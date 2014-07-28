@@ -67,3 +67,4 @@ bundle exec rails s -u
 
 * [Cocoa Rest Client](http://mmattozzi.github.io/cocoa-rest-client/)
 * [PGCommander](https://eggerapps.at/pgcommander/)
+* [Navicat Essentials for POSTGRESQL](https://itunes.apple.com/de/app/navicat-essentials-for-postgresql/id466725643?l=en&mt=12)
