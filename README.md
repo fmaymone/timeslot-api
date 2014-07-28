@@ -19,6 +19,7 @@ rvm implode
 brew update
 brew install rbenv
 brew install ruby-build
+brew install rbenv-gem-rehash
 ```
 * add to end of .bashrc / .zshrc:
 ```bash
@@ -32,7 +33,6 @@ rbenv install 2.1.0
 
 * install bundler:
 ```bash
-brew install rbenv-gem-rehash
 gem install bundler
 ```
 * install gems:
