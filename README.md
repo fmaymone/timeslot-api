@@ -68,3 +68,13 @@ bundle exec rails s -u
 * [Cocoa Rest Client](http://mmattozzi.github.io/cocoa-rest-client/)
 * [PGCommander](https://eggerapps.at/pgcommander/)
 * [Navicat Essentials for POSTGRESQL](https://itunes.apple.com/de/app/navicat-essentials-for-postgresql/id466725643?l=en&mt=12)
+
+## JIRA
+
+* [Project's Agile Jira Work Board](https://timeslot.atlassian.net/secure/RapidBoard.jspa?rapidView=2&view=detail)
+
+### Git Commit Commands for JIRA
+
+* When commiting use the following commit message format: `KEY #resolved <comment>`
+* e.g. `git commit -m "TRB-2 #resolved testing jira smart commit messages"`
+* More detailed information [here](https://confluence.atlassian.com/display/AOD/Processing+JIRA+issues+with+commit+messages)
