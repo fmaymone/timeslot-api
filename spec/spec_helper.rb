@@ -74,3 +74,8 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 end
+
+# apitome
+RspecApiDocumentation.configure do |config|
+  config.format = :json
+end
