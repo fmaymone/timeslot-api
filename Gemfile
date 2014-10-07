@@ -4,23 +4,45 @@ gem 'rails', '4.1.4'
 
 gem 'rails-api'
 
-gem 'spring', :group => :development
-
 gem 'pg'
-
-gem 'debugger', :group => :development
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 # To use Jbuilder templates for JSON
-# gem 'jbuilder'
+gem 'jbuilder'
+
+gem 'oj'
+
+gem 'oj_mimic_json'
 
 # Use unicorn as the app server
-# gem 'unicorn'
+gem 'unicorn'
+
+gem 'rails_12factor', group: :production
 
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
+
+group :development do
+  gem 'spring'
+
+  gem 'debugger'
+end
+
+group :development, :test do
+  gem 'rspec-rails', '~> 3.0.0'
+
+  gem 'factory_girl_rails'
+
+  gem 'database_cleaner'
+
+  gem 'rspec_api_documentation'
+
+  gem 'apitome'
+end
+
+ruby '2.1.0'
