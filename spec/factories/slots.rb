@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :slot do
-    # baseslot id
+    baseslot
     visibility 'x'
     alerts '0101001100'
     # reslots

@@ -10,6 +10,7 @@ RSpec.describe Baseslot, :type => :model do
   it { should respond_to(:title) }
   it { should respond_to(:startdate) }
   it { should respond_to(:enddate) }
+  it { should respond_to(:slots) }
 
   it { should be_valid }
 end

@@ -9,6 +9,7 @@ RSpec.describe Slot, type: :model do
 
   it { should respond_to(:visibility) }
   it { should respond_to(:alerts) }
+  it { should respond_to(:baseslot) }
   # it { should respond_to(:reslots) }
   # it { should respond_to(:comments) }
   # it { should respond_to(:likes) }
