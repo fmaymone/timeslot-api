@@ -33,7 +33,7 @@ group :development do
   gem 'debugger'
 end
 
-group :development, :test do
+group :test do
   gem 'rspec-rails', '~> 3.0.0'
 
   gem 'factory_girl_rails'
@@ -43,6 +43,8 @@ group :development, :test do
   gem 'rspec_api_documentation'
 
   gem 'apitome'
+
+  gem 'shoulda-matchers', require: false
 end
 
 ruby '2.1.1'
