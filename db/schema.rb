@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141007114115) do
+ActiveRecord::Schema.define(version: 20141008125634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,10 +26,10 @@ ActiveRecord::Schema.define(version: 20141007114115) do
 
   create_table "slots", force: true do |t|
     t.integer  "baseslot_id"
-    t.integer  "visibility",             default: 0
     t.string   "alerts",      limit: 10
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "visibility",  limit: 2,  default: "11"
   end
 
 end
