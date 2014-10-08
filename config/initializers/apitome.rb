@@ -1,3 +1,5 @@
+require 'apitome'
+
 Apitome.setup do |config|
 
   # This determines where the Apitome routes will be mounted. Changing this to "/api/documentation" for instance would

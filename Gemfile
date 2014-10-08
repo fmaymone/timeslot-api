@@ -33,9 +33,17 @@ group :development do
   gem 'debugger'
 end
 
-group :test do
+group :development, :test do
+  gem 'spring-commands-rspec'
+
   gem 'rspec-rails', '~> 3.0.0'
 
+  gem 'guard-rspec'
+
+  gem 'rb-fsevent' if `uname` =~ /Darwin/
+end
+
+group :test do
   gem 'factory_girl_rails'
 
   gem 'database_cleaner'
