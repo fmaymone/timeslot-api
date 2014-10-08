@@ -53,6 +53,8 @@ group :test do
   gem 'apitome'
 
   gem 'shoulda-matchers', require: false
+
+  gem 'faker'
 end
 
 ruby '2.1.1'
