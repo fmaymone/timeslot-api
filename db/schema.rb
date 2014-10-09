@@ -17,11 +17,14 @@ ActiveRecord::Schema.define(version: 20141007095331) do
   enable_extension "plpgsql"
 
   create_table "slots", force: true do |t|
-    t.integer  "baseslot_id"
-    t.string   "alerts",      limit: 10
+    t.string   "title"
+    t.datetime "startdate"
+    t.datetime "enddate"
+    t.text     "note"
+    t.string   "visibility", limit: 2,  default: "11"
+    t.string   "alerts",     limit: 10, default: "1000010100"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "visibility"
   end
 
 end
