@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :slot do
     baseslot
-    visibility 'x'
+    visibility '11'
     alerts '0101001100'
     # reslots
     # comments
