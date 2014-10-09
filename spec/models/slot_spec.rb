@@ -1,35 +1,56 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Slot, type: :model do
-  before do
-    @slot = build(:slot)
-  end
+  let(:slot) { build(:slot) }
 
-  subject { @slot }
+  subject { slot }
 
+  it { should respond_to(:title) }
+  it { should respond_to(:startdate) }
+  it { should respond_to(:enddate) }
+  it { should respond_to(:note) }
   it { should respond_to(:visibility) }
   it { should respond_to(:alerts) }
-  # it { should respond_to(:reslots) }
-  # it { should respond_to(:comments) }
-  # it { should respond_to(:likes) }
-  it { should respond_to(:baseslot) }
-  it { should belong_to(:baseslot).inverse_of(:slots) }
 
   it { should be_valid }
 
-  describe 'when baseslot is not present' do
-    before { @slot.baseslot = nil }
+  describe "when title is not present" do
+    before { slot.title = "" }
     it { should_not be_valid }
   end
 
-  describe 'when visibility is not present' do
-    before { @slot.visibility = '' }
+  describe "when title is too long" do
+    before { slot.title = "a" * 49 }
     it { should_not be_valid }
   end
 
-  describe 'when alerts is not present' do
-    before { @slot.alerts = '' }
+  describe "when startdate is not present" do
+    before { slot.startdate = "" }
     it { should_not be_valid }
   end
 
+  describe "when enddate is not present" do
+    before { slot.enddate = "" }
+    it { should_not be_valid }
+  end
+
+  describe "when note is not present" do
+    before { slot.note = nil }
+    it { should be_valid }
+  end
+
+  describe "when note is too long" do
+    before { slot.note = "a" * 501 }
+    it { should_not be_valid }
+  end
+
+  describe "when visibility is not present" do
+    before { slot.visibility = "" }
+    it { should_not be_valid }
+  end
+
+  describe "when alerts is not present" do
+    before { slot.alerts = "" }
+    it { should_not be_valid }
+  end
 end
