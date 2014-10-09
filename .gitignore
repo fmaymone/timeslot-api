@@ -79,3 +79,7 @@ pickle-email-*.html
 .powenv
 
 Guardfile
+
+.rubocop.yml
+
+.rubocop_todo.yml

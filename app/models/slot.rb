@@ -1,7 +1,8 @@
 class Slot < ActiveRecord::Base
-  belongs_to :baseslot, inverse_of: :slots
-
-  validates :baseslot, presence: true
+  validates :title, presence: true, length: { maximum: 48 }
+  validates :startdate, presence: true
+  validates :enddate, presence: true
+  validates :note, length: { maximum: 500 }
   validates :visibility, presence: true
   validates :alerts, presence: true
 end
