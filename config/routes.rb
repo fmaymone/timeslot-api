@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
-    resources :slots
+    get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
+    resources :slots, except: [:index, :show, :new, :edit]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
