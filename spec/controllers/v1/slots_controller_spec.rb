@@ -5,6 +5,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Slot. As you add validations to Slot, be sure to
   # adjust the attributes here as well.
+  let(:valid_slot) { create(:slot) }
   let(:valid_attributes) { attributes_for(:slot) }
   let(:invalid_attributes) { attributes_for(:slot, title: nil) }
 
@@ -13,17 +14,23 @@ RSpec.describe V1::SlotsController, type: :controller do
   # V1::SlotsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before(:each) { request.accept = "application/json" }
+
   describe "GET show" do
     it "returns http success" do
-      slot = create(:slot)
-      get :show, id: slot.id
+      get :show, id: valid_slot.id
       expect(response).to be_success
     end
 
     it "assigns the requested slot as @slot" do
-      slot = Slot.create! valid_attributes
-      get :show, { id: slot.to_param }, valid_session
-      expect(assigns(:slot)).to eq(slot)
+      get :show, { id: valid_slot.to_param }, valid_session
+      expect(assigns(:slot)).to eq(valid_slot)
+    end
+
+    it "renders the show template" do
+      get :show, id: valid_slot.id
+      expect(response).to render_template("show")
+      expect(response.body).to eq ""
     end
   end
 
@@ -32,6 +39,11 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "returns http success" do
         post :create, valid_attributes
         expect(response).to be_success
+      end
+
+      it "responds with http status 422 aka Unprocessable Entity" do
+        post :create, valid_attributes
+        expect(response).to have_http_status(:created)
       end
 
       it "creates a new Slot" do
@@ -55,7 +67,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "responds with http status 422 aka Unprocessable Entity" do
         post :create, invalid_attributes
-        expect(response.status).to eq(422)
+        expect(response).to have_http_status(:unprocessable_entity)
       end
     end
   end

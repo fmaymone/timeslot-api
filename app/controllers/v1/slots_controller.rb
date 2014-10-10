@@ -5,7 +5,7 @@ module V1
     def show
       @slot = Slot.find(params.require(:id))
 
-      # render json: @slot
+      render :show
     end
 
     # POST /v1/slots
@@ -14,7 +14,7 @@ module V1
       @slot = Slot.new(slot_create_params)
 
       if @slot.save
-        render json: @slot, status: :created
+        render :show, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
