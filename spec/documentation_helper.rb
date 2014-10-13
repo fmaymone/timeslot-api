@@ -26,7 +26,7 @@ RspecApiDocumentation.configure do |config|
 
   # Used when adding a cURL output to the docs
   # config.curl_host = nil
-  config.curl_host = 'http://localhost:5000'
+  config.curl_host = 'http://localhost:3000'
 
   # Used when adding a cURL output to the docs
   # Allows you to filter out headers that are not needed in the cURL request,
