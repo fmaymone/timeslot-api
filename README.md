@@ -44,7 +44,7 @@ bundle install
 
 * install postgresql
 ```bash
-brew install postgresql	
+brew install postgresql
 ```
 * create local user and when prompt for password enter "9dh39fd"
 ```bash
@@ -62,6 +62,24 @@ bundle exec rake db:create
 ```bash
 bundle exec rails s -u
 ```
+
+## API Documentation
+
+The documentation is based on the *spec/acceptance* tests.
+The DSL is outlined [here](https://github.com/zipmark/rspec_api_documentation#dsl).
+
+### Generating API documentation
+
+* This is done via gem [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation).
+Per default the documentation is generated as **json**
+for consumption via the gem [apitome](https://github.com/modeset/apitome) as viewer.
+Other output formats are possible. To get **markdown** add
+markdown to the line
+```ruby
+config.format = [:json, :markdown]
+```
+This is located in *spec/documentation_helper.rb*.
+The generated Markdown files will be in *doc/api* folder.
 
 ## Additional software you may want to use
 
