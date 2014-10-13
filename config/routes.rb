@@ -1,4 +1,12 @@
 Rails.application.routes.draw do
+
+  namespace :v1, defaults: { format: :json } do
+    get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
+    post 'slots', to: 'slots#create'
+    patch 'slots/:id', to: 'slots#update', as: 'slot_update'
+    delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

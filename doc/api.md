@@ -1,4 +1,4 @@
-Apitome Documentation
-=====================
+Timeslot API Documentation
+==========================
 
-This file was automatically generated, and can be found at `doc/api.md`.
+This file can be found at `doc/api.md`.

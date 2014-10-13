@@ -1,0 +1,10 @@
+json.extract! @slot,
+:id,
+:title,
+:startdate,
+:enddate,
+:note,
+:visibility,
+:alerts,
+:created_at,
+:updated_at

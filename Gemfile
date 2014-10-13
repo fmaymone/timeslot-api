@@ -41,9 +41,7 @@ group :development, :test do
   gem 'guard-rspec'
 
   gem 'rb-fsevent' if `uname` =~ /Darwin/
-end
 
-group :test do
   gem 'factory_girl_rails'
 
   gem 'database_cleaner'
