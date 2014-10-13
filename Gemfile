@@ -34,8 +34,16 @@ group :development do
 end
 
 group :development, :test do
+  gem 'spring-commands-rspec'
+
   gem 'rspec-rails', '~> 3.0.0'
 
+  gem 'guard-rspec'
+
+  gem 'rb-fsevent' if `uname` =~ /Darwin/
+end
+
+group :test do
   gem 'factory_girl_rails'
 
   gem 'database_cleaner'
@@ -43,6 +51,10 @@ group :development, :test do
   gem 'rspec_api_documentation'
 
   gem 'apitome'
+
+  gem 'shoulda-matchers', require: false
+
+  gem 'faker'
 end
 
 ruby '2.1.1'
