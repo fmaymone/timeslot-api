@@ -13,7 +13,15 @@ RSpec.describe "V1::Slots", type: :request do
     it "returns details of slot with given id" do
       get v1_slot_path(id: slot.id), accept_json
       json = JSON.parse(response.body)
+      expect(json).to have_key('id')
       expect(json).to have_key('title')
+      expect(json).to have_key('startdate')
+      expect(json).to have_key('enddate')
+      expect(json).to have_key('note')
+      expect(json).to have_key('visibility')
+      expect(json).to have_key('alerts')
+      expect(json).to_not have_key('created_at')
+      expect(json).to_not have_key('updated_at')
     end
 
     it "does return the slots title" do
@@ -52,7 +60,7 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "PATCH /v1/slots/:id" do
     describe "with valid params" do
-      it "responds with http status Created (201)" do
+      it "responds with http status No Content (204)" do
         patch "/v1/slots/#{slot.id}", slot: { title: "Something" }
         expect(response).to have_http_status(:no_content)
       end
@@ -88,7 +96,7 @@ RSpec.describe "V1::Slots", type: :request do
   describe "DELETE /v1/slots/:id" do
     describe "with valid params" do
 
-      it "returns http No Content" do
+      it "returns http No Content (204)" do
         delete "/v1/slots/#{slot.id}"
         expect(response).to have_http_status(:no_content)
       end

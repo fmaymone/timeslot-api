@@ -5,6 +5,4 @@ json.extract! @slot,
 :enddate,
 :note,
 :visibility,
-:alerts,
-:created_at,
-:updated_at
+:alerts

@@ -1,7 +1,6 @@
 module V1
   class SlotsController < ApplicationController
     # GET /v1/slots/1
-    # GET /v1/slots/1.json
     def show
       @slot = Slot.find(params.require(:id))
 
@@ -9,19 +8,17 @@ module V1
     end
 
     # POST /v1/slots
-    # POST /v1/slots.json
     def create
       @slot = Slot.new(slot_create_params)
 
       if @slot.save
-        render :show, status: :created
+        render :create, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
     end
 
     # PATCH /v1/slots/1
-    # PATCH /v1/slots/1.json
     def update
       @slot = Slot.find(params.require(:id))
 
@@ -33,7 +30,6 @@ module V1
     end
 
     # DELETE /v1/slots/1
-    # DELETE /v1/slots/1.json
     def destroy
       slot = Slot.find(params.require(:id))
       slot.destroy

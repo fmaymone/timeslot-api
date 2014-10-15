@@ -30,7 +30,6 @@ RSpec.describe V1::SlotsController, type: :controller do
     it "renders the show template" do
       get :show, id: valid_slot.id
       expect(response).to render_template("show")
-      expect(response.body).to eq ""
     end
   end
 
@@ -52,6 +51,11 @@ RSpec.describe V1::SlotsController, type: :controller do
         expect(assigns(:slot)).to be_a(Slot)
         expect(assigns(:slot)).to be_persisted
       end
+
+      it "renders the create template" do
+        post :create, valid_attributes
+        expect(response).to render_template("create")
+      end
     end
 
     describe "with invalid params" do
@@ -71,9 +75,9 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with valid params" do
       let(:new_attributes) { attributes_for(:slot, title: "New slot title") }
 
-      it "returns http success" do
+      it "respond with http status No Content (204)" do
         patch :update, { id: valid_slot.id, slot: new_attributes }
-        expect(response).to be_success
+        expect(response).to have_http_status(:no_content)
       end
 
       it "updates the requested slot" do
@@ -84,6 +88,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "assigns the requested slot as @slot" do
         patch :update, { id: valid_slot.id, slot: new_attributes }
+        expect(assigns(:slot)).to be_a(Slot)
         expect(assigns(:slot)).to eq(valid_slot)
       end
     end
@@ -94,7 +99,7 @@ RSpec.describe V1::SlotsController, type: :controller do
         expect(assigns(:slot)).to eq(valid_slot)
       end
 
-      it "responds with http status 422 aka Unprocessable Entity" do
+      it "responds with http status Unprocessable Entity (422)" do
         patch :update, { id: valid_slot.id, slot: invalid_attributes }
         expect(response.status).to eq(422)
       end
@@ -102,10 +107,16 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "DELETE destroy" do
+    let!(:valid_slot) { create(:slot) }
+
+    it "respond with http status No Content (204)" do
+      delete :destroy, id: valid_slot.id
+      expect(response.status).to eq(204)
+    end
+
     it "destroys the requested slot" do
-      slot = Slot.create! valid_attributes
       expect {
-        delete :destroy, { id: slot.id }
+        delete :destroy, id: valid_slot.id
       }.to change(Slot, :count).by(-1)
     end
   end
