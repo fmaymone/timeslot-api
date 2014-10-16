@@ -61,12 +61,12 @@ RSpec.describe "V1::Slots", type: :request do
   describe "PATCH /v1/slots/:id" do
     describe "with valid params" do
       it "responds with http status No Content (204)" do
-        patch "/v1/slots/#{slot.id}", slot: { title: "Something" }
+        patch "/v1/slots/#{slot.id}", { title: "Something" }
         expect(response).to have_http_status(:no_content)
       end
 
       it "updates the title of a given slot" do
-        patch "/v1/slots/#{slot.id}", slot: { title: "New title" }
+        patch "/v1/slots/#{slot.id}", { title: "New title" }
         slot.reload
         expect(slot.title).to eq('New title')
       end
@@ -74,12 +74,12 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe "with invalid params" do
       it "responds with Unprocessable Entity for invalid title)" do
-        patch "/v1/slots/#{slot.id}", slot: { title: "" }
+        patch "/v1/slots/#{slot.id}", { title: "" }
         expect(response).to have_http_status(:unprocessable_entity)
       end
 
       it "responds with Unprocessable Entity for invalid startdate" do
-        patch "/v1/slots/#{slot.id}", slot: { startdate: "" }
+        patch "/v1/slots/#{slot.id}", { startdate: "" }
         expect(response).to have_http_status(:unprocessable_entity)
       end
 

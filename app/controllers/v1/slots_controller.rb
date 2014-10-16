@@ -42,8 +42,7 @@ module V1
     end
 
     private def slot_update_params
-      params.require(:slot)
-        .permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
+      params.permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
     end
   end
 end

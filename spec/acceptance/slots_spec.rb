@@ -73,14 +73,13 @@ resource "Slots" do
     header "Content-Type", "application/json"
 
     parameter :id, "ID of the slot to update", required: true
-    parameter :title, "Updated title of slot", scope: :slot
-    parameter :startdate, "Updated Startdate and Time of the Slot", scope: :slot
+    parameter :title, "Updated title of slot"
+    parameter :startdate, "Updated Startdate and Time of the Slot"
     parameter :enddate,
-              "Updated Enddate and Time of the Slot (startdate + duration)",
-              scope: :slot
-    parameter :note, "Updated note for to the Slot", scope: :slot
-    parameter :visibility, "Updated visibility for the Slot", scope: :slot
-    parameter :alerts, "Updated alerts for the Slot", scope: :slot
+              "Updated Enddate and Time of the Slot (startdate + duration)"
+    parameter :note, "Updated note for to the Slot"
+    parameter :visibility, "Updated visibility for the Slot"
+    parameter :alerts, "Updated alerts for the Slot"
 
     let(:id) { slot.id }
     let(:title) { "New title for a Slot" }
