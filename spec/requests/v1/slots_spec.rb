@@ -2,45 +2,54 @@ require 'rails_helper'
 
 RSpec.describe "V1::Slots", type: :request do
   let(:slot) { create(:slot) }
-  let(:accept_json) { { "Accept" => "application/json" } }
 
   describe "GET /v1/slots/:id" do
-    it "returns success" do
-      get v1_slot_path(id: slot.id), accept_json
-      expect(response.status).to be(200)
+    context "with valid ID" do
+      it "returns success" do
+        get "/v1/slots/#{slot.id}"
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns details of slot with given id" do
+        get "/v1/slots/#{slot.id}"
+        json = JSON.parse(response.body)
+        expect(json).to have_key('id')
+        expect(json).to have_key('title')
+        expect(json).to have_key('startdate')
+        expect(json).to have_key('enddate')
+        expect(json).to have_key('note')
+        expect(json).to have_key('visibility')
+        expect(json).to have_key('alerts')
+        expect(json).to_not have_key('created_at')
+        expect(json).to_not have_key('updated_at')
+      end
+
+      it "does return the correct attributes" do
+        get "/v1/slots/#{slot.id}"
+        json = JSON.parse(response.body)
+        expect(json['id']).to eq(slot.id)
+        expect(json['title']).to eq(slot.title)
+        expect(json['startdate']).to eq(slot.startdate.iso8601)
+        expect(json['enddate']).to eq(slot.enddate.iso8601)
+        expect(json['note']).to eq(slot.note)
+        expect(json['visibility']).to eq(slot.visibility)
+        expect(json['alerts']).to eq(slot.alerts)
+      end
+
+      it "does return the slot title" do
+        slot = create(:slot, title: "Expected title")
+        get "/v1/slots/#{slot.id}"
+        json = JSON.parse(response.body)
+        expect(json['title']).to eq("Expected title")
+      end
     end
 
-    it "returns details of slot with given id" do
-      get v1_slot_path(id: slot.id), accept_json
-      json = JSON.parse(response.body)
-      expect(json).to have_key('id')
-      expect(json).to have_key('title')
-      expect(json).to have_key('startdate')
-      expect(json).to have_key('enddate')
-      expect(json).to have_key('note')
-      expect(json).to have_key('visibility')
-      expect(json).to have_key('alerts')
-      expect(json).to_not have_key('created_at')
-      expect(json).to_not have_key('updated_at')
-    end
-
-    it "does return the correct attributes" do
-      get v1_slot_path(id: slot.id), accept_json
-      json = JSON.parse(response.body)
-      expect(json['id']).to eq(slot.id)
-      expect(json['title']).to eq(slot.title)
-      expect(json['startdate']).to eq(slot.startdate.iso8601)
-      expect(json['enddate']).to eq(slot.enddate.iso8601)
-      expect(json['note']).to eq(slot.note)
-      expect(json['visibility']).to eq(slot.visibility)
-      expect(json['alerts']).to eq(slot.alerts)
-    end
-
-    it "does return the slots title" do
-      slot = create(:slot, title: "Expected title")
-      get v1_slot_path(id: slot.id), accept_json
-      json = JSON.parse(response.body)
-      expect(json['title']).to eq("Expected title")
+    context "with invalid ID" do
+      it "returns not found" do
+        wrong_id = slot.id + 1
+        get "/v1/slots/#{wrong_id}"
+        expect(response).to have_http_status(:not_found)
+      end
     end
   end
 
