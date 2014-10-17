@@ -45,7 +45,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots" do
-    describe "with valid params" do
+    context "with valid params" do
       let(:valid_slot) { attributes_for(:slot) }
 
       it "responds with http status Created (201)" do
@@ -74,25 +74,29 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "with invalid params" do
-      it "does not add a new entry to the DB" do
-        expect {
-          post "/v1/slots/", attributes_for(:slot, title: nil)
-        }.not_to change(Slot, :count)
-      end
-
-      describe "responds with http status Unprocessable Entity (422)" do
+    context "with invalid params" do
+      describe "does not add a new entry to the DB" do
         it "for empty title" do
           expect {
-            post "/v1/slots/", attributes_for(:slot, title: "")
+            post "/v1/slots/", attributes_for(:slot, title: nil)
           }.not_to change(Slot, :count)
-          expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty startdate" do
           expect {
             post "/v1/slots/", attributes_for(:slot, startdate: "")
           }.not_to change(Slot, :count)
+        end
+      end
+
+      describe "responds with http status Unprocessable Entity (422)" do
+        it "for empty title" do
+          post "/v1/slots/", attributes_for(:slot, title: "")
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "for empty startdate" do
+          post "/v1/slots/", attributes_for(:slot, startdate: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
@@ -166,7 +170,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/slots/:id" do
-    describe "with valid params" do
+    context "with valid params" do
       it "responds with http status No Content (204)" do
         patch "/v1/slots/#{slot.id}", { title: "Something" }
         expect(response).to have_http_status(:no_content)
@@ -222,18 +226,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "with invalid params" do
-      it "responds with Unprocessable Entity for invalid title)" do
-        patch "/v1/slots/#{slot.id}", { title: "" }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it "responds with Unprocessable Entity for invalid startdate" do
-        patch "/v1/slots/#{slot.id}", { startdate: "" }
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      describe "with an invalid ID" do
+    context "with invalid params" do
+      describe "for invalid ID" do
         it "responds with http status Not Found (404)" do
           wrong_id = slot.id + 1
           patch "/v1/slots/#{wrong_id}", { title: "Something" }
@@ -320,7 +314,7 @@ RSpec.describe "V1::Slots", type: :request do
   describe "DELETE /v1/slots/:id" do
     let!(:slot) { create(:slot) }
 
-    describe "with a valid ID" do
+    context "with a valid ID" do
       it "returns http No Content (204)" do
         delete "/v1/slots/#{slot.id}"
         expect(response).to have_http_status(:no_content)
@@ -333,7 +327,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "with an invalid ID" do
+    context "with an invalid ID" do
       it "responds with http status Not Found" do
         wrong_id = slot.id + 1
         delete "/v1/slots/#{wrong_id}"
@@ -341,8 +335,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       it "does not remove an entry from the DB" do
+        wrong_id = slot.id + 1
         expect {
-          wrong_id = slot.id + 1
           delete "/v1/slots/#{wrong_id}"
         }.not_to change(Slot, :count)
       end
