@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     post 'slots', to: 'slots#create'
     patch 'slots/:id', to: 'slots#update', as: 'slot_update'
     delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
+
+    get 'media-signature', to: 'media#create_signature'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
