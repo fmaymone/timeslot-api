@@ -21,6 +21,8 @@ gem 'unicorn'
 
 gem 'rails_12factor', group: :production
 
+gem 'cloudinary'
+
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
