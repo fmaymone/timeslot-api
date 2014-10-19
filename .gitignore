@@ -83,3 +83,5 @@ Guardfile
 .rubocop.yml
 
 .rubocop_todo.yml
+
+.env.test
