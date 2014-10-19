@@ -33,9 +33,13 @@ group :development do
   gem 'spring'
 
   gem 'debugger'
+
+  gem 'pry-rails'
 end
 
 group :development, :test do
+  gem 'pry-byebug'
+
   gem 'spring-commands-rspec'
 
   gem 'rspec-rails', '~> 3.0.0'
