@@ -85,3 +85,5 @@ Guardfile
 .rubocop_todo.yml
 
 .env.test
+
+config/app_environment_variables.rb
