@@ -235,62 +235,78 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       describe "handling media items" do
+        let(:media_item) do
+          { signed_identifier: "abc",
+            media: media }
+        end
+
         context "images" do
-          let(:media) { { img_id: "A", public_id: "foobar", ordering: "1" } }
-          let(:images) do
-            {
-              signed_identifier: "abc",
-              media_type: "image",
-              media: media
-            }
+          let(:media) do
+            { media_type: "image",
+              public_id: "foo-image",
+              ordering: "1" }
+          end
+
+          it "returns a media_item_id" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", media_item
+            slot.reload
+            json = JSON.parse(response.body)
+            expect(json).to have_key('id')
+          end
+
+          it "returns the ID of new media_item" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", media_item
+            slot.reload
+            json = JSON.parse(response.body)
+            expect(json['id']).to eq(slot.media_items[0].id)
           end
 
           it "adds a new image" do
             slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", images
+            patch "/v1/slots/#{slot.id}", media_item
             slot.reload
-            expect(slot.images.size).to eq(1)
+            expect(slot.media_items.size).to eq(1)
           end
 
           it "adds the submitted image to the db" do
             slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", images
+            patch "/v1/slots/#{slot.id}", media_item
             slot.reload
-            expect(slot.images[0]).to eq(media)
+            expect(slot.media_items[0].media_type).to eq(media[:media_type])
+            expect(slot.media_items[0].public_id).to eq(media[:public_id])
+            expect(slot.media_items[0].ordering).to eq(media[:ordering].to_i)
           end
         end
 
         context "video" do
-          let(:video) do
-            {
-              signed_identifier: "abc",
-              media_type: "video",
-              public_id: "foobar"
-            }
+          let(:media) do
+            { media_type: "video",
+              public_id: "foo-video",
+              ordering: "1" }
           end
 
           it "adds a new video" do
             slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", video
+            patch "/v1/slots/#{slot.id}", media_item
             slot.reload
-            expect(slot.video).to eq(video[:public_id])
+            expect(slot.media_items[0].media_type).to eq(media[:media_type])
           end
         end
 
         context "audio" do
-          let(:audio) do
-            {
-              signed_identifier: "abc",
-              media_type: "audio",
-              public_id: "foobar"
-            }
+          let(:media) do
+            { media_type: "audio",
+              public_id: "foo-audio",
+              ordering: "1" }
           end
 
           it "adds a new audio item" do
             slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", audio
+            patch "/v1/slots/#{slot.id}", media_item
             slot.reload
-            expect(slot.audio).to eq(audio[:public_id])
+            expect(slot.media_items[0].media_type).to eq(media[:media_type])
           end
         end
       end
