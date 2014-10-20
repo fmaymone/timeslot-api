@@ -1,7 +1,6 @@
 class CreateSlots < ActiveRecord::Migration
   def change
     create_table :slots do |t|
-      # t.string :title
       t.string :title, limit: '48'
       t.datetime :startdate
       t.datetime :enddate

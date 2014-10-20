@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141020105135) do
+ActiveRecord::Schema.define(version: 20141020110144) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,9 +34,6 @@ ActiveRecord::Schema.define(version: 20141020105135) do
     t.string   "alerts",     limit: 10, default: "0000000000"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.json     "images",                default: []
-    t.string   "video",                 default: ""
-    t.string   "audio",                 default: ""
   end
 
 end
