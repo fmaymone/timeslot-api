@@ -56,11 +56,7 @@ module V1
     private def add_new_media?
       @media_item = MediaItem.create(media_item_create_params)
       @slot.media_items << @media_item
-      if @media_item.save
-        return true
-      else
-        return false
-      end
+      @media_item.save
     end
   end
 end

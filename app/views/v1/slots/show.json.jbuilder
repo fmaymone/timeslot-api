@@ -5,8 +5,5 @@ json.extract! @slot,
 :enddate,
 :note,
 :visibility,
-:alerts,
-:media_items
-# :images,
-# :video,
-# :audio
+:alerts
+json.media @slot.media_items, :id, :media_type, :public_id, :ordering

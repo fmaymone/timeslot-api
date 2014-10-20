@@ -8,12 +8,11 @@ FactoryGirl.define do
     note "this is a testslot"
     visibility "11"
     alerts "0101001100"
+  end
 
-    factory :slot_with_media do
-    #   images '[{ "img_id": "A", "public_id": "cloudinary1", "ordering": "1"},' \
-    #          '{ "img_id": "B", "public_id": "cloudinary2", "ordering": "2" }]'
-    #   audio "v1234567/dfhjghjkdisudgfds7igg.jpg"
-    #   video "v1234567/dfhjghjkdisudgfds7iyf.jpg"
+  trait :with_media do
+    after :create do |slot|
+      FactoryGirl.create_list :media_item, 3, slot: slot
     end
   end
 end

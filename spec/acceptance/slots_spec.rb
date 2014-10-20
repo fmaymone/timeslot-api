@@ -14,24 +14,27 @@ resource "Slots" do
     response_field :note, "A note on the slot"
     response_field :visibility, "Visibiltiy of the slot"
     response_field :alerts, "Alerts for the slot"
+    response_field :media, "Media Items of the slot"
 
-    let(:slot) { create(:slot_with_media) }
+    let(:slot) { create(:slot, :with_media) }
     let(:id) { slot.id }
+
 
     example "Get a specific slot", document: :v1 do
       do_request
 
+      expect(response_status).to eq(200)
       json = JSON.parse(response_body)
-      expect(json.except("id"))
-        .to eq("title" => slot.title,
+      expect(json.except("media"))
+        .to eq("id" => slot.id,
+               "title" => slot.title,
                "startdate" => slot.startdate.iso8601,
                "enddate" => slot.enddate.iso8601,
                "note" => slot.note,
                "visibility" => slot.visibility,
-               "alerts" => slot.alerts,
-               "media_items" => slot.media_items
+               "alerts" => slot.alerts
               )
-      expect(response_status).to eq(200)
+      expect(json["media"].length).to eq(slot.media_items.length)
     end
   end
 
@@ -81,7 +84,7 @@ resource "Slots" do
     parameter :visibility, "Updated visibility for the Slot"
     parameter :alerts, "Updated alerts for the Slot"
 
-    let!(:slot) { create(:slot_with_media) }
+    let!(:slot) { create(:slot, :with_media) }
     let(:id) { slot.id }
     let(:title) { "New title for a Slot" }
 
@@ -99,10 +102,13 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update",
               required: true
-    parameter :media_type, "Type of media (image/video/audio)"
     parameter :signed_identifier, "Calculated from cloudinary upload response",
               required: true
+    parameter :media_type, "Type of media (image/video/audio)",
+              required: true,
+              scope: :media
     parameter :public_id, "Calculated from cloudinary upload response",
+              required: true,
               scope: :media
     parameter :ordering, "Order of the image (ignored for video/audio)",
               scope: :media
@@ -123,7 +129,8 @@ resource "Slots" do
                   " For validation purposes the signed_identifier is also send."
       do_request
 
-      expect(response_status).to eq(204)
+
+      expect(response_status).to eq(201)
       json = JSON.parse(response_body)
       expect(json).to have_key("media_item_id")
       expect(Slot.last.media_items.size).to eq(1)
@@ -133,7 +140,7 @@ resource "Slots" do
   delete "/v1/slots/:id" do
     parameter :id, "ID of the slot to delete", required: true
 
-    let!(:slot) { create(:slot_with_media) }
+    let!(:slot) { create(:slot, :with_media) }
     let(:id) { slot.id }
 
     example "Delete a specific slot", document: :v1 do

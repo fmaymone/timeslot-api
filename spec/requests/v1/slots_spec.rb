@@ -252,7 +252,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/slots/#{slot.id}", media_item
             slot.reload
             json = JSON.parse(response.body)
-            expect(json).to have_key('id')
+            expect(json).to have_key('media_item_id')
           end
 
           it "returns the ID of new media_item" do
@@ -260,7 +260,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/slots/#{slot.id}", media_item
             slot.reload
             json = JSON.parse(response.body)
-            expect(json['id']).to eq(slot.media_items[0].id)
+            expect(json['media_item_id']).to eq(slot.media_items[0].id)
           end
 
           it "adds a new image" do
