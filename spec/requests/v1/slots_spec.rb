@@ -233,6 +233,67 @@ RSpec.describe "V1::Slots", type: :request do
         slot.reload
         expect(slot.alerts).to eq("1111011110")
       end
+
+      describe "handling media items" do
+        context "images" do
+          let(:media) { { img_id: "A", public_id: "foobar", ordering: "1" } }
+          let(:images) do
+            {
+              signed_identifier: "abc",
+              media_type: "image",
+              media: media
+            }
+          end
+
+          it "adds a new image" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", images
+            slot.reload
+            expect(slot.images.size).to eq(1)
+          end
+
+          it "adds the submitted image to the db" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", images
+            slot.reload
+            expect(slot.images[0]).to eq(media)
+          end
+        end
+
+        context "video" do
+          let(:video) do
+            {
+              signed_identifier: "abc",
+              media_type: "video",
+              public_id: "foobar"
+            }
+          end
+
+          it "adds a new video" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", video
+            slot.reload
+            expect(slot.video).to eq(video[:public_id])
+          end
+        end
+
+        context "audio" do
+          let(:audio) do
+            {
+              signed_identifier: "abc",
+              media_type: "audio",
+              public_id: "foobar"
+            }
+          end
+
+          it "adds a new audio item" do
+            slot = create(:slot)
+            patch "/v1/slots/#{slot.id}", audio
+            slot.reload
+            expect(slot.audio).to eq(audio[:public_id])
+          end
+        end
+      end
     end
 
     context "with invalid params" do

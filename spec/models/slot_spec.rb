@@ -11,6 +11,9 @@ RSpec.describe Slot, type: :model do
   it { is_expected.to respond_to(:note) }
   it { is_expected.to respond_to(:visibility) }
   it { is_expected.to respond_to(:alerts) }
+  it { is_expected.to respond_to(:images) }
+  it { is_expected.to respond_to(:audio) }
+  it { is_expected.to respond_to(:video) }
 
   it { is_expected.to be_valid }
 
@@ -53,4 +56,24 @@ RSpec.describe Slot, type: :model do
     before { slot.alerts = "" }
     it { is_expected.to_not be_valid }
   end
+
+  context "with media items" do
+    let(:slot) { build(:slot_with_media) }
+
+    describe "when images are not present" do
+      before { slot.images = "[]" }
+      it { is_expected.to be_valid }
+    end
+
+    describe "when video is not present" do
+      before { slot.video = "" }
+      it { is_expected.to be_valid }
+    end
+
+    describe "when audio is not present" do
+      before { slot.audio = "" }
+      it { is_expected.to be_valid }
+    end
+  end
+
 end

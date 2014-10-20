@@ -2,8 +2,6 @@ require 'documentation_helper'
 
 resource "Slots" do
 
-  let(:slot) { create(:slot) }
-
   get "/v1/slots/:id" do
     header "Accept", "application/json"
 
@@ -17,6 +15,7 @@ resource "Slots" do
     response_field :visibility, "Visibiltiy of the slot"
     response_field :alerts, "Alerts for the slot"
 
+    let(:slot) { create(:slot_with_media) }
     let(:id) { slot.id }
 
     example "Get a specific slot", document: :v1 do
@@ -29,7 +28,10 @@ resource "Slots" do
                "enddate" => slot.enddate.iso8601,
                "note" => slot.note,
                "visibility" => slot.visibility,
-               "alerts" => slot.alerts
+               "alerts" => slot.alerts,
+               "images" => slot.images,
+               "audio" => slot.audio,
+               "video" => slot.video
               )
       expect(response_status).to eq(200)
     end
@@ -81,6 +83,7 @@ resource "Slots" do
     parameter :visibility, "Updated visibility for the Slot"
     parameter :alerts, "Updated alerts for the Slot"
 
+    let!(:slot) { create(:slot_with_media) }
     let(:id) { slot.id }
     let(:title) { "New title for a Slot" }
 
@@ -93,8 +96,47 @@ resource "Slots" do
     end
   end
 
+  patch "/v1/slots/:id" do
+    header "Content-Type", "application/json"
+
+    parameter :id, "ID of the slot to update",
+              required: true
+    parameter :media_type, "Type of media (image/video/audio)"
+    parameter :signed_identifier, "Calculated from cloudinary upload response",
+              required: true
+    parameter :img_id, "Timeslot's internal ID for this media item",
+              scope: :media,
+              required: true
+    parameter :public_id, "Calculated from cloudinary upload response",
+              scope: :media
+    parameter :ordering, "Order of the image (ignored for video/audio)",
+              scope: :media
+
+    let!(:slot) { create(:slot) }
+    let(:id) { slot.id }
+    let(:media_type) { "image" }
+    let(:signed_identifier) { "image/upload/v1234567/dfhjghjkdisudgfds7iyf.jpg#298hg20j2eoalgh3ekl" }
+    let(:img_id) { "A" }
+    let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+    let(:ordering) { "1" }
+
+    example "Adding image to existing slot.", document: :v1 do
+      explanation "First a cloudinary signature needs to be fetched by the" \
+                  " client from the API. After uploading the image to cloudinary" \
+                  " client updates the slot with the image information." \
+                  " For validation purposes the signed_identifier is also send."
+      do_request
+
+      expect(response_status).to eq(204)
+      expect(response_body).to eq("")
+      expect(Slot.last.images.size).to eq(1)
+    end
+  end
+
   delete "/v1/slots/:id" do
     parameter :id, "ID of the slot to delete", required: true
+
+    let!(:slot) { create(:slot_with_media) }
     let(:id) { slot.id }
 
     example "Delete a specific slot", document: :v1 do
