@@ -102,19 +102,17 @@ resource "Slots" do
     parameter :media_type, "Type of media (image/video/audio)"
     parameter :signed_identifier, "Calculated from cloudinary upload response",
               required: true
-    parameter :img_id, "Timeslot's internal ID for this media item",
-              scope: :media,
-              required: true
     parameter :public_id, "Calculated from cloudinary upload response",
               scope: :media
     parameter :ordering, "Order of the image (ignored for video/audio)",
               scope: :media
 
+    response_field :media_item_id, "Timeslot's internal ID for this media item"
+
     let!(:slot) { create(:slot) }
     let(:id) { slot.id }
     let(:media_type) { "image" }
     let(:signed_identifier) { "image/upload/v1234567/dfhjghjkdisudgfds7iyf.jpg#298hg20j2eoalgh3ekl" }
-    let(:img_id) { "A" }
     let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
     let(:ordering) { "1" }
 
@@ -126,8 +124,9 @@ resource "Slots" do
       do_request
 
       expect(response_status).to eq(204)
-      expect(response_body).to eq("")
-      expect(Slot.last.images.size).to eq(1)
+      json = JSON.parse(response_body)
+      expect(json).to have_key("media_item_id")
+      expect(Slot.last.media_items.size).to eq(1)
     end
   end
 
