@@ -6,6 +6,7 @@ json.extract! @slot,
 :note,
 :visibility,
 :alerts,
-:images,
-:video,
-:audio
+:media_items
+# :images,
+# :video,
+# :audio

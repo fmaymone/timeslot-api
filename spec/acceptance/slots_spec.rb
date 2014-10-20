@@ -29,9 +29,7 @@ resource "Slots" do
                "note" => slot.note,
                "visibility" => slot.visibility,
                "alerts" => slot.alerts,
-               "images" => slot.images,
-               "audio" => slot.audio,
-               "video" => slot.video
+               "media_items" => slot.media_items
               )
       expect(response_status).to eq(200)
     end
