@@ -5,4 +5,7 @@ json.extract! @slot,
 :enddate,
 :note,
 :visibility,
-:alerts
+:alerts,
+:images,
+:video,
+:audio
