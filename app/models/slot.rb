@@ -1,4 +1,6 @@
 class Slot < ActiveRecord::Base
+  has_many :media_items, dependent: :destroy
+
   validates :title, presence: true, length: { maximum: 48 }
   validates :startdate, presence: true
   validates :enddate, presence: true
