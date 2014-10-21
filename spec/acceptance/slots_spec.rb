@@ -143,6 +143,8 @@ resource "Slots" do
               required: true
     parameter :media_type, "Type of media (image/video/audio)",
               required: true
+    parameter :media_ordering, "Array with media_item_ids and ordering",
+              required: true
     parameter :media_item_id, "Timeslot's internal ID for this media item",
               required: true,
               scope: :media_ordering
@@ -170,8 +172,9 @@ resource "Slots" do
     let(:raw_post) { media_reordering.to_json }
 
     example "Reordering images of existing slot.", document: :v1 do
-      explanation "A key / value hash for all images and their new order" \
-                  " must be send."
+      explanation "An array with the media_items keys and corresponding" \
+                  " ordering number (starting from 0) for all images " \
+                  " of the slot must be send."
       do_request
 
       expect(response_status).to eq(204)
