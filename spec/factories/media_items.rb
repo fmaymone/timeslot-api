@@ -1,10 +1,11 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
-
 FactoryGirl.define do
+  sequence(:ordering, 1) { |n| n % 5 }
+  sequence(:public_id) { |n| "cloudinary-#{n}" }
+
   factory :media_item do
     slot
     media_type "image"
-    public_id "foobar"
-    ordering 1
+    public_id
+    ordering
   end
 end

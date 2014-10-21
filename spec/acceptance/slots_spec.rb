@@ -129,11 +129,55 @@ resource "Slots" do
                   " For validation purposes the signed_identifier is also send."
       do_request
 
-
       expect(response_status).to eq(201)
       json = JSON.parse(response_body)
       expect(json).to have_key("media_item_id")
       expect(Slot.last.media_items.size).to eq(1)
+    end
+  end
+
+  patch "/v1/slots/:id" do
+    header "Content-Type", "application/json"
+
+    parameter :id, "ID of the slot to update",
+              required: true
+    parameter :media_type, "Type of media (image/video/audio)",
+              required: true
+    parameter :media_item_id, "Timeslot's internal ID for this media item",
+              required: true,
+              scope: :media_ordering
+    parameter :ordering, "Order of the image (ignored for video/audio)",
+              required: true,
+              scope: :media_ordering
+
+    let!(:slot) { create(:slot) }
+    let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
+    let!(:media_item_2) { create(:media_item, slot: slot, ordering: 1) }
+    let!(:media_item_3) { create(:media_item, slot: slot, ordering: 2) }
+
+    let(:id) { slot.id }
+    let(:media_reordering) do
+      { media_type: "image",
+        media_ordering: [
+          { media_item_id: media_item_1.id,
+            ordering: 2 },
+          { media_item_id: media_item_2.id,
+            ordering: 0 },
+          { media_item_id: media_item_3.id,
+            ordering: 1 }
+        ] }
+    end
+    let(:raw_post) { media_reordering.to_json }
+
+    example "Reordering images of existing slot.", document: :v1 do
+      explanation "A key / value hash for all images and their new order" \
+                  " must be send."
+      do_request
+
+      expect(response_status).to eq(204)
+      expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
+      expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
+      expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)
     end
   end
 
