@@ -102,23 +102,22 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update",
               required: true
-    parameter :signed_identifier, "Calculated from cloudinary upload response",
+    parameter :new_media, "Scope for attributes of new media item",
               required: true
     parameter :media_type, "Type of media (image/video/audio)",
               required: true,
-              scope: :media
+              scope: :new_media
     parameter :public_id, "Calculated from cloudinary upload response",
               required: true,
-              scope: :media
+              scope: :new_media
     parameter :ordering, "Order of the image (ignored for video/audio)",
-              scope: :media
+              scope: :new_media
 
     response_field :media_item_id, "Timeslot's internal ID for this media item"
 
     let!(:slot) { create(:slot) }
     let(:id) { slot.id }
     let(:media_type) { "image" }
-    let(:signed_identifier) { "image/upload/v1234567/dfhjghjkdisudgfds7iyf.jpg#298hg20j2eoalgh3ekl" }
     let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
     let(:ordering) { "1" }
 
@@ -143,14 +142,14 @@ resource "Slots" do
               required: true
     parameter :media_type, "Type of media (image/video/audio)",
               required: true
-    parameter :media_ordering, "Array with media_item_ids and ordering",
+    parameter :ordering_media, "Array with media_item_ids and ordering",
               required: true
     parameter :media_item_id, "Timeslot's internal ID for this media item",
               required: true,
-              scope: :media_ordering
+              scope: :ordering_media
     parameter :ordering, "Order of the image (ignored for video/audio)",
               required: true,
-              scope: :media_ordering
+              scope: :ordering_media
 
     let!(:slot) { create(:slot) }
     let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
@@ -160,7 +159,7 @@ resource "Slots" do
     let(:id) { slot.id }
     let(:media_reordering) do
       { media_type: "image",
-        media_ordering: [
+        ordering_media: [
           { media_item_id: media_item_1.id,
             ordering: 2 },
           { media_item_id: media_item_2.id,
@@ -177,7 +176,7 @@ resource "Slots" do
                   " of the slot must be send."
       do_request
 
-      expect(response_status).to eq(204)
+      expect(response_status).to eq(200)
       expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
       expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
       expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)

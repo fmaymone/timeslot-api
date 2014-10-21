@@ -22,9 +22,7 @@ module V1
     def update
       @slot = Slot.find(params.require(:id))
 
-      if params[:signed_identifier].present? &&
-         params[:media].present? &&
-         add_new_media?
+      if add_new_media?
         render "v1/media/create", status: :created
       elsif @slot.update_attributes(slot_update_params)
         head :no_content
@@ -50,10 +48,12 @@ module V1
     end
 
     private def media_item_create_params
-      params.require(:media).permit(:public_id, :ordering, :media_type)
+      params.require(:new_media).permit(:public_id, :ordering, :media_type)
     end
 
     private def add_new_media?
+      return false if params[:new_media].blank?
+
       @media_item = MediaItem.create(media_item_create_params)
       @slot.media_items << @media_item
       @media_item.save

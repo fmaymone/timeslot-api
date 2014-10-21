@@ -235,10 +235,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       describe "handling media items" do
-        let(:media_item) do
-          { signed_identifier: "abc",
-            media: media }
-        end
+        let(:media_item) { { new_media: media } }
 
         context "images" do
           let(:media) do
