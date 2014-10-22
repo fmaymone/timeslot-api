@@ -235,9 +235,10 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       describe "handling media items" do
-        let(:media_item) { { new_media: media } }
+        let!(:slot) { create(:slot) }
+        let(:add_media_item) { { new_media: media } }
 
-        context "images" do
+        context "adding images" do
           let(:media) do
             { media_type: "image",
               public_id: "foo-image",
@@ -245,35 +246,127 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "returns a media_item_id" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             json = JSON.parse(response.body)
             expect(json).to have_key('media_item_id')
           end
 
           it "returns the ID of new media_item" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             json = JSON.parse(response.body)
             expect(json['media_item_id']).to eq(slot.media_items[0].id)
           end
 
           it "adds a new image" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             expect(slot.media_items.size).to eq(1)
           end
 
           it "adds the submitted image to the db" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             expect(slot.media_items[0].media_type).to eq(media[:media_type])
             expect(slot.media_items[0].public_id).to eq(media[:public_id])
             expect(slot.media_items[0].ordering).to eq(media[:ordering].to_i)
+          end
+
+          it "adds an additional new image" do
+            create(:media_item, slot: slot, ordering: 0)
+
+            patch "/v1/slots/#{slot.id}", add_media_item
+            slot.reload
+            expect(slot.media_items.size).to eq(2)
+          end
+
+          it "adds a 2nd  submitted image to the db" do
+            create(:media_item, slot: slot, ordering: 0)
+
+            patch "/v1/slots/#{slot.id}", add_media_item
+            slot.reload
+            expect(slot.media_items[1].media_type).to eq(media[:media_type])
+            expect(slot.media_items[1].public_id).to eq(media[:public_id])
+            expect(slot.media_items[1].ordering).to eq(media[:ordering].to_i)
+          end
+        end
+
+        describe "reordering images" do
+          let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
+          let!(:media_item_2) { create(:media_item, slot: slot, ordering: 1) }
+          let!(:media_item_3) { create(:media_item, slot: slot, ordering: 2) }
+
+          context "with valid params" do
+            let(:media_reordering) do
+              { media_type: "image",
+                ordering_media: [
+                  { media_item_id: media_item_1.id,
+                    ordering: 2 },
+                  { media_item_id: media_item_2.id,
+                    ordering: 0 },
+                  { media_item_id: media_item_3.id,
+                    ordering: 1 }
+                ] }
+            end
+
+            it "returns success" do
+              patch "/v1/slots/#{slot.id}", media_reordering
+              slot.reload
+              expect(response).to have_http_status(:ok)
+            end
+
+            it "reorders media items" do
+              patch "/v1/slots/#{slot.id}", media_reordering
+              slot.reload
+              expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
+              expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
+              expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)
+            end
+          end
+
+          context "with invalid params" do
+            describe "media_item_id" do
+              let(:invalid_id) { media_item_3.id + 1 }
+              let(:media_reordering) do
+                { media_type: "image",
+                  ordering_media: [
+                    { media_item_id: media_item_1.id,
+                      ordering: 2 },
+                    { media_item_id: media_item_2.id,
+                      ordering: 0 },
+                    { media_item_id: invalid_id,
+                      ordering: 1 }
+                  ] }
+              end
+
+              it "returns 404" do
+                patch "/v1/slots/#{slot.id}", media_reordering
+                slot.reload
+                expect(response).to have_http_status(:not_found)
+              end
+            end
+
+            describe "ordering" do
+              let(:invalid_id) { media_item_3.id + 1 }
+              let(:media_reordering) do
+                { media_type: "image",
+                  ordering_media: [
+                    { media_item_id: media_item_1.id,
+                      ordering: 1 },
+                    { media_item_id: media_item_2.id,
+                      ordering: 0 },
+                    { media_item_id: media_item_3.id,
+                      ordering: 1 }
+                  ] }
+              end
+
+              it "returns 422" do
+                patch "/v1/slots/#{slot.id}", media_reordering
+                slot.reload
+                expect(response).to have_http_status(:unprocessable_entity)
+              end
+            end
           end
         end
 
@@ -285,8 +378,7 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "adds a new video" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             expect(slot.media_items[0].media_type).to eq(media[:media_type])
           end
@@ -300,8 +392,7 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "adds a new audio item" do
-            slot = create(:slot)
-            patch "/v1/slots/#{slot.id}", media_item
+            patch "/v1/slots/#{slot.id}", add_media_item
             slot.reload
             expect(slot.media_items[0].media_type).to eq(media[:media_type])
           end
