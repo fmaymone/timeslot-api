@@ -135,19 +135,6 @@ RSpec.describe V1::SlotsController, type: :controller do
       expect(result).to eq true
     end
 
-    it "returns false if duplicate ordering numbers" do
-      param = [
-        { media_item_id: 1,
-          ordering: 2 },
-        { media_item_id: 2,
-          ordering: 1 },
-        { media_item_id: 3,
-          ordering: 1 }
-      ]
-      result = controller.instance_eval { valid_ordering? param }
-      expect(result).to eq false
-    end
-
     it "returns false if gaps in the ordering numbers" do
       param = [
         { media_item_id: 1,

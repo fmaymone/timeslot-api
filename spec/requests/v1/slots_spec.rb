@@ -324,7 +324,6 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/slots/#{slot.id}", add_media_item
             expect(response).to have_http_status(:unprocessable_entity)
           end
-
         end
 
         describe "reordering images" do
@@ -382,7 +381,6 @@ RSpec.describe "V1::Slots", type: :request do
             end
 
             describe "ordering" do
-              let(:invalid_id) { media_item_3.id + 1 }
               let(:media_reordering) do
                 { media_type: "image",
                   ordering_media: [
@@ -399,6 +397,13 @@ RSpec.describe "V1::Slots", type: :request do
                 patch "/v1/slots/#{slot.id}", media_reordering
                 slot.reload
                 expect(response).to have_http_status(:unprocessable_entity)
+              end
+
+              it "returns duplicate ordering numbers" do
+                patch "/v1/slots/#{slot.id}", media_reordering
+                json = JSON.parse(response.body)
+                expect(json).to have_key('duplicate_ordering')
+                expect(json['duplicate_ordering']).to eq [1]
               end
             end
           end

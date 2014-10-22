@@ -101,8 +101,9 @@ module V1
     private def valid_ordering?(parameter)
       arr = parameter.map { |i| i[:ordering].to_i }
       no_gaps = arr.size > arr.max
-      no_dups = arr.uniq!.nil?
-      no_dups && no_gaps
+      dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
+      @slot.errors.add(:duplicate_ordering, dups) if dups
+      dups.nil? && no_gaps
     end
   end
 end
