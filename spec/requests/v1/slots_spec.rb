@@ -312,6 +312,30 @@ RSpec.describe "V1::Slots", type: :request do
               expect(slot.media_items[1].ordering).to eq(new_ordering)
             end
           end
+
+          context "existing ordering parameter" do
+            let(:media) do
+              { media_type: "image",
+                public_id: "foo-image",
+                ordering: "0" }
+            end
+
+            it "updates existing ordering" do
+              existing_1 = create(:media_item, slot: slot, ordering: 0)
+              existing_2 = create(:media_item, slot: slot, ordering: 1)
+
+              patch "/v1/slots/#{slot.id}", add_media_item
+
+              expect(response).to have_http_status(:created)
+              slot.reload
+              existing_1.reload
+              existing_2.reload
+
+              expect(existing_1.ordering).to eq 1
+              expect(existing_2.ordering).to eq 2
+              expect(slot.media_items.last.ordering).to eq media[:ordering].to_i
+            end
+          end
         end
 
         context "adding images with invalid params" do

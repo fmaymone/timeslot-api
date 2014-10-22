@@ -47,13 +47,19 @@ module V1
       params.permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
     end
 
-    private def media_item_create_params
-      atts = params.require(:new_media)
-             .permit(:public_id, :ordering, :media_type)
+    private def ordering_param
+      atts = media_item_create_params
+
       unless atts.key? :ordering
         atts.merge!(ordering: @slot.media_items.size)
       end
-      atts
+      atts.require(:ordering)
+    end
+
+    private def media_item_create_params
+      # cache to behold eventually added ordering param
+      @atts = @atts || params.require(:new_media)
+                      .permit(:public_id, :ordering, :media_type)
     end
 
     private def media_data?
@@ -73,6 +79,9 @@ module V1
     end
 
     private def add_media
+      if (ordering_param.to_i < @slot.media_items.size)
+        needs_ordering_update
+      end
       @media_item = MediaItem.create(media_item_create_params)
       @slot.media_items << @media_item
 
@@ -81,6 +90,15 @@ module V1
       else
         render json: @slot.errors.add(:media_item, @media_item.errors),
                status: :unprocessable_entity
+      end
+    end
+
+    private def needs_ordering_update
+      media_items = @slot.media_items.where(
+        "media_items.ordering >= ?", ordering_param).to_a
+
+      media_items.each do |item|
+        item.update(ordering: item.ordering += 1)
       end
     end
 
