@@ -238,11 +238,16 @@ RSpec.describe "V1::Slots", type: :request do
         let!(:slot) { create(:slot) }
         let(:add_media_item) { { new_media: media } }
 
-        context "adding images" do
+        context "adding images with valid params" do
           let(:media) do
             { media_type: "image",
               public_id: "foo-image",
               ordering: "1" }
+          end
+
+          it "returns success" do
+            patch "/v1/slots/#{slot.id}", add_media_item
+            expect(response).to have_http_status(:created)
           end
 
           it "returns a media_item_id" do
@@ -290,6 +295,36 @@ RSpec.describe "V1::Slots", type: :request do
             expect(slot.media_items[1].public_id).to eq(media[:public_id])
             expect(slot.media_items[1].ordering).to eq(media[:ordering].to_i)
           end
+
+          context "missing ordering parameter" do
+            let(:media) do
+              { media_type: "image",
+                public_id: "foo-image" }
+            end
+
+            it "adds a missing ordering parameter" do
+              create(:media_item, slot: slot, ordering: 0)
+              new_ordering = slot.media_items.size
+              patch "/v1/slots/#{slot.id}", add_media_item
+
+              expect(response).to have_http_status(:created)
+              slot.reload
+              expect(slot.media_items[1].ordering).to eq(new_ordering)
+            end
+          end
+        end
+
+        context "adding images with invalid params" do
+          let(:media) do
+            { media_type: "image",
+              ordering: "0" }
+          end
+
+          it "returns 422" do
+            patch "/v1/slots/#{slot.id}", add_media_item
+            expect(response).to have_http_status(:unprocessable_entity)
+          end
+
         end
 
         describe "reordering images" do
@@ -312,7 +347,6 @@ RSpec.describe "V1::Slots", type: :request do
 
             it "returns success" do
               patch "/v1/slots/#{slot.id}", media_reordering
-              slot.reload
               expect(response).to have_http_status(:ok)
             end
 

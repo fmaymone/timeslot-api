@@ -48,7 +48,12 @@ module V1
     end
 
     private def media_item_create_params
-      params.require(:new_media).permit(:public_id, :ordering, :media_type)
+      atts = params.require(:new_media)
+             .permit(:public_id, :ordering, :media_type)
+      unless atts.key? :ordering
+        atts.merge!(ordering: @slot.media_items.size)
+      end
+      atts
     end
 
     private def media_data?
@@ -74,8 +79,8 @@ module V1
       if @slot.save
         render "v1/media/create", status: :created
       else
-        render json: @slot.errors, status: :unprocessable_entity
-        # render json: @media_item.errors, status: :unprocessable_entity
+        render json: @slot.errors.add(:media_item, @media_item.errors),
+               status: :unprocessable_entity
       end
     end
 
