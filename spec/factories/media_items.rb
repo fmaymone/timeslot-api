@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  sequence(:ordering, 1) { |n| n % 5 }
+  sequence(:ordering, 0)
   sequence(:public_id) { |n| "cloudinary-#{n}" }
 
   factory :media_item do
