@@ -86,4 +86,16 @@ RSpec.configure do |config|
       Bullet.end_request
     end
   end
+
+  config.around(:each, db: true) do |example|
+    with_std_out_logger { example.run }
+  end
+end
+
+def with_std_out_logger
+  default_logger = ActiveRecord::Base.logger
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  yield
+ensure
+  ActiveRecord::Base.logger = default_logger
 end
