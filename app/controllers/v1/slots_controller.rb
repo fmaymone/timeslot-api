@@ -47,19 +47,12 @@ module V1
       params.permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
     end
 
-    private def ordering_param
-      atts = media_item_create_params
-
-      unless atts.key? :ordering
-        atts.merge!(ordering: @slot.media_items.size)
-      end
-      atts.require(:ordering)
+    private def media_item_create_params
+      params.require(:new_media).permit(:public_id, :ordering, :media_type)
     end
 
-    private def media_item_create_params
-      # cache to behold eventually added ordering param
-      @atts = @atts || params.require(:new_media)
-                      .permit(:public_id, :ordering, :media_type)
+    private def ordering_param
+      media_item_create_params.require(:ordering)
     end
 
     private def media_data?
@@ -68,8 +61,13 @@ module V1
 
     private def update_media
       if params[:new_media].present?
-        add_media
-      elsif params[:ordering_media].present?
+        if add_media?
+          render "v1/media/create", status: :created
+        else
+          render json: @slot.errors.add(:media_item, @media_item.errors),
+                 status: :unprocessable_entity
+        end
+      else
         if reorder_media?
           head :ok
         else
@@ -78,19 +76,18 @@ module V1
       end
     end
 
-    private def add_media
-      if (ordering_param.to_i < @slot.media_items.size)
+    private def add_media?
+      new_media = media_item_create_params
+
+      if !new_media.key? :ordering
+        new_media.merge!(ordering: @slot.media_items.size)
+      elsif ordering_param.to_i < @slot.media_items.size
         needs_ordering_update
       end
-      @media_item = MediaItem.create(media_item_create_params)
-      @slot.media_items << @media_item
 
-      if @slot.save
-        render "v1/media/create", status: :created
-      else
-        render json: @slot.errors.add(:media_item, @media_item.errors),
-               status: :unprocessable_entity
-      end
+      @media_item = MediaItem.create(new_media)
+      @slot.media_items << @media_item
+      @slot.save
     end
 
     private def needs_ordering_update
