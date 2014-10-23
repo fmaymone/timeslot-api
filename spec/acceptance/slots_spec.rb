@@ -15,10 +15,11 @@ resource "Slots" do
     response_field :visibility, "Visibiltiy of the slot"
     response_field :alerts, "Alerts for the slot"
     response_field :media, "Media Items of the slot"
+    response_field :created_at, "Creation of slot"
+    response_field :updated_at, "Latest update of slot in db"
 
     let(:slot) { create(:slot, :with_media) }
     let(:id) { slot.id }
-
 
     example "Get a specific slot", document: :v1 do
       do_request
@@ -32,7 +33,9 @@ resource "Slots" do
                "enddate" => slot.enddate.iso8601,
                "note" => slot.note,
                "visibility" => slot.visibility,
-               "alerts" => slot.alerts
+               "alerts" => slot.alerts,
+               "created_at" => slot.created_at.iso8601,
+               "updated_at" => slot.updated_at.iso8601
               )
       expect(json["media"].length).to eq(slot.media_items.length)
     end

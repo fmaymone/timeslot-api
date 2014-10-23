@@ -20,8 +20,8 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json).to have_key('note')
         expect(json).to have_key('visibility')
         expect(json).to have_key('alerts')
-        expect(json).to_not have_key('created_at')
-        expect(json).to_not have_key('updated_at')
+        expect(json).to have_key('created_at')
+        expect(json).to have_key('updated_at')
       end
 
       it "does return the correct attributes" do
