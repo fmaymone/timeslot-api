@@ -104,7 +104,7 @@ module V1
 
       media_items = @slot.media_items
       par = params[:ordering_media]
-      # TODO: IMP remove n+1 query
+      # TODO: might need to validate new media item before reordering
       par.each do |item|
         item_id = item[:media_item_id]
         item_order = item[:ordering]
