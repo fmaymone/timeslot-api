@@ -59,6 +59,8 @@ group :development, :test do
   gem 'shoulda-matchers', require: false
 
   gem 'faker'
+
+  gem 'bullet'
 end
 
 ruby '2.1.1'
