@@ -179,7 +179,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/slots/:id" do
-    context "with valid params" do
+    context "with valid non-media params" do
       it "responds with http status No Content (204)" do
         patch "/v1/slots/#{slot.id}", { title: "Something" }
         expect(response).to have_http_status(:no_content)
@@ -233,237 +233,9 @@ RSpec.describe "V1::Slots", type: :request do
         slot.reload
         expect(slot.alerts).to eq("1111011110")
       end
-
-      describe "handling media items" do
-        let!(:slot) { create(:slot) }
-        let(:add_media_item) { { new_media: media } }
-
-        context "adding images with valid params" do
-          let(:media) do
-            { media_type: "image",
-              public_id: "foo-image",
-              ordering: "1" }
-          end
-
-          it "returns success" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            expect(response).to have_http_status(:created)
-          end
-
-          it "returns a media_item_id" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            json = JSON.parse(response.body)
-            expect(json).to have_key('media_item_id')
-          end
-
-          it "returns the ID of new media_item" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            json = JSON.parse(response.body)
-            expect(json['media_item_id']).to eq(slot.media_items[0].id)
-          end
-
-          it "adds a new image" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items.size).to eq(1)
-          end
-
-          it "adds the submitted image to the db" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items[0].media_type).to eq(media[:media_type])
-            expect(slot.media_items[0].public_id).to eq(media[:public_id])
-            expect(slot.media_items[0].ordering).to eq(media[:ordering].to_i)
-          end
-
-          it "adds an additional new image" do
-            create(:media_item, slot: slot, ordering: 0)
-
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items.size).to eq(2)
-          end
-
-          it "adds a 2nd  submitted image to the db" do
-            create(:media_item, slot: slot, ordering: 0)
-
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items[1].media_type).to eq(media[:media_type])
-            expect(slot.media_items[1].public_id).to eq(media[:public_id])
-            expect(slot.media_items[1].ordering).to eq(media[:ordering].to_i)
-          end
-
-          context "missing ordering parameter" do
-            let(:media) do
-              { media_type: "image",
-                public_id: "foo-image" }
-            end
-
-            it "adds a missing ordering parameter" do
-              create(:media_item, slot: slot, ordering: 0)
-              new_ordering = slot.media_items.size
-              patch "/v1/slots/#{slot.id}", add_media_item
-
-              expect(response).to have_http_status(:created)
-              slot.reload
-              expect(slot.media_items[1].ordering).to eq(new_ordering)
-            end
-          end
-
-          context "existing ordering parameter" do
-            let(:media) do
-              { media_type: "image",
-                public_id: "foo-image",
-                ordering: "0" }
-            end
-
-            it "updates existing ordering" do
-              existing_1 = create(:media_item, slot: slot, ordering: 0)
-              existing_2 = create(:media_item, slot: slot, ordering: 1)
-
-              patch "/v1/slots/#{slot.id}", add_media_item
-
-              expect(response).to have_http_status(:created)
-              slot.reload
-              existing_1.reload
-              existing_2.reload
-
-              expect(existing_1.ordering).to eq 1
-              expect(existing_2.ordering).to eq 2
-              expect(slot.media_items.last.ordering).to eq media[:ordering].to_i
-            end
-          end
-        end
-
-        context "adding images with invalid params" do
-          let(:media) do
-            { media_type: "image",
-              ordering: "0" }
-          end
-
-          it "returns 422" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            expect(response).to have_http_status(:unprocessable_entity)
-          end
-        end
-
-        describe "reordering images" do
-          let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
-          let!(:media_item_2) { create(:media_item, slot: slot, ordering: 1) }
-          let!(:media_item_3) { create(:media_item, slot: slot, ordering: 2) }
-
-          context "with valid params" do
-            let(:media_reordering) do
-              { media_type: "image",
-                ordering_media: [
-                  { media_item_id: media_item_1.id,
-                    ordering: 2 },
-                  { media_item_id: media_item_2.id,
-                    ordering: 0 },
-                  { media_item_id: media_item_3.id,
-                    ordering: 1 }
-                ] }
-            end
-
-            it "returns success" do
-              patch "/v1/slots/#{slot.id}", media_reordering
-              expect(response).to have_http_status(:ok)
-            end
-
-            it "reorders media items" do
-              patch "/v1/slots/#{slot.id}", media_reordering
-              slot.reload
-              expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
-              expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
-              expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)
-            end
-          end
-
-          context "with invalid params" do
-            describe "media_item_id" do
-              let(:invalid_id) { media_item_3.id + 1 }
-              let(:media_reordering) do
-                { media_type: "image",
-                  ordering_media: [
-                    { media_item_id: media_item_1.id,
-                      ordering: 2 },
-                    { media_item_id: media_item_2.id,
-                      ordering: 0 },
-                    { media_item_id: invalid_id,
-                      ordering: 1 }
-                  ] }
-              end
-
-              it "returns 404" do
-                patch "/v1/slots/#{slot.id}", media_reordering
-                slot.reload
-                expect(response).to have_http_status(:not_found)
-              end
-            end
-
-            describe "ordering" do
-              let(:media_reordering) do
-                { media_type: "image",
-                  ordering_media: [
-                    { media_item_id: media_item_1.id,
-                      ordering: 1 },
-                    { media_item_id: media_item_2.id,
-                      ordering: 0 },
-                    { media_item_id: media_item_3.id,
-                      ordering: 1 }
-                  ] }
-              end
-
-              it "returns 422" do
-                patch "/v1/slots/#{slot.id}", media_reordering
-                slot.reload
-                expect(response).to have_http_status(:unprocessable_entity)
-              end
-
-              it "returns duplicate ordering numbers" do
-                patch "/v1/slots/#{slot.id}", media_reordering
-                json = JSON.parse(response.body)
-                expect(json).to have_key('duplicate_ordering')
-                expect(json['duplicate_ordering']).to eq [1]
-              end
-            end
-          end
-        end
-
-        context "video" do
-          let(:media) do
-            { media_type: "video",
-              public_id: "foo-video",
-              ordering: "1" }
-          end
-
-          it "adds a new video" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items[0].media_type).to eq(media[:media_type])
-          end
-        end
-
-        context "audio" do
-          let(:media) do
-            { media_type: "audio",
-              public_id: "foo-audio",
-              ordering: "1" }
-          end
-
-          it "adds a new audio item" do
-            patch "/v1/slots/#{slot.id}", add_media_item
-            slot.reload
-            expect(slot.media_items[0].media_type).to eq(media[:media_type])
-          end
-        end
-      end
     end
 
-    context "with invalid params" do
+    context "with invalid non-media params" do
       describe "for invalid ID" do
         it "responds with http status Not Found (404)" do
           wrong_id = slot.id + 1
@@ -543,6 +315,234 @@ RSpec.describe "V1::Slots", type: :request do
         it "if to many characters for alerts" do
           patch "/v1/slots/#{slot.id}", { alerts: "11101101100" }
           expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+    end
+
+    describe "handling media items" do
+      let!(:slot) { create(:slot) }
+      let(:add_media_item) { { new_media: media } }
+
+      context "add images with valid params" do
+        let(:media) do
+          { media_type: "image",
+            public_id: "foo-image",
+            ordering: "1" }
+        end
+
+        it "returns success" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          expect(response).to have_http_status(:created)
+        end
+
+        it "returns a media_item_id" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          json = JSON.parse(response.body)
+          expect(json).to have_key('media_item_id')
+        end
+
+        it "returns the ID of new media_item" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          json = JSON.parse(response.body)
+          expect(json['media_item_id']).to eq(slot.media_items[0].id)
+        end
+
+        it "adds a new image" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items.size).to eq(1)
+        end
+
+        it "adds the submitted image to the db" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items[0].media_type).to eq(media[:media_type])
+          expect(slot.media_items[0].public_id).to eq(media[:public_id])
+          expect(slot.media_items[0].ordering).to eq(media[:ordering].to_i)
+        end
+
+        it "adds an additional new image" do
+          create(:media_item, slot: slot, ordering: 0)
+
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items.size).to eq(2)
+        end
+
+        it "adds a 2nd  submitted image to the db" do
+          create(:media_item, slot: slot, ordering: 0)
+
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items[1].media_type).to eq(media[:media_type])
+          expect(slot.media_items[1].public_id).to eq(media[:public_id])
+          expect(slot.media_items[1].ordering).to eq(media[:ordering].to_i)
+        end
+
+        context "missing ordering parameter" do
+          let(:media) do
+            { media_type: "image",
+              public_id: "foo-image" }
+          end
+
+          it "adds it" do
+            create(:media_item, slot: slot, ordering: 0)
+            new_ordering = slot.media_items.size
+            patch "/v1/slots/#{slot.id}", add_media_item
+
+            expect(response).to have_http_status(:created)
+            slot.reload
+            expect(slot.media_items[1].ordering).to eq(new_ordering)
+          end
+        end
+
+        context "existing ordering parameter" do
+          let(:media) do
+            { media_type: "image",
+              public_id: "foo-image",
+              ordering: "0" }
+          end
+
+          it "updates existing ordering" do
+            existing_1 = create(:media_item, slot: slot, ordering: 0)
+            existing_2 = create(:media_item, slot: slot, ordering: 1)
+
+            patch "/v1/slots/#{slot.id}", add_media_item
+
+            expect(response).to have_http_status(:created)
+            slot.reload
+            existing_1.reload
+            existing_2.reload
+
+            expect(existing_1.ordering).to eq 1
+            expect(existing_2.ordering).to eq 2
+            expect(slot.media_items.last.ordering).to eq media[:ordering].to_i
+          end
+        end
+      end
+
+      context "add images with invalid params" do
+        let(:media) do
+          { media_type: "image",
+            ordering: "0" }
+        end
+
+        it "returns 422 if public_id is missing" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+
+      describe "reorder images" do
+        let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
+        let!(:media_item_2) { create(:media_item, slot: slot, ordering: 1) }
+        let!(:media_item_3) { create(:media_item, slot: slot, ordering: 2) }
+
+        context "with valid params" do
+          let(:media_reordering) do
+            { media_type: "image",
+              ordering_media: [
+                { media_item_id: media_item_1.id,
+                  ordering: 2 },
+                { media_item_id: media_item_2.id,
+                  ordering: 0 },
+                { media_item_id: media_item_3.id,
+                  ordering: 1 }
+              ] }
+          end
+
+          it "returns success" do
+            patch "/v1/slots/#{slot.id}", media_reordering
+            expect(response).to have_http_status(:ok)
+          end
+
+          it "reorders media items" do
+            patch "/v1/slots/#{slot.id}", media_reordering
+            slot.reload
+            expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
+            expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
+            expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)
+          end
+        end
+
+        context "with invalid params" do
+          describe "media_item_id" do
+            let(:invalid_id) { media_item_3.id + 1 }
+            let(:media_reordering) do
+              { media_type: "image",
+                ordering_media: [
+                  { media_item_id: media_item_1.id,
+                    ordering: 2 },
+                  { media_item_id: media_item_2.id,
+                    ordering: 0 },
+                  { media_item_id: invalid_id,
+                    ordering: 1 }
+                ] }
+            end
+
+            it "returns 404" do
+              patch "/v1/slots/#{slot.id}", media_reordering
+              slot.reload
+              expect(response).to have_http_status(:not_found)
+            end
+          end
+
+          describe "ordering" do
+            let(:media_reordering) do
+              { media_type: "image",
+                ordering_media: [
+                  { media_item_id: media_item_1.id,
+                    ordering: 1 },
+                  { media_item_id: media_item_2.id,
+                    ordering: 0 },
+                  { media_item_id: media_item_3.id,
+                    ordering: 1 }
+                ] }
+            end
+
+            it "returns 422" do
+              patch "/v1/slots/#{slot.id}", media_reordering
+              slot.reload
+              expect(response).to have_http_status(:unprocessable_entity)
+            end
+
+            it "returns duplicate ordering numbers" do
+              patch "/v1/slots/#{slot.id}", media_reordering
+              json = JSON.parse(response.body)
+              expect(json).to have_key('duplicate_ordering')
+              expect(json['duplicate_ordering']).to eq [1]
+            end
+          end
+        end
+      end
+
+      context "video" do
+        let(:media) do
+          { media_type: "video",
+            public_id: "foo-video",
+            ordering: "1" }
+        end
+
+        it "adds a new video" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items[0].media_type).to eq(media[:media_type])
+        end
+      end
+
+      context "audio" do
+        let(:media) do
+          { media_type: "audio",
+            public_id: "foo-audio",
+            ordering: "1" }
+        end
+
+        it "adds a new audio item" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          slot.reload
+          expect(slot.media_items[0].media_type).to eq(media[:media_type])
         end
       end
     end
