@@ -4,6 +4,6 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
-    render json: exception.message, status: :unprocessable_entity
+    render json: { pgerror: exception.message }, status: :unprocessable_entity
   end
 end
