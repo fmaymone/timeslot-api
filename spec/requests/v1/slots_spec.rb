@@ -532,14 +532,14 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
-      context "audio" do
+      context "voice" do
         let(:media) do
-          { media_type: "audio",
-            public_id: "foo-audio",
+          { media_type: "voice",
+            public_id: "foo-voice",
             ordering: "1" }
         end
 
-        it "adds a new audio item" do
+        it "adds a new voice item" do
           patch "/v1/slots/#{slot.id}", add_media_item
           slot.reload
           expect(slot.media_items[0].media_type).to eq(media[:media_type])

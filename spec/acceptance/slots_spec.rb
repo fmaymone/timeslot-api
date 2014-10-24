@@ -164,15 +164,14 @@ resource "Slots" do
 
       parameter :new_media, "Scope for attributes of new media item",
                 required: true
-      parameter :media_type, "Type of media (image/video/audio)",
+      parameter :media_type, "Type of media (image/video/voice)",
                 required: true,
                 scope: :new_media
-      parameter :public_id, "Calculated from cloudinary upload response",
+      parameter :public_id, "Cloudinary ID / URL",
                 required: true,
                 scope: :new_media
-      parameter :ordering, "Order of the image (ignored for video/audio)." \
-                           " If not submitted new media item will be added" \
-                           " as last one",
+      parameter :ordering, "Order of the new media item." \
+                           " If not submitted it will be added last one",
                 scope: :new_media
 
       response_field :media_item_id, "Timeslot internal ID for this media item"
@@ -200,14 +199,14 @@ resource "Slots" do
 
     describe "Reordering media data of existing slot" do
 
-      parameter :media_type, "Type of media (image/video/audio)",
+      parameter :media_type, "Type of media (image/video/voice)",
                 required: true
       parameter :ordering_media, "Array with media_item_ids and ordering",
                 required: true
       parameter :media_item_id, "Timeslot's internal ID for this media item",
                 required: true,
                 scope: :ordering_media
-      parameter :ordering, "Order of the image (ignored for video/audio)",
+      parameter :ordering, "Order of the image (ignored for video/voice)",
                 required: true,
                 scope: :ordering_media
 

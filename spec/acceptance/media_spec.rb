@@ -11,7 +11,7 @@ resource "Media" do
 
     example "Get a new cloudinary signature", document: :v1 do
       explanation "Cloundinary signed parameters to be used for client side" \
-                  " image or raw data (audio/video) uploading"
+                  " image or raw data (voice/video) upload."
       do_request
 
       json = JSON.parse(response_body)
