@@ -12,7 +12,7 @@ FactoryGirl.define do
 
   trait :with_media do
     after :create do |slot|
-      FactoryGirl.create_list :media_item, 3, mediable: slot
+      FactoryGirl.create_list :slot_image, 3, mediable: slot
     end
   end
 end

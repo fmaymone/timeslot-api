@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MediaItem, type: :model do
-  let(:media_item) { build(:media_item) }
+  let(:media_item) { build(:slot_image) }
 
   subject { media_item }
 

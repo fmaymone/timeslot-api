@@ -364,7 +364,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "adds an additional new image" do
-          create(:media_item, mediable: slot, ordering: 0)
+          create(:slot_image, mediable: slot, ordering: 0)
 
           patch "/v1/slots/#{slot.id}", add_media_item
           slot.reload
@@ -372,7 +372,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "adds a 2nd  submitted image to the db" do
-          create(:media_item, mediable: slot, ordering: 0)
+          create(:slot_image, mediable: slot, ordering: 0)
 
           patch "/v1/slots/#{slot.id}", add_media_item
           new_media_item = MediaItem.last
@@ -388,7 +388,7 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "adds it" do
-            create(:media_item, mediable: slot, ordering: 0)
+            create(:slot_image, mediable: slot, ordering: 0)
             new_ordering = slot.media_items.size
             patch "/v1/slots/#{slot.id}", add_media_item
 
@@ -406,8 +406,8 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "updates existing ordering" do
-            existing_1 = create(:media_item, mediable: slot, ordering: 0)
-            existing_2 = create(:media_item, mediable: slot, ordering: 1)
+            existing_1 = create(:slot_image, mediable: slot, ordering: 0)
+            existing_2 = create(:slot_image, mediable: slot, ordering: 1)
 
             patch "/v1/slots/#{slot.id}", add_media_item
 
@@ -436,9 +436,9 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       describe "reorder images" do
-        let!(:media_item_1) { create(:media_item, mediable: slot, ordering: 0) }
-        let!(:media_item_2) { create(:media_item, mediable: slot, ordering: 1) }
-        let!(:media_item_3) { create(:media_item, mediable: slot, ordering: 2) }
+        let!(:media_item_1) { create(:slot_image, mediable: slot, ordering: 0) }
+        let!(:media_item_2) { create(:slot_image, mediable: slot, ordering: 1) }
+        let!(:media_item_3) { create(:slot_image, mediable: slot, ordering: 2) }
 
         context "with valid params" do
           let(:media_reordering) do
