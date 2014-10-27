@@ -68,7 +68,7 @@ module V1
                  status: :unprocessable_entity
         end
       else
-        if reorder_media?
+        if MediaItem.reorder_media? params[:ordering_media]
           head :ok
         else
           render json: @slot.errors, status: :unprocessable_entity
@@ -97,28 +97,6 @@ module V1
       media_items.each do |item|
         item.update(ordering: item.ordering += 1)
       end
-    end
-
-    private def reorder_media?
-      return false unless valid_ordering? params[:ordering_media]
-
-      media_items = @slot.media_items
-      par = params[:ordering_media]
-      # TODO: might need to validate new media item before reordering
-      par.each do |item|
-        item_id = item[:media_item_id]
-        item_order = item[:ordering]
-        media_items.find(item_id).update(ordering: item_order)
-      end
-      @slot.save
-    end
-
-    private def valid_ordering?(parameter)
-      arr = parameter.map { |i| i[:ordering].to_i }
-      no_gaps = arr.size > arr.max
-      dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
-      @slot.errors.add(:duplicate_ordering, dups) if dups
-      dups.nil? && no_gaps
     end
   end
 end

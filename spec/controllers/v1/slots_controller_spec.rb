@@ -118,47 +118,4 @@ RSpec.describe V1::SlotsController, type: :controller do
       }.to change(Slot, :count).by(-1)
     end
   end
-
-  describe ".valid_ordering?"  do
-    let(:controller) { described_class.new }
-
-    it "returns true if order is valid" do
-      param = [
-        { media_item_id: 1,
-          ordering: 2 },
-        { media_item_id: 2,
-          ordering: 0 },
-        { media_item_id: 3,
-          ordering: 1 }
-      ]
-      result = controller.instance_eval { valid_ordering? param }
-      expect(result).to eq true
-    end
-
-    it "returns false if gaps in the ordering numbers" do
-      param = [
-        { media_item_id: 1,
-          ordering: 3 },
-        { media_item_id: 2,
-          ordering: 0 },
-        { media_item_id: 3,
-          ordering: 1 }
-      ]
-      result = controller.instance_eval { valid_ordering? param }
-      expect(result).to eq false
-    end
-
-    it "returns false if the ordering numbers don't start with 0" do
-      param = [
-        { media_item_id: 1,
-          ordering: 2 },
-        { media_item_id: 2,
-          ordering: 3 },
-        { media_item_id: 3,
-          ordering: 1 }
-      ]
-      result = controller.instance_eval { valid_ordering? param }
-      expect(result).to eq false
-    end
-  end
 end

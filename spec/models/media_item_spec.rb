@@ -37,4 +37,46 @@ RSpec.describe MediaItem, type: :model do
     before { media_item.mediable_type = nil }
     it { is_expected.to_not be_valid }
   end
+
+  describe ".valid_ordering?"  do
+    it "returns true if order is valid" do
+      param = [
+        { media_item_id: 1,
+          ordering: 2 },
+        { media_item_id: 2,
+          ordering: 0 },
+        { media_item_id: 3,
+          ordering: 1 }
+      ]
+      result = described_class.valid_ordering? param
+      expect(result).to eq true
+    end
+
+    it "returns false if gaps in the ordering numbers" do
+      param = [
+        { media_item_id: 1,
+          ordering: 3 },
+        { media_item_id: 2,
+          ordering: 0 },
+        { media_item_id: 3,
+          ordering: 1 }
+      ]
+      result = described_class.valid_ordering? param
+      expect(result).to eq false
+    end
+
+    it "returns false if the ordering numbers don't start with 0" do
+      param = [
+        { media_item_id: 1,
+          ordering: 2 },
+        { media_item_id: 2,
+          ordering: 3 },
+        { media_item_id: 3,
+          ordering: 1 }
+      ]
+      result = described_class.valid_ordering? param
+      expect(result).to eq false
+    end
+  end
+
 end
