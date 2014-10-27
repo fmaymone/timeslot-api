@@ -171,7 +171,7 @@ resource "Slots" do
                 required: true,
                 scope: :new_media
       parameter :ordering, "Order of the new media item." \
-                           " If not submitted it will be added last one",
+                           " If not submitted it will be added at the end",
                 scope: :new_media
 
       response_field :media_item_id, "Timeslot internal ID for this media item"
@@ -182,7 +182,7 @@ resource "Slots" do
       let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
-      example "Adding media items to existing slot returns created",
+      example "Adding media items to existing slot returns ID & status created",
               document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
