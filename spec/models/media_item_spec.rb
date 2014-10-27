@@ -8,7 +8,8 @@ RSpec.describe MediaItem, type: :model do
   it { is_expected.to respond_to(:public_id) }
   it { is_expected.to respond_to(:ordering) }
   it { is_expected.to respond_to(:media_type) }
-  it { is_expected.to respond_to(:slot_id) }
+  it { is_expected.to respond_to(:mediable_id) }
+  it { is_expected.to respond_to(:mediable_type) }
 
   it { is_expected.to be_valid }
 
@@ -27,8 +28,13 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when slot_id is not present" do
-    before { media_item.slot_id = nil }
+  describe "when mediable_id is not present" do
+    before { media_item.mediable_id = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when mediable_type is not present" do
+    before { media_item.mediable_type = nil }
     it { is_expected.to_not be_valid }
   end
 end

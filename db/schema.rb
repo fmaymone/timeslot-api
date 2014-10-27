@@ -11,19 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141020110144) do
+ActiveRecord::Schema.define(version: 20141027105619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "media_items", force: true do |t|
-    t.integer  "slot_id"
     t.string   "media_type"
     t.string   "public_id"
     t.integer  "ordering"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "mediable_id"
+    t.string   "mediable_type"
   end
+
+  add_index "media_items", ["mediable_id", "mediable_type"], name: "index_media_items_on_mediable_id_and_mediable_type", using: :btree
 
   create_table "slots", force: true do |t|
     t.string   "title",      limit: 48

@@ -211,9 +211,9 @@ resource "Slots" do
                 scope: :ordering_media
 
       let!(:slot) { create(:slot) }
-      let!(:media_item_1) { create(:media_item, slot: slot, ordering: 0) }
-      let!(:media_item_2) { create(:media_item, slot: slot, ordering: 1) }
-      let!(:media_item_3) { create(:media_item, slot: slot, ordering: 2) }
+      let!(:media_item_1) { create(:media_item, mediable: slot, ordering: 0) }
+      let!(:media_item_2) { create(:media_item, mediable: slot, ordering: 1) }
+      let!(:media_item_3) { create(:media_item, mediable: slot, ordering: 2) }
 
       let(:id) { slot.id }
       let(:media_reordering) do

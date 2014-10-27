@@ -1,5 +1,5 @@
 class Slot < ActiveRecord::Base
-  has_many :media_items, dependent: :destroy
+  has_many :media_items, as: :mediable, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 48 }
   validates :startdate, presence: true
