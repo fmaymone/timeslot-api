@@ -140,13 +140,15 @@ resource "Slots" do
 
     describe "Update/Edit an existing slot with valid non-media params" do
 
-      parameter :title, "Updated title of slot"
-      parameter :startdate, "Updated Startdate and Time of the Slot"
+      parameter :title, "Updated title of slot", scope: :slot
+      parameter :startdate, "Updated Startdate and Time of the Slot",
+                scope: :slot
       parameter :enddate,
-                "Updated Enddate and Time of the Slot (startdate + duration)"
-      parameter :note, "Updated note for to the Slot"
-      parameter :visibility, "Updated visibility for the Slot"
-      parameter :alerts, "Updated alerts for the Slot"
+                "Updated Enddate and Time of the Slot (startdate + duration)",
+                scope: :slot
+      parameter :note, "Updated note for to the Slot", scope: :slot
+      parameter :visibility, "Updated visibility for the Slot", scope: :slot
+      parameter :alerts, "Updated alerts for the Slot", scope: :slot
 
       let!(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }
