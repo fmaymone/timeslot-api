@@ -57,16 +57,18 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :title, "Title of slot", required: true
+    parameter :title, "Title of slot", required: true, scope: :new_slot
     parameter :startdate,
               "Startdate and Time of the Slot",
-              required: true
+              required: true,
+              scope: :new_slot
     parameter :enddate,
               "Enddate and Time of the Slot (startdate + duration)",
-              required: true
-    parameter :note, "A note which belongs to the Slot"
-    parameter :visibility, "Visibility of the Slot"
-    parameter :alerts, "Alerts for the Slot"
+              required: true,
+              scope: :new_slot
+    parameter :note, "A note which belongs to the Slot", scope: :new_slot
+    parameter :visibility, "Visibility of the Slot", scope: :new_slot
+    parameter :alerts, "Alerts for the Slot", scope: :new_slot
 
     describe "Create slot with valid params" do
 
