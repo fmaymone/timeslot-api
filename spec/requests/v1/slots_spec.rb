@@ -433,6 +433,12 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/slots/#{slot.id}", add_media_item
           expect(response).to have_http_status(:unprocessable_entity)
         end
+
+        it "returns the error" do
+          patch "/v1/slots/#{slot.id}", add_media_item
+          expect(response.body).to include 'public_id'
+          expect(response.body).to include 'blank'
+        end
       end
 
       describe "reorder images" do

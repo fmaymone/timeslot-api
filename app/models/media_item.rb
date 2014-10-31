@@ -7,7 +7,7 @@ class MediaItem < ActiveRecord::Base
   validates :mediable_id, presence: true
   validates :mediable_type, presence: true
 
-  def self.reorder_media?(order_params)
+  def self.reorder?(order_params)
     return false unless self.valid_ordering? order_params
 
     # TODO: might need to validate new media item before reordering
@@ -23,7 +23,25 @@ class MediaItem < ActiveRecord::Base
     arr = parameter.map { |i| i[:ordering].to_i }
     no_gaps = arr.size > arr.max
     dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
-    # @slot.errors.add(:duplicate_ordering, dups) if dups
     dups.nil? && no_gaps
+  end
+
+  def self.insert(collection, new_media)
+    if !new_media.key? :ordering
+      new_media.merge!(ordering: collection.size)
+    elsif new_media.require(:ordering).to_i < collection.size
+      needs_ordering_update(collection, new_media.require(:ordering))
+    end
+
+    MediaItem.new(new_media)
+  end
+
+  def self.needs_ordering_update(collection, ordering_param)
+    media_items = collection.where(
+      "media_items.ordering >= ?", ordering_param).to_a
+
+    media_items.each do |item|
+      item.update(ordering: item.ordering += 1)
+    end
   end
 end

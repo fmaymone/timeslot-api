@@ -22,8 +22,10 @@ module V1
     def update
       @slot = Slot.find(params.require(:id))
 
-      if media_data?
-        update_media
+      if params[:new_media].present?
+        add_media_item
+      elsif params[:ordering_media].present?
+        update_media_order
       elsif @slot.update_attributes(slot_update_params)
         head :no_content
       else
@@ -51,51 +53,24 @@ module V1
       params.require(:new_media).permit(:public_id, :ordering, :media_type)
     end
 
-    private def ordering_param
-      media_item_create_params.require(:ordering)
-    end
-
-    private def media_data?
-      params[:new_media].present? || params[:ordering_media].present?
-    end
-
-    private def update_media
-      if params[:new_media].present?
-        if add_media?
-          render "v1/media/create", status: :created
-        else
-          render json: @slot.errors.add(:media_item, @media_item.errors),
-                 status: :unprocessable_entity
-        end
+    private def update_media_order
+      if MediaItem.reorder? params[:ordering_media]
+        head :ok
       else
-        if MediaItem.reorder_media? params[:ordering_media]
-          head :ok
-        else
-          render json: @slot.errors, status: :unprocessable_entity
-        end
+        render json: @slot.errors, status: :unprocessable_entity
       end
     end
 
-    private def add_media?
-      new_media = media_item_create_params
-
-      if !new_media.key? :ordering
-        new_media.merge!(ordering: @slot.media_items.size)
-      elsif ordering_param.to_i < @slot.media_items.size
-        needs_ordering_update
-      end
-
-      @media_item = MediaItem.create(new_media)
+    private def add_media_item
+      @media_item = MediaItem.insert(@slot.media_items,
+                                     media_item_create_params)
       @slot.media_items << @media_item
-      @slot.save
-    end
 
-    private def needs_ordering_update
-      media_items = @slot.media_items.where(
-        "media_items.ordering >= ?", ordering_param).to_a
-
-      media_items.each do |item|
-        item.update(ordering: item.ordering += 1)
+      if @slot.save
+        render "v1/media/create", status: :created
+      else
+        render json: @slot.errors.add(:media_item, @media_item.errors),
+               status: :unprocessable_entity
       end
     end
   end
