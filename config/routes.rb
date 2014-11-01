@@ -7,6 +7,12 @@ Rails.application.routes.draw do
     delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
 
     get 'media-signature', to: 'media#create_signature'
+
+    get 'users', to: 'users#index'
+    get 'users/:id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+    post 'users', to: 'users#create', as: 'user_create'
+    patch 'users/:id', to: 'users#update', as: 'user_update'
+    delete 'users/:id', to: 'users#destroy', as: 'user_delete'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
