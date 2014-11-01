@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141027105619) do
+ActiveRecord::Schema.define(version: 20141101013446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,13 @@ ActiveRecord::Schema.define(version: 20141027105619) do
     t.text     "note"
     t.string   "visibility", limit: 2,  default: "11"
     t.string   "alerts",     limit: 10, default: "0000000000"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "username",   limit: 20
+    t.boolean  "displayed",             default: true
     t.datetime "created_at"
     t.datetime "updated_at"
   end
