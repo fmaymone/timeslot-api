@@ -5,7 +5,7 @@ require File.expand_path('../application', __FILE__)
 # so that they are loaded before environments/*.rb
 # http://stackoverflow.com/a/11765775/531439
 app_env_vars = File.join(Rails.root, 'config', 'app_environment_variables.rb')
-load(app_env_vars) if File.exists?(app_env_vars)
+load(app_env_vars) if File.exist?(app_env_vars)
 
 # Initialize the Rails application.
 Rails.application.initialize!

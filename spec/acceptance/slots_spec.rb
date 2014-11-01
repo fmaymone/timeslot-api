@@ -81,7 +81,8 @@ resource "Slots" do
 
       example "Create slot with valid params returns ID of new slot",
               document: :v1 do
-        explanation "Missing unrequiered fields will be filled with default values."
+        explanation "Missing unrequiered fields will be filled" \
+                    " with default values."
         do_request
 
         json = JSON.parse(response_body)
