@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141102004823) do
+ActiveRecord::Schema.define(version: 20141102232807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,12 @@ ActiveRecord::Schema.define(version: 20141102004823) do
   end
 
   add_index "media_items", ["mediable_id", "mediable_type"], name: "index_media_items_on_mediable_id_and_mediable_type", using: :btree
+
+  create_table "membership_states", force: true do |t|
+    t.integer  "membership_id"
+    t.string   "state",         limit: 2
+    t.datetime "created_at"
+  end
 
   create_table "memberships", force: true do |t|
     t.integer  "user_id"
