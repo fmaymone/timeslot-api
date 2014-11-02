@@ -7,6 +7,7 @@ RSpec.describe User, type: :model do
 
   it { is_expected.to respond_to(:username) }
   it { is_expected.to respond_to(:displayed) }
+  it { should have_many(:groups) }
 
   it { is_expected.to be_valid }
 

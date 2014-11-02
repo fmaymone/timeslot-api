@@ -8,4 +8,10 @@ FactoryGirl.define do
     public_id
     ordering
   end
+
+  factory :group_image, class: "MediaItem" do
+    association :mediable, factory: :group
+    media_type "image"
+    public_id
+  end
 end

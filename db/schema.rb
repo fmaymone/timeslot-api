@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141101013446) do
+ActiveRecord::Schema.define(version: 20141101220238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "groups", force: true do |t|
+    t.integer  "owner_id"
+    t.string   "name"
+    t.boolean  "can_post",   default: true
+    t.boolean  "can_invite", default: false
+    t.boolean  "displayed",  default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "media_items", force: true do |t|
     t.string   "media_type"
