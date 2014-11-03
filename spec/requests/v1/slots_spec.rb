@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "V1::Slots", type: :request do
+  let(:json) { JSON.parse(response.body) }
   let(:slot) { create(:slot) }
 
   describe "GET /v1/slots/:id" do
@@ -12,7 +13,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "returns details of slot with given id" do
         get "/v1/slots/#{slot.id}"
-        json = JSON.parse(response.body)
         expect(json).to have_key('id')
         expect(json).to have_key('title')
         expect(json).to have_key('startdate')
@@ -26,7 +26,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "does return the correct attributes" do
         get "/v1/slots/#{slot.id}"
-        json = JSON.parse(response.body)
         expect(json['id']).to eq(slot.id)
         expect(json['title']).to eq(slot.title)
         expect(json['startdate']).to eq(slot.startdate.iso8601)
@@ -39,7 +38,6 @@ RSpec.describe "V1::Slots", type: :request do
       it "does return the slot title" do
         slot = create(:slot, title: "Expected title")
         get "/v1/slots/#{slot.id}"
-        json = JSON.parse(response.body)
         expect(json['title']).to eq("Expected title")
       end
     end
@@ -64,7 +62,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "respondes with an ID only" do
         post "/v1/slots/", valid_slot
-        json = JSON.parse(response.body)
         expect(json).to have_key('id')
         expect(json).to_not have_key('title')
         expect(json).to_not have_key('created_at')
@@ -78,7 +75,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "returns the ID of the new slot" do
         post "/v1/slots/", valid_slot
-        json = JSON.parse(response.body)
         expect(json['id']).to eq(Slot.last.id)
       end
     end
@@ -338,14 +334,12 @@ RSpec.describe "V1::Slots", type: :request do
         it "returns a media_item_id" do
           patch "/v1/slots/#{slot.id}", add_media_item
           slot.reload
-          json = JSON.parse(response.body)
           expect(json).to have_key('media_item_id')
         end
 
         it "returns the ID of new media_item" do
           patch "/v1/slots/#{slot.id}", add_media_item
           slot.reload
-          json = JSON.parse(response.body)
           expect(json['media_item_id']).to eq(slot.media_items[0].id)
         end
 
@@ -517,7 +511,6 @@ RSpec.describe "V1::Slots", type: :request do
             it "returns duplicate ordering numbers" do
               skip "TODO change handling of errors"
               patch "/v1/slots/#{slot.id}", media_reordering
-              json = JSON.parse(response.body)
               expect(json).to have_key('duplicate_ordering')
               expect(json['duplicate_ordering']).to eq [1]
             end
