@@ -77,10 +77,16 @@ RSpec.describe V1::UsersController, type: :controller do
   describe "DELETE destroy" do
     let!(:user) { create(:user) }
 
-    it "destroys the requested user" do
+    it "doesn't destroy the requested user" do
       expect {
-        delete :destroy, { id: user.to_param }, valid_session
-      }.to change(User, :count).by(-1)
+        delete :destroy, { id: user.id }, valid_session
+      }.not_to change(User.unscoped, :count)
+    end
+
+    it "hides the requested user" do
+      delete :destroy, { id: user.id }, valid_session
+      user.reload
+      expect(user.displayed).to eq false
     end
   end
 end

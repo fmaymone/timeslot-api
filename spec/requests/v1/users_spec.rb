@@ -20,7 +20,7 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "for hidden user", :focus do
+    context "for hidden user" do
       before(:each) do
         user.displayed = false
         user.save
