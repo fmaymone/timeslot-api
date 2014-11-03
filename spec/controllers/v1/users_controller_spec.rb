@@ -4,13 +4,13 @@ RSpec.describe V1::UsersController, type: :controller do
 
   let(:valid_attributes) { attributes_for(:user) }
   let(:invalid_attributes) { attributes_for(:user, username: nil) }
+  let(:user) { create(:user) }
   let(:valid_session) { {} }
 
   before(:each) { request.accept = "application/json" }
 
   describe "GET index" do
     it "assigns all users as @users" do
-      user = User.create! valid_attributes
       get :index, {}, valid_session
       expect(assigns(:users)).to eq([user])
     end
@@ -18,7 +18,6 @@ RSpec.describe V1::UsersController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested user as @user" do
-      user = User.create! valid_attributes
       get :show, { id: user.to_param }, valid_session
       expect(assigns(:user)).to eq(user)
     end
