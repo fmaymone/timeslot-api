@@ -19,15 +19,6 @@ RSpec.describe "V1::Users", type: :request do
         expect(json['username']).to eq(user.username)
       end
     end
-
-    context "for hidden user" do
-      before(:each) { user.update(displayed: false) }
-
-      it "doesn't return the requested user" do
-        get "/v1/users/#{user.id}"
-        expect(response).to have_http_status(:not_found)
-      end
-    end
   end
 
   describe "POST /v1/users" do

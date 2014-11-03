@@ -39,12 +39,9 @@ module V1
     # DELETE /v1/users/1
     def destroy
       @user = User.find(params[:id])
+      @user.destroy
 
-      if @user.update(displayed: false)
-        head :no_content
-      else
-        render json: @user.errors, status: :unprocessable_entity
-      end
+      head :no_content
     end
 
     private def user_create_params

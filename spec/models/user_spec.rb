@@ -6,7 +6,9 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
-  it { is_expected.to respond_to(:displayed) }
+  it { is_expected.to respond_to(:deleted_at) }
+  it { is_expected.to respond_to(:image) }
+  it { should have_one(:image) }
   it { should have_many(:own_groups).inverse_of(:owner) }
   it { should have_many(:memberships).inverse_of(:user) }
   it { should have_many(:groups).through(:memberships) }

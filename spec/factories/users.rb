@@ -3,5 +3,11 @@ FactoryGirl.define do
 
   factory :user do
     username
+
+    trait :with_image do
+      after :create do |group|
+        create :user_image, mediable: user
+      end
+    end
   end
 end
