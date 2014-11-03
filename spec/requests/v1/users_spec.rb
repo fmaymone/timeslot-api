@@ -70,7 +70,7 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "with missing params", :focus do
+    context "with missing params" do
       it "responds with http status Bad Request (422)" do
         patch "/v1/users/#{user.id}", wrong_scope: { username: "foo" }
         expect(response).to have_http_status(:unprocessable_entity)
