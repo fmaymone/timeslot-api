@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "V1::Slots", type: :request do
   let(:json) { JSON.parse(response.body) }
-  let(:slot) { create(:slot) }
 
   describe "GET /v1/slots/:id" do
+    let(:slot) { create(:slot) }
+
     context "with valid ID" do
       it "returns success" do
         get "/v1/slots/#{slot.id}"
@@ -175,6 +176,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/slots/:id" do
+    let(:slot) { create(:slot) }
+
     context "with valid non-media params" do
       it "responds with http status No Content (204)" do
         patch "/v1/slots/#{slot.id}", { title: "Something" }
@@ -578,6 +581,5 @@ RSpec.describe "V1::Slots", type: :request do
         }.not_to change(Slot, :count)
       end
     end
-
   end
 end

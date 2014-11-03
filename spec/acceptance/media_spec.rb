@@ -1,6 +1,8 @@
 require 'documentation_helper'
 
 resource "Media" do
+  let(:json) { JSON.parse(response_body) }
+
   get "/v1/media-signature" do
     header "Accept", "application/json"
 
@@ -14,12 +16,11 @@ resource "Media" do
                   " image or raw data (voice/video) upload."
       do_request
 
-      json = JSON.parse(response_body)
+      expect(status).to eq(201)
       expect(json).to have_key("signature")
       expect(json).to have_key("public_id")
       expect(json).to have_key("timestamp")
       expect(json).to have_key("api_key")
-      expect(status).to eq(201)
     end
   end
 end

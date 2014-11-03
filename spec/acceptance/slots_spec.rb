@@ -1,6 +1,7 @@
 require 'documentation_helper'
 
 resource "Slots" do
+  let(:json) { JSON.parse(response_body) }
 
   get "/v1/slots/:id" do
     header "Accept", "application/json"
@@ -23,11 +24,11 @@ resource "Slots" do
       let(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }
 
-      example "Get slot with valid ID returns complete slot", document: :v1 do
+      example "Get slot returns slot data", document: :v1 do
+        explanation "returns 404 if ID is invalid"
         do_request
 
         expect(response_status).to eq(200)
-        json = JSON.parse(response_body)
         expect(json.except("media"))
           .to eq("id" => slot.id,
                  "title" => slot.title,
@@ -46,7 +47,7 @@ resource "Slots" do
     describe "Get slot with invalid ID" do
       let(:id) { 1 }
 
-      example "Get slot with invalid ID returns not found", document: :v1 do
+      example "Get slot with invalid ID returns not found", document: false do
         do_request
         expect(response_status).to eq(404)
       end
@@ -70,7 +71,7 @@ resource "Slots" do
 
     describe "Create slot with valid params" do
 
-      response_field :id, "ID of the new slot", "Type" => "String"
+      response_field :id, "ID of the new slot"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
@@ -79,13 +80,15 @@ resource "Slots" do
       let(:visibility) { 10 }
       let(:alerts) { "0101001100" }
 
-      example "Create slot with valid params returns ID of new slot",
+      example "Create slot returns ID of new slot",
               document: :v1 do
         explanation "Missing unrequiered fields will be filled" \
-                    " with default values."
+                    " with default values.\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
         do_request
 
-        json = JSON.parse(response_body)
         expect(json).to have_key("id")
         expect(response_status).to eq(201)
       end
@@ -101,13 +104,12 @@ resource "Slots" do
       let(:alerts) { "oh no" }
 
       example "Create slot with invalid params returns 422 & failure details",
-              document: :v1 do
+              document: false do
         explanation "Parameters that can not be written to db will be returned."
         do_request
 
-        json = JSON.parse(response_body)
-        expect(json).to have_key("pgerror")
         expect(response_status).to eq 422
+        expect(json).to have_key("pgerror")
       end
 
     end
@@ -120,13 +122,12 @@ resource "Slots" do
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
 
       example "Create slot with missing requiered params returns 422" \
-              " & failure details", document: :v1 do
+              " & failure details", document: false do
         explanation "Missing requiered fields will be returned."
         do_request
 
-        json = JSON.parse(response_body)
-        expect(json).to have_key("enddate")
         expect(response_status).to eq 422
+        expect(json).to have_key("enddate")
       end
 
     end
@@ -137,7 +138,7 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
 
-    describe "Update/Edit an existing slot with valid non-media params" do
+    describe "Update an existing slot with valid non-media params" do
 
       parameter :title, "Updated title of slot"
       parameter :startdate, "Updated Startdate and Time of the Slot"
@@ -151,9 +152,11 @@ resource "Slots" do
       let(:id) { slot.id }
       let(:title) { "New title for a Slot" }
 
-      example "Update/Edit an existing slot with valid non-media params" \
+      example "Update an existing slot with valid non-media params" \
               " returns No Content", document: :v1 do
-        explanation "Changing title of slot"
+        explanation "Changing title of slot\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid"
         do_request
 
         expect(response_status).to eq(204)
@@ -192,7 +195,6 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(201)
-        json = JSON.parse(response_body)
         expect(json).to have_key("media_item_id")
         expect(Slot.last.media_items.size).to eq(1)
       end
@@ -253,7 +255,8 @@ resource "Slots" do
       let!(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }
 
-      example "Delete slot with valid ID returns No content", document: :v1 do
+      example "Delete slot returns No content", document: :v1 do
+        explanation "returns 404 if ID is invalid"
         do_request
 
         expect(response_status).to eq(204)
@@ -264,7 +267,8 @@ resource "Slots" do
     describe "Delete slot with invalid ID" do
       let(:id) { 1 }
 
-      example "Delete slot with invalid ID returns Not found", document: :v1 do
+      example "Delete slot with invalid ID returns Not found",
+              document: false do
         do_request
         expect(response_status).to eq(404)
       end
