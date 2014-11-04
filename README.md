@@ -81,6 +81,20 @@ config.format = [:json, :markdown]
 This is located in *spec/documentation_helper.rb*.
 The generated Markdown files will be in *doc/api* folder.
 
+## Specs / Tests
+
+If you're having issues with the TEST_ENV Database after a migration had run
+(for me the postgres specific types always get changed), destroy your TEST_ENV
+database and re-run all migrations: ```RAILS_ENV=test rake db:migrate:reset```
+
+### Database Cleaner Gem
+
+Manages database transactions for specs/tests.
+Default strategy is ```transaction```.
+If a spec needs ```truncation```, a **:commit** flag can be set on the test.
+```describe "auditing", :commit do ... end```
+
+
 ## Additional software you may want to use
 
 * [Cocoa Rest Client](http://mmattozzi.github.io/cocoa-rest-client/)

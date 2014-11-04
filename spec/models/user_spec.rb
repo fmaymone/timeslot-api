@@ -25,8 +25,7 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "auditing" do
-    self.use_transactional_fixtures = false
+  describe "auditing", :commit do
     let(:user) { create(:user) }
 
     it "logs instance changes" do
