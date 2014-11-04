@@ -13,6 +13,12 @@ Rails.application.routes.draw do
     post 'users', to: 'users#create', as: 'user_create'
     patch 'users/:id', to: 'users#update', as: 'user_update'
     delete 'users/:id', to: 'users#destroy', as: 'user_delete'
+
+    get 'groups', to: 'groups#index'
+    get 'groups/:id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
+    post 'groups', to: 'groups#create', as: 'group_create'
+    patch 'groups/:id', to: 'groups#update', as: 'group_update'
+    delete 'groups/:id', to: 'groups#destroy', as: 'group_delete'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

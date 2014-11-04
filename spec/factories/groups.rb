@@ -2,7 +2,7 @@ FactoryGirl.define do
   sequence(:name) { |n| "Testgroup #{n}" }
 
   factory :group do
-    association :owner, factory: :user
+    owner
     name
     subs_can_post true
     subs_can_invite false
