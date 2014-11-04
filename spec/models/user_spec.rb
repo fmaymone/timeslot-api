@@ -24,4 +24,19 @@ RSpec.describe User, type: :model do
     before { user.username = "a" * 21 }
     it { is_expected.to_not be_valid }
   end
+
+  describe "auditing" do
+    self.use_transactional_fixtures = false
+    let(:user) { create(:user) }
+
+    it "logs instance changes" do
+      # twice: once for creation, once for change
+      expect(Rails.logger).to receive(:info).twice
+
+      new_name = "name_#{user.id}"
+      user.update(username: new_name)
+
+      expect(user.username).to eq new_name
+    end
+  end
 end
