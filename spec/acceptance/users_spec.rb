@@ -12,6 +12,7 @@ resource "Users" do
     response_field :username, "Username of the user"
     response_field :created_at, "Creation of user"
     response_field :updated_at, "Latest update of user in db"
+    response_field :deleted_at, "Deletion of user"
 
     let(:user) { create(:user) }
     let(:id) { user.id }
@@ -22,12 +23,7 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to eq("id" => user.id,
-                         "username" => user.username,
-                         "created_at" => user.created_at.iso8601,
-                         "updated_at" => user.updated_at.iso8601,
-                         "deleted_at" => deleted_at
-                        )
+      expect(json).to eq(user.attributes.as_json)
     end
   end
 
@@ -55,7 +51,6 @@ resource "Users" do
     header "Content-Type", "application/json"
 
     parameter :id, "ID of the user to update", required: true
-
     parameter :username, "Updated title of user", scope: :user
 
     let!(:user) { create(:user, username: "foo") }
@@ -83,7 +78,8 @@ resource "Users" do
     let(:id) { user.id }
 
     example "Delete user returns the user", document: :v1 do
-      explanation "Sets 'deleted_at' on the user. Doesn't delete anything.\n\n" \
+      explanation "Sets 'deleted_at' on the user\n\n." \
+                  "Doesn't delete anything.\n\n" \
                   "returns 404 if ID is invalid\n\n"
       do_request
 
