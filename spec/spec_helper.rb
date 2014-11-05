@@ -87,7 +87,7 @@ RSpec.configure do |config|
     end
   end
 
-  config.around(:each, db: true) do |example|
+  config.around(:each, :db) do |example|
     with_std_out_logger { example.run }
   end
 end

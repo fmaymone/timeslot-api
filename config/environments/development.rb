@@ -39,7 +39,7 @@ Rails.application.configure do
   ActiveRecord::Base.logger = Logger.new(STDOUT)
 
   config.after_initialize do
-    Bullet.enable = true
+    Bullet.enable = false
     Bullet.bullet_logger = true
     # Bullet.growl = true
     Bullet.rails_logger = true
