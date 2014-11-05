@@ -39,9 +39,13 @@ module V1
     # DELETE /v1/users/1
     def destroy
       @user = User.find(params[:id])
-      @user.destroy
 
-      head :no_content
+      if SoftDeleteService.call(@user)
+        # render :show
+        head :no_content
+      else
+        render json: @user.errors, status: :unprocessable_entity
+      end
     end
 
     private def user_create_params

@@ -62,7 +62,7 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     context "with missing params" do
-      it "responds with http status Bad Request (422)" do
+      it "responds with Unprocessable Entity (422)" do
         patch "/v1/users/#{user.id}", wrong_scope: { username: "foo" }
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.body).to include "missing"
@@ -83,15 +83,15 @@ RSpec.describe "V1::Users", type: :request do
     let!(:user) { create(:user) }
 
     context "with a valid ID" do
-      it "returns http No Content (204)" do
+      it "returns success" do
         delete "/v1/users/#{user.id}"
-        expect(response).to have_http_status(:no_content)
+        expect(response).to be_success
       end
 
-      it "hides the requested user" do
+      it "doesn't delete the requested user" do
         expect {
           delete "/v1/users/#{user.id}"
-        }.to change(User, :count).by(-1)
+        }.not_to change(User, :count)
       end
     end
 

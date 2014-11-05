@@ -78,14 +78,12 @@ RSpec.describe V1::UsersController, type: :controller do
     let!(:user) { create(:user) }
 
     it "doesn't destroy the requested user" do
-      skip "TODO"
       expect {
         delete :destroy, { id: user.id }, valid_session
       }.not_to change(User, :count)
     end
 
-    it "sets the deleted_at of the user" do
-      skip "TODO"
+    it "sets the deleted_at of the user", :commit do
       delete :destroy, { id: user.id }, valid_session
       user.reload
       expect(user.deleted_at).not_to eq nil
