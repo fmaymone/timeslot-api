@@ -15,6 +15,7 @@ resource "Users" do
 
     let(:user) { create(:user) }
     let(:id) { user.id }
+    let(:deleted_at) { user.deleted_at.nil? ? nil : user.deleted_at.iso8601 }
 
     example "Get user returns user data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n" \
@@ -25,7 +26,8 @@ resource "Users" do
       expect(json).to eq("id" => user.id,
                          "username" => user.username,
                          "created_at" => user.created_at.iso8601,
-                         "updated_at" => user.updated_at.iso8601
+                         "updated_at" => user.updated_at.iso8601,
+                         "deleted_at" => deleted_at
                         )
     end
   end
