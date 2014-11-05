@@ -75,10 +75,16 @@ RSpec.describe V1::GroupsController, type: :controller do
   describe "DELETE destroy" do
     let!(:group) { create(:group) }
 
-    it "destroys the requested group" do
+    it "doesn't destroy the requested group" do
       expect {
         delete :destroy, { id: group.id }, valid_session
-      }.to change(Group, :count).by(-1)
+      }.not_to change(Group, :count)
+    end
+
+    it "sets deleted_at on the requested group" do
+      delete :destroy, { id: group.id }, valid_session
+      group.reload
+      expect(group.deleted_at).not_to eq nil
     end
   end
 end

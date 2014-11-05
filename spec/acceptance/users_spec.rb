@@ -90,7 +90,7 @@ resource "Users" do
       user.reload
       expect(user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(response_body).to eq(user.to_json)
+      expect(json).to eq(user.attributes.as_json)
     end
   end
 end

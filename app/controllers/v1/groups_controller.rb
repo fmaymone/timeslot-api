@@ -39,9 +39,8 @@ module V1
     # DELETE /v1/groups/1
     def destroy
       @group = Group.find(params[:id])
-      @group.destroy
 
-      head :no_content
+      render :show if SoftDeleteService.call(@group)
     end
 
     private def group_create_params
