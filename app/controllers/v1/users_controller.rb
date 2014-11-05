@@ -41,8 +41,7 @@ module V1
       @user = User.find(params[:id])
 
       if SoftDeleteService.call(@user)
-        # render :show
-        head :no_content
+        render :show
       else
         render json: @user.errors, status: :unprocessable_entity
       end

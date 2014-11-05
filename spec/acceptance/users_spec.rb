@@ -18,8 +18,7 @@ resource "Users" do
     let(:deleted_at) { user.deleted_at.nil? ? nil : user.deleted_at.iso8601 }
 
     example "Get user returns user data", document: :v1 do
-      explanation "returns 404 if ID is invalid\n\n" \
-                  "returns 404 if User is hidden (displayed == false)"
+      explanation "returns 404 if ID is invalid\n\n"
       do_request
 
       expect(response_status).to eq(200)
@@ -65,7 +64,7 @@ resource "Users" do
 
     example "Update an existing user returns No Content", document: :v1 do
       explanation "Change username\n\n" \
-                  "returns 404 if ID is invalid or User is hidden\n\n" \
+                  "returns 404 if ID is invalid\n\n" \
                   "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
       do_request
@@ -83,15 +82,15 @@ resource "Users" do
     let!(:user) { create(:user) }
     let(:id) { user.id }
 
-    example "Delete user returns No content", document: :v1 do
-      explanation "Sets the 'displayed' status of the user to 'false'.\n\n" \
-                  "returns 404 if ID is invalid\n\n" \
-                  "returns 404 if User is already hidden (displayed == false)"
-
+    example "Delete user returns the user", document: :v1 do
+      explanation "Sets 'deleted_at' on the user. Doesn't delete anything.\n\n" \
+                  "returns 404 if ID is invalid\n\n"
       do_request
 
-      expect(response_status).to eq(204)
-      expect(response_body).to eq("")
+      user.reload
+      expect(user.deleted_at).not_to be nil
+      expect(response_status).to eq(200)
+      expect(response_body).to eq(user.to_json)
     end
   end
 end
