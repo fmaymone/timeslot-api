@@ -2,9 +2,7 @@ module V1
   class GroupsController < ApplicationController
     # GET /v1/groups
     def index
-      # what to do with this?
-      # return all lists ???
-      # return all groups where the current user is member or owner ???
+      # return all groups where the current user is member or owner
       @groups = Group.all
 
       render :index
@@ -29,7 +27,7 @@ module V1
     end
 
     # PATCH /v1/groups/:group_id
-    # change name, image, owner, subs_can - states
+    # change name, image, subs_can - states
     def update
       @group = Group.find(params[:id])
 
@@ -48,33 +46,31 @@ module V1
     end
 
     # GET /v1/groups/:group_id/members
-    # GET /v1/groups/members
-    # returns a list of all members of the specified group ordered by state
+    # returns a list of all members of the specified group
     def members
     end
 
     # GET /v1/groups/:group_id/members/:user_id
-    # GET /v1/groups/members/show
-    # Check if the specified user is a member of the specified group
-    def membership_state
-    end
+    # return if the specified user is an activated member of the specified group
+    # or return the state of the specified user regarding the specified group
+    # def membership_state
+    # end
 
     # POST /v1/groups/:group_id/members
-    # POST /v1/groups/members/create
-    # current user joins group
+    # current user accepts invite and joins group
     # update membership with state joined/active
     # add current user as group member
-    def join
+    def accept_invite
     end
 
     # POST /v1/groups/:group_id/members/:user_id
     # current user invites other user to own group
     # create membership with state invited/pending
+    # notify invited user
     def invite
     end
 
     # DELETE /v1/groups/:group_id/members
-    # POST /v1/groups/members/destroy
     # current user leaves group
     # update membership with state left
     # remove current user from group members
@@ -88,26 +84,10 @@ module V1
     def kick
     end
 
-    # GET /v1/groups/ownerships/(:user_id)
-    # returns all groups where user is owner
-    # if no user ID is submitted the current user is assumed
-    def ownerships
-    end
-
-    # GET /v1/groups/memberships/(:user_id)
-    # returns all groups where user is member
-    # if no user ID is submitted the current user is assumed
-    def memberships
-    end
-
-    # POST /v1/groups/:group_id/notifications
-    # enables group notifications if current user is group member
-    def enable_notifications
-    end
-
-    # DELETE /v1/groups/:group_id/notifications
-    # disables group notifications if current user is group member
-    def disable_notifications
+    # PATCH /v1/groups/:group_id/members
+    # change membership settings if current user is group member
+    # notifications
+    def settings
     end
 
     private def group_create_params
