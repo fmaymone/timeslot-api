@@ -8,6 +8,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:username) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:image) }
+  it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to have_one(:image) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }

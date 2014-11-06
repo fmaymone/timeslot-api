@@ -10,6 +10,7 @@ RSpec.describe MediaItem, type: :model do
   it { is_expected.to respond_to(:media_type) }
   it { is_expected.to respond_to(:mediable_id) }
   it { is_expected.to respond_to(:mediable_type) }
+  it { is_expected.to respond_to(:deleted_at) }
 
   it { is_expected.to be_valid }
 

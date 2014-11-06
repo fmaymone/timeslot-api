@@ -9,6 +9,7 @@ RSpec.describe Membership, type: :model do
   it { is_expected.to respond_to(:group) }
   it { is_expected.to respond_to(:notifications) }
   it { is_expected.to respond_to(:state) }
+  it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:user).inverse_of(:memberships) }
   it { is_expected.to belong_to(:group).inverse_of(:memberships) }
 
