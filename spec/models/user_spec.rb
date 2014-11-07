@@ -26,6 +26,20 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "groups relation" do
+    let(:user) { create(:user, :with_groups) }
+    it "returns the groups where user is a member" do
+      expect(user.groups.size).to eq 3
+    end
+  end
+
+  describe "own groups relation" do
+    let(:user) { create(:user, :with_own_groups) }
+    it "returns the users own groups" do
+      expect(user.own_groups.size).to eq 3
+    end
+  end
+
   describe "auditing", :commit do
     let(:user) { create(:user) }
 

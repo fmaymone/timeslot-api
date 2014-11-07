@@ -2,9 +2,10 @@ class User < ActiveRecord::Base
   after_commit AuditService
 
   has_one :image, class_name: "MediaItem", as: :mediable
-  has_many :own_groups, class_name: "Group", inverse_of: :owner
+  has_many :own_groups, class_name: "Group",
+           foreign_key: "owner_id", inverse_of: :owner
   has_many :memberships, inverse_of: :user
-  has_many :groups, through: :memberships
+  has_many :groups, through: :memberships, source: :group
 
   validates :username, presence: true, length: { maximum: 20 }
 
