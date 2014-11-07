@@ -14,11 +14,18 @@ Rails.application.routes.draw do
     patch 'users/:id', to: 'users#update', as: 'user_update'
     delete 'users/:id', to: 'users#destroy', as: 'user_delete'
 
-    get 'groups', to: 'groups#index'
-    get 'groups/:id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
-    post 'groups', to: 'groups#create', as: 'group_create'
-    patch 'groups/:id', to: 'groups#update', as: 'group_update'
-    delete 'groups/:id', to: 'groups#destroy', as: 'group_delete'
+    scope :groups do
+      get '', to: 'groups#index', as: 'groups'
+      get ':id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
+      post '', to: 'groups#create', as: 'group_create'
+      patch ':id', to: 'groups#update', as: 'group_update'
+      delete ':id', to: 'groups#destroy', as: 'group_delete'
+
+      post ':group_id/members/:user_id',
+           to: 'groups#invite',
+           as: 'group_invite',
+           constraints: { user_id: /\d+/, group_id: /\d+/ }
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

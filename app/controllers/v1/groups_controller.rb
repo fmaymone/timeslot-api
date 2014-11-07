@@ -68,6 +68,19 @@ module V1
     # create membership with state invited/pending
     # notify invited user
     def invite
+      group = invite_params[:group_id]
+      return head :forbidden unless current_user.can_invite? group
+
+      invitee = User.find(invite_params[:user_id])
+      return head :ok if invitee.has_invitation? group
+
+      @membership = Membership.new(invite_params)
+
+      if @membership.invite && @membership.save
+        head :created
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
     end
 
     # DELETE /v1/groups/:group_id/members
@@ -92,6 +105,10 @@ module V1
 
     private def group_create_params
       params.require(:group).permit(:name, :owner_id)
+    end
+
+    private def invite_params
+      params.permit(:group_id, :user_id)
     end
   end
 end
