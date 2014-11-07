@@ -57,10 +57,17 @@ module V1
     # end
 
     # POST /v1/groups/:group_id/members
-    # current user accepts invite and joins group
-    # update membership with state joined/active
-    # add current user as group member
-    def accept_invite
+    def handle_invite
+      @membership = current_user.memberships
+                    .where(group_id: params[:group_id]).first!
+
+      if join_params[:state] == 'accept' && @membership.activate
+        head :ok
+      elsif join_params[:state] == 'refuse' && @membership.refuse
+        head :ok
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
     end
 
     # POST /v1/groups/:group_id/members/:user_id
@@ -109,6 +116,10 @@ module V1
 
     private def invite_params
       params.permit(:group_id, :user_id)
+    end
+
+    private def join_params
+      params.require(:group).permit(:state)
     end
   end
 end

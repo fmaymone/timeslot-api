@@ -58,4 +58,48 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
   end
+
+  # handle_invite
+  describe "POST /v1/groups/:group_id/members" do
+    let(:current_user) { create(:user) }
+    let(:group) { create(:group) }
+    let!(:membership) { create(:membership, user: current_user, group: group) }
+
+    describe "accept invite" do
+      let(:params) { { group: { state: 'accept' } } }
+
+      it "returns success" do
+        post "/v1/groups/#{group.id}/members", params
+        expect(response.status).to be(200)
+      end
+
+      it "changes membership state to active" do
+        post "/v1/groups/#{group.id}/members", params
+        membership.reload
+        expect(membership.active?).to be true
+      end
+
+      it "adds user to group" do
+        skip
+        expect {
+          post "/v1/groups/#{group.id}/members", params
+        }.to change(group.members, :count).by(1)
+      end
+    end
+
+    describe "refuse invite" do
+      let(:params) { { group: { state: 'refuse' } } }
+
+      it "returns success" do
+        post "/v1/groups/#{group.id}/members", params
+        expect(response.status).to be(200)
+      end
+
+      it "changes membership state to refused" do
+        post "/v1/groups/#{group.id}/members", params
+        membership.reload
+        expect(membership.refused?).to be true
+      end
+    end
+  end
 end

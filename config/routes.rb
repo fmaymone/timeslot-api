@@ -25,6 +25,10 @@ Rails.application.routes.draw do
            to: 'groups#invite',
            as: 'group_invite',
            constraints: { user_id: /\d+/, group_id: /\d+/ }
+      post ':group_id/members',
+           to: 'groups#handle_invite',
+           as: 'group_handle_invite',
+           constraints: { group_id: /\d+/ }
     end
   end
 
