@@ -1,8 +1,8 @@
 FactoryGirl.define do
   factory :membership do
-    user
-    group
+    association :user, strategy: :build
+    association :group, strategy: :build
     notifications true
-    state "11"
+    state "000"
   end
 end
