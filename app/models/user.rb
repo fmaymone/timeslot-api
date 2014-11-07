@@ -7,4 +7,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships
 
   validates :username, presence: true, length: { maximum: 20 }
+
+  def has_invitation?(group_id)
+    memberships.where(group_id: group_id).exists?
+  end
 end

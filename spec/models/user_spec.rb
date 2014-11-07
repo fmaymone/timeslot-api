@@ -39,4 +39,23 @@ RSpec.describe User, type: :model do
       expect(user.username).to eq new_name
     end
   end
+
+  describe :has_invitation? do
+    let(:user) { create(:user) }
+    let(:group) { create(:group) }
+
+    describe "exists" do
+      let!(:membership) { create(:membership, user: user, group: group) }
+
+      it "return true" do
+        expect(user.has_invitation? group.id).to be true
+      end
+    end
+
+    describe "doesn't exists" do
+      it "return false" do
+        expect(user.has_invitation? group.id).to be false
+      end
+    end
+  end
 end
