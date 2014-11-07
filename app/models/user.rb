@@ -11,4 +11,9 @@ class User < ActiveRecord::Base
   def has_invitation?(group_id)
     memberships.where(group_id: group_id).exists?
   end
+
+  def can_invite?(group_id)
+    group = Group.find(group_id)
+    self == group.owner || group.subs_can_invite
+  end
 end
