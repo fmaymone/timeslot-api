@@ -68,7 +68,7 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "accept invite" do
-      let(:params) { { group: { state: 'accept' } } }
+      let(:params) { { group: { invite: 'accept' } } }
 
       it "returns success" do
         post "/v1/groups/#{group.id}/members", params
@@ -90,7 +90,7 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "refuse invite" do
-      let(:params) { { group: { state: 'refuse' } } }
+      let(:params) { { group: { invite: 'refuse' } } }
 
       it "returns success" do
         post "/v1/groups/#{group.id}/members", params

@@ -63,9 +63,9 @@ module V1
 
       @membership = current_user.memberships.where(group_id: group).first!
 
-      if join_params[:state] == 'accept' && @membership.activate
+      if join_params[:invite] == 'accept' && @membership.activate
         head :ok
-      elsif join_params[:state] == 'refuse' && @membership.refuse
+      elsif join_params[:invite] == 'refuse' && @membership.refuse
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -121,7 +121,7 @@ module V1
     end
 
     private def join_params
-      params.require(:group).permit(:state)
+      params.require(:group).permit(:invite)
     end
   end
 end
