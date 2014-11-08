@@ -58,14 +58,14 @@ module V1
 
     # POST /v1/groups/:group_id/members
     def handle_invite
-      group = invite_params[:group_id]
+      group = membership_params[:group_id]
       return head :forbidden unless current_user.is_invited? group
 
       @membership = current_user.memberships.where(group_id: group).first!
 
-      if join_params[:invite] == 'accept' && @membership.activate
+      if invite_param == 'accept' && @membership.activate
         head :ok
-      elsif join_params[:invite] == 'refuse' && @membership.refuse
+      elsif invite_param == 'refuse' && @membership.refuse
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -77,13 +77,13 @@ module V1
     # create membership with state invited/pending
     # notify invited user
     def invite
-      group = invite_params[:group_id]
+      group = membership_params[:group_id]
       return head :forbidden unless current_user.can_invite? group
 
-      invitee = User.find(invite_params[:user_id])
+      invitee = User.find(membership_params[:user_id])
       return head :ok if invitee.is_invited? group
 
-      @membership = Membership.new(invite_params)
+      @membership = Membership.new(membership_params)
 
       if @membership.invite && @membership.save
         head :created
@@ -97,7 +97,7 @@ module V1
     # update membership with state left
     # remove current user from group members
     def leave
-      group = invite_params[:group_id]
+      group = membership_params[:group_id]
       return head :forbidden unless current_user.is_member? group
 
       @membership = current_user.memberships.where(group_id: group).first!
@@ -126,12 +126,12 @@ module V1
       params.require(:group).permit(:name, :owner_id)
     end
 
-    private def invite_params
+    private def membership_params
       params.permit(:group_id, :user_id)
     end
 
-    private def join_params
-      params.require(:group).permit(:invite)
+    private def invite_param
+      params.require(:group).require(:invite)
     end
   end
 end
