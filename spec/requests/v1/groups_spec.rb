@@ -66,10 +66,9 @@ RSpec.describe "V1::Groups", type: :request do
     let!(:membership) do
       create(:membership, :invited, user: current_user, group: group)
     end
+    let(:params) { { group: { invite: 'accept' } } }
 
     describe "accept invite" do
-      let(:params) { { group: { invite: 'accept' } } }
-
       it "returns success" do
         post "/v1/groups/#{group.id}/members", params
         expect(response.status).to be(200)
@@ -108,10 +107,60 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:membership) do
         create(:membership, :inactive, user: current_user, group: group)
       end
-      let(:params) { { group: { state: 'accept' } } }
 
       it "returns forbidden" do
         post "/v1/groups/#{group.id}/members", params
+        expect(response.status).to be(403)
+      end
+    end
+
+    describe "no membership" do
+      let(:membership) {}
+
+      it "returns forbidden" do
+        post "/v1/groups/#{group.id}/members", params
+        expect(response.status).to be(403)
+      end
+    end
+  end
+
+  # leave
+  describe "DELETE /v1/groups/:group_id/members" do
+    let(:owner) { create(:user) }
+    let(:member) { create(:user) }
+    let(:group) { create(:group, owner: owner) }
+
+    describe "user in group active" do
+      let!(:membership) do
+        create(:membership, :active, user: member, group: group)
+      end
+
+      it "returns OK" do
+        delete "/v1/groups/#{group.id}/members"
+        expect(response.status).to be(200)
+      end
+
+      it "changes membership state to 'inactive'" do
+        delete "/v1/groups/#{group.id}/members"
+        membership.reload
+        expect(membership.inactive?).to be true
+      end
+    end
+
+    describe "user not in group active" do
+      let!(:membership) do
+        create(:membership, :inactive, user: member, group: group)
+      end
+
+      it "returns forbidden" do
+        delete "/v1/groups/#{group.id}/members"
+        expect(response.status).to be(403)
+      end
+    end
+
+    describe "no membership" do
+      it "returns forbidden" do
+        delete "/v1/groups/#{group.id}/members"
         expect(response.status).to be(403)
       end
     end

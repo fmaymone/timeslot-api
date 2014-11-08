@@ -97,6 +97,16 @@ module V1
     # update membership with state left
     # remove current user from group members
     def leave
+      group = invite_params[:group_id]
+      return head :forbidden unless current_user.is_member? group
+
+      @membership = current_user.memberships.where(group_id: group).first!
+
+      if @membership.inactivate
+        head :ok
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
     end
 
     # DELETE /v1/groups/:group_id/members/:user_id
