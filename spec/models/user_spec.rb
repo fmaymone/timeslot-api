@@ -54,21 +54,31 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :has_invitation? do
+  describe :is_invited? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
-    describe "exists" do
+    describe "membership exists" do
       let!(:membership) { create(:membership, user: user, group: group) }
 
-      it "return true" do
-        expect(user.has_invitation? group.id).to be true
+      describe "state invited" do
+        it "return true" do
+          membership.invite
+          expect(user.is_invited? group.id).to be true
+        end
+      end
+
+      describe "state not invited" do
+        it "return false" do
+          membership.inactivate
+          expect(user.is_invited? group.id).to be false
+        end
       end
     end
 
-    describe "doesn't exists" do
+    describe "membership doesn't exists" do
       it "return false" do
-        expect(user.has_invitation? group.id).to be false
+        expect(user.is_invited? group.id).to be false
       end
     end
   end

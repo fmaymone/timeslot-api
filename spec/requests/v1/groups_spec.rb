@@ -7,7 +7,7 @@ RSpec.describe "V1::Groups", type: :request do
   describe "POST /v1/groups/:group_id/members/:user_id" do
     let(:user) { create(:user) }
 
-    describe "can invite" do
+    describe "user can invite" do
       let(:group) { create(:group, owner: user) }
 
       it "returns created" do
@@ -38,7 +38,7 @@ RSpec.describe "V1::Groups", type: :request do
           expect(response.status).to be(200)
         end
 
-        it "are not created " do
+        it "are not (re-)created " do
           expect {
             post "/v1/groups/#{group.id}/members/#{user.id}"
           }.not_to change(Membership, :count)
@@ -46,7 +46,7 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
 
-    describe "can't invite" do
+    describe "user can't invite" do
       let!(:user) { create(:user) } # remove when current_user is implemented
       let(:group) do
         create(:group, owner: create(:user), subs_can_invite: false)
@@ -63,7 +63,9 @@ RSpec.describe "V1::Groups", type: :request do
   describe "POST /v1/groups/:group_id/members" do
     let(:current_user) { create(:user) }
     let(:group) { create(:group) }
-    let!(:membership) { create(:membership, user: current_user, group: group) }
+    let!(:membership) do
+      create(:membership, :invited, user: current_user, group: group)
+    end
 
     describe "accept invite" do
       let(:params) { { group: { state: 'accept' } } }
@@ -99,6 +101,18 @@ RSpec.describe "V1::Groups", type: :request do
         post "/v1/groups/#{group.id}/members", params
         membership.reload
         expect(membership.refused?).to be true
+      end
+    end
+
+    describe "no invitation" do
+      let!(:membership) do
+        create(:membership, :inactive, user: current_user, group: group)
+      end
+      let(:params) { { group: { state: 'accept' } } }
+
+      it "returns forbidden" do
+        post "/v1/groups/#{group.id}/members", params
+        expect(response.status).to be(403)
       end
     end
   end

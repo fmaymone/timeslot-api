@@ -9,8 +9,9 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, length: { maximum: 20 }
 
-  def has_invitation?(group_id)
-    memberships.where(group_id: group_id).exists?
+  def is_invited?(group_id)
+    membership = memberships.where(group_id: group_id)
+    membership.exists? && membership.first.invited?
   end
 
   def can_invite?(group_id)

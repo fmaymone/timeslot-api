@@ -58,8 +58,10 @@ module V1
 
     # POST /v1/groups/:group_id/members
     def handle_invite
-      @membership = current_user.memberships
-                    .where(group_id: params[:group_id]).first!
+      group = invite_params[:group_id]
+      return head :forbidden unless current_user.is_invited? group
+
+      @membership = current_user.memberships.where(group_id: group).first!
 
       if join_params[:state] == 'accept' && @membership.activate
         head :ok
@@ -79,7 +81,7 @@ module V1
       return head :forbidden unless current_user.can_invite? group
 
       invitee = User.find(invite_params[:user_id])
-      return head :ok if invitee.has_invitation? group
+      return head :ok if invitee.is_invited? group
 
       @membership = Membership.new(invite_params)
 
