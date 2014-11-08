@@ -109,4 +109,33 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe :is_member? do
+    let(:user) { create(:user) }
+    let(:group) { create(:group) }
+
+    describe "membership exists" do
+      let!(:membership) { create(:membership, user: user, group: group) }
+
+      describe "state active" do
+        it "return true" do
+          membership.activate
+          expect(user.is_member? group.id).to be true
+        end
+      end
+
+      describe "state not active" do
+        it "return false" do
+          membership.inactivate
+          expect(user.is_member? group.id).to be false
+        end
+      end
+    end
+
+    describe "membership doesn't exists" do
+      it "return false" do
+        expect(user.is_member? group.id).to be false
+      end
+    end
+  end
 end

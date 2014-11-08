@@ -18,4 +18,9 @@ class User < ActiveRecord::Base
     group = Group.find(group_id)
     self == group.owner || group.subs_can_invite
   end
+
+  def is_member?(group_id)
+    membership = memberships.where(group_id: group_id)
+    membership.exists? && membership.first.active?
+  end
 end
