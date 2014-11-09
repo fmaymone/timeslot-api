@@ -5,6 +5,7 @@ class Membership < ActiveRecord::Base
   validates :user, presence: true
   validates :group, presence: true
   validates :state, presence: true
+  validates :notifications, inclusion: { in: [true, false] }
 
   def activate
     update!(state: "111")

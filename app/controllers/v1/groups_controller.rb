@@ -130,6 +130,17 @@ module V1
     # change membership settings if current user is group member
     # notifications
     def settings
+      group_id = membership_params[:group_id]
+      return head :not_found unless Group.exists?(group_id)
+      return head :forbidden unless current_user.is_member? group_id
+
+      @membership = current_user.memberships.where(group_id: group_id).first!
+
+      if @membership.update(membership_update_params)
+        head :ok
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
     end
 
     private def group_create_params
@@ -142,6 +153,10 @@ module V1
 
     private def invite_param
       params.require(:group).require(:invite)
+    end
+
+    private def membership_update_params
+      params.require(:group).permit(:notifications)
     end
   end
 end

@@ -259,10 +259,9 @@ RSpec.describe "V1::Groups", type: :request do
     let(:owner) { create(:user) }
     let(:member) { create(:user) }
     let(:group) { create(:group, owner: owner) }
+    let(:params) { { group: { notifications: 'false' } } }
 
     describe "current user is group member" do
-      # let!(:owner) { create(:user) } # remove when current_user is implemented
-
       describe "membership active" do
         let!(:membership) do
           create(:membership, :active, user: member, group: group,
@@ -270,14 +269,14 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          patch "/v1/groups/#{group.id}/members"
+          patch "/v1/groups/#{group.id}/members", params
           expect(response.status).to be(200)
         end
 
         it "changes notifications state" do
-          patch "/v1/groups/#{group.id}/members"
+          patch "/v1/groups/#{group.id}/members", params
           membership.reload
-          expect(membership.kicked?).to be true
+          expect(membership.notifications).to be false
         end
       end
 

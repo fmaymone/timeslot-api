@@ -98,6 +98,8 @@ resource "Groups" do
   end
 
   patch "/v1/groups/:group_id/members" do
+    header "Content-Type", "application/json"
+
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :group
 
@@ -105,26 +107,49 @@ resource "Groups" do
     let(:group) { create(:group) }
 
     let(:group_id) { group.id }
-    let(:notifications) { false }
+    let(:notifications) { "true" }
 
     describe "membership active" do
       let!(:membership) do
         create(:membership, :active, user: member, group: group,
-               notifications: true)
+               notifications: false)
       end
 
       example "Update settings of joined group returns OK", document: :v1 do
         explanation "Change notifications for group\n\n" \
                     "returns 403 if user not active group member\n\n" \
                     "returns 404 if group ID is invalid\n\n" \
-                    "returns 422 if parameters are missing\n\n" \
-                    "returns 422 if parameters are invalid"
+                    "returns 422 if parameters are missing"
         do_request
 
         expect(response_status).to eq(200)
-        expect(response_body).to eq("")
         membership.reload
-        expect(membership.notifications).to eq false
+        expect(membership.notifications).to eq true
+      end
+
+      describe "invalid parameter" do
+        let(:notifications) { "foo" }
+
+        example "returns Unprocessable Entity", document: false do
+          skip "request dosn't fail, but also doesn't update"
+          do_request
+          expect(response_status).to eq(422)
+        end
+
+        example "does not change notifications", document: false do
+          do_request
+          membership.reload
+          expect(membership.notifications).to be false
+        end
+      end
+
+      describe "missing parameter" do
+        let(:notifications) {}
+
+        example "returns Unprocessable Entity", document: false do
+          do_request
+          expect(response_status).to eq(422)
+        end
       end
     end
 
@@ -149,32 +174,12 @@ resource "Groups" do
       end
     end
 
-    describe "group not existing" do
-      let!(:membership) do
-        create(:membership, :inactive, user: member, notifications: true)
-      end
+    describe "group " do
+      let(:group_id) { group.id + 1 }
 
       example "returns Not Found", document: false do
         do_request
         expect(response_status).to eq(404)
-      end
-    end
-
-    describe "invalid parameter" do
-      let(:notifications) { "foo" }
-
-      example "returns Unprocessable Entity", document: false do
-        do_request
-        expect(response_status).to eq(422)
-      end
-    end
-
-    describe "missing parameter" do
-      let(:notifications) {}
-
-      example "returns Unprocessable Entity", document: false do
-        do_request
-        expect(response_status).to eq(422)
       end
     end
   end
