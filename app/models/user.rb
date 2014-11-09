@@ -23,4 +23,9 @@ class User < ActiveRecord::Base
     membership = memberships.where(group_id: group_id)
     membership.exists? && membership.first.active?
   end
+
+  def is_owner?(group_id)
+    group = Group.find(group_id)
+    self == group.owner
+  end
 end

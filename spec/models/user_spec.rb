@@ -138,4 +138,24 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe :is_owner? do
+    let(:user) { create(:user) }
+
+    describe "user is group owner" do
+      let(:group) { create(:group, owner: user) }
+
+      it "return true" do
+        expect(user.is_owner? group.id).to be true
+      end
+    end
+
+    describe "user not owner" do
+      let(:group) { create(:group) }
+
+      it "return false" do
+        expect(user.is_owner? group.id).to be false
+      end
+    end
+  end
 end
