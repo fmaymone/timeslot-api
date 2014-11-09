@@ -101,27 +101,31 @@ resource "Groups" do
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :group
 
+    let(:member) { create(:user) }
     let(:group) { create(:group) }
+
     let(:group_id) { group.id }
     let(:notifications) { false }
 
-    let(:member) { create(:user) }
-    let!(:membership) do
-      create(:membership, :active, user: member, group: group,
-             notifications: true)
-    end
+    describe "membership active" do
+      let!(:membership) do
+        create(:membership, :active, user: member, group: group,
+               notifications: true)
+      end
 
-    example "Update settings of joined group returns OK", document: :v1 do
-      explanation "Change notifications for group\n\n" \
-                  "returns 404 if group ID is invalid\n\n" \
-                  "returns 422 if parameters are missing\n\n" \
-                  "returns 422 if parameters are invalid"
-      do_request
+      example "Update settings of joined group returns OK", document: :v1 do
+        explanation "Change notifications for group\n\n" \
+                    "returns 403 if user not active group member\n\n" \
+                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
 
-      group.reload
-      expect(membership.notifications).to eq false
-      expect(response_status).to eq(200)
-      expect(response_body).to eq("")
+        expect(response_status).to eq(200)
+        expect(response_body).to eq("")
+        membership.reload
+        expect(membership.notifications).to eq false
+      end
     end
 
     describe "membership not active" do
@@ -133,6 +137,44 @@ resource "Groups" do
       example "returns forbidden", document: false do
         do_request
         expect(response_status).to eq(403)
+      end
+    end
+
+    describe "no membership" do
+      let(:membership) {}
+
+      example "returns forbidden", document: false do
+        do_request
+        expect(response_status).to eq(403)
+      end
+    end
+
+    describe "group not existing" do
+      let!(:membership) do
+        create(:membership, :inactive, user: member, notifications: true)
+      end
+
+      example "returns Not Found", document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+
+    describe "invalid parameter" do
+      let(:notifications) { "foo" }
+
+      example "returns Unprocessable Entity", document: false do
+        do_request
+        expect(response_status).to eq(422)
+      end
+    end
+
+    describe "missing parameter" do
+      let(:notifications) {}
+
+      example "returns Unprocessable Entity", document: false do
+        do_request
+        expect(response_status).to eq(422)
       end
     end
   end
