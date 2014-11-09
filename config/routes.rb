@@ -33,6 +33,10 @@ Rails.application.routes.draw do
              to: 'groups#leave',
              as: 'group_leave',
              constraints: { group_id: /\d+/ }
+      delete ':group_id/members/:user_id',
+             to: 'groups#kick',
+             as: 'group_kcik',
+             constraints: { group_id: /\d+/, user_id: /\d+/ }
     end
   end
 

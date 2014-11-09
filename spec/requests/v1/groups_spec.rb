@@ -56,6 +56,12 @@ RSpec.describe "V1::Groups", type: :request do
         post "/v1/groups/#{group.id}/members/#{user.id}"
         expect(response.status).to be(403)
       end
+
+      it "doesn't create membership" do
+        expect {
+          post "/v1/groups/#{group.id}/members/#{user.id}"
+        }.not_to change(Membership, :count)
+      end
     end
   end
 
@@ -112,6 +118,12 @@ RSpec.describe "V1::Groups", type: :request do
         post "/v1/groups/#{group.id}/members", params
         expect(response.status).to be(403)
       end
+
+      it "doesn't changes membership state" do
+        expect {
+          post "/v1/groups/#{group.id}/members", params
+        }.not_to change(membership, :state)
+      end
     end
 
     describe "no membership" do
@@ -130,7 +142,7 @@ RSpec.describe "V1::Groups", type: :request do
     let(:member) { create(:user) }
     let(:group) { create(:group, owner: owner) }
 
-    describe "user in group active" do
+    describe "membership active" do
       let!(:membership) do
         create(:membership, :active, user: member, group: group)
       end
@@ -147,7 +159,7 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
 
-    describe "user not in group active" do
+    describe "membership not active" do
       let!(:membership) do
         create(:membership, :inactive, user: member, group: group)
       end
@@ -156,11 +168,84 @@ RSpec.describe "V1::Groups", type: :request do
         delete "/v1/groups/#{group.id}/members"
         expect(response.status).to be(403)
       end
+
+      it "doesn't changes membership state" do
+        expect {
+          delete "/v1/groups/#{group.id}/members"
+        }.not_to change(membership, :state)
+      end
     end
 
     describe "no membership" do
       it "returns forbidden" do
         delete "/v1/groups/#{group.id}/members"
+        expect(response.status).to be(403)
+      end
+    end
+  end
+
+  # kick
+  describe "DELETE /v1/groups/:group_id/members/:user_id" do
+    let(:owner) { create(:user) }
+    let(:member) { create(:user) }
+    let(:group) { create(:group, owner: owner) }
+
+    describe "current user is group owner" do
+      describe "membership active" do
+        let!(:membership) do
+          create(:membership, :active, user: member, group: group)
+        end
+
+        it "returns OK" do
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          expect(response.status).to be(200)
+        end
+
+        it "changes membership state to 'kicked'" do
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          membership.reload
+          expect(membership.kicked?).to be true
+        end
+      end
+
+      describe "membership not active" do
+        let!(:membership) do
+          create(:membership, :inactive, user: member, group: group)
+        end
+
+        it "returns forbidden" do
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          expect(response.status).to be(403)
+        end
+
+        it "doesn't changes membership state" do
+          expect {
+            delete "/v1/groups/#{group.id}/members/#{member.id}"
+          }.not_to change(membership, :state)
+        end
+      end
+    end
+
+    describe "current user not group owner" do
+      let!(:non_owner) { create(:user) } # remove when current_user is implemented
+      # let(:current_user) { non_owner }
+
+      it "returns forbidden" do
+        delete "/v1/groups/#{group.id}/members/#{member.id}"
+        expect(response.status).to be(403)
+      end
+
+      it "doesn't changes membership state" do
+        expect {
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+        }.not_to change(membership, :state)
+      end
+
+    end
+
+    describe "no membership" do
+      it "returns forbidden" do
+        delete "/v1/groups/#{group.id}/members/#{member.id}"
         expect(response.status).to be(403)
       end
     end

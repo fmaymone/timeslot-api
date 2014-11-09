@@ -54,5 +54,11 @@ RSpec.describe V1::GroupsController, type: :routing do
         .to route_to(
               "v1/groups#leave", group_id: "1", format: :json)
     end
+
+    it "routes to #kick" do
+      expect(delete: "/v1/groups/1/members/2")
+        .to route_to(
+              "v1/groups#kick", group_id: "1", user_id: "2", format: :json)
+    end
   end
 end
