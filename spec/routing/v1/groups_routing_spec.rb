@@ -60,5 +60,11 @@ RSpec.describe V1::GroupsController, type: :routing do
         .to route_to(
               "v1/groups#kick", group_id: "1", user_id: "2", format: :json)
     end
+
+    it "routes to #settings" do
+      expect(patch: "/v1/groups/1/members")
+        .to route_to(
+              "v1/groups#settings", group_id: "1", format: :json)
+    end
   end
 end

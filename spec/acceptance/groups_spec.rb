@@ -60,7 +60,7 @@ resource "Groups" do
     parameter :id, "ID of the group to update", required: true
     parameter :name, "Updated name of group", scope: :group
 
-    let!(:group) { create(:group, name: "foo") }
+    let(:group) { create(:group, name: "foo") }
     let(:id) { group.id }
     let(:name) { "bar" }
 
@@ -81,7 +81,7 @@ resource "Groups" do
   delete "/v1/groups/:id" do
     parameter :id, "ID of the group to delete", required: true
 
-    let!(:group) { create(:group) }
+    let(:group) { create(:group) }
     let(:id) { group.id }
 
     example "Delete group returns the group", document: :v1 do
@@ -94,6 +94,46 @@ resource "Groups" do
       expect(group.deleted_at).not_to be nil
       expect(response_status).to eq(200)
       expect(json).to eq(group.attributes.as_json)
+    end
+  end
+
+  patch "/v1/groups/:group_id/members" do
+    parameter :group_id, "ID of the group to delete", required: true
+    parameter :notifications, "receive notifications?", scope: :group
+
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+    let(:notifications) { false }
+
+    let(:member) { create(:user) }
+    let!(:membership) do
+      create(:membership, :active, user: member, group: group,
+             notifications: true)
+    end
+
+    example "Update settings of joined group returns OK", document: :v1 do
+      explanation "Change notifications for group\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing\n\n" \
+                  "returns 422 if parameters are invalid"
+      do_request
+
+      group.reload
+      expect(membership.notifications).to eq false
+      expect(response_status).to eq(200)
+      expect(response_body).to eq("")
+    end
+
+    describe "membership not active" do
+      let!(:membership) do
+        create(:membership, :inactive, user: member, group: group,
+               notifications: true)
+      end
+
+      example "returns forbidden", document: false do
+        do_request
+        expect(response_status).to eq(403)
+      end
     end
   end
 end

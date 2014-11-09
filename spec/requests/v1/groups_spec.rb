@@ -253,4 +253,39 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
   end
+
+  # settings
+  describe "PATCH /v1/groups/:group_id/members" do
+    let(:owner) { create(:user) }
+    let(:member) { create(:user) }
+    let(:group) { create(:group, owner: owner) }
+
+    describe "current user is group member" do
+      # let!(:owner) { create(:user) } # remove when current_user is implemented
+
+      describe "membership active" do
+        let!(:membership) do
+          create(:membership, :active, user: member, group: group,
+                 notifications: true)
+        end
+
+        it "returns OK" do
+          patch "/v1/groups/#{group.id}/members"
+          expect(response.status).to be(200)
+        end
+
+        it "changes notifications state" do
+          patch "/v1/groups/#{group.id}/members"
+          membership.reload
+          expect(membership.kicked?).to be true
+        end
+      end
+
+      describe "membership not active" do
+      end
+    end
+
+    describe "current user not group member" do
+    end
+  end
 end
