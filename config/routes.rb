@@ -35,8 +35,12 @@ Rails.application.routes.draw do
              constraints: { group_id: /\d+/ }
       delete ':group_id/members/:user_id',
              to: 'groups#kick',
-             as: 'group_kcik',
+             as: 'group_kick',
              constraints: { group_id: /\d+/, user_id: /\d+/ }
+      patch ':group_id/members',
+             to: 'groups#settings',
+             as: 'group_settings',
+             constraints: { group_id: /\d+/ }
     end
   end
 
