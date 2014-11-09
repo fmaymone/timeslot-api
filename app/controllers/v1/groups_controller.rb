@@ -110,10 +110,20 @@ module V1
     end
 
     # DELETE /v1/groups/:group_id/members/:user_id
-    # current user removes other user from own group
-    # update membership with state kicked
-    # remove other user from group members
     def kick
+      group = membership_params[:group_id]
+      return head :forbidden unless current_user.is_owner? group
+
+      kickee = User.find(membership_params[:user_id])
+      return head :forbidden unless kickee.is_member? group
+
+      @membership = kickee.memberships.where(group_id: group).first!
+
+      if @membership.kick
+        head :ok
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
     end
 
     # PATCH /v1/groups/:group_id/members

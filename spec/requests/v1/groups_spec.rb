@@ -191,6 +191,8 @@ RSpec.describe "V1::Groups", type: :request do
     let(:group) { create(:group, owner: owner) }
 
     describe "current user is group owner" do
+      let!(:owner) { create(:user) } # remove when current_user is implemented
+
       describe "membership active" do
         let!(:membership) do
           create(:membership, :active, user: member, group: group)
@@ -228,7 +230,9 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "current user not group owner" do
       let!(:non_owner) { create(:user) } # remove when current_user is implemented
-      # let(:current_user) { non_owner }
+      let!(:membership) do
+        create(:membership, :active, user: member, group: group)
+      end
 
       it "returns forbidden" do
         delete "/v1/groups/#{group.id}/members/#{member.id}"
@@ -240,7 +244,6 @@ RSpec.describe "V1::Groups", type: :request do
           delete "/v1/groups/#{group.id}/members/#{member.id}"
         }.not_to change(membership, :state)
       end
-
     end
 
     describe "no membership" do
