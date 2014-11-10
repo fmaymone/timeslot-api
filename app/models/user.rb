@@ -28,4 +28,8 @@ class User < ActiveRecord::Base
     group = Group.find(group_id)
     self == group.owner
   end
+
+  def get_membership(group_id)
+    memberships.where(group_id: group_id).first
+  end
 end

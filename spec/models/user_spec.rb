@@ -158,4 +158,23 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe :get_membership do
+    let(:user) { create(:user) }
+    let(:group) { create(:group) }
+
+    describe "membership exists" do
+      let!(:membership) { create(:membership, user: user, group: group) }
+
+      it "return membership" do
+        expect(user.get_membership group.id).to eq membership
+      end
+    end
+
+    describe "no existing membership" do
+      it "return nil" do
+        expect(user.get_membership group.id).to be nil
+      end
+    end
+  end
 end
