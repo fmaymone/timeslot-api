@@ -82,8 +82,7 @@ module V1
       return head :forbidden unless current_user.can_invite? group
 
       invitee = User.find(membership_params[:user_id])
-      return head :ok if invitee.is_invited? group
-      return head :forbidden if invitee.is_member? group
+      return head :ok if invitee.is_invited?(group) || invitee.is_member?(group)
 
       @membership = invitee.get_membership group
       @membership ||= Membership.new(membership_params)

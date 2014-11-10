@@ -50,9 +50,9 @@ RSpec.describe "V1::Groups", type: :request do
           let!(:membership) {
             create(:membership, :active, user: user, group: group)
           }
-          it "returns forbidden" do
+          it "returns OK" do
             post "/v1/groups/#{group.id}/members/#{user.id}"
-            expect(response.status).to be(403)
+            expect(response.status).to be(200)
           end
         end
 
