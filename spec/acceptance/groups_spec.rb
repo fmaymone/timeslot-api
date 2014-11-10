@@ -19,7 +19,7 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:id) { group.id }
-    let(:deleted_at) { group.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
+    # let(:deleted_at) { group.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
     example "Get group returns group data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
@@ -94,6 +94,50 @@ resource "Groups" do
       expect(group.deleted_at).not_to be nil
       expect(response_status).to eq(200)
       expect(json).to eq(group.attributes.as_json)
+    end
+  end
+
+  get "/v1/groups/:group_id/members" do
+    header "Accept", "application/json"
+
+    parameter :group_id, "ID of the group to get", required: true
+
+    response_field :group_id, "ID of the group"
+    response_field :size, "Number of group members (excluding owner)"
+    response_field :members, "Array of users"
+    response_field :user_id, "ID of member"
+    response_field :username, "name of member"
+    response_field :user_url, "URL for member"
+
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+
+    example "Get list of all group members", document: :v1 do
+      explanation "returns 404 if ID is invalid\n\n"
+      create_list(:membership, 3, group: group)
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to include({
+                                "group_id" => group.id,
+                                "size" => group.members.size
+                              })
+      # TODO: need to get the correct user_url here
+      expect(json["members"].first.except("user_url"))
+        .to eq({
+                 "user_id" => group.members.first.id,
+                 "username" => group.members.first.username
+               })
+    end
+
+    describe "group ID invalid" do
+      let(:group_id) { group.id + 1 }
+
+      example "returns Not Found", document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
     end
   end
 
@@ -174,7 +218,7 @@ resource "Groups" do
       end
     end
 
-    describe "group " do
+    describe "group ID invalid" do
       let(:group_id) { group.id + 1 }
 
       example "returns Not Found", document: false do

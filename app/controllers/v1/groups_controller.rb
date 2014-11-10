@@ -46,8 +46,11 @@ module V1
     end
 
     # GET /v1/groups/:group_id/members
-    # returns a list of all members of the specified group
     def members
+      @group = Group.find(membership_params[:group_id])
+      @members = @group.members
+
+      render :members
     end
 
     # GET /v1/groups/:group_id/members/:user_id
