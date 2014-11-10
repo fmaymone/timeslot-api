@@ -76,14 +76,20 @@ module V1
     # current user invites other user to own group
     # create membership with state invited/pending
     # notify invited user
+    # TODO: put logic into service
     def invite
       group = membership_params[:group_id]
       return head :forbidden unless current_user.can_invite? group
 
       invitee = User.find(membership_params[:user_id])
       return head :ok if invitee.is_invited? group
+      return head :forbidden if invitee.is_member? group
 
-      @membership = Membership.new(membership_params)
+      if invitee.memberships.where(group_id: group).exists?
+        @membership = invitee.memberships.where(group_id: group).first!
+      else
+        @membership = Membership.new(membership_params)
+      end
 
       if @membership.invite && @membership.save
         head :created

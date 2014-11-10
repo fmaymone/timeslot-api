@@ -30,18 +30,53 @@ RSpec.describe "V1::Groups", type: :request do
         }.not_to change(group.members, :count)
       end
 
-      describe "duplicate invitations" do
-        let!(:membership) { create(:membership, user: user, group: group) }
+      describe "existing membership" do
+        describe "duplicate invitation" do
+          let!(:membership) { create(:membership, user: user, group: group) }
 
-        it "returns ok" do
-          post "/v1/groups/#{group.id}/members/#{user.id}"
-          expect(response.status).to be(200)
+          it "returns ok" do
+            post "/v1/groups/#{group.id}/members/#{user.id}"
+            expect(response.status).to be(200)
+          end
+
+          it "are not (re-)created " do
+            expect {
+              post "/v1/groups/#{group.id}/members/#{user.id}"
+            }.not_to change(Membership, :count)
+          end
         end
 
-        it "are not (re-)created " do
-          expect {
+        describe "active group member" do
+          let!(:membership) {
+            create(:membership, :active, user: user, group: group)
+          }
+          it "returns forbidden" do
             post "/v1/groups/#{group.id}/members/#{user.id}"
-          }.not_to change(Membership, :count)
+            expect(response.status).to be(403)
+          end
+        end
+
+        describe "non active group member" do
+          let!(:membership) {
+            create(:membership, :inactive, user: user, group: group)
+          }
+          it "returns Created", :focus, :db do
+            post "/v1/groups/#{group.id}/members/#{user.id}"
+            expect(response.status).to be(201)
+          end
+
+          it "memberships are not (re-)created " do
+            expect {
+              post "/v1/groups/#{group.id}/members/#{user.id}"
+            }.not_to change(Membership, :count)
+          end
+
+          it "changes membership state to 'invited'" do
+            post "/v1/groups/#{group.id}/members/#{user.id}"
+            membership.reload
+            expect(membership.invited?).to be true
+          end
+
         end
       end
     end
