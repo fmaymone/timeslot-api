@@ -60,7 +60,7 @@ RSpec.describe "V1::Groups", type: :request do
           let!(:membership) {
             create(:membership, :inactive, user: user, group: group)
           }
-          it "returns Created", :focus, :db do
+          it "returns Created" do
             post "/v1/groups/#{group.id}/members/#{user.id}"
             expect(response.status).to be(201)
           end

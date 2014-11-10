@@ -61,7 +61,7 @@ module V1
       group = membership_params[:group_id]
       return head :forbidden unless current_user.is_invited? group
 
-      @membership = current_user.memberships.where(group_id: group).first!
+      @membership = current_user.get_membership group
 
       if invite_param == 'accept' && @membership.activate
         head :ok
@@ -85,11 +85,8 @@ module V1
       return head :ok if invitee.is_invited? group
       return head :forbidden if invitee.is_member? group
 
-      if invitee.memberships.where(group_id: group).exists?
-        @membership = invitee.memberships.where(group_id: group).first!
-      else
-        @membership = Membership.new(membership_params)
-      end
+      @membership = invitee.get_membership group
+      @membership ||= Membership.new(membership_params)
 
       if @membership.invite && @membership.save
         head :created
@@ -106,7 +103,7 @@ module V1
       group = membership_params[:group_id]
       return head :forbidden unless current_user.is_member? group
 
-      @membership = current_user.memberships.where(group_id: group).first!
+      @membership = current_user.get_membership group
 
       if @membership.inactivate
         head :ok
@@ -123,7 +120,7 @@ module V1
       kickee = User.find(membership_params[:user_id])
       return head :forbidden unless kickee.is_member? group
 
-      @membership = kickee.memberships.where(group_id: group).first!
+      @membership = kickee.get_membership group
 
       if @membership.kick
         head :ok
@@ -136,11 +133,11 @@ module V1
     # change membership settings if current user is group member
     # notifications
     def settings
-      group_id = membership_params[:group_id]
-      return head :not_found unless Group.exists?(group_id)
-      return head :forbidden unless current_user.is_member? group_id
+      group = membership_params[:group_id]
+      return head :not_found unless Group.exists?(group)
+      return head :forbidden unless current_user.is_member? group
 
-      @membership = current_user.memberships.where(group_id: group_id).first!
+      @membership = current_user.get_membership group
 
       if @membership.update(membership_update_params)
         head :ok
