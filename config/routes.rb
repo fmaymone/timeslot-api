@@ -16,10 +16,10 @@ Rails.application.routes.draw do
 
     scope :groups do
       get '', to: 'groups#index', as: 'groups'
-      get ':id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
+      get ':group_id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
       post '', to: 'groups#create', as: 'group_create'
-      patch ':id', to: 'groups#update', as: 'group_update'
-      delete ':id', to: 'groups#destroy', as: 'group_delete'
+      patch ':group_id', to: 'groups#update', as: 'group_update'
+      delete ':group_id', to: 'groups#destroy', as: 'group_delete'
 
       get ':group_id/members',
           to: 'groups#members',

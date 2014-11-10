@@ -18,7 +18,7 @@ RSpec.describe V1::GroupsController, type: :controller do
 
   describe "GET show" do
     it "assigns the requested group as @group" do
-      get :show, { id: group.id }, valid_session
+      get :show, { group_id: group.id }, valid_session
       expect(assigns(:group)).to eq(group)
     end
   end
@@ -53,20 +53,23 @@ RSpec.describe V1::GroupsController, type: :controller do
       }
 
       it "updates the requested group" do
-        patch :update, { id: group.id, group: new_attributes }, valid_session
+        patch :update, { group_id: group.id, group: new_attributes },
+              valid_session
         group.reload
         expect(group.name).to eq "new group name"
       end
 
       it "assigns the requested group as @group" do
-        patch :update, { id: group.id, group: valid_attributes }, valid_session
+        patch :update, { group_id: group.id, group: valid_attributes },
+              valid_session
         expect(assigns(:group)).to eq(group)
       end
     end
 
     describe "with invalid params" do
       it "assigns the group as @group" do
-        patch :update, { id: group.id, group: invalid_attributes }, valid_session
+        patch :update, { group_id: group.id, group: invalid_attributes },
+              valid_session
         expect(assigns(:group)).to eq(group)
       end
     end
@@ -77,12 +80,12 @@ RSpec.describe V1::GroupsController, type: :controller do
 
     it "doesn't destroy the requested group" do
       expect {
-        delete :destroy, { id: group.id }, valid_session
+        delete :destroy, { group_id: group.id }, valid_session
       }.not_to change(Group, :count)
     end
 
     it "sets deleted_at on the requested group" do
-      delete :destroy, { id: group.id }, valid_session
+      delete :destroy, { group_id: group.id }, valid_session
       group.reload
       expect(group.deleted_at).not_to eq nil
     end

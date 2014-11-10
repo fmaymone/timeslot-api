@@ -10,7 +10,7 @@ module V1
 
     # GET /v1/groups/:group_id
     def show
-      @group = Group.find(params[:id])
+      @group = Group.find(params[:group_id])
 
       render :show
     end
@@ -29,7 +29,7 @@ module V1
     # PATCH /v1/groups/:group_id
     # change name, image, subs_can - states
     def update
-      @group = Group.find(params[:id])
+      @group = Group.find(params[:group_id])
 
       if @group.update(group_create_params)
         head :no_content
@@ -40,7 +40,7 @@ module V1
 
     # DELETE /v1/groups/:group_id
     def destroy
-      @group = Group.find(params[:id])
+      @group = Group.find(params[:group_id])
 
       render :show if SoftDeleteService.call(@group)
     end
@@ -149,7 +149,8 @@ module V1
     end
 
     private def group_create_params
-      params.require(:group).permit(:name, :owner_id)
+      params.require(:group).permit(
+        :name, :owner_id, :subs_can_post, :subs_can_invite)
     end
 
     private def membership_params

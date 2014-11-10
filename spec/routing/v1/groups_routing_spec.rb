@@ -10,7 +10,7 @@ RSpec.describe V1::GroupsController, type: :routing do
 
     it "routes to #show" do
       expect(get: "/v1/groups/1")
-        .to route_to("v1/groups#show", id: "1", format: :json)
+        .to route_to("v1/groups#show", group_id: "1", format: :json)
     end
 
     it "routes to #create" do
@@ -20,12 +20,12 @@ RSpec.describe V1::GroupsController, type: :routing do
 
     it "routes to #update" do
       expect(patch: "/v1/groups/1")
-        .to route_to("v1/groups#update", id: "1", format: :json)
+        .to route_to("v1/groups#update", group_id: "1", format: :json)
     end
 
     it "routes to #destroy" do
       expect(delete: "/v1/groups/1")
-        .to route_to("v1/groups#destroy", id: "1", format: :json)
+        .to route_to("v1/groups#destroy", group_id: "1", format: :json)
     end
 
     it "does't route to #new" do
@@ -35,7 +35,7 @@ RSpec.describe V1::GroupsController, type: :routing do
 
     it "doesn't route to #edit" do
       expect(get: "/v1/groups/1/edit")
-        .not_to route_to("v1/groups#edit", id: "1", format: :json)
+        .not_to route_to("v1/groups#edit", group_id: "1", format: :json)
     end
 
     it "routes to #members" do

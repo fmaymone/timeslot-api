@@ -3,10 +3,10 @@ require 'documentation_helper'
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
 
-  get "/v1/groups/:id" do
+  get "/v1/groups/:group_id" do
     header "Accept", "application/json"
 
-    parameter :id, "ID of the group to get", required: true
+    parameter :group_id, "ID of the group to get", required: true
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
@@ -18,7 +18,7 @@ resource "Groups" do
     response_field :deleted_at, "Deletion of group"
 
     let(:group) { create(:group) }
-    let(:id) { group.id }
+    let(:group_id) { group.id }
     # let(:deleted_at) { group.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
     example "Get group returns group data", document: :v1 do
@@ -54,14 +54,14 @@ resource "Groups" do
     end
   end
 
-  patch "/v1/groups/:id" do
+  patch "/v1/groups/:group_id" do
     header "Content-Type", "application/json"
 
-    parameter :id, "ID of the group to update", required: true
+    parameter :group_id, "ID of the group to update", required: true
     parameter :name, "Updated name of group", scope: :group
 
     let(:group) { create(:group, name: "foo") }
-    let(:id) { group.id }
+    let(:group_id) { group.id }
     let(:name) { "bar" }
 
     example "Update an existing group returns No Content", document: :v1 do
@@ -78,11 +78,11 @@ resource "Groups" do
     end
   end
 
-  delete "/v1/groups/:id" do
-    parameter :id, "ID of the group to delete", required: true
+  delete "/v1/groups/:group_id" do
+    parameter :group_id, "ID of the group to delete", required: true
 
     let(:group) { create(:group) }
-    let(:id) { group.id }
+    let(:group_id) { group.id }
 
     example "Delete group returns the group", document: :v1 do
       explanation "Sets 'deleted_at' on the group.\n\n" \
