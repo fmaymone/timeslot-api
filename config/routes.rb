@@ -21,6 +21,10 @@ Rails.application.routes.draw do
       patch ':id', to: 'groups#update', as: 'group_update'
       delete ':id', to: 'groups#destroy', as: 'group_delete'
 
+      get ':group_id/members',
+          to: 'groups#members',
+          as: 'group_members',
+          constraints: { group_id: /\d+/ }
       post ':group_id/members/:user_id',
            to: 'groups#invite',
            as: 'group_invite',
