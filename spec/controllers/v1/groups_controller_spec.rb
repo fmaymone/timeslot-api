@@ -8,12 +8,12 @@ RSpec.describe V1::GroupsController, type: :controller do
   let(:invalid_attributes) { attributes_for(:group, name: nil) }
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    let(:group) { create(:group, owner: owner) }
+  describe "GET index", :focus do
+    let(:groups) { create_list(:group, 10) }
 
     it "assigns all groups as @groups" do
       get :index, {}, valid_session
-      expect(assigns(:groups)).to eq([group])
+      expect(assigns(:groups)).to eq(groups)
     end
   end
 
