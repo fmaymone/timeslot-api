@@ -46,7 +46,7 @@ group :development, :test do
 
   gem 'guard-rspec'
 
-  gem 'rb-fsevent' if `uname` =~ /Darwin/
+  gem 'rb-fsevent'
 
   gem 'factory_girl_rails'
 
@@ -63,4 +63,4 @@ group :development, :test do
   gem 'bullet'
 end
 
-ruby '2.1.1'
+ruby '2.1.4'
