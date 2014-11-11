@@ -21,6 +21,8 @@ gem 'unicorn'
 
 gem 'rails_12factor', group: :production
 
+gem 'cloudinary'
+
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
@@ -31,9 +33,13 @@ group :development do
   gem 'spring'
 
   gem 'debugger'
+
+  gem 'pry-rails'
 end
 
 group :development, :test do
+  gem 'pry-byebug'
+
   gem 'spring-commands-rspec'
 
   gem 'rspec-rails', '~> 3.0.0'
@@ -53,6 +59,8 @@ group :development, :test do
   gem 'shoulda-matchers', require: false
 
   gem 'faker'
+
+  gem 'bullet'
 end
 
 ruby '2.1.1'

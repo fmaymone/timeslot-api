@@ -55,6 +55,8 @@ createuser -P -d ts_rails_backend
 bundle exec rake db:create
 ```
 
+If the database is not created with the correct PG datatypes by schema.rb, run the migrations directly.
+
 ## Starting rails
 
 * Start dev server (s=server,u=debugger)
@@ -62,6 +64,10 @@ bundle exec rake db:create
 ```bash
 bundle exec rails s -u
 ```
+
+### No delete & destroy
+
+**Delete** and **Destroy** are globally disabled in ```config/activerecord_extensions.rb```.
 
 ## API Documentation
 
@@ -80,6 +86,20 @@ config.format = [:json, :markdown]
 ```
 This is located in *spec/documentation_helper.rb*.
 The generated Markdown files will be in *doc/api* folder.
+
+## Specs / Tests
+
+If you're having issues with the TEST_ENV Database after a migration had run
+(for me the postgres specific types always get changed), destroy your TEST_ENV
+database and re-run all migrations: ```RAILS_ENV=test rake db:migrate:reset```
+
+### Database Cleaner Gem
+
+Manages database transactions for specs/tests.
+Default strategy is ```transaction```.
+If a spec needs ```truncation```, a **:commit** flag can be set on the test.
+```describe "auditing", :commit do ... end```
+
 
 ## Additional software you may want to use
 

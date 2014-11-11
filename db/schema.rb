@@ -11,10 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141007095331) do
+ActiveRecord::Schema.define(version: 20141106135926) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "groups", force: true do |t|
+    t.integer  "owner_id"
+    t.string   "name"
+    t.boolean  "subs_can_post",   default: true
+    t.boolean  "subs_can_invite", default: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  create_table "media_items", force: true do |t|
+    t.string   "media_type"
+    t.string   "public_id"
+    t.integer  "ordering"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "mediable_id"
+    t.string   "mediable_type"
+    t.datetime "deleted_at"
+  end
+
+  add_index "media_items", ["mediable_id", "mediable_type"], name: "index_media_items_on_mediable_id_and_mediable_type", using: :btree
+
+  create_table "memberships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.boolean  "notifications",           default: true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
+    t.string   "state",         limit: 3, default: "011"
+  end
 
   create_table "slots", force: true do |t|
     t.string   "title",      limit: 48
@@ -22,9 +55,17 @@ ActiveRecord::Schema.define(version: 20141007095331) do
     t.datetime "enddate"
     t.text     "note"
     t.string   "visibility", limit: 2,  default: "11"
-    t.string   "alerts",     limit: 10, default: "1000010100"
+    t.string   "alerts",     limit: 10, default: "0000000000"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "deleted_at"
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "username",   limit: 20
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.datetime "deleted_at"
   end
 
 end

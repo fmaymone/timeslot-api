@@ -34,4 +34,17 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # print SQL to console
+  ActiveRecord::Base.logger = Logger.new(STDOUT)
+
+  config.after_initialize do
+    Bullet.enable = false
+    Bullet.bullet_logger = true
+    # Bullet.growl = true
+    Bullet.rails_logger = true
+    Bullet.raise = true
+    # Bullet.airbrake = true
+    # Bullet.stacktrace_includes = %w('your_gem', 'your_middleware')
+  end
 end
