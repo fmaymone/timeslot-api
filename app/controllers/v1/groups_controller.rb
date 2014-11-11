@@ -30,6 +30,7 @@ module V1
     # change name, image, subs_can - states
     def update
       @group = Group.find(params[:group_id])
+      return head :forbidden unless current_user.is_owner? @group.id
 
       if params[:new_media].present?
         add_group_image

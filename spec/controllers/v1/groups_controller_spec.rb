@@ -3,13 +3,14 @@ require 'rails_helper'
 RSpec.describe V1::GroupsController, type: :controller do
   before(:each) { request.accept = "application/json" }
 
-  let(:group) { create(:group) }
   let!(:owner) { create(:user) }
   let(:valid_attributes) { attributes_for(:group, owner_id: owner.id) }
   let(:invalid_attributes) { attributes_for(:group, name: nil) }
   let(:valid_session) { {} }
 
   describe "GET index" do
+    let(:group) { create(:group, owner: owner) }
+
     it "assigns all groups as @groups" do
       get :index, {}, valid_session
       expect(assigns(:groups)).to eq([group])
@@ -17,6 +18,8 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "GET show" do
+    let(:group) { create(:group, owner: owner) }
+
     it "assigns the requested group as @group" do
       get :show, { group_id: group.id }, valid_session
       expect(assigns(:group)).to eq(group)
@@ -47,6 +50,8 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "PATCH update" do
+    let(:group) { create(:group, owner: owner) }
+
     describe "with valid params" do
       let(:new_attributes) {
         attributes_for(:group, name: "new group name")

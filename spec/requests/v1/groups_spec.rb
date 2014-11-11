@@ -3,6 +3,43 @@ require 'rails_helper'
 RSpec.describe "V1::Groups", type: :request do
   let(:json) { JSON.parse(response.body) }
 
+  # update
+  describe "PATCH /v1/groups/:group_id" do
+    let(:user) { create(:user) }
+    let(:new_params) { { group: { name: "bar" } } }
+
+    describe "user is group owner" do
+      let(:group) { create(:group, owner: user, name: "foo") }
+
+      it "returns No Content" do
+        patch "/v1/groups/#{group.id}", new_params
+        expect(response.status).to be(204)
+      end
+
+      it "updates group name" do
+        patch "/v1/groups/#{group.id}", new_params
+        group.reload
+        expect(group.name).to eq "bar"
+      end
+    end
+
+    describe "user not group owner" do
+      let!(:current_user) { create(:user) } # HACK, remove when current_user
+      let(:group) { create(:group, name: "foo") }
+
+      it "returns Forbidden" do
+        patch "/v1/groups/#{group.id}", new_params
+        expect(response.status).to be(403)
+      end
+
+      it "doesn't change group name" do
+        expect {
+          patch "/v1/groups/#{group.id}", new_params
+        }.not_to change(group, :name)
+      end
+    end
+  end
+
   # invite
   describe "POST /v1/groups/:group_id/members/:user_id" do
     let(:user) { create(:user) }
