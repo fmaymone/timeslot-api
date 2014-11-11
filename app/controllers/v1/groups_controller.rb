@@ -172,7 +172,7 @@ module V1
     end
 
     private def add_group_image
-      @media_item = MediaItem.new(group_image_params.merge(media_type: "Image"))
+      @media_item = MediaItem.new(group_image_params.merge(media_type: "image"))
       @group.image = @media_item
 
       if @group.save

@@ -1,7 +1,9 @@
 class MediaItem < ActiveRecord::Base
   belongs_to :mediable, polymorphic: true
 
-  validates :media_type, presence: true
+  validates :media_type,
+            presence: true,
+            inclusion: { in: %w(image voice video) }
   validates :public_id, presence: true
   validates :ordering, presence: true, if: :belongs_to_slot?
   validates :mediable_id, presence: true

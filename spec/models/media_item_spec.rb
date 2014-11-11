@@ -19,6 +19,11 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "with wrong media_type" do
+    before { media_item.media_type = "foo" }
+    it { is_expected.to_not be_valid }
+  end
+
   describe "when public_id is not present" do
     before { media_item.public_id = "" }
     it { is_expected.to_not be_valid }
