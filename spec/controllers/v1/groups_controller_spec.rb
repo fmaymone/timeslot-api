@@ -4,11 +4,11 @@ RSpec.describe V1::GroupsController, type: :controller do
   before(:each) { request.accept = "application/json" }
 
   let!(:owner) { create(:user) }
-  let(:valid_attributes) { attributes_for(:group, owner_id: owner.id) }
+  let(:valid_attributes) { attributes_for(:group) }
   let(:invalid_attributes) { attributes_for(:group, name: nil) }
   let(:valid_session) { {} }
 
-  describe "GET index", :focus do
+  describe "GET index" do
     let(:groups) { create_list(:group, 10) }
 
     it "assigns all groups as @groups" do

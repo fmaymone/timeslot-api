@@ -19,7 +19,6 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
-    # let(:deleted_at) { group.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
     example "Get group returns group data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
@@ -35,22 +34,24 @@ resource "Groups" do
     header "Accept", "application/json"
 
     parameter :name, "Name of group", scope: :group, required: true
-    parameter :owner_id, "User ID of group owner", scope: :group, required: true
     parameter :subs_can_post, "Can subscribers post?", scope: :group
     parameter :subs_can_invite, "Can subscribers invite friends?", scope: :group
 
     response_field :id, "ID of the new group"
 
     let(:name) { "foo" }
-    let(:owner_id) { create(:user).id }
+    let!(:owner) { create(:user) }
 
     example "Create group returns data of new group", document: :v1 do
-      explanation "returns 422 if parameters are missing\n\n" \
+      explanation "group owner is current user\n\n" \
+                  "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
       do_request
 
       expect(response_status).to eq(201)
       expect(json).to have_key("id")
+      group = Group.last
+      expect(group.owner).to eq owner
     end
   end
 

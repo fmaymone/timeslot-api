@@ -17,7 +17,7 @@ module V1
 
     # POST /v1/groups
     def create
-      @group = Group.new(group_create_params)
+      @group = Group.new(group_create_params.merge(owner: current_user))
 
       if @group.save
         render :show, status: :created
@@ -152,8 +152,7 @@ module V1
     end
 
     private def group_create_params
-      params.require(:group).permit(
-        :name, :owner_id, :subs_can_post, :subs_can_invite)
+      params.require(:group).permit(:name, :subs_can_post, :subs_can_invite)
     end
 
     private def membership_params
