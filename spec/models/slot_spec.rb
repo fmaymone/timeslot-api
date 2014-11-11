@@ -55,4 +55,22 @@ RSpec.describe Slot, type: :model do
     before { slot.alerts = "" }
     it { is_expected.to_not be_valid }
   end
+
+  describe "prevent removing from db" do
+    let!(:slot) { create(:slot) }
+
+    it "can not be deleted" do
+      expect(Rails.logger).to receive(:error)
+      expect {
+        slot.delete
+      }.not_to change(described_class, :count)
+    end
+
+    it "can not be destroyed" do
+      expect(Rails.logger).to receive(:error)
+      expect {
+        slot.destroy
+      }.not_to change(described_class, :count)
+    end
+  end
 end

@@ -55,6 +55,8 @@ createuser -P -d ts_rails_backend
 bundle exec rake db:create
 ```
 
+If the database is not created with the correct PG datatypes by schema.rb, run the migrations directly.
+
 ## Starting rails
 
 * Start dev server (s=server,u=debugger)
@@ -62,6 +64,10 @@ bundle exec rake db:create
 ```bash
 bundle exec rails s -u
 ```
+
+### No delete & destroy
+
+**Delete** and **Destroy** are globally disabled in ```config/activerecord_extensions.rb```.
 
 ## API Documentation
 
