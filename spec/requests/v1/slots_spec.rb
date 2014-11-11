@@ -57,12 +57,12 @@ RSpec.describe "V1::Slots", type: :request do
       let(:valid_slot) { attributes_for(:slot) }
 
       it "responds with http status Created (201)" do
-        post "/v1/slots/", valid_slot
+        post "/v1/slots/", new_slot: valid_slot
         expect(response).to have_http_status(:created)
       end
 
       it "respondes with an ID only" do
-        post "/v1/slots/", valid_slot
+        post "/v1/slots/", new_slot: valid_slot
         expect(json).to have_key('id')
         expect(json).to_not have_key('title')
         expect(json).to_not have_key('created_at')
@@ -70,12 +70,12 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "adds a new entry to the DB" do
         expect {
-          post "/v1/slots/", valid_slot
+          post "/v1/slots/", new_slot: valid_slot
         }.to change(Slot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/slots/", valid_slot
+        post "/v1/slots/", new_slot: valid_slot
         expect(json['id']).to eq(Slot.last.id)
       end
     end
@@ -84,40 +84,42 @@ RSpec.describe "V1::Slots", type: :request do
       describe "does not add a new entry to the DB" do
         it "for empty title" do
           expect {
-            post "/v1/slots/", attributes_for(:slot, title: nil)
+            post "/v1/slots/", new_slot: attributes_for(:slot, title: nil)
           }.not_to change(Slot, :count)
         end
 
         it "for empty startdate" do
           expect {
-            post "/v1/slots/", attributes_for(:slot, startdate: "")
+            post "/v1/slots/", new_slot: attributes_for(:slot, startdate: "")
           }.not_to change(Slot, :count)
         end
       end
 
       describe "responds with http status Unprocessable Entity (422)" do
         it "for empty title" do
-          post "/v1/slots/", attributes_for(:slot, title: "")
+          post "/v1/slots/", new_slot: attributes_for(:slot, title: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty startdate" do
-          post "/v1/slots/", attributes_for(:slot, startdate: "")
+          post "/v1/slots/", new_slot: attributes_for(:slot, startdate: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid startdate" do
-          post "/v1/slots/", attributes_for(:slot, startdate: "|$%^@wer")
+          post "/v1/slots/", new_slot: attributes_for(:slot,
+                                                      startdate: "|$%^@wer")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty enddate" do
-          post "/v1/slots/", attributes_for(:slot, enddate: "")
+          post "/v1/slots/", new_slot: attributes_for(:slot, enddate: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid enddate" do
-          post "/v1/slots/", attributes_for(:slot, enddate: "|$%^@wer")
+          post "/v1/slots/", new_slot: attributes_for(:slot,
+                                                      enddate: "|$%^@wer")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
@@ -125,7 +127,7 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:slot,
                                 startdate: "2014-09-08 13:31:02",
                                 enddate: "2014-09-08 13:31:02")
-          post "/v1/slots/", slot
+          post "/v1/slots/", new_slot: slot
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
@@ -133,42 +135,43 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:slot,
                                 startdate: "2014-09-08 13:31:02",
                                 enddate: "2014-07-07 13:31:02")
-          post "/v1/slots/", slot
+          post "/v1/slots/", new_slot: slot
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty visibility" do
-          post "/v1/slots/", attributes_for(:slot, visibility: "")
+          post "/v1/slots/", new_slot: attributes_for(:slot, visibility: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for visibility" do
-          post "/v1/slots/", attributes_for(:slot, visibility: "$$")
+          post "/v1/slots/", new_slot: attributes_for(:slot, visibility: "$$")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if visibility has to much characters" do
-          post "/v1/slots/", attributes_for(:slot, visibility: "101")
+          post "/v1/slots/", new_slot: attributes_for(:slot, visibility: "101")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty alerts" do
-          post "/v1/slots/", attributes_for(:slot, alerts: "")
+          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for alerts" do
-          post "/v1/slots/", attributes_for(:slot, alerts: "$$")
+          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "$$")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if characters missing for alerts" do
-          post "/v1/slots/", attributes_for(:slot, alerts: "101")
+          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "101")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if to many characters for alerts" do
-          post "/v1/slots/", attributes_for(:slot, alerts: "11101101100")
+          post "/v1/slots/", new_slot: attributes_for(:slot,
+                                                      alerts: "11101101100")
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
@@ -180,55 +183,55 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "with valid non-media params" do
       it "responds with http status No Content (204)" do
-        patch "/v1/slots/#{slot.id}", { title: "Something" }
+        patch "/v1/slots/#{slot.id}", slot: { title: "Something" }
         expect(response).to have_http_status(:no_content)
       end
 
       it "updates the title of a given slot" do
         slot = create(:slot, title: "Old title")
-        patch "/v1/slots/#{slot.id}", { title: "New title" }
+        patch "/v1/slots/#{slot.id}", slot: { title: "New title" }
         slot.reload
         expect(slot.title).to eq("New title")
       end
 
       it "updates the startdate of a given slot" do
         slot = create(:slot, startdate: "2014-09-08 13:31:02")
-        patch "/v1/slots/#{slot.id}", { startdate: "2014-07-07 13:31:02" }
+        patch "/v1/slots/#{slot.id}", slot: { startdate: "2014-07-07 13:31:02" }
         slot.reload
         expect(slot.startdate).to eq("2014-07-07 13:31:02")
       end
 
       it "updates the enddate of a given slot" do
         slot = create(:slot, enddate: "2014-09-09 13:31:02")
-        patch "/v1/slots/#{slot.id}", { enddate: "2014-11-11 13:31:02" }
+        patch "/v1/slots/#{slot.id}", slot: { enddate: "2014-11-11 13:31:02" }
         slot.reload
         expect(slot.enddate).to eq("2014-11-11 13:31:02")
       end
 
       it "updates the note of a given slot" do
         slot = create(:slot, note: "Old note")
-        patch "/v1/slots/#{slot.id}", { note: "New note" }
+        patch "/v1/slots/#{slot.id}", slot: { note: "New note" }
         slot.reload
         expect(slot.note).to eq("New note")
       end
 
       it "empty string deletes a note of a given slot" do
         slot = create(:slot, note: "Old note")
-        patch "/v1/slots/#{slot.id}", { note: "" }
+        patch "/v1/slots/#{slot.id}", slot: { note: "" }
         slot.reload
         expect(slot.note).to eq("")
       end
 
       it "updates the visibility of a given slot" do
         slot = create(:slot, visibility: "00")
-        patch "/v1/slots/#{slot.id}", { visibility: "11" }
+        patch "/v1/slots/#{slot.id}", slot: { visibility: "11" }
         slot.reload
         expect(slot.visibility).to eq("11")
       end
 
       it "updates the alerts of a given slot" do
         slot = create(:slot, alerts: "0001110001")
-        patch "/v1/slots/#{slot.id}", { alerts: "1111011110" }
+        patch "/v1/slots/#{slot.id}", slot: { alerts: "1111011110" }
         slot.reload
         expect(slot.alerts).to eq("1111011110")
       end
@@ -238,81 +241,81 @@ RSpec.describe "V1::Slots", type: :request do
       describe "for invalid ID" do
         it "responds with http status Not Found (404)" do
           wrong_id = slot.id + 1
-          patch "/v1/slots/#{wrong_id}", { title: "Something" }
+          patch "/v1/slots/#{wrong_id}", slot: { title: "Something" }
           expect(response).to have_http_status(:not_found)
         end
       end
 
       describe "responds with http status Unprocessable Entity (422)" do
         it "for empty title" do
-          patch "/v1/slots/#{slot.id}", { title: "" }
+          patch "/v1/slots/#{slot.id}", slot: { title: "" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty startdate" do
-          patch "/v1/slots/#{slot.id}", { startdate: "" }
+          patch "/v1/slots/#{slot.id}", slot: { startdate: "" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid startdate" do
-          patch "/v1/slots/#{slot.id}", { startdate: "|$%^@wer" }
+          patch "/v1/slots/#{slot.id}", slot: { startdate: "|$%^@wer" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty enddate" do
-          patch "/v1/slots/#{slot.id}", { enddate: "" }
+          patch "/v1/slots/#{slot.id}", slot: { enddate: "" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid enddate" do
-          patch "/v1/slots/#{slot.id}", { enddate: "|$%^@wer" }
+          patch "/v1/slots/#{slot.id}", slot: { enddate: "|$%^@wer" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if startdate equals enddate" do
           slot = create(:slot, startdate: "2014-09-08 13:31:02")
-          patch "/v1/slots/#{slot.id}", { enddate: "2014-09-08 13:31:02" }
+          patch "/v1/slots/#{slot.id}", slot: { enddate: "2014-09-08 13:31:02" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if enddate before startdate" do
           slot = create(:slot, startdate: "2014-09-08 13:31:02")
-          patch "/v1/slots/#{slot.id}", { enddate: "2014-07-07 13:31:02" }
+          patch "/v1/slots/#{slot.id}", slot: { enddate: "2014-07-07 13:31:02" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty visibility" do
-          patch "/v1/slots/#{slot.id}", { visibility: "" }
+          patch "/v1/slots/#{slot.id}", slot: { visibility: "" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for visibility" do
-          patch "/v1/slots/#{slot.id}", { visibility: "$$" }
+          patch "/v1/slots/#{slot.id}", slot: { visibility: "$$" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if visibility has to much characters" do
-          patch "/v1/slots/#{slot.id}", { visibility: "101" }
+          patch "/v1/slots/#{slot.id}", slot: { visibility: "101" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for empty alerts" do
-          patch "/v1/slots/#{slot.id}", { alerts: "" }
+          patch "/v1/slots/#{slot.id}", slot: { alerts: "" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for alerts" do
-          patch "/v1/slots/#{slot.id}", { alerts: "$$" }
+          patch "/v1/slots/#{slot.id}", slot: { alerts: "$$" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if characters missing for alerts" do
-          patch "/v1/slots/#{slot.id}", { alerts: "101" }
+          patch "/v1/slots/#{slot.id}", slot: { alerts: "101" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "if to many characters for alerts" do
-          patch "/v1/slots/#{slot.id}", { alerts: "11101101100" }
+          patch "/v1/slots/#{slot.id}", slot: { alerts: "11101101100" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
