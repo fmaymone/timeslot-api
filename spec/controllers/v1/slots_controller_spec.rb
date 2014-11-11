@@ -105,19 +105,24 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:valid_slot) { create(:slot) }
+    let!(:slot) { create(:slot) }
 
-    it "respond with http status No Content (204)" do
-      skip "TODO: add soft delete for slots"
-      delete :destroy, id: valid_slot.id
-      expect(response.status).to eq(204)
+    it "respond with http status OK (200)" do
+      delete :destroy, id: slot.id
+      expect(response.status).to eq(200)
     end
 
-    it "destroys the requested slot" do
-      skip "TODO: add soft delete for slots"
+    it "doesn't destroy the requested slot" do
       expect {
-        delete :destroy, id: valid_slot.id
-      }.to change(Slot, :count).by(-1)
+        delete :destroy, id: slot.id
+      }.not_to change(Slot, :count)
     end
+
+    it "sets deleted_at on the requested slot" do
+      delete :destroy, id: slot.id
+      slot.reload
+      expect(slot.deleted_at).not_to eq nil
+    end
+
   end
 end

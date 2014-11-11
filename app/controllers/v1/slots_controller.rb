@@ -35,10 +35,9 @@ module V1
 
     # DELETE /v1/slots/1
     def destroy
-      slot = Slot.find(params.require(:id))
-      slot.destroy
+      @slot = Slot.find(params.require(:id))
 
-      head :no_content
+      render :show if SoftDeleteService.call(@slot)
     end
 
     private def slot_create_params

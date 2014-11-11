@@ -77,10 +77,10 @@ resource "Users" do
     let!(:user) { create(:user) }
     let(:id) { user.id }
 
-    example "Delete user returns the user", document: :v1 do
-      explanation "Sets 'deleted_at' on the user\n\n." \
-                  "Doesn't delete anything.\n\n" \
-                  "returns 404 if ID is invalid\n\n"
+    example "Delete user sets 'deleted_at' and returns user data",
+            document: :v1 do
+      explanation "Doesn't delete anything.\n\n" \
+                  "returns 404 if ID is invalid"
       do_request
 
       user.reload

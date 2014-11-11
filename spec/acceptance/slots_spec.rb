@@ -23,6 +23,7 @@ resource "Slots" do
 
       let(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }
+      let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
       example "Get slot returns slot data", document: :v1 do
         explanation "returns 404 if ID is invalid"
@@ -38,7 +39,8 @@ resource "Slots" do
                  "visibility" => slot.visibility,
                  "alerts" => slot.alerts,
                  "created_at" => slot.created_at.iso8601,
-                 "updated_at" => slot.updated_at.iso8601
+                 "updated_at" => slot.updated_at.iso8601,
+                 "deleted_at" => deleted_at
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
       end
@@ -255,13 +257,16 @@ resource "Slots" do
       let!(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }
 
-      example "Delete slot returns No content", document: :v1 do
-        explanation "returns 404 if ID is invalid"
-        skip "TODO: add soft delete for slots"
+      example "Delete slot sets 'deleted_at' and returns slot data",
+              document: :v1 do
+        explanation "Doesn't delete anything.\n\n" \
+                    "returns 404 if ID is invalid"
         do_request
 
-        expect(response_status).to eq(204)
-        expect(response_body).to eq("")
+        slot.reload
+        expect(slot.deleted_at).not_to be nil
+        expect(response_status).to eq(200)
+        expect(json).to include(slot.attributes.as_json)
       end
     end
 

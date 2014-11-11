@@ -555,18 +555,15 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:slot) { create(:slot) }
 
     context "with a valid ID" do
-      it "returns http No Content (204)" do
-        skip "TODO: add soft delete for slots"
-
+      it "returns success" do
         delete "/v1/slots/#{slot.id}"
-        expect(response).to have_http_status(:no_content)
+        expect(response).to have_http_status(:ok)
       end
 
-      it "destroys the requested slot" do
-        skip "TODO: add soft delete for slots"
+      it "doesn't destroy the slot" do
         expect {
           delete "/v1/slots/#{slot.id}"
-        }.to change(Slot, :count).by(-1)
+        }.not_to change(Slot, :count)
       end
     end
 
