@@ -76,6 +76,33 @@ resource "Groups" do
       expect(response_status).to eq(204)
       expect(response_body).to eq("")
     end
+
+    describe "Adding image to group" do
+      parameter :new_media, "Scope for attributes of new image",
+                required: true
+      parameter :public_id, "Cloudinary ID / URL",
+                required: true,
+                scope: :new_media
+
+      response_field :media_item_id, "Timeslot internal ID for this media item"
+
+      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+
+      example "Adding media items to existing slot returns ID & status created",
+              document: :v1 do
+        explanation "First a cloudinary signature needs to be fetched by the" \
+                    " client from the API. After uploading the image to" \
+                    " cloudinary client updates the group with the image" \
+                    " information."
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key("media_item_id")
+        group.reload
+        expect(group.image).not_to be nil
+        expect(group.image.public_id).to eq public_id
+      end
+    end
   end
 
   delete "/v1/groups/:group_id" do
