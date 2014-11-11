@@ -60,17 +60,23 @@ RSpec.describe Slot, type: :model do
     let!(:slot) { create(:slot) }
 
     it "can not be deleted" do
+      before_count = described_class.count
+
       expect(Rails.logger).to receive(:error)
       expect {
         slot.delete
-      }.not_to change(described_class, :count)
+      }.to raise_error
+      expect(before_count).to eq described_class.all.size
     end
 
     it "can not be destroyed" do
+      before_count = described_class.count
+
       expect(Rails.logger).to receive(:error)
       expect {
         slot.destroy
-      }.not_to change(described_class, :count)
+      }.to raise_error
+      expect(before_count).to eq described_class.all.size
     end
   end
 end

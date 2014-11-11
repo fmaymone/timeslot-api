@@ -2,14 +2,14 @@ module PreventDeletion
   class NotActivated < StandardError; end
 
   def destroy
-    log_prevention
+    prevent_remove
   end
 
   def delete
-    log_prevention
+    prevent_remove
   end
 
-  def log_prevention
+  private def prevent_remove
     msg = { self: self }
     msg.merge!(caller_0: caller[0])
     msg.merge!(caller_1: caller[1])
