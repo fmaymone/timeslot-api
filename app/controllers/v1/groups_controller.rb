@@ -32,8 +32,8 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      if params[:new_media].present? &&
-         AddImage.call(@group, group_image_params).equal?(true)
+      if image_param.present? &&
+         AddImage.call(@group, group_image_param).equal?(true)
         render "v1/media/create", status: :created,
                locals: { media_item_id: @group.image.id }
       elsif @group.update(group_create_params)
@@ -169,8 +169,12 @@ module V1
       params.require(:group).permit(:notifications)
     end
 
-    private def group_image_params
-      params.require(:new_media).require(:public_id)
+    private def image_param
+      params.require(:group)[:new_media]
+    end
+
+    private def group_image_param
+      params.require(:group).require(:new_media).require(:public_id)
     end
   end
 end

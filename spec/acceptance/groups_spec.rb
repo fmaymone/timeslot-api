@@ -83,7 +83,8 @@ resource "Groups" do
 
     describe "Add image to group" do
       parameter :new_media, "Scope for attributes of new image",
-                required: true
+                required: true,
+                scope: :group
       parameter :public_id, "Cloudinary ID / URL",
                 required: true,
                 scope: :new_media
@@ -91,6 +92,7 @@ resource "Groups" do
       response_field :media_item_id, "Timeslot internal ID for this media item"
 
       let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:raw_post) {{ group: { new_media: { public_id: public_id }}}.to_json }
 
       example "Add image to existing group returns ID & status created",
               document: :v1 do
