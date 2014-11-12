@@ -32,8 +32,10 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      if params[:new_media].present?
-        add_group_image
+      if params[:new_media].present? &&
+         AddImage.call(@group, group_image_params).equal?(true)
+        render "v1/media/create", status: :created,
+               locals: { media_item_id: @group.image.id }
       elsif @group.update(group_create_params)
         head :no_content
       else
@@ -168,19 +170,7 @@ module V1
     end
 
     private def group_image_params
-      params.require(:new_media).permit(:public_id)
-    end
-
-    private def add_group_image
-      @media_item = MediaItem.new(group_image_params.merge(media_type: "image"))
-      @group.image = @media_item
-
-      if @group.save
-        render "v1/media/create", status: :created
-      else
-        render json: @group.errors.add(:media_item, @media_item.errors),
-               status: :unprocessable_entity
-      end
+      params.require(:new_media).require(:public_id)
     end
   end
 end

@@ -21,6 +21,49 @@ RSpec.describe "V1::Groups", type: :request do
         group.reload
         expect(group.name).to eq "bar"
       end
+
+      describe "add image" do
+        let(:public_id) { FactoryGirl.attributes_for(:user_image)[:public_id] }
+        let(:img_params) { { new_media: { public_id: public_id } } }
+
+        describe "new" do
+          it "returns created" do
+            patch "/v1/groups/#{group.id}", img_params
+            expect(response.status).to be(201)
+          end
+
+          it "sets group image" do
+            patch "/v1/groups/#{group.id}", img_params
+            expect(group.image.public_id).to eq public_id
+          end
+        end
+
+        describe "overwrite existing" do
+          let(:group) { create(:group, :with_image, owner: user, name: "foo") }
+
+          it "returns created" do
+            skip "what to do with previous image? soft delete?"
+            patch "/v1/groups/#{group.id}", img_params
+            expect(response.status).to be(201)
+            expect(group.image.public_id).to eq public_id
+          end
+        end
+
+        describe "invalid" do
+          let(:img_params) { { new_media: { public_id: nil } } }
+
+          it "returns 422" do
+            patch "/v1/groups/#{group.id}", img_params
+            expect(response.status).to be(422)
+          end
+
+          it "doesn't set group image" do
+            expect {
+              patch "/v1/groups/#{group.id}", img_params
+            }.not_to change(group, :image)
+          end
+        end
+      end
     end
 
     describe "user not group owner" do
