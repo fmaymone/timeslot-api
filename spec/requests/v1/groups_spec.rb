@@ -23,9 +23,8 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       describe "add image" do
-        let(:public_id) { FactoryGirl.attributes_for(:user_image)[:public_id] }
+        let(:public_id) { attributes_for(:real_image)[:public_id] }
         let(:img_params) { { group: { new_media: { public_id: public_id } } } }
-        # let(:img_params) { { new_media: { public_id: public_id } } }
 
         describe "new" do
           it "returns created" do
@@ -43,7 +42,6 @@ RSpec.describe "V1::Groups", type: :request do
           let(:group) { create(:group, :with_image, owner: user, name: "foo") }
 
           it "returns created" do
-            skip "what to do with previous image? soft delete?"
             patch "/v1/groups/#{group.id}", img_params
             expect(response.status).to be(201)
             expect(group.image.public_id).to eq public_id

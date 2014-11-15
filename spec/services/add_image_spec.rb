@@ -1,8 +1,11 @@
 require 'spec_helper'
 
-describe AddImage do
+RSpec.describe AddImage, type: :service do
+  before(:each) { DatabaseCleaner.start }
+  after(:each) { DatabaseCleaner.clean }
+
   let(:user) { FactoryGirl.create(:user) }
-  let(:public_id) { FactoryGirl.attributes_for(:user_image)[:public_id] }
+  let(:public_id) { FactoryGirl.attributes_for(:mock_image)[:public_id] }
 
   describe :call do
     describe "passing valid parameters" do
@@ -30,6 +33,52 @@ describe AddImage do
           AddImage.call(user, nil)
         }.not_to change(MediaItem, :count)
       end
+    end
+
+    describe "existing image" do
+      let(:user) { FactoryGirl.create(:user, :with_image) }
+
+      describe "passing valid parameters" do
+        it "updates the image" do
+          expect(user.image.public_id).not_to eq public_id
+          expect {
+            AddImage.call(user, public_id)
+          }.not_to change(MediaItem, :count)
+          expect(user.image.public_id).to eq public_id
+        end
+      end
+    end
+  end
+
+  describe :unlink_existing_image do
+    it "unsets the models image" do
+      user = FactoryGirl.create(:user, :with_image)
+      AddImage.instance_eval do
+        unlink_existing_image user
+      end
+      expect(user.image).to be nil
+    end
+
+    it "removes the media_item from the database" do
+      user = FactoryGirl.create(:user, :with_image)
+      expect {
+        AddImage.instance_eval {
+          unlink_existing_image user
+        }
+      }.to change(MediaItem, :count).by(-1)
+    end
+
+    it "adds a cloudinary tag to the image" do
+      user = FactoryGirl.create(:user, :with_real_image)
+      public_id = user.image.public_id
+      AddImage.instance_eval {
+        unlink_existing_image user
+      }
+      tags = Cloudinary::Api.resource(public_id)["tags"]
+      expect(tags).to include("replaced", "model-id:#{user.id}")
+
+      Cloudinary::Uploader.remove_tag("replaced", public_id)
+      Cloudinary::Uploader.remove_tag("model-id:#{user.id}", public_id)
     end
   end
 end
