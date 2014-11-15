@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   after_commit AuditService
 
-  has_one :image, class_name: "MediaItem", as: :mediable
+  has_one :image, class_name: "MediaItem", as: :mediable, dependent: :destroy
   has_many :own_groups, class_name: "Group",
            foreign_key: "owner_id", inverse_of: :owner
   has_many :memberships, inverse_of: :user

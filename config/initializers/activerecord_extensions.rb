@@ -2,7 +2,12 @@ module PreventDeletion
   class NotActivated < StandardError; end
 
   def destroy
-    prevent_remove
+    if self.class == MediaItem
+      Rails.logger.info "removing media_item from db: #{self}"
+      super
+    else
+      prevent_remove
+    end
   end
 
   def delete

@@ -76,14 +76,14 @@ pickle-email-*.html
 
 # Environment files that may contain sensitive data
 .env
+.env.test
 .powenv
+config/app_environment_variables.rb
 
 Guardfile
 
 .rubocop.yml
-
 .rubocop_todo.yml
 
-.env.test
-
-config/app_environment_variables.rb
+doc/api.zip
+spec/logo.jpg

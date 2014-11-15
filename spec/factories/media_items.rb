@@ -1,6 +1,6 @@
 FactoryGirl.define do
   sequence(:ordering, 0)
-  sequence(:public_id) { |n| "cloudinary-#{n}" }
+  sequence(:public_id) { |n| "dfhjghjkdisudgfds7iy#{n}" }
 
   factory :slot_image, class: "MediaItem" do
     association :mediable, factory: :slot
@@ -9,15 +9,15 @@ FactoryGirl.define do
     ordering
   end
 
-  factory :user_image, class: "MediaItem" do
+  factory :mock_image, class: "MediaItem" do
     association :mediable, factory: :user
     media_type "image"
     public_id
   end
 
-  factory :group_image, class: "MediaItem" do
-    association :mediable, factory: :group
+  factory :real_image, class: "MediaItem" do
+    association :mediable, factory: :user
     media_type "image"
-    public_id
+    public_id "testid"
   end
 end

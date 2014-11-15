@@ -63,24 +63,28 @@ resource "Groups" do
 
     let(:group) { create(:group, name: "foo") }
     let(:group_id) { group.id }
-    let(:name) { "bar" }
 
-    example "Update an existing group returns No Content", document: :v1 do
-      explanation "Change groupname\n\n" \
-                  "returns 404 if ID is invalid\n\n" \
-                  "returns 422 if parameters are missing\n\n" \
-                  "returns 422 if parameters are invalid"
-      do_request
+    describe "Update existing group" do
+      let(:name) { "bar" }
 
-      group.reload
-      expect(group.name).to eq "bar"
-      expect(response_status).to eq(204)
-      expect(response_body).to eq("")
+      example "Update existing group returns No Content", document: :v1 do
+        explanation "Change groupname\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        group.reload
+        expect(group.name).to eq "bar"
+        expect(response_status).to eq(204)
+        expect(response_body).to eq("")
+      end
     end
 
-    describe "Adding image to group" do
+    describe "Add image to group" do
       parameter :new_media, "Scope for attributes of new image",
-                required: true
+                required: true,
+                scope: :group
       parameter :public_id, "Cloudinary ID / URL",
                 required: true,
                 scope: :new_media
@@ -88,8 +92,9 @@ resource "Groups" do
       response_field :media_item_id, "Timeslot internal ID for this media item"
 
       let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:raw_post) {{ group: { new_media: { public_id: public_id }}}.to_json }
 
-      example "Adding media items to existing slot returns ID & status created",
+      example "Add image to existing group returns ID & status created",
               document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \

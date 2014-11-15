@@ -63,14 +63,14 @@ module V1
     end
 
     private def add_media_item
-      @media_item = MediaItem.insert(@slot.media_items,
-                                     media_item_create_params)
-      @slot.media_items << @media_item
+      media_item = MediaItem.insert(@slot.media_items, media_item_create_params)
+      @slot.media_items << media_item
 
       if @slot.save
-        render "v1/media/create", status: :created
+        render "v1/media/create", status: :created,
+               locals: { media_item_id: media_item.id }
       else
-        render json: @slot.errors.add(:media_item, @media_item.errors),
+        render json: @slot.errors.add(:media_item, media_item.errors),
                status: :unprocessable_entity
       end
     end
