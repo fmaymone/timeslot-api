@@ -6,7 +6,13 @@ FactoryGirl.define do
 
     trait :with_image do
       after :create do |user|
-        create :user_image, mediable: user
+        create :mock_image, mediable: user
+      end
+    end
+
+    trait :with_real_image do
+      after :create do |user|
+        create :real_image, mediable: user
       end
     end
 
