@@ -36,7 +36,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # print SQL to console
-  ActiveRecord::Base.logger = Logger.new(STDOUT)
+  ActiveRecord::Base.logger = ActiveSupport::Logger.new(STDOUT)
 
   config.after_initialize do
     Bullet.enable = false
