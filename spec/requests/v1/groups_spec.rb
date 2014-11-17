@@ -278,9 +278,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :inactive, user: member, group: group)
       end
 
-      it "returns forbidden" do
+      it "returns OK" do
         delete "/v1/groups/#{group.id}/members"
-        expect(response.status).to be(403)
+        expect(response.status).to be(200)
       end
 
       it "doesn't changes membership state" do

@@ -108,7 +108,8 @@ module V1
     # remove current user from group members
     def leave
       group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_member? group
+      return head :forbidden if current_user.get_membership(group).nil?
+      return head :ok unless current_user.is_member? group
 
       @membership = current_user.get_membership group
 
