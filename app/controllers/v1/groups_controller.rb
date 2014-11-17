@@ -125,7 +125,8 @@ module V1
       return head :forbidden unless current_user.is_owner? group
 
       kickee = User.find(membership_params[:user_id])
-      return head :forbidden unless kickee.is_member? group
+      return head :forbidden if kickee.get_membership(group).nil?
+      return head :ok unless (kickee.is_member?(group) || kickee.is_invited?(group))
 
       @membership = kickee.get_membership group
 

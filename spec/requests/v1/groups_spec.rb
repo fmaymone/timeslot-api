@@ -324,14 +324,31 @@ RSpec.describe "V1::Groups", type: :request do
         end
       end
 
-      describe "membership not active" do
+      describe "membership invited" do
+        let!(:membership) do
+          create(:membership, :invited, user: member, group: group)
+        end
+
+        it "returns OK" do
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          expect(response.status).to be(200)
+        end
+
+        it "changes membership state to 'kicked'" do
+          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          membership.reload
+          expect(membership.kicked?).to be true
+        end
+      end
+
+      describe "membership not active nor invited" do
         let!(:membership) do
           create(:membership, :inactive, user: member, group: group)
         end
 
-        it "returns forbidden" do
+        it "returns OK" do
           delete "/v1/groups/#{group.id}/members/#{member.id}"
-          expect(response.status).to be(403)
+          expect(response.status).to be(200)
         end
 
         it "doesn't changes membership state" do
