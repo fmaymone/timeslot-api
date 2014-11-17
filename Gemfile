@@ -54,8 +54,6 @@ group :development, :test do
 
   gem 'rspec_api_documentation'
 
-  gem 'apitome'
-
   gem 'shoulda-matchers', require: false
 
   gem 'faker'
