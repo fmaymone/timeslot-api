@@ -174,6 +174,147 @@ resource "Groups" do
     end
   end
 
+  # handle invite
+  post "/v1/groups/:group_id/members" do
+    header "Content-Type", "application/json"
+
+    example "Adds an invited user to group", document: :v1 do
+      skip "TODO"
+      explanation "returns 200 if invite successfully accepted\n\n" \
+                  "returns 200 if invite successfully refused.\n\n" \
+                  "returns 403 if invitation is missing\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing"
+      do_request
+
+      expect(response_status).to eq(200)
+    end
+  end
+
+  # invite
+  post "/v1/groups/:group_id/members/:user_id" do
+    header "Content-Type", "application/json"
+
+    example "Invite user to group", document: :v1 do
+      skip "TODO"
+      explanation "Inviting user must be group owner or group must allow\n\n" \
+                  "invites by group members.\n\n" \
+                  "returns 200 if user is already invited\n\n" \
+                  "returns 200 if user is already group member\n\n" \
+                  "returns 201 if invite successfully created\n\n" \
+                  "returns 403 if user is not allowed to invite\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing"
+      do_request
+
+      expect(response_status).to eq(200)
+    end
+  end
+
+  # leave
+  delete "/v1/groups/:group_id/members" do
+
+    parameter :group_id, "ID of the group", required: true
+
+    let!(:member) { create(:user) }
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+
+    describe "membership active" do
+      let!(:membership) do
+        create(:membership, :active, user: member, group: group)
+      end
+
+      example "current user leaves group", document: :v1 do
+        explanation "returns 200 if membership successfully inactivated\n\n" \
+                    "returns 200 if user not active group member\n\n" \
+                    "returns 403 if user has no membership for this" \
+                    " group at all\n\n" \
+                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 422 if parameters are missing"
+        do_request
+
+        expect(response_status).to eq(200)
+        membership.reload
+        expect(membership.inactive?).to be true
+      end
+    end
+
+    describe "membership not active" do
+      let!(:membership) do
+        create(:membership, :inactive, user: member, group: group)
+      end
+
+      example "returns OK", document: false do
+        do_request
+        expect(response_status).to eq(200)
+      end
+    end
+
+    describe "no membership" do
+      example "returns Forbidden", document: false do
+        do_request
+        expect(response_status).to eq(403)
+      end
+    end
+  end
+
+  # kick
+  delete "/v1/groups/:group_id/members/:user_id" do
+
+    parameter :group_id, "ID of the group", required: true
+    parameter :user_id, "ID of the user to kick", required: true
+
+    let(:member) { create(:user) }
+    let!(:owner) { create(:user) }
+    let(:group) { create(:group, owner: owner) }
+
+    let(:group_id) { group.id }
+    let(:user_id) { member.id }
+
+    describe "membership active" do
+      let!(:membership) do
+        create(:membership, :active, user: member, group: group)
+      end
+
+      example "Remove other user from owned group (kick)", document: :v1 do
+        explanation "returns 200 if user successfully removed from group\n\n" \
+                    "returns 200 if invite for user successfully disabled\n\n" \
+                    "returns 403 if user to be kicked has no membership" \
+                    " for this group at all\n\n" \
+                    "returns 403 if current user not group owner aka" \
+                    " not allowed to kick members\n\n" \
+                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 422 if parameters are missing"
+        do_request
+
+        expect(response_status).to eq(200)
+        membership.reload
+        expect(membership.kicked?).to be true
+        # expect(group.members).not_to include member # TODO: add scope
+      end
+    end
+
+    describe "membership not active" do
+      let!(:membership) do
+        create(:membership, :inactive, user: member, group: group)
+      end
+
+      example "returns OK", document: false do
+        do_request
+        expect(response_status).to eq(200)
+      end
+    end
+
+    describe "no membership" do
+      example "returns Forbidden", document: false do
+        do_request
+        expect(response_status).to eq(403)
+      end
+    end
+  end
+
+  # settings
   patch "/v1/groups/:group_id/members" do
     header "Content-Type", "application/json"
 
