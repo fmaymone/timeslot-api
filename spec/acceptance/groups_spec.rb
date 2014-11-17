@@ -147,7 +147,7 @@ resource "Groups" do
 
     example "Get list of all group members", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
-      create_list(:membership, 3, group: group)
+      create_list(:membership, 3, :active, group: group)
 
       do_request
 

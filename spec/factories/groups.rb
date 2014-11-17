@@ -12,5 +12,11 @@ FactoryGirl.define do
         create :mock_image, mediable: group
       end
     end
+
+    trait :with_3_members do
+      after :create do |group|
+        create_list :membership, 3, :active, group: group
+      end
+    end
   end
 end
