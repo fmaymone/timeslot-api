@@ -32,11 +32,11 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      if image_param.present? &&
-         AddImage.call(@group, group_image_param).equal?(true)
-        render "v1/media/create", status: :created,
+      if image_param.present? && AddImage.call(@group, group_image_param).equal?(true)
+        render "v1/media/create",
+               status: :created,
                locals: { media_item_id: @group.image.id }
-      elsif @group.update(group_create_params)
+      elsif !image_param.present? &&  @group.update(group_create_params)
         head :no_content
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -46,6 +46,7 @@ module V1
     # DELETE /v1/groups/:group_id
     def destroy
       @group = Group.find(params[:group_id])
+      return head :forbidden unless current_user.is_owner? @group.id
 
       render :show if SoftDeleteService.call(@group)
     end
@@ -58,22 +59,42 @@ module V1
       render :members
     end
 
+    # GET /v1/groups/:group_id/related
+    def related
+      group = Group.find(membership_params[:group_id])
+      @memberships = Membership.includes([:user]).where(group_id: group.id)
+
+      render :related
+    end
+
     # GET /v1/groups/:group_id/members/:user_id
     # return if the specified user is an activated member of the specified group
     # or return the state of the specified user regarding the specified group
     # def membership_state
     # end
 
-    # POST /v1/groups/:group_id/members
-    def handle_invite
+    # POST /v1/groups/:group_id/accept
+    def accept_invite
       group = membership_params[:group_id]
       return head :forbidden unless current_user.is_invited? group
 
       @membership = current_user.get_membership group
 
-      if invite_param == 'accept' && @membership.activate
+      if @membership.activate
         head :ok
-      elsif invite_param == 'refuse' && @membership.refuse
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
+    end
+
+    # POST /v1/groups/:group_id/refuse
+    def refuse_invite
+      group = membership_params[:group_id]
+      return head :forbidden unless current_user.is_invited? group
+
+      @membership = current_user.get_membership group
+
+      if @membership.refuse
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -108,7 +129,8 @@ module V1
     # remove current user from group members
     def leave
       group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_member? group
+      return head :forbidden if current_user.get_membership(group).nil?
+      return head :ok unless current_user.is_member? group
 
       @membership = current_user.get_membership group
 
@@ -125,7 +147,8 @@ module V1
       return head :forbidden unless current_user.is_owner? group
 
       kickee = User.find(membership_params[:user_id])
-      return head :forbidden unless kickee.is_member? group
+      return head :forbidden if kickee.get_membership(group).nil?
+      return head :ok unless (kickee.is_member?(group) || kickee.is_invited?(group))
 
       @membership = kickee.get_membership group
 
@@ -154,15 +177,11 @@ module V1
     end
 
     private def group_create_params
-      params.require(:group).permit(:name, :subs_can_post, :subs_can_invite)
+      params.require(:group).permit(:name, :members_can_post, :members_can_invite)
     end
 
     private def membership_params
       params.permit(:group_id, :user_id)
-    end
-
-    private def invite_param
-      params.require(:group).require(:invite)
     end
 
     private def membership_update_params

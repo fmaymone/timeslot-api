@@ -27,14 +27,14 @@ RSpec.describe User, type: :model do
   end
 
   describe "groups relation" do
-    let(:user) { create(:user, :with_groups) }
+    let(:user) { create(:user, :with_3_groups) }
     it "returns the groups where user is a member" do
       expect(user.groups.size).to eq 3
     end
   end
 
   describe "own groups relation" do
-    let(:user) { create(:user, :with_own_groups) }
+    let(:user) { create(:user, :with_3_own_groups) }
     it "returns the users own groups" do
       expect(user.own_groups.size).to eq 3
     end
@@ -94,7 +94,7 @@ RSpec.describe User, type: :model do
     end
 
     describe "group subscribers can invite" do
-      let(:group) { create(:group, subs_can_invite: true) }
+      let(:group) { create(:group, members_can_invite: true) }
 
       it "return true" do
         expect(user.can_invite? group.id).to be true
@@ -102,7 +102,7 @@ RSpec.describe User, type: :model do
     end
 
     describe "not owner & subs can't invite" do
-      let(:group) { create(:group, subs_can_invite: false) }
+      let(:group) { create(:group, members_can_invite: false) }
 
       it "return false" do
         expect(user.can_invite? group.id).to be false

@@ -84,6 +84,6 @@ Guardfile
 
 .rubocop.yml
 .rubocop_todo.yml
+rails_best_practices_output.html
 
-doc/api.zip
 spec/logo.jpg

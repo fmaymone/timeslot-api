@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106135926) do
+ActiveRecord::Schema.define(version: 20141118141033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -19,12 +19,14 @@ ActiveRecord::Schema.define(version: 20141106135926) do
   create_table "groups", force: true do |t|
     t.integer  "owner_id"
     t.string   "name"
-    t.boolean  "subs_can_post",   default: true
-    t.boolean  "subs_can_invite", default: false
+    t.boolean  "members_can_post",   default: true
+    t.boolean  "members_can_invite", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
   end
+
+  add_index "groups", ["owner_id"], name: "index_groups_on_owner_id", using: :btree
 
   create_table "media_items", force: true do |t|
     t.string   "media_type"
@@ -48,6 +50,9 @@ ActiveRecord::Schema.define(version: 20141106135926) do
     t.datetime "deleted_at"
     t.string   "state",         limit: 3, default: "011"
   end
+
+  add_index "memberships", ["group_id"], name: "index_memberships_on_group_id", using: :btree
+  add_index "memberships", ["user_id"], name: "index_memberships_on_user_id", using: :btree
 
   create_table "slots", force: true do |t|
     t.string   "title",      limit: 48
