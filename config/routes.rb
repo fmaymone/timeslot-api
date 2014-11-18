@@ -29,9 +29,13 @@ Rails.application.routes.draw do
            to: 'groups#invite',
            as: 'group_invite',
            constraints: { group_id: /\d+/, user_id: /\d+/ }
-      post ':group_id/members',
-           to: 'groups#handle_invite',
-           as: 'group_handle_invite',
+      post ':group_id/accept',
+           to: 'groups#accept_invite',
+           as: 'group_accept_invite',
+           constraints: { group_id: /\d+/ }
+      post ':group_id/refuse',
+           to: 'groups#refuse_invite',
+           as: 'group_refuse_invite',
            constraints: { group_id: /\d+/ }
       delete ':group_id/members',
              to: 'groups#leave',

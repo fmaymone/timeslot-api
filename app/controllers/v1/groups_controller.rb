@@ -32,9 +32,9 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      if image_param.present? &&
-         AddImage.call(@group, group_image_param).equal?(true)
-        render "v1/media/create", status: :created,
+      if image_param.present? && AddImage.call(@group, group_image_param).equal?(true)
+        render "v1/media/create",
+               status: :created,
                locals: { media_item_id: @group.image.id }
       elsif @group.update(group_create_params)
         head :no_content
@@ -64,16 +64,28 @@ module V1
     # def membership_state
     # end
 
-    # POST /v1/groups/:group_id/members
-    def handle_invite
+    # POST /v1/groups/:group_id/accept
+    def accept_invite
       group = membership_params[:group_id]
       return head :forbidden unless current_user.is_invited? group
 
       @membership = current_user.get_membership group
 
-      if invite_param == 'accept' && @membership.activate
+      if @membership.activate
         head :ok
-      elsif invite_param == 'refuse' && @membership.refuse
+      else
+        render json: @membership.errors, status: :unprocessable_entity
+      end
+    end
+
+    # POST /v1/groups/:group_id/refuse
+    def refuse_invite
+      group = membership_params[:group_id]
+      return head :forbidden unless current_user.is_invited? group
+
+      @membership = current_user.get_membership group
+
+      if @membership.refuse
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -161,10 +173,6 @@ module V1
 
     private def membership_params
       params.permit(:group_id, :user_id)
-    end
-
-    private def invite_param
-      params.require(:group).require(:invite)
     end
 
     private def membership_update_params

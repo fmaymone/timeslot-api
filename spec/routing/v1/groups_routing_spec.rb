@@ -50,9 +50,14 @@ RSpec.describe V1::GroupsController, type: :routing do
               "v1/groups#invite", group_id: "1", user_id: "2", format: :json)
     end
 
-    it "routes to #handle_invite" do
-      expect(post: "/v1/groups/1/members")
-        .to route_to("v1/groups#handle_invite", group_id: "1", format: :json)
+    it "routes to #accept_invite" do
+      expect(post: "/v1/groups/1/accept")
+        .to route_to("v1/groups#accept_invite", group_id: "1", format: :json)
+    end
+
+    it "routes to #refuse_invite" do
+      expect(post: "/v1/groups/1/refuse")
+        .to route_to("v1/groups#refuse_invite", group_id: "1", format: :json)
     end
 
     it "routes to #leave" do
