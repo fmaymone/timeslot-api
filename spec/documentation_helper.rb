@@ -41,7 +41,8 @@ RspecApiDocumentation.configure do |config|
 
   # By default examples and resources are ordered by description.
   # Set to true keep the source order.
-  config.keep_source_order = false
+  config.keep_source_order = true
+  RSpec.configuration.order = :defined
 
   # Change the name of the API on index pages
   config.api_name = 'Timeslot API'
