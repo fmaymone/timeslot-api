@@ -46,6 +46,7 @@ module V1
     # DELETE /v1/groups/:group_id
     def destroy
       @group = Group.find(params[:group_id])
+      return head :forbidden unless current_user.is_owner? @group.id
 
       render :show if SoftDeleteService.call(@group)
     end

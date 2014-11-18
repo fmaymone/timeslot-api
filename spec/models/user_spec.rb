@@ -27,14 +27,14 @@ RSpec.describe User, type: :model do
   end
 
   describe "groups relation" do
-    let(:user) { create(:user, :with_groups) }
+    let(:user) { create(:user, :with_3_groups) }
     it "returns the groups where user is a member" do
       expect(user.groups.size).to eq 3
     end
   end
 
   describe "own groups relation" do
-    let(:user) { create(:user, :with_own_groups) }
+    let(:user) { create(:user, :with_3_own_groups) }
     it "returns the users own groups" do
       expect(user.own_groups.size).to eq 3
     end
