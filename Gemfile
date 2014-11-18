@@ -26,13 +26,8 @@ gem 'cloudinary'
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
 group :development do
   gem 'spring'
-
-  gem 'debugger'
 
   gem 'pry-rails'
 end
