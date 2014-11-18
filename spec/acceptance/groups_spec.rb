@@ -330,7 +330,7 @@ resource "Groups" do
     describe "membership active" do
       let!(:membership) do
         create(:membership, :active, user: member, group: group,
-               notifications: false)
+               notifications: true)
       end
 
       example "Update settings of joined group returns OK", document: :v1 do
@@ -349,15 +349,17 @@ resource "Groups" do
         let(:notifications) { "foo" }
 
         example "returns Unprocessable Entity", document: false do
-          skip "request dosn't fail, but also doesn't update"
+          skip "if it is not true, it's false..."
+          # see: http://stackoverflow.com/questions/5170008/rails-validating-inclusion-of-a-boolean-fails-tests
           do_request
           expect(response_status).to eq(422)
         end
 
         example "does not change notifications", document: false do
+          skip "if it is not true, it's false..."
           do_request
           membership.reload
-          expect(membership.notifications).to be false
+          expect(membership.notifications).to be true
         end
       end
 
