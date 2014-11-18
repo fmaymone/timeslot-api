@@ -177,7 +177,7 @@ resource "Groups" do
 
     response_field :group_id, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
-    response_field :members, "Array of users"
+    response_field :members, "Array of active members"
     response_field :user_id, "ID of member"
     response_field :username, "name of member"
     response_field :user_url, "URL for member"
@@ -202,6 +202,53 @@ resource "Groups" do
         .to eq({
                  "user_id" => group.members.first.id,
                  "username" => group.members.first.username
+               })
+    end
+
+    describe "group ID invalid" do
+      let(:group_id) { group.id + 1 }
+
+      example "returns Not Found", document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  # related
+  get "/v1/groups/:group_id/related" do
+    header "Accept", "application/json"
+
+    parameter :group_id, "ID of the group to get", required: true
+
+    response_field :group_id, "ID of the group"
+    response_field :size, "Number of group members (excluding owner)"
+    response_field :related, "Array of related users"
+    response_field :user_id, "ID of user", scope: :related
+    response_field :state, "state of membership", scope: :related
+
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+    let!(:members) { create_list(:membership, 1, :active, group: group) }
+    let!(:invitees) { create_list(:membership, 2, :invited, group: group) }
+    let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
+
+    example "Get list of all users related to a group", document: :v1 do
+      explanation "Also includes user with pending or refused invitations and" \
+                  " inactive or kicked members.\n\n" \
+                  "returns 200 & list of all users related to this group\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to include({
+                                "group_id" => group.id,
+                                "size" => 6
+                              })
+      expect(json["related"].first)
+        .to eq({
+                 "user_id" => group.related_users.first.id,
+                 "state" => group.memberships.first.state
                })
     end
 

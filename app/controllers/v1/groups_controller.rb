@@ -59,6 +59,15 @@ module V1
       render :members
     end
 
+    # GET /v1/groups/:group_id/related
+    def related
+      @group = Group.find(membership_params[:group_id])
+      @memberships = @group.memberships
+      # @related = @group.related_users
+
+      render :related
+    end
+
     # GET /v1/groups/:group_id/members/:user_id
     # return if the specified user is an activated member of the specified group
     # or return the state of the specified user regarding the specified group
