@@ -3,6 +3,7 @@ require 'documentation_helper'
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
 
+  # show
   get "/v1/groups/:group_id" do
     header "Accept", "application/json"
 
@@ -29,6 +30,7 @@ resource "Groups" do
     end
   end
 
+  # create
   post "/v1/groups" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -55,6 +57,7 @@ resource "Groups" do
     end
   end
 
+  # update
   patch "/v1/groups/:group_id" do
     header "Content-Type", "application/json"
 
@@ -111,6 +114,7 @@ resource "Groups" do
     end
   end
 
+  # destroy
   delete "/v1/groups/:group_id" do
     parameter :group_id, "ID of the group to delete", required: true
 
@@ -130,6 +134,7 @@ resource "Groups" do
     end
   end
 
+  # members
   get "/v1/groups/:group_id/members" do
     header "Accept", "application/json"
 
@@ -174,20 +179,58 @@ resource "Groups" do
     end
   end
 
-  # handle invite
-  post "/v1/groups/:group_id/members" do
+  # accept invite
+  post "/v1/groups/:group_id/accept" do
     header "Content-Type", "application/json"
 
+    parameter :group_id, "ID of the group", required: true
+
+    let!(:invited_user) { create(:user) }
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+    let!(:membership) do
+      create(:membership, :invited, user: invited_user, group: group)
+    end
+
     example "Adds an invited user to group", document: :v1 do
-      skip "TODO"
       explanation "returns 200 if invite successfully accepted\n\n" \
-                  "returns 200 if invite successfully refused.\n\n" \
                   "returns 403 if invitation is missing\n\n" \
                   "returns 404 if group ID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       do_request
 
       expect(response_status).to eq(200)
+      membership.reload
+      expect(membership.active?).to be true
+      expect(group.members).to include invited_user
+    end
+  end
+
+  # refuse invite
+  post "/v1/groups/:group_id/refuse" do
+    header "Content-Type", "application/json"
+
+    parameter :group_id, "ID of the group", required: true
+
+    let!(:invited_user) { create(:user) }
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+    let!(:membership) do
+      create(:membership, :invited, user: invited_user, group: group)
+    end
+
+    example "Invalidates a group invitation", document: :v1 do
+      explanation "returns 200 if invite successfully refused.\n\n" \
+                  "returns 403 if invitation is missing\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing"
+      do_request
+
+      expect(response_status).to eq(200)
+      membership.reload
+      expect(membership.active?).to be false
+      expect(membership.refused?).to be true
+      expect(group.members).not_to include invited_user
     end
   end
 
@@ -195,8 +238,16 @@ resource "Groups" do
   post "/v1/groups/:group_id/members/:user_id" do
     header "Content-Type", "application/json"
 
+    parameter :group_id, "ID of the group", required: true
+
+    let!(:owner) { create(:user) }
+    let(:group) { create(:group, owner: owner) }
+    let(:invited_user) { create(:user) }
+
+    let(:group_id) { group.id }
+    let(:user_id) { invited_user.id }
+
     example "Invite user to group", document: :v1 do
-      skip "TODO"
       explanation "Inviting user must be group owner or group must allow\n\n" \
                   "invites by group members.\n\n" \
                   "returns 200 if user is already invited\n\n" \
@@ -205,9 +256,14 @@ resource "Groups" do
                   "returns 403 if user is not allowed to invite\n\n" \
                   "returns 404 if group ID is invalid\n\n" \
                   "returns 422 if parameters are missing"
-      do_request
-
-      expect(response_status).to eq(200)
+      expect {
+        do_request
+      }.to change(Membership, :count).by 1
+      expect(response_status).to eq(201)
+      membership = Membership.last
+      expect(membership.invited?).to be true
+      expect(group.members).not_to include invited_user
+      expect(group.related_users).to include invited_user
     end
   end
 
@@ -237,6 +293,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.inactive?).to be true
+        expect(group.members).not_to include member
       end
     end
 
@@ -291,7 +348,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.kicked?).to be true
-        # expect(group.members).not_to include member # TODO: add scope
+        expect(group.members).not_to include member
       end
     end
 

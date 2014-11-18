@@ -103,7 +103,6 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "doesn't add user to group" do
-        skip
         expect {
           post "/v1/groups/#{group.id}/members/#{user.id}"
         }.not_to change(group.members, :count)
@@ -200,7 +199,6 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "adds user to group" do
-        skip
         expect {
           post "/v1/groups/#{group.id}/accept"
         }.to change(group.members, :count).by(1)
