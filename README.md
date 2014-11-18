@@ -77,14 +77,7 @@ The DSL is outlined [here](https://github.com/zipmark/rspec_api_documentation#ds
 ### Generating API documentation
 
 * This is done via gem [rspec_api_documentation](https://github.com/zipmark/rspec_api_documentation).
-Per default the documentation is generated as **json**
-for consumption via the gem [apitome](https://github.com/modeset/apitome) as viewer.
-Other output formats are possible. To get **markdown** add
-markdown to the line
-```ruby
-config.format = [:json, :markdown]
-```
-This is located in *spec/documentation_helper.rb*.
+Per default the documentation is generated as **markdown**.
 The generated Markdown files will be in *doc/api* folder.
 
 ## Specs / Tests

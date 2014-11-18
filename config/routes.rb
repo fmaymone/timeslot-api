@@ -15,23 +15,41 @@ Rails.application.routes.draw do
     delete 'users/:id', to: 'users#destroy', as: 'user_delete'
 
     scope :groups do
-      get '', to: 'groups#index', as: 'groups'
-      get ':group_id', to: 'groups#show', as: 'group', constraints: { id: /\d+/ }
-      post '', to: 'groups#create', as: 'group_create'
-      patch ':group_id', to: 'groups#update', as: 'group_update'
-      delete ':group_id', to: 'groups#destroy', as: 'group_delete'
-
+      get '',
+          to: 'groups#index',
+          as: 'groups'
+      get ':group_id',
+          to: 'groups#show',
+          as: 'group',
+          constraints: { id: /\d+/ }
+      post '',
+           to: 'groups#create',
+           as: 'group_create'
+      patch ':group_id',
+            to: 'groups#update',
+            as: 'group_update'
+      delete ':group_id',
+             to: 'groups#destroy',
+             as: 'group_delete'
       get ':group_id/members',
           to: 'groups#members',
           as: 'group_members',
+          constraints: { group_id: /\d+/ }
+      get ':group_id/related',
+          to: 'groups#related',
+          as: 'group_related',
           constraints: { group_id: /\d+/ }
       post ':group_id/members/:user_id',
            to: 'groups#invite',
            as: 'group_invite',
            constraints: { group_id: /\d+/, user_id: /\d+/ }
-      post ':group_id/members',
-           to: 'groups#handle_invite',
-           as: 'group_handle_invite',
+      post ':group_id/accept',
+           to: 'groups#accept_invite',
+           as: 'group_accept_invite',
+           constraints: { group_id: /\d+/ }
+      post ':group_id/refuse',
+           to: 'groups#refuse_invite',
+           as: 'group_refuse_invite',
            constraints: { group_id: /\d+/ }
       delete ':group_id/members',
              to: 'groups#leave',
@@ -42,9 +60,9 @@ Rails.application.routes.draw do
              as: 'group_kick',
              constraints: { group_id: /\d+/, user_id: /\d+/ }
       patch ':group_id/members',
-             to: 'groups#settings',
-             as: 'group_settings',
-             constraints: { group_id: /\d+/ }
+            to: 'groups#settings',
+            as: 'group_settings',
+            constraints: { group_id: /\d+/ }
     end
   end
 

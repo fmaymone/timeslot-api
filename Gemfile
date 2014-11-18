@@ -26,13 +26,8 @@ gem 'cloudinary'
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
 group :development do
   gem 'spring'
-
-  gem 'debugger'
 
   gem 'pry-rails'
 end
@@ -46,15 +41,13 @@ group :development, :test do
 
   gem 'guard-rspec'
 
-  gem 'rb-fsevent' if `uname` =~ /Darwin/
+  gem 'rb-fsevent'
 
   gem 'factory_girl_rails'
 
   gem 'database_cleaner'
 
   gem 'rspec_api_documentation'
-
-  gem 'apitome'
 
   gem 'shoulda-matchers', require: false
 
@@ -63,4 +56,4 @@ group :development, :test do
   gem 'bullet'
 end
 
-ruby '2.1.1'
+ruby '2.1.4'
