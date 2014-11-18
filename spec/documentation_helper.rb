@@ -13,7 +13,7 @@ RspecApiDocumentation.configure do |config|
   # Possible values are :json, :html, :combined_text, :combined_json,
   #   :json_iodocs, :textile, :markdown, :append_json
   # config.format = [:json, :combined_text, :html]
-  config.format = [:markdown, :json]
+  config.format = [:markdown]
 
   # Location of templates
   # config.template_path = "inside of the gem"

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe SoftDeleteService  do
+describe SoftDeleteService do
   let(:user) { FactoryGirl.create(:user) }
 
   describe :call do

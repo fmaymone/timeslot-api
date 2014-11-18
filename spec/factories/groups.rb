@@ -9,7 +9,7 @@ FactoryGirl.define do
 
     trait :with_image do
       after :create do |group|
-        create :group_image, mediable: group
+        create :mock_image, mediable: group
       end
     end
   end
