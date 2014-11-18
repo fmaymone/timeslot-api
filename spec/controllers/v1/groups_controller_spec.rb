@@ -81,7 +81,8 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:group) { create(:group) }
+    let!(:owner) { create(:user) }
+    let!(:group) { create(:group, owner: owner) }
 
     it "doesn't destroy the requested group" do
       expect {
