@@ -31,8 +31,8 @@ resource "Groups" do
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
     response_field :owner_id, "user id of group owner"
-    response_field :subs_can_post, "Can subscribers post?"
-    response_field :subs_can_invite, "Can subscribers invite friends?"
+    response_field :members_can_post, "Can subscribers post?"
+    response_field :members_can_invite, "Can subscribers invite friends?"
     response_field :created_at, "Creation of group"
     response_field :updated_at, "Latest update of group in db"
     response_field :deleted_at, "Deletion of group"
@@ -56,8 +56,8 @@ resource "Groups" do
     header "Accept", "application/json"
 
     parameter :name, "Name of group", scope: :group, required: true
-    parameter :subs_can_post, "Can subscribers post?", scope: :group
-    parameter :subs_can_invite, "Can subscribers invite friends?", scope: :group
+    parameter :members_can_post, "Can subscribers post?", scope: :group
+    parameter :members_can_invite, "Can subscribers invite friends?", scope: :group
 
     response_field :id, "ID of the new group"
 

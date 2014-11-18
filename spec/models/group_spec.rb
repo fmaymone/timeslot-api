@@ -8,8 +8,8 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:owner) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:name) }
-  it { is_expected.to respond_to(:subs_can_post) }
-  it { is_expected.to respond_to(:subs_can_invite) }
+  it { is_expected.to respond_to(:members_can_post) }
+  it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
   it { is_expected.to have_one(:image) }

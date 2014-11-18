@@ -162,7 +162,7 @@ RSpec.describe "V1::Groups", type: :request do
     describe "user can't invite" do
       let!(:user) { create(:user) } # remove when current_user is implemented
       let(:group) do
-        create(:group, owner: create(:user), subs_can_invite: false)
+        create(:group, owner: create(:user), members_can_invite: false)
       end
 
       it "returns forbidden" do

@@ -178,7 +178,7 @@ module V1
     end
 
     private def group_create_params
-      params.require(:group).permit(:name, :subs_can_post, :subs_can_invite)
+      params.require(:group).permit(:name, :members_can_post, :members_can_invite)
     end
 
     private def membership_params

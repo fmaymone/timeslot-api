@@ -94,7 +94,7 @@ RSpec.describe User, type: :model do
     end
 
     describe "group subscribers can invite" do
-      let(:group) { create(:group, subs_can_invite: true) }
+      let(:group) { create(:group, members_can_invite: true) }
 
       it "return true" do
         expect(user.can_invite? group.id).to be true
@@ -102,7 +102,7 @@ RSpec.describe User, type: :model do
     end
 
     describe "not owner & subs can't invite" do
-      let(:group) { create(:group, subs_can_invite: false) }
+      let(:group) { create(:group, members_can_invite: false) }
 
       it "return false" do
         expect(user.can_invite? group.id).to be false
