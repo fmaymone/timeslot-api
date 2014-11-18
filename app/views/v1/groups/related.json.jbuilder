@@ -1,4 +1,4 @@
-json.group_id @group.id
+json.group_id @memberships.first.group_id
 json.size @memberships.size
 json.related do
   json.array!(@memberships) do |membership|

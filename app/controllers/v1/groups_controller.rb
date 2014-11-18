@@ -61,9 +61,8 @@ module V1
 
     # GET /v1/groups/:group_id/related
     def related
-      @group = Group.find(membership_params[:group_id])
-      @memberships = @group.memberships
-      # @related = @group.related_users
+      group = Group.find(membership_params[:group_id])
+      @memberships = Membership.includes([:user]).where(group_id: group.id)
 
       render :related
     end
