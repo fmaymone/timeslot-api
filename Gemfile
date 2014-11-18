@@ -54,6 +54,10 @@ group :development, :test do
   gem 'faker'
 
   gem 'bullet'
+
+  gem 'vcr'
+
+  gem 'webmock'
 end
 
 ruby '2.1.4'

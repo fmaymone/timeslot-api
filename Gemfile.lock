@@ -27,6 +27,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    addressable (2.3.6)
     arel (5.0.1.20140414130214)
     aws_cf_signer (0.1.3)
     builder (3.2.2)
@@ -44,6 +45,8 @@ GEM
       rest-client
     coderay (1.1.0)
     columnize (0.8.9)
+    crack (0.4.2)
+      safe_yaml (~> 1.0.0)
     database_cleaner (1.3.0)
     debugger-linecache (1.2.0)
     diff-lcs (1.2.5)
@@ -160,6 +163,7 @@ GEM
       json (~> 1.4, >= 1.4.6)
       mustache (~> 0.99, >= 0.99.4)
       rspec (>= 3.0.0)
+    safe_yaml (1.0.4)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
     slop (3.6.0)
@@ -190,6 +194,10 @@ GEM
       rack
       raindrops (~> 0.7)
     uniform_notifier (1.6.2)
+    vcr (2.9.3)
+    webmock (1.19.0)
+      addressable (>= 2.3.6)
+      crack (>= 0.3.2)
 
 PLATFORMS
   ruby
@@ -217,3 +225,5 @@ DEPENDENCIES
   spring
   spring-commands-rspec
   unicorn
+  vcr
+  webmock

@@ -1,0 +1,260 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1416107180&tag=replaced&public_ids[]=testid&command=add&signature=3fcd219f106ea891fe4a9340f45d26a582b00797&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.77
+      Content-Length:
+      - '140'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 16 Nov 2014 03:06:21 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - a6b97301aeeb2921
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
+        /wMAEeHuqBkAAAA=
+    http_version: 
+  recorded_at: Sun, 16 Nov 2014 03:06:21 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1416107181&tag=model-id%3A3&public_ids[]=testid&command=add&signature=8f973b8aa5f479060f3124116d77b1d997778169&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.77
+      Content-Length:
+      - '144'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 16 Nov 2014 03:06:22 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - 28efd40b7458fd9d
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
+        /wMAEeHuqBkAAAA=
+    http_version: 
+  recorded_at: Sun, 16 Nov 2014 03:06:22 GMT
+- request:
+    method: get
+    uri: https://255241985667644:KkOCYRSF8Zgk6OE0Z3mzXtcjhcU@api.cloudinary.com/v1_1/einselbst/resources/image/upload/testid
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.77
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 16 Nov 2014 03:06:23 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Featureratelimit-Limit:
+      - '500'
+      X-Featureratelimit-Remaining:
+      - '499'
+      X-Featureratelimit-Reset:
+      - Sun, 16 Nov 2014 04:00:00 GMT
+      X-Request-Id:
+      - f64aed63e8c8f220
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//tFFLboMwEL3LrEmIsYHAObpqFCF/huAKMLJN2ijK
+        3TuQSFlkU1XtzmPNvO8Vpln1VjfWQA0RQ6RHAq3zg4z08zGdaDyjD9aNUDPB
+        eFaWjJUJeAxu9hqbeJmQVu0gT0jLj3GeeicXLO1RRjTNipftmNiw3YaJt92+
+        zvc1L99pR12IGuoFO4FPa2JHXCVLoEN76uiQcZHA7HuC6GKc6jQl+q3u3Wzs
+        KP1lq92Qoh0D9irEdNWS3iWk56fq9O5we7cVUM8emyds+BvcKE9k5kApOpoG
+        Z7DfWFNzWEKbeqnRwDGBEb9iQwqC88TPq1ZXmrMqz9pCKayUqAi6EDwzGa+W
+        JA16e6bb+nCF6OUY7jWtzUBsBjRWNr1VTezmQb3W+Eg5E/sqgbVwnlcZQ+Rc
+        Kc2NUAUrMrFjeas0a0VZwK9Df5HzbzX8mOl2vH0DAAD//wMAEhBzi+8CAAA=
+    http_version: 
+  recorded_at: Sun, 16 Nov 2014 03:06:23 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1416107183&tag=replaced&public_ids[]=testid&command=remove&signature=24258c0b505ef3cfed33e5676a68722d74481188&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.77
+      Content-Length:
+      - '143'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 16 Nov 2014 03:06:23 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - dc25b0318b7a3593
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Content-Length:
+      - '51'
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA6pWKihNyslMjs9MKVayilYqSS0uyUxRiq0FAAAA//8DABHh
+        7qgZAAAA
+    http_version: 
+  recorded_at: Sun, 16 Nov 2014 03:06:24 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1416107184&tag=model-id%3A3&public_ids[]=testid&command=remove&signature=7ff5025e4e9837c7df024b3f65ed42dea8d7df63&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.77
+      Content-Length:
+      - '147'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 16 Nov 2014 03:06:24 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - 9cafe69072542715
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
+        /wMAEeHuqBkAAAA=
+    http_version: 
+  recorded_at: Sun, 16 Nov 2014 03:06:24 GMT
+recorded_with: VCR 2.9.3
