@@ -12,7 +12,8 @@ RSpec.describe Slot, type: :model do
   it { is_expected.to respond_to(:visibility) }
   it { is_expected.to respond_to(:alerts) }
   it { is_expected.to respond_to(:media_items) }
-  it { should have_many(:media_items) }
+  it { is_expected.to have_many(:media_items) }
+  it { is_expected.to have_many(:users).through(:meta_slots) }
 
   it { is_expected.to be_valid }
 

@@ -35,13 +35,13 @@ SET default_with_oids = false;
 
 CREATE TABLE groups (
     id integer NOT NULL,
+    owner_id integer,
     name character varying(255),
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
-    owner_id integer
+    deleted_at timestamp without time zone
 );
 
 
@@ -133,6 +133,20 @@ CREATE SEQUENCE memberships_id_seq
 --
 
 ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
+
+
+--
+-- Name: meta_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE meta_slots (
+    user_id integer,
+    slot_id integer,
+    alerts bit(10) DEFAULT B'0000000000'::"bit",
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
 
 
 --
@@ -317,6 +331,20 @@ CREATE INDEX index_memberships_on_user_id ON memberships USING btree (user_id);
 
 
 --
+-- Name: index_meta_slots_on_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_meta_slots_on_slot_id ON meta_slots USING btree (slot_id);
+
+
+--
+-- Name: index_meta_slots_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_meta_slots_on_user_id_and_slot_id ON meta_slots USING btree (user_id, slot_id);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -364,4 +392,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141106103514');
 INSERT INTO schema_migrations (version) VALUES ('20141106135926');
 
 INSERT INTO schema_migrations (version) VALUES ('20141118141033');
+
+INSERT INTO schema_migrations (version) VALUES ('20141119092600');
 
