@@ -3,8 +3,8 @@ class User < ActiveRecord::Base
 
   has_one :image, class_name: "MediaItem", as: :mediable, dependent: :destroy
 
-  has_many :meta_slots, inverse_of: :user
-  has_many :slots, through: :meta_slots, source: :slot
+  has_many :slot_settings, inverse_of: :user
+  has_many :slots, through: :slot_settings, source: :slot
 
   has_many :own_groups, class_name: "Group",
            foreign_key: "owner_id", inverse_of: :owner

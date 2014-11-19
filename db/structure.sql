@@ -136,25 +136,25 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 
 
 --
--- Name: meta_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE meta_slots (
+CREATE TABLE schema_migrations (
+    version character varying(255) NOT NULL
+);
+
+
+--
+-- Name: slot_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE slot_settings (
     user_id integer,
     slot_id integer,
     alerts bit(10) DEFAULT B'0000000000'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
-);
-
-
---
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
 );
 
 
@@ -330,17 +330,17 @@ CREATE INDEX index_memberships_on_user_id ON memberships USING btree (user_id);
 
 
 --
--- Name: index_meta_slots_on_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_slot_settings_on_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_meta_slots_on_slot_id ON meta_slots USING btree (slot_id);
+CREATE INDEX index_slot_settings_on_slot_id ON slot_settings USING btree (slot_id);
 
 
 --
--- Name: index_meta_slots_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_slot_settings_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_meta_slots_on_user_id_and_slot_id ON meta_slots USING btree (user_id, slot_id);
+CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_slot_id ON slot_settings USING btree (user_id, slot_id);
 
 
 --
@@ -395,4 +395,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141118141033');
 INSERT INTO schema_migrations (version) VALUES ('20141119092600');
 
 INSERT INTO schema_migrations (version) VALUES ('20141119125908');
+
+INSERT INTO schema_migrations (version) VALUES ('20141119144049');
 
