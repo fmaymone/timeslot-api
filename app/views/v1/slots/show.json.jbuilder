@@ -3,8 +3,6 @@ json.extract! @slot,
 :title,
 :startdate,
 :enddate,
-:note,
-:visibility,
 :created_at,
 :updated_at,
 :deleted_at

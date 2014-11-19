@@ -5,9 +5,9 @@ RSpec.describe V1::SlotsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Slot. As you add validations to Slot, be sure to
   # adjust the attributes here as well.
-  let(:valid_slot) { create(:slot) }
-  let(:valid_attributes) { attributes_for(:slot) }
-  let(:invalid_attributes) { attributes_for(:slot, title: nil) }
+  let(:valid_slot) { create(:meta_slot) }
+  let(:valid_attributes) { attributes_for(:meta_slot) }
+  let(:invalid_attributes) { attributes_for(:meta_slot, title: nil) }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -43,12 +43,12 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new Slot" do
         expect {
           post :create, new_slot: valid_attributes
-        }.to change(Slot, :count).by(1)
+        }.to change(MetaSlot, :count).by(1)
       end
 
       it "assigns a newly created slot as @slot" do
         post :create, new_slot: valid_attributes
-        expect(assigns(:slot)).to be_a(Slot)
+        expect(assigns(:slot)).to be_a(MetaSlot)
         expect(assigns(:slot)).to be_persisted
       end
 
@@ -61,7 +61,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with invalid params" do
       it "assigns a newly created but unsaved slot as @slot" do
         post :create, new_slot: invalid_attributes
-        expect(assigns(:slot)).to be_a_new(Slot)
+        expect(assigns(:slot)).to be_a_new(MetaSlot)
       end
 
       it "responds with http status Unprocessable Entity (422)" do
@@ -86,7 +86,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "assigns the requested slot as @slot" do
         patch :update, { id: valid_slot.id, slot: { title: "New slot title" } }
-        expect(assigns(:slot)).to be_a(Slot)
+        expect(assigns(:slot)).to be_a(MetaSlot)
         expect(assigns(:slot)).to eq(valid_slot)
       end
     end
@@ -105,7 +105,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:slot) { create(:slot) }
+    let!(:slot) { create(:meta_slot) }
 
     it "respond with http status OK (200)" do
       delete :destroy, id: slot.id
@@ -115,7 +115,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     it "doesn't destroy the requested slot" do
       expect {
         delete :destroy, id: slot.id
-      }.not_to change(Slot, :count)
+      }.not_to change(MetaSlot, :count)
     end
 
     it "sets deleted_at on the requested slot" do

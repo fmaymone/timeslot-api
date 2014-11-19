@@ -136,6 +136,41 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 
 
 --
+-- Name: meta_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE meta_slots (
+    id integer NOT NULL,
+    title character varying(48),
+    startdate timestamp without time zone,
+    enddate timestamp without time zone,
+    creator_id integer,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: meta_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE meta_slots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: meta_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -150,48 +185,12 @@ CREATE TABLE schema_migrations (
 
 CREATE TABLE slot_settings (
     user_id integer,
-    slot_id integer,
+    meta_slot_id integer,
     alerts bit(10) DEFAULT B'0000000000'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
-
-
---
--- Name: slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE slots (
-    id integer NOT NULL,
-    title character varying(48),
-    startdate timestamp without time zone,
-    enddate timestamp without time zone,
-    note text,
-    visibility bit(2) DEFAULT B'11'::"bit",
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE slots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE slots_id_seq OWNED BY slots.id;
 
 
 --
@@ -251,7 +250,7 @@ ALTER TABLE ONLY memberships ALTER COLUMN id SET DEFAULT nextval('memberships_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY slots ALTER COLUMN id SET DEFAULT nextval('slots_id_seq'::regclass);
+ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_seq'::regclass);
 
 
 --
@@ -286,11 +285,11 @@ ALTER TABLE ONLY memberships
 
 
 --
--- Name: slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: meta_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY slots
-    ADD CONSTRAINT slots_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY meta_slots
+    ADD CONSTRAINT meta_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -330,17 +329,24 @@ CREATE INDEX index_memberships_on_user_id ON memberships USING btree (user_id);
 
 
 --
--- Name: index_slot_settings_on_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_meta_slots_on_creator_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_slot_settings_on_slot_id ON slot_settings USING btree (slot_id);
+CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_id);
 
 
 --
--- Name: index_slot_settings_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_slot_id ON slot_settings USING btree (user_id, slot_id);
+CREATE INDEX index_slot_settings_on_meta_slot_id ON slot_settings USING btree (meta_slot_id);
+
+
+--
+-- Name: index_slot_settings_on_user_id_and_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_settings USING btree (user_id, meta_slot_id);
 
 
 --
@@ -397,4 +403,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141119092600');
 INSERT INTO schema_migrations (version) VALUES ('20141119125908');
 
 INSERT INTO schema_migrations (version) VALUES ('20141119144049');
+
+INSERT INTO schema_migrations (version) VALUES ('20141119205309');
 
