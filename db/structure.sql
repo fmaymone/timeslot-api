@@ -169,7 +169,6 @@ CREATE TABLE slots (
     enddate timestamp without time zone,
     note text,
     visibility bit(2) DEFAULT B'11'::"bit",
-    alerts bit(10) DEFAULT B'0000000000'::"bit",
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone
@@ -394,4 +393,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141106135926');
 INSERT INTO schema_migrations (version) VALUES ('20141118141033');
 
 INSERT INTO schema_migrations (version) VALUES ('20141119092600');
+
+INSERT INTO schema_migrations (version) VALUES ('20141119125908');
 

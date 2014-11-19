@@ -7,7 +7,6 @@ FactoryGirl.define do
     enddate "2014-09-13 22:03:24"
     note "this is a testslot"
     visibility "11"
-    alerts "0101001100"
   end
 
   trait :with_media do

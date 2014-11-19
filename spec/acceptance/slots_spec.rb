@@ -16,7 +16,6 @@ resource "Slots" do
       response_field :enddate, "Enddate of the slot"
       response_field :note, "A note on the slot"
       response_field :visibility, "Visibiltiy of the slot"
-      response_field :alerts, "Alerts for the slot"
       response_field :media, "Media Items of the slot"
       response_field :created_at, "Creation of slot"
       response_field :updated_at, "Latest update of slot in db"
@@ -37,7 +36,6 @@ resource "Slots" do
                  "enddate" => slot.enddate.iso8601,
                  "note" => slot.note,
                  "visibility" => slot.visibility,
-                 "alerts" => slot.alerts,
                  "created_at" => slot.created_at.iso8601,
                  "updated_at" => slot.updated_at.iso8601,
                  "deleted_at" => deleted_at
@@ -71,7 +69,6 @@ resource "Slots" do
               scope: :new_slot
     parameter :note, "A note which belongs to the Slot", scope: :new_slot
     parameter :visibility, "Visibility of the Slot", scope: :new_slot
-    parameter :alerts, "Alerts for the Slot", scope: :new_slot
 
     describe "Create slot with valid params" do
 
@@ -82,7 +79,6 @@ resource "Slots" do
       let(:enddate) { "2014-09-13T22:03:24.000Z" }
       let(:note) { "revolutionizing the calendar" }
       let(:visibility) { 10 }
-      let(:alerts) { "0101001100" }
 
       example "Create slot returns ID of new slot",
               document: :v1 do
@@ -109,6 +105,7 @@ resource "Slots" do
 
       example "Create slot with invalid params returns 422 & failure details",
               document: false do
+        skip "no alerts on slot model anymore"
         explanation "Parameters that can not be written to db will be returned."
         do_request
 
@@ -152,7 +149,6 @@ resource "Slots" do
                 scope: :slot
       parameter :note, "Updated note for to the Slot", scope: :slot
       parameter :visibility, "Updated visibility for the Slot", scope: :slot
-      parameter :alerts, "Updated alerts for the Slot", scope: :slot
 
       let!(:slot) { create(:slot, :with_media) }
       let(:id) { slot.id }

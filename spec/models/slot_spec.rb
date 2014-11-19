@@ -10,7 +10,6 @@ RSpec.describe Slot, type: :model do
   it { is_expected.to respond_to(:enddate) }
   it { is_expected.to respond_to(:note) }
   it { is_expected.to respond_to(:visibility) }
-  it { is_expected.to respond_to(:alerts) }
   it { is_expected.to respond_to(:media_items) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:users).through(:meta_slots) }
@@ -49,11 +48,6 @@ RSpec.describe Slot, type: :model do
 
   describe "when visibility is not present" do
     before { slot.visibility = "" }
-    it { is_expected.to_not be_valid }
-  end
-
-  describe "when alerts is not present" do
-    before { slot.alerts = "" }
     it { is_expected.to_not be_valid }
   end
 

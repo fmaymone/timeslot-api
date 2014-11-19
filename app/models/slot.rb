@@ -9,7 +9,6 @@ class Slot < ActiveRecord::Base
   validates :enddate, presence: true
   validates :note, length: { maximum: 500 }
   validates :visibility, presence: true
-  validates :alerts, presence: true
   validate :enddate_is_after_startdate
 
   private def enddate_is_after_startdate

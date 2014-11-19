@@ -42,12 +42,12 @@ module V1
 
     private def slot_create_params
       params.require(:new_slot)
-        .permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
+        .permit(:title, :startdate, :enddate, :note, :visibility)
     end
 
     private def slot_update_params
       params.require(:slot)
-        .permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
+        .permit(:title, :startdate, :enddate, :note, :visibility)
     end
 
     private def media_item_create_params

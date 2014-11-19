@@ -20,7 +20,6 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json).to have_key('enddate')
         expect(json).to have_key('note')
         expect(json).to have_key('visibility')
-        expect(json).to have_key('alerts')
         expect(json).to have_key('created_at')
         expect(json).to have_key('updated_at')
       end
@@ -33,7 +32,6 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['enddate']).to eq(slot.enddate.iso8601)
         expect(json['note']).to eq(slot.note)
         expect(json['visibility']).to eq(slot.visibility)
-        expect(json['alerts']).to eq(slot.alerts)
       end
 
       it "does return the slot title" do
@@ -153,27 +151,6 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/slots/", new_slot: attributes_for(:slot, visibility: "101")
           expect(response).to have_http_status(:unprocessable_entity)
         end
-
-        it "for empty alerts" do
-          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "for invalid characters for alerts" do
-          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "$$")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "if characters missing for alerts" do
-          post "/v1/slots/", new_slot: attributes_for(:slot, alerts: "101")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "if to many characters for alerts" do
-          post "/v1/slots/", new_slot: attributes_for(:slot,
-                                                      alerts: "11101101100")
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
       end
     end
   end
@@ -227,13 +204,6 @@ RSpec.describe "V1::Slots", type: :request do
         patch "/v1/slots/#{slot.id}", slot: { visibility: "11" }
         slot.reload
         expect(slot.visibility).to eq("11")
-      end
-
-      it "updates the alerts of a given slot" do
-        slot = create(:slot, alerts: "0001110001")
-        patch "/v1/slots/#{slot.id}", slot: { alerts: "1111011110" }
-        slot.reload
-        expect(slot.alerts).to eq("1111011110")
       end
     end
 
@@ -296,26 +266,6 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "if visibility has to much characters" do
           patch "/v1/slots/#{slot.id}", slot: { visibility: "101" }
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "for empty alerts" do
-          patch "/v1/slots/#{slot.id}", slot: { alerts: "" }
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "for invalid characters for alerts" do
-          patch "/v1/slots/#{slot.id}", slot: { alerts: "$$" }
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "if characters missing for alerts" do
-          patch "/v1/slots/#{slot.id}", slot: { alerts: "101" }
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "if to many characters for alerts" do
-          patch "/v1/slots/#{slot.id}", slot: { alerts: "11101101100" }
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
