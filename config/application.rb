@@ -24,5 +24,8 @@ module TsRailsBackend
 
     # no fractional seconds for datime strings
     ActiveSupport::JSON::Encoding.time_precision = 0
+
+    # dump postgres specific sql into schema
+    config.active_record.schema_format = :sql
   end
 end
