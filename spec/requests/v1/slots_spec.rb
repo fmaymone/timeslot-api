@@ -51,6 +51,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots" do
+    let!(:current_user) { create(:user) }
+
     context "with valid params" do
       let(:valid_slot) { attributes_for(:meta_slot) }
 

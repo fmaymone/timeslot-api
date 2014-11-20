@@ -9,7 +9,7 @@ module V1
 
     # POST /v1/slots
     def create
-      @slot = MetaSlot.new(slot_create_params)
+      @slot = MetaSlot.new(slot_create_params.merge(creator: current_user))
 
       if @slot.save
         render :create, status: :created

@@ -79,6 +79,7 @@ resource "Slots" do
       let(:enddate) { "2014-09-13T22:03:24.000Z" }
       # let(:note) { "revolutionizing the calendar" }
       # let(:visibility) { 10 }
+      let!(:current_user) { create(:user) }
 
       example "Create slot returns ID of new slot",
               document: :v1 do

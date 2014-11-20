@@ -3,6 +3,9 @@ class User < ActiveRecord::Base
 
   has_one :image, class_name: "MediaItem", as: :mediable, dependent: :destroy
 
+  has_many :created_slots, class_name: "MetaSlot",
+           foreign_key: "creator_id", inverse_of: :creator
+
   has_many :slot_settings, inverse_of: :user
   has_many :meta_slots, through: :slot_settings, source: :meta_slot
 
