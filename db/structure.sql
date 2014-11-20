@@ -30,18 +30,49 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: base_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE base_slots (
+    id integer NOT NULL,
+    footest character varying(255),
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: base_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE base_slots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: base_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
+
+
+--
 -- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE groups (
     id integer NOT NULL,
-    owner_id integer,
     name character varying(255),
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    owner_id integer
 );
 
 
@@ -229,6 +260,13 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
@@ -258,6 +296,14 @@ ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_s
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- Name: base_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY base_slots
+    ADD CONSTRAINT base_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -405,4 +451,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141119125908');
 INSERT INTO schema_migrations (version) VALUES ('20141119144049');
 
 INSERT INTO schema_migrations (version) VALUES ('20141119205309');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120091047');
 
