@@ -225,6 +225,38 @@ CREATE TABLE slot_settings (
 
 
 --
+-- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE std_slots (
+    id integer NOT NULL,
+    visibility bit(2) DEFAULT B'11'::"bit",
+    note text DEFAULT ''::text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: std_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE std_slots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: std_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE std_slots_id_seq OWNED BY std_slots.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -295,6 +327,13 @@ ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('std_slots_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
@@ -336,6 +375,14 @@ ALTER TABLE ONLY memberships
 
 ALTER TABLE ONLY meta_slots
     ADD CONSTRAINT meta_slots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: std_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY std_slots
+    ADD CONSTRAINT std_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -453,4 +500,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141119144049');
 INSERT INTO schema_migrations (version) VALUES ('20141119205309');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120091047');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120091415');
 
