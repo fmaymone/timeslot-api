@@ -1,5 +1,7 @@
 class MetaSlot < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :created_slots
+  has_one :base_slot, inverse_of: :meta_slot
+
   has_many :media_items, as: :mediable, dependent: :destroy
 
   has_many :slot_settings, inverse_of: :meta_slot

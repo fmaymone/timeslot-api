@@ -1,5 +1,6 @@
 FactoryGirl.define do
-  factory :std_slot do
+  factory :std_slot, class: StdSlot, parent: :base_slot do
     association :user, strategy: :build
+    footest "StdSlot"
   end
 end

@@ -37,7 +37,9 @@ CREATE TABLE base_slots (
     id integer NOT NULL,
     footest character varying(255),
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    meta_slot_id integer,
+    deleted_at timestamp without time zone
 );
 
 
@@ -490,6 +492,13 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: index_base_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_base_slots_on_meta_slot_id ON base_slots USING btree (meta_slot_id);
+
+
+--
 -- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -625,4 +634,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141120092303');
 INSERT INTO schema_migrations (version) VALUES ('20141120092546');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120102152');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120104643');
 
