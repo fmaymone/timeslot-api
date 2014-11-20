@@ -273,7 +273,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "handling media items" do
+    xdescribe "handling media items" do
       let!(:slot) { create(:meta_slot) }
       let(:add_media_item) { { new_media: media } }
 
@@ -506,7 +506,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "DELETE /v1/slots/:id" do
+  xdescribe "DELETE /v1/slots/:id" do
     let!(:slot) { create(:meta_slot) }
 
     context "with a valid ID" do

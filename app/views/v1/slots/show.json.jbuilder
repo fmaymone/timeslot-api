@@ -6,4 +6,4 @@ json.extract! @slot,
 :created_at,
 :updated_at,
 :deleted_at
-json.media @slot.media_items, :id, :media_type, :public_id, :ordering
+# json.media @slot.media_items, :id, :media_type, :public_id, :ordering

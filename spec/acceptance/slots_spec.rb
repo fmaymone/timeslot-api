@@ -40,7 +40,7 @@ resource "Slots" do
                  "updated_at" => slot.updated_at.iso8601,
                  "deleted_at" => deleted_at
                 )
-        expect(json["media"].length).to eq(slot.media_items.length)
+        # expect(json["media"].length).to eq(slot.media_items.length)
       end
     end
 
@@ -191,6 +191,7 @@ resource "Slots" do
 
       example "Adding media items to existing slot returns ID & status created",
               document: :v1 do
+        skip "No more media items here"
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -237,6 +238,7 @@ resource "Slots" do
 
       example "Reordering media data of existing slot returns success",
               document: :v1 do
+        skip "No more media items here"
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
                     " of the slot must be send."
