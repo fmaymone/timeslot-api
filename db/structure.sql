@@ -61,18 +61,50 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 
 
 --
+-- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE group_slots (
+    id integer NOT NULL,
+    group_id integer,
+    note text DEFAULT ''::text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: group_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE group_slots_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: group_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE group_slots_id_seq OWNED BY group_slots.id;
+
+
+--
 -- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE groups (
     id integer NOT NULL,
+    owner_id integer,
     name character varying(255),
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
-    owner_id integer
+    deleted_at timestamp without time zone
 );
 
 
@@ -299,6 +331,13 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('group_slots_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
@@ -343,6 +382,14 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 ALTER TABLE ONLY base_slots
     ADD CONSTRAINT base_slots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: group_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY group_slots
+    ADD CONSTRAINT group_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -391,6 +438,13 @@ ALTER TABLE ONLY std_slots
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_group_slots_on_group_id ON group_slots USING btree (group_id);
 
 
 --
@@ -502,4 +556,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141119205309');
 INSERT INTO schema_migrations (version) VALUES ('20141120091047');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120091415');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120092303');
 
