@@ -40,6 +40,7 @@ GEM
       slop (~> 3.6)
     celluloid (0.16.0)
       timers (~> 4.0.0)
+    choice (0.1.6)
     cloudinary (1.0.78)
       aws_cf_signer
       rest-client
@@ -107,6 +108,7 @@ GEM
     rack (1.5.2)
     rack-test (0.6.2)
       rack (>= 1.0)
+    railroady (1.2.0)
     rails (4.1.4)
       actionmailer (= 4.1.4)
       actionpack (= 4.1.4)
@@ -120,6 +122,11 @@ GEM
     rails-api (0.3.1)
       actionpack (>= 3.2.11)
       railties (>= 3.2.11)
+    rails-erd (1.1.0)
+      activerecord (>= 3.0)
+      activesupport (>= 3.0)
+      choice (~> 0.1.6)
+      ruby-graphviz (~> 1.0.4)
     rails_12factor (0.0.3)
       rails_serve_static_assets
       rails_stdout_logging
@@ -163,6 +170,7 @@ GEM
       json (~> 1.4, >= 1.4.6)
       mustache (~> 0.99, >= 0.99.4)
       rspec (>= 3.0.0)
+    ruby-graphviz (1.0.9)
     safe_yaml (1.0.4)
     shoulda-matchers (2.7.0)
       activesupport (>= 3.0.0)
@@ -215,8 +223,10 @@ DEPENDENCIES
   pg
   pry-byebug
   pry-rails
+  railroady
   rails (= 4.1.4)
   rails-api
+  rails-erd
   rails_12factor
   rb-fsevent
   rspec-rails (~> 3.0.0)
