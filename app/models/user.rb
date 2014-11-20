@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
            foreign_key: "creator_id", inverse_of: :creator
 
   has_many :slot_settings, inverse_of: :user
+  has_many :std_slots, inverse_of: :user
   has_many :meta_slots, through: :slot_settings, source: :meta_slot
 
   has_many :own_groups, class_name: "Group",

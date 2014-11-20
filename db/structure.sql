@@ -297,7 +297,9 @@ CREATE TABLE std_slots (
     visibility bit(2) DEFAULT B'11'::"bit",
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    user_id integer,
+    deleted_at timestamp without time zone
 );
 
 
@@ -551,6 +553,13 @@ CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_sett
 
 
 --
+-- Name: index_std_slots_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_std_slots_on_user_id ON std_slots USING btree (user_id);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -614,4 +623,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141120091415');
 INSERT INTO schema_migrations (version) VALUES ('20141120092303');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120092546');
+
+INSERT INTO schema_migrations (version) VALUES ('20141120102152');
 
