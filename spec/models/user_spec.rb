@@ -6,13 +6,16 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
-  it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:image) }
+  it { is_expected.to respond_to(:created_slots) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to have_one(:image) }
+  it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
+  it { is_expected.to have_many(:std_slots).inverse_of(:user) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
+  it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
 
   it { is_expected.to be_valid }
 

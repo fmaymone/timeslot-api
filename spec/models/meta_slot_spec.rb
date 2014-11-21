@@ -1,70 +1,56 @@
 require "rails_helper"
 
-RSpec.describe Slot, type: :model do
-  let(:slot) { build(:slot) }
+RSpec.describe MetaSlot, type: :model do
+  let(:meta_slot) { build(:meta_slot) }
 
-  subject { slot }
+  subject { meta_slot }
 
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:startdate) }
   it { is_expected.to respond_to(:enddate) }
-  it { is_expected.to respond_to(:note) }
-  it { is_expected.to respond_to(:visibility) }
-  it { is_expected.to respond_to(:alerts) }
-  it { is_expected.to respond_to(:media_items) }
-  it { should have_many(:media_items) }
+  it { is_expected.to respond_to(:creator) }
+  it { is_expected.to respond_to(:deleted_at) }
+  it { is_expected.to respond_to(:base_slot) }
+  it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
+  it { is_expected.to have_one(:base_slot).inverse_of(:meta_slot) }
+  it { is_expected.to have_many(:users).through(:slot_settings) }
 
   it { is_expected.to be_valid }
 
   describe "when title is not present" do
-    before { slot.title = "" }
+    before { meta_slot.title = "" }
     it { is_expected.to_not be_valid }
   end
 
   describe "when title is too long" do
-    before { slot.title = "a" * 49 }
+    before { meta_slot.title = "a" * 49 }
     it { is_expected.to_not be_valid }
   end
 
   describe "when startdate is not present" do
-    before { slot.startdate = "" }
+    before { meta_slot.startdate = "" }
     it { is_expected.to_not be_valid }
   end
 
   describe "when enddate is not present" do
-    before { slot.enddate = "" }
+    before { meta_slot.enddate = "" }
     it { is_expected.to_not be_valid }
   end
 
-  describe "when note is not present" do
-    before { slot.note = "" }
-    it { is_expected.to be_valid }
-  end
-
-  describe "when note is too long" do
-    before { slot.note = "a" * 501 }
-    it { is_expected.to_not be_valid }
-  end
-
-  describe "when visibility is not present" do
-    before { slot.visibility = "" }
-    it { is_expected.to_not be_valid }
-  end
-
-  describe "when alerts is not present" do
-    before { slot.alerts = "" }
+  describe "when creator is not present" do
+    before { meta_slot.creator = nil }
     it { is_expected.to_not be_valid }
   end
 
   describe "prevent removing from db" do
-    let!(:slot) { create(:slot) }
+    let!(:meta_slot) { create(:meta_slot) }
 
     it "can not be deleted" do
       before_count = described_class.count
 
       expect(Rails.logger).to receive(:error)
       expect {
-        slot.delete
+        meta_slot.delete
       }.to raise_error
       expect(before_count).to eq described_class.all.size
     end
@@ -74,7 +60,7 @@ RSpec.describe Slot, type: :model do
 
       expect(Rails.logger).to receive(:error)
       expect {
-        slot.destroy
+        meta_slot.destroy
       }.to raise_error
       expect(before_count).to eq described_class.all.size
     end

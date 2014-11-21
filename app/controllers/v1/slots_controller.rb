@@ -2,14 +2,14 @@ module V1
   class SlotsController < ApplicationController
     # GET /v1/slots/1
     def show
-      @slot = Slot.find(params.require(:id))
+      @slot = MetaSlot.find(params.require(:id))
 
       render :show
     end
 
     # POST /v1/slots
     def create
-      @slot = Slot.new(slot_create_params)
+      @slot = MetaSlot.new(slot_create_params.merge(creator: current_user))
 
       if @slot.save
         render :create, status: :created
@@ -20,7 +20,7 @@ module V1
 
     # PATCH /v1/slots/1
     def update
-      @slot = Slot.find(params.require(:id))
+      @slot = MetaSlot.find(params.require(:id))
 
       if params[:new_media].present?
         add_media_item
@@ -35,19 +35,19 @@ module V1
 
     # DELETE /v1/slots/1
     def destroy
-      @slot = Slot.find(params.require(:id))
+      @slot = MetaSlot.find(params.require(:id))
 
       render :show if SoftDeleteService.call(@slot)
     end
 
     private def slot_create_params
       params.require(:new_slot)
-        .permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
+        .permit(:title, :startdate, :enddate, :note, :visibility)
     end
 
     private def slot_update_params
       params.require(:slot)
-        .permit(:title, :startdate, :enddate, :note, :visibility, :alerts)
+        .permit(:title, :startdate, :enddate, :note, :visibility)
     end
 
     private def media_item_create_params

@@ -1,12 +1,14 @@
-class Slot < ActiveRecord::Base
-  has_many :media_items, as: :mediable, dependent: :destroy
+class MetaSlot < ActiveRecord::Base
+  belongs_to :creator, class_name: "User", inverse_of: :created_slots
+  has_one :base_slot, inverse_of: :meta_slot
 
+  has_many :slot_settings, inverse_of: :meta_slot
+  has_many :users, through: :slot_settings, source: :user
+
+  validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
   validates :startdate, presence: true
   validates :enddate, presence: true
-  validates :note, length: { maximum: 500 }
-  validates :visibility, presence: true
-  validates :alerts, presence: true
   validate :enddate_is_after_startdate
 
   private def enddate_is_after_startdate
