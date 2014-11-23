@@ -11,7 +11,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to have_one(:image) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
-  it { is_expected.to have_many(:std_slots).inverse_of(:user) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }

@@ -38,7 +38,6 @@ CREATE TABLE base_slots (
     footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    meta_slot_id integer,
     deleted_at timestamp without time zone
 );
 
@@ -71,7 +70,8 @@ CREATE TABLE group_slots (
     group_id integer,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    meta_slot_id integer
 );
 
 
@@ -244,7 +244,8 @@ CREATE TABLE re_slots (
     predecessor_id integer,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    meta_slot_id integer
 );
 
 
@@ -300,8 +301,8 @@ CREATE TABLE std_slots (
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    user_id integer,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    meta_slot_id integer
 );
 
 
@@ -492,17 +493,17 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_base_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_base_slots_on_meta_slot_id ON base_slots USING btree (meta_slot_id);
-
-
---
 -- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_group_slots_on_group_id ON group_slots USING btree (group_id);
+
+
+--
+-- Name: index_group_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_slot_id);
 
 
 --
@@ -541,6 +542,13 @@ CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_i
 
 
 --
+-- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_re_slots_on_meta_slot_id ON re_slots USING btree (meta_slot_id);
+
+
+--
 -- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -562,10 +570,10 @@ CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_sett
 
 
 --
--- Name: index_std_slots_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_std_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_std_slots_on_user_id ON std_slots USING btree (user_id);
+CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot_id);
 
 
 --
@@ -636,4 +644,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141120092546');
 INSERT INTO schema_migrations (version) VALUES ('20141120102152');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120104643');
+
+INSERT INTO schema_migrations (version) VALUES ('20141123173734');
 

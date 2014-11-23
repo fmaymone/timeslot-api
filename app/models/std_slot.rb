@@ -1,7 +1,7 @@
 class StdSlot < BaseSlot
   self.table_name = 'std_slots'
 
-  belongs_to :user, inverse_of: :std_slots
+  belongs_to :meta_slot
 
-  validates :user, presence: true
+  validates :meta_slot, presence: true
 end
