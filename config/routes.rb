@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
-    post 'slots', to: 'slots#create'
+    post 'slots', to: 'base_slots#create'
     patch 'slots/:id', to: 'slots#update', as: 'slot_update'
     delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
 

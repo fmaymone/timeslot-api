@@ -8,9 +8,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show", id: "1", format: :json)
     end
 
-    it "routes to #create" do
+    it "does not route to #create" do
       expect(post: "/v1/slots")
-        .to route_to("v1/slots#create", format: :json)
+        .not_to route_to("v1/slots#create", format: :json)
     end
 
     it "routes to #update via PATCH" do
