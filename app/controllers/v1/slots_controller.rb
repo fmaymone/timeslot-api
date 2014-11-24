@@ -7,17 +7,6 @@ module V1
       render :show
     end
 
-    # POST /v1/slots
-    def create
-      @slot = MetaSlot.new(slot_create_params.merge(creator: current_user))
-
-      if @slot.save
-        render :create, status: :created
-      else
-        render json: @slot.errors, status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/slots/1
     def update
       @slot = MetaSlot.find(params.require(:id))
