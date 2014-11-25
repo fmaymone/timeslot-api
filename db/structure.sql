@@ -66,13 +66,16 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 --
 
 CREATE TABLE group_slots (
-    id integer NOT NULL,
+    id integer,
     group_id integer,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    meta_slot_id integer
-);
+    meta_slot_id integer,
+    footest character varying(255),
+    deleted_at timestamp without time zone
+)
+INHERITS (base_slots);
 
 
 --
@@ -240,13 +243,16 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 --
 
 CREATE TABLE re_slots (
-    id integer NOT NULL,
+    id integer,
     predecessor_id integer,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    meta_slot_id integer
-);
+    meta_slot_id integer,
+    footest character varying(255),
+    deleted_at timestamp without time zone
+)
+INHERITS (base_slots);
 
 
 --
@@ -650,4 +656,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141120104643');
 INSERT INTO schema_migrations (version) VALUES ('20141123173734');
 
 INSERT INTO schema_migrations (version) VALUES ('20141125085243');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125095021');
 

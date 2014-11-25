@@ -7,9 +7,13 @@ RSpec.describe StdSlot, type: :model do
 
   it { is_expected.to respond_to(:visibility) }
   it { is_expected.to respond_to(:note) }
+  it { is_expected.to respond_to(:created_at) }
+  it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:footest) }
+  it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:startdate) }
+  it { is_expected.to respond_to(:enddate) }
   it { is_expected.to respond_to(:meta_slot) }
   it { is_expected.to belong_to(:meta_slot) }
 
