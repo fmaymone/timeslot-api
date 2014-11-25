@@ -293,8 +293,28 @@ CREATE TABLE slot_settings (
     alerts bit(10) DEFAULT B'0000000000'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    id integer NOT NULL
 );
+
+
+--
+-- Name: slot_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE slot_settings_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: slot_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 
 --
@@ -418,6 +438,13 @@ ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('re_slots_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_settings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('std_slots_id_seq'::regclass);
 
 
@@ -482,6 +509,14 @@ ALTER TABLE ONLY meta_slots
 
 ALTER TABLE ONLY re_slots
     ADD CONSTRAINT re_slots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY slot_settings
+    ADD CONSTRAINT slot_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -658,4 +693,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141123173734');
 INSERT INTO schema_migrations (version) VALUES ('20141125085243');
 
 INSERT INTO schema_migrations (version) VALUES ('20141125095021');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125110600');
 

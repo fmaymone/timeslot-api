@@ -40,7 +40,6 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
       end
 
       it "creates a new SlotSetting" do
-        skip "Add primary key for SlotSetting"
         expect {
           post :create, { new_slot: valid_attributes }, valid_session
         }.to change(SlotSetting, :count).by(1)
