@@ -296,14 +296,16 @@ CREATE TABLE slot_settings (
 --
 
 CREATE TABLE std_slots (
-    id integer NOT NULL,
+    id integer,
     visibility bit(2) DEFAULT B'11'::"bit",
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    meta_slot_id integer
-);
+    meta_slot_id integer,
+    footest character varying(255)
+)
+INHERITS (base_slots);
 
 
 --
@@ -646,4 +648,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141120102152');
 INSERT INTO schema_migrations (version) VALUES ('20141120104643');
 
 INSERT INTO schema_migrations (version) VALUES ('20141123173734');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125085243');
 
