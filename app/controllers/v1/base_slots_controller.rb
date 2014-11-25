@@ -8,22 +8,33 @@ module V1
     end
 
     # POST /v1/base_slots
-    # create MetaSlot
-    # create SlotSetting
-    # create StdSlot
-    # TODO: improve error handling
+    # TODO: needs refactoring
     def create
+      if group_params[:group_id].present?
+        return head :unprocessable_entity unless Group.exists?(group_params[:group_id])
+      elsif std_params[:visibility].blank?
+        return head :unprocessable_entity
+      end
+
       meta_slot = MetaSlot.create(meta_slot_params.merge(creator: current_user))
-      SlotSetting.create(user: current_user,
-                         meta_slot: meta_slot,
-                         alerts: alert_params)
+      return render json: meta_slot.errors,
+                    status: :unprocessable_entity unless meta_slot.save
 
-      @std_slot = StdSlot.new(base_slot_params.merge(meta_slot: meta_slot))
+      if group_params[:group_id].present?
+        @slot = GroupSlot.new(group_params.merge(meta_slot: meta_slot))
+      else
+        slot_setting = SlotSetting.create(user: current_user,
+                                          meta_slot: meta_slot,
+                                          alerts: alert_params)
+        return render json: slot_setting.errors,
+                      status: :unprocessable_entity unless slot_setting.save
+        @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot))
+      end
 
-      if @std_slot.save
+      if @slot.save
         render :show, status: :created
       else
-        render json: @std_slot.errors, status: :unprocessable_entity
+        render json: @slot.errors, status: :unprocessable_entity
       end
     end
 
@@ -46,7 +57,11 @@ module V1
       head :no_content
     end
 
-    private def base_slot_params
+    private def group_params
+      params.require(:new_slot).permit(:group_id)
+    end
+
+    private def std_params
       params.require(:new_slot).permit(:visibility)
     end
 

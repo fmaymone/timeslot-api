@@ -67,25 +67,37 @@ resource "Slots" do
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
               scope: :new_slot
-    # parameter :note, "A note which belongs to the Slot", scope: :new_slot
-    parameter :visibility, "Visibility of the Slot", scope: :new_slot
+    parameter :note, "A note which belongs to the Slot", scope: :new_slot
+    parameter :alerts, "Alerts for the Slot", scope: :new_slot
 
-    describe "Create slot with valid params" do
+    let!(:current_user) { create(:user) }
+
+    describe "Create new standard slot" do
+
+      parameter :visibility, "Visibility of the Slot",
+                required: true, scope: :new_slot
 
       response_field :id, "ID of the new slot"
+      response_field :title, "Title of the new slot"
+      response_field :stardate, "Startdate of the new slot"
+      response_field :enddate, "Enddate of the new slot"
+      response_field :creator_id, "ID of the User who created the slot"
+      response_field :alerts, "Alerts for the slot"
+      response_field :note, "A Note on the slot"
+      response_field :visibility, "Visibility of the slot"
+      response_field :created_at, "Creation datetime of the slot"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
       let(:enddate) { "2014-09-13T22:03:24.000Z" }
-      # let(:note) { "revolutionizing the calendar" }
+      let(:note) { "revolutionizing the calendar" }
+      let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
-      let!(:current_user) { create(:user) }
 
-      example "Create slot returns ID of new slot",
+      example "Create Standard slot returns data of new slot",
               document: :v1 do
         explanation "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
         do_request
@@ -99,37 +111,84 @@ resource "Slots" do
       end
     end
 
+    describe "Create new group slot" do
+
+      parameter :group_id, "Group ID if GroupSlot",
+                required: true, scope: :new_slot
+
+      response_field :id, "ID of the new slot"
+      response_field :title, "Title of the new slot"
+      response_field :stardate, "Startdate of the new slot"
+      response_field :enddate, "Enddate of the new slot"
+      response_field :creator_id, "ID of the User who created the slot"
+      response_field :alerts, "Alerts for the slot"
+      response_field :note, "A Note on the slot"
+      response_field :group_id, "ID of the group the slot belongs to"
+      response_field :created_at, "Creation datetime of the slot"
+
+      let(:group) { create(:group) }
+
+      let(:title) { "Time for a Slot" }
+      let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:enddate) { "2014-09-13T22:03:24.000Z" }
+      let(:note) { "revolutionizing the calendar" }
+      let(:alerts) { '0101010101' }
+      let(:group_id) { group.id }
+
+      example "Create group slot returns data of new slot",
+              document: :v1 do
+        explanation "Missing unrequiered fields will be filled" \
+                    " with default values.\n\n" \
+                    "returns 404 if Group ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
+        do_request
+
+        expect(json).to have_key("id")
+        expect(json).to have_key("title")
+        expect(json).to have_key("startdate")
+        expect(json).to have_key("enddate")
+        expect(json).to have_key("group_id")
+        expect(response_status).to eq(201)
+      end
+    end
+
     describe "Create slot with invalid params" do
+
+      parameter :visibility, "Visibility of the Slot",
+                required: true, scope: :new_slot
 
       response_field :pgerror, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:enddate) { "2014-09-13T22:03:24.000Z" }
+      let(:enddate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { '10' }
       let(:alerts) { "oh no" }
 
       example "Create slot with invalid params returns 422 & failure details",
               document: false do
-        skip "no alerts on slot model anymore"
         explanation "Parameters that can not be written to db will be returned."
         do_request
 
         expect(response_status).to eq 422
         expect(json).to have_key("pgerror")
       end
-
     end
 
     describe "Create slot with missing requiered params" do
+
+      parameter :visibility, "Visibility of the Slot",
+                required: true, scope: :new_slot
 
       response_field :enddate, "The missing parameter"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:visibility) { 10 }
 
       example "Create slot with missing requiered params returns 422" \
               " & failure details", document: false do
-        skip "no adequate error handling in controller yet"
         explanation "Missing requiered fields will be returned."
         do_request
 
