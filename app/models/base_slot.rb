@@ -4,4 +4,5 @@ class BaseSlot < ActiveRecord::Base
   delegate :title, to: :meta_slot
   delegate :startdate, to: :meta_slot
   delegate :enddate, to: :meta_slot
+  delegate :creator, to: :meta_slot
 end

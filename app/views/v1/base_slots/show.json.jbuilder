@@ -3,13 +3,13 @@ json.extract!(@slot,
               :title,
               :startdate,
               :enddate,
-              # :creator_id,
               # :alerts,
               :note,
               :created_at,
               :updated_at,
               :deleted_at
              )
+json.creator_id @slot.creator.id
 if @slot.class == StdSlot
   json.visibility @slot.visibility
 elsif @slot.class == GroupSlot

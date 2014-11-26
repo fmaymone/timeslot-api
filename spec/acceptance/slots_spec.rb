@@ -106,6 +106,8 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
+        expect(json).to have_key("creator_id")
+        expect(json).to have_key("note")
         expect(json).to have_key("visibility")
         expect(response_status).to eq(201)
       end
@@ -148,6 +150,8 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
+        expect(json).to have_key("creator_id")
+        expect(json).to have_key("note")
         expect(json).to have_key("group_id")
         expect(response_status).to eq(201)
       end
