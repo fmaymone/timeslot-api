@@ -328,8 +328,8 @@ CREATE TABLE std_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    meta_slot_id integer,
-    footest character varying(255)
+    footest character varying(255),
+    slot_setting_id integer
 )
 INHERITS (base_slots);
 
@@ -613,10 +613,10 @@ CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_sett
 
 
 --
--- Name: index_std_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_std_slots_on_slot_setting_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot_id);
+CREATE INDEX index_std_slots_on_slot_setting_id ON std_slots USING btree (slot_setting_id);
 
 
 --
@@ -695,4 +695,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141125085243');
 INSERT INTO schema_migrations (version) VALUES ('20141125095021');
 
 INSERT INTO schema_migrations (version) VALUES ('20141125110600');
+
+INSERT INTO schema_migrations (version) VALUES ('20141126125743');
 

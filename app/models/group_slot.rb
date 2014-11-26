@@ -4,6 +4,11 @@ class GroupSlot < BaseSlot
   belongs_to :group, inverse_of: :group_slots
   belongs_to :meta_slot
 
+  delegate :title, to: :meta_slot
+  delegate :startdate, to: :meta_slot
+  delegate :enddate, to: :meta_slot
+  delegate :creator, to: :meta_slot
+
   validates :meta_slot, presence: true
   validates :group, presence: true
 end
