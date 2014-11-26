@@ -2,13 +2,13 @@ class ReSlot < BaseSlot
   self.table_name = 're_slots'
 
   belongs_to :predecessor, class_name: User
-  belongs_to :meta_slot
+  belongs_to :slot_setting
 
-  delegate :title, to: :meta_slot
-  delegate :startdate, to: :meta_slot
-  delegate :enddate, to: :meta_slot
-  delegate :creator, to: :meta_slot
+  delegate :title, to: :slot_setting
+  delegate :startdate, to: :slot_setting
+  delegate :enddate, to: :slot_setting
+  delegate :creator, to: :slot_setting
 
   validates :predecessor, presence: true
-  validates :meta_slot, presence: true
+  validates :slot_setting, presence: true
 end
