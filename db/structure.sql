@@ -250,7 +250,8 @@ CREATE TABLE re_slots (
     updated_at timestamp without time zone,
     footest character varying(255),
     deleted_at timestamp without time zone,
-    meta_slot_id integer
+    meta_slot_id integer,
+    slotter_id integer
 )
 INHERITS (base_slots);
 
@@ -599,6 +600,13 @@ CREATE INDEX index_re_slots_on_predecessor_id ON re_slots USING btree (predecess
 
 
 --
+-- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
+
+
+--
 -- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -701,4 +709,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141126125743');
 INSERT INTO schema_migrations (version) VALUES ('20141126134021');
 
 INSERT INTO schema_migrations (version) VALUES ('20141127130943');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127140805');
 
