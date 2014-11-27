@@ -7,8 +7,13 @@ class User < ActiveRecord::Base
            foreign_key: "creator_id", inverse_of: :creator
 
   has_many :slot_settings, inverse_of: :user
-  has_many :std_slots, inverse_of: :user
-  has_many :meta_slots, through: :slot_settings, source: :meta_slot
+
+  # I think I don't need this...
+  has_many :meta_slots, through: :slot_settings #, source: :meta_slot
+
+  has_many :std_slots, through: :created_slots
+  has_many :re_slots, foreign_key: :slotter_id,  inverse_of: :slotter
+  has_many :group_slots, through: :groups
 
   has_many :own_groups, class_name: "Group",
            foreign_key: "owner_id", inverse_of: :owner

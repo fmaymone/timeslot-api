@@ -8,13 +8,20 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:username) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:created_slots) }
+  it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
+  it { is_expected.to respond_to(:std_slots) }
+  it { is_expected.to respond_to(:re_slots) }
   it { is_expected.to have_one(:image) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
   it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
+  it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
+  it { is_expected.to have_many(:std_slots).through(:created_slots) }
+  it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
+  it { is_expected.to have_many(:group_slots).through(:groups) }
 
   it { is_expected.to be_valid }
 

@@ -4,6 +4,8 @@ class MetaSlot < ActiveRecord::Base
   has_many :slot_settings, inverse_of: :meta_slot
   has_many :users, through: :slot_settings, source: :user
 
+  has_one :std_slot, inverse_of: :meta_slot
+
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
   validates :startdate, presence: true
