@@ -23,10 +23,6 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#destroy", id: "1", format: :json)
     end
 
-    it "does not route to #index" do
-      expect(get: "/v1/slots").not_to be_routable
-    end
-
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end
