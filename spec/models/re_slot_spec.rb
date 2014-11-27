@@ -13,8 +13,8 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:startdate) }
   it { is_expected.to respond_to(:enddate) }
-  it { is_expected.to respond_to(:slot_setting) }
-  it { is_expected.to belong_to(:slot_setting) }
+  it { is_expected.to respond_to(:meta_slot) }
+  it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to respond_to(:media_items) }
   it { is_expected.to have_many(:media_items) }
 
@@ -25,18 +25,18 @@ RSpec.describe ReSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when slot_setting is not present" do
-    before { re_slot.slot_setting = nil }
+  describe "when meta_slot is not present" do
+    before { re_slot.meta_slot = nil }
     it { is_expected.to_not be_valid }
   end
 
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
     let(:slot_setting) { create(:slot_setting, meta_slot: meta_slot) }
-    let(:re_slot) { create(:re_slot, slot_setting: slot_setting) }
+    let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
 
-    it "contains startdate of the meta_slot" do
-      expect(re_slot.startdate).to eq slot_setting.startdate
+    it "contains title of the meta_slot" do
+      expect(re_slot.startdate).to eq meta_slot.startdate
       expect(re_slot.title).to eq "Timeslot"
     end
   end
