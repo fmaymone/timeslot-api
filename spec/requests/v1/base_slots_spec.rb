@@ -6,10 +6,10 @@ RSpec.describe "V1::BaseSlots", type: :request do
   describe "GET /v1/slots" do
     let!(:current_user) { create(:user) }
 
-    let(:settings) { create_list(:slot_setting, 2, user: current_user) }
-    let!(:std_slot_1) { create(:std_slot, slot_setting: settings[0]) }
-    let!(:std_slots_2) { create_list(:std_slot, 2, slot_setting: settings[1]) }
-    let!(:re_slots) { create_list(:re_slot, 4, slot_setting: settings[1]) }
+    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
+    let!(:std_slot_1) { create(:std_slot, meta_slot: metas[0]) }
+    let!(:std_slot_2) { create(:std_slot, meta_slot: metas[1]) }
+    let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
     let!(:memberships) {
@@ -25,15 +25,14 @@ RSpec.describe "V1::BaseSlots", type: :request do
 
     it "returns all slots for the current_user" do
       get "/v1/slots"
-      slots_count = 1 + std_slots_2.size +
-                    re_slots.size + group_slots_1.size + group_slots_2.size
+      slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
       expect(json.length).to eq slots_count
     end
 
     it "returns the details of the first slot" do
       get "/v1/slots"
       expect(json.first).to include std_slot_1.as_json.except(
-                                      "footest", "slot_setting_id",
+                                      "footest", "meta_slot_id",
                                       "created_at", "updated_at", "deleted_at")
     end
   end

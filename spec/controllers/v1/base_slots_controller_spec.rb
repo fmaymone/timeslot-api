@@ -7,11 +7,10 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
   let!(:current_user) { create(:user) }
 
   describe "GET index" do
-
-    let!(:settings) { create_list(:slot_setting, 2, user: current_user) }
-    let!(:std_slots_1) { create_list(:std_slot, 3, slot_setting: settings[0]) }
-    let!(:std_slots_2) { create_list(:std_slot, 2, slot_setting: settings[1]) }
-    let!(:re_slots) { create_list(:re_slot, 4, slot_setting: settings[1]) }
+    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
+    let!(:std_slots_1) { create(:std_slot, meta_slot: metas[0]) }
+    let!(:std_slots_2) { create(:std_slot, meta_slot: metas[1]) }
+    let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
     let!(:memberships) {
@@ -22,8 +21,7 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
 
     it "assigns all groups as @groups" do
       get :index, {}, valid_session
-      slots_count = std_slots_1.size + std_slots_2.size +
-                    re_slots.size + group_slots_1.size + group_slots_2.size
+      slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
       expect(assigns(:slots).length).to eq slots_count
     end
   end

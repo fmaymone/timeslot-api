@@ -8,10 +8,10 @@ resource "Slots" do
 
     let!(:current_user) { create(:user) }
 
-    let(:settings) { create_list(:slot_setting, 2, user: current_user) }
-    let!(:std_slot_1) { create(:std_slot, slot_setting: settings[0]) }
-    let!(:std_slots_2) { create_list(:std_slot, 2, slot_setting: settings[1]) }
-    let!(:re_slots) { create_list(:re_slot, 4, slot_setting: settings[1]) }
+    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
+    let!(:std_slot_1) { create(:std_slot, meta_slot: metas[0]) }
+    let!(:std_slot_2) { create(:std_slot, meta_slot: metas[1]) }
+    let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
     let!(:memberships) {
@@ -52,6 +52,41 @@ resource "Slots" do
                       "created_at" => std_slot_1.created_at.iso8601,
                       "updated_at" => std_slot_1.updated_at.iso8601,
                       "deleted_at" => std_slot_1.deleted_at
+                     )
+        expect(json)
+          .to include("id" => std_slot_2.id,
+                      "title" => std_slot_2.title,
+                      "creator_id" => std_slot_2.creator.id,
+                      "startdate" => std_slot_2.startdate.iso8601,
+                      "enddate" => std_slot_2.enddate.iso8601,
+                      "note" => std_slot_2.note,
+                      "visibility" => std_slot_2.visibility,
+                      "created_at" => std_slot_2.created_at.iso8601,
+                      "updated_at" => std_slot_2.updated_at.iso8601,
+                      "deleted_at" => std_slot_2.deleted_at
+                     )
+        expect(json)
+          .to include("id" => re_slots[0].id,
+                      "title" => re_slots[0].title,
+                      "creator_id" => re_slots[0].creator.id,
+                      "startdate" => re_slots[0].startdate.iso8601,
+                      "enddate" => re_slots[0].enddate.iso8601,
+                      "note" => re_slots[0].note,
+                      "created_at" => re_slots[0].created_at.iso8601,
+                      "updated_at" => re_slots[0].updated_at.iso8601,
+                      "deleted_at" => re_slots[0].deleted_at
+                     )
+        expect(json)
+          .to include("id" => group_slots_1[0].id,
+                      "title" => group_slots_1[0].title,
+                      "creator_id" => group_slots_1[0].creator.id,
+                      "startdate" => group_slots_1[0].startdate.iso8601,
+                      "enddate" => group_slots_1[0].enddate.iso8601,
+                      "note" => group_slots_1[0].note,
+                      "group_id" => group_slots_1[0].group.id,
+                      "created_at" => group_slots_1[0].created_at.iso8601,
+                      "updated_at" => group_slots_1[0].updated_at.iso8601,
+                      "deleted_at" => group_slots_1[0].deleted_at
                      )
       end
     end

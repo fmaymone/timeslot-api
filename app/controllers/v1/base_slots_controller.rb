@@ -2,18 +2,11 @@ module V1
   class BaseSlotsController < ApplicationController
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
-    # needs support for date range
     def index
       @slots = []
-
-      current_user.slot_settings.each do |setting|
-        @slots.push(*StdSlot.where(slot_setting: setting))
-        @slots.push(*ReSlot.where(slot_setting: setting))
-      end
-
-      current_user.groups.each do |group|
-        @slots.push(*GroupSlot.where(group: group))
-      end
+      @slots.push(*current_user.std_slots)
+      @slots.push(*current_user.re_slots)
+      @slots.push(*current_user.group_slots)
 
       render :index
     end
@@ -46,7 +39,7 @@ module V1
                                           alerts: alert_params)
         return render json: slot_setting.errors,
                       status: :unprocessable_entity unless slot_setting.save
-        @slot = StdSlot.new(std_params.merge(slot_setting: slot_setting))
+        @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot))
       end
 
       if @slot.save
