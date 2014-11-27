@@ -3,6 +3,60 @@ require 'documentation_helper'
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
 
+  get "/v1/slots" do
+    header "Accept", "application/json"
+
+    let!(:current_user) { create(:user) }
+
+    let(:settings) { create_list(:slot_setting, 2, user: current_user) }
+    let!(:std_slot_1) { create(:std_slot, slot_setting: settings[0]) }
+    let!(:std_slots_2) { create_list(:std_slot, 2, slot_setting: settings[1]) }
+    let!(:re_slots) { create_list(:re_slot, 4, slot_setting: settings[1]) }
+
+    let(:groups) { create_list(:group, 2) }
+    let!(:memberships) {
+      create(:membership, group: groups[0], user: current_user)
+      create(:membership, group: groups[1], user: current_user) }
+    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
+    let!(:group_slots_2) { create_list(:group_slot, 2, group: groups[1]) }
+
+    describe "Get all slots for current user" do
+
+      response_field :id, "ID of the slot"
+      response_field :title, "Title of the slot"
+      response_field :stardate, "Startdate of the slot"
+      response_field :enddate, "Enddate of the slot"
+      response_field :creator_id, "ID of the User who created the slot"
+      # response_field :alerts, "Alerts for the slot"
+      response_field :note, "A Note on the slot"
+      response_field :visibility, "Visibility if it's a Standard or ReSlot"
+      response_field :group_id, "ID of belonging Group if it's a GroupSlot"
+      response_field :created_at, "Creation datetime of the slot"
+      response_field :updated_at, "Last update of the slot"
+      response_field :deleted_at, "Deletion datetime of the slot"
+
+      example "Get all slots for current user", document: :v1 do
+        explanation "Returns an array which includes StandardSlots," \
+                    " ReSlots & GroupSlots"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json)
+          .to include("id" => std_slot_1.id,
+                      "title" => std_slot_1.title,
+                      "creator_id" => std_slot_1.creator.id,
+                      "startdate" => std_slot_1.startdate.iso8601,
+                      "enddate" => std_slot_1.enddate.iso8601,
+                      "note" => std_slot_1.note,
+                      "visibility" => std_slot_1.visibility,
+                      "created_at" => std_slot_1.created_at.iso8601,
+                      "updated_at" => std_slot_1.updated_at.iso8601,
+                      "deleted_at" => std_slot_1.deleted_at
+                     )
+      end
+    end
+  end
+
   get "/v1/slots/:id" do
     header "Accept", "application/json"
 
@@ -86,6 +140,8 @@ resource "Slots" do
       response_field :note, "A Note on the slot"
       response_field :visibility, "Visibility of the slot"
       response_field :created_at, "Creation datetime of the slot"
+      response_field :updated_at, "Last update of the slot"
+      response_field :deleted_at, "Deletion datetime of the slot"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }

@@ -6,6 +6,28 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
   let(:valid_session) { {} }
   let!(:current_user) { create(:user) }
 
+  describe "GET index" do
+
+    let!(:settings) { create_list(:slot_setting, 2, user: current_user) }
+    let!(:std_slots_1) { create_list(:std_slot, 3, slot_setting: settings[0]) }
+    let!(:std_slots_2) { create_list(:std_slot, 2, slot_setting: settings[1]) }
+    let!(:re_slots) { create_list(:re_slot, 4, slot_setting: settings[1]) }
+
+    let(:groups) { create_list(:group, 2) }
+    let!(:memberships) {
+      create(:membership, group: groups[0], user: current_user)
+      create(:membership, group: groups[1], user: current_user) }
+    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
+    let!(:group_slots_2) { create_list(:group_slot, 5, group: groups[1]) }
+
+    it "assigns all groups as @groups" do
+      get :index, {}, valid_session
+      slots_count = std_slots_1.size + std_slots_2.size +
+                    re_slots.size + group_slots_1.size + group_slots_2.size
+      expect(assigns(:slots).length).to eq slots_count
+    end
+  end
+
   describe "POST create" do
     describe "with valid params" do
       let(:valid_attributes) {
