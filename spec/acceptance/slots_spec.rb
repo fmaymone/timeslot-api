@@ -26,14 +26,14 @@ resource "Slots" do
       response_field :title, "Title of the slot"
       response_field :stardate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
-      response_field :creator_id, "ID of the User who created the slot"
+      response_field :creatorId, "ID of the User who created the slot"
       # response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
       response_field :visibility, "Visibility if it's a Standard or ReSlot"
-      response_field :group_id, "ID of belonging Group if it's a GroupSlot"
-      response_field :created_at, "Creation datetime of the slot"
-      response_field :updated_at, "Last update of the slot"
-      response_field :deleted_at, "Deletion datetime of the slot"
+      response_field :groupId, "ID of belonging Group if it's a GroupSlot"
+      response_field :createdAt, "Creation datetime of the slot"
+      response_field :updatedAt, "Last update of the slot"
+      response_field :deletedAt, "Deletion datetime of the slot"
 
       example "Get all slots for current user", document: :v1 do
         explanation "Returns an array which includes StandardSlots," \
@@ -44,49 +44,49 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "creator_id" => std_slot_1.creator.id,
+                      "creatorId" => std_slot_1.creator.id,
                       "startdate" => std_slot_1.startdate.iso8601,
                       "enddate" => std_slot_1.enddate.iso8601,
                       "note" => std_slot_1.note,
                       "visibility" => std_slot_1.visibility,
-                      "created_at" => std_slot_1.created_at.iso8601,
-                      "updated_at" => std_slot_1.updated_at.iso8601,
-                      "deleted_at" => std_slot_1.deleted_at
+                      "createdAt" => std_slot_1.created_at.iso8601,
+                      "updatedAt" => std_slot_1.updated_at.iso8601,
+                      "deletedAt" => std_slot_1.deleted_at
                      )
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
-                      "creator_id" => std_slot_2.creator.id,
+                      "creatorId" => std_slot_2.creator.id,
                       "startdate" => std_slot_2.startdate.iso8601,
                       "enddate" => std_slot_2.enddate.iso8601,
                       "note" => std_slot_2.note,
                       "visibility" => std_slot_2.visibility,
-                      "created_at" => std_slot_2.created_at.iso8601,
-                      "updated_at" => std_slot_2.updated_at.iso8601,
-                      "deleted_at" => std_slot_2.deleted_at
+                      "createdAt" => std_slot_2.created_at.iso8601,
+                      "updatedAt" => std_slot_2.updated_at.iso8601,
+                      "deletedAt" => std_slot_2.deleted_at
                      )
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
-                      "creator_id" => re_slots[0].creator.id,
+                      "creatorId" => re_slots[0].creator.id,
                       "startdate" => re_slots[0].startdate.iso8601,
                       "enddate" => re_slots[0].enddate.iso8601,
                       "note" => re_slots[0].note,
-                      "created_at" => re_slots[0].created_at.iso8601,
-                      "updated_at" => re_slots[0].updated_at.iso8601,
-                      "deleted_at" => re_slots[0].deleted_at
+                      "createdAt" => re_slots[0].created_at.iso8601,
+                      "updatedAt" => re_slots[0].updated_at.iso8601,
+                      "deletedAt" => re_slots[0].deleted_at
                      )
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
-                      "creator_id" => group_slots_1[0].creator.id,
+                      "creatorId" => group_slots_1[0].creator.id,
                       "startdate" => group_slots_1[0].startdate.iso8601,
                       "enddate" => group_slots_1[0].enddate.iso8601,
                       "note" => group_slots_1[0].note,
-                      "group_id" => group_slots_1[0].group.id,
-                      "created_at" => group_slots_1[0].created_at.iso8601,
-                      "updated_at" => group_slots_1[0].updated_at.iso8601,
-                      "deleted_at" => group_slots_1[0].deleted_at
+                      "groupId" => group_slots_1[0].group.id,
+                      "createdAt" => group_slots_1[0].created_at.iso8601,
+                      "updatedAt" => group_slots_1[0].updated_at.iso8601,
+                      "deletedAt" => group_slots_1[0].deleted_at
                      )
       end
     end
@@ -106,8 +106,8 @@ resource "Slots" do
       # response_field :note, "A note on the slot"
       # response_field :visibility, "Visibiltiy of the slot"
       response_field :media, "Media Items of the slot"
-      response_field :created_at, "Creation of slot"
-      response_field :updated_at, "Latest update of slot in db"
+      response_field :createdAt, "Creation of slot"
+      response_field :updatedAt, "Latest update of slot in db"
 
       let(:slot) { create(:meta_slot, :with_media) }
       let(:id) { slot.id }
@@ -125,9 +125,9 @@ resource "Slots" do
                  "enddate" => slot.enddate.iso8601,
                  # "note" => slot.note,
                  # "visibility" => slot.visibility,
-                 "created_at" => slot.created_at.iso8601,
-                 "updated_at" => slot.updated_at.iso8601,
-                 "deleted_at" => deleted_at
+                 "createdAt" => slot.created_at.iso8601,
+                 "updatedAt" => slot.updated_at.iso8601,
+                 "deletedAt" => deleted_at
                 )
         # expect(json["media"].length).to eq(slot.media_items.length)
       end
@@ -172,13 +172,13 @@ resource "Slots" do
       response_field :title, "Title of the new slot"
       response_field :stardate, "Startdate of the new slot"
       response_field :enddate, "Enddate of the new slot"
-      response_field :creator_id, "ID of the User who created the slot"
+      response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
       response_field :visibility, "Visibility of the slot"
-      response_field :created_at, "Creation datetime of the slot"
-      response_field :updated_at, "Last update of the slot"
-      response_field :deleted_at, "Deletion datetime of the slot"
+      response_field :createdAt, "Creation datetime of the slot"
+      response_field :updatedAt, "Last update of the slot"
+      response_field :deletedAt, "Deletion datetime of the slot"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
@@ -199,7 +199,7 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
-        expect(json).to have_key("creator_id")
+        expect(json).to have_key("creatorId")
         expect(json).to have_key("note")
         expect(json).to have_key("visibility")
         expect(response_status).to eq(201)
@@ -266,7 +266,7 @@ resource "Slots" do
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
               scope: :new_slot
-    parameter :group_id, "Group ID if GroupSlot",
+    parameter :groupId, "Group ID if GroupSlot",
               required: true,
               scope: :new_slot
     parameter :note, "A note which belongs to the Slot",
@@ -283,18 +283,18 @@ resource "Slots" do
       response_field :title, "Title of the new slot"
       response_field :stardate, "Startdate of the new slot"
       response_field :enddate, "Enddate of the new slot"
-      response_field :creator_id, "ID of the User who created the slot"
+      response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
-      response_field :group_id, "ID of the group the slot belongs to"
-      response_field :created_at, "Creation datetime of the slot"
+      response_field :groupId, "ID of the group the slot belongs to"
+      response_field :createdAt, "Creation datetime of the slot"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
       let(:enddate) { "2014-09-13T22:03:24.000Z" }
       let(:note) { "revolutionizing the calendar" }
       let(:alerts) { '0101010101' }
-      let(:group_id) { group.id }
+      let(:groupId) { group.id }
 
       example "Create group slot returns data of new slot",
               document: :v1 do
@@ -309,9 +309,9 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
-        expect(json).to have_key("creator_id")
+        expect(json).to have_key("creatorId")
         expect(json).to have_key("note")
-        expect(json).to have_key("group_id")
+        expect(json).to have_key("groupId")
         expect(response_status).to eq(201)
       end
     end
@@ -324,7 +324,7 @@ resource "Slots" do
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
       let(:enddate) { "2014-09-10T13:31:02.000Z" }
       let(:alerts) { "oh no" }
-      let(:group_id) { group.id }
+      let(:groupId) { group.id }
 
       example "Create group slot with invalid params returns 422 & failure details",
               document: false do
@@ -342,7 +342,7 @@ resource "Slots" do
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:group_id) { group.id }
+      let(:groupId) { group.id }
 
       example "Create group slot with missing requiered params returns 422" \
               " & failure details", document: false do
@@ -359,11 +359,11 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :predecessor_id,
+    parameter :predecessorId,
               "ID of the Slot which was resloted",
               required: true,
               scope: :re_slot
-    parameter :predecessor_type,
+    parameter :predecessorType,
               "Type of the Slot which was resloted (StdSlot/GroupSlot/ReSlot)",
               required: true,
               scope: :re_slot
@@ -377,15 +377,15 @@ resource "Slots" do
       response_field :title, "Title of the slot"
       response_field :stardate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
-      response_field :creator_id, "ID of the User who created the slot"
-      response_field :slotter_id, "ID of the User who did reslot"
+      response_field :creatorId, "ID of the User who created the slot"
+      response_field :slotterId, "ID of the User who did reslot"
       response_field :note, "A Note on the slot"
-      response_field :created_at, "Creation datetime of the slot"
-      response_field :updated_at, "Last update of the slot"
-      response_field :deleted_at, "Deletion datetime of the slot"
+      response_field :createdAt, "Creation datetime of the slot"
+      response_field :updatedAt, "Last update of the slot"
+      response_field :deletedAt, "Deletion datetime of the slot"
 
-      let(:predecessor_id) { pred.id }
-      let(:predecessor_type) { pred.class.model_name.param_key }
+      let(:predecessorId) { pred.id }
+      let(:predecessorType) { pred.class.model_name.param_key }
       let(:note) { "re-revolutionizing the calendar" }
 
       example "Reslot a slot returns data of ReSlot",
@@ -400,12 +400,12 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
-        expect(json).to have_key("creator_id")
-        expect(json).to have_key("slotter_id")
+        expect(json).to have_key("creatorId")
+        expect(json).to have_key("slotterId")
         expect(json["title"]).to eq pred.title
         expect(json["startdate"]).to eq pred.startdate.iso8601
-        expect(json["creator_id"]).to eq pred.creator.id
-        expect(json["slotter_id"]).to eq current_user.id
+        expect(json["creatorId"]).to eq pred.creator.id
+        expect(json["slotterId"]).to eq current_user.id
       end
     end
   end
@@ -449,19 +449,19 @@ resource "Slots" do
       parameter :media_type, "Type of media (image/video/voice)",
                 required: true,
                 scope: :new_media
-      parameter :public_id, "Cloudinary ID / URL",
+      parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :new_media
       parameter :ordering, "Order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :new_media
 
-      response_field :media_item_id, "Timeslot internal ID for this media item"
+      response_field :mediaItemId, "Timeslot internal ID for this media item"
 
       let!(:slot) { create(:meta_slot) }
       let(:id) { slot.id }
       let(:media_type) { "image" }
-      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
       example "Adding media items to existing slot returns ID & status created",
@@ -474,7 +474,7 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(201)
-        expect(json).to have_key("media_item_id")
+        expect(json).to have_key("mediaItemId")
         expect(MetaSlot.last.media_items.size).to eq(1)
       end
     end
@@ -483,9 +483,9 @@ resource "Slots" do
 
       parameter :media_type, "Type of media (image/video/voice)",
                 required: true
-      parameter :ordering_media, "Array with media_item_ids and ordering",
+      parameter :ordering_media, "Array with mediaItemIds and ordering",
                 required: true
-      parameter :media_item_id, "Timeslot's internal ID for this media item",
+      parameter :mediaItemId, "Timeslot's internal ID for this media item",
                 required: true,
                 scope: :ordering_media
       parameter :ordering, "Order of the image (ignored for video/voice)",
@@ -501,11 +501,11 @@ resource "Slots" do
       let(:media_reordering) do
         { media_type: "image",
           ordering_media: [
-            { media_item_id: media_item_1.id,
+            { mediaItemId: media_item_1.id,
               ordering: 2 },
-            { media_item_id: media_item_2.id,
+            { mediaItemId: media_item_2.id,
               ordering: 0 },
-            { media_item_id: media_item_3.id,
+            { mediaItemId: media_item_3.id,
               ordering: 1 }
           ] }
       end
@@ -535,7 +535,7 @@ resource "Slots" do
       let!(:slot) { create(:meta_slot, :with_media) }
       let(:id) { slot.id }
 
-      example "Delete slot sets 'deleted_at' and returns slot data",
+      example "Delete slot sets 'deletedAt' and returns slot data",
               document: :v1 do
         skip "Needs to get fixed"
         explanation "Doesn't delete anything.\n\n" \

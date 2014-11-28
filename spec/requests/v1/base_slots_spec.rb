@@ -148,7 +148,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
     let(:group) { create(:group) }
 
     context "GroupSlot with valid params" do
-      let(:valid_slot) { attributes_for(:meta_slot).merge(group_id: group.id) }
+      let(:valid_slot) { attributes_for(:meta_slot).merge(groupId: group.id) }
 
       it "responds with http status Created (201)" do
         post "/v1/groupslot/", new_slot: valid_slot
@@ -169,7 +169,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
 
     context "with invalid params" do
       let(:invalid_attributes) {
-        attributes_for(:meta_slot).merge(group_id: group.id)
+        attributes_for(:meta_slot).merge(groupId: group.id)
       }
       describe "does not add a new entry to the DB" do
         it "with missing group ID" do
@@ -182,7 +182,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
         it "with invalid group ID" do
           expect {
             post "/v1/groupslot/", new_slot: attributes_for(:meta_slot).merge(
-                   group_id: 1)
+                   groupId: 1)
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
           expect(response).to have_http_status(:not_found)
         end
@@ -214,7 +214,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
           group_slot = attributes_for(:meta_slot,
                                       startdate: "2014-09-08 13:31:02",
                                       enddate: "2014-09-08 13:31:02",
-                                      group_id: group.id)
+                                      groupId: group.id)
           post "/v1/groupslot/", new_slot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'enddate' && 'start date'
@@ -224,7 +224,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
           group_slot = attributes_for(:meta_slot,
                                       startdate: "2014-09-08 13:31:02",
                                       enddate: "2014-07-07 13:31:02",
-                                      group_id: group.id)
+                                      groupId: group.id)
           post "/v1/groupslot/", new_slot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'enddate' && 'start date'
@@ -242,8 +242,8 @@ RSpec.describe "V1::BaseSlots", type: :request do
         let(:pred) { create(:std_slot) }
         let(:valid_attributes) {
           attributes_for(:re_slot,
-                         predecessor_id: pred.id,
-                         predecessor_type: pred.class.model_name.param_key)
+                         predecessorId: pred.id,
+                         predecessorType: pred.class.model_name.param_key)
         }
         it "responds with http status Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
@@ -270,8 +270,8 @@ RSpec.describe "V1::BaseSlots", type: :request do
         }
         let(:valid_attributes) {
           attributes_for(:re_slot,
-                         predecessor_id: pred.id,
-                         predecessor_type: pred.class.model_name.param_key)
+                         predecessorId: pred.id,
+                         predecessorType: pred.class.model_name.param_key)
         }
         it "responds with http status Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
@@ -294,8 +294,8 @@ RSpec.describe "V1::BaseSlots", type: :request do
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
           attributes_for(:re_slot,
-                         predecessor_id: pred.id,
-                         predecessor_type: pred.class.model_name.param_key)
+                         predecessorId: pred.id,
+                         predecessorType: pred.class.model_name.param_key)
         }
         it "responds with http status Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes

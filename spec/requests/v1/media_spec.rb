@@ -10,10 +10,10 @@ RSpec.describe "V1::Media", type: :request do
     it "responds with a cloudinary signature" do
       get "/v1/media-signature"
       json = JSON.parse(response.body)
-      expect(json).to have_key('public_id')
+      expect(json).to have_key('publicId')
       expect(json).to have_key('signature')
       expect(json).to have_key('timestamp')
-      expect(json).to have_key('api_key')
+      expect(json).to have_key('apiKey')
     end
 
     it "returns 503 if signature creation fails" do

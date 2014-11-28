@@ -27,5 +27,7 @@ module TsRailsBackend
 
     # dump postgres specific sql into schema
     config.active_record.schema_format = :sql
+
+    Jbuilder.key_format camelize: :lower
   end
 end

@@ -10,9 +10,9 @@ resource "Users" do
 
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
-    response_field :created_at, "Creation of user"
-    response_field :updated_at, "Latest update of user in db"
-    response_field :deleted_at, "Deletion of user"
+    response_field :createdAt, "Creation of user"
+    response_field :updatedAt, "Latest update of user in db"
+    response_field :deletedAt, "Deletion of user"
 
     let(:user) { create(:user) }
     let(:id) { user.id }
@@ -23,7 +23,8 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to eq(user.attributes.as_json)
+      expect(json).to eq(user.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 
@@ -79,7 +80,7 @@ resource "Users" do
     let!(:user) { create(:user) }
     let(:id) { user.id }
 
-    example "Delete user sets 'deleted_at' and returns user data",
+    example "Delete user sets 'deletedAt' and returns user data",
             document: :v1 do
       explanation "Doesn't delete anything.\n\n" \
                   "returns 404 if ID is invalid"
@@ -88,7 +89,8 @@ resource "Users" do
       user.reload
       expect(user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(json).to eq(user.attributes.as_json)
+      expect(json).to eq(user.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 end

@@ -30,12 +30,12 @@ resource "Groups" do
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
-    response_field :owner_id, "user id of group owner"
+    response_field :ownerId, "user id of group owner"
     response_field :members_can_post, "Can subscribers post?"
     response_field :members_can_invite, "Can subscribers invite friends?"
-    response_field :created_at, "Creation of group"
-    response_field :updated_at, "Latest update of group in db"
-    response_field :deleted_at, "Deletion of group"
+    response_field :createdAt, "Creation of group"
+    response_field :updatedAt, "Latest update of group in db"
+    response_field :deletedAt, "Deletion of group"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -46,7 +46,8 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to eq(group.attributes.as_json)
+      expect(json).to eq(group.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 
@@ -113,14 +114,14 @@ resource "Groups" do
       parameter :new_media, "Scope for attributes of new image",
                 required: true,
                 scope: :group
-      parameter :public_id, "Cloudinary ID / URL",
+      parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :new_media
 
-      response_field :media_item_id, "Timeslot internal ID for this media item"
+      response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ group: { new_media: { public_id: public_id }}}.to_json }
+      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:raw_post) {{ group: { new_media: { public_id: publicId }}}.to_json }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -132,10 +133,10 @@ resource "Groups" do
         do_request
 
         expect(response_status).to eq(201)
-        expect(json).to have_key("media_item_id")
+        expect(json).to have_key("mediaItemId")
         group.reload
         expect(group.image).not_to be nil
-        expect(group.image.public_id).to eq public_id
+        expect(group.image.public_id).to eq publicId
       end
     end
   end
@@ -148,7 +149,7 @@ resource "Groups" do
     let(:group_id) { group.id }
 
     example "Delete group", document: :v1 do
-      explanation "Sets 'deleted_at' on the group." \
+      explanation "Sets 'deletedAt' on the group." \
                   " Doesn't delete anything.\n\n" \
                   "returns 200 and the updated data for the group\n\n" \
                   "returns 403 if current user not group owner\n\n" \
@@ -158,7 +159,8 @@ resource "Groups" do
       group.reload
       expect(group.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(json).to eq(group.attributes.as_json)
+      expect(json).to eq(group.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
 
     describe "current user not group owner" do
@@ -180,7 +182,7 @@ resource "Groups" do
     response_field :group_id, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
     response_field :members, "Array of active members"
-    response_field :user_id, "ID of member"
+    response_field :userId, "ID of member"
     response_field :username, "name of member"
     response_field :user_url, "URL for member"
 
@@ -196,13 +198,13 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "group_id" => group.id,
+                                "groupId" => group.id,
                                 "size" => 4
                               })
       # TODO: need to get the correct user_url here
-      expect(json["members"].first.except("user_url"))
+      expect(json["members"].first.except("userUrl"))
         .to eq({
-                 "user_id" => group.members.first.id,
+                 "userId" => group.members.first.id,
                  "username" => group.members.first.username
                })
     end
@@ -223,10 +225,10 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get", required: true
 
-    response_field :group_id, "ID of the group"
+    response_field :groupId, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
     response_field :related, "Array of related users"
-    response_field :user_id, "ID of user", scope: :related
+    response_field :userId, "ID of user", scope: :related
     response_field :state, "state of membership", scope: :related
 
     let(:group) { create(:group) }
@@ -244,12 +246,12 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "group_id" => group.id,
+                                "groupId" => group.id,
                                 "size" => 6
                               })
       expect(json["related"].first)
         .to eq({
-                 "user_id" => group.related_users.first.id,
+                 "userId" => group.related_users.first.id,
                  "state" => group.memberships.first.state
                })
     end

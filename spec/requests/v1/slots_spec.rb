@@ -20,8 +20,8 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json).to have_key('enddate')
         # expect(json).to have_key('note')
         # expect(json).to have_key('visibility')
-        expect(json).to have_key('created_at')
-        expect(json).to have_key('updated_at')
+        expect(json).to have_key('createdAt')
+        expect(json).to have_key('updatedAt')
       end
 
       it "does return the correct attributes" do

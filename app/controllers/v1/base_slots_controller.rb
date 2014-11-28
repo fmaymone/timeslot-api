@@ -70,8 +70,8 @@ module V1
     # POST /v1/reslot
     def create_reslot
       predecessor = BaseSlot.where(
-        id: re_params.require(:predecessor_id),
-        sub_type: re_params.require(:predecessor_type)
+        id: re_params.require(:predecessorId),
+        sub_type: re_params.require(:predecessorType)
       ).first
       # TODO: use model initializer
       @slot = ReSlot.new(slotter: current_user,
@@ -106,7 +106,7 @@ module V1
     end
 
     private def group_param
-      params.require(:new_slot).require(:group_id)
+      params.require(:new_slot).require(:groupId)
     end
 
     private def std_params
@@ -114,7 +114,7 @@ module V1
     end
 
     private def re_params
-      params.require(:re_slot).permit(:predecessor_id, :predecessor_type)
+      params.require(:re_slot).permit(:predecessorId, :predecessorType)
     end
 
     private def meta_slot_params
