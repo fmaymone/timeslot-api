@@ -51,7 +51,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
       it "adds a new entry to the DB" do
         expect {
           post "/v1/stdslot/", new_slot: valid_slot
-        }.to change(MetaSlot, :count).by(1)
+        }.to change(MetaSlot, :count).by(1) && change(StdSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
@@ -158,7 +158,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
       it "adds a new entry to the DB" do
         expect {
           post "/v1/groupslot/", new_slot: valid_slot
-        }.to change(MetaSlot, :count).by(1)
+        }.to change(MetaSlot, :count).by(1) && change(GroupSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
@@ -228,6 +228,89 @@ RSpec.describe "V1::BaseSlots", type: :request do
           post "/v1/groupslot/", new_slot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'enddate' && 'start date'
+        end
+      end
+    end
+  end
+
+  describe "POST /v1/reslot" do
+    let!(:current_user) { create(:user) }
+    let(:group) { create(:group) }
+
+    context "with valid params" do
+      context "ReSlot from StdSlot" do
+        let(:pred) { create(:std_slot) }
+        let(:valid_attributes) {
+          attributes_for(:re_slot,
+                         predecessor_id: pred.id,
+                         predecessor_type: pred.class.model_name.param_key)
+        }
+        it "responds with http status Created (201)" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new entry to the DB" do
+          expect {
+            post "/v1/reslot/", re_slot: valid_attributes
+          }.to change(ReSlot, :count).by(1)
+        end
+
+        it "returns the ID of the new reslot" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+
+      context "ReSlot from ReSlot" do
+        let(:origin) { create(:std_slot) }
+        let!(:pred) {
+          create(:re_slot, predecessor_id: origin.id,
+                 predecessor_type: origin.class.model_name.param_key)
+        }
+        let(:valid_attributes) {
+          attributes_for(:re_slot,
+                         predecessor_id: pred.id,
+                         predecessor_type: pred.class.model_name.param_key)
+        }
+        it "responds with http status Created (201)" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new entry to the DB" do
+          expect {
+            post "/v1/reslot/", re_slot: valid_attributes
+          }.to change(ReSlot, :count).by(1)
+        end
+
+        it "returns the ID of the new reslot" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+
+      context "ReSlot from GroupSlot" do
+        let(:pred) { create(:group_slot) }
+        let(:valid_attributes) {
+          attributes_for(:re_slot,
+                         predecessor_id: pred.id,
+                         predecessor_type: pred.class.model_name.param_key)
+        }
+        it "responds with http status Created (201)" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new entry to the DB" do
+          expect {
+            post "/v1/reslot/", re_slot: valid_attributes
+          }.to change(ReSlot, :count).by(1)
+        end
+
+        it "returns the ID of the new slot" do
+          post "/v1/reslot/", re_slot: valid_attributes
+          expect(json['id']).to eq(ReSlot.last.id)
         end
       end
     end

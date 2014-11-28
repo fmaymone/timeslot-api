@@ -62,9 +62,9 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         }.to change(SlotSetting, :count).by(1)
       end
 
-      it "assigns a newly created base_slot as @slot" do
+      it "assigns a newly created std_slot as @slot" do
         post :create_stdslot, { new_slot: valid_attributes }, valid_session
-        expect(assigns(:slot)).to be_a(BaseSlot)
+        expect(assigns(:slot)).to be_a(StdSlot)
         expect(assigns(:slot)).to be_persisted
       end
     end
@@ -106,9 +106,47 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         }.to change(SlotSetting, :count).by(1)
       end
 
-      it "assigns a newly created base_slot as @slot" do
+      it "assigns a newly created group_slot as @slot" do
         post :create_groupslot, { new_slot: valid_attributes }, valid_session
-        expect(assigns(:slot)).to be_a(BaseSlot)
+        expect(assigns(:slot)).to be_a(GroupSlot)
+        expect(assigns(:slot)).to be_persisted
+      end
+    end
+  end
+
+  describe "POST create_reslot" do
+    describe "with valid params" do
+      let(:pred) { create(:std_slot) }
+      let(:valid_attributes) {
+        attributes_for(:re_slot, predecessor_id: pred.id,
+                       predecessor_type: pred.class.model_name.param_key)
+      }
+      it "responds with http status Created (201)" do
+        post :create_reslot, re_slot: valid_attributes
+        expect(response).to have_http_status(:created)
+      end
+
+      it "renders the create template" do
+        post :create_reslot, re_slot: valid_attributes
+        expect(response).to render_template("show")
+      end
+
+      it "creates a new ReSlot" do
+        expect {
+
+          post :create_reslot, { re_slot: valid_attributes }, valid_session
+        }.to change(ReSlot, :count).by(1)
+      end
+
+      it "doesn't create a new SlotSetting" do
+        expect {
+          post :create_reslot, { re_slot: valid_attributes }, valid_session
+        }.not_to change(SlotSetting, :count)
+      end
+
+      it "assigns a newly created re_slot as @slot" do
+        post :create_reslot, { re_slot: valid_attributes }, valid_session
+        expect(assigns(:slot)).to be_a(ReSlot)
         expect(assigns(:slot)).to be_persisted
       end
     end

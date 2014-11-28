@@ -353,6 +353,61 @@ resource "Slots" do
     end
   end
 
+  post "/v1/reslot" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :predecessor_id,
+              "ID of the Slot which was resloted",
+              required: true,
+              scope: :re_slot
+    parameter :predecessor_type,
+              "Type of the Slot which was resloted (StdSlot/GroupSlot/ReSlot)",
+              required: true,
+              scope: :re_slot
+
+    let!(:current_user) { create(:user) }
+    let(:pred) { create(:std_slot) }
+
+    describe "Reslot a StandardSlot" do
+
+      response_field :id, "ID of the new slot"
+      response_field :title, "Title of the slot"
+      response_field :stardate, "Startdate of the slot"
+      response_field :enddate, "Enddate of the slot"
+      response_field :creator_id, "ID of the User who created the slot"
+      response_field :slotter_id, "ID of the User who did reslot"
+      response_field :note, "A Note on the slot"
+      response_field :created_at, "Creation datetime of the slot"
+      response_field :updated_at, "Last update of the slot"
+      response_field :deleted_at, "Deletion datetime of the slot"
+
+      let(:predecessor_id) { pred.id }
+      let(:predecessor_type) { pred.class.model_name.param_key }
+      let(:note) { "re-revolutionizing the calendar" }
+
+      example "Reslot a slot returns data of ReSlot",
+              document: :v1 do
+        explanation "returns 404 if Predecessor doesn't exist\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key("id")
+        expect(json).to have_key("title")
+        expect(json).to have_key("startdate")
+        expect(json).to have_key("enddate")
+        expect(json).to have_key("creator_id")
+        expect(json).to have_key("slotter_id")
+        expect(json["title"]).to eq pred.title
+        expect(json["startdate"]).to eq pred.startdate.iso8601
+        expect(json["creator_id"]).to eq pred.creator.id
+        expect(json["slotter_id"]).to eq current_user.id
+      end
+    end
+  end
+
   patch "/v1/slots/:id" do
     header "Content-Type", "application/json"
 

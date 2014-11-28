@@ -14,5 +14,7 @@ if @slot.class == StdSlot
   json.visibility @slot.visibility
 elsif @slot.class == GroupSlot
   json.group_id @slot.group.id
+elsif @slot.class == ReSlot
+  json.slotter_id @slot.slotter.id
 end
 # json.media @slot.media_items, :id, :media_type, :public_id, :ordering

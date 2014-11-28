@@ -50,7 +50,7 @@ module V1
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
 
-      # make service for alarm
+      # TODO: make service for alarm
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
                                      alerts: alert_param)
@@ -69,6 +69,21 @@ module V1
 
     # POST /v1/reslot
     def create_reslot
+      predecessor = BaseSlot.where(
+        id: re_params.require(:predecessor_id),
+        sub_type: re_params.require(:predecessor_type)
+      ).first
+      # TODO: use model initializer
+      @slot = ReSlot.new(slotter: current_user,
+                         predecessor: predecessor,
+                         predecessor_type: predecessor.sub_type,
+                         meta_slot: predecessor.meta_slot)
+
+      if @slot.save
+        render :show, status: :created
+      else
+        render json: @slot.errors, status: :unprocessable_entity
+      end
     end
 
     # PATCH /v1/base_slots/1
@@ -91,12 +106,15 @@ module V1
     end
 
     private def group_param
-      # params.require(:new_slot).permit(:group_id)
       params.require(:new_slot).require(:group_id)
     end
 
     private def std_params
       params.require(:new_slot).permit(:visibility)
+    end
+
+    private def re_params
+      params.require(:re_slot).permit(:predecessor_id, :predecessor_type)
     end
 
     private def meta_slot_params
