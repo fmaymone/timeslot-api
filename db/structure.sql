@@ -38,7 +38,9 @@ CREATE TABLE base_slots (
     footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    sub_type character varying(10) NOT NULL,
+    meta_slot_id integer
 );
 
 
@@ -73,7 +75,8 @@ CREATE TABLE group_slots (
     updated_at timestamp without time zone,
     meta_slot_id integer,
     footest character varying(255),
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    sub_type character varying(10) DEFAULT 'group_slot'::character varying
 )
 INHERITS (base_slots);
 
@@ -244,14 +247,16 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 
 CREATE TABLE re_slots (
     id integer,
-    predecessor_id integer,
+    predecessor_id integer NOT NULL,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     footest character varying(255),
     deleted_at timestamp without time zone,
-    meta_slot_id integer,
-    slotter_id integer
+    meta_slot_id integer NOT NULL,
+    slotter_id integer NOT NULL,
+    predecessor_type character varying(10) NOT NULL,
+    sub_type character varying(10) DEFAULT 're_slot'::character varying
 )
 INHERITS (base_slots);
 
@@ -330,7 +335,8 @@ CREATE TABLE std_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     footest character varying(255),
-    meta_slot_id integer
+    meta_slot_id integer,
+    sub_type character varying(10) DEFAULT 'std_slot'::character varying
 )
 INHERITS (base_slots);
 
@@ -537,6 +543,13 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: index_base_slots_on_id_and_sub_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_base_slots_on_id_and_sub_type ON base_slots USING btree (id, sub_type);
+
+
+--
 -- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -711,4 +724,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141126134021');
 INSERT INTO schema_migrations (version) VALUES ('20141127130943');
 
 INSERT INTO schema_migrations (version) VALUES ('20141127140805');
+
+INSERT INTO schema_migrations (version) VALUES ('20141128130147');
 

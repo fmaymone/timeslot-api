@@ -32,7 +32,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
     it "returns the details of the first slot" do
       get "/v1/slots"
       expect(json.first).to include std_slot_1.as_json.except(
-                                      "footest", "meta_slot_id",
+                                      "footest", "meta_slot_id","sub_type",
                                       "created_at", "updated_at", "deleted_at")
     end
   end

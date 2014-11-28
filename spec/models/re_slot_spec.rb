@@ -6,6 +6,7 @@ RSpec.describe ReSlot, type: :model do
   subject { re_slot }
 
   it { is_expected.to respond_to(:predecessor) }
+  it { is_expected.to respond_to(:predecessor_type) }
   it { is_expected.to respond_to(:slotter) }
   it { is_expected.to respond_to(:created_at) }
   it { is_expected.to respond_to(:updated_at) }
@@ -28,6 +29,11 @@ RSpec.describe ReSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when predecessor_type is not present" do
+    before { re_slot.predecessor_type = nil }
+    it { is_expected.to_not be_valid }
+  end
+
   describe "when meta_slot is not present" do
     before { re_slot.meta_slot = nil }
     it { is_expected.to_not be_valid }
@@ -41,19 +47,6 @@ RSpec.describe ReSlot, type: :model do
     it "contains title of the meta_slot" do
       expect(re_slot.startdate).to eq meta_slot.startdate
       expect(re_slot.title).to eq "Timeslot"
-    end
-  end
-
-  describe "inheritance" do
-    let!(:re_slot) { create(:re_slot, footest: "hola") }
-
-    it "adds inherited columns to the base slot also" do
-      skip "can not use first/last b/c now also creates a StdSlot"
-      base_slot_entry = BaseSlot.last
-      re_slot_entry = ReSlot.last
-      expect(base_slot_entry.footest).to eq "hola"
-      expect(re_slot_entry.footest).to eq "hola"
-      expect(re_slot_entry.id).to eq base_slot_entry.id
     end
   end
 end
