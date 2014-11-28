@@ -143,7 +143,7 @@ resource "Slots" do
     end
   end
 
-  post "/v1/slots" do
+  post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
@@ -204,10 +204,78 @@ resource "Slots" do
       end
     end
 
-    describe "Create new group slot" do
+    describe "Create std slot with invalid params" do
 
-      parameter :group_id, "Group ID if GroupSlot",
+      parameter :visibility, "Visibility of the Slot",
                 required: true, scope: :new_slot
+
+      response_field :pgerror, "Explanation which param couldn't be saved"
+
+      let(:title) { "Time for a Slot" }
+      let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:enddate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { '10' }
+      let(:alerts) { "oh no" }
+
+      example "Create std slot with invalid params returns 422 & failure details",
+              document: false do
+        explanation "Parameters that can not be written to db will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("pgerror")
+      end
+    end
+
+    describe "Create std slot with missing requiered params" do
+
+      parameter :visibility, "Visibility of the Slot",
+                required: true, scope: :new_slot
+
+      response_field :enddate, "The missing parameter"
+
+      let(:title) { "Time for a Slot" }
+      let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:visibility) { 10 }
+
+      example "Create std slot with missing requiered params returns 422" \
+              " & failure details", document: false do
+        explanation "Missing requiered fields will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("enddate")
+      end
+    end
+  end
+
+  post "/v1/groupslot" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :title, "Title of slot",
+              required: true,
+              scope: :new_slot
+    parameter :startdate,
+              "Startdate and Time of the Slot",
+              required: true,
+              scope: :new_slot
+    parameter :enddate,
+              "Enddate and Time of the Slot (startdate + duration)",
+              required: true,
+              scope: :new_slot
+    parameter :group_id, "Group ID if GroupSlot",
+              required: true,
+              scope: :new_slot
+    parameter :note, "A note which belongs to the Slot",
+              scope: :new_slot
+    parameter :alerts, "Alerts for the Slot",
+              scope: :new_slot
+
+    let!(:current_user) { create(:user) }
+    let(:group) { create(:group) }
+
+    describe "Create new group slot" do
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
@@ -218,8 +286,6 @@ resource "Slots" do
       response_field :note, "A Note on the slot"
       response_field :group_id, "ID of the group the slot belongs to"
       response_field :created_at, "Creation datetime of the slot"
-
-      let(:group) { create(:group) }
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
@@ -248,20 +314,17 @@ resource "Slots" do
       end
     end
 
-    describe "Create slot with invalid params" do
-
-      parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+    describe "Create group slot with invalid params" do
 
       response_field :pgerror, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
       let(:enddate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { '10' }
       let(:alerts) { "oh no" }
+      let(:group_id) { group.id }
 
-      example "Create slot with invalid params returns 422 & failure details",
+      example "Create group slot with invalid params returns 422 & failure details",
               document: false do
         explanation "Parameters that can not be written to db will be returned."
         do_request
@@ -271,18 +334,15 @@ resource "Slots" do
       end
     end
 
-    describe "Create slot with missing requiered params" do
-
-      parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+    describe "Create group slot with missing requiered params" do
 
       response_field :enddate, "The missing parameter"
 
       let(:title) { "Time for a Slot" }
       let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { 10 }
+      let(:group_id) { group.id }
 
-      example "Create slot with missing requiered params returns 422" \
+      example "Create group slot with missing requiered params returns 422" \
               " & failure details", document: false do
         explanation "Missing requiered fields will be returned."
         do_request
@@ -290,7 +350,6 @@ resource "Slots" do
         expect(response_status).to eq 422
         expect(json).to have_key("enddate")
       end
-
     end
   end
 

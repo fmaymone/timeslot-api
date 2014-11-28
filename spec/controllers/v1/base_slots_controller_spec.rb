@@ -26,7 +26,7 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
     end
   end
 
-  describe "POST create" do
+  describe "POST create_stdslot" do
     describe "with valid params" do
       let(:valid_attributes) {
         attributes_for(:meta_slot, creator: current_user).merge(
@@ -34,35 +34,80 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
 
       }
       it "responds with http status Created (201)" do
-        post :create, new_slot: valid_attributes
+        post :create_stdslot, new_slot: valid_attributes
         expect(response).to have_http_status(:created)
       end
 
       it "renders the create template" do
-        post :create, new_slot: valid_attributes
+        post :create_stdslot, new_slot: valid_attributes
         expect(response).to render_template("show")
       end
 
       it "creates a new MetaSlot" do
         expect {
-          post :create, { new_slot: valid_attributes }, valid_session
+          post :create_stdslot, { new_slot: valid_attributes }, valid_session
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "creates a new StdSlot" do
         expect {
-          post :create, { new_slot: valid_attributes }, valid_session
+          post :create_stdslot, { new_slot: valid_attributes }, valid_session
         }.to change(StdSlot, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
         expect {
-          post :create, { new_slot: valid_attributes }, valid_session
+          post :create_stdslot, { new_slot: valid_attributes.merge(
+                                  alerts: '1110111010') }, valid_session
         }.to change(SlotSetting, :count).by(1)
       end
 
       it "assigns a newly created base_slot as @slot" do
-        post :create, { new_slot: valid_attributes }, valid_session
+        post :create_stdslot, { new_slot: valid_attributes }, valid_session
+        expect(assigns(:slot)).to be_a(BaseSlot)
+        expect(assigns(:slot)).to be_persisted
+      end
+    end
+  end
+
+  describe "POST create_groupslot" do
+    describe "with valid params" do
+      let(:group) { create(:group) }
+      let(:valid_attributes) {
+        attributes_for(:meta_slot, creator: current_user).merge(
+          group_id: group.id, footest: "myfootest")
+      }
+      it "responds with http status Created (201)" do
+        post :create_groupslot, new_slot: valid_attributes
+        expect(response).to have_http_status(:created)
+      end
+
+      it "renders the create template" do
+        post :create_groupslot, new_slot: valid_attributes
+        expect(response).to render_template("show")
+      end
+
+      it "creates a new MetaSlot" do
+        expect {
+          post :create_groupslot, { new_slot: valid_attributes }, valid_session
+        }.to change(MetaSlot, :count).by(1)
+      end
+
+      it "creates a new GroupSlot" do
+        expect {
+          post :create_groupslot, { new_slot: valid_attributes }, valid_session
+        }.to change(GroupSlot, :count).by(1)
+      end
+
+      it "creates a new SlotSetting" do
+        expect {
+          post :create_groupslot, { new_slot: valid_attributes.merge(
+                                    alerts: '1110111010') }, valid_session
+        }.to change(SlotSetting, :count).by(1)
+      end
+
+      it "assigns a newly created base_slot as @slot" do
+        post :create_groupslot, { new_slot: valid_attributes }, valid_session
         expect(assigns(:slot)).to be_a(BaseSlot)
         expect(assigns(:slot)).to be_persisted
       end

@@ -18,35 +18,57 @@ module V1
       render json: @base_slot
     end
 
-    # POST /v1/slots
-    # TODO: needs refactoring
-    def create
-      if group_params[:group_id].present?
-        return head :unprocessable_entity unless Group.exists?(group_params[:group_id])
-      elsif std_params[:visibility].blank?
-        return head :unprocessable_entity
-      end
+    # POST /v1/stdslot
+    def create_stdslot
+      return head :unprocessable_entity if std_params[:visibility].blank?
 
       meta_slot = MetaSlot.create(meta_slot_params.merge(creator: current_user))
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
 
-      if group_params[:group_id].present?
-        @slot = GroupSlot.new(group_params.merge(meta_slot: meta_slot))
-      else
-        slot_setting = SlotSetting.create(user: current_user,
-                                          meta_slot: meta_slot,
-                                          alerts: alert_params)
-        return render json: slot_setting.errors,
-                      status: :unprocessable_entity unless slot_setting.save
-        @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot))
+      if alert_param.present?
+        setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
+                                     alerts: alert_param)
+        return render json: setting.errors,
+                      status: :unprocessable_entity unless setting.save
       end
+
+      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot))
 
       if @slot.save
         render :show, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
+    end
+
+    # POST /v1/groupslot
+    def create_groupslot
+      group = Group.find(group_param)
+
+      meta_slot = MetaSlot.create(meta_slot_params.merge(creator: current_user))
+      return render json: meta_slot.errors,
+                    status: :unprocessable_entity unless meta_slot.save
+
+      # make service for alarm
+      if alert_param.present?
+        setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
+                                     alerts: alert_param)
+        return render json: setting.errors,
+                      status: :unprocessable_entity unless setting.save
+      end
+
+      @slot = GroupSlot.new(group: group, meta_slot: meta_slot)
+
+      if @slot.save
+        render :show, status: :created
+      else
+        render json: @slot.errors, status: :unprocessable_entity
+      end
+    end
+
+    # POST /v1/reslot
+    def create_reslot
     end
 
     # PATCH /v1/base_slots/1
@@ -68,8 +90,9 @@ module V1
       head :no_content
     end
 
-    private def group_params
-      params.require(:new_slot).permit(:group_id)
+    private def group_param
+      # params.require(:new_slot).permit(:group_id)
+      params.require(:new_slot).require(:group_id)
     end
 
     private def std_params
@@ -80,7 +103,7 @@ module V1
       params.require(:new_slot).permit(:title, :startdate, :enddate)
     end
 
-    private def alert_params
+    private def alert_param
       params.require(:new_slot).permit(:alerts)[:alerts]
     end
   end
