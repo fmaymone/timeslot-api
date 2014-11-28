@@ -147,7 +147,9 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :title, "Title of slot", required: true, scope: :new_slot
+    parameter :title, "Title of slot (max. 48 characters)",
+              required: true,
+              scope: :new_slot
     parameter :startdate,
               "Startdate and Time of the Slot",
               required: true,
@@ -253,7 +255,7 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :title, "Title of slot",
+    parameter :title, "Title of slot (max. 48 characters)",
               required: true,
               scope: :new_slot
     parameter :startdate,

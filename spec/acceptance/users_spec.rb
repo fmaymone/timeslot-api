@@ -31,7 +31,8 @@ resource "Users" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :username, "Username of user", scope: :user, required: true
+    parameter :username, "Username of user (max. 20 characters)",
+              scope: :user, required: true
 
     response_field :id, "ID of the new user"
 
@@ -51,7 +52,8 @@ resource "Users" do
     header "Content-Type", "application/json"
 
     parameter :id, "ID of the user to update", required: true
-    parameter :username, "Updated title of user", scope: :user
+    parameter :username, "Updated username of user (max. 20 characters)",
+              scope: :user
 
     let!(:user) { create(:user, username: "foo") }
     let(:id) { user.id }

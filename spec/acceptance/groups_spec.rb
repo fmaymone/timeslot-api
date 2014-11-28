@@ -55,7 +55,8 @@ resource "Groups" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :name, "Name of group", scope: :group, required: true
+    parameter :name, "Name of group (max. 255 characters)",
+              scope: :group, required: true
     parameter :members_can_post, "Can subscribers post?", scope: :group
     parameter :members_can_invite, "Can subscribers invite friends?", scope: :group
 
@@ -88,7 +89,8 @@ resource "Groups" do
     let(:group_id) { group.id }
 
     describe "Update existing group returns No Content" do
-      parameter :name, "Updated name of group", scope: :group
+      parameter :name, "Updated name of group (max. 255 characters)",
+                scope: :group
 
       let(:name) { "bar" }
 
