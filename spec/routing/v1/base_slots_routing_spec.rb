@@ -22,5 +22,20 @@ RSpec.describe V1::BaseSlotsController, type: :routing do
       expect(
         post: "/v1/groupslot").to route_to("v1/base_slots#create_groupslot", format: :json)
     end
+
+    it "routes to #destroy_stdslot" do
+      expect(delete: "/v1/stdslot/1")
+        .to route_to("v1/base_slots#destroy_stdslot", id: "1", format: :json)
+    end
+
+    it "routes to #destroy_grou[]slot" do
+      expect(delete: "/v1/groupslot/1")
+        .to route_to("v1/base_slots#destroy_groupslot", id: "1", format: :json)
+    end
+
+    it "routes to #destroy_reslot" do
+      expect(delete: "/v1/reslot/1")
+        .to route_to("v1/base_slots#destroy_reslot", id: "1", format: :json)
+    end
   end
 end

@@ -18,9 +18,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#update", id: "1", format: :json)
     end
 
-    it "routes to #destroy" do
+    it "doesn't route to #destroy" do
       expect(delete: "/v1/slots/1")
-        .to route_to("v1/slots#destroy", id: "1", format: :json)
+        .not_to route_to("v1/slots#destroy", id: "1", format: :json)
     end
 
     it "does not route to #new" do

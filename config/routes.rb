@@ -7,7 +7,9 @@ Rails.application.routes.draw do
     post 'reslot', to: 'base_slots#create_reslot'
     post 'groupslot', to: 'base_slots#create_groupslot'
     patch 'slots/:id', to: 'slots#update', as: 'slot_update'
-    delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
+    delete 'stdslot/:id', to: 'base_slots#destroy_stdslot', as: 'stdslot_delete'
+    delete 'groupslot/:id', to: 'base_slots#destroy_groupslot', as: 'groupslot_delete'
+    delete 'reslot/:id', to: 'base_slots#destroy_reslot', as: 'reslot_delete'
 
     get 'media-signature', to: 'media#create_signature'
 
