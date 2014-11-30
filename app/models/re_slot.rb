@@ -9,4 +9,13 @@ class ReSlot < BaseSlot
   validates :predecessor, presence: true
   validates :predecessor_type, presence: true
   validates :meta_slot, presence: true
+
+  class << self
+    def from_slot(predecessor: nil, slotter: nil)
+      create(slotter: slotter,
+             predecessor: predecessor,
+             predecessor_type: predecessor.sub_type,
+             meta_slot: predecessor.meta_slot)
+    end
+  end
 end

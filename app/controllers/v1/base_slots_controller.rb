@@ -73,11 +73,8 @@ module V1
         id: re_params.require(:predecessorId),
         sub_type: re_params.require(:predecessorType)
       ).first
-      # TODO: use model initializer
-      @slot = ReSlot.new(slotter: current_user,
-                         predecessor: predecessor,
-                         predecessor_type: predecessor.sub_type,
-                         meta_slot: predecessor.meta_slot)
+
+      @slot = ReSlot.from_slot(predecessor: predecessor, slotter: current_user)
 
       if @slot.save
         render :show, status: :created
