@@ -38,15 +38,21 @@ RSpec.describe "V1::BaseSlots", type: :request do
     context "StdSlot with valid params" do
       let(:valid_slot) { attributes_for(:meta_slot).merge(visibility: '10') }
 
-      it "responds with http status Created (201)" do
+      it "responds with Created (201)" do
         post "/v1/stdslot/", new_slot: valid_slot
         expect(response).to have_http_status(:created)
       end
 
-      it "adds a new entry to the DB" do
+      it "adds a new StdSlot entry to the DB" do
         expect {
           post "/v1/stdslot/", new_slot: valid_slot
-        }.to change(MetaSlot, :count).by(1) && change(StdSlot, :count).by(1)
+        }.to change(StdSlot, :count).by(1)
+      end
+
+      it "adds a new MetaSlot entry to the DB" do
+        expect {
+          post "/v1/stdslot/", new_slot: valid_slot
+        }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
@@ -65,7 +71,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
           expect {
             post "/v1/stdslot/", new_slot: invalid_attributes
           }.not_to change(MetaSlot, :count)
-          expect(response.body).to include 'error' && 'title'
+          expect(response.body).to include('title')
         end
 
         it "for empty startdate" do
@@ -73,31 +79,31 @@ RSpec.describe "V1::BaseSlots", type: :request do
           expect {
             post "/v1/stdslot/", new_slot: invalid_attributes
           }.not_to change(MetaSlot, :count)
-          expect(response.body).to include 'error' && 'startdate'
+          expect(response.body).to include('startdate')
           expect(response).to have_http_status(:unprocessable_entity)
         end
       end
 
-      describe "responds with http status Unprocessable Entity (422)" do
+      describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
           post "/v1/stdslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'title' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "for invalid startdate" do
           invalid_attributes[:startdate] = "|$%^@wer"
           post "/v1/stdslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'startdate' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "for empty enddate" do
           invalid_attributes[:enddate] = ""
           post "/v1/stdslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "if startdate equals enddate" do
@@ -106,7 +112,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                                 enddate: "2014-09-08 13:31:02")
           post "/v1/stdslot/", new_slot: slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'start date'
+          expect(response.body).to include('start date')
         end
 
         it "if startdate after enddate"  do
@@ -115,7 +121,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                                 enddate: "2014-07-07 13:31:02")
           post "/v1/stdslot/", new_slot: slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'start date'
+          expect(response.body).to include('start date')
         end
 
         it "for empty visibility" do
@@ -145,15 +151,21 @@ RSpec.describe "V1::BaseSlots", type: :request do
     context "GroupSlot with valid params" do
       let(:valid_slot) { attributes_for(:meta_slot).merge(groupId: group.id) }
 
-      it "responds with http status Created (201)" do
+      it "responds with Created (201)" do
         post "/v1/groupslot/", new_slot: valid_slot
         expect(response).to have_http_status(:created)
       end
 
-      it "adds a new entry to the DB" do
+      it "adds a new group_slot entry to the DB" do
         expect {
           post "/v1/groupslot/", new_slot: valid_slot
-        }.to change(MetaSlot, :count).by(1) && change(GroupSlot, :count).by(1)
+        }.to change(GroupSlot, :count).by(1)
+      end
+
+      it "adds a new meta_slot entry to the DB" do
+        expect {
+          post "/v1/groupslot/", new_slot: valid_slot
+        }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
@@ -183,26 +195,26 @@ RSpec.describe "V1::BaseSlots", type: :request do
         end
       end
 
-      describe "responds with http status Unprocessable Entity (422)" do
+      describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
           post "/v1/groupslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'title' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "for invalid startdate" do
           invalid_attributes[:startdate] = "|$%^@wer"
           post "/v1/groupslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'startdate' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "for empty enddate" do
           invalid_attributes[:enddate] = ""
           post "/v1/groupslot/", new_slot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'blank'
+          expect(response.body).to include('blank')
         end
 
         it "if startdate equals enddate" do
@@ -212,7 +224,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                                       groupId: group.id)
           post "/v1/groupslot/", new_slot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'start date'
+          expect(response.body).to include('start date')
         end
 
         it "if startdate after enddate"  do
@@ -222,7 +234,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                                       groupId: group.id)
           post "/v1/groupslot/", new_slot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'enddate' && 'start date'
+          expect(response.body).to include('start date')
         end
       end
     end
@@ -240,7 +252,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                          predecessorId: pred.id,
                          predecessorType: pred.class.model_name.param_key)
         }
-        it "responds with http status Created (201)" do
+        it "responds with Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
           expect(response).to have_http_status(:created)
         end
@@ -268,7 +280,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                          predecessorId: pred.id,
                          predecessorType: pred.class.model_name.param_key)
         }
-        it "responds with http status Created (201)" do
+        it "responds with Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
           expect(response).to have_http_status(:created)
         end
@@ -292,7 +304,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
                          predecessorId: pred.id,
                          predecessorType: pred.class.model_name.param_key)
         }
-        it "responds with http status Created (201)" do
+        it "responds with Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
           expect(response).to have_http_status(:created)
         end
@@ -306,6 +318,105 @@ RSpec.describe "V1::BaseSlots", type: :request do
         it "returns the ID of the new slot" do
           post "/v1/reslot/", re_slot: valid_attributes
           expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+    end
+  end
+
+  describe "PATCH /v1/metaslot/:id" do
+    let!(:current_user) { create(:user) }
+    let(:metaslot) { create(:meta_slot, creator: current_user) }
+
+    context "with valid params" do
+      it "responds with No Content (204)" do
+        patch "/v1/metaslot/#{metaslot.id}", metaSlot: { title: "Something" }
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "updates the title of a given metaslot" do
+        metaslot.update(title: "Old title")
+        patch "/v1/metaslot/#{metaslot.id}", metaSlot: { title: "New title" }
+        metaslot.reload
+        expect(metaslot.title).to eq("New title")
+      end
+
+      it "updates the startdate of a given metaslot" do
+        metaslot.update(startdate: "2014-09-08 13:31:02")
+        patch "/v1/metaslot/#{metaslot.id}", metaSlot: { startdate: "2014-07-07 13:31:02" }
+        metaslot.reload
+        expect(metaslot.startdate).to eq("2014-07-07 13:31:02")
+      end
+
+      it "updates the enddate of a given metaslot" do
+        metaslot.update(enddate: "2014-09-09 13:31:02")
+        patch "/v1/metaslot/#{metaslot.id}", metaSlot: { enddate: "2014-11-11 13:31:02" }
+        metaslot.reload
+        expect(metaslot.enddate).to eq("2014-11-11 13:31:02")
+      end
+    end
+
+    context "with invalid params" do
+      describe "User not creator of MetaSlot" do
+        let(:creator) { create(:user) }
+        let(:metaslot) { create(:meta_slot, creator: creator) }
+
+        it "responds with Not Found (404)" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { title: "Something" }
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      describe "for invalid ID" do
+        it "responds with Not Found (404)" do
+          wrong_id = metaslot.id + 1
+          patch "/v1/metaslot/#{wrong_id}", metaSlot: { title: "Something" }
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      describe "responds with Unprocessable Entity (422)" do
+        it "for empty title" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { title: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for empty startdate" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { startdate: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for invalid startdate" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { startdate: "|$%^@wer" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for empty enddate" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { enddate: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for invalid enddate" do
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { enddate: "|$%^@wer" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "if startdate equals enddate" do
+          metaslot.update(startdate: "2014-09-08 13:31:02")
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { enddate: "2014-09-08 13:31:02" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('start date')
+        end
+
+        it "if enddate before startdate" do
+          metaslot.update(startdate: "2014-09-08 13:31:02")
+          patch "/v1/metaslot/#{metaslot.id}", metaSlot: { enddate: "2014-07-07 13:31:02" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('start date')
         end
       end
     end
@@ -331,7 +442,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
     context "with an invalid ID" do
       let(:wrong_id) { std_slot.id + 1 }
 
-      it "responds with http status Not Found" do
+      it "responds with Not Found" do
         delete "/v1/stdslot/#{wrong_id}"
         expect(response).to have_http_status(:not_found)
       end
@@ -366,7 +477,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
     context "with an invalid ID" do
       let(:wrong_id) { group_slot.id + 1 }
 
-      it "responds with http status Not Found" do
+      it "responds with Not Found" do
         delete "/v1/groupslot/#{wrong_id}"
         expect(response).to have_http_status(:not_found)
       end
@@ -399,7 +510,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
     context "with an invalid ID" do
       let(:wrong_id) { re_slot.id + 1 }
 
-      it "responds with http status Not Found" do
+      it "responds with Not Found" do
         delete "/v1/reslot/#{wrong_id}"
         expect(response).to have_http_status(:not_found)
       end

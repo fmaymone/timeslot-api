@@ -123,12 +123,12 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         attributes_for(:re_slot, predecessorId: pred.id,
                        predecessorType: pred.class.model_name.param_key)
       }
-      it "responds with http status Created (201)" do
+      it "responds with Created (201)" do
         post :create_reslot, re_slot: valid_attributes
         expect(response).to have_http_status(:created)
       end
 
-      it "renders the create template" do
+      it "renders the show template" do
         post :create_reslot, re_slot: valid_attributes
         expect(response).to render_template("show")
       end
@@ -149,6 +149,46 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         post :create_reslot, { re_slot: valid_attributes }, valid_session
         expect(assigns(:slot)).to be_a(ReSlot)
         expect(assigns(:slot)).to be_persisted
+      end
+    end
+  end
+
+  describe "PATCH update" do
+    let(:valid_slot) { create(:meta_slot, creator: current_user) }
+
+    describe "with valid params" do
+      it "respond with No Content (204)" do
+        patch :update_metaslot, {
+                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "updates the requested slot" do
+        patch :update_metaslot, {
+                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        valid_slot.reload
+        expect(valid_slot.title).to eq("New slot title")
+      end
+
+      it "assigns the requested slot as @meta_slot" do
+        patch :update_metaslot, {
+                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        expect(assigns(:meta_slot)).to be_a(MetaSlot)
+        expect(assigns(:meta_slot)).to eq(valid_slot)
+      end
+    end
+
+    describe "with invalid params" do
+      it "assigns the slot as @meta_slot" do
+        patch :update_metaslot, {
+                id: valid_slot.id, metaSlot: { title: nil } }
+        expect(assigns(:meta_slot)).to eq(valid_slot)
+      end
+
+      it "responds with Unprocessable Entity (422)" do
+        patch :update_metaslot, {
+                id: valid_slot.id, metaSlot: { title: nil } }
+        expect(response.status).to eq(422)
       end
     end
   end

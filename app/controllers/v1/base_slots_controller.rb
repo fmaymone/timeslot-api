@@ -22,7 +22,7 @@ module V1
     def create_stdslot
       return head :unprocessable_entity if std_params[:visibility].blank?
 
-      meta_slot = MetaSlot.create(meta_slot_params.merge(creator: current_user))
+      meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
 
@@ -46,7 +46,7 @@ module V1
     def create_groupslot
       group = Group.find(group_param)
 
-      meta_slot = MetaSlot.create(meta_slot_params.merge(creator: current_user))
+      meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
 
@@ -83,14 +83,14 @@ module V1
       end
     end
 
-    # PATCH /v1/base_slots/1
-    def update
-      @base_slot = BaseSlot.find(params[:id])
+    # PATCH /v1/metaslot/1
+    def update_metaslot
+      @meta_slot = current_user.created_slots.find(params[:id])
 
-      if @base_slot.update(base_slot_params)
+      if @meta_slot.update(update_meta_params)
         head :no_content
       else
-        render json: @base_slot.errors, status: :unprocessable_entity
+        render json: @meta_slot.errors, status: :unprocessable_entity
       end
     end
 
@@ -143,8 +143,12 @@ module V1
       params.require(:re_slot).permit(:predecessorId, :predecessorType)
     end
 
-    private def meta_slot_params
+    private def meta_params
       params.require(:new_slot).permit(:title, :startdate, :enddate)
+    end
+
+    private def update_meta_params
+      params.require(:metaSlot).permit(:title, :startdate, :enddate)
     end
 
     private def alert_param

@@ -412,28 +412,25 @@ resource "Slots" do
     end
   end
 
-  patch "/v1/slots/:id" do
+  patch "/v1/metaslot/:id" do
     header "Content-Type", "application/json"
 
     parameter :id, "ID of the slot to update", required: true
 
-    describe "Update an existing slot with valid non-media params" do
+    describe "Update an existing MetaSlot" do
 
-      parameter :title, "Updated title of slot", scope: :slot
+      parameter :title, "Updated title of slot", scope: :metaSlot
       parameter :startdate, "Updated Startdate and Time of the Slot",
-                scope: :slot
+                scope: :metaSlot
       parameter :enddate,
                 "Updated Enddate and Time of the Slot (startdate + duration)",
-                scope: :slot
-      # parameter :note, "Updated note for to the Slot", scope: :slot
-      # parameter :visibility, "Updated visibility for the Slot", scope: :slot
+                scope: :metaSlot
 
-      let!(:slot) { create(:meta_slot, :with_media) }
-      let(:id) { slot.id }
+      let!(:meta_slot) { create(:meta_slot) }
+      let(:id) { meta_slot.id }
       let(:title) { "New title for a Slot" }
 
-      example "Update an existing slot with valid non-media params" \
-              " returns No Content", document: :v1 do
+      example "Update an existing MetaSlot", document: :v1 do
         explanation "Changing title of slot\n\n" \
                     "returns 404 if ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
@@ -441,6 +438,7 @@ resource "Slots" do
 
         expect(response_status).to eq(204)
         expect(response_body).to eq("")
+        expect(MetaSlot.last.title).to eq title
       end
     end
 

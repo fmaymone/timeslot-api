@@ -32,37 +32,4 @@ RSpec.describe V1::SlotsController, type: :controller do
       expect(response).to render_template("show")
     end
   end
-
-  describe "PATCH update" do
-    describe "with valid params" do
-      it "respond with http status No Content (204)" do
-        patch :update, { id: valid_slot.id, slot: { title: "New slot title" } }
-        expect(response).to have_http_status(:no_content)
-      end
-
-      it "updates the requested slot" do
-        patch :update, { id: valid_slot.id, slot: { title: "New slot title" } }
-        valid_slot.reload
-        expect(valid_slot.title).to eq("New slot title")
-      end
-
-      it "assigns the requested slot as @slot" do
-        patch :update, { id: valid_slot.id, slot: { title: "New slot title" } }
-        expect(assigns(:slot)).to be_a(MetaSlot)
-        expect(assigns(:slot)).to eq(valid_slot)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns the slot as @slot" do
-        patch :update, { id: valid_slot.id, slot: { title: nil } }
-        expect(assigns(:slot)).to eq(valid_slot)
-      end
-
-      it "responds with http status Unprocessable Entity (422)" do
-        patch :update, { id: valid_slot.id, slot: { title: nil } }
-        expect(response.status).to eq(422)
-      end
-    end
-  end
 end
