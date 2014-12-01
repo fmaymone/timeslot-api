@@ -3,10 +3,13 @@ Rails.application.routes.draw do
   namespace :v1, defaults: { format: :json } do
     get 'slots/', to: 'base_slots#index'
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
+
     post 'stdslot', to: 'base_slots#create_stdslot'
     post 'reslot', to: 'base_slots#create_reslot'
     post 'groupslot', to: 'base_slots#create_groupslot'
-    patch 'slots/:id', to: 'slots#update', as: 'slot_update'
+
+    patch 'metaslot/:id', to: 'base_slots#update_metaslot', as: 'metaslot_update'
+
     delete 'stdslot/:id', to: 'base_slots#destroy_stdslot', as: 'stdslot_delete'
     delete 'groupslot/:id', to: 'base_slots#destroy_groupslot', as: 'groupslot_delete'
     delete 'reslot/:id', to: 'base_slots#destroy_reslot', as: 'reslot_delete'
