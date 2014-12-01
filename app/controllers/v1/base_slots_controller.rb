@@ -96,6 +96,9 @@ module V1
 
     # DELETE /v1/std_slot/1
     def destroy_stdslot
+      @slot = current_user.std_slots.find(params.require(:id))
+
+      render :show if SoftDeleteService.call(@slot)
     end
 
     # DELETE /v1/group_slot/1
@@ -104,12 +107,12 @@ module V1
 
     # DELETE /v1/re_slot/1
     def destroy_reslot
-      @reslot = current_user.re_slots.find(params.require(:id))
+      @slot = current_user.re_slots.find(params.require(:id))
 
       # delete SlotSetting object if one exists and it is only referenced by
       # this reslot or softdeleted slots
       # TODO: add helper within user model to get slot_setting references
-      condition = { meta_slot: @reslot.meta_slot.id }
+      condition = { meta_slot: @slot.meta_slot.id }
 
       if current_user.slot_settings.where(condition).exists?
         unless current_user.std_slots.active.where(condition).exists? ||
@@ -118,7 +121,7 @@ module V1
         end
       end
 
-      render :show if SoftDeleteService.call(@reslot)
+      render :show if SoftDeleteService.call(@slot)
     end
 
     private def group_param

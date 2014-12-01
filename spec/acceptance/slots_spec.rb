@@ -529,34 +529,89 @@ resource "Slots" do
     end
   end
 
-  delete "/v1/slots/:id" do
-    parameter :id, "ID of the slot to delete", required: true
+  delete "/v1/stdslot/:id" do
+    parameter :id, "ID of the Standard Slot to delete", required: true
 
-    describe "Delete slot with valid ID" do
+    let!(:current_user) { create(:user) }
 
-      let!(:slot) { create(:meta_slot, :with_media) }
-      let(:id) { slot.id }
+    describe "Delete Standard Slot" do
+      let!(:std_slot) { create(:std_slot, owner: current_user) }
+      let(:id) { std_slot.id }
 
-      example "Delete slot sets 'deletedAt' and returns slot data",
+      example "Delete Standard Slot",
               document: :v1 do
-        skip "Needs to get updated"
-        explanation "Doesn't delete anything.\n\n" \
+        explanation "Sets 'deletedAt', returns updated Standard Slot data" \
+                    "Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
         do_request
 
-        slot.reload
-        expect(slot.deleted_at).not_to be nil
+        std_slot.reload
+        expect(std_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to include(slot.attributes.as_json)
+        expect(json).to include("id" => std_slot.id,
+                                "title" => std_slot.title,
+                                "creatorId" => std_slot.creator.id,
+                                "startdate" => std_slot.startdate.iso8601,
+                                "enddate" => std_slot.enddate.iso8601,
+                                "note" => std_slot.note,
+                                "visibility" => std_slot.visibility,
+                                "createdAt" => std_slot.created_at.iso8601,
+                                "updatedAt" => std_slot.updated_at.iso8601,
+                                "deletedAt" => std_slot.deleted_at.iso8601
+                               )
       end
     end
 
     describe "Delete slot with invalid ID" do
       let(:id) { 1 }
 
+      example "Delete StdSlot with invalid ID returns Not found",
+              document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  delete "/v1/reslot/:id" do
+    parameter :id, "ID of the ReSlot to delete", required: true
+
+    let!(:current_user) { create(:user) }
+
+    describe "Delete ReSlot" do
+      let!(:re_slot) { create(:re_slot, slotter: current_user) }
+      let(:id) { re_slot.id }
+
+      example "Delete ReSlot",
+              document: :v1 do
+        explanation "Sets 'deletedAt', returns updated reslot data" \
+                    "Doesn't delete anything.\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        re_slot.reload
+        expect(re_slot.deleted_at?).to be true
+        expect(response_status).to eq(200)
+        expect(json).to eq("id" => re_slot.id,
+                           "title" => re_slot.title,
+                           "creatorId" => re_slot.creator.id,
+                           "startdate" => re_slot.startdate.iso8601,
+                           "enddate" => re_slot.enddate.iso8601,
+                           "note" => re_slot.note,
+                           "slotterId" => re_slot.slotter.id,
+                           "createdAt" => re_slot.created_at.iso8601,
+                           "updatedAt" => re_slot.updated_at.iso8601,
+                           "deletedAt" => re_slot.deleted_at.iso8601
+                          )
+      end
+    end
+
+
+    describe "Delete ReSlot with invalid ID" do
+      let(:id) { 1 }
+
       example "Delete slot with invalid ID returns Not found",
               document: false do
-        skip "Needs to get updated"
         do_request
         expect(response_status).to eq(404)
       end
