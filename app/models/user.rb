@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :meta_slots, through: :slot_settings #, source: :meta_slot
 
   has_many :std_slots, through: :created_slots
-  has_many :re_slots, foreign_key: :slotter_id,  inverse_of: :slotter
+  has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
   has_many :group_slots, through: :groups
 
   has_many :own_groups, class_name: "Group",
