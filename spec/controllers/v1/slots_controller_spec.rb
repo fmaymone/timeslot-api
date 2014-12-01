@@ -65,26 +65,4 @@ RSpec.describe V1::SlotsController, type: :controller do
       end
     end
   end
-
-  describe "DELETE destroy" do
-    let!(:slot) { create(:meta_slot) }
-
-    it "respond with http status OK (200)" do
-      delete :destroy, id: slot.id
-      expect(response.status).to eq(200)
-    end
-
-    it "doesn't destroy the requested slot" do
-      expect {
-        delete :destroy, id: slot.id
-      }.not_to change(MetaSlot, :count)
-    end
-
-    it "sets deleted_at on the requested slot" do
-      delete :destroy, id: slot.id
-      slot.reload
-      expect(slot.deleted_at).not_to eq nil
-    end
-
-  end
 end

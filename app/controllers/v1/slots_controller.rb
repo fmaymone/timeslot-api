@@ -22,13 +22,6 @@ module V1
       end
     end
 
-    # DELETE /v1/slots/1
-    def destroy
-      @slot = MetaSlot.find(params.require(:id))
-
-      render :show if SoftDeleteService.call(@slot)
-    end
-
     private def slot_create_params
       params.require(:new_slot)
         .permit(:title, :startdate, :enddate, :note, :visibility)

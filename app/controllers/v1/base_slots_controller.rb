@@ -94,12 +94,31 @@ module V1
       end
     end
 
-    # DELETE /v1/base_slots/1
-    def destroy
-      @base_slot = BaseSlot.find(params[:id])
-      @base_slot.destroy
+    # DELETE /v1/std_slot/1
+    def destroy_stdslot
+    end
 
-      head :no_content
+    # DELETE /v1/group_slot/1
+    def destroy_groupslot
+    end
+
+    # DELETE /v1/re_slot/1
+    def destroy_reslot
+      @reslot = current_user.re_slots.find(params.require(:id))
+
+      # delete SlotSetting object if one exists and it is only referenced by
+      # this reslot or softdeleted slots
+      # TODO: add helper within user model to get slot_setting references
+      condition = { meta_slot: @reslot.meta_slot.id }
+
+      if current_user.slot_settings.where(condition).exists?
+        unless current_user.std_slots.active.where(condition).exists? ||
+               current_user.group_slots.active.where(condition).exists?
+          SoftDeleteService.call(current_user.slot_settings.where(condition).first)
+        end
+      end
+
+      render :show if SoftDeleteService.call(@reslot)
     end
 
     private def group_param

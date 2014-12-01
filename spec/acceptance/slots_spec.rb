@@ -537,7 +537,7 @@ resource "Slots" do
 
       example "Delete slot sets 'deletedAt' and returns slot data",
               document: :v1 do
-        skip "Needs to get fixed"
+        skip "Needs to get updated"
         explanation "Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
         do_request
@@ -554,6 +554,7 @@ resource "Slots" do
 
       example "Delete slot with invalid ID returns Not found",
               document: false do
+        skip "Needs to get updated"
         do_request
         expect(response_status).to eq(404)
       end
