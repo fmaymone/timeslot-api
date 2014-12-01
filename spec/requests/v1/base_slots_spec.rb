@@ -7,8 +7,10 @@ RSpec.describe "V1::BaseSlots", type: :request do
     let!(:current_user) { create(:user) }
 
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slot_1) { create(:std_slot, meta_slot: metas[0]) }
-    let!(:std_slot_2) { create(:std_slot, meta_slot: metas[1]) }
+    let!(:std_slot_1) {
+      create(:std_slot, meta_slot: metas[0], owner: current_user) }
+    let!(:std_slot_2) {
+      create(:std_slot, meta_slot: metas[1], owner: current_user) }
     let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
@@ -31,9 +33,10 @@ RSpec.describe "V1::BaseSlots", type: :request do
 
     it "returns the details of the first slot" do
       get "/v1/slots"
-      expect(json.first).to include std_slot_1.as_json.except(
+      expect(json.first).to include std_slot_2.as_json.except(
                                       "footest", "meta_slot_id","sub_type",
-                                      "created_at", "updated_at", "deleted_at")
+                                      "owner_id", "created_at", "updated_at",
+                                      "deleted_at")
     end
   end
 

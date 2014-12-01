@@ -19,7 +19,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:groups).through(:memberships) }
   it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
-  it { is_expected.to have_many(:std_slots).through(:created_slots) }
+  it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
   it { is_expected.to have_many(:group_slots).through(:groups) }
 
@@ -50,11 +50,10 @@ RSpec.describe User, type: :model do
   end
 
   describe "auditing", :commit do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
 
     it "logs instance changes" do
-      # twice: once for creation, once for change
-      expect(Rails.logger).to receive(:info).twice
+      expect(Rails.logger).to receive(:info).once
 
       new_name = "name_#{user.id}"
       user.update(username: new_name)

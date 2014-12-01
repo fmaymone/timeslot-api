@@ -33,7 +33,7 @@ module V1
                       status: :unprocessable_entity unless setting.save
       end
 
-      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot))
+      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot, owner: current_user))
 
       if @slot.save
         render :show, status: :created

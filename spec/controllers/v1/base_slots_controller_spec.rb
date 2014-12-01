@@ -8,8 +8,10 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
 
   describe "GET index" do
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slots_1) { create(:std_slot, meta_slot: metas[0]) }
-    let!(:std_slots_2) { create(:std_slot, meta_slot: metas[1]) }
+    let!(:std_slots_1) {
+      create(:std_slot, meta_slot: metas[0], owner: current_user) }
+    let!(:std_slots_2) {
+      create(:std_slot, meta_slot: metas[1], owner: current_user) }
     let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
@@ -225,7 +227,8 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         end
 
         context "by users std_slot" do
-          let!(:std_slot) { create(:std_slot, meta_slot: reslot.meta_slot) }
+          let!(:std_slot) {
+            create(:std_slot, meta_slot: reslot.meta_slot, owner: current_user) }
 
           it "doesn't set deleted_at on the slot_setting" do
             reslot.meta_slot.update(creator: current_user)
