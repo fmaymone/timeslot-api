@@ -30,14 +30,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
       slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
       expect(json.length).to eq slots_count
     end
-
-    it "returns the details of the first slot" do
-      get "/v1/slots"
-      expect(json.first).to include std_slot_2.as_json.except(
-                                      "footest", "meta_slot_id","sub_type",
-                                      "owner_id", "created_at", "updated_at",
-                                      "deleted_at")
-    end
   end
 
   describe "POST /v1/stdlot" do
@@ -315,6 +307,107 @@ RSpec.describe "V1::BaseSlots", type: :request do
           post "/v1/reslot/", re_slot: valid_attributes
           expect(json['id']).to eq(ReSlot.last.id)
         end
+      end
+    end
+  end
+
+  describe "DELETE /v1/stdslot/:id" do
+    let!(:current_user) { create(:user) }
+    let!(:std_slot) { create(:std_slot, owner: current_user) }
+
+    context "with a valid ID" do
+      it "returns success" do
+        delete "/v1/stdslot/#{std_slot.id}"
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "doesn't destroy the std_slot" do
+        expect {
+          delete "/v1/stdslot/#{std_slot.id}"
+        }.not_to change(StdSlot, :count)
+      end
+    end
+
+    context "with an invalid ID" do
+      let(:wrong_id) { std_slot.id + 1 }
+
+      it "responds with http status Not Found" do
+        delete "/v1/stdslot/#{wrong_id}"
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "does not remove an entry from the DB" do
+        expect {
+          delete "/v1/stdslot/#{wrong_id}"
+        }.not_to change(StdSlot, :count)
+      end
+    end
+  end
+
+  describe "DELETE /v1/groupslot/:id" do
+    let!(:current_user) { create(:user) }
+    let(:group) { create(:group) }
+    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let!(:group_slot) { create(:group_slot, group: group) }
+
+    context "with a valid ID" do
+      it "returns success" do
+        delete "/v1/groupslot/#{group_slot.id}"
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "doesn't destroy the group_slot" do
+        expect {
+          delete "/v1/groupslot/#{group_slot.id}"
+        }.not_to change(GroupSlot, :count)
+      end
+    end
+
+    context "with an invalid ID" do
+      let(:wrong_id) { group_slot.id + 1 }
+
+      it "responds with http status Not Found" do
+        delete "/v1/groupslot/#{wrong_id}"
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "does not remove an entry from the DB" do
+        expect {
+          delete "/v1/groupslot/#{wrong_id}"
+        }.not_to change(GroupSlot, :count)
+      end
+    end
+  end
+
+  describe "DELETE /v1/reslot/:id" do
+    let!(:current_user) { create(:user) }
+    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+
+    context "with a valid ID" do
+      it "returns success" do
+        delete "/v1/reslot/#{re_slot.id}"
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "doesn't destroy the re_slot" do
+        expect {
+          delete "/v1/reslot/#{re_slot.id}"
+        }.not_to change(ReSlot, :count)
+      end
+    end
+
+    context "with an invalid ID" do
+      let(:wrong_id) { re_slot.id + 1 }
+
+      it "responds with http status Not Found" do
+        delete "/v1/reslot/#{wrong_id}"
+        expect(response).to have_http_status(:not_found)
+      end
+
+      it "does not remove an entry from the DB" do
+        expect {
+          delete "/v1/reslot/#{wrong_id}"
+        }.not_to change(ReSlot, :count)
       end
     end
   end

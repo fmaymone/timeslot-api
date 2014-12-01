@@ -398,36 +398,4 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
   end
-
-  xdescribe "DELETE /v1/slots/:id" do
-    let!(:slot) { create(:meta_slot) }
-
-    context "with a valid ID" do
-      it "returns success" do
-        delete "/v1/slots/#{slot.id}"
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "doesn't destroy the slot" do
-        expect {
-          delete "/v1/slots/#{slot.id}"
-        }.not_to change(MetaSlot, :count)
-      end
-    end
-
-    context "with an invalid ID" do
-      it "responds with http status Not Found" do
-        wrong_id = slot.id + 1
-        delete "/v1/slots/#{wrong_id}"
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it "does not remove an entry from the DB" do
-        wrong_id = slot.id + 1
-        expect {
-          delete "/v1/slots/#{wrong_id}"
-        }.not_to change(MetaSlot, :count)
-      end
-    end
-  end
 end

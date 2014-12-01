@@ -98,11 +98,18 @@ module V1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
 
+      # TODO: handle alarm/slot_setting
+
       render :show if SoftDeleteService.call(@slot)
     end
 
     # DELETE /v1/group_slot/1
     def destroy_groupslot
+      @slot = current_user.group_slots.find(params.require(:id))
+
+      # TODO: handle alarm/slot_setting
+
+      render :show if SoftDeleteService.call(@slot)
     end
 
     # DELETE /v1/re_slot/1

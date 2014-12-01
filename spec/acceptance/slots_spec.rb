@@ -533,13 +533,12 @@ resource "Slots" do
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:current_user) { create(:user) }
+    let!(:std_slot) { create(:std_slot, owner: current_user) }
 
     describe "Delete Standard Slot" do
-      let!(:std_slot) { create(:std_slot, owner: current_user) }
       let(:id) { std_slot.id }
 
-      example "Delete Standard Slot",
-              document: :v1 do
+      example "Delete Standard Slot", document: :v1 do
         explanation "Sets 'deletedAt', returns updated Standard Slot data" \
                     "Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
@@ -562,10 +561,55 @@ resource "Slots" do
       end
     end
 
-    describe "Delete slot with invalid ID" do
-      let(:id) { 1 }
+    describe "Delete StdSlot with invalid ID" do
+      let(:id) { std_slot.id + 1 }
 
       example "Delete StdSlot with invalid ID returns Not found",
+              document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  delete "/v1/groupslot/:id" do
+    parameter :id, "ID of the Group Slot to delete", required: true
+
+    let!(:current_user) { create(:user) }
+    let(:group) { create(:group) }
+    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let!(:group_slot) { create(:group_slot, group: group) }
+
+    describe "Delete Group Slot" do
+      let(:id) { group_slot.id }
+
+      example "Delete Group Slot", document: :v1 do
+        explanation "Sets 'deletedAt', returns updated Group Slot data" \
+                    "Doesn't delete anything.\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        group_slot.reload
+        expect(group_slot.deleted_at?).to be true
+        expect(response_status).to eq(200)
+        expect(json).to include("id" => group_slot.id,
+                                "title" => group_slot.title,
+                                "creatorId" => group_slot.creator.id,
+                                "startdate" => group_slot.startdate.iso8601,
+                                "enddate" => group_slot.enddate.iso8601,
+                                "note" => group_slot.note,
+                                "groupId" => group_slot.group.id,
+                                "createdAt" => group_slot.created_at.iso8601,
+                                "updatedAt" => group_slot.updated_at.iso8601,
+                                "deletedAt" => group_slot.deleted_at.iso8601
+                               )
+      end
+    end
+
+    describe "Delete GroupSlot with invalid ID" do
+      let(:id) { group_slot.id + 1 }
+
+      example "Delete GroupSlot with invalid ID returns Not found",
               document: false do
         do_request
         expect(response_status).to eq(404)
@@ -577,13 +621,12 @@ resource "Slots" do
     parameter :id, "ID of the ReSlot to delete", required: true
 
     let!(:current_user) { create(:user) }
+    let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
-      let!(:re_slot) { create(:re_slot, slotter: current_user) }
       let(:id) { re_slot.id }
 
-      example "Delete ReSlot",
-              document: :v1 do
+      example "Delete ReSlot", document: :v1 do
         explanation "Sets 'deletedAt', returns updated reslot data" \
                     "Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
@@ -606,11 +649,10 @@ resource "Slots" do
       end
     end
 
-
     describe "Delete ReSlot with invalid ID" do
-      let(:id) { 1 }
+      let(:id) { re_slot.id + 1 }
 
-      example "Delete slot with invalid ID returns Not found",
+      example "Delete ReSlot with invalid ID returns Not found",
               document: false do
         do_request
         expect(response_status).to eq(404)
