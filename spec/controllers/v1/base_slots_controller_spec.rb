@@ -207,8 +207,7 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
         delete :destroy_reslot, id: reslot.id
         reslot.reload
         expect(reslot.deleted_at?).to be true
-        base_slot = BaseSlot.where(
-          slot_id: reslot.id, sub_type: reslot.class.model_name.param_key).first
+        base_slot = BaseSlot.find(reslot.id)
         expect(base_slot.deleted_at?).to be true
       end
 

@@ -39,7 +39,6 @@ CREATE TABLE base_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    sub_type character varying(10) NOT NULL,
     meta_slot_id integer,
     slot_id integer NOT NULL
 );
@@ -95,8 +94,7 @@ CREATE TABLE group_slots (
     updated_at timestamp without time zone,
     meta_slot_id integer,
     footest character varying(255),
-    deleted_at timestamp without time zone,
-    sub_type character varying(10) DEFAULT 'group_slot'::character varying
+    deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
 
@@ -274,9 +272,7 @@ CREATE TABLE re_slots (
     footest character varying(255),
     deleted_at timestamp without time zone,
     meta_slot_id integer NOT NULL,
-    slotter_id integer NOT NULL,
-    predecessor_type character varying(10) NOT NULL,
-    sub_type character varying(10) DEFAULT 're_slot'::character varying
+    slotter_id integer NOT NULL
 )
 INHERITS (base_slots);
 
@@ -356,7 +352,6 @@ CREATE TABLE std_slots (
     deleted_at timestamp without time zone,
     footest character varying(255),
     meta_slot_id integer,
-    sub_type character varying(10) DEFAULT 'std_slot'::character varying,
     owner_id integer
 )
 INHERITS (base_slots);
@@ -592,13 +587,6 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_base_slots_on_id_and_sub_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_base_slots_on_id_and_sub_type ON base_slots USING btree (id, sub_type);
-
-
---
 -- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -786,4 +774,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141128130147');
 INSERT INTO schema_migrations (version) VALUES ('20141201103503');
 
 INSERT INTO schema_migrations (version) VALUES ('20141202183715');
+
+INSERT INTO schema_migrations (version) VALUES ('20141202233110');
 

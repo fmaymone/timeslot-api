@@ -272,13 +272,10 @@ RSpec.describe "V1::BaseSlots", type: :request do
       context "ReSlot from ReSlot" do
         let(:origin) { create(:std_slot) }
         let!(:pred) {
-          create(:re_slot, predecessor_id: origin.id,
-                 predecessor_type: origin.class.model_name.param_key)
+          create(:re_slot, predecessor_id: origin.id)
         }
         let(:valid_attributes) {
-          attributes_for(:re_slot,
-                         predecessorId: pred.id,
-                         predecessorType: pred.class.model_name.param_key)
+          attributes_for(:re_slot, predecessorId: pred.id)
         }
         it "responds with Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes
@@ -300,9 +297,7 @@ RSpec.describe "V1::BaseSlots", type: :request do
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
-          attributes_for(:re_slot,
-                         predecessorId: pred.id,
-                         predecessorType: pred.class.model_name.param_key)
+          attributes_for(:re_slot, predecessorId: pred.id)
         }
         it "responds with Created (201)" do
           post "/v1/reslot/", re_slot: valid_attributes

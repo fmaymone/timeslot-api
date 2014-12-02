@@ -39,6 +39,8 @@ class BaseSlot < ActiveRecord::Base
     SoftDelete.call(self)
   end
 
+  # TODO: should I remove the PrimaryKey on ID for Slot representations
+  # and put it on slot_id instead as in base_slots?
   private def unique_slot_id
     map = { 'base_slot' => '10',
             'std_slot' => '11',

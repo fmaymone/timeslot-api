@@ -6,7 +6,6 @@ RSpec.describe ReSlot, type: :model do
   subject { re_slot }
 
   it { is_expected.to respond_to(:predecessor) }
-  it { is_expected.to respond_to(:predecessor_type) }
   it { is_expected.to respond_to(:slotter) }
   it { is_expected.to respond_to(:created_at) }
   it { is_expected.to respond_to(:updated_at) }
@@ -26,11 +25,6 @@ RSpec.describe ReSlot, type: :model do
 
   describe "when predecessor is not present" do
     before { re_slot.predecessor = nil }
-    it { is_expected.to_not be_valid }
-  end
-
-  describe "when predecessor_type is not present" do
-    before { re_slot.predecessor_type = nil }
     it { is_expected.to_not be_valid }
   end
 
