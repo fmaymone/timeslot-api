@@ -40,7 +40,7 @@ module V1
     def destroy
       @user = User.find(params[:id])
 
-      if SoftDelete.call(@user)
+      if @user.delete
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity

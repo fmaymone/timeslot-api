@@ -98,37 +98,33 @@ module V1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
 
-      # TODO: handle alarm/slot_setting
-
-      render :show if SoftDelete.call(@slot)
+      if @slot.delete
+        render :show
+      else
+        render json: @slot.errors, status: :unprocessable_entity
+      end
     end
 
     # DELETE /v1/group_slot/1
     def destroy_groupslot
       @slot = current_user.group_slots.find(params.require(:id))
 
-      # TODO: handle alarm/slot_setting
-
-      render :show if SoftDelete.call(@slot)
+      if @slot.delete
+        render :show
+      else
+        render json: @slot.errors, status: :unprocessable_entity
+      end
     end
 
     # DELETE /v1/re_slot/1
     def destroy_reslot
       @slot = current_user.re_slots.find(params.require(:id))
 
-      # delete SlotSetting object if one exists and it is only referenced by
-      # this reslot or softdeleted slots
-      # TODO: add helper within user model to get slot_setting references
-      condition = { meta_slot: @slot.meta_slot.id }
-
-      if current_user.slot_settings.where(condition).exists?
-        unless current_user.std_slots.active.where(condition).exists? ||
-               current_user.group_slots.active.where(condition).exists?
-          SoftDelete.call(current_user.slot_settings.where(condition).first)
-        end
+      if @slot.delete
+        render :show
+      else
+        render json: @slot.errors, status: :unprocessable_entity
       end
-
-      render :show if SoftDelete.call(@slot)
     end
 
     private def group_param

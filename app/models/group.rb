@@ -17,4 +17,11 @@ class Group < ActiveRecord::Base
 
   validates :name, presence: true
   validates :owner, presence: true
+
+  def delete
+    # TODO: take care of Memberships, related GroupSlots, Group Image
+    # can a group with the same name be created after "deletion"?
+    # TODO: add spec
+    SoftDelete.call(self)
+  end
 end

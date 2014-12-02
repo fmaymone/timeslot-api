@@ -22,6 +22,13 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, length: { maximum: 20 }
 
+  def delete
+    # TODO: take care of created Slots, created Groups, Friendships,
+    # Memberships, SlotSettings, StdSlots, ReSlots, User Image
+    # TODO: add spec
+    SoftDelete.call(self)
+  end
+
   def is_invited?(group_id)
     membership = memberships.where(group_id: group_id)
     membership.exists? && membership.first.invited?

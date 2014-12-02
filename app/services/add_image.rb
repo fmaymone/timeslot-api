@@ -1,4 +1,5 @@
 class AddImage
+  # TODO: use custom class as return value to simplify error handling
   def self.call(model, public_id)
     media_item = MediaItem.new(public_id: public_id, media_type: "image")
     unlink_existing_image model if model.image

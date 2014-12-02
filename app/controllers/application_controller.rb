@@ -11,6 +11,8 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
+  # HACK: This is not ready for production
+  # TODO: add authentication
   def current_user
     @current_user ||= User.first
   end
