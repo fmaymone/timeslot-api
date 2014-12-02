@@ -3,6 +3,9 @@ class BaseSlot < ActiveRecord::Base
   # but rather as an uniform interface for the specific slot representations
   # it shares postgres inheritance semantics at the db level with its subtypes
   after_commit AuditLog
+  before_create :unique_slot_id
+
+  # self.primay_key = 'slot_id'
 
   scope :active, -> { where(deleted_at: nil) }
 
@@ -34,5 +37,16 @@ class BaseSlot < ActiveRecord::Base
 
     # TODO: add spec
     SoftDelete.call(self)
+  end
+
+  private def unique_slot_id
+    map = { 'base_slot' => '10',
+            'std_slot' => '11',
+            'group_slot' => '12',
+            're_slot' => '13'
+          }
+    identifier = map[self.class.model_name.singular]
+    slot_id_string = identifier + self.class.count.to_s
+    self.slot_id = slot_id_string.to_i
   end
 end

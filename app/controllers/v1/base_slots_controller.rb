@@ -70,7 +70,7 @@ module V1
     # POST /v1/reslot
     def create_reslot
       predecessor = BaseSlot.where(
-        id: re_params.require(:predecessorId),
+        slot_id: re_params.require(:predecessorId),
         sub_type: re_params.require(:predecessorType)
       ).first
 

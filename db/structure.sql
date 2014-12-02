@@ -40,7 +40,8 @@ CREATE TABLE base_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     sub_type character varying(10) NOT NULL,
-    meta_slot_id integer
+    meta_slot_id integer,
+    slot_id integer NOT NULL
 );
 
 
@@ -61,6 +62,25 @@ CREATE SEQUENCE base_slots_id_seq
 --
 
 ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
+
+
+--
+-- Name: base_slots_slot_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE base_slots_slot_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: base_slots_slot_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE base_slots_slot_id_seq OWNED BY base_slots.slot_id;
 
 
 --
@@ -401,10 +421,24 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 
 
 --
+-- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY base_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('group_slots_id_seq'::regclass);
+
+
+--
+-- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY group_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
 
 
 --
@@ -443,6 +477,13 @@ ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('re_slots_id_seq':
 
 
 --
+-- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY re_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -457,6 +498,13 @@ ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('std_slots_id_seq
 
 
 --
+-- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -468,7 +516,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY base_slots
-    ADD CONSTRAINT base_slots_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT base_slots_pkey PRIMARY KEY (slot_id);
 
 
 --
@@ -736,4 +784,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141127140805');
 INSERT INTO schema_migrations (version) VALUES ('20141128130147');
 
 INSERT INTO schema_migrations (version) VALUES ('20141201103503');
+
+INSERT INTO schema_migrations (version) VALUES ('20141202183715');
 
