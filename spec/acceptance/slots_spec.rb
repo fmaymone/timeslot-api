@@ -31,7 +31,7 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       # response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
-      response_field :visibility, "Visibility if it's a Standard or ReSlot"
+      response_field :visibility, "Visibility if it's a StandardSlot"
       response_field :groupId, "ID of belonging Group if it's a GroupSlot"
       response_field :createdAt, "Creation datetime of the slot"
       response_field :updatedAt, "Last update of the slot"
@@ -189,9 +189,10 @@ resource "Slots" do
       let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
 
-      example "Create Standard slot returns data of new slot",
+      example "Create StandardSlot",
               document: :v1 do
-        explanation "Missing unrequiered fields will be filled" \
+        explanation "Returns data of new slot.\n\n" \
+                    "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
@@ -298,9 +299,10 @@ resource "Slots" do
       let(:alerts) { '0101010101' }
       let(:groupId) { group.id }
 
-      example "Create group slot returns data of new slot",
+      example "Create GroupSlot",
               document: :v1 do
-        explanation "Missing unrequiered fields will be filled" \
+        explanation "Returns data of new slot.\n\n" \
+                    "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
                     "returns 404 if Group ID is invalid\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
@@ -390,9 +392,10 @@ resource "Slots" do
       let(:predecessorType) { pred.class.model_name.param_key }
       let(:note) { "re-revolutionizing the calendar" }
 
-      example "Reslot a slot returns data of ReSlot",
+      example "Reslot a slot",
               document: :v1 do
-        explanation "returns 404 if Predecessor doesn't exist\n\n" \
+        explanation "Returns data of new ReSlot.\n\n" \
+                    "returns 404 if Predecessor Slot doesn't exist\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
         do_request
@@ -430,9 +433,10 @@ resource "Slots" do
       let(:id) { meta_slot.id }
       let(:title) { "New title for a Slot" }
 
-      example "Update an existing MetaSlot", document: :v1 do
-        explanation "Changing title of slot\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
+      example "Update MetaSlot", document: :v1 do
+        explanation "Update content of MetaSlot.\n\n" \
+                    "User must be creator of MetaSlot.\n\n" \
+                    "returns 404 User not creator of ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
         do_request
 
@@ -536,9 +540,9 @@ resource "Slots" do
     describe "Delete Standard Slot" do
       let(:id) { std_slot.id }
 
-      example "Delete Standard Slot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated Standard Slot data" \
-                    "Doesn't delete anything.\n\n" \
+      example "Delete StandardSlot", document: :v1 do
+        explanation "Sets 'deletedAt', returns updated Standard Slot data." \
+                    " Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
         do_request
 
@@ -581,9 +585,9 @@ resource "Slots" do
     describe "Delete Group Slot" do
       let(:id) { group_slot.id }
 
-      example "Delete Group Slot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated Group Slot data" \
-                    "Doesn't delete anything.\n\n" \
+      example "Delete GroupSlot", document: :v1 do
+        explanation "Sets 'deletedAt', returns updated Group Slot data." \
+                    " Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
         do_request
 
@@ -625,8 +629,8 @@ resource "Slots" do
       let(:id) { re_slot.id }
 
       example "Delete ReSlot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated reslot data" \
-                    "Doesn't delete anything.\n\n" \
+        explanation "Sets 'deletedAt', returns updated reslot data." \
+                    " Doesn't delete anything.\n\n" \
                     "returns 404 if ID is invalid"
         do_request
 
