@@ -163,11 +163,10 @@ module V1
     # change membership settings if current user is group member
     # notifications
     def settings
-      group = membership_params[:group_id]
-      return head :not_found unless Group.exists?(group)
-      return head :forbidden unless current_user.is_member? group
+      group = Group.find(membership_params[:group_id])
+      return head :forbidden unless current_user.is_member? group.id
 
-      @membership = current_user.get_membership group
+      @membership = current_user.get_membership group.id
 
       if @membership.update(membership_update_params)
         head :ok
