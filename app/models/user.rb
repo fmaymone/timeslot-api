@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  after_commit AuditService
+  after_commit AuditLog
 
   has_one :image, class_name: "MediaItem", as: :mediable, dependent: :destroy
 

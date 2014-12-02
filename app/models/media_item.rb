@@ -1,4 +1,6 @@
 class MediaItem < ActiveRecord::Base
+  after_commit AuditLog
+
   belongs_to :mediable, polymorphic: true
 
   validates :media_type,

@@ -1,4 +1,6 @@
 class MetaSlot < ActiveRecord::Base
+  after_commit AuditLog
+
   belongs_to :creator, class_name: "User", inverse_of: :created_slots
 
   has_many :slot_settings, inverse_of: :meta_slot
