@@ -48,7 +48,7 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      render :show if SoftDeleteService.call(@group)
+      render :show if SoftDelete.call(@group)
     end
 
     # GET /v1/groups/:group_id/members

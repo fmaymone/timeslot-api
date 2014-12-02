@@ -100,7 +100,7 @@ module V1
 
       # TODO: handle alarm/slot_setting
 
-      render :show if SoftDeleteService.call(@slot)
+      render :show if SoftDelete.call(@slot)
     end
 
     # DELETE /v1/group_slot/1
@@ -109,7 +109,7 @@ module V1
 
       # TODO: handle alarm/slot_setting
 
-      render :show if SoftDeleteService.call(@slot)
+      render :show if SoftDelete.call(@slot)
     end
 
     # DELETE /v1/re_slot/1
@@ -124,11 +124,11 @@ module V1
       if current_user.slot_settings.where(condition).exists?
         unless current_user.std_slots.active.where(condition).exists? ||
                current_user.group_slots.active.where(condition).exists?
-          SoftDeleteService.call(current_user.slot_settings.where(condition).first)
+          SoftDelete.call(current_user.slot_settings.where(condition).first)
         end
       end
 
-      render :show if SoftDeleteService.call(@slot)
+      render :show if SoftDelete.call(@slot)
     end
 
     private def group_param
