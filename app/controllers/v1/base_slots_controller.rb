@@ -12,10 +12,21 @@ module V1
     end
 
     # GET /v1/slots/1
+    # TODO: can probably be removed
     def show
       @slot = BaseSlot.get(params[:id])
 
       render :show
+    end
+
+    # POST /v1/slots
+    # TODO: add request specs
+    # TODO: add acceptance specs
+    # TODO: add routing specs
+    def show_many
+      @slots = BaseSlot.get_many(params[:ids])
+
+      render :index
     end
 
     # POST /v1/stdslot

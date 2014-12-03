@@ -38,13 +38,13 @@ class BaseSlot < ActiveRecord::Base
   end
 
   private def unique_slot_id
-    identifier = self.class.map[self.class.model_name.name]
+    identifier = self.class.slot_map[self.class.model_name.name]
     slot_id_string = identifier + self.class.count.to_s
     self.id = slot_id_string.to_i
   end
 
   class << self
-    def map
+    def slot_map
       { 'BaseSlot' => '10',
         'StdSlot' => '11',
         'GroupSlot' => '12',
@@ -52,9 +52,13 @@ class BaseSlot < ActiveRecord::Base
     end
 
     def get(slot_id)
-      class_name = map.invert[slot_id[0, 2]]
+      class_name = slot_map.invert[slot_id[0, 2]]
       fail ActiveRecord::RecordNotFound if class_name.nil?
       class_name.constantize.find(slot_id)
+    end
+
+    def get_many(slot_ids)
+      slot_ids.collect { |id| get(id.to_s) }
     end
   end
 end

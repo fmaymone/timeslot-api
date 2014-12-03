@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   namespace :v1, defaults: { format: :json } do
     get 'slots/', to: 'base_slots#index'
     get 'slots/:id', to: 'base_slots#show', as: 'slot', constraints: { id: /\d+/ }
+    post 'slots', to: 'base_slots#show_many', as: 'slots_read'
 
     post 'stdslot', to: 'base_slots#create_stdslot'
     post 'reslot', to: 'base_slots#create_reslot'
