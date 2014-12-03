@@ -5,8 +5,6 @@ class BaseSlot < ActiveRecord::Base
   after_commit AuditLog
   before_create :unique_slot_id
 
-  # self.primay_key = 'slot_id'
-
   scope :active, -> { where(deleted_at: nil) }
 
   has_many :media_items, as: :mediable, dependent: :destroy
@@ -39,16 +37,18 @@ class BaseSlot < ActiveRecord::Base
     SoftDelete.call(self)
   end
 
-  # TODO: should I remove the PrimaryKey on ID for Slot representations
-  # and put it on slot_id instead as in base_slots?
   private def unique_slot_id
-    map = { 'base_slot' => '10',
-            'std_slot' => '11',
-            'group_slot' => '12',
-            're_slot' => '13'
-          }
-    identifier = map[self.class.model_name.singular]
+    identifier = self.class.map[self.class.model_name.name]
     slot_id_string = identifier + self.class.count.to_s
-    self.slot_id = slot_id_string.to_i
+    self.id = slot_id_string.to_i
+  end
+
+  class << self
+    def map
+      { 'BaseSlot' => '10',
+        'StdSlot' => '11',
+        'GroupSlot' => '12',
+        'ReSlot' => '13' }
+    end
   end
 end

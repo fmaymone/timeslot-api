@@ -34,13 +34,12 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE base_slots (
-    id integer NOT NULL,
     footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id integer,
-    slot_id integer NOT NULL
+    id integer NOT NULL
 );
 
 
@@ -64,30 +63,10 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 
 
 --
--- Name: base_slots_slot_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE base_slots_slot_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: base_slots_slot_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE base_slots_slot_id_seq OWNED BY base_slots.slot_id;
-
-
---
 -- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE group_slots (
-    id integer,
     group_id integer,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
@@ -97,25 +76,6 @@ CREATE TABLE group_slots (
     deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
-
-
---
--- Name: group_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE group_slots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: group_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE group_slots_id_seq OWNED BY group_slots.id;
 
 
 --
@@ -264,7 +224,6 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 --
 
 CREATE TABLE re_slots (
-    id integer,
     predecessor_id integer NOT NULL,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
@@ -275,25 +234,6 @@ CREATE TABLE re_slots (
     slotter_id integer NOT NULL
 )
 INHERITS (base_slots);
-
-
---
--- Name: re_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE re_slots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: re_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE re_slots_id_seq OWNED BY re_slots.id;
 
 
 --
@@ -344,7 +284,6 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 --
 
 CREATE TABLE std_slots (
-    id integer,
     visibility bit(2) DEFAULT B'11'::"bit",
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
@@ -355,25 +294,6 @@ CREATE TABLE std_slots (
     owner_id integer
 )
 INHERITS (base_slots);
-
-
---
--- Name: std_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE std_slots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: std_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE std_slots_id_seq OWNED BY std_slots.id;
 
 
 --
@@ -416,24 +336,10 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 
 
 --
--- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY base_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
-
-
---
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('group_slots_id_seq'::regclass);
-
-
---
--- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY group_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
@@ -468,14 +374,7 @@ ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('re_slots_id_seq'::regclass);
-
-
---
--- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
@@ -489,14 +388,7 @@ ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_setting
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('std_slots_id_seq'::regclass);
-
-
---
--- Name: slot_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY std_slots ALTER COLUMN slot_id SET DEFAULT nextval('base_slots_slot_id_seq'::regclass);
+ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
@@ -511,15 +403,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 --
 
 ALTER TABLE ONLY base_slots
-    ADD CONSTRAINT base_slots_pkey PRIMARY KEY (slot_id);
-
-
---
--- Name: group_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY group_slots
-    ADD CONSTRAINT group_slots_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT base_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -555,27 +439,11 @@ ALTER TABLE ONLY meta_slots
 
 
 --
--- Name: re_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY re_slots
-    ADD CONSTRAINT re_slots_pkey PRIMARY KEY (id);
-
-
---
 -- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY slot_settings
     ADD CONSTRAINT slot_settings_pkey PRIMARY KEY (id);
-
-
---
--- Name: std_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY std_slots
-    ADD CONSTRAINT std_slots_pkey PRIMARY KEY (id);
 
 
 --
@@ -776,4 +644,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141201103503');
 INSERT INTO schema_migrations (version) VALUES ('20141202183715');
 
 INSERT INTO schema_migrations (version) VALUES ('20141202233110');
+
+INSERT INTO schema_migrations (version) VALUES ('20141203115550');
 
