@@ -2,11 +2,11 @@ require 'documentation_helper'
 
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   get "/v1/slots" do
     header "Accept", "application/json"
-
-    let!(:current_user) { create(:user) }
 
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
     let!(:std_slot_1) {
@@ -164,8 +164,6 @@ resource "Slots" do
     parameter :note, "A note which belongs to the Slot", scope: :new_slot
     parameter :alerts, "Alerts for the Slot", scope: :new_slot
 
-    let!(:current_user) { create(:user) }
-
     describe "Create new standard slot" do
 
       parameter :visibility, "Visibility of the Slot",
@@ -278,7 +276,6 @@ resource "Slots" do
     parameter :alerts, "Alerts for the Slot",
               scope: :new_slot
 
-    let!(:current_user) { create(:user) }
     let(:group) { create(:group) }
 
     describe "Create new group slot" do
@@ -373,7 +370,6 @@ resource "Slots" do
               required: true,
               scope: :re_slot
 
-    let!(:current_user) { create(:user) }
     let(:pred) { create(:std_slot) }
 
     describe "Reslot a StandardSlot" do
@@ -430,7 +426,7 @@ resource "Slots" do
                 "Updated Enddate and Time of the Slot (startdate + duration)",
                 scope: :metaSlot
 
-      let!(:meta_slot) { create(:meta_slot) }
+      let!(:meta_slot) { create(:meta_slot, creator: current_user) }
       let(:id) { meta_slot.id }
       let(:title) { "New title for a Slot" }
 
@@ -535,7 +531,6 @@ resource "Slots" do
   delete "/v1/stdslot/:id" do
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:current_user) { create(:user) }
     let!(:std_slot) { create(:std_slot, owner: current_user) }
 
     describe "Delete Standard Slot" do
@@ -578,7 +573,6 @@ resource "Slots" do
   delete "/v1/groupslot/:id" do
     parameter :id, "ID of the Group Slot to delete", required: true
 
-    let!(:current_user) { create(:user) }
     let(:group) { create(:group) }
     let!(:membership) { create(:membership, group: group, user: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
@@ -623,7 +617,6 @@ resource "Slots" do
   delete "/v1/reslot/:id" do
     parameter :id, "ID of the ReSlot to delete", required: true
 
-    let!(:current_user) { create(:user) }
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do

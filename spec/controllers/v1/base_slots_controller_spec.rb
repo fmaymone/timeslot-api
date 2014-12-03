@@ -1,10 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe V1::BaseSlotsController, type: :controller do
-  before(:each) { request.accept = "application/json" }
-
+  before(:each) {
+    request.accept = "application/json"
+    described_class.new.current_user = current_user
+  }
+  let(:current_user) { create(:user) }
   let(:valid_session) { {} }
-  let!(:current_user) { create(:user) }
 
   describe "GET index" do
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
@@ -21,7 +23,7 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
     let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
     let!(:group_slots_2) { create_list(:group_slot, 5, group: groups[1]) }
 
-    it "assigns all groups as @groups" do
+    it "assigns all slots as @slots" do
       get :index, {}, valid_session
       slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
       expect(assigns(:slots).length).to eq slots_count

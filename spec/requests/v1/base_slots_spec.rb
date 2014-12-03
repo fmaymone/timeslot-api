@@ -2,10 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "V1::BaseSlots", type: :request do
   let(:json) { JSON.parse(response.body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   describe "GET /v1/slots" do
-    let!(:current_user) { create(:user) }
-
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
     let!(:std_slot_1) {
       create(:std_slot, meta_slot: metas[0], owner: current_user) }
@@ -33,8 +33,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "POST /v1/stdlot" do
-    let!(:current_user) { create(:user) }
-
     context "StdSlot with valid params" do
       let(:valid_slot) { attributes_for(:meta_slot).merge(visibility: '10') }
 
@@ -145,7 +143,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "POST /v1/groupslot" do
-    let!(:current_user) { create(:user) }
     let(:group) { create(:group) }
 
     context "GroupSlot with valid params" do
@@ -241,7 +238,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "POST /v1/reslot" do
-    let!(:current_user) { create(:user) }
     let(:group) { create(:group) }
 
     context "with valid params" do
@@ -319,7 +315,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "PATCH /v1/metaslot/:id" do
-    let!(:current_user) { create(:user) }
     let(:metaslot) { create(:meta_slot, creator: current_user) }
 
     context "with valid params" do
@@ -418,7 +413,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:current_user) { create(:user) }
     let!(:std_slot) { create(:std_slot, owner: current_user) }
 
     context "with a valid ID" do
@@ -451,7 +445,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "DELETE /v1/groupslot/:id" do
-    let!(:current_user) { create(:user) }
     let(:group) { create(:group) }
     let!(:membership) { create(:membership, group: group, user: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
@@ -486,7 +479,6 @@ RSpec.describe "V1::BaseSlots", type: :request do
   end
 
   describe "DELETE /v1/reslot/:id" do
-    let!(:current_user) { create(:user) }
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     context "with a valid ID" do

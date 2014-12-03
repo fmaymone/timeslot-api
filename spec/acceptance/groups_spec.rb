@@ -2,6 +2,8 @@ require 'documentation_helper'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   # index
   get "/v1/groups" do
@@ -15,6 +17,7 @@ resource "Groups" do
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
+      # ApplicationController.new.set_current_user(user)
       do_request
 
       expect(response_status).to eq(200)
@@ -64,7 +67,6 @@ resource "Groups" do
     response_field :id, "ID of the new group"
 
     let(:name) { "foo" }
-    let!(:owner) { create(:user) }
 
     example "Create a new group", document: :v1 do
       explanation "Group owner is current user.\n\n" \
@@ -76,7 +78,7 @@ resource "Groups" do
       expect(response_status).to eq(201)
       expect(json).to have_key("id")
       group = Group.last
-      expect(group.owner).to eq owner
+      expect(group.owner).to eq current_user
     end
   end
 
@@ -86,7 +88,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to update", required: true
 
-    let(:group) { create(:group, name: "foo") }
+    let(:group) { create(:group, name: "foo", owner: current_user) }
     let(:group_id) { group.id }
 
     describe "Update existing group returns No Content" do
@@ -145,7 +147,7 @@ resource "Groups" do
   delete "/v1/groups/:group_id" do
     parameter :group_id, "ID of the group to delete", required: true
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
 
     example "Delete group", document: :v1 do
@@ -164,7 +166,7 @@ resource "Groups" do
     end
 
     describe "current user not group owner" do
-      let!(:non_owner) { create(:user) }
+      let(:group) { create(:group, owner: create(:user)) }
 
       example "returns forbidden", document: false do
         do_request
@@ -272,7 +274,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:invited_user) { create(:user) }
+    let(:invited_user) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
     let!(:membership) do
@@ -299,7 +301,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:invited_user) { create(:user) }
+    let(:invited_user) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
     let!(:membership) do
@@ -327,8 +329,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:owner) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
     let(:invited_user) { create(:user) }
 
     let(:group_id) { group.id }
@@ -359,7 +360,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:member) { create(:user) }
+    let(:member) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
 
@@ -410,8 +411,7 @@ resource "Groups" do
     parameter :user_id, "ID of the user to kick", required: true
 
     let(:member) { create(:user) }
-    let!(:owner) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
 
     let(:group_id) { group.id }
     let(:user_id) { member.id }
@@ -465,7 +465,7 @@ resource "Groups" do
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :group
 
-    let(:member) { create(:user) }
+    let(:member) { current_user }
     let(:group) { create(:group) }
 
     let(:group_id) { group.id }

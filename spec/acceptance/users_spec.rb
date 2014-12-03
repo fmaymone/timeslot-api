@@ -3,6 +3,31 @@ require 'documentation_helper'
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
 
+  get "/v1/users/authenticate/:id" do
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to authenticate", required: true
+
+    let!(:first_user) { create(:user) } # should not be the current_user
+    let(:user) { create(:user) }
+    let(:id) { user.id }
+    let(:testgroup) { attributes_for(:group) }
+
+    # The best idea I had to check which user is set as current_user was taking
+    # an action which uses the current_user and see if it gets set correctly
+    example "Authenticate an user", document: :v1 do
+      explanation "returns OK if User set as current user\n\n" \
+                  "returns 404 if ID is invalid\n\n"
+      do_request
+
+      expect(response_status).to eq(200)
+
+      client.post(URI.parse("/v1/groups").path, { group: testgroup }, headers)
+      expect(status).to eq(201)
+      expect(json['ownerId']).to eq user.id
+    end
+  end
+
   get "/v1/users/:id" do
     header "Accept", "application/json"
 

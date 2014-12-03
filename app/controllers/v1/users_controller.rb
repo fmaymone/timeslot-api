@@ -14,6 +14,15 @@ module V1
       render :show
     end
 
+    # GET /v1/users/authenticate/1
+    # HACK: temporary solution
+    def auth
+      user = User.find(params[:id])
+      self.current_user = user
+
+      head :ok
+    end
+
     # POST /v1/users
     def create
       @user = User.new(user_create_params)

@@ -13,7 +13,11 @@ class ApplicationController < ActionController::API
 
   # HACK: This is not ready for production
   # TODO: add authentication
+  def current_user=(user)
+    @@current_user = user
+  end
+
   def current_user
-    @current_user ||= User.first
+    @@current_user ||= User.first
   end
 end
