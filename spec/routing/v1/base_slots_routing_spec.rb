@@ -8,6 +8,11 @@ RSpec.describe V1::BaseSlotsController, type: :routing do
         .to route_to("v1/base_slots#index", format: :json)
     end
 
+    it "routes to #show" do
+      expect(get: "/v1/slots/1")
+        .to route_to("v1/base_slots#show", id: "1", format: :json)
+    end
+
     it "routes to #create_stdslot" do
       expect(
         post: "/v1/stdslot").to route_to("v1/base_slots#create_stdslot", format: :json)
