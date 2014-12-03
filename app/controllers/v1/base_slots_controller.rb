@@ -13,9 +13,9 @@ module V1
 
     # GET /v1/slots/1
     def show
-      @base_slot = BaseSlot.find(params[:id])
+      @slot = BaseSlot.get(params[:id])
 
-      render json: @base_slot
+      render :show
     end
 
     # POST /v1/stdslot

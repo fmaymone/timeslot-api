@@ -105,13 +105,13 @@ resource "Slots" do
       response_field :title, "Title of the slot"
       response_field :startdate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
-      # response_field :note, "A note on the slot"
-      # response_field :visibility, "Visibiltiy of the slot"
+      response_field :note, "A note on the slot"
+      response_field :visibility, "Visibiltiy of the slot"
       response_field :media, "Media Items of the slot"
       response_field :createdAt, "Creation of slot"
       response_field :updatedAt, "Latest update of slot in db"
 
-      let(:slot) { create(:meta_slot, :with_media) }
+      let(:slot) { create(:std_slot) }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
@@ -125,8 +125,9 @@ resource "Slots" do
                  "title" => slot.title,
                  "startdate" => slot.startdate.iso8601,
                  "enddate" => slot.enddate.iso8601,
-                 # "note" => slot.note,
-                 # "visibility" => slot.visibility,
+                 "creatorId" => slot.creator.id,
+                 "note" => slot.note,
+                 "visibility" => slot.visibility,
                  "createdAt" => slot.created_at.iso8601,
                  "updatedAt" => slot.updated_at.iso8601,
                  "deletedAt" => deleted_at

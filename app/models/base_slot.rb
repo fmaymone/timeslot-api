@@ -50,5 +50,11 @@ class BaseSlot < ActiveRecord::Base
         'GroupSlot' => '12',
         'ReSlot' => '13' }
     end
+
+    def get(slot_id)
+      class_name = map.invert[slot_id[0, 2]]
+      fail ActiveRecord::RecordNotFound if class_name.nil?
+      class_name.constantize.find(slot_id)
+    end
   end
 end

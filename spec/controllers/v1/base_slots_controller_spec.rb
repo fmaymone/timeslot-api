@@ -28,6 +28,25 @@ RSpec.describe V1::BaseSlotsController, type: :controller do
     end
   end
 
+  describe "GET show" do
+    let(:std_slot) { create(:std_slot) }
+
+    it "returns http success" do
+      get :show, id: std_slot.id
+      expect(response).to be_success
+    end
+
+    it "assigns the requested slot as @slot" do
+      get :show, id: std_slot.id
+      expect(assigns(:slot)).to eq(std_slot)
+    end
+
+    it "renders the show template" do
+      get :show, id: std_slot.id
+      expect(response).to render_template("show")
+    end
+  end
+
   describe "POST create_stdslot" do
     describe "with valid params" do
       let(:valid_attributes) {
