@@ -20,7 +20,27 @@ class User < ActiveRecord::Base
   has_many :memberships, inverse_of: :user
   has_many :groups, through: :memberships, source: :group
 
+  has_many :friendships1,
+           class_name: Friendship,
+           foreign_key: "user_id",
+           inverse_of: :user
+  has_many :friendships2,
+           class_name: Friendship,
+           foreign_key: "friend_id",
+           inverse_of: :friend
+  has_many :friends1,
+           through: :friendships1,
+           source: :friend
+  has_many :friends2,
+           through: :friendships2,
+           source: :user
+
   validates :username, presence: true, length: { maximum: 20 }
+
+  # TODO: get friends with one query
+  def friends
+    friends1 + friends2
+  end
 
   def delete
     # TODO: take care of created Slots, created Groups, Friendships,

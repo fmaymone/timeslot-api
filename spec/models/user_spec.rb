@@ -23,6 +23,11 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
   it { is_expected.to have_many(:group_slots).through(:groups) }
 
+  it { is_expected.to have_many(:friendships1).inverse_of(:user) }
+  it { is_expected.to have_many(:friendships2).inverse_of(:friend) }
+  it { is_expected.to have_many(:friends1).through(:friendships1) }
+  it { is_expected.to have_many(:friends2).through(:friendships2) }
+
   it { is_expected.to be_valid }
 
   describe "when name is not present" do
@@ -183,6 +188,16 @@ RSpec.describe User, type: :model do
       it "return nil" do
         expect(user.get_membership group.id).to be nil
       end
+    end
+  end
+
+  describe :friend do
+    let(:john) { create(:user, username: "John") }
+    let!(:friendships_A) { create_list(:friendship, 2, user: john) }
+    let!(:friendships_B) { create_list(:friendship, 3, friend: john) }
+
+    it "returns all friends" do
+      expect(john.friends.size).to eq 5
     end
   end
 end

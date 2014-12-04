@@ -63,6 +63,40 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 
 
 --
+-- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE friendships (
+    id integer NOT NULL,
+    user_id integer,
+    friend_id integer,
+    state bit(2) DEFAULT B'00'::"bit",
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: friendships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE friendships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: friendships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
+
+
+--
 -- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -339,6 +373,13 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -407,6 +448,14 @@ ALTER TABLE ONLY base_slots
 
 
 --
+-- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY friendships
+    ADD CONSTRAINT friendships_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -452,6 +501,20 @@ ALTER TABLE ONLY slot_settings
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_id);
+
+
+--
+-- Name: index_friendships_on_user_id_and_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_friendships_on_user_id_and_friend_id ON friendships USING btree (user_id, friend_id);
 
 
 --
@@ -646,4 +709,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141202183715');
 INSERT INTO schema_migrations (version) VALUES ('20141202233110');
 
 INSERT INTO schema_migrations (version) VALUES ('20141203115550');
+
+INSERT INTO schema_migrations (version) VALUES ('20141203213610');
 
