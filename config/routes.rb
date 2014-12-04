@@ -17,15 +17,17 @@ Rails.application.routes.draw do
 
     get 'media-signature', to: 'media#create_signature'
 
-    get 'users', to: 'users#index'
-    get 'users/:id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
-    # HACK: not ready for production
-    # TODO: add routing specs
-    get '/users/authenticate/:id', to: 'users#auth', as: 'auth',
-        constraints: { id: /\d+/ }
-    post 'users', to: 'users#create', as: 'user_create'
-    patch 'users/:id', to: 'users#update', as: 'user_update'
-    delete 'users/:id', to: 'users#destroy', as: 'user_delete'
+    scope :users do
+      get '', to: 'users#index'
+      get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+      post '', to: 'users#create', as: 'user_create'
+      patch ':id', to: 'users#update', as: 'user_update'
+      delete ':id', to: 'users#destroy', as: 'user_delete'
+      # HACK: not ready for production
+      get 'authenticate/:id', to: 'users#auth', as: 'auth',
+          constraints: { id: /\d+/ }
+      post 'add_friends', to: 'users#add_friends', as: 'add_friends'
+    end
 
     scope :groups do
       get '',
