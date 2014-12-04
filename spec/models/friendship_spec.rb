@@ -28,4 +28,17 @@ RSpec.describe Friendship, type: :model do
     before { friendship.friend = nil }
     it { is_expected.to_not be_valid }
   end
+
+  describe "prevent duplicates" do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let!(:existing_friendship) {
+      create(:friendship, user: john, friend: mary)
+    }
+    it "doesn't add duplicate friendships" do
+      expect {
+        Friendship.create(user: mary, friend: john)
+      }.to raise_error Friendship::DuplicateEntry
+    end
+  end
 end
