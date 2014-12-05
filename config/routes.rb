@@ -56,9 +56,12 @@ Rails.application.routes.draw do
           as: 'group_related',
           constraints: { group_id: /\d+/ }
       post ':group_id/members/:user_id',
-           to: 'groups#invite',
-           as: 'group_invite',
+           to: 'groups#invite_single',
+           as: 'group_invite_single',
            constraints: { group_id: /\d+/, user_id: /\d+/ }
+      post ':group_id/members',
+           to: 'groups#invite',
+           as: 'group_invite'
       post ':group_id/accept',
            to: 'groups#accept_invite',
            as: 'group_accept_invite',

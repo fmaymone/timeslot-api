@@ -106,7 +106,7 @@ module V1
     # create membership with state invited/pending
     # notify invited user
     # TODO: put logic into service
-    def invite
+    def invite_single
       group = membership_params[:group_id]
       return head :forbidden unless current_user.can_invite? group
 
@@ -121,6 +121,14 @@ module V1
       else
         render json: @membership.errors, status: :unprocessable_entity
       end
+    end
+
+    # POST /v1/groups/:group_id/members/:user_id
+    # current user invites other users to own group
+    # create membership with state invited/pending
+    # notify invited users
+    # TODO: put logic into service
+    def invite
     end
 
     # DELETE /v1/groups/:group_id/members
