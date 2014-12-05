@@ -126,8 +126,8 @@ resource "Users" do
         expect(response_status).to eq(201)
         expect(json).to have_key("mediaItemId")
         current_user.reload
-        expect(current_user.image).not_to be nil
-        expect(current_user.image.public_id).to eq publicId
+        expect(current_user.image.first).not_to be nil
+        expect(current_user.image.first.public_id).to eq publicId
       end
     end
   end

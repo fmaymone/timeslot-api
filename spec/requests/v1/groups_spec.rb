@@ -35,7 +35,7 @@ RSpec.describe "V1::Groups", type: :request do
 
           it "sets group image" do
             patch "/v1/groups/#{group.id}", img_params
-            expect(group.image.public_id).to eq public_id
+            expect(group.image.first.public_id).to eq public_id
           end
         end
 
@@ -46,7 +46,7 @@ RSpec.describe "V1::Groups", type: :request do
           it "returns created" do
             patch "/v1/groups/#{group.id}", img_params
             expect(response.status).to be(201)
-            expect(group.image.public_id).to eq public_id
+            expect(group.image.first.public_id).to eq public_id
           end
         end
 

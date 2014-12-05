@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
   after_commit AuditLog
 
-  has_one :image, class_name: MediaItem, as: :mediable, dependent: :destroy
+  has_many :image, -> { where deleted_at: nil }, class_name: MediaItem,
+          as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: "creator_id", inverse_of: :creator

@@ -7,7 +7,7 @@ class BaseSlot < ActiveRecord::Base
 
   scope :active, -> { where(deleted_at: nil) }
 
-  has_many :media_items, as: :mediable, dependent: :destroy
+  has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   belongs_to :meta_slot
 
   delegate :title, to: :meta_slot

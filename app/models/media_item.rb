@@ -15,41 +15,56 @@ class MediaItem < ActiveRecord::Base
     mediable_type == "MetaSlot"
   end
 
-  def self.reorder?(order_params)
-    return false unless self.valid_ordering? order_params
+  def delete
+    Cloudinary::Uploader.add_tag("replaced", public_id)
+    Cloudinary::Uploader.add_tag(
+      "mediable_id:#{mediable.id}, mediable_type:#{mediable_type}", public_id)
+  rescue => e
+    msg = { image: self }
+    msg.merge!(cloudinary: "adding tag for destroyed media_item failed.")
+    msg.merge!(error: e)
+    Rails.logger.error msg
+  ensure
+    SoftDelete.call(self)
+  end
 
-    # TODO: might need to validate new media item before reordering
-    order_params.each do |item|
-      changed = MediaItem.where(id: item[:mediaItemId])
-                .update_all(ordering: item[:ordering])
-      fail ActiveRecord::RecordNotFound if changed == 0
+  class << self
+    def reorder?(order_params)
+      return false unless self.valid_ordering? order_params
+
+      # TODO: might need to validate new media item before reordering
+      order_params.each do |item|
+        changed = MediaItem.where(id: item[:mediaItemId])
+                  .update_all(ordering: item[:ordering])
+        fail ActiveRecord::RecordNotFound if changed == 0
+      end
+      true
     end
-    true
-  end
 
-  def self.valid_ordering?(parameter)
-    arr = parameter.map { |i| i[:ordering].to_i }
-    no_gaps = arr.size > arr.max
-    dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
-    dups.nil? && no_gaps
-  end
-
-  def self.insert(collection, new_media)
-    if !new_media.key? :ordering
-      new_media.merge!(ordering: collection.size)
-    elsif new_media.require(:ordering).to_i < collection.size
-      needs_ordering_update(collection, new_media.require(:ordering))
+    def valid_ordering?(parameter)
+      arr = parameter.map { |i| i[:ordering].to_i }
+      no_gaps = arr.size > arr.max
+      dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
+      dups.nil? && no_gaps
     end
 
-    MediaItem.new(new_media)
-  end
+    def insert(collection, new_media)
+      if !new_media.key? :ordering
+        new_media.merge!(ordering: collection.size)
+      elsif new_media.require(:ordering).to_i < collection.size
+        needs_ordering_update(collection, new_media.require(:ordering))
+      end
 
-  def self.needs_ordering_update(collection, ordering_param)
-    media_items = collection.where(
-      "media_items.ordering >= ?", ordering_param).to_a
+      MediaItem.new(new_media)
+    end
 
-    media_items.each do |item|
-      item.update(ordering: item.ordering += 1)
+    def needs_ordering_update(collection, ordering_param)
+      media_items = collection.where(
+        "media_items.ordering >= ?", ordering_param).to_a
+
+      media_items.each do |item|
+        item.update(ordering: item.ordering += 1)
+      end
     end
   end
 end

@@ -137,8 +137,8 @@ resource "Groups" do
         expect(response_status).to eq(201)
         expect(json).to have_key("mediaItemId")
         group.reload
-        expect(group.image).not_to be nil
-        expect(group.image.public_id).to eq publicId
+        expect(group.image.first).not_to be nil
+        expect(group.image.first.public_id).to eq publicId
       end
     end
   end

@@ -35,7 +35,7 @@ module V1
       if image_param.present? && AddImage.call(@group, group_image_param).equal?(true)
         render "v1/media/create",
                status: :created,
-               locals: { media_item_id: @group.image.id }
+               locals: { media_item_id: @group.image.first.id }
       elsif !image_param.present? && @group.update(group_create_params)
         head :no_content
       else

@@ -2,7 +2,8 @@ class Group < ActiveRecord::Base
   after_commit AuditLog
 
   belongs_to :owner, class_name: "User", inverse_of: :own_groups
-  has_one :image, class_name: "MediaItem", as: :mediable, dependent: :destroy
+  has_many :image, -> { where deleted_at: nil }, class_name: "MediaItem",
+          as: :mediable
 
   has_many :group_slots, inverse_of: :group
 
