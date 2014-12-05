@@ -1,22 +1,22 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
-    get 'slots/', to: 'base_slots#index'
-    get 'slots/:id', to: 'base_slots#show', as: 'slot', constraints: { id: /\d+/ }
-    post 'slots', to: 'base_slots#show_many', as: 'slots_read'
+    get 'slots/', to: 'slots#index'
+    get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
+    post 'slots', to: 'slots#show_many', as: 'slots_read'
 
-    post 'stdslot', to: 'base_slots#create_stdslot'
-    post 'reslot', to: 'base_slots#create_reslot'
-    post 'groupslot', to: 'base_slots#create_groupslot'
+    post 'stdslot', to: 'slots#create_stdslot'
+    post 'reslot', to: 'slots#create_reslot'
+    post 'groupslot', to: 'slots#create_groupslot'
 
-    patch 'metaslot/:id', to: 'base_slots#update_metaslot', as: 'metaslot_update'
-    patch 'stdslot/:id', to: 'base_slots#update_stdslot', as: 'stdslot_update'
-    patch 'groupslot/:id', to: 'base_slots#update_groupslot', as: 'groupslot_update'
-    patch 'reslot/:id', to: 'base_slots#update_reslot', as: 'reslot_update'
+    patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
+    patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
+    patch 'groupslot/:id', to: 'slots#update_groupslot', as: 'groupslot_update'
+    patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
-    delete 'stdslot/:id', to: 'base_slots#destroy_stdslot', as: 'stdslot_delete'
-    delete 'groupslot/:id', to: 'base_slots#destroy_groupslot', as: 'groupslot_delete'
-    delete 'reslot/:id', to: 'base_slots#destroy_reslot', as: 'reslot_delete'
+    delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
+    delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
+    delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
     get 'media-signature', to: 'media#create_signature'
 
