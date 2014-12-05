@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.1.4'
+
 gem 'rails', '4.1.4'
 
 gem 'rails-api'
@@ -59,5 +61,3 @@ group :development, :test do
 
   gem 'webmock'
 end
-
-ruby '2.1.4'
