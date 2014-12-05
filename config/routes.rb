@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     post 'groupslot', to: 'base_slots#create_groupslot'
 
     patch 'metaslot/:id', to: 'base_slots#update_metaslot', as: 'metaslot_update'
+    patch 'stdslot/:id', to: 'base_slots#update_stdslot', as: 'stdslot_update'
+    patch 'groupslot/:id', to: 'base_slots#update_groupslot', as: 'groupslot_update'
+    patch 'reslot/:id', to: 'base_slots#update_reslot', as: 'reslot_update'
 
     delete 'stdslot/:id', to: 'base_slots#destroy_stdslot', as: 'stdslot_delete'
     delete 'groupslot/:id', to: 'base_slots#destroy_groupslot', as: 'groupslot_delete'
