@@ -160,4 +160,41 @@ resource "Users" do
       expect(current_user.requested_friends.size).to eq 4
     end
   end
+
+  post "/v1/users/remove_friends" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :ids, "Array of User IDs for whom to refuse/destroy a friendship",
+              required: true
+
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let(:bob) { create(:user, username: "Bob") }
+    let!(:friend_request) {
+      create(:friendship, user: current_user, friend: bob) }
+    let!(:friend_offer) {
+      create(:friendship, user: john, friend: current_user) }
+    let!(:friendship) {
+      create(:friendship, :established, user: current_user, friend: mary) }
+
+    let(:ids) { [john.id, mary.id, alice.id, bob.id] }
+
+    example "Remove Friends/Refuse Friend requests",
+            document: :v1 do
+      explanation "Receives a list of User IDs for which a friendship" \
+                  "with the current user will be refused or deleted.\n\n" \
+                  "returns 404 if an User ID is invalid"
+
+      do_request
+
+      expect(status).to be 200
+      current_user.reload
+      expect(current_user.friends).not_to include john
+      expect(current_user.requested_friends).not_to include bob
+      expect(current_user.friends).not_to include mary
+      expect(current_user.friends).not_to include alice
+    end
+  end
 end

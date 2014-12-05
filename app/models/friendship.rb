@@ -4,8 +4,6 @@ class Friendship < ActiveRecord::Base
   after_commit AuditLog
   before_create :check_duplicate
 
-  # scope :open, -> { where state: '00' }
-
   belongs_to :user, inverse_of: :friendships1
   belongs_to :friend, class_name: User, inverse_of: :friendships2
 
@@ -26,6 +24,8 @@ class Friendship < ActiveRecord::Base
   end
 
   def delete
+    # HACK: Don't know how to use 2 conditions for users associatons
+    update!(state: "01")
     # TODO: add spec
     SoftDelete.call(self)
   end

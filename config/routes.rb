@@ -27,6 +27,7 @@ Rails.application.routes.draw do
       get 'authenticate/:id', to: 'users#auth', as: 'auth',
           constraints: { id: /\d+/ }
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
+      post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
     end
 
     scope :groups do

@@ -25,17 +25,20 @@ class User < ActiveRecord::Base
   has_many :friendships2, class_name: Friendship,
            foreign_key: "friend_id", inverse_of: :friend
 
-  # all this just to get the friends... TODO: refactor
-  has_many :accepted_friendships1, -> { where state: '11' },
+  has_many :established_friendships1, -> { where state: '11' },
+           # -> { where("state = ? AND friendships.deleted_at = ?", '11', nil) },
            class_name: Friendship, foreign_key: "user_id"
-  has_many :accepted_friendships2, -> { where state: '11' },
+  has_many :established_friendships2, -> { where state: '11' },
+           # -> { where("state = ? AND friendships.deleted_at = ?", '11', nil) },
            class_name: Friendship, foreign_key: "friend_id"
-  has_many :friends1, through: :accepted_friendships1, source: :friend
-  has_many :friends2, through: :accepted_friendships2, source: :user
+  has_many :friends1, through: :established_friendships1, source: :friend
+  has_many :friends2, through: :established_friendships2, source: :user
 
   has_many :requested_friendships, -> { where state: '00' },
+           # -> { where("state = ? AND friendships.deleted_at = ?", '00', nil) },
            class_name: Friendship, foreign_key: "user_id"
   has_many :offered_friendships, -> { where state: '00' },
+           # -> { where("state = ? AND friendships.deleted_at = ?", '00', nil) },
            class_name: Friendship, foreign_key: "friend_id"
   has_many :requested_friends, through: :requested_friendships, source: :friend
 

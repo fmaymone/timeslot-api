@@ -36,5 +36,10 @@ RSpec.describe V1::UsersController, type: :routing do
       expect(post: "/v1/users/add_friends")
         .to route_to("v1/users#add_friends", format: :json)
     end
+
+    it "routes to #remove_friends" do
+      expect(post: "/v1/users/remove_friends")
+        .to route_to("v1/users#remove_friends", format: :json)
+    end
   end
 end

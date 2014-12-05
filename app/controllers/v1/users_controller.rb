@@ -73,6 +73,15 @@ module V1
       head :ok
     end
 
+    # POST /v1/users/remove_friends
+    # deny friend request and unfriending
+    def remove_friends
+      friends_params.each do |id|
+        connection = current_user.friendship(id)
+        connection.delete if connection
+      end
+    end
+
     private def user_create_params
       params.require(:user).permit(:username)
     end
