@@ -25,7 +25,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       describe "add image" do
         let(:public_id) { attributes_for(:real_image)[:public_id] }
-        let(:img_params) { { group: { new_media: { public_id: public_id } } } }
+        let(:img_params) { { group: { newMedia: { public_id: public_id } } } }
 
         describe "new" do
           it "returns created" do
@@ -51,7 +51,7 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         describe "invalid" do
-          let(:img_params) { { group: { new_media: { public_id: nil } } } }
+          let(:img_params) { { group: { newMedia: { public_id: nil } } } }
 
           it "returns 422" do
             patch "/v1/groups/#{group.id}", img_params

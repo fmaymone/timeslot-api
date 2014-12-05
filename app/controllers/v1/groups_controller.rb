@@ -36,7 +36,7 @@ module V1
         render "v1/media/create",
                status: :created,
                locals: { media_item_id: @group.image.id }
-      elsif !image_param.present? &&  @group.update(group_create_params)
+      elsif !image_param.present? && @group.update(group_create_params)
         head :no_content
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -217,11 +217,11 @@ module V1
     end
 
     private def image_param
-      params.require(:group)[:new_media]
+      params.require(:group)[:newMedia]
     end
 
     private def group_image_param
-      params.require(:group).require(:new_media).require(:public_id)
+      params.require(:group).require(:newMedia).require(:public_id)
     end
   end
 end

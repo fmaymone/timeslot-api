@@ -113,17 +113,17 @@ resource "Groups" do
     end
 
     describe "Add image to group" do
-      parameter :new_media, "Scope for attributes of new image",
+      parameter :newMedia, "Scope for attributes of new image",
                 required: true,
                 scope: :group
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
-                scope: :new_media
+                scope: :newMedia
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ group: { new_media: { public_id: publicId }}}.to_json }
+      let(:raw_post) {{ group: { newMedia: { public_id: publicId }}}.to_json }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
