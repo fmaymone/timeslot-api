@@ -19,10 +19,15 @@ class Group < ActiveRecord::Base
   validates :name, presence: true
   validates :owner, presence: true
 
+  # TODO: add spec
   def delete
     # TODO: take care of Memberships, related GroupSlots, Group Image
     # can a group with the same name be created after "deletion"?
-    # TODO: add spec
+    update!(name: Time.zone.now.to_s + name) # what if max length in db surpassed
+    image.first.delete if image.first
+    # image.delete
+    memberships.delete
+    group_slots.delete
     SoftDelete.call(self)
   end
 end

@@ -6,4 +6,12 @@ class SlotSetting < ActiveRecord::Base
 
   validates :user, presence: true
   validates :meta_slot, presence: true
+
+  def unregister
+  end
+
+  # TODO: add spec
+  def delete
+    SoftDelete.call(self)
+  end
 end

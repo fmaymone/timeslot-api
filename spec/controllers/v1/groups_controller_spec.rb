@@ -95,7 +95,7 @@ RSpec.describe V1::GroupsController, type: :controller do
     it "sets deleted_at on the requested group" do
       delete :destroy, { group_id: group.id }, valid_session
       group.reload
-      expect(group.deleted_at).not_to eq nil
+      expect(group.deleted_at?).to be true
     end
   end
 end

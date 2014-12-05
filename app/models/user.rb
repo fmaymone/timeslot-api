@@ -108,7 +108,14 @@ class User < ActiveRecord::Base
   def delete
     # TODO: take care of created Slots, created Groups, Friendships,
     # Memberships, SlotSettings, StdSlots, ReSlots, User Image
+
+    # Everything needs to stay available so that if user comes back all content
+    # is still there
+
     # TODO: add spec
+
+    # created_slots set creator to unknown /  deleted user
+    # own_groups set creator to unknown /  deleted user
     SoftDelete.call(self)
   end
 end

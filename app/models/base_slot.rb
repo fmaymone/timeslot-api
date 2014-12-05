@@ -34,6 +34,8 @@ class BaseSlot < ActiveRecord::Base
     # end
 
     # TODO: add spec
+    # meta_slot.unregister
+    media_items.delete
     SoftDelete.call(self)
   end
 

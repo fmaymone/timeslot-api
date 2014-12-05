@@ -56,4 +56,10 @@ class Membership < ActiveRecord::Base
   # def subscribed?
   #   state == "101"
   # end
+
+  # TODO: add spec
+  def delete
+    update!(state: "110")
+    SoftDelete.call(self)
+  end
 end
