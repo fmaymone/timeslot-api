@@ -412,6 +412,341 @@ RSpec.describe "V1::BaseSlots", type: :request do
     end
   end
 
+  describe "PATCH /v1/stdslot/:id" do
+    let!(:std_slot) { create(:std_slot, owner: current_user) }
+
+    context "with valid non-media params" do
+      it "responds with No Content (204)" do
+        patch "/v1/stdslot/#{std_slot.id}", stdSlot: { title: "Something" }
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "updates the visibiltiy of a given slot" do
+        std_slot.visibility = "00"
+        patch "/v1/stdslot/#{std_slot.id}", stdSlot: { visibility: "11" }
+        std_slot.reload
+        expect(std_slot.visibility).to eq("11")
+      end
+
+      it "updates the title of a given slot" do
+        std_slot.meta_slot.title = "Old title"
+        patch "/v1/stdslot/#{std_slot.id}", stdSlot: { title: "New title" }
+        std_slot.reload
+        expect(std_slot.title).to eq("New title")
+      end
+
+      it "updates the startdate of a given slot" do
+        std_slot.meta_slot.update(startdate: "2014-09-08 13:31:02")
+        patch "/v1/stdslot/#{std_slot.id}", stdSlot: { startdate: "2014-07-07 13:31:02" }
+        std_slot.reload
+        expect(std_slot.startdate).to eq("2014-07-07 13:31:02")
+      end
+
+      it "updates the enddate of a given slot" do
+        std_slot.meta_slot.update(enddate: "2014-09-09 13:31:02")
+        patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "2014-11-11 13:31:02" }
+        std_slot.reload
+        expect(std_slot.enddate).to eq("2014-11-11 13:31:02")
+      end
+    end
+
+    context "with invalid non-media params" do
+      describe "User not owner of StdSlot" do
+        let(:std_slot) { create(:std_slot) }
+
+        it "responds with Not Found (404)" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { title: "Something" }
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      describe "for invalid ID" do
+        it "responds with Not Found (404)" do
+          wrong_id = std_slot.id + 1
+          patch "/v1/stdslot/#{wrong_id}", stdSlot: { title: "Something" }
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      describe "responds with Unprocessable Entity (422)" do
+        it "for empty title" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { title: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for empty startdate" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { startdate: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for invalid startdate" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { startdate: "|$%^@wer" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for empty enddate" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "for invalid enddate" do
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "|$%^@wer" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('blank')
+        end
+
+        it "if startdate equals enddate" do
+          std_slot.meta_slot.update(startdate: "2014-09-08 13:31:02")
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "2014-09-08 13:31:02" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('start date')
+        end
+
+        it "if enddate before startdate" do
+          std_slot.meta_slot.update(startdate: "2014-09-08 13:31:02")
+          patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "2014-07-07 13:31:02" }
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include('start date')
+        end
+      end
+    end
+
+    describe "handling media items" do
+      let(:add_media_item) { { newMedia: media } }
+
+      context "add images with valid params" do
+        let(:media) do
+          { media_type: "image",
+            public_id: "foo-image",
+            ordering: "1" }
+        end
+
+        it "returns success" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          expect(response).to have_http_status(:created)
+        end
+
+        it "returns a mediaItemId" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(json).to have_key('mediaItemId')
+        end
+
+        it "returns the ID of new media_item" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(json['mediaItemId']).to eq(std_slot.media_items[0].id)
+        end
+
+        it "adds a new image" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(std_slot.media_items.size).to eq(1)
+        end
+
+        it "adds the submitted image to the db" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
+          expect(std_slot.media_items[0].public_id).to eq(media[:public_id])
+          expect(std_slot.media_items[0].ordering).to eq(media[:ordering].to_i)
+        end
+
+        it "adds an additional new image" do
+          create(:slot_image, mediable: std_slot, ordering: 0)
+
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(std_slot.media_items.size).to eq(2)
+        end
+
+        it "adds a 2nd  submitted image to the db" do
+          create(:slot_image, mediable: std_slot, ordering: 0)
+
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          new_media_item = MediaItem.last
+          expect(new_media_item.media_type).to eq(media[:media_type])
+          expect(new_media_item.public_id).to eq(media[:public_id])
+          expect(new_media_item.ordering).to eq(media[:ordering].to_i)
+        end
+
+        context "missing ordering parameter" do
+          let(:media) do
+            { media_type: "image",
+              public_id: "foo-image" }
+          end
+
+          it "adds it" do
+            create(:slot_image, mediable: std_slot, ordering: 0)
+            new_ordering = std_slot.media_items.size
+            patch "/v1/stdslot/#{std_slot.id}", add_media_item
+
+            expect(response).to have_http_status(:created)
+            new_media_item = MediaItem.last
+            expect(new_media_item.ordering).to eq(new_ordering)
+          end
+        end
+
+        context "existing ordering parameter" do
+          let(:media) do
+            { media_type: "image",
+              public_id: "foo-image",
+              ordering: "0" }
+          end
+
+          it "updates existing ordering" do
+            existing_1 = create(:slot_image, mediable: std_slot, ordering: 0)
+            existing_2 = create(:slot_image, mediable: std_slot, ordering: 1)
+
+            patch "/v1/stdslot/#{std_slot.id}", add_media_item
+
+            expect(response).to have_http_status(:created)
+            std_slot.reload
+            existing_1.reload
+            existing_2.reload
+
+            expect(existing_1.ordering).to eq 1
+            expect(existing_2.ordering).to eq 2
+            expect(std_slot.media_items.last.ordering).to eq media[:ordering].to_i
+          end
+        end
+      end
+
+      context "add images with invalid params" do
+        let(:media) do
+          { media_type: "image",
+            ordering: "0" }
+        end
+
+        it "returns 422 if public_id is missing" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
+        it "returns the error" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          expect(response.body).to include 'public_id'
+          expect(response.body).to include 'blank'
+        end
+      end
+
+      describe "reorder images" do
+        let!(:media_item_1) { create(:slot_image, mediable: std_slot, ordering: 0) }
+        let!(:media_item_2) { create(:slot_image, mediable: std_slot, ordering: 1) }
+        let!(:media_item_3) { create(:slot_image, mediable: std_slot, ordering: 2) }
+
+        context "with valid params" do
+          let(:media_reordering) do
+            { media_type: "image",
+              orderingMedia: [
+                { mediaItemId: media_item_1.id,
+                  ordering: 2 },
+                { mediaItemId: media_item_2.id,
+                  ordering: 0 },
+                { mediaItemId: media_item_3.id,
+                  ordering: 1 }
+              ] }
+          end
+
+          it "returns success" do
+            patch "/v1/stdslot/#{std_slot.id}", media_reordering
+            expect(response).to have_http_status(:ok)
+          end
+
+          it "reorders media items" do
+            patch "/v1/stdslot/#{std_slot.id}", media_reordering
+            std_slot.reload
+            expect(std_slot.media_items.find(media_item_1.id).ordering).to eq(2)
+            expect(std_slot.media_items.find(media_item_2.id).ordering).to eq(0)
+            expect(std_slot.media_items.find(media_item_3.id).ordering).to eq(1)
+          end
+        end
+
+        context "with invalid params" do
+          describe "mediaItemId" do
+            let(:invalid_id) { media_item_3.id + 1 }
+            let(:media_reordering) do
+              { media_type: "image",
+                orderingMedia: [
+                  { mediaItemId: media_item_1.id,
+                    ordering: 2 },
+                  { mediaItemId: media_item_2.id,
+                    ordering: 0 },
+                  { mediaItemId: invalid_id,
+                    ordering: 1 }
+                ] }
+            end
+
+            it "returns 404" do
+              patch "/v1/stdslot/#{std_slot.id}", media_reordering
+              std_slot.reload
+              expect(response).to have_http_status(:not_found)
+            end
+          end
+
+          describe "ordering" do
+            let(:media_reordering) do
+              { media_type: "image",
+                orderingMedia: [
+                  { mediaItemId: media_item_1.id,
+                    ordering: 1 },
+                  { mediaItemId: media_item_2.id,
+                    ordering: 0 },
+                  { mediaItemId: media_item_3.id,
+                    ordering: 1 }
+                ] }
+            end
+
+            it "returns 422" do
+              patch "/v1/stdslot/#{std_slot.id}", media_reordering
+              std_slot.reload
+              expect(response).to have_http_status(:unprocessable_entity)
+            end
+
+            it "returns duplicate ordering numbers" do
+              skip "TODO change handling of errors"
+              patch "/v1/stdslot/#{std_slot.id}", media_reordering
+              expect(json).to have_key('duplicate_ordering')
+              expect(json['duplicate_ordering']).to eq [1]
+            end
+          end
+        end
+      end
+
+      context "video" do
+        let(:media) do
+          { media_type: "video",
+            public_id: "foo-video",
+            ordering: "1" }
+        end
+
+        it "adds a new video" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
+        end
+      end
+
+      context "voice" do
+        let(:media) do
+          { media_type: "voice",
+            public_id: "foo-voice",
+            ordering: "1" }
+        end
+
+        it "adds a new voice item" do
+          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          std_slot.reload
+          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
+        end
+      end
+    end
+  end
+
   describe "DELETE /v1/stdslot/:id" do
     let!(:std_slot) { create(:std_slot, owner: current_user) }
 

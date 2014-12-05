@@ -433,7 +433,8 @@ resource "Slots" do
       example "Update MetaSlot", document: :v1 do
         explanation "Update content of MetaSlot.\n\n" \
                     "User must be creator of MetaSlot.\n\n" \
-                    "returns 404 User not creator of ID is invalid\n\n" \
+                    "returns 204 if update succeded \n\n" \
+                    "returns 404 if User not creator or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
         do_request
 
@@ -442,32 +443,62 @@ resource "Slots" do
         expect(MetaSlot.last.title).to eq title
       end
     end
+  end
+
+  patch "/v1/stdslot/:id" do
+    header "Content-Type", "application/json"
+
+    parameter :id, "ID of the slot to update", required: true
+
+    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let(:id) { std_slot.id }
+
+    describe "Update an existing StdSlot" do
+      parameter :title, "Updated title of slot", scope: :stdSlot
+      parameter :startdate, "Updated Startdate and Time of the Slot",
+                scope: :stdSlot
+      parameter :enddate,
+                "Updated Enddate and Time of the Slot (startdate + duration)",
+                scope: :stdSlot
+
+      let(:title) { "New title for a Slot" }
+
+      example "Update StdSlot", document: :v1 do
+        explanation "Update content of StdSlot.\n\n" \
+                    "User must be owner of StdSlot.\n\n" \
+                    "returns 204 if update succeded \n\n" \
+                    "returns 404 if User not owner or ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_body).to eq("")
+        expect(response_status).to eq(204)
+        expect(StdSlot.last.title).to eq title
+      end
+    end
 
     describe "Adding media items to existing slot" do
 
-      parameter :new_media, "Scope for attributes of new media item",
+      parameter :newMedia, "Scope for attributes of new media item",
                 required: true
       parameter :media_type, "Type of media (image/video/voice)",
                 required: true,
-                scope: :new_media
-      parameter :publicId, "Cloudinary ID / URL",
+                scope: :newMedia
+      parameter :public_id, "Cloudinary ID / URL",
                 required: true,
-                scope: :new_media
+                scope: :newMedia
       parameter :ordering, "Order of the new media item." \
                            " If not submitted it will be added at the end",
-                scope: :new_media
+                scope: :newMedia
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let!(:slot) { create(:meta_slot) }
-      let(:id) { slot.id }
       let(:media_type) { "image" }
-      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
       example "Adding media items to existing slot returns ID & status created",
               document: :v1 do
-        skip "No more media items here"
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -476,7 +507,7 @@ resource "Slots" do
 
         expect(response_status).to eq(201)
         expect(json).to have_key("mediaItemId")
-        expect(MetaSlot.last.media_items.size).to eq(1)
+        expect(StdSlot.last.media_items.size).to eq(1)
       end
     end
 
@@ -484,24 +515,22 @@ resource "Slots" do
 
       parameter :media_type, "Type of media (image/video/voice)",
                 required: true
-      parameter :ordering_media, "Array with mediaItemIds and ordering",
+      parameter :orderingMedia, "Array with mediaItemIds and ordering",
                 required: true
       parameter :mediaItemId, "Timeslot's internal ID for this media item",
                 required: true,
-                scope: :ordering_media
+                scope: :orderingMedia
       parameter :ordering, "Order of the image (ignored for video/voice)",
                 required: true,
-                scope: :ordering_media
+                scope: :orderingMedia
 
-      let!(:slot) { create(:meta_slot) }
-      let!(:media_item_1) { create(:slot_image, mediable: slot, ordering: 0) }
-      let!(:media_item_2) { create(:slot_image, mediable: slot, ordering: 1) }
-      let!(:media_item_3) { create(:slot_image, mediable: slot, ordering: 2) }
+      let!(:media_item_1) { create(:slot_image, mediable: std_slot, ordering: 0) }
+      let!(:media_item_2) { create(:slot_image, mediable: std_slot, ordering: 1) }
+      let!(:media_item_3) { create(:slot_image, mediable: std_slot, ordering: 2) }
 
-      let(:id) { slot.id }
       let(:media_reordering) do
         { media_type: "image",
-          ordering_media: [
+          orderingMedia: [
             { mediaItemId: media_item_1.id,
               ordering: 2 },
             { mediaItemId: media_item_2.id,
@@ -514,16 +543,15 @@ resource "Slots" do
 
       example "Reordering media data of existing slot returns success",
               document: :v1 do
-        skip "No more media items here"
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
                     " of the slot must be send."
         do_request
 
         expect(response_status).to eq(200)
-        expect(slot.media_items.find(media_item_1.id).ordering).to eq(2)
-        expect(slot.media_items.find(media_item_2.id).ordering).to eq(0)
-        expect(slot.media_items.find(media_item_3.id).ordering).to eq(1)
+        expect(std_slot.media_items.find(media_item_1.id).ordering).to eq(2)
+        expect(std_slot.media_items.find(media_item_2.id).ordering).to eq(0)
+        expect(std_slot.media_items.find(media_item_3.id).ordering).to eq(1)
       end
     end
   end

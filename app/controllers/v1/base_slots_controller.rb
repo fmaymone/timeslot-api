@@ -102,6 +102,26 @@ module V1
       end
     end
 
+    # PATCH /v1/stdslot/1
+    # TODO: needs refactoring, why can't I write attributes via delegates?
+    def update_stdslot
+      @slot = current_user.std_slots.find(params[:id])
+
+      if params[:newMedia].present?
+        add_media_item
+      elsif params[:orderingMedia].present?
+        update_media_order
+      elsif update_std_params[:visibility].present? &&
+            @slot.update(update_std_params.permit(:visibility))
+        head :no_content
+      elsif @slot.meta_slot.update(update_std_params)
+        head :no_content
+      else
+        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
+               status: :unprocessable_entity
+      end
+    end
+
     # DELETE /v1/std_slot/1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
@@ -155,8 +175,38 @@ module V1
       params.require(:metaSlot).permit(:title, :startdate, :enddate)
     end
 
+    private def update_std_params
+      params.require(:stdSlot).permit(:title, :startdate, :enddate, :visibility)
+    end
+
     private def alert_param
       params.require(:new_slot).permit(:alerts)[:alerts]
+    end
+
+    private def media_item_create_params
+      params.require(:newMedia).permit(:public_id, :ordering, :media_type)
+      # params.require(:newMedia).permit(:publicId, :ordering, :mediaType)
+    end
+
+    private def update_media_order
+      if MediaItem.reorder? params[:orderingMedia]
+        head :ok
+      else
+        render json: @slot.errors, status: :unprocessable_entity
+      end
+    end
+
+    private def add_media_item
+      media_item = MediaItem.insert(@slot.media_items, media_item_create_params)
+      @slot.media_items << media_item
+
+      if @slot.save
+        render "v1/media/create", status: :created,
+               locals: { media_item_id: media_item.id }
+      else
+        render json: @slot.errors.add(:media_item, media_item.errors),
+               status: :unprocessable_entity
+      end
     end
   end
 end

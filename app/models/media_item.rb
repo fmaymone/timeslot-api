@@ -20,7 +20,7 @@ class MediaItem < ActiveRecord::Base
 
     # TODO: might need to validate new media item before reordering
     order_params.each do |item|
-      changed = MediaItem.where(id: item[:media_item_id])
+      changed = MediaItem.where(id: item[:mediaItemId])
                 .update_all(ordering: item[:ordering])
       fail ActiveRecord::RecordNotFound if changed == 0
     end
