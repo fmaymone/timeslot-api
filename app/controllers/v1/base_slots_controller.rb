@@ -184,8 +184,9 @@ module V1
     end
 
     private def media_item_create_params
-      params.require(:newMedia).permit(:public_id, :ordering, :media_type)
-      # params.require(:newMedia).permit(:publicId, :ordering, :mediaType)
+      # TODO: better handling and specing of duration and thumbnail
+      params.require(:newMedia).permit(:public_id, :ordering, :media_type,
+                                       :duration, :thumbnail)
     end
 
     private def update_media_order

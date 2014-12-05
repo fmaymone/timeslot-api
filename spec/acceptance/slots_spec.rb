@@ -31,6 +31,8 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       # response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
+      response_field :media, "Media Items for the slot"
+      response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
       response_field :groupId, "ID of belonging Group if it's a GroupSlot"
       response_field :createdAt, "Creation datetime of the slot"
@@ -50,10 +52,11 @@ resource "Slots" do
                       "startdate" => std_slot_1.startdate.iso8601,
                       "enddate" => std_slot_1.enddate.iso8601,
                       "note" => std_slot_1.note,
-                      "visibility" => std_slot_1.visibility,
                       "createdAt" => std_slot_1.created_at.iso8601,
                       "updatedAt" => std_slot_1.updated_at.iso8601,
-                      "deletedAt" => std_slot_1.deleted_at
+                      "deletedAt" => std_slot_1.deleted_at,
+                      "visibility" => std_slot_1.visibility,
+                      "media" => std_slot_1.media_items
                      )
         expect(json)
           .to include("id" => std_slot_2.id,
@@ -65,7 +68,8 @@ resource "Slots" do
                       "visibility" => std_slot_2.visibility,
                       "createdAt" => std_slot_2.created_at.iso8601,
                       "updatedAt" => std_slot_2.updated_at.iso8601,
-                      "deletedAt" => std_slot_2.deleted_at
+                      "deletedAt" => std_slot_2.deleted_at,
+                      "media" => std_slot_1.media_items
                      )
         expect(json)
           .to include("id" => re_slots[0].id,
@@ -76,7 +80,8 @@ resource "Slots" do
                       "note" => re_slots[0].note,
                       "createdAt" => re_slots[0].created_at.iso8601,
                       "updatedAt" => re_slots[0].updated_at.iso8601,
-                      "deletedAt" => re_slots[0].deleted_at
+                      "deletedAt" => re_slots[0].deleted_at,
+                      "media" => std_slot_1.media_items
                      )
         expect(json)
           .to include("id" => group_slots_1[0].id,
@@ -88,7 +93,8 @@ resource "Slots" do
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.iso8601,
                       "updatedAt" => group_slots_1[0].updated_at.iso8601,
-                      "deletedAt" => group_slots_1[0].deleted_at
+                      "deletedAt" => group_slots_1[0].deleted_at,
+                      "media" => std_slot_1.media_items
                      )
       end
     end
@@ -132,7 +138,7 @@ resource "Slots" do
                  "updatedAt" => slot.updated_at.iso8601,
                  "deletedAt" => deleted_at
                 )
-        # expect(json["media"].length).to eq(slot.media_items.length)
+        expect(json["media"].length).to eq(slot.media_items.length)
       end
     end
 
@@ -497,12 +503,13 @@ resource "Slots" do
       let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
-      example "Adding media items to existing slot returns ID & status created",
+      example "Add media items",
               document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
-                    " information."
+                    " information.\n\n" \
+                    "returns media item ID & status created"
         do_request
 
         expect(response_status).to eq(201)
@@ -541,11 +548,12 @@ resource "Slots" do
       end
       let(:raw_post) { media_reordering.to_json }
 
-      example "Reordering media data of existing slot returns success",
+      example "Reorder media items",
               document: :v1 do
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
-                    " of the slot must be send."
+                    " of the slot must be send.\n\n" \
+                    "returns success"
         do_request
 
         expect(response_status).to eq(200)
@@ -617,17 +625,18 @@ resource "Slots" do
         group_slot.reload
         expect(group_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to include("id" => group_slot.id,
-                                "title" => group_slot.title,
-                                "creatorId" => group_slot.creator.id,
-                                "startdate" => group_slot.startdate.iso8601,
-                                "enddate" => group_slot.enddate.iso8601,
-                                "note" => group_slot.note,
-                                "groupId" => group_slot.group.id,
-                                "createdAt" => group_slot.created_at.iso8601,
-                                "updatedAt" => group_slot.updated_at.iso8601,
-                                "deletedAt" => group_slot.deleted_at.iso8601
-                               )
+        expect(json).to eq("id" => group_slot.id,
+                           "title" => group_slot.title,
+                           "creatorId" => group_slot.creator.id,
+                           "startdate" => group_slot.startdate.iso8601,
+                           "enddate" => group_slot.enddate.iso8601,
+                           "note" => group_slot.note,
+                           "media" => group_slot.media_items,
+                           "groupId" => group_slot.group.id,
+                           "createdAt" => group_slot.created_at.iso8601,
+                           "updatedAt" => group_slot.updated_at.iso8601,
+                           "deletedAt" => group_slot.deleted_at.iso8601
+                          )
       end
     end
 
@@ -665,6 +674,7 @@ resource "Slots" do
                            "startdate" => re_slot.startdate.iso8601,
                            "enddate" => re_slot.enddate.iso8601,
                            "note" => re_slot.note,
+                           "media" => re_slot.media_items,
                            "slotterId" => re_slot.slotter.id,
                            "createdAt" => re_slot.created_at.iso8601,
                            "updatedAt" => re_slot.updated_at.iso8601,
