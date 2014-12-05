@@ -83,6 +83,4 @@ test:
 #
 production:
   <<: *default
-  database: ts_rails_backend_production
-  username: ts_rails_backend
-  password: <%= ENV['TS_RAILS_BACKEND_DATABASE_PASSWORD'] %>
+  url: <%= ENV['DATABASE_URL'] %>
