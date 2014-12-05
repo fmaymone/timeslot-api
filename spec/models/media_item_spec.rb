@@ -6,6 +6,8 @@ RSpec.describe MediaItem, type: :model do
   subject { media_item }
 
   it { is_expected.to respond_to(:public_id) }
+  it { is_expected.to respond_to(:duration) }
+  it { is_expected.to respond_to(:thumbnail) }
   it { is_expected.to respond_to(:ordering) }
   it { is_expected.to respond_to(:media_type) }
   it { is_expected.to respond_to(:mediable_id) }
