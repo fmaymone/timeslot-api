@@ -323,11 +323,12 @@ resource "Groups" do
     end
   end
 
-  # invite
+  # invite_single
   post "/v1/groups/:group_id/members/:user_id" do
     header "Content-Type", "application/json"
 
     parameter :group_id, "ID of the group", required: true
+    parameter :user_id, "User ID to invite to the group", required: true
 
     let(:group) { create(:group, owner: current_user) }
     let(:invited_user) { create(:user) }
@@ -352,6 +353,38 @@ resource "Groups" do
       expect(membership.invited?).to be true
       expect(group.members).not_to include invited_user
       expect(group.related_users).to include invited_user
+    end
+  end
+
+  # invite
+  # TODO: needs improvement
+  post "/v1/groups/:group_id/members" do
+    header "Content-Type", "application/json"
+
+    parameter :group_id, "ID of the group", required: true
+    parameter :ids, "User IDs to be invited to group", required: true
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:invited_users) { create_list(:user, 3) }
+
+    let(:group_id) { group.id }
+    let(:ids) { invited_users.collect(&:id) }
+
+    example "Invite multiple users to group", document: :v1 do
+      explanation "Inviting user must be group owner or group must allow" \
+                  " invites by group members.\n\n" \
+                  "returns 201 if invite successfully created\n\n" \
+                  "returns 403 if user is not allowed to invite\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing"
+      expect {
+        do_request
+      }.to change(Membership, :count).by invited_users.length
+      expect(response_status).to eq(201)
+      membership = Membership.last
+      expect(membership.invited?).to be true
+      expect(group.members).not_to include invited_users.first
+      expect(group.related_users).to include invited_users.first
     end
   end
 

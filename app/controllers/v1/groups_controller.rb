@@ -128,7 +128,24 @@ module V1
     # create membership with state invited/pending
     # notify invited users
     # TODO: put logic into service
+    # TODO: improve flow
+    # TODO: needs more specs, has only acceptance spec
     def invite
+      group = Group.find(group_param)
+      return head :forbidden unless current_user.can_invite? group.id
+
+      params.require(:ids).each do |id|
+        invitee = User.find(id)
+        return head :ok if invitee.is_invited?(group.id) || invitee.is_member?(group.id)
+
+        @membership = invitee.get_membership group
+        @membership ||= Membership.new(group_id: group_param, user_id: id)
+        if !(@membership.invite && @membership.save)
+          fail ArgumentError, "couldn't create membership for userId #{id}"
+        end
+      end
+
+      head :created
     end
 
     # DELETE /v1/groups/:group_id/members
@@ -189,6 +206,10 @@ module V1
 
     private def membership_params
       params.permit(:group_id, :user_id)
+    end
+
+    private def group_param
+      params.require(:group_id)
     end
 
     private def membership_update_params
