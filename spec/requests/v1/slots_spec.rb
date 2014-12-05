@@ -479,28 +479,28 @@ RSpec.describe "V1::Slots", type: :request do
         expect(response).to have_http_status(:no_content)
       end
 
-      it "updates the visibiltiy of a given slot" do
+      it "updates the visibiltiy of a given StdSlot" do
         std_slot.visibility = "00"
         patch "/v1/stdslot/#{std_slot.id}", stdSlot: { visibility: "11" }
         std_slot.reload
         expect(std_slot.visibility).to eq("11")
       end
 
-      it "updates the title of a given slot" do
+      it "updates the title of a given StdSlot" do
         std_slot.meta_slot.title = "Old title"
         patch "/v1/stdslot/#{std_slot.id}", stdSlot: { title: "New title" }
         std_slot.reload
         expect(std_slot.title).to eq("New title")
       end
 
-      it "updates the startdate of a given slot" do
+      it "updates the startdate of a given StdSlot" do
         std_slot.meta_slot.update(startdate: "2014-09-08 13:31:02")
         patch "/v1/stdslot/#{std_slot.id}", stdSlot: { startdate: "2014-07-07 13:31:02" }
         std_slot.reload
         expect(std_slot.startdate).to eq("2014-07-07 13:31:02")
       end
 
-      it "updates the enddate of a given slot" do
+      it "updates the enddate of a given StdSlot" do
         std_slot.meta_slot.update(enddate: "2014-09-09 13:31:02")
         patch "/v1/stdslot/#{std_slot.id}", stdSlot: { enddate: "2014-11-11 13:31:02" }
         std_slot.reload
@@ -801,6 +801,44 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
         end
+      end
+    end
+  end
+
+  describe "PATCH /v1/groupslot/:id" do
+    let(:group) { create(:group) }
+    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let!(:group_slot) { create(:group_slot, group: group) }
+
+    context "with valid non-media params" do
+      it "responds with No Content (204)" do
+        patch "/v1/groupslot/#{group_slot.id}", groupSlot: { title: "Something" }
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "updates the title of a given GroupSlot" do
+        group_slot.meta_slot.title = "Old title"
+        patch "/v1/groupslot/#{group_slot.id}", groupSlot: { title: "New title" }
+        group_slot.reload
+        expect(group_slot.title).to eq("New title")
+      end
+    end
+  end
+
+  describe "PATCH /v1/reslot/:id" do
+    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+
+    context "with valid non-media params" do
+      it "responds with No Content (204)" do
+        patch "/v1/reslot/#{re_slot.id}", reSlot: { title: "Something" }
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "updates the title of a given ReSlot" do
+        re_slot.meta_slot.title = "Old title"
+        patch "/v1/reslot/#{re_slot.id}", reSlot: { title: "New title" }
+        re_slot.reload
+        expect(re_slot.title).to eq("New title")
       end
     end
   end

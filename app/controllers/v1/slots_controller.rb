@@ -122,6 +122,42 @@ module V1
       end
     end
 
+    # PATCH /v1/groupslot/1
+    # TODO: needs refactoring, why can't I write attributes via delegates?
+    # TODO: add specs
+    def update_groupslot
+      @slot = current_user.group_slots.find(params[:id])
+
+      if params[:newMedia].present?
+        add_media_item
+      elsif params[:orderingMedia].present?
+        update_media_order
+      elsif @slot.meta_slot.update(update_group_params)
+        head :no_content
+      else
+        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
+               status: :unprocessable_entity
+      end
+    end
+
+    # PATCH /v1/reslot/1
+    # TODO: needs refactoring
+    # TODO: add specs
+    def update_reslot
+      @slot = current_user.re_slots.find(params[:id])
+
+      if params[:newMedia].present?
+        add_media_item
+      elsif params[:orderingMedia].present?
+        update_media_order
+      elsif @slot.meta_slot.update(update_re_params)
+        head :no_content
+      else
+        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
+               status: :unprocessable_entity
+      end
+    end
+
     # DELETE /v1/std_slot/1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
@@ -177,6 +213,14 @@ module V1
 
     private def update_std_params
       params.require(:stdSlot).permit(:title, :startdate, :enddate, :visibility)
+    end
+
+    private def update_group_params
+      params.require(:groupSlot).permit(:title, :startdate, :enddate)
+    end
+
+    private def update_re_params
+      params.require(:reSlot).permit(:title, :startdate, :enddate)
     end
 
     private def alert_param
