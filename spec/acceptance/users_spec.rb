@@ -2,6 +2,8 @@ require 'documentation_helper'
 
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   get "/v1/users/authenticate/:id" do
     header "Accept", "application/json"
@@ -116,6 +118,46 @@ resource "Users" do
       expect(response_status).to eq(200)
       expect(json).to eq(user.attributes.as_json
                           .transform_keys{ |key| key.camelize(:lower) })
+    end
+  end
+
+  post "/v1/users/add_friends" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :ids, "Array of User IDs to create a friendship for",
+              required: true
+
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let!(:friendship) { create(:friendship, user: john, friend: current_user) }
+    let!(:friendship2) {
+      create(:friendship, :established, user: current_user, friend: mary) }
+
+    let!(:friend_requests) { create_list(:user, 3) }
+    let(:ids) { [john.id, mary.id, alice.id] + friend_requests.collect(&:id) }
+
+    example "Add Friends",
+            document: :v1 do
+      explanation "Receives a list of User IDs for which a friendship" \
+                  "with the current user will be created.\n\n" \
+                  "This corresponds to a 'Friend Request'.\n\n" \
+                  "If the friendship was already initiated by the other User" \
+                  " it will be accepted.\n\n" \
+                  # "returns a list of all User IDs for which a friendship was" \
+                  # " created (request of fully established)\n\n." \
+                  "returns 404 if an User ID is invalid"
+
+      do_request
+
+      expect(status).to be 200
+      expect(current_user.friends).to include john
+      expect(current_user.friends).to include mary
+      expect(current_user.requested_friends).to include alice
+      expect(current_user.requested_friends).not_to include john
+      expect(current_user.requested_friends).not_to include mary
+      expect(current_user.requested_friends.size).to eq 4
     end
   end
 end

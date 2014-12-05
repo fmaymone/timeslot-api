@@ -2,6 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "V1::Users", type: :request do
   let(:json) { JSON.parse(response.body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   describe "GET /v1/users" do
     it "returns success" do
@@ -107,6 +109,29 @@ RSpec.describe "V1::Users", type: :request do
         expect {
           delete "/v1/users/#{wrong_id}"
         }.not_to change(User, :count)
+      end
+    end
+  end
+
+  describe "POST /v1/users/add_friends" do
+    let(:john) { create(:user, username: "John") }
+
+    context "no offer" do
+      it "creates a friend request" do
+        post "/v1/users/add_friends", ids: [john.id]
+        expect(john.offered_friendship(current_user.id)).not_to be nil
+      end
+    end
+
+    context "existing offer" do
+      let!(:friendship) {
+        create(:friendship, user: john, friend: current_user)
+      }
+      it "accepts a friend request" do
+        expect(friendship.established?).to be false
+        post "/v1/users/add_friends", ids: [john.id]
+        friendship.reload
+        expect(friendship.established?).to be true
       end
     end
   end

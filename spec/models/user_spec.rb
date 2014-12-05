@@ -25,8 +25,8 @@ RSpec.describe User, type: :model do
 
   it { is_expected.to have_many(:friendships1).inverse_of(:user) }
   it { is_expected.to have_many(:friendships2).inverse_of(:friend) }
-  it { is_expected.to have_many(:friends1).through(:friendships1) }
-  it { is_expected.to have_many(:friends2).through(:friendships2) }
+  it { is_expected.to have_many(:friends1).through(:accepted_friendships1) }
+  it { is_expected.to have_many(:friends2).through(:accepted_friendships2) }
 
   it { is_expected.to be_valid }
 
@@ -193,11 +193,26 @@ RSpec.describe User, type: :model do
 
   describe :friend do
     let(:john) { create(:user, username: "John") }
-    let!(:friendships_A) { create_list(:friendship, 2, user: john) }
-    let!(:friendships_B) { create_list(:friendship, 3, friend: john) }
+    let!(:friendships_A) { create_list(:friendship, 2, :established, user: john) }
+    let!(:friendships_B) { create_list(:friendship, 3, :established, friend: john) }
 
     it "returns all friends" do
       expect(john.friends.size).to eq 5
+    end
+  end
+
+  describe :friendship do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let!(:friendship_1) {
+      create(:friendship, :established, user: john, friend: mary) }
+    let!(:friendship_2) {
+      create(:friendship, :established, user: alice, friend: john) }
+
+    it "returns the friendship object for the given user" do
+      expect(john.friendship(mary)).to eq friendship_1
+      expect(john.friendship(alice)).to eq friendship_2
     end
   end
 end

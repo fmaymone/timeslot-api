@@ -35,6 +35,7 @@ module V1
     end
 
     # PATCH/PUT /v1/users/1
+    # TODO check for current user, can only update his own stuff
     def update
       @user = User.find(params[:id])
 
@@ -56,8 +57,28 @@ module V1
       end
     end
 
+    # POST /v1/users/add_friends
+    # TODO: add friendship state to get users json if a friendship exists
+    # creates friend request or accepts friend request if one exists
+    def add_friends
+      friends_params.each do |id|
+        offer = current_user.offered_friendship(id)
+        if offer
+          offer.accept
+        elsif current_user.friendship(id).nil?
+          current_user.requested_friends << User.find(id)
+        end
+      end
+
+      head :ok
+    end
+
     private def user_create_params
       params.require(:user).permit(:username)
+    end
+
+    private def friends_params
+      params.require(:ids)
     end
   end
 end
