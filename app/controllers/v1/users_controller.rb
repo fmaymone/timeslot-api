@@ -37,18 +37,22 @@ module V1
     # PATCH/PUT /v1/users/1
     # TODO check for current user, can only update his own stuff
     def update
-      @user = User.find(params[:id])
+      @user = current_user
 
-      if @user.update(user_create_params)
-        head :no_content
+      if image_param.present? && AddImage.call(@user, user_image_param).equal?(true)
+        render "v1/media/create",
+               status: :created,
+               locals: { media_item_id: @user.image.id }
+      elsif !image_param.present? && @user.update(user_create_params)
+        render :show, status: :no_content
       else
         render json: @user.errors, status: :unprocessable_entity
       end
     end
 
-    # DELETE /v1/users/1
+    # DELETE /v1/users
     def destroy
-      @user = User.find(params[:id])
+      @user = current_user
 
       if @user.delete
         render :show
@@ -88,6 +92,14 @@ module V1
 
     private def friends_params
       params.require(:ids)
+    end
+
+    private def image_param
+      params.require(:user)[:newMedia]
+    end
+
+    private def user_image_param
+      params.require(:user).require(:newMedia).require(:public_id)
     end
   end
 end

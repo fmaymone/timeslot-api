@@ -24,8 +24,8 @@ Rails.application.routes.draw do
       get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
       post '', to: 'users#create', as: 'user_create'
-      patch ':id', to: 'users#update', as: 'user_update'
-      delete ':id', to: 'users#destroy', as: 'user_delete'
+      patch '', to: 'users#update', as: 'user_update'
+      delete '', to: 'users#destroy', as: 'user_delete'
       # HACK: not ready for production
       get 'authenticate/:id', to: 'users#auth', as: 'auth',
           constraints: { id: /\d+/ }

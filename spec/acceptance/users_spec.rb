@@ -76,47 +76,73 @@ resource "Users" do
     end
   end
 
-  patch "/v1/users/:id" do
+  patch "/v1/users" do
     header "Content-Type", "application/json"
 
-    parameter :id, "ID of the user to update", required: true
-    parameter :username, "Updated username of user (max. 20 characters)",
-              scope: :user
+    describe "Update current users data" do
 
-    let!(:user) { create(:user, username: "foo") }
-    let(:id) { user.id }
-    let(:username) { "bar" }
+      parameter :username, "Updated username of user (max. 20 characters)",
+                scope: :user
 
-    example "Update an existing user returns No Content", document: :v1 do
-      explanation "Change username\n\n" \
-                  "returns 404 if ID is invalid\n\n" \
-                  "returns 422 if parameters are missing\n\n" \
-                  "returns 422 if parameters are invalid"
-      do_request
+      let(:username) { "bar" }
 
-      user.reload
-      expect(user.username).to eq "bar"
-      expect(response_status).to eq(204)
-      expect(response_body).to eq("")
+      example "Update current user", document: :v1 do
+        explanation "E.g, change username\n\n" \
+                    "returns user data\n\n"
+        "returns 404 if ID is invalid\n\n" \
+        "returns 422 if parameters are missing\n\n" \
+        "returns 422 if parameters are invalid"
+        do_request
+
+        current_user.reload
+        expect(current_user.username).to eq "bar"
+        expect(response_status).to eq(204)
+        expect(response_body).to eq("")
+      end
+    end
+
+    describe "Set image for User" do
+      parameter :newMedia, "Scope for attributes of new image",
+                required: true,
+                scope: :user
+      parameter :publicId, "Cloudinary ID / URL",
+                required: true,
+                scope: :newMedia
+
+      response_field :mediaItemId, "Timeslot internal ID for this media item"
+
+      let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
+      let(:raw_post) {{ user: { newMedia: { public_id: publicId }}}.to_json }
+
+      example "Set user image", document: :v1 do
+        explanation "First a cloudinary signature needs to be fetched by the" \
+                    " client from the API. After uploading the image to" \
+                    " cloudinary the client updates the group with the image" \
+                    " information.\n\n" \
+                    "returns 201 and the media_item ID if the image was" \
+                    " successfully added or updated"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key("mediaItemId")
+        current_user.reload
+        expect(current_user.image).not_to be nil
+        expect(current_user.image.public_id).to eq publicId
+      end
     end
   end
 
-  delete "/v1/users/:id" do
-    parameter :id, "ID of the user to delete", required: true
-
-    let!(:user) { create(:user) }
-    let(:id) { user.id }
-
-    example "Delete user sets 'deletedAt' and returns user data",
-            document: :v1 do
-      explanation "Doesn't delete anything.\n\n" \
-                  "returns 404 if ID is invalid"
+  delete "/v1/users" do
+    example "Delete current user", document: :v1 do
+      explanation "Sets 'deletedAt' attr for user who is logged in" \
+                  "Doesn't delete anything.\n\n" \
+                  "returns user data"
       do_request
 
-      user.reload
-      expect(user.deleted_at).not_to be nil
+      current_user.reload
+      expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(json).to eq(user.attributes.as_json
+      expect(json).to eq(current_user.attributes.as_json
                           .transform_keys{ |key| key.camelize(:lower) })
     end
   end

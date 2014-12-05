@@ -18,13 +18,13 @@ RSpec.describe V1::UsersController, type: :routing do
     end
 
     it "routes to #update" do
-      expect(patch: "/v1/users/1")
-        .to route_to("v1/users#update", id: "1", format: :json)
+      expect(patch: "/v1/users")
+        .to route_to("v1/users#update", format: :json)
     end
 
     it "routes to #destroy" do
-      expect(delete: "/v1/users/1")
-        .to route_to("v1/users#destroy", id: "1", format: :json)
+      expect(delete: "/v1/users")
+        .to route_to("v1/users#destroy", format: :json)
     end
 
     it "routes to #authenticate" do
