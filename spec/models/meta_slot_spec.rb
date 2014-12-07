@@ -11,7 +11,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:creator) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
-  it { is_expected.to have_many(:users).through(:slot_settings) }
+  # it { is_expected.to have_many(:users).through(:slot_settings) }
 
   it { is_expected.to be_valid }
 

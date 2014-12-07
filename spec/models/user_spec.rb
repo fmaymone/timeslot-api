@@ -18,7 +18,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
-  it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
+  # it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }

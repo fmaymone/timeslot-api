@@ -4,9 +4,8 @@ class MetaSlot < ActiveRecord::Base
   belongs_to :creator, class_name: "User", inverse_of: :created_slots
 
   has_many :slot_settings, inverse_of: :meta_slot
-  has_many :users, through: :slot_settings, source: :user
-
-  has_one :std_slot, inverse_of: :meta_slot
+  # TODO: I think I don't need this, remove after alarm stuff is in place
+  # has_many :users, through: :slot_settings, source: :user
 
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }

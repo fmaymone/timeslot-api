@@ -9,8 +9,8 @@ class User < ActiveRecord::Base
 
   has_many :slot_settings, inverse_of: :user
 
-  # I think I don't need this...
-  has_many :meta_slots, through: :slot_settings #, source: :meta_slot
+  # TODO: I think I don't need this, remove after alarm stuff is in place
+  # has_many :meta_slots, through: :slot_settings #, source: :meta_slot
 
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
