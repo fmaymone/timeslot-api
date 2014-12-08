@@ -10,6 +10,8 @@ class BaseSlot < ActiveRecord::Base
 
   delegate :title, :startdate, :enddate, :creator, to: :meta_slot
 
+  validates :meta_slot, presence: true
+
   def delete
     # TODO: handle alarm/slot_setting
     # TODO: take care of Media Items, Notes, Likes, Comments

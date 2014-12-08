@@ -13,6 +13,11 @@ RSpec.describe BaseSlot, type: :model do
 
   it { is_expected.to be_valid }
 
+  describe "when MetaSlot is not present" do
+    before { base_slot.meta_slot = nil }
+    it { is_expected.to_not be_valid }
+  end
+
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
     let(:slot_setting) { create(:slot_setting, meta_slot: meta_slot) }

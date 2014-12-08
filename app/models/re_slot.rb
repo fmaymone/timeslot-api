@@ -3,11 +3,9 @@ class ReSlot < BaseSlot
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
-  belongs_to :meta_slot
 
   validates :slotter, presence: true
   validates :predecessor, presence: true
-  validates :meta_slot, presence: true
 
   class << self
     def from_slot(predecessor: nil, slotter: nil)
