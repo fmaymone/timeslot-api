@@ -164,4 +164,31 @@ RSpec.describe Membership, type: :model do
       end
     end
   end
+
+  describe :leave do
+    it "returns true" do
+      expect(membership.leave).to be true
+    end
+
+    it "set membership state to 'left'" do
+      membership.leave
+      expect(membership.state).to eq "100"
+    end
+  end
+
+  describe :left? do
+    invalid_states = %w(111 001 000 110 011 101 010)
+
+    it "returns true if membership state is 'left'" do
+      membership.state = "100"
+      expect(membership.left?).to be true
+    end
+
+    it "returns false if membership isn't 'left'" do
+      invalid_states.each do |invalid_state|
+        membership.state = invalid_state
+        expect(membership.left?).to be false
+      end
+    end
+  end
 end

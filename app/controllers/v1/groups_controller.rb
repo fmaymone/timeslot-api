@@ -159,7 +159,7 @@ module V1
 
       @membership = current_user.get_membership group
 
-      if @membership.inactivate
+      if @membership.leave
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity

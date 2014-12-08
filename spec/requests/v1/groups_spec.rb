@@ -293,16 +293,16 @@ RSpec.describe "V1::Groups", type: :request do
         expect(response.status).to be(200)
       end
 
-      it "changes membership state to 'inactive'" do
+      it "changes membership state to 'left'" do
         delete "/v1/groups/#{group.id}/members"
         membership.reload
-        expect(membership.inactive?).to be true
+        expect(membership.left?).to be true
       end
     end
 
-    describe "membership not active" do
+    describe "group already left" do
       let!(:membership) do
-        create(:membership, :inactive, user: current_user, group: group)
+        create(:membership, :left, user: current_user, group: group)
       end
 
       it "returns OK" do

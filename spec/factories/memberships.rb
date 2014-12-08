@@ -21,4 +21,8 @@ FactoryGirl.define do
   trait :inactive do
     state "000"
   end
+
+  trait :left do
+    state "100"
+  end
 end

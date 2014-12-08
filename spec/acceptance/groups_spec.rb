@@ -308,8 +308,9 @@ resource "Groups" do
       create(:membership, :invited, user: invited_user, group: group)
     end
 
-    example "Refuse and invalidate a group invitation", document: :v1 do
-      explanation "returns 200 if invite successfully refused.\n\n" \
+    example "Refuse group invitation", document: :v1 do
+      explanation "The invitation is invalidated.\n\n" \
+                  "returns 200 if invite successfully refused.\n\n" \
                   "returns 403 if invitation is missing\n\n" \
                   "returns 404 if group ID is invalid\n\n" \
                   "returns 422 if parameters are missing"
@@ -403,7 +404,7 @@ resource "Groups" do
       end
 
       example "Leave group", document: :v1 do
-        explanation "returns 200 if membership successfully inactivated\n\n" \
+        explanation "returns 200 if membership successfully invalidated\n\n" \
                     "returns 200 if current user not active group member\n\n" \
                     "returns 403 if current user has no membership for this" \
                     " group at all\n\n" \
@@ -413,7 +414,7 @@ resource "Groups" do
 
         expect(response_status).to eq(200)
         membership.reload
-        expect(membership.inactive?).to be true
+        expect(membership.left?).to be true
         expect(group.members).not_to include member
       end
     end
