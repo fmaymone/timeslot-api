@@ -7,12 +7,12 @@ class MediaItem < ActiveRecord::Base
             presence: true,
             inclusion: { in: %w(image voice video) }
   validates :public_id, presence: true
-  validates :ordering, presence: true, if: :belongs_to_meta_slot?
+  validates :ordering, presence: true, if: :belongs_to_slot?
   validates :mediable_id, presence: true
   validates :mediable_type, presence: true
 
-  def belongs_to_meta_slot?
-    mediable_type == "MetaSlot"
+  def belongs_to_slot?
+    mediable_type == "BaseSlot"
   end
 
   def delete
