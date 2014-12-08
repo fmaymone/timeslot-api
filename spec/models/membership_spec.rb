@@ -191,4 +191,19 @@ RSpec.describe Membership, type: :model do
       end
     end
   end
+
+  describe :delete do
+    let(:membership) { create(:membership, :active) }
+
+    it "sets deleted_at on the membership" do
+      membership.delete
+      expect(membership.deleted_at?).to be true
+    end
+
+    it "touches the user to mark a change" do
+      expect {
+        membership.delete
+      }.to change(membership.user, :updated_at)
+    end
+  end
 end

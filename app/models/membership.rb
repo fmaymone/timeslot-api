@@ -11,6 +11,7 @@ class Membership < ActiveRecord::Base
 
   def activate
     update!(state: "111")
+    group.touch
   end
 
   def active?
@@ -20,6 +21,7 @@ class Membership < ActiveRecord::Base
   # if user deactivates his account
   def inactivate
     update!(state: "000")
+    group.touch
   end
 
   def inactive?
@@ -44,6 +46,7 @@ class Membership < ActiveRecord::Base
 
   def kick
     update!(state: "010")
+    group.touch
   end
 
   def kicked?
@@ -53,6 +56,7 @@ class Membership < ActiveRecord::Base
   # member leaves group
   def leave
     update!(state: "100")
+    group.touch
   end
 
   def left?
@@ -67,10 +71,10 @@ class Membership < ActiveRecord::Base
   #   state == "101"
   # end
 
-  # TODO: add spec
   # called when belonging group gets deleted
   # group can't come back so we can't use this membership object again
   def delete
+    user.touch
     SoftDelete.call(self)
   end
 end
