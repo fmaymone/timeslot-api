@@ -13,23 +13,40 @@ class Friendship < ActiveRecord::Base
   validates :friend, presence: true
   validates :state, presence: true
 
-  def offered?
-    state == "00"
+  def offer
+    update!(state: 00)
   end
 
-  def established?
-    state == "11"
+  def offered?
+    state == "00" && !deleted_at?
   end
 
   def accept
     update!(state: "11")
   end
 
-  def delete
-    # HACK: Don't know how to use 2 conditions for users associatons
+  def established?
+    state == "11" && !deleted_at?
+  end
+
+  def reject
     update!(state: "01")
-    # TODO: add spec
+  end
+
+  def rejected?
+    state == "01" && !deleted_at?
+  end
+
+  # when user deactivates account, need to preserve state
+  def delete
+    friend.touch
     SoftDelete.call(self)
+  end
+
+  def undelete
+    return if friend.deleted_at?
+    update!(deleted_at: nil)
+    friend.touch
   end
 
   private def check_duplicate
