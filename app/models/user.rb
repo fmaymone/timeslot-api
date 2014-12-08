@@ -32,8 +32,8 @@ class User < ActiveRecord::Base
   has_many :established_friendships2, -> { where state: '11' },
            # -> { where("state = ? AND friendships.deleted_at = ?", '11', nil) },
            class_name: Friendship, foreign_key: "friend_id"
-  has_many :friends1, through: :established_friendships1, source: :friend
-  has_many :friends2, through: :established_friendships2, source: :user
+  has_many :friends_by_request, through: :established_friendships1, source: :friend
+  has_many :friends_by_offer, through: :established_friendships2, source: :user
 
   has_many :requested_friendships, -> { where state: '00' },
            # -> { where("state = ? AND friendships.deleted_at = ?", '00', nil) },
@@ -59,11 +59,11 @@ class User < ActiveRecord::Base
 
   # TODO: get friends with one query
   def friends
-    friends1 + friends2
+    friends_by_request + friends_by_offer
   end
 
   # def friendships
-  #   friendships1 + friendships2
+  #   friendships1.active + friendships2.active
   # end
 
   # def friend_with?(user_id)

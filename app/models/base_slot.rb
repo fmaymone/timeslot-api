@@ -5,15 +5,10 @@ class BaseSlot < ActiveRecord::Base
   after_commit AuditLog
   before_create :unique_slot_id
 
-  scope :active, -> { where(deleted_at: nil) }
-
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   belongs_to :meta_slot
 
-  delegate :title, to: :meta_slot
-  delegate :startdate, to: :meta_slot
-  delegate :enddate, to: :meta_slot
-  delegate :creator, to: :meta_slot
+  delegate :title, :startdate, :enddate, :creator, to: :meta_slot
 
   def delete
     # TODO: handle alarm/slot_setting

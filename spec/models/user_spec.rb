@@ -26,8 +26,8 @@ RSpec.describe User, type: :model do
 
   it { is_expected.to have_many(:friendships1).inverse_of(:user) }
   it { is_expected.to have_many(:friendships2).inverse_of(:friend) }
-  it { is_expected.to have_many(:friends1).through(:established_friendships1) }
-  it { is_expected.to have_many(:friends2).through(:established_friendships2) }
+  it { is_expected.to have_many(:friends_by_request).through(:established_friendships1) }
+  it { is_expected.to have_many(:friends_by_offer).through(:established_friendships2) }
 
   it { is_expected.to be_valid }
 

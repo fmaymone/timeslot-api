@@ -4,6 +4,8 @@ class Friendship < ActiveRecord::Base
   after_commit AuditLog
   before_create :check_duplicate
 
+  scope :active, -> { where(deleted_at: nil) }
+
   belongs_to :user, inverse_of: :friendships1
   belongs_to :friend, class_name: User, inverse_of: :friendships2
 
