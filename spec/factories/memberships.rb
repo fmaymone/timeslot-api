@@ -19,7 +19,7 @@ FactoryGirl.define do
   end
 
   trait :inactive do
-    state "000"
+    deleted_at Time.zone.now
   end
 
   trait :left do

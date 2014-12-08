@@ -136,7 +136,7 @@ RSpec.describe "V1::Groups", type: :request do
 
         describe "non active group member" do
           let!(:membership) {
-            create(:membership, :inactive, user: current_user, group: group)
+            create(:membership, :left, user: current_user, group: group)
           }
           it "returns Created" do
             post "/v1/groups/#{group.id}/members/#{current_user.id}"

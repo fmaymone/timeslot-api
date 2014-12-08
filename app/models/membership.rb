@@ -15,17 +15,7 @@ class Membership < ActiveRecord::Base
   end
 
   def active?
-    state == "111"
-  end
-
-  # if user deactivates his account
-  def inactivate
-    update!(state: "000")
-    group.touch
-  end
-
-  def inactive?
-    state == "000"
+    state == "111" && !deleted_at?
   end
 
   def invite
@@ -33,7 +23,7 @@ class Membership < ActiveRecord::Base
   end
 
   def invited?
-    state == "011"
+    state == "011" && !deleted_at?
   end
 
   def refuse
@@ -41,7 +31,7 @@ class Membership < ActiveRecord::Base
   end
 
   def refused?
-    state == "001"
+    state == "001" && !deleted_at?
   end
 
   def kick
@@ -50,17 +40,16 @@ class Membership < ActiveRecord::Base
   end
 
   def kicked?
-    state == "010"
+    state == "010" && !deleted_at?
   end
 
-  # member leaves group
   def leave
     update!(state: "100")
     group.touch
   end
 
   def left?
-    state == "100"
+    state == "100" && !deleted_at?
   end
 
   # def subscribe
@@ -68,13 +57,31 @@ class Membership < ActiveRecord::Base
   # end
 
   # def subscribed?
-  #   state == "101"
+  #   state == "101" && !deleted_at?
   # end
+
+  # called if user deactivates his account
+  # state needs to be preserved in this case
+  def inactivate
+    group.touch
+    SoftDelete.call(self)
+  end
+
+  # group still existing
+  def inactive?
+    state != "000" && deleted_at?
+  end
 
   # called when belonging group gets deleted
   # group can't come back so we can't use this membership object again
+  # and thus don't need the state
   def delete
+    update!(state: "000")
     user.touch
     SoftDelete.call(self)
   end
+
+  # def deleted?
+  #   state == '000' && deleted_at?
+  # end
 end
