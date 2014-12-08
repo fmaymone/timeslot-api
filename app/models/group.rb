@@ -16,18 +16,14 @@ class Group < ActiveRecord::Base
   has_many :members, through: :active_memberships, class_name: "User",
            source: :user
 
-  validates :name, presence: true
+  validates :name, presence: true, length: { maximum: 255 }
   validates :owner, presence: true
 
-  # TODO: add spec
   def delete
-    # TODO: take care of Memberships, related GroupSlots, Group Image
-    # can a group with the same name be created after "deletion"?
-    update!(name: Time.zone.now.to_s + name) # what if max length in db surpassed
+    # all other images (if any) should already be "deleted"
     image.first.delete if image.first
-    # image.delete
-    memberships.delete
-    group_slots.delete
+    memberships.each(&:delete)
+    group_slots.each(&:delete)
     SoftDelete.call(self)
   end
 end

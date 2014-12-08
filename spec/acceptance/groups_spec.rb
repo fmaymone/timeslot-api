@@ -149,10 +149,12 @@ resource "Groups" do
 
     let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
+    let!(:memberships) { create_list(:membership, 4, :active, group: group) }
 
     example "Delete group", document: :v1 do
-      explanation "Sets 'deletedAt' on the group." \
+      explanation "Sets 'deleted_at' on the group and its memberships." \
                   " Doesn't delete anything.\n\n" \
+                  "Current User must be group owner" \
                   "returns 200 and the updated data for the group\n\n" \
                   "returns 403 if current user not group owner\n\n" \
                   "returns 404 if ID is invalid"
@@ -160,6 +162,8 @@ resource "Groups" do
 
       group.reload
       expect(group.deleted_at).not_to be nil
+      expect(group.memberships.first.deleted_at?).to be true
+      expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
       expect(json).to eq(group.attributes.as_json
                           .transform_keys{ |key| key.camelize(:lower) })
