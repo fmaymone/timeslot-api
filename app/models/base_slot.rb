@@ -5,6 +5,8 @@ class BaseSlot < ActiveRecord::Base
   after_commit AuditLog
   before_create :unique_slot_id
 
+  scope :active, -> { where deleted_at: nil }
+
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   belongs_to :meta_slot
 
@@ -13,8 +15,6 @@ class BaseSlot < ActiveRecord::Base
   validates :meta_slot, presence: true
 
   def delete
-    # TODO: handle alarm/slot_setting
-    # TODO: take care of Media Items, Notes, Likes, Comments
 
     # -> make an "unregister" Method in SlotSetting Class so it can take care itself
 

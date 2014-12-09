@@ -74,6 +74,15 @@ RSpec.describe User, type: :model do
         expect(user.representation?(meta_slot)).to be false
       end
     end
+
+    context "user has deleted std_slot with the specified meta_slot" do
+      let!(:std_slot) {
+        create(:std_slot, :deleted, meta_slot: meta_slot, owner: user)
+      }
+      it "returns false" do
+        expect(user.representation?(meta_slot)).to be false
+      end
+    end
   end
 
   describe :groups do

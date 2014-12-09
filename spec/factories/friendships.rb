@@ -7,9 +7,9 @@ FactoryGirl.define do
     trait :established do
       state '11'
     end
+  end
 
-    trait :deleted do
-      deleted_at Time.zone.now
-    end
+  trait :deleted do
+    deleted_at Time.zone.now
   end
 end

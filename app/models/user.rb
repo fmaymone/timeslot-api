@@ -44,9 +44,9 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def representation?(meta_slot)
-    std_slots.where(meta_slot: meta_slot).exists? ||
-      group_slots.where(meta_slot: meta_slot).exists? ||
-      re_slots.where(meta_slot: meta_slot).exists?
+    std_slots.active.where(meta_slot: meta_slot).exists? ||
+      group_slots.active.where(meta_slot: meta_slot).exists? ||
+      re_slots.active.where(meta_slot: meta_slot).exists?
   end
 
   ## friendship related ##
@@ -106,7 +106,6 @@ class User < ActiveRecord::Base
 
     # created_slots set creator to unknown /  deleted user
     # own_groups set creator to unknown /  deleted user
-    # SlotSettings
     # StdSlots
     # ReSlots
 
