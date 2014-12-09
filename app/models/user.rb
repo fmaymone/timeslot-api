@@ -41,6 +41,14 @@ class User < ActiveRecord::Base
 
   validates :username, presence: true, length: { maximum: 20 }
 
+  ## slot related ##
+
+  def representation?(meta_slot)
+    std_slots.where(meta_slot: meta_slot).exists? ||
+      group_slots.where(meta_slot: meta_slot).exists? ||
+      re_slots.where(meta_slot: meta_slot).exists?
+  end
+
   ## friendship related ##
 
   # TODO: get friends with one query

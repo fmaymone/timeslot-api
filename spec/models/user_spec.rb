@@ -38,30 +38,55 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "groups relation" do
+  describe :representation? do
+    let(:user) { create(:user) }
+    let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
+
+    context "user has std_slot with the specified meta_slot" do
+      let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
+
+      it "returns true" do
+        expect(user.representation?(meta_slot)).to be true
+      end
+    end
+
+    context "user has re_slot with the specified meta_slot" do
+      let!(:re_slot) { create(:re_slot, meta_slot: meta_slot, slotter: user) }
+
+      it "returns true" do
+        expect(user.representation?(meta_slot)).to be true
+      end
+    end
+
+    context "user has group_slot with the specified meta_slot" do
+      let(:group) { create(:group) }
+      let!(:membership) { create(:membership, user: user, group: group) }
+      let!(:group_slot) {
+        create(:group_slot, meta_slot: meta_slot, group: group)
+      }
+      it "returns true" do
+        expect(user.representation?(meta_slot)).to be true
+      end
+    end
+
+    context "user has no representation of the specified meta_slot" do
+      it "returns false" do
+        expect(user.representation?(meta_slot)).to be false
+      end
+    end
+  end
+
+  describe :groups do
     let(:user) { create(:user, :with_3_groups) }
     it "returns the groups where user is a member" do
       expect(user.groups.size).to eq 3
     end
   end
 
-  describe "own groups relation" do
+  describe :own_groups do
     let(:user) { create(:user, :with_3_own_groups) }
     it "returns the users own groups" do
       expect(user.own_groups.size).to eq 3
-    end
-  end
-
-  describe "auditing", :commit do
-    let!(:user) { create(:user) }
-
-    it "logs instance changes" do
-      expect(Rails.logger).to receive(:info).once
-
-      new_name = "name_#{user.id}"
-      user.update(username: new_name)
-
-      expect(user.username).to eq new_name
     end
   end
 
@@ -370,6 +395,19 @@ RSpec.describe User, type: :model do
         expect(user.friends_by_offer).not_to include charlie
         expect(user.friends_by_offer).not_to include eve
       end
+    end
+  end
+
+  describe "auditing", :commit do
+    let!(:user) { create(:user) }
+
+    it "logs instance changes" do
+      expect(Rails.logger).to receive(:info).once
+
+      new_name = "name_#{user.id}"
+      user.update(username: new_name)
+
+      expect(user.username).to eq new_name
     end
   end
 end
