@@ -30,12 +30,15 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :get do
+    let(:std_slot) { create(:std_slot) }
+
     it "returns the specific slot representation" do
-      skip "TODO"
+      result = BaseSlot.get(std_slot.id)
+      expect(result.class).to eq StdSlot
     end
 
     it "fails with ActiveRecord::RecordNotFound if invalid ID" do
-      skip "TODO"
+      expect { BaseSlot.get('foo') }.to raise_error ActiveRecord::RecordNotFound
     end
   end
 
@@ -50,9 +53,9 @@ RSpec.describe BaseSlot, type: :model do
         |slots| a << slots.collect(&:id)
       }
       result = BaseSlot.get_many(a.flatten)
-      expect(result).to include *std_slots
-      expect(result).to include *group_slots
-      expect(result).not_to include *other_slots
+      expect(result).to include(*std_slots)
+      expect(result).to include(*group_slots)
+      expect(result).not_to include(*other_slots)
     end
   end
 end

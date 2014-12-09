@@ -51,13 +51,13 @@ class BaseSlot < ActiveRecord::Base
     end
 
     def get(slot_id)
-      class_name = slot_map.invert[slot_id[0, 2]]
+      class_name = slot_map.invert[slot_id.to_s[0, 2]]
       fail ActiveRecord::RecordNotFound if class_name.nil?
       class_name.constantize.find(slot_id)
     end
 
     def get_many(slot_ids)
-      slot_ids.collect { |id| get(id.to_s) }
+      slot_ids.collect { |id| get(id) }
     end
   end
 end
