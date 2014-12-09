@@ -21,63 +21,49 @@ class User < ActiveRecord::Base
   has_many :memberships, inverse_of: :user
   has_many :groups, through: :memberships, source: :group
 
-  has_many :friendships1, class_name: Friendship,
+  # all friendships (regardless state & deleted_at)
+  has_many :initiated_friendships, class_name: Friendship,
            foreign_key: "user_id", inverse_of: :user
-  has_many :friendships2, class_name: Friendship,
+  has_many :received_friendships, class_name: Friendship,
            foreign_key: "friend_id", inverse_of: :friend
 
-  has_many :established_friendships1, -> { where state: '11' },
-           # -> { where("state = ? AND friendships.deleted_at = ?", '11', nil) },
-           class_name: Friendship, foreign_key: "user_id"
-  has_many :established_friendships2, -> { where state: '11' },
-           # -> { where("state = ? AND friendships.deleted_at = ?", '11', nil) },
-           class_name: Friendship, foreign_key: "friend_id"
-  has_many :friends_by_request, through: :established_friendships1, source: :friend
-  has_many :friends_by_offer, through: :established_friendships2, source: :user
+  # friends
+  has_many :friends_by_request, -> { merge(Friendship.established) },
+           through: :initiated_friendships, source: :friend
+  has_many :friends_by_offer, -> { merge(Friendship.established) },
+           through: :received_friendships, source: :user
 
-  has_many :requested_friendships, -> { where state: '00' },
-           # -> { where("state = ? AND friendships.deleted_at = ?", '00', nil) },
-           class_name: Friendship, foreign_key: "user_id"
-  has_many :offered_friendships, -> { where state: '00' },
-           # -> { where("state = ? AND friendships.deleted_at = ?", '00', nil) },
-           class_name: Friendship, foreign_key: "friend_id"
-  has_many :requested_friends, through: :requested_friendships, source: :friend
+  # not yet friends
+  has_many :requested_friends, -> { merge Friendship.open },
+           through: :initiated_friendships, source: :friend
+  has_many :offered_friends, -> { merge Friendship.open },
+           through: :received_friendships, source: :user
 
   validates :username, presence: true, length: { maximum: 20 }
 
   ## friendship related ##
-
-  # def requested_friendships
-  #   # friendships1.where(state: '00')
-  #   friendships1.open
-  # end
-
-  # def offered_friendships
-  #   # friendships2.where(state: '00')
-  #   friendships2.open
-  # end
 
   # TODO: get friends with one query
   def friends
     friends_by_request + friends_by_offer
   end
 
-  # def friendships
-  #   friendships1.active + friendships2.active
-  # end
+  def friendships
+    initiated_friendships.active + received_friendships.active
+  end
 
   # def friend_with?(user_id)
-  #   friendships1.where("friend_id= ?", user_id).exists? ||
-  #     friendships2.where("user_id= ?", user_id).exists?
+  #   initiated_friendships.where("friend_id= ?", user_id).exists? ||
+  #     received_friendships.where("user_id= ?", user_id).exists?
   # end
 
   def friendship(user_id)
-    friendships1.where("friend_id= ?", user_id).first ||
-      friendships2.where("user_id= ?", user_id).first
+    initiated_friendships.where("friend_id= ?", user_id).first ||
+      received_friendships.where("user_id= ?", user_id).first
   end
 
   def offered_friendship(user_id)
-    offered_friendships.where("user_id= ?", user_id).first
+    received_friendships.open.where("user_id= ?", user_id).first
   end
 
   ## group related ##
@@ -106,16 +92,19 @@ class User < ActiveRecord::Base
   end
 
   def delete
-    # TODO: take care of created Slots, created Groups, Friendships,
-    # Memberships, SlotSettings, StdSlots, ReSlots, User Image
-
     # Everything needs to stay available so that if user comes back all content
     # is still there
-
     # TODO: add spec
 
     # created_slots set creator to unknown /  deleted user
     # own_groups set creator to unknown /  deleted user
+    # SlotSettings
+    # StdSlots
+    # ReSlots
+
+    image.first.delete if image.first
+    friendships.each(&:delete)
+    memberships.each(&:delete)
     SoftDelete.call(self)
   end
 end

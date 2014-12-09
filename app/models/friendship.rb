@@ -6,8 +6,8 @@ class Friendship < ActiveRecord::Base
 
   scope :active, -> { where(deleted_at: nil) }
 
-  belongs_to :user, inverse_of: :friendships1
-  belongs_to :friend, class_name: User, inverse_of: :friendships2
+  belongs_to :user, inverse_of: :initiated_friendships
+  belongs_to :friend, class_name: User, inverse_of: :received_friendships
 
   validates :user, presence: true
   validates :friend, presence: true
@@ -53,6 +53,16 @@ class Friendship < ActiveRecord::Base
     if Friendship.where(user_id: friend_id, friend_id: user_id).exists?
       # TODO: add special log message, this should never happen
       fail DuplicateEntry, "reverse friendship relation already exists"
+    end
+  end
+
+  class << self
+    def open
+      where(deleted_at: nil).where(state: '00')
+    end
+
+    def established
+      where(deleted_at: nil).where(state: '11')
     end
   end
 end

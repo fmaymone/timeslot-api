@@ -23,11 +23,8 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
   it { is_expected.to have_many(:group_slots).through(:groups) }
-
-  it { is_expected.to have_many(:friendships1).inverse_of(:user) }
-  it { is_expected.to have_many(:friendships2).inverse_of(:friend) }
-  it { is_expected.to have_many(:friends_by_request).through(:established_friendships1) }
-  it { is_expected.to have_many(:friends_by_offer).through(:established_friendships2) }
+  it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
+  it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
 
   it { is_expected.to be_valid }
 
@@ -222,7 +219,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :friend do
+  describe :friends do
     let(:john) { create(:user, username: "John") }
     let!(:friendships_A) { create_list(:friendship, 2, :established, user: john) }
     let!(:friendships_B) { create_list(:friendship, 3, :established, friend: john) }
@@ -244,6 +241,135 @@ RSpec.describe User, type: :model do
     it "returns the friendship object for the given user" do
       expect(john.friendship(mary)).to eq friendship_1
       expect(john.friendship(alice)).to eq friendship_2
+    end
+
+    it "returns nil if no connection" do
+      expect(alice.friendship(mary)).to be nil
+    end
+  end
+
+  describe :offered_friendship do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let(:bob) { create(:user, username: "Bob") }
+    let!(:friendship_1) {
+      create(:friendship, user: user, friend: mary) }
+    let!(:friendship_2) {
+      create(:friendship, user: john, friend: user) }
+    let!(:friendship_3) {
+      create(:friendship, :established, user: alice, friend: user) }
+    let!(:friendship_4) {
+      create(:friendship, :established, user: user, friend: bob) }
+
+    it "returns the friendship object if a friendship was offered" \
+       " to the current user by to other user" do
+      expect(user.offered_friendship(john)).to eq friendship_2
+    end
+
+    it "returns nil if no friendship was offered" \
+       " to the current user by to other user" do
+      expect(user.offered_friendship(mary)).to be nil
+      expect(user.offered_friendship(alice)).to be nil
+      expect(user.offered_friendship(bob)).to be nil
+    end
+  end
+
+  describe "friendship associations" do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let(:bob) { create(:user, username: "Bob") }
+    let(:charlie) { create(:user, username: "Charlie") }
+    let(:eve) { create(:user, username: "Eve") }
+    let!(:friendship_1) {
+      create(:friendship, :established, user: user, friend: mary) }
+    let!(:friendship_2) {
+      create(:friendship, :established, user: alice, friend: user) }
+    let!(:friendship_3) {
+      create(:friendship, user: user, friend: john) }
+    let!(:friendship_4) {
+      create(:friendship, user: bob, friend: user) }
+    let!(:friendship_5) {
+      create(:friendship, :established, user: bob, friend: alice) }
+    let!(:friendship_6) {
+      create(:friendship, user: mary, friend: john) }
+    let!(:friendship_7) {
+      create(:friendship, :deleted, user: mary, friend: alice) }
+    let!(:friendship_8) {
+      create(:friendship, :established, :deleted, user: john, friend: bob) }
+    let!(:friendship_9) {
+      create(:friendship, :established, :deleted, user: user, friend: charlie) }
+    let!(:friendship_10) {
+      create(:friendship, :deleted, user: eve, friend: user) }
+
+    context :initiated_friendships do
+      it "contains all friendships initiated by current user" do
+        expect(user.initiated_friendships).to include friendship_1
+        expect(user.initiated_friendships).to include friendship_3
+        expect(user.initiated_friendships).to include friendship_9
+        expect(user.initiated_friendships).not_to include friendship_2
+        expect(user.initiated_friendships).not_to include friendship_4
+        expect(user.initiated_friendships).not_to include friendship_5
+        expect(user.initiated_friendships).not_to include friendship_6
+        expect(user.initiated_friendships).not_to include friendship_7
+        expect(user.initiated_friendships).not_to include friendship_8
+        expect(user.initiated_friendships).not_to include friendship_10
+      end
+    end
+
+    context :received_friendships do
+      it "contains all friendships that current user received by other users" do
+        expect(user.received_friendships).to include friendship_2
+        expect(user.received_friendships).to include friendship_4
+        expect(user.received_friendships).to include friendship_10
+        expect(user.received_friendships).not_to include friendship_1
+        expect(user.received_friendships).not_to include friendship_3
+        expect(user.received_friendships).not_to include friendship_5
+        expect(user.received_friendships).not_to include friendship_6
+        expect(user.received_friendships).not_to include friendship_7
+        expect(user.received_friendships).not_to include friendship_8
+        expect(user.received_friendships).not_to include friendship_9
+      end
+    end
+
+    context :friendships do
+      it "contains all active (not deleted) friendships" do
+        expect(user.friendships).to include friendship_1
+        expect(user.friendships).to include friendship_2
+        expect(user.friendships).to include friendship_3
+        expect(user.friendships).to include friendship_4
+        expect(user.friendships).not_to include friendship_5
+        expect(user.friendships).not_to include friendship_6
+        expect(user.friendships).not_to include friendship_7
+        expect(user.friendships).not_to include friendship_8
+        expect(user.friendships).not_to include friendship_9
+        expect(user.friendships).not_to include friendship_10
+      end
+    end
+
+    context :friends_by_request do
+      it "contains all friends where current user" \
+         " requested friendship and the friend accepted" do
+        expect(user.friends_by_request).to include mary
+        expect(user.friends_by_request).not_to include john
+        expect(user.friends_by_request).not_to include alice
+        expect(user.friends_by_request).not_to include bob
+        expect(user.friends_by_request).not_to include charlie
+        expect(user.friends_by_request).not_to include eve
+      end
+    end
+
+    context :friends_by_offer do
+      it "contains all friends where the friendship was initiated by the" \
+         " other user and current user accepted" do
+        expect(user.friends_by_offer).to include alice
+        expect(user.friends_by_offer).not_to include john
+        expect(user.friends_by_offer).not_to include mary
+        expect(user.friends_by_offer).not_to include bob
+        expect(user.friends_by_offer).not_to include charlie
+        expect(user.friends_by_offer).not_to include eve
+      end
     end
   end
 end

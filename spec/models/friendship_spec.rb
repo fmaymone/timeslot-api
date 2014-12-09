@@ -9,8 +9,8 @@ RSpec.describe Friendship, type: :model do
   it { is_expected.to respond_to(:friend) }
   it { is_expected.to respond_to(:state) }
   it { is_expected.to respond_to(:deleted_at) }
-  it { is_expected.to belong_to(:user).inverse_of(:friendships1) }
-  it { is_expected.to belong_to(:friend).inverse_of(:friendships2) }
+  it { is_expected.to belong_to(:user).inverse_of(:initiated_friendships) }
+  it { is_expected.to belong_to(:friend).inverse_of(:received_friendships) }
 
   it { is_expected.to be_valid }
 
