@@ -32,10 +32,36 @@ RSpec.describe SlotSetting, type: :model do
     let(:duplicate_slot_setting) {
       build(:slot_setting, user: user, meta_slot: meta_slot) }
 
-    it "can not be saved" do
+    it "duplicates can not be saved" do
       expect {
         duplicate_slot_setting.save
       }.to raise_error
+    end
+  end
+
+  describe :unregister do
+    describe "user has a representation of meta_slot" do
+      let(:user) { create(:user) }
+      let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
+      let(:slot_setting) {
+        create(:slot_setting, user: user, meta_slot: meta_slot) }
+      let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
+
+      it "doesn't set deleted_at" do
+        expect {
+          slot_setting.unregister
+        }.not_to change(slot_setting, :deleted_at)
+      end
+    end
+
+    it "sets deleted_at if user has no representation of meta_slot" do
+      expect { slot_setting.unregister }.to change(slot_setting, :deleted_at)
+    end
+  end
+
+  describe :delete do
+    it "sets deleted_at" do
+      expect { slot_setting.delete }.to change(slot_setting, :deleted_at)
     end
   end
 end
