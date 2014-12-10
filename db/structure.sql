@@ -34,7 +34,6 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE base_slots (
-    footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
@@ -102,7 +101,6 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 
 CREATE TABLE group_slots (
     group_id integer,
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     meta_slot_id integer,
@@ -295,7 +293,6 @@ ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
 
 CREATE TABLE re_slots (
     predecessor_id integer NOT NULL,
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     footest character varying(255),
@@ -355,7 +352,6 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 CREATE TABLE std_slots (
     visibility bit(2) DEFAULT B'11'::"bit",
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
@@ -773,4 +769,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141203213610');
 INSERT INTO schema_migrations (version) VALUES ('20141205094237');
 
 INSERT INTO schema_migrations (version) VALUES ('20141210122837');
+
+INSERT INTO schema_migrations (version) VALUES ('20141210135147');
 

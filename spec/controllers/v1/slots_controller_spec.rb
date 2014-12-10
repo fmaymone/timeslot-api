@@ -53,8 +53,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with valid params" do
       let(:valid_attributes) {
         attributes_for(:meta_slot, creator: current_user).merge(
-          visibility: '10', footest: "myfootest")
-
+          visibility: '10')
       }
       it "responds with http status Created (201)" do
         post :create_stdslot, new_slot: valid_attributes
@@ -98,7 +97,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       let(:group) { create(:group) }
       let(:valid_attributes) {
         attributes_for(:meta_slot, creator: current_user).merge(
-          groupId: group.id, footest: "myfootest")
+          groupId: group.id)
       }
       it "responds with http status Created (201)" do
         post :create_groupslot, new_slot: valid_attributes
