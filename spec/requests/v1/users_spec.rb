@@ -108,6 +108,18 @@ RSpec.describe "V1::Users", type: :request do
         friendship.reload
         expect(friendship.established?).to be true
       end
+
+      context "with authorization" do
+        it "accepts a friend request" do
+          skip "add auth handling for specs"
+          get "/v1/users/authenticate/#{current_user.id}"
+          expect(friendship.established?).to be false
+          post "/v1/users/add_friends", {ids: [john.id]},
+               { 'HTTP_AUTHORIZATION' => current_user.username }
+          friendship.reload
+          expect(friendship.established?).to be true
+        end
+      end
     end
   end
 end
