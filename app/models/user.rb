@@ -109,9 +109,15 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
+    slot_settings.each(&:delete)
     image.first.delete if image.first
     friendships.each(&:delete)
     memberships.each(&:delete)
     SoftDelete.call(self)
+  end
+
+  # TODO: add spec
+  def undelete
+    slot_settings.each(&:undelete)
   end
 end
