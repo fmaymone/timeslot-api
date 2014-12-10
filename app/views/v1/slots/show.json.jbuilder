@@ -4,7 +4,6 @@ json.extract!(@slot,
               :startdate,
               :enddate,
               # :alerts,
-              :note,
               :created_at,
               :updated_at,
               :deleted_at
@@ -17,16 +16,21 @@ elsif @slot.class == GroupSlot
 elsif @slot.class == ReSlot
   json.slotter_id @slot.slotter.id
 end
-json.media @slot.media_items do |slot|
-  json.media_id slot.id
-  json.media_type slot.media_type
-  json.clyid slot.public_id
-  json.ordering slot.ordering
+json.notes @slot.notes do |note|
+  json.title note.title
+  json.content note.content
+  json.created note.created_at
+end
+json.media @slot.media_items do |item|
+  json.media_id item.id
+  json.media_type item.media_type
+  json.clyid item.public_id
+  json.ordering item.ordering
 
-  if slot.media_type == "voice"
-    json.duration = slot.duration
-  elsif slot.media_type == "video"
-    json.duration = slot.duration
-    json.thumbnail = slot.thumbnail
+  if item.media_type == "voice"
+    json.duration = item.duration
+  elsif item.media_type == "video"
+    json.duration = item.duration
+    json.thumbnail = item.thumbnail
   end
 end

@@ -74,6 +74,10 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  # to be able to use route helpers in specs
+  config.include Rails.application.routes.url_helpers
+  Rails.application.routes.default_url_options[:host] = 'example.org'
+
   if defined?(Bullet) && Bullet.enable?
     config.before(:each) do
       Bullet.start_request

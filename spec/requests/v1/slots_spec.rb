@@ -58,7 +58,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json).to have_key('title')
         expect(json).to have_key('startdate')
         expect(json).to have_key('enddate')
-        expect(json).to have_key('note')
+        expect(json).to have_key('notes')
         expect(json).to have_key('visibility')
         expect(json).to have_key('createdAt')
         expect(json).to have_key('updatedAt')
@@ -70,7 +70,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['title']).to eq(std_slot.title)
         expect(json['startdate']).to eq(std_slot.startdate.iso8601)
         expect(json['enddate']).to eq(std_slot.enddate.iso8601)
-        expect(json['note']).to eq(std_slot.note)
+        expect(json['notes']).to eq(std_slot.notes)
         expect(json['visibility']).to eq(std_slot.visibility)
       end
 
