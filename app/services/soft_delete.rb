@@ -1,4 +1,4 @@
-class SoftDeleteService
+class SoftDelete
   def self.call(model)
     model.update(deleted_at: Time.zone.now)
   end

@@ -2,6 +2,8 @@ require 'documentation_helper'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   # index
   get "/v1/groups" do
@@ -15,6 +17,7 @@ resource "Groups" do
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
+      # ApplicationController.new.set_current_user(user)
       do_request
 
       expect(response_status).to eq(200)
@@ -30,12 +33,12 @@ resource "Groups" do
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
-    response_field :owner_id, "user id of group owner"
+    response_field :ownerId, "user id of group owner"
     response_field :members_can_post, "Can subscribers post?"
     response_field :members_can_invite, "Can subscribers invite friends?"
-    response_field :created_at, "Creation of group"
-    response_field :updated_at, "Latest update of group in db"
-    response_field :deleted_at, "Deletion of group"
+    response_field :createdAt, "Creation of group"
+    response_field :updatedAt, "Latest update of group in db"
+    response_field :deletedAt, "Deletion of group"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -46,7 +49,8 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to eq(group.attributes.as_json)
+      expect(json).to eq(group.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 
@@ -55,14 +59,14 @@ resource "Groups" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :name, "Name of group", scope: :group, required: true
+    parameter :name, "Name of group (max. 255 characters)",
+              scope: :group, required: true
     parameter :members_can_post, "Can subscribers post?", scope: :group
     parameter :members_can_invite, "Can subscribers invite friends?", scope: :group
 
     response_field :id, "ID of the new group"
 
     let(:name) { "foo" }
-    let!(:owner) { create(:user) }
 
     example "Create a new group", document: :v1 do
       explanation "Group owner is current user.\n\n" \
@@ -74,7 +78,7 @@ resource "Groups" do
       expect(response_status).to eq(201)
       expect(json).to have_key("id")
       group = Group.last
-      expect(group.owner).to eq owner
+      expect(group.owner).to eq current_user
     end
   end
 
@@ -84,11 +88,12 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to update", required: true
 
-    let(:group) { create(:group, name: "foo") }
+    let(:group) { create(:group, name: "foo", owner: current_user) }
     let(:group_id) { group.id }
 
     describe "Update existing group returns No Content" do
-      parameter :name, "Updated name of group", scope: :group
+      parameter :name, "Updated name of group (max. 255 characters)",
+                scope: :group
 
       let(:name) { "bar" }
 
@@ -108,17 +113,17 @@ resource "Groups" do
     end
 
     describe "Add image to group" do
-      parameter :new_media, "Scope for attributes of new image",
+      parameter :newMedia, "Scope for attributes of new image",
                 required: true,
                 scope: :group
-      parameter :public_id, "Cloudinary ID / URL",
+      parameter :publicId, "Cloudinary ID / URL",
                 required: true,
-                scope: :new_media
+                scope: :newMedia
 
-      response_field :media_item_id, "Timeslot internal ID for this media item"
+      response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ group: { new_media: { public_id: public_id }}}.to_json }
+      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:raw_post) {{ group: { newMedia: { public_id: publicId }}}.to_json }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -130,10 +135,10 @@ resource "Groups" do
         do_request
 
         expect(response_status).to eq(201)
-        expect(json).to have_key("media_item_id")
+        expect(json).to have_key("mediaItemId")
         group.reload
-        expect(group.image).not_to be nil
-        expect(group.image.public_id).to eq public_id
+        expect(group.image.first).not_to be nil
+        expect(group.image.first.public_id).to eq publicId
       end
     end
   end
@@ -142,12 +147,14 @@ resource "Groups" do
   delete "/v1/groups/:group_id" do
     parameter :group_id, "ID of the group to delete", required: true
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
+    let!(:memberships) { create_list(:membership, 4, :active, group: group) }
 
     example "Delete group", document: :v1 do
-      explanation "Sets 'deleted_at' on the group." \
+      explanation "Sets 'deleted_at' on the group and its memberships." \
                   " Doesn't delete anything.\n\n" \
+                  "Current User must be group owner" \
                   "returns 200 and the updated data for the group\n\n" \
                   "returns 403 if current user not group owner\n\n" \
                   "returns 404 if ID is invalid"
@@ -155,12 +162,15 @@ resource "Groups" do
 
       group.reload
       expect(group.deleted_at).not_to be nil
+      expect(group.memberships.first.deleted_at?).to be true
+      expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
-      expect(json).to eq(group.attributes.as_json)
+      expect(json).to eq(group.attributes.as_json
+                          .transform_keys{ |key| key.camelize(:lower) })
     end
 
     describe "current user not group owner" do
-      let!(:non_owner) { create(:user) }
+      let(:group) { create(:group, owner: create(:user)) }
 
       example "returns forbidden", document: false do
         do_request
@@ -178,7 +188,7 @@ resource "Groups" do
     response_field :group_id, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
     response_field :members, "Array of active members"
-    response_field :user_id, "ID of member"
+    response_field :userId, "ID of member"
     response_field :username, "name of member"
     response_field :user_url, "URL for member"
 
@@ -194,13 +204,13 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "group_id" => group.id,
+                                "groupId" => group.id,
                                 "size" => 4
                               })
       # TODO: need to get the correct user_url here
-      expect(json["members"].first.except("user_url"))
+      expect(json["members"].first.except("userUrl"))
         .to eq({
-                 "user_id" => group.members.first.id,
+                 "userId" => group.members.first.id,
                  "username" => group.members.first.username
                })
     end
@@ -221,10 +231,10 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get", required: true
 
-    response_field :group_id, "ID of the group"
+    response_field :groupId, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
     response_field :related, "Array of related users"
-    response_field :user_id, "ID of user", scope: :related
+    response_field :userId, "ID of user", scope: :related
     response_field :state, "state of membership", scope: :related
 
     let(:group) { create(:group) }
@@ -242,12 +252,12 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "group_id" => group.id,
+                                "groupId" => group.id,
                                 "size" => 6
                               })
       expect(json["related"].first)
         .to eq({
-                 "user_id" => group.related_users.first.id,
+                 "userId" => group.related_users.first.id,
                  "state" => group.memberships.first.state
                })
     end
@@ -268,7 +278,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:invited_user) { create(:user) }
+    let(:invited_user) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
     let!(:membership) do
@@ -295,15 +305,16 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:invited_user) { create(:user) }
+    let(:invited_user) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
     let!(:membership) do
       create(:membership, :invited, user: invited_user, group: group)
     end
 
-    example "Refuse and invalidate a group invitation", document: :v1 do
-      explanation "returns 200 if invite successfully refused.\n\n" \
+    example "Refuse group invitation", document: :v1 do
+      explanation "The invitation is invalidated.\n\n" \
+                  "returns 200 if invite successfully refused.\n\n" \
                   "returns 403 if invitation is missing\n\n" \
                   "returns 404 if group ID is invalid\n\n" \
                   "returns 422 if parameters are missing"
@@ -317,14 +328,14 @@ resource "Groups" do
     end
   end
 
-  # invite
+  # invite_single
   post "/v1/groups/:group_id/members/:user_id" do
     header "Content-Type", "application/json"
 
     parameter :group_id, "ID of the group", required: true
+    parameter :user_id, "User ID to invite to the group", required: true
 
-    let!(:owner) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
     let(:invited_user) { create(:user) }
 
     let(:group_id) { group.id }
@@ -350,12 +361,44 @@ resource "Groups" do
     end
   end
 
+  # invite
+  # TODO: needs improvement
+  post "/v1/groups/:group_id/members" do
+    header "Content-Type", "application/json"
+
+    parameter :group_id, "ID of the group", required: true
+    parameter :ids, "User IDs to be invited to group", required: true
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:invited_users) { create_list(:user, 3) }
+
+    let(:group_id) { group.id }
+    let(:ids) { invited_users.collect(&:id) }
+
+    example "Invite multiple users to group", document: :v1 do
+      explanation "Inviting user must be group owner or group must allow" \
+                  " invites by group members.\n\n" \
+                  "returns 201 if invite successfully created\n\n" \
+                  "returns 403 if user is not allowed to invite\n\n" \
+                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 422 if parameters are missing"
+      expect {
+        do_request
+      }.to change(Membership, :count).by invited_users.length
+      expect(response_status).to eq(201)
+      membership = Membership.last
+      expect(membership.invited?).to be true
+      expect(group.members).not_to include invited_users.first
+      expect(group.related_users).to include invited_users.first
+    end
+  end
+
   # leave
   delete "/v1/groups/:group_id/members" do
 
     parameter :group_id, "ID of the group", required: true
 
-    let!(:member) { create(:user) }
+    let(:member) { current_user }
     let(:group) { create(:group) }
     let(:group_id) { group.id }
 
@@ -365,7 +408,7 @@ resource "Groups" do
       end
 
       example "Leave group", document: :v1 do
-        explanation "returns 200 if membership successfully inactivated\n\n" \
+        explanation "returns 200 if membership successfully invalidated\n\n" \
                     "returns 200 if current user not active group member\n\n" \
                     "returns 403 if current user has no membership for this" \
                     " group at all\n\n" \
@@ -375,7 +418,7 @@ resource "Groups" do
 
         expect(response_status).to eq(200)
         membership.reload
-        expect(membership.inactive?).to be true
+        expect(membership.left?).to be true
         expect(group.members).not_to include member
       end
     end
@@ -406,8 +449,7 @@ resource "Groups" do
     parameter :user_id, "ID of the user to kick", required: true
 
     let(:member) { create(:user) }
-    let!(:owner) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
 
     let(:group_id) { group.id }
     let(:user_id) { member.id }
@@ -461,7 +503,7 @@ resource "Groups" do
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :group
 
-    let(:member) { create(:user) }
+    let(:member) { current_user }
     let(:group) { create(:group) }
 
     let(:group_id) { group.id }

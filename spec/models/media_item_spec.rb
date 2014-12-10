@@ -6,6 +6,8 @@ RSpec.describe MediaItem, type: :model do
   subject { media_item }
 
   it { is_expected.to respond_to(:public_id) }
+  it { is_expected.to respond_to(:duration) }
+  it { is_expected.to respond_to(:thumbnail) }
   it { is_expected.to respond_to(:ordering) }
   it { is_expected.to respond_to(:media_type) }
   it { is_expected.to respond_to(:mediable_id) }
@@ -85,4 +87,28 @@ RSpec.describe MediaItem, type: :model do
     end
   end
 
+  describe :delete do
+    let!(:media_item) { create(:slot_image) }
+
+    it "doesn't remove the media_item from the database" do
+      expect { media_item.delete }.not_to change(MediaItem, :count)
+    end
+
+    it "sets deleted_at on the media_item" do
+      media_item.delete
+      expect(media_item.deleted_at?).to be true
+    end
+
+    it "adds a cloudinary tag to the image", :vcr do
+      user = FactoryGirl.create(:user, :with_real_image)
+      public_id = user.image.first.public_id
+
+      media_item.delete
+
+      tags = Cloudinary::Api.resource(public_id)["tags"]
+      expect(tags).to include "replaced"
+
+      Cloudinary::Uploader.remove_tag("replaced", public_id)
+    end
+  end
 end

@@ -58,29 +58,39 @@ RSpec.describe Membership, type: :model do
   end
 
   describe :inactivate do
+    let(:membership) { create(:membership, group: create(:group)) }
+
     it "returns true" do
       expect(membership.inactivate).to be true
     end
 
     it "set membership state to 'inactive'" do
-      membership.inactivate
-      expect(membership.state).to eq "000"
+      expect { membership.inactivate }.not_to change(membership, :state)
+    end
+
+    it "preserves the membership state" do
+      expect {
+        membership.delete
+      }.to change(membership.user, :updated_at)
+    end
+
+    it "touches the group to mark a change" do
+      expect { membership.inactivate }.to change(membership.group, :updated_at)
     end
   end
 
   describe :inactive? do
-    invalid_states = %w(111 001 100 110 011 101 010)
+    let(:membership) { create(:membership, group: create(:group)) }
 
     it "returns true if membership state is 'inactive'" do
-      membership.state = "000"
+      membership.inactivate
       expect(membership.inactive?).to be true
     end
 
-    it "returns false if membership isn't 'inactive'" do
-      invalid_states.each do |invalid_state|
-        membership.state = invalid_state
-        expect(membership.inactive?).to be false
-      end
+    it "returns false if membership is invalid" do
+      membership.inactivate
+      membership.state = '000'
+      expect(membership.inactive?).to be false
     end
   end
 
@@ -162,6 +172,52 @@ RSpec.describe Membership, type: :model do
         membership.state = invalid_state
         expect(membership.kicked?).to be false
       end
+    end
+  end
+
+  describe :leave do
+    it "returns true" do
+      expect(membership.leave).to be true
+    end
+
+    it "set membership state to 'left'" do
+      membership.leave
+      expect(membership.state).to eq "100"
+    end
+  end
+
+  describe :left? do
+    invalid_states = %w(111 001 000 110 011 101 010)
+
+    it "returns true if membership state is 'left'" do
+      membership.state = "100"
+      expect(membership.left?).to be true
+    end
+
+    it "returns false if membership isn't 'left'" do
+      invalid_states.each do |invalid_state|
+        membership.state = invalid_state
+        expect(membership.left?).to be false
+      end
+    end
+  end
+
+  describe :delete do
+    let(:membership) { create(:membership, :active, user: create(:user)) }
+    invalid_states = %w(111 001 100 110 011 101 010)
+
+    it "sets deleted_at on the membership" do
+      membership.delete
+      expect(membership.deleted_at?).to be true
+    end
+
+    it "sets membership state to 000" do
+      membership.delete
+      expect(membership.state).to eq "000"
+    end
+
+    it "touches the user to mark a change" do
+      expect { membership.delete }.to change(membership.user, :updated_at)
     end
   end
 end

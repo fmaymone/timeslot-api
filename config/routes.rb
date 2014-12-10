@@ -1,18 +1,37 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
+    get 'slots/', to: 'slots#index'
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
-    post 'slots', to: 'slots#create'
-    patch 'slots/:id', to: 'slots#update', as: 'slot_update'
-    delete 'slots/:id', to: 'slots#destroy', as: 'slot_delete'
+    post 'slots', to: 'slots#show_many', as: 'slots_read'
+
+    post 'stdslot', to: 'slots#create_stdslot'
+    post 'reslot', to: 'slots#create_reslot'
+    post 'groupslot', to: 'slots#create_groupslot'
+
+    patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
+    patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
+    patch 'groupslot/:id', to: 'slots#update_groupslot', as: 'groupslot_update'
+    patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
+
+    delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
+    delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
+    delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
     get 'media-signature', to: 'media#create_signature'
 
-    get 'users', to: 'users#index'
-    get 'users/:id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
-    post 'users', to: 'users#create', as: 'user_create'
-    patch 'users/:id', to: 'users#update', as: 'user_update'
-    delete 'users/:id', to: 'users#destroy', as: 'user_delete'
+    scope :users do
+      get '', to: 'users#index'
+      get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+      post '', to: 'users#create', as: 'user_create'
+      patch '', to: 'users#update', as: 'user_update'
+      delete '', to: 'users#destroy', as: 'user_delete'
+      # HACK: not ready for production
+      get 'authenticate/:id', to: 'users#auth', as: 'auth',
+          constraints: { id: /\d+/ }
+      post 'add_friends', to: 'users#add_friends', as: 'add_friends'
+      post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
+    end
 
     scope :groups do
       get '',
@@ -40,9 +59,12 @@ Rails.application.routes.draw do
           as: 'group_related',
           constraints: { group_id: /\d+/ }
       post ':group_id/members/:user_id',
-           to: 'groups#invite',
-           as: 'group_invite',
+           to: 'groups#invite_single',
+           as: 'group_invite_single',
            constraints: { group_id: /\d+/, user_id: /\d+/ }
+      post ':group_id/members',
+           to: 'groups#invite',
+           as: 'group_invite'
       post ':group_id/accept',
            to: 'groups#accept_invite',
            as: 'group_accept_invite',

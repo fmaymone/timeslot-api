@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.1.4'
+
 gem 'rails', '4.1.4'
 
 gem 'rails-api'
@@ -30,6 +32,10 @@ group :development do
   gem 'spring'
 
   gem 'pry-rails'
+
+  gem "rails-erd"
+
+  gem "railroady"
 end
 
 group :development, :test do
@@ -59,5 +65,3 @@ group :development, :test do
 
   gem 'webmock'
 end
-
-ruby '2.1.4'

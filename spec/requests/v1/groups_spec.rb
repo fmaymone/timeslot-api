@@ -2,14 +2,15 @@ require 'rails_helper'
 
 RSpec.describe "V1::Groups", type: :request do
   let(:json) { JSON.parse(response.body) }
+  let(:current_user) { create(:user) }
+  before(:each) { ApplicationController.new.current_user = current_user }
 
   # update
   describe "PATCH /v1/groups/:group_id" do
-    let(:user) { create(:user) }
     let(:new_params) { { group: { name: "bar" } } }
 
     describe "user is group owner" do
-      let(:group) { create(:group, owner: user, name: "foo") }
+      let(:group) { create(:group, owner: current_user, name: "foo") }
 
       it "returns No Content" do
         patch "/v1/groups/#{group.id}", new_params
@@ -24,7 +25,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       describe "add image" do
         let(:public_id) { attributes_for(:real_image)[:public_id] }
-        let(:img_params) { { group: { new_media: { public_id: public_id } } } }
+        let(:img_params) { { group: { newMedia: { public_id: public_id } } } }
 
         describe "new" do
           it "returns created" do
@@ -34,22 +35,23 @@ RSpec.describe "V1::Groups", type: :request do
 
           it "sets group image" do
             patch "/v1/groups/#{group.id}", img_params
-            expect(group.image.public_id).to eq public_id
+            expect(group.image.first.public_id).to eq public_id
           end
         end
 
         describe "overwrite existing" do
-          let(:group) { create(:group, :with_image, owner: user, name: "foo") }
-
+          let(:group) {
+            create(:group, :with_image, owner: current_user, name: "foo")
+          }
           it "returns created" do
             patch "/v1/groups/#{group.id}", img_params
             expect(response.status).to be(201)
-            expect(group.image.public_id).to eq public_id
+            expect(group.image.first.public_id).to eq public_id
           end
         end
 
         describe "invalid" do
-          let(:img_params) { { group: { new_media: { public_id: nil } } } }
+          let(:img_params) { { group: { newMedia: { public_id: nil } } } }
 
           it "returns 422" do
             patch "/v1/groups/#{group.id}", img_params
@@ -66,7 +68,6 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "user not group owner" do
-      let!(:current_user) { create(:user) } # HACK, remove when current_user
       let(:group) { create(:group, name: "foo") }
 
       it "returns Forbidden" do
@@ -84,19 +85,17 @@ RSpec.describe "V1::Groups", type: :request do
 
   # invite
   describe "POST /v1/groups/:group_id/members/:user_id" do
-    let(:user) { create(:user) }
-
     describe "user can invite" do
-      let(:group) { create(:group, owner: user) }
+      let(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members/#{user.id}"
+        post "/v1/groups/#{group.id}/members/#{current_user.id}"
         expect(response.status).to be(201)
       end
 
       it "creates a membership with state 'invited'" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{user.id}"
+          post "/v1/groups/#{group.id}/members/#{current_user.id}"
         }.to change(Membership, :count).by(1)
         membership = Membership.last
         expect(membership.invited?).to be true
@@ -104,53 +103,54 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "doesn't add user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{user.id}"
+          post "/v1/groups/#{group.id}/members/#{current_user.id}"
         }.not_to change(group.members, :count)
       end
 
       describe "existing membership" do
         describe "duplicate invitation" do
-          let!(:membership) { create(:membership, user: user, group: group) }
-
+          let!(:membership) {
+            create(:membership, user: current_user, group: group)
+          }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members/#{user.id}"
+            post "/v1/groups/#{group.id}/members/#{current_user.id}"
             expect(response.status).to be(200)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{user.id}"
+              post "/v1/groups/#{group.id}/members/#{current_user.id}"
             }.not_to change(Membership, :count)
           end
         end
 
         describe "active group member" do
           let!(:membership) {
-            create(:membership, :active, user: user, group: group)
+            create(:membership, :active, user: current_user, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members/#{user.id}"
+            post "/v1/groups/#{group.id}/members/#{current_user.id}"
             expect(response.status).to be(200)
           end
         end
 
         describe "non active group member" do
           let!(:membership) {
-            create(:membership, :inactive, user: user, group: group)
+            create(:membership, :left, user: current_user, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members/#{user.id}"
+            post "/v1/groups/#{group.id}/members/#{current_user.id}"
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{user.id}"
+              post "/v1/groups/#{group.id}/members/#{current_user.id}"
             }.not_to change(Membership, :count)
           end
 
           it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members/#{user.id}"
+            post "/v1/groups/#{group.id}/members/#{current_user.id}"
             membership.reload
             expect(membership.invited?).to be true
           end
@@ -160,19 +160,18 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "user can't invite" do
-      let!(:user) { create(:user) } # remove when current_user is implemented
       let(:group) do
         create(:group, owner: create(:user), members_can_invite: false)
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/members/#{user.id}"
+        post "/v1/groups/#{group.id}/members/#{current_user.id}"
         expect(response.status).to be(403)
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{user.id}"
+          post "/v1/groups/#{group.id}/members/#{current_user.id}"
         }.not_to change(Membership, :count)
       end
     end
@@ -180,7 +179,6 @@ RSpec.describe "V1::Groups", type: :request do
 
   # accept_invite
   describe "POST /v1/groups/:group_id/accept" do
-    let(:current_user) { create(:user) }
     let(:group) { create(:group) }
     let!(:membership) do
       create(:membership, :invited, user: current_user, group: group)
@@ -234,7 +232,6 @@ RSpec.describe "V1::Groups", type: :request do
 
   # refuse_invite
   describe "POST /v1/groups/:group_id/refuse" do
-    let(:current_user) { create(:user) }
     let(:group) { create(:group) }
     let!(:membership) do
       create(:membership, :invited, user: current_user, group: group)
@@ -284,13 +281,11 @@ RSpec.describe "V1::Groups", type: :request do
 
   # leave
   describe "DELETE /v1/groups/:group_id/members" do
-    let(:owner) { create(:user) }
-    let(:member) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: create(:user)) }
 
     describe "membership active" do
       let!(:membership) do
-        create(:membership, :active, user: member, group: group)
+        create(:membership, :active, user: current_user, group: group)
       end
 
       it "returns OK" do
@@ -298,16 +293,16 @@ RSpec.describe "V1::Groups", type: :request do
         expect(response.status).to be(200)
       end
 
-      it "changes membership state to 'inactive'" do
+      it "changes membership state to 'left'" do
         delete "/v1/groups/#{group.id}/members"
         membership.reload
-        expect(membership.inactive?).to be true
+        expect(membership.left?).to be true
       end
     end
 
-    describe "membership not active" do
+    describe "group already left" do
       let!(:membership) do
-        create(:membership, :inactive, user: member, group: group)
+        create(:membership, :left, user: current_user, group: group)
       end
 
       it "returns OK" do
@@ -332,13 +327,10 @@ RSpec.describe "V1::Groups", type: :request do
 
   # kick
   describe "DELETE /v1/groups/:group_id/members/:user_id" do
-    let(:owner) { create(:user) }
     let(:member) { create(:user) }
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
 
     describe "current user is group owner" do
-      let!(:owner) { create(:user) } # remove when current_user is implemented
-
       describe "membership active" do
         let!(:membership) do
           create(:membership, :active, user: member, group: group)
@@ -392,7 +384,7 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "current user not group owner" do
-      let!(:non_owner) { create(:user) } # remove when current_user is implemented
+      let(:group) { create(:group, owner: create(:user)) }
       let!(:membership) do
         create(:membership, :active, user: member, group: group)
       end
@@ -411,7 +403,7 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "no membership" do
       it "returns forbidden" do
-        delete "/v1/groups/#{group.id}/members/#{member.id}"
+        delete "/v1/groups/#{group.id}/members/#{current_user.id}"
         expect(response.status).to be(403)
       end
     end
@@ -420,14 +412,13 @@ RSpec.describe "V1::Groups", type: :request do
   # settings
   describe "PATCH /v1/groups/:group_id/members" do
     let(:owner) { create(:user) }
-    let(:member) { create(:user) }
     let(:group) { create(:group, owner: owner) }
     let(:params) { { group: { notifications: 'false' } } }
 
     describe "current user is group member" do
       describe "membership active" do
         let!(:membership) do
-          create(:membership, :active, user: member, group: group,
+          create(:membership, :active, user: current_user, group: group,
                  notifications: true)
         end
 

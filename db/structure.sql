@@ -34,12 +34,12 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE base_slots (
-    id integer NOT NULL,
     footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id integer,
-    deleted_at timestamp without time zone
+    id integer NOT NULL
 );
 
 
@@ -63,23 +63,25 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 
 
 --
--- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE TABLE group_slots (
+CREATE TABLE friendships (
     id integer NOT NULL,
-    group_id integer,
-    note text DEFAULT ''::text,
+    user_id integer,
+    friend_id integer,
+    state bit(2) DEFAULT B'00'::"bit",
+    deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
 );
 
 
 --
--- Name: group_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: friendships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE group_slots_id_seq
+CREATE SEQUENCE friendships_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -88,10 +90,26 @@ CREATE SEQUENCE group_slots_id_seq
 
 
 --
--- Name: group_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: friendships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE group_slots_id_seq OWNED BY group_slots.id;
+ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
+
+
+--
+-- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE group_slots (
+    group_id integer,
+    note text DEFAULT ''::text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    meta_slot_id integer,
+    footest character varying(255),
+    deleted_at timestamp without time zone
+)
+INHERITS (base_slots);
 
 
 --
@@ -142,7 +160,9 @@ CREATE TABLE media_items (
     updated_at timestamp without time zone,
     mediable_id integer,
     mediable_type character varying(255),
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    duration integer,
+    thumbnail character varying(255)
 );
 
 
@@ -240,31 +260,16 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 --
 
 CREATE TABLE re_slots (
-    id integer NOT NULL,
-    predecessor_id integer,
+    predecessor_id integer NOT NULL,
     note text DEFAULT ''::text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: re_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE re_slots_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: re_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE re_slots_id_seq OWNED BY re_slots.id;
+    updated_at timestamp without time zone,
+    footest character varying(255),
+    deleted_at timestamp without time zone,
+    meta_slot_id integer NOT NULL,
+    slotter_id integer NOT NULL
+)
+INHERITS (base_slots);
 
 
 --
@@ -286,30 +291,16 @@ CREATE TABLE slot_settings (
     alerts bit(10) DEFAULT B'0000000000'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
-);
-
-
---
--- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE std_slots (
-    id integer NOT NULL,
-    visibility bit(2) DEFAULT B'11'::"bit",
-    note text DEFAULT ''::text,
-    created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    user_id integer,
-    deleted_at timestamp without time zone
+    id integer NOT NULL
 );
 
 
 --
--- Name: std_slots_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: slot_settings_id_seq; Type: SEQUENCE; Schema: public; Owner: -
 --
 
-CREATE SEQUENCE std_slots_id_seq
+CREATE SEQUENCE slot_settings_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -318,10 +309,27 @@ CREATE SEQUENCE std_slots_id_seq
 
 
 --
--- Name: std_slots_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: slot_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
 --
 
-ALTER SEQUENCE std_slots_id_seq OWNED BY std_slots.id;
+ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
+
+
+--
+-- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE std_slots (
+    visibility bit(2) DEFAULT B'11'::"bit",
+    note text DEFAULT ''::text,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
+    footest character varying(255),
+    meta_slot_id integer,
+    owner_id integer
+)
+INHERITS (base_slots);
 
 
 --
@@ -367,7 +375,14 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('group_slots_id_seq'::regclass);
+ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
@@ -402,14 +417,21 @@ ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('re_slots_id_seq'::regclass);
+ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('std_slots_id_seq'::regclass);
+ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_settings_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
@@ -428,11 +450,11 @@ ALTER TABLE ONLY base_slots
 
 
 --
--- Name: group_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY group_slots
-    ADD CONSTRAINT group_slots_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY friendships
+    ADD CONSTRAINT friendships_pkey PRIMARY KEY (id);
 
 
 --
@@ -468,19 +490,11 @@ ALTER TABLE ONLY meta_slots
 
 
 --
--- Name: re_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
-ALTER TABLE ONLY re_slots
-    ADD CONSTRAINT re_slots_pkey PRIMARY KEY (id);
-
-
---
--- Name: std_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY std_slots
-    ADD CONSTRAINT std_slots_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY slot_settings
+    ADD CONSTRAINT slot_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -492,10 +506,17 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_base_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_base_slots_on_meta_slot_id ON base_slots USING btree (meta_slot_id);
+CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_id);
+
+
+--
+-- Name: index_friendships_on_user_id_and_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_friendships_on_user_id_and_friend_id ON friendships USING btree (user_id, friend_id);
 
 
 --
@@ -503,6 +524,13 @@ CREATE INDEX index_base_slots_on_meta_slot_id ON base_slots USING btree (meta_sl
 --
 
 CREATE INDEX index_group_slots_on_group_id ON group_slots USING btree (group_id);
+
+
+--
+-- Name: index_group_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_slot_id);
 
 
 --
@@ -541,10 +569,24 @@ CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_i
 
 
 --
+-- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_re_slots_on_meta_slot_id ON re_slots USING btree (meta_slot_id);
+
+
+--
 -- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_re_slots_on_predecessor_id ON re_slots USING btree (predecessor_id);
+
+
+--
+-- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
 
 
 --
@@ -562,10 +604,17 @@ CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_sett
 
 
 --
--- Name: index_std_slots_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_std_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_std_slots_on_user_id ON std_slots USING btree (user_id);
+CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot_id);
+
+
+--
+-- Name: index_std_slots_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
 
 
 --
@@ -636,4 +685,34 @@ INSERT INTO schema_migrations (version) VALUES ('20141120092546');
 INSERT INTO schema_migrations (version) VALUES ('20141120102152');
 
 INSERT INTO schema_migrations (version) VALUES ('20141120104643');
+
+INSERT INTO schema_migrations (version) VALUES ('20141123173734');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125085243');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125095021');
+
+INSERT INTO schema_migrations (version) VALUES ('20141125110600');
+
+INSERT INTO schema_migrations (version) VALUES ('20141126125743');
+
+INSERT INTO schema_migrations (version) VALUES ('20141126134021');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127130943');
+
+INSERT INTO schema_migrations (version) VALUES ('20141127140805');
+
+INSERT INTO schema_migrations (version) VALUES ('20141128130147');
+
+INSERT INTO schema_migrations (version) VALUES ('20141201103503');
+
+INSERT INTO schema_migrations (version) VALUES ('20141202183715');
+
+INSERT INTO schema_migrations (version) VALUES ('20141202233110');
+
+INSERT INTO schema_migrations (version) VALUES ('20141203115550');
+
+INSERT INTO schema_migrations (version) VALUES ('20141203213610');
+
+INSERT INTO schema_migrations (version) VALUES ('20141205094237');
 

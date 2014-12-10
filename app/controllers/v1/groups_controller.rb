@@ -35,8 +35,8 @@ module V1
       if image_param.present? && AddImage.call(@group, group_image_param).equal?(true)
         render "v1/media/create",
                status: :created,
-               locals: { media_item_id: @group.image.id }
-      elsif !image_param.present? &&  @group.update(group_create_params)
+               locals: { media_item_id: @group.image.first.id }
+      elsif !image_param.present? && @group.update(group_create_params)
         head :no_content
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -48,7 +48,7 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      render :show if SoftDeleteService.call(@group)
+      render :show if @group.delete
     end
 
     # GET /v1/groups/:group_id/members
@@ -106,7 +106,7 @@ module V1
     # create membership with state invited/pending
     # notify invited user
     # TODO: put logic into service
-    def invite
+    def invite_single
       group = membership_params[:group_id]
       return head :forbidden unless current_user.can_invite? group
 
@@ -123,6 +123,31 @@ module V1
       end
     end
 
+    # POST /v1/groups/:group_id/members/:user_id
+    # current user invites other users to own group
+    # create membership with state invited/pending
+    # notify invited users
+    # TODO: put logic into service
+    # TODO: improve flow
+    # TODO: needs more specs, has only acceptance spec
+    def invite
+      group = Group.find(group_param)
+      return head :forbidden unless current_user.can_invite? group.id
+
+      params.require(:ids).each do |id|
+        invitee = User.find(id)
+        return head :ok if invitee.is_invited?(group.id) || invitee.is_member?(group.id)
+
+        @membership = invitee.get_membership group
+        @membership ||= Membership.new(group_id: group_param, user_id: id)
+        if !(@membership.invite && @membership.save)
+          fail ArgumentError, "couldn't create membership for userId #{id}"
+        end
+      end
+
+      head :created
+    end
+
     # DELETE /v1/groups/:group_id/members
     # current user leaves group
     # update membership with state left
@@ -134,7 +159,7 @@ module V1
 
       @membership = current_user.get_membership group
 
-      if @membership.inactivate
+      if @membership.leave
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -163,11 +188,10 @@ module V1
     # change membership settings if current user is group member
     # notifications
     def settings
-      group = membership_params[:group_id]
-      return head :not_found unless Group.exists?(group)
-      return head :forbidden unless current_user.is_member? group
+      group = Group.find(membership_params[:group_id])
+      return head :forbidden unless current_user.is_member? group.id
 
-      @membership = current_user.get_membership group
+      @membership = current_user.get_membership group.id
 
       if @membership.update(membership_update_params)
         head :ok
@@ -184,16 +208,20 @@ module V1
       params.permit(:group_id, :user_id)
     end
 
+    private def group_param
+      params.require(:group_id)
+    end
+
     private def membership_update_params
       params.require(:group).permit(:notifications)
     end
 
     private def image_param
-      params.require(:group)[:new_media]
+      params.require(:group)[:newMedia]
     end
 
     private def group_image_param
-      params.require(:group).require(:new_media).require(:public_id)
+      params.require(:group).require(:newMedia).require(:public_id)
     end
   end
 end

@@ -1,9 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe V1::GroupsController, type: :controller do
-  before(:each) { request.accept = "application/json" }
+  before(:each) {
+    request.accept = "application/json"
+    described_class.new.current_user = current_user
+  }
 
-  let!(:owner) { create(:user) }
+  let(:current_user) { create(:user) }
   let(:valid_attributes) { attributes_for(:group) }
   let(:invalid_attributes) { attributes_for(:group, name: nil) }
   let(:valid_session) { {} }
@@ -18,7 +21,7 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "GET show" do
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
 
     it "assigns the requested group as @group" do
       get :show, { group_id: group.id }, valid_session
@@ -50,7 +53,7 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "PATCH update" do
-    let(:group) { create(:group, owner: owner) }
+    let(:group) { create(:group, owner: current_user) }
 
     describe "with valid params" do
       let(:new_attributes) {
@@ -81,8 +84,7 @@ RSpec.describe V1::GroupsController, type: :controller do
   end
 
   describe "DELETE destroy" do
-    let!(:owner) { create(:user) }
-    let!(:group) { create(:group, owner: owner) }
+    let!(:group) { create(:group, owner: current_user) }
 
     it "doesn't destroy the requested group" do
       expect {
@@ -93,7 +95,7 @@ RSpec.describe V1::GroupsController, type: :controller do
     it "sets deleted_at on the requested group" do
       delete :destroy, { group_id: group.id }, valid_session
       group.reload
-      expect(group.deleted_at).not_to eq nil
+      expect(group.deleted_at?).to be true
     end
   end
 end
