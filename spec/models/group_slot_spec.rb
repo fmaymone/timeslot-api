@@ -33,4 +33,17 @@ RSpec.describe GroupSlot, type: :model do
       expect(group_slot.startdate).to eq meta_slot.startdate
     end
   end
+
+  describe :delete do
+    let(:group) { create(:group) }
+    let(:group_slot) { create(:group_slot, group: group) }
+
+    it "sets deleted_at" do
+      expect { group_slot.delete }.to change(group_slot, :deleted_at)
+    end
+
+    it "notifies group about a change" do
+      expect { group_slot.delete }.to change(group_slot.group, :updated_at)
+    end
+  end
 end

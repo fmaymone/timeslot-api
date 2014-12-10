@@ -58,4 +58,20 @@ RSpec.describe BaseSlot, type: :model do
       expect(result).not_to include(*other_slots)
     end
   end
+
+  describe :delete do
+    let(:base_slot) { create(:base_slot, :with_media) }
+
+    it "sets deleted_at on itself" do
+      expect(base_slot.deleted_at?).to be false
+      base_slot.delete
+      expect(base_slot.deleted_at?).to be true
+    end
+
+    it "invalidates belonging media_items" do
+      base_slot.delete
+      expect(base_slot.media_items.first.deleted_at?).to be true
+      expect(base_slot.media_items.last.deleted_at?).to be true
+    end
+  end
 end

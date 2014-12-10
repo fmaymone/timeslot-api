@@ -891,6 +891,12 @@ RSpec.describe "V1::Slots", type: :request do
           delete "/v1/groupslot/#{group_slot.id}"
         }.not_to change(GroupSlot, :count)
       end
+
+      it "changes the number of active group_slots for the user" do
+        expect {
+          delete "/v1/groupslot/#{group_slot.id}"
+        }.to change(current_user.group_slots.active, :count)
+      end
     end
 
     context "with an invalid ID" do

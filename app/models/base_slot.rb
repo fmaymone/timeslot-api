@@ -30,9 +30,12 @@ class BaseSlot < ActiveRecord::Base
     #   end
     # end
 
-    # TODO: add spec
+    # alarm/slot_setting
+    # Notes
+    # Likes
+    # Comments
     # meta_slot.unregister
-    media_items.delete
+    media_items.each(&:delete)
     SoftDelete.call(self)
   end
 
