@@ -13,12 +13,13 @@ class ApplicationController < ActionController::API
 
   # HACK: This is not ready for production
   # TODO: add authentication
+  # used for setting current user for tests
   def current_user=(user)
-    @@current_user = user
+    @@hack_current_user = user
   end
 
   def current_user
-    @@current_user ||= nil
+    @current_user ||= @@hack_current_user
   end
 
   # HACK: temporary solution
@@ -38,11 +39,29 @@ class ApplicationController < ActionController::API
     end
 
     if request.headers['HTTP_AUTHORIZATION'].nil?
-      return render json: "HTTP_AUTHORIZATION header requiered", status: :unauthorized
+      return render json: "HTTP_AUTHORIZATION header required",
+                    status: :unauthorized
     end
 
     if request.headers['HTTP_AUTHORIZATION'] != current_user.username
       return render json: "test", status: :unauthorized
     end
+  end
+
+  # HACK: temporary solution
+  # TODO: improve
+  # used for setting current_user for client testing via HTTP_AUTHORIZATION header
+  def sign_in
+    # tests use current_user= method
+    if Rails.env.test?
+      return
+    end
+
+    if request.headers['HTTP_AUTHORIZATION'].nil?
+      return render json: "HTTP_AUTHORIZATION header required",
+                    status: :unauthorized
+    end
+    username = request.headers['HTTP_AUTHORIZATION']
+    @current_user = User.where(username: username).first
   end
 end
