@@ -573,6 +573,37 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    describe "handling notes" do
+      let(:note) { attributes_for(:note) }
+      let(:add_note) { { newNote: note } }
+
+      it "returns success" do
+        patch "/v1/stdslot/#{std_slot.id}", add_note
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "adds a new note to the slot" do
+        patch "/v1/stdslot/#{std_slot.id}", add_note
+        std_slot.reload
+        expect(std_slot.notes.size).to eq(1)
+      end
+
+      it "adds the submitted note to the db" do
+        patch "/v1/stdslot/#{std_slot.id}", add_note
+        std_slot.reload
+        expect(std_slot.notes[0].title).to eq(note[:title])
+        expect(std_slot.notes[0].content).to eq(note[:content])
+      end
+
+      it "adds an additional new note" do
+        create(:note, base_slot: std_slot)
+
+        patch "/v1/stdslot/#{std_slot.id}", add_note
+        std_slot.reload
+        expect(std_slot.notes.size).to eq(2)
+      end
+    end
+
     describe "handling media items" do
       let(:add_media_item) { { newMedia: media } }
 
