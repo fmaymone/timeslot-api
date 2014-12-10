@@ -111,6 +111,8 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
+      elsif params[:newNote].present?
+        @slot.notes.create(note_create_params)
       elsif update_std_params[:visibility].present? &&
             @slot.update(update_std_params.permit(:visibility))
         head :no_content
@@ -231,6 +233,10 @@ module V1
       # TODO: better handling and specing of duration and thumbnail
       params.require(:newMedia).permit(:public_id, :ordering, :media_type,
                                        :duration, :thumbnail)
+    end
+
+    private def note_create_params
+      params.require(:newNote).permit(:title, :content)
     end
 
     private def update_media_order

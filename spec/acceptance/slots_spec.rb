@@ -483,6 +483,26 @@ resource "Slots" do
       end
     end
 
+    describe "Add note" do
+      parameter :newNote, "Scope for attributes of new note",
+                required: true
+      parameter :title, "Title of the note",
+                required: true,
+                scope: :newNote
+      parameter :content, "Content of the note",
+                required: true,
+                scope: :newNote
+
+      let(:newNote) { attributes_for(:note) }
+
+      example "Add note", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(StdSlot.last.notes.last.title).to eq newNote[:title]
+      end
+    end
+
     describe "Adding media items to existing slot" do
 
       parameter :newMedia, "Scope for attributes of new media item",
@@ -503,8 +523,7 @@ resource "Slots" do
       let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
-      example "Add media items",
-              document: :v1 do
+      example "Add media items", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -548,8 +567,7 @@ resource "Slots" do
       end
       let(:raw_post) { media_reordering.to_json }
 
-      example "Reorder media items",
-              document: :v1 do
+      example "Reorder media items", document: :v1 do
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
                     " of the slot must be send.\n\n" \
