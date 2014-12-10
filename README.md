@@ -57,6 +57,25 @@ bundle exec rake db:create
 
 If the database is not created with the correct PG datatypes by schema.rb, run the migrations directly.
 
+## More Tools
+
+# Rails ERD
+
+* install graphviz with pango/cairo support.
+```bash
+brew install graphviz --with-pangocairo
+```
+* gen simple ERD
+```bash
+bin/rake generate_lean_erd
+```
+
+* gen detailed ERD
+```bash
+bin/rake generate_adv_erd
+```
+
+
 ## Starting rails
 
 * Start dev server (s=server,u=debugger)

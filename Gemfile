@@ -32,6 +32,10 @@ group :development do
   gem 'spring'
 
   gem 'pry-rails'
+
+  gem "rails-erd"
+
+  gem "railroady"
 end
 
 group :development, :test do
