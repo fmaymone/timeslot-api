@@ -56,36 +56,36 @@ RSpec.describe V1::SlotsController, type: :controller do
           visibility: '10')
       }
       it "responds with http status Created (201)" do
-        post :create_stdslot, new_slot: valid_attributes
+        post :create_stdslot, newSlot: valid_attributes
         expect(response).to have_http_status(:created)
       end
 
       it "renders the create template" do
-        post :create_stdslot, new_slot: valid_attributes
+        post :create_stdslot, newSlot: valid_attributes
         expect(response).to render_template("show")
       end
 
       it "creates a new MetaSlot" do
         expect {
-          post :create_stdslot, { new_slot: valid_attributes }, valid_session
+          post :create_stdslot, { newSlot: valid_attributes }, valid_session
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "creates a new StdSlot" do
         expect {
-          post :create_stdslot, { new_slot: valid_attributes }, valid_session
+          post :create_stdslot, { newSlot: valid_attributes }, valid_session
         }.to change(StdSlot, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
         expect {
-          post :create_stdslot, { new_slot: valid_attributes.merge(
+          post :create_stdslot, { newSlot: valid_attributes.merge(
                                   alerts: '1110111010') }, valid_session
         }.to change(SlotSetting, :count).by(1)
       end
 
       it "assigns a newly created std_slot as @slot" do
-        post :create_stdslot, { new_slot: valid_attributes }, valid_session
+        post :create_stdslot, { newSlot: valid_attributes }, valid_session
         expect(assigns(:slot)).to be_a(StdSlot)
         expect(assigns(:slot)).to be_persisted
       end
@@ -100,36 +100,36 @@ RSpec.describe V1::SlotsController, type: :controller do
           groupId: group.id)
       }
       it "responds with http status Created (201)" do
-        post :create_groupslot, new_slot: valid_attributes
+        post :create_groupslot, newSlot: valid_attributes
         expect(response).to have_http_status(:created)
       end
 
       it "renders the create template" do
-        post :create_groupslot, new_slot: valid_attributes
+        post :create_groupslot, newSlot: valid_attributes
         expect(response).to render_template("show")
       end
 
       it "creates a new MetaSlot" do
         expect {
-          post :create_groupslot, { new_slot: valid_attributes }, valid_session
+          post :create_groupslot, { newSlot: valid_attributes }, valid_session
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "creates a new GroupSlot" do
         expect {
-          post :create_groupslot, { new_slot: valid_attributes }, valid_session
+          post :create_groupslot, { newSlot: valid_attributes }, valid_session
         }.to change(GroupSlot, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
         expect {
-          post :create_groupslot, { new_slot: valid_attributes.merge(
+          post :create_groupslot, { newSlot: valid_attributes.merge(
                                     alerts: '1110111010') }, valid_session
         }.to change(SlotSetting, :count).by(1)
       end
 
       it "assigns a newly created group_slot as @slot" do
-        post :create_groupslot, { new_slot: valid_attributes }, valid_session
+        post :create_groupslot, { newSlot: valid_attributes }, valid_session
         expect(assigns(:slot)).to be_a(GroupSlot)
         expect(assigns(:slot)).to be_persisted
       end
@@ -144,29 +144,29 @@ RSpec.describe V1::SlotsController, type: :controller do
                        predecessorType: pred.class.model_name.param_key)
       }
       it "responds with Created (201)" do
-        post :create_reslot, re_slot: valid_attributes
+        post :create_reslot, reSlot: valid_attributes
         expect(response).to have_http_status(:created)
       end
 
       it "renders the show template" do
-        post :create_reslot, re_slot: valid_attributes
+        post :create_reslot, reSlot: valid_attributes
         expect(response).to render_template("show")
       end
 
       it "creates a new ReSlot" do
         expect {
-          post :create_reslot, { re_slot: valid_attributes }, valid_session
+          post :create_reslot, { reSlot: valid_attributes }, valid_session
         }.to change(ReSlot, :count).by(1)
       end
 
       it "doesn't create a new SlotSetting" do
         expect {
-          post :create_reslot, { re_slot: valid_attributes }, valid_session
+          post :create_reslot, { reSlot: valid_attributes }, valid_session
         }.not_to change(SlotSetting, :count)
       end
 
       it "assigns a newly created re_slot as @slot" do
-        post :create_reslot, { re_slot: valid_attributes }, valid_session
+        post :create_reslot, { reSlot: valid_attributes }, valid_session
         expect(assigns(:slot)).to be_a(ReSlot)
         expect(assigns(:slot)).to be_persisted
       end

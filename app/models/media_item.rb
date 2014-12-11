@@ -49,10 +49,10 @@ class MediaItem < ActiveRecord::Base
     end
 
     def insert(collection, new_media)
-      if !new_media.key? :ordering
+      if !new_media.key? "ordering"
         new_media.merge!(ordering: collection.size)
-      elsif new_media.require(:ordering).to_i < collection.size
-        needs_ordering_update(collection, new_media.require(:ordering))
+      elsif new_media["ordering"].to_i < collection.size
+        needs_ordering_update(collection, new_media["ordering"])
       end
 
       MediaItem.new(new_media)

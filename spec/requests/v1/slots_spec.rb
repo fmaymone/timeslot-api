@@ -95,24 +95,24 @@ RSpec.describe "V1::Slots", type: :request do
       let(:valid_slot) { attributes_for(:meta_slot).merge(visibility: '10') }
 
       it "responds with Created (201)" do
-        post "/v1/stdslot/", new_slot: valid_slot
+        post "/v1/stdslot/", newSlot: valid_slot
         expect(response).to have_http_status(:created)
       end
 
       it "adds a new StdSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", new_slot: valid_slot
+          post "/v1/stdslot/", newSlot: valid_slot
         }.to change(StdSlot, :count).by(1)
       end
 
       it "adds a new MetaSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", new_slot: valid_slot
+          post "/v1/stdslot/", newSlot: valid_slot
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/stdslot/", new_slot: valid_slot
+        post "/v1/stdslot/", newSlot: valid_slot
         expect(json['id']).to eq(StdSlot.last.id)
       end
     end
@@ -125,7 +125,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty title" do
           invalid_attributes[:title] = nil
           expect {
-            post "/v1/stdslot/", new_slot: invalid_attributes
+            post "/v1/stdslot/", newSlot: invalid_attributes
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('title')
         end
@@ -133,7 +133,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty startdate" do
           invalid_attributes[:startdate] = ""
           expect {
-            post "/v1/stdslot/", new_slot: invalid_attributes
+            post "/v1/stdslot/", newSlot: invalid_attributes
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('startdate')
           expect(response).to have_http_status(:unprocessable_entity)
@@ -143,21 +143,21 @@ RSpec.describe "V1::Slots", type: :request do
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
-          post "/v1/stdslot/", new_slot: invalid_attributes
+          post "/v1/stdslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid startdate" do
           invalid_attributes[:startdate] = "|$%^@wer"
-          post "/v1/stdslot/", new_slot: invalid_attributes
+          post "/v1/stdslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for empty enddate" do
           invalid_attributes[:enddate] = ""
-          post "/v1/stdslot/", new_slot: invalid_attributes
+          post "/v1/stdslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
@@ -166,7 +166,7 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:meta_slot,
                                 startdate: "2014-09-08 13:31:02",
                                 enddate: "2014-09-08 13:31:02")
-          post "/v1/stdslot/", new_slot: slot.merge(visibility: '11')
+          post "/v1/stdslot/", newSlot: slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start date')
         end
@@ -175,24 +175,24 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:meta_slot,
                                 startdate: "2014-09-08 13:31:02",
                                 enddate: "2014-07-07 13:31:02")
-          post "/v1/stdslot/", new_slot: slot.merge(visibility: '11')
+          post "/v1/stdslot/", newSlot: slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start date')
         end
 
         it "for empty visibility" do
-          post "/v1/stdslot/", new_slot: attributes_for(:meta_slot, visibility: "")
+          post "/v1/stdslot/", newSlot: attributes_for(:meta_slot, visibility: "")
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for visibility" do
-          post "/v1/stdslot/", new_slot: attributes_for(:meta_slot, visibility: "$$")
+          post "/v1/stdslot/", newSlot: attributes_for(:meta_slot, visibility: "$$")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'pgerror'
         end
 
         it "if visibility has to much characters" do
-          post "/v1/stdslot/", new_slot: attributes_for(:meta_slot, visibility: "101")
+          post "/v1/stdslot/", newSlot: attributes_for(:meta_slot, visibility: "101")
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'pgerror'
         end
@@ -207,24 +207,24 @@ RSpec.describe "V1::Slots", type: :request do
       let(:valid_slot) { attributes_for(:meta_slot).merge(groupId: group.id) }
 
       it "responds with Created (201)" do
-        post "/v1/groupslot/", new_slot: valid_slot
+        post "/v1/groupslot/", newSlot: valid_slot
         expect(response).to have_http_status(:created)
       end
 
       it "adds a new group_slot entry to the DB" do
         expect {
-          post "/v1/groupslot/", new_slot: valid_slot
+          post "/v1/groupslot/", newSlot: valid_slot
         }.to change(GroupSlot, :count).by(1)
       end
 
       it "adds a new meta_slot entry to the DB" do
         expect {
-          post "/v1/groupslot/", new_slot: valid_slot
+          post "/v1/groupslot/", newSlot: valid_slot
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/groupslot/", new_slot: valid_slot
+        post "/v1/groupslot/", newSlot: valid_slot
         expect(json['id']).to eq(GroupSlot.last.id)
       end
     end
@@ -236,14 +236,14 @@ RSpec.describe "V1::Slots", type: :request do
       describe "does not add a new entry to the DB" do
         it "with missing group ID" do
           expect {
-            post "/v1/groupslot/", new_slot: attributes_for(:meta_slot)
+            post "/v1/groupslot/", newSlot: attributes_for(:meta_slot)
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "with invalid group ID" do
           expect {
-            post "/v1/groupslot/", new_slot: attributes_for(:meta_slot).merge(
+            post "/v1/groupslot/", newSlot: attributes_for(:meta_slot).merge(
                    groupId: 1)
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
           expect(response).to have_http_status(:not_found)
@@ -253,21 +253,21 @@ RSpec.describe "V1::Slots", type: :request do
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
-          post "/v1/groupslot/", new_slot: invalid_attributes
+          post "/v1/groupslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid startdate" do
           invalid_attributes[:startdate] = "|$%^@wer"
-          post "/v1/groupslot/", new_slot: invalid_attributes
+          post "/v1/groupslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for empty enddate" do
           invalid_attributes[:enddate] = ""
-          post "/v1/groupslot/", new_slot: invalid_attributes
+          post "/v1/groupslot/", newSlot: invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
@@ -277,7 +277,7 @@ RSpec.describe "V1::Slots", type: :request do
                                       startdate: "2014-09-08 13:31:02",
                                       enddate: "2014-09-08 13:31:02",
                                       groupId: group.id)
-          post "/v1/groupslot/", new_slot: group_slot
+          post "/v1/groupslot/", newSlot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start date')
         end
@@ -287,7 +287,7 @@ RSpec.describe "V1::Slots", type: :request do
                                       startdate: "2014-09-08 13:31:02",
                                       enddate: "2014-07-07 13:31:02",
                                       groupId: group.id)
-          post "/v1/groupslot/", new_slot: group_slot
+          post "/v1/groupslot/", newSlot: group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start date')
         end
@@ -307,18 +307,18 @@ RSpec.describe "V1::Slots", type: :request do
                          predecessorType: pred.class.model_name.param_key)
         }
         it "responds with Created (201)" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(response).to have_http_status(:created)
         end
 
         it "adds a new entry to the DB" do
           expect {
-            post "/v1/reslot/", re_slot: valid_attributes
+            post "/v1/reslot/", reSlot: valid_attributes
           }.to change(ReSlot, :count).by(1)
         end
 
         it "returns the ID of the new reslot" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(json['id']).to eq(ReSlot.last.id)
         end
       end
@@ -332,18 +332,18 @@ RSpec.describe "V1::Slots", type: :request do
           attributes_for(:re_slot, predecessorId: pred.id)
         }
         it "responds with Created (201)" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(response).to have_http_status(:created)
         end
 
         it "adds a new entry to the DB" do
           expect {
-            post "/v1/reslot/", re_slot: valid_attributes
+            post "/v1/reslot/", reSlot: valid_attributes
           }.to change(ReSlot, :count).by(1)
         end
 
         it "returns the ID of the new reslot" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(json['id']).to eq(ReSlot.last.id)
         end
       end
@@ -354,18 +354,18 @@ RSpec.describe "V1::Slots", type: :request do
           attributes_for(:re_slot, predecessorId: pred.id)
         }
         it "responds with Created (201)" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(response).to have_http_status(:created)
         end
 
         it "adds a new entry to the DB" do
           expect {
-            post "/v1/reslot/", re_slot: valid_attributes
+            post "/v1/reslot/", reSlot: valid_attributes
           }.to change(ReSlot, :count).by(1)
         end
 
         it "returns the ID of the new slot" do
-          post "/v1/reslot/", re_slot: valid_attributes
+          post "/v1/reslot/", reSlot: valid_attributes
           expect(json['id']).to eq(ReSlot.last.id)
         end
       end
@@ -609,8 +609,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "add images with valid params" do
         let(:media) do
-          { media_type: "image",
-            public_id: "foo-image",
+          { mediaType: "image",
+            publicId: "foo-image",
             ordering: "1" }
         end
 
@@ -640,8 +640,8 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds the submitted image to the db" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
-          expect(std_slot.media_items[0].public_id).to eq(media[:public_id])
+          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
+          expect(std_slot.media_items[0].public_id).to eq(media[:publicId])
           expect(std_slot.media_items[0].ordering).to eq(media[:ordering].to_i)
         end
 
@@ -658,15 +658,15 @@ RSpec.describe "V1::Slots", type: :request do
 
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           new_media_item = MediaItem.last
-          expect(new_media_item.media_type).to eq(media[:media_type])
-          expect(new_media_item.public_id).to eq(media[:public_id])
+          expect(new_media_item.media_type).to eq(media[:mediaType])
+          expect(new_media_item.public_id).to eq(media[:publicId])
           expect(new_media_item.ordering).to eq(media[:ordering].to_i)
         end
 
         context "missing ordering parameter" do
           let(:media) do
-            { media_type: "image",
-              public_id: "foo-image" }
+            { mediaType: "image",
+              publicId: "foo-image" }
           end
 
           it "adds it" do
@@ -682,8 +682,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         context "existing ordering parameter" do
           let(:media) do
-            { media_type: "image",
-              public_id: "foo-image",
+            { mediaType: "image",
+              publicId: "foo-image",
               ordering: "0" }
           end
 
@@ -707,11 +707,11 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "add images with invalid params" do
         let(:media) do
-          { media_type: "image",
+          { mediaType: "image",
             ordering: "0" }
         end
 
-        it "returns 422 if public_id is missing" do
+        it "returns 422 if publicId is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           expect(response).to have_http_status(:unprocessable_entity)
         end
@@ -730,7 +730,7 @@ RSpec.describe "V1::Slots", type: :request do
 
         context "with valid params" do
           let(:media_reordering) do
-            { media_type: "image",
+            { mediaType: "image",
               orderingMedia: [
                 { mediaItemId: media_item_1.id,
                   ordering: 2 },
@@ -759,7 +759,7 @@ RSpec.describe "V1::Slots", type: :request do
           describe "mediaItemId" do
             let(:invalid_id) { media_item_3.id + 1 }
             let(:media_reordering) do
-              { media_type: "image",
+              { mediaType: "image",
                 orderingMedia: [
                   { mediaItemId: media_item_1.id,
                     ordering: 2 },
@@ -779,7 +779,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           describe "ordering" do
             let(:media_reordering) do
-              { media_type: "image",
+              { mediaType: "image",
                 orderingMedia: [
                   { mediaItemId: media_item_1.id,
                     ordering: 1 },
@@ -808,29 +808,29 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "video" do
         let(:media) do
-          { media_type: "video",
-            public_id: "foo-video",
+          { mediaType: "video",
+            publicId: "foo-video",
             ordering: "1" }
         end
 
         it "adds a new video" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
+          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
         end
       end
 
       context "voice" do
         let(:media) do
-          { media_type: "voice",
-            public_id: "foo-voice",
+          { mediaType: "voice",
+            publicId: "foo-voice",
             ordering: "1" }
         end
 
         it "adds a new voice item" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:media_type])
+          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
         end
       end
     end

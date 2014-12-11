@@ -179,22 +179,22 @@ resource "Slots" do
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :startdate,
               "Startdate and Time of the Slot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :enddate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
-              scope: :new_slot
-    parameter :note, "A note which belongs to the Slot", scope: :new_slot
-    parameter :alerts, "Alerts for the Slot", scope: :new_slot
+              scope: :newSlot
+    parameter :note, "A note which belongs to the Slot", scope: :newSlot
+    parameter :alerts, "Alerts for the Slot", scope: :newSlot
 
     describe "Create new standard slot" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
@@ -238,7 +238,7 @@ resource "Slots" do
     describe "Create std slot with invalid params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :pgerror, "Explanation which param couldn't be saved"
 
@@ -261,7 +261,7 @@ resource "Slots" do
     describe "Create std slot with missing requiered params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :enddate, "The missing parameter"
 
@@ -286,22 +286,22 @@ resource "Slots" do
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :startdate,
               "Startdate and Time of the Slot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :enddate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :groupId, "Group ID if GroupSlot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :note, "A note which belongs to the Slot",
-              scope: :new_slot
+              scope: :newSlot
     parameter :alerts, "Alerts for the Slot",
-              scope: :new_slot
+              scope: :newSlot
 
     let(:group) { create(:group) }
 
@@ -391,11 +391,11 @@ resource "Slots" do
     parameter :predecessorId,
               "ID of the Slot which was resloted",
               required: true,
-              scope: :re_slot
+              scope: :reSlot
     parameter :predecessorType,
               "Type of the Slot which was resloted (StdSlot/GroupSlot/ReSlot)",
               required: true,
-              scope: :re_slot
+              scope: :reSlot
 
     let(:pred) { create(:std_slot) }
 
@@ -528,10 +528,10 @@ resource "Slots" do
 
       parameter :newMedia, "Scope for attributes of new media item",
                 required: true
-      parameter :media_type, "Type of media (image/video/voice)",
+      parameter :mediaType, "Type of media (image/video/voice)",
                 required: true,
                 scope: :newMedia
-      parameter :public_id, "Cloudinary ID / URL",
+      parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :newMedia
       parameter :ordering, "Order of the new media item." \
@@ -540,8 +540,8 @@ resource "Slots" do
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let(:media_type) { "image" }
-      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:mediaType) { "image" }
+      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
       example "Add media items", document: :v1 do
