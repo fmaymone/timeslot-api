@@ -134,6 +134,8 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
+      elsif params[:newNote].present?
+        @slot.notes.create(note_create_params)
       elsif @slot.meta_slot.update(update_group_params)
         head :no_content
       else
@@ -152,6 +154,8 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
+      elsif params[:newNote].present?
+        @slot.notes.create(note_create_params)
       elsif @slot.meta_slot.update(update_re_params)
         head :no_content
       else
