@@ -43,19 +43,9 @@ group :development, :test do
 
   gem 'spring-commands-rspec'
 
-  gem 'rspec-rails', '~> 3.0.0'
-
   gem 'guard-rspec'
 
   gem 'rb-fsevent'
-
-  gem 'factory_girl_rails'
-
-  gem 'database_cleaner'
-
-  gem 'rspec_api_documentation'
-
-  gem 'shoulda-matchers', require: false
 
   gem 'faker'
 
@@ -64,4 +54,16 @@ group :development, :test do
   gem 'vcr'
 
   gem 'webmock'
+end
+
+group :development, :test, :apptest do
+  gem 'rspec-rails', '~> 3.0.0'
+
+  gem 'factory_girl_rails'
+
+  gem 'database_cleaner'
+
+  gem 'rspec_api_documentation'
+
+  gem 'shoulda-matchers', require: false
 end
