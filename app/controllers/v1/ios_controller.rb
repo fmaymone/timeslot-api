@@ -1,8 +1,8 @@
 module V1
   class IosController < ApplicationController
-    # GET /clean-db
+    # GET /v1/ios/clean-db
     def clean_db
-      if Rails.env.apptest? || Rails.env.test?
+      if Rails.env.apptest? || Rails.env.herokutest? || Rails.env.test?
         DatabaseCleaner.clean
         head :ok
       else

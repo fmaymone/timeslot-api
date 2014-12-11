@@ -56,7 +56,7 @@ group :development, :test do
   gem 'webmock'
 end
 
-group :development, :test, :apptest do
+group :development, :test, :herokutest do
   gem 'rspec-rails', '~> 3.0.0'
 
   gem 'factory_girl_rails'
