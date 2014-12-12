@@ -29,8 +29,8 @@ resource "Slots" do
       response_field :stardate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
       response_field :creatorId, "ID of the User who created the slot"
-      # response_field :alerts, "Alerts for the slot"
-      response_field :note, "A Note on the slot"
+      response_field :alerts, "Alerts for the slot for the current user"
+      response_field :notes, "A list of all notes on the slot"
       response_field :media, "Media Items for the slot"
       response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
@@ -45,56 +45,81 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot_count = current_user.std_slots.count +
+                     current_user.group_slots.count +
+                     current_user.re_slots.count
+        expect(json.length).to eq slot_count
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("title")
+        expect(json.first).to have_key("startdate")
+        expect(json.first).to have_key("enddate")
+        expect(json.first).to have_key("alerts")
+        expect(json.first).to have_key("createdAt")
+        expect(json.first).to have_key("updatedAt")
+        expect(json.first).to have_key("deletedAt")
+        expect(json.first).to have_key("creatorId")
+        expect(json.first).to have_key("notes")
+        expect(json.first).to have_key("visibility")
+        expect(json.first).to have_key("media")
+        expect(json.first).to have_key("url")
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "creatorId" => std_slot_1.creator.id,
                       "startdate" => std_slot_1.startdate.iso8601,
                       "enddate" => std_slot_1.enddate.iso8601,
-                      "note" => std_slot_1.note,
                       "createdAt" => std_slot_1.created_at.iso8601,
                       "updatedAt" => std_slot_1.updated_at.iso8601,
                       "deletedAt" => std_slot_1.deleted_at,
+                      "alerts" => std_slot_1.alerts(current_user),
+                      "notes" => std_slot_1.notes,
+                      "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
-                      "media" => std_slot_1.media_items
+                      "url" => v1_slot_url(std_slot_1, format: :json),
+                      "creatorId" => std_slot_1.creator.id
                      )
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
-                      "creatorId" => std_slot_2.creator.id,
                       "startdate" => std_slot_2.startdate.iso8601,
                       "enddate" => std_slot_2.enddate.iso8601,
-                      "note" => std_slot_2.note,
-                      "visibility" => std_slot_2.visibility,
+                      "alerts" => std_slot_2.alerts(current_user),
                       "createdAt" => std_slot_2.created_at.iso8601,
                       "updatedAt" => std_slot_2.updated_at.iso8601,
                       "deletedAt" => std_slot_2.deleted_at,
-                      "media" => std_slot_1.media_items
+                      "notes" => std_slot_2.notes,
+                      "media" => std_slot_2.media_items,
+                      "visibility" => std_slot_2.visibility,
+                      "url" => v1_slot_url(std_slot_2, format: :json),
+                      "creatorId" => std_slot_2.creator.id
                      )
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
-                      "creatorId" => re_slots[0].creator.id,
                       "startdate" => re_slots[0].startdate.iso8601,
                       "enddate" => re_slots[0].enddate.iso8601,
-                      "note" => re_slots[0].note,
+                      "alerts" => re_slots[0].alerts(current_user),
                       "createdAt" => re_slots[0].created_at.iso8601,
                       "updatedAt" => re_slots[0].updated_at.iso8601,
                       "deletedAt" => re_slots[0].deleted_at,
-                      "media" => std_slot_1.media_items
+                      "notes" => re_slots[0].notes,
+                      "media" => re_slots[0].media_items,
+                      "url" => v1_slot_url(re_slots[0], format: :json),
+                      "creatorId" => re_slots[0].creator.id
                      )
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
-                      "creatorId" => group_slots_1[0].creator.id,
                       "startdate" => group_slots_1[0].startdate.iso8601,
                       "enddate" => group_slots_1[0].enddate.iso8601,
-                      "note" => group_slots_1[0].note,
+                      "alerts" => group_slots_1[0].alerts(current_user),
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.iso8601,
                       "updatedAt" => group_slots_1[0].updated_at.iso8601,
                       "deletedAt" => group_slots_1[0].deleted_at,
-                      "media" => std_slot_1.media_items
+                      "notes" => group_slots_1[0].notes,
+                      "media" => group_slots_1[0].media_items,
+                      "url" => v1_slot_url(group_slots_1[0], format: :json),
+                      "creatorId" => group_slots_1[0].creator.id
                      )
       end
     end
@@ -118,6 +143,10 @@ resource "Slots" do
       response_field :updatedAt, "Latest update of slot in db"
 
       let(:slot) { create(:std_slot) }
+      let!(:slot_setting) { create(:slot_setting,
+                                   user: current_user,
+                                   meta_slot: slot.meta_slot,
+                                   alerts: '1110001100') }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
@@ -126,17 +155,19 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(json.except("media"))
+        expect(json)
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startdate" => slot.startdate.iso8601,
                  "enddate" => slot.enddate.iso8601,
                  "creatorId" => slot.creator.id,
-                 "note" => slot.note,
                  "visibility" => slot.visibility,
                  "createdAt" => slot.created_at.iso8601,
                  "updatedAt" => slot.updated_at.iso8601,
-                 "deletedAt" => deleted_at
+                 "deletedAt" => deleted_at,
+                 "alerts" => slot.alerts(current_user),
+                 "notes" => slot.notes,
+                 "media" => slot.media_items
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
       end
@@ -158,22 +189,22 @@ resource "Slots" do
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :startdate,
               "Startdate and Time of the Slot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :enddate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
-              scope: :new_slot
-    parameter :note, "A note which belongs to the Slot", scope: :new_slot
-    parameter :alerts, "Alerts for the Slot", scope: :new_slot
+              scope: :newSlot
+    parameter :note, "A note which belongs to the Slot", scope: :newSlot
+    parameter :alerts, "Alerts for the Slot", scope: :newSlot
 
     describe "Create new standard slot" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
@@ -208,7 +239,7 @@ resource "Slots" do
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
         expect(json).to have_key("creatorId")
-        expect(json).to have_key("note")
+        expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
         expect(response_status).to eq(201)
       end
@@ -217,7 +248,7 @@ resource "Slots" do
     describe "Create std slot with invalid params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :pgerror, "Explanation which param couldn't be saved"
 
@@ -240,7 +271,7 @@ resource "Slots" do
     describe "Create std slot with missing requiered params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :new_slot
+                required: true, scope: :newSlot
 
       response_field :enddate, "The missing parameter"
 
@@ -265,22 +296,22 @@ resource "Slots" do
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :startdate,
               "Startdate and Time of the Slot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :enddate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :groupId, "Group ID if GroupSlot",
               required: true,
-              scope: :new_slot
+              scope: :newSlot
     parameter :note, "A note which belongs to the Slot",
-              scope: :new_slot
+              scope: :newSlot
     parameter :alerts, "Alerts for the Slot",
-              scope: :new_slot
+              scope: :newSlot
 
     let(:group) { create(:group) }
 
@@ -318,7 +349,7 @@ resource "Slots" do
         expect(json).to have_key("startdate")
         expect(json).to have_key("enddate")
         expect(json).to have_key("creatorId")
-        expect(json).to have_key("note")
+        expect(json).to have_key("notes")
         expect(json).to have_key("groupId")
         expect(response_status).to eq(201)
       end
@@ -370,11 +401,7 @@ resource "Slots" do
     parameter :predecessorId,
               "ID of the Slot which was resloted",
               required: true,
-              scope: :re_slot
-    parameter :predecessorType,
-              "Type of the Slot which was resloted (StdSlot/GroupSlot/ReSlot)",
-              required: true,
-              scope: :re_slot
+              scope: :reSlot
 
     let(:pred) { create(:std_slot) }
 
@@ -392,7 +419,6 @@ resource "Slots" do
       response_field :deletedAt, "Deletion datetime of the slot"
 
       let(:predecessorId) { pred.id }
-      let(:predecessorType) { pred.class.model_name.param_key }
       let(:note) { "re-revolutionizing the calendar" }
 
       example "Reslot a slot",
@@ -483,14 +509,34 @@ resource "Slots" do
       end
     end
 
+    describe "Add note" do
+      parameter :newNote, "Scope for attributes of new note",
+                required: true
+      parameter :title, "Title of the note",
+                required: true,
+                scope: :newNote
+      parameter :content, "Content of the note",
+                required: true,
+                scope: :newNote
+
+      let(:newNote) { attributes_for(:note) }
+
+      example "Add note", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(StdSlot.last.notes.last.title).to eq newNote[:title]
+      end
+    end
+
     describe "Adding media items to existing slot" do
 
       parameter :newMedia, "Scope for attributes of new media item",
                 required: true
-      parameter :media_type, "Type of media (image/video/voice)",
+      parameter :mediaType, "Type of media (image/video/voice)",
                 required: true,
                 scope: :newMedia
-      parameter :public_id, "Cloudinary ID / URL",
+      parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :newMedia
       parameter :ordering, "Order of the new media item." \
@@ -499,12 +545,11 @@ resource "Slots" do
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let(:media_type) { "image" }
-      let(:public_id) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:mediaType) { "image" }
+      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
       let(:ordering) { "1" }
 
-      example "Add media items",
-              document: :v1 do
+      example "Add media items", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -548,8 +593,7 @@ resource "Slots" do
       end
       let(:raw_post) { media_reordering.to_json }
 
-      example "Reorder media items",
-              document: :v1 do
+      example "Reorder media items", document: :v1 do
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
                     " of the slot must be send.\n\n" \
@@ -586,11 +630,13 @@ resource "Slots" do
                                 "creatorId" => std_slot.creator.id,
                                 "startdate" => std_slot.startdate.iso8601,
                                 "enddate" => std_slot.enddate.iso8601,
-                                "note" => std_slot.note,
+                                "alerts" => std_slot.alerts(current_user),
                                 "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.iso8601,
                                 "updatedAt" => std_slot.updated_at.iso8601,
-                                "deletedAt" => std_slot.deleted_at.iso8601
+                                "deletedAt" => std_slot.deleted_at.iso8601,
+                                "notes" => std_slot.notes,
+                                "media" => std_slot.media_items
                                )
       end
     end
@@ -630,12 +676,13 @@ resource "Slots" do
                            "creatorId" => group_slot.creator.id,
                            "startdate" => group_slot.startdate.iso8601,
                            "enddate" => group_slot.enddate.iso8601,
-                           "note" => group_slot.note,
-                           "media" => group_slot.media_items,
+                           "alerts" => group_slot.alerts(current_user),
                            "groupId" => group_slot.group.id,
                            "createdAt" => group_slot.created_at.iso8601,
                            "updatedAt" => group_slot.updated_at.iso8601,
-                           "deletedAt" => group_slot.deleted_at.iso8601
+                           "deletedAt" => group_slot.deleted_at.iso8601,
+                           "notes" => group_slot.notes,
+                           "media" => group_slot.media_items
                           )
       end
     end
@@ -673,12 +720,13 @@ resource "Slots" do
                            "creatorId" => re_slot.creator.id,
                            "startdate" => re_slot.startdate.iso8601,
                            "enddate" => re_slot.enddate.iso8601,
-                           "note" => re_slot.note,
-                           "media" => re_slot.media_items,
+                           "alerts" => re_slot.alerts(current_user),
                            "slotterId" => re_slot.slotter.id,
                            "createdAt" => re_slot.created_at.iso8601,
                            "updatedAt" => re_slot.updated_at.iso8601,
-                           "deletedAt" => re_slot.deleted_at.iso8601
+                           "deletedAt" => re_slot.deleted_at.iso8601,
+                           "notes" => re_slot.notes,
+                           "media" => re_slot.media_items
                           )
       end
     end

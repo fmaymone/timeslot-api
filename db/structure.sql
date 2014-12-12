@@ -34,7 +34,6 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE base_slots (
-    footest character varying(255),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
@@ -102,7 +101,6 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 
 CREATE TABLE group_slots (
     group_id integer,
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     meta_slot_id integer,
@@ -256,12 +254,45 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 
 
 --
+-- Name: notes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE notes (
+    id integer NOT NULL,
+    base_slot_id integer,
+    title character varying(255) NOT NULL,
+    content text DEFAULT ''::text,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE notes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: notes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
+
+
+--
 -- Name: re_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE re_slots (
     predecessor_id integer NOT NULL,
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     footest character varying(255),
@@ -321,7 +352,6 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 CREATE TABLE std_slots (
     visibility bit(2) DEFAULT B'11'::"bit",
-    note text DEFAULT ''::text,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
@@ -417,6 +447,13 @@ ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY notes ALTER COLUMN id SET DEFAULT nextval('notes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -487,6 +524,14 @@ ALTER TABLE ONLY memberships
 
 ALTER TABLE ONLY meta_slots
     ADD CONSTRAINT meta_slots_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY notes
+    ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
 
 
 --
@@ -566,6 +611,13 @@ CREATE INDEX index_memberships_on_user_id ON memberships USING btree (user_id);
 --
 
 CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_id);
+
+
+--
+-- Name: index_notes_on_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_notes_on_base_slot_id ON notes USING btree (base_slot_id);
 
 
 --
@@ -715,4 +767,8 @@ INSERT INTO schema_migrations (version) VALUES ('20141203115550');
 INSERT INTO schema_migrations (version) VALUES ('20141203213610');
 
 INSERT INTO schema_migrations (version) VALUES ('20141205094237');
+
+INSERT INTO schema_migrations (version) VALUES ('20141210122837');
+
+INSERT INTO schema_migrations (version) VALUES ('20141210135147');
 
