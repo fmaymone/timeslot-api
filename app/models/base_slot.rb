@@ -15,6 +15,11 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
 
+  def alerts(user)
+    setting = SlotSetting.where(user: user, meta_slot: meta_slot)
+    setting.first.alerts if setting.exists?
+  end
+
   def delete
 
     # -> make an "unregister" Method in SlotSetting Class so it can take care itself

@@ -4,11 +4,11 @@ json.array!(@slots) do |slot|
                 :title,
                 :startdate,
                 :enddate,
-                # :alerts,
                 :created_at,
                 :updated_at,
                 :deleted_at
                )
+  json.alerts slot.alerts(current_user) if current_user
   json.notes slot.notes do |note|
     json.title note.title
     json.content note.content

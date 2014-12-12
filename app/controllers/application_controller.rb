@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::API
+  include ActionController::Helpers
+  helper_method :current_user
+
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
   end

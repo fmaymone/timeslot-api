@@ -3,11 +3,11 @@ json.extract!(@slot,
               :title,
               :startdate,
               :enddate,
-              # :alerts,
               :created_at,
               :updated_at,
               :deleted_at
              )
+json.alerts @slot.alerts(current_user) if current_user
 json.creator_id @slot.creator.id
 if @slot.class == StdSlot
   json.visibility @slot.visibility

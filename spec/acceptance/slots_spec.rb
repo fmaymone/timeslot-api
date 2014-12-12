@@ -29,7 +29,7 @@ resource "Slots" do
       response_field :stardate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
       response_field :creatorId, "ID of the User who created the slot"
-      # response_field :alerts, "Alerts for the slot"
+      response_field :alerts, "Alerts for the slot for the current user"
       response_field :notes, "A list of all notes on the slot"
       response_field :media, "Media Items for the slot"
       response_field :url, "direct url to fetch the slot"
@@ -53,6 +53,7 @@ resource "Slots" do
         expect(json.first).to have_key("title")
         expect(json.first).to have_key("startdate")
         expect(json.first).to have_key("enddate")
+        expect(json.first).to have_key("alerts")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
         expect(json.first).to have_key("deletedAt")
@@ -69,6 +70,7 @@ resource "Slots" do
                       "createdAt" => std_slot_1.created_at.iso8601,
                       "updatedAt" => std_slot_1.updated_at.iso8601,
                       "deletedAt" => std_slot_1.deleted_at,
+                      "alerts" => std_slot_1.alerts(current_user),
                       "notes" => std_slot_1.notes,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
@@ -80,6 +82,7 @@ resource "Slots" do
                       "title" => std_slot_2.title,
                       "startdate" => std_slot_2.startdate.iso8601,
                       "enddate" => std_slot_2.enddate.iso8601,
+                      "alerts" => std_slot_2.alerts(current_user),
                       "createdAt" => std_slot_2.created_at.iso8601,
                       "updatedAt" => std_slot_2.updated_at.iso8601,
                       "deletedAt" => std_slot_2.deleted_at,
@@ -94,6 +97,7 @@ resource "Slots" do
                       "title" => re_slots[0].title,
                       "startdate" => re_slots[0].startdate.iso8601,
                       "enddate" => re_slots[0].enddate.iso8601,
+                      "alerts" => re_slots[0].alerts(current_user),
                       "createdAt" => re_slots[0].created_at.iso8601,
                       "updatedAt" => re_slots[0].updated_at.iso8601,
                       "deletedAt" => re_slots[0].deleted_at,
@@ -107,6 +111,7 @@ resource "Slots" do
                       "title" => group_slots_1[0].title,
                       "startdate" => group_slots_1[0].startdate.iso8601,
                       "enddate" => group_slots_1[0].enddate.iso8601,
+                      "alerts" => group_slots_1[0].alerts(current_user),
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.iso8601,
                       "updatedAt" => group_slots_1[0].updated_at.iso8601,
@@ -138,6 +143,10 @@ resource "Slots" do
       response_field :updatedAt, "Latest update of slot in db"
 
       let(:slot) { create(:std_slot) }
+      let!(:slot_setting) { create(:slot_setting,
+                                   user: current_user,
+                                   meta_slot: slot.meta_slot,
+                                   alerts: '1110001100') }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
 
@@ -156,6 +165,7 @@ resource "Slots" do
                  "createdAt" => slot.created_at.iso8601,
                  "updatedAt" => slot.updated_at.iso8601,
                  "deletedAt" => deleted_at,
+                 "alerts" => slot.alerts(current_user),
                  "notes" => slot.notes,
                  "media" => slot.media_items
                 )
@@ -620,6 +630,7 @@ resource "Slots" do
                                 "creatorId" => std_slot.creator.id,
                                 "startdate" => std_slot.startdate.iso8601,
                                 "enddate" => std_slot.enddate.iso8601,
+                                "alerts" => std_slot.alerts(current_user),
                                 "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.iso8601,
                                 "updatedAt" => std_slot.updated_at.iso8601,
@@ -665,6 +676,7 @@ resource "Slots" do
                            "creatorId" => group_slot.creator.id,
                            "startdate" => group_slot.startdate.iso8601,
                            "enddate" => group_slot.enddate.iso8601,
+                           "alerts" => group_slot.alerts(current_user),
                            "groupId" => group_slot.group.id,
                            "createdAt" => group_slot.created_at.iso8601,
                            "updatedAt" => group_slot.updated_at.iso8601,
@@ -708,6 +720,7 @@ resource "Slots" do
                            "creatorId" => re_slot.creator.id,
                            "startdate" => re_slot.startdate.iso8601,
                            "enddate" => re_slot.enddate.iso8601,
+                           "alerts" => re_slot.alerts(current_user),
                            "slotterId" => re_slot.slotter.id,
                            "createdAt" => re_slot.created_at.iso8601,
                            "updatedAt" => re_slot.updated_at.iso8601,
