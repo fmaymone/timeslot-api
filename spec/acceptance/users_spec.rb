@@ -5,6 +5,7 @@ resource "Users" do
   let(:current_user) { create(:user) }
   before(:each) { ApplicationController.new.current_user = current_user }
 
+  # at the moment this test is just here to explain the auth hack
   get "/v1/users/authenticate/:id" do
     header "Accept", "application/json"
 
@@ -17,9 +18,13 @@ resource "Users" do
 
     # The best idea I had to check which user is set as current_user was taking
     # an action which uses the current_user and see if it gets set correctly
-    example "Authenticate an user", document: :v1 do
-      explanation "returns OK if User set as current user\n\n" \
-                  "returns 404 if ID is invalid\n\n"
+    example "Authenticate an user - See Note", document: :v1 do
+      explanation "***Important***: as of now we don't have a proper user" \
+                  " authentication in place. Please set a HTTP header" \
+                  " with **'HTTP_AUTHORIZATION'** as key and the **username**" \
+                  " of the user who should be *logged in* as value.\n\n" \
+                  "returns OK if User set as current user\n\n" \
+                  "returns 404 if ID is invalid"
       do_request
 
       expect(response_status).to eq(200)
