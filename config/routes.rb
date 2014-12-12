@@ -86,6 +86,10 @@ Rails.application.routes.draw do
             as: 'group_settings',
             constraints: { group_id: /\d+/ }
     end
+
+    if Rails.env.apptest? || Rails.env.herokutest? || Rails.env.test?
+      get 'ios/clean-db', to: 'ios#clean_db'
+    end
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
