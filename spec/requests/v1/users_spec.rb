@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "V1::Users", type: :request do
   let(:json) { JSON.parse(response.body) }
-  let(:current_user) { create(:user) }
+  let!(:current_user) { create(:user) }
   before(:each) { ApplicationController.new.current_user = current_user }
 
   describe "GET /v1/users" do
@@ -72,18 +72,19 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "DELETE /v1/users" do
     it "returns success" do
-      delete "/v1/users"
+      delete "/v1/users", {}, { 'HTTP_AUTHORIZATION' => current_user.username }
       expect(response).to be_success
     end
 
     it "sets deleted_at for current_user" do
-      delete "/v1/users"
+      delete "/v1/users", {}, { 'HTTP_AUTHORIZATION' => current_user.username }
+      current_user.reload
       expect(current_user.deleted_at?).to be true
     end
 
     it "doesn't delete the current user" do
       expect {
-        delete "/v1/users"
+        delete "/v1/users", {}, { 'HTTP_AUTHORIZATION' => current_user.username }
       }.not_to change(User, :count)
     end
   end
@@ -107,6 +108,18 @@ RSpec.describe "V1::Users", type: :request do
         post "/v1/users/add_friends", ids: [john.id]
         friendship.reload
         expect(friendship.established?).to be true
+      end
+
+      context "with authorization" do
+        it "accepts a friend request" do
+          skip "add auth handling for specs"
+          get "/v1/users/authenticate/#{current_user.id}"
+          expect(friendship.established?).to be false
+          post "/v1/users/add_friends", {ids: [john.id]},
+               { 'HTTP_AUTHORIZATION' => current_user.username }
+          friendship.reload
+          expect(friendship.established?).to be true
+        end
       end
     end
   end

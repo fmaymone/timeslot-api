@@ -1,5 +1,8 @@
 module V1
   class SlotsController < ApplicationController
+    # before_filter :signed_in?
+    before_filter :sign_in
+
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
     def index

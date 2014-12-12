@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
-  validates :username, presence: true, length: { maximum: 20 }
+  validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
 
   ## slot related ##
 
