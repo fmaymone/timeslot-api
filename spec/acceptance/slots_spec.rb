@@ -392,10 +392,6 @@ resource "Slots" do
               "ID of the Slot which was resloted",
               required: true,
               scope: :reSlot
-    parameter :predecessorType,
-              "Type of the Slot which was resloted (StdSlot/GroupSlot/ReSlot)",
-              required: true,
-              scope: :reSlot
 
     let(:pred) { create(:std_slot) }
 
@@ -413,7 +409,6 @@ resource "Slots" do
       response_field :deletedAt, "Deletion datetime of the slot"
 
       let(:predecessorId) { pred.id }
-      let(:predecessorType) { pred.class.model_name.param_key }
       let(:note) { "re-revolutionizing the calendar" }
 
       example "Reslot a slot",

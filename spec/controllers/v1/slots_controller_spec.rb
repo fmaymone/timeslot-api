@@ -139,10 +139,8 @@ RSpec.describe V1::SlotsController, type: :controller do
   describe "POST create_reslot" do
     describe "with valid params" do
       let(:pred) { create(:std_slot) }
-      let(:valid_attributes) {
-        attributes_for(:re_slot, predecessorId: pred.id,
-                       predecessorType: pred.class.model_name.param_key)
-      }
+      let(:valid_attributes) { attributes_for(:re_slot, predecessorId: pred.id) }
+
       it "responds with Created (201)" do
         post :create_reslot, reSlot: valid_attributes
         expect(response).to have_http_status(:created)

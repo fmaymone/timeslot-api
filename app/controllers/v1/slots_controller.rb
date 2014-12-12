@@ -206,7 +206,7 @@ module V1
     end
 
     private def re_params
-      params.require(:reSlot).permit(:predecessorId, :predecessorType)
+      params.require(:reSlot).permit(:predecessorId)
     end
 
     private def meta_params
