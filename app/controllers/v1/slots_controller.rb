@@ -213,23 +213,24 @@ module V1
     end
 
     private def meta_params
-      params.require(:newSlot).permit(:title, :startdate, :enddate)
+      params.require(:newSlot).permit(:title, :startdate, :enddate, :location)
     end
 
     private def update_meta_params
-      params.require(:metaSlot).permit(:title, :startdate, :enddate)
+      params.require(:metaSlot).permit(:title, :startdate, :enddate, :location)
     end
 
     private def update_std_params
-      params.require(:stdSlot).permit(:title, :startdate, :enddate, :visibility)
+      params.require(:stdSlot).permit(:title, :startdate, :enddate, :location,
+                                      :visibility)
     end
 
     private def update_group_params
-      params.require(:groupSlot).permit(:title, :startdate, :enddate)
+      params.require(:groupSlot).permit(:title, :startdate, :enddate, :location)
     end
 
     private def update_re_params
-      params.require(:reSlot).permit(:title, :startdate, :enddate)
+      params.require(:reSlot).permit(:title, :startdate, :enddate, :location)
     end
 
     private def alert_param

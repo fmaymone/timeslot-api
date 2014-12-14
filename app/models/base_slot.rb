@@ -11,9 +11,13 @@ class BaseSlot < ActiveRecord::Base
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :base_slot
   belongs_to :meta_slot
 
-  delegate :title, :startdate, :enddate, :creator, to: :meta_slot
+  delegate :title, :startdate, :enddate, :creator, :location, to: :meta_slot
 
   validates :meta_slot, presence: true
+
+  def locations
+    Location.find(location)
+  end
 
   def alerts(user)
     setting = SlotSetting.where(user: user, meta_slot: meta_slot)

@@ -7,6 +7,9 @@ json.extract!(@slot,
               :updated_at,
               :deleted_at
              )
+unless @slot.location.nil?
+  json.location @slot.locations, :id, :name, :longitude, :latitude
+end
 json.alerts @slot.alerts(current_user) if current_user
 json.creator_id @slot.creator.id
 if @slot.class == StdSlot
