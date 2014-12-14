@@ -136,6 +136,7 @@ resource "Slots" do
       response_field :title, "Title of the slot"
       response_field :startdate, "Startdate of the slot"
       response_field :enddate, "Enddate of the slot"
+      response_field :location, "Location data for the slot"
       response_field :note, "A note on the slot"
       response_field :visibility, "Visibiltiy of the slot"
       response_field :media, "Media Items of the slot"
@@ -160,6 +161,7 @@ resource "Slots" do
                  "title" => slot.title,
                  "startdate" => slot.startdate.iso8601,
                  "enddate" => slot.enddate.iso8601,
+                 "location" => nil,
                  "creatorId" => slot.creator.id,
                  "visibility" => slot.visibility,
                  "createdAt" => slot.created_at.iso8601,
@@ -671,19 +673,19 @@ resource "Slots" do
         group_slot.reload
         expect(group_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to eq("id" => group_slot.id,
-                           "title" => group_slot.title,
-                           "creatorId" => group_slot.creator.id,
-                           "startdate" => group_slot.startdate.iso8601,
-                           "enddate" => group_slot.enddate.iso8601,
-                           "alerts" => group_slot.alerts(current_user),
-                           "groupId" => group_slot.group.id,
-                           "createdAt" => group_slot.created_at.iso8601,
-                           "updatedAt" => group_slot.updated_at.iso8601,
-                           "deletedAt" => group_slot.deleted_at.iso8601,
-                           "notes" => group_slot.notes,
-                           "media" => group_slot.media_items
-                          )
+        expect(json).to include("id" => group_slot.id,
+                                "title" => group_slot.title,
+                                "creatorId" => group_slot.creator.id,
+                                "startdate" => group_slot.startdate.iso8601,
+                                "enddate" => group_slot.enddate.iso8601,
+                                "alerts" => group_slot.alerts(current_user),
+                                "groupId" => group_slot.group.id,
+                                "createdAt" => group_slot.created_at.iso8601,
+                                "updatedAt" => group_slot.updated_at.iso8601,
+                                "deletedAt" => group_slot.deleted_at.iso8601,
+                                "notes" => group_slot.notes,
+                                "media" => group_slot.media_items
+                               )
       end
     end
 
@@ -715,19 +717,19 @@ resource "Slots" do
         re_slot.reload
         expect(re_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to eq("id" => re_slot.id,
-                           "title" => re_slot.title,
-                           "creatorId" => re_slot.creator.id,
-                           "startdate" => re_slot.startdate.iso8601,
-                           "enddate" => re_slot.enddate.iso8601,
-                           "alerts" => re_slot.alerts(current_user),
-                           "slotterId" => re_slot.slotter.id,
-                           "createdAt" => re_slot.created_at.iso8601,
-                           "updatedAt" => re_slot.updated_at.iso8601,
-                           "deletedAt" => re_slot.deleted_at.iso8601,
-                           "notes" => re_slot.notes,
-                           "media" => re_slot.media_items
-                          )
+        expect(json).to include("id" => re_slot.id,
+                                "title" => re_slot.title,
+                                "creatorId" => re_slot.creator.id,
+                                "startdate" => re_slot.startdate.iso8601,
+                                "enddate" => re_slot.enddate.iso8601,
+                                "alerts" => re_slot.alerts(current_user),
+                                "slotterId" => re_slot.slotter.id,
+                                "createdAt" => re_slot.created_at.iso8601,
+                                "updatedAt" => re_slot.updated_at.iso8601,
+                                "deletedAt" => re_slot.deleted_at.iso8601,
+                                "notes" => re_slot.notes,
+                                "media" => re_slot.media_items
+                               )
       end
     end
 

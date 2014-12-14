@@ -7,9 +7,15 @@ json.extract!(@slot,
               :updated_at,
               :deleted_at
              )
-unless @slot.location.nil?
-  json.location @slot.locations, :id, :name, :longitude, :latitude
+
+json.location do
+  if @slot.location_id.nil?
+    json.nil!
+  else
+    json.partial! 'v1/locations/show', location_data: @slot.location
+  end
 end
+
 json.alerts @slot.alerts(current_user) if current_user
 json.creator_id @slot.creator.id
 if @slot.class == StdSlot

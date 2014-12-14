@@ -15,7 +15,7 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
 
-  def locations
+  def location
     Location.find(location_id)
   end
 

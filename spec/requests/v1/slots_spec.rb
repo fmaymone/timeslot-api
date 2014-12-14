@@ -47,7 +47,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "StdSlot, with location" do
-      let(:meta_slot) { create(:meta_slot, location: "02-0000-114") }
+      let(:meta_slot) { create(:meta_slot, location_id: "02-0000-114") }
       let(:std_slot) { create(:std_slot, meta_slot: meta_slot) }
 
       it "returns the location" do
