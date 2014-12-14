@@ -16,11 +16,14 @@ json.location do
   end
 end
 
+json.creator do
+  json.partial! 'v1/users/user', user: @slot.creator
+end
+
 if current_user
   json.partial! 'v1/slots/settings', slot: @slot
 end
 
-json.creator_id @slot.creator.id
 if @slot.class == StdSlot
   json.visibility @slot.visibility
 elsif @slot.class == GroupSlot
