@@ -8,12 +8,13 @@ json.array!(@slots) do |slot|
                )
   json.start_date slot.startdate
   json.end_date slot.enddate
-  json.alerts slot.alerts(current_user) if current_user
-  json.notes slot.notes do |note|
-    json.title note.title
-    json.content note.content
-    json.created note.created_at
+
+  if current_user
+    json.partial! 'v1/slots/settings', slot: slot
   end
+
+  json.notes slot.notes, partial: 'v1/slots/note', as: :note
+
   json.media slot.media_items do |item|
     json.media_id item.id
     json.media_type item.media_type

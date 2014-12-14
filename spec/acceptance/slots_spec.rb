@@ -53,7 +53,7 @@ resource "Slots" do
         expect(json.first).to have_key("title")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
-        expect(json.first).to have_key("alerts")
+        expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
         expect(json.first).to have_key("deletedAt")
@@ -65,12 +65,13 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "startDate" => std_slot_1.startdate.iso8601,
-                      "endDate" => std_slot_1.enddate.iso8601,
-                      "createdAt" => std_slot_1.created_at.iso8601,
-                      "updatedAt" => std_slot_1.updated_at.iso8601,
+                      "startDate" => std_slot_1.startdate.as_json,
+                      "endDate" => std_slot_1.enddate.as_json,
+                      "createdAt" => std_slot_1.created_at.as_json,
+                      "updatedAt" => std_slot_1.updated_at.as_json,
                       "deletedAt" => std_slot_1.deleted_at,
-                      "alerts" => std_slot_1.alerts(current_user),
+                      "settings" => {
+                        'alerts' => std_slot_1.alerts(current_user) },
                       "notes" => std_slot_1.notes,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
@@ -80,11 +81,12 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
-                      "startDate" => std_slot_2.startdate.iso8601,
-                      "endDate" => std_slot_2.enddate.iso8601,
-                      "alerts" => std_slot_2.alerts(current_user),
-                      "createdAt" => std_slot_2.created_at.iso8601,
-                      "updatedAt" => std_slot_2.updated_at.iso8601,
+                      "startDate" => std_slot_2.startdate.as_json,
+                      "endDate" => std_slot_2.enddate.as_json,
+                      "settings" => {
+                        'alerts' => std_slot_2.alerts(current_user) },
+                      "createdAt" => std_slot_2.created_at.as_json,
+                      "updatedAt" => std_slot_2.updated_at.as_json,
                       "deletedAt" => std_slot_2.deleted_at,
                       "notes" => std_slot_2.notes,
                       "media" => std_slot_2.media_items,
@@ -95,11 +97,12 @@ resource "Slots" do
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
-                      "startDate" => re_slots[0].startdate.iso8601,
-                      "endDate" => re_slots[0].enddate.iso8601,
-                      "alerts" => re_slots[0].alerts(current_user),
-                      "createdAt" => re_slots[0].created_at.iso8601,
-                      "updatedAt" => re_slots[0].updated_at.iso8601,
+                      "startDate" => re_slots[0].startdate.as_json,
+                      "endDate" => re_slots[0].enddate.as_json,
+                      "settings" => {
+                        'alerts' => re_slots[0].alerts(current_user) },
+                      "createdAt" => re_slots[0].created_at.as_json,
+                      "updatedAt" => re_slots[0].updated_at.as_json,
                       "deletedAt" => re_slots[0].deleted_at,
                       "notes" => re_slots[0].notes,
                       "media" => re_slots[0].media_items,
@@ -109,12 +112,13 @@ resource "Slots" do
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
-                      "startDate" => group_slots_1[0].startdate.iso8601,
-                      "endDate" => group_slots_1[0].enddate.iso8601,
-                      "alerts" => group_slots_1[0].alerts(current_user),
+                      "startDate" => group_slots_1[0].startdate.as_json,
+                      "endDate" => group_slots_1[0].enddate.as_json,
+                      "settings" => {
+                        'alerts' => group_slots_1[0].alerts(current_user) },
                       "groupId" => group_slots_1[0].group.id,
-                      "createdAt" => group_slots_1[0].created_at.iso8601,
-                      "updatedAt" => group_slots_1[0].updated_at.iso8601,
+                      "createdAt" => group_slots_1[0].created_at.as_json,
+                      "updatedAt" => group_slots_1[0].updated_at.as_json,
                       "deletedAt" => group_slots_1[0].deleted_at,
                       "notes" => group_slots_1[0].notes,
                       "media" => group_slots_1[0].media_items,
@@ -153,7 +157,7 @@ resource "Slots" do
                                    meta_slot: slot.meta_slot,
                                    alerts: '1110001100') }
       let(:id) { slot.id }
-      let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.iso8601 }
+      let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.as_json }
 
       example "Get slot returns slot data", document: :v1 do
         explanation "returns 404 if ID is invalid"
@@ -179,10 +183,10 @@ resource "Slots" do
         expect(json)
           .to eq("id" => slot.id,
                  "title" => slot.title,
-                 "startDate" => slot.startdate.iso8601,
-                 "endDate" => slot.enddate.iso8601,
-                 "createdAt" => slot.created_at.iso8601,
-                 "updatedAt" => slot.updated_at.iso8601,
+                 "startDate" => slot.startdate.as_json,
+                 "endDate" => slot.enddate.as_json,
+                 "createdAt" => slot.created_at.as_json,
+                 "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
                  "location" => {"id" => "02-0000-114",
                                 "name" => slot.location.name,
@@ -192,15 +196,15 @@ resource "Slots" do
                                 "country" => slot.location.country,
                                 "longitude" => slot.location.longitude,
                                 "latitude" => slot.location.latitude,
-                                "createdAt" => slot.location.created.iso8601,
-                                "updatedAt" => slot.location.last_update.iso8601,
+                                "createdAt" => slot.location.created.as_json,
+                                "updatedAt" => slot.location.last_update.as_json,
                                 "categories" => slot.location.categories,
                                 "images" => slot.location.images
                                },
                  "creator" => {"id" => slot.creator.id,
                                "username" => slot.creator.username,
-                               "createdAt" => slot.creator.created_at.iso8601,
-                               "updatedAt" => slot.creator.updated_at.iso8601,
+                               "createdAt" => slot.creator.created_at.as_json,
+                               "updatedAt" => slot.creator.updated_at.as_json,
                                "deletedAt" => nil},
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
@@ -475,7 +479,7 @@ resource "Slots" do
         expect(json).to have_key("creator")
         expect(json).to have_key("slotterId")
         expect(json["title"]).to eq pred.title
-        expect(json["startDate"]).to eq pred.startdate.iso8601
+        expect(json["startDate"]).to eq pred.startdate.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["slotterId"]).to eq current_user.id
       end
@@ -665,12 +669,12 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => std_slot.id,
                                 "title" => std_slot.title,
-                                "startDate" => std_slot.startdate.iso8601,
-                                "endDate" => std_slot.enddate.iso8601,
+                                "startDate" => std_slot.startdate.as_json,
+                                "endDate" => std_slot.enddate.as_json,
                                 "visibility" => std_slot.visibility,
-                                "createdAt" => std_slot.created_at.iso8601,
-                                "updatedAt" => std_slot.updated_at.iso8601,
-                                "deletedAt" => std_slot.deleted_at.iso8601,
+                                "createdAt" => std_slot.created_at.as_json,
+                                "updatedAt" => std_slot.updated_at.as_json,
+                                "deletedAt" => std_slot.deleted_at.as_json,
                                 "notes" => std_slot.notes,
                                 "media" => std_slot.media_items
                                )
@@ -709,12 +713,12 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => group_slot.id,
                                 "title" => group_slot.title,
-                                "startDate" => group_slot.startdate.iso8601,
-                                "endDate" => group_slot.enddate.iso8601,
+                                "startDate" => group_slot.startdate.as_json,
+                                "endDate" => group_slot.enddate.as_json,
                                 "groupId" => group_slot.group.id,
-                                "createdAt" => group_slot.created_at.iso8601,
-                                "updatedAt" => group_slot.updated_at.iso8601,
-                                "deletedAt" => group_slot.deleted_at.iso8601,
+                                "createdAt" => group_slot.created_at.as_json,
+                                "updatedAt" => group_slot.updated_at.as_json,
+                                "deletedAt" => group_slot.deleted_at.as_json,
                                 "notes" => group_slot.notes,
                                 "media" => group_slot.media_items
                                )
@@ -751,12 +755,10 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => re_slot.id,
                                 "title" => re_slot.title,
-                                "startDate" => re_slot.startdate.iso8601,
-                                "endDate" => re_slot.enddate.iso8601,
                                 "slotterId" => re_slot.slotter.id,
-                                "createdAt" => re_slot.created_at.iso8601,
-                                "updatedAt" => re_slot.updated_at.iso8601,
-                                "deletedAt" => re_slot.deleted_at.iso8601,
+                                "createdAt" => re_slot.created_at.as_json,
+                                "updatedAt" => re_slot.updated_at.as_json,
+                                "deletedAt" => re_slot.deleted_at.as_json,
                                 "notes" => re_slot.notes,
                                 "media" => re_slot.media_items
                                )
