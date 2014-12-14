@@ -143,7 +143,8 @@ resource "Slots" do
       response_field :createdAt, "Creation of slot"
       response_field :updatedAt, "Latest update of slot in db"
 
-      let(:slot) { create(:std_slot) }
+      let(:meta_slot) { create(:meta_slot, location_id: "02-0000-114") }
+      let(:slot) { create(:std_slot, meta_slot: meta_slot) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
@@ -156,18 +157,45 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("title")
+        expect(json).to have_key("startdate")
+        expect(json).to have_key("enddate")
+        expect(json).to have_key("location")
+        expect(json['location']).to have_key("name")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("createdAt")
+        expect(json).to have_key("updatedAt")
+        expect(json).to have_key("deletedAt")
+        expect(json).to have_key("creatorId")
+        expect(json).to have_key("notes")
+        expect(json).to have_key("visibility")
+        expect(json).to have_key("media")
         expect(json)
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startdate" => slot.startdate.iso8601,
                  "enddate" => slot.enddate.iso8601,
-                 "location" => nil,
+                 "location" => {"id" => "02-0000-114",
+                                "name" => slot.location.name,
+                                "street" => slot.location.street,
+                                "city" => slot.location.city,
+                                "postcode" => slot.location.postcode,
+                                "country" => slot.location.country,
+                                "longitude" => slot.location.longitude,
+                                "latitude" => slot.location.latitude,
+                                "createdAt" => slot.location.created.iso8601,
+                                "updatedAt" => slot.location.last_update.iso8601,
+                                "categories" => slot.location.categories,
+                                "images" => slot.location.images
+                               },
                  "creatorId" => slot.creator.id,
                  "visibility" => slot.visibility,
                  "createdAt" => slot.created_at.iso8601,
                  "updatedAt" => slot.updated_at.iso8601,
                  "deletedAt" => deleted_at,
-                 "alerts" => slot.alerts(current_user),
+                 "settings" => { 'alerts' => '1110001100' },
                  "notes" => slot.notes,
                  "media" => slot.media_items
                 )
@@ -632,7 +660,6 @@ resource "Slots" do
                                 "creatorId" => std_slot.creator.id,
                                 "startdate" => std_slot.startdate.iso8601,
                                 "enddate" => std_slot.enddate.iso8601,
-                                "alerts" => std_slot.alerts(current_user),
                                 "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.iso8601,
                                 "updatedAt" => std_slot.updated_at.iso8601,
@@ -678,7 +705,6 @@ resource "Slots" do
                                 "creatorId" => group_slot.creator.id,
                                 "startdate" => group_slot.startdate.iso8601,
                                 "enddate" => group_slot.enddate.iso8601,
-                                "alerts" => group_slot.alerts(current_user),
                                 "groupId" => group_slot.group.id,
                                 "createdAt" => group_slot.created_at.iso8601,
                                 "updatedAt" => group_slot.updated_at.iso8601,
@@ -722,7 +748,6 @@ resource "Slots" do
                                 "creatorId" => re_slot.creator.id,
                                 "startdate" => re_slot.startdate.iso8601,
                                 "enddate" => re_slot.enddate.iso8601,
-                                "alerts" => re_slot.alerts(current_user),
                                 "slotterId" => re_slot.slotter.id,
                                 "createdAt" => re_slot.created_at.iso8601,
                                 "updatedAt" => re_slot.updated_at.iso8601,

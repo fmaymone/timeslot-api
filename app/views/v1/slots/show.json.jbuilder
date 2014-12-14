@@ -16,7 +16,10 @@ json.location do
   end
 end
 
-json.alerts @slot.alerts(current_user) if current_user
+if current_user
+  json.partial! 'v1/slots/settings', slot: @slot
+end
+
 json.creator_id @slot.creator.id
 if @slot.class == StdSlot
   json.visibility @slot.visibility
