@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::API
+  include ActionController::Caching
   include ActionController::Helpers
   helper_method :current_user
 
