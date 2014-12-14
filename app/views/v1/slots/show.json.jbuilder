@@ -1,12 +1,12 @@
 json.extract!(@slot,
               :id,
               :title,
-              :startdate,
-              :enddate,
               :created_at,
               :updated_at,
               :deleted_at
              )
+json.start_date @slot.startdate
+json.end_date @slot.enddate
 
 json.location do
   if @slot.location_id.nil?

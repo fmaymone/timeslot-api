@@ -67,8 +67,8 @@ RSpec.describe "V1::Slots", type: :request do
         get "/v1/slots/#{std_slot.id}"
         expect(json).to have_key('id')
         expect(json).to have_key('title')
-        expect(json).to have_key('startdate')
-        expect(json).to have_key('enddate')
+        expect(json).to have_key('startDate')
+        expect(json).to have_key('endDate')
         expect(json).to have_key('notes')
         expect(json).to have_key('visibility')
         expect(json).to have_key('createdAt')
@@ -79,8 +79,8 @@ RSpec.describe "V1::Slots", type: :request do
         get "/v1/slots/#{std_slot.id}"
         expect(json['id']).to eq(std_slot.id)
         expect(json['title']).to eq(std_slot.title)
-        expect(json['startdate']).to eq(std_slot.startdate.iso8601)
-        expect(json['enddate']).to eq(std_slot.enddate.iso8601)
+        expect(json['startDate']).to eq(std_slot.startdate.iso8601)
+        expect(json['endDate']).to eq(std_slot.enddate.iso8601)
         expect(json['notes']).to eq(std_slot.notes)
         expect(json['visibility']).to eq(std_slot.visibility)
       end

@@ -51,8 +51,8 @@ resource "Slots" do
         expect(json.length).to eq slot_count
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("title")
-        expect(json.first).to have_key("startdate")
-        expect(json.first).to have_key("enddate")
+        expect(json.first).to have_key("startDate")
+        expect(json.first).to have_key("endDate")
         expect(json.first).to have_key("alerts")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
@@ -65,8 +65,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "startdate" => std_slot_1.startdate.iso8601,
-                      "enddate" => std_slot_1.enddate.iso8601,
+                      "startDate" => std_slot_1.startdate.iso8601,
+                      "endDate" => std_slot_1.enddate.iso8601,
                       "createdAt" => std_slot_1.created_at.iso8601,
                       "updatedAt" => std_slot_1.updated_at.iso8601,
                       "deletedAt" => std_slot_1.deleted_at,
@@ -80,8 +80,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
-                      "startdate" => std_slot_2.startdate.iso8601,
-                      "enddate" => std_slot_2.enddate.iso8601,
+                      "startDate" => std_slot_2.startdate.iso8601,
+                      "endDate" => std_slot_2.enddate.iso8601,
                       "alerts" => std_slot_2.alerts(current_user),
                       "createdAt" => std_slot_2.created_at.iso8601,
                       "updatedAt" => std_slot_2.updated_at.iso8601,
@@ -95,8 +95,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
-                      "startdate" => re_slots[0].startdate.iso8601,
-                      "enddate" => re_slots[0].enddate.iso8601,
+                      "startDate" => re_slots[0].startdate.iso8601,
+                      "endDate" => re_slots[0].enddate.iso8601,
                       "alerts" => re_slots[0].alerts(current_user),
                       "createdAt" => re_slots[0].created_at.iso8601,
                       "updatedAt" => re_slots[0].updated_at.iso8601,
@@ -109,8 +109,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
-                      "startdate" => group_slots_1[0].startdate.iso8601,
-                      "enddate" => group_slots_1[0].enddate.iso8601,
+                      "startDate" => group_slots_1[0].startdate.iso8601,
+                      "endDate" => group_slots_1[0].enddate.iso8601,
                       "alerts" => group_slots_1[0].alerts(current_user),
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.iso8601,
@@ -162,8 +162,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to have_key("id")
         expect(json).to have_key("title")
-        expect(json).to have_key("startdate")
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
         expect(json).to have_key("location")
         expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -179,8 +179,8 @@ resource "Slots" do
         expect(json)
           .to eq("id" => slot.id,
                  "title" => slot.title,
-                 "startdate" => slot.startdate.iso8601,
-                 "enddate" => slot.enddate.iso8601,
+                 "startDate" => slot.startdate.iso8601,
+                 "endDate" => slot.enddate.iso8601,
                  "createdAt" => slot.created_at.iso8601,
                  "updatedAt" => slot.updated_at.iso8601,
                  "deletedAt" => deleted_at,
@@ -274,8 +274,8 @@ resource "Slots" do
 
         expect(json).to have_key("id")
         expect(json).to have_key("title")
-        expect(json).to have_key("startdate")
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
@@ -384,8 +384,8 @@ resource "Slots" do
 
         expect(json).to have_key("id")
         expect(json).to have_key("title")
-        expect(json).to have_key("startdate")
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("groupId")
@@ -470,12 +470,12 @@ resource "Slots" do
         expect(response_status).to eq(201)
         expect(json).to have_key("id")
         expect(json).to have_key("title")
-        expect(json).to have_key("startdate")
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("slotterId")
         expect(json["title"]).to eq pred.title
-        expect(json["startdate"]).to eq pred.startdate.iso8601
+        expect(json["startDate"]).to eq pred.startdate.iso8601
         expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["slotterId"]).to eq current_user.id
       end
@@ -665,8 +665,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => std_slot.id,
                                 "title" => std_slot.title,
-                                "startdate" => std_slot.startdate.iso8601,
-                                "enddate" => std_slot.enddate.iso8601,
+                                "startDate" => std_slot.startdate.iso8601,
+                                "endDate" => std_slot.enddate.iso8601,
                                 "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.iso8601,
                                 "updatedAt" => std_slot.updated_at.iso8601,
@@ -709,8 +709,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => group_slot.id,
                                 "title" => group_slot.title,
-                                "startdate" => group_slot.startdate.iso8601,
-                                "enddate" => group_slot.enddate.iso8601,
+                                "startDate" => group_slot.startdate.iso8601,
+                                "endDate" => group_slot.enddate.iso8601,
                                 "groupId" => group_slot.group.id,
                                 "createdAt" => group_slot.created_at.iso8601,
                                 "updatedAt" => group_slot.updated_at.iso8601,
@@ -751,8 +751,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => re_slot.id,
                                 "title" => re_slot.title,
-                                "startdate" => re_slot.startdate.iso8601,
-                                "enddate" => re_slot.enddate.iso8601,
+                                "startDate" => re_slot.startdate.iso8601,
+                                "endDate" => re_slot.enddate.iso8601,
                                 "slotterId" => re_slot.slotter.id,
                                 "createdAt" => re_slot.created_at.iso8601,
                                 "updatedAt" => re_slot.updated_at.iso8601,

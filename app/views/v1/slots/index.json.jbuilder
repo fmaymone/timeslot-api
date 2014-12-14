@@ -2,12 +2,12 @@ json.array!(@slots) do |slot|
   json.extract!(slot,
                 :id,
                 :title,
-                :startdate,
-                :enddate,
                 :created_at,
                 :updated_at,
                 :deleted_at
                )
+  json.start_date slot.startdate
+  json.end_date slot.enddate
   json.alerts slot.alerts(current_user) if current_user
   json.notes slot.notes do |note|
     json.title note.title
