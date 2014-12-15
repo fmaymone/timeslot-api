@@ -109,24 +109,24 @@ RSpec.describe "V1::Slots", type: :request do
       }
 
       it "responds with Created (201)" do
-        post "/v1/stdslot/", newSlot: valid_slot
+        post "/v1/stdslot/", valid_slot
         expect(response).to have_http_status(:created)
       end
 
       it "adds a new StdSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", newSlot: valid_slot
+          post "/v1/stdslot/", valid_slot
         }.to change(StdSlot, :count).by(1)
       end
 
       it "adds a new MetaSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", newSlot: valid_slot
+          post "/v1/stdslot/", valid_slot
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/stdslot/", newSlot: valid_slot
+        post "/v1/stdslot/", valid_slot
         expect(json['id']).to eq(StdSlot.last.id)
       end
     end
@@ -140,7 +140,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty title" do
           invalid_attributes[:title] = nil
           expect {
-            post "/v1/stdslot/", newSlot: invalid_attributes
+            post "/v1/stdslot/", invalid_attributes
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('title')
         end
@@ -148,7 +148,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty start_date" do
           invalid_attributes[:startDate] = ""
           expect {
-            post "/v1/stdslot/", newSlot: invalid_attributes
+            post "/v1/stdslot/", invalid_attributes
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('start_date')
           expect(response).to have_http_status(:unprocessable_entity)
@@ -158,21 +158,21 @@ RSpec.describe "V1::Slots", type: :request do
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
           invalid_attributes[:startDate] = "|$%^@wer"
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for empty end_date" do
           invalid_attributes[:endDate] = ""
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
@@ -183,7 +183,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-09-08 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", newSlot: slot.merge(visibility: '11')
+          post "/v1/stdslot/", slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -194,27 +194,27 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-07-07 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", newSlot: slot.merge(visibility: '11')
+          post "/v1/stdslot/", slot.merge(visibility: '11')
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
 
         it "for empty visibility" do
           invalid_attributes[:visibility] = ""
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for visibility" do
           invalid_attributes[:visibility] = "$$"
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'pgerror'
         end
 
         it "if visibility has to much characters" do
           invalid_attributes[:visibility] = "101"
-          post "/v1/stdslot/", newSlot: invalid_attributes
+          post "/v1/stdslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'pgerror'
         end
@@ -231,24 +231,24 @@ RSpec.describe "V1::Slots", type: :request do
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       it "responds with Created (201)" do
-        post "/v1/groupslot/", newSlot: valid_slot
+        post "/v1/groupslot/", valid_slot
         expect(response).to have_http_status(:created)
       end
 
       it "adds a new group_slot entry to the DB" do
         expect {
-          post "/v1/groupslot/", newSlot: valid_slot
+          post "/v1/groupslot/", valid_slot
         }.to change(GroupSlot, :count).by(1)
       end
 
       it "adds a new meta_slot entry to the DB" do
         expect {
-          post "/v1/groupslot/", newSlot: valid_slot
+          post "/v1/groupslot/", valid_slot
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/groupslot/", newSlot: valid_slot
+        post "/v1/groupslot/", valid_slot
         expect(json['id']).to eq(GroupSlot.last.id)
       end
     end
@@ -260,14 +260,14 @@ RSpec.describe "V1::Slots", type: :request do
       describe "does not add a new entry to the DB" do
         it "with missing group ID" do
           expect {
-            post "/v1/groupslot/", newSlot: attributes_for(:meta_slot)
+            post "/v1/groupslot/", attributes_for(:meta_slot)
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "with invalid group ID" do
           expect {
-            post "/v1/groupslot/", newSlot: attributes_for(:meta_slot).merge(
+            post "/v1/groupslot/", attributes_for(:meta_slot).merge(
                    groupId: 1)
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
           expect(response).to have_http_status(:not_found)
@@ -277,21 +277,21 @@ RSpec.describe "V1::Slots", type: :request do
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
-          post "/v1/groupslot/", newSlot: invalid_attributes
+          post "/v1/groupslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
           invalid_attributes[:start_date] = "|$%^@wer"
-          post "/v1/groupslot/", newSlot: invalid_attributes
+          post "/v1/groupslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for empty end_date" do
           invalid_attributes[:endDate] = ""
-          post "/v1/groupslot/", newSlot: invalid_attributes
+          post "/v1/groupslot/", invalid_attributes
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
@@ -302,8 +302,7 @@ RSpec.describe "V1::Slots", type: :request do
                                       end_date: "2014-09-08 13:31:02",
                                       group_id: group.id)
           group_slot.transform_keys! { |key| key.to_s.camelize(:lower) }
-          p group_slot
-          post "/v1/groupslot/", newSlot: group_slot
+          post "/v1/groupslot/", group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -315,7 +314,7 @@ RSpec.describe "V1::Slots", type: :request do
                                       group_id: group.id)
           group_slot.transform_keys! { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/groupslot/", newSlot: group_slot
+          post "/v1/groupslot/", group_slot
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end

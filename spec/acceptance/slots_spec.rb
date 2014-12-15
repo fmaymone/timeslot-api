@@ -230,25 +230,22 @@ resource "Slots" do
     header "Accept", "application/json"
 
     parameter :title, "Title of slot (max. 48 characters)",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :startDate,
               "Startdate and Time of the Slot",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :endDate,
               "Enddate and Time of the Slot (startdate + duration)",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :locationId,
-              "ID of the location associated with this slot", scope: :newSlot
-    parameter :note, "A note which belongs to the Slot", scope: :newSlot
-    parameter :alerts, "Alerts for the Slot", scope: :newSlot
+              "ID of the location associated with this slot"
+    parameter :note, "A note which belongs to the Slot"
+    parameter :alerts, "Alerts for the Slot"
 
     describe "Create new standard slot" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :newSlot
+                required: true
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
@@ -293,7 +290,7 @@ resource "Slots" do
     describe "Create std slot with invalid params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :newSlot
+                required: true
 
       response_field :pgerror, "Explanation which param couldn't be saved"
 
@@ -316,7 +313,7 @@ resource "Slots" do
     describe "Create std slot with missing requiered params" do
 
       parameter :visibility, "Visibility of the Slot",
-                required: true, scope: :newSlot
+                required: true
 
       response_field :endDate, "The missing parameter"
 
@@ -340,23 +337,17 @@ resource "Slots" do
     header "Accept", "application/json"
 
     parameter :title, "Title of slot (max. 48 characters)",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :startDate,
               "Startdate and Time of the Slot",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :endDate,
               "Enddate and Time of the Slot (startdate + duration)",
-              required: true,
-              scope: :newSlot
+              required: true
     parameter :groupId, "Group ID if GroupSlot",
-              required: true,
-              scope: :newSlot
-    parameter :note, "A note which belongs to the Slot",
-              scope: :newSlot
-    parameter :alerts, "Alerts for the Slot",
-              scope: :newSlot
+              required: true
+    parameter :note, "A note which belongs to the Slot"
+    parameter :alerts, "Alerts for the Slot"
 
     let(:group) { create(:group) }
 

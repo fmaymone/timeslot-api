@@ -201,11 +201,11 @@ module V1
     end
 
     private def group_param
-      params.require(:newSlot).require(:groupId)
+      params.require(:groupId)
     end
 
     private def std_params
-      params.require(:newSlot).permit(:visibility)
+      params.permit(:visibility)
     end
 
     private def re_params
@@ -213,7 +213,7 @@ module V1
     end
 
     private def meta_params
-      parameter = params.require(:newSlot).permit(
+      parameter = params.permit(
         :title, :startDate, :endDate, :locationId)
       parameter.transform_keys(&:underscore)
     end
@@ -243,14 +243,14 @@ module V1
     end
 
     private def alert_param
-      params.require(:newSlot).permit(:alerts)[:alerts]
+      params.permit(:alerts)[:alerts]
     end
 
     private def media_item_create_params
       # TODO: better handling and specing of duration and thumbnail
-      p = params.require(:newMedia).permit(:publicId, :ordering, :mediaType,
-                                            :duration, :thumbnail)
-      p.transform_keys(&:underscore)
+      parameter = params.require(:newMedia).permit(
+        :publicId, :ordering, :mediaType, :duration, :thumbnail)
+      parameter.transform_keys(&:underscore)
     end
 
     private def note_create_params
