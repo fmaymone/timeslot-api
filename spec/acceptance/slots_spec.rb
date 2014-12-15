@@ -240,6 +240,7 @@ resource "Slots" do
     parameter :locationId,
               "ID of the location associated with this slot"
     parameter :note, "A note which belongs to the Slot"
+    parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
     describe "Create new standard slot" do
@@ -347,6 +348,7 @@ resource "Slots" do
     parameter :groupId, "Group ID if GroupSlot",
               required: true
     parameter :note, "A note which belongs to the Slot"
+    parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
     let(:group) { create(:group) }

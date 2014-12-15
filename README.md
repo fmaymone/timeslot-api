@@ -57,6 +57,17 @@ bundle exec rake db:create
 
 If the database is not created with the correct PG datatypes by schema.rb, run the migrations directly.
 
+## Location DB and Search Service
+
+The following env variables are expected:
+
+```
+ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] # username
+ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] # password
+ENV['TS_LOCATION_SEARCH_SERVICE_URL'] # search url
+ENV['LOCATION_DB_URI'] # postgres uri of locations production db
+```
+
 ## More Tools
 
 # Rails ERD
