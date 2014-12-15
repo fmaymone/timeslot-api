@@ -32,7 +32,7 @@ class ApplicationController < ActionController::API
   # if so sets the current user to the user with the provided username
   def sign_in
     # tests use current_user= method
-    return if Rails.env.test?
+    return if Rails.env.test? || Rails.env.herokutest?
 
     if request.headers['HTTP_AUTHORIZATION'].nil?
       return render json: "HTTP 'Authorization' header required",
