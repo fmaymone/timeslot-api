@@ -55,7 +55,7 @@ development:
 # connected via ssh tunnel
 development_sec:
   <<: *default
-  database: locations_production_01
+  database: loc_prod_20141213_1442
   username: <%= ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] %>
   password: <%= ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] %>
   host: localhost

@@ -2,6 +2,7 @@ json.array!(@slots) do |slot|
   json.extract!(slot,
                 :id,
                 :title,
+                :location_id,
                 :created_at,
                 :updated_at,
                 :deleted_at,

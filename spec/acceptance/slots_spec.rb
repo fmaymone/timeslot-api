@@ -51,6 +51,7 @@ resource "Slots" do
         expect(json.length).to eq slot_count
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("title")
+        expect(json.first).to have_key("locationId")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
         expect(json.first).to have_key("settings")
@@ -65,6 +66,7 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
+                      "locationId" => std_slot_1.location_id,
                       "startDate" => std_slot_1.start_date.as_json,
                       "endDate" => std_slot_1.end_date.as_json,
                       "createdAt" => std_slot_1.created_at.as_json,
@@ -81,6 +83,7 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
+                      "locationId" => std_slot_2.location_id,
                       "startDate" => std_slot_2.start_date.as_json,
                       "endDate" => std_slot_2.end_date.as_json,
                       "settings" => {
@@ -97,6 +100,7 @@ resource "Slots" do
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
+                      "locationId" => re_slots[0].location_id,
                       "startDate" => re_slots[0].start_date.as_json,
                       "endDate" => re_slots[0].end_date.as_json,
                       "settings" => {
@@ -112,6 +116,7 @@ resource "Slots" do
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
+                      "locationId" => group_slots_1[0].location_id,
                       "startDate" => group_slots_1[0].start_date.as_json,
                       "endDate" => group_slots_1[0].end_date.as_json,
                       "settings" => {
@@ -150,7 +155,7 @@ resource "Slots" do
       response_field :note, "A note on the slot"
       response_field :media, "Media Items of the slot"
 
-      let(:meta_slot) { create(:meta_slot, location_id: "02-0000-114") }
+      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
       let(:slot) { create(:std_slot, meta_slot: meta_slot) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
@@ -188,7 +193,7 @@ resource "Slots" do
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
-                 "location" => {"id" => "02-0000-114",
+                 "location" => {"id" => 200719253,
                                 "name" => slot.location.name,
                                 "street" => slot.location.street,
                                 "city" => slot.location.city,
@@ -263,13 +268,12 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      let(:locationId) { "02-0000-114" }
+      let(:locationId) { 200_719_253 }
       let(:note) { "revolutionizing the calendar" }
       let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
 
-      example "Create StandardSlot",
-              document: :v1 do
+      example "Create StandardSlot", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
                     "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
@@ -277,6 +281,7 @@ resource "Slots" do
                     "returns 422 if required parameters are missing"
         do_request
 
+        expect(response_status).to eq(201)
         expect(json).to have_key("id")
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
@@ -284,7 +289,6 @@ resource "Slots" do
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
-        expect(response_status).to eq(201)
       end
     end
 

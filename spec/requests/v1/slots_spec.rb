@@ -47,13 +47,13 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "StdSlot, with location" do
-      let(:meta_slot) { create(:meta_slot, location_id: "02-0000-114") }
+      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
       let(:std_slot) { create(:std_slot, meta_slot: meta_slot) }
 
       it "returns the location" do
         get "/v1/slots/#{std_slot.id}"
         expect(json).to have_key('location')
-        expect(json['location']['id']).to eq "02-0000-114"
+        expect(json['location']['id']).to eq 200719253
       end
     end
 

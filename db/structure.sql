@@ -231,7 +231,7 @@ CREATE TABLE meta_slots (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    location_id character varying(255)
+    location_id integer
 );
 
 
@@ -778,4 +778,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141213235605');
 INSERT INTO schema_migrations (version) VALUES ('20141214164428');
 
 INSERT INTO schema_migrations (version) VALUES ('20141215092936');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215223116');
 
