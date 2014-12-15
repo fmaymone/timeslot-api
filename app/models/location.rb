@@ -1,3 +1,7 @@
 class Location < ActiveRecord::Base
-  establish_connection :development_sec
+  if Rails.env.test? || Rails.env.development?
+    establish_connection :development_sec
+  else
+    establish_connection ENV['LOCATION_DB_URI']
+  end
 end
