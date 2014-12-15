@@ -42,7 +42,7 @@ module V1
 
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param)
+                                     alerts: alert_param[:alerts])
         return render json: setting.errors,
                       status: :unprocessable_entity unless setting.save
       end
@@ -67,7 +67,7 @@ module V1
       # TODO: make service for alarm
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param)
+                                     alerts: alert_param[:alerts])
         return render json: setting.errors,
                       status: :unprocessable_entity unless setting.save
       end
@@ -116,8 +116,8 @@ module V1
         update_media_order
       elsif params[:newNote].present?
         @slot.notes.create(note_create_params)
-      elsif update_std_params[:visibility].present? &&
-            @slot.update(update_std_params.permit(:visibility))
+      elsif update_std_params["visibility"].present? &&
+            @slot.update(visibility: update_std_params["visibility"])
         head :no_content
       elsif @slot.meta_slot.update(update_std_params)
         head :no_content
@@ -201,11 +201,11 @@ module V1
     end
 
     private def group_param
-      params.require(:newSlot).require(:groupId)
+      params.require(:groupId)
     end
 
     private def std_params
-      params.require(:newSlot).permit(:visibility)
+      params.permit(:visibility)
     end
 
     private def re_params
@@ -213,34 +213,44 @@ module V1
     end
 
     private def meta_params
-      params.require(:newSlot).permit(:title, :startdate, :enddate)
+      parameter = params.permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_meta_params
-      params.require(:metaSlot).permit(:title, :startdate, :enddate)
+      parameter = params.require(:metaSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_std_params
-      params.require(:stdSlot).permit(:title, :startdate, :enddate, :visibility)
+      parameter = params.require(:stdSlot).permit(
+        :title, :startDate, :endDate, :locationId, :visibility)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_group_params
-      params.require(:groupSlot).permit(:title, :startdate, :enddate)
+      parameter = params.require(:groupSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_re_params
-      params.require(:reSlot).permit(:title, :startdate, :enddate)
+      parameter = params.require(:reSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def alert_param
-      params.require(:newSlot).permit(:alerts)[:alerts]
+      params[:settings]
     end
 
     private def media_item_create_params
       # TODO: better handling and specing of duration and thumbnail
-      p = params.require(:newMedia).permit(:publicId, :ordering, :mediaType,
-                                            :duration, :thumbnail)
-      p.transform_keys(&:underscore)
+      parameter = params.require(:newMedia).permit(
+        :publicId, :ordering, :mediaType, :duration, :thumbnail)
+      parameter.transform_keys(&:underscore)
     end
 
     private def note_create_params

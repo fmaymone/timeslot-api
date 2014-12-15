@@ -6,8 +6,8 @@ RSpec.describe MetaSlot, type: :model do
   subject { meta_slot }
 
   it { is_expected.to respond_to(:title) }
-  it { is_expected.to respond_to(:startdate) }
-  it { is_expected.to respond_to(:enddate) }
+  it { is_expected.to respond_to(:start_date) }
+  it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:creator) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
@@ -25,13 +25,13 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when startdate is not present" do
-    before { meta_slot.startdate = "" }
+  describe "when start_date is not present" do
+    before { meta_slot.start_date = "" }
     it { is_expected.to_not be_valid }
   end
 
-  describe "when enddate is not present" do
-    before { meta_slot.enddate = "" }
+  describe "when end_date is not present" do
+    before { meta_slot.end_date = "" }
     it { is_expected.to_not be_valid }
   end
 

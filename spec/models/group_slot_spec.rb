@@ -11,8 +11,8 @@ RSpec.describe GroupSlot, type: :model do
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:title) }
-  it { is_expected.to respond_to(:startdate) }
-  it { is_expected.to respond_to(:enddate) }
+  it { is_expected.to respond_to(:start_date) }
+  it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:group).inverse_of(:group_slots) }
@@ -28,8 +28,8 @@ RSpec.describe GroupSlot, type: :model do
     let(:meta_slot) { create(:meta_slot) }
     let(:group_slot) { create(:group_slot, meta_slot: meta_slot) }
 
-    it "contains startdate of the meta_slot" do
-      expect(group_slot.startdate).to eq meta_slot.startdate
+    it "contains start_date of the meta_slot" do
+      expect(group_slot.start_date).to eq meta_slot.start_date
     end
   end
 

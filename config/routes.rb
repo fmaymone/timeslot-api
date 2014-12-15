@@ -90,6 +90,8 @@ Rails.application.routes.draw do
     if Rails.env.apptest? || Rails.env.herokutest? || Rails.env.test?
       get 'ios/clean-db', to: 'ios#clean_db'
     end
+
+    get 'locations/search', to: 'locations#search'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

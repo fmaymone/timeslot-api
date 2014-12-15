@@ -24,7 +24,7 @@ RSpec.describe BaseSlot, type: :model do
     let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
 
     it "contains title of the meta_slot" do
-      expect(re_slot.startdate).to eq meta_slot.startdate
+      expect(re_slot.start_date).to eq meta_slot.start_date
       expect(re_slot.title).to eq "Timeslot"
     end
   end

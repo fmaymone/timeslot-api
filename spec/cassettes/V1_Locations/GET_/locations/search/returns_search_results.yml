@@ -1,0 +1,63 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://***REMOVED***@37.187.168.228:34567/locations?limit=10&pos=13.0,52.0&q=berghain
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '2346'
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Sat, 13 Dec 2014 22:41:43 GMT
+      Server:
+      - ns346656.ip-37-187-168.eu
+    body:
+      encoding: UTF-8
+      string: '[{"city": null, "name": "Bergschl\u00f6\u00dfchen", "country": null,
+        "street": "", "postcode": null, "score": 0.9892106, "geo": {"lat": 52.0028994,
+        "lon": 13.0861265}, "id": 200870186, "categories": ["tourism", "hotel"]},
+        {"city": null, "name": "Bergschl\u00f6\u00dfchen", "country": null, "street":
+        "", "postcode": null, "score": 0.9892106, "geo": {"lat": 52.0027681, "lon":
+        13.0859167}, "id": 201000188, "categories": ["amenity", "biergarten"]}, {"city":
+        null, "name": "Bertuch", "country": null, "street": "", "postcode": null,
+        "score": 0.5453181, "geo": {"lat": 52.0232622, "lon": 13.1018932}, "id": 200830240,
+        "categories": ["tourism", "guest_house"]}, {"city": null, "name": "Landfleischerei
+        Axel Bergemann", "country": null, "street": "", "postcode": null, "score":
+        0.4946053, "geo": {"lat": 51.951289, "lon": 12.978558}, "id": 200582393, "categories":
+        ["shop", "butcher"]}, {"city": "J\u00fcterbog", "name": "Sch\u00e4fer Bestattungen",
+        "country": null, "street": "Gro\u00dfe Stra\u00dfe 92", "postcode": null,
+        "score": 0.13848095, "geo": {"lat": 51.9904336, "lon": 13.0847849}, "id":
+        200811287, "categories": ["shop", "funeral_directors"]}, {"city": "J\u00fcterbog",
+        "name": "Bestattungshaus Unger", "country": null, "street": "Gro\u00dfe Stra\u00dfe
+        114", "postcode": null, "score": 0.13848095, "geo": {"lat": 51.9902166, "lon":
+        13.086789}, "id": 200834287, "categories": ["shop", "funeral_directors"]},
+        {"city": null, "name": "Pflanzenhandel Bechstedt", "country": null, "street":
+        "", "postcode": null, "score": 0.13848095, "geo": {"lat": 52.0935408, "lon":
+        12.8613053}, "id": 200762332, "categories": ["shop", "florist"]}, {"city":
+        null, "name": "Schlacht bei Dennewitz", "country": null, "street": "", "postcode":
+        null, "score": 0.110784754, "geo": {"lat": 51.9799716, "lon": 12.9964277},
+        "id": 200570150, "categories": ["historic", "memorial"]}, {"city": "Niederg\u00f6rsdorf",
+        "name": "K\u00fchne & Dr. Beckmann", "country": "DE", "street": "Bl\u00f6nsdorf
+        8", "postcode": null, "score": 0.110784754, "geo": {"lat": 51.9587763, "lon":
+        12.8822638}, "id": 200835272, "categories": ["amenity", "dentist"]}, {"city":
+        null, "name": "Schlacht bei Dennewitz", "country": null, "street": "", "postcode":
+        null, "score": 0.110784754, "geo": {"lat": 51.9710948, "lon": 13.0099896},
+        "id": 200057392, "categories": ["historic", "battlefield"]}]'
+    http_version: 
+  recorded_at: Sat, 13 Dec 2014 22:41:43 GMT
+recorded_with: VCR 2.9.3

@@ -9,13 +9,13 @@ class MetaSlot < ActiveRecord::Base
 
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
-  validates :startdate, presence: true
-  validates :enddate, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
   validate :enddate_is_after_startdate
 
   private def enddate_is_after_startdate
-    return false if enddate.blank? || startdate.blank?
-    return true if startdate.to_i < enddate.to_i
-    errors.add(:enddate, "cannot be before the start date")
+    return false if end_date.blank? || start_date.blank?
+    return true if start_date.to_i < end_date.to_i
+    errors.add(:end_date, "cannot be before the start_date")
   end
 end

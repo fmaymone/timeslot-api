@@ -21,7 +21,7 @@ resource "Users" do
     example "Authenticate an user - See Note", document: :v1 do
       explanation "***Important***: as of now we don't have a proper user" \
                   " authentication in place. Please set a HTTP header" \
-                  " with **'HTTP_AUTHORIZATION'** as key and the **username**" \
+                  " with **'AUTHORIZATION'** as key and the **username**" \
                   " of the user who should be *logged in* as value.\n\n" \
                   "returns OK if User set as current user\n\n" \
                   "returns 404 if ID is invalid"
