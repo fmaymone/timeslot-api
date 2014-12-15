@@ -93,7 +93,3 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-
-apptest:
-  <<: *default
-  url: <%= ENV['DATABASE_URL'] %>
