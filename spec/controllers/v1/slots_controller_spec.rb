@@ -81,7 +81,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new SlotSetting" do
         expect {
           post :create_stdslot, valid_attributes.merge(
-                 alerts: '1110111010'), valid_session
+                 settings: { alerts: '1110111010' }), valid_session
         }.to change(SlotSetting, :count).by(1)
       end
 
@@ -126,7 +126,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new SlotSetting" do
         expect {
           post :create_groupslot, valid_attributes.merge(
-                 alerts: '1110111010'), valid_session
+                 settings: { alerts: '1110111010' }), valid_session
         }.to change(SlotSetting, :count).by(1)
       end
 

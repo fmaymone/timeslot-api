@@ -42,7 +42,7 @@ module V1
 
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param)
+                                     alerts: alert_param[:alerts])
         return render json: setting.errors,
                       status: :unprocessable_entity unless setting.save
       end
@@ -67,7 +67,7 @@ module V1
       # TODO: make service for alarm
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param)
+                                     alerts: alert_param[:alerts])
         return render json: setting.errors,
                       status: :unprocessable_entity unless setting.save
       end
@@ -243,7 +243,7 @@ module V1
     end
 
     private def alert_param
-      params.permit(:alerts)[:alerts]
+      params[:settings]
     end
 
     private def media_item_create_params
