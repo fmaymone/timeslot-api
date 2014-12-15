@@ -20,7 +20,7 @@ Rails.application.routes.draw do
 
     get 'media-signature', to: 'media#create_signature'
 
-    scope :users do
+    scope :users1 do
       get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
       post '', to: 'users#create', as: 'user_create'
