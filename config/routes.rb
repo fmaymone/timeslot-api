@@ -87,7 +87,7 @@ Rails.application.routes.draw do
             constraints: { group_id: /\d+/ }
     end
 
-    if Rails.env.apptest? || Rails.env.herokutest? || Rails.env.test?
+    if ENV['ENABLE_IOS_DB_CLEAN'] == 'true'
       get 'ios/clean-db', to: 'ios#clean_db'
     end
 
