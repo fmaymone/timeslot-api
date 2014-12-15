@@ -12,8 +12,8 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:notes) }
   it { is_expected.to respond_to(:title) }
-  it { is_expected.to respond_to(:startdate) }
-  it { is_expected.to respond_to(:enddate) }
+  it { is_expected.to respond_to(:start_date) }
+  it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:predecessor) }
@@ -39,7 +39,7 @@ RSpec.describe ReSlot, type: :model do
     let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
 
     it "contains title of the meta_slot" do
-      expect(re_slot.startdate).to eq meta_slot.startdate
+      expect(re_slot.start_date).to eq meta_slot.start_date
       expect(re_slot.title).to eq "Timeslot"
     end
   end

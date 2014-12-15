@@ -26,8 +26,8 @@ resource "Slots" do
 
       response_field :id, "ID of the slot"
       response_field :title, "Title of the slot"
-      response_field :stardate, "Startdate of the slot"
-      response_field :enddate, "Enddate of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot for the current user"
       response_field :notes, "A list of all notes on the slot"
@@ -65,8 +65,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "startDate" => std_slot_1.startdate.as_json,
-                      "endDate" => std_slot_1.enddate.as_json,
+                      "startDate" => std_slot_1.start_date.as_json,
+                      "endDate" => std_slot_1.end_date.as_json,
                       "createdAt" => std_slot_1.created_at.as_json,
                       "updatedAt" => std_slot_1.updated_at.as_json,
                       "deletedAt" => std_slot_1.deleted_at,
@@ -81,8 +81,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => std_slot_2.id,
                       "title" => std_slot_2.title,
-                      "startDate" => std_slot_2.startdate.as_json,
-                      "endDate" => std_slot_2.enddate.as_json,
+                      "startDate" => std_slot_2.start_date.as_json,
+                      "endDate" => std_slot_2.end_date.as_json,
                       "settings" => {
                         'alerts' => std_slot_2.alerts(current_user) },
                       "createdAt" => std_slot_2.created_at.as_json,
@@ -97,8 +97,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => re_slots[0].id,
                       "title" => re_slots[0].title,
-                      "startDate" => re_slots[0].startdate.as_json,
-                      "endDate" => re_slots[0].enddate.as_json,
+                      "startDate" => re_slots[0].start_date.as_json,
+                      "endDate" => re_slots[0].end_date.as_json,
                       "settings" => {
                         'alerts' => re_slots[0].alerts(current_user) },
                       "createdAt" => re_slots[0].created_at.as_json,
@@ -112,8 +112,8 @@ resource "Slots" do
         expect(json)
           .to include("id" => group_slots_1[0].id,
                       "title" => group_slots_1[0].title,
-                      "startDate" => group_slots_1[0].startdate.as_json,
-                      "endDate" => group_slots_1[0].enddate.as_json,
+                      "startDate" => group_slots_1[0].start_date.as_json,
+                      "endDate" => group_slots_1[0].end_date.as_json,
                       "settings" => {
                         'alerts' => group_slots_1[0].alerts(current_user) },
                       "groupId" => group_slots_1[0].group.id,
@@ -129,7 +129,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id" do
+  get "/v1/slots/:id", :vcr do
     header "Accept", "application/json"
 
     parameter :id, "ID of the slot to get", required: true
@@ -138,8 +138,8 @@ resource "Slots" do
 
       response_field :id, "ID of the slot"
       response_field :title, "Title of the slot"
-      response_field :startdate, "Startdate of the slot"
-      response_field :enddate, "Enddate of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
       response_field :createdAt, "Creation of slot"
       response_field :updatedAt, "Latest update of slot in db"
       response_field :deletedAt, "Delete date of slot or nil"
@@ -183,8 +183,8 @@ resource "Slots" do
         expect(json)
           .to eq("id" => slot.id,
                  "title" => slot.title,
-                 "startDate" => slot.startdate.as_json,
-                 "endDate" => slot.enddate.as_json,
+                 "startDate" => slot.start_date.as_json,
+                 "endDate" => slot.end_date.as_json,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
@@ -232,14 +232,16 @@ resource "Slots" do
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
               scope: :newSlot
-    parameter :startdate,
+    parameter :startDate,
               "Startdate and Time of the Slot",
               required: true,
               scope: :newSlot
-    parameter :enddate,
+    parameter :endDate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
               scope: :newSlot
+    parameter :locationId,
+              "ID of the location associated with this slot", scope: :newSlot
     parameter :note, "A note which belongs to the Slot", scope: :newSlot
     parameter :alerts, "Alerts for the Slot", scope: :newSlot
 
@@ -250,8 +252,8 @@ resource "Slots" do
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
-      response_field :stardate, "Startdate of the new slot"
-      response_field :enddate, "Enddate of the new slot"
+      response_field :startDate, "Startdate of the new slot"
+      response_field :endDate, "Enddate of the new slot"
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
@@ -261,8 +263,9 @@ resource "Slots" do
       response_field :deletedAt, "Deletion datetime of the slot"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:enddate) { "2014-09-13T22:03:24.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      let(:locationId) { "02-0000-114" }
       let(:note) { "revolutionizing the calendar" }
       let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
@@ -295,8 +298,8 @@ resource "Slots" do
       response_field :pgerror, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:enddate) { "2014-09-10T13:31:02.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
       let(:visibility) { '10' }
       let(:alerts) { "oh no" }
 
@@ -315,10 +318,10 @@ resource "Slots" do
       parameter :visibility, "Visibility of the Slot",
                 required: true, scope: :newSlot
 
-      response_field :enddate, "The missing parameter"
+      response_field :endDate, "The missing parameter"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:visibility) { 10 }
 
       example "Create std slot with missing requiered params returns 422" \
@@ -327,7 +330,7 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("end_date")
       end
     end
   end
@@ -339,11 +342,11 @@ resource "Slots" do
     parameter :title, "Title of slot (max. 48 characters)",
               required: true,
               scope: :newSlot
-    parameter :startdate,
+    parameter :startDate,
               "Startdate and Time of the Slot",
               required: true,
               scope: :newSlot
-    parameter :enddate,
+    parameter :endDate,
               "Enddate and Time of the Slot (startdate + duration)",
               required: true,
               scope: :newSlot
@@ -361,8 +364,8 @@ resource "Slots" do
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the new slot"
-      response_field :stardate, "Startdate of the new slot"
-      response_field :enddate, "Enddate of the new slot"
+      response_field :startDate, "Startdate of the new slot"
+      response_field :endDate, "Enddate of the new slot"
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
@@ -370,8 +373,8 @@ resource "Slots" do
       response_field :createdAt, "Creation datetime of the slot"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:enddate) { "2014-09-13T22:03:24.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-13T22:03:24.000Z" }
       let(:note) { "revolutionizing the calendar" }
       let(:alerts) { '0101010101' }
       let(:groupId) { group.id }
@@ -402,8 +405,8 @@ resource "Slots" do
       response_field :pgerror, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
-      let(:enddate) { "2014-09-10T13:31:02.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
       let(:alerts) { "oh no" }
       let(:groupId) { group.id }
 
@@ -419,10 +422,10 @@ resource "Slots" do
 
     describe "Create group slot with missing requiered params" do
 
-      response_field :enddate, "The missing parameter"
+      response_field :endDate, "The missing parameter"
 
       let(:title) { "Time for a Slot" }
-      let(:startdate) { "2014-09-08T13:31:02.000Z" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:groupId) { group.id }
 
       example "Create group slot with missing requiered params returns 422" \
@@ -431,7 +434,7 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("enddate")
+        expect(json).to have_key("end_date")
       end
     end
   end
@@ -451,8 +454,8 @@ resource "Slots" do
 
       response_field :id, "ID of the new slot"
       response_field :title, "Title of the slot"
-      response_field :stardate, "Startdate of the slot"
-      response_field :enddate, "Enddate of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
       response_field :creatorId, "ID of the User who created the slot"
       response_field :slotterId, "ID of the User who did reslot"
       response_field :note, "A Note on the slot"
@@ -479,7 +482,7 @@ resource "Slots" do
         expect(json).to have_key("creator")
         expect(json).to have_key("slotterId")
         expect(json["title"]).to eq pred.title
-        expect(json["startDate"]).to eq pred.startdate.as_json
+        expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["slotterId"]).to eq current_user.id
       end
@@ -494,9 +497,9 @@ resource "Slots" do
     describe "Update an existing MetaSlot" do
 
       parameter :title, "Updated title of slot", scope: :metaSlot
-      parameter :startdate, "Updated Startdate and Time of the Slot",
+      parameter :startDate, "Updated Startdate and Time of the Slot",
                 scope: :metaSlot
-      parameter :enddate,
+      parameter :endDate,
                 "Updated Enddate and Time of the Slot (startdate + duration)",
                 scope: :metaSlot
 
@@ -529,9 +532,9 @@ resource "Slots" do
 
     describe "Update an existing StdSlot" do
       parameter :title, "Updated title of slot", scope: :stdSlot
-      parameter :startdate, "Updated Startdate and Time of the Slot",
+      parameter :startDate, "Updated Startdate and Time of the Slot",
                 scope: :stdSlot
-      parameter :enddate,
+      parameter :endDate,
                 "Updated Enddate and Time of the Slot (startdate + duration)",
                 scope: :stdSlot
 
@@ -669,8 +672,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => std_slot.id,
                                 "title" => std_slot.title,
-                                "startDate" => std_slot.startdate.as_json,
-                                "endDate" => std_slot.enddate.as_json,
+                                "startDate" => std_slot.start_date.as_json,
+                                "endDate" => std_slot.end_date.as_json,
                                 "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
@@ -713,8 +716,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => group_slot.id,
                                 "title" => group_slot.title,
-                                "startDate" => group_slot.startdate.as_json,
-                                "endDate" => group_slot.enddate.as_json,
+                                "startDate" => group_slot.start_date.as_json,
+                                "endDate" => group_slot.end_date.as_json,
                                 "groupId" => group_slot.group.id,
                                 "createdAt" => group_slot.created_at.as_json,
                                 "updatedAt" => group_slot.updated_at.as_json,

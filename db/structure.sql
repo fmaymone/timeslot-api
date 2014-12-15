@@ -225,8 +225,8 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 CREATE TABLE meta_slots (
     id integer NOT NULL,
     title character varying(48),
-    startdate timestamp without time zone,
-    enddate timestamp without time zone,
+    start_date timestamp without time zone,
+    end_date timestamp without time zone,
     creator_id integer,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -776,4 +776,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141210135147');
 INSERT INTO schema_migrations (version) VALUES ('20141213235605');
 
 INSERT INTO schema_migrations (version) VALUES ('20141214164428');
+
+INSERT INTO schema_migrations (version) VALUES ('20141215092936');
 

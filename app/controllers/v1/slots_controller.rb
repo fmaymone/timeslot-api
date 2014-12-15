@@ -116,8 +116,8 @@ module V1
         update_media_order
       elsif params[:newNote].present?
         @slot.notes.create(note_create_params)
-      elsif update_std_params[:visibility].present? &&
-            @slot.update(update_std_params.permit(:visibility))
+      elsif update_std_params["visibility"].present? &&
+            @slot.update(visibility: update_std_params["visibility"])
         head :no_content
       elsif @slot.meta_slot.update(update_std_params)
         head :no_content
@@ -213,24 +213,33 @@ module V1
     end
 
     private def meta_params
-      params.require(:newSlot).permit(:title, :startdate, :enddate, :locationId)
+      parameter = params.require(:newSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_meta_params
-      params.require(:metaSlot).permit(:title, :startdate, :enddate, :locationId)
+      parameter = params.require(:metaSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_std_params
-      params.require(:stdSlot).permit(:title, :startdate, :enddate, :locationId,
-                                      :visibility)
+      parameter = params.require(:stdSlot).permit(
+        :title, :startDate, :endDate, :locationId, :visibility)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_group_params
-      params.require(:groupSlot).permit(:title, :startdate, :enddate, :locationId)
+      parameter = params.require(:groupSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def update_re_params
-      params.require(:reSlot).permit(:title, :startdate, :enddate, :locationId)
+      parameter = params.require(:reSlot).permit(
+        :title, :startDate, :endDate, :locationId)
+      parameter.transform_keys(&:underscore)
     end
 
     private def alert_param

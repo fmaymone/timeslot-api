@@ -4,10 +4,10 @@ json.array!(@slots) do |slot|
                 :title,
                 :created_at,
                 :updated_at,
-                :deleted_at
+                :deleted_at,
+                :start_date,
+                :end_date
                )
-  json.start_date slot.startdate
-  json.end_date slot.enddate
 
   if current_user
     json.partial! 'v1/slots/settings', slot: slot

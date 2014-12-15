@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :meta_slot do
     association :creator, factory: :user, strategy: :build
     title
-    startdate "2014-09-08 13:31:02"
-    enddate "2014-09-13 22:03:24"
+    start_date "2014-09-08 13:31:02"
+    end_date "2014-09-13 22:03:24"
   end
 end
