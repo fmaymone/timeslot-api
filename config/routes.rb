@@ -87,7 +87,7 @@ Rails.application.routes.draw do
             constraints: { group_id: /\d+/ }
     end
 
-    if ENV['ENABLE_IOS_DB_CLEAN'] == 'true'
+    if ENV['ENABLE_IOS_DB_CLEAN']
       get 'ios/clean-db', to: 'ios#clean_db'
     end
 
