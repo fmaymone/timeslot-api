@@ -34,4 +34,6 @@ end
 
 json.notes @slot.notes, partial: 'v1/slots/note', as: :note
 
-json.partial! 'v1/media/media_items', media: @slot.media_items
+json.partial! 'v1/media/images', media: @slot.images
+json.partial! 'v1/media/voices', media: @slot.voices
+json.partial! 'v1/media/videos', media: @slot.videos

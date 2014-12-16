@@ -7,6 +7,9 @@ RSpec.describe BaseSlot, type: :model do
 
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:media_items) }
+  it { is_expected.to respond_to(:images) }
+  it { is_expected.to respond_to(:voices) }
+  it { is_expected.to respond_to(:videos) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to have_many(:notes).inverse_of(:base_slot) }
@@ -26,6 +29,19 @@ RSpec.describe BaseSlot, type: :model do
     it "contains title of the meta_slot" do
       expect(re_slot.start_date).to eq meta_slot.start_date
       expect(re_slot.title).to eq "Timeslot"
+    end
+  end
+
+  describe :images do
+    let(:std_slot) { create(:std_slot) }
+    let!(:media) {
+      create_list :slot_image, 3, mediable: std_slot
+      create_list :voice, 2, mediable: std_slot
+      create_list :video, 2, mediable: std_slot
+    }
+    it "returns all slot media items of type image" do
+      expect(std_slot.media_items.length).to eq 7
+      expect(std_slot.images.length).to eq 3
     end
   end
 

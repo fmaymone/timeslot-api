@@ -152,8 +152,10 @@ resource "Slots" do
       response_field :creator, "User who created the slot"
       response_field :settings, "User specific settings for the slot (alerts)"
       response_field :visibility, "Visibiltiy of the slot"
-      response_field :note, "A note on the slot"
-      response_field :media, "Media Items of the slot"
+      response_field :notes, "Notes on the slot"
+      response_field :images, "Images for the slot"
+      response_field :voices, "Voice recordings for the slot"
+      response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot) }
@@ -161,6 +163,11 @@ resource "Slots" do
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
                                    alerts: '1110001100') }
+      let!(:medias) {
+        create_list :slot_image, 3, mediable: slot
+        create_list :voice, 2, mediable: slot
+        create_list :video, 2, mediable: slot
+      }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
 
@@ -184,8 +191,10 @@ resource "Slots" do
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
-        expect(json).to have_key("media")
-        expect(json.except('media'))
+        expect(json).to have_key("images")
+        expect(json).to have_key("voices")
+        expect(json).to have_key("videos")
+        expect(json.except('images', 'voices', 'videos'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -215,8 +224,8 @@ resource "Slots" do
                  "visibility" => slot.visibility,
                  "notes" => slot.notes
                 )
-        expect(json["media"].length).to eq(slot.media_items.length)
-        expect(json["media"].first['clyid']).to eq(slot.media_items.first.public_id)
+        expect(json["images"].length).to eq(slot.images.length)
+        expect(json["images"].first['clyid']).to eq(slot.images.first.public_id)
       end
     end
 
@@ -675,8 +684,7 @@ resource "Slots" do
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
-                                "notes" => std_slot.notes,
-                                "media" => std_slot.media_items
+                                "notes" => std_slot.notes
                                )
       end
     end
@@ -719,8 +727,7 @@ resource "Slots" do
                                 "createdAt" => group_slot.created_at.as_json,
                                 "updatedAt" => group_slot.updated_at.as_json,
                                 "deletedAt" => group_slot.deleted_at.as_json,
-                                "notes" => group_slot.notes,
-                                "media" => group_slot.media_items
+                                "notes" => group_slot.notes
                                )
       end
     end
@@ -759,8 +766,7 @@ resource "Slots" do
                                 "createdAt" => re_slot.created_at.as_json,
                                 "updatedAt" => re_slot.updated_at.as_json,
                                 "deletedAt" => re_slot.deleted_at.as_json,
-                                "notes" => re_slot.notes,
-                                "media" => re_slot.media_items
+                                "notes" => re_slot.notes
                                )
       end
     end

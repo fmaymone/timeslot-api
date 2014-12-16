@@ -15,6 +15,18 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
 
+  def images
+    media_items.image.order(:ordering)
+  end
+
+  def voices
+    media_items.voice.order(:ordering)
+  end
+
+  def videos
+    media_items.video.order(:ordering)
+  end
+
   def location
     Location.find(location_id)
   end

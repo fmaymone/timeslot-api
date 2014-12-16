@@ -20,4 +20,18 @@ FactoryGirl.define do
     media_type "image"
     public_id "testid"
   end
+
+  factory :voice, class: "MediaItem" do
+    association :mediable, factory: :base_slot
+    media_type "voice"
+    public_id
+    ordering
+  end
+
+  factory :video, class: "MediaItem" do
+    association :mediable, factory: :base_slot
+    media_type "video"
+    public_id
+    ordering
+  end
 end
