@@ -144,29 +144,29 @@ RSpec.describe V1::SlotsController, type: :controller do
       let(:valid_attributes) { attributes_for(:re_slot, predecessorId: pred.id) }
 
       it "responds with Created (201)" do
-        post :create_reslot, reSlot: valid_attributes
+        post :create_reslot, valid_attributes
         expect(response).to have_http_status(:created)
       end
 
       it "renders the show template" do
-        post :create_reslot, reSlot: valid_attributes
+        post :create_reslot, valid_attributes
         expect(response).to render_template("show")
       end
 
       it "creates a new ReSlot" do
         expect {
-          post :create_reslot, { reSlot: valid_attributes }, valid_session
+          post :create_reslot, valid_attributes, valid_session
         }.to change(ReSlot, :count).by(1)
       end
 
       it "doesn't create a new SlotSetting" do
         expect {
-          post :create_reslot, { reSlot: valid_attributes }, valid_session
+          post :create_reslot, valid_attributes, valid_session
         }.not_to change(SlotSetting, :count)
       end
 
       it "assigns a newly created re_slot as @slot" do
-        post :create_reslot, { reSlot: valid_attributes }, valid_session
+        post :create_reslot, valid_attributes, valid_session
         expect(assigns(:slot)).to be_a(ReSlot)
         expect(assigns(:slot)).to be_persisted
       end
@@ -178,21 +178,18 @@ RSpec.describe V1::SlotsController, type: :controller do
 
     describe "with valid params" do
       it "respond with No Content (204)" do
-        patch :update_metaslot, {
-                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        patch :update_metaslot, { id: valid_slot.id, title: "New slot title" }
         expect(response).to have_http_status(:no_content)
       end
 
       it "updates the requested slot" do
-        patch :update_metaslot, {
-                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        patch :update_metaslot, { id: valid_slot.id, title: "New slot title" }
         valid_slot.reload
         expect(valid_slot.title).to eq("New slot title")
       end
 
       it "assigns the requested slot as @meta_slot" do
-        patch :update_metaslot, {
-                id: valid_slot.id, metaSlot: { title: "New slot title" } }
+        patch :update_metaslot, { id: valid_slot.id, title: "New slot title" }
         expect(assigns(:meta_slot)).to be_a(MetaSlot)
         expect(assigns(:meta_slot)).to eq(valid_slot)
       end
@@ -200,14 +197,12 @@ RSpec.describe V1::SlotsController, type: :controller do
 
     describe "with invalid params" do
       it "assigns the slot as @meta_slot" do
-        patch :update_metaslot, {
-                id: valid_slot.id, metaSlot: { title: nil } }
+        patch :update_metaslot, { id: valid_slot.id, title: nil }
         expect(assigns(:meta_slot)).to eq(valid_slot)
       end
 
       it "responds with Unprocessable Entity (422)" do
-        patch :update_metaslot, {
-                id: valid_slot.id, metaSlot: { title: nil } }
+        patch :update_metaslot, { id: valid_slot.id, title: nil }
         expect(response.status).to eq(422)
       end
     end

@@ -279,9 +279,9 @@ resource "Slots" do
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       let(:locationId) { 200_719_253 }
       let(:notes) { [{ title: "revolutionizing the calendar",
-                        content: "this is content" },
-                      { title: "and another title",
-                        content: "more content here" }] }
+                       content: "this is content" },
+                     { title: "and another title",
+                       content: "more content here" }] }
       let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
 
@@ -455,8 +455,7 @@ resource "Slots" do
 
     parameter :predecessorId,
               "ID of the Slot which was resloted",
-              required: true,
-              scope: :reSlot
+              required: true
 
     let(:pred) { create(:std_slot) }
 
@@ -506,12 +505,10 @@ resource "Slots" do
 
     describe "Update an existing MetaSlot" do
 
-      parameter :title, "Updated title of slot", scope: :metaSlot
-      parameter :startDate, "Updated Startdate and Time of the Slot",
-                scope: :metaSlot
+      parameter :title, "Updated title of slot"
+      parameter :startDate, "Updated Startdate and Time of the Slot"
       parameter :endDate,
-                "Updated Enddate and Time of the Slot (startdate + duration)",
-                scope: :metaSlot
+                "Updated Enddate and Time of the Slot (startdate + duration)"
 
       let!(:meta_slot) { create(:meta_slot, creator: current_user) }
       let(:id) { meta_slot.id }
@@ -541,12 +538,10 @@ resource "Slots" do
     let(:id) { std_slot.id }
 
     describe "Update an existing StdSlot" do
-      parameter :title, "Updated title of slot", scope: :stdSlot
-      parameter :startDate, "Updated Startdate and Time of the Slot",
-                scope: :stdSlot
+      parameter :title, "Updated title of slot"
+      parameter :startDate, "Updated Startdate and Time of the Slot"
       parameter :endDate,
-                "Updated Enddate and Time of the Slot (startdate + duration)",
-                scope: :stdSlot
+                "Updated Enddate and Time of the Slot (startdate + duration)"
 
       let(:title) { "New title for a Slot" }
 

@@ -47,8 +47,8 @@ module V1
                       status: :unprocessable_entity unless setting.save
       end
 
-      @slot = StdSlot.new(std_params.merge(
-                           meta_slot: meta_slot, owner: current_user))
+      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot,
+                                           owner: current_user))
 
       if @slot.save
         if params[:notes].present?
@@ -89,7 +89,7 @@ module V1
 
     # POST /v1/reslot
     def create_reslot
-      predecessor = BaseSlot.find(re_params.require(:predecessorId))
+      predecessor = BaseSlot.find(re_params)
 
       @slot = ReSlot.from_slot(predecessor: predecessor, slotter: current_user)
 
@@ -104,7 +104,7 @@ module V1
     def update_metaslot
       @meta_slot = current_user.created_slots.find(params[:id])
 
-      if @meta_slot.update(update_meta_params)
+      if @meta_slot.update(meta_params)
         head :no_content
       else
         render json: @meta_slot.errors, status: :unprocessable_entity
@@ -125,10 +125,9 @@ module V1
         params[:notes].each do |note|
           @slot.notes.create(note_create_params(note))
         end
-      elsif update_std_params["visibility"].present? &&
-            @slot.update(visibility: update_std_params["visibility"])
+      elsif std_params["visibility"].present? && @slot.update(std_params)
         head :no_content
-      elsif @slot.meta_slot.update(update_std_params)
+      elsif @slot.meta_slot.update(meta_params)
         head :no_content
       else
         render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
@@ -148,7 +147,7 @@ module V1
         update_media_order
       elsif params[:notes].present?
         @slot.notes.create(note_create_params)
-      elsif @slot.meta_slot.update(update_group_params)
+      elsif @slot.meta_slot.update(meta_params)
         head :no_content
       else
         render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
@@ -168,7 +167,7 @@ module V1
         update_media_order
       elsif params[:notes].present?
         @slot.notes.create(note_create_params)
-      elsif @slot.meta_slot.update(update_re_params)
+      elsif @slot.meta_slot.update(meta_params)
         head :no_content
       else
         render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
@@ -218,36 +217,11 @@ module V1
     end
 
     private def re_params
-      params.require(:reSlot).permit(:predecessorId)
+      params.require(:predecessorId)
     end
 
     private def meta_params
-      parameter = params.permit(
-        :title, :startDate, :endDate, :locationId)
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def update_meta_params
-      parameter = params.require(:metaSlot).permit(
-        :title, :startDate, :endDate, :locationId)
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def update_std_params
-      parameter = params.require(:stdSlot).permit(
-        :title, :startDate, :endDate, :locationId, :visibility)
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def update_group_params
-      parameter = params.require(:groupSlot).permit(
-        :title, :startDate, :endDate, :locationId)
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def update_re_params
-      parameter = params.require(:reSlot).permit(
-        :title, :startDate, :endDate, :locationId)
+      parameter = params.permit(:title, :startDate, :endDate, :locationId)
       parameter.transform_keys(&:underscore)
     end
 
