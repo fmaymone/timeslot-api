@@ -50,13 +50,12 @@ module V1
       @slot = StdSlot.new(std_params.merge(
                            meta_slot: meta_slot, owner: current_user))
 
-      if params[:notes].present?
-        params[:notes].each do |note|
-          @slot.notes.create(note_create_params(note))
-        end
-      end
-
       if @slot.save
+        if params[:notes].present?
+          params[:notes].each do |note|
+            @slot.notes.create(note_create_params(note))
+          end
+        end
         render :show, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity

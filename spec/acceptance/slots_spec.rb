@@ -253,7 +253,7 @@ resource "Slots" do
               required: true
     parameter :locationId,
               "ID of the location associated with this slot"
-    parameter :note, "A note which belongs to the Slot"
+    parameter :notes, "Notes for to the Slot"
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
@@ -278,7 +278,10 @@ resource "Slots" do
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       let(:locationId) { 200_719_253 }
-      let(:note) { "revolutionizing the calendar" }
+      let(:notes) { [{ title: "revolutionizing the calendar",
+                        content: "this is content" },
+                      { title: "and another title",
+                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
       let(:visibility) { 10 }
 
@@ -298,6 +301,7 @@ resource "Slots" do
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
+        expect(json["notes"].length).to eq(notes.length)
       end
     end
 
