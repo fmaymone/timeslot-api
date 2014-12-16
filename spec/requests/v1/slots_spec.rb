@@ -600,7 +600,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe "handling notes" do
       let(:note) { attributes_for(:note) }
-      let(:add_note) { { newNote: note } }
+      let(:add_note) { { notes: [note] } }
 
       it "returns success" do
         patch "/v1/stdslot/#{std_slot.id}", add_note

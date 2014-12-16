@@ -551,23 +551,23 @@ resource "Slots" do
       end
     end
 
-    describe "Add note" do
-      parameter :newNote, "Scope for attributes of new note",
+    describe "Add notes" do
+      parameter :notes, "Scope for new notes",
                 required: true
       parameter :title, "Title of the note",
                 required: true,
-                scope: :newNote
+                scope: :notes
       parameter :content, "Content of the note",
                 required: true,
-                scope: :newNote
+                scope: :notes
 
-      let(:newNote) { attributes_for(:note) }
+      let(:notes) { [ attributes_for(:note), attributes_for(:note) ] }
 
-      example "Add note", document: :v1 do
+      example "Add notes", document: :v1 do
         do_request
 
         expect(response_status).to eq(200)
-        expect(StdSlot.last.notes.last.title).to eq newNote[:title]
+        expect(StdSlot.last.notes.last.title).to eq notes.first[:title]
       end
     end
 

@@ -114,8 +114,11 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
-      elsif params[:newNote].present?
-        @slot.notes.create(note_create_params)
+      elsif params[:notes].present?
+        # TODO: extend to allow updating of existing notes
+        params[:notes].each do |note|
+          @slot.notes.create(note_create_params(note))
+        end
       elsif update_std_params["visibility"].present? &&
             @slot.update(visibility: update_std_params["visibility"])
         head :no_content
@@ -137,7 +140,7 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
-      elsif params[:newNote].present?
+      elsif params[:notes].present?
         @slot.notes.create(note_create_params)
       elsif @slot.meta_slot.update(update_group_params)
         head :no_content
@@ -157,7 +160,7 @@ module V1
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
-      elsif params[:newNote].present?
+      elsif params[:notes].present?
         @slot.notes.create(note_create_params)
       elsif @slot.meta_slot.update(update_re_params)
         head :no_content
@@ -253,8 +256,9 @@ module V1
       parameter.transform_keys(&:underscore)
     end
 
-    private def note_create_params
-      params.require(:newNote).permit(:title, :content)
+    private def note_create_params(note)
+      note.permit(:title, :content)
+      # params.require(:notes).permit(:title, :content)
     end
 
     private def update_media_order
