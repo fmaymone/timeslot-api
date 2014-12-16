@@ -12,10 +12,13 @@ module V1
       query = "#{search_url}?#{query_string}"
       auth = { http_basic_authentication: [user, pw] }
 
-      # WebMock.allow_net_connect!  # for local testing
-      result = open(query, auth).read
-      # WebMock.disable_net_connect!
-
+      begin
+        # WebMock.allow_net_connect!  # for local testing
+        result = open(query, auth).read
+        # WebMock.disable_net_connect!
+      rescue => e
+        return render json: "Search Service Error: #{e}", status: :ok
+      end
       render json: result, status: :ok
     end
 
