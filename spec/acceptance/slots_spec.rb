@@ -155,14 +155,14 @@ resource "Slots" do
       response_field :note, "A note on the slot"
       response_field :media, "Media Items of the slot"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:slot) { create(:std_slot, meta_slot: meta_slot) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
                                    alerts: '1110001100') }
       let(:id) { slot.id }
-      let(:deleted_at) { slot.deleted_at.nil? ? nil : group.deleted_at.as_json }
+      let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
 
       example "Get slot returns slot data", document: :v1 do
         explanation "returns 404 if ID is invalid"
@@ -185,7 +185,7 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json)
+        expect(json.except('media'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -193,30 +193,30 @@ resource "Slots" do
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
-                 "location" => {"id" => 200719253,
-                                "name" => slot.location.name,
-                                "street" => slot.location.street,
-                                "city" => slot.location.city,
-                                "postcode" => slot.location.postcode,
-                                "country" => slot.location.country,
-                                "longitude" => slot.location.longitude,
-                                "latitude" => slot.location.latitude,
-                                "createdAt" => slot.location.created.as_json,
-                                "updatedAt" => slot.location.last_update.as_json,
-                                "categories" => slot.location.categories,
-                                "images" => slot.location.images
+                 "location" => { "id" => 200_719_253,
+                                 "name" => slot.location.name,
+                                 "street" => slot.location.street,
+                                 "city" => slot.location.city,
+                                 "postcode" => slot.location.postcode,
+                                 "country" => slot.location.country,
+                                 "longitude" => slot.location.longitude,
+                                 "latitude" => slot.location.latitude,
+                                 "createdAt" => slot.location.created.as_json,
+                                 "updatedAt" => slot.location.last_update.as_json,
+                                 "categories" => slot.location.categories,
+                                 "images" => slot.location.images
                                },
-                 "creator" => {"id" => slot.creator.id,
-                               "username" => slot.creator.username,
-                               "createdAt" => slot.creator.created_at.as_json,
-                               "updatedAt" => slot.creator.updated_at.as_json,
-                               "deletedAt" => nil},
+                 "creator" => { "id" => slot.creator.id,
+                                "username" => slot.creator.username,
+                                "createdAt" => slot.creator.created_at.as_json,
+                                "updatedAt" => slot.creator.updated_at.as_json,
+                                "deletedAt" => nil},
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
-                 "notes" => slot.notes,
-                 "media" => slot.media_items
+                 "notes" => slot.notes
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
+        expect(json["media"].first['clyid']).to eq(slot.media_items.first.public_id)
       end
     end
 
