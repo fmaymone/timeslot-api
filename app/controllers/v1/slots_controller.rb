@@ -110,7 +110,7 @@ module V1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
 
-      if params[:newMedia].present?
+      if params[:photos].present?
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
@@ -136,7 +136,7 @@ module V1
     def update_groupslot
       @slot = current_user.group_slots.find(params[:id])
 
-      if params[:newMedia].present?
+      if params[:photos].present?
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
@@ -156,7 +156,7 @@ module V1
     def update_reslot
       @slot = current_user.re_slots.find(params[:id])
 
-      if params[:newMedia].present?
+      if params[:photos].present?
         add_media_item
       elsif params[:orderingMedia].present?
         update_media_order
@@ -251,14 +251,13 @@ module V1
 
     private def media_item_create_params
       # TODO: better handling and specing of duration and thumbnail
-      parameter = params.require(:newMedia).permit(
+      parameter = params.require(:photos).permit(
         :publicId, :ordering, :mediaType, :duration, :thumbnail)
       parameter.transform_keys(&:underscore)
     end
 
     private def note_create_params(note)
       note.permit(:title, :content)
-      # params.require(:notes).permit(:title, :content)
     end
 
     private def update_media_order

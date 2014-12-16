@@ -573,17 +573,17 @@ resource "Slots" do
 
     describe "Adding media items to existing slot" do
 
-      parameter :newMedia, "Scope for attributes of new media item",
+      parameter :photos, "Scope for attributes of new media item",
                 required: true
       parameter :mediaType, "Type of media (image/video/voice)",
                 required: true,
-                scope: :newMedia
+                scope: :photos
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
-                scope: :newMedia
+                scope: :photos
       parameter :ordering, "Order of the new media item." \
                            " If not submitted it will be added at the end",
-                scope: :newMedia
+                scope: :photos
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 

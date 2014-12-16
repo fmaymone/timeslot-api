@@ -630,7 +630,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "handling media items" do
-      let(:add_media_item) { { newMedia: media } }
+      let(:add_media_item) { { photos: media } }
 
       context "add images with valid params" do
         let(:media) do
