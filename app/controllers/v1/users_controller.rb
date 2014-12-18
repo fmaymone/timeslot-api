@@ -1,13 +1,25 @@
 module V1
   class UsersController < ApplicationController
     # before_filter :signed_in?, except: [:auth, :create]
-    before_filter :sign_in, except: [:auth, :create, :index]
+    before_filter :sign_in, except: [:auth, :create, :index, :show_slots]
 
     # GET /v1/users
     def index
       @users = User.all
 
       render :index
+    end
+
+    # HACK: temporary no current user
+    # GET /v1/users/1/slots
+    def show_slots
+      user = User.find(params[:id])
+      @slots = []
+      @slots.push(*user.std_slots)
+      @slots.push(*user.re_slots)
+      @slots.push(*user.group_slots)
+
+      render "v1/slots/index"
     end
 
     # GET /v1/users/1

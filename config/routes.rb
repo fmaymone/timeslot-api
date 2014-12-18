@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     scope :users do
       get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+      get ':id/slots', to: 'users#show_slots', as: 'user_slots',
+          constraints: { id: /\d+/ }
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'
       delete '', to: 'users#destroy', as: 'user_delete'
