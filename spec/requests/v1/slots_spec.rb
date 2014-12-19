@@ -634,9 +634,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "add images with valid params" do
         let(:media) do
-          { mediaType: "image",
-            publicId: "foo-image",
-            ordering: "1" }
+          [{ publicId: "foo-image",
+             ordering: "1" }]
         end
 
         it "returns success" do
@@ -665,9 +664,10 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds the submitted image to the db" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
-          expect(std_slot.media_items[0].public_id).to eq(media[:publicId])
-          expect(std_slot.media_items[0].ordering).to eq(media[:ordering].to_i)
+          expect(std_slot.media_items[0].media_type).to eq 'image'
+          expect(std_slot.images[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.media_items[0].ordering)
+            .to eq(media.first[:ordering].to_i)
         end
 
         it "adds an additional new image" do
@@ -683,15 +683,14 @@ RSpec.describe "V1::Slots", type: :request do
 
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           new_media_item = MediaItem.last
-          expect(new_media_item.media_type).to eq(media[:mediaType])
-          expect(new_media_item.public_id).to eq(media[:publicId])
-          expect(new_media_item.ordering).to eq(media[:ordering].to_i)
+          expect(new_media_item.media_type).to eq 'image'
+          expect(new_media_item.public_id).to eq(media.first[:publicId])
+          expect(new_media_item.ordering).to eq(media.first[:ordering].to_i)
         end
 
         context "missing ordering parameter" do
           let(:media) do
-            { mediaType: "image",
-              publicId: "foo-image" }
+            [{ publicId: "foo-image" }]
           end
 
           it "adds it" do
@@ -707,9 +706,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         context "existing ordering parameter" do
           let(:media) do
-            { mediaType: "image",
-              publicId: "foo-image",
-              ordering: "0" }
+            [{ publicId: "foo-image",
+              ordering: "0" }]
           end
 
           it "updates existing ordering" do
@@ -725,16 +723,14 @@ RSpec.describe "V1::Slots", type: :request do
 
             expect(existing_1.ordering).to eq 1
             expect(existing_2.ordering).to eq 2
-            expect(std_slot.media_items.last.ordering).to eq media[:ordering].to_i
+            expect(std_slot.media_items.last.ordering)
+              .to eq media.first[:ordering].to_i
           end
         end
       end
 
       context "add images with invalid params" do
-        let(:media) do
-          { mediaType: "image",
-            ordering: "0" }
-        end
+        let(:media) { [{ ordering: "0" }] }
 
         it "returns 422 if publicId is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
@@ -833,29 +829,29 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "video" do
         let(:media) do
-          { mediaType: "video",
-            publicId: "foo-video",
-            ordering: "1" }
+          [{ publicId: "foo-video",
+             ordering: "1" }]
         end
 
         it "adds a new video" do
-          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          patch "/v1/stdslot/#{std_slot.id}", {videos: media}
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
+          expect(std_slot.videos[0].media_type).to eq 'video'
+          expect(std_slot.videos[0].public_id).to eq(media.first[:publicId])
         end
       end
 
       context "voice" do
         let(:media) do
-          { mediaType: "voice",
-            publicId: "foo-voice",
-            ordering: "1" }
+          [{ publicId: "foo-voice",
+             ordering: "1" }]
         end
 
         it "adds a new voice item" do
-          patch "/v1/stdslot/#{std_slot.id}", add_media_item
+          patch "/v1/stdslot/#{std_slot.id}", voices: media
           std_slot.reload
-          expect(std_slot.media_items[0].media_type).to eq(media[:mediaType])
+          expect(std_slot.voices[0].media_type).to eq 'voice'
+          expect(std_slot.voices[0].public_id).to eq(media.first[:publicId])
         end
       end
     end

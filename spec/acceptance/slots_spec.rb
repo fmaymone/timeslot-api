@@ -54,7 +54,7 @@ resource "Slots" do
         expect(json.first).to have_key("locationId")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
-        expect(json.first).to have_key("settings")
+        # expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
         expect(json.first).to have_key("deletedAt")
@@ -72,8 +72,8 @@ resource "Slots" do
                       "createdAt" => std_slot_1.created_at.as_json,
                       "updatedAt" => std_slot_1.updated_at.as_json,
                       "deletedAt" => std_slot_1.deleted_at,
-                      "settings" => {
-                        'alerts' => std_slot_1.alerts(current_user) },
+                      # "settings" => {
+                        # 'alerts' => std_slot_1.alerts(current_user) },
                       "notes" => std_slot_1.notes,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
@@ -86,8 +86,8 @@ resource "Slots" do
                       "locationId" => std_slot_2.location_id,
                       "startDate" => std_slot_2.start_date.as_json,
                       "endDate" => std_slot_2.end_date.as_json,
-                      "settings" => {
-                        'alerts' => std_slot_2.alerts(current_user) },
+                      # "settings" => {
+                        # 'alerts' => std_slot_2.alerts(current_user) },
                       "createdAt" => std_slot_2.created_at.as_json,
                       "updatedAt" => std_slot_2.updated_at.as_json,
                       "deletedAt" => std_slot_2.deleted_at,
@@ -103,8 +103,8 @@ resource "Slots" do
                       "locationId" => re_slots[0].location_id,
                       "startDate" => re_slots[0].start_date.as_json,
                       "endDate" => re_slots[0].end_date.as_json,
-                      "settings" => {
-                        'alerts' => re_slots[0].alerts(current_user) },
+                      # "settings" => {
+                        # 'alerts' => re_slots[0].alerts(current_user) },
                       "createdAt" => re_slots[0].created_at.as_json,
                       "updatedAt" => re_slots[0].updated_at.as_json,
                       "deletedAt" => re_slots[0].deleted_at,
@@ -119,8 +119,8 @@ resource "Slots" do
                       "locationId" => group_slots_1[0].location_id,
                       "startDate" => group_slots_1[0].start_date.as_json,
                       "endDate" => group_slots_1[0].end_date.as_json,
-                      "settings" => {
-                        'alerts' => group_slots_1[0].alerts(current_user) },
+                      # "settings" => {
+                        # 'alerts' => group_slots_1[0].alerts(current_user) },
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.as_json,
                       "updatedAt" => group_slots_1[0].updated_at.as_json,
@@ -184,8 +184,8 @@ resource "Slots" do
         expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
-        expect(json).to have_key("settings")
-        expect(json['settings']).to have_key("alerts")
+        # expect(json).to have_key("settings")
+        # expect(json['settings']).to have_key("alerts")
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
@@ -220,7 +220,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil},
-                 "settings" => { 'alerts' => '1110001100' },
+                 # "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes
                 )
@@ -581,11 +581,8 @@ resource "Slots" do
 
     describe "Adding media items to existing slot" do
 
-      parameter :photos, "Scope for attributes of new media item",
+      parameter :photos, "Scope for array of attributes of new photos",
                 required: true
-      parameter :mediaType, "Type of media (image/video/voice)",
-                required: true,
-                scope: :photos
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :photos
@@ -595,11 +592,10 @@ resource "Slots" do
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
-      let(:mediaType) { "image" }
-      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:ordering) { "1" }
+      let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+                      ordering: "1"] }
 
-      example "Add media items", document: :v1 do
+      example "Add photo", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -613,6 +609,7 @@ resource "Slots" do
       end
     end
 
+    # TODO: needs to be updated
     describe "Reordering media data of existing slot" do
 
       parameter :media_type, "Type of media (image/video/voice)",
@@ -644,6 +641,7 @@ resource "Slots" do
       let(:raw_post) { media_reordering.to_json }
 
       example "Reorder media items", document: :v1 do
+        skip "TODO: needs update"
         explanation "An array with the media_items keys and corresponding" \
                     " ordering number (starting from 0) for all images " \
                     " of the slot must be send.\n\n" \

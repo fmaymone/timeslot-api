@@ -112,12 +112,22 @@ module V1
     end
 
     # PATCH /v1/stdslot/1
-    # TODO: needs refactoring, why can't I write attributes via delegates?
+    # TODO: needs HEAVY refactoring, why can't I write attributes via delegates?
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
 
-      if params[:photos].present?
-        add_media_item
+      if params[:photos].present? ||
+         params[:videos].present? ||
+         params[:voices].present?
+        params[:photos].present? && params[:photos].each do |photo|
+          add_media(photo_create_params(photo))
+        end
+        params[:voices].present? && params[:voices].each do |voice|
+          add_media(voice_create_params(voice))
+        end
+        params[:videos].present? && params[:videos].each do |video|
+          add_media(video_create_params(video))
+        end
       elsif params[:orderingMedia].present?
         update_media_order
       elsif params[:notes].present?
@@ -142,7 +152,7 @@ module V1
       @slot = current_user.group_slots.find(params[:id])
 
       if params[:photos].present?
-        add_media_item
+        add_media
       elsif params[:orderingMedia].present?
         update_media_order
       elsif params[:notes].present?
@@ -162,7 +172,7 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
 
       if params[:photos].present?
-        add_media_item
+        add_media
       elsif params[:orderingMedia].present?
         update_media_order
       elsif params[:notes].present?
@@ -229,10 +239,22 @@ module V1
       params[:settings]
     end
 
-    private def media_item_create_params
+    private def video_create_params(video)
       # TODO: better handling and specing of duration and thumbnail
-      parameter = params.require(:photos).permit(
-        :publicId, :ordering, :mediaType, :duration, :thumbnail)
+      parameter = video.permit(:publicId, :ordering, :mediaType, :duration,
+                               :thumbnail).merge(mediaType: 'video')
+      parameter.transform_keys(&:underscore)
+    end
+
+    private def voice_create_params(voice)
+      # TODO: better handling and specing of duration
+      parameter = voice.permit(:publicId, :ordering, :mediaType, :duration)
+                  .merge(mediaType: 'voice')
+      parameter.transform_keys(&:underscore)
+    end
+
+    private def photo_create_params(photo)
+      parameter = photo.permit(:publicId, :ordering).merge(mediaType: 'image')
       parameter.transform_keys(&:underscore)
     end
 
@@ -248,8 +270,8 @@ module V1
       end
     end
 
-    private def add_media_item
-      media_item = MediaItem.insert(@slot.media_items, media_item_create_params)
+    private def add_media(item)
+      media_item = MediaItem.insert(@slot.media_items, item)
       @slot.media_items << media_item
 
       if @slot.save
