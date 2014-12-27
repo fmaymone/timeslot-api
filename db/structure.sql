@@ -104,7 +104,6 @@ CREATE TABLE group_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     meta_slot_id integer,
-    footest character varying(255),
     deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
@@ -296,7 +295,6 @@ CREATE TABLE re_slots (
     predecessor_id integer NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    footest character varying(255),
     deleted_at timestamp without time zone,
     meta_slot_id integer NOT NULL,
     slotter_id integer NOT NULL
@@ -356,7 +354,6 @@ CREATE TABLE std_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    footest character varying(255),
     meta_slot_id integer,
     owner_id integer
 )
@@ -780,4 +777,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141214164428');
 INSERT INTO schema_migrations (version) VALUES ('20141215092936');
 
 INSERT INTO schema_migrations (version) VALUES ('20141215223116');
+
+INSERT INTO schema_migrations (version) VALUES ('20141227213950');
 
