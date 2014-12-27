@@ -52,15 +52,6 @@ development:
   # Defaults to warning.
   #min_messages: notice
 
-# connected via ssh tunnel
-development_sec:
-  <<: *default
-  database: loc_prod_20141213_1442
-  username: <%= ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] %>
-  password: <%= ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] %>
-  host: localhost
-  port: 5431
-
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
