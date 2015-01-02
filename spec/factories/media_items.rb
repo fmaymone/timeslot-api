@@ -18,7 +18,7 @@ FactoryGirl.define do
   factory :real_image, class: "MediaItem" do
     association :mediable, factory: :user
     media_type "image"
-    public_id "testid"
+    public_id "sample"
   end
 
   factory :voice, class: "MediaItem" do

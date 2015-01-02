@@ -101,14 +101,18 @@ RSpec.describe MediaItem, type: :model do
 
     it "adds a cloudinary tag to the image", :vcr do
       user = FactoryGirl.create(:user, :with_real_image)
-      public_id = user.image.first.public_id
+      media_item = user.image.first
 
       media_item.delete
 
-      tags = Cloudinary::Api.resource(public_id)["tags"]
+      tags = Cloudinary::Api.resource(media_item.public_id)["tags"]
       expect(tags).to include "replaced"
 
-      Cloudinary::Uploader.remove_tag("replaced", public_id)
+      Cloudinary::Uploader.remove_tag("replaced", media_item.public_id)
+      Cloudinary::Uploader.remove_tag("mediable_id:#{media_item.mediable_id}",
+                                      media_item.public_id)
+      Cloudinary::Uploader.remove_tag("mediable_type:#{media_item.mediable_type}",
+                                      media_item.public_id)
     end
   end
 end

@@ -1,104 +1,6 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
-    body:
-      encoding: US-ASCII
-      string: timestamp=1417797662&tag=replaced&public_ids[]=testid&command=add&signature=d6151a0543923c75c45a891d09797c5b97c80e65&api_key=255241985667644
-    headers:
-      Accept:
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - cld-ruby-1.0.78
-      Content-Length:
-      - '140'
-      Content-Type:
-      - application/x-www-form-urlencoded
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Cache-Control:
-      - max-age=0, private, must-revalidate
-      Content-Encoding:
-      - gzip
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Fri, 05 Dec 2014 16:41:12 GMT
-      Server:
-      - cloudinary
-      Status:
-      - 200 OK
-      X-Request-Id:
-      - 2fd5bb1f8f3f44e3
-      X-Ua-Compatible:
-      - IE=Edge,chrome=1
-      Content-Length:
-      - '56'
-      Connection:
-      - keep-alive
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
-        /wMAEeHuqBkAAAA=
-    http_version: 
-  recorded_at: Fri, 05 Dec 2014 16:41:12 GMT
-- request:
-    method: post
-    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
-    body:
-      encoding: US-ASCII
-      string: timestamp=1417797672&tag=model-id%3A30&public_ids[]=testid&command=add&signature=b7d1c7c3513bce094d4f97b89223d2a66c059362&api_key=255241985667644
-    headers:
-      Accept:
-      - "*/*; q=0.5, application/xml"
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - cld-ruby-1.0.78
-      Content-Length:
-      - '145'
-      Content-Type:
-      - application/x-www-form-urlencoded
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Cache-Control:
-      - max-age=0, private, must-revalidate
-      Content-Encoding:
-      - gzip
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Fri, 05 Dec 2014 16:41:13 GMT
-      Server:
-      - cloudinary
-      Status:
-      - 200 OK
-      X-Request-Id:
-      - 77e867efc7b6ac7d
-      X-Ua-Compatible:
-      - IE=Edge,chrome=1
-      Content-Length:
-      - '56'
-      Connection:
-      - keep-alive
-    body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
-        /wMAEeHuqBkAAAA=
-    http_version: 
-  recorded_at: Fri, 05 Dec 2014 16:41:12 GMT
-- request:
     method: get
     uri: https://255241985667644:KkOCYRSF8Zgk6OE0Z3mzXtcjhcU@api.cloudinary.com/v1_1/einselbst/resources/image/upload/testid
     body:
@@ -164,7 +66,167 @@ http_interactions:
     uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
     body:
       encoding: US-ASCII
-      string: timestamp=1417797673&tag=replaced&public_ids[]=testid&command=remove&signature=8e6ade78dc5234affb0d5d13c244914cb89c8a37&api_key=255241985667644
+      string: timestamp=1420208244&tag=replaced&public_ids[]=sample&command=add&signature=0ed6675dd8c5c310c74d5b108a870305e627fff2&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.78
+      Content-Length:
+      - '140'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 Jan 2015 14:17:25 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - 7ab3321438395314
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipOzC3ISVWKrQUAAAD/
+        /wMAss/plBkAAAA=
+    http_version: 
+  recorded_at: Fri, 02 Jan 2015 14:17:25 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1420208245&tag=mediable_id%3A36%2C%20mediable_type%3AUser&public_ids[]=sample&command=add&signature=aa88c4766466dd913929926ca84d27ae02d7c7a0&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.78
+      Content-Length:
+      - '174'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 Jan 2015 14:17:25 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - 7588fc866bb66fb5
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipOzC3ISVWKrQUAAAD/
+        /wMAss/plBkAAAA=
+    http_version: 
+  recorded_at: Fri, 02 Jan 2015 14:17:25 GMT
+- request:
+    method: get
+    uri: https://255241985667644:KkOCYRSF8Zgk6OE0Z3mzXtcjhcU@api.cloudinary.com/v1_1/einselbst/resources/image/upload/sample
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.78
+      Content-Length:
+      - '0'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 Jan 2015 14:17:26 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Featureratelimit-Limit:
+      - '500'
+      X-Featureratelimit-Remaining:
+      - '480'
+      X-Featureratelimit-Reset:
+      - Fri, 02 Jan 2015 15:00:00 GMT
+      X-Request-Id:
+      - e4f1a05797b75f80
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//tFLJTsMwEP2XOYcmjlMn8XfABYQiL5PGyFlkO4UK
+        8e9MU9QeuCAExxnPvHmL32FZtXemcxYkRDUuHiGDfg6jStR5WQ5UHjFEN08g
+        WcV4yff7lmUQMM5rMNil04I06kZ1OO9+leviZ2WpNgFVQttteGXBqjtW3DF+
+        XzJZCsnZI83oU8JI8EUrRJvBq7NpANmIKoMB3WGg1X0tMliDJ5AhpUXmORHY
+        GT+v1k0qnHZmHnN0U0SvY8o3NvmFRH688c4vGncXYRHNGrC7wca/wU3qQHKe
+        YETrlPZI9kou6OHaOLskHyIGODu5eGXQwnMGE76ljkjFORAlZpludVFZhtaq
+        1u4FN0oZ3hutGsFbWrYY3JF25dM7pKCmeMluiwtStx3svNNdGtZRf8/2an3J
+        ygy2b9AXhhSJvqhLuseaqqg1N7xu66bpheDw6yC+8fm3aH586eP54xMAAP//
+        AwAgoELTBQMAAA==
+    http_version: 
+  recorded_at: Fri, 02 Jan 2015 14:17:26 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1420208246&tag=replaced&public_ids[]=sample&command=remove&signature=1e6500d7f802af7c28929168ce6091912c0bfa16&api_key=255241985667644
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -188,32 +250,32 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 05 Dec 2014 16:41:14 GMT
+      - Fri, 02 Jan 2015 14:17:27 GMT
       Server:
       - cloudinary
       Status:
       - 200 OK
       X-Request-Id:
-      - 4cb78eb8c83532d2
+      - fdb30abb56382962
       X-Ua-Compatible:
       - IE=Edge,chrome=1
-      Content-Length:
-      - '56'
+      Transfer-Encoding:
+      - chunked
       Connection:
       - keep-alive
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
-        /wMAEeHuqBkAAAA=
+        H4sIAAAAAAAAA6pWKihNyslMjs9MKVayilYqTswtyElViq0FAAAA//8DALLP
+        6ZQZAAAA
     http_version: 
-  recorded_at: Fri, 05 Dec 2014 16:41:13 GMT
+  recorded_at: Fri, 02 Jan 2015 14:17:27 GMT
 - request:
     method: post
     uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
     body:
       encoding: US-ASCII
-      string: timestamp=1417797673&tag=model-id%3A30&public_ids[]=testid&command=remove&signature=209d96e706865db4b5344b1536d88f6b3ea77a53&api_key=255241985667644
+      string: timestamp=1420208247&tag=mediable_id%3A36&public_ids[]=sample&command=remove&signature=7bcba454d3441a7b262c38f30ddb284a7cc560c5&api_key=255241985667644
     headers:
       Accept:
       - "*/*; q=0.5, application/xml"
@@ -222,7 +284,7 @@ http_interactions:
       User-Agent:
       - cld-ruby-1.0.78
       Content-Length:
-      - '148'
+      - '151'
       Content-Type:
       - application/x-www-form-urlencoded
   response:
@@ -237,13 +299,62 @@ http_interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Fri, 05 Dec 2014 16:41:14 GMT
+      - Fri, 02 Jan 2015 14:17:27 GMT
       Server:
       - cloudinary
       Status:
       - 200 OK
       X-Request-Id:
-      - 76c33e16f9c103a5
+      - e9210764ba3c8c27
+      X-Ua-Compatible:
+      - IE=Edge,chrome=1
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipOzC3ISVWKrQUAAAD/
+        /wMAss/plBkAAAA=
+    http_version: 
+  recorded_at: Fri, 02 Jan 2015 14:17:27 GMT
+- request:
+    method: post
+    uri: https://api.cloudinary.com/v1_1/einselbst/image/tags
+    body:
+      encoding: US-ASCII
+      string: timestamp=1420208247&tag=mediable_type%3AUser&public_ids[]=sample&command=remove&signature=a097fda1ca5672be9ec1102185978f7f56ec5c5e&api_key=255241985667644
+    headers:
+      Accept:
+      - "*/*; q=0.5, application/xml"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - cld-ruby-1.0.78
+      Content-Length:
+      - '155'
+      Content-Type:
+      - application/x-www-form-urlencoded
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Cache-Control:
+      - max-age=0, private, must-revalidate
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Fri, 02 Jan 2015 14:17:28 GMT
+      Server:
+      - cloudinary
+      Status:
+      - 200 OK
+      X-Request-Id:
+      - d9bfec30ee74941a
       X-Ua-Compatible:
       - IE=Edge,chrome=1
       Content-Length:
@@ -253,8 +364,8 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipJLS7JTFGKrQUAAAD/
-        /wMAEeHuqBkAAAA=
+        H4sIAAAAAAAAAwAAAP//qlYqKE3KyUyOz0wpVrKKVipOzC3ISVWKrQUAAAD/
+        /wMAss/plBkAAAA=
     http_version: 
-  recorded_at: Fri, 05 Dec 2014 16:41:14 GMT
+  recorded_at: Fri, 02 Jan 2015 14:17:28 GMT
 recorded_with: VCR 2.9.3
