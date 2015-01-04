@@ -15,7 +15,7 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
 
-  def images
+  def photos
     media_items.image.order(:ordering)
   end
 

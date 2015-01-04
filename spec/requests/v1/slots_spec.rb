@@ -665,7 +665,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
           expect(std_slot.media_items[0].media_type).to eq 'image'
-          expect(std_slot.images[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.photos[0].public_id).to eq(media.first[:publicId])
           expect(std_slot.media_items[0].ordering)
             .to eq(media.first[:ordering].to_i)
         end

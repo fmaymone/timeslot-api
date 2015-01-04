@@ -191,10 +191,10 @@ resource "Slots" do
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("notes")
         expect(json).to have_key("visibility")
-        expect(json).to have_key("images")
+        expect(json).to have_key("photos")
         expect(json).to have_key("voices")
         expect(json).to have_key("videos")
-        expect(json.except('images', 'voices', 'videos'))
+        expect(json.except('photos', 'voices', 'videos'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -219,13 +219,13 @@ resource "Slots" do
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
-                                "deletedAt" => nil},
+                                "deletedAt" => nil },
                  # "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes
                 )
-        expect(json["images"].length).to eq(slot.images.length)
-        expect(json["images"].first['clyid']).to eq(slot.images.first.public_id)
+        expect(json["photos"].length).to eq(slot.photos.length)
+        expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
       end
     end
 

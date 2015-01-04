@@ -20,7 +20,7 @@ json.creator do
   json.partial! 'v1/users/user', user: @slot.creator
 end
 
-# TODO: temporary disabled until current user is requiererd
+# TODO: temporary disabled until current user is requiered
 #if current_user
 #  json.partial! 'v1/slots/settings', slot: @slot
 #end
@@ -35,6 +35,6 @@ end
 
 json.notes @slot.notes, partial: 'v1/slots/note', as: :note
 
-json.partial! 'v1/media/images', media: @slot.images
+json.partial! 'v1/media/photos', media: @slot.photos
 json.partial! 'v1/media/voices', media: @slot.voices
 json.partial! 'v1/media/videos', media: @slot.videos
