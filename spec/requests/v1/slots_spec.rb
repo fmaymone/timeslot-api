@@ -498,102 +498,104 @@ RSpec.describe "V1::Slots", type: :request do
   describe "PATCH /v1/stdslot/:id" do
     let!(:std_slot) { create(:std_slot, owner: current_user) }
 
-    context "with valid non-media params" do
-      it "responds with No Content (204)" do
-        patch "/v1/stdslot/#{std_slot.id}", title: "Something"
-        expect(response).to have_http_status(:no_content)
-      end
-
-      it "updates the visibiltiy of a given StdSlot" do
-        std_slot.update(visibility: "00")
-        patch "/v1/stdslot/#{std_slot.id}", visibility: "11"
-        std_slot.reload
-        expect(std_slot.visibility).to eq("11")
-      end
-
-      it "updates the title of a given StdSlot" do
-        std_slot.meta_slot.title = "Old title"
-        patch "/v1/stdslot/#{std_slot.id}", title: "New title"
-        std_slot.reload
-        expect(std_slot.title).to eq("New title")
-      end
-
-      it "updates the start_date of a given StdSlot" do
-        std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
-        patch "/v1/stdslot/#{std_slot.id}", startDate: "2014-07-07 13:31:02"
-        std_slot.reload
-        expect(std_slot.start_date).to eq("2014-07-07 13:31:02")
-      end
-
-      it "updates the end_date of a given StdSlot" do
-        std_slot.meta_slot.update(end_date: "2014-09-09 13:31:02")
-        patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-11-11 13:31:02"
-        std_slot.reload
-        expect(std_slot.end_date).to eq("2014-11-11 13:31:02")
-      end
-    end
-
-    context "with invalid non-media params" do
-      describe "User not owner of StdSlot" do
-        let(:std_slot) { create(:std_slot) }
-
-        it "responds with Not Found (404)" do
+    describe "handling non-media params" do
+      context "valid params" do
+        it "responds with No Content (204)" do
           patch "/v1/stdslot/#{std_slot.id}", title: "Something"
-          expect(response).to have_http_status(:not_found)
+          expect(response).to have_http_status(:no_content)
+        end
+
+        it "updates the visibiltiy of a given StdSlot" do
+          std_slot.update(visibility: "00")
+          patch "/v1/stdslot/#{std_slot.id}", visibility: "11"
+          std_slot.reload
+          expect(std_slot.visibility).to eq("11")
+        end
+
+        it "updates the title of a given StdSlot" do
+          std_slot.meta_slot.title = "Old title"
+          patch "/v1/stdslot/#{std_slot.id}", title: "New title"
+          std_slot.reload
+          expect(std_slot.title).to eq("New title")
+        end
+
+        it "updates the start_date of a given StdSlot" do
+          std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
+          patch "/v1/stdslot/#{std_slot.id}", startDate: "2014-07-07 13:31:02"
+          std_slot.reload
+          expect(std_slot.start_date).to eq("2014-07-07 13:31:02")
+        end
+
+        it "updates the end_date of a given StdSlot" do
+          std_slot.meta_slot.update(end_date: "2014-09-09 13:31:02")
+          patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-11-11 13:31:02"
+          std_slot.reload
+          expect(std_slot.end_date).to eq("2014-11-11 13:31:02")
         end
       end
 
-      describe "for invalid ID" do
-        it "responds with Not Found (404)" do
-          wrong_id = std_slot.id + 1
-          patch "/v1/stdslot/#{wrong_id}", title: "Something"
-          expect(response).to have_http_status(:not_found)
-        end
-      end
+      context "invalid params" do
+        describe "User not owner of StdSlot" do
+          let(:std_slot) { create(:std_slot) }
 
-      describe "responds with Unprocessable Entity (422)" do
-        it "for empty title" do
-          patch "/v1/stdslot/#{std_slot.id}", title: ""
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
+          it "responds with Not Found (404)" do
+            patch "/v1/stdslot/#{std_slot.id}", title: "Something"
+            expect(response).to have_http_status(:not_found)
+          end
         end
 
-        it "for empty start_date" do
-          patch "/v1/stdslot/#{std_slot.id}", startDate: ""
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
+        describe "for invalid ID" do
+          it "responds with Not Found (404)" do
+            wrong_id = std_slot.id + 1
+            patch "/v1/stdslot/#{wrong_id}", title: "Something"
+            expect(response).to have_http_status(:not_found)
+          end
         end
 
-        it "for invalid start_date" do
-          patch "/v1/stdslot/#{std_slot.id}", startDate: "|$%^@wer"
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
+        describe "responds with Unprocessable Entity (422)" do
+          it "for empty title" do
+            patch "/v1/stdslot/#{std_slot.id}", title: ""
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('blank')
+          end
 
-        it "for empty end_date" do
-          patch "/v1/stdslot/#{std_slot.id}", endDate: ""
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
+          it "for empty start_date" do
+            patch "/v1/stdslot/#{std_slot.id}", startDate: ""
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('blank')
+          end
 
-        it "for invalid end_date" do
-          patch "/v1/stdslot/#{std_slot.id}", endDate: "|$%^@wer"
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
+          it "for invalid start_date" do
+            patch "/v1/stdslot/#{std_slot.id}", startDate: "|$%^@wer"
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('blank')
+          end
 
-        it "if start_date equals end_date" do
-          std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
-          patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-09-08 13:31:02"
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
-        end
+          it "for empty end_date" do
+            patch "/v1/stdslot/#{std_slot.id}", endDate: ""
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('blank')
+          end
 
-        it "if end_date before start_date" do
-          std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
-          patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-07-07 13:31:02"
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
+          it "for invalid end_date" do
+            patch "/v1/stdslot/#{std_slot.id}", endDate: "|$%^@wer"
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('blank')
+          end
+
+          it "if start_date equals end_date" do
+            std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
+            patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-09-08 13:31:02"
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('start_date')
+          end
+
+          it "if end_date before start_date" do
+            std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
+            patch "/v1/stdslot/#{std_slot.id}", endDate: "2014-07-07 13:31:02"
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('start_date')
+          end
         end
       end
     end
@@ -678,7 +680,7 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.media_items.size).to eq(2)
         end
 
-        it "adds a 2nd  submitted image to the db" do
+        it "adds a 2nd submitted image to the db" do
           create(:slot_image, mediable: std_slot, ordering: 0)
 
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
@@ -705,10 +707,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "existing ordering parameter" do
-          let(:media) do
-            [{ publicId: "foo-image",
-              ordering: "0" }]
-          end
+          let(:media) { [{ publicId: "foo-image", ordering: "0" }] }
 
           it "updates existing ordering" do
             existing_1 = create(:slot_image, mediable: std_slot, ordering: 0)
@@ -745,9 +744,12 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       describe "reorder images" do
-        let!(:media_item_1) { create(:slot_image, mediable: std_slot, ordering: 0) }
-        let!(:media_item_2) { create(:slot_image, mediable: std_slot, ordering: 1) }
-        let!(:media_item_3) { create(:slot_image, mediable: std_slot, ordering: 2) }
+        let!(:media_item_1) {
+          create(:slot_image, mediable: std_slot, ordering: 0) }
+        let!(:media_item_2) {
+          create(:slot_image, mediable: std_slot, ordering: 1) }
+        let!(:media_item_3) {
+          create(:slot_image, mediable: std_slot, ordering: 2) }
 
         context "with valid params" do
           let(:media_reordering) do
