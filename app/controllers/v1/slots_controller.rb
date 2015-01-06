@@ -118,29 +118,8 @@ module V1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
 
-      add_media(@slot)
-      return update_media_order if params[:orderingMedia].present? # TODO: improve
-
-      if params[:notes].present?
-        params[:notes].each do |note|
-          if note.key? 'id'
-            @slot.notes.find(note["id"]).update(note_params(note))
-          else
-            @slot.notes.create(note_params(note))
-          end
-        end
-      end
-
       @slot.update(std_params) if std_params["visibility"].present?
-      @slot.meta_slot.update(meta_params) if meta_params
-
-      if @slot.errors.empty? && @slot.meta_slot.errors.empty?
-        render :show, status: :ok
-      else
-        @slot.errors.add(:meta_slot, @slot.meta_slot.errors)
-        render json: @slot.errors.messages,
-               status: :unprocessable_entity
-      end
+      update_baseslot(@slot)
     end
 
     # PATCH /v1/groupslot/1
@@ -254,6 +233,23 @@ module V1
       slot.add_photos(params[:photos]) if params[:photos].present?
       slot.add_voices(params[:voices]) if params[:voices].present?
       slot.add_videos(params[:videos]) if params[:videos].present?
+    end
+
+    # TODO: refactor and improve media ordering
+    private def update_baseslot(base_slot)
+      add_media(base_slot)
+      base_slot.update_notes(params[:notes]) if params[:notes].present?
+      base_slot.meta_slot.update(meta_params) if meta_params
+
+      return update_media_order if params[:orderingMedia].present?
+
+      if base_slot.errors.empty? && base_slot.meta_slot.errors.empty?
+        render :show, status: :ok
+      else
+        base_slot.errors.add(:meta_slot, base_slot.meta_slot.errors)
+        render json: base_slot.errors.messages,
+               status: :unprocessable_entity
+      end
     end
   end
 end

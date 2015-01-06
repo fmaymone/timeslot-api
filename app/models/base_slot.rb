@@ -65,6 +65,16 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  def update_notes(new_notes)
+    new_notes.each do |note|
+      if note.key? 'id'
+        notes.find(note["id"]).update(note.permit(:title, :content))
+      else
+        notes.create(note.permit(:title, :content))
+      end
+    end
+  end
+
   def delete
 
     # -> make an "unregister" Method in SlotSetting Class so it can take care itself
