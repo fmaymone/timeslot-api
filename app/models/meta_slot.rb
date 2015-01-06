@@ -16,6 +16,6 @@ class MetaSlot < ActiveRecord::Base
   private def enddate_is_after_startdate
     return false if end_date.blank? || start_date.blank?
     return true if start_date.to_i < end_date.to_i
-    errors.add(:end_date, "cannot be before the start_date")
+    errors.add(:end_date, "can't be before start_date")
   end
 end

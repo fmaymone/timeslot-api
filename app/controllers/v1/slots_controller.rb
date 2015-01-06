@@ -127,19 +127,7 @@ module V1
     # TODO: add specs
     def update_groupslot
       @slot = current_user.group_slots.find(params[:id])
-
-      if params[:photos].present?
-        add_media
-      elsif params[:orderingMedia].present?
-        update_media_order
-      elsif params[:notes].present?
-        @slot.notes.create(note_params)
-      elsif @slot.meta_slot.update(meta_params)
-        head :no_content
-      else
-        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
-               status: :unprocessable_entity
-      end
+      update_baseslot(@slot)
     end
 
     # PATCH /v1/reslot/1
@@ -147,19 +135,7 @@ module V1
     # TODO: add specs
     def update_reslot
       @slot = current_user.re_slots.find(params[:id])
-
-      if params[:photos].present?
-        add_media
-      elsif params[:orderingMedia].present?
-        update_media_order
-      elsif params[:notes].present?
-        @slot.notes.create(note_params)
-      elsif @slot.meta_slot.update(meta_params)
-        head :no_content
-      else
-        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
-               status: :unprocessable_entity
-      end
+      update_baseslot(@slot)
     end
 
     # DELETE /v1/std_slot/1

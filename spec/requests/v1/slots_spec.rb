@@ -945,9 +945,9 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:group_slot) { create(:group_slot, group: group) }
 
     context "with valid non-media params" do
-      it "responds with No Content (204)" do
+      it "responds with 200" do
         patch "/v1/groupslot/#{group_slot.id}", title: "Something"
-        expect(response).to have_http_status(:no_content)
+        expect(response).to have_http_status(:ok)
       end
 
       it "updates the title of a given GroupSlot" do
@@ -963,9 +963,9 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     context "with valid non-media params" do
-      it "responds with No Content (204)" do
+      it "responds with 200" do
         patch "/v1/reslot/#{re_slot.id}", title: "Something"
-        expect(response).to have_http_status(:no_content)
+        expect(response).to have_http_status(:ok)
       end
 
       it "updates the title of a given ReSlot" do
