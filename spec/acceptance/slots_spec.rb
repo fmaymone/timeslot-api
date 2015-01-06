@@ -542,20 +542,22 @@ resource "Slots" do
       parameter :startDate, "Updated Startdate and Time of the Slot"
       parameter :endDate,
                 "Updated Enddate and Time of the Slot (startdate + duration)"
+      parameter :locationId, "Location ID"
+      parameter :visibility, "Visibility of slot"
 
       let(:title) { "New title for a Slot" }
 
       example "Update StdSlot", document: :v1 do
         explanation "Update content of StdSlot.\n\n" \
                     "User must be owner of StdSlot.\n\n" \
-                    "returns 204 if update succeded \n\n" \
+                    "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
         do_request
 
-        expect(response_body).to eq("")
-        expect(response_status).to eq(204)
-        expect(StdSlot.last.title).to eq title
+        expect(response_status).to eq(200)
+        std_slot.reload
+        expect(std_slot.title).to eq title
       end
     end
 
@@ -569,7 +571,7 @@ resource "Slots" do
                 required: true,
                 scope: :notes
 
-      let(:notes) { [ attributes_for(:note), attributes_for(:note) ] }
+      let(:notes) { [attributes_for(:note), attributes_for(:note)] }
 
       example "Add notes", document: :v1 do
         do_request
@@ -600,12 +602,14 @@ resource "Slots" do
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
                     " information.\n\n" \
-                    "returns media item ID & status created"
+                    "returns complete slot including the new media item ID"
         do_request
 
-        expect(response_status).to eq(201)
-        expect(json).to have_key("mediaItemId")
-        expect(StdSlot.last.media_items.size).to eq(1)
+        expect(response_status).to eq(200)
+        expect(json).to have_key("photos")
+        expect(*json['photos']).to have_key("mediaId")
+        std_slot.reload
+        expect(std_slot.photos.size).to eq 1
       end
     end
 

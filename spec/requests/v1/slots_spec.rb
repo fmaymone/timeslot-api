@@ -502,7 +502,7 @@ RSpec.describe "V1::Slots", type: :request do
       context "valid params" do
         it "responds with No Content (204)" do
           patch "/v1/stdslot/#{std_slot.id}", title: "Something"
-          expect(response).to have_http_status(:no_content)
+          expect(response).to have_http_status(:ok)
         end
 
         it "updates the visibiltiy of a given StdSlot" do
@@ -642,19 +642,19 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "returns success" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
-          expect(response).to have_http_status(:created)
+          expect(response).to have_http_status(:ok)
         end
 
         it "returns a mediaItemId" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(json).to have_key('mediaItemId')
+          expect(*json['photos']).to have_key('mediaId')
         end
 
         it "returns the ID of new media_item" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
-          expect(json['mediaItemId']).to eq(std_slot.media_items[0].id)
+          expect(json['photos'][0]['mediaId']).to eq std_slot.media_items[0].id
         end
 
         it "adds a new image" do
@@ -700,7 +700,7 @@ RSpec.describe "V1::Slots", type: :request do
             new_ordering = std_slot.media_items.size
             patch "/v1/stdslot/#{std_slot.id}", add_media_item
 
-            expect(response).to have_http_status(:created)
+            expect(response).to have_http_status(:ok)
             new_media_item = MediaItem.last
             expect(new_media_item.ordering).to eq(new_ordering)
           end
@@ -715,7 +715,7 @@ RSpec.describe "V1::Slots", type: :request do
 
             patch "/v1/stdslot/#{std_slot.id}", add_media_item
 
-            expect(response).to have_http_status(:created)
+            expect(response).to have_http_status(:ok)
             std_slot.reload
             existing_1.reload
             existing_2.reload
@@ -854,6 +854,40 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.voices[0].media_type).to eq 'voice'
           expect(std_slot.voices[0].public_id).to eq(media.first[:publicId])
+        end
+      end
+    end
+
+    describe "handling mixed params" do
+      let(:note) { attributes_for(:note) }
+
+      context "valid params" do
+        let(:new_params) { { title: '2015',
+                             visibility: '10',
+                             notes: [note] } }
+
+        it "returns success" do
+          patch "/v1/stdslot/#{std_slot.id}", new_params
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "updates slot with all new params" do
+          patch "/v1/stdslot/#{std_slot.id}", new_params
+          std_slot.reload
+          expect(std_slot.title).to eq '2015'
+          expect(std_slot.visibility).to eq '10'
+          expect(std_slot.notes.size).to eq(1)
+        end
+      end
+
+      context "invalid params" do
+        let(:new_params) { { title: '',
+                             visibility: '10',
+                             notes: [note] } }
+
+        it "returns unprocessable entity" do
+          patch "/v1/stdslot/#{std_slot.id}", new_params
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end

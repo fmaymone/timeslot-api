@@ -101,6 +101,7 @@ module V1
     end
 
     # PATCH /v1/metaslot/1
+    # TODO: Do we want to keep this?
     def update_metaslot
       @meta_slot = current_user.created_slots.find(params[:id])
 
@@ -113,34 +114,28 @@ module V1
 
     # PATCH /v1/stdslot/1
     # TODO: needs HEAVY refactoring, why can't I write attributes via delegates?
+    # TODO: handle alerts
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
 
-      if params[:photos].present? ||
-         params[:videos].present? ||
-         params[:voices].present?
-        params[:photos].present? && params[:photos].each do |photo|
-          add_media(photo_create_params(photo))
-        end
-        params[:voices].present? && params[:voices].each do |voice|
-          add_media(voice_create_params(voice))
-        end
-        params[:videos].present? && params[:videos].each do |video|
-          add_media(video_create_params(video))
-        end
-      elsif params[:orderingMedia].present?
-        update_media_order
-      elsif params[:notes].present?
+      add_media(@slot)
+      return update_media_order if params[:orderingMedia].present? # TODO: improve
+
+      if params[:notes].present?
         # TODO: extend to allow updating of existing notes
         params[:notes].each do |note|
           @slot.notes.create(note_create_params(note))
         end
-      elsif std_params["visibility"].present? && @slot.update(std_params)
-        head :no_content
-      elsif @slot.meta_slot.update(meta_params)
-        head :no_content
+      end
+
+      @slot.update(std_params) if std_params["visibility"].present?
+      @slot.meta_slot.update(meta_params) if meta_params
+
+      if @slot.errors.empty? && @slot.meta_slot.errors.empty?
+        render :show, status: :ok
       else
-        render json: @slot.errors.add(:meta_slot, @slot.meta_slot.errors),
+        @slot.errors.add(:meta_slot, @slot.meta_slot.errors)
+        render json: @slot.errors.messages,
                status: :unprocessable_entity
       end
     end
@@ -239,29 +234,11 @@ module V1
       params[:settings]
     end
 
-    private def video_create_params(video)
-      # TODO: better handling and specing of duration and thumbnail
-      parameter = video.permit(:publicId, :ordering, :mediaType, :duration,
-                               :thumbnail).merge(mediaType: 'video')
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def voice_create_params(voice)
-      # TODO: better handling and specing of duration
-      parameter = voice.permit(:publicId, :ordering, :mediaType, :duration)
-                  .merge(mediaType: 'voice')
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def photo_create_params(photo)
-      parameter = photo.permit(:publicId, :ordering).merge(mediaType: 'image')
-      parameter.transform_keys(&:underscore)
-    end
-
     private def note_create_params(note)
       note.permit(:title, :content)
     end
 
+    # TODO: decide with pascal and peter how to handle reordering
     private def update_media_order
       if MediaItem.reorder? params[:orderingMedia]
         head :ok
@@ -270,17 +247,10 @@ module V1
       end
     end
 
-    private def add_media(item)
-      media_item = MediaItem.insert(@slot.media_items, item)
-      @slot.media_items << media_item
-
-      if @slot.save
-        render "v1/media/create", status: :created,
-               locals: { media_item_id: media_item.id }
-      else
-        render json: @slot.errors.add(:media_item, media_item.errors),
-               status: :unprocessable_entity
-      end
+    private def add_media(slot)
+      slot.add_photos(params[:photos]) if params[:photos].present?
+      slot.add_voices(params[:voices]) if params[:voices].present?
+      slot.add_videos(params[:videos]) if params[:videos].present?
     end
   end
 end

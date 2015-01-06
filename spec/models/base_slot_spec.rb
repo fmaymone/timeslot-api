@@ -75,6 +75,29 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
+  describe :add_media do
+    let(:std_slot) { create(:std_slot) }
+    let(:new_video) { attributes_for(:video) }
+
+    it "adds a new media item to the slot" do
+      std_slot.add_media(new_video)
+      std_slot.reload
+      expect(std_slot.videos.length).to eq 1
+      expect(*std_slot.errors.messages.any?).to be false
+    end
+
+    it "doesn't add an invalid item" do
+      new_video["public_id"] = ''
+      std_slot.add_media(new_video)
+      std_slot.reload
+      expect(std_slot.videos.length).to eq 0
+      expect(*std_slot.errors.messages.any?).to be true
+      expect(std_slot.errors.messages).to have_key :video
+      expect(*std_slot.errors.messages[:video]).to have_key :public_id
+      expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
+    end
+  end
+
   describe :delete do
     let(:base_slot) { create(:base_slot, :with_media) }
 

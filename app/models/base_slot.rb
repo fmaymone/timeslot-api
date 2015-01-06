@@ -36,6 +36,35 @@ class BaseSlot < ActiveRecord::Base
     setting.first.alerts if setting.exists?
   end
 
+  def add_media(item)
+    new_item = MediaItem.insert(media_items, item)
+    media_items << new_item
+    errors.add(new_item.media_type, new_item.errors.messages) unless save
+  end
+
+  def add_photos(items)
+    items.each do |item|
+      item = item.permit(:publicId, :ordering).merge(mediaType: 'image')
+      add_media(item.transform_keys(&:underscore))
+    end
+  end
+
+  def add_voices(items)
+    items.each do |item|
+      item = item.permit(:publicId, :ordering, :duration)
+             .merge(mediaType: 'voice')
+      add_media(item.transform_keys(&:underscore))
+    end
+  end
+
+  def add_videos(items)
+    items.each do |item|
+      item = item.permit(:publicId, :ordering, :duration, :thumbnail)
+             .merge(mediaType: 'video')
+      add_media(item.transform_keys(&:underscore))
+    end
+  end
+
   def delete
 
     # -> make an "unregister" Method in SlotSetting Class so it can take care itself
