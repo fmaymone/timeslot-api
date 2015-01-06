@@ -3,6 +3,12 @@ FactoryGirl.define do
     association :meta_slot, strategy: :build
   end
 
+  trait :with_note do
+    after :create do |base_slot|
+      create :note, base_slot: base_slot
+    end
+  end
+
   trait :with_media do
     after :create do |base_slot|
       create_list :slot_image, 3, mediable: base_slot

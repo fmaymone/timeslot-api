@@ -33,6 +33,7 @@ module V1
     end
 
     # POST /v1/stdslot
+    # TODO: improve handling of notes
     def create_stdslot
       return head :unprocessable_entity if std_params[:visibility].blank?
 
@@ -53,7 +54,7 @@ module V1
       if @slot.save
         if params[:notes].present?
           params[:notes].each do |note|
-            @slot.notes.create(note_create_params(note))
+            @slot.notes.create(note_params(note))
           end
         end
         render :show, status: :created
@@ -113,7 +114,6 @@ module V1
     end
 
     # PATCH /v1/stdslot/1
-    # TODO: needs HEAVY refactoring, why can't I write attributes via delegates?
     # TODO: handle alerts
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
@@ -122,9 +122,12 @@ module V1
       return update_media_order if params[:orderingMedia].present? # TODO: improve
 
       if params[:notes].present?
-        # TODO: extend to allow updating of existing notes
         params[:notes].each do |note|
-          @slot.notes.create(note_create_params(note))
+          if note.key? 'id'
+            @slot.notes.find(note["id"]).update(note_params(note))
+          else
+            @slot.notes.create(note_params(note))
+          end
         end
       end
 
@@ -151,7 +154,7 @@ module V1
       elsif params[:orderingMedia].present?
         update_media_order
       elsif params[:notes].present?
-        @slot.notes.create(note_create_params)
+        @slot.notes.create(note_params)
       elsif @slot.meta_slot.update(meta_params)
         head :no_content
       else
@@ -171,7 +174,7 @@ module V1
       elsif params[:orderingMedia].present?
         update_media_order
       elsif params[:notes].present?
-        @slot.notes.create(note_create_params)
+        @slot.notes.create(note_params)
       elsif @slot.meta_slot.update(meta_params)
         head :no_content
       else
@@ -234,7 +237,7 @@ module V1
       params[:settings]
     end
 
-    private def note_create_params(note)
+    private def note_params(note)
       note.permit(:title, :content)
     end
 

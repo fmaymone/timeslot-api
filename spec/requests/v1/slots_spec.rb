@@ -629,6 +629,52 @@ RSpec.describe "V1::Slots", type: :request do
         std_slot.reload
         expect(std_slot.notes.size).to eq(2)
       end
+
+      context "patch with valid params" do
+        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:changed_note) {
+          { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
+        }
+        it "updates an existing note" do
+          patch "/v1/stdslot/#{std_slot.id}", changed_note
+          std_slot.reload
+          expect(std_slot.notes.size).to eq 1
+          expect(std_slot.notes.first.title).to eq "something new"
+        end
+      end
+
+      context "patch non-existing note" do
+        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:changed_note) {
+          { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
+        }
+        it "returns 404" do
+          expect {
+            patch "/v1/stdslot/#{std_slot.id}", changed_note
+          }.not_to change(std_slot.notes.first, :title)
+          expect(response.status).to eq 404
+        end
+      end
+
+      context "patch with invalid params" do
+        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:changed_note) {
+          { notes: [{ id: std_slot.notes.first.id, title: "" }] }
+        }
+        it "doesn't update note" do
+          expect {
+            patch "/v1/stdslot/#{std_slot.id}", changed_note
+          }.not_to change(std_slot.notes.first, :title)
+        end
+
+        it "returns 422 & error details" do
+          patch "/v1/stdslot/#{std_slot.id}", changed_note
+          expect(response.status).to eq 422
+          expect(json).to have_key "note"
+          expect(*json["note"]).to have_key "title"
+          expect(*json["note"][0]["title"]).to eq "can't be blank"
+        end
+      end
     end
 
     describe "handling media items" do
