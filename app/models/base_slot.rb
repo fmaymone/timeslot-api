@@ -9,9 +9,10 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :base_slot
-  belongs_to :meta_slot
+  belongs_to :meta_slot, autosave: true
 
-  delegate :title, :start_date, :end_date, :creator, :location_id, to: :meta_slot
+  delegate :title, :title=, :start_date, :start_date=, :end_date, :end_date=,
+           :creator, :creator=, :location_id, :location_id=, to: :meta_slot
 
   validates :meta_slot, presence: true
 

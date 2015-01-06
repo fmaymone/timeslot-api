@@ -123,16 +123,12 @@ module V1
     end
 
     # PATCH /v1/groupslot/1
-    # TODO: needs refactoring, why can't I write attributes via delegates?
-    # TODO: add specs
     def update_groupslot
       @slot = current_user.group_slots.find(params[:id])
       update_baseslot(@slot)
     end
 
     # PATCH /v1/reslot/1
-    # TODO: needs refactoring
-    # TODO: add specs
     def update_reslot
       @slot = current_user.re_slots.find(params[:id])
       update_baseslot(@slot)
@@ -213,16 +209,17 @@ module V1
 
     # TODO: refactor and improve media ordering
     private def update_baseslot(base_slot)
+      # order is important so that added errors are not overwritten
+      base_slot.update(meta_params) if meta_params
       add_media(base_slot)
       base_slot.update_notes(params[:notes]) if params[:notes].present?
-      base_slot.meta_slot.update(meta_params) if meta_params
 
       return update_media_order if params[:orderingMedia].present?
 
-      if base_slot.errors.empty? && base_slot.meta_slot.errors.empty?
+      if base_slot.errors.empty?
+        # TODO: remove view template dependency on @slot class variable
         render :show, status: :ok
       else
-        base_slot.errors.add(:meta_slot, base_slot.meta_slot.errors)
         render json: base_slot.errors.messages,
                status: :unprocessable_entity
       end
