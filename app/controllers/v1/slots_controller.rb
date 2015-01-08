@@ -45,6 +45,7 @@ module V1
       return render json: @slot.errors,
                     status: :unprocessable_entity unless @slot.save
 
+      # TODO: make service for alarm
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
                                      alerts: alert_param[:alerts])
@@ -62,12 +63,17 @@ module V1
     end
 
     # POST /v1/groupslot
+    # TODO: add functionality to create group_slot from existing std, group or reslot
     def create_groupslot
       group = Group.find(group_param)
 
       meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
+
+      @slot = GroupSlot.new(group: group, meta_slot: meta_slot)
+      return render json: @slot.errors,
+                    status: :unprocessable_entity unless @slot.save
 
       # TODO: make service for alarm
       if alert_param.present?
@@ -77,9 +83,9 @@ module V1
                       status: :unprocessable_entity unless setting.save
       end
 
-      @slot = GroupSlot.new(group: group, meta_slot: meta_slot)
+      @slot.update_notes(params[:notes]) if params[:notes].present?
 
-      if @slot.save
+      if @slot.errors.empty?
         render :show, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity
