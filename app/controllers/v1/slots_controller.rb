@@ -33,13 +33,17 @@ module V1
     end
 
     # POST /v1/stdslot
-    # TODO: improve handling of notes
     def create_stdslot
       return head :unprocessable_entity if std_params[:visibility].blank?
 
       meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
       return render json: meta_slot.errors,
                     status: :unprocessable_entity unless meta_slot.save
+
+      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot,
+                                           owner: current_user))
+      return render json: @slot.errors,
+                    status: :unprocessable_entity unless @slot.save
 
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
@@ -48,15 +52,9 @@ module V1
                       status: :unprocessable_entity unless setting.save
       end
 
-      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot,
-                                           owner: current_user))
+      @slot.update_notes(params[:notes]) if params[:notes].present?
 
-      if @slot.save
-        if params[:notes].present?
-          params[:notes].each do |note|
-            @slot.notes.create(note_params(note))
-          end
-        end
+      if @slot.errors.empty?
         render :show, status: :created
       else
         render json: @slot.errors, status: :unprocessable_entity
