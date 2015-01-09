@@ -25,7 +25,6 @@ module V1
     # POST /v1/slots
     # TODO: add request specs
     # TODO: add acceptance specs
-    # TODO: add routing specs
     def show_many
       @slots = BaseSlot.get_many(params[:ids])
 
