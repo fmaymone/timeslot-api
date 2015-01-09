@@ -63,13 +63,16 @@ module V1
     end
 
     # POST /v1/groupslot
-    # TODO: add functionality to create group_slot from existing std, group or reslot
     def create_groupslot
       group = Group.find(group_param)
 
-      meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
-      return render json: meta_slot.errors,
-                    status: :unprocessable_entity unless meta_slot.save
+      if params[:metaSlotId].present?
+        meta_slot = MetaSlot.find(params[:metaSlotId])
+      else
+        meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
+        return render json: meta_slot.errors,
+                      status: :unprocessable_entity unless meta_slot.save
+      end
 
       @slot = GroupSlot.new(group: group, meta_slot: meta_slot)
       return render json: @slot.errors,

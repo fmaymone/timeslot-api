@@ -253,6 +253,70 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    describe "create GroupSlot via copy from existing slot", :focus do
+      context "copy GroupSlot from existing std_slot" do
+        let!(:existing_slot) { create(:std_slot) }
+        let(:group_slot_params) {
+          params = existing_slot.as_json
+                   .transform_keys { |key| key.to_s.camelize(:lower) }
+          params.merge(groupId: group.id)
+        }
+        it "responds with Created (201)" do
+          post "/v1/groupslot/", group_slot_params
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new group_slot entry to the DB" do
+          expect {
+            post "/v1/groupslot/", group_slot_params
+          }.to change(GroupSlot, :count).by(1)
+        end
+      end
+
+      context "copy GroupSlot from existing group_slot" do
+        let!(:existing_slot) { create(:group_slot) }
+        let(:group_slot_params) {
+          params = existing_slot.as_json
+                   .transform_keys { |key| key.to_s.camelize(:lower) }
+          params.merge(groupId: group.id)
+        }
+        it "responds with Created (201)" do
+          post "/v1/groupslot/", group_slot_params
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new group_slot entry to the DB" do
+          expect {
+            post "/v1/groupslot/", group_slot_params
+          }.to change(GroupSlot, :count).by(1)
+        end
+
+        it "sets the correct group on the new group_slot" do
+          post "/v1/groupslot/", group_slot_params
+          expect(GroupSlot.last.group_id).to eq group.id
+        end
+      end
+
+      context "copy GroupSlot from existing re_slot" do
+        let!(:existing_slot) { create(:re_slot) }
+        let(:group_slot_params) {
+          params = existing_slot.as_json
+                   .transform_keys { |key| key.to_s.camelize(:lower) }
+          params.merge(groupId: group.id)
+        }
+        it "responds with Created (201)" do
+          post "/v1/groupslot/", group_slot_params
+          expect(response).to have_http_status(:created)
+        end
+
+        it "adds a new group_slot entry to the DB" do
+          expect {
+            post "/v1/groupslot/", group_slot_params
+          }.to change(GroupSlot, :count).by(1)
+        end
+      end
+    end
+
     context "with invalid params" do
       let(:invalid_attributes) {
         attributes_for(:meta_slot).merge(groupId: group.id)
