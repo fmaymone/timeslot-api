@@ -23,8 +23,6 @@ module V1
     end
 
     # POST /v1/slots
-    # TODO: add request specs
-    # TODO: add acceptance specs
     def show_many
       @slots = BaseSlot.get_many(params[:ids])
 
@@ -77,7 +75,7 @@ module V1
       return render json: @slot.errors,
                     status: :unprocessable_entity unless @slot.save
 
-      # TODO: make service for alarm
+      # TODO: make service for alerts
       if alert_param.present?
         setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
                                      alerts: alert_param[:alerts])

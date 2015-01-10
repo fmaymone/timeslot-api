@@ -134,6 +134,108 @@ resource "Slots" do
     end
   end
 
+  post "/v1/slots" do
+    header "Accept", "application/json"
+
+    parameter :ids, "Array of slot IDs to get", required: true
+
+    describe "Get several slots at once" do
+
+      response_field :id, "ID of the slot"
+      response_field :title, "Title of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
+      response_field :createdAt, "Creation of slot"
+      response_field :updatedAt, "Latest update of slot in db"
+      response_field :deletedAt, "Delete date of slot or nil"
+      response_field :location, "Location data for the slot"
+      response_field :creator, "User who created the slot"
+      response_field :settings, "User specific settings for the slot (alerts)"
+      response_field :visibility, "Visibiltiy of the slot"
+      response_field :notes, "Notes on the slot"
+      response_field :images, "Images for the slot"
+      response_field :voices, "Voice recordings for the slot"
+      response_field :videos, "Videos recordings for the slot"
+
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:slot1) { create(:std_slot, :with_media) }
+      let(:slot2) { create(:std_slot, :with_media, meta_slot: meta_slot) }
+      let!(:slot_setting) { create(:slot_setting,
+                                   user: current_user,
+                                   meta_slot: slot2.meta_slot,
+                                   alerts: '1110001100') }
+      let!(:medias) {
+        create_list :slot_image, 3, mediable: slot2
+        create_list :voice, 2, mediable: slot2
+        create_list :video, 2, mediable: slot2
+      }
+      let(:raw_post) do
+        { ids: [slot1.id, slot2.id] }
+      end
+
+      let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
+
+      example "Get several slots returns slot data", document: :v1 do
+        explanation "returns 404 if an ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq 2
+        expect(json.last).to have_key("id")
+        expect(json.last["id"]).to eq slot2.id
+        expect(json.last).to have_key("title")
+        expect(json.last).to have_key("startDate")
+        expect(json.last).to have_key("endDate")
+        expect(json.last).to have_key("locationId")
+        # expect(json.last['location']).to have_key("name")
+        expect(json.last).to have_key("creatorId")
+        # expect(json.last['creator']).to have_key("username")
+        # expect(json.last).to have_key("settings")
+        # expect(json.last['settings']).to have_key("alerts")
+        expect(json.last).to have_key("createdAt")
+        expect(json.last).to have_key("updatedAt")
+        expect(json.last).to have_key("deletedAt")
+        expect(json.last).to have_key("notes")
+        # expect(json.last).to have_key("visibility")
+        # expect(json.last).to have_key("photos")
+        # expect(json.last).to have_key("voices")
+        # expect(json.last).to have_key("videos")
+        # expect(json.last.except('photos', 'voices', 'videos'))
+        #   .to eq("id" => slot.id,
+        #          "title" => slot.title,
+        #          "startDate" => slot.start_date.as_json,
+        #          "endDate" => slot.end_date.as_json,
+        #          "createdAt" => slot.created_at.as_json,
+        #          "updatedAt" => slot.updated_at.as_json,
+        #          "deletedAt" => deleted_at,
+        #          "location" => { "id" => 200_719_253,
+        #                          "name" => slot.location.name,
+        #                          "street" => slot.location.street,
+        #                          "city" => slot.location.city,
+        #                          "postcode" => slot.location.postcode,
+        #                          "country" => slot.location.country,
+        #                          "longitude" => slot.location.longitude,
+        #                          "latitude" => slot.location.latitude,
+        #                          "createdAt" => slot.location.created.as_json,
+        #                          "updatedAt" => slot.location.last_update.as_json,
+        #                          "categories" => slot.location.categories,
+        #                          "images" => slot.location.images
+        #                        },
+        #          "creator" => { "id" => slot.creator.id,
+        #                         "username" => slot.creator.username,
+        #                         "createdAt" => slot.creator.created_at.as_json,
+        #                         "updatedAt" => slot.creator.updated_at.as_json,
+        #                         "deletedAt" => nil },
+        #          # "settings" => { 'alerts' => '1110001100' },
+        #          "visibility" => slot.visibility,
+        #          "notes" => slot.notes
+        #         )
+        # expect(json.last["photos"].length).to eq(slot.photos.length)
+        # expect(json.last["photos"].first['clyid']).to eq(slot.photos.first.public_id)
+      end
+    end
+  end
+
   get "/v1/slots/:id", :vcr do
     header "Accept", "application/json"
 
