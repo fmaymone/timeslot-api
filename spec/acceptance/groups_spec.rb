@@ -507,7 +507,7 @@ resource "Groups" do
     let(:group) { create(:group) }
 
     let(:group_id) { group.id }
-    let(:notifications) { "true" }
+    let(:notifications) { "false" }
 
     describe "membership active" do
       let!(:membership) do
@@ -525,24 +525,22 @@ resource "Groups" do
 
         expect(response_status).to eq(200)
         membership.reload
-        expect(membership.notifications).to eq true
+        expect(membership.notifications).to eq false
       end
 
       describe "invalid parameter" do
         let(:notifications) { "foo" }
 
-        example "returns Unprocessable Entity", document: false do
-          skip "if it is not true, it's false..."
-          # see: http://stackoverflow.com/questions/5170008/rails-validating-inclusion-of-a-boolean-fails-tests
+        # see: http://stackoverflow.com/questions/5170008/rails-validating-inclusion-of-a-boolean-fails-tests
+        example "invalid boolean parameters evaluate to 'false'",
+                document: false do
+          explanation "Every non-true value will be evaluated to false so" \
+                      " there is no 'invalid' parameter.\n\n" \
+                      "I leave this test here for documentation purposes."
           do_request
-          expect(response_status).to eq(422)
-        end
-
-        example "does not change notifications", document: false do
-          skip "if it is not true, it's false..."
-          do_request
+          expect(response_status).to eq(200)
           membership.reload
-          expect(membership.notifications).to be true
+          expect(membership.notifications).to be false
         end
       end
 
