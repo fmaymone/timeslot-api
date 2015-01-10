@@ -207,11 +207,11 @@ resource "Groups" do
                                 "groupId" => group.id,
                                 "size" => 4
                               })
-      # TODO: need to get the correct user_url here
-      expect(json["members"].first.except("userUrl"))
+      expect(json["members"].first)
         .to eq({
                  "userId" => group.members.first.id,
-                 "username" => group.members.first.username
+                 "username" => group.members.first.username,
+                 "userUrl" => v1_user_url(group.members.first, format: :json)
                })
     end
 
