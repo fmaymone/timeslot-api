@@ -253,7 +253,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "create GroupSlot via copy from existing slot", :focus do
+    describe "create GroupSlot via copy from existing slot" do
       context "copy GroupSlot from existing std_slot" do
         let!(:existing_slot) { create(:std_slot) }
         let(:group_slot_params) {

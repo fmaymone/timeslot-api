@@ -258,7 +258,8 @@ resource "Groups" do
       expect(json["related"].first)
         .to eq({
                  "userId" => group.related_users.first.id,
-                 "state" => group.memberships.first.state
+                 "state" => group.memberships.first.state,
+                 "deletedAt" => group.memberships.first.deleted_at
                })
     end
 
