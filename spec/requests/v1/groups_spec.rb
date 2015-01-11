@@ -84,6 +84,70 @@ RSpec.describe "V1::Groups", type: :request do
   end
 
   # invite
+  describe "POST /v1/groups/:group_id/members" do
+    describe "user can invite" do
+      let(:group) { create(:group, owner: current_user) }
+      let(:others) { create_list(:user, 3) }
+      let(:user_ids) { { ids: others.collect(&:id) } }
+
+      it "returns created" do
+        post "/v1/groups/#{group.id}/members", user_ids
+        expect(response.status).to be(201)
+      end
+
+      it "returns a list of all users related to that group" do
+        post "/v1/groups/#{group.id}/members", user_ids
+        expect(json).to have_key "related"
+        expect(json['related'].size).to eq 3
+      end
+
+      it "creates new memberships with state 'invited' for all new members" do
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.to change(Membership, :count).by(others.size)
+        others.each do |id|
+          expect(Membership.where(user_id: id).first.invited?).to be true
+        end
+      end
+
+      it "doesn't create new memberships for already invited members" do
+        create(:membership, :invited, user: others.first, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.to change(Membership, :count).by(others.size - 1)
+      end
+
+      it "doesn't create new memberships for already active members" do
+        create(:membership, :active, user: others.first, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.to change(Membership, :count).by(others.size - 1)
+      end
+
+      it "re-invites users who had left the group or rejected a previous invitation" do
+        create(:membership, :left, user: others.first, group: group)
+        create(:membership, :refused, user: others.last, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.to change(Membership, :count).by(others.size - 2)
+        membership1 = Membership.where(user_id: others.first).first
+        membership2 = Membership.where(user_id: others.last).first
+        expect(membership1.invited?).to be true
+        expect(membership2.invited?).to be true
+      end
+
+      it "doesn't add users to group" do
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.not_to change(group.members, :count)
+      end
+    end
+  end
+
+  # invite_single
   describe "POST /v1/groups/:group_id/members/:user_id" do
     describe "user can invite" do
       let(:group) { create(:group, owner: current_user) }

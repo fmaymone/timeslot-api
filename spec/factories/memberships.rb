@@ -14,6 +14,10 @@ FactoryGirl.define do
     state "011"
   end
 
+  trait :refused do
+    state "001"
+  end
+
   trait :active do
     state "111"
   end

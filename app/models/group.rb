@@ -19,6 +19,10 @@ class Group < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 255 }
   validates :owner, presence: true
 
+  def related_memberships
+    Membership.includes([:user]).where(group_id: id)
+  end
+
   def delete
     # all other images (if any) should already be "deleted"
     image.first.delete if image.first

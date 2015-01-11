@@ -16,6 +16,7 @@ module V1
     end
 
     # POST /v1/groups
+    # TODO: create a membership for the owner on group creation
     def create
       @group = Group.new(group_create_params.merge(owner: current_user))
 
@@ -60,9 +61,10 @@ module V1
     end
 
     # GET /v1/groups/:group_id/related
+    # TODO: change template to not use class variable
     def related
       group = Group.find(membership_params[:group_id])
-      @memberships = Membership.includes([:user]).where(group_id: group.id)
+      @memberships = group.related_memberships
 
       render :related
     end
@@ -105,7 +107,7 @@ module V1
     # current user invites other user to own group
     # create membership with state invited/pending
     # notify invited user
-    # TODO: put logic into service
+    # TODO: can probably be removed
     def invite_single
       group = membership_params[:group_id]
       return head :forbidden unless current_user.can_invite? group
@@ -123,29 +125,21 @@ module V1
       end
     end
 
-    # POST /v1/groups/:group_id/members/:user_id
-    # current user invites other users to own group
+    # POST /v1/groups/:group_id/members
+    # current user invites other users to own group or to group
+    # where he is member and members can invite
     # create membership with state invited/pending
     # notify invited users
-    # TODO: put logic into service
-    # TODO: improve flow
-    # TODO: needs more specs, has only acceptance spec
     def invite
-      group = Group.find(group_param)
+      group = Group.find(params.require(:group_id))
       return head :forbidden unless current_user.can_invite? group.id
 
-      params.require(:ids).each do |id|
-        invitee = User.find(id)
-        return head :ok if invitee.is_invited?(group.id) || invitee.is_member?(group.id)
-
-        @membership = invitee.get_membership group
-        @membership ||= Membership.new(group_id: group_param, user_id: id)
-        if !(@membership.invite && @membership.save)
-          fail ArgumentError, "couldn't create membership for userId #{id}"
-        end
+      params.require(:ids).each do |user_id|
+        InviteUserToGroup.call(group, user_id)
       end
+      @memberships = group.related_memberships
 
-      head :created
+      render :related, status: :created
     end
 
     # DELETE /v1/groups/:group_id/members
@@ -208,14 +202,11 @@ module V1
       params.permit(:group_id, :user_id)
     end
 
-    private def group_param
-      params.require(:group_id)
-    end
-
     private def membership_update_params
       params.require(:group).permit(:notifications)
     end
 
+    # TODO: get rid of newMedia scope
     private def image_param
       params.require(:group)[:newMedia]
     end
