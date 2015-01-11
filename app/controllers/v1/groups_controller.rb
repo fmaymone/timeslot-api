@@ -61,12 +61,10 @@ module V1
     end
 
     # GET /v1/groups/:group_id/related
-    # TODO: change template to not use class variable
     def related
-      group = Group.find(membership_params[:group_id])
-      @memberships = group.related_memberships
+      group = Group.find(params.require(:group_id))
 
-      render :related
+      render :related, locals: { memberships: group.related_memberships }
     end
 
     # GET /v1/groups/:group_id/members/:user_id
@@ -137,9 +135,9 @@ module V1
       params.require(:ids).each do |user_id|
         InviteUserToGroup.call(group, user_id)
       end
-      @memberships = group.related_memberships
 
-      render :related, status: :created
+      render :related, status: :created,
+             locals: { memberships: group.related_memberships }
     end
 
     # DELETE /v1/groups/:group_id/members
