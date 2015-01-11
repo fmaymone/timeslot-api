@@ -499,10 +499,29 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       describe "membership not active" do
+        let!(:membership) do
+          create(:membership, :left, user: current_user, group: group,
+                 notifications: true)
+        end
+
+        it "returns Forbidden" do
+          patch "/v1/groups/#{group.id}/members", params
+          expect(response).to have_http_status :forbidden
+        end
+
+        it "doesn't change notifications state" do
+          expect {
+            patch "/v1/groups/#{group.id}/members", params
+          }.not_to change(membership, :notifications)
+        end
       end
     end
 
     describe "current user not group member" do
+      it "returns Forbidden" do
+        patch "/v1/groups/#{group.id}/members", params
+        expect(response).to have_http_status :forbidden
+      end
     end
   end
 end
