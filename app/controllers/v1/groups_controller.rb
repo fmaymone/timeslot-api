@@ -1,10 +1,9 @@
 module V1
   class GroupsController < ApplicationController
     # GET /v1/groups
-    # TODO: implement logic
+    # return all groups where the current user is member
     def index
-      # return all groups where the current user is member or owner
-      @groups = Group.all
+      @groups = current_user.groups
 
       render :index
     end

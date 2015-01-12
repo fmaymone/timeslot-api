@@ -17,12 +17,11 @@ resource "Groups" do
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
-      skip 'not yet done'
-      # ApplicationController.new.set_current_user(user)
+      ApplicationController.new.current_user = user
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq user.groups.count + user.own_groups.count
+      expect(json.size).to eq user.groups.count
     end
   end
 

@@ -11,16 +11,6 @@ RSpec.describe V1::GroupsController, type: :controller do
   let(:invalid_attributes) { attributes_for(:group, name: nil) }
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    let(:groups) { create_list(:group, 10) }
-
-    it "assigns all groups as @groups" do
-      skip "TODO: update method implementation"
-      get :index, {}, valid_session
-      expect(assigns(:groups)).to eq(groups)
-    end
-  end
-
   describe "GET show" do
     let(:group) { create(:group, owner: current_user) }
 
