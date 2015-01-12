@@ -755,7 +755,7 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response).to have_http_status(:ok)
         end
 
-        it "returns a mediaItemId" do
+        it "returns a mediaId" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
           expect(*json['photos']).to have_key('mediaId')
@@ -865,11 +865,11 @@ RSpec.describe "V1::Slots", type: :request do
           let(:media_reordering) do
             { mediaType: "image",
               orderingMedia: [
-                { mediaItemId: media_item_1.id,
+                { mediaId: media_item_1.id,
                   position: 2 },
-                { mediaItemId: media_item_2.id,
+                { mediaId: media_item_2.id,
                   position: 0 },
-                { mediaItemId: media_item_3.id,
+                { mediaId: media_item_3.id,
                   position: 1 }
               ] }
           end
@@ -889,16 +889,16 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "with invalid params" do
-          describe "mediaItemId" do
+          describe "mediaId" do
             let(:invalid_id) { media_item_3.id + 1 }
             let(:media_reordering) do
               { mediaType: "image",
                 orderingMedia: [
-                  { mediaItemId: media_item_1.id,
+                  { mediaId: media_item_1.id,
                     position: 2 },
-                  { mediaItemId: media_item_2.id,
+                  { mediaId: media_item_2.id,
                     position: 0 },
-                  { mediaItemId: invalid_id,
+                  { mediaId: invalid_id,
                     position: 1 }
                 ] }
             end
@@ -914,11 +914,11 @@ RSpec.describe "V1::Slots", type: :request do
             let(:media_reordering) do
               { mediaType: "image",
                 orderingMedia: [
-                  { mediaItemId: media_item_1.id,
+                  { mediaId: media_item_1.id,
                     position: 1 },
-                  { mediaItemId: media_item_2.id,
+                  { mediaId: media_item_2.id,
                     position: 0 },
-                  { mediaItemId: media_item_3.id,
+                  { mediaId: media_item_3.id,
                     position: 1 }
                 ] }
             end

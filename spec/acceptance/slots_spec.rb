@@ -737,11 +737,11 @@ resource "Slots" do
       let(:media_reordering) do
         { media_type: "image",
           orderingMedia: [
-            { mediaItemId: media_item_1.id,
+            { mediaId: media_item_1.id,
               position: 2 },
-            { mediaItemId: media_item_2.id,
+            { mediaId: media_item_2.id,
               position: 0 },
-            { mediaItemId: media_item_3.id,
+            { mediaId: media_item_3.id,
               position: 1 }
           ] }
       end

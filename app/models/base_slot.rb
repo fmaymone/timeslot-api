@@ -77,7 +77,6 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
-
     # -> make an "unregister" Method in SlotSetting Class so it can take care itself
 
     # delete SlotSetting object if one exists and it is only referenced by
