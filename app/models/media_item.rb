@@ -32,43 +32,41 @@ class MediaItem < ActiveRecord::Base
     SoftDelete.call(self)
   end
 
-  class << self
-    def reorder?(order_params)
-      return false unless self.valid_ordering? order_params
+  def self.reorder?(position_params)
+    return false unless self.valid_sorting? position_params
 
-      # TODO: might need to validate new media item before reordering
-      order_params.each do |item|
-        changed = MediaItem.where(id: item[:mediaItemId])
-                  .update_all(position: item[:position])
-        fail ActiveRecord::RecordNotFound if changed == 0
-      end
-      true
+    # TODO: might need to validate new media item before reordering
+    position_params.each do |item|
+      changed = MediaItem.where(id: item[:mediaItemId])
+                .update_all(position: item[:position])
+      fail ActiveRecord::RecordNotFound if changed == 0
+    end
+    true
+  end
+
+  def self.valid_sorting?(parameter)
+    arr = parameter.map { |i| i[:position].to_i }
+    no_gaps = arr.size > arr.max
+    dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
+    dups.nil? && no_gaps
+  end
+
+  def self.insert(collection, new_media)
+    if !new_media.key? "position"
+      new_media.merge!(position: collection.size)
+    elsif new_media["position"].to_i < collection.size
+      needs_ordering_update(collection, new_media["position"])
     end
 
-    def valid_ordering?(parameter)
-      arr = parameter.map { |i| i[:position].to_i }
-      no_gaps = arr.size > arr.max
-      dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
-      dups.nil? && no_gaps
-    end
+    MediaItem.new(new_media)
+  end
 
-    def insert(collection, new_media)
-      if !new_media.key? "position"
-        new_media.merge!(position: collection.size)
-      elsif new_media["position"].to_i < collection.size
-        needs_ordering_update(collection, new_media["position"])
-      end
+  def self.needs_ordering_update(collection, position_param)
+    media_items = collection.where(
+      "media_items.position >= ?", position_param).to_a
 
-      MediaItem.new(new_media)
-    end
-
-    def needs_ordering_update(collection, position_param)
-      media_items = collection.where(
-        "media_items.position >= ?", position_param).to_a
-
-      media_items.each do |item|
-        item.update(position: item.position += 1)
-      end
+    media_items.each do |item|
+      item.update(position: item.position += 1)
     end
   end
 end

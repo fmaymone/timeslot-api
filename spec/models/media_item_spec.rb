@@ -46,7 +46,7 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe ".valid_ordering?"  do
+  describe ".valid_sorting?"  do
     it "returns true if order is valid" do
       param = [
         { media_item_id: 1,
@@ -56,7 +56,7 @@ RSpec.describe MediaItem, type: :model do
         { media_item_id: 3,
           position: 1 }
       ]
-      result = described_class.valid_ordering? param
+      result = described_class.valid_sorting? param
       expect(result).to eq true
     end
 
@@ -69,7 +69,7 @@ RSpec.describe MediaItem, type: :model do
         { media_item_id: 3,
           position: 1 }
       ]
-      result = described_class.valid_ordering? param
+      result = described_class.valid_sorting? param
       expect(result).to eq false
     end
 
@@ -82,7 +82,7 @@ RSpec.describe MediaItem, type: :model do
         { media_item_id: 3,
           position: 1 }
       ]
-      result = described_class.valid_ordering? param
+      result = described_class.valid_sorting? param
       expect(result).to eq false
     end
   end
