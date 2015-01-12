@@ -107,19 +107,13 @@ module V1
     # notify invited user
     # TODO: can probably be removed
     def invite_single
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.can_invite? group
+      group = Group.find(params.require(:group_id))
+      return head :forbidden unless current_user.can_invite? group.id
 
-      invitee = User.find(membership_params[:user_id])
-      return head :ok if invitee.is_invited?(group) || invitee.is_member?(group)
-
-      @membership = invitee.get_membership group
-      @membership ||= Membership.new(membership_params)
-
-      if @membership.invite && @membership.save
+      if InviteUserToGroup.call(group, membership_params[:user_id])
         head :created
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: "Couldn't create invite", status: :unprocessable_entity
       end
     end
 
@@ -128,7 +122,6 @@ module V1
     # where he is member and members can invite
     # create membership with state invited/pending
     # notify invited users
-    # TODO: move invite single request specs to invite specs
     def invite
       group = Group.find(params.require(:group_id))
       return head :forbidden unless current_user.can_invite? group.id

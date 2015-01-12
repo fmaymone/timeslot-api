@@ -102,10 +102,11 @@ RSpec.describe "V1::Groups", type: :request do
 
   # invite
   describe "POST /v1/groups/:group_id/members" do
+    let(:others) { create_list(:user, 3) }
+    let(:user_ids) { { ids: others.collect(&:id) } }
+
     describe "user can invite" do
       let!(:group) { create(:group, owner: current_user) }
-      let(:others) { create_list(:user, 3) }
-      let(:user_ids) { { ids: others.collect(&:id) } }
 
       it "returns created" do
         post "/v1/groups/#{group.id}/members", user_ids
@@ -163,6 +164,23 @@ RSpec.describe "V1::Groups", type: :request do
         }.not_to change(group.members, :count)
       end
     end
+
+    describe "user can't invite" do
+      let!(:group) do
+        create(:group, owner: create(:user), members_can_invite: false)
+      end
+
+      it "returns forbidden" do
+        post "/v1/groups/#{group.id}/members", user_ids
+        expect(response.status).to be(403)
+      end
+
+      it "doesn't create membership" do
+        expect {
+          post "/v1/groups/#{group.id}/members", user_ids
+        }.not_to change(Membership, :count)
+      end
+    end
   end
 
   # invite_single
@@ -198,7 +216,7 @@ RSpec.describe "V1::Groups", type: :request do
           }
           it "returns ok" do
             post "/v1/groups/#{group.id}/members/#{other_user.id}"
-            expect(response.status).to be(200)
+            expect(response.status).to be(201)
           end
 
           it "are not (re-)created " do
@@ -214,7 +232,7 @@ RSpec.describe "V1::Groups", type: :request do
           }
           it "returns OK" do
             post "/v1/groups/#{group.id}/members/#{other_user.id}"
-            expect(response.status).to be(200)
+            expect(response.status).to be(201)
           end
         end
 
@@ -238,7 +256,6 @@ RSpec.describe "V1::Groups", type: :request do
             membership.reload
             expect(membership.invited?).to be true
           end
-
         end
       end
     end
