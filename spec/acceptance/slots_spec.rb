@@ -690,14 +690,14 @@ resource "Slots" do
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :photos
-      parameter :ordering, "Order of the new media item." \
+      parameter :position, "Order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :photos
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
       let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-                      ordering: "1"] }
+                      position: "1"] }
 
       example "Add photo", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -725,39 +725,40 @@ resource "Slots" do
       parameter :mediaItemId, "Timeslot's internal ID for this media item",
                 required: true,
                 scope: :orderingMedia
-      parameter :ordering, "Order of the image (ignored for video/voice)",
-                required: true,
+      parameter :position, "Sorting order of the image/video/voice. If not " \
+                           "supplied the media items will be sortet as they" \
+                           " are ordered in the array.",
                 scope: :orderingMedia
 
-      let!(:media_item_1) { create(:slot_image, mediable: std_slot, ordering: 0) }
-      let!(:media_item_2) { create(:slot_image, mediable: std_slot, ordering: 1) }
-      let!(:media_item_3) { create(:slot_image, mediable: std_slot, ordering: 2) }
+      let!(:media_item_1) { create(:slot_image, mediable: std_slot, position: 0) }
+      let!(:media_item_2) { create(:slot_image, mediable: std_slot, position: 1) }
+      let!(:media_item_3) { create(:slot_image, mediable: std_slot, position: 2) }
 
       let(:media_reordering) do
         { media_type: "image",
           orderingMedia: [
             { mediaItemId: media_item_1.id,
-              ordering: 2 },
+              position: 2 },
             { mediaItemId: media_item_2.id,
-              ordering: 0 },
+              position: 0 },
             { mediaItemId: media_item_3.id,
-              ordering: 1 }
+              position: 1 }
           ] }
       end
       let(:raw_post) { media_reordering.to_json }
 
       example "Reorder media items", document: :v1 do
-        skip "TODO: needs update"
+        # skip "TODO: needs update"
         explanation "An array with the media_items keys and corresponding" \
-                    " ordering number (starting from 0) for all images " \
-                    " of the slot must be send.\n\n" \
+                    " position/ordering number (starting from 0) for all" \
+                    " images of the slot must be send.\n\n" \
                     "returns success"
         do_request
 
         expect(response_status).to eq(200)
-        expect(std_slot.media_items.find(media_item_1.id).ordering).to eq(2)
-        expect(std_slot.media_items.find(media_item_2.id).ordering).to eq(0)
-        expect(std_slot.media_items.find(media_item_3.id).ordering).to eq(1)
+        expect(std_slot.media_items.find(media_item_1.id).position).to eq(2)
+        expect(std_slot.media_items.find(media_item_2.id).position).to eq(0)
+        expect(std_slot.media_items.find(media_item_3.id).position).to eq(1)
       end
     end
   end

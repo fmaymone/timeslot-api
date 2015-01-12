@@ -152,7 +152,7 @@ CREATE TABLE media_items (
     id integer NOT NULL,
     media_type character varying(255),
     public_id character varying(255),
-    ordering integer,
+    "position" integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     mediable_id integer,
@@ -779,4 +779,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141215092936');
 INSERT INTO schema_migrations (version) VALUES ('20141215223116');
 
 INSERT INTO schema_migrations (version) VALUES ('20141227213950');
+
+INSERT INTO schema_migrations (version) VALUES ('20150112223724');
 

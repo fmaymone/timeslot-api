@@ -17,15 +17,15 @@ class BaseSlot < ActiveRecord::Base
   validates :meta_slot, presence: true
 
   def photos
-    media_items.image.order(:ordering)
+    media_items.image.order(:position)
   end
 
   def voices
-    media_items.voice.order(:ordering)
+    media_items.voice.order(:position)
   end
 
   def videos
-    media_items.video.order(:ordering)
+    media_items.video.order(:position)
   end
 
   def location
@@ -45,14 +45,14 @@ class BaseSlot < ActiveRecord::Base
 
   def add_photos(items)
     items.each do |item|
-      item = item.permit(:publicId, :ordering).merge(mediaType: 'image')
+      item = item.permit(:publicId, :position).merge(mediaType: 'image')
       add_media(item.transform_keys(&:underscore))
     end
   end
 
   def add_voices(items)
     items.each do |item|
-      item = item.permit(:publicId, :ordering, :duration)
+      item = item.permit(:publicId, :position, :duration)
              .merge(mediaType: 'voice')
       add_media(item.transform_keys(&:underscore))
     end
@@ -60,7 +60,7 @@ class BaseSlot < ActiveRecord::Base
 
   def add_videos(items)
     items.each do |item|
-      item = item.permit(:publicId, :ordering, :duration, :thumbnail)
+      item = item.permit(:publicId, :position, :duration, :thumbnail)
              .merge(mediaType: 'video')
       add_media(item.transform_keys(&:underscore))
     end

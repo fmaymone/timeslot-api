@@ -747,7 +747,7 @@ RSpec.describe "V1::Slots", type: :request do
       context "add images with valid params" do
         let(:media) do
           [{ publicId: "foo-image",
-             ordering: "1" }]
+             position: "1" }]
         end
 
         it "returns success" do
@@ -778,12 +778,12 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.media_items[0].media_type).to eq 'image'
           expect(std_slot.photos[0].public_id).to eq(media.first[:publicId])
-          expect(std_slot.media_items[0].ordering)
-            .to eq(media.first[:ordering].to_i)
+          expect(std_slot.media_items[0].position)
+            .to eq(media.first[:position].to_i)
         end
 
         it "adds an additional new image" do
-          create(:slot_image, mediable: std_slot, ordering: 0)
+          create(:slot_image, mediable: std_slot, position: 0)
 
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           std_slot.reload
@@ -791,37 +791,37 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "adds a 2nd submitted image to the db" do
-          create(:slot_image, mediable: std_slot, ordering: 0)
+          create(:slot_image, mediable: std_slot, position: 0)
 
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
           new_media_item = MediaItem.last
           expect(new_media_item.media_type).to eq 'image'
           expect(new_media_item.public_id).to eq(media.first[:publicId])
-          expect(new_media_item.ordering).to eq(media.first[:ordering].to_i)
+          expect(new_media_item.position).to eq(media.first[:position].to_i)
         end
 
-        context "missing ordering parameter" do
+        context "missing position parameter" do
           let(:media) do
             [{ publicId: "foo-image" }]
           end
 
           it "adds it" do
-            create(:slot_image, mediable: std_slot, ordering: 0)
-            new_ordering = std_slot.media_items.size
+            create(:slot_image, mediable: std_slot, position: 0)
+            new_position = std_slot.media_items.size
             patch "/v1/stdslot/#{std_slot.id}", add_media_item
 
             expect(response).to have_http_status(:ok)
             new_media_item = MediaItem.last
-            expect(new_media_item.ordering).to eq(new_ordering)
+            expect(new_media_item.position).to eq(new_position)
           end
         end
 
-        context "existing ordering parameter" do
-          let(:media) { [{ publicId: "foo-image", ordering: "0" }] }
+        context "existing position parameter" do
+          let(:media) { [{ publicId: "foo-image", position: "0" }] }
 
-          it "updates existing ordering" do
-            existing_1 = create(:slot_image, mediable: std_slot, ordering: 0)
-            existing_2 = create(:slot_image, mediable: std_slot, ordering: 1)
+          it "updates existing position" do
+            existing_1 = create(:slot_image, mediable: std_slot, position: 0)
+            existing_2 = create(:slot_image, mediable: std_slot, position: 1)
 
             patch "/v1/stdslot/#{std_slot.id}", add_media_item
 
@@ -830,16 +830,16 @@ RSpec.describe "V1::Slots", type: :request do
             existing_1.reload
             existing_2.reload
 
-            expect(existing_1.ordering).to eq 1
-            expect(existing_2.ordering).to eq 2
-            expect(std_slot.media_items.last.ordering)
-              .to eq media.first[:ordering].to_i
+            expect(existing_1.position).to eq 1
+            expect(existing_2.position).to eq 2
+            expect(std_slot.media_items.last.position)
+              .to eq media.first[:position].to_i
           end
         end
       end
 
       context "add images with invalid params" do
-        let(:media) { [{ ordering: "0" }] }
+        let(:media) { [{ position: "0" }] }
 
         it "returns 422 if publicId is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item
@@ -855,22 +855,22 @@ RSpec.describe "V1::Slots", type: :request do
 
       describe "reorder images" do
         let!(:media_item_1) {
-          create(:slot_image, mediable: std_slot, ordering: 0) }
+          create(:slot_image, mediable: std_slot, position: 0) }
         let!(:media_item_2) {
-          create(:slot_image, mediable: std_slot, ordering: 1) }
+          create(:slot_image, mediable: std_slot, position: 1) }
         let!(:media_item_3) {
-          create(:slot_image, mediable: std_slot, ordering: 2) }
+          create(:slot_image, mediable: std_slot, position: 2) }
 
         context "with valid params" do
           let(:media_reordering) do
             { mediaType: "image",
               orderingMedia: [
                 { mediaItemId: media_item_1.id,
-                  ordering: 2 },
+                  position: 2 },
                 { mediaItemId: media_item_2.id,
-                  ordering: 0 },
+                  position: 0 },
                 { mediaItemId: media_item_3.id,
-                  ordering: 1 }
+                  position: 1 }
               ] }
           end
 
@@ -882,9 +882,9 @@ RSpec.describe "V1::Slots", type: :request do
           it "reorders media items" do
             patch "/v1/stdslot/#{std_slot.id}", media_reordering
             std_slot.reload
-            expect(std_slot.media_items.find(media_item_1.id).ordering).to eq(2)
-            expect(std_slot.media_items.find(media_item_2.id).ordering).to eq(0)
-            expect(std_slot.media_items.find(media_item_3.id).ordering).to eq(1)
+            expect(std_slot.media_items.find(media_item_1.id).position).to eq(2)
+            expect(std_slot.media_items.find(media_item_2.id).position).to eq(0)
+            expect(std_slot.media_items.find(media_item_3.id).position).to eq(1)
           end
         end
 
@@ -895,11 +895,11 @@ RSpec.describe "V1::Slots", type: :request do
               { mediaType: "image",
                 orderingMedia: [
                   { mediaItemId: media_item_1.id,
-                    ordering: 2 },
+                    position: 2 },
                   { mediaItemId: media_item_2.id,
-                    ordering: 0 },
+                    position: 0 },
                   { mediaItemId: invalid_id,
-                    ordering: 1 }
+                    position: 1 }
                 ] }
             end
 
@@ -915,11 +915,11 @@ RSpec.describe "V1::Slots", type: :request do
               { mediaType: "image",
                 orderingMedia: [
                   { mediaItemId: media_item_1.id,
-                    ordering: 1 },
+                    position: 1 },
                   { mediaItemId: media_item_2.id,
-                    ordering: 0 },
+                    position: 0 },
                   { mediaItemId: media_item_3.id,
-                    ordering: 1 }
+                    position: 1 }
                 ] }
             end
 
@@ -929,11 +929,11 @@ RSpec.describe "V1::Slots", type: :request do
               expect(response).to have_http_status(:unprocessable_entity)
             end
 
-            it "returns duplicate ordering numbers" do
+            it "returns duplicate position numbers" do
               skip "TODO change handling of errors"
               patch "/v1/stdslot/#{std_slot.id}", media_reordering
-              expect(json).to have_key('duplicate_ordering')
-              expect(json['duplicate_ordering']).to eq [1]
+              expect(json).to have_key('duplicate_position')
+              expect(json['duplicate_position']).to eq [1]
             end
           end
         end
@@ -942,7 +942,7 @@ RSpec.describe "V1::Slots", type: :request do
       context "video" do
         let(:media) do
           [{ publicId: "foo-video",
-             ordering: "1" }]
+             position: "1" }]
         end
 
         it "adds a new video" do
@@ -956,7 +956,7 @@ RSpec.describe "V1::Slots", type: :request do
       context "voice" do
         let(:media) do
           [{ publicId: "foo-voice",
-             ordering: "1" }]
+             position: "1" }]
         end
 
         it "adds a new voice item" do

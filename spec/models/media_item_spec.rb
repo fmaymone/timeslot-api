@@ -8,7 +8,7 @@ RSpec.describe MediaItem, type: :model do
   it { is_expected.to respond_to(:public_id) }
   it { is_expected.to respond_to(:duration) }
   it { is_expected.to respond_to(:thumbnail) }
-  it { is_expected.to respond_to(:ordering) }
+  it { is_expected.to respond_to(:position) }
   it { is_expected.to respond_to(:media_type) }
   it { is_expected.to respond_to(:mediable_id) }
   it { is_expected.to respond_to(:mediable_type) }
@@ -31,8 +31,8 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when ordering is not present" do
-    before { media_item.ordering = nil }
+  describe "when position is not present" do
+    before { media_item.position = nil }
     it { is_expected.to_not be_valid }
   end
 
@@ -50,37 +50,37 @@ RSpec.describe MediaItem, type: :model do
     it "returns true if order is valid" do
       param = [
         { media_item_id: 1,
-          ordering: 2 },
+          position: 2 },
         { media_item_id: 2,
-          ordering: 0 },
+          position: 0 },
         { media_item_id: 3,
-          ordering: 1 }
+          position: 1 }
       ]
       result = described_class.valid_ordering? param
       expect(result).to eq true
     end
 
-    it "returns false if gaps in the ordering numbers" do
+    it "returns false if gaps in the position numbers" do
       param = [
         { media_item_id: 1,
-          ordering: 3 },
+          position: 3 },
         { media_item_id: 2,
-          ordering: 0 },
+          position: 0 },
         { media_item_id: 3,
-          ordering: 1 }
+          position: 1 }
       ]
       result = described_class.valid_ordering? param
       expect(result).to eq false
     end
 
-    it "returns false if the ordering numbers don't start with 0" do
+    it "returns false if the position numbers don't start with 0" do
       param = [
         { media_item_id: 1,
-          ordering: 2 },
+          position: 2 },
         { media_item_id: 2,
-          ordering: 3 },
+          position: 3 },
         { media_item_id: 3,
-          ordering: 1 }
+          position: 1 }
       ]
       result = described_class.valid_ordering? param
       expect(result).to eq false

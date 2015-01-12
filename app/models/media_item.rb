@@ -11,7 +11,7 @@ class MediaItem < ActiveRecord::Base
             presence: true,
             inclusion: { in: %w(image voice video) }
   validates :public_id, presence: true
-  validates :ordering, presence: true, if: :belongs_to_slot?
+  validates :position, presence: true, if: :belongs_to_slot?
   validates :mediable_id, presence: true
   validates :mediable_type, presence: true
 
@@ -39,35 +39,35 @@ class MediaItem < ActiveRecord::Base
       # TODO: might need to validate new media item before reordering
       order_params.each do |item|
         changed = MediaItem.where(id: item[:mediaItemId])
-                  .update_all(ordering: item[:ordering])
+                  .update_all(position: item[:position])
         fail ActiveRecord::RecordNotFound if changed == 0
       end
       true
     end
 
     def valid_ordering?(parameter)
-      arr = parameter.map { |i| i[:ordering].to_i }
+      arr = parameter.map { |i| i[:position].to_i }
       no_gaps = arr.size > arr.max
       dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
       dups.nil? && no_gaps
     end
 
     def insert(collection, new_media)
-      if !new_media.key? "ordering"
-        new_media.merge!(ordering: collection.size)
-      elsif new_media["ordering"].to_i < collection.size
-        needs_ordering_update(collection, new_media["ordering"])
+      if !new_media.key? "position"
+        new_media.merge!(position: collection.size)
+      elsif new_media["position"].to_i < collection.size
+        needs_ordering_update(collection, new_media["position"])
       end
 
       MediaItem.new(new_media)
     end
 
-    def needs_ordering_update(collection, ordering_param)
+    def needs_ordering_update(collection, position_param)
       media_items = collection.where(
-        "media_items.ordering >= ?", ordering_param).to_a
+        "media_items.position >= ?", position_param).to_a
 
       media_items.each do |item|
-        item.update(ordering: item.ordering += 1)
+        item.update(position: item.position += 1)
       end
     end
   end

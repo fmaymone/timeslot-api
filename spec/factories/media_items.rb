@@ -1,12 +1,12 @@
 FactoryGirl.define do
-  sequence(:ordering, 0)
+  sequence(:position, 0)
   sequence(:public_id) { |n| "dfhjghjkdisudgfds7iy#{n}" }
 
   factory :slot_image, class: "MediaItem" do
     association :mediable, factory: :base_slot
     media_type "image"
     public_id
-    ordering
+    position
   end
 
   factory :mock_image, class: "MediaItem" do
@@ -25,13 +25,13 @@ FactoryGirl.define do
     association :mediable, factory: :base_slot
     media_type "voice"
     public_id
-    ordering
+    position
   end
 
   factory :video, class: "MediaItem" do
     association :mediable, factory: :base_slot
     media_type "video"
     public_id
-    ordering
+    position
   end
 end
