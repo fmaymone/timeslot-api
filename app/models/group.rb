@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   after_commit AuditLog
+  after_create :add_owner_as_member, on: :create
 
   belongs_to :owner, class_name: "User", inverse_of: :own_groups
   has_many :image, -> { where deleted_at: nil }, class_name: "MediaItem",
@@ -29,5 +30,9 @@ class Group < ActiveRecord::Base
     memberships.each(&:delete)
     group_slots.each(&:delete)
     SoftDelete.call(self)
+  end
+
+  private def add_owner_as_member
+    Membership.create(group_id: id, user_id: owner.id).activate
   end
 end

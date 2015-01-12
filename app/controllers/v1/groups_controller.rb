@@ -1,6 +1,7 @@
 module V1
   class GroupsController < ApplicationController
     # GET /v1/groups
+    # TODO: implement logic
     def index
       # return all groups where the current user is member or owner
       @groups = Group.all
@@ -16,7 +17,6 @@ module V1
     end
 
     # POST /v1/groups
-    # TODO: create a membership for the owner on group creation
     def create
       @group = Group.new(group_create_params.merge(owner: current_user))
 
@@ -128,6 +128,7 @@ module V1
     # where he is member and members can invite
     # create membership with state invited/pending
     # notify invited users
+    # TODO: move invite single request specs to invite specs
     def invite
       group = Group.find(params.require(:group_id))
       return head :forbidden unless current_user.can_invite? group.id

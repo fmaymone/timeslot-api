@@ -5,6 +5,23 @@ RSpec.describe "V1::Groups", type: :request do
   let(:current_user) { create(:user) }
   before(:each) { ApplicationController.new.current_user = current_user }
 
+  # create
+  describe "POST /v1/groups" do
+    let(:new_params) { { group: { name: "bar" } } }
+
+    it "creates a new group" do
+      expect {
+        post "/v1/groups", new_params
+      }.to change(Group, :count)
+      expect(Group.last.name).to eq "bar"
+    end
+
+    it "adds the owner as a group member" do
+      post "/v1/groups", new_params
+      expect(Group.last.members).to include current_user
+    end
+  end
+
   # update
   describe "PATCH /v1/groups/:group_id" do
     let(:new_params) { { group: { name: "bar" } } }
@@ -86,7 +103,7 @@ RSpec.describe "V1::Groups", type: :request do
   # invite
   describe "POST /v1/groups/:group_id/members" do
     describe "user can invite" do
-      let(:group) { create(:group, owner: current_user) }
+      let!(:group) { create(:group, owner: current_user) }
       let(:others) { create_list(:user, 3) }
       let(:user_ids) { { ids: others.collect(&:id) } }
 
@@ -98,7 +115,8 @@ RSpec.describe "V1::Groups", type: :request do
       it "returns a list of all users related to that group" do
         post "/v1/groups/#{group.id}/members", user_ids
         expect(json).to have_key "related"
-        expect(json['related'].size).to eq 3
+        # group owner is automatically an active member too
+        expect(json['related'].size).to eq 4
       end
 
       it "creates new memberships with state 'invited' for all new members" do
@@ -149,17 +167,19 @@ RSpec.describe "V1::Groups", type: :request do
 
   # invite_single
   describe "POST /v1/groups/:group_id/members/:user_id" do
+    let(:other_user) { create(:user) }
+
     describe "user can invite" do
-      let(:group) { create(:group, owner: current_user) }
+      let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members/#{current_user.id}"
+        post "/v1/groups/#{group.id}/members/#{other_user.id}"
         expect(response.status).to be(201)
       end
 
       it "creates a membership with state 'invited'" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{current_user.id}"
+          post "/v1/groups/#{group.id}/members/#{other_user.id}"
         }.to change(Membership, :count).by(1)
         membership = Membership.last
         expect(membership.invited?).to be true
@@ -167,54 +187,54 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "doesn't add user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{current_user.id}"
+          post "/v1/groups/#{group.id}/members/#{other_user.id}"
         }.not_to change(group.members, :count)
       end
 
       describe "existing membership" do
         describe "duplicate invitation" do
           let!(:membership) {
-            create(:membership, user: current_user, group: group)
+            create(:membership, user: other_user, group: group)
           }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members/#{current_user.id}"
+            post "/v1/groups/#{group.id}/members/#{other_user.id}"
             expect(response.status).to be(200)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{current_user.id}"
+              post "/v1/groups/#{group.id}/members/#{other_user.id}"
             }.not_to change(Membership, :count)
           end
         end
 
         describe "active group member" do
           let!(:membership) {
-            create(:membership, :active, user: current_user, group: group)
+            create(:membership, :active, user: other_user, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members/#{current_user.id}"
+            post "/v1/groups/#{group.id}/members/#{other_user.id}"
             expect(response.status).to be(200)
           end
         end
 
         describe "non active group member" do
           let!(:membership) {
-            create(:membership, :left, user: current_user, group: group)
+            create(:membership, :left, user: other_user, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members/#{current_user.id}"
+            post "/v1/groups/#{group.id}/members/#{other_user.id}"
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{current_user.id}"
+              post "/v1/groups/#{group.id}/members/#{other_user.id}"
             }.not_to change(Membership, :count)
           end
 
           it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members/#{current_user.id}"
+            post "/v1/groups/#{group.id}/members/#{other_user.id}"
             membership.reload
             expect(membership.invited?).to be true
           end
@@ -224,18 +244,18 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "user can't invite" do
-      let(:group) do
+      let!(:group) do
         create(:group, owner: create(:user), members_can_invite: false)
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/members/#{current_user.id}"
+        post "/v1/groups/#{group.id}/members/#{other_user.id}"
         expect(response.status).to be(403)
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{current_user.id}"
+          post "/v1/groups/#{group.id}/members/#{other_user.id}"
         }.not_to change(Membership, :count)
       end
     end
@@ -467,7 +487,7 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "no membership" do
       it "returns forbidden" do
-        delete "/v1/groups/#{group.id}/members/#{current_user.id}"
+        delete "/v1/groups/#{group.id}/members/#{member.id}"
         expect(response.status).to be(403)
       end
     end

@@ -17,6 +17,7 @@ resource "Groups" do
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
+      skip 'not yet done'
       # ApplicationController.new.set_current_user(user)
       do_request
 
@@ -49,8 +50,9 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
+      group.reload
       expect(json).to eq(group.attributes.as_json
-                          .transform_keys{ |key| key.camelize(:lower) })
+                          .transform_keys { |key| key.camelize(:lower) })
     end
   end
 
@@ -69,7 +71,8 @@ resource "Groups" do
     let(:name) { "foo" }
 
     example "Create a new group", document: :v1 do
-      explanation "Group owner is current user.\n\n" \
+      explanation "Current User is the group owner and" \
+                  "also initially an active group member.\n\n" \
                   "returns 201 and data of new group\n\n" \
                   "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
@@ -79,6 +82,7 @@ resource "Groups" do
       expect(json).to have_key("id")
       group = Group.last
       expect(group.owner).to eq current_user
+      expect(group.members).to include current_user
     end
   end
 
@@ -196,6 +200,7 @@ resource "Groups" do
     let(:group_id) { group.id }
     let!(:members) { create_list(:membership, 4, :active, group: group) }
     let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
+    # group owner is automatically an active member too
 
     example "Get list of all active group members", document: :v1 do
       explanation "returns 200 and a list of all active group members\n\n" \
@@ -205,7 +210,7 @@ resource "Groups" do
       expect(response_status).to eq(200)
       expect(json).to include({
                                 "groupId" => group.id,
-                                "size" => 4
+                                "size" => 5
                               })
       expect(json["members"].first)
         .to eq({
@@ -242,6 +247,7 @@ resource "Groups" do
     let!(:members) { create_list(:membership, 1, :active, group: group) }
     let!(:invitees) { create_list(:membership, 2, :invited, group: group) }
     let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
+    # group owner is automatically an active member too
 
     example "Get list of all users related to a group", document: :v1 do
       explanation "Also includes user with pending or refused invitations and" \
@@ -253,7 +259,7 @@ resource "Groups" do
       expect(response_status).to eq(200)
       expect(json).to include({
                                 "groupId" => group.id,
-                                "size" => 6
+                                "size" => 7
                               })
       expect(json["related"].first)
         .to eq({
@@ -336,7 +342,7 @@ resource "Groups" do
     parameter :group_id, "ID of the group", required: true
     parameter :user_id, "User ID to invite to the group", required: true
 
-    let(:group) { create(:group, owner: current_user) }
+    let!(:group) { create(:group, owner: current_user) }
     let(:invited_user) { create(:user) }
 
     let(:group_id) { group.id }
@@ -370,7 +376,7 @@ resource "Groups" do
     parameter :group_id, "ID of the group", required: true
     parameter :ids, "User IDs to be invited to group", required: true
 
-    let(:group) { create(:group, owner: current_user) }
+    let!(:group) { create(:group, owner: current_user) }
     let(:invited_users) { create_list(:user, 3) }
 
     let(:group_id) { group.id }

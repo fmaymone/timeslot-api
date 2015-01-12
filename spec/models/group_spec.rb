@@ -50,7 +50,8 @@ RSpec.describe Group, type: :model do
     end
 
     it "only returns active group members" do
-      expect(group.members.count).to eq 3
+      # group owner is automatically an active member too
+      expect(group.members.count).to eq 4
     end
   end
 
@@ -61,7 +62,8 @@ RSpec.describe Group, type: :model do
     end
 
     it "returns all related users" do
-      expect(group.related_users.count).to eq 5
+      # group owner is automatically an active member too
+      expect(group.related_users.count).to eq 6
     end
   end
 
