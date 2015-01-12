@@ -368,7 +368,6 @@ resource "Groups" do
   end
 
   # invite
-  # TODO: needs improvement
   post "/v1/groups/:group_id/members" do
     header "Content-Type", "application/json"
 

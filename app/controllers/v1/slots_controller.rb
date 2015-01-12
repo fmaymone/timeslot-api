@@ -19,7 +19,7 @@ module V1
     def show
       @slot = BaseSlot.get(params[:id])
 
-      render :show
+      render :show, locals: { slot: @slot }
     end
 
     # POST /v1/slots
@@ -53,7 +53,7 @@ module V1
       @slot.update_notes(params[:notes]) if params[:notes].present?
 
       if @slot.errors.empty?
-        render :show, status: :created
+        render :show, status: :created, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -86,7 +86,7 @@ module V1
       @slot.update_notes(params[:notes]) if params[:notes].present?
 
       if @slot.errors.empty?
-        render :show, status: :created
+        render :show, status: :created, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -99,7 +99,7 @@ module V1
       @slot = ReSlot.from_slot(predecessor: predecessor, slotter: current_user)
 
       if @slot.save
-        render :show, status: :created
+        render :show, status: :created, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -120,22 +120,22 @@ module V1
     # PATCH /v1/stdslot/1
     # TODO: handle alerts
     def update_stdslot
-      @slot = current_user.std_slots.find(params[:id])
+      slot = current_user.std_slots.find(params[:id])
 
-      @slot.update(std_params) if std_params["visibility"].present?
-      update_baseslot(@slot)
+      slot.update(std_params) if std_params["visibility"].present?
+      update_baseslot(slot)
     end
 
     # PATCH /v1/groupslot/1
     def update_groupslot
-      @slot = current_user.group_slots.find(params[:id])
-      update_baseslot(@slot)
+      slot = current_user.group_slots.find(params[:id])
+      update_baseslot(slot)
     end
 
     # PATCH /v1/reslot/1
     def update_reslot
-      @slot = current_user.re_slots.find(params[:id])
-      update_baseslot(@slot)
+      slot = current_user.re_slots.find(params[:id])
+      update_baseslot(slot)
     end
 
     # DELETE /v1/std_slot/1
@@ -143,7 +143,7 @@ module V1
       @slot = current_user.std_slots.find(params.require(:id))
 
       if @slot.delete
-        render :show
+        render :show, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -154,7 +154,7 @@ module V1
       @slot = current_user.group_slots.find(params.require(:id))
 
       if @slot.delete
-        render :show
+        render :show, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -165,7 +165,7 @@ module V1
       @slot = current_user.re_slots.find(params.require(:id))
 
       if @slot.delete
-        render :show
+        render :show, locals: { slot: @slot }
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
@@ -196,12 +196,12 @@ module V1
       note.permit(:title, :content)
     end
 
-    # TODO: decide with pascal and peter how to handle reordering
+    # TODO: check and update how to handle reordering
     private def update_media_order
       if MediaItem.reorder? params[:orderingMedia]
         head :ok
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: "slot.errors", status: :unprocessable_entity
       end
     end
 
@@ -212,19 +212,18 @@ module V1
     end
 
     # TODO: refactor and improve media ordering
-    private def update_baseslot(base_slot)
+    private def update_baseslot(slot)
       # order is important so that added errors are not overwritten
-      base_slot.update(meta_params) if meta_params
-      add_media(base_slot)
-      base_slot.update_notes(params[:notes]) if params[:notes].present?
+      slot.update(meta_params) if meta_params
+      add_media(slot)
+      slot.update_notes(params[:notes]) if params[:notes].present?
 
       return update_media_order if params[:orderingMedia].present?
 
-      if base_slot.errors.empty?
-        # TODO: remove view template dependency on @slot class variable
-        render :show, status: :ok
+      if slot.errors.empty?
+        render :show, status: :ok, locals: { slot: slot }
       else
-        render json: base_slot.errors.messages,
+        render json: slot.errors.messages,
                status: :unprocessable_entity
       end
     end
