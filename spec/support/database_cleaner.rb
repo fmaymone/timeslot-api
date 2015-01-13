@@ -14,6 +14,9 @@ RSpec.configure do |config|
 
   config.before(:each) do
     DatabaseCleaner.start
+    # HACK: to reset sorting sequence for position
+    FactoryGirl.configuration.sequences[:position]
+      .instance_variable_get("@value").instance_variable_set("@value", 0)
   end
 
   config.after(:each) do
