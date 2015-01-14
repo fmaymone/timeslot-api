@@ -1,4 +1,5 @@
 class Note < ActiveRecord::Base
+  after_commit AuditLog
   after_validation :propagate_error, on: [:create, :update],
                    if: proc { |note| note.errors.any? && note.base_slot }
 
@@ -10,5 +11,10 @@ class Note < ActiveRecord::Base
 
   private def propagate_error
     base_slot.errors.add(:note, errors)
+  end
+
+  # if belonging slot is deleted
+  def delete
+    SoftDelete.call(self)
   end
 end

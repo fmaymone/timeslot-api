@@ -21,4 +21,10 @@ RSpec.describe Note, type: :model do
     before { note.title = nil }
     it { is_expected.to_not be_valid }
   end
+
+  describe :delete do
+    it "sets deleted_at" do
+      expect { note.delete }.to change(note, :deleted_at)
+    end
+  end
 end
