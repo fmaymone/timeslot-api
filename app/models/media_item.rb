@@ -32,25 +32,6 @@ class MediaItem < ActiveRecord::Base
     SoftDelete.call(self)
   end
 
-  def self.reorder?(position_params)
-    return false unless self.valid_sorting? position_params
-
-    # TODO: might need to validate new media item before reordering
-    position_params.each do |item|
-      changed = MediaItem.where(id: item[:mediaId])
-                .update_all(position: item[:position])
-      fail ActiveRecord::RecordNotFound if changed == 0
-    end
-    true
-  end
-
-  def self.valid_sorting?(parameter)
-    arr = parameter.map { |i| i[:position].to_i }
-    no_gaps = arr.size > arr.max
-    dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
-    dups.nil? && no_gaps
-  end
-
   def self.insert(collection, new_media)
     if !new_media.key? "position"
       new_media.merge!(position: collection.size)

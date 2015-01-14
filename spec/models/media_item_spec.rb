@@ -46,47 +46,6 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe ".valid_sorting?"  do
-    it "returns true if order is valid" do
-      param = [
-        { media_item_id: 1,
-          position: 2 },
-        { media_item_id: 2,
-          position: 0 },
-        { media_item_id: 3,
-          position: 1 }
-      ]
-      result = described_class.valid_sorting? param
-      expect(result).to eq true
-    end
-
-    it "returns false if gaps in the position numbers" do
-      param = [
-        { media_item_id: 1,
-          position: 3 },
-        { media_item_id: 2,
-          position: 0 },
-        { media_item_id: 3,
-          position: 1 }
-      ]
-      result = described_class.valid_sorting? param
-      expect(result).to eq false
-    end
-
-    it "returns false if the position numbers don't start with 0" do
-      param = [
-        { media_item_id: 1,
-          position: 2 },
-        { media_item_id: 2,
-          position: 3 },
-        { media_item_id: 3,
-          position: 1 }
-      ]
-      result = described_class.valid_sorting? param
-      expect(result).to eq false
-    end
-  end
-
   describe :delete do
     let!(:media_item) { create(:slot_image) }
 
