@@ -38,12 +38,12 @@ class Friendship < ActiveRecord::Base
   end
 
   # when user deactivates account, need to preserve state
-  def delete
+  def inactivate
     friend.touch
     SoftDelete.call(self)
   end
 
-  def undelete
+  def activate
     return if friend.deleted_at?
     update!(deleted_at: nil)
     friend.touch

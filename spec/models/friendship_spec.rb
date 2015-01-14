@@ -42,24 +42,24 @@ RSpec.describe Friendship, type: :model do
     end
   end
 
-  describe :delete do
+  describe :inactivate do
     let(:friendship) { create(:friendship, friend: create(:user)) }
 
     it "preserves the friendship state" do
-      expect { friendship.delete }.not_to change(friendship, :state)
+      expect { friendship.inactivate }.not_to change(friendship, :state)
     end
 
     it "notifies the friend about a change" do
-      expect { friendship.delete }.to change(friendship.friend, :updated_at)
+      expect { friendship.inactivate }.to change(friendship.friend, :updated_at)
     end
   end
 
-  describe :undelete do
+  describe :activate do
     let(:friendship) {
       create(:friendship, friend: create(:user, deleted_at: Time.zone.now))
     }
     it "only undeletes friendships to active friends" do
-      expect { friendship.undelete }.not_to change(friendship, :deleted_at)
+      expect { friendship.activate }.not_to change(friendship, :deleted_at)
     end
   end
 end
