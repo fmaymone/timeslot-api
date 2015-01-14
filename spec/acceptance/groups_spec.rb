@@ -50,8 +50,10 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       group.reload
-      expect(json).to eq(group.attributes.as_json
-                          .transform_keys { |key| key.camelize(:lower) })
+      expect(
+        json.except('image')
+      ).to eq(group.attributes.as_json
+               .transform_keys { |key| key.camelize(:lower) })
     end
   end
 
@@ -118,8 +120,10 @@ resource "Groups" do
         expect(group.members_can_invite).to eq true
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
-        expect(json).to eq(group.attributes.as_json
-                            .transform_keys { |key| key.camelize(:lower) })
+        expect(
+          json.except('image')
+        ).to eq(group.attributes.as_json
+                 .transform_keys { |key| key.camelize(:lower) })
 
       end
     end
@@ -145,7 +149,8 @@ resource "Groups" do
         do_request
 
         expect(response_status).to eq(200)
-        # expect(json).to have_key("mediaItemId")
+        expect(json).to have_key("image")
+        expect(json["image"]).to eq publicId
         group.reload
         expect(group.image).not_to be nil
         expect(group.image.public_id).to eq publicId
@@ -175,8 +180,10 @@ resource "Groups" do
       expect(group.memberships.first.deleted_at?).to be true
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
-      expect(json).to eq(group.attributes.as_json
-                          .transform_keys{ |key| key.camelize(:lower) })
+      expect(
+        json.except('image')
+      ).to eq(group.attributes.as_json
+               .transform_keys{ |key| key.camelize(:lower) })
     end
 
     describe "current user not group owner" do
