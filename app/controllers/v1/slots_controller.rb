@@ -196,35 +196,36 @@ module V1
       note.permit(:title, :content)
     end
 
-    # TODO: check and update how to handle reordering
-    private def update_media_order
-      if MediaItem.reorder? params[:orderingMedia]
-        head :ok
-      else
-        render json: "slot.errors", status: :unprocessable_entity
+    private def update_media(slot)
+      media_map = [:photos, :voices, :videos]
+
+      media_map.each do |media_type|
+        next unless params[media_type].present?
+
+        items = params[media_type].each do |item|
+          item.transform_keys!(&:underscore)
+        end
+
+        if items.first.key? "media_id"
+          unless ReorderMedia.call items
+            slot.errors.add(:media_items, 'invalid ordering')
+          end
+        else
+          slot.add_media_items(items, media_type)
+        end
       end
     end
 
-    private def add_media(slot)
-      slot.add_photos(params[:photos]) if params[:photos].present?
-      slot.add_voices(params[:voices]) if params[:voices].present?
-      slot.add_videos(params[:videos]) if params[:videos].present?
-    end
-
-    # TODO: refactor and improve media ordering
     private def update_baseslot(slot)
-      # order is important so that added errors are not overwritten
+      # statement order is important, otherwise added errors may be overwritten
       slot.update(meta_params) if meta_params
-      add_media(slot)
+      update_media(slot)
       slot.update_notes(params[:notes]) if params[:notes].present?
 
-      return update_media_order if params[:orderingMedia].present?
-
       if slot.errors.empty?
-        render :show, status: :ok, locals: { slot: slot }
+        render :show, locals: { slot: slot }
       else
-        render json: slot.errors.messages,
-               status: :unprocessable_entity
+        render json: slot.errors.messages, status: :unprocessable_entity
       end
     end
   end

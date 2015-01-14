@@ -685,12 +685,11 @@ resource "Slots" do
 
     describe "Adding media items to existing slot" do
 
-      parameter :photos, "Scope for array of attributes of new photos",
+      parameter :photos, "Scope for array of new photos/voices/videos",
                 required: true
       parameter :publicId, "Cloudinary ID / URL",
-                required: true,
-                scope: :photos
-      parameter :position, "Order of the new media item." \
+                required: true, scope: :photos
+      parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :photos
 
@@ -704,7 +703,8 @@ resource "Slots" do
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
                     " information.\n\n" \
-                    "returns complete slot including the new media item ID"
+                    "returns 422 if the media data is invalid\n\n" \
+                    "returns 200 and slot details including the new mediaID"
         do_request
 
         expect(response_status).to eq(200)
@@ -715,50 +715,41 @@ resource "Slots" do
       end
     end
 
-    # TODO: needs to be updated
     describe "Reordering media data of existing slot" do
 
-      parameter :media_type, "Type of media (image/video/voice)",
+      parameter :photos, "Array with mediaIds and position parameter",
                 required: true
-      parameter :orderingMedia, "Array with mediaItemIds and ordering",
-                required: true
-      parameter :mediaItemId, "Timeslot's internal ID for this media item",
-                required: true,
-                scope: :orderingMedia
+      parameter :mediaId, "Timeslot's internal ID for this media item",
+                required: true, scope: :photos
       parameter :position, "Sorting order of the image/video/voice. If not " \
                            "supplied the media items will be sortet as they" \
                            " are ordered in the array.",
-                scope: :orderingMedia
+                required: true, scope: :photos
 
-      let!(:media_item_1) { create(:slot_image, mediable: std_slot, position: 0) }
-      let!(:media_item_2) { create(:slot_image, mediable: std_slot, position: 1) }
-      let!(:media_item_3) { create(:slot_image, mediable: std_slot, position: 2) }
+      let!(:photo_1) { create(:slot_image, mediable: std_slot, position: 0) }
+      let!(:photo_2) { create(:slot_image, mediable: std_slot, position: 1) }
+      let!(:photo_3) { create(:slot_image, mediable: std_slot, position: 2) }
 
-      let(:media_reordering) do
-        { media_type: "image",
-          orderingMedia: [
-            { mediaId: media_item_1.id,
-              position: 2 },
-            { mediaId: media_item_2.id,
-              position: 0 },
-            { mediaId: media_item_3.id,
-              position: 1 }
-          ] }
-      end
-      let(:raw_post) { media_reordering.to_json }
+      let(:photos) { [{ mediaId: photo_1.id,
+                        position: 2 },
+                      { mediaId: photo_2.id,
+                        position: 0 },
+                      { mediaId: photo_3.id,
+                        position: 1 }] }
 
       example "Reorder media items", document: :v1 do
-        # skip "TODO: needs update"
-        explanation "An array with the media_items keys and corresponding" \
+        explanation "An array with the media_item keys and corresponding" \
                     " position/ordering number (starting from 0) for all" \
                     " images of the slot must be send.\n\n" \
-                    "returns success"
+                    "returns 404 if a mediaId doesn't exist\n\n" \
+                    "returns 422 if position params are invalid\n\n" \
+                    "returns 200 and slot details on success"
         do_request
 
         expect(response_status).to eq(200)
-        expect(std_slot.media_items.find(media_item_1.id).position).to eq(2)
-        expect(std_slot.media_items.find(media_item_2.id).position).to eq(0)
-        expect(std_slot.media_items.find(media_item_3.id).position).to eq(1)
+        expect(std_slot.media_items.find(photo_1.id).position).to eq(2)
+        expect(std_slot.media_items.find(photo_2.id).position).to eq(0)
+        expect(std_slot.media_items.find(photo_3.id).position).to eq(1)
       end
     end
   end

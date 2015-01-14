@@ -31,23 +31,4 @@ class MediaItem < ActiveRecord::Base
   ensure
     SoftDelete.call(self)
   end
-
-  def self.insert(collection, new_media)
-    if !new_media.key? "position"
-      new_media.merge!(position: collection.size)
-    elsif new_media["position"].to_i < collection.size
-      needs_ordering_update(collection, new_media["position"])
-    end
-
-    MediaItem.new(new_media)
-  end
-
-  def self.needs_ordering_update(collection, position_param)
-    media_items = collection.where(
-      "media_items.position >= ?", position_param).to_a
-
-    media_items.each do |item|
-      item.update(position: item.position += 1)
-    end
-  end
 end
