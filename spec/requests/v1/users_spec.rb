@@ -28,7 +28,7 @@ RSpec.describe "V1::Users", type: :request do
       let(:valid_attributes) { attributes_for(:user) }
 
       it "returns ID of created user" do
-        post "/v1/users", user: valid_attributes
+        post "/v1/users", valid_attributes
         expect(json).to have_key('id')
       end
 
@@ -42,12 +42,12 @@ RSpec.describe "V1::Users", type: :request do
   describe "PATCH /v1/users" do
     context "with valid params" do
       it "responds with http OK" do
-        patch "/v1/users", user: { username: "foo" }
+        patch "/v1/users", { username: "foo" }
         expect(response).to have_http_status(:ok)
       end
 
       it "updates the title of a given user" do
-        patch "/v1/users", user: { username: "New username" }
+        patch "/v1/users", { username: "New username" }
         current_user.reload
         expect(current_user.username).to eq("New username")
       end
@@ -55,17 +55,8 @@ RSpec.describe "V1::Users", type: :request do
 
     context "with invalid params" do
       it "responds with http status Unprocessable Entity (422)" do
-        patch "/v1/users", user: { username: "" }
+        patch "/v1/users", username: ""
         expect(response).to have_http_status(:unprocessable_entity)
-      end
-    end
-
-    context "with missing params" do
-      it "responds with Unprocessable Entity (422)" do
-        patch "/v1/users", wrong_scope: { username: "foo" }
-        expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to include "missing"
-        expect(response.body).to include "user"
       end
     end
   end

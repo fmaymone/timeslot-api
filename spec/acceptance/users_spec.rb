@@ -65,7 +65,7 @@ resource "Users" do
     header "Accept", "application/json"
 
     parameter :username, "Username of user (max. 20 characters)",
-              scope: :user, required: true
+              required: true
 
     response_field :id, "ID of the new user"
 
@@ -86,8 +86,7 @@ resource "Users" do
 
     describe "Update current users data" do
 
-      parameter :username, "Updated username of user (max. 20 characters)",
-                scope: :user
+      parameter :username, "Updated username of user (max. 20 characters)"
 
       let(:username) { "bar" }
 
@@ -110,24 +109,22 @@ resource "Users" do
     end
 
     describe "Set image for User" do
-      parameter :newMedia, "Scope for attributes of new image",
-                required: true,
-                scope: :user
+      parameter :image, "Scope for attributes of new image",
+                required: true
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
-                scope: :newMedia
+                scope: :image
 
-      response_field :mediaItemId, "Timeslot internal ID for this media item"
+      response_field :image, "Timeslot internal ID for this media item"
 
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ user: { newMedia: { publicId: publicId }}}.to_json }
 
       example "Set user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
                     " information.\n\n" \
-                    "returns 201 and the media_item ID if the image was" \
+                    "returns 200 and the users data if the image was" \
                     " successfully added or updated"
         do_request
 

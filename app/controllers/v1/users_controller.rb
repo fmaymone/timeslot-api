@@ -54,7 +54,7 @@ module V1
       @user = current_user
 
       @user.update(user_params) unless user_params.empty?
-      AddImage.call(@user, image_param) if params[:user][:newMedia].present?
+      AddImage.call(@user, image_param) if params[:image].present?
 
       if @user.errors.empty?
         render :show
@@ -100,7 +100,7 @@ module V1
     end
 
     private def user_params
-      params.require(:user).permit(:username)
+      params.permit(:username)
     end
 
     private def friends_params
@@ -108,7 +108,7 @@ module V1
     end
 
     private def image_param
-      params.require(:user).require(:newMedia).require(:publicId)
+      params.require(:image).require(:publicId)
     end
   end
 end
