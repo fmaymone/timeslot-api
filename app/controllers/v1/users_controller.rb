@@ -40,7 +40,7 @@ module V1
 
     # POST /v1/users
     def create
-      @user = User.new(user_create_params)
+      @user = User.new(user_params)
 
       if @user.save
         render :show, status: :created
@@ -50,16 +50,14 @@ module V1
     end
 
     # PATCH/PUT /v1/users/1
-    # TODO check for current user, can only update his own stuff
     def update
       @user = current_user
 
-      if image_param.present? && AddImage.call(@user, user_image_param).equal?(true)
-        render "v1/media/create",
-               status: :created,
-               locals: { media_item_id: @user.image.id }
-      elsif !image_param.present? && @user.update(user_create_params)
-        render :show, status: :no_content
+      @user.update(user_params) unless user_params.empty?
+      AddImage.call(@user, image_param) if params[:user][:newMedia].present?
+
+      if @user.errors.empty?
+        render :show
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -101,7 +99,7 @@ module V1
       end
     end
 
-    private def user_create_params
+    private def user_params
       params.require(:user).permit(:username)
     end
 
@@ -110,11 +108,7 @@ module V1
     end
 
     private def image_param
-      params.require(:user)[:newMedia]
-    end
-
-    private def user_image_param
-      params.require(:user).require(:newMedia).require(:public_id)
+      params.require(:user).require(:newMedia).require(:publicId)
     end
   end
 end

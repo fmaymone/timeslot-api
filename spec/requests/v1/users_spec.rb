@@ -41,9 +41,9 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "PATCH /v1/users" do
     context "with valid params" do
-      it "responds with http status No Content (204)" do
+      it "responds with http OK" do
         patch "/v1/users", user: { username: "foo" }
-        expect(response).to have_http_status(:no_content)
+        expect(response).to have_http_status(:ok)
       end
 
       it "updates the title of a given user" do

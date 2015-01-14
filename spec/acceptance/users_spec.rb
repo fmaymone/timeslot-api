@@ -101,8 +101,11 @@ resource "Users" do
 
         current_user.reload
         expect(current_user.username).to eq "bar"
-        expect(response_status).to eq(204)
-        expect(response_body).to eq("")
+        expect(response_status).to eq(200)
+        expect(
+          json.except('image')
+        ).to eq(current_user.attributes.as_json
+              .transform_keys { |key| key.camelize(:lower) })
       end
     end
 
@@ -117,7 +120,7 @@ resource "Users" do
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ user: { newMedia: { public_id: publicId }}}.to_json }
+      let(:raw_post) {{ user: { newMedia: { publicId: publicId }}}.to_json }
 
       example "Set user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -128,8 +131,8 @@ resource "Users" do
                     " successfully added or updated"
         do_request
 
-        expect(response_status).to eq(201)
-        expect(json).to have_key("mediaItemId")
+        expect(response_status).to eq(200)
+        # expect(json).to have_key("mediaItemId")
         current_user.reload
         expect(current_user.image).not_to be nil
         expect(current_user.image.public_id).to eq publicId
