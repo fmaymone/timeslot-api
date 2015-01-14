@@ -11,6 +11,7 @@ resource "Groups" do
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
+    response_field :image, "URL of the groupimage"
     response_field :url, "ressource url for the group"
 
     let!(:user) { create(:user, :with_3_groups, :with_3_own_groups) }
@@ -36,6 +37,7 @@ resource "Groups" do
     response_field :ownerId, "user id of group owner"
     response_field :members_can_post, "Can subscribers post?"
     response_field :members_can_invite, "Can subscribers invite friends?"
+    response_field :image, "URL of the group image"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
@@ -135,7 +137,7 @@ resource "Groups" do
                 required: true,
                 scope: :image
 
-      response_field :mediaItemId, "Timeslot internal ID for this media item"
+      response_field :image, "URL for this media item"
 
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
 

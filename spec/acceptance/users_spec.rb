@@ -42,6 +42,7 @@ resource "Users" do
 
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
+    response_field :image, "URL of the user image"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -55,8 +56,10 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to eq(user.attributes.as_json
-                          .transform_keys { |key| key.camelize(:lower) })
+      expect(
+        json.except('image')
+      ).to eq(user.attributes.as_json
+               .transform_keys { |key| key.camelize(:lower) })
     end
   end
 
@@ -115,7 +118,7 @@ resource "Users" do
                 required: true,
                 scope: :image
 
-      response_field :image, "Timeslot internal ID for this media item"
+      response_field :image, "URL for this media item"
 
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
@@ -129,7 +132,8 @@ resource "Users" do
         do_request
 
         expect(response_status).to eq(200)
-        # expect(json).to have_key("mediaItemId")
+        expect(json).to have_key("image")
+        expect(json["image"]).to eq publicId
         current_user.reload
         expect(current_user.image).not_to be nil
         expect(current_user.image.public_id).to eq publicId
@@ -147,8 +151,10 @@ resource "Users" do
       current_user.reload
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(json).to eq(current_user.attributes.as_json
-                          .transform_keys{ |key| key.camelize(:lower) })
+      expect(
+        json.except('image')
+      ).to eq(current_user.attributes.as_json
+               .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 
