@@ -7,7 +7,7 @@ RSpec.describe "V1::Groups", type: :request do
 
   # create
   describe "POST /v1/groups" do
-    let(:new_params) { { group: { name: "bar" } } }
+    let(:new_params) { { name: "bar" } }
 
     it "creates a new group" do
       expect {
@@ -24,7 +24,7 @@ RSpec.describe "V1::Groups", type: :request do
 
   # update
   describe "PATCH /v1/groups/:group_id" do
-    let(:new_params) { { group: { name: "bar" } } }
+    let(:new_params) { { name: "bar" } }
 
     describe "user is group owner" do
       let(:group) { create(:group, owner: current_user, name: "foo") }
@@ -42,7 +42,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       describe "add image" do
         let(:public_id) { attributes_for(:real_image)[:public_id] }
-        let(:img_params) { { group: { newMedia: { public_id: public_id } } } }
+        let(:img_params) { { image: { publicId: public_id } } }
 
         describe "new" do
           it "returns OK" do
@@ -68,7 +68,7 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         describe "invalid" do
-          let(:img_params) { { group: { newMedia: { public_id: nil } } } }
+          let(:img_params) { { image: { public_id: nil } } }
 
           it "returns 422" do
             patch "/v1/groups/#{group.id}", img_params
@@ -514,7 +514,7 @@ RSpec.describe "V1::Groups", type: :request do
   describe "PATCH /v1/groups/:group_id/members" do
     let(:owner) { create(:user) }
     let(:group) { create(:group, owner: owner) }
-    let(:params) { { group: { notifications: 'false' } } }
+    let(:params) { { settings: { notifications: 'false' } } }
 
     describe "current user is group member" do
       describe "membership active" do

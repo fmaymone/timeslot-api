@@ -29,7 +29,7 @@ resource "Users" do
 
       expect(response_status).to eq(200)
 
-      client.post(URI.parse("/v1/groups").path, { group: testgroup }, headers)
+      client.post(URI.parse("/v1/groups").path, testgroup, headers)
       expect(status).to eq(201)
       expect(json['ownerId']).to eq user.id
     end
@@ -56,7 +56,7 @@ resource "Users" do
 
       expect(response_status).to eq(200)
       expect(json).to eq(user.attributes.as_json
-                          .transform_keys{ |key| key.camelize(:lower) })
+                          .transform_keys { |key| key.camelize(:lower) })
     end
   end
 

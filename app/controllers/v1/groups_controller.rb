@@ -17,7 +17,7 @@ module V1
 
     # POST /v1/groups
     def create
-      @group = Group.new(group_create_params.merge(owner: current_user))
+      @group = Group.new(group_params.merge(owner: current_user))
 
       if @group.save
         render :show, status: :created
@@ -32,8 +32,8 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      @group.update(group_create_params)
-      AddImage.call(@group, group_image_param) if image_param.present?
+      @group.update(group_params) unless group_params.empty?
+      AddImage.call(@group, image_param) if params[:image].present?
 
       if @group.errors.empty?
         render :show
@@ -177,32 +177,28 @@ module V1
 
       @membership = current_user.get_membership group.id
 
-      if @membership.update(membership_update_params)
+      if @membership.update(membership_setting_params)
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
       end
     end
 
-    private def group_create_params
-      params.require(:group).permit(:name, :members_can_post, :members_can_invite)
+    private def group_params
+      parameter = params.permit(:name, :membersCanPost, :membersCanInvite)
+      parameter.transform_keys(&:underscore)
     end
 
     private def membership_params
       params.permit(:group_id, :user_id)
     end
 
-    private def membership_update_params
-      params.require(:group).permit(:notifications)
+    private def membership_setting_params
+      params.require(:settings).permit(:notifications)
     end
 
-    # TODO: get rid of newMedia scope
     private def image_param
-      params.require(:group)[:newMedia]
-    end
-
-    private def group_image_param
-      params.require(:group).require(:newMedia).require(:public_id)
+      params.require(:image).require(:publicId)
     end
   end
 end

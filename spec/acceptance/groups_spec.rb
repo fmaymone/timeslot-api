@@ -60,10 +60,9 @@ resource "Groups" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :name, "Name of group (max. 255 characters)",
-              scope: :group, required: true
-    parameter :members_can_post, "Can subscribers post?", scope: :group
-    parameter :members_can_invite, "Can subscribers invite friends?", scope: :group
+    parameter :name, "Name of group (max. 255 characters)", required: true
+    parameter :members_can_post, "Can subscribers post?"
+    parameter :members_can_invite, "Can subscribers invite friends?"
 
     response_field :id, "ID of the new group"
 
@@ -91,14 +90,20 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to update", required: true
 
-    let(:group) { create(:group, name: "foo", owner: current_user) }
+    let(:group) do
+      create(:group, name: "foo", owner: current_user,
+             members_can_invite: false, members_can_post: false)
+    end
     let(:group_id) { group.id }
 
     describe "Update existing group" do
-      parameter :name, "Updated name of group (max. 255 characters)",
-                scope: :group
+      parameter :name, "Updated name of group (max. 255 characters)"
+      parameter :membersCanInvite, "Allows members to invite other users"
+      parameter :membersCanPost, "Allows members to post new slots"
 
       let(:name) { "bar" }
+      let(:membersCanInvite) { true }
+      let(:membersCanPost) { true }
 
       example "Update data for existing group", document: :v1 do
         explanation "e.g. Change groupname\n\n" \
@@ -110,6 +115,8 @@ resource "Groups" do
 
         group.reload
         expect(group.name).to eq "bar"
+        expect(group.members_can_invite).to eq true
+        expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
         expect(json).to eq(group.attributes.as_json
                             .transform_keys { |key| key.camelize(:lower) })
@@ -118,17 +125,15 @@ resource "Groups" do
     end
 
     describe "Add image to group" do
-      parameter :newMedia, "Scope for attributes of new image",
-                required: true,
-                scope: :group
+      parameter :image, "Scope for attributes of new image",
+                required: true
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
-                scope: :newMedia
+                scope: :image
 
       response_field :mediaItemId, "Timeslot internal ID for this media item"
 
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:raw_post) {{ group: { newMedia: { public_id: publicId }}}.to_json }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -508,7 +513,7 @@ resource "Groups" do
     header "Content-Type", "application/json"
 
     parameter :group_id, "ID of the group to delete", required: true
-    parameter :notifications, "receive notifications?", scope: :group
+    parameter :notifications, "receive notifications?", scope: :settings
 
     let(:member) { current_user }
     let(:group) { create(:group) }
