@@ -94,7 +94,7 @@ resource "Groups" do
     let(:group) { create(:group, name: "foo", owner: current_user) }
     let(:group_id) { group.id }
 
-    describe "Update existing group returns No Content" do
+    describe "Update existing group" do
       parameter :name, "Updated name of group (max. 255 characters)",
                 scope: :group
 
@@ -102,7 +102,7 @@ resource "Groups" do
 
       example "Update data for existing group", document: :v1 do
         explanation "e.g. Change groupname\n\n" \
-                    "returns 204 if the update was successful\n\n" \
+                    "returns 200 if the update was successful\n\n" \
                     "returns 404 if ID is invalid\n\n" \
                     "returns 422 if parameters are missing\n\n" \
                     "returns 422 if parameters are invalid"
@@ -110,8 +110,10 @@ resource "Groups" do
 
         group.reload
         expect(group.name).to eq "bar"
-        expect(response_status).to eq(204)
-        expect(response_body).to eq("")
+        expect(response_status).to eq(200)
+        expect(json).to eq(group.attributes.as_json
+                            .transform_keys { |key| key.camelize(:lower) })
+
       end
     end
 
@@ -133,12 +135,12 @@ resource "Groups" do
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
                     " information.\n\n" \
-                    "returns 201 and the media_item ID if the image was" \
+                    "returns 200 and the group data if the image was" \
                     " successfully added or updated"
         do_request
 
-        expect(response_status).to eq(201)
-        expect(json).to have_key("mediaItemId")
+        expect(response_status).to eq(200)
+        # expect(json).to have_key("mediaItemId")
         group.reload
         expect(group.image.first).not_to be nil
         expect(group.image.first.public_id).to eq publicId

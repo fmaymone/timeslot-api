@@ -32,12 +32,11 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      if image_param.present? && AddImage.call(@group, group_image_param).equal?(true)
-        render "v1/media/create",
-               status: :created,
-               locals: { media_item_id: @group.image.first.id }
-      elsif !image_param.present? && @group.update(group_create_params)
-        head :no_content
+      @group.update(group_create_params)
+      AddImage.call(@group, group_image_param) if image_param.present?
+
+      if @group.errors.empty?
+        render :show
       else
         render json: @group.errors, status: :unprocessable_entity
       end

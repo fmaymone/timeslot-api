@@ -29,9 +29,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "user is group owner" do
       let(:group) { create(:group, owner: current_user, name: "foo") }
 
-      it "returns No Content" do
+      it "returns OK" do
         patch "/v1/groups/#{group.id}", new_params
-        expect(response.status).to be(204)
+        expect(response.status).to be(200)
       end
 
       it "updates group name" do
@@ -45,9 +45,9 @@ RSpec.describe "V1::Groups", type: :request do
         let(:img_params) { { group: { newMedia: { public_id: public_id } } } }
 
         describe "new" do
-          it "returns created" do
+          it "returns OK" do
             patch "/v1/groups/#{group.id}", img_params
-            expect(response.status).to be(201)
+            expect(response.status).to be(200)
           end
 
           it "sets group image" do
@@ -60,9 +60,9 @@ RSpec.describe "V1::Groups", type: :request do
           let(:group) {
             create(:group, :with_image, owner: current_user, name: "foo")
           }
-          it "returns created" do
+          it "returns OK" do
             patch "/v1/groups/#{group.id}", img_params
-            expect(response.status).to be(201)
+            expect(response.status).to be(200)
             expect(group.image.first.public_id).to eq public_id
           end
         end
