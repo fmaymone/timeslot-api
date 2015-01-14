@@ -24,9 +24,9 @@ RSpec.describe AddImage, type: :service do
 
     describe "passing invalid image data" do
       it "returns model with errors" do
-        skip "optimize"
-        expect(AddImage.call(user, nil)).to eq user
+        AddImage.call(user, nil)
         expect(user.errors.blank?).not_to be true
+        expect(user.errors.messages).to have_key :mediaItem
       end
 
       it "doesn't create a new MediaItem" do
