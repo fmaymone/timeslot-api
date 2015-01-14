@@ -3,8 +3,9 @@ class Group < ActiveRecord::Base
   after_create :add_owner_as_member, on: :create
 
   belongs_to :owner, class_name: "User", inverse_of: :own_groups
-  has_many :image, -> { where deleted_at: nil }, class_name: "MediaItem",
-          as: :mediable
+  # has_many relation because when image gets updated the old image still exists
+  has_many :images, -> { where deleted_at: nil }, class_name: "MediaItem",
+           as: :mediable
 
   has_many :group_slots, inverse_of: :group
 
@@ -20,13 +21,17 @@ class Group < ActiveRecord::Base
   validates :name, presence: true, length: { maximum: 255 }
   validates :owner, presence: true
 
+  def image
+    images.first
+  end
+
   def related_memberships
     Membership.includes([:user]).where(group_id: id)
   end
 
   def delete
     # all other images (if any) should already be "deleted"
-    image.first.delete if image.first
+    image.delete if images.first
     memberships.each(&:delete)
     group_slots.each(&:delete)
     SoftDelete.call(self)

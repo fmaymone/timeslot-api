@@ -57,7 +57,7 @@ module V1
       if image_param.present? && AddImage.call(@user, user_image_param).equal?(true)
         render "v1/media/create",
                status: :created,
-               locals: { media_item_id: @user.image.first.id }
+               locals: { media_item_id: @user.image.id }
       elsif !image_param.present? && @user.update(user_create_params)
         render :show, status: :no_content
       else

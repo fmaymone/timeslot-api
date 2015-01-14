@@ -93,10 +93,10 @@ resource "Users" do
 
       example "Update current user", document: :v1 do
         explanation "E.g, change username\n\n" \
-                    "returns user data\n\n"
-        "returns 404 if ID is invalid\n\n" \
-        "returns 422 if parameters are missing\n\n" \
-        "returns 422 if parameters are invalid"
+                    "returns user data\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
         do_request
 
         current_user.reload
@@ -131,8 +131,8 @@ resource "Users" do
         expect(response_status).to eq(201)
         expect(json).to have_key("mediaItemId")
         current_user.reload
-        expect(current_user.image.first).not_to be nil
-        expect(current_user.image.first.public_id).to eq publicId
+        expect(current_user.image).not_to be nil
+        expect(current_user.image.public_id).to eq publicId
       end
     end
   end

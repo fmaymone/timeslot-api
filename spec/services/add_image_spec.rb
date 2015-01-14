@@ -16,9 +16,9 @@ RSpec.describe AddImage, type: :service do
       it "it creates a new MediaItem of type image" do
         expect {
           AddImage.call(user, public_id)
-        }.to change(user.image, :first)
-        expect(user.image.first).not_to be nil
-        expect(user.image.first.media_type).to eq "image"
+        }.to change(user.images, :first)
+        expect(user.image).not_to be nil
+        expect(user.image.media_type).to eq "image"
       end
     end
 
@@ -41,12 +41,12 @@ RSpec.describe AddImage, type: :service do
 
       describe "passing valid parameters" do
         it "updates the image", :vcr do
-          expect(user.image.first.public_id).not_to eq public_id
+          expect(user.image.public_id).not_to eq public_id
           expect {
             AddImage.call(user, public_id)
           }.to change(MediaItem, :count).by 1
 
-          expect(user.image.first.public_id).to eq public_id
+          expect(user.image.public_id).to eq public_id
         end
       end
     end

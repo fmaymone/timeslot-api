@@ -60,7 +60,7 @@ RSpec.describe MediaItem, type: :model do
 
     it "adds a cloudinary tag to the image", :vcr do
       user = FactoryGirl.create(:user, :with_real_image)
-      media_item = user.image.first
+      media_item = user.image
 
       media_item.delete
 

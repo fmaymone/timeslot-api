@@ -6,8 +6,8 @@ class AddImage
       model.errors.add(:mediaItem, media_item.errors.messages) && return
     end
 
-    model.image.first.delete if model.image.first
-    model.image << media_item
+    model.image.delete if model.images.first
+    model.images << media_item
     media_item.save
   end
 end

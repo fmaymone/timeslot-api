@@ -1,7 +1,8 @@
 class User < ActiveRecord::Base
   after_commit AuditLog
 
-  has_many :image, -> { where deleted_at: nil }, class_name: MediaItem,
+  # has_many relation because when image gets updated the old image still exists
+  has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
           as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
@@ -40,6 +41,10 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
+
+  def image
+    images.first
+  end
 
   ## slot related ##
 
@@ -110,7 +115,7 @@ class User < ActiveRecord::Base
     # ReSlots
 
     slot_settings.each(&:delete)
-    image.first.delete if image.first
+    image.delete if images.first
     friendships.each(&:delete)
     memberships.each(&:delete)
     SoftDelete.call(self)
