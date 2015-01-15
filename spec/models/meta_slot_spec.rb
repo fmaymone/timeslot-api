@@ -12,8 +12,8 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:location_id) }
   it { is_expected.to respond_to(:location) }
   it { is_expected.to respond_to(:deleted_at) }
+  it { is_expected.to have_many(:base_slots).inverse_of(:meta_slot) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
-  # it { is_expected.to have_many(:users).through(:slot_settings) }
 
   it { is_expected.to be_valid }
 
@@ -42,17 +42,35 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "prevent removing from db" do
+  describe :unregister do
+    let(:meta_slot) { create(:meta_slot) }
+    let(:user) { create(:user) }
+    let!(:slot_setting) {
+      create(:slot_setting, meta_slot: meta_slot, user: user) }
+
+    it "unregisters on related slot_settings" do
+      meta_slot.unregister user
+      slot_setting.reload
+      expect(slot_setting.deleted_at?).to be true
+    end
+
+    it "deletes itself if no other base_slot references it" do
+      meta_slot.unregister user
+      expect(meta_slot.deleted_at?).to be true
+    end
+
+    it "doesn't delete itself if another base_slot references it" do
+      create(:std_slot, meta_slot: meta_slot)
+      meta_slot.unregister user
+      expect(meta_slot.deleted_at?).to be false
+    end
+  end
+
+  describe "delete" do
     let!(:meta_slot) { create(:meta_slot) }
 
-    it "can not be deleted" do
-      before_count = described_class.count
-
-      expect(Rails.logger).to receive(:error)
-      expect {
-        meta_slot.delete
-      }.to raise_error
-      expect(before_count).to eq described_class.all.size
+    it "sets deleted_at on the slot" do
+      expect { meta_slot.delete }.to change(meta_slot, :deleted_at)
     end
 
     it "can not be destroyed" do
