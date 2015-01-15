@@ -99,7 +99,7 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :delete do
-    let(:base_slot) { create(:base_slot, :with_media) }
+    let(:base_slot) { create(:base_slot, :with_media, :with_notes) }
 
     it "sets deleted_at on itself" do
       expect(base_slot.deleted_at?).to be false
@@ -111,6 +111,12 @@ RSpec.describe BaseSlot, type: :model do
       base_slot.delete
       expect(base_slot.media_items.first.deleted_at?).to be true
       expect(base_slot.media_items.last.deleted_at?).to be true
+    end
+
+    it "deletes belonging notes" do
+      base_slot.delete
+      expect(base_slot.notes.first.deleted_at?).to be true
+      expect(base_slot.notes.last.deleted_at?).to be true
     end
   end
 end

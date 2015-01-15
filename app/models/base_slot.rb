@@ -78,25 +78,9 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
-    # -> make an "unregister" Method in SlotSetting Class so it can take care itself
-
-    # delete SlotSetting object if one exists and it is only referenced by
-    # this reslot or softdeleted slots
-    # TODO: add helper within user model to get slot_setting references
-    # condition = { meta_slot: self.meta_slot.id }
-
-    # if current_user.slot_settings.where(condition).exists?
-    #   unless current_user.std_slots.active.where(condition).exists? ||
-    #          current_user.group_slots.active.where(condition).exists?
-    #     SoftDelete.call(current_user.slot_settings.where(condition).first)
-    #   end
-    # end
-
-    # alarm/slot_setting
-    # Notes
     # Likes
     # Comments
-    # meta_slot.unregister
+    notes.each(&:delete)
     media_items.each(&:delete)
     SoftDelete.call(self)
   end

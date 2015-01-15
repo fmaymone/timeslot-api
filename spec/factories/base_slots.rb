@@ -9,6 +9,12 @@ FactoryGirl.define do
     end
   end
 
+  trait :with_notes do
+    after :create do |base_slot|
+      create_list :note, 3, base_slot: base_slot
+    end
+  end
+
   trait :with_media do
     after :create do |base_slot|
       create_list :slot_image, 3, mediable: base_slot
