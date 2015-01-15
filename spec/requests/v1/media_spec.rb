@@ -15,11 +15,5 @@ RSpec.describe "V1::Media", type: :request do
       expect(json).to have_key('timestamp')
       expect(json).to have_key('apiKey')
     end
-
-    it "returns 503 if signature creation fails" do
-      skip
-      get "/v1/media-signature"
-      expect(response).to have_http_status(:service_unavailable)
-    end
   end
 end
