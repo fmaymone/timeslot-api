@@ -74,7 +74,6 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "DELETE destroy" do
-
     it "doesn't destroy the requested user" do
       expect {
         delete :destroy, { }, valid_session

@@ -116,8 +116,8 @@ class User < ActiveRecord::Base
 
     slot_settings.each(&:delete)
     image.delete if images.first
-    friendships.each(&:delete)
-    memberships.each(&:delete)
+    friendships.each(&:inactivate)
+    memberships.each(&:inactivate)
     SoftDelete.call(self)
   end
 

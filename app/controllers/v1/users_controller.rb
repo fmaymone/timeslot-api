@@ -94,8 +94,8 @@ module V1
     # deny friend request and unfriending
     def remove_friends
       friends_params.each do |id|
-        connection = current_user.friendship(id)
-        connection.delete if connection
+        friendship = current_user.friendship(id)
+        friendship.inactivate if friendship
       end
     end
 
