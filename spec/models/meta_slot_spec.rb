@@ -9,6 +9,8 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:creator) }
+  it { is_expected.to respond_to(:location_id) }
+  it { is_expected.to respond_to(:location) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
   # it { is_expected.to have_many(:users).through(:slot_settings) }

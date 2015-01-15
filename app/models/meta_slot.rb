@@ -13,6 +13,10 @@ class MetaSlot < ActiveRecord::Base
   validates :end_date, presence: true
   validate :enddate_is_after_startdate
 
+  def location
+    Location.find(location_id)
+  end
+
   private def enddate_is_after_startdate
     return false if end_date.blank? || start_date.blank?
     return true if start_date.to_i < end_date.to_i
