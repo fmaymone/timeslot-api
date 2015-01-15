@@ -6,7 +6,10 @@ class GroupSlot < BaseSlot
   validates :group, presence: true
 
   def delete
-    group.touch
     super
+    group.members.each do |user|
+      meta_slot.unregister user
+    end
+    group.touch
   end
 end

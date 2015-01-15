@@ -17,8 +17,8 @@ class SlotSetting < ActiveRecord::Base
     SoftDelete.call(self)
   end
 
-  # TODO: add method
-# def undelete
+  # undelete if user re-activates his profile
+  # def undelete
   #   update(deleted_at: nil) if user.representation?(meta_slot)
   # end
 end
