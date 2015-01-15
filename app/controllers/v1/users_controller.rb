@@ -67,7 +67,7 @@ module V1
     def destroy
       @user = current_user
 
-      if @user.delete
+      if @user.inactivate
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity

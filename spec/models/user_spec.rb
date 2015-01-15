@@ -419,4 +419,28 @@ RSpec.describe User, type: :model do
       expect(user.username).to eq new_name
     end
   end
+
+  describe "prevent removing from db" do
+    let!(:user) { create(:user) }
+
+    it "can not be deleted" do
+      before_count = described_class.count
+
+      expect(Rails.logger).to receive(:error)
+      expect {
+        user.delete
+      }.to raise_error
+      expect(before_count).to eq described_class.all.size
+    end
+
+    it "can not be destroyed" do
+      before_count = described_class.count
+
+      expect(Rails.logger).to receive(:error)
+      expect {
+        user.destroy
+      }.to raise_error
+      expect(before_count).to eq described_class.all.size
+    end
+  end
 end

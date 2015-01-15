@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
     memberships.where(group_id: group_id).first
   end
 
-  def delete
+  def inactivate
     # Everything needs to stay available so that if user comes back all content
     # is still there
     # TODO: add spec
@@ -122,7 +122,7 @@ class User < ActiveRecord::Base
   end
 
   # TODO: add spec
-  def undelete
+  def activate
     slot_settings.each(&:undelete)
   end
 end
