@@ -104,7 +104,8 @@ RSpec.describe "V1::Slots", type: :request do
   describe "POST /v1/stdlot" do
     context "StdSlot with valid params" do
       let(:valid_slot) {
-        attr = attributes_for(:meta_slot).merge(visibility: '10')
+        attr = attributes_for(:meta_slot).merge(
+          visibility: '10', settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -123,6 +124,12 @@ RSpec.describe "V1::Slots", type: :request do
         expect {
           post "/v1/stdslot/", valid_slot
         }.to change(MetaSlot, :count).by(1)
+      end
+
+      it "adds a new SlotSetting entry to the DB" do
+        expect {
+          post "/v1/stdslot/", valid_slot
+        }.to change(SlotSetting, :count).by(1)
       end
 
       it "returns the ID of the new slot" do

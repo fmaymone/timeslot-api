@@ -42,12 +42,8 @@ module V1
       return render json: @slot.errors,
                     status: :unprocessable_entity unless @slot.save
 
-      # TODO: make service for alarm
       if alert_param.present?
-        setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param[:alerts])
-        return render json: setting.errors,
-                      status: :unprocessable_entity unless setting.save
+        SetAlerts.call(@slot, current_user, alert_param[:alerts])
       end
 
       @slot.update_notes(params[:notes]) if params[:notes].present?
@@ -75,12 +71,8 @@ module V1
       return render json: @slot.errors,
                     status: :unprocessable_entity unless @slot.save
 
-      # TODO: make service for alerts
       if alert_param.present?
-        setting = SlotSetting.create(user: current_user, meta_slot: meta_slot,
-                                     alerts: alert_param[:alerts])
-        return render json: setting.errors,
-                      status: :unprocessable_entity unless setting.save
+        SetAlerts.call(@slot, current_user, alert_param[:alerts])
       end
 
       @slot.update_notes(params[:notes]) if params[:notes].present?
@@ -118,7 +110,6 @@ module V1
     end
 
     # PATCH /v1/stdslot/1
-    # TODO: handle alerts
     def update_stdslot
       slot = current_user.std_slots.find(params[:id])
 
@@ -221,6 +212,8 @@ module V1
       slot.update(meta_params) if meta_params
       update_media(slot)
       slot.update_notes(params[:notes]) if params[:notes].present?
+      SetAlerts.call(
+        slot, current_user, alert_param[:alerts]) if alert_param.present?
 
       if slot.errors.empty?
         render :show, locals: { slot: slot }
