@@ -523,12 +523,15 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
+    parameter :defaultAlerts, "set default alerts for slots in this group",
+              scope: :settings
 
     let(:member) { current_user }
     let(:group) { create(:group) }
 
     let(:group_id) { group.id }
     let(:notifications) { "false" }
+    let(:defaultAlerts) { "1111100000" }
 
     describe "membership active" do
       let!(:membership) do
@@ -537,7 +540,7 @@ resource "Groups" do
       end
 
       example "Update settings of joined group", document: :v1 do
-        explanation "E.g. change notifications for group\n\n" \
+        explanation "Change notifications and default alerts for group\n\n" \
                     "returns 200 if setting was successfully updated\n\n" \
                     "returns 403 if user not active group member\n\n" \
                     "returns 404 if group ID is invalid\n\n" \
@@ -547,6 +550,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.notifications).to eq false
+        expect(membership.default_alerts).to eq defaultAlerts
       end
 
       describe "invalid parameter" do

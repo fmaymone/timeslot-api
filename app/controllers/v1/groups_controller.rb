@@ -170,7 +170,7 @@ module V1
 
     # PATCH /v1/groups/:group_id/members
     # change membership settings if current user is group member
-    # notifications
+    # notifications, default_alerts
     def settings
       group = Group.find(membership_params[:group_id])
       return head :forbidden unless current_user.is_member? group.id
@@ -194,7 +194,8 @@ module V1
     end
 
     private def membership_setting_params
-      params.require(:settings).permit(:notifications)
+      p = params.require(:settings).permit(:notifications, :defaultAlerts)
+      p.transform_keys(&:underscore)
     end
 
     private def image_param
