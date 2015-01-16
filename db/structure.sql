@@ -194,7 +194,8 @@ CREATE TABLE memberships (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    state bit(3) DEFAULT B'011'::"bit"
+    state bit(3) DEFAULT B'011'::"bit",
+    default_alerts bit(10)
 );
 
 
@@ -369,7 +370,8 @@ CREATE TABLE users (
     username character varying(20),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone
+    deleted_at timestamp without time zone,
+    default_alerts bit(10)
 );
 
 
@@ -781,4 +783,6 @@ INSERT INTO schema_migrations (version) VALUES ('20141215223116');
 INSERT INTO schema_migrations (version) VALUES ('20141227213950');
 
 INSERT INTO schema_migrations (version) VALUES ('20150112223724');
+
+INSERT INTO schema_migrations (version) VALUES ('20150116103054');
 
