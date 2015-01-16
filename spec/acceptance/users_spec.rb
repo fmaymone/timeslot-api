@@ -90,11 +90,15 @@ resource "Users" do
     describe "Update current users data" do
 
       parameter :username, "Updated username of user (max. 20 characters)"
+      parameter :defaultAlerts, "Default alerts for all slots of this user" \
+                                " where no specific alert is set. Groupslots" \
+                                " may have their own default alerts per group"
 
       let(:username) { "bar" }
+      let(:defaultAlerts) { '0111011100' }
 
       example "Update current user", document: :v1 do
-        explanation "E.g, change username\n\n" \
+        explanation "E.g, change username and set default alerts\n\n" \
                     "returns user data\n\n" \
                     "returns 404 if ID is invalid\n\n" \
                     "returns 422 if parameters are missing\n\n" \
@@ -103,6 +107,7 @@ resource "Users" do
 
         current_user.reload
         expect(current_user.username).to eq "bar"
+        expect(current_user.default_alerts).to eq defaultAlerts
         expect(response_status).to eq(200)
         expect(
           json.except('image')

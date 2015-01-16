@@ -100,7 +100,8 @@ module V1
     end
 
     private def user_params
-      params.permit(:username)
+      parameter = params.permit(:username, :defaultAlerts)
+      parameter.transform_keys(&:underscore)
     end
 
     private def friends_params
