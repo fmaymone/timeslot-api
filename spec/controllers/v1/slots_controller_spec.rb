@@ -173,7 +173,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     end
   end
 
-  describe "PATCH update" do
+  describe "PATCH update_metaslot" do
     let(:valid_slot) { create(:meta_slot, creator: current_user) }
 
     describe "with valid params" do

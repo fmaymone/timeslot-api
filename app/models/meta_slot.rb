@@ -15,12 +15,6 @@ class MetaSlot < ActiveRecord::Base
     Location.find(location_id)
   end
 
-  private def enddate_is_after_startdate
-    return false if end_date.blank? || start_date.blank?
-    return true if start_date.to_i < end_date.to_i
-    errors.add(:end_date, "can't be before start_date")
-  end
-
   def unregister(user)
     alert = slot_settings.where(user: user).first
     alert.unregister unless alert.nil?
@@ -30,5 +24,11 @@ class MetaSlot < ActiveRecord::Base
 
   def delete
     SoftDelete.call(self)
+  end
+
+  private def enddate_is_after_startdate
+    return false if end_date.blank? || start_date.blank?
+    return true if start_date.to_i < end_date.to_i
+    errors.add(:end_date, "can't be before start_date")
   end
 end
