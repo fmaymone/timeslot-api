@@ -56,7 +56,6 @@ module V1
     # GET /v1/groups/:group_id/members
     def members
       @group = Group.find(membership_params[:group_id])
-      @members = @group.members
 
       render :members
     end
