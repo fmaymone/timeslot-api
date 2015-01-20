@@ -157,7 +157,7 @@ module V1
     # PATCH /v1/groups/:group_id/members
     # change membership settings if current user is group member
     # notifications, default_alerts
-    def settings
+    def member_settings
       group = Group.find(membership_params[:group_id])
       return head :forbidden unless current_user.is_member? group.id
 

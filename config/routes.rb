@@ -80,8 +80,8 @@ Rails.application.routes.draw do
              as: 'group_kick',
              constraints: { group_id: /\d+/, user_id: /\d+/ }
       patch ':group_id/members',
-            to: 'groups#settings',
-            as: 'group_settings',
+            to: 'groups#member_settings',
+            as: 'group_member_settings',
             constraints: { group_id: /\d+/ }
     end
 
