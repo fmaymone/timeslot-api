@@ -46,7 +46,11 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      render :show if @group.delete
+      if @group.delete
+        render :show
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
     end
 
     # GET /v1/groups/:group_id/members
@@ -95,22 +99,6 @@ module V1
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
-      end
-    end
-
-    # POST /v1/groups/:group_id/members/:user_id
-    # current user invites other user to own group
-    # create membership with state invited/pending
-    # notify invited user
-    # TODO: can probably be removed
-    def invite_single
-      group = Group.find(params.require(:group_id))
-      return head :forbidden unless current_user.can_invite? group.id
-
-      if InviteUserToGroup.call(group, membership_params[:user_id])
-        head :created
-      else
-        render json: "Couldn't create invite", status: :unprocessable_entity
       end
     end
 

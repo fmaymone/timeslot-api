@@ -188,76 +188,77 @@ RSpec.describe "V1::Groups", type: :request do
     end
   end
 
-  # invite_single
-  describe "POST /v1/groups/:group_id/members/:user_id" do
-    let(:other_user) { create(:user) }
+  # invite
+  describe "POST /v1/groups/:group_id/members" do
+    let(:other_users) { create_list(:user, 5) }
+    let(:ids) { other_users.collect(&:id) }
 
     describe "user can invite" do
       let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members/#{other_user.id}"
+        post "/v1/groups/#{group.id}/members", { ids: ids }
         expect(response.status).to be(201)
       end
 
       it "creates a membership with state 'invited'" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{other_user.id}"
-        }.to change(Membership, :count).by(1)
+          post "/v1/groups/#{group.id}/members", { ids: ids }
+        }.to change(Membership, :count).by ids.size
         membership = Membership.last
         expect(membership.invited?).to be true
       end
 
       it "doesn't add user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{other_user.id}"
+          post "/v1/groups/#{group.id}/members", { ids: ids }
         }.not_to change(group.members, :count)
       end
 
       describe "existing membership" do
         describe "duplicate invitation" do
           let!(:membership) {
-            create(:membership, user: other_user, group: group)
+            create(:membership, user: other_users.first, group: group)
           }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members/#{other_user.id}"
+            post "/v1/groups/#{group.id}/members", { ids: ids }
             expect(response.status).to be(201)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{other_user.id}"
+              post "/v1/groups/#{group.id}/members", { ids: [ids.first] }
             }.not_to change(Membership, :count)
           end
         end
 
         describe "active group member" do
           let!(:membership) {
-            create(:membership, :active, user: other_user, group: group)
+            create(:membership, :active, user: other_users.first, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members/#{other_user.id}"
+            post "/v1/groups/#{group.id}/members", { ids: ids }
             expect(response.status).to be(201)
           end
         end
 
         describe "non active group member" do
           let!(:membership) {
-            create(:membership, :left, user: other_user, group: group)
+            create(:membership, :left, user: other_users.first, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members/#{other_user.id}"
+            post "/v1/groups/#{group.id}/members", { ids: ids }
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members/#{other_user.id}"
+              post "/v1/groups/#{group.id}/members", { ids: [ids.first] }
             }.not_to change(Membership, :count)
           end
 
           it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members/#{other_user.id}"
+            post "/v1/groups/#{group.id}/members", { ids: ids }
             membership.reload
             expect(membership.invited?).to be true
           end
@@ -271,13 +272,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/members/#{other_user.id}"
+        post "/v1/groups/#{group.id}/members",{ ids: ids }
         expect(response.status).to be(403)
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members/#{other_user.id}"
+          post "/v1/groups/#{group.id}/members",{ ids: ids }
         }.not_to change(Membership, :count)
       end
     end
