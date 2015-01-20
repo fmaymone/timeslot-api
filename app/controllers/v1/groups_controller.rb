@@ -17,9 +17,9 @@ module V1
 
     # POST /v1/groups
     def create
-      @group = Group.new(group_params.merge(owner: current_user))
+      @group = Group.add(group_params.merge(owner: current_user))
 
-      if @group.save
+      if @group.errors.empty?
         render :show, status: :created
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -32,8 +32,7 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      @group.update(group_params) unless group_params.empty?
-      AddImage.call(@group, image_param) if params[:image].present?
+      @group.change(group_params) unless group_params.empty?
 
       if @group.errors.empty?
         render :show
@@ -186,6 +185,7 @@ module V1
 
     private def group_params
       parameter = params.permit(:name, :membersCanPost, :membersCanInvite)
+      parameter.merge!("public_id" => image_param) if params[:image].present?
       parameter.transform_keys(&:underscore)
     end
 

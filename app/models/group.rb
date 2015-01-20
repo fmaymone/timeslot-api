@@ -25,6 +25,12 @@ class Group < ActiveRecord::Base
     images.first
   end
 
+  def change(params)
+    update(params.except("public_id"))
+    AddImage.call(self, params["public_id"]) if params["public_id"].present?
+    self
+  end
+
   def related_memberships
     Membership.includes([:user]).where(group_id: id)
   end
@@ -39,5 +45,12 @@ class Group < ActiveRecord::Base
 
   private def add_owner_as_member
     Membership.create(group_id: id, user_id: owner.id).activate
+  end
+
+  def self.add(params)
+    new_group = create(params.except("public_id"))
+    return new_group unless new_group.errors.empty?
+    AddImage.call(new_group, params["public_id"]) if params["public_id"].present?
+    new_group
   end
 end

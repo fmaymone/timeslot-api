@@ -20,6 +20,11 @@ RSpec.describe "V1::Groups", type: :request do
       post "/v1/groups", new_params
       expect(Group.last.members).to include current_user
     end
+
+    it "adds an group image" do
+      post "/v1/groups", new_params.merge(image: { publicId: 'foobar' })
+      expect(json["image"]).to eq "foobar"
+    end
   end
 
   # update
