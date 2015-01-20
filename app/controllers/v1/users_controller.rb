@@ -12,6 +12,7 @@ module V1
 
     # HACK: temporary no current user
     # GET /v1/users/1/slots
+    # TODO: needs admin layer, comment out method
     def show_slots
       user = User.find(params[:id])
       @slots = []
@@ -40,9 +41,11 @@ module V1
 
     # POST /v1/users
     def create
-      @user = User.new(user_params)
+      @user = User.add(user_params)
 
-      if @user.save
+      # if @user.save
+
+      if @user.errors.empty?
         render :show, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -67,7 +70,7 @@ module V1
     def destroy
       @user = current_user
 
-      if @user.inactivate
+      if @user.inactivate # inactive methode to be implemented
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -100,7 +103,8 @@ module V1
     end
 
     private def user_params
-      parameter = params.permit(:username, :defaultAlerts)
+      parameter = params.permit(:username, :defaultAlerts, :image)
+      parameter.merge!("public_id" => image_param) if params[:image].present?
       parameter.transform_keys(&:underscore)
     end
 

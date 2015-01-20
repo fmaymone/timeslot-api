@@ -443,4 +443,42 @@ RSpec.describe User, type: :model do
       expect(before_count).to eq described_class.all.size
     end
   end
+
+  describe "add" do
+    context "valid params" do
+      it "creates a new user" do
+        expect {
+          User.add(attributes_for(:user))
+        }.to change(User, :count).by 1
+      end
+
+      it "sets an image if provided" do
+        params = { username: 'foo', "public_id" => 'foobar' }
+        expect {
+          User.add(params)
+        }.to change(MediaItem, :count).by 1
+        expect(User.last.image.public_id).to eq params["public_id"]
+      end
+    end
+
+    context "invalid params" do
+      it "doesn't create a new user if username is nil" do
+        expect {
+          User.add(username: nil)
+        }.not_to change(User, :count)
+      end
+
+      it "creates a new user even if mediaitems public_id is nil" do
+        expect {
+          User.add(username: 'foo', "public_id" => nil)
+        }.to change(User, :count)
+      end
+
+      it "doesn't create a new mediaitem if public_id is nil" do
+        expect {
+          User.add(username: 'foo', "public_id" => nil)
+        }.not_to change(MediaItem, :count)
+      end
+    end
+  end
 end

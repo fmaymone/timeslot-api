@@ -11,8 +11,9 @@ class User < ActiveRecord::Base
   has_many :slot_settings, inverse_of: :user
 
   # TODO: I think I don't need this, remove after alarm stuff is in place
-  # has_many :meta_slots, through: :slot_settings #, source: :meta_slot
+  # has_many :meta_slots, through: :slot_settings, source: :meta_slot
 
+  # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
   has_many :group_slots, through: :groups
@@ -41,6 +42,8 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
+
+  ## user related ##
 
   def image
     images.first
@@ -124,5 +127,12 @@ class User < ActiveRecord::Base
   # TODO: add spec
   def activate
     slot_settings.each(&:undelete)
+  end
+
+  def self.add(params)
+    new_user = create(params.except("public_id"))
+    return new_user unless new_user.errors.empty?
+    AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
+    new_user
   end
 end

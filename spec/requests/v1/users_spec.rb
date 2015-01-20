@@ -25,16 +25,27 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "POST /v1/users" do
     describe "with valid params" do
-      let(:valid_attributes) { attributes_for(:user) }
-
+      let(:valid_attributes) {
+        { username: 'foo', image: { publicId: 'foobar' } }
+      }
       it "returns ID of created user" do
         post "/v1/users", valid_attributes
         expect(json).to have_key('id')
       end
 
-      it "does not return displayed state" do
-        post "/v1/users", user: valid_attributes
-        expect(json).to_not have_key('displayed')
+      it "adds an user image" do
+        post "/v1/users", valid_attributes
+        expect(json["image"]).to eq "foobar"
+      end
+    end
+
+    describe "with invalid params" do
+      let(:invalid_attributes) {
+        { username: 'foo', image: { publicId: '' } }
+      }
+      it "returns an error" do
+        post "/v1/users", invalid_attributes
+        expect(json).to have_key "error"
       end
     end
   end
