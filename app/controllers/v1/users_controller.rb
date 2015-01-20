@@ -54,10 +54,7 @@ module V1
 
     # PATCH/PUT /v1/users/1
     def update
-      @user = current_user
-
-      @user.update(user_params) unless user_params.empty?
-      AddImage.call(@user, image_param) if params[:image].present?
+      @user = current_user.change(user_params) unless user_params.empty?
 
       if @user.errors.empty?
         render :show
@@ -70,7 +67,7 @@ module V1
     def destroy
       @user = current_user
 
-      if @user.inactivate # inactive methode to be implemented
+      if @user.inactivate # inactivate methode to be implemented
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity

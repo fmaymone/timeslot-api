@@ -45,6 +45,12 @@ class User < ActiveRecord::Base
 
   ## user related ##
 
+  def change(params)
+    update(params.except("public_id"))
+    AddImage.call(self, params["public_id"]) if params["public_id"].present?
+    self
+  end
+
   def image
     images.first
   end
