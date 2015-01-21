@@ -13,9 +13,7 @@ module V1
 
     # GET /v1/slots/1
     def show
-      @slot = BaseSlot.get(params[:id])
-
-      render :show, locals: { slot: @slot }
+      render :show, locals: { slot: BaseSlot.get(params[:id]) }
     end
 
     # POST /v1/slots
