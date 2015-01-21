@@ -37,25 +37,8 @@ module V1
 
     # POST /v1/groupslot
     def create_groupslot
-      group = Group.find(group_param)
-
-      if params[:metaSlotId].present?
-        meta_slot = MetaSlot.find(params[:metaSlotId])
-      else
-        meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
-        return render json: meta_slot.errors,
-                      status: :unprocessable_entity unless meta_slot.save
-      end
-
-      @slot = GroupSlot.new(group: group, meta_slot: meta_slot)
-      return render json: @slot.errors,
-                    status: :unprocessable_entity unless @slot.save
-
-      if alert_param.present?
-        SetAlerts.call(@slot, current_user, alert_param[:alerts])
-      end
-
-      @slot.update_notes(params[:notes]) if params[:notes].present?
+      @slot = GroupSlot.add(meta_params, group_param, note_param,
+                            alerts_param, current_user)
 
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
@@ -143,7 +126,8 @@ module V1
     end
 
     private def group_param
-      params.require(:groupId)
+      group = Group.find(params.require(:groupId))
+      { group: group }
     end
 
     private def std_params
@@ -156,8 +140,8 @@ module V1
     end
 
     private def meta_params
-      parameter = params.permit(:title, :startDate, :endDate, :locationId)
-      parameter.transform_keys(&:underscore)
+      p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId)
+      p.transform_keys(&:underscore)
     end
 
     private def alert_param

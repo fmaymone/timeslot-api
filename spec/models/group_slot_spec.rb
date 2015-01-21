@@ -45,4 +45,47 @@ RSpec.describe GroupSlot, type: :model do
       expect { group_slot.delete }.to change(group_slot.group, :updated_at)
     end
   end
+
+  describe "add" do
+    let(:meta_param) { attributes_for(:meta_slot) }
+    let(:group_param) { { group: create(:group) } }
+    let(:note_param) {
+      [ActionController::Parameters.new(attributes_for(:note))] }
+    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
+    let(:user) { create(:user) }
+
+    it "creates a new GroupSlot" do
+      expect {
+        described_class.add(meta_param, group_param, user)
+      }.to change(GroupSlot, :count).by 1
+    end
+
+    it "creates a new MetaSlot" do
+      expect {
+        described_class.add(meta_param, group_param, user)
+      }.to change(MetaSlot, :count).by 1
+    end
+
+    it "creates a new Note" do
+      expect {
+        described_class.add(meta_param, group_param, note_param, user)
+      }.to change(Note, :count).by 1
+    end
+
+    it "creates a new SlotSetting" do
+      expect {
+        described_class.add(meta_param, group_param, note_param, alert_param, user)
+      }.to change(SlotSetting, :count).by 1
+    end
+
+    context "existing metaslot" do
+      let!(:meta_param) { { 'meta_slot_id' => create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.add(meta_param, group_param, user)
+        }.not_to change(MetaSlot, :count)
+      end
+    end
+  end
 end
