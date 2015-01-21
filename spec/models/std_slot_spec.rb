@@ -67,5 +67,15 @@ RSpec.describe StdSlot, type: :model do
         described_class.add(meta_param, std_param, note_param, alert_param, user)
       }.to change(SlotSetting, :count).by 1
     end
+
+    context "existing metaslot" do
+      let!(:meta_param) { { 'meta_slot_id' => create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.add(meta_param, std_param, user)
+        }.not_to change(MetaSlot, :count)
+      end
+    end
   end
 end

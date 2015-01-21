@@ -31,4 +31,9 @@ class MetaSlot < ActiveRecord::Base
     return true if start_date.to_i < end_date.to_i
     errors.add(:end_date, "can't be before start_date")
   end
+
+  def self.find_or_add(meta_params)
+    meta_id = meta_params['meta_slot_id']
+    MetaSlot.where(id: meta_id).first_or_create(meta_params)
+  end
 end

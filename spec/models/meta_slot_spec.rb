@@ -83,4 +83,28 @@ RSpec.describe MetaSlot, type: :model do
       expect(before_count).to eq described_class.all.size
     end
   end
+
+  describe "find_or_add" do
+    let(:user) { create(:user) }
+
+    context "non existing metaslot" do
+      let(:meta_params) { attributes_for(:meta_slot) }
+
+      it "creates a new MetaSlot" do
+        expect {
+          described_class.find_or_add(meta_params.merge(creator: user))
+        }.to change(MetaSlot, :count).by 1
+      end
+    end
+
+    context "existing metaslot" do
+      let!(:meta_params) { { 'meta_slot_id' => create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.find_or_add(meta_params)
+        }.not_to change(MetaSlot, :count)
+      end
+    end
+  end
 end

@@ -12,7 +12,7 @@ class StdSlot < BaseSlot
   end
 
   def self.add(meta_param, std_param, note_param = nil, alert_param = nil, user)
-    meta_slot = MetaSlot.create(meta_param.merge(creator: user))
+    meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
     slot = create(std_param.merge(meta_slot: meta_slot, owner: user))

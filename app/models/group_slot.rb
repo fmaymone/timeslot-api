@@ -14,8 +14,7 @@ class GroupSlot < BaseSlot
   end
 
   def self.add(meta_param, group_param, note_param = nil, alert_param = nil, user)
-    meta_slot = MetaSlot.where(id: meta_param['meta_slot_id']).first_or_create(
-      meta_param.merge(creator: user))
+    meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
     slot = create(group_param.merge(meta_slot: meta_slot))
