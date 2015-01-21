@@ -35,4 +35,37 @@ RSpec.describe StdSlot, type: :model do
       expect(std_slot.alerts(user)).to eq slot_setting.alerts
     end
   end
+
+  describe "add" do
+    let(:meta_param) { attributes_for(:meta_slot) }
+    let(:std_param) { attributes_for(:std_slot) }
+    let(:note_param) {
+      [ActionController::Parameters.new(attributes_for(:note))] }
+    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
+    let(:user) { create(:user) }
+
+    it "creates a new StdSlot" do
+      expect {
+        described_class.add(meta_param, std_param, user)
+      }.to change(StdSlot, :count).by 1
+    end
+
+    it "creates a new MetaSlot" do
+      expect {
+        described_class.add(meta_param, std_param, user)
+      }.to change(MetaSlot, :count).by 1
+    end
+
+    it "creates a new Note" do
+      expect {
+        described_class.add(meta_param, std_param, note_param, user)
+      }.to change(Note, :count).by 1
+    end
+
+    it "creates a new SlotSetting" do
+      expect {
+        described_class.add(meta_param, std_param, note_param, alert_param, user)
+      }.to change(SlotSetting, :count).by 1
+    end
+  end
 end

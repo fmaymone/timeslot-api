@@ -85,12 +85,6 @@ RSpec.describe V1::SlotsController, type: :controller do
                  settings: { alerts: '1110111010' }), valid_session
         }.to change(SlotSetting, :count).by(1)
       end
-
-      it "assigns a newly created std_slot as @slot" do
-        post :create_stdslot, valid_attributes, valid_session
-        expect(assigns(:slot)).to be_a(StdSlot)
-        expect(assigns(:slot)).to be_persisted
-      end
     end
   end
 

@@ -25,27 +25,13 @@ module V1
 
     # POST /v1/stdslot
     def create_stdslot
-      return head :unprocessable_entity if std_params[:visibility].blank?
+      slot = StdSlot.add(meta_params, std_params, note_param,
+                         alerts_param, current_user)
 
-      meta_slot = MetaSlot.create(meta_params.merge(creator: current_user))
-      return render json: meta_slot.errors,
-                    status: :unprocessable_entity unless meta_slot.save
-
-      @slot = StdSlot.new(std_params.merge(meta_slot: meta_slot,
-                                           owner: current_user))
-      return render json: @slot.errors,
-                    status: :unprocessable_entity unless @slot.save
-
-      if alert_param.present?
-        SetAlerts.call(@slot, current_user, alert_param[:alerts])
-      end
-
-      @slot.update_notes(params[:notes]) if params[:notes].present?
-
-      if @slot.errors.empty?
-        render :show, status: :created, locals: { slot: @slot }
+      if slot.errors.empty?
+        render :show, status: :created, locals: { slot: slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: slot.errors, status: :unprocessable_entity
       end
     end
 
@@ -107,7 +93,7 @@ module V1
     def update_stdslot
       slot = current_user.std_slots.find(params[:id])
 
-      slot.update(std_params) if std_params["visibility"].present?
+      slot.update(std_params) if params["visibility"].present?
       update_baseslot(slot)
     end
 
@@ -161,6 +147,7 @@ module V1
     end
 
     private def std_params
+      params.require(:visibility)
       params.permit(:visibility)
     end
 
@@ -177,8 +164,12 @@ module V1
       params[:settings]
     end
 
-    private def note_params(note)
-      note.permit(:title, :content)
+    private def alerts_param
+      params[:settings][:alerts] if params[:settings].present?
+    end
+
+    private def note_param
+      params.require(:notes) if params[:notes].present?
     end
 
     private def update_media(slot)
