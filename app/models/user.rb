@@ -71,6 +71,11 @@ class User < ActiveRecord::Base
     slots.push(*re_slots)
   end
 
+  def prepare_for_slot_deletion(slot)
+    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    alert.unregister unless alert.nil?
+  end
+
   ## friendship related ##
 
   # TODO: get friends with one query

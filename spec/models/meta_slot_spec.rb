@@ -44,24 +44,15 @@ RSpec.describe MetaSlot, type: :model do
 
   describe :unregister do
     let(:meta_slot) { create(:meta_slot) }
-    let(:user) { create(:user) }
-    let!(:slot_setting) {
-      create(:slot_setting, meta_slot: meta_slot, user: user) }
-
-    it "unregisters on related slot_settings" do
-      meta_slot.unregister user
-      slot_setting.reload
-      expect(slot_setting.deleted_at?).to be true
-    end
 
     it "deletes itself if no other base_slot references it" do
-      meta_slot.unregister user
+      meta_slot.unregister
       expect(meta_slot.deleted_at?).to be true
     end
 
     it "doesn't delete itself if another base_slot references it" do
       create(:std_slot, meta_slot: meta_slot)
-      meta_slot.unregister user
+      meta_slot.unregister
       expect(meta_slot.deleted_at?).to be false
     end
   end

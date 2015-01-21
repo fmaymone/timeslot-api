@@ -15,11 +15,8 @@ class MetaSlot < ActiveRecord::Base
     Location.find(location_id)
   end
 
-  def unregister(user)
-    alert = slot_settings.where(user: user).first
-    alert.unregister unless alert.nil?
+  def unregister
     delete if base_slots.empty?
-    true
   end
 
   def delete

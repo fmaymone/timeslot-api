@@ -83,8 +83,9 @@ class BaseSlot < ActiveRecord::Base
     notes.each(&:delete)
     media_items.each(&:delete)
     SoftDelete.call(self)
+    meta_slot.unregister
     related_users.each do |user|
-      meta_slot.unregister user
+      user.prepare_for_slot_deletion self
     end
   end
 

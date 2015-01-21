@@ -481,4 +481,16 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe "prepare_for_slot_deletion" do
+    let(:slot) { create(:std_slot) }
+    let!(:slot_setting) {
+      create(:slot_setting, meta_slot: slot.meta_slot, user: user) }
+
+    it "unregisters on related slot_settings" do
+      user.prepare_for_slot_deletion slot
+      slot_setting.reload
+      expect(slot_setting.deleted_at?).to be true
+    end
+  end
 end
