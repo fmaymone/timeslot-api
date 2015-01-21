@@ -6,9 +6,8 @@ class StdSlot < BaseSlot
   validates :meta_slot, presence: true
   validates :visibility, presence: true
 
-  def delete
-    super
-    meta_slot.unregister owner
+  def related_users
+    [owner]
   end
 
   def self.add(meta_param, std_param, note_param = nil, alert_param = nil, user)

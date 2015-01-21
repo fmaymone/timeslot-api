@@ -7,9 +7,8 @@ class ReSlot < BaseSlot
   validates :slotter, presence: true
   validates :predecessor, presence: true
 
-  def delete
-    super
-    meta_slot.unregister slotter
+  def related_users
+    [slotter]
   end
 
   def self.from_slot(predecessor: nil, slotter: nil)

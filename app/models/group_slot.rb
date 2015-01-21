@@ -5,12 +5,8 @@ class GroupSlot < BaseSlot
 
   validates :group, presence: true
 
-  def delete
-    super
-    group.members.each do |user|
-      meta_slot.unregister user
-    end
-    group.touch
+  def related_users
+    group.members
   end
 
   def self.add(meta_param, group_param, note_param = nil, alert_param = nil, user)

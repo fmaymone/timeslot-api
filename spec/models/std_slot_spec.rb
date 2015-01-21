@@ -78,4 +78,26 @@ RSpec.describe StdSlot, type: :model do
       end
     end
   end
+
+  describe :delete do
+    let(:slot) { create(:std_slot, :with_media, :with_notes) }
+
+    it "sets deleted_at on itself" do
+      expect(slot.deleted_at?).to be false
+      slot.delete
+      expect(slot.deleted_at?).to be true
+    end
+
+    it "invalidates belonging media_items" do
+      slot.delete
+      expect(slot.media_items.first.deleted_at?).to be true
+      expect(slot.media_items.last.deleted_at?).to be true
+    end
+
+    it "deletes belonging notes" do
+      slot.delete
+      expect(slot.notes.first.deleted_at?).to be true
+      expect(slot.notes.last.deleted_at?).to be true
+    end
+  end
 end
