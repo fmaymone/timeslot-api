@@ -6,16 +6,12 @@ module V1
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
     def index
-      @slots = []
-      @slots.push(*current_user.std_slots)
-      @slots.push(*current_user.re_slots)
-      @slots.push(*current_user.group_slots)
+      @slots = current_user.slot_representations
 
       render :index
     end
 
     # GET /v1/slots/1
-    # TODO: can probably be removed
     def show
       @slot = BaseSlot.get(params[:id])
 

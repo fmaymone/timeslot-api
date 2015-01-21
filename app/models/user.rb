@@ -63,6 +63,14 @@ class User < ActiveRecord::Base
       re_slots.active.where(meta_slot: meta_slot).exists?
   end
 
+  # including deleted slots
+  def slot_representations
+    slots = []
+    slots.push(*std_slots)
+    slots.push(*group_slots)
+    slots.push(*re_slots)
+  end
+
   ## friendship related ##
 
   # TODO: get friends with one query
