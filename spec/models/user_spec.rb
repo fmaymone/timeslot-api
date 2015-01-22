@@ -98,6 +98,25 @@ RSpec.describe User, type: :model do
           user.update_alerts(slot, '0101010101')
         }.to change(SlotSetting, :count).by 1
       end
+
+      it "doesn't create a new slot_setting if alerts eq users default alerts" do
+        user.update(default_alerts: '1110011110')
+        expect {
+          user.update_alerts(slot, '1110011110')
+        }.not_to change(SlotSetting, :count)
+      end
+
+      context "group_slot" do
+        let(:slot) { create(:group_slot) }
+        let!(:membership) { create(:membership, :active, group: slot.group,
+                                   user: user, default_alerts: '1110011110') }
+
+        it "doesn't create a new slot_setting if alerts eq group default alerts" do
+          expect {
+            user.update_alerts(slot, '1110011110')
+          }.not_to change(SlotSetting, :count)
+        end
+      end
     end
 
     describe "existing SlotSetting" do

@@ -37,6 +37,8 @@ module V1
 
     # POST /v1/groupslot
     def create_groupslot
+      # TODO: can only be done if current_user is group owner or
+      # member and members can post
       @slot = GroupSlot.add(meta_params, group_param, note_param,
                             alerts_param, current_user)
 

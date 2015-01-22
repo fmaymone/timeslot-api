@@ -48,12 +48,12 @@ RSpec.describe GroupSlot, type: :model do
   end
 
   describe "add" do
+    let(:user) { create(:user) }
     let(:meta_param) { attributes_for(:meta_slot) }
-    let(:group_param) { { group: create(:group) } }
+    let(:group_param) { { group: create(:group, owner: user) } }
     let(:note_param) {
       [ActionController::Parameters.new(attributes_for(:note))] }
     let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
-    let(:user) { create(:user) }
 
     it "creates a new GroupSlot" do
       expect {

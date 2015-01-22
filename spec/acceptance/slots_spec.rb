@@ -470,7 +470,7 @@ resource "Slots" do
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, owner: current_user) }
 
     describe "Create new group slot" do
 

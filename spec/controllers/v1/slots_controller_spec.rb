@@ -90,7 +90,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
   describe "POST create_groupslot" do
     describe "with valid params" do
-      let(:group) { create(:group) }
+      let(:group) { create(:group, owner: current_user) }
       let(:valid_attributes) {
         attr = attributes_for(
           :meta_slot, creator: current_user).merge(groupId: group.id)

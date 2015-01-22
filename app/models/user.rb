@@ -81,6 +81,7 @@ class User < ActiveRecord::Base
   def update_alerts(slot, alerts)
     alert = slot_settings.where(meta_slot: slot.meta_slot).first
     if alert.nil?
+      return if default_alert?(slot, alerts)
       SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
     else
       alert.update(alerts: alerts)
@@ -157,6 +158,14 @@ class User < ActiveRecord::Base
   # TODO: add spec
   def activate
     slot_settings.each(&:undelete)
+  end
+
+  private def default_alert?(slot, alerts)
+    if slot.class == GroupSlot
+      alerts == memberships.find_by(group_id: slot.group.id).default_alerts
+    else
+      alerts == default_alerts
+    end
   end
 
   def self.add(params)
