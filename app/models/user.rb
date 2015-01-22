@@ -90,7 +90,11 @@ class User < ActiveRecord::Base
 
   def alerts(slot)
     setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
-    setting.first.alerts if setting.exists?
+    if setting.exists?
+      setting.first.alerts
+    else
+      default_alert(slot)
+    end
   end
 
   ## friendship related ##
@@ -170,6 +174,15 @@ class User < ActiveRecord::Base
       alerts == memberships.find_by(group_id: slot.group.id).default_alerts
     else
       alerts == default_alerts
+    end
+  end
+
+  private def default_alert(slot)
+    if slot.class == GroupSlot
+      membership = memberships.find_by(group_id: slot.group.id)
+      membership.default_alerts unless membership.nil?
+    else
+      default_alerts
     end
   end
 

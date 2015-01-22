@@ -141,12 +141,61 @@ RSpec.describe User, type: :model do
 
   describe :alerts do
     let(:std_slot) { create(:std_slot, owner: user) }
-    let!(:slot_setting) {
-      create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
-             alerts: '0000011111') }
 
     it "returns the alarm for a specific slot representation" do
-      expect(user.alerts(std_slot)).to eq slot_setting.alerts
+      # TODO: needs specification
+      expect(user.alerts(std_slot)).to eq nil
+    end
+
+    describe "existing default alert for user" do
+      let(:new_alert) { '1010101010' }
+
+      it "returns the default alert" do
+        user.update(default_alerts: new_alert)
+        expect(user.alerts(std_slot)).to eq user.default_alerts
+      end
+    end
+
+    describe "existing slot_setting" do
+      let!(:slot_setting) {
+        create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+               alerts: '0000011111') }
+
+      it "returns the alarm for a specific slot representation" do
+        expect(user.alerts(std_slot)).to eq slot_setting.alerts
+      end
+    end
+
+    context "groupSlot" do
+      let(:slot) { create(:group_slot) }
+      let!(:membership) {
+        create(:membership, :active, group: slot.group, user: user) }
+
+      describe "existing default alert for group" do
+        it "returns the group default alert for this user" do
+          membership.update(default_alerts: '1110011110')
+          expect(user.alerts(slot)).to eq membership.default_alerts
+        end
+      end
+
+      describe "existing default alert for user but not for membership" do
+        let(:new_alert) { '1010101010' }
+
+        it "returns the users default alert" do
+          user.update(default_alerts: new_alert)
+          expect(user.alerts(std_slot)).to eq new_alert
+        end
+      end
+
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+                 alerts: '0000011111') }
+
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+        end
+      end
     end
   end
 
