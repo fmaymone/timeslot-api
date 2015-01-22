@@ -104,8 +104,15 @@ RSpec.describe User, type: :model do
       let!(:slot_setting) {
         create(:slot_setting, meta_slot: slot.meta_slot, user: user)
       }
+      let(:new_alert) { '1010101010' }
+
       it "updates alerts" do
-        skip "TODO"
+        user.update_alerts(slot, new_alert)
+        slot_setting.reload
+        expect(slot_setting.alerts).to eq(new_alert)
+      end
+
+      it "doesn't create a new slot_setting" do
         expect {
           user.update_alerts(slot, '1010101010')
         }.not_to change(SlotSetting, :count)

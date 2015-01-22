@@ -79,7 +79,12 @@ class User < ActiveRecord::Base
   end
 
   def update_alerts(slot, alerts)
-    SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
+    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    if alert.nil?
+      SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
+    else
+      alert.update(alerts: alerts)
+    end
   end
 
   ## friendship related ##
