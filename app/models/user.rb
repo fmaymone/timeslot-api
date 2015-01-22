@@ -180,10 +180,11 @@ class User < ActiveRecord::Base
   private def default_alert(slot)
     if slot.class == GroupSlot
       membership = memberships.find_by(group_id: slot.group.id)
-      membership.default_alerts unless membership.nil?
-    else
-      default_alerts
+      if !membership.nil? && !membership.default_alerts.nil?
+        return membership.default_alerts
+      end
     end
+    default_alerts
   end
 
   def self.add(params)

@@ -183,17 +183,17 @@ RSpec.describe User, type: :model do
 
         it "returns the users default alert" do
           user.update(default_alerts: new_alert)
-          expect(user.alerts(std_slot)).to eq new_alert
+          expect(user.alerts(slot)).to eq new_alert
         end
       end
 
       describe "existing slot_setting" do
         let!(:slot_setting) {
-          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+          create(:slot_setting, user: user, meta_slot: slot.meta_slot,
                  alerts: '0000011111') }
 
         it "returns the alarm for a specific slot representation" do
-          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+          expect(user.alerts(slot)).to eq slot_setting.alerts
         end
       end
     end
