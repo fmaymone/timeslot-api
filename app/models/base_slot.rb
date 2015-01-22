@@ -86,7 +86,7 @@ class BaseSlot < ActiveRecord::Base
       user.prepare_for_slot_deletion self
     end
     meta_slot.unregister
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   private def unique_slot_id

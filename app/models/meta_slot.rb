@@ -20,7 +20,7 @@ class MetaSlot < ActiveRecord::Base
   end
 
   def delete
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   private def enddate_is_after_startdate

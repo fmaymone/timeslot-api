@@ -40,7 +40,7 @@ class Friendship < ActiveRecord::Base
   # when user deactivates account, need to preserve state
   def inactivate
     friend.touch
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   def activate

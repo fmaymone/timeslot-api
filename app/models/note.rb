@@ -15,6 +15,6 @@ class Note < ActiveRecord::Base
 
   # if belonging slot is deleted
   def delete
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 end

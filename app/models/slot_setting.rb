@@ -10,7 +10,7 @@ class SlotSetting < ActiveRecord::Base
   # delete if user deletes all representations of the specific meta_slot
   # delete if user deactivates his profile
   def delete
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   # undelete if user re-activates his profile

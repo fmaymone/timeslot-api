@@ -29,6 +29,6 @@ class MediaItem < ActiveRecord::Base
     msg.merge!(error: e)
     Rails.logger.error msg
   ensure
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 end

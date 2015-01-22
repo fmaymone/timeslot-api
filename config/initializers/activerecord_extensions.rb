@@ -1,6 +1,10 @@
 module PreventDeletion
   class NotActivated < StandardError; end
 
+  def ts_soft_delete
+    update(deleted_at: Time.zone.now)
+  end
+
   def destroy
     prevent_remove
   end

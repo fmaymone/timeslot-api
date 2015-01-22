@@ -40,7 +40,7 @@ class Group < ActiveRecord::Base
     image.delete if images.first
     memberships.each(&:delete)
     group_slots.each(&:delete)
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   private def add_owner_as_member

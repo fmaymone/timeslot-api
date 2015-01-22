@@ -64,7 +64,7 @@ class Membership < ActiveRecord::Base
   # state needs to be preserved in this case
   def inactivate
     group.touch
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   # group still existing
@@ -78,7 +78,7 @@ class Membership < ActiveRecord::Base
   def delete
     update!(state: "000")
     user.touch
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   # def deleted?
