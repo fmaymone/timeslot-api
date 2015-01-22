@@ -4,7 +4,7 @@ FactoryGirl.define do
   sequence(:public_id) { |n| "dfhjghjkdisudgfds7iy#{n}" }
 
   factory :slot_image, class: "MediaItem" do
-    association :mediable, factory: :base_slot
+    association :mediable, factory: :slot
     media_type "image"
     public_id
     position
@@ -23,14 +23,14 @@ FactoryGirl.define do
   end
 
   factory :voice, class: "MediaItem" do
-    association :mediable, factory: :base_slot
+    association :mediable, factory: :slot
     media_type "voice"
     public_id
     position
   end
 
   factory :video, class: "MediaItem" do
-    association :mediable, factory: :base_slot
+    association :mediable, factory: :slot
     media_type "video"
     public_id
     position

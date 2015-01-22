@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe BaseSlot, type: :model do
-  let(:base_slot) { build(:base_slot) }
+  let(:base_slot) { build(:slot) }
 
   subject { base_slot }
 
@@ -11,8 +11,8 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:voices) }
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to have_many(:media_items) }
-  it { is_expected.to belong_to(:meta_slot) }
-  it { is_expected.to have_many(:notes).inverse_of(:base_slot) }
+  it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
+  it { is_expected.to have_many(:notes).inverse_of(:slot) }
 
   it { is_expected.to be_valid }
 

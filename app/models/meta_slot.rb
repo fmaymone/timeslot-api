@@ -1,9 +1,10 @@
 class MetaSlot < ActiveRecord::Base
   after_commit AuditLog
 
-  belongs_to :creator, class_name: "User", inverse_of: :created_slots
+  belongs_to :creator, class_name: User, inverse_of: :created_slots
   has_many :slot_settings, inverse_of: :meta_slot
-  has_many :base_slots, -> { where deleted_at: nil }, inverse_of: :meta_slot
+  has_many :slots, -> { where deleted_at: nil }, class_name: BaseSlot,
+           inverse_of: :meta_slot
 
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
@@ -16,7 +17,7 @@ class MetaSlot < ActiveRecord::Base
   end
 
   def unregister
-    delete if base_slots.size <= 1
+    delete if slots.size <= 1
   end
 
   def delete

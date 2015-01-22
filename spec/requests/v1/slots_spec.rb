@@ -694,7 +694,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       it "adds an additional new note" do
-        create(:note, base_slot: std_slot)
+        create(:note, slot: std_slot)
 
         patch "/v1/stdslot/#{std_slot.id}", add_note
         std_slot.reload

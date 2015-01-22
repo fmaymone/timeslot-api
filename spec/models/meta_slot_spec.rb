@@ -12,7 +12,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:location_id) }
   it { is_expected.to respond_to(:location) }
   it { is_expected.to respond_to(:deleted_at) }
-  it { is_expected.to have_many(:base_slots).inverse_of(:meta_slot) }
+  it { is_expected.to have_many(:slots).inverse_of(:meta_slot) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
 
   it { is_expected.to be_valid }
@@ -45,7 +45,7 @@ RSpec.describe MetaSlot, type: :model do
   describe :unregister do
     let(:meta_slot) { create(:meta_slot) }
 
-    it "deletes itself if no other base_slot references it" do
+    it "deletes itself if no other slot references it" do
       meta_slot.unregister
       expect(meta_slot.deleted_at?).to be true
     end

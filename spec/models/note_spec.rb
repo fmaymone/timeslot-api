@@ -8,12 +8,12 @@ RSpec.describe Note, type: :model do
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:content) }
   it { is_expected.to respond_to(:deleted_at) }
-  it { is_expected.to belong_to(:base_slot).inverse_of(:notes) }
+  it { is_expected.to belong_to(:slot).inverse_of(:notes) }
 
   it { is_expected.to be_valid }
 
-  describe "when BaseSlot is not present" do
-    before { note.base_slot = nil }
+  describe "when Slot is not present" do
+    before { note.slot = nil }
     it { is_expected.to_not be_valid }
   end
 
