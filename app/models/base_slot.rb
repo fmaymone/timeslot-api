@@ -29,11 +29,6 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
-  def alerts(user)
-    setting = SlotSetting.where(user: user, meta_slot: meta_slot)
-    setting.first.alerts if setting.exists?
-  end
-
   def add_media(item)
     item.merge!(position: media_items.size) unless item.key? "position"
     item.merge!(mediable_id: id, mediable_type: BaseSlot)

@@ -1,3 +1,3 @@
 json.settings do
-  json.alerts slot.alerts(current_user) if current_user
+  json.alerts current_user.alerts(slot) if current_user
 end

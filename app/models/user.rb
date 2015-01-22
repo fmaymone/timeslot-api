@@ -88,6 +88,11 @@ class User < ActiveRecord::Base
     end
   end
 
+  def alerts(slot)
+    setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
+    setting.first.alerts if setting.exists?
+  end
+
   ## friendship related ##
 
   # TODO: get friends with one query
