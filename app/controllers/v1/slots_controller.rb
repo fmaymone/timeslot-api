@@ -181,8 +181,7 @@ module V1
       slot.update(meta_params) if meta_params
       update_media(slot)
       slot.update_notes(params[:notes]) if params[:notes].present?
-      SetAlerts.call(
-        slot, current_user, alert_param[:alerts]) if alert_param.present?
+      current_user.update_alerts(slot, alert_param[:alerts]) if alert_param.present?
 
       if slot.errors.empty?
         render :show, locals: { slot: slot }

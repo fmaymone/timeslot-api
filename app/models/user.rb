@@ -78,6 +78,10 @@ class User < ActiveRecord::Base
     alert.delete if active_slots(slot.meta_slot).size <= 1
   end
 
+  def update_alerts(slot, alerts)
+    SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
+  end
+
   ## friendship related ##
 
   # TODO: get friends with one query

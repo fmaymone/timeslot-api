@@ -17,7 +17,7 @@ class GroupSlot < BaseSlot
     return slot unless slot.errors.empty?
 
     slot.update_notes(note_param) if note_param
-    SetAlerts.call(slot, user, alert_param) if alert_param
+    user.update_alerts(slot, alert_param) if alert_param
     slot
   end
 end

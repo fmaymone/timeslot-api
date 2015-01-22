@@ -85,6 +85,34 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :update_alerts do
+    let(:slot) { create(:std_slot, owner: user) }
+
+    describe "no existing SlotSetting" do
+      it "returns the SlotSetting object" do
+        expect(user.update_alerts(slot, '1100110011')).to eq SlotSetting.last
+      end
+
+      it "it creates a new slot_setting object" do
+        expect {
+          user.update_alerts(slot, '0101010101')
+        }.to change(SlotSetting, :count).by 1
+      end
+    end
+
+    describe "existing SlotSetting" do
+      let!(:slot_setting) {
+        create(:slot_setting, meta_slot: slot.meta_slot, user: user)
+      }
+      it "updates alerts" do
+        skip "TODO"
+        expect {
+          user.update_alerts(slot, '1010101010')
+        }.not_to change(SlotSetting, :count)
+      end
+    end
+  end
+
   describe :groups do
     let(:user) { create(:user, :with_3_groups) }
     it "returns the groups where user is a member" do
