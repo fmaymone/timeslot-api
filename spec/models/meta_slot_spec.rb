@@ -50,8 +50,15 @@ RSpec.describe MetaSlot, type: :model do
       expect(meta_slot.deleted_at?).to be true
     end
 
-    it "doesn't delete itself if another base_slot references it" do
+    it "deletes itself if only one last slot (which will" \
+       " be deleted) references it" do
       create(:std_slot, meta_slot: meta_slot)
+      meta_slot.unregister
+      expect(meta_slot.deleted_at?).to be true
+    end
+
+    it "doesn't delete itself if more than the last slot references it" do
+      create_list(:std_slot, 2, meta_slot: meta_slot)
       meta_slot.unregister
       expect(meta_slot.deleted_at?).to be false
     end
