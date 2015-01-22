@@ -38,23 +38,23 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe :representation? do
+  describe :active_slots do
     let(:user) { create(:user) }
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
 
     context "user has std_slot with the specified meta_slot" do
       let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
 
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns std_slot" do
+        expect(user.active_slots(meta_slot)).to include std_slot
       end
     end
 
     context "user has re_slot with the specified meta_slot" do
       let!(:re_slot) { create(:re_slot, meta_slot: meta_slot, slotter: user) }
 
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns reslot" do
+        expect(user.active_slots(meta_slot)).to include re_slot
       end
     end
 
@@ -64,14 +64,14 @@ RSpec.describe User, type: :model do
       let!(:group_slot) {
         create(:group_slot, meta_slot: meta_slot, group: group)
       }
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns group_slot" do
+        expect(user.active_slots(meta_slot)).to include group_slot
       end
     end
 
     context "user has no representation of the specified meta_slot" do
-      it "returns false" do
-        expect(user.representation?(meta_slot)).to be false
+      it "returns empty array" do
+        expect(user.active_slots(meta_slot).empty?).to be true
       end
     end
 
@@ -79,8 +79,8 @@ RSpec.describe User, type: :model do
       let!(:std_slot) {
         create(:std_slot, :deleted, meta_slot: meta_slot, owner: user)
       }
-      it "returns false" do
-        expect(user.representation?(meta_slot)).to be false
+      it "returns empty array" do
+        expect(user.active_slots(meta_slot).empty?).to be true
       end
     end
   end
@@ -483,14 +483,25 @@ RSpec.describe User, type: :model do
   end
 
   describe "prepare_for_slot_deletion" do
-    let(:slot) { create(:std_slot) }
+    let(:slot) { create(:std_slot, owner: user) }
     let!(:slot_setting) {
       create(:slot_setting, meta_slot: slot.meta_slot, user: user) }
 
-    it "unregisters on related slot_settings" do
+    it "sets deleted_at if user has no representation of meta_slot" do
       user.prepare_for_slot_deletion slot
       slot_setting.reload
       expect(slot_setting.deleted_at?).to be true
+    end
+
+    describe "user has a representation of meta_slot" do
+      let!(:std_slot) {
+        create(:std_slot, meta_slot: slot.meta_slot, owner: user) }
+
+      it "doesn't set deleted_at" do
+        user.prepare_for_slot_deletion slot
+        slot_setting.reload
+        expect(slot_setting.deleted_at?).to be false
+      end
     end
   end
 end

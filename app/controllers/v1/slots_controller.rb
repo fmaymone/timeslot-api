@@ -6,7 +6,7 @@ module V1
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
     def index
-      @slots = current_user.slot_representations
+      @slots = current_user.all_slots
 
       render :index
     end

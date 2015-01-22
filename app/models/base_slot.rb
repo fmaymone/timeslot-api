@@ -82,11 +82,11 @@ class BaseSlot < ActiveRecord::Base
     # Comments
     notes.each(&:delete)
     media_items.each(&:delete)
-    SoftDelete.call(self)
-    meta_slot.unregister
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+    SoftDelete.call(self)
+    meta_slot.unregister
   end
 
   private def unique_slot_id

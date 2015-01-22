@@ -57,14 +57,15 @@ class User < ActiveRecord::Base
 
   ## slot related ##
 
-  def representation?(meta_slot)
-    std_slots.active.where(meta_slot: meta_slot).exists? ||
-      group_slots.active.where(meta_slot: meta_slot).exists? ||
-      re_slots.active.where(meta_slot: meta_slot).exists?
+  def active_slots(meta_slot)
+    slots = []
+    slots.push(*std_slots.active.where(meta_slot: meta_slot))
+    slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end
 
   # including deleted slots
-  def slot_representations
+  def all_slots
     slots = []
     slots.push(*std_slots)
     slots.push(*group_slots)
@@ -73,7 +74,8 @@ class User < ActiveRecord::Base
 
   def prepare_for_slot_deletion(slot)
     alert = slot_settings.where(meta_slot: slot.meta_slot).first
-    alert.unregister unless alert.nil?
+    return if alert.nil?
+    alert.delete if active_slots(slot.meta_slot).size <= 1
   end
 
   ## friendship related ##
