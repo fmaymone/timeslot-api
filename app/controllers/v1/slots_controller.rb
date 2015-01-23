@@ -169,7 +169,7 @@ module V1
         end
 
         if items.first.key? "media_id"
-          unless ReorderMedia.call items
+          unless MediaItem.reorder_media items
             slot.errors.add(:media_items, 'invalid ordering')
           end
         else
