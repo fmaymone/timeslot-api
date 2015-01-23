@@ -110,9 +110,7 @@ module V1
       group = Group.find(params.require(:group_id))
       return head :forbidden unless current_user.can_invite? group.id
 
-      params.require(:ids).each do |user_id|
-        InviteUserToGroup.call(group, user_id)
-      end
+      group.invite_users(params.require(:ids))
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }

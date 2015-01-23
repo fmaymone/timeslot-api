@@ -35,6 +35,18 @@ class Group < ActiveRecord::Base
     Membership.includes([:user]).where(group_id: id)
   end
 
+  def invite_users(ids)
+    ids.each do |user_id|
+      invitee = User.find(user_id)
+      next if invitee.is_invited?(id) || invitee.is_member?(id)
+
+      # allow to re-invite kicked/refused/left members:
+      membership = invitee.get_membership self
+      membership ||= Membership.new(group_id: id, user_id: invitee.id)
+      membership.invite && membership.save
+    end
+  end
+
   def delete
     # all other images (if any) should already be "deleted"
     image.delete if images.first
