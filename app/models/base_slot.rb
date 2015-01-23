@@ -29,6 +29,15 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
+  def update_from_params(meta_params, media_params = nil, note_param = nil,
+                         alerts_param = nil, user)
+    # statement order is important, otherwise added errors may be overwritten
+    update(meta_params) if meta_params
+    update_media(media_params) if media_params
+    update_notes(note_param) if note_param
+    user.update_alerts(self, alerts_param) if alerts_param
+  end
+
   def add_media(item)
     item.merge!(position: media_items.size) unless item.key? "position"
     item.merge!(mediable_id: id, mediable_type: BaseSlot)
@@ -51,17 +60,6 @@ class BaseSlot < ActiveRecord::Base
     new_media.save
   end
 
-  def add_media_items(collection, media_type)
-    case media_type
-    when :photos
-      add_photos(collection)
-    when :voices
-      add_voices(collection)
-    when :videos
-      add_videos(collection)
-    end
-  end
-
   def update_notes(new_notes)
     new_notes.each do |note|
       if note.key? 'id'
@@ -82,6 +80,37 @@ class BaseSlot < ActiveRecord::Base
     end
     meta_slot.unregister
     ts_soft_delete
+  end
+
+  private def update_media(media_params)
+    media_map = [:photos, :voices, :videos]
+
+    media_map.each do |media_type|
+      next unless media_params[media_type].present?
+
+      items = media_params[media_type].each do |item|
+        item.transform_keys!(&:underscore)
+      end
+
+      if items.first.key? "media_id"
+        unless MediaItem.reorder_media items
+          errors.add(:media_items, 'invalid ordering')
+        end
+      else
+        add_media_items(items, media_type)
+      end
+    end
+  end
+
+  private def add_media_items(collection, media_type)
+    case media_type
+    when :photos
+      add_photos(collection)
+    when :voices
+      add_voices(collection)
+    when :videos
+      add_videos(collection)
+    end
   end
 
   private def unique_slot_id

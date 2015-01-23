@@ -79,19 +79,40 @@ module V1
       slot = current_user.std_slots.find(params[:id])
 
       slot.update(std_params) if params["visibility"].present?
-      update_baseslot(slot)
+      slot.update_from_params(meta_params, media_params, note_param,
+                              alerts_param, current_user)
+
+      if slot.errors.empty?
+        render :show, locals: { slot: slot }
+      else
+        render json: slot.errors.messages, status: :unprocessable_entity
+      end
     end
 
     # PATCH /v1/groupslot/1
     def update_groupslot
       slot = current_user.group_slots.find(params[:id])
-      update_baseslot(slot)
+      slot.update_from_params(meta_params, media_params, note_param,
+                              alerts_param, current_user)
+
+      if slot.errors.empty?
+        render :show, locals: { slot: slot }
+      else
+        render json: slot.errors.messages, status: :unprocessable_entity
+      end
     end
 
     # PATCH /v1/reslot/1
     def update_reslot
       slot = current_user.re_slots.find(params[:id])
-      update_baseslot(slot)
+      slot.update_from_params(meta_params, media_params, note_param,
+                              alerts_param, current_user)
+
+      if slot.errors.empty?
+        render :show, locals: { slot: slot }
+      else
+        render json: slot.errors.messages, status: :unprocessable_entity
+      end
     end
 
     # DELETE /v1/std_slot/1
@@ -146,10 +167,6 @@ module V1
       p.transform_keys(&:underscore)
     end
 
-    private def alert_param
-      params[:settings]
-    end
-
     private def alerts_param
       params[:settings][:alerts] if params[:settings].present?
     end
@@ -158,38 +175,9 @@ module V1
       params.require(:notes) if params[:notes].present?
     end
 
-    private def update_media(slot)
-      media_map = [:photos, :voices, :videos]
-
-      media_map.each do |media_type|
-        next unless params[media_type].present?
-
-        items = params[media_type].each do |item|
-          item.transform_keys!(&:underscore)
-        end
-
-        if items.first.key? "media_id"
-          unless MediaItem.reorder_media items
-            slot.errors.add(:media_items, 'invalid ordering')
-          end
-        else
-          slot.add_media_items(items, media_type)
-        end
-      end
-    end
-
-    private def update_baseslot(slot)
-      # statement order is important, otherwise added errors may be overwritten
-      slot.update(meta_params) if meta_params
-      update_media(slot)
-      slot.update_notes(params[:notes]) if params[:notes].present?
-      current_user.update_alerts(slot, alert_param[:alerts]) if alert_param.present?
-
-      if slot.errors.empty?
-        render :show, locals: { slot: slot }
-      else
-        render json: slot.errors.messages, status: :unprocessable_entity
-      end
+    private def media_params
+      item_params = [:publicId, :position, :mediaId]
+      params.permit(photos: item_params, voices: item_params, videos: item_params)
     end
   end
 end
