@@ -39,7 +39,6 @@ RSpec.describe V1::SlotsController, type: :controller do
     end
 
     it "assigns the requested slot as @slot" do
-      skip "ask pascal if this is too much"
       get :show, id: std_slot.id
       expect(assigns(:slot)).to eq(std_slot)
     end

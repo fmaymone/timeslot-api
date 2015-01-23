@@ -7,30 +7,29 @@ module V1
     # return all slots (std, group, re) of the current user
     def index
       @slots = current_user.all_slots
-
       render :index
     end
 
     # GET /v1/slots/1
     def show
-      render :show, locals: { slot: BaseSlot.get(params[:id]) }
+      @slot = BaseSlot.get(params[:id])
+      render :show, locals: { slot: @slot }
     end
 
     # POST /v1/slots
     def show_many
       @slots = BaseSlot.get_many(params[:ids])
-
       render :index
     end
 
     # POST /v1/stdslot
     def create_stdslot
-      slot = StdSlot.create_with_meta(meta_params, std_params, note_param,
-                                      alerts_param, current_user)
-      if slot.errors.empty?
-        render :show, status: :created, locals: { slot: slot }
+      @slot = StdSlot.create_with_meta(meta_params, std_param, note_param,
+                                       alerts_param, current_user)
+      if @slot.errors.empty?
+        render :show, status: :created, locals: { slot: @slot }
       else
-        render json: slot.errors, status: :unprocessable_entity
+        render json: @slot.errors, status: :unprocessable_entity
       end
     end
 
@@ -76,7 +75,7 @@ module V1
     def update_stdslot
       slot = current_user.std_slots.find(params[:id])
 
-      slot.update(std_params) if params["visibility"].present?
+      slot.update(std_param) if params["visibility"].present?
       slot.update_from_params(meta_params, media_params, note_param,
                               alerts_param, current_user)
 
@@ -151,7 +150,7 @@ module V1
       { group: group }
     end
 
-    private def std_params
+    private def std_param
       params.require(:visibility)
       params.permit(:visibility)
     end
