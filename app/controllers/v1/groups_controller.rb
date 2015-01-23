@@ -17,7 +17,7 @@ module V1
 
     # POST /v1/groups
     def create
-      @group = Group.add(group_params.merge(owner: current_user))
+      @group = Group.create_with_media(group_params.merge(owner: current_user))
 
       if @group.errors.empty?
         render :show, status: :created
