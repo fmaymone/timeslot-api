@@ -25,9 +25,8 @@ module V1
 
     # POST /v1/stdslot
     def create_stdslot
-      slot = StdSlot.add(meta_params, std_params, note_param,
-                         alerts_param, current_user)
-
+      slot = StdSlot.create_with_meta(meta_params, std_params, note_param,
+                                      alerts_param, current_user)
       if slot.errors.empty?
         render :show, status: :created, locals: { slot: slot }
       else
@@ -39,9 +38,8 @@ module V1
     def create_groupslot
       # TODO: can only be done if current_user is group owner or
       # member and members can post
-      @slot = GroupSlot.add(meta_params, group_param, note_param,
-                            alerts_param, current_user)
-
+      @slot = GroupSlot.create_with_meta(meta_params, group_param, note_param,
+                                         alerts_param, current_user)
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else

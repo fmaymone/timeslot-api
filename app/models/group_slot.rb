@@ -9,7 +9,8 @@ class GroupSlot < BaseSlot
     group.members
   end
 
-  def self.add(meta_param, group_param, note_param = nil, alert_param = nil, user)
+  def self.create_with_meta(meta_param, group_param, note_param = nil,
+                            alert_param = nil, user)
     meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
