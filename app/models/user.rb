@@ -148,7 +148,7 @@ class User < ActiveRecord::Base
     membership && membership.leave
   end
 
-  def is_member?(group_id)
+  def is_active_member?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.active?
   end

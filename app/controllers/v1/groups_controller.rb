@@ -118,7 +118,7 @@ module V1
     # remove current user from group members
     def leave
       return head :forbidden if current_user.get_membership(group_id).nil?
-      return head :ok unless current_user.is_member? group_id
+      return head :ok unless current_user.is_active_member? group_id
 
       if current_user.leave_group group_id
         head :ok
@@ -134,7 +134,7 @@ module V1
 
       kickee = User.find(membership_params[:user_id])
       return head :forbidden if kickee.get_membership(group_id).nil?
-      return head :ok unless (kickee.is_member?(group_id) || kickee.is_invited?(group_id))
+      return head :ok unless (kickee.is_active_member?(group_id) || kickee.is_invited?(group_id))
 
       @membership = kickee.get_membership group_id
 
@@ -149,7 +149,7 @@ module V1
     # change membership settings if current user is group member
     # notifications, default_alerts
     def member_settings
-      return head :forbidden unless current_user.is_member? group_id
+      return head :forbidden unless current_user.is_active_member? group_id
 
       @membership = current_user.get_membership group_id
 
