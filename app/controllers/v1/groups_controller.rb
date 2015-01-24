@@ -89,12 +89,11 @@ module V1
     def refuse_invite
       return head :forbidden unless current_user.is_invited? group_id
 
-      @membership = current_user.get_membership group_id
-
-      if @membership.refuse
+      if current_user.refuse_invite group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error refusing invite" },
+               status: :unprocessable_entity
       end
     end
 

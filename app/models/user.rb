@@ -138,6 +138,11 @@ class User < ActiveRecord::Base
     membership && membership.activate
   end
 
+  def refuse_invite(group_id)
+    membership = get_membership group_id
+    membership && membership.refuse
+  end
+
   def is_member?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.active?
