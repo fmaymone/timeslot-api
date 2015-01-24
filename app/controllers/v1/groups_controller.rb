@@ -153,9 +153,8 @@ module V1
     def member_settings
       return head :forbidden unless current_user.is_active_member? group_id
 
-      @membership = current_user.get_membership group_id
-
-      if @membership.update(membership_setting_params)
+      @membership = current_user.update_member_settings(setting_params, group_id)
+      if @membership.errors.empty?
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -176,7 +175,7 @@ module V1
       params.require(:group_id)
     end
 
-    private def membership_setting_params
+    private def setting_params
       p = params.require(:settings).permit(:notifications, :defaultAlerts)
       p.transform_keys(&:underscore)
     end

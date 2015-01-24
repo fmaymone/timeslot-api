@@ -162,6 +162,12 @@ class User < ActiveRecord::Base
     memberships.find_by group_id: group_id
   end
 
+  def update_member_settings(params, group_id)
+    membership = get_membership group_id
+    membership && membership.update(params)
+    membership
+  end
+
   def inactivate
     # Everything needs to stay available so that if user comes back all content
     # is still there
