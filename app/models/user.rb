@@ -124,8 +124,8 @@ class User < ActiveRecord::Base
 
   ## group related ##
   def is_invited?(group_id)
-    membership = memberships.where(group_id: group_id)
-    membership.exists? && membership.first.invited?
+    membership = get_membership group_id
+    !membership.nil? && membership.invited?
   end
 
   def can_invite?(group_id)
@@ -133,9 +133,14 @@ class User < ActiveRecord::Base
     self == group.owner || group.members_can_invite
   end
 
+  def accept_invite(group_id)
+    membership = get_membership group_id
+    membership && membership.activate
+  end
+
   def is_member?(group_id)
-    membership = memberships.where(group_id: group_id)
-    membership.exists? && membership.first.active?
+    membership = get_membership group_id
+    !membership.nil? && membership.active?
   end
 
   def is_owner?(group_id)
@@ -144,7 +149,7 @@ class User < ActiveRecord::Base
   end
 
   def get_membership(group_id)
-    memberships.where(group_id: group_id).first
+    memberships.find_by group_id: group_id
   end
 
   def inactivate

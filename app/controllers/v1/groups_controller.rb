@@ -75,24 +75,21 @@ module V1
 
     # POST /v1/groups/:group_id/accept
     def accept_invite
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_invited? group
+      return head :forbidden unless current_user.is_invited? group_id
 
-      @membership = current_user.get_membership group
-
-      if @membership.activate
+      if current_user.accept_invite group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error accepting invite" },
+               status: :unprocessable_entity
       end
     end
 
     # POST /v1/groups/:group_id/refuse
     def refuse_invite
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_invited? group
+      return head :forbidden unless current_user.is_invited? group_id
 
-      @membership = current_user.get_membership group
+      @membership = current_user.get_membership group_id
 
       if @membership.refuse
         head :ok
@@ -121,11 +118,10 @@ module V1
     # update membership with state left
     # remove current user from group members
     def leave
-      group = membership_params[:group_id]
-      return head :forbidden if current_user.get_membership(group).nil?
-      return head :ok unless current_user.is_member? group
+      return head :forbidden if current_user.get_membership(group_id).nil?
+      return head :ok unless current_user.is_member? group_id
 
-      @membership = current_user.get_membership group
+      @membership = current_user.get_membership group_id
 
       if @membership.leave
         head :ok
@@ -136,14 +132,13 @@ module V1
 
     # DELETE /v1/groups/:group_id/members/:user_id
     def kick
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_owner? group
+      return head :forbidden unless current_user.is_owner? group_id
 
       kickee = User.find(membership_params[:user_id])
-      return head :forbidden if kickee.get_membership(group).nil?
-      return head :ok unless (kickee.is_member?(group) || kickee.is_invited?(group))
+      return head :forbidden if kickee.get_membership(group_id).nil?
+      return head :ok unless (kickee.is_member?(group_id) || kickee.is_invited?(group_id))
 
-      @membership = kickee.get_membership group
+      @membership = kickee.get_membership group_id
 
       if @membership.kick
         head :ok
@@ -156,10 +151,9 @@ module V1
     # change membership settings if current user is group member
     # notifications, default_alerts
     def member_settings
-      group = Group.find(membership_params[:group_id])
-      return head :forbidden unless current_user.is_member? group.id
+      return head :forbidden unless current_user.is_member? group_id
 
-      @membership = current_user.get_membership group.id
+      @membership = current_user.get_membership group_id
 
       if @membership.update(membership_setting_params)
         head :ok
@@ -176,6 +170,10 @@ module V1
 
     private def membership_params
       params.permit(:group_id, :user_id)
+    end
+
+    private def group_id
+      params.require(:group_id)
     end
 
     private def membership_setting_params

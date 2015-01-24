@@ -570,9 +570,9 @@ resource "Groups" do
     describe "group ID invalid" do
       let(:group_id) { group.id + 1 }
 
-      example "returns Not Found", document: false do
+      example "returns forbidden", document: false do
         do_request
-        expect(response_status).to eq(404)
+        expect(response_status).to eq(403)
       end
     end
   end
