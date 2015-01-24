@@ -120,12 +120,11 @@ module V1
       return head :forbidden if current_user.get_membership(group_id).nil?
       return head :ok unless current_user.is_member? group_id
 
-      @membership = current_user.get_membership group_id
-
-      if @membership.leave
+      if current_user.leave_group group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error leaving group #{group_id}" },
+               status: :unprocessable_entity
       end
     end
 
