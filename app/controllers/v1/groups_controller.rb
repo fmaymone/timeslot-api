@@ -130,18 +130,20 @@ module V1
 
     # DELETE /v1/groups/:group_id/members/:user_id
     def kick
-      return head :forbidden unless current_user.is_owner? group_id
+      group = Group.find(params.require(:group_id))
+      return head :forbidden unless current_user.is_owner? group.id
 
       kickee = User.find(membership_params[:user_id])
-      return head :forbidden if kickee.get_membership(group_id).nil?
-      return head :ok unless (kickee.is_active_member?(group_id) || kickee.is_invited?(group_id))
+      return head :forbidden if kickee.get_membership(group.id).nil?
+      return head :ok unless (kickee.is_active_member?(group.id) ||
+                              kickee.is_invited?(group.id))
 
-      @membership = kickee.get_membership group_id
-
-      if @membership.kick
+      if group.kick_member kickee
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error kicking member with id #{user_id}" \
+                                   " from group #{group_id}" },
+               status: :unprocessable_entity
       end
     end
 

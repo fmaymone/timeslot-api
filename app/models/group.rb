@@ -47,6 +47,11 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def kick_member(user)
+    membership = memberships.find_by user_id: user.id
+    membership && membership.kick
+  end
+
   def delete
     # all other images (if any) should already be "deleted"
     image.delete if images.first
