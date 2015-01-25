@@ -17,6 +17,16 @@ RSpec.describe V1::UsersController, type: :routing do
         .to route_to("v1/users#create", format: :json)
     end
 
+    it "routes to #signin" do
+      expect(post: "/v1/users/signin")
+        .to route_to("v1/users#signin", format: :json)
+    end
+
+    it "routes to #signout" do
+      expect(get: "/v1/users/signout")
+        .to route_to("v1/users#signout", format: :json)
+    end
+
     it "routes to #update" do
       expect(patch: "/v1/users")
         .to route_to("v1/users#update", format: :json)

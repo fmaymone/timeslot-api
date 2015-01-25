@@ -31,6 +31,8 @@ Rails.application.routes.draw do
       # HACK: not ready for production
       get 'authenticate/:id', to: 'users#auth', as: 'auth',
           constraints: { id: /\d+/ }
+      post 'signin', to: 'users#signin', as: 'signin'
+      get 'signout', to: 'users#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
     end
