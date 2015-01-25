@@ -81,6 +81,7 @@ RSpec.describe User, type: :model do
     end
   end
 
+  # TODO: merge with 'add'
   describe "sign up" do
     context "valid params" do
       let(:new_user) { build(:user) }
@@ -682,6 +683,26 @@ RSpec.describe User, type: :model do
         expect {
           User.add(user_params)
         }.not_to change(MediaItem, :count)
+      end
+    end
+  end
+
+  describe "sign_in" do
+    let!(:user) { create(:user, password: 'timeslot') }
+
+    context "valid params" do
+      it "returns the user" do
+        expect(User.sign_in(user.email, user.password)).to eq user
+      end
+    end
+
+    context "invalid params" do
+      it "returns false if invalid password" do
+        expect(User.sign_in(user.email, 'marzipan')).to be false
+      end
+
+      it "returns nil if invalid email" do
+        expect(User.sign_in('marzipan', user.password)).to be nil
       end
     end
   end

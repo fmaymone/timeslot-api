@@ -233,4 +233,9 @@ class User < ActiveRecord::Base
     AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
     new_user
   end
+
+  def self.sign_in(email, password)
+    user = User.find_by email: email
+    user.try(:authenticate, password)
+  end
 end
