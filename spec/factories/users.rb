@@ -1,8 +1,10 @@
 FactoryGirl.define do
   sequence(:username) { |n| "User #{n}" }
+  sequence(:email) { |n| "user#{n}@email.com" }
 
   factory :user, aliases: [:owner, :member] do
     username
+    email
 
     trait :with_image do
       after :create do |user|

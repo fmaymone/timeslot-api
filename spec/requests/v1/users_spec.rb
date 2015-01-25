@@ -26,7 +26,7 @@ RSpec.describe "V1::Users", type: :request do
   describe "POST /v1/users" do
     describe "with valid params" do
       let(:valid_attributes) {
-        { username: 'foo', image: { publicId: 'foobar' } }
+        attributes_for(:user).merge!(image: { publicId: 'foobar' })
       }
       it "returns ID of created user" do
         post "/v1/users", valid_attributes

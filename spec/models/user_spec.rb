@@ -6,13 +6,14 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
+  it { is_expected.to respond_to(:email) }
+  it { is_expected.to respond_to(:auth_token) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:created_slots) }
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
-  it { is_expected.to respond_to(:image) }
   it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
@@ -36,6 +37,48 @@ RSpec.describe User, type: :model do
   describe "when name is too long" do
     before { user.username = "a" * 21 }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "when email is not present" do
+    before { user.email = "" }
+    it { should_not be_valid }
+  end
+
+  describe "when email is too long" do
+    before { user.email = "user@".concat("a" * 254).concat(".com")  }
+    it { should_not be_valid }
+  end
+
+  describe "when email format is valid" do
+    it "will be valid" do
+      addresses = %w([user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn])
+      addresses.each do |valid_address|
+        user.email = valid_address
+        expect(user).to be_valid
+      end
+    end
+  end
+
+  describe "when email format is invalid" do
+    it "will be invalid" do
+      addresses = %w([user@foo,com user_at_foo.org example.user@foo.
+                     @barbaz.com foo@.com])
+      addresses.each do |invalid_address|
+        user.email = invalid_address
+        expect(user).not_to be_valid
+      end
+    end
+  end
+
+  describe "when email address is already taken" do
+    it "won't be valid" do
+      user.save
+      user_with_same_email = user.dup
+      user_with_same_email.email = user.email.upcase
+      user_with_same_email.save
+
+      expect(user_with_same_email).not_to be_valid
+    end
   end
 
   describe :active_slots do
@@ -559,38 +602,45 @@ RSpec.describe User, type: :model do
   end
 
   describe "add" do
+    let(:user_params) { attributes_for(:user) }
+
     context "valid params" do
       it "creates a new user" do
         expect {
-          User.add(attributes_for(:user))
+          User.add(user_params)
         }.to change(User, :count).by 1
       end
 
       it "sets an image if provided" do
-        params = { username: 'foo', "public_id" => 'foobar' }
+        user_params.merge!("public_id" => 'foobar')
         expect {
-          User.add(params)
+          User.add(user_params)
         }.to change(MediaItem, :count).by 1
-        expect(User.last.image.public_id).to eq params["public_id"]
+        expect(User.last.image.public_id).to eq user_params["public_id"]
       end
     end
 
     context "invalid params" do
       it "doesn't create a new user if username is nil" do
+        user_params[:username] = nil
         expect {
-          User.add(username: nil)
+          User.add(user_params)
         }.not_to change(User, :count)
       end
 
       it "creates a new user even if mediaitems public_id is nil" do
+        user_params.merge!("public_id" => nil)
+
         expect {
-          User.add(username: 'foo', "public_id" => nil)
-        }.to change(User, :count)
+          User.add(user_params)
+        }.to change(User, :count).by 1
       end
 
       it "doesn't create a new mediaitem if public_id is nil" do
+        user_params.merge!("public_id" => nil)
+
         expect {
-          User.add(username: 'foo', "public_id" => nil)
+          User.add(user_params)
         }.not_to change(MediaItem, :count)
       end
     end

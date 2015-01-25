@@ -59,6 +59,7 @@ resource "Users" do
       expect(
         json.except('image')
       ).to eq(user.attributes.as_json
+               .except("auth_token", "password_digest")
                .transform_keys { |key| key.camelize(:lower) })
     end
   end
@@ -69,10 +70,13 @@ resource "Users" do
 
     parameter :username, "Username of user (max. 20 characters)",
               required: true
+    parameter :email, "Email of user (max. 254 characters)",
+              required: true
 
     response_field :id, "ID of the new user"
 
     let(:username) { "foo" }
+    let(:email) { "someone@timeslot.com" }
 
     example "Create user returns ID of new user", document: :v1 do
       explanation "returns 422 if parameters are missing\n\n" \
@@ -112,7 +116,8 @@ resource "Users" do
         expect(
           json.except('image')
         ).to eq(current_user.attributes.as_json
-              .transform_keys { |key| key.camelize(:lower) })
+                .except("auth_token", "password_digest")
+                .transform_keys { |key| key.camelize(:lower) })
       end
     end
 
@@ -159,6 +164,7 @@ resource "Users" do
       expect(
         json.except('image')
       ).to eq(current_user.attributes.as_json
+               .except("auth_token", "password_digest")
                .transform_keys{ |key| key.camelize(:lower) })
     end
   end

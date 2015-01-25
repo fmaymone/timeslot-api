@@ -1,6 +1,7 @@
 json.extract! @user,
 :id,
 :username,
+:email,
 :default_alerts,
 :created_at,
 :updated_at,
