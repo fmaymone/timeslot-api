@@ -100,7 +100,7 @@ module V1
     end
 
     private def user_params
-      parameter = params.permit(:username, :email, :defaultAlerts, :image)
+      parameter = params.permit(:username, :email, :password, :defaultAlerts, :image)
       parameter.merge!("public_id" => image_param) if params[:image].present?
       parameter.transform_keys(&:underscore)
     end

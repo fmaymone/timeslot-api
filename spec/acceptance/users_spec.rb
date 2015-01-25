@@ -72,11 +72,14 @@ resource "Users" do
               required: true
     parameter :email, "Email of user (max. 254 characters)",
               required: true
+    parameter :password, "Password for user (min. 5 & max. 72 characters)",
+              required: true
 
     response_field :id, "ID of the new user"
 
     let(:username) { "foo" }
     let(:email) { "someone@timeslot.com" }
+    let(:password) { "secret-thing" }
 
     example "Create user returns ID of new user", document: :v1 do
       explanation "returns 422 if parameters are missing\n\n" \

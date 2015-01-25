@@ -81,6 +81,41 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "sign up", :focus do
+    context "valid params" do
+      let(:new_user) { build(:user) }
+
+      it "succeeds if password is long enough" do
+        expect(new_user.save).to be true
+        expect(new_user.errors.empty?).to be true
+      end
+
+      it "sets an encrypted password for the user" do
+        new_user.save
+        expect(new_user.password_digest.nil?).to be false
+      end
+    end
+
+    context "invalid params" do
+      let(:invalid_user) { build(:user) }
+
+      it "fails if password missing" do
+        invalid_user.password = nil
+        expect(invalid_user.save).to be false
+      end
+
+      it "fails if password too short" do
+        invalid_user.password = "han"
+        expect(invalid_user.save).to be false
+      end
+
+      it "fails if password too long" do
+        invalid_user.password = 'n' * 73
+        expect(invalid_user.save).to be false
+      end
+    end
+  end
+
   describe :active_slots do
     let(:user) { create(:user) }
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }

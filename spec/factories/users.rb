@@ -5,6 +5,7 @@ FactoryGirl.define do
   factory :user, aliases: [:owner, :member] do
     username
     email
+    password "foobar"
 
     trait :with_image do
       after :create do |user|

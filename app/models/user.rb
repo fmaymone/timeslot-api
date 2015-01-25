@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  has_secure_password
   after_commit AuditLog
 
   # has_many relation because when image gets updated the old image still exists
@@ -42,10 +43,14 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
+  # TODO: what about a minimum for username?
   validates :email, presence: true, length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
+
+  # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
+  validates :password, length: { minimum: 5, maximum: 72 }
 
   ## user related ##
 
