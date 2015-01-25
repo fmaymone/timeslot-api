@@ -9,7 +9,7 @@ gem 'rails-api'
 gem 'pg'
 
 # To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.1.2'
+gem 'bcrypt'
 
 # To use Jbuilder templates for JSON
 gem 'jbuilder'
