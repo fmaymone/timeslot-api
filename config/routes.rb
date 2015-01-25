@@ -28,9 +28,6 @@ Rails.application.routes.draw do
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'
       delete '', to: 'users#destroy', as: 'user_delete'
-      # HACK: not ready for production
-      get 'authenticate/:id', to: 'users#auth', as: 'auth',
-          constraints: { id: /\d+/ }
       post 'signin', to: 'users#signin', as: 'signin'
       get 'signout', to: 'users#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'

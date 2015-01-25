@@ -30,15 +30,6 @@ module V1
       render :show
     end
 
-    # GET /v1/users/authenticate/1
-    # HACK: temporary solution
-    def auth
-      user = User.find(params[:id])
-      self.current_user = user
-
-      head :ok
-    end
-
     # POST /v1/users
     def create
       @user = User.add(user_params)
@@ -70,7 +61,7 @@ module V1
     def signout
     end
 
-    # PATCH/PUT /v1/users/1
+    # PATCH /v1/users/1
     def update
       @user = current_user.change(user_params) unless user_params.empty?
 

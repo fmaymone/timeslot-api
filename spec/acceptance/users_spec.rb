@@ -5,33 +5,27 @@ resource "Users" do
   let(:current_user) { create(:user) }
   before(:each) { ApplicationController.new.current_user = current_user }
 
-  # at the moment this test is just here to explain the auth hack
-  get "/v1/users/authenticate/:id" do
+  post "/v1/users/signin" do
+    header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :id, "ID of the user to authenticate", required: true
+    parameter :email, "Email of the user to authenticate", required: true
+    parameter :password, "Password for the user to authenticate", required: true
 
-    let!(:first_user) { create(:user) } # should not be the current_user
-    let(:user) { create(:user) }
-    let(:id) { user.id }
-    let(:testgroup) { attributes_for(:group) }
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
 
-    # The best idea I had to check which user is set as current_user was taking
-    # an action which uses the current_user and see if it gets set correctly
-    example "Authenticate an user - See Note", document: :v1 do
-      explanation "***Important***: as of now we don't have a proper user" \
-                  " authentication in place. Please set a HTTP header" \
-                  " with **'AUTHORIZATION'** as key and the **username**" \
-                  " of the user who should be *logged in* as value.\n\n" \
-                  "returns OK if User set as current user\n\n" \
-                  "returns 404 if ID is invalid"
+    let(:user) { create(:user, password: "timeslot") }
+    let(:email) { user.email }
+    let(:password) { "timeslot" }
+
+    example "Sign In User returns Authentication Token", document: :v1 do
+      explanation "returns OK and an AuthToken if credentials match\n\n" \
+                  "returns 403 if credentials invalid"
       do_request
 
       expect(response_status).to eq(200)
-
-      client.post(URI.parse("/v1/groups").path, testgroup, headers)
-      expect(status).to eq(201)
-      expect(json['ownerId']).to eq user.id
+      expect(json['authToken']).to eq user.auth_token
     end
   end
 
