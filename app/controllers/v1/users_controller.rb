@@ -52,6 +52,24 @@ module V1
       end
     end
 
+    # POST /v1/users/signin
+    # returns auth_token if correct email and password are send
+    def signin
+      @user = User.sign_in(*credentials)
+
+      if @user
+        render :signin
+      else
+        render json: { error: "email and password didn't match" },
+               status: :unauthorized
+      end
+    end
+
+    # GET /v1/users/signout
+    # invalidates auth token?
+    def signout
+    end
+
     # PATCH/PUT /v1/users/1
     def update
       @user = current_user.change(user_params) unless user_params.empty?
@@ -111,6 +129,10 @@ module V1
 
     private def image_param
       params.require(:image).require(:publicId)
+    end
+
+    private def credentials
+      [params.require(:email), params.require(:password)]
     end
   end
 end

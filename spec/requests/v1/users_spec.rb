@@ -50,6 +50,40 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  describe "POST /v1/users/signin" do
+    let!(:user) { create(:user, password: 'timeslot') }
+
+    describe "with valid params" do
+      let(:valid_attributes) {
+        { email: user.email, password: 'timeslot' }
+      }
+      it "returns OK" do
+        post "/v1/users/signin", valid_attributes
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns auth_token for user" do
+        post "/v1/users/signin", valid_attributes
+        expect(json).to have_key('authToken')
+      end
+    end
+
+    describe "with invalid params" do
+      let(:invalid_attributes) {
+        { email: user.email, password: 'not timeslot' }
+      }
+      it "returns unauthorized" do
+        post "/v1/users/signin", invalid_attributes
+        expect(response).to have_http_status :unauthorized
+      end
+
+      it "returns an error" do
+        post "/v1/users/signin", invalid_attributes
+        expect(json).to have_key "error"
+      end
+    end
+  end
+
   describe "PATCH /v1/users" do
     context "with valid params" do
       it "responds with http OK" do
