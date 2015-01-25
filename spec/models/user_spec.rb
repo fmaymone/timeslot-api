@@ -81,7 +81,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "sign up", :focus do
+  describe "sign up" do
     context "valid params" do
       let(:new_user) { build(:user) }
 
@@ -90,9 +90,14 @@ RSpec.describe User, type: :model do
         expect(new_user.errors.empty?).to be true
       end
 
-      it "sets an encrypted password for the user" do
+      it "saves an encrypted password for the user" do
         new_user.save
-        expect(new_user.password_digest.nil?).to be false
+        expect(new_user.password_digest.present?).to be true
+      end
+
+      it "generates an auth_token for the user" do
+        new_user.save
+        expect(new_user.auth_token.present?).to be true
       end
     end
 

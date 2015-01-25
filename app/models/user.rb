@@ -1,5 +1,6 @@
 class User < ActiveRecord::Base
   has_secure_password
+  before_create :set_auth_token
   after_commit AuditLog
 
   # has_many relation because when image gets updated the old image still exists
@@ -215,6 +216,15 @@ class User < ActiveRecord::Base
       end
     end
     default_alerts
+  end
+
+  private def set_auth_token
+    return if auth_token.present?
+    self.auth_token = generate_auth_token
+  end
+
+  private def generate_auth_token
+    SecureRandom.urlsafe_base64(20).tr('lIO0', 'pstu')
   end
 
   def self.add(params)
