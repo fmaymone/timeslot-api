@@ -10,18 +10,17 @@ module V1
       render :index
     end
 
-    # HACK: temporary no current user
     # GET /v1/users/1/slots
-    # TODO: needs admin layer, comment out method
-    def show_slots
-      user = User.find(params[:id])
-      @slots = []
-      @slots.push(*user.std_slots)
-      @slots.push(*user.re_slots)
-      @slots.push(*user.group_slots)
+    # method was added for demo purposes
+    # def show_slots
+    #   user = User.find(params[:id])
+    #   @slots = []
+    #   @slots.push(*user.std_slots)
+    #   @slots.push(*user.re_slots)
+    #   @slots.push(*user.group_slots)
 
-      render "v1/slots/index"
-    end
+    #   render "v1/slots/index"
+    # end
 
     # GET /v1/users/1
     def show
@@ -107,17 +106,16 @@ module V1
     end
 
     private def user_params
-      parameter = params.permit(:username, :email, :password, :defaultAlerts, :image)
-      parameter.merge!("public_id" => image_param) if params[:image].present?
-      parameter.transform_keys(&:underscore)
+      p = params.permit(:username, :email, :password, :defaultAlerts, :image)
+      if params[:image].present?
+        img_param = params.require(:image).require(:publicId)
+        p.merge!("public_id" => img_param)
+      end
+      p.transform_keys(&:underscore)
     end
 
     private def friends_params
       params.require(:ids)
-    end
-
-    private def image_param
-      params.require(:image).require(:publicId)
     end
 
     private def credentials
