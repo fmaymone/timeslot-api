@@ -1,7 +1,6 @@
 module V1
   class UsersController < ApplicationController
-    # before_filter :signed_in?, except: [:auth, :create]
-    before_filter :sign_in, except: [:auth, :create, :index, :show_slots]
+    skip_before_filter :authenticate_user_from_token!, only: [:create, :show_slots]
 
     # GET /v1/users
     def index

@@ -1,7 +1,6 @@
 module V1
   class SlotsController < ApplicationController
-    # before_filter :signed_in?
-    before_filter :sign_in, except: [:show, :show_many]
+    skip_before_filter :authenticate_user_from_token!, only: [:show, :show_many]
 
     # GET /v1/slots
     # return all slots (std, group, re) of the current user

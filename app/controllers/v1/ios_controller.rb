@@ -1,5 +1,7 @@
 module V1
   class IosController < ApplicationController
+    skip_before_filter :authenticate_user_from_token!
+
     # GET /v1/ios/clean-db
     def clean_db
       if ENV['ENABLE_IOS_DB_CLEAN']

@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::API
   include ActionController::Caching
   include ActionController::Helpers
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+  before_filter :authenticate_user_from_token!
   helper_method :current_user
 
   rescue_from ActiveRecord::RecordNotFound do
@@ -15,37 +17,22 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
-  # HACK: This is not ready for production
-  # TODO: add authentication
-  # used for setting current user for tests
-  def current_user=(user)
-    @@hack_current_user = user
-  end
-
   def current_user
-    @current_user ||= @@hack_current_user
+    @current_user
   end
 
-  # HACK: temporary solution
-  # TODO: improve
-  # checks if a HTTP AUTHORIZATION header is set
-  # if so sets the current user to the user with the provided username
-  def sign_in
-    # tests use current_user= method
-    return if Rails.env.test? || Rails.env.herokutest?
+  private def authenticate_user_from_token!
+    authenticate_token || render_unauthorized
+  end
 
-    if request.headers['HTTP_AUTHORIZATION'].nil?
-      return render json: "HTTP 'Authorization' header required",
-                    status: :unauthorized
+  private def authenticate_token
+    authenticate_with_http_token do |token, options|
+      @current_user = User.find_by(auth_token: token)
     end
-    username = request.headers['HTTP_AUTHORIZATION']
+  end
 
-    current_user = User.where(username: username).first
-    if !current_user.nil?
-      @current_user = current_user
-    else
-      render json: "Authorization error: Couldn't find user with name #{username}",
-             status: :unauthorized
-    end
+  def render_unauthorized
+    self.headers['WWW-Authenticate'] = 'Token realm="Application"'
+    render json: 'Bad credentials', status: 401
   end
 end

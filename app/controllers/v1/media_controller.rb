@@ -1,5 +1,7 @@
 module V1
   class MediaController < ApplicationController
+    skip_before_filter :authenticate_user_from_token!
+
     rescue_from CloudinaryException do |exception|
       render json: exception.message, status: :service_unavailable
     end
