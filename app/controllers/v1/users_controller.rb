@@ -32,9 +32,7 @@ module V1
 
     # POST /v1/users
     def create
-      @user = User.add(user_params)
-
-      # if @user.save
+      @user = User.create_with_image(user_params)
 
       if @user.errors.empty?
         render :show, status: :created

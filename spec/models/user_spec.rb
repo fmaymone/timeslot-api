@@ -81,8 +81,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # TODO: merge with 'add'
-  describe "sign up" do
+  describe "authentication params" do
     context "valid params" do
       let(:new_user) { build(:user) }
 
@@ -642,20 +641,20 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "add" do
+  describe "create_with_image" do
     let(:user_params) { attributes_for(:user, password: 'something') }
 
     context "valid params" do
       it "creates a new user" do
         expect {
-          User.add(user_params)
+          User.create_with_image(user_params)
         }.to change(User, :count).by 1
       end
 
       it "sets an image if provided" do
         user_params.merge!("public_id" => 'foobar')
         expect {
-          User.add(user_params)
+          User.create_with_image(user_params)
         }.to change(MediaItem, :count).by 1
         expect(User.last.image.public_id).to eq user_params["public_id"]
       end
@@ -665,7 +664,7 @@ RSpec.describe User, type: :model do
       it "doesn't create a new user if username is nil" do
         user_params[:username] = nil
         expect {
-          User.add(user_params)
+          User.create_with_image(user_params)
         }.not_to change(User, :count)
       end
 
@@ -673,7 +672,7 @@ RSpec.describe User, type: :model do
         user_params.merge!("public_id" => nil)
 
         expect {
-          User.add(user_params)
+          User.create_with_image(user_params)
         }.to change(User, :count).by 1
       end
 
@@ -681,7 +680,7 @@ RSpec.describe User, type: :model do
         user_params.merge!("public_id" => nil)
 
         expect {
-          User.add(user_params)
+          User.create_with_image(user_params)
         }.not_to change(MediaItem, :count)
       end
     end

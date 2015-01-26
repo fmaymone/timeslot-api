@@ -232,7 +232,7 @@ class User < ActiveRecord::Base
     errors.add(:password, "Password missing") if password_digest.nil?
   end
 
-  def self.add(params)
+  def self.create_with_image(params)
     new_user = create(params.except("public_id"))
     return new_user unless new_user.errors.empty?
     AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
