@@ -6,18 +6,21 @@ module V1
     # return all slots (std, group, re) of the current user
     def index
       @slots = current_user.all_slots
+
       render :index
     end
 
     # GET /v1/slots/1
     def show
       @slot = BaseSlot.get(params[:id])
+
       render :show, locals: { slot: @slot }
     end
 
     # POST /v1/slots
     def show_many
       @slots = BaseSlot.get_many(params[:ids])
+
       render :index
     end
 
@@ -33,9 +36,11 @@ module V1
     end
 
     # POST /v1/groupslot
+    # TODO: authorization
     def create_groupslot
-      # TODO: can only be done if current_user is group owner or
-      # member and members can post
+      # group = Group.find(group_param)
+      # return unless current_user.is_owner? group.id || group.members_can_post
+
       @slot = GroupSlot.create_with_meta(meta_params, group_param, note_param,
                                          alerts_param, current_user)
       if @slot.errors.empty?
@@ -86,6 +91,7 @@ module V1
     end
 
     # PATCH /v1/groupslot/1
+    # TODO: authorization
     def update_groupslot
       slot = current_user.group_slots.find(params[:id])
       slot.update_from_params(meta_params, media_params, note_param,
@@ -145,8 +151,7 @@ module V1
     end
 
     private def group_param
-      group = Group.find(params.require(:groupId))
-      { group: group }
+      params.require(:groupId)
     end
 
     private def std_param

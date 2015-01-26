@@ -343,7 +343,7 @@ RSpec.describe "V1::Slots", type: :request do
             post "/v1/groupslot/", attributes_for(:meta_slot).merge(
                    groupId: 1), auth_header
           }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
-          expect(response).to have_http_status(:not_found)
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
 
