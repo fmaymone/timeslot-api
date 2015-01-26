@@ -3,7 +3,9 @@ require 'rails_helper'
 RSpec.describe "V1::Groups", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) do
+    { 'Authorization' => "Token token=#{current_user.auth_token}" }
+  end
 
   # create
   describe "POST /v1/groups" do
@@ -11,18 +13,19 @@ RSpec.describe "V1::Groups", type: :request do
 
     it "creates a new group" do
       expect {
-        post "/v1/groups", new_params
+        post "/v1/groups", new_params, auth_header
       }.to change(Group, :count)
       expect(Group.last.name).to eq "bar"
     end
 
     it "adds the owner as a group member" do
-      post "/v1/groups", new_params
+      post "/v1/groups", new_params, auth_header
       expect(Group.last.members).to include current_user
     end
 
     it "adds an group image" do
-      post "/v1/groups", new_params.merge(image: { publicId: 'foobar' })
+      post "/v1/groups", new_params.merge(image: { publicId: 'foobar' }),
+           auth_header
       expect(json["image"]).to eq "foobar"
     end
   end
@@ -35,12 +38,12 @@ RSpec.describe "V1::Groups", type: :request do
       let(:group) { create(:group, owner: current_user, name: "foo") }
 
       it "returns OK" do
-        patch "/v1/groups/#{group.id}", new_params
+        patch "/v1/groups/#{group.id}", new_params, auth_header
         expect(response.status).to be(200)
       end
 
       it "updates group name" do
-        patch "/v1/groups/#{group.id}", new_params
+        patch "/v1/groups/#{group.id}", new_params, auth_header
         group.reload
         expect(group.name).to eq "bar"
       end
@@ -51,12 +54,12 @@ RSpec.describe "V1::Groups", type: :request do
 
         describe "new" do
           it "returns OK" do
-            patch "/v1/groups/#{group.id}", img_params
+            patch "/v1/groups/#{group.id}", img_params, auth_header
             expect(response.status).to be(200)
           end
 
           it "sets group image" do
-            patch "/v1/groups/#{group.id}", img_params
+            patch "/v1/groups/#{group.id}", img_params, auth_header
             expect(group.image.public_id).to eq public_id
           end
         end
@@ -66,7 +69,7 @@ RSpec.describe "V1::Groups", type: :request do
             create(:group, :with_image, owner: current_user, name: "foo")
           }
           it "returns OK" do
-            patch "/v1/groups/#{group.id}", img_params
+            patch "/v1/groups/#{group.id}", img_params, auth_header
             expect(response.status).to be(200)
             expect(group.image.public_id).to eq public_id
           end
@@ -76,13 +79,13 @@ RSpec.describe "V1::Groups", type: :request do
           let(:img_params) { { image: { public_id: nil } } }
 
           it "returns 422" do
-            patch "/v1/groups/#{group.id}", img_params
+            patch "/v1/groups/#{group.id}", img_params, auth_header
             expect(response.status).to be(422)
           end
 
           it "doesn't set group image" do
             expect {
-              patch "/v1/groups/#{group.id}", img_params
+              patch "/v1/groups/#{group.id}", img_params, auth_header
             }.not_to change(group, :image)
           end
         end
@@ -93,13 +96,13 @@ RSpec.describe "V1::Groups", type: :request do
       let(:group) { create(:group, name: "foo") }
 
       it "returns Forbidden" do
-        patch "/v1/groups/#{group.id}", new_params
+        patch "/v1/groups/#{group.id}", new_params, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't change group name" do
         expect {
-          patch "/v1/groups/#{group.id}", new_params
+          patch "/v1/groups/#{group.id}", new_params, auth_header
         }.not_to change(group, :name)
       end
     end
@@ -114,12 +117,12 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members", user_ids
+        post "/v1/groups/#{group.id}/members", user_ids, auth_header
         expect(response.status).to be(201)
       end
 
       it "returns a list of all users related to that group" do
-        post "/v1/groups/#{group.id}/members", user_ids
+        post "/v1/groups/#{group.id}/members", user_ids, auth_header
         expect(json).to have_key "related"
         # group owner is automatically an active member too
         expect(json['related'].size).to eq 4
@@ -127,7 +130,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "creates new memberships with state 'invited' for all new members" do
         expect {
-          post "/v1/groups/#{group.id}/members", user_ids
+          post "/v1/groups/#{group.id}/members", user_ids, auth_header
         }.to change(Membership, :count).by(others.size)
         others.each do |id|
           expect(Membership.where(user_id: id).first.invited?).to be true
@@ -138,7 +141,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :invited, user: others.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", user_ids
+          post "/v1/groups/#{group.id}/members", user_ids, auth_header
         }.to change(Membership, :count).by(others.size - 1)
       end
 
@@ -146,7 +149,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :active, user: others.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", user_ids
+          post "/v1/groups/#{group.id}/members", user_ids, auth_header
         }.to change(Membership, :count).by(others.size - 1)
       end
 
@@ -155,7 +158,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :refused, user: others.last, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", user_ids
+          post "/v1/groups/#{group.id}/members", user_ids, auth_header
         }.to change(Membership, :count).by(others.size - 2)
         membership1 = Membership.where(user_id: others.first).first
         membership2 = Membership.where(user_id: others.last).first
@@ -176,13 +179,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/members", user_ids
+        post "/v1/groups/#{group.id}/members", user_ids, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members", user_ids
+          post "/v1/groups/#{group.id}/members", user_ids, auth_header
         }.not_to change(Membership, :count)
       end
     end
@@ -197,13 +200,13 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members", { ids: ids }
+        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
         expect(response.status).to be(201)
       end
 
       it "creates a membership with state 'invited'" do
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
         }.to change(Membership, :count).by ids.size
         membership = Membership.last
         expect(membership.invited?).to be true
@@ -211,7 +214,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "doesn't add user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
         }.not_to change(group.members, :count)
       end
 
@@ -221,13 +224,14 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, user: other_users.first, group: group)
           }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }
+            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { ids: [ids.first] }
+              post "/v1/groups/#{group.id}/members", { ids: [ids.first] },
+                   auth_header
             }.not_to change(Membership, :count)
           end
         end
@@ -237,7 +241,7 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :active, user: other_users.first, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }
+            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
             expect(response.status).to be(201)
           end
         end
@@ -247,18 +251,19 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :left, user: other_users.first, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }
+            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { ids: [ids.first] }
+              post "/v1/groups/#{group.id}/members", { ids: [ids.first] },
+                   auth_header
             }.not_to change(Membership, :count)
           end
 
           it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }
+            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
             membership.reload
             expect(membership.invited?).to be true
           end
@@ -272,13 +277,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/members",{ ids: ids }
+        post "/v1/groups/#{group.id}/members",{ ids: ids }, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members",{ ids: ids }
+          post "/v1/groups/#{group.id}/members",{ ids: ids }, auth_header
         }.not_to change(Membership, :count)
       end
     end
@@ -293,19 +298,19 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "existing invitation" do
       it "returns success" do
-        post "/v1/groups/#{group.id}/accept"
+        post "/v1/groups/#{group.id}/accept", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to active" do
-        post "/v1/groups/#{group.id}/accept"
+        post "/v1/groups/#{group.id}/accept", {}, auth_header
         membership.reload
         expect(membership.active?).to be true
       end
 
       it "adds user to group" do
         expect {
-          post "/v1/groups/#{group.id}/accept"
+          post "/v1/groups/#{group.id}/accept", {}, auth_header
         }.to change(group.members, :count).by(1)
       end
     end
@@ -316,13 +321,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/accept"
+        post "/v1/groups/#{group.id}/accept", {}, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't changes membership state" do
         expect {
-          post "/v1/groups/#{group.id}/accept"
+          post "/v1/groups/#{group.id}/accept", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
@@ -331,7 +336,7 @@ RSpec.describe "V1::Groups", type: :request do
       let(:membership) {}
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/accept"
+        post "/v1/groups/#{group.id}/accept", {}, auth_header
         expect(response.status).to be(403)
       end
     end
@@ -348,12 +353,12 @@ RSpec.describe "V1::Groups", type: :request do
       let(:params) { { group: { invite: 'refuse' } } }
 
       it "returns success" do
-        post "/v1/groups/#{group.id}/refuse"
+        post "/v1/groups/#{group.id}/refuse", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to refused" do
-        post "/v1/groups/#{group.id}/refuse"
+        post "/v1/groups/#{group.id}/refuse", {}, auth_header
         membership.reload
         expect(membership.refused?).to be true
       end
@@ -365,13 +370,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/refuse"
+        post "/v1/groups/#{group.id}/refuse", {}, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't changes membership state" do
         expect {
-          post "/v1/groups/#{group.id}/refuse"
+          post "/v1/groups/#{group.id}/refuse", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
@@ -380,7 +385,7 @@ RSpec.describe "V1::Groups", type: :request do
       let(:membership) {}
 
       it "returns forbidden" do
-        post "/v1/groups/#{group.id}/refuse"
+        post "/v1/groups/#{group.id}/refuse", {}, auth_header
         expect(response.status).to be(403)
       end
     end
@@ -396,12 +401,12 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns OK" do
-        delete "/v1/groups/#{group.id}/members"
+        delete "/v1/groups/#{group.id}/members", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to 'left'" do
-        delete "/v1/groups/#{group.id}/members"
+        delete "/v1/groups/#{group.id}/members", {}, auth_header
         membership.reload
         expect(membership.left?).to be true
       end
@@ -413,20 +418,20 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns OK" do
-        delete "/v1/groups/#{group.id}/members"
+        delete "/v1/groups/#{group.id}/members", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "doesn't changes membership state" do
         expect {
-          delete "/v1/groups/#{group.id}/members"
+          delete "/v1/groups/#{group.id}/members", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
 
     describe "no membership" do
       it "returns forbidden" do
-        delete "/v1/groups/#{group.id}/members"
+        delete "/v1/groups/#{group.id}/members", {}, auth_header
         expect(response.status).to be(403)
       end
     end
@@ -444,12 +449,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes membership state to 'kicked'" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
           membership.reload
           expect(membership.kicked?).to be true
         end
@@ -461,12 +466,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes membership state to 'kicked'" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
           membership.reload
           expect(membership.kicked?).to be true
         end
@@ -478,7 +483,7 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
@@ -497,20 +502,20 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns forbidden" do
-        delete "/v1/groups/#{group.id}/members/#{member.id}"
+        delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
         expect(response.status).to be(403)
       end
 
       it "doesn't changes membership state" do
         expect {
-          delete "/v1/groups/#{group.id}/members/#{member.id}"
+          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
 
     describe "no membership" do
       it "returns forbidden" do
-        delete "/v1/groups/#{group.id}/members/#{member.id}"
+        delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
         expect(response.status).to be(403)
       end
     end
@@ -530,12 +535,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          patch "/v1/groups/#{group.id}/members", params
+          patch "/v1/groups/#{group.id}/members", params, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes notifications state" do
-          patch "/v1/groups/#{group.id}/members", params
+          patch "/v1/groups/#{group.id}/members", params, auth_header
           membership.reload
           expect(membership.notifications).to be false
         end
@@ -548,13 +553,13 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns Forbidden" do
-          patch "/v1/groups/#{group.id}/members", params
+          patch "/v1/groups/#{group.id}/members", params, auth_header
           expect(response).to have_http_status :forbidden
         end
 
         it "doesn't change notifications state" do
           expect {
-            patch "/v1/groups/#{group.id}/members", params
+            patch "/v1/groups/#{group.id}/members", params, auth_header
           }.not_to change(membership, :notifications)
         end
       end
@@ -562,7 +567,7 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "current user not group member" do
       it "returns Forbidden" do
-        patch "/v1/groups/#{group.id}/members", params
+        patch "/v1/groups/#{group.id}/members", params, auth_header
         expect(response).to have_http_status :forbidden
       end
     end

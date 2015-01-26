@@ -3,7 +3,7 @@ require 'documentation_helper'
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   post "/v1/users/signin" do
     header "Content-Type", "application/json"
@@ -31,6 +31,7 @@ resource "Users" do
 
   get "/v1/users/:id" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the user to get", required: true
 
@@ -41,9 +42,7 @@ resource "Users" do
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
 
-    let(:user) { create(:user) }
-    let(:id) { user.id }
-    let(:deleted_at) { user.deleted_at.nil? ? nil : user.deleted_at.iso8601 }
+    let(:id) { current_user.id }
 
     example "Get user returns user data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
@@ -52,7 +51,7 @@ resource "Users" do
       expect(response_status).to eq(200)
       expect(
         json.except('image')
-      ).to eq(user.attributes.as_json
+      ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest")
                .transform_keys { |key| key.camelize(:lower) })
     end
@@ -87,6 +86,7 @@ resource "Users" do
 
   patch "/v1/users" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     describe "Update current users data" do
 
@@ -149,6 +149,8 @@ resource "Users" do
   end
 
   delete "/v1/users" do
+    header "Authorization", :auth_header
+
     example "Delete current user", document: :v1 do
       explanation "Sets 'deletedAt' attr for user who is logged in" \
                   "Doesn't delete anything.\n\n" \
@@ -169,6 +171,7 @@ resource "Users" do
   post "/v1/users/add_friends" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of User IDs to create a friendship for",
               required: true
@@ -209,6 +212,7 @@ resource "Users" do
   post "/v1/users/remove_friends" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of User IDs for whom to refuse/destroy a friendship",
               required: true

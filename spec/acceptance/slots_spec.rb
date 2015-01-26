@@ -3,10 +3,11 @@ require 'documentation_helper'
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   get "/v1/slots" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
     let!(:std_slot_1) {
@@ -344,6 +345,7 @@ resource "Slots" do
   post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true
@@ -455,6 +457,7 @@ resource "Slots" do
   post "/v1/groupslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true
@@ -554,6 +557,7 @@ resource "Slots" do
   post "/v1/reslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :predecessorId,
               "ID of the Slot which was resloted",
@@ -602,6 +606,7 @@ resource "Slots" do
 
   patch "/v1/metaslot/:id" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
 
@@ -633,6 +638,7 @@ resource "Slots" do
 
   patch "/v1/stdslot/:id" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
 
@@ -755,6 +761,8 @@ resource "Slots" do
   end
 
   delete "/v1/stdslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:std_slot) { create(:std_slot, owner: current_user) }
@@ -796,6 +804,8 @@ resource "Slots" do
   end
 
   delete "/v1/groupslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the Group Slot to delete", required: true
 
     let(:group) { create(:group) }
@@ -839,6 +849,8 @@ resource "Slots" do
   end
 
   delete "/v1/reslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the ReSlot to delete", required: true
 
     let!(:re_slot) { create(:re_slot, slotter: current_user) }

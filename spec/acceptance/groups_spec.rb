@@ -3,32 +3,33 @@ require 'documentation_helper'
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   # index
   get "/v1/groups" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
     response_field :image, "URL of the groupimage"
     response_field :url, "ressource url for the group"
 
-    let!(:user) { create(:user, :with_3_groups, :with_3_own_groups) }
+    let!(:current_user) { create(:user, :with_3_groups, :with_3_own_groups) }
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
-      ApplicationController.new.current_user = user
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq user.groups.count
+      expect(json.size).to eq current_user.groups.count
     end
   end
 
   # show
   get "/v1/groups/:group_id" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to get", required: true
 
@@ -63,6 +64,7 @@ resource "Groups" do
   post "/v1/groups" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :members_can_post, "Can subscribers post?"
@@ -91,6 +93,7 @@ resource "Groups" do
   # update
   patch "/v1/groups/:group_id" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to update", required: true
 
@@ -162,6 +165,8 @@ resource "Groups" do
 
   # destroy
   delete "/v1/groups/:group_id" do
+    header "Authorization", :auth_header
+
     parameter :group_id, "ID of the group to delete", required: true
 
     let(:group) { create(:group, owner: current_user) }
@@ -185,7 +190,7 @@ resource "Groups" do
       expect(
         json.except('image')
       ).to eq(group.attributes.as_json
-               .transform_keys{ |key| key.camelize(:lower) })
+               .transform_keys { |key| key.camelize(:lower) })
     end
 
     describe "current user not group owner" do
@@ -201,6 +206,7 @@ resource "Groups" do
   # members
   get "/v1/groups/:group_id/members" do
     header "accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to get", required: true
 
@@ -248,6 +254,7 @@ resource "Groups" do
   # related
   get "/v1/groups/:group_id/related" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to get", required: true
 
@@ -297,6 +304,7 @@ resource "Groups" do
   # accept invite
   post "/v1/groups/:group_id/accept" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
 
@@ -324,6 +332,7 @@ resource "Groups" do
   # refuse invite
   post "/v1/groups/:group_id/refuse" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
 
@@ -353,6 +362,7 @@ resource "Groups" do
   # invite
   post "/v1/groups/:group_id/members" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
     parameter :ids, "User IDs to be invited to group", required: true
@@ -383,6 +393,7 @@ resource "Groups" do
 
   # leave
   delete "/v1/groups/:group_id/members" do
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
 
@@ -432,6 +443,7 @@ resource "Groups" do
 
   # kick
   delete "/v1/groups/:group_id/members/:user_id" do
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
     parameter :user_id, "ID of the user to kick", required: true
@@ -487,6 +499,7 @@ resource "Groups" do
   # settings
   patch "/v1/groups/:group_id/members" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
