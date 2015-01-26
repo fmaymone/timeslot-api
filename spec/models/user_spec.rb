@@ -643,7 +643,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "add" do
-    let(:user_params) { attributes_for(:user) }
+    let(:user_params) { attributes_for(:user, password: 'something') }
 
     context "valid params" do
       it "creates a new user" do
