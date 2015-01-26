@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
 
   ## friendship related ##
 
-  # TODO: get friends with one query
+  # OPTIMIZATION: get friends with one query
   def friends
     friends_by_request + friends_by_offer
   end
@@ -118,11 +118,6 @@ class User < ActiveRecord::Base
   def friendships
     initiated_friendships.active + received_friendships.active
   end
-
-  # def friend_with?(user_id)
-  #   initiated_friendships.where("friend_id= ?", user_id).exists? ||
-  #     received_friendships.where("user_id= ?", user_id).exists?
-  # end
 
   def friendship(user_id)
     initiated_friendships.where("friend_id= ?", user_id).first ||
@@ -133,7 +128,24 @@ class User < ActiveRecord::Base
     received_friendships.open.where("user_id= ?", user_id).first
   end
 
+  def add_friends(user_ids)
+    user_ids.each do |id|
+      if offered_friendship(id).try(:accept)
+        next
+      elsif friendship(id).nil?
+        requested_friends << User.find(id)
+      end
+    end
+  end
+
+  def remove_friends(user_ids)
+    user_ids.each do |id|
+      friendship(id).try(:inactivate)
+    end
+  end
+
   ## group related ##
+
   def is_invited?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.invited?

@@ -81,28 +81,17 @@ module V1
     end
 
     # POST /v1/users/add_friends
-    # TODO: add friendship state to get users json if a friendship exists
     # creates friend request or accepts friend request if one exists
     def add_friends
-      friends_params.each do |id|
-        offer = current_user.offered_friendship(id)
-        if offer
-          offer.accept
-        elsif current_user.friendship(id).nil?
-          current_user.requested_friends << User.find(id)
-        end
-      end
-
+      current_user.add_friends friends_ids
       head :ok
     end
 
     # POST /v1/users/remove_friends
     # deny friend request and unfriending
     def remove_friends
-      friends_params.each do |id|
-        friendship = current_user.friendship(id)
-        friendship.inactivate if friendship
-      end
+      current_user.remove_friends friends_ids
+      head :ok
     end
 
     private def user_params
@@ -114,7 +103,7 @@ module V1
       p.transform_keys(&:underscore)
     end
 
-    private def friends_params
+    private def friends_ids
       params.require(:ids)
     end
 
