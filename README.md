@@ -140,3 +140,7 @@ If a spec needs ```truncation```, a **:commit** flag can be set on the test.
 * When commiting use the following commit message format: `KEY #resolved <comment>`
 * e.g. `git commit -m "TRB-2 #resolved testing jira smart commit messages"`
 * More detailed information [here](https://confluence.atlassian.com/display/AOD/Processing+JIRA+issues+with+commit+messages)
+
+## Coding Conventions / Styleguide
+
+* If patching third party libraries we use a **ts_** prefix.
