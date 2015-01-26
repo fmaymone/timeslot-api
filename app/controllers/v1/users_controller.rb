@@ -71,9 +71,10 @@ module V1
 
     # DELETE /v1/users
     def destroy
-      @user = current_user
+      # user inactivate methode not yet fully implemented
+      @user = current_user.inactivate
 
-      if @user.inactivate # inactivate methode to be implemented
+      if @user.errors.empty?
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -84,6 +85,7 @@ module V1
     # creates friend request or accepts friend request if one exists
     def add_friends
       current_user.add_friends friends_ids
+
       head :ok
     end
 
@@ -91,6 +93,7 @@ module V1
     # deny friend request and unfriending
     def remove_friends
       current_user.remove_friends friends_ids
+
       head :ok
     end
 

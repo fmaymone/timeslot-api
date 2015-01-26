@@ -205,7 +205,7 @@ class User < ActiveRecord::Base
     image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
-    ts_soft_delete
+    ts_soft_delete and return self
   end
 
   # TODO: add spec
