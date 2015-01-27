@@ -2,6 +2,8 @@ class BaseSlot < ActiveRecord::Base
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
   # it shares postgres inheritance semantics at the db level with its subtypes
+  class InterfaceNotImplementedError < NoMethodError; end
+
   after_commit AuditLog
   before_create :unique_slot_id
 
@@ -101,6 +103,14 @@ class BaseSlot < ActiveRecord::Base
       end
     end
   end
+
+  ## abstract methods ##
+
+  def related_users
+    fail InterfaceNotImplementedError
+  end
+
+  ## private methods ##
 
   private def add_media_items(collection, media_type)
     case media_type
