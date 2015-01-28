@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   has_secure_password validations: false
-  before_create :set_auth_token
+  before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
 
   # has_many relation because when image gets updated the old image still exists
@@ -232,7 +232,6 @@ class User < ActiveRecord::Base
   end
 
   private def set_auth_token
-    return if auth_token.present?
     self.auth_token = generate_auth_token
   end
 

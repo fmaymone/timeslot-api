@@ -86,15 +86,68 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "PATCH /v1/users" do
     context "with valid params" do
-      it "responds with http OK" do
-        patch "/v1/users", { username: "foo" }, auth_header
-        expect(response).to have_http_status(:ok)
+      context "username" do
+        it "responds with http OK" do
+          patch "/v1/users", { username: "foo" }, auth_header
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "updates the username of a given user" do
+          patch "/v1/users", { username: "New username" }, auth_header
+          current_user.reload
+          expect(current_user.username).to eq("New username")
+        end
+
+        it "doesn't update the auth_token if new username" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { username: "newname" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new username" do
+          old_digest = current_user.password_digest
+          patch "/v1/users", { username: "newname" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
       end
 
-      it "updates the title of a given user" do
-        patch "/v1/users", { username: "New username" }, auth_header
-        current_user.reload
-        expect(current_user.username).to eq("New username")
+      context "email" do
+        it "updates the email of a given user" do
+          patch "/v1/users", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.email).to eq("newmail@timeslot.com")
+        end
+
+        it "doesn't update the auth_token if new email" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new email" do
+          old_digest = current_user.password_digest
+          patch "/v1/users", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
+      context "password" do
+        it "updates the password_digest if new password" do
+          expect {
+            patch "/v1/users", { password: "newsecret" }, auth_header
+          }.to change(current_user, :password_digest)
+        end
+
+        it "updates the auth_token if new password" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { password: "newsecret" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).not_to eq old_token
+        end
       end
     end
 
