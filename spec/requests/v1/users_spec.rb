@@ -21,6 +21,14 @@ RSpec.describe "V1::Users", type: :request do
         expect(json['username']).to eq(current_user.username)
       end
     end
+
+    context "without valid Auth Header" do
+      it "returns unauthorized" do
+        get "/v1/users/#{current_user.id}"
+        expect(response).to have_http_status :unauthorized
+        expect(response.body).to include "Bad credentials"
+      end
+    end
   end
 
   describe "POST /v1/users" do
