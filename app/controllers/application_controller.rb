@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::API
   include TS_Authenticable
+  include Pundit
 
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
