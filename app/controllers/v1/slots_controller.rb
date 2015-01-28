@@ -54,7 +54,7 @@ module V1
     def create_reslot
       predecessor = BaseSlot.find(re_params)
 
-      @slot = ReSlot.from_slot(predecessor: predecessor, slotter: current_user)
+      @slot = ReSlot.create_from_slot(predecessor: predecessor, slotter: current_user)
 
       if @slot.save
         render :show, status: :created, locals: { slot: @slot }

@@ -17,7 +17,7 @@ module V1
 
     # POST /v1/groups
     def create
-      @group = Group.create_with_media(group_params.merge(owner: current_user))
+      @group = Group.create_with_image(group_params.merge(owner: current_user))
 
       if @group.errors.empty?
         render :show, status: :created
@@ -32,7 +32,7 @@ module V1
       @group = Group.find(params[:group_id])
       return head :forbidden unless current_user.is_owner? @group.id
 
-      @group.change(group_params) unless group_params.empty?
+      @group.update_with_image(group_params) unless group_params.empty?
 
       if @group.errors.empty?
         render :show

@@ -4,7 +4,7 @@ FactoryGirl.define do
     association :predecessor, factory: :std_slot, strategy: :build
 
     initialize_with {
-      ReSlot.from_slot(predecessor: predecessor, slotter: slotter)
+      ReSlot.create_from_slot(predecessor: predecessor, slotter: slotter)
     }
   end
 end

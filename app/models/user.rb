@@ -56,7 +56,7 @@ class User < ActiveRecord::Base
 
   ## user related ##
 
-  def change(params)
+  def update_with_image(params)
     update(params.except("public_id"))
     AddImage.call(self, params["public_id"]) if params["public_id"].present?
     self

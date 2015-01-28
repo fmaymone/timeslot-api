@@ -60,7 +60,7 @@ module V1
 
     # PATCH /v1/users/1
     def update
-      @user = current_user.change(user_params) unless user_params.empty?
+      @user = current_user.update_with_image(user_params) unless user_params.empty?
 
       if @user.errors.empty?
         render :show

@@ -11,7 +11,7 @@ class ReSlot < BaseSlot
     [slotter]
   end
 
-  def self.from_slot(predecessor: nil, slotter: nil)
+  def self.create_from_slot(predecessor: nil, slotter: nil)
     create(slotter: slotter,
            predecessor: predecessor,
            meta_slot: predecessor.meta_slot)

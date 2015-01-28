@@ -25,7 +25,7 @@ class Group < ActiveRecord::Base
     images.first
   end
 
-  def change(params)
+  def update_with_image(params)
     update(params.except("public_id"))
     AddImage.call(self, params["public_id"]) if params["public_id"].present?
     self
@@ -64,7 +64,7 @@ class Group < ActiveRecord::Base
     Membership.create(group_id: id, user_id: owner.id).activate
   end
 
-  def self.create_with_media(params)
+  def self.create_with_image(params)
     new_group = create(params.except("public_id"))
     return new_group unless new_group.errors.empty?
     AddImage.call(new_group, params["public_id"]) if params["public_id"].present?
