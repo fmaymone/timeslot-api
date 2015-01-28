@@ -1,10 +1,11 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_filter :authenticate_user_from_token!,
-                       only: [:create, :signin, :show_slots]
+    skip_before_filter :authenticate_user_from_token!, only: [:create, :signin]
+    after_action :verify_authorized, except: [:create, :signin]
 
     # GET /v1/users
     def index
+      authorize User
       @users = User.all
 
       render :index
@@ -24,6 +25,7 @@ module V1
 
     # GET /v1/users/1
     def show
+      authorize User
       @user = User.find(params[:id])
 
       render :show
@@ -60,6 +62,7 @@ module V1
 
     # PATCH /v1/users/1
     def update
+      authorize User
       @user = current_user.update_with_image(user_params) unless user_params.empty?
 
       if @user.errors.empty?
@@ -71,6 +74,7 @@ module V1
 
     # DELETE /v1/users
     def destroy
+      authorize User
       # user inactivate methode not yet fully implemented
       @user = current_user.inactivate
 
@@ -84,6 +88,7 @@ module V1
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends
+      authorize User
       current_user.add_friends friends_ids
 
       head :ok
@@ -92,6 +97,7 @@ module V1
     # POST /v1/users/remove_friends
     # deny friend request and unfriending
     def remove_friends
+      authorize User
       current_user.remove_friends friends_ids
 
       head :ok
