@@ -374,7 +374,8 @@ CREATE TABLE users (
     default_alerts bit(10),
     email character varying(255) DEFAULT ''::character varying NOT NULL,
     password_digest character varying(255) DEFAULT ''::character varying NOT NULL,
-    auth_token character varying(255)
+    auth_token character varying(255),
+    role integer
 );
 
 
@@ -804,4 +805,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150112223724');
 INSERT INTO schema_migrations (version) VALUES ('20150116103054');
 
 INSERT INTO schema_migrations (version) VALUES ('20150124224424');
+
+INSERT INTO schema_migrations (version) VALUES ('20150128120441');
 

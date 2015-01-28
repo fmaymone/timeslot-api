@@ -52,7 +52,7 @@ resource "Users" do
       expect(
         json.except('image')
       ).to eq(current_user.attributes.as_json
-               .except("auth_token", "password_digest")
+               .except("auth_token", "password_digest", "role")
                .transform_keys { |key| key.camelize(:lower) })
     end
   end
@@ -113,7 +113,7 @@ resource "Users" do
         expect(
           json.except('image')
         ).to eq(current_user.attributes.as_json
-                .except("auth_token", "password_digest")
+                .except("auth_token", "password_digest", "role")
                 .transform_keys { |key| key.camelize(:lower) })
       end
     end
@@ -163,7 +163,7 @@ resource "Users" do
       expect(
         json.except('image')
       ).to eq(current_user.attributes.as_json
-               .except("auth_token", "password_digest")
+               .except("auth_token", "password_digest", "role")
                .transform_keys{ |key| key.camelize(:lower) })
     end
   end

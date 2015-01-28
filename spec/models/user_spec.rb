@@ -651,6 +651,13 @@ RSpec.describe User, type: :model do
         }.to change(User, :count).by 1
       end
 
+      it "sets the default role for the user" do
+        User.create_with_image(user_params)
+        expect(User.last.role).to eq "user"
+        expect(User.last.user?).to be true
+        expect(User.last.admin?).to be false
+      end
+
       it "sets an image if provided" do
         user_params.merge!("public_id" => 'foobar')
         expect {

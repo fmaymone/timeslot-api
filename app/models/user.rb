@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include TS_Role
+
   has_secure_password validations: false
   before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
@@ -51,7 +53,7 @@ class User < ActiveRecord::Base
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
-  validates :password, length: { minimum: 5, maximum: 72 }, if: "!password.nil?"
+  validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
   validate :password_digest_was_created, on: :create
 
   ## user related ##
