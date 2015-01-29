@@ -1,7 +1,7 @@
 module V1
   class SlotsController < ApplicationController
-    skip_before_filter :authenticate_user_from_token!, only: [:show, :show_many]
-    after_action :verify_authorized, except: [:show, :show_many]
+    skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
+    skip_after_action :verify_authorized, only: [:show, :show_many]
 
     # GET /v1/slots
     # return all slots (std, group, re) of the current user

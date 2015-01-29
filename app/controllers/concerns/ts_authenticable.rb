@@ -3,7 +3,7 @@ module TS_Authenticable
     base.include ActionController::HttpAuthentication::Token::ControllerMethods
     base.include ActionController::Caching
     base.include ActionController::Helpers
-    base.before_filter :authenticate_user_from_token!
+    base.before_action :authenticate_user_from_token!
     base.helper_method :current_user
   end
 

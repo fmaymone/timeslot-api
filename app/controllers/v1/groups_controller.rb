@@ -1,6 +1,6 @@
 module V1
   class GroupsController < ApplicationController
-    after_action :verify_authorized, except: [:show, :members, :related]
+    skip_after_action :verify_authorized, only: [:show, :members, :related]
 
     # GET /v1/groups
     # return all groups where the current user is member

@@ -1,7 +1,7 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_filter :authenticate_user_from_token!, only: [:create, :signin]
-    after_action :verify_authorized, except: [:create, :signin]
+    skip_before_action :authenticate_user_from_token!, only: [:create, :signin]
+    skip_after_action :verify_authorized, only: [:create, :signin]
 
     # GET /v1/users
     def index
