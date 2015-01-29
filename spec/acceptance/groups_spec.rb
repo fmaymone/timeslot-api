@@ -196,9 +196,9 @@ resource "Groups" do
     describe "current user not group owner" do
       let(:group) { create(:group, owner: create(:user)) }
 
-      example "returns forbidden", document: false do
+      example "returns unauthorized", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq(401)
       end
     end
   end
@@ -434,9 +434,9 @@ resource "Groups" do
     end
 
     describe "no membership" do
-      example "returns Forbidden", document: false do
+      example "returns Unauthorized", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq 401
       end
     end
   end
@@ -462,7 +462,7 @@ resource "Groups" do
       example "Remove/Kick other user from own group", document: :v1 do
         explanation "returns 200 if user successfully removed from group\n\n" \
                     "returns 200 if invite for user successfully disabled\n\n" \
-                    "returns 403 if user to be kicked has no membership" \
+                    "returns 422 if user to be kicked has no membership" \
                     " for this group at all\n\n" \
                     "returns 403 if current user not group owner aka" \
                     " not allowed to kick members\n\n" \
@@ -489,9 +489,9 @@ resource "Groups" do
     end
 
     describe "no membership" do
-      example "returns Forbidden", document: false do
+      example "returns Unprocessable Entity", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq(422)
       end
     end
   end
@@ -565,27 +565,27 @@ resource "Groups" do
                notifications: true)
       end
 
-      example "returns forbidden", document: false do
+      example "returns Unauthorized", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq 401
       end
     end
 
     describe "no membership" do
       let(:membership) {}
 
-      example "returns forbidden", document: false do
+      example "returns Unauthorized", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq 401
       end
     end
 
     describe "group ID invalid" do
       let(:group_id) { group.id + 1 }
 
-      example "returns forbidden", document: false do
+      example "returns Not found", document: false do
         do_request
-        expect(response_status).to eq(403)
+        expect(response_status).to eq 404
       end
     end
   end

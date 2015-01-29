@@ -47,8 +47,8 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def kick_member(user)
-    membership = memberships.find_by user_id: user.id
+  def kick_member(user_id)
+    membership = memberships.find_by user_id: user_id
     membership && membership.kick
   end
 
