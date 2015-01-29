@@ -16,4 +16,9 @@ class ReSlot < BaseSlot
            predecessor: predecessor,
            meta_slot: predecessor.meta_slot)
   end
+
+  # for Pundit
+  def self.policy_class
+    ReSlotPolicy
+  end
 end

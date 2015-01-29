@@ -165,4 +165,9 @@ class BaseSlot < ActiveRecord::Base
   def self.get_many(slot_ids)
     slot_ids.collect { |id| get(id) }
   end
+
+  # for Pundit
+  def self.policy_class
+    SlotPolicy
+  end
 end

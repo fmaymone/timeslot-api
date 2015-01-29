@@ -21,4 +21,9 @@ class GroupSlot < BaseSlot
     user.update_alerts(slot, alert_param) if alert_param
     slot
   end
+
+  # for Pundit
+  def self.policy_class
+    GroupSlotPolicy
+  end
 end

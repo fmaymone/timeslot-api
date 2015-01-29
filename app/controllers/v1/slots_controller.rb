@@ -1,10 +1,12 @@
 module V1
   class SlotsController < ApplicationController
     skip_before_filter :authenticate_user_from_token!, only: [:show, :show_many]
+    after_action :verify_authorized, except: [:show, :show_many]
 
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
     def index
+      authorize :slot
       @slots = current_user.all_slots
 
       render :index
@@ -26,6 +28,7 @@ module V1
 
     # POST /v1/stdslot
     def create_stdslot
+      authorize StdSlot
       @slot = StdSlot.create_with_meta(meta_params, std_param, note_param,
                                        alerts_param, current_user)
       if @slot.errors.empty?
@@ -36,10 +39,9 @@ module V1
     end
 
     # POST /v1/groupslot
-    # TODO: authorization
     def create_groupslot
-      # group = Group.find(group_param)
-      # return unless current_user.is_owner? group.id || group.members_can_post
+      group = Group.find(group_param)
+      authorize GroupSlot.new(group: group)
 
       @slot = GroupSlot.create_with_meta(meta_params, group_param, note_param,
                                          alerts_param, current_user)
@@ -52,10 +54,11 @@ module V1
 
     # POST /v1/reslot
     def create_reslot
+      authorize ReSlot
       predecessor = BaseSlot.find(re_params)
 
-      @slot = ReSlot.create_from_slot(predecessor: predecessor, slotter: current_user)
-
+      @slot = ReSlot.create_from_slot(predecessor: predecessor,
+                                      slotter: current_user)
       if @slot.save
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -66,6 +69,7 @@ module V1
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot
+      authorize :slot
       @meta_slot = current_user.created_slots.find(params[:id])
 
       if @meta_slot.update(meta_params)
@@ -77,49 +81,54 @@ module V1
 
     # PATCH /v1/stdslot/1
     def update_stdslot
-      slot = current_user.std_slots.find(params[:id])
+      @slot = current_user.std_slots.find(params[:id])
+      authorize @slot
 
-      slot.update(std_param) if params["visibility"].present?
-      slot.update_from_params(meta_params, media_params, note_param,
-                              alerts_param, current_user)
+      @slot.update(std_param) if params["visibility"].present?
+      @slot.update_from_params(meta_params, media_params, note_param,
+                               alerts_param, current_user)
 
-      if slot.errors.empty?
-        render :show, locals: { slot: slot }
+      if @slot.errors.empty?
+        render :show, locals: { slot: @slot }
       else
-        render json: slot.errors.messages, status: :unprocessable_entity
+        render json: @slot.errors.messages, status: :unprocessable_entity
       end
     end
 
     # PATCH /v1/groupslot/1
-    # TODO: authorization
     def update_groupslot
-      slot = current_user.group_slots.find(params[:id])
-      slot.update_from_params(meta_params, media_params, note_param,
-                              alerts_param, current_user)
+      @slot = current_user.group_slots.find(params[:id])
+      authorize @slot
 
-      if slot.errors.empty?
-        render :show, locals: { slot: slot }
+      @slot.update_from_params(meta_params, media_params, note_param,
+                               alerts_param, current_user)
+
+      if @slot.errors.empty?
+        render :show, locals: { slot: @slot }
       else
-        render json: slot.errors.messages, status: :unprocessable_entity
+        render json: @slot.errors.messages, status: :unprocessable_entity
       end
     end
 
     # PATCH /v1/reslot/1
     def update_reslot
-      slot = current_user.re_slots.find(params[:id])
-      slot.update_from_params(meta_params, media_params, note_param,
-                              alerts_param, current_user)
+      @slot = current_user.re_slots.find(params[:id])
+      authorize @slot
 
-      if slot.errors.empty?
-        render :show, locals: { slot: slot }
+      @slot.update_from_params(meta_params, media_params, note_param,
+                               alerts_param, current_user)
+
+      if @slot.errors.empty?
+        render :show, locals: { slot: @slot }
       else
-        render json: slot.errors.messages, status: :unprocessable_entity
+        render json: @slot.errors.messages, status: :unprocessable_entity
       end
     end
 
     # DELETE /v1/std_slot/1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
+      authorize @slot
 
       if @slot.delete
         render :show, locals: { slot: @slot }
@@ -131,6 +140,7 @@ module V1
     # DELETE /v1/group_slot/1
     def destroy_groupslot
       @slot = current_user.group_slots.find(params.require(:id))
+      authorize @slot
 
       if @slot.delete
         render :show, locals: { slot: @slot }
@@ -142,6 +152,7 @@ module V1
     # DELETE /v1/re_slot/1
     def destroy_reslot
       @slot = current_user.re_slots.find(params.require(:id))
+      authorize @slot
 
       if @slot.delete
         render :show, locals: { slot: @slot }
