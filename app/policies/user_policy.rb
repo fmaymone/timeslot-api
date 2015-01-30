@@ -7,6 +7,14 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  def create?
+    true
+  end
+
+  def signin?
+    true
+  end
+
   def update?
     current_user?
   end

@@ -1,11 +1,10 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: [:create, :signin]
-    skip_after_action :verify_authorized, only: [:create, :signin]
 
     # GET /v1/users
     def index
-      authorize User
+      authorize :user
       @users = User.all
 
       render :index
@@ -25,7 +24,7 @@ module V1
 
     # GET /v1/users/1
     def show
-      authorize User
+      authorize :user
       @user = User.find(params[:id])
 
       render :show
@@ -33,6 +32,7 @@ module V1
 
     # POST /v1/users
     def create
+      authorize :user
       @user = User.create_with_image(user_params)
 
       if @user.errors.empty?
@@ -45,6 +45,7 @@ module V1
     # POST /v1/users/signin
     # returns auth_token if correct email and password are send
     def signin
+      authorize :user
       @user = User.sign_in(*credentials)
 
       if @user
@@ -62,7 +63,7 @@ module V1
 
     # PATCH /v1/users/1
     def update
-      authorize User
+      authorize :user
       @user = current_user.update_with_image(user_params) unless user_params.empty?
 
       if @user.errors.empty?
@@ -74,7 +75,7 @@ module V1
 
     # DELETE /v1/users
     def destroy
-      authorize User
+      authorize :user
       # user inactivate methode not yet fully implemented
       @user = current_user.inactivate
 
@@ -88,7 +89,7 @@ module V1
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends
-      authorize User
+      authorize :user
       current_user.add_friends friends_ids
 
       head :ok
@@ -97,7 +98,7 @@ module V1
     # POST /v1/users/remove_friends
     # deny friend request and unfriending
     def remove_friends
-      authorize User
+      authorize :user
       current_user.remove_friends friends_ids
 
       head :ok
