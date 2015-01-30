@@ -808,8 +808,7 @@ resource "Slots" do
 
     parameter :id, "ID of the Group Slot to delete", required: true
 
-    let(:group) { create(:group) }
-    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
 
     describe "Delete Group Slot" do

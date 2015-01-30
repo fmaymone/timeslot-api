@@ -1106,8 +1106,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/groupslot/:id" do
-    let(:group) { create(:group) }
-    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
 
     context "with a valid ID" do
