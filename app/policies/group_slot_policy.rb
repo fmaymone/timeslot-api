@@ -14,6 +14,9 @@ class GroupSlotPolicy < SlotPolicy
   end
 
   def destroy_groupslot?
-    current_user?
+    return false unless current_user?
+    return true if user.is_owner? record.group_id
+    return true if record.group.members_can_post
+    false
   end
 end
