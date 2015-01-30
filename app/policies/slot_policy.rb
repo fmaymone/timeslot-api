@@ -4,11 +4,11 @@ class SlotPolicy < ApplicationPolicy
   end
 
   def show?
-    current_user?
+    true
   end
 
   def show_many?
-    current_user?
+    true
   end
 
   def update_metaslot?

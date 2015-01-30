@@ -1,7 +1,6 @@
 module V1
   class SlotsController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
-    skip_after_action :verify_authorized, only: [:show, :show_many]
 
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
@@ -14,6 +13,7 @@ module V1
 
     # GET /v1/slots/1
     def show
+      authorize :slot
       @slot = BaseSlot.get(params[:id])
 
       render :show, locals: { slot: @slot }
@@ -21,6 +21,7 @@ module V1
 
     # POST /v1/slots
     def show_many
+      authorize :slot
       @slots = BaseSlot.get_many(params[:ids])
 
       render :index
@@ -28,7 +29,7 @@ module V1
 
     # POST /v1/stdslot
     def create_stdslot
-      authorize StdSlot
+      authorize :stdSlot
       @slot = StdSlot.create_with_meta(meta_params, std_param, note_param,
                                        alerts_param, current_user)
       if @slot.errors.empty?
@@ -54,7 +55,7 @@ module V1
 
     # POST /v1/reslot
     def create_reslot
-      authorize ReSlot
+      authorize :reSlot
       predecessor = BaseSlot.find(re_params)
 
       @slot = ReSlot.create_from_slot(predecessor: predecessor,
