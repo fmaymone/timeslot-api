@@ -1,7 +1,5 @@
 module V1
   class GroupsController < ApplicationController
-    skip_after_action :verify_authorized, only: [:show, :members, :related]
-
     # GET /v1/groups
     # return all groups where the current user is member
     def index
@@ -13,6 +11,7 @@ module V1
 
     # GET /v1/groups/:group_id
     def show
+      authorize :group
       @group = Group.find(group_id)
 
       render :show
@@ -58,6 +57,7 @@ module V1
 
     # GET /v1/groups/:group_id/members
     def members
+      authorize :group
       @group = Group.find(group_id)
 
       render :members
@@ -65,6 +65,7 @@ module V1
 
     # GET /v1/groups/:group_id/related
     def related
+      authorize :group
       group = Group.find(group_id)
 
       render :related, locals: { memberships: group.related_memberships }

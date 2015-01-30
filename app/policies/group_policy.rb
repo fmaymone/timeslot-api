@@ -3,6 +3,10 @@ class GroupPolicy < ApplicationPolicy
     current_user?
   end
 
+  def show?
+    true
+  end
+
   def create?
     current_user?
   end
@@ -17,6 +21,14 @@ class GroupPolicy < ApplicationPolicy
     return false unless current_user?
     return true if user.is_owner? record.id
     false
+  end
+
+  def members?
+    true
+  end
+
+  def related?
+    true
   end
 
   def accept_invite?
@@ -46,20 +58,13 @@ class GroupPolicy < ApplicationPolicy
 
   def kick?
     return false unless current_user?
-    return true if user.is_active_member? record.id
+    return true if user.get_membership(record.id)
     false
   end
 
   def member_settings?
     return false unless current_user?
     return true if user.is_active_member? record.id
-    false
-  end
-
-  def create_groupslot?
-    return false unless current_user?
-    return true if user.is_owner? record.id
-    return true if record.members_can_post
     false
   end
 end

@@ -232,7 +232,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/groupslot" do
-    let(:group) { create(:group) }
+    let(:group) { create(:group, :members_can_post) }
 
     context "GroupSlot with valid params" do
       let(:valid_slot) {
@@ -1033,8 +1033,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/groupslot/:id" do
-    let(:group) { create(:group) }
-    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
 
     context "with valid non-media params" do
