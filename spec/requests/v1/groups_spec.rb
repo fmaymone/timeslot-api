@@ -110,89 +110,6 @@ RSpec.describe "V1::Groups", type: :request do
 
   # invite
   describe "POST /v1/groups/:group_id/members" do
-    let(:others) { create_list(:user, 3) }
-    let(:user_ids) { { ids: others.collect(&:id) } }
-
-    describe "user can invite" do
-      let!(:group) { create(:group, owner: current_user) }
-
-      it "returns created" do
-        post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        expect(response.status).to be(201)
-      end
-
-      it "returns a list of all users related to that group" do
-        post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        expect(json).to have_key "related"
-        # group owner is automatically an active member too
-        expect(json['related'].size).to eq 4
-      end
-
-      it "creates new memberships with state 'invited' for all new members" do
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        }.to change(Membership, :count).by(others.size)
-        others.each do |id|
-          expect(Membership.where(user_id: id).first.invited?).to be true
-        end
-      end
-
-      it "doesn't create new memberships for already invited members" do
-        create(:membership, :invited, user: others.first, group: group)
-
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        }.to change(Membership, :count).by(others.size - 1)
-      end
-
-      it "doesn't create new memberships for already active members" do
-        create(:membership, :active, user: others.first, group: group)
-
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        }.to change(Membership, :count).by(others.size - 1)
-      end
-
-      it "re-invites users who had left the group or rejected a previous invitation" do
-        create(:membership, :left, user: others.first, group: group)
-        create(:membership, :refused, user: others.last, group: group)
-
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        }.to change(Membership, :count).by(others.size - 2)
-        membership1 = Membership.where(user_id: others.first).first
-        membership2 = Membership.where(user_id: others.last).first
-        expect(membership1.invited?).to be true
-        expect(membership2.invited?).to be true
-      end
-
-      it "doesn't add users to group" do
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids
-        }.not_to change(group.members, :count)
-      end
-    end
-
-    describe "user can't invite" do
-      let!(:group) do
-        create(:group, owner: create(:user), members_can_invite: false)
-      end
-
-      it "returns Unauthorized" do
-        post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        expect(response.status).to be 401
-      end
-
-      it "doesn't create membership" do
-        expect {
-          post "/v1/groups/#{group.id}/members", user_ids, auth_header
-        }.not_to change(Membership, :count)
-      end
-    end
-  end
-
-  # invite
-  describe "POST /v1/groups/:group_id/members" do
     let(:other_users) { create_list(:user, 5) }
     let(:ids) { other_users.collect(&:id) }
 
@@ -204,12 +121,49 @@ RSpec.describe "V1::Groups", type: :request do
         expect(response.status).to be(201)
       end
 
-      it "creates a membership with state 'invited'" do
+      it "returns a list of all users related to that group" do
+        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        expect(json).to have_key "related"
+        # group owner is automatically an active member too
+        expect(json['related'].size).to eq 6
+      end
+
+      it "creates new memberships with state 'invited' for all new members" do
         expect {
           post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
-        }.to change(Membership, :count).by ids.size
-        membership = Membership.last
-        expect(membership.invited?).to be true
+        }.to change(Membership, :count).by(other_users.size)
+        other_users.each do |id|
+          expect(Membership.where(user_id: id).first.invited?).to be true
+        end
+      end
+
+      it "doesn't create new memberships for already invited members" do
+        create(:membership, :invited, user: other_users.first, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        }.to change(Membership, :count).by(other_users.size - 1)
+      end
+
+      it "doesn't create new memberships for already active members" do
+        create(:membership, :active, user: other_users.first, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        }.to change(Membership, :count).by(other_users.size - 1)
+      end
+
+      it "re-invites users who had left the group or rejected a previous invitation" do
+        create(:membership, :left, user: other_users.first, group: group)
+        create(:membership, :refused, user: other_users.last, group: group)
+
+        expect {
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        }.to change(Membership, :count).by(other_users.size - 2)
+        membership1 = Membership.where(user_id: other_users.first).first
+        membership2 = Membership.where(user_id: other_users.last).first
+        expect(membership1.invited?).to be true
+        expect(membership2.invited?).to be true
       end
 
       it "doesn't add user to group" do
@@ -277,13 +231,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Unauthorized" do
-        post "/v1/groups/#{group.id}/members",{ ids: ids }, auth_header
+        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
         expect(response.status).to be 401
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members",{ ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
         }.not_to change(Membership, :count)
       end
     end
