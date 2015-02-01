@@ -17,12 +17,12 @@ RSpec.describe Group, type: :model do
   it { is_expected.to have_many(:group_slots).inverse_of(:group) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
-                       .class_name("User")
+                       .class_name(User)
                        .through(:memberships)
                        .source(:user) }
   it { is_expected.to have_many(:active_memberships) }
   it { is_expected.to have_many(:members)
-                       .class_name("User")
+                       .class_name(User)
                        .through(:active_memberships)
                        .source(:user) }
 

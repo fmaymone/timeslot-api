@@ -765,7 +765,7 @@ resource "Slots" do
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot, :with_media, owner: current_user) }
 
     describe "Delete Standard Slot" do
       let(:id) { std_slot.id }
