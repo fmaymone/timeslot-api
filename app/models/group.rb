@@ -53,6 +53,7 @@ class Group < ActiveRecord::Base
   end
 
   def delete
+    owner.touch
     # all other images (if any) should already be "deleted"
     image.delete if images.first
     memberships.each(&:delete)

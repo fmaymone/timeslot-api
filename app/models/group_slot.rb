@@ -9,6 +9,11 @@ class GroupSlot < BaseSlot
     group.members
   end
 
+  def delete
+    super
+    group.touch unless group.deleted_at?
+  end
+
   def self.create_with_meta(meta_param, group_id, note_param = nil,
                             alert_param = nil, user)
     meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))

@@ -78,6 +78,7 @@ class Membership < ActiveRecord::Base
   def delete
     update!(state: "000")
     user.touch
+    group.touch unless group.deleted_at?
     ts_soft_delete
   end
 
