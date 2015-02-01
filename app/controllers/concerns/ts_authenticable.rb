@@ -8,7 +8,7 @@ module TS_Authenticable
   end
 
   def current_user
-    @current_user
+    @current_user || authenticate_token
   end
 
   private def authenticate_user_from_token!

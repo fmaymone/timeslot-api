@@ -9,10 +9,9 @@ json.array!(@slots) do |slot|
                 :start_date,
                 :end_date
                )
-  # TODO: temporary disabled until current user is requiererd
-#  if current_user
-#    json.partial! 'v1/slots/settings', slot: slot
-#  end
+  if current_user
+    json.partial! 'v1/slots/settings', slot: slot
+  end
 
   json.notes slot.notes, partial: 'v1/slots/note', as: :note
 
