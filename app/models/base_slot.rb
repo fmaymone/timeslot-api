@@ -80,8 +80,8 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
-    meta_slot.unregister
     ts_soft_delete
+    meta_slot.unregister
   end
 
   private def update_media(media_params)

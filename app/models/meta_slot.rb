@@ -17,7 +17,7 @@ class MetaSlot < ActiveRecord::Base
   end
 
   def unregister
-    delete if slots.size <= 1
+    delete if slots.empty?
   end
 
   def delete
