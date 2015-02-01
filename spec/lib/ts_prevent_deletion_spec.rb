@@ -13,6 +13,9 @@ describe TSPreventDeletion do
   it "fails if undeleted references to the item to be deleted exists" do
     expect {
       slot_with_media.ts_soft_delete
-    }.to raise_error TSPreventDeletion::AssociationNotDeleted
+    }.to raise_error(/wasn't deleted \(but should\)/)
+    # I would like to check for the error class here, but the identity of the
+    # class changes when Rails reloads and doesn't match the cached test env
+    # }.to raise_error TSPreventDeletion::AssociationNotDeleted
   end
 end
