@@ -29,10 +29,11 @@ module TSPreventDeletion
 
     associated_entities.flatten.each do |item|
       next if item.deleted_at?
+      error_string =  "#{item} wasn't deleted (but should) when deleting #{self}"
       msg = {
-        delete_check: "#{item} wasn't deleted (but should) when deleting #{self}"
+        delete_check: error_string
       }
-      Rails.logger.error msg
+      Rails.logger.error error_string
       fail AssociationNotDeleted, msg if Rails.env.test? || Rails.env.development?
     end
 
