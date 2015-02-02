@@ -12,7 +12,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:location_id) }
   it { is_expected.to respond_to(:location) }
   it { is_expected.to respond_to(:deleted_at) }
-  it { is_expected.to have_many(:base_slots).inverse_of(:meta_slot) }
+  it { is_expected.to have_many(:slots).inverse_of(:meta_slot) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
 
   it { is_expected.to be_valid }
@@ -44,24 +44,15 @@ RSpec.describe MetaSlot, type: :model do
 
   describe :unregister do
     let(:meta_slot) { create(:meta_slot) }
-    let(:user) { create(:user) }
-    let!(:slot_setting) {
-      create(:slot_setting, meta_slot: meta_slot, user: user) }
 
-    it "unregisters on related slot_settings" do
-      meta_slot.unregister user
-      slot_setting.reload
-      expect(slot_setting.deleted_at?).to be true
-    end
-
-    it "deletes itself if no other base_slot references it" do
-      meta_slot.unregister user
+    it "deletes itself if no other slot references it" do
+      meta_slot.unregister
       expect(meta_slot.deleted_at?).to be true
     end
 
-    it "doesn't delete itself if another base_slot references it" do
+    it "doesn't delete itself if another slot references it" do
       create(:std_slot, meta_slot: meta_slot)
-      meta_slot.unregister user
+      meta_slot.unregister
       expect(meta_slot.deleted_at?).to be false
     end
   end
@@ -81,6 +72,30 @@ RSpec.describe MetaSlot, type: :model do
         meta_slot.destroy
       }.to raise_error
       expect(before_count).to eq described_class.all.size
+    end
+  end
+
+  describe "find_or_add" do
+    let(:user) { create(:user) }
+
+    context "non existing metaslot" do
+      let(:meta_params) { attributes_for(:meta_slot) }
+
+      it "creates a new MetaSlot" do
+        expect {
+          described_class.find_or_add(meta_params.merge(creator: user))
+        }.to change(MetaSlot, :count).by 1
+      end
+    end
+
+    context "existing metaslot" do
+      let!(:meta_params) { { 'meta_slot_id' => create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.find_or_add(meta_params)
+        }.not_to change(MetaSlot, :count)
+      end
     end
   end
 end

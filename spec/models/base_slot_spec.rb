@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe BaseSlot, type: :model do
-  let(:base_slot) { build(:base_slot) }
+  let(:base_slot) { build(:slot) }
 
   subject { base_slot }
 
@@ -11,8 +11,8 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:voices) }
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to have_many(:media_items) }
-  it { is_expected.to belong_to(:meta_slot) }
-  it { is_expected.to have_many(:notes).inverse_of(:base_slot) }
+  it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
+  it { is_expected.to have_many(:notes).inverse_of(:slot) }
 
   it { is_expected.to be_valid }
 
@@ -95,28 +95,6 @@ RSpec.describe BaseSlot, type: :model do
       expect(std_slot.errors.messages).to have_key :video
       expect(*std_slot.errors.messages[:video]).to have_key :public_id
       expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
-    end
-  end
-
-  describe :delete do
-    let(:base_slot) { create(:base_slot, :with_media, :with_notes) }
-
-    it "sets deleted_at on itself" do
-      expect(base_slot.deleted_at?).to be false
-      base_slot.delete
-      expect(base_slot.deleted_at?).to be true
-    end
-
-    it "invalidates belonging media_items" do
-      base_slot.delete
-      expect(base_slot.media_items.first.deleted_at?).to be true
-      expect(base_slot.media_items.last.deleted_at?).to be true
-    end
-
-    it "deletes belonging notes" do
-      base_slot.delete
-      expect(base_slot.notes.first.deleted_at?).to be true
-      expect(base_slot.notes.last.deleted_at?).to be true
     end
   end
 end

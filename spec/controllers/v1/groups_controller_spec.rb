@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe V1::GroupsController, type: :controller do
   before(:each) {
     request.accept = "application/json"
-    described_class.new.current_user = current_user
+    request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
 
   let(:current_user) { create(:user) }

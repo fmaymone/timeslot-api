@@ -4,8 +4,16 @@ FactoryGirl.define do
   factory :group do
     association :owner, factory: :user, strategy: :build
     name
-    members_can_post true
+    members_can_post false
     members_can_invite false
+
+    trait :members_can_post do
+      members_can_post true
+    end
+
+    trait :members_can_invite do
+      members_can_invite true
+    end
 
     trait :with_image do
       after :create do |group|

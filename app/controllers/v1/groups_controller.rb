@@ -3,6 +3,7 @@ module V1
     # GET /v1/groups
     # return all groups where the current user is member
     def index
+      authorize :group
       @groups = current_user.groups
 
       render :index
@@ -10,16 +11,18 @@ module V1
 
     # GET /v1/groups/:group_id
     def show
-      @group = Group.find(params[:group_id])
+      authorize :group
+      @group = Group.find(group_id)
 
       render :show
     end
 
     # POST /v1/groups
     def create
-      @group = Group.new(group_params.merge(owner: current_user))
+      authorize :group
+      @group = Group.create_with_image(group_params.merge(owner: current_user))
 
-      if @group.save
+      if @group.errors.empty?
         render :show, status: :created
       else
         render json: @group.errors, status: :unprocessable_entity
@@ -29,11 +32,9 @@ module V1
     # PATCH /v1/groups/:group_id
     # change name, image, subs_can - states
     def update
-      @group = Group.find(params[:group_id])
-      return head :forbidden unless current_user.is_owner? @group.id
-
-      @group.update(group_params) unless group_params.empty?
-      AddImage.call(@group, image_param) if params[:image].present?
+      @group = Group.find(group_id)
+      authorize @group
+      @group.update_with_image(group_params) unless group_params.empty?
 
       if @group.errors.empty?
         render :show
@@ -44,23 +45,28 @@ module V1
 
     # DELETE /v1/groups/:group_id
     def destroy
-      @group = Group.find(params[:group_id])
-      return head :forbidden unless current_user.is_owner? @group.id
+      @group = Group.find(group_id)
+      authorize @group
 
-      render :show if @group.delete
+      if @group.delete
+        render :show
+      else
+        render json: @group.errors, status: :unprocessable_entity
+      end
     end
 
     # GET /v1/groups/:group_id/members
     def members
-      @group = Group.find(membership_params[:group_id])
-      @members = @group.members
+      authorize :group
+      @group = Group.find(group_id)
 
       render :members
     end
 
     # GET /v1/groups/:group_id/related
     def related
-      group = Group.find(params.require(:group_id))
+      authorize :group
+      group = Group.find(group_id)
 
       render :related, locals: { memberships: group.related_memberships }
     end
@@ -73,45 +79,27 @@ module V1
 
     # POST /v1/groups/:group_id/accept
     def accept_invite
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_invited? group
+      group = Group.find(group_id)
+      authorize group
 
-      @membership = current_user.get_membership group
-
-      if @membership.activate
+      if current_user.accept_invite group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error accepting invite" },
+               status: :unprocessable_entity
       end
     end
 
     # POST /v1/groups/:group_id/refuse
     def refuse_invite
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_invited? group
+      group = Group.find(group_id)
+      authorize group
 
-      @membership = current_user.get_membership group
-
-      if @membership.refuse
+      if current_user.refuse_invite group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
-      end
-    end
-
-    # POST /v1/groups/:group_id/members/:user_id
-    # current user invites other user to own group
-    # create membership with state invited/pending
-    # notify invited user
-    # TODO: can probably be removed
-    def invite_single
-      group = Group.find(params.require(:group_id))
-      return head :forbidden unless current_user.can_invite? group.id
-
-      if InviteUserToGroup.call(group, membership_params[:user_id])
-        head :created
-      else
-        render json: "Couldn't create invite", status: :unprocessable_entity
+        render json: { membership: "error refusing invite" },
+               status: :unprocessable_entity
       end
     end
 
@@ -121,12 +109,9 @@ module V1
     # create membership with state invited/pending
     # notify invited users
     def invite
-      group = Group.find(params.require(:group_id))
-      return head :forbidden unless current_user.can_invite? group.id
-
-      params.require(:ids).each do |user_id|
-        InviteUserToGroup.call(group, user_id)
-      end
+      group = Group.find(group_id)
+      authorize group
+      group.invite_users(params.require(:ids))
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }
@@ -137,47 +122,40 @@ module V1
     # update membership with state left
     # remove current user from group members
     def leave
-      group = membership_params[:group_id]
-      return head :forbidden if current_user.get_membership(group).nil?
-      return head :ok unless current_user.is_member? group
+      group = Group.find(group_id)
+      authorize group
 
-      @membership = current_user.get_membership group
-
-      if @membership.leave
+      if current_user.leave_group group_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error leaving group #{group_id}" },
+               status: :unprocessable_entity
       end
     end
 
     # DELETE /v1/groups/:group_id/members/:user_id
     def kick
-      group = membership_params[:group_id]
-      return head :forbidden unless current_user.is_owner? group
+      group = Group.find(group_id)
+      authorize group
 
-      kickee = User.find(membership_params[:user_id])
-      return head :forbidden if kickee.get_membership(group).nil?
-      return head :ok unless (kickee.is_member?(group) || kickee.is_invited?(group))
-
-      @membership = kickee.get_membership group
-
-      if @membership.kick
+      if group.kick_member user_id
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { membership: "error kicking member with id #{user_id}" \
+                                   " from group #{group_id}" },
+               status: :unprocessable_entity
       end
     end
 
     # PATCH /v1/groups/:group_id/members
     # change membership settings if current user is group member
     # notifications, default_alerts
-    def settings
-      group = Group.find(membership_params[:group_id])
-      return head :forbidden unless current_user.is_member? group.id
-
-      @membership = current_user.get_membership group.id
-
-      if @membership.update(membership_setting_params)
+    def member_settings
+      group = Group.find(group_id)
+      authorize group
+      @membership = current_user.update_member_settings(setting_params,
+                                                        group_id)
+      if @membership.errors.empty?
         head :ok
       else
         render json: @membership.errors, status: :unprocessable_entity
@@ -185,21 +163,25 @@ module V1
     end
 
     private def group_params
-      parameter = params.permit(:name, :membersCanPost, :membersCanInvite)
-      parameter.transform_keys(&:underscore)
-    end
-
-    private def membership_params
-      params.permit(:group_id, :user_id)
-    end
-
-    private def membership_setting_params
-      p = params.require(:settings).permit(:notifications, :defaultAlerts)
+      p = params.permit(:name, :membersCanPost, :membersCanInvite)
+      if params[:image].present?
+        image_param = params.require(:image).require(:publicId)
+        p.merge!("public_id" => image_param)
+      end
       p.transform_keys(&:underscore)
     end
 
-    private def image_param
-      params.require(:image).require(:publicId)
+    private def group_id
+      params.require(:group_id)
+    end
+
+    private def user_id
+      params.require(:user_id)
+    end
+
+    private def setting_params
+      p = params.require(:settings).permit(:notifications, :defaultAlerts)
+      p.transform_keys(&:underscore)
     end
   end
 end

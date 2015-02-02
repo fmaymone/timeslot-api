@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :note do
-    base_slot
+    slot
     title "MyString"
     content "MyText"
   end

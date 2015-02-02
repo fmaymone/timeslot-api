@@ -2,6 +2,9 @@ module V1
   require 'open-uri'
 
   class LocationsController < ApplicationController
+    skip_before_action :authenticate_user_from_token!
+    skip_after_action :verify_authorized
+
     # GET /v1/locations/search?q=berghain&limit=20&pos=13.0,52.0
     def search
       search_url = ENV['TS_LOCATION_SEARCH_SERVICE_URL']

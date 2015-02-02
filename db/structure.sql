@@ -371,7 +371,11 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    default_alerts bit(10)
+    default_alerts bit(10),
+    email character varying(255) DEFAULT ''::character varying NOT NULL,
+    password_digest character varying(255) DEFAULT ''::character varying NOT NULL,
+    auth_token character varying(255),
+    role integer
 );
 
 
@@ -670,6 +674,20 @@ CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
 
 
 --
+-- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
+
+
+--
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+
+
+--
 -- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -785,4 +803,8 @@ INSERT INTO schema_migrations (version) VALUES ('20141227213950');
 INSERT INTO schema_migrations (version) VALUES ('20150112223724');
 
 INSERT INTO schema_migrations (version) VALUES ('20150116103054');
+
+INSERT INTO schema_migrations (version) VALUES ('20150124224424');
+
+INSERT INTO schema_migrations (version) VALUES ('20150128120441');
 

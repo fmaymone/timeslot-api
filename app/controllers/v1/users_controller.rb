@@ -1,60 +1,70 @@
 module V1
   class UsersController < ApplicationController
-    # before_filter :signed_in?, except: [:auth, :create]
-    before_filter :sign_in, except: [:auth, :create, :index, :show_slots]
+    skip_before_action :authenticate_user_from_token!, only: [:create, :signin]
 
     # GET /v1/users
     def index
+      authorize :user
       @users = User.all
 
       render :index
     end
 
-    # HACK: temporary no current user
     # GET /v1/users/1/slots
-    def show_slots
-      user = User.find(params[:id])
-      @slots = []
-      @slots.push(*user.std_slots)
-      @slots.push(*user.re_slots)
-      @slots.push(*user.group_slots)
+    # method was added for demo purposes
+    # def show_slots
+    #   user = User.find(params[:id])
+    #   @slots = []
+    #   @slots.push(*user.std_slots)
+    #   @slots.push(*user.re_slots)
+    #   @slots.push(*user.group_slots)
 
-      render "v1/slots/index"
-    end
+    #   render "v1/slots/index"
+    # end
 
     # GET /v1/users/1
     def show
+      authorize :user
       @user = User.find(params[:id])
 
       render :show
     end
 
-    # GET /v1/users/authenticate/1
-    # HACK: temporary solution
-    def auth
-      user = User.find(params[:id])
-      self.current_user = user
-
-      head :ok
-    end
-
     # POST /v1/users
     def create
-      @user = User.new(user_params)
+      authorize :user
+      @user = User.create_with_image(user_params)
 
-      if @user.save
+      if @user.errors.empty?
         render :show, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
       end
     end
 
-    # PATCH/PUT /v1/users/1
-    def update
-      @user = current_user
+    # POST /v1/users/signin
+    # returns auth_token if correct email and password are send
+    def signin
+      authorize :user
+      @user = User.sign_in(*credentials)
 
-      @user.update(user_params) unless user_params.empty?
-      AddImage.call(@user, image_param) if params[:image].present?
+      if @user
+        render :signin
+      else
+        render json: { error: "email and password didn't match" },
+               status: :unauthorized
+      end
+    end
+
+    # GET /v1/users/signout
+    # invalidates auth token?
+    def signout
+    end
+
+    # PATCH /v1/users/1
+    def update
+      authorize :user
+      @user = current_user.update_with_image(user_params) unless user_params.empty?
 
       if @user.errors.empty?
         render :show
@@ -65,9 +75,11 @@ module V1
 
     # DELETE /v1/users
     def destroy
-      @user = current_user
+      authorize :user
+      # user inactivate methode not yet fully implemented
+      @user = current_user.inactivate
 
-      if @user.inactivate
+      if @user.errors.empty?
         render :show
       else
         render json: @user.errors, status: :unprocessable_entity
@@ -75,17 +87,10 @@ module V1
     end
 
     # POST /v1/users/add_friends
-    # TODO: add friendship state to get users json if a friendship exists
     # creates friend request or accepts friend request if one exists
     def add_friends
-      friends_params.each do |id|
-        offer = current_user.offered_friendship(id)
-        if offer
-          offer.accept
-        elsif current_user.friendship(id).nil?
-          current_user.requested_friends << User.find(id)
-        end
-      end
+      authorize :user
+      current_user.add_friends friends_ids
 
       head :ok
     end
@@ -93,23 +98,27 @@ module V1
     # POST /v1/users/remove_friends
     # deny friend request and unfriending
     def remove_friends
-      friends_params.each do |id|
-        friendship = current_user.friendship(id)
-        friendship.inactivate if friendship
-      end
+      authorize :user
+      current_user.remove_friends friends_ids
+
+      head :ok
     end
 
     private def user_params
-      parameter = params.permit(:username, :defaultAlerts)
-      parameter.transform_keys(&:underscore)
+      p = params.permit(:username, :email, :password, :defaultAlerts, :image)
+      if params[:image].present?
+        img_param = params.require(:image).require(:publicId)
+        p.merge!("public_id" => img_param)
+      end
+      p.transform_keys(&:underscore)
     end
 
-    private def friends_params
+    private def friends_ids
       params.require(:ids)
     end
 
-    private def image_param
-      params.require(:image).require(:publicId)
+    private def credentials
+      [params.require(:email), params.require(:password)]
     end
   end
 end

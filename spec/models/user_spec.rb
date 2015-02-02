@@ -6,13 +6,14 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
+  it { is_expected.to respond_to(:email) }
+  it { is_expected.to respond_to(:auth_token) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:created_slots) }
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
-  it { is_expected.to respond_to(:image) }
   it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
@@ -38,23 +39,105 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe :representation? do
+  describe "when email is not present" do
+    before { user.email = "" }
+    it { should_not be_valid }
+  end
+
+  describe "when email is too long" do
+    before { user.email = "user@".concat("a" * 254).concat(".com")  }
+    it { should_not be_valid }
+  end
+
+  describe "when email format is valid" do
+    it "will be valid" do
+      addresses = %w([user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn])
+      addresses.each do |valid_address|
+        user.email = valid_address
+        expect(user).to be_valid
+      end
+    end
+  end
+
+  describe "when email format is invalid" do
+    it "will be invalid" do
+      addresses = %w([user@foo,com user_at_foo.org example.user@foo.
+                     @barbaz.com foo@.com])
+      addresses.each do |invalid_address|
+        user.email = invalid_address
+        expect(user).not_to be_valid
+      end
+    end
+  end
+
+  describe "when email address is already taken" do
+    it "won't be valid" do
+      user.save
+      user_with_same_email = user.dup
+      user_with_same_email.email = user.email.upcase
+      user_with_same_email.save
+
+      expect(user_with_same_email).not_to be_valid
+    end
+  end
+
+  describe "authentication params" do
+    context "valid params" do
+      let(:new_user) { build(:user) }
+
+      it "succeeds if password is long enough" do
+        expect(new_user.save).to be true
+        expect(new_user.errors.empty?).to be true
+      end
+
+      it "saves an encrypted password for the user" do
+        new_user.save
+        expect(new_user.password_digest.present?).to be true
+      end
+
+      it "generates an auth_token for the user" do
+        new_user.save
+        expect(new_user.auth_token.present?).to be true
+      end
+    end
+
+    context "invalid params" do
+      let(:invalid_user) { build(:user) }
+
+      it "fails if password missing" do
+        invalid_user.password = nil
+        expect(invalid_user.save).to be false
+      end
+
+      it "fails if password too short" do
+        invalid_user.password = "han"
+        expect(invalid_user.save).to be false
+      end
+
+      it "fails if password too long" do
+        invalid_user.password = 'n' * 73
+        expect(invalid_user.save).to be false
+      end
+    end
+  end
+
+  describe :active_slots do
     let(:user) { create(:user) }
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
 
     context "user has std_slot with the specified meta_slot" do
       let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
 
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns std_slot" do
+        expect(user.active_slots(meta_slot)).to include std_slot
       end
     end
 
     context "user has re_slot with the specified meta_slot" do
       let!(:re_slot) { create(:re_slot, meta_slot: meta_slot, slotter: user) }
 
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns reslot" do
+        expect(user.active_slots(meta_slot)).to include re_slot
       end
     end
 
@@ -64,14 +147,14 @@ RSpec.describe User, type: :model do
       let!(:group_slot) {
         create(:group_slot, meta_slot: meta_slot, group: group)
       }
-      it "returns true" do
-        expect(user.representation?(meta_slot)).to be true
+      it "returns group_slot" do
+        expect(user.active_slots(meta_slot)).to include group_slot
       end
     end
 
     context "user has no representation of the specified meta_slot" do
-      it "returns false" do
-        expect(user.representation?(meta_slot)).to be false
+      it "returns empty array" do
+        expect(user.active_slots(meta_slot).empty?).to be true
       end
     end
 
@@ -79,8 +162,122 @@ RSpec.describe User, type: :model do
       let!(:std_slot) {
         create(:std_slot, :deleted, meta_slot: meta_slot, owner: user)
       }
-      it "returns false" do
-        expect(user.representation?(meta_slot)).to be false
+      it "returns empty array" do
+        expect(user.active_slots(meta_slot).empty?).to be true
+      end
+    end
+  end
+
+  describe :update_alerts do
+    let(:slot) { create(:std_slot, owner: user) }
+
+    describe "no existing SlotSetting" do
+      it "returns the SlotSetting object" do
+        expect(user.update_alerts(slot, '1100110011')).to eq SlotSetting.last
+      end
+
+      it "it creates a new slot_setting object" do
+        expect {
+          user.update_alerts(slot, '0101010101')
+        }.to change(SlotSetting, :count).by 1
+      end
+
+      it "doesn't create a new slot_setting if alerts eq users default alerts" do
+        user.update(default_alerts: '1110011110')
+        expect {
+          user.update_alerts(slot, '1110011110')
+        }.not_to change(SlotSetting, :count)
+      end
+
+      context "group_slot" do
+        let(:slot) { create(:group_slot) }
+        let!(:membership) { create(:membership, :active, group: slot.group,
+                                   user: user, default_alerts: '1110011110') }
+
+        it "doesn't create a new slot_setting if alerts eq group default alerts" do
+          expect {
+            user.update_alerts(slot, '1110011110')
+          }.not_to change(SlotSetting, :count)
+        end
+      end
+    end
+
+    describe "existing SlotSetting" do
+      let!(:slot_setting) {
+        create(:slot_setting, meta_slot: slot.meta_slot, user: user)
+      }
+      let(:new_alert) { '1010101010' }
+
+      it "updates alerts" do
+        user.update_alerts(slot, new_alert)
+        slot_setting.reload
+        expect(slot_setting.alerts).to eq(new_alert)
+      end
+
+      it "doesn't create a new slot_setting" do
+        expect {
+          user.update_alerts(slot, '1010101010')
+        }.not_to change(SlotSetting, :count)
+      end
+    end
+  end
+
+  describe :alerts do
+    let(:std_slot) { create(:std_slot, owner: user) }
+
+    it "returns the alarm for a specific slot representation" do
+      # TODO: needs specification
+      expect(user.alerts(std_slot)).to eq nil
+    end
+
+    describe "existing default alert for user" do
+      let(:new_alert) { '1010101010' }
+
+      it "returns the default alert" do
+        user.update(default_alerts: new_alert)
+        expect(user.alerts(std_slot)).to eq user.default_alerts
+      end
+    end
+
+    describe "existing slot_setting" do
+      let!(:slot_setting) {
+        create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+               alerts: '0000011111') }
+
+      it "returns the alarm for a specific slot representation" do
+        expect(user.alerts(std_slot)).to eq slot_setting.alerts
+      end
+    end
+
+    context "groupSlot" do
+      let(:slot) { create(:group_slot) }
+      let!(:membership) {
+        create(:membership, :active, group: slot.group, user: user) }
+
+      describe "existing default alert for group" do
+        it "returns the group default alert for this user" do
+          membership.update(default_alerts: '1110011110')
+          expect(user.alerts(slot)).to eq membership.default_alerts
+        end
+      end
+
+      describe "existing default alert for user but not for membership" do
+        let(:new_alert) { '1010101010' }
+
+        it "returns the users default alert" do
+          user.update(default_alerts: new_alert)
+          expect(user.alerts(slot)).to eq new_alert
+        end
+      end
+
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: slot.meta_slot,
+                 alerts: '0000011111') }
+
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(slot)).to eq slot_setting.alerts
+        end
       end
     end
   end
@@ -170,7 +367,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :is_member? do
+  describe :is_active_member? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
@@ -180,36 +377,36 @@ RSpec.describe User, type: :model do
       describe "state active" do
         it "return true" do
           membership.activate
-          expect(user.is_member? group.id).to be true
+          expect(user.is_active_member? group.id).to be true
         end
       end
 
       describe "state not active" do
         it "return false if kicked" do
           membership.kick
-          expect(user.is_member? group.id).to be false
+          expect(user.is_active_member? group.id).to be false
         end
 
         it "return false if refused" do
           membership.refuse
-          expect(user.is_member? group.id).to be false
+          expect(user.is_active_member? group.id).to be false
         end
 
         it "return false if inactive" do
           membership.inactivate
-          expect(user.is_member? group.id).to be false
+          expect(user.is_active_member? group.id).to be false
         end
 
         it "return false if invite" do
           membership.invite
-          expect(user.is_member? group.id).to be false
+          expect(user.is_active_member? group.id).to be false
         end
       end
     end
 
     describe "membership doesn't exists" do
       it "return false" do
-        expect(user.is_member? group.id).to be false
+        expect(user.is_active_member? group.id).to be false
       end
     end
   end
@@ -441,6 +638,101 @@ RSpec.describe User, type: :model do
         user.destroy
       }.to raise_error
       expect(before_count).to eq described_class.all.size
+    end
+  end
+
+  describe "create_with_image" do
+    let(:user_params) { attributes_for(:user, password: 'something') }
+
+    context "valid params" do
+      it "creates a new user" do
+        expect {
+          User.create_with_image(user_params)
+        }.to change(User, :count).by 1
+      end
+
+      it "sets the default role for the user" do
+        User.create_with_image(user_params)
+        expect(User.last.role).to eq "user"
+        expect(User.last.user?).to be true
+        expect(User.last.admin?).to be false
+      end
+
+      it "sets an image if provided" do
+        user_params.merge!("public_id" => 'foobar')
+        expect {
+          User.create_with_image(user_params)
+        }.to change(MediaItem, :count).by 1
+        expect(User.last.image.public_id).to eq user_params["public_id"]
+      end
+    end
+
+    context "invalid params" do
+      it "doesn't create a new user if username is nil" do
+        user_params[:username] = nil
+        expect {
+          User.create_with_image(user_params)
+        }.not_to change(User, :count)
+      end
+
+      it "creates a new user even if mediaitems public_id is nil" do
+        user_params.merge!("public_id" => nil)
+
+        expect {
+          User.create_with_image(user_params)
+        }.to change(User, :count).by 1
+      end
+
+      it "doesn't create a new mediaitem if public_id is nil" do
+        user_params.merge!("public_id" => nil)
+
+        expect {
+          User.create_with_image(user_params)
+        }.not_to change(MediaItem, :count)
+      end
+    end
+  end
+
+  describe "sign_in" do
+    let!(:user) { create(:user, password: 'timeslot') }
+
+    context "valid params" do
+      it "returns the user" do
+        expect(User.sign_in(user.email, user.password)).to eq user
+      end
+    end
+
+    context "invalid params" do
+      it "returns false if invalid password" do
+        expect(User.sign_in(user.email, 'marzipan')).to be false
+      end
+
+      it "returns nil if invalid email" do
+        expect(User.sign_in('marzipan', user.password)).to be nil
+      end
+    end
+  end
+
+  describe "prepare_for_slot_deletion" do
+    let(:slot) { create(:std_slot, owner: user) }
+    let!(:slot_setting) {
+      create(:slot_setting, meta_slot: slot.meta_slot, user: user) }
+
+    it "sets deleted_at if user has no representation of meta_slot" do
+      user.prepare_for_slot_deletion slot
+      slot_setting.reload
+      expect(slot_setting.deleted_at?).to be true
+    end
+
+    describe "user has a representation of meta_slot" do
+      let!(:std_slot) {
+        create(:std_slot, meta_slot: slot.meta_slot, owner: user) }
+
+      it "doesn't set deleted_at" do
+        user.prepare_for_slot_deletion slot
+        slot_setting.reload
+        expect(slot_setting.deleted_at?).to be false
+      end
     end
   end
 end

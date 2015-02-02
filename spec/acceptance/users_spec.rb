@@ -3,40 +3,35 @@ require 'documentation_helper'
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  # at the moment this test is just here to explain the auth hack
-  get "/v1/users/authenticate/:id" do
+  post "/v1/users/signin" do
+    header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :id, "ID of the user to authenticate", required: true
+    parameter :email, "Email of the user to authenticate", required: true
+    parameter :password, "Password for the user to authenticate", required: true
 
-    let!(:first_user) { create(:user) } # should not be the current_user
-    let(:user) { create(:user) }
-    let(:id) { user.id }
-    let(:testgroup) { attributes_for(:group) }
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
 
-    # The best idea I had to check which user is set as current_user was taking
-    # an action which uses the current_user and see if it gets set correctly
-    example "Authenticate an user - See Note", document: :v1 do
-      explanation "***Important***: as of now we don't have a proper user" \
-                  " authentication in place. Please set a HTTP header" \
-                  " with **'AUTHORIZATION'** as key and the **username**" \
-                  " of the user who should be *logged in* as value.\n\n" \
-                  "returns OK if User set as current user\n\n" \
-                  "returns 404 if ID is invalid"
+    let(:user) { create(:user, password: "timeslot") }
+    let(:email) { user.email }
+    let(:password) { "timeslot" }
+
+    example "Sign In User returns Authentication Token", document: :v1 do
+      explanation "returns OK and an AuthToken if credentials match\n\n" \
+                  "returns 403 if credentials invalid"
       do_request
 
       expect(response_status).to eq(200)
-
-      client.post(URI.parse("/v1/groups").path, testgroup, headers)
-      expect(status).to eq(201)
-      expect(json['ownerId']).to eq user.id
+      expect(json['authToken']).to eq user.auth_token
     end
   end
 
   get "/v1/users/:id" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the user to get", required: true
 
@@ -47,9 +42,7 @@ resource "Users" do
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
 
-    let(:user) { create(:user) }
-    let(:id) { user.id }
-    let(:deleted_at) { user.deleted_at.nil? ? nil : user.deleted_at.iso8601 }
+    let(:id) { current_user.id }
 
     example "Get user returns user data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
@@ -58,7 +51,8 @@ resource "Users" do
       expect(response_status).to eq(200)
       expect(
         json.except('image')
-      ).to eq(user.attributes.as_json
+      ).to eq(current_user.attributes.as_json
+               .except("auth_token", "password_digest", "role")
                .transform_keys { |key| key.camelize(:lower) })
     end
   end
@@ -69,10 +63,16 @@ resource "Users" do
 
     parameter :username, "Username of user (max. 20 characters)",
               required: true
+    parameter :email, "Email of user (max. 254 characters)",
+              required: true
+    parameter :password, "Password for user (min. 5 & max. 72 characters)",
+              required: true
 
     response_field :id, "ID of the new user"
 
     let(:username) { "foo" }
+    let(:email) { "someone@timeslot.com" }
+    let(:password) { "secret-thing" }
 
     example "Create user returns ID of new user", document: :v1 do
       explanation "returns 422 if parameters are missing\n\n" \
@@ -86,6 +86,7 @@ resource "Users" do
 
   patch "/v1/users" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     describe "Update current users data" do
 
@@ -112,7 +113,8 @@ resource "Users" do
         expect(
           json.except('image')
         ).to eq(current_user.attributes.as_json
-              .transform_keys { |key| key.camelize(:lower) })
+                .except("auth_token", "password_digest", "role")
+                .transform_keys { |key| key.camelize(:lower) })
       end
     end
 
@@ -147,6 +149,8 @@ resource "Users" do
   end
 
   delete "/v1/users" do
+    header "Authorization", :auth_header
+
     example "Delete current user", document: :v1 do
       explanation "Sets 'deletedAt' attr for user who is logged in" \
                   "Doesn't delete anything.\n\n" \
@@ -159,6 +163,7 @@ resource "Users" do
       expect(
         json.except('image')
       ).to eq(current_user.attributes.as_json
+               .except("auth_token", "password_digest", "role")
                .transform_keys{ |key| key.camelize(:lower) })
     end
   end
@@ -166,6 +171,7 @@ resource "Users" do
   post "/v1/users/add_friends" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of User IDs to create a friendship for",
               required: true
@@ -206,6 +212,7 @@ resource "Users" do
   post "/v1/users/remove_friends" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of User IDs for whom to refuse/destroy a friendship",
               required: true

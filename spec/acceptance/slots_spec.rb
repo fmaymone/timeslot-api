@@ -3,10 +3,11 @@ require 'documentation_helper'
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user) }
-  before(:each) { ApplicationController.new.current_user = current_user }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   get "/v1/slots" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
     let!(:std_slot_1) {
@@ -41,7 +42,9 @@ resource "Slots" do
 
       example "Get all slots for current user", document: :v1 do
         explanation "Returns an array which includes StandardSlots," \
-                    " ReSlots & GroupSlots"
+                    " ReSlots & GroupSlots\n\n" \
+                    "If a user is authenticated the slot settings" \
+                    " (alerts) will be included."
         do_request
 
         expect(response_status).to eq(200)
@@ -54,7 +57,7 @@ resource "Slots" do
         expect(json.first).to have_key("locationId")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
-        # expect(json.first).to have_key("settings")
+        expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
         expect(json.first).to have_key("deletedAt")
@@ -72,8 +75,8 @@ resource "Slots" do
                       "createdAt" => std_slot_1.created_at.as_json,
                       "updatedAt" => std_slot_1.updated_at.as_json,
                       "deletedAt" => std_slot_1.deleted_at,
-                      # "settings" => {
-                        # 'alerts' => std_slot_1.alerts(current_user) },
+                      "settings" => {
+                        'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
@@ -86,8 +89,8 @@ resource "Slots" do
                       "locationId" => std_slot_2.location_id,
                       "startDate" => std_slot_2.start_date.as_json,
                       "endDate" => std_slot_2.end_date.as_json,
-                      # "settings" => {
-                        # 'alerts' => std_slot_2.alerts(current_user) },
+                      "settings" => {
+                        'alerts' => current_user.alerts(std_slot_2) },
                       "createdAt" => std_slot_2.created_at.as_json,
                       "updatedAt" => std_slot_2.updated_at.as_json,
                       "deletedAt" => std_slot_2.deleted_at,
@@ -103,8 +106,8 @@ resource "Slots" do
                       "locationId" => re_slots[0].location_id,
                       "startDate" => re_slots[0].start_date.as_json,
                       "endDate" => re_slots[0].end_date.as_json,
-                      # "settings" => {
-                        # 'alerts' => re_slots[0].alerts(current_user) },
+                      "settings" => {
+                        'alerts' => current_user.alerts(re_slots[0]) },
                       "createdAt" => re_slots[0].created_at.as_json,
                       "updatedAt" => re_slots[0].updated_at.as_json,
                       "deletedAt" => re_slots[0].deleted_at,
@@ -119,8 +122,8 @@ resource "Slots" do
                       "locationId" => group_slots_1[0].location_id,
                       "startDate" => group_slots_1[0].start_date.as_json,
                       "endDate" => group_slots_1[0].end_date.as_json,
-                      # "settings" => {
-                        # 'alerts' => group_slots_1[0].alerts(current_user) },
+                      "settings" => {
+                        'alerts' => current_user.alerts(group_slots_1[0]) },
                       "groupId" => group_slots_1[0].group.id,
                       "createdAt" => group_slots_1[0].created_at.as_json,
                       "updatedAt" => group_slots_1[0].updated_at.as_json,
@@ -176,7 +179,9 @@ resource "Slots" do
       let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
 
       example "Get several slots returns slot data", document: :v1 do
-        explanation "returns 404 if an ID is invalid"
+        explanation "if a user is authenticated the slot settings" \
+                    " (alerts) will be included\n\n" \
+                    "returns 404 if an ID is invalid"
         do_request
 
         expect(response_status).to eq(200)
@@ -196,7 +201,7 @@ resource "Slots" do
         expect(json.last).to have_key("updatedAt")
         expect(json.last).to have_key("deletedAt")
         expect(json.last).to have_key("notes")
-        # expect(json.last).to have_key("visibility")
+        expect(json.last).to have_key("visibility")
         # expect(json.last).to have_key("photos")
         # expect(json.last).to have_key("voices")
         # expect(json.last).to have_key("videos")
@@ -238,6 +243,7 @@ resource "Slots" do
 
   get "/v1/slots/:id", :vcr do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to get", required: true
 
@@ -274,7 +280,9 @@ resource "Slots" do
       let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
 
       example "Get slot returns slot data", document: :v1 do
-        explanation "returns 404 if ID is invalid"
+        explanation "if a user is authenticated the slot settings" \
+                    " (alerts) will be included\n\n" \
+                    "returns 404 if ID is invalid"
         do_request
 
         expect(response_status).to eq(200)
@@ -286,8 +294,8 @@ resource "Slots" do
         expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
-        # expect(json).to have_key("settings")
-        # expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
@@ -322,7 +330,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil },
-                 # "settings" => { 'alerts' => '1110001100' },
+                 "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes
                 )
@@ -344,6 +352,7 @@ resource "Slots" do
   post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true
@@ -455,6 +464,7 @@ resource "Slots" do
   post "/v1/groupslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :title, "Title of slot (max. 48 characters)",
               required: true
@@ -470,7 +480,7 @@ resource "Slots" do
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, owner: current_user) }
 
     describe "Create new group slot" do
 
@@ -554,6 +564,7 @@ resource "Slots" do
   post "/v1/reslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :predecessorId,
               "ID of the Slot which was resloted",
@@ -602,6 +613,7 @@ resource "Slots" do
 
   patch "/v1/metaslot/:id" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
 
@@ -633,6 +645,7 @@ resource "Slots" do
 
   patch "/v1/stdslot/:id" do
     header "Content-Type", "application/json"
+    header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
 
@@ -755,9 +768,11 @@ resource "Slots" do
   end
 
   delete "/v1/stdslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot, :with_media, owner: current_user) }
 
     describe "Delete Standard Slot" do
       let(:id) { std_slot.id }
@@ -796,10 +811,11 @@ resource "Slots" do
   end
 
   delete "/v1/groupslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the Group Slot to delete", required: true
 
-    let(:group) { create(:group) }
-    let!(:membership) { create(:membership, group: group, user: current_user) }
+    let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
 
     describe "Delete Group Slot" do
@@ -839,6 +855,8 @@ resource "Slots" do
   end
 
   delete "/v1/reslot/:id" do
+    header "Authorization", :auth_header
+
     parameter :id, "ID of the ReSlot to delete", required: true
 
     let!(:re_slot) { create(:re_slot, slotter: current_user) }

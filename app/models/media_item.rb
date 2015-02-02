@@ -29,6 +29,22 @@ class MediaItem < ActiveRecord::Base
     msg.merge!(error: e)
     Rails.logger.error msg
   ensure
-    SoftDelete.call(self)
+    ts_soft_delete
+  end
+
+  def self.reorder_media(media_items)
+    return false unless self.valid_sorting? media_items
+
+    media_items.each do |item|
+      MediaItem.find(item[:media_id]).update(position: item[:position])
+    end
+    true
+  end
+
+  def self.valid_sorting?(parameter)
+    arr = parameter.map { |i| i[:position].to_i }
+    no_gaps = arr.size > arr.max
+    dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
+    dups.nil? && no_gaps
   end
 end

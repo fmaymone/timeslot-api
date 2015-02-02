@@ -17,12 +17,12 @@ RSpec.describe Group, type: :model do
   it { is_expected.to have_many(:group_slots).inverse_of(:group) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
-                       .class_name("User")
+                       .class_name(User)
                        .through(:memberships)
                        .source(:user) }
   it { is_expected.to have_many(:active_memberships) }
   it { is_expected.to have_many(:members)
-                       .class_name("User")
+                       .class_name(User)
                        .through(:active_memberships)
                        .source(:user) }
 
@@ -85,6 +85,42 @@ RSpec.describe Group, type: :model do
       group.delete
       expect(group.memberships.first.deleted_at?).to be true
       expect(group.memberships.last.deleted_at?).to be true
+    end
+  end
+
+  describe "create_with_image" do
+    let(:params) do
+      attributes_for(:group).merge(
+        "public_id" => 'foobar', "owner" => create(:user))
+    end
+
+    context "valid params" do
+      it "creates a new group" do
+        expect {
+          Group.create_with_image(params)
+        }.to change(Group, :count).by 1
+      end
+
+      it "sets an image if provided" do
+        expect {
+          Group.create_with_image(params)
+        }.to change(MediaItem, :count).by 1
+        expect(Group.last.image.public_id).to eq params["public_id"]
+      end
+    end
+
+    context "invalid params" do
+      it "doesn't create a new group if groupname is nil" do
+        expect {
+          Group.create_with_image(name: nil)
+        }.not_to change(Group, :count)
+      end
+
+      it "doesn't create a new mediaitem if public_id is nil" do
+        expect {
+          Group.create_with_image(name: 'foo', "public_id" => nil)
+        }.not_to change(MediaItem, :count)
+      end
     end
   end
 end

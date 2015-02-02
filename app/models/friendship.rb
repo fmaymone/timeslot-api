@@ -40,7 +40,7 @@ class Friendship < ActiveRecord::Base
   # when user deactivates account, need to preserve state
   def inactivate
     friend.touch
-    SoftDelete.call(self)
+    ts_soft_delete
   end
 
   def activate
@@ -51,8 +51,11 @@ class Friendship < ActiveRecord::Base
 
   private def check_duplicate
     if Friendship.where(user_id: friend_id, friend_id: user_id).exists?
-      # TODO: add special log message, this should never happen
-      fail DuplicateEntry, "reverse friendship relation already exists"
+      msg = {
+        duplicate_friendship: "reverse friendship from #{user_id} to #{friend_id} already exists"
+            }
+      Rails.logger.error msg
+      fail DuplicateEntry, msg
     end
   end
 

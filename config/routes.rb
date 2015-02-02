@@ -28,9 +28,8 @@ Rails.application.routes.draw do
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'
       delete '', to: 'users#destroy', as: 'user_delete'
-      # HACK: not ready for production
-      get 'authenticate/:id', to: 'users#auth', as: 'auth',
-          constraints: { id: /\d+/ }
+      post 'signin', to: 'users#signin', as: 'signin'
+      get 'signout', to: 'users#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
     end
@@ -60,10 +59,6 @@ Rails.application.routes.draw do
           to: 'groups#related',
           as: 'group_related',
           constraints: { group_id: /\d+/ }
-      post ':group_id/members/:user_id',
-           to: 'groups#invite_single',
-           as: 'group_invite_single',
-           constraints: { group_id: /\d+/, user_id: /\d+/ }
       post ':group_id/members',
            to: 'groups#invite',
            as: 'group_invite'
@@ -84,8 +79,8 @@ Rails.application.routes.draw do
              as: 'group_kick',
              constraints: { group_id: /\d+/, user_id: /\d+/ }
       patch ':group_id/members',
-            to: 'groups#settings',
-            as: 'group_settings',
+            to: 'groups#member_settings',
+            as: 'group_member_settings',
             constraints: { group_id: /\d+/ }
     end
 

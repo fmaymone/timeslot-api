@@ -50,12 +50,6 @@ RSpec.describe V1::GroupsController, type: :routing do
               "v1/groups#related", group_id: "1", format: :json)
     end
 
-    it "routes to #invite_single" do
-      expect(post: "/v1/groups/1/members/2")
-        .to route_to(
-              "v1/groups#invite_single", group_id: "1", user_id: "2", format: :json)
-    end
-
     it "routes to #invite" do
       expect(post: "/v1/groups/1/members")
         .to route_to(
@@ -84,10 +78,10 @@ RSpec.describe V1::GroupsController, type: :routing do
               "v1/groups#kick", group_id: "1", user_id: "2", format: :json)
     end
 
-    it "routes to #settings" do
+    it "routes to #member_settings" do
       expect(patch: "/v1/groups/1/members")
         .to route_to(
-              "v1/groups#settings", group_id: "1", format: :json)
+              "v1/groups#member_settings", group_id: "1", format: :json)
     end
   end
 end

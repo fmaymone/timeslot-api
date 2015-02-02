@@ -3,7 +3,6 @@ require 'rails_helper'
 RSpec.describe V1::UsersController, type: :controller do
   before(:each) {
     request.accept = "application/json"
-    described_class.new.current_user = current_user
   }
   let(:current_user) { create(:user) }
   let(:valid_attributes) { attributes_for(:user, username: "current user") }
@@ -11,6 +10,9 @@ RSpec.describe V1::UsersController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET index" do
+    before(:each) {
+      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
+    }
     it "assigns all users as @users" do
       get :index, {}, valid_session
       expect(assigns(:users)).to eq([current_user])
@@ -18,6 +20,9 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "GET show" do
+    before(:each) {
+      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
+    }
     it "assigns the requested user as @user" do
       get :show, { id: current_user.id }, valid_session
       expect(assigns(:user)).to eq(current_user)
@@ -25,6 +30,8 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "POST create" do
+    let(:valid_attributes) { attributes_for(:user, password: "something") }
+
     describe "with valid params" do
       it "creates a new User" do
         expect {
@@ -48,6 +55,9 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "PATCH update" do
+    before(:each) {
+      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
+    }
     describe "with valid params" do
       let(:new_attributes) {
         attributes_for(:user, username: "new name")
@@ -74,6 +84,9 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "DELETE destroy" do
+    before(:each) {
+      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
+    }
     it "doesn't destroy the requested user" do
       expect {
         delete :destroy, { }, valid_session

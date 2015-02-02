@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe V1::SlotsController, type: :controller do
   before(:each) {
     request.accept = "application/json"
-    described_class.new.current_user = current_user
+    request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
   let(:current_user) { create(:user) }
   let(:valid_session) { {} }
@@ -84,18 +84,12 @@ RSpec.describe V1::SlotsController, type: :controller do
                  settings: { alerts: '1110111010' }), valid_session
         }.to change(SlotSetting, :count).by(1)
       end
-
-      it "assigns a newly created std_slot as @slot" do
-        post :create_stdslot, valid_attributes, valid_session
-        expect(assigns(:slot)).to be_a(StdSlot)
-        expect(assigns(:slot)).to be_persisted
-      end
     end
   end
 
   describe "POST create_groupslot" do
     describe "with valid params" do
-      let(:group) { create(:group) }
+      let(:group) { create(:group, owner: current_user) }
       let(:valid_attributes) {
         attr = attributes_for(
           :meta_slot, creator: current_user).merge(groupId: group.id)

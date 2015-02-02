@@ -1,4 +1,8 @@
 class User < ActiveRecord::Base
+  include TS_Role
+
+  has_secure_password validations: false
+  before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
 
   # has_many relation because when image gets updated the old image still exists
@@ -10,9 +14,7 @@ class User < ActiveRecord::Base
 
   has_many :slot_settings, inverse_of: :user
 
-  # TODO: I think I don't need this, remove after alarm stuff is in place
-  # has_many :meta_slots, through: :slot_settings #, source: :meta_slot
-
+  # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
   has_many :group_slots, through: :groups
@@ -41,6 +43,23 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
+  # TODO: what about a minimum for username?
+  validates :email, presence: true, length: { maximum: 254 },
+            uniqueness: { case_sensitive: false },
+            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
+  # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
+
+  # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
+  validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
+  validate :password_digest_was_created, on: :create
+
+  ## user related ##
+
+  def update_with_image(params)
+    update(params.except("public_id"))
+    AddImage.call(self, params["public_id"]) if params["public_id"].present?
+    self
+  end
 
   def image
     images.first
@@ -48,15 +67,49 @@ class User < ActiveRecord::Base
 
   ## slot related ##
 
-  def representation?(meta_slot)
-    std_slots.active.where(meta_slot: meta_slot).exists? ||
-      group_slots.active.where(meta_slot: meta_slot).exists? ||
-      re_slots.active.where(meta_slot: meta_slot).exists?
+  def active_slots(meta_slot)
+    slots = []
+    slots.push(*std_slots.active.where(meta_slot: meta_slot))
+    slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    slots.push(*re_slots.active.where(meta_slot: meta_slot))
+  end
+
+  # including deleted slots
+  def all_slots
+    slots = []
+    slots.push(*std_slots)
+    slots.push(*group_slots)
+    slots.push(*re_slots)
+  end
+
+  def prepare_for_slot_deletion(slot)
+    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    return if alert.nil?
+    alert.delete if active_slots(slot.meta_slot).size <= 1
+  end
+
+  def update_alerts(slot, alerts)
+    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    if alert.nil?
+      return if default_alert?(slot, alerts)
+      SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
+    else
+      alert.update(alerts: alerts)
+    end
+  end
+
+  def alerts(slot)
+    setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
+    if setting.exists?
+      setting.first.alerts
+    else
+      default_alert(slot)
+    end
   end
 
   ## friendship related ##
 
-  # TODO: get friends with one query
+  # OPTIMIZATION: get friends with one query
   def friends
     friends_by_request + friends_by_offer
   end
@@ -64,11 +117,6 @@ class User < ActiveRecord::Base
   def friendships
     initiated_friendships.active + received_friendships.active
   end
-
-  # def friend_with?(user_id)
-  #   initiated_friendships.where("friend_id= ?", user_id).exists? ||
-  #     received_friendships.where("user_id= ?", user_id).exists?
-  # end
 
   def friendship(user_id)
     initiated_friendships.where("friend_id= ?", user_id).first ||
@@ -79,10 +127,27 @@ class User < ActiveRecord::Base
     received_friendships.open.where("user_id= ?", user_id).first
   end
 
+  def add_friends(user_ids)
+    user_ids.each do |id|
+      if offered_friendship(id).try(:accept)
+        next
+      elsif friendship(id).nil?
+        requested_friends << User.find(id)
+      end
+    end
+  end
+
+  def remove_friends(user_ids)
+    user_ids.each do |id|
+      friendship(id).try(:inactivate)
+    end
+  end
+
   ## group related ##
+
   def is_invited?(group_id)
-    membership = memberships.where(group_id: group_id)
-    membership.exists? && membership.first.invited?
+    membership = get_membership group_id
+    !membership.nil? && membership.invited?
   end
 
   def can_invite?(group_id)
@@ -90,9 +155,24 @@ class User < ActiveRecord::Base
     self == group.owner || group.members_can_invite
   end
 
-  def is_member?(group_id)
-    membership = memberships.where(group_id: group_id)
-    membership.exists? && membership.first.active?
+  def accept_invite(group_id)
+    membership = get_membership group_id
+    membership && membership.activate
+  end
+
+  def refuse_invite(group_id)
+    membership = get_membership group_id
+    membership && membership.refuse
+  end
+
+  def leave_group(group_id)
+    membership = get_membership group_id
+    membership && membership.leave
+  end
+
+  def is_active_member?(group_id)
+    membership = get_membership group_id
+    !membership.nil? && membership.active?
   end
 
   def is_owner?(group_id)
@@ -101,7 +181,13 @@ class User < ActiveRecord::Base
   end
 
   def get_membership(group_id)
-    memberships.where(group_id: group_id).first
+    memberships.find_by group_id: group_id
+  end
+
+  def update_member_settings(params, group_id)
+    membership = get_membership group_id
+    membership && membership.update(params)
+    membership
   end
 
   def inactivate
@@ -118,11 +204,53 @@ class User < ActiveRecord::Base
     image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
-    SoftDelete.call(self)
+    ts_soft_delete and return self
   end
 
   # TODO: add spec
   def activate
     slot_settings.each(&:undelete)
+  end
+
+  private def default_alert?(slot, alerts)
+    if slot.class == GroupSlot
+      alerts == memberships.find_by(group_id: slot.group.id).default_alerts
+    else
+      alerts == default_alerts
+    end
+  end
+
+  private def default_alert(slot)
+    if slot.class == GroupSlot
+      membership = memberships.find_by(group_id: slot.group.id)
+      if !membership.nil? && !membership.default_alerts.nil?
+        return membership.default_alerts
+      end
+    end
+    default_alerts
+  end
+
+  private def set_auth_token
+    self.auth_token = generate_auth_token
+  end
+
+  private def generate_auth_token
+    SecureRandom.urlsafe_base64(20).tr('lIO0', 'pstu')
+  end
+
+  private def password_digest_was_created
+    errors.add(:password, "Password missing") if password_digest.nil?
+  end
+
+  def self.create_with_image(params)
+    new_user = create(params.except("public_id"))
+    return new_user unless new_user.errors.empty?
+    AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
+    new_user
+  end
+
+  def self.sign_in(email, password)
+    user = User.find_by email: email
+    user.try(:authenticate, password)
   end
 end

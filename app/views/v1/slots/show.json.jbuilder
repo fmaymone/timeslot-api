@@ -20,10 +20,9 @@ json.creator do
   json.partial! 'v1/users/user', user: slot.creator
 end
 
-# TODO: temporary disabled until current user is requiered
-#if current_user
-#  json.partial! 'v1/slots/settings', slot: slot
-#end
+if current_user
+ json.partial! 'v1/slots/settings', slot: slot
+end
 
 if slot.class == StdSlot
   json.visibility slot.visibility
