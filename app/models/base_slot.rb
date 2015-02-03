@@ -82,7 +82,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
-    # Likes
+    likes.each(&:delete)
     # Comments
     notes.each(&:delete)
     media_items.each(&:delete)

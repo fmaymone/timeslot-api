@@ -24,4 +24,10 @@ RSpec.describe Like, type: :model do
     before { like.slot = nil }
     it { is_expected.to_not be_valid }
   end
+
+  describe :delete do
+    it "sets deleted_at" do
+      expect { like.delete }.to change(like, :deleted_at)
+    end
+  end
 end
