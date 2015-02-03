@@ -11,7 +11,7 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
-  has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
+  has_many :likes, inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
@@ -71,6 +71,14 @@ class BaseSlot < ActiveRecord::Base
         notes.create(note.permit(:title, :content))
       end
     end
+  end
+
+  def create_like(user)
+    like = likes.where(user: user).first_or_create do |new_like|
+      new_like.slot = self
+      new_like.user = user
+    end
+    like.update(deleted_at: nil) if like.deleted_at?
   end
 
   def delete

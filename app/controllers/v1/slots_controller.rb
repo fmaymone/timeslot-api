@@ -162,6 +162,15 @@ module V1
       end
     end
 
+    # POST /v1/slots/1/like
+    def like
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.create_like current_user
+
+      head :ok
+    end
+
     private def group_param
       params.require(:groupId)
     end

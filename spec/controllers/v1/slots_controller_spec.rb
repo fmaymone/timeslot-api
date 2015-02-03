@@ -290,15 +290,18 @@ RSpec.describe V1::SlotsController, type: :controller do
     end
 
     describe "POST like" do
-      let(:pred) { create(:std_slot) }
-      let!(:reslot) { create(:re_slot, slotter: current_user, predecessor: pred) }
+      let(:reslot) { create(:re_slot) }
+
+      it "returns http success" do
+        post :like, { id: reslot.id }
+        expect(response).to be_success
+      end
 
       it "creates a new Like" do
         expect {
-          post :like, { id: reslot.id }, valid_session
+          post :like, { id: reslot.id }
         }.to change(Like, :count).by(1)
       end
-
     end
   end
 end

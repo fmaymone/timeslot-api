@@ -98,4 +98,30 @@ RSpec.describe BaseSlot, type: :model do
       expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
     end
   end
+
+  describe :create_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "creates a like if none exists" do
+      expect {
+        std_slot.create_like user
+      }.to change(Like, :count).by 1
+    end
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "doesn't create a new like" do
+        expect { std_slot.create_like user }.not_to change(Like, :count)
+      end
+
+      it "unsets deleted_at (re-like smt previously unliked)" do
+        like.update(deleted_at: Time.zone.now)
+        std_slot.create_like user
+        like.reload
+        expect(like.deleted_at?).to be false
+      end
+    end
+  end
 end
