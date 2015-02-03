@@ -13,6 +13,7 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
+  it { is_expected.to have_many(:likes).inverse_of(:slot) }
 
   it { is_expected.to be_valid }
 
