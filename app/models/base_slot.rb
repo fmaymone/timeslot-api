@@ -11,6 +11,8 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
+  has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
+           inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
@@ -74,7 +76,7 @@ class BaseSlot < ActiveRecord::Base
 
   def delete
     # Likes
-    # Comments
+    comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
     related_users.each do |user|
