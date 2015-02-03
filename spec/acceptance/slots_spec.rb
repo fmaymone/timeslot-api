@@ -907,4 +907,28 @@ resource "Slots" do
       end
     end
   end
+
+  get "/v1/slots/:id/likes" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the likes for", required: true
+
+    let(:slot) { create(:group_slot) }
+    let!(:membership) {
+      create(:membership, :active, group: slot.group, user: current_user) }
+
+    describe "Get Likes for Slot" do
+      let(:id) { slot.id }
+
+      example "Get Likes for Slot", document: :v1 do
+        explanation "returns a list of all likes for the slot." \
+                    " Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Likes data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+      end
+    end
+  end
 end

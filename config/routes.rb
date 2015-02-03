@@ -18,6 +18,10 @@ Rails.application.routes.draw do
     delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
     delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
+    get 'slots/:id/likes',
+        to: 'slots#likes',
+        as: 'slot_likes',
+        constraints: { id: /\d+/ }
     post 'slots/:id/like',
          to: 'slots#like',
          as: 'slot_like',
