@@ -171,6 +171,14 @@ module V1
       head :ok
     end
 
+    # GET /v1/slots/1/likes
+    def likes
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      render :likes
+    end
+
     private def group_param
       params.require(:groupId)
     end

@@ -913,9 +913,10 @@ resource "Slots" do
 
     parameter :id, "ID of the Slot to get the likes for", required: true
 
-    let(:slot) { create(:group_slot) }
+    let(:slot) { create(:group_slot, :with_likes) }
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
+    let!(:like) { create(:like, user: create(:user, :with_image), slot: slot) }
 
     describe "Get Likes for Slot" do
       let(:id) { slot.id }
@@ -928,6 +929,10 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        expect(json.length).to eq slot.likes.count
+        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first).to have_key "userimage"
       end
     end
   end

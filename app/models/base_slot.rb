@@ -32,6 +32,10 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
+  def likes_with_details
+    Like.includes([:user]).where(slot: self)
+  end
+
   def update_from_params(meta_params, media_params = nil, note_param = nil,
                          alerts_param = nil, user)
     # statement order is important, otherwise added errors may be overwritten
