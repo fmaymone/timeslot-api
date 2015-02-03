@@ -28,6 +28,13 @@ class SlotPolicy < ApplicationPolicy
     # TODO: add scope check
   end
 
+  # true if like was made by current user
+  def unlike?
+    return false unless current_user?
+    return true if record.likes.exists?(user: user)
+    false
+  end
+
   # true if slot is public std slot
   # true if it is my slot
   # true if slot is friend slot and i am a friend of the owner

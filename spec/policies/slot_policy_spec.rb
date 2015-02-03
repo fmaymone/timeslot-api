@@ -51,6 +51,33 @@ describe SlotPolicy do
     end
   end
 
+  permissions :unlike? do
+    let(:user) { create(:user) }
+    let!(:like) { create(:like, slot: slot) }
+
+    context "for the like creator" do
+      let!(:like) { create(:like, user: user, slot: slot) }
+
+      it "allows access" do
+        expect(subject).to permit(user, slot)
+      end
+    end
+
+    context "for a user" do
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+
+    context "for a visitor" do
+      let(:user) { nil }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+  end
+
   permissions :likes? do
     context "std_slot" do
       context "for a user" do

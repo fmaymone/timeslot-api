@@ -124,4 +124,19 @@ RSpec.describe BaseSlot, type: :model do
       end
     end
   end
+
+  describe :destroy_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "sets deleted_at on the like" do
+        std_slot.destroy_like user
+        like.reload
+        expect(like.deleted_at?).to be true
+      end
+    end
+  end
 end

@@ -73,6 +73,11 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#like", id: "1", format: :json)
     end
 
+    it "routes to #unlike" do
+      expect(delete: "/v1/slots/1/like")
+        .to route_to("v1/slots#unlike", id: "1", format: :json)
+    end
+
     it "routes to #likes" do
       expect(get: "/v1/slots/1/likes")
         .to route_to("v1/slots#likes", id: "1", format: :json)

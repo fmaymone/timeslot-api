@@ -26,6 +26,10 @@ Rails.application.routes.draw do
          to: 'slots#like',
          as: 'slot_like',
          constraints: { id: /\d+/ }
+    delete 'slots/:id/like',
+           to: 'slots#unlike',
+           as: 'slot_unlike',
+           constraints: { id: /\d+/ }
 
     get 'media-signature', to: 'media#create_signature'
 

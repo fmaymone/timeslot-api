@@ -85,6 +85,11 @@ class BaseSlot < ActiveRecord::Base
     like.update(deleted_at: nil) if like.deleted_at?
   end
 
+  def destroy_like(user)
+    like = likes.find_by(user: user)
+    like.try(:delete)
+  end
+
   def delete
     likes.each(&:delete)
     # Comments
