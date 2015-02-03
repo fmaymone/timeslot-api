@@ -18,6 +18,11 @@ Rails.application.routes.draw do
     delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
     delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
+    post 'slots/:id/like',
+         to: 'slots#like',
+         as: 'slot_like',
+         constraints: { id: /\d+/ }
+
     get 'media-signature', to: 'media#create_signature'
 
     scope :users do
