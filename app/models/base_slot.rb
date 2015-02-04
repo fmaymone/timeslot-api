@@ -80,6 +80,10 @@ class BaseSlot < ActiveRecord::Base
     errors.add(:comment, new_comment.errors)
   end
 
+  def comments_with_details
+    Comment.includes([:user]).where(slot: self)
+  end
+
   def delete
     # Likes
     comments.each(&:delete)
