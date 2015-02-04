@@ -20,6 +20,15 @@ Rails.application.routes.draw do
 
     get 'media-signature', to: 'media#create_signature'
 
+    post 'slots/:id/comment',
+         to: 'slots#add_comment',
+         as: 'slot_add_comment',
+         constraints: { id: /\d+/ }
+    get 'slots/:id/comments',
+        to: 'slots#show_comments',
+        as: 'slot_show_comments',
+        constraints: { id: /\d+/ }
+
     scope :users do
       get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
