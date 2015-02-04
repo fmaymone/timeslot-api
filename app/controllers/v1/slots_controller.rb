@@ -162,6 +162,23 @@ module V1
       end
     end
 
+    # POST /v1/slots/1/comment
+    def add_comment
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.create_comment(current_user, comment_param)
+
+      head :ok
+    end
+
+    # GET /v1/slots/1/comments
+    def show_comments
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      render :comments
+    end
+
     private def group_param
       params.require(:groupId)
     end
@@ -191,6 +208,10 @@ module V1
     private def media_params
       item_params = [:publicId, :position, :mediaId]
       params.permit(photos: item_params, voices: item_params, videos: item_params)
+    end
+
+    private def comment_param
+      params.require(:content)
     end
   end
 end

@@ -32,6 +32,7 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot for the current user"
       response_field :notes, "A list of all notes on the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
       response_field :media, "Media Items for the slot"
       response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
@@ -63,6 +64,7 @@ resource "Slots" do
         expect(json.first).to have_key("deletedAt")
         expect(json.first).to have_key("creatorId")
         expect(json.first).to have_key("notes")
+        expect(json.first).to have_key("commentsCounter")
         expect(json.first).to have_key("visibility")
         expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
@@ -78,6 +80,7 @@ resource "Slots" do
                       "settings" => {
                         'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,
+                      "commentsCounter" => std_slot_1.comments.count,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
                       "url" => v1_slot_url(std_slot_1, format: :json),
@@ -95,6 +98,7 @@ resource "Slots" do
                       "updatedAt" => std_slot_2.updated_at.as_json,
                       "deletedAt" => std_slot_2.deleted_at,
                       "notes" => std_slot_2.notes,
+                      "commentsCounter" => std_slot_2.comments.count,
                       "media" => std_slot_2.media_items,
                       "visibility" => std_slot_2.visibility,
                       "url" => v1_slot_url(std_slot_2, format: :json),
@@ -112,6 +116,7 @@ resource "Slots" do
                       "updatedAt" => re_slots[0].updated_at.as_json,
                       "deletedAt" => re_slots[0].deleted_at,
                       "notes" => re_slots[0].notes,
+                      "commentsCounter" => re_slots[0].comments.count,
                       "media" => re_slots[0].media_items,
                       "url" => v1_slot_url(re_slots[0], format: :json),
                       "creatorId" => re_slots[0].creator.id
@@ -129,6 +134,7 @@ resource "Slots" do
                       "updatedAt" => group_slots_1[0].updated_at.as_json,
                       "deletedAt" => group_slots_1[0].deleted_at,
                       "notes" => group_slots_1[0].notes,
+                      "commentsCounter" => group_slots_1[0].comments.count,
                       "media" => group_slots_1[0].media_items,
                       "url" => v1_slot_url(group_slots_1[0], format: :json),
                       "creatorId" => group_slots_1[0].creator.id
@@ -156,6 +162,7 @@ resource "Slots" do
       response_field :settings, "User specific settings for the slot (alerts)"
       response_field :visibility, "Visibiltiy of the slot"
       response_field :notes, "Notes on the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
       response_field :images, "Images for the slot"
       response_field :voices, "Voice recordings for the slot"
       response_field :videos, "Videos recordings for the slot"
@@ -201,6 +208,7 @@ resource "Slots" do
         expect(json.last).to have_key("updatedAt")
         expect(json.last).to have_key("deletedAt")
         expect(json.last).to have_key("notes")
+        expect(json.last).to have_key("commentsCounter")
         expect(json.last).to have_key("visibility")
         # expect(json.last).to have_key("photos")
         # expect(json.last).to have_key("voices")
@@ -261,6 +269,7 @@ resource "Slots" do
       response_field :settings, "User specific settings for the slot (alerts)"
       response_field :visibility, "Visibiltiy of the slot"
       response_field :notes, "Notes on the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
       response_field :images, "Images for the slot"
       response_field :voices, "Voice recordings for the slot"
       response_field :videos, "Videos recordings for the slot"
@@ -300,6 +309,7 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("notes")
+        expect(json).to have_key("commentsCounter")
         expect(json).to have_key("visibility")
         expect(json).to have_key("photos")
         expect(json).to have_key("voices")
@@ -332,7 +342,8 @@ resource "Slots" do
                                 "deletedAt" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
-                 "notes" => slot.notes
+                 "notes" => slot.notes,
+                 "commentsCounter" => slot.comments.count
                 )
         expect(json["photos"].length).to eq(slot.photos.length)
         expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
@@ -879,8 +890,7 @@ resource "Slots" do
                                 "createdAt" => re_slot.created_at.as_json,
                                 "updatedAt" => re_slot.updated_at.as_json,
                                 "deletedAt" => re_slot.deleted_at.as_json,
-                                "notes" => re_slot.notes
-                               )
+                                "notes" => re_slot.notes)
       end
     end
 
@@ -891,6 +901,63 @@ resource "Slots" do
               document: false do
         do_request
         expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  post "/v1/slots/:id/comment" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to make a comment on", required: true
+    parameter :content, "Content of the comment", required: true
+
+    let(:slot) { create(:std_slot, :with_comments, owner: current_user) }
+    # let(:slot) { create(:std_slot, :friendslot, :with_comments) }
+    # let!(:friendship) {
+      # create(:friendship, :established, friend: slot.owner, user: current_user)
+    # }
+    describe "Make comment on Slot" do
+      let(:id) { slot.id }
+      let(:content) { "Liebe ist ein Kind der Freiheit" }
+
+      example "Make Comment on Slot", document: :v1 do
+        explanation "Current user makes a comment on a slot."
+        do_request
+
+        expect(response_status).to eq(200)
+      end
+    end
+  end
+
+  get "/v1/slots/:id/comments" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the comments for", required: true
+
+    let(:slot) { create(:group_slot, :with_comments) }
+    let!(:membership) {
+      create(:membership, :active, group: slot.group, user: current_user) }
+    let!(:comment) {
+      create(:comment, user: create(:user, :with_image), slot: slot) }
+
+    describe "Get Comments for Slot" do
+      let(:id) { slot.id }
+
+      example "Get Comments for Slot", document: :v1 do
+        explanation "returns a list of all comments for the slot." \
+                    " Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Comments data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq slot.comments.count
+        expect(json.first).to have_key "userId"
+        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "content"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first).to have_key "userimage"
       end
     end
   end
