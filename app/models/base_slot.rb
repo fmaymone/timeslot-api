@@ -74,6 +74,12 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  def create_comment(user, content)
+    new_comment = comments.create(user: user, content: content)
+    return new_comment if new_comment.valid?
+    errors.add(:comment, new_comment.errors)
+  end
+
   def delete
     # Likes
     comments.each(&:delete)

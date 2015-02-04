@@ -97,4 +97,30 @@ RSpec.describe BaseSlot, type: :model do
       expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
     end
   end
+
+  describe :create_comment do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "adds a new comment to the slot" do
+      expect {
+        std_slot.create_comment(user, "some content for the comment")
+      }.to change(Comment, :count).by 1
+    end
+
+    context "invalid params" do
+      it "doesn't add a new comment to the slot" do
+        expect {
+          std_slot.create_comment(user, "")
+        }.not_to change(Comment, :count)
+      end
+
+      it "returns the error" do
+        std_slot.create_comment(user, "")
+        expect(std_slot.errors.messages).to have_key :comment
+        expect(std_slot.errors.messages[:comment].first.messages)
+          .to have_key :content
+      end
+    end
+  end
 end
