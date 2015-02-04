@@ -930,6 +930,7 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.likes.count
+        expect(json.first).to have_key "userId"
         expect(json.first).to have_key "username"
         expect(json.first).to have_key "createdAt"
         expect(json.first).to have_key "userimage"

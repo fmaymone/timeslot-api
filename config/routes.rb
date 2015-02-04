@@ -19,12 +19,12 @@ Rails.application.routes.draw do
     delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
     get 'slots/:id/likes',
-        to: 'slots#likes',
-        as: 'slot_likes',
+        to: 'slots#get_likes',
+        as: 'slot_get_likes',
         constraints: { id: /\d+/ }
     post 'slots/:id/like',
-         to: 'slots#like',
-         as: 'slot_like',
+         to: 'slots#add_like',
+         as: 'slot_add_like',
          constraints: { id: /\d+/ }
     delete 'slots/:id/like',
            to: 'slots#unlike',

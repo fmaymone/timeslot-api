@@ -33,7 +33,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :like? do
+  permissions :add_like? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -78,7 +78,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :likes? do
+  permissions :get_likes? do
     context "std_slot" do
       context "for a user" do
         let(:user) { create(:user) }

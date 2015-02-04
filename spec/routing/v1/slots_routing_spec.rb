@@ -68,9 +68,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#destroy_reslot", id: "1", format: :json)
     end
 
-    it "routes to #like" do
+    it "routes to #add_like" do
       expect(post: "/v1/slots/1/like")
-        .to route_to("v1/slots#like", id: "1", format: :json)
+        .to route_to("v1/slots#add_like", id: "1", format: :json)
     end
 
     it "routes to #unlike" do
@@ -78,9 +78,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#unlike", id: "1", format: :json)
     end
 
-    it "routes to #likes" do
+    it "routes to #get_likes" do
       expect(get: "/v1/slots/1/likes")
-        .to route_to("v1/slots#likes", id: "1", format: :json)
+        .to route_to("v1/slots#get_likes", id: "1", format: :json)
     end
 
     it "does not route to #new" do

@@ -163,7 +163,7 @@ module V1
     end
 
     # POST /v1/slots/1/like
-    def like
+    def add_like
       @slot = BaseSlot.get(params[:id])
       authorize @slot
       @slot.create_like current_user
@@ -181,7 +181,7 @@ module V1
     end
 
     # GET /v1/slots/1/likes
-    def likes
+    def get_likes
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
