@@ -5,7 +5,7 @@ describe SlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :show?, :show_many? do
+  permissions :show?, :show_many?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
 

@@ -14,4 +14,9 @@ class SlotPolicy < ApplicationPolicy
   def update_metaslot?
     current_user?
   end
+
+  # TODO
+  def share_url?
+    show?
+  end
 end
