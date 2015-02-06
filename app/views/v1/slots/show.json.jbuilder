@@ -33,6 +33,7 @@ elsif slot.class == ReSlot
 end
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
+json.share_url slot.share_url? ? slot.share_url : nil
 
 json.partial! 'v1/media/photos', media: slot.photos
 json.partial! 'v1/media/voices', media: slot.voices

@@ -176,7 +176,7 @@ resource "Slots" do
         { ids: [slot1.id, slot2.id] }
       end
 
-      let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
+      let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
       example "Get several slots returns slot data", document: :v1 do
         explanation "if a user is authenticated the slot settings" \
@@ -266,7 +266,8 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot) }
+      let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot,
+                          share_url: 'abcd1234') }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
@@ -277,7 +278,8 @@ resource "Slots" do
         create_list :video, 2, mediable: slot
       }
       let(:id) { slot.id }
-      let(:deleted_at) { slot.deleted_at.nil? ? nil : slot.deleted_at.as_json }
+      let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
+      let(:share_url) { slot.share_url? ? slot.share_url : nil }
 
       example "Get slot returns slot data", document: :v1 do
         explanation "if a user is authenticated the slot settings" \
@@ -300,6 +302,7 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("notes")
+        expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("photos")
         expect(json).to have_key("voices")
@@ -332,7 +335,8 @@ resource "Slots" do
                                 "deletedAt" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
-                 "notes" => slot.notes
+                 "notes" => slot.notes,
+                 "shareUrl" => share_url
                 )
         expect(json["photos"].length).to eq(slot.photos.length)
         expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
