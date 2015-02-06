@@ -38,7 +38,8 @@ CREATE TABLE base_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id integer,
-    id integer NOT NULL
+    id integer NOT NULL,
+    share_url character varying(255) DEFAULT ''::character varying
 );
 
 
@@ -59,6 +60,40 @@ CREATE SEQUENCE base_slots_id_seq
 --
 
 ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
+
+
+--
+-- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE comments (
+    id integer NOT NULL,
+    user_id integer,
+    slot_id integer,
+    content text,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE comments_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
@@ -142,6 +177,39 @@ CREATE SEQUENCE groups_id_seq
 --
 
 ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+
+
+--
+-- Name: likes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE likes (
+    id integer NOT NULL,
+    user_id integer,
+    base_slot_id integer,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE likes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: likes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
@@ -409,6 +477,13 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
 
 
@@ -420,10 +495,24 @@ ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_
 
 
 --
+-- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY group_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
 
 
 --
@@ -462,6 +551,13 @@ ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq
 
 
 --
+-- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY re_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -473,6 +569,13 @@ ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_setting
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
+
+
+--
+-- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
 
 
 --
@@ -491,6 +594,14 @@ ALTER TABLE ONLY base_slots
 
 
 --
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY comments
+    ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -504,6 +615,14 @@ ALTER TABLE ONLY friendships
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY likes
+    ADD CONSTRAINT likes_pkey PRIMARY KEY (id);
 
 
 --
@@ -555,6 +674,13 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: index_comments_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user_id, slot_id);
+
+
+--
 -- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -587,6 +713,13 @@ CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_
 --
 
 CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
+
+
+--
+-- Name: index_likes_on_user_id_and_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_likes_on_user_id_and_base_slot_id ON likes USING btree (user_id, base_slot_id);
 
 
 --
@@ -807,4 +940,10 @@ INSERT INTO schema_migrations (version) VALUES ('20150116103054');
 INSERT INTO schema_migrations (version) VALUES ('20150124224424');
 
 INSERT INTO schema_migrations (version) VALUES ('20150128120441');
+
+INSERT INTO schema_migrations (version) VALUES ('20150203092305');
+
+INSERT INTO schema_migrations (version) VALUES ('20150203153826');
+
+INSERT INTO schema_migrations (version) VALUES ('20150206105753');
 

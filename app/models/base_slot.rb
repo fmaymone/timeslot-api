@@ -72,6 +72,10 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  def set_share_url
+    self.share_url? || create_share_url
+  end
+
   def delete
     # Likes
     # Comments
@@ -83,6 +87,8 @@ class BaseSlot < ActiveRecord::Base
     ts_soft_delete
     meta_slot.unregister
   end
+
+  ## private instance methods ##
 
   private def update_media(media_params)
     media_map = [:photos, :voices, :videos]
@@ -103,14 +109,6 @@ class BaseSlot < ActiveRecord::Base
       end
     end
   end
-
-  ## abstract methods ##
-
-  def related_users
-    fail InterfaceNotImplementedError
-  end
-
-  ## private methods ##
 
   private def add_media_items(collection, media_type)
     case media_type
@@ -148,6 +146,18 @@ class BaseSlot < ActiveRecord::Base
                  .merge(media_type: 'video'))
     end
   end
+
+  private def create_share_url
+    update(share_url: SecureRandom.urlsafe_base64(8).tr('lIO0', 'pstu'))
+  end
+
+  ## abstract methods ##
+
+  def related_users
+    fail InterfaceNotImplementedError
+  end
+
+  ## class methods ##
 
   def self.slot_map
     { 'BaseSlot' => '10',
