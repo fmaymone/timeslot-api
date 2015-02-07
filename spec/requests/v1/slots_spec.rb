@@ -1175,4 +1175,16 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
   end
+
+  describe "GET /v1/:uid/slotdata", :focus do
+    let!(:slot) { create(:std_slot, :with_notes, :with_location,
+                         :with_real_photo, share_url: '12345xyz') }
+
+    it "returns data of slot" do
+      get "/v1/slots/#{slot.share_url}/sharedata", {}, auth_header
+      expect(response).to have_http_status :ok
+      expect(json["title"]).to eq slot.title
+      expect(json["startDate"]).to eq slot.start_date.as_json
+    end
+  end
 end

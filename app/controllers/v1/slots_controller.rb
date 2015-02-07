@@ -126,18 +126,6 @@ module V1
       end
     end
 
-    # GET /v1/slots/1/share
-    def share_url
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-
-      if @slot.create_share_url
-        render :show
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
     # DELETE /v1/std_slot/1
     def destroy_stdslot
       @slot = current_user.std_slots.find(params.require(:id))
@@ -172,6 +160,26 @@ module V1
       else
         render json: @slot.errors, status: :unprocessable_entity
       end
+    end
+
+    # GET /v1/slots/1/share
+    def share_url
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      if @slot.create_share_url
+        render :show
+      else
+        render json: @slot.errors.messages, status: :unprocessable_entity
+      end
+    end
+
+    # GET /v1/slots/abcd1234/sharedata
+    def share_data
+      @slot = BaseSlot.find_by(share_url: params[:uid])
+      authorize @slot
+
+      render :sharedata, locals: { slot: @slot }
     end
 
     private def group_param
