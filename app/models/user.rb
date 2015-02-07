@@ -235,7 +235,7 @@ class User < ActiveRecord::Base
   end
 
   private def generate_auth_token
-    SecureRandom.urlsafe_base64(20).tr('lIO0', 'pstu')
+    SecureRandom.urlsafe_base64(20)
   end
 
   private def password_digest_was_created
