@@ -18,7 +18,13 @@ Rails.application.routes.draw do
     delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
     delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
 
-    get 'slots/:id/share', to: 'slots#share_url'
+    get 'slots/:id/share',
+        to: 'slots#share_url',
+        as: 'slot_shareurl',
+        constraints: { id: /\d+/ }
+    get 'slots/:uid/sharedata',
+        to: 'slots#share_data',
+        as: 'slot_sharedata'
 
     get 'media-signature', to: 'media#create_signature'
 

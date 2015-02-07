@@ -32,4 +32,9 @@ describe SlotPolicy do
       end
     end
   end
+
+  permissions :share_data? do
+    # TODO: how do we want to validate this? have a user for the webview app?
+    true
+  end
 end

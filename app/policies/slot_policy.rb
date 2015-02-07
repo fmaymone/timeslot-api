@@ -19,4 +19,10 @@ class SlotPolicy < ApplicationPolicy
   def share_url?
     show?
   end
+
+  # TODO
+  # this should only be allowed for our other rails app
+  def share_data?
+    show?
+  end
 end

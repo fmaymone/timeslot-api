@@ -68,9 +68,14 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#destroy_reslot", id: "1", format: :json)
     end
 
-    it "routes to #create_share_url" do
+    it "routes to #share_url" do
       expect(get: "/v1/slots/1/share")
         .to route_to("v1/slots#share_url", id: "1", format: :json)
+    end
+
+    it "routes to #share_data" do
+      expect(get: "/v1/slots/abcd1234/sharedata")
+        .to route_to("v1/slots#share_data", uid: "abcd1234", format: :json)
     end
 
     it "does not route to #new" do
