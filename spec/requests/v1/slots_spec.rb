@@ -1176,7 +1176,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "GET /v1/:uid/slotdata", :focus do
+  describe "GET /v1/:uid/slotdata" do
     let!(:slot) { create(:std_slot, :with_notes, :with_location,
                          :with_real_photo, share_url: '12345xyz') }
 
