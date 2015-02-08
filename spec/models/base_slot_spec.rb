@@ -98,22 +98,22 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :set_share_url do
+  describe :set_share_id do
     let(:std_slot) { create(:std_slot) }
 
     it "adds a share url to the slot" do
-      std_slot.set_share_url
+      std_slot.set_share_id
       std_slot.reload
-      expect(std_slot.share_url?).to be true
+      expect(std_slot.share_id?).to be true
     end
 
     context "existing share url" do
-      let(:std_slot) { create(:std_slot, share_url: '12345678') }
+      let(:std_slot) { create(:std_slot, share_id: '12345678') }
 
       it "doesn't overwrite an existing share url" do
-        std_slot.set_share_url
+        std_slot.set_share_id
         std_slot.reload
-        expect(std_slot.share_url).to eq '12345678'
+        expect(std_slot.share_id).to eq '12345678'
       end
     end
   end

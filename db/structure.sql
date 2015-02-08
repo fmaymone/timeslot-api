@@ -39,7 +39,7 @@ CREATE TABLE base_slots (
     deleted_at timestamp without time zone,
     meta_slot_id integer,
     id integer NOT NULL,
-    share_url character varying(255) DEFAULT ''::character varying
+    share_id character varying(8) DEFAULT ''::character varying
 );
 
 
@@ -495,10 +495,10 @@ ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_
 
 
 --
--- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+-- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
+ALTER TABLE ONLY group_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
 
 
 --
@@ -551,10 +551,10 @@ ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq
 
 
 --
--- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+-- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
+ALTER TABLE ONLY re_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
 
 
 --
@@ -572,10 +572,10 @@ ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_se
 
 
 --
--- Name: share_url; Type: DEFAULT; Schema: public; Owner: -
+-- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY std_slots ALTER COLUMN share_url SET DEFAULT ''::character varying;
+ALTER TABLE ONLY std_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
 
 
 --
@@ -946,4 +946,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150203092305');
 INSERT INTO schema_migrations (version) VALUES ('20150203153826');
 
 INSERT INTO schema_migrations (version) VALUES ('20150206105753');
+
+INSERT INTO schema_migrations (version) VALUES ('20150208002831');
 

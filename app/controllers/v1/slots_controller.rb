@@ -167,8 +167,8 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      if @slot.create_share_url
-        render :show
+      if @slot.set_share_id
+        render :show, locals: { slot: @slot }
       else
         render json: @slot.errors.messages, status: :unprocessable_entity
       end
@@ -176,7 +176,7 @@ module V1
 
     # GET /v1/slots/abcd1234/sharedata
     def share_data
-      @slot = BaseSlot.find_by(share_url: params[:uid])
+      @slot = BaseSlot.find_by(share_id: params[:uid])
       authorize @slot
 
       render :sharedata, locals: { slot: @slot }

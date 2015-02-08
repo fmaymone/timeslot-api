@@ -72,8 +72,8 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  def set_share_url
-    self.share_url? || create_share_url
+  def set_share_id
+    self.share_id? || create_share_id
   end
 
   def delete
@@ -147,8 +147,9 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  private def create_share_url
-    update(share_url: SecureRandom.urlsafe_base64(8).tr('lIO0', 'pstu'))
+  private def create_share_id
+    # The length of the result string is about 4/3 of the argument, now: 8 chars
+    update(share_id: SecureRandom.urlsafe_base64(6).tr('lIO0', 'pstu'))
   end
 
   ## abstract methods ##
