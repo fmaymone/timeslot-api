@@ -149,7 +149,7 @@ class BaseSlot < ActiveRecord::Base
 
   private def create_share_id
     # The length of the result string is about 4/3 of the argument, now: 8 chars
-    update(share_id: SecureRandom.urlsafe_base64(6).tr('lIO0', 'pstu'))
+    update(share_id: SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu'))
   end
 
   ## abstract methods ##
