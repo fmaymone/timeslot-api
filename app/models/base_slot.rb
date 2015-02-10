@@ -12,6 +12,7 @@ class BaseSlot < ActiveRecord::Base
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
+  belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
            :title=, :start_date=, :end_date=, :creator=, :location_id=,
@@ -72,8 +73,8 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  def set_share_url
-    self.share_url? || create_share_url
+  def set_share_id(user)
+    self.share_id? || create_share_id(user)
   end
 
   def delete
@@ -147,8 +148,10 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  private def create_share_url
-    update(share_url: SecureRandom.urlsafe_base64(8).tr('lIO0', 'pstu'))
+  private def create_share_id(user)
+    # The length of the result string is about 4/3 of the argument, now: 8 chars
+    update(share_id: SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu'))
+    update(shared_by: user)
   end
 
   ## abstract methods ##

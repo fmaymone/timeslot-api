@@ -7,12 +7,16 @@ json.extract!(slot,
               :end_date
              )
 
-json.location do
-  if slot.location_id.nil?
-    json.nil!
-  else
-    json.partial! 'v1/locations/show', location_data: slot.location
-  end
+if slot.location_id.nil?
+  json.address json.nil!
+else
+  address = ""
+  address << "#{slot.location.name}, " if slot.location.name
+  address << "#{slot.location.street}, " if slot.location.street
+  address << "#{slot.location.city}, " if slot.location.city
+  address << "#{slot.location.postcode}, " if slot.location.postcode
+  address << "#{slot.location.country}" if slot.location.country
+  json.address address
 end
 
 json.creator do
@@ -28,8 +32,8 @@ elsif slot.class == ReSlot
 end
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
-json.share_url slot.share_url? ? slot.share_url : nil
 
-json.partial! 'v1/media/photos', media: slot.photos
-json.partial! 'v1/media/voices', media: slot.voices
-json.partial! 'v1/media/videos', media: slot.videos
+json.partial! 'v1/slots/share_url', share_id: slot.share_id
+json.shared_by slot.shared_by.username
+
+json.photos slot.photos.try(:first) ? slot.photos.first.public_id : nil

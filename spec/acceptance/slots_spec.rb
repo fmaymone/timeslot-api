@@ -267,7 +267,7 @@ resource "Slots" do
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot,
-                          share_url: 'abcd1234') }
+                          share_id: 'abcd1234') }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
@@ -279,7 +279,6 @@ resource "Slots" do
       }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
-      let(:share_url) { slot.share_url? ? slot.share_url : nil }
 
       example "Get slot returns slot data", document: :v1 do
         explanation "if a user is authenticated the slot settings" \
@@ -307,7 +306,7 @@ resource "Slots" do
         expect(json).to have_key("photos")
         expect(json).to have_key("voices")
         expect(json).to have_key("videos")
-        expect(json.except('photos', 'voices', 'videos'))
+        expect(json.except('photos', 'voices', 'videos', 'shareUrl'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -335,11 +334,11 @@ resource "Slots" do
                                 "deletedAt" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
-                 "notes" => slot.notes,
-                 "shareUrl" => share_url
+                 "notes" => slot.notes
                 )
         expect(json["photos"].length).to eq(slot.photos.length)
         expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
+        expect(json["shareUrl"]).to include slot.share_id
       end
     end
 

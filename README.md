@@ -66,7 +66,8 @@ ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] # username
 ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] # password
 ENV['TS_LOCATION_SEARCH_SERVICE_URL'] # search url
 ENV['LOCATION_DB_URI'] # postgres uri of locations production db
-ENV['ENABLE_IOS_DB_CLEAN'] == 'true' # to enable the endpoint for db cleaning
+ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
+ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app
 ```
 
 ## More Tools
