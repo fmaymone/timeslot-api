@@ -1178,7 +1178,8 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "GET /v1/:uid/slotdata" do
     let!(:slot) { create(:std_slot, :with_notes, :with_location,
-                         :with_real_photo, share_id: '12345xyz') }
+                         :with_real_photo, share_id: '12345xyz',
+                         shared_by: create(:user)) }
 
     it "returns data of slot" do
       get "/v1/slots/#{slot.share_id}/sharedata", {}, auth_header
