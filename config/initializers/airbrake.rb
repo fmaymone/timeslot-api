@@ -1,4 +1,4 @@
 Airbrake.configure do |config|
-  config.api_key = '033ae71d3cb8e604bf7c3e6c96fdc82e4d6c1d13'
+  config.api_key = '60a29489047b4ca377db98a076bd38d7'
   config.ignore_only  = []
 end
