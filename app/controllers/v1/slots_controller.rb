@@ -167,6 +167,18 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
+      begin
+        p '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+        fail StandardError.new, 'some other info here'
+      rescue => ex
+        p ex
+        env["airbrake.error_id"] = notify_airbrake(this: 'works')
+        # env["airbrake.error_id"] =  Airbrake.notify(ex)
+        p env["airbrake.error_id"]
+        p 'Encryptions could not be rerouted, try again.'
+      end
+
+
       if @slot.set_share_id(current_user)
         render :show, locals: { slot: @slot }
       else
