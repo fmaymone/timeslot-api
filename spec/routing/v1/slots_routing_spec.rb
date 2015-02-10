@@ -93,6 +93,16 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#get_likes", id: "1", format: :json)
     end
 
+    it "routes to #add_comment" do
+      expect(post: "/v1/slots/1/comment")
+        .to route_to("v1/slots#add_comment", id: "1", format: :json)
+    end
+
+    it "routes to #show_comments" do
+      expect(get: "/v1/slots/1/comments")
+        .to route_to("v1/slots#show_comments", id: "1", format: :json)
+    end
+
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end

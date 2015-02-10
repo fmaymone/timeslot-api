@@ -33,7 +33,9 @@ elsif slot.class == ReSlot
 end
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
+
 json.likes slot.likes.count
+json.commentsCounter slot.comments.count
 
 json.partial! 'v1/slots/share_url', share_id: slot.share_id
 

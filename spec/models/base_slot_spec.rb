@@ -167,4 +167,41 @@ RSpec.describe BaseSlot, type: :model do
       end
     end
   end
+
+  describe :create_comment do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "adds a new comment to the slot" do
+      expect {
+        std_slot.create_comment(user, "some content for the comment")
+      }.to change(Comment, :count).by 1
+    end
+
+    context "invalid params" do
+      it "doesn't add a new comment to the slot" do
+        expect {
+          std_slot.create_comment(user, "")
+        }.not_to change(Comment, :count)
+      end
+
+      it "returns the error" do
+        std_slot.create_comment(user, "")
+        expect(std_slot.errors.messages).to have_key :comment
+        expect(std_slot.errors.messages[:comment].first.messages)
+          .to have_key :content
+      end
+    end
+  end
+
+  describe :comments_with_details do
+    let(:std_slot) { create(:std_slot, :with_comments) }
+    let(:user) { create(:user) }
+
+    it "returns all comments for the slot" do
+      comments = std_slot.comments_with_details
+      expect(comments.size).to eq 3
+      expect(comments).to include *std_slot.comments
+    end
+  end
 end

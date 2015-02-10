@@ -37,6 +37,14 @@ Rails.application.routes.draw do
            to: 'slots#unlike',
            as: 'slot_unlike',
            constraints: { id: /\d+/ }
+    post 'slots/:id/comment',
+         to: 'slots#add_comment',
+         as: 'slot_add_comment',
+         constraints: { id: /\d+/ }
+    get 'slots/:id/comments',
+        to: 'slots#show_comments',
+        as: 'slot_show_comments',
+        constraints: { id: /\d+/ }
 
     get 'media-signature', to: 'media#create_signature'
 

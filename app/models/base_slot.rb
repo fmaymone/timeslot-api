@@ -12,6 +12,8 @@ class BaseSlot < ActiveRecord::Base
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :likes, inverse_of: :slot
+  has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
+           inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
   belongs_to :shared_by, class_name: User
 
@@ -91,13 +93,23 @@ class BaseSlot < ActiveRecord::Base
     like.try(:delete)
   end
 
+  def create_comment(user, content)
+    new_comment = comments.create(user: user, content: content)
+    return new_comment if new_comment.valid?
+    errors.add(:comment, new_comment.errors)
+  end
+
+  def comments_with_details
+    Comment.includes([:user]).where(slot: self)
+  end
+
   def set_share_id(user)
     self.share_id? || create_share_id(user)
   end
 
   def delete
     likes.each(&:delete)
-    # Comments
+    comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
     related_users.each do |user|

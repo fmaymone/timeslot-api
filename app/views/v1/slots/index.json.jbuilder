@@ -15,6 +15,7 @@ json.array!(@slots) do |slot|
 
   json.notes slot.notes, partial: 'v1/slots/note', as: :note
   json.likes slot.likes.count
+  json.commentsCounter slot.comments.count
 
   json.media slot.media_items do |item|
     json.media_id item.id
