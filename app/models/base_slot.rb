@@ -11,6 +11,7 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
+  has_many :likes, inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
   belongs_to :shared_by, class_name: User
 
@@ -30,6 +31,10 @@ class BaseSlot < ActiveRecord::Base
 
   def videos
     media_items.video.order(:position)
+  end
+
+  def likes_with_details
+    Like.includes([:user]).where(slot: self)
   end
 
   def update_from_params(meta_params, media_params = nil, note_param = nil,
@@ -73,12 +78,25 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  def create_like(user)
+    like = likes.where(user: user).first_or_create do |new_like|
+      new_like.slot = self
+      new_like.user = user
+    end
+    like.update(deleted_at: nil) if like.deleted_at?
+  end
+
+  def destroy_like(user)
+    like = likes.find_by(user: user)
+    like.try(:delete)
+  end
+
   def set_share_id(user)
     self.share_id? || create_share_id(user)
   end
 
   def delete
-    # Likes
+    likes.each(&:delete)
     # Comments
     notes.each(&:delete)
     media_items.each(&:delete)

@@ -14,6 +14,7 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to belong_to(:shared_by) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
+  it { is_expected.to have_many(:likes).inverse_of(:slot) }
 
   it { is_expected.to be_valid }
 
@@ -122,6 +123,47 @@ RSpec.describe BaseSlot, type: :model do
         std_slot.set_share_id(user)
         std_slot.reload
         expect(std_slot.share_id).to eq '12345678'
+      end
+    end
+  end
+
+  describe :create_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "creates a like if none exists" do
+      expect {
+        std_slot.create_like user
+      }.to change(Like, :count).by 1
+    end
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "doesn't create a new like" do
+        expect { std_slot.create_like user }.not_to change(Like, :count)
+      end
+
+      it "unsets deleted_at (re-like smt previously unliked)" do
+        like.update(deleted_at: Time.zone.now)
+        std_slot.create_like user
+        like.reload
+        expect(like.deleted_at?).to be false
+      end
+    end
+  end
+
+  describe :destroy_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "sets deleted_at on the like" do
+        std_slot.destroy_like user
+        like.reload
+        expect(like.deleted_at?).to be true
       end
     end
   end

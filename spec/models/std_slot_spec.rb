@@ -69,7 +69,7 @@ RSpec.describe StdSlot, type: :model do
   end
 
   describe :delete do
-    let(:slot) { create(:std_slot, :with_media, :with_notes) }
+    let(:slot) { create(:std_slot) }
 
     it "sets deleted_at on itself" do
       expect(slot.deleted_at?).to be false
@@ -77,16 +77,34 @@ RSpec.describe StdSlot, type: :model do
       expect(slot.deleted_at?).to be true
     end
 
-    it "invalidates belonging media_items" do
-      slot.delete
-      expect(slot.media_items.first.deleted_at?).to be true
-      expect(slot.media_items.last.deleted_at?).to be true
+    context "media" do
+      let(:slot) { create(:std_slot, :with_media) }
+
+      it "invalidates belonging media_items" do
+        slot.delete
+        expect(slot.media_items.first.deleted_at?).to be true
+        expect(slot.media_items.last.deleted_at?).to be true
+      end
     end
 
-    it "deletes belonging notes" do
-      slot.delete
-      expect(slot.notes.first.deleted_at?).to be true
-      expect(slot.notes.last.deleted_at?).to be true
+    context "notes" do
+      let(:slot) { create(:std_slot, :with_notes) }
+
+      it "deletes belonging notes" do
+        slot.delete
+        expect(slot.notes.first.deleted_at?).to be true
+        expect(slot.notes.last.deleted_at?).to be true
+      end
+    end
+
+    context "likes" do
+      let(:slot) { create(:std_slot, :with_likes) }
+
+      it "deletes belonging likes" do
+        slot.delete
+        expect(slot.likes.first.deleted_at?).to be true
+        expect(slot.likes.last.deleted_at?).to be true
+      end
     end
   end
 end

@@ -78,6 +78,21 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#share_data", uid: "abcd1234", format: :json)
     end
 
+    it "routes to #add_like" do
+      expect(post: "/v1/slots/1/like")
+        .to route_to("v1/slots#add_like", id: "1", format: :json)
+    end
+
+    it "routes to #unlike" do
+      expect(delete: "/v1/slots/1/like")
+        .to route_to("v1/slots#unlike", id: "1", format: :json)
+    end
+
+    it "routes to #get_likes" do
+      expect(get: "/v1/slots/1/likes")
+        .to route_to("v1/slots#get_likes", id: "1", format: :json)
+    end
+
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end

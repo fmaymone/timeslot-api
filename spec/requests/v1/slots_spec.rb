@@ -1188,4 +1188,15 @@ RSpec.describe "V1::Slots", type: :request do
       expect(json["startDate"]).to eq slot.start_date.as_json
     end
   end
+
+  describe "DELETE /v1/slots/:id/like" do
+    let(:std_slot) { create(:std_slot) }
+    let!(:like) { create(:like, user: current_user, slot: std_slot) }
+
+    it "sets deleted_at on the like" do
+      delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
+      like.reload
+      expect(like.deleted_at?).to be true
+    end
+  end
 end

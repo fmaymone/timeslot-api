@@ -182,6 +182,32 @@ module V1
       render :sharedata, locals: { slot: @slot }
     end
 
+    # POST /v1/slots/1/like
+    def add_like
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.create_like current_user
+
+      head :ok
+    end
+
+    # DELETE /v1/slots/1/like
+    def unlike
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.destroy_like current_user
+
+      head :ok
+    end
+
+    # GET /v1/slots/1/likes
+    def get_likes
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      render :likes
+    end
+
     private def group_param
       params.require(:groupId)
     end
