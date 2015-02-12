@@ -1006,4 +1006,27 @@ resource "Slots" do
       end
     end
   end
+
+  get "/v1/slots/:id/history", :focus do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the chronik for", required: true
+
+    let(:slot) { create(:std_slot) }
+    let(:reslot_1) { create(:re_slot, predecessor: slot) }
+    let(:reslot_2) { create(:re_slot, predecessor: reslot_1) }
+    let(:reslot_3) { create(:re_slot, predecessor: reslot_2) }
+
+    let(:id) { reslot_3.id }
+
+    example "Get Reslot History/Chronic for Slot", document: :v1 do
+      explanation "returns list of all previous reslots for the slot." \
+                  " Includes User data and timestamp.\n\n" \
+                  "returns 401 if User not allowed to see the reslot history\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+    end
+  end
 end

@@ -103,6 +103,11 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show_comments", id: "1", format: :json)
     end
 
+    it "routes to #reslot_history" do
+      expect(get: "/v1/slots/1/history")
+        .to route_to("v1/slots#reslot_history", id: "1", format: :json)
+    end
+
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end

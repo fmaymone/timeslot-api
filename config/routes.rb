@@ -45,6 +45,10 @@ Rails.application.routes.draw do
         to: 'slots#show_comments',
         as: 'slot_show_comments',
         constraints: { id: /\d+/ }
+    get 'slots/:id/history',
+        to: 'slots#reslot_history',
+        as: 'reslot_history',
+        constraints: { id: /\d+/ }
 
     get 'media-signature', to: 'media#create_signature'
 
