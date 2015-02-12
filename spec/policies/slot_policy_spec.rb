@@ -181,4 +181,8 @@ describe SlotPolicy do
       end
     end
   end
+
+  permissions :reslot_history? do
+    skip "TODO"
+  end
 end

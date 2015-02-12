@@ -77,6 +77,7 @@ class SlotPolicy < ApplicationPolicy
   end
 
   # same as show?
+  # false if slot is private? (screen doesn't have 'Add a comment')
   def add_comment?
     new_show?
   end
@@ -84,5 +85,12 @@ class SlotPolicy < ApplicationPolicy
   # same as show?
   def show_comments?
     new_show?
+  end
+
+  # true if I have resloted this slot
+  def reslot_history?
+    return false unless current_user?
+    return true if user == record.try(:slotter)
+    false
   end
 end
