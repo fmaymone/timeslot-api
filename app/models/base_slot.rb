@@ -179,12 +179,13 @@ class BaseSlot < ActiveRecord::Base
   end
 
   private def create_share_id(user)
+    new_share_id = ''
     loop do
       # length of the result string is about 4/3 of the argument, now: 8 chars
-      self.share_id = SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu')
-      break unless self.class.exists?(share_id: share_id)
+      new_share_id = SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu')
+      break unless self.class.exists?(share_id: new_share_id)
     end
-    update(share_id: share_id)
+    update(share_id: new_share_id)
     update(shared_by: user)
   end
 
