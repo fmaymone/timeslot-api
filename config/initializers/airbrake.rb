@@ -1,5 +1,5 @@
 Airbrake.configure do |config|
-  config.api_key = '60a29489047b4ca377db98a076bd38d7'
+  config.api_key = ENV['AIRBRAKE_API_KEY]']
   config.user_attributes = [:id, :username]
 
   # notify all error types:
