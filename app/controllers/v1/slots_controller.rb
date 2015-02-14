@@ -225,6 +225,15 @@ module V1
       render :comments
     end
 
+    # GET /v1/slots/1/history
+    def reslot_history
+      slot = BaseSlot.get(params[:id])
+      authorize slot
+      @slots = slot.chronic
+
+      render :reslot_history
+    end
+
     private def group_param
       params.require(:groupId)
     end

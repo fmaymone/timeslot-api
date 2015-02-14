@@ -1007,26 +1007,33 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id/history", :focus do
+  get "/v1/slots/:id/history" do
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Slot to get the chronik for", required: true
+    parameter :id, "ID of the Slot to get the chronic for", required: true
 
-    let(:slot) { create(:std_slot) }
-    let(:reslot_1) { create(:re_slot, predecessor: slot) }
-    let(:reslot_2) { create(:re_slot, predecessor: reslot_1) }
-    let(:reslot_3) { create(:re_slot, predecessor: reslot_2) }
+    let!(:slot) { create(:std_slot) }
+    let!(:reslot_1) {
+      create(:re_slot, predecessor: slot, meta_slot: slot.meta_slot) }
+    let!(:reslot_2) {
+      create(:re_slot, predecessor: reslot_1, meta_slot: slot.meta_slot) }
+    let!(:reslot_3) {
+      create(:re_slot, predecessor: reslot_2, slotter: current_user,
+             meta_slot: slot.meta_slot) }
 
     let(:id) { reslot_3.id }
 
     example "Get Reslot History/Chronic for Slot", document: :v1 do
       explanation "returns list of all previous reslots for the slot." \
                   " Includes User data and timestamp.\n\n" \
-                  "returns 401 if User not allowed to see the reslot history\n\n" \
+                  "returns 401 if User not allowed to see reslot history\n\n" \
                   "returns 404 if ID is invalid"
       do_request
 
       expect(response_status).to eq(200)
+      expect(json.size).to eq 3
+      expect(json.last).to have_key("parentUserId")
+      expect(json.last["parentUserId"]).to eq slot.owner.id
     end
   end
 end

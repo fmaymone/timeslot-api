@@ -17,6 +17,19 @@ class ReSlot < BaseSlot
            meta_slot: predecessor.meta_slot)
   end
 
+  def chronic
+    predecessors = []
+    slot = self
+
+    loop do
+      break unless slot.try(:predecessor)
+      slot = BaseSlot.get(slot.predecessor.id)
+      predecessors << slot
+    end
+
+    predecessors
+  end
+
   # for Pundit
   def self.policy_class
     ReSlotPolicy

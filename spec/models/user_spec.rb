@@ -655,7 +655,7 @@ RSpec.describe User, type: :model do
         User.create_with_image(user_params)
         expect(User.last.role).to eq "user"
         expect(User.last.user?).to be true
-        expect(User.last.admin?).to be false
+        expect(User.last.webview?).to be false
       end
 
       it "sets an image if provided" do
