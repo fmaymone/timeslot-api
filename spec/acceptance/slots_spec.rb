@@ -422,7 +422,7 @@ resource "Slots" do
                      { title: "and another title",
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
-      let(:visibility) { 10 }
+      let(:visibility) { '01' }
 
       example "Create StandardSlot", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
@@ -454,7 +454,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { '10' }
+      let(:visibility) { '01' }
       let(:alerts) { "oh no" }
 
       example "Create std slot with invalid params returns 422 & failure details",
@@ -476,7 +476,7 @@ resource "Slots" do
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { 10 }
+      let(:visibility) { '01' }
 
       example "Create std slot with missing requiered params returns 422" \
               " & failure details", document: false do

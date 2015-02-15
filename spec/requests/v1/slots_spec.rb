@@ -107,7 +107,7 @@ RSpec.describe "V1::Slots", type: :request do
     context "StdSlot with valid params" do
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: '10', settings: { alerts: '1110001100' })
+          visibility: '01', settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -1002,7 +1002,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "valid params" do
         let(:new_params) { { title: '2015',
-                             visibility: '10',
+                             visibility: '01',
                              notes: [note] } }
 
         it "returns success" do
@@ -1014,14 +1014,14 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
           std_slot.reload
           expect(std_slot.title).to eq '2015'
-          expect(std_slot.visibility).to eq '10'
+          expect(std_slot.visibility).to eq '01'
           expect(std_slot.notes.size).to eq(1)
         end
       end
 
       context "invalid params" do
         let(:new_params) { { title: '',
-                             visibility: '10',
+                             visibility: '01',
                              notes: [note] } }
 
         it "returns unprocessable entity" do

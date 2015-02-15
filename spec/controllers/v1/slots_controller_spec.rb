@@ -53,7 +53,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with valid params" do
       let(:valid_attributes) {
         attr = attributes_for(:meta_slot, creator: current_user).merge(
-          visibility: '10')
+          visibility: '01')
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       it "responds with http status Created (201)" do

@@ -8,7 +8,7 @@ FactoryGirl.define do
     end
 
     trait :friendslot do
-      visibility '10'
+      visibility '01'
     end
   end
 end
