@@ -227,9 +227,8 @@ module V1
 
     # GET /v1/slots/1/history
     def reslot_history
-      slot = BaseSlot.get(params[:id])
-      authorize slot
-      @slots = slot.chronic
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
 
       render :reslot_history
     end

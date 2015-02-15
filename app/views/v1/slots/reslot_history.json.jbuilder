@@ -1,4 +1,4 @@
-json.array! @slots do |slot|
+json.array! @slot.chronic do |slot|
   json.timestamp slot.created_at
 
   if slot.try(:predecessor)
