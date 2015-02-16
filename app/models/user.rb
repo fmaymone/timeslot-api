@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include TS_Role
 
   has_secure_password validations: false
+  # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
 
@@ -272,11 +273,7 @@ class User < ActiveRecord::Base
   end
 
   private def set_auth_token
-    self.auth_token = generate_auth_token
-  end
-
-  private def generate_auth_token
-    SecureRandom.urlsafe_base64(20)
+    self.auth_token = self.class.generate_auth_token
   end
 
   private def password_digest_was_created
@@ -292,6 +289,12 @@ class User < ActiveRecord::Base
 
   def self.sign_in(email, password)
     user = User.find_by email: email
-    user.try(:authenticate, password)
+    current_user = user.try(:authenticate, password)
+    current_user.update(auth_token: generate_auth_token) if current_user
+    current_user
+  end
+
+  def self.generate_auth_token
+    SecureRandom.urlsafe_base64(20)
   end
 end

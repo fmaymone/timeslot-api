@@ -25,6 +25,7 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
+      user.reload
       expect(json['authToken']).to eq user.auth_token
     end
   end
