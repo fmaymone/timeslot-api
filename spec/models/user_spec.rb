@@ -169,7 +169,7 @@ RSpec.describe User, type: :model do
   end
 
   describe :update_alerts do
-    let(:slot) { create(:std_slot, owner: user) }
+    let(:slot) { create(:std_slot, :friendslot, owner: user) }
 
     describe "no existing SlotSetting" do
       it "returns the SlotSetting object" do
@@ -183,7 +183,7 @@ RSpec.describe User, type: :model do
       end
 
       it "doesn't create a new slot_setting if alerts eq users default alerts" do
-        user.update(default_alerts: '1110011110')
+        user.update(default_own_friendslot_alerts: '1110011110')
         expect {
           user.update_alerts(slot, '1110011110')
         }.not_to change(SlotSetting, :count)
@@ -223,29 +223,46 @@ RSpec.describe User, type: :model do
   end
 
   describe :alerts do
-    let(:std_slot) { create(:std_slot, owner: user) }
+    context "private StdSlot" do
+      let(:std_slot) { create(:std_slot, owner: user) }
+      before { user.update(default_private_alerts: '0000000010') }
 
-    it "returns the alarm for a specific slot representation" do
-      # TODO: needs specification
-      expect(user.alerts(std_slot)).to eq nil
-    end
+      describe "existing default alert for user" do
+        it "returns the default private alerts for private slot" do
+          expect(user.alerts(std_slot)).to eq user.default_private_alerts
+          expect(user.alerts(std_slot)).to eq '0000000010'
+        end
+      end
 
-    describe "existing default alert for user" do
-      let(:new_alert) { '1010101010' }
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+                 alerts: '0000011111') }
 
-      it "returns the default alert" do
-        user.update(default_alerts: new_alert)
-        expect(user.alerts(std_slot)).to eq user.default_alerts
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+        end
       end
     end
 
-    describe "existing slot_setting" do
-      let!(:slot_setting) {
-        create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
-               alerts: '0000011111') }
+    context "own friend StdSlot" do
+      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      before { user.update(default_own_friendslot_alerts: '1010101010') }
 
-      it "returns the alarm for a specific slot representation" do
-        expect(user.alerts(std_slot)).to eq slot_setting.alerts
+      describe "existing default alert for user" do
+        it "returns the default own friendslot alerts for friendslots" do
+          expect(user.alerts(std_slot)).to eq user.default_own_friendslot_alerts
+        end
+      end
+
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+                 alerts: '0000011111') }
+
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+        end
       end
     end
 
@@ -254,29 +271,37 @@ RSpec.describe User, type: :model do
       let!(:membership) {
         create(:membership, :active, group: slot.group, user: user) }
 
-      describe "existing default alert for group" do
-        it "returns the group default alert for this user" do
-          membership.update(default_alerts: '1110011110')
-          expect(user.alerts(slot)).to eq membership.default_alerts
-        end
-      end
-
-      describe "existing default alert for user but not for membership" do
+      context "existing alerts" do
         let(:new_alert) { '1010101010' }
+        before { user.update(default_group_alerts: new_alert) }
 
-        it "returns the users default alert" do
-          user.update(default_alerts: new_alert)
-          expect(user.alerts(slot)).to eq new_alert
+        describe "existing default alert for group" do
+          it "returns the group default alert for this user" do
+            membership.update(default_alerts: '1110011110')
+            expect(user.alerts(slot)).to eq membership.default_alerts
+          end
+        end
+
+        describe "existing default group alert for user but not for membership" do
+          it "returns the users default group alert" do
+            expect(user.alerts(slot)).to eq new_alert
+          end
+        end
+
+        describe "existing slot_setting" do
+          let!(:slot_setting) {
+            create(:slot_setting, user: user, meta_slot: slot.meta_slot,
+                   alerts: '0000011111') }
+
+          it "returns the alarm for a specific slot representation" do
+            expect(user.alerts(slot)).to eq slot_setting.alerts
+          end
         end
       end
 
-      describe "existing slot_setting" do
-        let!(:slot_setting) {
-          create(:slot_setting, user: user, meta_slot: slot.meta_slot,
-                 alerts: '0000011111') }
-
-        it "returns the alarm for a specific slot representation" do
-          expect(user.alerts(slot)).to eq slot_setting.alerts
+      describe "no alerts set" do
+        it "returns nil" do
+          expect(user.alerts(slot)).to eq nil
         end
       end
     end

@@ -213,21 +213,39 @@ class User < ActiveRecord::Base
   end
 
   private def default_alert?(slot, alerts)
-    if slot.class == GroupSlot
-      alerts == memberships.find_by(group_id: slot.group.id).default_alerts
-    else
-      alerts == default_alerts
+    if slot.class == StdSlot
+      return alerts == default_private_alerts if slot.private?
+      return alerts == default_own_friendslot_alerts if slot.friendslot?
+      return alerts == default_own_public_alerts if slot.public?
+      # TODO: add friends friendslot
+      # TODO: add friends publicslot
+    elsif slot.class == GroupSlot
+      ms = memberships.find_by(group_id: slot.group.id)
+      default_specific_group_alerts = ms.try(:default_alerts)
+      return alerts == (default_group_alerts || default_specific_group_alerts)
+    elsif slot.class == ReSlot
+      return alerts == default_reslot_alerts
     end
+    false
   end
 
   private def default_alert(slot)
-    if slot.class == GroupSlot
+    if slot.class == StdSlot
+      return default_private_alerts if slot.private?
+      return default_own_friendslot_alerts if slot.friendslot?
+      return default_own_public_alerts if slot.public?
+      # TODO: add friends friendslot
+      # TODO: add friends publicslot
+    elsif slot.class == GroupSlot
       membership = memberships.find_by(group_id: slot.group.id)
       if !membership.nil? && !membership.default_alerts.nil?
         return membership.default_alerts
+      elsif !membership.nil?
+        return default_group_alerts
       end
+    elsif slot.class == ReSlot
+      return default_reslot_alerts
     end
-    default_alerts
   end
 
   private def set_auth_token

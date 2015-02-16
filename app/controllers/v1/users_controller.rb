@@ -105,7 +105,18 @@ module V1
     end
 
     private def user_params
-      p = params.permit(:username, :email, :password, :defaultAlerts, :image)
+      p = params.permit(:username,
+                        :email,
+                        :password,
+                        :image,
+                        :defaultPrivateAlerts,
+                        :defaultOwnFriendslotAlerts,
+                        :defaultOwnPublicAlerts,
+                        :defaultFriendsFriendslotAlerts,
+                        :defaultFriendsPublicAlerts,
+                        :defaultReslotAlerts,
+                        :defaultGroupAlerts)
+
       if params[:image].present?
         img_param = params.require(:image).require(:publicId)
         p.merge!("public_id" => img_param)
