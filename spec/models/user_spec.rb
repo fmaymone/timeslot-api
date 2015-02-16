@@ -193,11 +193,19 @@ RSpec.describe User, type: :model do
         let(:slot) { create(:group_slot) }
         let!(:membership) { create(:membership, :active, group: slot.group,
                                    user: user, default_alerts: '1110011110') }
+        before { user.update(default_group_alerts: '0000000010') }
 
         it "doesn't create a new slot_setting if alerts eq group default alerts" do
           expect {
             user.update_alerts(slot, '1110011110')
           }.not_to change(SlotSetting, :count)
+        end
+
+        it "creates a new slot_setting if alerts eq default group alerts " \
+           "but not the default membership alerts" do
+          expect {
+            user.update_alerts(slot, '0000000010')
+          }.to change(SlotSetting, :count).by 1
         end
       end
     end
@@ -300,9 +308,24 @@ RSpec.describe User, type: :model do
       end
 
       describe "no alerts set" do
-        it "returns nil" do
-          expect(user.alerts(slot)).to eq nil
+        it "returns 0000000000" do
+          expect(user.alerts(slot)).to eq '0000000000'
         end
+      end
+    end
+
+    context "several slot representations" do
+      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
+      let!(:membership) {
+        create(:membership, :active, group: group_slot.group, user: user) }
+      before {
+        user.update(default_own_friendslot_alerts: '0000000111')
+        user.update(default_group_alerts: '1110000000')
+      }
+
+      it "merges the default alerts" do
+        expect(user.alerts(std_slot)).to eq '1110000111'
       end
     end
   end

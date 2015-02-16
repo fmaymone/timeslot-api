@@ -80,6 +80,7 @@ class User < ActiveRecord::Base
     slots.push(*std_slots)
     slots.push(*group_slots)
     slots.push(*re_slots)
+    # TODO: add slots from friends
   end
 
   def prepare_for_slot_deletion(slot)
@@ -101,9 +102,10 @@ class User < ActiveRecord::Base
   def alerts(slot)
     setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
     if setting.exists?
-      setting.first.alerts
+      setting.take.alerts
     else
-      default_alert(slot)
+      representations = multiple_representations(slot)
+      merge_alerts(representations)
     end
   end
 
@@ -221,8 +223,9 @@ class User < ActiveRecord::Base
       # TODO: add friends publicslot
     elsif slot.class == GroupSlot
       ms = memberships.find_by(group_id: slot.group.id)
-      default_specific_group_alerts = ms.try(:default_alerts)
-      return alerts == (default_group_alerts || default_specific_group_alerts)
+      default_membership_alerts = ms.try(:default_alerts)
+      return alerts == default_group_alerts if default_membership_alerts.nil?
+      return alerts == default_membership_alerts
     elsif slot.class == ReSlot
       return alerts == default_reslot_alerts
     end
@@ -246,6 +249,22 @@ class User < ActiveRecord::Base
     elsif slot.class == ReSlot
       return default_reslot_alerts
     end
+  end
+
+  # combines alerts from all slot representations via logical OR
+  private def merge_alerts(representations)
+    alert = 0
+    representations.each do |slot|
+      alert |= default_alert(slot).to_i(2)
+    end
+    alert.to_s(2).rjust(10, '0')
+  end
+
+  private def multiple_representations(slot)
+    representations = []
+    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*re_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
   private def set_auth_token
