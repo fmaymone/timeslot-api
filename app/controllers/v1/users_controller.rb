@@ -57,8 +57,12 @@ module V1
     end
 
     # GET /v1/users/signout
-    # invalidates auth token?
+    # invalidates auth token
     def signout
+      authorize :user
+      current_user.sign_out
+
+      render json: { success: "Signed out successfully" }, status: :ok
     end
 
     # PATCH /v1/users/1

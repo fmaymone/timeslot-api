@@ -14,7 +14,7 @@ describe UserPolicy do
   end
 
   permissions :index?, :show?, :update?, :add_friends?,
-              :remove_friends?, :destroy? do
+              :remove_friends?, :destroy?, :signout? do
     context "for a user" do
       let(:user) { create(:user) }
 

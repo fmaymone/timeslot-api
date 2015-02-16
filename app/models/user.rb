@@ -65,6 +65,10 @@ class User < ActiveRecord::Base
     images.first
   end
 
+  def sign_out
+    update!(auth_token: nil)
+  end
+
   ## slot related ##
 
   def active_slots(meta_slot)
