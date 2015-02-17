@@ -1213,19 +1213,44 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/copy" do
-    let!(:std_slot) { create(:std_slot, :publicslot) }
-    let!(:group_slot) { create(:group_slot) }
-    let(:copy_params) { { copyTo: [
-                            { target: 'public_slots',
-                              details: 'false' },
-                            { target: group_slot.group.name,
-                              details: true }
-                          ] } }
+    let!(:group) { create(:group) }
 
-    it "creates a new slot" do
-      expect {
+    describe "copy without details" do
+      let!(:std_slot) { create(:std_slot, :publicslot) }
+      let(:copy_params) { { copyTo: [
+                              { target: 'public_slots',
+                                details: 'false' },
+                              { target: group.name,
+                                details: false }
+                            ] } }
+
+      it "creates a new slot" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
+        }.to change(BaseSlot, :count).by 2
+      end
+    end
+
+    describe "copy with details" do
+      let!(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_likes,
+                               :with_notes) }
+      let(:copy_params) { { copyTo: [
+                              { target: 'public_slots',
+                                details: 'true' },
+                              { target: group.name,
+                                details: true }
+                            ] } }
+
+      it "copys media, likes and comments if desired" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-      }.to change(BaseSlot, :count).by 2
+        new_slot = GroupSlot.last
+        expect(new_slot.notes.size).to eq 3
+        expect(new_slot.notes.first.title).to eq std_slot.notes.first.title
+        expect(new_slot.likes.size).to eq 3
+        expect(new_slot.likes.first.user).to eq std_slot.likes.first.user
+        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.photos.first.public_id).to eq std_slot.photos.first.public_id
+      end
     end
   end
 

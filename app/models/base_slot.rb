@@ -130,22 +130,6 @@ class BaseSlot < ActiveRecord::Base
     # delete
   end
 
-  def self.create_slot(slot, slot_type, details)
-    case slot_type
-    when "private_slots"
-      StdSlot.create(meta_slot: slot.meta_slot, visibility: '00')
-    when "friend_slots"
-      StdSlot.create(meta_slot: slot.meta_slot, visibility: '01')
-    when "public_slots"
-      StdSlot.create(meta_slot: slot.meta_slot, visibility: '11')
-    when "re_slots"
-      # TODO
-    else
-      group = Group.find_by name: slot_type
-      GroupSlot.create(meta_slot: slot.meta_slot, group: group)
-    end
-  end
-
   ## private instance methods ##
 
   private def update_media(media_params)
@@ -239,6 +223,40 @@ class BaseSlot < ActiveRecord::Base
 
   def self.get_many(slot_ids)
     slot_ids.collect { |id| get(id) }
+  end
+
+  def self.create_slot(slot, slot_type, copy_details)
+    case slot_type
+    when "private_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '00')
+    when "friend_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '01')
+    when "public_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '11')
+    when "re_slots"
+      # TODO
+    else
+      group = Group.find_by name: slot_type
+      new_slot = GroupSlot.create(meta_slot: slot.meta_slot, group: group)
+    end
+
+    duplicate_slot_details(slot, new_slot) if copy_details
+  end
+
+  def self.duplicate_slot_details(old_slot, new_slot)
+    old_slot.media_items.reverse.each do |item|
+      attr = item.attributes
+      attr.delete('id')
+      new_slot.media_items.create(attr)
+    end
+
+    old_slot.notes.reverse.each do |note|
+      new_slot.notes.create(title: note.title, content: note.content)
+    end
+
+    old_slot.likes.each do |like|
+      new_slot.likes.create(user: like.user)
+    end
   end
 
   # for Pundit
