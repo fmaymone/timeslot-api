@@ -720,7 +720,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(StdSlot.last.notes.last.title).to eq notes.first[:title]
+        expect(
+          [notes.first[:title], notes.second[:title]]
+        ).to include StdSlot.last.notes.last.title
       end
     end
 

@@ -1279,14 +1279,33 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "move to reslots" do
+    context "move to reslots without details" do
       let(:move_params) { { moveTo: { target: 're_slots',
-                                      details: 'true' } } }
+                                      details: false } } }
 
       it "creates a new slot" do
         expect {
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
         }.to change(ReSlot, :count).by 1
+      end
+    end
+
+    context "move to reslots with details" do
+      let!(:std_slot) { create(:std_slot, :publicslot, :with_real_photo) }
+      let(:photo) { std_slot.media_items.first }
+      let(:move_params) { { moveTo: { target: 're_slots',
+                                      details: true } } }
+      before {
+        Cloudinary::Uploader.remove_tag("replaced", photo.public_id)
+      }
+
+      it "doesn't mark the cloudinary resource as deleted", :vcr do
+        post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+
+        tags = Cloudinary::Api.resource(photo.public_id)["tags"]
+        expect(tags).not_to include "replaced" if tags
+        photo.reload
+        expect(photo.deleted_at?).to be true
       end
     end
   end

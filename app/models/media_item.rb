@@ -20,6 +20,9 @@ class MediaItem < ActiveRecord::Base
   end
 
   def delete
+    items_with_same_public_id = MediaItem.where(public_id: public_id)
+    return if items_with_same_public_id.size > 1
+
     Cloudinary::Uploader.add_tag("replaced", public_id)
     Cloudinary::Uploader.add_tag(
       "mediable_id:#{mediable.id}, mediable_type:#{mediable_type}", public_id)
