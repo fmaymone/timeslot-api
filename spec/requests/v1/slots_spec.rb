@@ -1211,4 +1211,35 @@ RSpec.describe "V1::Slots", type: :request do
       expect(like.deleted_at?).to be true
     end
   end
+
+  describe "POST /v1/slots/:id/copy" do
+    let!(:std_slot) { create(:std_slot, :publicslot) }
+    let!(:group_slot) { create(:group_slot) }
+    let(:copy_params) { { copyTo: [
+                            { target: 'public_slots',
+                              details: 'false' },
+                            { target: group_slot.group.name,
+                              details: true }
+                          ] } }
+
+    it "creates a new slot" do
+      expect {
+        post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
+      }.to change(BaseSlot, :count).by 2
+    end
+  end
+
+  describe "POST /v1/slots/:id/move" do
+    let!(:std_slot) { create(:std_slot, :publicslot) }
+    let(:move_params) { { moveTo:
+                            { target: 'public_slots',
+                              details: 'false' },
+                        } }
+
+    it "creates a new slot" do
+      expect {
+        post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+      }.to change(BaseSlot, :count).by 1
+    end
+  end
 end

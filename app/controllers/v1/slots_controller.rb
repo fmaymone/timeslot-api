@@ -233,6 +233,28 @@ module V1
       render :reslot_history
     end
 
+    # POST /v1/slots/1/copy
+    # - target (private_slots, friend_slots, public_slots, groupname)
+    # - with_details(media, comments, likes)
+    def copy
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.copy_to(copy_params)
+
+      head :ok
+    end
+
+    # POST /v1/slots/1/move
+    # - target (private_slots, friend_slots, public_slots, re_slots, groupname)
+    # - with_details(media, comments, likes)
+    def move
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.move_to(move_params)
+
+      head :ok
+    end
+
     private def group_param
       params.require(:groupId)
     end
@@ -266,6 +288,18 @@ module V1
 
     private def comment_param
       params.require(:content)
+    end
+
+    private def copy_params
+      target_params = [:target, :details]
+      params.require(:copyTo).map do |p|
+        # may need to prevent "re_slots" here
+        ActionController::Parameters.new(p.to_hash).permit(target_params)
+      end
+    end
+
+    private def move_params
+      params.require(:moveTo).permit([:target, :details])
     end
   end
 end

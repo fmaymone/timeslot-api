@@ -119,6 +119,33 @@ class BaseSlot < ActiveRecord::Base
     meta_slot.unregister
   end
 
+  def copy_to(targets)
+    targets.each do |target|
+      self.class.create_slot(self, target["target"], YAML.load(target["details"]))
+    end
+  end
+
+  def move_to(target)
+    self.class.create_slot(self, target['target'], YAML.load(target['details']))
+    # delete
+  end
+
+  def self.create_slot(slot, slot_type, details)
+    case slot_type
+    when "private_slots"
+      StdSlot.create(meta_slot: slot.meta_slot, visibility: '00')
+    when "friend_slots"
+      StdSlot.create(meta_slot: slot.meta_slot, visibility: '01')
+    when "public_slots"
+      StdSlot.create(meta_slot: slot.meta_slot, visibility: '11')
+    when "re_slots"
+      # TODO
+    else
+      group = Group.find_by name: slot_type
+      GroupSlot.create(meta_slot: slot.meta_slot, group: group)
+    end
+  end
+
   ## private instance methods ##
 
   private def update_media(media_params)
