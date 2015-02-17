@@ -83,7 +83,8 @@ describe SlotPolicy do
     end
   end
 
-  permissions :new_show?, :get_likes?, :show_comments?, :add_comment? do
+  permissions :new_show?, :get_likes?, :show_comments?, :add_comment?,
+              :copy?, :move? do
     context "std_slot" do
       context "for a user" do
         let(:user) { create(:user) }

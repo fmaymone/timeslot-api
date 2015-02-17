@@ -93,4 +93,14 @@ class SlotPolicy < ApplicationPolicy
     return true if user == record.try(:slotter)
     false
   end
+
+  # same as show? ???
+  def copy?
+    new_show?
+  end
+
+  # same as show? ???
+  def move?
+    new_show?
+  end
 end
