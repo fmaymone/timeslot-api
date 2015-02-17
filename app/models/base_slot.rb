@@ -119,15 +119,17 @@ class BaseSlot < ActiveRecord::Base
     meta_slot.unregister
   end
 
-  def copy_to(targets)
+  def copy_to(targets, user)
     targets.each do |target|
-      self.class.create_slot(self, target["target"], YAML.load(target["details"]))
+      copy_details = YAML.load(target["details"]) # converts to boolean
+      self.class.create_slot(self, target["target"], copy_details, user)
     end
   end
 
-  def move_to(target)
-    self.class.create_slot(self, target['target'], YAML.load(target['details']))
-    # delete
+  def move_to(target, user)
+    copy_details = YAML.load(target["details"])
+    self.class.create_slot(self, target['target'], copy_details, user)
+    delete
   end
 
   ## private instance methods ##
@@ -225,16 +227,19 @@ class BaseSlot < ActiveRecord::Base
     slot_ids.collect { |id| get(id) }
   end
 
-  def self.create_slot(slot, slot_type, copy_details)
+  def self.create_slot(slot, slot_type, copy_details, user)
     case slot_type
     when "private_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '00')
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '00')
     when "friend_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '01')
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '01')
     when "public_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, visibility: '11')
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '11')
     when "re_slots"
-      # TODO
+      new_slot = ReSlot.create_from_slot(predecessor: slot, slotter: user)
     else
       group = Group.find_by name: slot_type
       new_slot = GroupSlot.create(meta_slot: slot.meta_slot, group: group)
@@ -250,7 +255,7 @@ class BaseSlot < ActiveRecord::Base
       new_slot.media_items.create(attr)
     end
 
-    old_slot.notes.reverse.each do |note|
+    old_slot.notes.each do |note|
       new_slot.notes.create(title: note.title, content: note.content)
     end
 

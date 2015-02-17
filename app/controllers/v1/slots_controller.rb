@@ -239,7 +239,7 @@ module V1
     def copy
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @slot.copy_to(copy_params)
+      @slot.copy_to(copy_params, current_user)
 
       head :ok
     end
@@ -250,7 +250,7 @@ module V1
     def move
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @slot.move_to(move_params)
+      @slot.move_to(move_params, current_user)
 
       head :ok
     end

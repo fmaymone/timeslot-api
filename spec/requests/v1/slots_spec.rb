@@ -1245,7 +1245,7 @@ RSpec.describe "V1::Slots", type: :request do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
         new_slot = GroupSlot.last
         expect(new_slot.notes.size).to eq 3
-        expect(new_slot.notes.first.title).to eq std_slot.notes.first.title
+        expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 3
         expect(new_slot.likes.first.user).to eq std_slot.likes.first.user
         expect(new_slot.media_items.size).to eq 3
@@ -1256,15 +1256,38 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "POST /v1/slots/:id/move" do
     let!(:std_slot) { create(:std_slot, :publicslot) }
-    let(:move_params) { { moveTo:
-                            { target: 'public_slots',
-                              details: 'false' },
-                        } }
 
-    it "creates a new slot" do
-      expect {
+    context "move to public slots" do
+      let(:move_params) { { moveTo: { target: 'public_slots',
+                                      details: 'false' } } }
+
+      it "creates a new slot" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+        }.to change(StdSlot, :count).by 1
+      end
+
+      it "owner of the new slot is current user" do
         post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-      }.to change(BaseSlot, :count).by 1
+        expect(StdSlot.last.owner).to eq current_user
+      end
+
+      it "deletes to original slot" do
+        post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+        std_slot.reload
+        expect(std_slot.deleted_at?).to be true
+      end
+    end
+
+    context "move to reslots" do
+      let(:move_params) { { moveTo: { target: 're_slots',
+                                      details: 'true' } } }
+
+      it "creates a new slot" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+        }.to change(ReSlot, :count).by 1
+      end
     end
   end
 end
