@@ -49,6 +49,14 @@ Rails.application.routes.draw do
         to: 'slots#reslot_history',
         as: 'reslot_history',
         constraints: { id: /\d+/ }
+    post 'slots/:id/copy',
+         to: 'slots#copy',
+         as: 'slot_copy',
+         constraints: { id: /\d+/ }
+    post 'slots/:id/move',
+         to: 'slots#move',
+         as: 'slot_move',
+         constraints: { id: /\d+/ }
 
     get 'media-signature', to: 'media#create_signature'
 
