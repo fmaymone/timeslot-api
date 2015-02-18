@@ -122,13 +122,13 @@ class BaseSlot < ActiveRecord::Base
 
   def copy_to(targets, user)
     targets.each do |target|
-      copy_details = YAML.load(target["details"]) # converts to boolean
+      copy_details = YAML.load(target["details"].to_s) # converts to boolean
       self.class.create_slot(self, target["target"], copy_details, user)
     end
   end
 
   def move_to(target, user)
-    copy_details = YAML.load(target["details"])
+    copy_details = YAML.load(target["details"].to_s)
     new_slot = self.class.create_slot(self, target['target'], copy_details, user)
     delete
     new_slot

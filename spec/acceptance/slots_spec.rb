@@ -962,6 +962,7 @@ resource "Slots" do
     parameter :content, "Content of the comment", required: true
 
     let(:slot) { create(:std_slot, :with_comments, owner: current_user) }
+    # TODO: needs update in slot policy which depends on a new user method
     # let(:slot) { create(:std_slot, :friendslot, :with_comments) }
     # let!(:friendship) {
       # create(:friendship, :established, friend: slot.owner, user: current_user)
@@ -1036,6 +1037,54 @@ resource "Slots" do
       expect(json.size).to eq 3
       expect(json.last).to have_key("parentUserId")
       expect(json.last["parentUserId"]).to eq slot.owner.id
+    end
+  end
+
+  post "/v1/slots/:id/copy" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :copyTo, "contains an array of the copy targets",
+              required: true
+    parameter :target, "Type of slot to copy to. Must be own of " \
+                       "[private_slots/friend_slots/public_slots] " \
+                       "or a name of a group where the user is allowed " \
+                       "to post.",
+              required: true,
+              scope: :copyTo
+    parameter :details, "Duplicate all media data, comments and likes " \
+                        "on the copied slots. (true/false)",
+              required: true,
+              scope: :copyTo
+
+    let(:slot) { create(:std_slot, :publicslot, :with_comments, title: 'sly') }
+    let(:group) { create(:group, :members_can_post) }
+    let!(:membership) do
+      create(:membership, :active, user: current_user, group: group)
+    end
+
+    describe "Copy Slot into several targets" do
+      let(:id) { slot.id }
+      let(:target_1) { { target: 'friend_slots',
+                         details: 'true' } }
+      let(:target_2) { { target: group.name,
+                         details: true } }
+
+      let(:copyTo) { [target_1, target_2] }
+
+      example "Copy Slot to Friend Slots and into a group", document: :v1 do
+        explanation "Several new slot instances can be created which share " \
+                    "the same Metadata as the copy source. If details is " \
+                    "set to 'true' all media items, comments and likes will " \
+                    "be duplicated."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(BaseSlot.all.length).to eq 3
+        expect(GroupSlot.last.title).to eq slot.title
+        expect(GroupSlot.last.end_date).to eq slot.end_date
+      end
     end
   end
 end
