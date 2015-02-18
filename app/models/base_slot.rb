@@ -129,8 +129,9 @@ class BaseSlot < ActiveRecord::Base
 
   def move_to(target, user)
     copy_details = YAML.load(target["details"])
-    self.class.create_slot(self, target['target'], copy_details, user)
+    new_slot = self.class.create_slot(self, target['target'], copy_details, user)
     delete
+    new_slot
   end
 
   ## private instance methods ##
@@ -251,6 +252,7 @@ class BaseSlot < ActiveRecord::Base
     end
 
     duplicate_slot_details(slot, new_slot) if copy_details
+    new_slot
   end
 
   def self.duplicate_slot_details(old_slot, new_slot)

@@ -248,11 +248,11 @@ module V1
     # - target (private_slots, friend_slots, public_slots, re_slots, groupname)
     # - with_details(media, comments, likes)
     def move
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-      @slot.move_to(move_params, current_user)
+      old_slot = BaseSlot.get(params[:id])
+      authorize old_slot
+      new_slot = old_slot.move_to(move_params, current_user)
 
-      head :ok
+      render :show, locals: { slot: new_slot }
     end
 
     private def group_param
