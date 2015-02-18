@@ -115,6 +115,7 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+    prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister
   end
@@ -205,6 +206,10 @@ class BaseSlot < ActiveRecord::Base
   ## abstract methods ##
 
   def related_users
+    fail InterfaceNotImplementedError
+  end
+
+  def prepare_for_deletion
     fail InterfaceNotImplementedError
   end
 

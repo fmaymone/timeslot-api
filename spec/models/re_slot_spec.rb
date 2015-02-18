@@ -43,4 +43,21 @@ RSpec.describe ReSlot, type: :model do
       expect(re_slot.title).to eq "Timeslot"
     end
   end
+
+  describe :delete do
+    let(:group_slot) { create(:group_slot) }
+    let(:re_slot_1) { create(:re_slot, predecessor: group_slot,
+                             meta_slot: group_slot.meta_slot) }
+    let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,
+                             meta_slot: group_slot.meta_slot) }
+    let!(:re_slot_3) { create(:re_slot, predecessor: re_slot_2,
+                              meta_slot: group_slot.meta_slot) }
+
+    it "updates the successors predecessor" do
+      # what happens if the original source of a reslot history gets deleted?
+      re_slot_2.delete
+      re_slot_3.reload
+      expect(re_slot_3.predecessor.id).to eq re_slot_1.id
+    end
+  end
 end

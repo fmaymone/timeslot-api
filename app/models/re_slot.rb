@@ -24,10 +24,24 @@ class ReSlot < BaseSlot
     loop do
       break unless slot.try(:predecessor)
       slot = BaseSlot.get(slot.predecessor.id)
+      if slot.deleted_at?
+        Airbrake.notify(reslot_history_error: "found deleted predecessor: #{slot}")
+      end
       predecessors << slot
     end
 
     predecessors
+  end
+
+  def prepare_for_deletion
+    update_successors
+  end
+
+  private def update_successors
+    successors = ReSlot.where(predecessor: self)
+    successors.each do |slot|
+      slot.update(predecessor: predecessor)
+    end
   end
 
   # for Pundit

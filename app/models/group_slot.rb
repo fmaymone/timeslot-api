@@ -9,8 +9,7 @@ class GroupSlot < BaseSlot
     group.members
   end
 
-  def delete
-    super
+  def prepare_for_deletion
     group.touch unless group.deleted_at?
   end
 
