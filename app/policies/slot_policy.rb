@@ -1,4 +1,11 @@
 class SlotPolicy < ApplicationPolicy
+  attr_reader :user, :slot
+
+  def initialize(user, slot)
+    @user = user
+    @slot = slot
+  end
+
   def index?
     current_user?
   end
@@ -17,11 +24,11 @@ class SlotPolicy < ApplicationPolicy
   # true if slot is friend slot and i am a friend of the owner
   # true if slot is group slot and i am member of the group
   def new_show?
-    return true if record.try(:visibility) == '11'
+    return true if slot.try(:visibility) == '11'
     return false unless current_user?
     # return true if slot.friendslot? && user.friend_with? slot.owner
-    return true if user == record.try(:owner)
-    return true if record.try(:group).try(:members).try(:include?, user)
+    return true if user == slot.try(:owner)
+    return true if slot.try(:group).try(:members).try(:include?, user)
     false
   end
 
@@ -58,7 +65,7 @@ class SlotPolicy < ApplicationPolicy
   # true if like was made by current user
   def unlike?
     return false unless current_user?
-    return true if record.likes.exists?(user: user)
+    return true if slot.likes.exists?(user: user)
     false
   end
 
@@ -68,11 +75,11 @@ class SlotPolicy < ApplicationPolicy
   # true if slot is group slot and i am member of the group
   # reslots?
   def get_likes?
-    return true if record.try(:visibility) == '11'
+    return true if slot.try(:visibility) == '11'
     return false unless current_user?
     # return true if slot.friendslot? && user.friend_with? slot.owner
-    return true if user == record.try(:owner)
-    return true if record.try(:group).try(:members).try(:include?, user)
+    return true if user == slot.try(:owner)
+    return true if slot.try(:group).try(:members).try(:include?, user)
     false
   end
 
@@ -90,7 +97,7 @@ class SlotPolicy < ApplicationPolicy
   # true if I have resloted this slot
   def reslot_history?
     return false unless current_user?
-    return true if user == record.try(:slotter)
+    return true if user == slot.try(:slotter)
     false
   end
 
