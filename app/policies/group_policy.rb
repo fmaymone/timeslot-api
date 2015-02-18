@@ -4,7 +4,9 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def show?
-    true
+    return false unless current_user?
+    return true if user.is_active_member? record.id
+    false
   end
 
   def create?
@@ -24,11 +26,13 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def members?
-    true
+    show?
   end
 
   def related?
-    true
+    return false unless current_user?
+    return true if user.is_owner? record.id
+    false
   end
 
   def accept_invite?
@@ -62,6 +66,7 @@ class GroupPolicy < ApplicationPolicy
     false
   end
 
+  # same as show? ???
   def member_settings?
     return false unless current_user?
     return true if user.is_active_member? record.id
