@@ -299,7 +299,8 @@ module V1
     end
 
     private def move_params
-      params.require(:moveTo).permit([:target, :details])
+      params.require(:target)
+      params.permit(:target, :details)
     end
   end
 end

@@ -1042,7 +1042,6 @@ resource "Slots" do
 
   post "/v1/slots/:id/copy" do
     header "Content-Type", "application/json"
-    header "Accept", "application/json"
     header "Authorization", :auth_header
 
     parameter :copyTo, "contains an array of the copy targets",
@@ -1054,11 +1053,11 @@ resource "Slots" do
               required: true,
               scope: :copyTo
     parameter :details, "Duplicate all media data, comments and likes " \
-                        "on the copied slots. (true/false)",
-              required: true,
+                        "on the copied slots. Defaults to 'false'.\n\n" \
+                        "Must be one of [true/false]",
               scope: :copyTo
 
-    let(:slot) { create(:std_slot, :publicslot, :with_comments, title: 'sly') }
+    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
     let(:group) { create(:group, :members_can_post) }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -1084,6 +1083,41 @@ resource "Slots" do
         expect(BaseSlot.all.length).to eq 3
         expect(GroupSlot.last.title).to eq slot.title
         expect(GroupSlot.last.end_date).to eq slot.end_date
+      end
+    end
+  end
+
+  post "/v1/slots/:id/move" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :target, "Type of slot to move to. Must be own of " \
+                       "[private_slots/friend_slots/public_slots/re_slots] " \
+                       "or a name of a group where the user is allowed " \
+                       "to post.",
+              required: true
+    parameter :details, "Move all media data, comments and likes to the new " \
+                        " slot. Otherwise they will be deleted.\n\n" \
+                        "Defaults to 'false', must be one of [true/false]"
+
+    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
+
+    describe "Move Slot into ReSlots" do
+      let(:id) { slot.id }
+      let(:target) { 're_slots' }
+      let(:details) { 'true' }
+
+      example "Move Slot to Friend Slots and into a group", document: :v1 do
+        explanation "A new slot will be created with share " \
+                    "the same Metadata as the move source. If details is " \
+                    "set to 'true' all media items, comments and likes will " \
+                    "be duplicated."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(BaseSlot.all.length).to eq 2
+        expect(ReSlot.last.title).to eq slot.title
+        expect(ReSlot.last.end_date).to eq slot.end_date
       end
     end
   end

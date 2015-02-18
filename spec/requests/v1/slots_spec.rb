@@ -1258,8 +1258,8 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:std_slot) { create(:std_slot, :publicslot) }
 
     context "move to public slots" do
-      let(:move_params) { { moveTo: { target: 'public_slots',
-                                      details: 'false' } } }
+      let(:move_params) { { target: 'public_slots',
+                            details: 'false' } }
 
       it "creates a new slot" do
         expect {
@@ -1280,8 +1280,8 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "move to reslots without details" do
-      let(:move_params) { { moveTo: { target: 're_slots',
-                                      details: false } } }
+      let(:move_params) { { target: 're_slots',
+                            details: false } }
 
       it "creates a new slot" do
         expect {
@@ -1293,8 +1293,8 @@ RSpec.describe "V1::Slots", type: :request do
     context "move to reslots with details" do
       let!(:std_slot) { create(:std_slot, :publicslot, :with_real_photo) }
       let(:photo) { std_slot.media_items.first }
-      let(:move_params) { { moveTo: { target: 're_slots',
-                                      details: true } } }
+      let(:move_params) { { target: 're_slots',
+                            details: true } }
       before {
         Cloudinary::Uploader.remove_tag("replaced", photo.public_id)
       }
