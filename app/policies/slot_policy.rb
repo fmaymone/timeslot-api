@@ -58,6 +58,7 @@ class SlotPolicy < ApplicationPolicy
   end
 
   def show_comments?
+    return false if slot.try(:private?)
     show?
   end
 

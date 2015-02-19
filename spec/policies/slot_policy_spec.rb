@@ -88,7 +88,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_likes?, :show_comments?, :copy?, :move?,
+  permissions :show?, :show_likes?, :copy?, :move?,
               :share_url?, :reslot_history? do
     context "own private slot" do
       let(:user) { create(:user) }
@@ -100,7 +100,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :add_comment? do
+  permissions :add_comment?, :show_comments? do
     context "own private slot" do
       let(:user) { create(:user) }
       let(:slot) { create(:std_slot, owner: user) }
@@ -157,7 +157,6 @@ describe SlotPolicy do
           let(:slot) { create(:std_slot, :friendslot) }
 
           it "allows access" do
-            skip "TODO: not yet implemented"
             create(:friendship, :established, user: user, friend: slot.owner)
             expect(subject).to permit(user, slot)
           end
