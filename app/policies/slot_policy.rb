@@ -25,15 +25,6 @@ class SlotPolicy < ApplicationPolicy
     true
   end
 
-  # probably only the creator is allowed to do this
-  # TODO: need to put this into its own policy, make sure its worth the effort
-  def update_metaslot?
-    # return false unless current_user?
-    # return true if user == slot.creator
-    # false
-    current_user?
-  end
-
   def share_url?
     show?
   end

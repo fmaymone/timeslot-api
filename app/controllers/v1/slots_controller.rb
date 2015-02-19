@@ -70,8 +70,8 @@ module V1
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot
-      authorize :slot
       @meta_slot = current_user.created_slots.find(params[:id])
+      authorize @meta_slot
 
       if @meta_slot.update(meta_params)
         head :no_content
