@@ -527,6 +527,28 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :friend_with? do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let!(:friendship_1) {
+      create(:friendship, :established, user: john, friend: mary) }
+    let!(:friendship_2) {
+      create(:friendship, :rejected, user: alice, friend: john) }
+
+    it "returns true if the given user has an established friendship" do
+      expect(john.friend_with? mary).to be true
+    end
+
+    it "returns false if the given user has no established friendship" do
+      expect(alice.friend_with? mary).not_to be true
+    end
+
+    it "returns false if the given user has rejected friendship" do
+      expect(alice.friend_with? john).not_to be true
+    end
+  end
+
   describe :offered_friendship do
     let(:john) { create(:user, username: "John") }
     let(:mary) { create(:user, username: "Mary") }

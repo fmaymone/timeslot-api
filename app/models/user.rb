@@ -150,6 +150,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def friend_with?(user)
+    friendship(user.id).try(:established?)
+  end
+
   ## group related ##
 
   def is_invited?(group_id)
