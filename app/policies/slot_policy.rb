@@ -6,108 +6,114 @@ class SlotPolicy < ApplicationPolicy
     @slot = slot
   end
 
+  # false if no current user
+  # TODO: use Pundit scope here?
   def index?
     current_user?
   end
 
   # true if slot is public
-  # true if slot is friend slot and i am a friend of the owner
-  # true if it is my slot
-  # TODO: replace by new_show?
+  # true if the current user is allowed to see this slot
   def show?
-    true
-  end
-
-  # true if slot is public std slot
-  # current user must exist and must be allowed to see slot:
-  # true if it is my slot
-  # true if slot is friend slot and i am a friend of the owner
-  # true if slot is group slot and i am member of the group
-  def new_show?
-    return true if slot.try(:visibility) == '11'
-    return false unless current_user?
-    # return true if slot.friendslot? && user.friend_with? slot.owner
-    return true if user == slot.try(:owner)
-    return true if slot.try(:group).try(:members).try(:include?, user)
-    false
+    return true if slot.try(:public?) # allow for visitors
+    show_to_current_user?
   end
 
   # same as show?, need to check for every requested slot I think
+  # TODO: also I may need to use pundit scopes here
   def show_many?
     true
   end
 
+  # probably only the creator is allowed to do this
+  # TODO: need to put this into its own policy, make sure its worth the effort
   def update_metaslot?
+    # return false unless current_user?
+    # return true if user == slot.creator
+    # false
     current_user?
   end
 
-  # TODO
   def share_url?
     show?
   end
 
-  # TODO
-  # this should only be allowed for our other rails app
+  # this should only be allowed for our rails slot webview app
   def share_data?
-    show?
+    return false unless current_user?
+    return true if user.webview?
+    false
   end
 
-  # current user must exist
-  # current user must be allowed to see slot:
-  # true if slot is public
-  # true if slot is friend slot and i am a friend of the owner
-  # true if it is my slot
   def add_like?
-    current_user?
-    # TODO: add scope check
+    show_to_current_user?
   end
 
-  # true if like was made by current user
+  # true if current user has liked the slot before
   def unlike?
     return false unless current_user?
     return true if slot.likes.exists?(user: user)
     false
   end
 
-  # true if slot is public std slot
-  # true if it is my slot
-  # true if slot is friend slot and i am a friend of the owner
-  # true if slot is group slot and i am member of the group
-  # reslots?
   def get_likes?
-    return true if slot.try(:visibility) == '11'
-    return false unless current_user?
-    # return true if slot.friendslot? && user.friend_with? slot.owner
-    return true if user == slot.try(:owner)
-    return true if slot.try(:group).try(:members).try(:include?, user)
-    false
+    show?
   end
 
-  # same as show?
   # false if slot is private? (screen doesn't have 'Add a comment')
   def add_comment?
-    new_show?
+    return false if slot.try(:private?)
+    show_to_current_user?
   end
 
-  # same as show?
   def show_comments?
-    new_show?
+    show?
   end
 
-  # true if I have resloted this slot
+  # can only logged in users see the history?
   def reslot_history?
-    return false unless current_user?
-    return true if user == slot.try(:slotter)
-    false
+    show_to_current_user?
   end
 
-  # same as show? ???
   def copy?
-    new_show?
+    show_to_current_user?
   end
 
-  # same as show? ???
+  # TODO
   def move?
-    new_show?
+    show_to_current_user?
+  end
+
+  # helper
+
+  def show_to_current_user?
+    # current user must exist
+    return false unless current_user?
+
+    # standard slot
+    # true if it is my slot
+    # true if slot is friendslot and from a friend aka I'm a friend of the slot owner
+    if slot.try(:visibility)
+      return true if slot.public?
+      return true if user == slot.owner
+      return true if slot.friendslot? && user.friend_with?(slot.owner)
+    end
+
+    # re slot
+    # true if it's a reslot from a friends
+    # true if it's a public reslot
+    if slot.try(:slotter)
+      return true if user == slot.slotter
+      return true if user.friend_with?(slot.slotter)
+      return true if slot.parent.public?
+    end
+
+    # group slot
+    # true if slot is group slot and i am member of the group
+    if slot.try(:group)
+      return true if slot.group.members.include? user
+    end
+
+    false
   end
 end

@@ -31,7 +31,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "GET show" do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot, :publicslot) }
 
     it "returns http success" do
       get :show, id: std_slot.id

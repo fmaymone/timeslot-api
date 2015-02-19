@@ -35,10 +35,12 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:id" do
-    let(:std_slot) { create(:std_slot) }
-    let(:group_slot) { create(:group_slot) }
+    let(:std_slot) { create(:std_slot, :publicslot) }
 
     context "GroupSlot, with valid ID" do
+      let(:group) { create(:group, owner: current_user) }
+      let(:group_slot) { create(:group_slot, group: group) }
+
       it "returns success" do
         get "/v1/slots/#{group_slot.id}", {}, auth_header
         expect(response).to have_http_status(200)
@@ -50,7 +52,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "StdSlot, with location" do
       let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot, meta_slot: meta_slot) }
+      let(:std_slot) { create(:std_slot, :publicslot, meta_slot: meta_slot) }
 
       it "returns the location" do
         get "/v1/slots/#{std_slot.id}"
@@ -1179,7 +1181,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:id/share" do
-    let(:slot) { create(:std_slot) }
+    let(:slot) { create(:std_slot, :publicslot) }
 
     it "returns data of slot including share url" do
       get "/v1/slots/#{slot.id}/share", {}, auth_header
@@ -1194,6 +1196,7 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:slot) { create(:std_slot, :with_notes, :with_location,
                          :with_real_photo, share_id: '12345xyz',
                          shared_by: create(:user)) }
+    before { current_user.webview! }
 
     it "returns data of slot" do
       get "/v1/slots/#{slot.share_id}/sharedata", {}, auth_header

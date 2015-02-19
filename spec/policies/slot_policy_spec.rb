@@ -5,7 +5,7 @@ describe SlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :show?, :show_many?, :share_url? do
+  permissions :show_many? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -33,17 +33,61 @@ describe SlotPolicy do
     end
   end
 
-  permissions :share_data? do
-    # TODO: how do we want to validate this? have a user for the webview app?
-    true
-  end
+  permissions :update_metaslot? do
+    context "for the slot creator" do
+      let(:user) { create(:user) }
+      let(:slot) { create(:std_slot, creator: user) }
 
-  permissions :add_like? do
+      it "allows access" do
+        skip
+        expect(subject).to permit(user, slot)
+      end
+    end
+
+    context "for the slot owner" do
+      let(:user) { create(:user) }
+      let(:slot) { create(:std_slot, owner: user) }
+
+      it "denies access" do
+        skip
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+
     context "for a user" do
       let(:user) { create(:user) }
 
+      it "denies access" do
+        skip
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+
+    context "for a visitor" do
+      let(:user) { nil }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+  end
+
+  permissions :share_data? do
+    context "for a user with role 'webview'" do
+      let(:user) { create(:user) }
+      let(:slot) { create(:std_slot) }
+      before { user.webview! }
+
       it "allows access" do
         expect(subject).to permit(user, slot)
+      end
+    end
+
+    context "for a user" do
+      let(:user) { create(:user) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
       end
     end
 
@@ -83,8 +127,59 @@ describe SlotPolicy do
     end
   end
 
-  permissions :new_show?, :get_likes?, :show_comments?, :add_comment?,
-              :copy?, :move? do
+  permissions :show?, :get_likes?, :show_comments?, :copy?, :move?,
+              :share_url?, :reslot_history? do
+    context "own private slot" do
+      let(:user) { create(:user) }
+      let(:slot) { create(:std_slot, owner: user) }
+
+      it "allows access" do
+        expect(subject).to permit(user, slot)
+      end
+    end
+  end
+
+  permissions :add_comment? do
+    context "own private slot" do
+      let(:user) { create(:user) }
+      let(:slot) { create(:std_slot, owner: user) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
+      end
+    end
+  end
+
+  permissions :show?, :show_comments?, :get_likes?, :share_url? do
+    context "for a visitor" do
+      let(:user) { nil }
+
+      context "public slot" do
+        let(:slot) { create(:std_slot, :publicslot) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+    end
+  end
+
+  permissions :add_comment?, :copy?, :move?, :reslot_history? do
+    context "for a visitor" do
+      let(:user) { nil }
+
+      context "public slot" do
+        let(:slot) { create(:std_slot, :publicslot) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+    end
+  end
+
+  permissions :show?, :get_likes?, :show_comments?, :share_url?, :reslot_history?,
+              :add_like?, :add_comment?, :copy?, :move? do
     context "std_slot" do
       context "for a user" do
         let(:user) { create(:user) }
@@ -120,26 +215,10 @@ describe SlotPolicy do
             expect(subject).not_to permit(user, slot)
           end
         end
-
-        context "own private slot" do
-          let(:slot) { create(:std_slot, owner: user) }
-
-          it "allows access" do
-            expect(subject).to permit(user, slot)
-          end
-        end
       end
 
       context "for a visitor" do
         let(:user) { nil }
-
-        context "public slot" do
-          let(:slot) { create(:std_slot, :publicslot) }
-
-          it "allows access" do
-            expect(subject).to permit(user, slot)
-          end
-        end
 
         context "friend slot" do
           let(:slot) { create(:std_slot, :friendslot) }
@@ -181,9 +260,5 @@ describe SlotPolicy do
         end
       end
     end
-  end
-
-  permissions :reslot_history? do
-    skip "TODO"
   end
 end

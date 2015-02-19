@@ -13,8 +13,8 @@ module V1
 
     # GET /v1/slots/1
     def show
-      authorize :slot
       @slot = BaseSlot.get(params[:id])
+      authorize @slot
 
       render :show, locals: { slot: @slot }
     end

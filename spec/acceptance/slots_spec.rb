@@ -286,7 +286,7 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot, :with_media, :with_likes,
+      let(:slot) { create(:std_slot, :with_media, :with_likes, :publicslot,
                           meta_slot: meta_slot, share_id: 'abcd1234') }
 
       let!(:slot_setting) { create(:slot_setting,
@@ -961,12 +961,10 @@ resource "Slots" do
     parameter :id, "ID of the Slot to make a comment on", required: true
     parameter :content, "Content of the comment", required: true
 
-    let(:slot) { create(:std_slot, :with_comments, owner: current_user) }
-    # TODO: needs update in slot policy which depends on a new user method
-    # let(:slot) { create(:std_slot, :friendslot, :with_comments) }
-    # let!(:friendship) {
-      # create(:friendship, :established, friend: slot.owner, user: current_user)
-    # }
+    let(:slot) { create(:std_slot, :friendslot, :with_comments) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
     describe "Make comment on Slot" do
       let(:id) { slot.id }
       let(:content) { "Liebe ist ein Kind der Freiheit" }
