@@ -233,6 +233,8 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "POST /v1/groupslot" do
     let(:group) { create(:group, :members_can_post) }
+    let!(:membership) {
+      create(:membership, :active, group: group, user: current_user) }
 
     context "GroupSlot with valid params" do
       let(:valid_slot) {
