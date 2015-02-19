@@ -56,7 +56,7 @@ class SlotPolicy < ApplicationPolicy
     false
   end
 
-  def get_likes?
+  def show_likes?
     show?
   end
 

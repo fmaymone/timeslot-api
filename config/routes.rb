@@ -26,8 +26,8 @@ Rails.application.routes.draw do
         to: 'slots#share_data',
         as: 'slot_sharedata'
     get 'slots/:id/likes',
-        to: 'slots#get_likes',
-        as: 'slot_get_likes',
+        to: 'slots#show_likes',
+        as: 'slot_show_likes',
         constraints: { id: /\d+/ }
     post 'slots/:id/like',
          to: 'slots#add_like',

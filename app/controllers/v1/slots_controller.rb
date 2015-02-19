@@ -201,7 +201,7 @@ module V1
     end
 
     # GET /v1/slots/1/likes
-    def get_likes
+    def show_likes
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 

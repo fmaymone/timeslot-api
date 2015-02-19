@@ -127,7 +127,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :get_likes?, :show_comments?, :copy?, :move?,
+  permissions :show?, :show_likes?, :show_comments?, :copy?, :move?,
               :share_url?, :reslot_history? do
     context "own private slot" do
       let(:user) { create(:user) }
@@ -150,7 +150,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_comments?, :get_likes?, :share_url? do
+  permissions :show?, :show_comments?, :show_likes?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -178,7 +178,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :get_likes?, :show_comments?, :share_url?, :reslot_history?,
+  permissions :show?, :show_likes?, :show_comments?, :share_url?, :reslot_history?,
               :add_like?, :add_comment?, :copy?, :move? do
     context "std_slot" do
       context "for a user" do

@@ -88,9 +88,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#unlike", id: "1", format: :json)
     end
 
-    it "routes to #get_likes" do
+    it "routes to #show_likes" do
       expect(get: "/v1/slots/1/likes")
-        .to route_to("v1/slots#get_likes", id: "1", format: :json)
+        .to route_to("v1/slots#show_likes", id: "1", format: :json)
     end
 
     it "routes to #add_comment" do
