@@ -723,8 +723,8 @@ RSpec.describe User, type: :model do
 
       it "sets the default role for the user" do
         User.create_with_image(user_params)
-        expect(User.last.role).to eq "user"
-        expect(User.last.user?).to be true
+        expect(User.last.role).to eq "basic"
+        expect(User.last.basic?).to be true
         expect(User.last.webview?).to be false
       end
 
