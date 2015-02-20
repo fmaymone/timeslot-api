@@ -4,9 +4,10 @@ module V1
 
     # GET /v1/slots
     # return all slots (std, group, re) of the current user
+    # should almost probably also include slots from friends
     def index
       authorize :slot
-      @slots = current_user.all_slots
+      @slots = policy_scope(:slot)
 
       render :index
     end

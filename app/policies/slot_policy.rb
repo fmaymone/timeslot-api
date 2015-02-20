@@ -1,13 +1,24 @@
 class SlotPolicy < ApplicationPolicy
   attr_reader :user, :slot
 
+  class Scope < Scope
+    def initialize(user, scope)
+      @user = user
+      @scope = scope
+    end
+
+    def resolve
+      user.all_slots
+      # add slots from friends
+    end
+  end
+
   def initialize(user, slot)
     @user = user
     @slot = slot
   end
 
   # false if no current user
-  # TODO: use Pundit scope here?
   def index?
     current_user?
   end
