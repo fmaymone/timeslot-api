@@ -62,8 +62,9 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
-  # can only logged in users see the history?
+  # ASK: can only logged in users see the history?
   def reslot_history?
+    return false if slot.try(:private?)
     show_to_current_user?
   end
 
@@ -71,9 +72,16 @@ class SlotPolicy < ApplicationPolicy
     show_to_current_user?
   end
 
-  # TODO
+  # TODO: need more domain info: target
+  # true if I'm the slot owner, visibilty can only increase
+  # true if I'm the slotter of a reslot, target only private, friends or group
+  # false if groupslot
+  # ASK why should I move a slot into reslots? Ich glaube, move to reslots macht niemals sinn
   def move?
-    show_to_current_user?
+    return false unless current_user?
+    return true if user == slot.try(:owner)
+    return true if user == slot.try(:slotter)
+    false
   end
 
   # helper

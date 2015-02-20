@@ -1098,24 +1098,25 @@ resource "Slots" do
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'false', must be one of [true/false]"
 
-    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
+    let(:slot) { create(:std_slot, :with_media, owner: current_user) }
 
-    describe "Move Slot into ReSlots" do
+    describe "Move Slot from private to friends" do
       let(:id) { slot.id }
-      let(:target) { 're_slots' }
+      let(:target) { 'friend_slots' }
       let(:details) { 'true' }
 
-      example "Move Slot to Friend Slots and into a group", document: :v1 do
-        explanation "A new slot will be created with share " \
-                    "the same Metadata as the move source. If details is " \
+      example "Move Slot from private Slots to Friend Slots", document: :v1 do
+        explanation "A new slot will be created with  " \
+                    "the same Metadata as it's source. If details is " \
                     "set to 'true' all media items, comments and likes will " \
-                    "be duplicated."
+                    "be duplicated. The source will be deleted afterwards."
         do_request
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 2
-        expect(ReSlot.last.title).to eq slot.title
-        expect(ReSlot.last.end_date).to eq slot.end_date
+        expect(StdSlot.last.friendslot?).to be true
+        expect(StdSlot.last.title).to eq slot.title
+        expect(StdSlot.last.end_date).to eq slot.end_date
       end
     end
   end
