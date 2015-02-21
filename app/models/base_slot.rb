@@ -39,13 +39,12 @@ class BaseSlot < ActiveRecord::Base
     Like.includes([:user]).where(slot: self)
   end
 
-  def update_from_params(meta_params, media_params = nil, note_param = nil,
-                         alerts_param = nil, user)
+  def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
     # statement order is important, otherwise added errors may be overwritten
-    update(meta_params) if meta_params
-    update_media(media_params) if media_params
-    update_notes(note_param) if note_param
-    user.update_alerts(self, alerts_param) if alerts_param
+    update(meta) if meta
+    update_media(media) if media
+    update_notes(notes) if notes
+    user.update_alerts(self, alerts) if alerts
   end
 
   def add_media(item)

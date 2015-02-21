@@ -87,8 +87,9 @@ module V1
       authorize @slot
 
       @slot.update(std_param) if params["visibility"].present?
-      @slot.update_from_params(meta_params, media_params, note_param,
-                               alerts_param, current_user)
+      @slot.update_from_params(meta: meta_params, media: media_params,
+                               notes: note_param, alerts: alerts_param,
+                               user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }
@@ -102,8 +103,9 @@ module V1
       @slot = current_user.group_slots.find(params[:id])
       authorize @slot
 
-      @slot.update_from_params(meta_params, media_params, note_param,
-                               alerts_param, current_user)
+      @slot.update_from_params(meta: meta_params, media: media_params,
+                               notes: note_param, alerts: alerts_param,
+                               user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }
@@ -117,8 +119,8 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
       authorize @slot
 
-      @slot.update_from_params(meta_params, media_params, note_param,
-                               alerts_param, current_user)
+      @slot.parent.update_from_params(media: media_params, notes: note_param)
+      @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }

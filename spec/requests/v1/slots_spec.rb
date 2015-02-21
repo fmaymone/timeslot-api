@@ -1093,19 +1093,60 @@ RSpec.describe "V1::Slots", type: :request do
   describe "PATCH /v1/reslot/:id" do
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
-    context "with valid non-media params" do
+    context "with valid alerts" do
       it "responds with 200" do
         patch "/v1/reslot/#{re_slot.id}",
-              { title: "Something" }, auth_header
+              { settings: { alerts: '1110001100' }}, auth_header
         expect(response).to have_http_status(:ok)
       end
 
-      it "updates the title of a given ReSlot" do
-        re_slot.meta_slot.title = "Old title"
+      it "updates the alert of a given ReSlot" do
         patch "/v1/reslot/#{re_slot.id}",
-              { title: "New title" }, auth_header
+              { settings: { alerts: '1110001101' } }, auth_header
         re_slot.reload
-        expect(re_slot.title).to eq("New title")
+        expect(current_user.alerts(re_slot)).to eq("1110001101")
+      end
+    end
+
+    context "with valid media params" do
+      let(:add_media_item) { { photos: media } }
+      let(:media) do
+        [{ publicId: "foo-image",
+           position: "1" }]
+      end
+
+      it "responds with 200" do
+        patch "/v1/reslot/#{re_slot.id}", add_media_item, auth_header
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "adds new media to the parent slot" do
+        patch "/v1/reslot/#{re_slot.id}", add_media_item, auth_header
+        re_slot.reload
+        expect(re_slot.photos.first.public_id).to eq("foo-image")
+      end
+    end
+
+    describe "handling notes" do
+      let(:note) { attributes_for(:note) }
+      let(:add_note) { { notes: [note] } }
+
+      it "returns success" do
+        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "adds a new note to the parent slot" do
+        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
+        re_slot.reload
+        expect(re_slot.notes.size).to eq(1)
+      end
+
+      it "adds the submitted note to the db" do
+        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
+        re_slot.reload
+        expect(re_slot.notes.first.title).to eq(note[:title])
+        expect(re_slot.notes.first.content).to eq(note[:content])
       end
     end
   end
