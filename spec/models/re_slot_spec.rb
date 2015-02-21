@@ -18,6 +18,7 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:predecessor) }
   it { is_expected.to belong_to(:slotter) }
+  it { is_expected.to belong_to(:parent) }
   it { is_expected.to respond_to(:media_items) }
   it { is_expected.to have_many(:media_items) }
 
@@ -25,6 +26,16 @@ RSpec.describe ReSlot, type: :model do
 
   describe "when predecessor is not present" do
     before { re_slot.predecessor = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when slotter is not present" do
+    before { re_slot.slotter = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when parent is not present" do
+    before { re_slot.parent = nil }
     it { is_expected.to_not be_valid }
   end
 

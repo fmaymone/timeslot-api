@@ -3,17 +3,21 @@ class ReSlot < BaseSlot
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
+  belongs_to :parent, class_name: BaseSlot
 
   validates :slotter, presence: true
   validates :predecessor, presence: true
+  validates :parent, presence: true
 
   def related_users
     [slotter]
   end
 
   def self.create_from_slot(predecessor: nil, slotter: nil)
+    original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
     create(slotter: slotter,
            predecessor: predecessor,
+           parent: original_source,
            meta_slot: predecessor.meta_slot)
   end
 

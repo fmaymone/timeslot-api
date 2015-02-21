@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :re_slot, class: ReSlot, parent: :slot do
     association :slotter, factory: :user, strategy: :build
     association :predecessor, factory: :std_slot, strategy: :build
+    association :parent, factory: :std_slot, strategy: :build
 
     # need to figure out why this doesn't use the meta slot of the
     # predecessor if not explictly set like this

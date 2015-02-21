@@ -367,7 +367,8 @@ CREATE TABLE re_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id integer NOT NULL,
-    slotter_id integer NOT NULL
+    slotter_id integer NOT NULL,
+    parent_id integer NOT NULL
 )
 INHERITS (base_slots);
 
@@ -959,4 +960,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150208002831');
 INSERT INTO schema_migrations (version) VALUES ('20150210101825');
 
 INSERT INTO schema_migrations (version) VALUES ('20150214163709');
+
+INSERT INTO schema_migrations (version) VALUES ('20150221012103');
 
