@@ -10,16 +10,19 @@ class GroupPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true if user is an active group member
   def show?
     return false unless current_user?
     return true if user.is_active_member? group.id
     false
   end
 
+  # true if a user is logged in
   def create?
     current_user?
   end
 
+  # true if the user is the group owner
   def update?
     return false unless current_user?
     return true if user.is_owner? group.id
@@ -27,9 +30,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def destroy?
-    return false unless current_user?
-    return true if user.is_owner? group.id
-    false
+    update?
   end
 
   def members?
@@ -37,11 +38,10 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def related?
-    return false unless current_user?
-    return true if user.is_owner? group.id
-    false
+    update?
   end
 
+  # true if user has an invitation to the group
   def accept_invite?
     return false unless current_user?
     return true if user.is_invited? group.id
@@ -49,34 +49,34 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def refuse_invite?
-    return false unless current_user?
-    return true if user.is_invited? group.id
-    false
+    accept_invite?
   end
 
+  # true if user is the group owner
+  # true if user is an active member of the group and members can invite
   def invite?
     return false unless current_user?
+    return false unless user.is_active_member? group.id
     return true if user.is_owner? group.id
     return true if group.members_can_invite
     false
   end
 
+  # true if I'm a member of the group and members can invite
   def leave?
     return false unless current_user?
     return true if user.get_membership(group.id)
     false
   end
 
+  # true if the user is related to the group
   def kick?
     return false unless current_user?
     return true if user.get_membership(group.id)
     false
   end
 
-  # same as show? ???
   def member_settings?
-    return false unless current_user?
-    return true if user.is_active_member? group.id
-    false
+    show?
   end
 end

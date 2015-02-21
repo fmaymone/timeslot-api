@@ -98,13 +98,19 @@ describe GroupPolicy do
 
     context "group members can invite" do
       let(:group) { create(:group, :members_can_invite) }
-
+      let!(:membership) {
+        create(:membership, :active, group: group, user: user)
+      }
       it "allows access" do
         expect(subject).to permit(user, group)
       end
     end
 
     context "group members can't invite" do
+      let(:group) { create(:group) }
+      let!(:membership) {
+        create(:membership, :active, group: group, user: user)
+      }
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
