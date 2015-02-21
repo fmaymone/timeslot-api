@@ -55,6 +55,27 @@ RSpec.describe ReSlot, type: :model do
     end
   end
 
+  describe "parent attributes" do
+    let(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_notes) }
+    let(:re_slot_1) { create(:re_slot, predecessor: std_slot,
+                             meta_slot: std_slot.meta_slot, parent: std_slot) }
+    let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,
+                             meta_slot: std_slot.meta_slot, parent: std_slot) }
+
+    it "contains the same media items and notes as the parent slot" do
+      expect(re_slot_1.notes).to eq std_slot.notes
+      expect(re_slot_1.media_items).to eq std_slot.media_items
+      expect(re_slot_1.photos).to eq std_slot.photos
+      expect(re_slot_1.voices).to eq std_slot.voices
+      expect(re_slot_1.videos).to eq std_slot.videos
+      expect(re_slot_2.notes).to eq std_slot.notes
+      expect(re_slot_2.media_items).to eq std_slot.media_items
+      expect(re_slot_2.photos).to eq std_slot.photos
+      expect(re_slot_2.voices).to eq std_slot.voices
+      expect(re_slot_2.videos).to eq std_slot.videos
+    end
+  end
+
   describe :delete do
     let(:group_slot) { create(:group_slot) }
     let(:re_slot_1) { create(:re_slot, predecessor: group_slot,

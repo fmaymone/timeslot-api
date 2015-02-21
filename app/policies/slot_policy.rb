@@ -112,15 +112,19 @@ class SlotPolicy < ApplicationPolicy
     # re slot
     # true if it's a reslot of mine
     # true if it's a reslot from a friend
-    # true if it's a public reslot
+    # true if it's a reslot from a public slot
+    # later: true if it's a reslot from a pulic group's groupslot
     if slot.try(:slotter)
       return true if user == slot.slotter
       return true if user.friend_with?(slot.slotter)
-      return true if slot.parent.public?
+      parent = BaseSlot.get(slot.parent.id)
+      return true if parent.try(:public?)
+      # return true if parent.try(:group).try(:public?)
     end
 
     # group slot
     # true if slot is group slot and i am member of the group
+    # later: true if it's a groupslot in a pulic group
     if slot.try(:group)
       return true if slot.group.members.include? user
     end

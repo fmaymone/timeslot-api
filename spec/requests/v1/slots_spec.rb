@@ -103,6 +103,38 @@ RSpec.describe "V1::Slots", type: :request do
         expect(response).to have_http_status(:not_found)
       end
     end
+
+    context "ReSlot, with valid ID" do
+      let(:std_slot) {
+        create(:std_slot, :publicslot, :with_media, :with_notes) }
+      let(:re_slot_1) {
+        create(:re_slot, predecessor: std_slot,
+               meta_slot: std_slot.meta_slot, parent: std_slot) }
+      let(:re_slot_2) {
+        create(:re_slot, predecessor: re_slot_1,
+               meta_slot: std_slot.meta_slot, parent: std_slot) }
+
+      it "returns success" do
+        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+        expect(response).to have_http_status(200)
+      end
+
+      it "has the same media items as the parent slot" do
+        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+        expect(json).to have_key('photos')
+        expect(
+          json['photos'].first['clyid']
+        ).to eq(std_slot.photos.first.public_id)
+      end
+
+      it "has the same notes as the parent slot" do
+        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+        expect(json).to have_key('notes')
+        expect(
+          json['notes'][1]['title']
+        ).to eq(std_slot.notes.second.title)
+      end
+    end
   end
 
   describe "POST /v1/stdlot" do
@@ -451,6 +483,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from GroupSlot" do
+        skip "not supported"
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
           attributes_for(:re_slot, predecessorId: pred.id)
