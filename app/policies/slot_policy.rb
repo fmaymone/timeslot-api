@@ -30,10 +30,8 @@ class SlotPolicy < ApplicationPolicy
     show_to_current_user?
   end
 
-  # same as show?, need to check for every requested slot I think
-  # TODO: also I may need to use pundit scopes here
   def show_many?
-    true
+    show?
   end
 
   def share_url?
@@ -102,6 +100,7 @@ class SlotPolicy < ApplicationPolicy
     return false unless current_user?
 
     # standard slot
+    # true if it's a public slot
     # true if it is my slot
     # true if slot is friendslot and from a friend aka I'm a friend of the slot owner
     if slot.try(:visibility)
@@ -111,7 +110,8 @@ class SlotPolicy < ApplicationPolicy
     end
 
     # re slot
-    # true if it's a reslot from a friends
+    # true if it's a reslot of mine
+    # true if it's a reslot from a friend
     # true if it's a public reslot
     if slot.try(:slotter)
       return true if user == slot.slotter

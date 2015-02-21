@@ -152,6 +152,7 @@ resource "Slots" do
 
   post "/v1/slots" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of slot IDs to get", required: true
 
@@ -176,8 +177,9 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot1) { create(:std_slot, :with_media) }
-      let(:slot2) { create(:std_slot, :with_media, meta_slot: meta_slot) }
+      let(:slot1) { create(:std_slot, :with_media, owner: current_user) }
+      let(:slot2) {
+        create(:std_slot, :with_media, meta_slot: meta_slot, owner: current_user) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot2.meta_slot,

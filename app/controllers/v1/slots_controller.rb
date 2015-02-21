@@ -22,8 +22,8 @@ module V1
 
     # POST /v1/slots
     def show_many
-      authorize :slot
       @slots = BaseSlot.get_many(params[:ids])
+      @slots.each { |slot| authorize slot }
 
       render :index
     end

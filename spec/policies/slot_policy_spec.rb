@@ -5,16 +5,6 @@ describe SlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :show_many? do
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-  end
-
   permissions :index? do
     context "for a user" do
       let(:user) { create(:user) }
@@ -110,7 +100,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_comments?, :show_likes?, :share_url? do
+  permissions :show?, :show_many?, :show_comments?, :show_likes?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -138,8 +128,8 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_likes?, :show_comments?, :share_url?, :reslot_history?,
-              :add_like?, :add_comment?, :copy? do
+  permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
+              :reslot_history?, :add_like?, :add_comment?, :copy? do
     context "std_slot" do
       context "for a user" do
         let(:user) { create(:user) }
