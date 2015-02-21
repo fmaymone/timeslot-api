@@ -1052,8 +1052,8 @@ resource "Slots" do
                        "to post.",
               required: true,
               scope: :copyTo
-    parameter :details, "Duplicate all media data, comments and likes " \
-                        "on the copied slots. Defaults to 'false'.\n\n" \
+    parameter :details, "Duplicate all media data and notes " \
+                        "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",
               scope: :copyTo
 
@@ -1075,7 +1075,7 @@ resource "Slots" do
       example "Copy Slot to Friend Slots and into a group", document: :v1 do
         explanation "Several new slot instances can be created which share " \
                     "the same Metadata as the copy source. If details is " \
-                    "set to 'true' all media items, comments and likes will " \
+                    "set to 'true' all media items and notes will " \
                     "be duplicated."
         do_request
 
@@ -1096,9 +1096,9 @@ resource "Slots" do
                        "or a name of a group where the user is allowed " \
                        "to post.",
               required: true
-    parameter :details, "Move all media data, comments and likes to the new " \
+    parameter :details, "Move all media data and notes to the new " \
                         " slot. Otherwise they will be deleted.\n\n" \
-                        "Defaults to 'false', must be one of [true/false]"
+                        "Defaults to 'true', must be one of [true/false]"
 
     let(:slot) { create(:std_slot, :with_media, owner: current_user) }
 
@@ -1110,8 +1110,9 @@ resource "Slots" do
       example "Move Slot from private Slots to Friend Slots", document: :v1 do
         explanation "A new slot will be created with  " \
                     "the same Metadata as it's source. If details is " \
-                    "set to 'true' all media items, comments and likes will " \
-                    "be duplicated. The source will be deleted afterwards."
+                    "set to 'true' all media items and notes will " \
+                    "be duplicated. The source will be deleted afterwards " \
+                    "and with it all comments and likes."
         do_request
 
         expect(response_status).to eq(200)

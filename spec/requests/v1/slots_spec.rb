@@ -1246,13 +1246,12 @@ RSpec.describe "V1::Slots", type: :request do
                                 details: true }
                             ] } }
 
-      it "copys media, likes and comments if desired" do
+      it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
         new_slot = GroupSlot.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
-        expect(new_slot.likes.size).to eq 3
-        expect(new_slot.likes.first.user).to eq std_slot.likes.first.user
+        expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.photos.first.public_id).to eq std_slot.photos.first.public_id
       end

@@ -294,7 +294,6 @@ module V1
     private def copy_params
       target_params = [:target, :details]
       params.require(:copyTo).map do |p|
-        # may need to prevent "re_slots" here
         ActionController::Parameters.new(p.to_hash).permit(target_params)
       end
     end
