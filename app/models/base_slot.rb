@@ -35,10 +35,6 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
-  def likes_with_details
-    Like.includes([:user]).where(slot: self)
-  end
-
   def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
     # statement order is important, otherwise added errors may be overwritten
     update(meta) if meta
@@ -80,16 +76,17 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    like = likes.where(user: user).first_or_create do |new_like|
-      new_like.slot = self
-      new_like.user = user
-    end
-    like.update(deleted_at: nil) if like.deleted_at?
+    like = likes.find_by(user: user) || likes.create(user: user)
+    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
   end
 
   def destroy_like(user)
     like = likes.find_by(user: user)
     like.try(:delete)
+  end
+
+  def likes_with_details
+    likes.includes([:user])
   end
 
   def create_comment(user, content)
@@ -99,7 +96,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def comments_with_details
-    Comment.includes([:user]).where(slot: self)
+    comments.includes([:user])
   end
 
   def set_share_id(user)

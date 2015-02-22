@@ -1280,14 +1280,77 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "DELETE /v1/slots/:id/like" do
-    let(:std_slot) { create(:std_slot) }
-    let!(:like) { create(:like, user: current_user, slot: std_slot) }
+  describe "POST /v1/slots/:id/like" do
+    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
 
-    it "sets deleted_at on the like" do
-      delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
-      like.reload
-      expect(like.deleted_at?).to be true
+    it "creates a new like" do
+      expect {
+        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+      }.to change(Like, :count).by 1
+    end
+
+    it "adds the new like to the parent slot" do
+      post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+      expect(Like.last.slot.id).to eq std_slot.id
+      expect(Like.last.slot.id).to eq re_slot.parent.id
+    end
+  end
+
+  describe "DELETE /v1/slots/:id/like" do
+    context "StdSlot" do
+      let(:std_slot) { create(:std_slot) }
+      let!(:like) { create(:like, user: current_user, slot: std_slot) }
+
+      it "sets deleted_at on the like" do
+        delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        like.reload
+        expect(like.deleted_at?).to be true
+      end
+    end
+
+    context "ReSlot" do
+      let(:re_slot) { create(:re_slot, slotter: current_user) }
+      let!(:like) { create(:like, user: current_user, slot: re_slot.parent) }
+
+      it "sets deleted_at on the like" do
+        delete "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        like.reload
+        expect(like.deleted_at?).to be true
+      end
+    end
+  end
+
+  describe "GET /v1/slots/1/likes" do
+    let(:std_slot) { create(:std_slot, :publicslot, :with_likes) }
+
+    context "ReSlot" do
+      let(:re_slot) {
+        create(:re_slot, slotter: current_user, parent: std_slot) }
+
+      it "retrieves a list of all likes with user details" do
+        get "/v1/slots/#{re_slot.id}/likes", {}, auth_header
+        expect(json.count).to eq std_slot.likes.count
+      end
+    end
+  end
+
+  describe "POST /v1/slots/:id/comment" do
+    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
+    let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
+
+    it "creates a new comment" do
+      expect {
+        post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
+      }.to change(Comment, :count).by 1
+    end
+
+    it "adds the new comment to the parent slot" do
+      post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
+      expect(Comment.last.slot.id).to eq std_slot.id
+      expect(Comment.last.slot.id).to eq re_slot.parent.id
+      expect(Comment.last.content).to eq new_comment[:content]
     end
   end
 
