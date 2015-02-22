@@ -25,16 +25,16 @@ class StdSlot < BaseSlot
   def prepare_for_deletion
   end
 
-  def self.create_with_meta(meta_param, std_param, note_param = nil,
-                            alert_param = nil, user)
-    meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))
+  def self.create_with_meta(meta:, visibility:, media: nil, notes: nil,
+                            alerts: nil, user: nil)
+    meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
-    slot = create(std_param.merge(meta_slot: meta_slot, owner: user))
+    slot = create(visibility.merge(meta_slot: meta_slot, owner: user))
     return slot unless slot.errors.empty?
 
-    slot.update_notes(note_param) if note_param
-    user.update_alerts(slot, alert_param) if alert_param
+    slot.update_from_params(meta: nil, media: media, notes: notes,
+                            alerts: alerts, user: user)
     slot
   end
 

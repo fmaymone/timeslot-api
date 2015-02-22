@@ -34,26 +34,29 @@ RSpec.describe StdSlot, type: :model do
 
     it "creates a new StdSlot" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
       }.to change(StdSlot, :count).by 1
     end
 
     it "creates a new MetaSlot" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
       }.to change(MetaSlot, :count).by 1
     end
 
     it "creates a new Note" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, note_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         notes: note_param, user: user)
       }.to change(Note, :count).by 1
     end
 
     it "creates a new SlotSetting" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, note_param,
-                                         alert_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         alerts: alert_param, user: user)
       }.to change(SlotSetting, :count).by 1
     end
 
@@ -62,7 +65,8 @@ RSpec.describe StdSlot, type: :model do
 
       it "doesn't create a new MetaSlot" do
         expect {
-          described_class.create_with_meta(meta_param, std_param, user)
+          described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
         }.not_to change(MetaSlot, :count)
       end
     end
