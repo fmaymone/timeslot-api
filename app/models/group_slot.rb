@@ -13,16 +13,16 @@ class GroupSlot < BaseSlot
     group.touch unless group.deleted_at?
   end
 
-  def self.create_with_meta(meta_param, group_id, note_param = nil,
-                            alert_param = nil, user)
-    meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))
+  def self.create_with_meta(meta:, group_id:, media: nil, notes: nil,
+                            alerts: nil, user: nil)
+    meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
     slot = create(group_id: group_id, meta_slot: meta_slot)
     return slot unless slot.errors.empty?
 
-    slot.update_notes(note_param) if note_param
-    user.update_alerts(slot, alert_param) if alert_param
+    slot.update_from_params(meta: nil, media: media, notes: notes,
+                            alerts: alerts, user: user)
     slot
   end
 
