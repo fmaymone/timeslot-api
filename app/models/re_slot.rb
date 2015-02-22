@@ -17,6 +17,10 @@ class ReSlot < BaseSlot
     [slotter]
   end
 
+  def source
+    BaseSlot.get(parent.id)
+  end
+
   def self.create_from_slot(predecessor: nil, slotter: nil)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
     create(slotter: slotter,
@@ -30,12 +34,12 @@ class ReSlot < BaseSlot
     slot = self
 
     loop do
-      break unless slot.try(:predecessor)
       slot = BaseSlot.get(slot.predecessor.id)
       if slot.deleted_at?
         Airbrake.notify(reslot_history_error: "found deleted predecessor: #{slot}")
       end
       predecessors << slot
+      break if slot.predecessor == slot.parent
     end
 
     predecessors

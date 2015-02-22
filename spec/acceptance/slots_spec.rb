@@ -1016,13 +1016,13 @@ resource "Slots" do
     parameter :id, "ID of the Slot to get the chronic for", required: true
 
     let!(:slot) { create(:std_slot) }
-    let!(:reslot_1) {
-      create(:re_slot, predecessor: slot, meta_slot: slot.meta_slot) }
-    let!(:reslot_2) {
-      create(:re_slot, predecessor: reslot_1, meta_slot: slot.meta_slot) }
+    let!(:reslot_1) { create(:re_slot, predecessor: slot,
+                             meta_slot: slot.meta_slot, parent: slot) }
+    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1,
+                             meta_slot: slot.meta_slot, parent: slot) }
     let!(:reslot_3) {
       create(:re_slot, predecessor: reslot_2, slotter: current_user,
-             meta_slot: slot.meta_slot) }
+             meta_slot: slot.meta_slot, parent: slot) }
 
     let(:id) { reslot_3.id }
 
@@ -1034,9 +1034,9 @@ resource "Slots" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq 3
-      expect(json.last).to have_key("parentUserId")
-      expect(json.last["parentUserId"]).to eq slot.owner.id
+      expect(json['predecessors'].size).to eq 2
+      expect(json).to have_key("parentUserId")
+      expect(json["parentUserId"]).to eq slot.owner.id
     end
   end
 
