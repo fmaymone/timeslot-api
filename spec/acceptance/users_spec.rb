@@ -26,6 +26,7 @@ resource "Users" do
 
       expect(response_status).to eq(200)
       user.reload
+      expect(json).to have_key "authToken"
       expect(json['authToken']).to eq user.auth_token
     end
   end
@@ -81,7 +82,11 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(201)
-      expect(json).to have_key("id")
+      expect(json).to have_key 'id'
+      expect(json).to have_key 'username'
+      expect(json).to have_key 'email'
+      expect(json).to have_key 'authToken'
+
     end
   end
 

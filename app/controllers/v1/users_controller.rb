@@ -36,7 +36,7 @@ module V1
       @user = User.create_with_image(user_params)
 
       if @user.errors.empty?
-        render :show, status: :created
+        render :signup, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
       end
