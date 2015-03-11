@@ -49,7 +49,7 @@ module V1
       @user = User.sign_in(*credentials)
 
       if @user
-        render :signin
+        render :signup
       else
         render json: { error: "email and password didn't match" },
                status: :unauthorized
