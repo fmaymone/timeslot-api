@@ -34,26 +34,29 @@ RSpec.describe StdSlot, type: :model do
 
     it "creates a new StdSlot" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
       }.to change(StdSlot, :count).by 1
     end
 
     it "creates a new MetaSlot" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
       }.to change(MetaSlot, :count).by 1
     end
 
     it "creates a new Note" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, note_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         notes: note_param, user: user)
       }.to change(Note, :count).by 1
     end
 
     it "creates a new SlotSetting" do
       expect {
-        described_class.create_with_meta(meta_param, std_param, note_param,
-                                         alert_param, user)
+        described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         alerts: alert_param, user: user)
       }.to change(SlotSetting, :count).by 1
     end
 
@@ -62,14 +65,15 @@ RSpec.describe StdSlot, type: :model do
 
       it "doesn't create a new MetaSlot" do
         expect {
-          described_class.create_with_meta(meta_param, std_param, user)
+          described_class.create_with_meta(meta: meta_param, visibility: std_param,
+                                         user: user)
         }.not_to change(MetaSlot, :count)
       end
     end
   end
 
   describe :delete do
-    let(:slot) { create(:std_slot, :with_media, :with_notes) }
+    let(:slot) { create(:std_slot) }
 
     it "sets deleted_at on itself" do
       expect(slot.deleted_at?).to be false
@@ -77,16 +81,34 @@ RSpec.describe StdSlot, type: :model do
       expect(slot.deleted_at?).to be true
     end
 
-    it "invalidates belonging media_items" do
-      slot.delete
-      expect(slot.media_items.first.deleted_at?).to be true
-      expect(slot.media_items.last.deleted_at?).to be true
+    context "media" do
+      let(:slot) { create(:std_slot, :with_media) }
+
+      it "invalidates belonging media_items" do
+        slot.delete
+        expect(slot.media_items.first.deleted_at?).to be true
+        expect(slot.media_items.last.deleted_at?).to be true
+      end
     end
 
-    it "deletes belonging notes" do
-      slot.delete
-      expect(slot.notes.first.deleted_at?).to be true
-      expect(slot.notes.last.deleted_at?).to be true
+    context "notes" do
+      let(:slot) { create(:std_slot, :with_notes) }
+
+      it "deletes belonging notes" do
+        slot.delete
+        expect(slot.notes.first.deleted_at?).to be true
+        expect(slot.notes.last.deleted_at?).to be true
+      end
+    end
+
+    context "likes" do
+      let(:slot) { create(:std_slot, :with_likes) }
+
+      it "deletes belonging likes" do
+        slot.delete
+        expect(slot.likes.first.deleted_at?).to be true
+        expect(slot.likes.last.deleted_at?).to be true
+      end
     end
   end
 end

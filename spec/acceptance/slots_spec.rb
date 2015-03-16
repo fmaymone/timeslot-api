@@ -14,7 +14,8 @@ resource "Slots" do
       create(:std_slot, meta_slot: metas[0], owner: current_user) }
     let!(:std_slot_2) {
       create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
+    let!(:re_slots) {
+      create_list(:re_slot, 4, :with_likes, slotter: current_user) }
 
     let(:groups) { create_list(:group, 2) }
     let!(:memberships) {
@@ -32,6 +33,8 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot for the current user"
       response_field :notes, "A list of all notes on the slot"
+      response_field :likes, "Number of likes for the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
       response_field :media, "Media Items for the slot"
       response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
@@ -63,6 +66,8 @@ resource "Slots" do
         expect(json.first).to have_key("deletedAt")
         expect(json.first).to have_key("creatorId")
         expect(json.first).to have_key("notes")
+        expect(json.first).to have_key("likes")
+        expect(json.first).to have_key("commentsCounter")
         expect(json.first).to have_key("visibility")
         expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
@@ -78,6 +83,8 @@ resource "Slots" do
                       "settings" => {
                         'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,
+                      "likes" => std_slot_1.likes.count,
+                      "commentsCounter" => std_slot_1.comments.count,
                       "media" => std_slot_1.media_items,
                       "visibility" => std_slot_1.visibility,
                       "url" => v1_slot_url(std_slot_1, format: :json),
@@ -95,6 +102,8 @@ resource "Slots" do
                       "updatedAt" => std_slot_2.updated_at.as_json,
                       "deletedAt" => std_slot_2.deleted_at,
                       "notes" => std_slot_2.notes,
+                      "likes" => std_slot_2.likes.count,
+                      "commentsCounter" => std_slot_2.comments.count,
                       "media" => std_slot_2.media_items,
                       "visibility" => std_slot_2.visibility,
                       "url" => v1_slot_url(std_slot_2, format: :json),
@@ -112,6 +121,8 @@ resource "Slots" do
                       "updatedAt" => re_slots[0].updated_at.as_json,
                       "deletedAt" => re_slots[0].deleted_at,
                       "notes" => re_slots[0].notes,
+                      "likes" => re_slots[0].likes.count,
+                      "commentsCounter" => re_slots[0].comments.count,
                       "media" => re_slots[0].media_items,
                       "url" => v1_slot_url(re_slots[0], format: :json),
                       "creatorId" => re_slots[0].creator.id
@@ -129,6 +140,8 @@ resource "Slots" do
                       "updatedAt" => group_slots_1[0].updated_at.as_json,
                       "deletedAt" => group_slots_1[0].deleted_at,
                       "notes" => group_slots_1[0].notes,
+                      "likes" => group_slots_1[0].likes.count,
+                      "commentsCounter" => group_slots_1[0].comments.count,
                       "media" => group_slots_1[0].media_items,
                       "url" => v1_slot_url(group_slots_1[0], format: :json),
                       "creatorId" => group_slots_1[0].creator.id
@@ -139,6 +152,7 @@ resource "Slots" do
 
   post "/v1/slots" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
     parameter :ids, "Array of slot IDs to get", required: true
 
@@ -156,13 +170,16 @@ resource "Slots" do
       response_field :settings, "User specific settings for the slot (alerts)"
       response_field :visibility, "Visibiltiy of the slot"
       response_field :notes, "Notes on the slot"
+      response_field :likes, "Counter for likes of the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
       response_field :images, "Images for the slot"
       response_field :voices, "Voice recordings for the slot"
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot1) { create(:std_slot, :with_media) }
-      let(:slot2) { create(:std_slot, :with_media, meta_slot: meta_slot) }
+      let(:slot1) { create(:std_slot, :with_media, owner: current_user) }
+      let(:slot2) {
+        create(:std_slot, :with_media, meta_slot: meta_slot, owner: current_user) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot2.meta_slot,
@@ -201,6 +218,8 @@ resource "Slots" do
         expect(json.last).to have_key("updatedAt")
         expect(json.last).to have_key("deletedAt")
         expect(json.last).to have_key("notes")
+        expect(json.last).to have_key("likes")
+        expect(json.last).to have_key("commentsCounter")
         expect(json.last).to have_key("visibility")
         # expect(json.last).to have_key("photos")
         # expect(json.last).to have_key("voices")
@@ -261,13 +280,17 @@ resource "Slots" do
       response_field :settings, "User specific settings for the slot (alerts)"
       response_field :visibility, "Visibiltiy of the slot"
       response_field :notes, "Notes on the slot"
+      response_field :likes, "Likes for the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
+      response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
       response_field :images, "Images for the slot"
       response_field :voices, "Voice recordings for the slot"
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot, :with_media, meta_slot: meta_slot,
-                          share_id: 'abcd1234') }
+      let(:slot) { create(:std_slot, :with_media, :with_likes, :publicslot,
+                          meta_slot: meta_slot, share_id: 'abcd1234') }
+
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
@@ -301,6 +324,8 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("notes")
+        expect(json).to have_key("likes")
+        expect(json).to have_key("commentsCounter")
         expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("photos")
@@ -334,7 +359,9 @@ resource "Slots" do
                                 "deletedAt" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
-                 "notes" => slot.notes
+                 "notes" => slot.notes,
+                 "likes" => slot.likes.count,
+                 "commentsCounter" => slot.comments.count
                 )
         expect(json["photos"].length).to eq(slot.photos.length)
         expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
@@ -397,7 +424,7 @@ resource "Slots" do
                      { title: "and another title",
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
-      let(:visibility) { 10 }
+      let(:visibility) { '01' }
 
       example "Create StandardSlot", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
@@ -429,7 +456,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { '10' }
+      let(:visibility) { '01' }
       let(:alerts) { "oh no" }
 
       example "Create std slot with invalid params returns 422 & failure details",
@@ -451,7 +478,7 @@ resource "Slots" do
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { 10 }
+      let(:visibility) { '01' }
 
       example "Create std slot with missing requiered params returns 422" \
               " & failure details", document: false do
@@ -695,7 +722,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(StdSlot.last.notes.last.title).to eq notes.first[:title]
+        expect(
+          [notes.first[:title], notes.second[:title]]
+        ).to include StdSlot.last.notes.last.title
       end
     end
 
@@ -882,8 +911,7 @@ resource "Slots" do
                                 "createdAt" => re_slot.created_at.as_json,
                                 "updatedAt" => re_slot.updated_at.as_json,
                                 "deletedAt" => re_slot.deleted_at.as_json,
-                                "notes" => re_slot.notes
-                               )
+                                "notes" => re_slot.notes)
       end
     end
 
@@ -894,6 +922,204 @@ resource "Slots" do
               document: false do
         do_request
         expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  get "/v1/slots/:id/likes" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the likes for", required: true
+
+    let(:slot) { create(:group_slot, :with_likes) }
+    let!(:membership) {
+      create(:membership, :active, group: slot.group, user: current_user) }
+    let!(:like) { create(:like, user: create(:user, :with_image), slot: slot) }
+
+    describe "Get Likes for Slot" do
+      let(:id) { slot.id }
+
+      example "Get Likes for Slot", document: :v1 do
+        explanation "returns a list of all likes for the slot." \
+                    " Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Likes data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq slot.likes.count
+        expect(json.first).to have_key "userId"
+        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first).to have_key "userimage"
+      end
+    end
+  end
+
+  post "/v1/slots/:id/comment" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to make a comment on", required: true
+    parameter :content, "Content of the comment", required: true
+
+    let(:slot) { create(:std_slot, :friendslot, :with_comments) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
+    describe "Make comment on Slot" do
+      let(:id) { slot.id }
+      let(:content) { "Liebe ist ein Kind der Freiheit" }
+
+      example "Make Comment on Slot", document: :v1 do
+        explanation "Current user makes a comment on a slot."
+        do_request
+
+        expect(response_status).to eq(200)
+      end
+    end
+  end
+
+  get "/v1/slots/:id/comments" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the comments for", required: true
+
+    let(:slot) { create(:group_slot, :with_comments) }
+    let!(:membership) {
+      create(:membership, :active, group: slot.group, user: current_user) }
+    let!(:comment) {
+      create(:comment, user: create(:user, :with_image), slot: slot) }
+
+    describe "Get Comments for Slot" do
+      let(:id) { slot.id }
+
+      example "Get Comments for Slot", document: :v1 do
+        explanation "returns a list of all comments for the slot." \
+                    " Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Comments data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq slot.comments.count
+        expect(json.first).to have_key "userId"
+        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "content"
+      end
+    end
+  end
+
+  get "/v1/slots/:id/history" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the chronic for", required: true
+
+    let!(:slot) { create(:std_slot) }
+    let!(:reslot_1) { create(:re_slot, predecessor: slot,
+                             meta_slot: slot.meta_slot, parent: slot) }
+    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1,
+                             meta_slot: slot.meta_slot, parent: slot) }
+    let!(:reslot_3) {
+      create(:re_slot, predecessor: reslot_2, slotter: current_user,
+             meta_slot: slot.meta_slot, parent: slot) }
+
+    let(:id) { reslot_3.id }
+
+    example "Get Reslot History/Chronic for Slot", document: :v1 do
+      explanation "returns list of all previous reslots for the slot." \
+                  " Includes User data and timestamp.\n\n" \
+                  "returns 401 if User not allowed to see reslot history\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json['predecessors'].size).to eq 2
+      expect(json).to have_key("parentUserId")
+      expect(json["parentUserId"]).to eq slot.owner.id
+    end
+  end
+
+  post "/v1/slots/:id/copy" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :copyTo, "contains an array of the copy targets",
+              required: true
+    parameter :target, "Type of slot to copy to. Must be own of " \
+                       "[private_slots/friend_slots/public_slots] " \
+                       "or a name of a group where the user is allowed " \
+                       "to post.",
+              required: true,
+              scope: :copyTo
+    parameter :details, "Duplicate all media data and notes " \
+                        "on the copied slots. Defaults to 'true'.\n\n" \
+                        "Must be one of [true/false]",
+              scope: :copyTo
+
+    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
+    let(:group) { create(:group, :members_can_post) }
+    let!(:membership) do
+      create(:membership, :active, user: current_user, group: group)
+    end
+
+    describe "Copy Slot into several targets" do
+      let(:id) { slot.id }
+      let(:target_1) { { target: 'friend_slots',
+                         details: 'true' } }
+      let(:target_2) { { target: group.name,
+                         details: true } }
+
+      let(:copyTo) { [target_1, target_2] }
+
+      example "Copy Slot to Friend Slots and into a group", document: :v1 do
+        explanation "Several new slot instances can be created which share " \
+                    "the same Metadata as the copy source. If details is " \
+                    "set to 'true' all media items and notes will " \
+                    "be duplicated."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(BaseSlot.all.length).to eq 3
+        expect(GroupSlot.last.title).to eq slot.title
+        expect(GroupSlot.last.end_date).to eq slot.end_date
+      end
+    end
+  end
+
+  post "/v1/slots/:id/move" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :target, "Type of slot to move to. Must be own of " \
+                       "[private_slots/friend_slots/public_slots/re_slots] " \
+                       "or a name of a group where the user is allowed " \
+                       "to post.",
+              required: true
+    parameter :details, "Move all media data and notes to the new " \
+                        " slot. Otherwise they will be deleted.\n\n" \
+                        "Defaults to 'true', must be one of [true/false]"
+
+    let(:slot) { create(:std_slot, :with_media, owner: current_user) }
+
+    describe "Move Slot from private to friends" do
+      let(:id) { slot.id }
+      let(:target) { 'friend_slots' }
+      let(:details) { 'true' }
+
+      example "Move Slot from private Slots to Friend Slots", document: :v1 do
+        explanation "A new slot will be created with  " \
+                    "the same Metadata as it's source. If details is " \
+                    "set to 'true' all media items and notes will " \
+                    "be duplicated. The source will be deleted afterwards " \
+                    "and with it all comments and likes."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(BaseSlot.all.length).to eq 2
+        expect(StdSlot.last.friendslot?).to be true
+        expect(StdSlot.last.title).to eq slot.title
+        expect(StdSlot.last.end_date).to eq slot.end_date
       end
     end
   end

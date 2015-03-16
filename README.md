@@ -112,6 +112,15 @@ The DSL is outlined [here](https://github.com/zipmark/rspec_api_documentation#ds
 Per default the documentation is generated as **markdown**.
 The generated Markdown files will be in *doc/api* folder.
 
+## Authorization
+
+Authorization is done via a token in the http header which is compared to a locally saved token for every user. The token is invalidated on logout and regenerated on login.
+On first signup the token is also created so a signed up user is already logged in.
+
+## Authentication
+
+We use Pundit for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
+
 ## Specs / Tests
 
 If you're having issues with the TEST_ENV Database after a migration had run

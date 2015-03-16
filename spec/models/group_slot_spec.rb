@@ -56,27 +56,29 @@ RSpec.describe GroupSlot, type: :model do
 
     it "creates a new GroupSlot" do
       expect {
-        described_class.create_with_meta(meta_param, group.id, user)
+        described_class.create_with_meta(meta: meta_param, group_id: group.id,
+                                         user: user)
       }.to change(GroupSlot, :count).by 1
     end
 
     it "creates a new MetaSlot" do
       expect {
-        described_class.create_with_meta(meta_param, group.id, user)
+        described_class.create_with_meta(meta: meta_param, group_id: group.id,
+                                         user: user)
       }.to change(MetaSlot, :count).by 1
     end
 
     it "creates a new Note" do
       expect {
-        described_class.create_with_meta(meta_param, group.id,
-                                         note_param, user)
+        described_class.create_with_meta(meta: meta_param, group_id: group.id,
+                                         notes: note_param, user: user)
       }.to change(Note, :count).by 1
     end
 
     it "creates a new SlotSetting" do
       expect {
-        described_class.create_with_meta(meta_param, group.id,
-                                         note_param, alert_param, user)
+        described_class.create_with_meta(meta: meta_param, group_id: group.id,
+                                         alerts: alert_param, user: user)
       }.to change(SlotSetting, :count).by 1
     end
 
@@ -85,7 +87,8 @@ RSpec.describe GroupSlot, type: :model do
 
       it "doesn't create a new MetaSlot" do
         expect {
-          described_class.create_with_meta(meta_param, group.id, user)
+          described_class.create_with_meta(meta: meta_param, group_id: group.id,
+                                           user: user)
         }.not_to change(MetaSlot, :count)
       end
     end

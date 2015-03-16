@@ -1,7 +1,8 @@
 FactoryGirl.define do
+
   factory :note do
     slot
-    title "MyString"
-    content "MyText"
+    sequence(:title) { |n| "Title for Note #{n}" }
+    content "Liebe ist ein Kind der Freiheit!"
   end
 end

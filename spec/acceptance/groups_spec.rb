@@ -45,6 +45,9 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
+    let!(:membership) do
+      create(:membership, :active, user: current_user, group: group)
+    end
 
     example "Get group data for specific group", document: :v1 do
       explanation "returns data of specified group\n\n" \
@@ -222,6 +225,9 @@ resource "Groups" do
     let!(:members) { create_list(:membership, 4, :active, group: group) }
     let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
     # group owner is automatically an active member too
+    let!(:membership) do
+      create(:membership, :active, user: current_user, group: group)
+    end
 
     example "Get list of all active group members", document: :v1 do
       explanation "returns 200 and a list of all active group members\n\n" \
@@ -231,7 +237,7 @@ resource "Groups" do
       expect(response_status).to eq(200)
       expect(json).to include({
                                 "groupId" => group.id,
-                                "size" => 5
+                                "size" => 6
                               })
       expect(json["members"].first)
         .to eq({
@@ -264,7 +270,7 @@ resource "Groups" do
     response_field :userId, "ID of user", scope: :related
     response_field :state, "state of membership", scope: :related
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
     let!(:members) { create_list(:membership, 1, :active, group: group) }
     let!(:invitees) { create_list(:membership, 2, :invited, group: group) }

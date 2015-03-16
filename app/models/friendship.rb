@@ -55,6 +55,7 @@ class Friendship < ActiveRecord::Base
         duplicate_friendship: "reverse friendship from #{user_id} to #{friend_id} already exists"
             }
       Rails.logger.error msg
+      Airbrake.notify(msg)
       fail DuplicateEntry, msg
     end
   end

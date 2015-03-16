@@ -30,6 +30,8 @@ gem 'cloudinary'
 # Deploy with Capistrano
 # gem 'capistrano', :group => :development
 
+gem 'airbrake'
+
 group :development do
   gem 'spring'
 

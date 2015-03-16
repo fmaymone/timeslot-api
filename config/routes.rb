@@ -25,6 +25,38 @@ Rails.application.routes.draw do
     get 'slots/:uid/sharedata',
         to: 'slots#share_data',
         as: 'slot_sharedata'
+    get 'slots/:id/likes',
+        to: 'slots#show_likes',
+        as: 'slot_show_likes',
+        constraints: { id: /\d+/ }
+    post 'slots/:id/like',
+         to: 'slots#add_like',
+         as: 'slot_add_like',
+         constraints: { id: /\d+/ }
+    delete 'slots/:id/like',
+           to: 'slots#unlike',
+           as: 'slot_unlike',
+           constraints: { id: /\d+/ }
+    post 'slots/:id/comment',
+         to: 'slots#add_comment',
+         as: 'slot_add_comment',
+         constraints: { id: /\d+/ }
+    get 'slots/:id/comments',
+        to: 'slots#show_comments',
+        as: 'slot_show_comments',
+        constraints: { id: /\d+/ }
+    get 'slots/:id/history',
+        to: 'slots#reslot_history',
+        as: 'reslot_history',
+        constraints: { id: /\d+/ }
+    post 'slots/:id/copy',
+         to: 'slots#copy',
+         as: 'slot_copy',
+         constraints: { id: /\d+/ }
+    post 'slots/:id/move',
+         to: 'slots#move',
+         as: 'slot_move',
+         constraints: { id: /\d+/ }
 
     get 'media-signature', to: 'media#create_signature'
 

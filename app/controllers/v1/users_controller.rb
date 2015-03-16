@@ -36,7 +36,7 @@ module V1
       @user = User.create_with_image(user_params)
 
       if @user.errors.empty?
-        render :show, status: :created
+        render :signup, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -49,7 +49,7 @@ module V1
       @user = User.sign_in(*credentials)
 
       if @user
-        render :signin
+        render :signup
       else
         render json: { error: "email and password didn't match" },
                status: :unauthorized
@@ -57,8 +57,12 @@ module V1
     end
 
     # GET /v1/users/signout
-    # invalidates auth token?
+    # invalidates auth token
     def signout
+      authorize :user
+      current_user.sign_out
+
+      render json: { success: "Signed out successfully" }, status: :ok
     end
 
     # PATCH /v1/users/1
@@ -105,7 +109,18 @@ module V1
     end
 
     private def user_params
-      p = params.permit(:username, :email, :password, :defaultAlerts, :image)
+      p = params.permit(:username,
+                        :email,
+                        :password,
+                        :image,
+                        :defaultPrivateAlerts,
+                        :defaultOwnFriendslotAlerts,
+                        :defaultOwnPublicAlerts,
+                        :defaultFriendsFriendslotAlerts,
+                        :defaultFriendsPublicAlerts,
+                        :defaultReslotAlerts,
+                        :defaultGroupAlerts)
+
       if params[:image].present?
         img_param = params.require(:image).require(:publicId)
         p.merge!("public_id" => img_param)

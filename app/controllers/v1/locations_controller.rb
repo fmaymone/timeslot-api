@@ -20,6 +20,7 @@ module V1
         result = open(query, auth).read
         # WebMock.disable_net_connect!
       rescue => e
+        Airbrake.notify(e)
         return render json: "Search Service Error: #{e}", status: :ok
       end
       render json: result, status: :ok

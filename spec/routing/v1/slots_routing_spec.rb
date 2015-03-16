@@ -78,6 +78,46 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#share_data", uid: "abcd1234", format: :json)
     end
 
+    it "routes to #add_like" do
+      expect(post: "/v1/slots/1/like")
+        .to route_to("v1/slots#add_like", id: "1", format: :json)
+    end
+
+    it "routes to #unlike" do
+      expect(delete: "/v1/slots/1/like")
+        .to route_to("v1/slots#unlike", id: "1", format: :json)
+    end
+
+    it "routes to #show_likes" do
+      expect(get: "/v1/slots/1/likes")
+        .to route_to("v1/slots#show_likes", id: "1", format: :json)
+    end
+
+    it "routes to #add_comment" do
+      expect(post: "/v1/slots/1/comment")
+        .to route_to("v1/slots#add_comment", id: "1", format: :json)
+    end
+
+    it "routes to #show_comments" do
+      expect(get: "/v1/slots/1/comments")
+        .to route_to("v1/slots#show_comments", id: "1", format: :json)
+    end
+
+    it "routes to #reslot_history" do
+      expect(get: "/v1/slots/1/history")
+        .to route_to("v1/slots#reslot_history", id: "1", format: :json)
+    end
+
+    it "routes to #copy" do
+      expect(post: "/v1/slots/1/copy")
+        .to route_to("v1/slots#copy", id: "1", format: :json)
+    end
+
+    it "routes to #move" do
+      expect(post: "/v1/slots/1/move")
+        .to route_to("v1/slots#move", id: "1", format: :json)
+    end
+
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end

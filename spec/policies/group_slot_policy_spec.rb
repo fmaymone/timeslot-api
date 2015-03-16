@@ -9,11 +9,20 @@ describe GroupSlotPolicy do
   permissions :create_groupslot?, :update_groupslot?, :destroy_groupslot? do
     let(:user) { create(:user) }
 
-    context "current_user is group owner" do
+    context "current_user is group owner and member (default)" do
       let(:group) { create(:group, owner: user) }
 
       it "allows access" do
         expect(subject).to permit(user, slot)
+      end
+    end
+
+    context "current_user is group owner but not member (has left group)" do
+      let(:group) { create(:group, owner: user) }
+      before { user.leave_group group.id }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
       end
     end
 
@@ -25,6 +34,8 @@ describe GroupSlotPolicy do
 
     context "group members can post" do
       let(:group) { create(:group, :members_can_post) }
+      let!(:membership) {
+        create(:membership, :active, group: group, user: user) }
 
       it "allows access" do
         expect(subject).to permit(user, slot)
