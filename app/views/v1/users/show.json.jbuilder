@@ -13,3 +13,8 @@ json.extract!(@user,
               :updated_at,
               :deleted_at)
 json.image @user.image ? @user.image.public_id : nil
+
+json.friends @user.friends do |friend| 
+       json.id friend.id
+       json.username friend.username
+end

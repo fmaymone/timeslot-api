@@ -29,6 +29,16 @@ RSpec.describe "V1::Users", type: :request do
         expect(response.body).to include "Bad credentials"
       end
     end
+
+    context "return friends via json", :focus do
+      let!(:friendship) { create(:friendship, :established, user: current_user) }
+
+      it "return friends via json" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('friends')
+        expect(json['friends'][0]['id']).to eq(current_user.friends.first.id)
+      end
+    end
   end
 
   describe "POST /v1/users" do
