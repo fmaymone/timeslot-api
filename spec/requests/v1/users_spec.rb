@@ -34,7 +34,7 @@ RSpec.describe "V1::Users", type: :request do
   describe "POST /v1/users" do
     describe "with valid params" do
       let(:valid_attributes) {
-        attributes_for(:user).merge!(image: { publicId: 'foobar' })
+        attributes_for(:user).merge!(image: { publicId: 'foobar' }, password: 'timeslot')
       }
       it "returns ID of created user" do
         post "/v1/users", valid_attributes
@@ -54,6 +54,11 @@ RSpec.describe "V1::Users", type: :request do
       }
       it "returns an error" do
         post "/v1/users", invalid_attributes
+        expect(json).to have_key "error"
+      end
+
+      it "returns an error if no password supplied" do      
+        post "/v1/users", { username: 'foo', email: 'test@timeslot.com' }
         expect(json).to have_key "error"
       end
     end

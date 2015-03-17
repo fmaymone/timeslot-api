@@ -33,7 +33,7 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_params)
+      @user = User.create_with_image(user_create_params)
 
       if @user.errors.empty?
         render :signup, status: :created
@@ -127,6 +127,12 @@ module V1
       end
       p.transform_keys(&:underscore)
     end
+
+    private def user_create_params
+      params.require(:password)
+      user_params
+    end
+
 
     private def friends_ids
       params.require(:ids)
