@@ -18,3 +18,7 @@ json.friends @user.friends do |friend|
        json.id friend.id
        json.username friend.username
 end
+
+json.offered_friends @user.offered_friends do |user|
+       json.id user.id
+end

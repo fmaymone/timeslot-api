@@ -30,13 +30,23 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "return friends via json", :focus do
+    context "return friends via json" do
       let!(:friendship) { create(:friendship, :established, user: current_user) }
 
       it "return friends via json" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('friends')
         expect(json['friends'][0]['id']).to eq(current_user.friends.first.id)
+      end
+    end
+
+    context "return offered_friends via json" do
+      let!(:friendship) { create(:friendship, friend: current_user) }
+
+      it "return offered_friends via json" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('offeredFriends')
+        expect(json['offeredFriends'][0]['id']).to eq(current_user.offered_friends.first.id)
       end
     end
   end
