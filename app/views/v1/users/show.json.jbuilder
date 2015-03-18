@@ -22,3 +22,7 @@ end
 json.offered_friends @user.offered_friends do |user|
        json.id user.id
 end
+
+json.requested_friends @user.requested_friends do |friend|
+       json.id friend.id
+end
