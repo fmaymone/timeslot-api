@@ -50,7 +50,8 @@ class Friendship < ActiveRecord::Base
   end
 
   private def check_duplicate
-    if Friendship.where(user_id: friend_id, friend_id: user_id).exists?
+    # also prevents friendship with oneself
+    if (Friendship.where(user_id: friend_id, friend_id: user_id).exists? || (user_id == friend_id))
       msg = {
         duplicate_friendship: "reverse friendship from #{user_id} to #{friend_id} already exists"
             }

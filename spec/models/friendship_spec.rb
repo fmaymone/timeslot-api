@@ -42,6 +42,16 @@ RSpec.describe Friendship, type: :model do
     end
   end
 
+  describe "prevent friendship with itself" do
+    let(:john) { create(:user, username: "John") }
+
+    it "doesn't add friendship with itself" do
+      expect {
+        Friendship.create(user: john, friend: john)
+      }.to raise_error Friendship::DuplicateEntry
+    end
+  end
+
   describe :inactivate do
     let(:friendship) { create(:friendship, friend: create(:user)) }
 
