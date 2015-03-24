@@ -220,4 +220,19 @@ RSpec.describe Membership, type: :model do
       expect { membership.delete }.to change(membership.user, :updated_at)
     end
   end
+
+  describe :humanize do
+    let(:membership) { create(:membership, :active, user: create(:user)) }
+    let(:resultValues) { [ {'111' => 'active'}, {'011' => 'invited'},
+        {'001' => 'refused'}, {'010' => 'kicked'}, {'100' => 'left'},
+          {'000' => 'inactive'} ] }
+
+    it "return membership state as a string" do
+      resultValues.each do |res|
+        membership.state = res.keys[0]
+        result = membership.humanize
+        expect(membership.humanize).to eq res.values[0]
+      end
+    end
+  end
 end

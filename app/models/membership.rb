@@ -85,4 +85,22 @@ class Membership < ActiveRecord::Base
   # def deleted?
   #   state == '000' && deleted_at?
   # end
+
+  def humanize
+    case state
+      when "111"
+        then "active"
+      when "011"
+        then "invited"
+      when "001"
+        then "refused"
+      when "010"
+        then "kicked"
+      when "100"
+        then "left"
+      when "000"
+        then "inactive"
+      else "undefined"
+    end 
+  end
 end
