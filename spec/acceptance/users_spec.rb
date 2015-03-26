@@ -63,7 +63,7 @@ resource "Users" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :username, "Username of user (max. 20 characters)",
+    parameter :username, "Username of user (max. 50 characters)",
               required: true
     parameter :email, "Email of user (max. 254 characters)",
               required: true
@@ -96,7 +96,7 @@ resource "Users" do
 
     describe "Update current users data" do
 
-      parameter :username, "Updated username of user (max. 20 characters)"
+      parameter :username, "Updated username of user (max. 50 characters)"
       parameter :defaultPrivateAlerts,
                 "Default alerts for private slots of this user"
       parameter :defaultOwnFriendslotAlerts,
