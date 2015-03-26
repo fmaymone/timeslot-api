@@ -239,6 +239,10 @@ class BaseSlot < ActiveRecord::Base
     joins(:meta_slot).where('meta_slots.start_date > ?', Time.zone.now)
   end
 
+  def self.next
+    upcoming.order('meta_slots.start_date').first
+  end
+
   def self.create_slot(slot, slot_type, copy_details, user)
     case slot_type
     when "private_slots"
