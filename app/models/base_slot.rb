@@ -232,6 +232,13 @@ class BaseSlot < ActiveRecord::Base
     slot_ids.collect { |id| get(id) }
   end
 
+  # TODO: add spec, check performance
+  def self.upcoming
+    # BaseSlot.includes(:meta_slot).
+      # where('meta_slots.start_date > ?', Time.zone.now).references(:meta_slot)
+    joins(:meta_slot).where('meta_slots.start_date > ?', Time.zone.now)
+  end
+
   def self.create_slot(slot, slot_type, copy_details, user)
     case slot_type
     when "private_slots"
