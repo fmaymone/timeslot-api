@@ -70,4 +70,16 @@ class Friendship < ActiveRecord::Base
       where(deleted_at: nil).where(state: '11')
     end
   end
+
+  def humanize
+    case state
+      when "00"
+        then "offered"
+      when "11"
+        then "established"
+      when "01"
+        then "rejected"
+      else "undefined"
+    end 
+  end
 end

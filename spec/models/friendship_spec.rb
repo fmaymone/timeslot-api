@@ -72,4 +72,17 @@ RSpec.describe Friendship, type: :model do
       expect { friendship.activate }.not_to change(friendship, :deleted_at)
     end
   end
+
+  describe :humanize do
+    let(:friendship) { create(:friendship, :established, friend: create(:user)) }
+    let(:resultValues) { [ {'00' => 'offered'}, {'11' => 'established'},
+        {'01' => 'rejected'} ] }
+
+    it "return friendship state as a string" do
+      resultValues.each do |res|
+        friendship.state = res.keys[0]
+        expect(friendship.humanize).to eq res.values[0]
+      end
+    end
+  end
 end

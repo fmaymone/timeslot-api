@@ -10,4 +10,4 @@ json.extract! @group,
 
 json.image @group.image ? @group.image.public_id : nil
 
-json.membership_state current_user.get_membership(@group.id).state
+json.membership_state current_user.get_membership(@group.id).humanize
