@@ -14,15 +14,16 @@ json.extract!(@user,
               :deleted_at)
 json.image @user.image ? @user.image.public_id : nil
 
-json.friends @user.friends do |friend| 
-       json.id friend.id
-       json.username friend.username
-end
+tmp = []
+if @user == current_user
+       @user.initiated_friendships.active.each do |friendship|
+       tmp.push( { 'friend_id' => friendship.friend.id, 'state' => friendship.humanize,
+                     'initiator' => friendship.user_id } )
+       end
+       @user.received_friendships.active.each do |user|
+       tmp.push( { 'friend_id' => user.user.id, 'state' => user.humanize,
+                     'initiator' => user.user_id } )
+       end
 
-json.offered_friends @user.offered_friends do |user|
-       json.id user.id
-end
-
-json.requested_friends @user.requested_friends do |user|
-       json.id user.id
+       json.friendships tmp
 end

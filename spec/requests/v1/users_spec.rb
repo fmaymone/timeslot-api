@@ -30,33 +30,14 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "return friends via json" do
-      let!(:friendship) { create(:friendship, :established, user: current_user) }
+    context "return friendships via json" do
+      let!(:friendship) { create_list(:friendship, 7, user: current_user) }
 
-      it "return friends via json" do
+      it "return all friendships for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('friends')
-        expect(json['friends'][0]['id']).to eq(current_user.friends.first.id)
-      end
-    end
-
-    context "return offered_friends via json" do
-      let!(:friendship) { create(:friendship, friend: current_user) }
-
-      it "return offered_friends via json" do
-        get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('offeredFriends')
-        expect(json['offeredFriends'][0]['id']).to eq(current_user.offered_friends.first.id)
-      end
-    end
-
-    context "return requested_friends via json" do
-      let!(:friendship) { create(:friendship, user: current_user) }
-
-      it "return requested_friends via json" do
-        get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('requestedFriends')
-        expect(json['requestedFriends'][0]['id']).to eq(current_user.requested_friends.first.id)
+        expect(json).to have_key('friendships')
+        expect(json['friendships'][0]['friend_id']).to eq(current_user.initiated_friendships.active[0].friend_id)
+        expect(json['friendships'].length).to eq(current_user.friendships.length)
       end
     end
   end
