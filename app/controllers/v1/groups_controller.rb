@@ -4,7 +4,7 @@ module V1
     # return all groups where the current user is member
     def index
       authorize :group
-      @groups = current_user.groups
+      @groups = current_user.groups_ordered
 
       render :index
     end
