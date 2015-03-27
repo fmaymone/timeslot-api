@@ -363,7 +363,7 @@ img.user {
   overflow: auto;
 }
 
-#groupList {
+#groupList, #userList {
   height: 460px;
 }
 
