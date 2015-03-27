@@ -6,6 +6,7 @@ app.locationSearch = {};
 
 app.init = function() {
     console.log('initialize app');
+    app.cloudinaryCloudName = 'hgjx56zst',
     app.imageCloudURL = 'http://res.cloudinary.com/hgjx56zst/image/upload/';
 }();
 
@@ -83,7 +84,7 @@ app.cloudinary.upload = function(value) {
 
     return m.request({
         method: "POST",
-        url: "https://api.cloudinary.com/v1_1/einselbst/image/upload",
+        url: "https://api.cloudinary.com/v1_1/" + app.cloudinaryCloudName + "/image/upload",
         data: formData,
         serialize: function(value) {return value;}
     }).then(log).then(this.cloudinaryResponse);
