@@ -101,7 +101,7 @@ User.edit.controller = function() {
             config: app.xhrConfig,
             data: newData,
             type: User.model
-        }).then(log).then(app.setCurrentUser).then(m.route("/me"));
+        }).then(log).then(m.route("/users/" + app.current_user.id()));
     };
 
     ctrl.update = function() {
