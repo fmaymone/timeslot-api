@@ -26,15 +26,6 @@ app.xhrConfig = function(xhr) {
     xhr.setRequestHeader("Content-Type", "application/json");
     if (app.current_user) {
         xhr.setRequestHeader("Authorization", "Token token=" + app.current_user.authToken);
-    } else { // remove this later, for testing
-        console.log('no current user');
-        var foo = {};
-        foo.id = 256;
-        foo.authToken = 'C1EcD5DZtgRfGiF0kFJjQBJUAeM';
-        xhr.setRequestHeader("Authorization", "Token token=C1EcD5DZtgRfGiF0kFJjQBJUAeM");
-        app.current_user = new User.model(foo);
-        app.current_user.authToken = foo.authToken;
-        console.log('now current user');
     }
 };
 
