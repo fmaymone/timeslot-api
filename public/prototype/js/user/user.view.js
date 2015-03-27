@@ -140,7 +140,7 @@ User.list.body = function(ctrl) {
     var vm = User.list.vm;
 
     return m('.users', [
-        m("ul#userlist", { class: 'list' }, [
+        m("ul#userList", { class: 'list' }, [
             vm.users().map( function(user) {
                 console.log('user is here');
                 console.log(user);
