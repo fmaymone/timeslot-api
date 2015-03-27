@@ -29,7 +29,9 @@ User.list.controller = function() {
 User.show.controller = function() {
     console.log('init user controller');
 
-    User.show.vm.init();
+    var ctrl = this;
+    ctrl.vm = User.show.vm;
+    ctrl.vm.init();
 };
 
 

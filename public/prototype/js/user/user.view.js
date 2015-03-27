@@ -229,17 +229,18 @@ User.show.body = function(ctrl) {
 
 User.show.view = function(ctrl) {
     console.log('init user view');
-    var vm = User.show.vm;
+    var vm = ctrl.vm;
+    var user = vm.user();
 
     document.title = vm.user().name() + " - Timeslot";
-    return User.show.layout(ctrl, User.me.nav(), User.show.body, User.show.menu);
-};
 
-User.show.layout = function(ctrl, nav, body, menu) {
     return [
         m("header", app.backNav()),
-        m("main", body(ctrl)),
-        m("footer", menu('me'))
+        m("main", User.show.body(ctrl)),
+        function() {
+            if(app.current_user.id() == user.id())
+                return m("footer", User.show.menu('me'));
+        }()
     ];
 };
 

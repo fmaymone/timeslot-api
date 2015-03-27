@@ -139,7 +139,7 @@ User.edit.vm = (function() {
     console.log('init user edit vm');
     var vm = {};
     vm.init = function() {
-        vm.user = User.load(256 || app.current_user.id());
+        vm.user = User.load(app.current_user.id());
 
         vm.address = m.prop('');
         vm.locActive = m.prop(false);
