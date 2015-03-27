@@ -32,44 +32,49 @@ User.me.body = function(ctrl) {
                 }),
             ])
         ]),
-        m('.slotListMenu', [
-            m("h2.calDate", vm.slots()[vm.earliestVisibleSlotIndex()].startDate().calendar()),
-        ]),
-        m("ul.slotList", { class: 'list', onscroll: vm.updateCurrentDay }, [
-            vm.slots().map( function(slot, i) {
-                console.log('slot is here');
-                // console.log(slot);
-                // console.log(i);
-                slotlistLayout = [
-                    m('a[href="/slots/' + slot.id() +'"]', {config: m.route}, [
-                        function() {
-                            if ((i == 0) ||
-                                (slot.startdate() != vm.slots()[i-1].startdate()))
-                                return m('time', slot.startDate().format('H:mm'));
-                        }(),
-                        m('.slotImg', [
-                            m('figure', [
-                                m('img', { src: (slot.photos().length > 0) ? slot.photos()[0].clyid : '' })
+        function() {
+            if(vm.slots().length == 0) return '';
+            return [
+                m('.slotListMenu', [
+                    m("h2.calDate", vm.slots()[vm.earliestVisibleSlotIndex()].startDate().calendar()),
+                ]),
+                m("ul.slotList", { class: 'list', onscroll: vm.updateCurrentDay }, [
+                    vm.slots().map( function(slot, i) {
+                        console.log('slot is here');
+                        // console.log(slot);
+                        // console.log(i);
+                        slotlistLayout = [
+                            m('a[href="/slots/' + slot.id() +'"]', {config: m.route}, [
+                                function() {
+                                    if ((i == 0) ||
+                                        (slot.startdate() != vm.slots()[i-1].startdate()))
+                                        return m('time', slot.startDate().format('H:mm'));
+                                }(),
+                                m('.slotImg', [
+                                    m('figure', [
+                                        m('img', { src: (slot.photos().length > 0) ? slot.photos()[0].clyid : '' })
+                                    ])
+                                ]),
+                                m('h2', slot.title()),
+                                m('small', slot.visibility())
                             ])
-                        ]),
-                        m('h2', slot.title()),
-                        m('small', slot.visibility())
-                    ])
-                ];
-                return [
-                    function() {
-                        if(i==0) return;
-                        var currentSlotDate = moment(slot.startDate().format('YYYY-MM-DD'));
-                        var lastSlotDate = vm.slots()[i-1].startDate().format('YYYY-MM-DD');
+                        ];
+                        return [
+                            function() {
+                                if(i==0) return;
+                                var currentSlotDate = moment(slot.startDate().format('YYYY-MM-DD'));
+                                var lastSlotDate = vm.slots()[i-1].startDate().format('YYYY-MM-DD');
 
-                        if(!(currentSlotDate.isSame(lastSlotDate)))
-                            return m('li.calDate.list-item', slot.startDate().calendar());
-                    }(),
-                    m('li.slot', {class: 'list-item', key: slot.id}, slotlistLayout)
-                ];
+                                if(!(currentSlotDate.isSame(lastSlotDate)))
+                                    return m('li.calDate.list-item', slot.startDate().calendar());
+                            }(),
+                            m('li.slot', {class: 'list-item', key: slot.id}, slotlistLayout)
+                        ];
 
-            })
-        ])
+                    })
+                ])
+            ];
+        }()
     ]);
 };
 
@@ -108,8 +113,8 @@ User.me.menu = function(activeClass) {
         ]),
         m("li", [
             m("a[href='/users']", { id: 'friends',
-                                      class: activeClass == 'friends' ? 'active' : '',
-                                      config: m.route}, "Friends")
+                                    class: activeClass == 'friends' ? 'active' : '',
+                                    config: m.route}, "Friends")
         ])
     ]);
 };
