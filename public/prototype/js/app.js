@@ -18,7 +18,7 @@ app.setCurrentUser = function(user) {
     console.log('set current user');
     console.log(user);
     app.current_user = user;
-    app.current_user.authToken = user.authToken;
+    app.current_user.authToken = user.authToken();
     app.redirectHome();
 };
 

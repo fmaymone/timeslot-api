@@ -15,6 +15,7 @@ User.model = function(data) {
     this.friendship = m.prop(data.friendshipState);
     this.location = m.prop(data.location);
     this.publicUrl = m.prop(data.publicUrl || '');
+    this.authToken = m.prop(data.authToken || '');
 };
 
 User.loadAll = function() {
