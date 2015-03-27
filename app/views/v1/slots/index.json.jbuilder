@@ -17,6 +17,10 @@ json.array!(@slots) do |slot|
   json.likes slot.likes.count
   json.commentsCounter slot.comments.count
 
+  json.partial! 'v1/media/photos', media: slot.photos
+  json.partial! 'v1/media/voices', media: slot.voices
+  json.partial! 'v1/media/videos', media: slot.videos
+
   json.media slot.media_items do |item|
     json.media_id item.id
     json.media_type item.media_type
