@@ -6,7 +6,7 @@ app.locationSearch = {};
 
 app.init = function() {
     console.log('initialize app');
-    app.imageCloudURL = 'http://res.cloudinary.com/einselbst/image/upload/';
+    app.imageCloudURL = 'http://res.cloudinary.com/hgjx56zst/image/upload/';
 }();
 
 function log(value) {
