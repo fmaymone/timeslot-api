@@ -52,7 +52,7 @@ resource "Users" do
 
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys { |key| key.camelize(:lower) })
@@ -130,7 +130,7 @@ resource "Users" do
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'friendships')
+          json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
         ).to eq(current_user.attributes.as_json
                  .except("auth_token", "password_digest", "role")
                  .transform_keys { |key| key.camelize(:lower) })
@@ -180,7 +180,7 @@ resource "Users" do
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys{ |key| key.camelize(:lower) })

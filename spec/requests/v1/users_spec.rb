@@ -40,6 +40,46 @@ RSpec.describe "V1::Users", type: :request do
         expect(json['friendships'].length).to eq(current_user.friendships.length)
       end
     end
+    
+    context "return number of friends via json" do
+      let!(:friendship) { create(:friendship, :established, user: current_user) }
+
+      it "return number of established friends for current user" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('friendsCount')
+        expect(json['friendsCount']).to eq(current_user.friends.length)
+      end
+    end
+
+    context "return std_slots via json" do
+      let!(:std_slot) { create(:std_slot, owner: current_user) }
+
+      it "return std_slots for current user" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('slotCount')
+        expect(json['slotCount']).to eq(current_user.std_slots.length)
+      end
+    end
+
+    context "return re_slots via json" do
+      let!(:re_slot) { create(:re_slot, slotter: current_user) }
+
+      it "return re_slots for current user" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('reslotCount')
+        expect(json['reslotCount']).to eq(current_user.re_slots.length)
+      end
+    end
+
+    context "return group membership via json" do
+      let(:membership) { create(:membership, :active, user: create(:user)) }
+
+      it "return group memberships for current user" do
+        get "/v1/users/#{current_user.id}", {}, auth_header
+        expect(json).to have_key('groups')
+        expect(json['groups'][0]).to eq(membership[0])
+      end
+    end
   end
 
   describe "POST /v1/users" do
