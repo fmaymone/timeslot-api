@@ -128,6 +128,8 @@ module V1
       p.transform_keys(&:underscore)
     end
 
+    # we want to make sure a password is submitted, this would usually
+    # be validated on the model layer but made problems there
     private def user_create_params
       params.require(:password)
       user_params
