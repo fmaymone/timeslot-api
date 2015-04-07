@@ -25,6 +25,7 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
+      user.reload
       expect(json['authToken']).to eq user.auth_token
     end
   end
@@ -91,12 +92,25 @@ resource "Users" do
     describe "Update current users data" do
 
       parameter :username, "Updated username of user (max. 20 characters)"
-      parameter :defaultAlerts, "Default alerts for all slots of this user" \
-                                " where no specific alert is set. Groupslots" \
-                                " may have their own default alerts per group"
+      parameter :defaultPrivateAlerts,
+                "Default alerts for private slots of this user"
+      parameter :defaultOwnFriendslotAlerts,
+                "Default alerts for the friendslots of this user"
+      parameter :defaultOwnPublicAlerts,
+                "Default alerts for the public slots of this user"
+      parameter :defaultFriendsFriendslotAlerts,
+                "Default alerts for the friendslots from friends of this user"
+      parameter :defaultFriendsPublicAlerts,
+                "Default alerts for the public slots from friends of this user"
+      parameter :defaultReslotAlerts,
+                "Default alerts for the reslots of this user"
+      parameter :defaultGroupAlerts,
+                "Default alerts for all groupslots of this user" \
+                " where no specific alert is set. Groupslots" \
+                " may also have their own default alerts per group"
 
       let(:username) { "bar" }
-      let(:defaultAlerts) { '0111011100' }
+      let(:defaultPrivateAlerts) { '0111011100' }
 
       example "Update current user", document: :v1 do
         explanation "E.g, change username and set default alerts\n\n" \
@@ -108,13 +122,13 @@ resource "Users" do
 
         current_user.reload
         expect(current_user.username).to eq "bar"
-        expect(current_user.default_alerts).to eq defaultAlerts
+        expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(
           json.except('image')
         ).to eq(current_user.attributes.as_json
-                .except("auth_token", "password_digest", "role")
-                .transform_keys { |key| key.camelize(:lower) })
+                 .except("auth_token", "password_digest", "role")
+                 .transform_keys { |key| key.camelize(:lower) })
       end
     end
 

@@ -169,7 +169,7 @@ RSpec.describe User, type: :model do
   end
 
   describe :update_alerts do
-    let(:slot) { create(:std_slot, owner: user) }
+    let(:slot) { create(:std_slot, :friendslot, owner: user) }
 
     describe "no existing SlotSetting" do
       it "returns the SlotSetting object" do
@@ -183,7 +183,7 @@ RSpec.describe User, type: :model do
       end
 
       it "doesn't create a new slot_setting if alerts eq users default alerts" do
-        user.update(default_alerts: '1110011110')
+        user.update(default_own_friendslot_alerts: '1110011110')
         expect {
           user.update_alerts(slot, '1110011110')
         }.not_to change(SlotSetting, :count)
@@ -193,11 +193,19 @@ RSpec.describe User, type: :model do
         let(:slot) { create(:group_slot) }
         let!(:membership) { create(:membership, :active, group: slot.group,
                                    user: user, default_alerts: '1110011110') }
+        before { user.update(default_group_alerts: '0000000010') }
 
         it "doesn't create a new slot_setting if alerts eq group default alerts" do
           expect {
             user.update_alerts(slot, '1110011110')
           }.not_to change(SlotSetting, :count)
+        end
+
+        it "creates a new slot_setting if alerts eq default group alerts " \
+           "but not the default membership alerts" do
+          expect {
+            user.update_alerts(slot, '0000000010')
+          }.to change(SlotSetting, :count).by 1
         end
       end
     end
@@ -223,29 +231,46 @@ RSpec.describe User, type: :model do
   end
 
   describe :alerts do
-    let(:std_slot) { create(:std_slot, owner: user) }
+    context "private StdSlot" do
+      let(:std_slot) { create(:std_slot, owner: user) }
+      before { user.update(default_private_alerts: '0000000010') }
 
-    it "returns the alarm for a specific slot representation" do
-      # TODO: needs specification
-      expect(user.alerts(std_slot)).to eq nil
-    end
+      describe "existing default alert for user" do
+        it "returns the default private alerts for private slot" do
+          expect(user.alerts(std_slot)).to eq user.default_private_alerts
+          expect(user.alerts(std_slot)).to eq '0000000010'
+        end
+      end
 
-    describe "existing default alert for user" do
-      let(:new_alert) { '1010101010' }
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+                 alerts: '0000011111') }
 
-      it "returns the default alert" do
-        user.update(default_alerts: new_alert)
-        expect(user.alerts(std_slot)).to eq user.default_alerts
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+        end
       end
     end
 
-    describe "existing slot_setting" do
-      let!(:slot_setting) {
-        create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
-               alerts: '0000011111') }
+    context "own friend StdSlot" do
+      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      before { user.update(default_own_friendslot_alerts: '1010101010') }
 
-      it "returns the alarm for a specific slot representation" do
-        expect(user.alerts(std_slot)).to eq slot_setting.alerts
+      describe "existing default alert for user" do
+        it "returns the default own friendslot alerts for friendslots" do
+          expect(user.alerts(std_slot)).to eq user.default_own_friendslot_alerts
+        end
+      end
+
+      describe "existing slot_setting" do
+        let!(:slot_setting) {
+          create(:slot_setting, user: user, meta_slot: std_slot.meta_slot,
+                 alerts: '0000011111') }
+
+        it "returns the alarm for a specific slot representation" do
+          expect(user.alerts(std_slot)).to eq slot_setting.alerts
+        end
       end
     end
 
@@ -254,30 +279,53 @@ RSpec.describe User, type: :model do
       let!(:membership) {
         create(:membership, :active, group: slot.group, user: user) }
 
-      describe "existing default alert for group" do
-        it "returns the group default alert for this user" do
-          membership.update(default_alerts: '1110011110')
-          expect(user.alerts(slot)).to eq membership.default_alerts
-        end
-      end
-
-      describe "existing default alert for user but not for membership" do
+      context "existing alerts" do
         let(:new_alert) { '1010101010' }
+        before { user.update(default_group_alerts: new_alert) }
 
-        it "returns the users default alert" do
-          user.update(default_alerts: new_alert)
-          expect(user.alerts(slot)).to eq new_alert
+        describe "existing default alert for group" do
+          it "returns the group default alert for this user" do
+            membership.update(default_alerts: '1110011110')
+            expect(user.alerts(slot)).to eq membership.default_alerts
+          end
+        end
+
+        describe "existing default group alert for user but not for membership" do
+          it "returns the users default group alert" do
+            expect(user.alerts(slot)).to eq new_alert
+          end
+        end
+
+        describe "existing slot_setting" do
+          let!(:slot_setting) {
+            create(:slot_setting, user: user, meta_slot: slot.meta_slot,
+                   alerts: '0000011111') }
+
+          it "returns the alarm for a specific slot representation" do
+            expect(user.alerts(slot)).to eq slot_setting.alerts
+          end
         end
       end
 
-      describe "existing slot_setting" do
-        let!(:slot_setting) {
-          create(:slot_setting, user: user, meta_slot: slot.meta_slot,
-                 alerts: '0000011111') }
-
-        it "returns the alarm for a specific slot representation" do
-          expect(user.alerts(slot)).to eq slot_setting.alerts
+      describe "no alerts set" do
+        it "returns 0000000000" do
+          expect(user.alerts(slot)).to eq '0000000000'
         end
+      end
+    end
+
+    context "several slot representations" do
+      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
+      let!(:membership) {
+        create(:membership, :active, group: group_slot.group, user: user) }
+      before {
+        user.update(default_own_friendslot_alerts: '0000000111')
+        user.update(default_group_alerts: '1110000000')
+      }
+
+      it "merges the default alerts" do
+        expect(user.alerts(std_slot)).to eq '1110000111'
       end
     end
   end
@@ -479,6 +527,28 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :friend_with? do
+    let(:john) { create(:user, username: "John") }
+    let(:mary) { create(:user, username: "Mary") }
+    let(:alice) { create(:user, username: "Alice") }
+    let!(:friendship_1) {
+      create(:friendship, :established, user: john, friend: mary) }
+    let!(:friendship_2) {
+      create(:friendship, :rejected, user: alice, friend: john) }
+
+    it "returns true if the given user has an established friendship" do
+      expect(john.friend_with? mary).to be true
+    end
+
+    it "returns false if the given user has no established friendship" do
+      expect(alice.friend_with? mary).not_to be true
+    end
+
+    it "returns false if the given user has rejected friendship" do
+      expect(alice.friend_with? john).not_to be true
+    end
+  end
+
   describe :offered_friendship do
     let(:john) { create(:user, username: "John") }
     let(:mary) { create(:user, username: "Mary") }
@@ -653,9 +723,9 @@ RSpec.describe User, type: :model do
 
       it "sets the default role for the user" do
         User.create_with_image(user_params)
-        expect(User.last.role).to eq "user"
-        expect(User.last.user?).to be true
-        expect(User.last.admin?).to be false
+        expect(User.last.role).to eq "basic"
+        expect(User.last.basic?).to be true
+        expect(User.last.webview?).to be false
       end
 
       it "sets an image if provided" do

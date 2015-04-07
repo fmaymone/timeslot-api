@@ -31,7 +31,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "GET show" do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot, :publicslot) }
 
     it "returns http success" do
       get :show, id: std_slot.id
@@ -53,7 +53,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with valid params" do
       let(:valid_attributes) {
         attr = attributes_for(:meta_slot, creator: current_user).merge(
-          visibility: '10')
+          visibility: '01')
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       it "responds with http status Created (201)" do
@@ -287,6 +287,21 @@ RSpec.describe V1::SlotsController, type: :controller do
           end
         end
       end
+    end
+  end
+
+  describe "POST like" do
+    let(:reslot) { create(:re_slot, slotter: current_user) }
+
+    it "returns http success" do
+      post :add_like, { id: reslot.id }
+      expect(response).to be_success
+    end
+
+    it "creates a new Like" do
+      expect {
+        post :add_like, { id: reslot.id }
+      }.to change(Like, :count).by(1)
     end
   end
 end

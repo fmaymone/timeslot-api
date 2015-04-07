@@ -7,6 +7,10 @@ FactoryGirl.define do
     trait :established do
       state '11'
     end
+
+    trait :rejected do
+      state '01'
+    end
   end
 
   trait :deleted do

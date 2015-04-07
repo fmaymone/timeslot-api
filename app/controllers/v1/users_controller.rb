@@ -57,8 +57,12 @@ module V1
     end
 
     # GET /v1/users/signout
-    # invalidates auth token?
+    # invalidates auth token
     def signout
+      authorize :user
+      current_user.sign_out
+
+      render json: { success: "Signed out successfully" }, status: :ok
     end
 
     # PATCH /v1/users/1
@@ -105,7 +109,18 @@ module V1
     end
 
     private def user_params
-      p = params.permit(:username, :email, :password, :defaultAlerts, :image)
+      p = params.permit(:username,
+                        :email,
+                        :password,
+                        :image,
+                        :defaultPrivateAlerts,
+                        :defaultOwnFriendslotAlerts,
+                        :defaultOwnPublicAlerts,
+                        :defaultFriendsFriendslotAlerts,
+                        :defaultFriendsPublicAlerts,
+                        :defaultReslotAlerts,
+                        :defaultGroupAlerts)
+
       if params[:image].present?
         img_param = params.require(:image).require(:publicId)
         p.merge!("public_id" => img_param)

@@ -5,16 +5,6 @@ describe GroupPolicy do
 
   let(:group) { create(:group) }
 
-  permissions :show?, :members?, :related? do
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "allows access" do
-        expect(subject).to permit(user, group)
-      end
-    end
-  end
-
   permissions :index?, :create? do
     context "for a user aka existing current_user" do
       let(:user) { create(:user) }
@@ -33,7 +23,7 @@ describe GroupPolicy do
     end
   end
 
-  permissions :update?, :destroy? do
+  permissions :update?, :destroy?, :related? do
     let(:user) { create(:user) }
 
     context "current_user is group owner" do
@@ -108,13 +98,19 @@ describe GroupPolicy do
 
     context "group members can invite" do
       let(:group) { create(:group, :members_can_invite) }
-
+      let!(:membership) {
+        create(:membership, :active, group: group, user: user)
+      }
       it "allows access" do
         expect(subject).to permit(user, group)
       end
     end
 
     context "group members can't invite" do
+      let(:group) { create(:group) }
+      let!(:membership) {
+        create(:membership, :active, group: group, user: user)
+      }
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
@@ -156,7 +152,7 @@ describe GroupPolicy do
     end
   end
 
-  permissions :member_settings? do
+  permissions :show?, :members?, :member_settings? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do

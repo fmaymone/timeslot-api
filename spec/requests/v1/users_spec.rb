@@ -70,6 +70,13 @@ RSpec.describe "V1::Users", type: :request do
         expect(response).to have_http_status(:ok)
       end
 
+      it "creates a new auth_token for user" do
+        expect {
+          post "/v1/users/signin", valid_attributes
+          user.reload
+        }.to change(user, :auth_token)
+      end
+
       it "returns auth_token for user" do
         post "/v1/users/signin", valid_attributes
         expect(json).to have_key('authToken')
@@ -89,6 +96,14 @@ RSpec.describe "V1::Users", type: :request do
         post "/v1/users/signin", invalid_attributes
         expect(json).to have_key "error"
       end
+    end
+  end
+
+  describe "GET /v1/users/signout" do
+    it "invalidates the auth token" do
+      get "/v1/users/signout", {}, auth_header
+      current_user.reload
+      expect(current_user.auth_token).to be nil
     end
   end
 

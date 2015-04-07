@@ -34,6 +34,7 @@ module TSPreventDeletion
         delete_check: error_string
       }
       Rails.logger.error error_string
+      Airbrake.notify(msg)
       fail AssociationNotDeleted, msg if Rails.env.test? || Rails.env.development?
     end
 

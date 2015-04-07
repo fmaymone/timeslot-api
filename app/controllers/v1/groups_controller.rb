@@ -11,8 +11,8 @@ module V1
 
     # GET /v1/groups/:group_id
     def show
-      authorize :group
       @group = Group.find(group_id)
+      authorize @group
 
       render :show
     end
@@ -57,16 +57,16 @@ module V1
 
     # GET /v1/groups/:group_id/members
     def members
-      authorize :group
       @group = Group.find(group_id)
+      authorize @group
 
       render :members
     end
 
     # GET /v1/groups/:group_id/related
     def related
-      authorize :group
       group = Group.find(group_id)
+      authorize group
 
       render :related, locals: { memberships: group.related_memberships }
     end

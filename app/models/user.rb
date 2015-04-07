@@ -2,6 +2,7 @@ class User < ActiveRecord::Base
   include TS_Role
 
   has_secure_password validations: false
+  # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
 
@@ -65,6 +66,10 @@ class User < ActiveRecord::Base
     images.first
   end
 
+  def sign_out
+    update!(auth_token: nil)
+  end
+
   ## slot related ##
 
   def active_slots(meta_slot)
@@ -80,6 +85,7 @@ class User < ActiveRecord::Base
     slots.push(*std_slots)
     slots.push(*group_slots)
     slots.push(*re_slots)
+    # TODO: add slots from friends
   end
 
   def prepare_for_slot_deletion(slot)
@@ -101,9 +107,10 @@ class User < ActiveRecord::Base
   def alerts(slot)
     setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
     if setting.exists?
-      setting.first.alerts
+      setting.take.alerts
     else
-      default_alert(slot)
+      representations = multiple_representations(slot)
+      merge_alerts(representations)
     end
   end
 
@@ -141,6 +148,10 @@ class User < ActiveRecord::Base
     user_ids.each do |id|
       friendship(id).try(:inactivate)
     end
+  end
+
+  def friend_with?(user)
+    friendship(user.id).try(:established?)
   end
 
   ## group related ##
@@ -213,29 +224,60 @@ class User < ActiveRecord::Base
   end
 
   private def default_alert?(slot, alerts)
-    if slot.class == GroupSlot
-      alerts == memberships.find_by(group_id: slot.group.id).default_alerts
-    else
-      alerts == default_alerts
+    if slot.class == StdSlot
+      return alerts == default_private_alerts if slot.private?
+      return alerts == default_own_friendslot_alerts if slot.friendslot?
+      return alerts == default_own_public_alerts if slot.public?
+      # TODO: add friends friendslot
+      # TODO: add friends publicslot
+    elsif slot.class == GroupSlot
+      ms = memberships.find_by(group_id: slot.group.id)
+      default_membership_alerts = ms.try(:default_alerts)
+      return alerts == default_group_alerts if default_membership_alerts.nil?
+      return alerts == default_membership_alerts
+    elsif slot.class == ReSlot
+      return alerts == default_reslot_alerts
     end
+    false
   end
 
   private def default_alert(slot)
-    if slot.class == GroupSlot
+    if slot.class == StdSlot
+      return default_private_alerts if slot.private?
+      return default_own_friendslot_alerts if slot.friendslot?
+      return default_own_public_alerts if slot.public?
+      # TODO: add friends friendslot
+      # TODO: add friends publicslot
+    elsif slot.class == GroupSlot
       membership = memberships.find_by(group_id: slot.group.id)
       if !membership.nil? && !membership.default_alerts.nil?
         return membership.default_alerts
+      elsif !membership.nil?
+        return default_group_alerts
       end
+    elsif slot.class == ReSlot
+      return default_reslot_alerts
     end
-    default_alerts
+  end
+
+  # combines alerts from all slot representations via logical OR
+  private def merge_alerts(representations)
+    alert = 0
+    representations.each do |slot|
+      alert |= default_alert(slot).to_i(2)
+    end
+    alert.to_s(2).rjust(10, '0')
+  end
+
+  private def multiple_representations(slot)
+    representations = []
+    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*re_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
   private def set_auth_token
-    self.auth_token = generate_auth_token
-  end
-
-  private def generate_auth_token
-    SecureRandom.urlsafe_base64(20)
+    self.auth_token = self.class.generate_auth_token
   end
 
   private def password_digest_was_created
@@ -251,6 +293,12 @@ class User < ActiveRecord::Base
 
   def self.sign_in(email, password)
     user = User.find_by email: email
-    user.try(:authenticate, password)
+    current_user = user.try(:authenticate, password)
+    current_user.update(auth_token: generate_auth_token) if current_user
+    current_user
+  end
+
+  def self.generate_auth_token
+    SecureRandom.urlsafe_base64(20)
   end
 end

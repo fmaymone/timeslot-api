@@ -15,6 +15,10 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  def signout?
+    current_user?
+  end
+
   def update?
     current_user?
   end

@@ -10,6 +10,21 @@ class StdSlot < BaseSlot
     [owner]
   end
 
+  def private?
+    visibility == "00"
+  end
+
+  def friendslot?
+    visibility == "01"
+  end
+
+  def public?
+    visibility == "11"
+  end
+
+  def prepare_for_deletion
+  end
+
   def self.create_with_meta(meta_param, std_param, note_param = nil,
                             alert_param = nil, user)
     meta_slot = MetaSlot.find_or_add(meta_param.merge(creator: user))

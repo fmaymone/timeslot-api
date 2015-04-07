@@ -18,6 +18,7 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:predecessor) }
   it { is_expected.to belong_to(:slotter) }
+  it { is_expected.to belong_to(:parent) }
   it { is_expected.to respond_to(:media_items) }
   it { is_expected.to have_many(:media_items) }
 
@@ -25,6 +26,16 @@ RSpec.describe ReSlot, type: :model do
 
   describe "when predecessor is not present" do
     before { re_slot.predecessor = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when slotter is not present" do
+    before { re_slot.slotter = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when parent is not present" do
+    before { re_slot.parent = nil }
     it { is_expected.to_not be_valid }
   end
 
@@ -41,6 +52,44 @@ RSpec.describe ReSlot, type: :model do
     it "contains title of the meta_slot" do
       expect(re_slot.start_date).to eq meta_slot.start_date
       expect(re_slot.title).to eq "Timeslot"
+    end
+  end
+
+  describe "parent attributes" do
+    let(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_notes) }
+    let(:re_slot_1) { create(:re_slot, predecessor: std_slot,
+                             meta_slot: std_slot.meta_slot, parent: std_slot) }
+    let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,
+                             meta_slot: std_slot.meta_slot, parent: std_slot) }
+
+    it "contains the same media items and notes as the parent slot" do
+      expect(re_slot_1.notes).to eq std_slot.notes
+      expect(re_slot_1.media_items).to eq std_slot.media_items
+      expect(re_slot_1.photos).to eq std_slot.photos
+      expect(re_slot_1.voices).to eq std_slot.voices
+      expect(re_slot_1.videos).to eq std_slot.videos
+      expect(re_slot_2.notes).to eq std_slot.notes
+      expect(re_slot_2.media_items).to eq std_slot.media_items
+      expect(re_slot_2.photos).to eq std_slot.photos
+      expect(re_slot_2.voices).to eq std_slot.voices
+      expect(re_slot_2.videos).to eq std_slot.videos
+    end
+  end
+
+  describe :delete do
+    let(:group_slot) { create(:group_slot) }
+    let(:re_slot_1) { create(:re_slot, predecessor: group_slot,
+                             meta_slot: group_slot.meta_slot) }
+    let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,
+                             meta_slot: group_slot.meta_slot) }
+    let!(:re_slot_3) { create(:re_slot, predecessor: re_slot_2,
+                              meta_slot: group_slot.meta_slot) }
+
+    it "updates the successors predecessor" do
+      # what happens if the original source of a reslot history gets deleted?
+      re_slot_2.delete
+      re_slot_3.reload
+      expect(re_slot_3.predecessor.id).to eq re_slot_1.id
     end
   end
 end

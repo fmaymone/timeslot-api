@@ -14,6 +14,7 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to belong_to(:shared_by) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
+  it { is_expected.to have_many(:likes).inverse_of(:slot) }
 
   it { is_expected.to be_valid }
 
@@ -123,6 +124,84 @@ RSpec.describe BaseSlot, type: :model do
         std_slot.reload
         expect(std_slot.share_id).to eq '12345678'
       end
+    end
+  end
+
+  describe :create_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "creates a like if none exists" do
+      expect {
+        std_slot.create_like user
+      }.to change(Like, :count).by 1
+    end
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "doesn't create a new like" do
+        expect { std_slot.create_like user }.not_to change(Like, :count)
+      end
+
+      it "unsets deleted_at (re-like smt previously unliked)" do
+        like.update(deleted_at: Time.zone.now)
+        std_slot.create_like user
+        like.reload
+        expect(like.deleted_at?).to be false
+      end
+    end
+  end
+
+  describe :destroy_like do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    context "existing like" do
+      let!(:like) { create(:like, user: user, slot: std_slot) }
+
+      it "sets deleted_at on the like" do
+        std_slot.destroy_like user
+        like.reload
+        expect(like.deleted_at?).to be true
+      end
+    end
+  end
+
+  describe :create_comment do
+    let(:std_slot) { create(:std_slot) }
+    let(:user) { create(:user) }
+
+    it "adds a new comment to the slot" do
+      expect {
+        std_slot.create_comment(user, "some content for the comment")
+      }.to change(Comment, :count).by 1
+    end
+
+    context "invalid params" do
+      it "doesn't add a new comment to the slot" do
+        expect {
+          std_slot.create_comment(user, "")
+        }.not_to change(Comment, :count)
+      end
+
+      it "returns the error" do
+        std_slot.create_comment(user, "")
+        expect(std_slot.errors.messages).to have_key :comment
+        expect(std_slot.errors.messages[:comment].first.messages)
+          .to have_key :content
+      end
+    end
+  end
+
+  describe :comments_with_details do
+    let(:std_slot) { create(:std_slot, :with_comments) }
+    let(:user) { create(:user) }
+
+    it "returns all comments for the slot" do
+      comments = std_slot.comments_with_details
+      expect(comments.size).to eq 3
+      expect(comments).to include *std_slot.comments
     end
   end
 end

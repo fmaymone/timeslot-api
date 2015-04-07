@@ -13,6 +13,7 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
+    notify_airbrake(exception)
     render json: { pgerror: exception.message }, status: :unprocessable_entity
   end
 

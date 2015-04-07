@@ -16,7 +16,7 @@ class MetaSlot < ActiveRecord::Base
     begin
       Location.find(location_id)
     rescue => e
-      # TODO: add airbrake
+      Airbrake.notify(e)
       nil
     end
   end

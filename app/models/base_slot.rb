@@ -11,6 +11,9 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
+  has_many :likes, inverse_of: :slot
+  has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
+           inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
   belongs_to :shared_by, class_name: User
 
@@ -32,13 +35,12 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
-  def update_from_params(meta_params, media_params = nil, note_param = nil,
-                         alerts_param = nil, user)
+  def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
     # statement order is important, otherwise added errors may be overwritten
-    update(meta_params) if meta_params
-    update_media(media_params) if media_params
-    update_notes(note_param) if note_param
-    user.update_alerts(self, alerts_param) if alerts_param
+    update(meta) if meta
+    update_media(media) if media
+    update_notes(notes) if notes
+    user.update_alerts(self, alerts) if alerts
   end
 
   def add_media(item)
@@ -73,20 +75,62 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  def create_like(user)
+    like = likes.find_by(user: user) || likes.create(user: user)
+    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+  end
+
+  def destroy_like(user)
+    like = likes.find_by(user: user)
+    like.try(:delete)
+  end
+
+  def likes_with_details
+    likes.includes([:user])
+  end
+
+  def create_comment(user, content)
+    new_comment = comments.create(user: user, content: content)
+    return new_comment if new_comment.valid?
+    errors.add(:comment, new_comment.errors)
+  end
+
+  def comments_with_details
+    comments.includes([:user])
+  end
+
   def set_share_id(user)
     self.share_id? || create_share_id(user)
   end
 
   def delete
-    # Likes
-    # Comments
+    likes.each(&:delete)
+    comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+    prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister
+  end
+
+  def copy_to(targets, user)
+    targets.each do |target|
+      details = target["details"].to_s
+      # YAML.load converts to boolean
+      copy_details = details ? true : YAML.load(details)
+      self.class.create_slot(self, target["target"], copy_details, user)
+    end
+  end
+
+  def move_to(target, user)
+    details = target["details"].to_s
+    move_details = details ? true : YAML.load(details)
+    new_slot = self.class.create_slot(self, target['target'], move_details, user)
+    delete
+    new_slot
   end
 
   ## private instance methods ##
@@ -149,14 +193,23 @@ class BaseSlot < ActiveRecord::Base
   end
 
   private def create_share_id(user)
-    # The length of the result string is about 4/3 of the argument, now: 8 chars
-    update(share_id: SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu'))
+    new_share_id = ''
+    loop do
+      # length of the result string is about 4/3 of the argument, now: 8 chars
+      new_share_id = SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu')
+      break unless self.class.exists?(share_id: new_share_id)
+    end
+    update(share_id: new_share_id)
     update(shared_by: user)
   end
 
   ## abstract methods ##
 
   def related_users
+    fail InterfaceNotImplementedError
+  end
+
+  def prepare_for_deletion
     fail InterfaceNotImplementedError
   end
 
@@ -177,6 +230,40 @@ class BaseSlot < ActiveRecord::Base
 
   def self.get_many(slot_ids)
     slot_ids.collect { |id| get(id) }
+  end
+
+  def self.create_slot(slot, slot_type, copy_details, user)
+    case slot_type
+    when "private_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '00')
+    when "friend_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '01')
+    when "public_slots"
+      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
+                                visibility: '11')
+    when "re_slots"
+      new_slot = ReSlot.create_from_slot(predecessor: slot, slotter: user)
+    else
+      group = Group.find_by name: slot_type
+      new_slot = GroupSlot.create(meta_slot: slot.meta_slot, group: group)
+    end
+
+    duplicate_slot_details(slot, new_slot) if copy_details
+    new_slot
+  end
+
+  def self.duplicate_slot_details(old_slot, new_slot)
+    old_slot.media_items.reverse.each do |item|
+      attr = item.attributes
+      attr.delete('id')
+      new_slot.media_items.create(attr)
+    end
+
+    old_slot.notes.each do |note|
+      new_slot.notes.create(title: note.title, content: note.content)
+    end
   end
 
   # for Pundit

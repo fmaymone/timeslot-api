@@ -4,6 +4,7 @@ module V1
     skip_after_action :verify_authorized
 
     rescue_from CloudinaryException do |exception|
+      Airbrake.notify(exception)
       render json: exception.message, status: :service_unavailable
     end
 
