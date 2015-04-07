@@ -8,7 +8,7 @@ module V1
       render json: exception.message, status: :service_unavailable
     end
 
-    # GET /v1/media
+    # GET /v1/media-signature
     def create_signature
       @signature = cloudinary_signature
 

@@ -35,7 +35,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "when name is too long" do
-    before { user.username = "a" * 21 }
+    before { user.username = "a" * 51 }
     it { is_expected.to_not be_valid }
   end
 

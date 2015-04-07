@@ -96,7 +96,8 @@ module V1
       authorize :user
       current_user.add_friends friends_ids
 
-      head :ok
+      # head :ok
+      render json: { 'fine' => 'but remove this' }, status: :ok
     end
 
     # POST /v1/users/remove_friends

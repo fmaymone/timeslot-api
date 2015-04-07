@@ -43,8 +43,8 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
-  validates :username, presence: true, length: { maximum: 20 }
-  # TODO: what about a minimum for username?
+  # TODO: limit username field length in database
+  validates :username, presence: true, length: { maximum: 50 }
   validates :email, presence: true, length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
@@ -68,6 +68,28 @@ class User < ActiveRecord::Base
 
   def sign_out
     update!(auth_token: nil)
+  end
+
+  def inactivate
+    # Everything needs to stay available so that if user comes back all content
+    # is still there
+    # TODO: add spec
+
+    # created_slots set creator to unknown /  deleted user
+    # own_groups set creator to unknown /  deleted user
+    # StdSlots
+    # ReSlots
+
+    slot_settings.each(&:delete)
+    image.delete if images.first
+    friendships.each(&:inactivate)
+    memberships.each(&:inactivate)
+    ts_soft_delete and return self
+  end
+
+  # TODO: add spec
+  def activate
+    slot_settings.each(&:undelete)
   end
 
   ## slot related ##
@@ -201,27 +223,12 @@ class User < ActiveRecord::Base
     membership
   end
 
-  def inactivate
-    # Everything needs to stay available so that if user comes back all content
-    # is still there
-    # TODO: add spec
-
-    # created_slots set creator to unknown /  deleted user
-    # own_groups set creator to unknown /  deleted user
-    # StdSlots
-    # ReSlots
-
-    slot_settings.each(&:delete)
-    image.delete if images.first
-    friendships.each(&:inactivate)
-    memberships.each(&:inactivate)
-    ts_soft_delete and return self
+  # ordered by start_date of the next group slot
+  def groups_ordered
+    groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
   end
 
-  # TODO: add spec
-  def activate
-    slot_settings.each(&:undelete)
-  end
+  ## private methods ##
 
   private def default_alert?(slot, alerts)
     if slot.class == StdSlot
@@ -283,6 +290,8 @@ class User < ActiveRecord::Base
   private def password_digest_was_created
     errors.add(:password, "Password missing") if password_digest.nil?
   end
+
+  ## class methods ##
 
   def self.create_with_image(params)
     new_user = create(params.except("public_id"))
