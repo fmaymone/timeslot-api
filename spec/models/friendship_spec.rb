@@ -42,6 +42,16 @@ RSpec.describe Friendship, type: :model do
     end
   end
 
+  describe "prevent friendship with itself" do
+    let(:john) { create(:user, username: "John") }
+
+    it "doesn't add friendship with itself" do
+      expect {
+        Friendship.create(user: john, friend: john)
+      }.to raise_error Friendship::DuplicateEntry
+    end
+  end
+
   describe :inactivate do
     let(:friendship) { create(:friendship, friend: create(:user)) }
 
@@ -60,6 +70,19 @@ RSpec.describe Friendship, type: :model do
     }
     it "only undeletes friendships to active friends" do
       expect { friendship.activate }.not_to change(friendship, :deleted_at)
+    end
+  end
+
+  describe :humanize do
+    let(:friendship) { create(:friendship, :established, friend: create(:user)) }
+    let(:resultValues) { [ {'00' => 'offered'}, {'11' => 'established'},
+        {'01' => 'rejected'} ] }
+
+    it "return friendship state as a string" do
+      resultValues.each do |res|
+        friendship.state = res.keys[0]
+        expect(friendship.humanize).to eq res.values[0]
+      end
     end
   end
 end

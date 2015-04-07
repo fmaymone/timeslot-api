@@ -7,4 +7,7 @@ json.extract! @group,
 :created_at,
 :updated_at,
 :deleted_at
+
 json.image @group.image ? @group.image.public_id : nil
+
+json.membership_state current_user.get_membership(@group.id).humanize

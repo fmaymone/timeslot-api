@@ -33,10 +33,10 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_params)
+      @user = User.create_with_image(user_create_params)
 
       if @user.errors.empty?
-        render :show, status: :created
+        render :signup, status: :created
       else
         render json: @user.errors, status: :unprocessable_entity
       end
@@ -49,7 +49,7 @@ module V1
       @user = User.sign_in(*credentials)
 
       if @user
-        render :signin
+        render :signup
       else
         render json: { error: "email and password didn't match" },
                status: :unauthorized
@@ -127,6 +127,14 @@ module V1
       end
       p.transform_keys(&:underscore)
     end
+
+    # we want to make sure a password is submitted, this would usually
+    # be validated on the model layer but made problems there
+    private def user_create_params
+      params.require(:password)
+      user_params
+    end
+
 
     private def friends_ids
       params.require(:ids)

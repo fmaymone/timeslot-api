@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
-  validates :username, presence: true, length: { maximum: 20 }, uniqueness: true
+  validates :username, presence: true, length: { maximum: 20 }
   # TODO: what about a minimum for username?
   validates :email, presence: true, length: { maximum: 254 },
             uniqueness: { case_sensitive: false },

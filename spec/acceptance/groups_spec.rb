@@ -42,6 +42,7 @@ resource "Groups" do
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
+    response_field :membershipState, "Membership state for current user" 
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -57,7 +58,7 @@ resource "Groups" do
       expect(response_status).to eq(200)
       group.reload
       expect(
-        json.except('image')
+        json.except('image', 'membershipState')
       ).to eq(group.attributes.as_json
                .transform_keys { |key| key.camelize(:lower) })
     end
@@ -129,10 +130,9 @@ resource "Groups" do
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
         expect(
-          json.except('image')
+          json.except('image', 'membershipState')
         ).to eq(group.attributes.as_json
                  .transform_keys { |key| key.camelize(:lower) })
-
       end
     end
 
@@ -191,7 +191,7 @@ resource "Groups" do
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
       expect(
-        json.except('image')
+        json.except('image', 'membershipState')
       ).to eq(group.attributes.as_json
                .transform_keys { |key| key.camelize(:lower) })
     end

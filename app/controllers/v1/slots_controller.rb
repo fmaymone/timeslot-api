@@ -31,8 +31,9 @@ module V1
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = StdSlot.create_with_meta(meta_params, std_param, note_param,
-                                       alerts_param, current_user)
+      @slot = StdSlot.create_with_meta(meta: meta_params, visibility: std_param,
+                                       media: media_params, notes: note_param,
+                                       alerts: alerts_param, user: current_user)
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -45,8 +46,9 @@ module V1
       group = Group.find(group_param)
       authorize GroupSlot.new(group: group)
 
-      @slot = GroupSlot.create_with_meta(meta_params, group_param, note_param,
-                                         alerts_param, current_user)
+      @slot = GroupSlot.create_with_meta(meta: meta_params, group_id: group_param,
+                                         media: media_params, notes: note_param,
+                                         alerts: alerts_param, user: current_user)
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
