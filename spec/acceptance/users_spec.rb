@@ -19,7 +19,7 @@ resource "Users" do
     let(:email) { user.email }
     let(:password) { "timeslot" }
 
-    example "Sign In User returns Authentication Token", document: :v1 do
+    example "User Signin", document: :v1 do
       explanation "returns OK and an AuthToken if credentials match\n\n" \
                   "returns 403 if credentials invalid"
       do_request
@@ -28,6 +28,33 @@ resource "Users" do
       user.reload
       expect(json).to have_key "authToken"
       expect(json['authToken']).to eq user.auth_token
+    end
+  end
+
+  # TODO: not ready for production!!! this needs email sending capability...
+  post "/v1/users/reset-password" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :email, "Email of the user for whom to reset password",
+              required: true
+
+    let(:user) { create(:user, password: "nottimeslot") }
+    let(:email) { user.email }
+
+    example "Reset Password", document: :v1 do
+      explanation "This is not ready for production!!!\n\n" \
+                  "returns OK if valid email\n\n" \
+                  "returns 403 if invalid email"
+      do_request
+
+      expect(response_status).to eq(200)
+      user.reload
+
+      # client.get(URI.parse(response_headers["location"]).path, {}, headers)
+      # expect(status).to eq(200)
+      # expect(json).to have_key "authToken"
+      # expect(json['authToken']).to eq user.auth_token
     end
   end
 
@@ -76,7 +103,7 @@ resource "Users" do
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
 
-    example "Create user returns ID of new user", document: :v1 do
+    example "User signup / Create user", document: :v1 do
       explanation "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
       do_request
