@@ -45,13 +45,6 @@ RSpec.describe V1::UsersController, type: :controller do
         expect(assigns(:user)).to be_persisted
       end
     end
-
-    describe "with invalid params" do
-      it "assigns a newly created but unsaved user as @user" do
-        post :create, invalid_attributes, valid_session
-        expect(assigns(:user)).to be_a_new(User)
-      end
-    end
   end
 
   describe "PATCH update" do

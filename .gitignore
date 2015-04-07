@@ -87,3 +87,9 @@ Guardfile
 rails_best_practices_output.html
 
 spec/logo.jpg
+
+spec/cassettes/AddImage/call/existing_image/passing_valid_parameters/updates_the_image.yml
+
+spec/cassettes/MediaItem/delete/adds_a_cloudinary_tag_to_the_image.yml
+
+spec/cassettes/V1_Slots/POST_/v1/slots/_id/move/move_to_friendslots_with_details/doesn_t_mark_the_cloudinary_resource_as_deleted.yml
