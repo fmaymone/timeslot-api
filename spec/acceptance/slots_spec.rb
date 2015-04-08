@@ -463,7 +463,7 @@ resource "Slots" do
       parameter :visibility, "Visibility of the Slot",
                 required: true
 
-      response_field :pgerror, "Explanation which param couldn't be saved"
+      response_field :error, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -477,7 +477,7 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("pgerror")
+        expect(json).to have_key("error")
       end
     end
 
@@ -498,7 +498,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("end_date")
+        expect(json).to have_key("error")
+        expect(response_body).to include "end_date"
       end
     end
   end
@@ -566,7 +567,7 @@ resource "Slots" do
 
     describe "Create group slot with invalid params" do
 
-      response_field :pgerror, "Explanation which param couldn't be saved"
+      response_field :error, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -580,7 +581,7 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("pgerror")
+        expect(json).to have_key("error")
       end
     end
 
@@ -598,7 +599,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq 422
-        expect(json).to have_key("end_date")
+        expect(json).to have_key("error")
+        expect(response_body).to include "end_date"
       end
     end
   end

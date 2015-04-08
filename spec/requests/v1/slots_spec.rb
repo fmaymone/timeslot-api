@@ -252,14 +252,14 @@ RSpec.describe "V1::Slots", type: :request do
           invalid_attributes[:visibility] = "$$"
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'pgerror'
+          expect(response.body).to include 'error'
         end
 
         it "if visibility has to much characters" do
           invalid_attributes[:visibility] = "101"
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'pgerror'
+          expect(response.body).to include 'error'
         end
       end
     end
