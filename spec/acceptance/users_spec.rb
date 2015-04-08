@@ -32,7 +32,7 @@ resource "Users" do
   end
 
   # TODO: not ready for production!!! this needs email sending capability...
-  post "/v1/users/reset-password" do
+  post "/v1/users/reset" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
@@ -49,12 +49,12 @@ resource "Users" do
       do_request
 
       expect(response_status).to eq(200)
-      user.reload
 
-      # client.get(URI.parse(response_headers["location"]).path, {}, headers)
-      # expect(status).to eq(200)
-      # expect(json).to have_key "authToken"
-      # expect(json['authToken']).to eq user.auth_token
+      client.post "v1/users/signin", { email: user.email, password: 'autechre' }
+      user.reload
+      expect(status).to eq(200)
+      expect(json).to have_key "authToken"
+      expect(json['authToken']).to eq user.auth_token
     end
   end
 
