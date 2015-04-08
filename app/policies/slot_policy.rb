@@ -1,5 +1,5 @@
 class SlotPolicy < ApplicationPolicy
-  attr_reader :user, :slot
+  attr_reader :current_user, :slot
 
   class Scope < Scope
     def initialize(user, scope)
@@ -14,7 +14,7 @@ class SlotPolicy < ApplicationPolicy
   end
 
   def initialize(user, slot)
-    @user = user
+    @current_user = user
     @slot = slot
   end
 
@@ -41,7 +41,7 @@ class SlotPolicy < ApplicationPolicy
   # this should only be allowed for our rails slot webview app
   def share_data?
     return false unless current_user?
-    return true if user.webview?
+    return true if current_user.webview?
     false
   end
 
@@ -52,7 +52,7 @@ class SlotPolicy < ApplicationPolicy
   # true if current user has liked the slot before
   def unlike?
     return false unless current_user?
-    return true if slot.likes.exists?(user: user)
+    return true if slot.likes.exists?(user: current_user)
     false
   end
 
@@ -88,8 +88,8 @@ class SlotPolicy < ApplicationPolicy
   # ASK why should I move a slot into reslots? Ich glaube, move to reslots macht niemals sinn
   def move?
     return false unless current_user?
-    return true if user == slot.try(:owner)
-    return true if user == slot.try(:slotter)
+    return true if current_user == slot.try(:owner)
+    return true if current_user == slot.try(:slotter)
     false
   end
 
@@ -105,8 +105,8 @@ class SlotPolicy < ApplicationPolicy
     # true if slot is friendslot and from a friend aka I'm a friend of the slot owner
     if slot.try(:visibility)
       return true if slot.public?
-      return true if user == slot.owner
-      return true if slot.friendslot? && user.friend_with?(slot.owner)
+      return true if current_user == slot.owner
+      return true if slot.friendslot? && current_user.friend_with?(slot.owner)
     end
 
     # re slot
@@ -115,8 +115,8 @@ class SlotPolicy < ApplicationPolicy
     # true if it's a reslot from a public slot
     # later: true if it's a reslot from a pulic group's groupslot
     if slot.try(:slotter)
-      return true if user == slot.slotter
-      return true if user.friend_with?(slot.slotter)
+      return true if current_user == slot.slotter
+      return true if current_user.friend_with?(slot.slotter)
       parent = BaseSlot.get(slot.parent.id)
       return true if parent.try(:public?)
       # return true if parent.try(:group).try(:public?)
@@ -126,7 +126,7 @@ class SlotPolicy < ApplicationPolicy
     # true if slot is group slot and i am member of the group
     # later: true if it's a groupslot in a pulic group
     if slot.try(:group)
-      return true if slot.group.members.include? user
+      return true if slot.group.members.include? current_user
     end
 
     false
