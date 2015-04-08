@@ -14,7 +14,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is an active group member
   def show?
     return false unless current_user?
-    return true if current_user.active_member? group
+    return true if current_user.active_member? group.id
     false
   end
 
@@ -57,7 +57,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is an active member of the group and members can invite
   def invite?
     return false unless current_user?
-    return false unless current_user.active_member? group
+    return false unless current_user.active_member? group.id
     return true if current_user.owner? group
     return true if group.members_can_invite
     false

@@ -12,7 +12,7 @@ class GroupSlotPolicy < SlotPolicy
   # true if user is a group member and members can post
   def create_groupslot?
     return false unless current_user?
-    return false unless current_user.active_member? group
+    return false unless current_user.active_member? group.id
     return true if current_user.owner? group
     return true if group.members_can_post
     false
