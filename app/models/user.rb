@@ -210,13 +210,12 @@ class User < ActiveRecord::Base
     membership && membership.leave
   end
 
-  def active_member?(group_id)
-    membership = get_membership group_id
+  def active_member?(group)
+    membership = get_membership group.id
     !membership.nil? && membership.active?
   end
 
-  def owner?(group_id)
-    group = Group.find(group_id)
+  def owner?(group)
     self == group.owner
   end
 
