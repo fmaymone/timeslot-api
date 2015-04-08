@@ -185,9 +185,22 @@ class User < ActiveRecord::Base
 
   ## group related ##
 
+  def owner?(group)
+    self == group.owner
+  end
+
+  def get_membership(group_id)
+    memberships.find_by group_id: group_id
+  end
+
   def invited?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.invited?
+  end
+
+  def active_member?(group_id)
+    membership = get_membership group_id
+    !membership.nil? && membership.active?
   end
 
   def accept_invite(group_id)
@@ -203,19 +216,6 @@ class User < ActiveRecord::Base
   def leave_group(group_id)
     membership = get_membership group_id
     membership && membership.leave
-  end
-
-  def active_member?(group_id)
-    membership = get_membership group_id
-    !membership.nil? && membership.active?
-  end
-
-  def owner?(group)
-    self == group.owner
-  end
-
-  def get_membership(group_id)
-    memberships.find_by group_id: group_id
   end
 
   def update_member_settings(params, group_id)

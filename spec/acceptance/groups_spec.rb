@@ -42,7 +42,7 @@ resource "Groups" do
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
-    response_field :membershipState, "Membership state for current user" 
+    response_field :membershipState, "Membership state for current user"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -414,8 +414,8 @@ resource "Groups" do
 
       example "Leave group", document: :v1 do
         explanation "returns 200 if membership successfully invalidated\n\n" \
-                    "returns 200 if current user not active group member\n\n" \
-                    "returns 403 if current user has no membership for this" \
+                    "returns 401 if current user not active group member\n\n" \
+                    "returns 401 if current user has no membership for this" \
                     " group at all\n\n" \
                     "returns 404 if group ID is invalid\n\n" \
                     "returns 422 if parameters are missing"
@@ -433,9 +433,9 @@ resource "Groups" do
         create(:membership, :inactive, user: member, group: group)
       end
 
-      example "returns OK", document: false do
+      example "returns Unauthorized", document: false do
         do_request
-        expect(response_status).to eq(200)
+        expect(response_status).to eq 401
       end
     end
 
@@ -467,7 +467,7 @@ resource "Groups" do
 
       example "Remove/Kick other user from own group", document: :v1 do
         explanation "returns 200 if user successfully removed from group\n\n" \
-                    "returns 200 if invite for user successfully disabled\n\n" \
+                    "returns 200 if invite for user successfully invalidated\n\n" \
                     "returns 422 if user to be kicked has no membership" \
                     " for this group at all\n\n" \
                     "returns 403 if current user not group owner aka" \
