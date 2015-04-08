@@ -57,23 +57,22 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is an active member of the group and members can invite
   def invite?
     return false unless current_user?
-    return false unless current_user.active_member? group.id
     return true if current_user.owner? group
+    return false unless current_user.active_member? group.id
     return true if group.members_can_invite
     false
   end
 
-  # true if current user is a member of the group and members can invite
   def leave?
-    return false unless current_user?
-    return true if current_user.get_membership(group.id)
-    false
+    show?
   end
 
-  # true if current user is related to the group
+  # true if current user is an active member of the group
+  # true if current user is invited to the group
   def kick?
     return false unless current_user?
-    return true if current_user.get_membership(group.id)
+    return true if current_user.active_member? group.id
+    return true if current_user.invited? group.id
     false
   end
 
