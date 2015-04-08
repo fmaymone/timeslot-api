@@ -25,7 +25,8 @@ module V1
       if @group.errors.empty?
         render :show, status: :created
       else
-        render json: @group.errors, status: :unprocessable_entity
+        render json: { error: @group.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -39,7 +40,8 @@ module V1
       if @group.errors.empty?
         render :show
       else
-        render json: @group.errors, status: :unprocessable_entity
+        render json: { error: @group.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -51,7 +53,8 @@ module V1
       if @group.delete
         render :show
       else
-        render json: @group.errors, status: :unprocessable_entity
+        render json: { error: @group.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -85,7 +88,7 @@ module V1
       if current_user.accept_invite group_id
         head :ok
       else
-        render json: { membership: "error accepting invite" },
+        render json: { error: "accepting group invitation failed" },
                status: :unprocessable_entity
       end
     end
@@ -98,7 +101,7 @@ module V1
       if current_user.refuse_invite group_id
         head :ok
       else
-        render json: { membership: "error refusing invite" },
+        render json: { error: "refusing group invitation failed" },
                status: :unprocessable_entity
       end
     end
@@ -128,7 +131,7 @@ module V1
       if current_user.leave_group group_id
         head :ok
       else
-        render json: { membership: "error leaving group #{group_id}" },
+        render json: { error: "leaving group #{group_id} failed" },
                status: :unprocessable_entity
       end
     end
@@ -141,8 +144,8 @@ module V1
       if group.kick_member user_id
         head :ok
       else
-        render json: { membership: "error kicking member with id #{user_id}" \
-                                   " from group #{group_id}" },
+        render json: { error: "kicking member with id #{user_id}" \
+                              " from group #{group_id} failed" },
                status: :unprocessable_entity
       end
     end
@@ -158,7 +161,8 @@ module V1
       if @membership.errors.empty?
         head :ok
       else
-        render json: @membership.errors, status: :unprocessable_entity
+        render json: { error: @membership.errors },
+               status: :unprocessable_entity
       end
     end
 

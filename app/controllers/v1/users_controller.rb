@@ -64,7 +64,7 @@ module V1
       authorize :user
       current_user.sign_out
 
-      render json: { success: "Signed out successfully" }, status: :ok
+      head :ok
     end
 
     # POST /v1/users/reset
@@ -87,7 +87,8 @@ module V1
       if @user.errors.empty?
         render :show
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: { error: @user.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -100,7 +101,8 @@ module V1
       if @user.errors.empty?
         render :show
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: { error: @user.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -110,8 +112,7 @@ module V1
       authorize :user
       current_user.add_friends friends_ids
 
-      # head :ok
-      render json: { 'fine' => 'but remove this' }, status: :ok
+      head :ok
     end
 
     # POST /v1/users/remove_friends

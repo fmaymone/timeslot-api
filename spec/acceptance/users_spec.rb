@@ -118,6 +118,7 @@ resource "Users" do
 
     example "Reset password", document: :v1 do
       explanation "This is not ready for production!!!\n\n" \
+                  "Resets password to 'autechre'\n\n" \
                   "returns OK if valid email\n\n" \
                   "returns 403 if invalid email"
       do_request
