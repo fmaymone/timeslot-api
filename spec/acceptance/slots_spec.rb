@@ -35,7 +35,9 @@ resource "Slots" do
       response_field :notes, "A list of all notes on the slot"
       response_field :likes, "Number of likes for the slot"
       response_field :commentsCounter, "Number of comments on the slot"
-      response_field :media, "Media Items for the slot"
+      response_field :photos, "Photosfor the slot"
+      response_field :voices, "Voice recordings for the slot"
+      response_field :videos, "Videos for the slot"
       response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
       response_field :groupId, "ID of belonging Group if it's a GroupSlot"
@@ -69,7 +71,9 @@ resource "Slots" do
         expect(json.first).to have_key("likes")
         expect(json.first).to have_key("commentsCounter")
         expect(json.first).to have_key("visibility")
-        expect(json.first).to have_key("media")
+        expect(json.first).to have_key("photos")
+        expect(json.first).to have_key("voices")
+        expect(json.first).to have_key("videos")
         expect(json.first).to have_key("url")
         expect(json)
           .to include("id" => std_slot_1.id,
@@ -85,7 +89,9 @@ resource "Slots" do
                       "notes" => std_slot_1.notes,
                       "likes" => std_slot_1.likes.count,
                       "commentsCounter" => std_slot_1.comments.count,
-                      "media" => std_slot_1.media_items,
+                      "photos" => std_slot_1.photos,
+                      "voices" => std_slot_1.voices,
+                      "videos" => std_slot_1.videos,
                       "visibility" => std_slot_1.visibility,
                       "url" => v1_slot_url(std_slot_1, format: :json),
                       "creatorId" => std_slot_1.creator.id
@@ -104,7 +110,9 @@ resource "Slots" do
                       "notes" => std_slot_2.notes,
                       "likes" => std_slot_2.likes.count,
                       "commentsCounter" => std_slot_2.comments.count,
-                      "media" => std_slot_2.media_items,
+                      "photos" => std_slot_2.photos,
+                      "voices" => std_slot_2.voices,
+                      "videos" => std_slot_2.videos,
                       "visibility" => std_slot_2.visibility,
                       "url" => v1_slot_url(std_slot_2, format: :json),
                       "creatorId" => std_slot_2.creator.id
@@ -123,7 +131,9 @@ resource "Slots" do
                       "notes" => re_slots[0].notes,
                       "likes" => re_slots[0].likes.count,
                       "commentsCounter" => re_slots[0].comments.count,
-                      "media" => re_slots[0].media_items,
+                      "photos" => re_slots[0].photos,
+                      "voices" => re_slots[0].voices,
+                      "videos" => re_slots[0].videos,
                       "url" => v1_slot_url(re_slots[0], format: :json),
                       "creatorId" => re_slots[0].creator.id
                      )
@@ -142,7 +152,9 @@ resource "Slots" do
                       "notes" => group_slots_1[0].notes,
                       "likes" => group_slots_1[0].likes.count,
                       "commentsCounter" => group_slots_1[0].comments.count,
-                      "media" => group_slots_1[0].media_items,
+                      "photos" => group_slots_1[0].photos,
+                      "voices" => group_slots_1[0].voices,
+                      "videos" => group_slots_1[0].videos,
                       "url" => v1_slot_url(group_slots_1[0], format: :json),
                       "creatorId" => group_slots_1[0].creator.id
                      )
