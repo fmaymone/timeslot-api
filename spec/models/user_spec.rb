@@ -415,7 +415,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :is_active_member? do
+  describe :active_member? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
@@ -425,48 +425,48 @@ RSpec.describe User, type: :model do
       describe "state active" do
         it "return true" do
           membership.activate
-          expect(user.is_active_member? group.id).to be true
+          expect(user.active_member? group.id).to be true
         end
       end
 
       describe "state not active" do
         it "return false if kicked" do
           membership.kick
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if refused" do
           membership.refuse
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if inactive" do
           membership.inactivate
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if invite" do
           membership.invite
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
       end
     end
 
     describe "membership doesn't exists" do
       it "return false" do
-        expect(user.is_active_member? group.id).to be false
+        expect(user.active_member? group.id).to be false
       end
     end
   end
 
-  describe :is_owner? do
+  describe :owner? do
     let(:user) { create(:user) }
 
     describe "user is group owner" do
       let(:group) { create(:group, owner: user) }
 
       it "return true" do
-        expect(user.is_owner? group.id).to be true
+        expect(user.owner? group.id).to be true
       end
     end
 
@@ -474,7 +474,7 @@ RSpec.describe User, type: :model do
       let(:group) { create(:group) }
 
       it "return false" do
-        expect(user.is_owner? group.id).to be false
+        expect(user.owner? group.id).to be false
       end
     end
   end
