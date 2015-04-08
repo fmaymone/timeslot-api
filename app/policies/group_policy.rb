@@ -45,7 +45,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user has an invitation to the group
   def accept_invite?
     return false unless current_user?
-    return true if current_user.is_invited? group.id
+    return true if current_user.invited? group.id
     false
   end
 

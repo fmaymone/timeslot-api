@@ -344,7 +344,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :is_invited? do
+  describe :invited? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
@@ -354,36 +354,36 @@ RSpec.describe User, type: :model do
       describe "state invited" do
         it "return true" do
           membership.invite
-          expect(user.is_invited? group.id).to be true
+          expect(user.invited? group.id).to be true
         end
       end
 
       describe "state not invited" do
         it "return false if kicked" do
           membership.kick
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if refused" do
           membership.refuse
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if active" do
           membership.activate
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if inactive" do
           membership.inactivate
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
       end
     end
 
     describe "membership doesn't exists" do
       it "return false" do
-        expect(user.is_invited? group.id).to be false
+        expect(user.invited? group.id).to be false
       end
     end
   end

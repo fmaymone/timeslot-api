@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
 
   ## group related ##
 
-  def is_invited?(group_id)
+  def invited?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.invited?
   end
