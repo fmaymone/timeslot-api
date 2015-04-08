@@ -1,10 +1,12 @@
 class User < ActiveRecord::Base
   include TS_Role
+  has_secure_password
 
-  has_secure_password validations: false
   # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
+
+  ## associations ##
 
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
@@ -43,18 +45,19 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
-  # TODO: limit username field length in database
+  ## validations ##
+
   validates :username, presence: true, length: { maximum: 50 }
+
+  # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email, presence: true, length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
-  # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
   validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
-  validate :password_digest_was_created, on: :create
 
-  ## user related ##
+  ## user specific ##
 
   def update_with_image(params)
     update(params.except("public_id"))
@@ -68,6 +71,10 @@ class User < ActiveRecord::Base
 
   def sign_out
     update!(auth_token: nil)
+  end
+
+  def reset_password
+    update(password: 'autechre')
   end
 
   def inactivate
@@ -287,12 +294,10 @@ class User < ActiveRecord::Base
     self.auth_token = self.class.generate_auth_token
   end
 
-  private def password_digest_was_created
-    errors.add(:password, "Password missing") if password_digest.nil?
-  end
-
   ## class methods ##
 
+  # technically this is not neccessary bc it's not possible to set an image on
+  # signup, at least in the ios app right now
   def self.create_with_image(params)
     new_user = create(params.except("public_id"))
     return new_user unless new_user.errors.empty?

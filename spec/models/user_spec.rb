@@ -783,6 +783,28 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :reset_password do
+    let!(:user) { create(:user, password: 'timeslot') }
+
+    context "valid params" do
+      it "resets the password" do
+        initial_pwd_digest = user.password_digest
+        user.reset_password
+        expect(initial_pwd_digest).not_to eq user.password_digest
+      end
+
+      it "resets the authToken" do
+        initial_auth_token = user.auth_token
+        user.reset_password
+        expect(initial_auth_token).not_to eq user.auth_token
+      end
+
+      it "sends an email to the user" do
+        skip 'needs mailer'
+      end
+    end
+  end
+
   describe "prepare_for_slot_deletion" do
     let(:slot) { create(:std_slot, owner: user) }
     let!(:slot_setting) {
