@@ -437,14 +437,14 @@ INHERITS (base_slots);
 
 CREATE TABLE users (
     id integer NOT NULL,
-    username character varying(20),
+    username character varying(50),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    email character varying(255) DEFAULT ''::character varying NOT NULL,
-    password_digest character varying(255) DEFAULT ''::character varying NOT NULL,
-    auth_token character varying(255),
-    role integer,
+    email character varying(255) DEFAULT ''::character varying,
+    password_digest character varying(60) NOT NULL,
+    auth_token character varying(27),
+    role smallint,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_private_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_own_friendslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -962,4 +962,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150210101825');
 INSERT INTO schema_migrations (version) VALUES ('20150214163709');
 
 INSERT INTO schema_migrations (version) VALUES ('20150221012103');
+
+INSERT INTO schema_migrations (version) VALUES ('20150408130844');
 
