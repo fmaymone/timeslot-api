@@ -388,33 +388,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :can_invite? do
-    context "user is group owner" do
-      let(:user) { create(:user) }
-      let(:group) { create(:group, owner: user) }
-
-      it "return true" do
-        expect(user.can_invite? group.id).to be true
-      end
-    end
-
-    context "group subscribers can invite" do
-      let(:group) { create(:group, members_can_invite: true) }
-
-      it "return true" do
-        expect(user.can_invite? group.id).to be true
-      end
-    end
-
-    context "not owner & subs can't invite" do
-      let(:group) { create(:group, members_can_invite: false) }
-
-      it "return false" do
-        expect(user.can_invite? group.id).to be false
-      end
-    end
-  end
-
   describe :active_member? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }

@@ -190,11 +190,6 @@ class User < ActiveRecord::Base
     !membership.nil? && membership.invited?
   end
 
-  def can_invite?(group_id)
-    group = Group.find(group_id)
-    self == group.owner || group.members_can_invite
-  end
-
   def accept_invite(group_id)
     membership = get_membership group_id
     membership && membership.activate
