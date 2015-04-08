@@ -1,6 +1,7 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, only: [:create, :signin]
+    skip_before_action :authenticate_user_from_token!,
+                       only: [:create, :signin, :reset_password]
 
     # GET /v1/users
     def index
@@ -33,12 +34,13 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_create_params)
+      @user = User.create_with_image(user_params)
 
       if @user.errors.empty?
         render :signup, status: :created
       else
-        render json: @user.errors, status: :unprocessable_entity
+        render json: { error: @user.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -63,6 +65,18 @@ module V1
       current_user.sign_out
 
       render json: { success: "Signed out successfully" }, status: :ok
+    end
+
+    # POST /v1/users/reset
+    # resets password to a new random password, should be sent per email
+    # TODO: this is not ready for production, sets a default password until
+    # we have email integration
+    def reset_password
+      authorize :user
+      @user = User.find_by email: params.require(:email)
+      @user.reset_password
+
+      head :ok
     end
 
     # PATCH /v1/users/1
@@ -128,14 +142,6 @@ module V1
       end
       p.transform_keys(&:underscore)
     end
-
-    # we want to make sure a password is submitted, this would usually
-    # be validated on the model layer but made problems there
-    private def user_create_params
-      params.require(:password)
-      user_params
-    end
-
 
     private def friends_ids
       params.require(:ids)
