@@ -40,7 +40,7 @@ RSpec.describe "V1::Users", type: :request do
         expect(json['friendships'].length).to eq(current_user.friendships.length)
       end
     end
-    
+
     context "return number of friends via json" do
       let!(:friendship) { create(:friendship, :established, user: current_user) }
 
@@ -85,7 +85,8 @@ RSpec.describe "V1::Users", type: :request do
   describe "POST /v1/users" do
     describe "with valid params" do
       let(:valid_attributes) {
-        attributes_for(:user).merge!(image: { publicId: 'foobar' }, password: 'timeslot')
+        attributes_for(:user).merge!(image: { publicId: 'foobar' },
+                                     password: 'timeslot')
       }
       it "returns ID of created user" do
         post "/v1/users", valid_attributes
@@ -100,17 +101,28 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     describe "with invalid params" do
-      let(:invalid_attributes) {
-        { username: 'foo', image: { publicId: '' } }
+      let(:missing_email) { { username: 'foo', password: 'foo' } }
+      let(:missing_password) { { username: 'foo', email: 'test@timeslot.com' } }
+      let(:invalid_image_url) {
+        { username: 'foo', image: { publicId: '' }, password: 'foobar' }
       }
-      it "returns an error" do
-        post "/v1/users", invalid_attributes
+
+      it "returns an error if email is missing" do
+        post "/v1/users", missing_email
         expect(json).to have_key "error"
+        expect(response.body).to include 'invalid email'
       end
 
-      it "returns an error if no password supplied" do      
-        post "/v1/users", { username: 'foo', email: 'test@timeslot.com' }
+      it "returns an error if no password supplied" do
+        post "/v1/users", missing_password
         expect(json).to have_key "error"
+        expect(response.body).to include 'password'
+      end
+
+      it "returns an error for invalid image url" do
+        post "/v1/users", invalid_image_url
+        expect(json).to have_key "error"
+        expect(response.body).to include 'publicId'
       end
     end
   end

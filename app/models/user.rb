@@ -1,10 +1,12 @@
 class User < ActiveRecord::Base
   include TS_Role
+  has_secure_password
 
-  has_secure_password validations: false
   # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
   after_commit AuditLog
+
+  ## associations ##
 
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
@@ -43,18 +45,19 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
-  validates :username, presence: true, length: { maximum: 20 }
-  # TODO: what about a minimum for username?
+  ## validations ##
+
+  validates :username, presence: true, length: { maximum: 50 }
+
+  # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email, presence: true, length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
-  # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
   validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
-  validate :password_digest_was_created, on: :create
 
-  ## user related ##
+  ## user specific ##
 
   def update_with_image(params)
     update(params.except("public_id"))
@@ -68,6 +71,32 @@ class User < ActiveRecord::Base
 
   def sign_out
     update!(auth_token: nil)
+  end
+
+  def reset_password
+    update(password: 'autechre')
+  end
+
+  def inactivate
+    # Everything needs to stay available so that if user comes back all content
+    # is still there
+    # TODO: add spec
+
+    # created_slots set creator to unknown /  deleted user
+    # own_groups set creator to unknown /  deleted user
+    # StdSlots
+    # ReSlots
+
+    slot_settings.each(&:delete)
+    image.delete if images.first
+    friendships.each(&:inactivate)
+    memberships.each(&:inactivate)
+    ts_soft_delete and return self
+  end
+
+  # TODO: add spec
+  def activate
+    slot_settings.each(&:undelete)
   end
 
   ## slot related ##
@@ -156,14 +185,22 @@ class User < ActiveRecord::Base
 
   ## group related ##
 
-  def is_invited?(group_id)
+  def owner?(group)
+    self == group.owner
+  end
+
+  def get_membership(group_id)
+    memberships.find_by group_id: group_id
+  end
+
+  def invited?(group_id)
     membership = get_membership group_id
     !membership.nil? && membership.invited?
   end
 
-  def can_invite?(group_id)
-    group = Group.find(group_id)
-    self == group.owner || group.members_can_invite
+  def active_member?(group_id)
+    membership = get_membership group_id
+    !membership.nil? && membership.active?
   end
 
   def accept_invite(group_id)
@@ -181,47 +218,18 @@ class User < ActiveRecord::Base
     membership && membership.leave
   end
 
-  def is_active_member?(group_id)
-    membership = get_membership group_id
-    !membership.nil? && membership.active?
-  end
-
-  def is_owner?(group_id)
-    group = Group.find(group_id)
-    self == group.owner
-  end
-
-  def get_membership(group_id)
-    memberships.find_by group_id: group_id
-  end
-
   def update_member_settings(params, group_id)
     membership = get_membership group_id
     membership && membership.update(params)
     membership
   end
 
-  def inactivate
-    # Everything needs to stay available so that if user comes back all content
-    # is still there
-    # TODO: add spec
-
-    # created_slots set creator to unknown /  deleted user
-    # own_groups set creator to unknown /  deleted user
-    # StdSlots
-    # ReSlots
-
-    slot_settings.each(&:delete)
-    image.delete if images.first
-    friendships.each(&:inactivate)
-    memberships.each(&:inactivate)
-    ts_soft_delete and return self
+  # ordered by start_date of the next group slot
+  def groups_ordered
+    groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
   end
 
-  # TODO: add spec
-  def activate
-    slot_settings.each(&:undelete)
-  end
+  ## private methods ##
 
   private def default_alert?(slot, alerts)
     if slot.class == StdSlot
@@ -280,10 +288,10 @@ class User < ActiveRecord::Base
     self.auth_token = self.class.generate_auth_token
   end
 
-  private def password_digest_was_created
-    errors.add(:password, "Password missing") if password_digest.nil?
-  end
+  ## class methods ##
 
+  # technically this is not neccessary bc it's not possible to set an image on
+  # signup, at least in the ios app right now
   def self.create_with_image(params)
     new_user = create(params.except("public_id"))
     return new_user unless new_user.errors.empty?

@@ -455,9 +455,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :left, user: current_user, group: group)
       end
 
-      it "returns OK" do
+      it "returns Not Authorized" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
-        expect(response.status).to be(200)
+        expect(response.status).to be 401
       end
 
       it "doesn't changes membership state" do

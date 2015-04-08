@@ -37,7 +37,8 @@ module V1
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -52,7 +53,8 @@ module V1
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -66,7 +68,8 @@ module V1
       if @slot.save
         render :show, status: :created, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -139,7 +142,8 @@ module V1
       if @slot.delete
         render :show, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -151,7 +155,8 @@ module V1
       if @slot.delete
         render :show, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 
@@ -163,7 +168,8 @@ module V1
       if @slot.delete
         render :show, locals: { slot: @slot }
       else
-        render json: @slot.errors, status: :unprocessable_entity
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
       end
     end
 

@@ -125,19 +125,37 @@ describe GroupPolicy do
     end
   end
 
-  permissions :leave?, :kick? do
+  permissions :kick? do
     let(:user) { create(:user) }
 
-    context "current_user has group membership" do
+    context "current_user is active group member" do
       let!(:membership) {
-        create(:membership, group: group, user: user)
+        create(:membership, :active, group: group, user: user)
       }
       it "allows access" do
         expect(subject).to permit(user, group)
       end
     end
 
-    context "current_user has no group membership" do
+    context "current_user is invited to group" do
+      let!(:membership) {
+        create(:membership, :invited, group: group, user: user)
+      }
+      it "allows access" do
+        expect(subject).to permit(user, group)
+      end
+    end
+
+    context "current_user is non active group member" do
+      let!(:membership) {
+        create(:membership, :inactive, group: group, user: user)
+      }
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+
+    context "current_user not related to group" do
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
@@ -152,7 +170,7 @@ describe GroupPolicy do
     end
   end
 
-  permissions :show?, :members?, :member_settings? do
+  permissions :show?, :leave?, :members?, :member_settings? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do

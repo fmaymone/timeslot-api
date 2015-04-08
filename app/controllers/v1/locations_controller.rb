@@ -16,12 +16,11 @@ module V1
       auth = { http_basic_authentication: [user, pw] }
 
       begin
-        # WebMock.allow_net_connect!  # for local testing
         result = open(query, auth).read
-        # WebMock.disable_net_connect!
       rescue => e
         Airbrake.notify(e)
-        return render json: "Search Service Error: #{e}", status: :ok
+        return render json: { error: "Search Service Error: #{e}" },
+                      status: :service_unavailable
       end
       render json: result, status: :ok
     end

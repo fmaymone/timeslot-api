@@ -4,7 +4,7 @@
 
 * Install homebrew:
 ```bash
-$ ruby -e "$(curl -fsSkL raw.github.com/mxcl/homebrew/go)"
+$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 * Add to end of .bashrc / .zshrc:
 ```bash
@@ -17,11 +17,9 @@ rvm implode
 * install rbenv:
 ```bash
 brew update
-brew install rbenv
-brew install ruby-build
-brew install rbenv-gem-rehash
+brew install rbenv ruby-build rbenv-gem-rehash
 ```
-* add to end of .bashrc / .zshrc:
+* add to end of .bash_profile / .zshrc:
 ```bash
 eval "$(rbenv init -)"
 export PATH=bin:$PATH
@@ -62,6 +60,9 @@ If the database is not created with the correct PG datatypes by schema.rb, run t
 The following env variables are expected:
 
 ```
+ENV['TS_RAILS_BACKEND_CLOUDINARY_CLOUD_NAME']
+ENV['TS_RAILS_BACKEND_CLOUDINARY_API_KEY']
+ENV['TS_RAILS_BACKEND_CLOUDINARY_API_SECRET']
 ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] # username
 ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] # password
 ENV['TS_LOCATION_SEARCH_SERVICE_URL'] # search url

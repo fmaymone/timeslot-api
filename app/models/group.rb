@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
   has_many :members, through: :active_memberships, class_name: User,
            source: :user
 
-  validates :name, presence: true, length: { maximum: 255 }
+  validates :name, presence: true, length: { maximum: 255 } # screens have max length of 25
   validates :owner, presence: true
 
   def image
@@ -38,7 +38,7 @@ class Group < ActiveRecord::Base
   def invite_users(ids)
     ids.each do |user_id|
       invitee = User.find(user_id)
-      next if invitee.is_invited?(id) || invitee.is_active_member?(id)
+      next if invitee.invited?(self) || invitee.active_member?(id)
 
       # allow to re-invite kicked/refused/left members:
       membership = invitee.get_membership self

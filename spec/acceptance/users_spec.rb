@@ -5,32 +5,6 @@ resource "Users" do
   let(:current_user) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  post "/v1/users/signin" do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-
-    parameter :email, "Email of the user to authenticate", required: true
-    parameter :password, "Password for the user to authenticate", required: true
-
-    response_field :authToken, "Authentication Token for the user to be set" \
-                               " as a HTTP header in subsequent requests"
-
-    let(:user) { create(:user, password: "timeslot") }
-    let(:email) { user.email }
-    let(:password) { "timeslot" }
-
-    example "Sign In User returns Authentication Token", document: :v1 do
-      explanation "returns OK and an AuthToken if credentials match\n\n" \
-                  "returns 403 if credentials invalid"
-      do_request
-
-      expect(response_status).to eq(200)
-      user.reload
-      expect(json).to have_key "authToken"
-      expect(json['authToken']).to eq user.auth_token
-    end
-  end
-
   get "/v1/users/:id" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
@@ -46,7 +20,7 @@ resource "Users" do
 
     let(:id) { current_user.id }
 
-    example "Get user returns user data", document: :v1 do
+    example "Get user data", document: :v1 do
       explanation "returns 404 if ID is invalid\n\n"
       do_request
 
@@ -63,7 +37,7 @@ resource "Users" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :username, "Username of user (max. 20 characters)",
+    parameter :username, "Username of user (max. 50 characters)",
               required: true
     parameter :email, "Email of user (max. 254 characters)",
               required: true
@@ -76,7 +50,7 @@ resource "Users" do
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
 
-    example "Create user returns ID of new user", document: :v1 do
+    example "User signup / Create user", document: :v1 do
       explanation "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
       do_request
@@ -90,13 +64,82 @@ resource "Users" do
     end
   end
 
+  post "/v1/users/signin" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :email, "Email of the user to authenticate", required: true
+    parameter :password, "Password for the user to authenticate", required: true
+
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
+
+    let(:user) { create(:user, password: "timeslot") }
+    let(:email) { user.email }
+    let(:password) { "timeslot" }
+
+    example "User signin", document: :v1 do
+      explanation "returns OK and an AuthToken if credentials match\n\n" \
+                  "returns 403 if credentials invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      user.reload
+      expect(json).to have_key "authToken"
+      expect(json['authToken']).to eq user.auth_token
+    end
+  end
+
+  get "/v1/users/signout" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    example "User signout", document: :v1 do
+      explanation "returns OK if current user was successfully signed out\n\n" \
+                  "returns 403 if there was no current user"
+      do_request
+
+      expect(response_status).to eq(200)
+      current_user.reload
+      expect(current_user.auth_token).to be nil
+    end
+  end
+
+  # TODO: not ready for production!!! this needs email sending capability...
+  post "/v1/users/reset" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :email, "Email of the user for whom to reset password",
+              required: true
+
+    let(:user) { create(:user, password: "nottimeslot") }
+    let(:email) { user.email }
+
+    example "Reset password", document: :v1 do
+      explanation "This is not ready for production!!!\n\n" \
+                  "Resets password to 'autechre'\n\n" \
+                  "returns OK if valid email\n\n" \
+                  "returns 403 if invalid email"
+      do_request
+
+      expect(response_status).to eq(200)
+
+      client.post "v1/users/signin", { email: user.email, password: 'autechre' }
+      user.reload
+      expect(status).to eq(200)
+      expect(json).to have_key "authToken"
+      expect(json['authToken']).to eq user.auth_token
+    end
+  end
+
   patch "/v1/users" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
     describe "Update current users data" do
 
-      parameter :username, "Updated username of user (max. 20 characters)"
+      parameter :username, "Updated username of user (max. 50 characters)"
       parameter :defaultPrivateAlerts,
                 "Default alerts for private slots of this user"
       parameter :defaultOwnFriendslotAlerts,
@@ -117,7 +160,8 @@ resource "Users" do
       let(:username) { "bar" }
       let(:defaultPrivateAlerts) { '0111011100' }
 
-      example "Update current user", document: :v1 do
+      example "Update current user - change username and default alerts",
+              document: :v1 do
         explanation "E.g, change username and set default alerts\n\n" \
                     "returns user data\n\n" \
                     "returns 404 if ID is invalid\n\n" \
@@ -148,7 +192,7 @@ resource "Users" do
 
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
-      example "Set user image", document: :v1 do
+      example "Update current user - set user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
@@ -205,7 +249,7 @@ resource "Users" do
     let!(:friend_requests) { create_list(:user, 3) }
     let(:ids) { [john.id, mary.id, alice.id] + friend_requests.collect(&:id) }
 
-    example "Add Friends",
+    example "Add Friends - Request Friendship / Accept Friend Request",
             document: :v1 do
       explanation "Receives a list of User IDs for which a friendship" \
                   "with the current user will be created.\n\n" \
@@ -249,7 +293,7 @@ resource "Users" do
 
     let(:ids) { [john.id, mary.id, alice.id, bob.id] }
 
-    example "Remove Friends/Refuse Friend requests",
+    example "Remove Friends - Unfriending / Refuse Friend Requests",
             document: :v1 do
       explanation "Receives a list of User IDs for which a friendship" \
                   "with the current user will be refused or deleted.\n\n" \

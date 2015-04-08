@@ -35,7 +35,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "when name is too long" do
-    before { user.username = "a" * 21 }
+    before { user.username = "a" * 51 }
     it { is_expected.to_not be_valid }
   end
 
@@ -344,7 +344,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :is_invited? do
+  describe :invited? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
@@ -354,68 +354,41 @@ RSpec.describe User, type: :model do
       describe "state invited" do
         it "return true" do
           membership.invite
-          expect(user.is_invited? group.id).to be true
+          expect(user.invited? group.id).to be true
         end
       end
 
       describe "state not invited" do
         it "return false if kicked" do
           membership.kick
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if refused" do
           membership.refuse
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if active" do
           membership.activate
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
 
         it "return false if inactive" do
           membership.inactivate
-          expect(user.is_invited? group.id).to be false
+          expect(user.invited? group.id).to be false
         end
       end
     end
 
     describe "membership doesn't exists" do
       it "return false" do
-        expect(user.is_invited? group.id).to be false
+        expect(user.invited? group.id).to be false
       end
     end
   end
 
-  describe :can_invite? do
-    describe "user is group owner" do
-      let(:user) { create(:user) }
-      let(:group) { create(:group, owner: user) }
-
-      it "return true" do
-        expect(user.can_invite? group.id).to be true
-      end
-    end
-
-    describe "group subscribers can invite" do
-      let(:group) { create(:group, members_can_invite: true) }
-
-      it "return true" do
-        expect(user.can_invite? group.id).to be true
-      end
-    end
-
-    describe "not owner & subs can't invite" do
-      let(:group) { create(:group, members_can_invite: false) }
-
-      it "return false" do
-        expect(user.can_invite? group.id).to be false
-      end
-    end
-  end
-
-  describe :is_active_member? do
+  describe :active_member? do
     let(:user) { create(:user) }
     let(:group) { create(:group) }
 
@@ -425,48 +398,48 @@ RSpec.describe User, type: :model do
       describe "state active" do
         it "return true" do
           membership.activate
-          expect(user.is_active_member? group.id).to be true
+          expect(user.active_member? group.id).to be true
         end
       end
 
       describe "state not active" do
         it "return false if kicked" do
           membership.kick
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if refused" do
           membership.refuse
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if inactive" do
           membership.inactivate
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
 
         it "return false if invite" do
           membership.invite
-          expect(user.is_active_member? group.id).to be false
+          expect(user.active_member? group.id).to be false
         end
       end
     end
 
     describe "membership doesn't exists" do
       it "return false" do
-        expect(user.is_active_member? group.id).to be false
+        expect(user.active_member? group.id).to be false
       end
     end
   end
 
-  describe :is_owner? do
+  describe :owner? do
     let(:user) { create(:user) }
 
     describe "user is group owner" do
       let(:group) { create(:group, owner: user) }
 
       it "return true" do
-        expect(user.is_owner? group.id).to be true
+        expect(user.owner? group).to be true
       end
     end
 
@@ -474,7 +447,7 @@ RSpec.describe User, type: :model do
       let(:group) { create(:group) }
 
       it "return false" do
-        expect(user.is_owner? group.id).to be false
+        expect(user.owner? group).to be false
       end
     end
   end
@@ -779,6 +752,28 @@ RSpec.describe User, type: :model do
 
       it "returns nil if invalid email" do
         expect(User.sign_in('marzipan', user.password)).to be nil
+      end
+    end
+  end
+
+  describe :reset_password do
+    let!(:user) { create(:user, password: 'timeslot') }
+
+    context "valid params" do
+      it "resets the password" do
+        initial_pwd_digest = user.password_digest
+        user.reset_password
+        expect(initial_pwd_digest).not_to eq user.password_digest
+      end
+
+      it "resets the authToken" do
+        initial_auth_token = user.auth_token
+        user.reset_password
+        expect(initial_auth_token).not_to eq user.auth_token
+      end
+
+      it "sends an email to the user" do
+        skip 'needs mailer'
       end
     end
   end

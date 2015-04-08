@@ -17,19 +17,10 @@ json.array!(@slots) do |slot|
   json.likes slot.likes.count
   json.commentsCounter slot.comments.count
 
-  json.media slot.media_items do |item|
-    json.media_id item.id
-    json.media_type item.media_type
-    json.clyid item.public_id
-    json.position item.position
+  json.partial! 'v1/media/photos', media: slot.photos
+  json.partial! 'v1/media/voices', media: slot.voices
+  json.partial! 'v1/media/videos', media: slot.videos
 
-    if item.media_type == "voice"
-      json.duration = item.duration
-    elsif item.media_type == "video"
-      json.duration = item.duration
-      json.thumbnail = item.thumbnail
-    end
-  end
   if slot.class == StdSlot
     json.visibility slot.visibility
   elsif slot.class == GroupSlot

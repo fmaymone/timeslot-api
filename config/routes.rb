@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       delete '', to: 'users#destroy', as: 'user_delete'
       post 'signin', to: 'users#signin', as: 'signin'
       get 'signout', to: 'users#signout', as: 'signout'
+      post 'reset', to: 'users#reset_password', as: 'reset_password'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
     end

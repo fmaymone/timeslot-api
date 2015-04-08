@@ -1,8 +1,8 @@
 class GroupSlotPolicy < SlotPolicy
-  attr_reader :user, :slot, :group
+  attr_reader :current_user, :slot, :group
 
   def initialize(user, groupslot)
-    @user = user
+    @current_user = user
     @slot = groupslot
     @group = groupslot.group
   end
@@ -12,8 +12,8 @@ class GroupSlotPolicy < SlotPolicy
   # true if user is a group member and members can post
   def create_groupslot?
     return false unless current_user?
-    return false unless user.is_active_member? group.id
-    return true if user.is_owner? group.id
+    return false unless current_user.active_member? group.id
+    return true if current_user.owner? group
     return true if group.members_can_post
     false
   end

@@ -5,10 +5,11 @@ module V1
 
     rescue_from CloudinaryException do |exception|
       Airbrake.notify(exception)
-      render json: exception.message, status: :service_unavailable
+      render json: { error: exception.message },
+             status: :service_unavailable
     end
 
-    # GET /v1/media
+    # GET /v1/media-signature
     def create_signature
       @signature = cloudinary_signature
 

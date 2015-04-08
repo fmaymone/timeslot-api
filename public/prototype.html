@@ -8,21 +8,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <meta name="keywords" content="timeslot, calendar, diary, social, network, time, events, search, discover, app">
     <meta name="description" content="A revolutionary new multi-media Calendar for our socially networked era. Go online for a better offline!">
-    <link rel="stylesheet" href="http://127.0.0.1:8088/css/ts-web-prototype.css">
-    <link rel="stylesheet" href="http://127.0.0.1:8088/css/vendor/pikaday.css">
-    <link rel="icon" sizes="180x180" href="http://127.0.0.1:8088/img/touch-icon-precomposed.png">
-    <link rel="shortcut icon" href="http://127.0.0.1:8088/img/favicon.ico" type="image/vnd.microsoft.icon">
-    <link rel="apple-touch-icon" href="http://127.0.0.1:8088/img/touch-icon-precomposed.png" type="image/png">
-    <link rel="apple-touch-icon-precomposed" href="http://127.0.0.1:8088/img/touch-icon-precomposed.png" type="image/png">
+    <link rel="stylesheet" href="/prototype/css/ts-web-prototype.css">
+    <link rel="stylesheet" href="/prototype/css/vendor/pikaday.css">
+    <link rel="icon" sizes="180x180" href="/prototype/img/touch-icon-precomposed.png">
+    <link rel="shortcut icon" href="/prototype/img/favicon.ico" type="image/vnd.microsoft.icon">
+    <link rel="apple-touch-icon" href="/prototype/img/touch-icon-precomposed.png" type="image/png">
+    <link rel="apple-touch-icon-precomposed" href="/prototype/img/touch-icon-precomposed.png" type="image/png">
   </head>
   <body>
-    <script src="http://127.0.0.1:8088/js/vendor/mithril.min.js"></script>
-    <script src="http://127.0.0.1:8088/js/vendor/moment.js"></script>
-    <script src="http://127.0.0.1:8088/js/vendor/pikaday.js"></script>
-    <script src="http://127.0.0.1:8088/js/app.js"></script>
-    <script src="http://127.0.0.1:8088/js/slot.js"></script>
-    <script src="http://127.0.0.1:8088/js/user.js"></script>
-    <script src="http://127.0.0.1:8088/js/signup.js"></script>
-    <script src="http://127.0.0.1:8088/js/routes.js"></script>
+    <!-- // third party libs -->
+    <script src="/prototype/js/vendor/mithril.min.js"></script>
+    <script src="/prototype/js/vendor/moment.js"></script>
+    <script src="/prototype/js/vendor/pikaday.js"></script>
+
+    <script src="/prototype/js/ext/select.js"></script>
+    <script src="/prototype/js/ext/autocompleter.js"></script>
+    <!-- <script src="/prototype/js/ext/visibility.js"></script> -->
+
+    <!-- // timeslot prototype app -->
+    <script src="/prototype/js/app.js"></script>
+    <script src="/prototype/js/user/user.model.js"></script>
+    <script src="/prototype/js/user/user.controller.js"></script>
+    <script src="/prototype/js/user/user.view.js"></script>
+    <script src="/prototype/js/group/group.model.js"></script>
+    <script src="/prototype/js/group/group.controller.js"></script>
+    <script src="/prototype/js/group/group.view.js"></script>
+    <script src="/prototype/js/slot/slot.model.js"></script>
+    <script src="/prototype/js/slot/slot.controller.js"></script>
+    <script src="/prototype/js/slot/slot.view.js"></script>
+    <script src="/prototype/js/routes.js"></script>
   </body>
 </html>
