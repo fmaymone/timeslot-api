@@ -114,7 +114,7 @@ module V1
     def invite
       group = Group.find(group_id)
       authorize group
-      group.invite_users(params.require(:ids))
+      group.invite_users(params.require(:invitees))
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }

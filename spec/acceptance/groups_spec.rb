@@ -73,10 +73,12 @@ resource "Groups" do
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :members_can_post, "Can subscribers post?"
     parameter :members_can_invite, "Can subscribers invite friends?"
+    parameter :invitees, "Array of User IDs to be invited"
 
     response_field :id, "ID of the new group"
 
     let(:name) { "foo" }
+    let(:invitees) { create_list(:user, 3).collect(&:id) }
 
     example "Create a new group", document: :v1 do
       explanation "Current User is the group owner and" \
@@ -91,6 +93,8 @@ resource "Groups" do
       group = Group.last
       expect(group.owner).to eq current_user
       expect(group.members).to include current_user
+      expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
+      expect(Membership.last.invited?).to be true
     end
   end
 
@@ -371,13 +375,13 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group", required: true
-    parameter :ids, "User IDs to be invited to group", required: true
+    parameter :invitees, "User IDs to be invited to group", required: true
 
     let!(:group) { create(:group, owner: current_user) }
     let(:invited_users) { create_list(:user, 3) }
 
     let(:group_id) { group.id }
-    let(:ids) { invited_users.collect(&:id) }
+    let(:invitees) { invited_users.collect(&:id) }
 
     example "Invite multiple users to group", document: :v1 do
       explanation "Inviting user must be group owner or group must allow" \
