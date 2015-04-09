@@ -211,7 +211,7 @@ resource "Groups" do
   end
 
   # slots
-  get "/v1/groups/:group_id/slots", :focus do
+  get "/v1/groups/:group_id/slots" do
     header "accept", "application/json"
     header "Authorization", :auth_header
 
@@ -230,17 +230,9 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({
-                                "groupId" => group.id,
-                                "slotCount" => slots.length
-                              })
+      expect(json).to include({ "groupId" => group.id,
+                                "slotCount" => slots.length })
       expect(json["slots"].length).to eq slots.length
-      # expect(json["slots"].first)
-      #   .to eq({
-      #            "userId" => group.members.first.id,
-      #            "username" => group.members.first.username,
-      #            "userUrl" => v1_user_url(group.members.first, format: :json)
-      #          })
     end
   end
 
