@@ -34,6 +34,10 @@ class GroupPolicy < ApplicationPolicy
     update?
   end
 
+  def slots?
+    show?
+  end
+
   def members?
     show?
   end

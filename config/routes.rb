@@ -92,11 +92,15 @@ Rails.application.routes.draw do
       delete ':group_id',
              to: 'groups#destroy',
              as: 'group_delete'
+      get ':group_id/slots',
+          to: 'groups#slots',
+          as: 'group_slots',
+          constraints: { group_id: /\d+/ }
       get ':group_id/members',
           to: 'groups#members',
           as: 'group_members',
           constraints: { group_id: /\d+/ }
-      get ':group_id/related',
+     get ':group_id/related',
           to: 'groups#related',
           as: 'group_related',
           constraints: { group_id: /\d+/ }
