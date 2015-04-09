@@ -210,15 +210,49 @@ resource "Groups" do
     end
   end
 
+  # slots
+  get "/v1/groups/:group_id/slots", :focus do
+    header "accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_id, "ID of the group to get slots for", required: true
+
+    let(:group) { create(:group) }
+    let(:group_id) { group.id }
+    let!(:slots) { create_list(:group_slot, 4, group: group) }
+    let!(:membership) do
+      create(:membership, :active, user: current_user, group: group)
+    end
+
+    example "Get slots in a group", document: :v1 do
+      explanation "returns 200 and a list of all slots\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to include({
+                                "groupId" => group.id,
+                                "slotCount" => slots.length
+                              })
+      expect(json["slots"].length).to eq slots.length
+      # expect(json["slots"].first)
+      #   .to eq({
+      #            "userId" => group.members.first.id,
+      #            "username" => group.members.first.username,
+      #            "userUrl" => v1_user_url(group.members.first, format: :json)
+      #          })
+    end
+  end
+
   # members
   get "/v1/groups/:group_id/members" do
     header "accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get", required: true
+    parameter :group_id, "ID of the group to get members for", required: true
 
     response_field :group_id, "ID of the group"
-    response_field :size, "Number of group members (excluding owner)"
+    response_field :size, "Number of active group members"
     response_field :members, "Array of active members"
     response_field :userId, "ID of member"
     response_field :username, "name of member"
@@ -226,8 +260,8 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
-    let!(:members) { create_list(:membership, 4, :active, group: group) }
-    let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
+    let!(:active_members) { create_list(:membership, 4, :active, group: group) }
+    let!(:inactive_member) { create(:membership, :inactive, group: group) }
     # group owner is automatically an active member too
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -266,7 +300,8 @@ resource "Groups" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get", required: true
+    parameter :group_id, "ID of the group to get related users for",
+              required: true
 
     response_field :groupId, "ID of the group"
     response_field :size, "Number of group members (excluding owner)"
