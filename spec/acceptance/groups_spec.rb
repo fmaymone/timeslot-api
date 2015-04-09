@@ -12,17 +12,27 @@ resource "Groups" do
 
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
-    response_field :image, "URL of the groupimage"
-    response_field :url, "ressource url for the group"
+    response_field :upcomingCount, "Number of upcoming group slots"
+    response_field :next, "Start date and Time of the next upcoming slot"
+    response_field :image, "URL of the group image"
+    response_field :url, "ressource URL for the group"
 
     let!(:current_user) { create(:user, :with_3_groups, :with_3_own_groups) }
 
     example "Get all groups where current user is member or owner",
             document: :v1 do
+      explanation "returns an array of groups"
+
       do_request
 
       expect(response_status).to eq(200)
       expect(json.size).to eq current_user.groups.count
+      expect(json[0]).to have_key("id")
+      expect(json[0]).to have_key("name")
+      expect(json[0]).to have_key("upcomingCount")
+      expect(json[0]).to have_key("next")
+      expect(json[0]).to have_key("image")
+      expect(json[0]).to have_key("url")
     end
   end
 
@@ -36,8 +46,8 @@ resource "Groups" do
     response_field :id, "ID of the group"
     response_field :name, "name of the group"
     response_field :ownerId, "user id of group owner"
-    response_field :members_can_post, "Can subscribers post?"
-    response_field :members_can_invite, "Can subscribers invite friends?"
+    response_field :membersCanPost, "Can subscribers add slots?"
+    response_field :membersCanInvite, "Can subscribers invite friends?"
     response_field :image, "URL of the group image"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
@@ -71,8 +81,8 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :name, "Name of group (max. 255 characters)", required: true
-    parameter :members_can_post, "Can subscribers post?"
-    parameter :members_can_invite, "Can subscribers invite friends?"
+    parameter :membersCanPost, "Can subscribers post?"
+    parameter :membersCanInvite, "Can subscribers invite friends?"
     parameter :invitees, "Array of User IDs to be invited"
 
     response_field :id, "ID of the new group"
@@ -217,6 +227,23 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get slots for", required: true
 
+    response_field :groupId, "ID of the group"
+    response_field :slotCount, "Number of all slot in this group"
+    response_field :upcomingCount, "Number of upcoming group slots"
+    response_field :slots, "Array of group slots"
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :photos, "Photos for the slot"
+    response_field :voices, "Voice recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
     let(:group) { create(:group) }
     let(:group_id) { group.id }
     let!(:slots) { create_list(:group_slot, 4, group: group) }
@@ -233,6 +260,21 @@ resource "Groups" do
       expect(json).to include({ "groupId" => group.id,
                                 "slotCount" => slots.length })
       expect(json["slots"].length).to eq slots.length
+      expect(json["slots"])
+        .to include("id" => slots.first.id,
+                    "title" => slots.first.title,
+                    "startDate" => slots[0].start_date.as_json,
+                    "endDate" => slots[0].end_date.as_json,
+                    "createdAt" => slots[0].created_at.as_json,
+                    "updatedAt" => slots[0].updated_at.as_json,
+                    "deletedAt" => slots[0].deleted_at,
+                    "settings" => {
+                      'alerts' => current_user.alerts(slots[0]) },
+                    "photos" => slots[0].photos,
+                    "voices" => slots[0].voices,
+                    "videos" => slots[0].videos,
+                    "url" => v1_slot_url(slots[0], format: :json)
+                   )
     end
   end
 
@@ -243,12 +285,12 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get members for", required: true
 
-    response_field :group_id, "ID of the group"
+    response_field :groupId, "ID of the group"
     response_field :size, "Number of active group members"
     response_field :members, "Array of active members"
     response_field :userId, "ID of member"
     response_field :username, "name of member"
-    response_field :user_url, "URL for member"
+    response_field :userUrl, "URL for member"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
