@@ -69,6 +69,7 @@ class Group < ActiveRecord::Base
     new_group = create(group_params)
     return new_group unless new_group.errors.empty?
 
+    new_group.invite_users(invitees) if invitees
     AddImage.call(new_group, group_image) if group_image
     new_group
   end
