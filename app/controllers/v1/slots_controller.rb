@@ -3,8 +3,7 @@ module V1
     skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
 
     # GET /v1/slots
-    # return all slots (std, group, re) of the current user
-    # should almost probably also include slots from friends
+    # return slots (std, re) of the current user
     def index
       authorize :slot
       @slots = policy_scope(:slot)

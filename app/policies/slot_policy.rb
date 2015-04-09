@@ -8,8 +8,7 @@ class SlotPolicy < ApplicationPolicy
     end
 
     def resolve
-      user.all_slots
-      # add slots from friends
+      user.my_slots
     end
   end
 

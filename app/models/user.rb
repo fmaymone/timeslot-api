@@ -109,12 +109,10 @@ class User < ActiveRecord::Base
   end
 
   # including deleted slots
-  def all_slots
+  def my_slots
     slots = []
     slots.push(*std_slots)
-    slots.push(*group_slots)
     slots.push(*re_slots)
-    # TODO: add slots from friends
   end
 
   def prepare_for_slot_deletion(slot)

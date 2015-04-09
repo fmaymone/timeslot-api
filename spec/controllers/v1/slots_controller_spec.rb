@@ -16,16 +16,9 @@ RSpec.describe V1::SlotsController, type: :controller do
       create(:std_slot, meta_slot: metas[1], owner: current_user) }
     let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
-    let(:groups) { create_list(:group, 2) }
-    let!(:memberships) {
-      create(:membership, group: groups[0], user: current_user)
-      create(:membership, group: groups[1], user: current_user) }
-    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
-    let!(:group_slots_2) { create_list(:group_slot, 5, group: groups[1]) }
-
     it "assigns all slots as @slots" do
       get :index, {}, valid_session
-      slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
+      slots_count = 2 + re_slots.size
       expect(assigns(:slots).length).to eq slots_count
     end
   end

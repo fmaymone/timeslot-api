@@ -17,13 +17,6 @@ resource "Slots" do
     let!(:re_slots) {
       create_list(:re_slot, 4, :with_likes, slotter: current_user) }
 
-    let(:groups) { create_list(:group, 2) }
-    let!(:memberships) {
-      create(:membership, group: groups[0], user: current_user)
-      create(:membership, group: groups[1], user: current_user) }
-    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
-    let!(:group_slots_2) { create_list(:group_slot, 2, group: groups[1]) }
-
     describe "Get all slots for current user" do
 
       response_field :id, "ID of the slot"
@@ -35,19 +28,18 @@ resource "Slots" do
       response_field :notes, "A list of all notes on the slot"
       response_field :likes, "Number of likes for the slot"
       response_field :commentsCounter, "Number of comments on the slot"
-      response_field :photos, "Photosfor the slot"
+      response_field :photos, "Photos for the slot"
       response_field :voices, "Voice recordings for the slot"
       response_field :videos, "Videos for the slot"
       response_field :url, "direct url to fetch the slot"
       response_field :visibility, "Visibility if it's a StandardSlot"
-      response_field :groupId, "ID of belonging Group if it's a GroupSlot"
       response_field :createdAt, "Creation datetime of the slot"
       response_field :updatedAt, "Last update of the slot"
       response_field :deletedAt, "Deletion datetime of the slot"
 
       example "Get all slots for current user", document: :v1 do
-        explanation "Returns an array which includes StandardSlots," \
-                    " ReSlots & GroupSlots\n\n" \
+        explanation "Returns an array which includes StandardSlots &" \
+                    " ReSlots\n\n" \
                     "If a user is authenticated the slot settings" \
                     " (alerts) will be included."
         do_request
@@ -136,27 +128,6 @@ resource "Slots" do
                       "videos" => re_slots[0].videos,
                       "url" => v1_slot_url(re_slots[0], format: :json),
                       "creatorId" => re_slots[0].creator.id
-                     )
-        expect(json)
-          .to include("id" => group_slots_1[0].id,
-                      "title" => group_slots_1[0].title,
-                      "locationId" => group_slots_1[0].location_id,
-                      "startDate" => group_slots_1[0].start_date.as_json,
-                      "endDate" => group_slots_1[0].end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(group_slots_1[0]) },
-                      "groupId" => group_slots_1[0].group.id,
-                      "createdAt" => group_slots_1[0].created_at.as_json,
-                      "updatedAt" => group_slots_1[0].updated_at.as_json,
-                      "deletedAt" => group_slots_1[0].deleted_at,
-                      "notes" => group_slots_1[0].notes,
-                      "likes" => group_slots_1[0].likes.count,
-                      "commentsCounter" => group_slots_1[0].comments.count,
-                      "photos" => group_slots_1[0].photos,
-                      "voices" => group_slots_1[0].voices,
-                      "videos" => group_slots_1[0].videos,
-                      "url" => v1_slot_url(group_slots_1[0], format: :json),
-                      "creatorId" => group_slots_1[0].creator.id
                      )
       end
     end
