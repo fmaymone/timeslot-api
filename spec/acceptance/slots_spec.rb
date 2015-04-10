@@ -5,134 +5,6 @@ resource "Slots" do
   let(:current_user) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  get "/v1/slots" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slot_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slot_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) {
-      create_list(:re_slot, 4, :with_likes, slotter: current_user) }
-
-    describe "Get all slots for current user" do
-
-      response_field :id, "ID of the slot"
-      response_field :title, "Title of the slot"
-      response_field :startDate, "Startdate of the slot"
-      response_field :endDate, "Enddate of the slot"
-      response_field :creatorId, "ID of the User who created the slot"
-      response_field :alerts, "Alerts for the slot for the current user"
-      response_field :notes, "A list of all notes on the slot"
-      response_field :likes, "Number of likes for the slot"
-      response_field :commentsCounter, "Number of comments on the slot"
-      response_field :photos, "Photos for the slot"
-      response_field :voices, "Voice recordings for the slot"
-      response_field :videos, "Videos for the slot"
-      response_field :url, "direct url to fetch the slot"
-      response_field :visibility, "Visibility if it's a StandardSlot"
-      response_field :createdAt, "Creation datetime of the slot"
-      response_field :updatedAt, "Last update of the slot"
-      response_field :deletedAt, "Deletion datetime of the slot"
-
-      example "Get all slots for current user", document: :v1 do
-        explanation "Returns an array which includes StandardSlots &" \
-                    " ReSlots\n\n" \
-                    "If a user is authenticated the slot settings" \
-                    " (alerts) will be included."
-        do_request
-
-        expect(response_status).to eq(200)
-        slot_count = current_user.std_slots.count +
-                     current_user.group_slots.count +
-                     current_user.re_slots.count
-        expect(json.length).to eq slot_count
-        expect(json.first).to have_key("id")
-        expect(json.first).to have_key("title")
-        expect(json.first).to have_key("locationId")
-        expect(json.first).to have_key("startDate")
-        expect(json.first).to have_key("endDate")
-        expect(json.first).to have_key("settings")
-        expect(json.first).to have_key("createdAt")
-        expect(json.first).to have_key("updatedAt")
-        expect(json.first).to have_key("deletedAt")
-        expect(json.first).to have_key("creatorId")
-        expect(json.first).to have_key("notes")
-        expect(json.first).to have_key("likes")
-        expect(json.first).to have_key("commentsCounter")
-        expect(json.first).to have_key("visibility")
-        expect(json.first).to have_key("photos")
-        expect(json.first).to have_key("voices")
-        expect(json.first).to have_key("videos")
-        expect(json.first).to have_key("url")
-        expect(json)
-          .to include("id" => std_slot_1.id,
-                      "title" => std_slot_1.title,
-                      "locationId" => std_slot_1.location_id,
-                      "startDate" => std_slot_1.start_date.as_json,
-                      "endDate" => std_slot_1.end_date.as_json,
-                      "createdAt" => std_slot_1.created_at.as_json,
-                      "updatedAt" => std_slot_1.updated_at.as_json,
-                      "deletedAt" => std_slot_1.deleted_at,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_1) },
-                      "notes" => std_slot_1.notes,
-                      "likes" => std_slot_1.likes.count,
-                      "commentsCounter" => std_slot_1.comments.count,
-                      "photos" => std_slot_1.photos,
-                      "voices" => std_slot_1.voices,
-                      "videos" => std_slot_1.videos,
-                      "visibility" => std_slot_1.visibility,
-                      "url" => v1_slot_url(std_slot_1, format: :json),
-                      "creatorId" => std_slot_1.creator.id
-                     )
-        expect(json)
-          .to include("id" => std_slot_2.id,
-                      "title" => std_slot_2.title,
-                      "locationId" => std_slot_2.location_id,
-                      "startDate" => std_slot_2.start_date.as_json,
-                      "endDate" => std_slot_2.end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_2) },
-                      "createdAt" => std_slot_2.created_at.as_json,
-                      "updatedAt" => std_slot_2.updated_at.as_json,
-                      "deletedAt" => std_slot_2.deleted_at,
-                      "notes" => std_slot_2.notes,
-                      "likes" => std_slot_2.likes.count,
-                      "commentsCounter" => std_slot_2.comments.count,
-                      "photos" => std_slot_2.photos,
-                      "voices" => std_slot_2.voices,
-                      "videos" => std_slot_2.videos,
-                      "visibility" => std_slot_2.visibility,
-                      "url" => v1_slot_url(std_slot_2, format: :json),
-                      "creatorId" => std_slot_2.creator.id
-                     )
-        expect(json)
-          .to include("id" => re_slots[0].id,
-                      "title" => re_slots[0].title,
-                      "locationId" => re_slots[0].location_id,
-                      "startDate" => re_slots[0].start_date.as_json,
-                      "endDate" => re_slots[0].end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(re_slots[0]) },
-                      "createdAt" => re_slots[0].created_at.as_json,
-                      "updatedAt" => re_slots[0].updated_at.as_json,
-                      "deletedAt" => re_slots[0].deleted_at,
-                      "notes" => re_slots[0].notes,
-                      "likes" => re_slots[0].likes.count,
-                      "commentsCounter" => re_slots[0].comments.count,
-                      "photos" => re_slots[0].photos,
-                      "voices" => re_slots[0].voices,
-                      "videos" => re_slots[0].videos,
-                      "url" => v1_slot_url(re_slots[0], format: :json),
-                      "creatorId" => re_slots[0].creator.id
-                     )
-      end
-    end
-  end
-
   post "/v1/slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
@@ -178,7 +50,7 @@ resource "Slots" do
 
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
-      example "Get several slots returns slot data", document: :v1 do
+      example "Get multiple slots", document: :v1 do
         explanation "if a user is authenticated the slot settings" \
                     " (alerts) will be included\n\n" \
                     "returns 404 if an ID is invalid"
@@ -286,7 +158,7 @@ resource "Slots" do
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
-      example "Get slot returns slot data", document: :v1 do
+      example "Get slot", document: :v1 do
         explanation "if a user is authenticated the slot settings" \
                     " (alerts) will be included\n\n" \
                     "returns 404 if ID is invalid"

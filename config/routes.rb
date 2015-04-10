@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
-    get 'slots/', to: 'slots#index'
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
     post 'slots', to: 'slots#show_many', as: 'slots_read'
 
@@ -100,7 +99,7 @@ Rails.application.routes.draw do
           to: 'groups#members',
           as: 'group_members',
           constraints: { group_id: /\d+/ }
-     get ':group_id/related',
+      get ':group_id/related',
           to: 'groups#related',
           as: 'group_related',
           constraints: { group_id: /\d+/ }
