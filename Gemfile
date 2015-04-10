@@ -67,7 +67,8 @@ group :development, :test, :herokutest do
 
   gem 'database_cleaner'
 
-  gem 'rspec_api_documentation'
+  # monkey patched version for json response body pretty printing is in my github
+  gem 'rspec_api_documentation' #, git: 'https://github.com/ts-silvio/rspec_api_documentation.git'
 
   gem 'shoulda-matchers', require: false
 end
