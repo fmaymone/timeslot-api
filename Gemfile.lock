@@ -1,3 +1,13 @@
+GIT
+  remote: https://github.com/ts-silvio/rspec_api_documentation.git
+  revision: d3f5de909d6713b0e603468ff685d4dbc7b61ed1
+  specs:
+    rspec_api_documentation (4.3.0)
+      activesupport (>= 3.0.0)
+      json (~> 1.4, >= 1.4.6)
+      mustache (~> 0.99, >= 0.99.4)
+      rspec (>= 3.0.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -61,8 +71,6 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faker (1.4.3)
-      i18n (~> 0.5)
     ffi (1.9.6)
     formatador (0.2.5)
     guard (2.10.1)
@@ -171,11 +179,6 @@ GEM
       rspec-mocks (~> 3.0.0)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.4)
-    rspec_api_documentation (4.3.0)
-      activesupport (>= 3.0.0)
-      json (~> 1.4, >= 1.4.6)
-      mustache (~> 0.99, >= 0.99.4)
-      rspec (>= 3.0.0)
     ruby-graphviz (1.0.9)
     safe_yaml (1.0.4)
     shoulda-matchers (2.7.0)
@@ -223,7 +226,6 @@ DEPENDENCIES
   cloudinary
   database_cleaner
   factory_girl_rails
-  faker
   guard-rspec
   jbuilder
   oj
@@ -239,7 +241,7 @@ DEPENDENCIES
   rails_12factor
   rb-fsevent
   rspec-rails (~> 3.0.0)
-  rspec_api_documentation
+  rspec_api_documentation!
   shoulda-matchers
   spring
   spring-commands-rspec
