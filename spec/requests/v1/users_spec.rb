@@ -270,6 +270,26 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  describe "GET /v1/users/:id/slots" do
+    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
+    let!(:std_slot_1) {
+      create(:std_slot, meta_slot: metas[0], owner: current_user) }
+    let!(:std_slot_2) {
+      create(:std_slot, meta_slot: metas[1], owner: current_user) }
+    let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
+
+    it "returns success" do
+      get "/v1/users/#{current_user.id}/slots", {}, auth_header
+      expect(response.status).to be(200)
+    end
+
+    it "returns all slots for the current_user" do
+      get "/v1/users/#{current_user.id}/slots", {}, auth_header
+      slots_count = 2 + re_slots.size
+      expect(json.length).to eq slots_count
+    end
+  end
+
   describe "POST /v1/users/add_friends" do
     let(:john) { create(:user, username: "John") }
 

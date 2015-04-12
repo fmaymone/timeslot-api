@@ -17,11 +17,6 @@ class SlotPolicy < ApplicationPolicy
     @slot = slot
   end
 
-  # false if no current user
-  def index?
-    current_user?
-  end
-
   # true if slot is public
   # true if the current user is allowed to see this slot
   def show?

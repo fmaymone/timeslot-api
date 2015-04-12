@@ -5,24 +5,6 @@ describe SlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :index? do
-    context "for a user" do
-      let(:user) { create(:user) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-  end
-
   permissions :share_data? do
     context "for a user with role 'webview'" do
       let(:user) { create(:user) }
