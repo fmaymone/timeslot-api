@@ -232,7 +232,7 @@ resource "Users" do
   end
 
 
-  get "/v1/users/:id/slots", :focus do
+  get "/v1/users/:id/slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 

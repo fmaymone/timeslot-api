@@ -11,18 +11,6 @@ module V1
       render :index
     end
 
-    # GET /v1/users/1/slots
-    # method was added for demo purposes
-    # def show_slots
-    #   user = User.find(params[:id])
-    #   @slots = []
-    #   @slots.push(*user.std_slots)
-    #   @slots.push(*user.re_slots)
-    #   @slots.push(*user.group_slots)
-
-    #   render "v1/slots/index"
-    # end
-
     # GET /v1/users/1
     def show
       authorize :user
@@ -104,6 +92,18 @@ module V1
         render json: { error: @user.errors },
                status: :unprocessable_entity
       end
+    end
+
+    # GET /v1/users/1/slots
+    # return slots (std, re) for the current user
+    def slots
+      user = User.find(params[:id])
+
+      authorize user
+      p 'aaa'
+      @slots = policy_scope(user)
+
+      render "v1/slots/index"
     end
 
     # POST /v1/users/add_friends
