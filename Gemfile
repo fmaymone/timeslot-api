@@ -8,28 +8,23 @@ gem 'rails-api'
 
 gem 'pg'
 
-# To use ActiveModel has_secure_password
+# Authentication (to use ActiveModel has_secure_password)
 gem 'bcrypt'
 
+# Authorization
 gem "pundit"
 
-# To use Jbuilder templates for JSON
+# JSON
 gem 'jbuilder'
-
 gem 'oj'
-
 gem 'oj_mimic_json'
 
-# Use unicorn as the app server
+# for heroku
 gem 'unicorn'
-
 gem 'rails_12factor', group: :production
 
+# third party services
 gem 'cloudinary'
-
-# Deploy with Capistrano
-# gem 'capistrano', :group => :development
-
 gem 'airbrake'
 
 group :development do
@@ -51,8 +46,6 @@ group :development, :test do
 
   gem 'rb-fsevent'
 
-  gem 'faker'
-
   gem 'bullet'
 
   gem 'vcr'
@@ -67,8 +60,8 @@ group :development, :test, :herokutest do
 
   gem 'database_cleaner'
 
-  # monkey patched version for json response body pretty printing is in my github
-  gem 'rspec_api_documentation' #, git: 'https://github.com/ts-silvio/rspec_api_documentation.git'
+  # github version contains a monkey patch for pretty printing response body in API docs
+  gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
   gem 'shoulda-matchers', require: false
 end
