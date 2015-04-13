@@ -8,21 +8,6 @@ RSpec.describe V1::SlotsController, type: :controller do
   let(:current_user) { create(:user) }
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slots_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slots_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
-
-    it "assigns all slots as @slots" do
-      get :index, {}, valid_session
-      slots_count = 2 + re_slots.size
-      expect(assigns(:slots).length).to eq slots_count
-    end
-  end
-
   describe "GET show" do
     let(:std_slot) { create(:std_slot, :publicslot) }
 
