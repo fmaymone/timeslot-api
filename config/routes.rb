@@ -62,7 +62,7 @@ Rails.application.routes.draw do
     scope :users do
       get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
-      get ':id/slots',
+      get ':user_id/slots',
           to: 'users#slots',
           as: 'user_slots',
           constraints: { id: /\d+/ }

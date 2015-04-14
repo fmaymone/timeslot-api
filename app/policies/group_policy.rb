@@ -2,7 +2,7 @@ class GroupPolicy < ApplicationPolicy
   attr_reader :current_user, :group
 
   def initialize(user, group)
-    @current_user = user
+    @current_user = user.try(:current_user) || user
     @group = group
   end
 

@@ -24,4 +24,22 @@ class ApplicationController < ActionController::API
   rescue_from Pundit::NotAuthorizedError do
     head :unauthorized
   end
+
+  class UserContext
+    attr_reader :current_user, :requested_user
+
+    def initialize(current_user, requested_user = nil)
+      @current_user = current_user
+      @requested_user = requested_user
+    end
+  end
+
+  def pundit_user
+    if params[:user_id].present?
+      requested_user = User.find(params[:user_id])
+      UserContext.new(current_user, requested_user)
+    else
+      current_user
+    end
+  end
 end
