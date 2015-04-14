@@ -66,6 +66,7 @@ Rails.application.routes.draw do
           to: 'users#slots',
           as: 'user_slots',
           constraints: { id: /\d+/ }
+      get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'
       delete '', to: 'users#destroy', as: 'user_delete'

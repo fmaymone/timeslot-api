@@ -32,5 +32,23 @@ FactoryGirl.define do
         create_list :membership, 3, user: user
       end
     end
+
+    trait :with_private_slot do
+      after :create do |user|
+        create :std_slot, owner: user
+      end
+    end
+
+    trait :with_friend_slot do
+      after :create do |user|
+        create :std_slot, :friendslot, owner: user
+      end
+    end
+
+    trait :with_public_slot do
+      after :create do |user|
+        create :std_slot, :publicslot, owner: user
+      end
+    end
   end
 end
