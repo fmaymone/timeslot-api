@@ -26,7 +26,8 @@ resource "Users" do
 
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                    'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys { |key| key.camelize(:lower) })
@@ -174,7 +175,8 @@ resource "Users" do
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+          json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                      'slotCount', 'groups')
         ).to eq(current_user.attributes.as_json
                  .except("auth_token", "password_digest", "role")
                  .transform_keys { |key| key.camelize(:lower) })
@@ -224,48 +226,44 @@ resource "Users" do
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                    'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 
-
   get "/v1/users/:id/slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:id) { current_user.id }
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slot_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slot_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) {
-      create_list(:re_slot, 4, :with_likes, slotter: current_user) }
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :creatorId, "ID of the User who created the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :notes, "A list of all notes on the slot"
+    response_field :likes, "Number of likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :photos, "Photos for the slot"
+    response_field :voices, "Voice recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :visibility, "Visibility if it's a StandardSlot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
 
-    describe "Get all slots for current user" do
+    describe "Get slots for current user" do
+      let(:id) { current_user.id }
 
-      response_field :id, "ID of the slot"
-      response_field :title, "Title of the slot"
-      response_field :startDate, "Startdate of the slot"
-      response_field :endDate, "Enddate of the slot"
-      response_field :creatorId, "ID of the User who created the slot"
-      response_field :alerts, "Alerts for the slot for the current user"
-      response_field :notes, "A list of all notes on the slot"
-      response_field :likes, "Number of likes for the slot"
-      response_field :commentsCounter, "Number of comments on the slot"
-      response_field :photos, "Photos for the slot"
-      response_field :voices, "Voice recordings for the slot"
-      response_field :videos, "Videos for the slot"
-      response_field :url, "direct url to fetch the slot"
-      response_field :visibility, "Visibility if it's a StandardSlot"
-      response_field :createdAt, "Creation datetime of the slot"
-      response_field :updatedAt, "Last update of the slot"
-      response_field :deletedAt, "Deletion datetime of the slot"
+      let!(:std_slot_1) { create(:std_slot, owner: current_user) }
+      let!(:std_slot_2) { create(:std_slot, owner: current_user) }
+      let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
-      example "Get all slots for current user", document: :v1 do
+      example "Get slots for current user", document: :v1 do
         explanation "Returns an array which includes StandardSlots &" \
                     " ReSlots\n\n" \
                     "If a user is authenticated the slot settings" \
@@ -359,6 +357,99 @@ resource "Users" do
                      )
       end
     end
+
+    describe "Get slots for other user" do
+      let(:joe) { create(:user, username: "Joe") }
+      let(:id) { joe.id }
+
+      let!(:std_slot_secret) { create(:std_slot, owner: joe) }
+      let!(:std_slot_friend) { create(:std_slot, :friendslot, owner: joe) }
+      let!(:std_slot_public) { create(:std_slot, :publicslot, owner: joe) }
+      let!(:re_slots) { create(:re_slot, slotter: joe) }
+      let(:incommon_groupslot) { create(:group_slot) }
+
+      describe "befriended user" do
+        let!(:friendship) {
+          create(:friendship, :established, user: joe, friend: current_user) }
+        let(:groupslot) { create(:group_slot) }
+        let!(:memberships) {
+          create(:membership, :active, group: groupslot.group, user: current_user)
+          create(:membership, :active, group: groupslot.group, user: joe)
+          create(:membership, :active, group: incommon_groupslot.group, user: joe)
+        }
+
+        example "Get slots for befriended user", document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'friend' or 'public', ReSlots & shared" \
+                      " GroupSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.friend_visible.count +
+                       joe.std_slots.public_visible.count +
+                       current_user.shared_group_slots(joe).count +
+                       joe.re_slots.count
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).to include groupslot.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+
+      describe "unrelated user with common groups" do
+        let(:groupslot) { create(:group_slot) }
+        let!(:memberships) {
+          create(:membership, :active, group: groupslot.group, user: current_user)
+          create(:membership, :active, group: groupslot.group, user: joe)
+          create(:membership, :active, group: incommon_groupslot.group, user: joe)
+        }
+
+        example "Get slots of unrelated user with common groups",
+                document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'public', 'public'-ReSlots & shared" \
+                      " GroupSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.public_visible.count +
+                       joe.re_slots.count +
+                       current_user.shared_group_slots(joe).count
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).not_to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).to include groupslot.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+
+      describe "unrelated user" do
+        example "Get slots of unrelated user", document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'public' and 'public'-ReSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.public_visible.count + joe.re_slots.count
+          expect(json.length).to eq slot_count
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).not_to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+    end
   end
 
   post "/v1/users/add_friends" do
@@ -387,7 +478,7 @@ resource "Users" do
                   "If the friendship was already initiated by the other User" \
                   " it will be accepted.\n\n" \
                   # "returns a list of all User IDs for which a friendship was" \
-                  # " created (request of fully established)\n\n." \
+                  # " created (requested or fully established)\n\n." \
                   "returns 404 if an User ID is invalid"
 
       do_request

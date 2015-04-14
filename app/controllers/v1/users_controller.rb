@@ -2,6 +2,8 @@ module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
                        only: [:create, :signin, :reset_password]
+    skip_after_action :verify_authorized, only: :slots
+    after_action :verify_policy_scoped, only: :slots
 
     # GET /v1/users
     def index
@@ -95,13 +97,8 @@ module V1
     end
 
     # GET /v1/users/1/slots
-    # return slots (std, re) for the current user
     def slots
-      user = User.find(params[:id])
-
-      authorize user
-      p 'aaa'
-      @slots = policy_scope(user)
+      @slots = policy_scope(:slot)
 
       render "v1/slots/index"
     end
