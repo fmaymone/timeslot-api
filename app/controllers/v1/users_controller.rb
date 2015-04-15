@@ -103,6 +103,21 @@ module V1
       render "v1/slots/index"
     end
 
+    # GET /v1/users/friendslots
+    # This is weird and not nice, pundit scopes seem way to inflexible...
+    # the 'resolve' method for SlotPolicy is already used by 'slots' method
+    # using another name doesn't trigger 'performed' for the scoped policy
+    # while the business logic is now in the policy instead of the model,
+    # the instantiation of the policy is ugly as shit
+    def slots_from_friends
+      authorize :user
+
+      ctx = UserContext.new(current_user, nil)
+      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+
+      render "v1/slots/index"
+    end
+
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends

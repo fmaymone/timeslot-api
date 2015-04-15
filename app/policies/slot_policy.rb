@@ -31,6 +31,17 @@ class SlotPolicy < ApplicationPolicy
           current_user.shared_group_slots(requested_user)
       end
     end
+
+    # TODO: optimize db access / query BKD-121
+    def friend_slots
+      slots = []
+      current_user.friends.each do |friend|
+        slots.push(*friend.std_slots.friend_visible)
+        slots.push(*friend.std_slots.public_visible)
+        slots.push(*friend.re_slots)
+      end
+      slots
+    end
   end
 
   def initialize(user, slot)
