@@ -28,6 +28,20 @@ RSpec.describe "V1::Groups", type: :request do
            auth_header
       expect(json["image"]).to eq "foobar"
     end
+
+    context "invite multiple members on group creation" do
+      let(:new_params) do
+        { name: "bar",
+          invitees: create_list(:user, 3).collect(&:id) }
+      end
+
+      it "creates memberships for all invitees" do
+        expect {
+          post "/v1/groups", new_params, auth_header
+        }.to change(Membership, :count).by 4
+        expect(Membership.last.invited?).to be true
+      end
+    end
   end
 
   # update
@@ -201,12 +215,12 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         expect(response.status).to be(201)
       end
 
       it "returns a list of all users related to that group" do
-        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         expect(json).to have_key "related"
         # group owner is automatically an active member too
         expect(json['related'].size).to eq 6
@@ -214,7 +228,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "creates new memberships with state 'invited' for all new members" do
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size)
         other_users.each do |id|
           expect(Membership.where(user_id: id).first.invited?).to be true
@@ -225,7 +239,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :invited, user: other_users.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 1)
       end
 
@@ -233,7 +247,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :active, user: other_users.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 1)
       end
 
@@ -242,7 +256,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :refused, user: other_users.last, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 2)
         membership1 = Membership.where(user_id: other_users.first).first
         membership2 = Membership.where(user_id: other_users.last).first
@@ -252,7 +266,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "doesn't add user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.not_to change(group.members, :count)
       end
 
@@ -262,13 +276,13 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, user: other_users.first, group: group)
           }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { ids: [ids.first] },
+              post "/v1/groups/#{group.id}/members", { invitees: [ids.first] },
                    auth_header
             }.not_to change(Membership, :count)
           end
@@ -279,7 +293,7 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :active, user: other_users.first, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
         end
@@ -289,19 +303,19 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :left, user: other_users.first, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { ids: [ids.first] },
+              post "/v1/groups/#{group.id}/members", { invitees: [ids.first] },
                    auth_header
             }.not_to change(Membership, :count)
           end
 
           it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
             membership.reload
             expect(membership.invited?).to be true
           end
@@ -315,13 +329,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Unauthorized" do
-        post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         expect(response.status).to be 401
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members", { ids: ids }, auth_header
+          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
         }.not_to change(Membership, :count)
       end
     end

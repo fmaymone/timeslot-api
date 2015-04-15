@@ -2,6 +2,8 @@ module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
                        only: [:create, :signin, :reset_password]
+    skip_after_action :verify_authorized, only: :slots
+    after_action :verify_policy_scoped, only: :slots
 
     # GET /v1/users
     def index
@@ -10,18 +12,6 @@ module V1
 
       render :index
     end
-
-    # GET /v1/users/1/slots
-    # method was added for demo purposes
-    # def show_slots
-    #   user = User.find(params[:id])
-    #   @slots = []
-    #   @slots.push(*user.std_slots)
-    #   @slots.push(*user.re_slots)
-    #   @slots.push(*user.group_slots)
-
-    #   render "v1/slots/index"
-    # end
 
     # GET /v1/users/1
     def show
@@ -104,6 +94,28 @@ module V1
         render json: { error: @user.errors },
                status: :unprocessable_entity
       end
+    end
+
+    # GET /v1/users/1/slots
+    def slots
+      @slots = policy_scope(:slot)
+
+      render "v1/slots/index"
+    end
+
+    # GET /v1/users/friendslots
+    # This is weird and not nice, pundit scopes seem way to inflexible...
+    # the 'resolve' method for SlotPolicy is already used by 'slots' method
+    # using another name doesn't trigger 'performed' for the scoped policy
+    # while the business logic is now in the policy instead of the model,
+    # the instantiation of the policy is ugly as shit
+    def slots_from_friends
+      authorize :user
+
+      ctx = UserContext.new(current_user, nil)
+      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+
+      render "v1/slots/index"
     end
 
     # POST /v1/users/add_friends

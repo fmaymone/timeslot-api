@@ -26,7 +26,8 @@ resource "Users" do
 
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                    'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys { |key| key.camelize(:lower) })
@@ -174,7 +175,8 @@ resource "Users" do
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+          json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                      'slotCount', 'groups')
         ).to eq(current_user.attributes.as_json
                  .except("auth_token", "password_digest", "role")
                  .transform_keys { |key| key.camelize(:lower) })
@@ -224,10 +226,279 @@ resource "Users" do
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount', 'slotCount', 'groups')
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                    'slotCount', 'groups')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role")
                .transform_keys{ |key| key.camelize(:lower) })
+    end
+  end
+
+  get "/v1/users/:id/slots" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :creatorId, "ID of the User who created the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :notes, "A list of all notes on the slot"
+    response_field :likes, "Number of likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :photos, "Photos for the slot"
+    response_field :voices, "Voice recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :visibility, "Visibility if it's a StandardSlot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
+    describe "Get slots for current user" do
+      let(:id) { current_user.id }
+
+      let!(:std_slot_1) { create(:std_slot, owner: current_user) }
+      let!(:std_slot_2) { create(:std_slot, owner: current_user) }
+      let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
+
+      example "Get slots for current user", document: :v1 do
+        explanation "Returns an array which includes StandardSlots &" \
+                    " ReSlots\n\n" \
+                    "If a user is authenticated the slot settings" \
+                    " (alerts) will be included."
+        do_request
+
+        expect(response_status).to eq(200)
+        slot_count = current_user.std_slots.count +
+                     current_user.group_slots.count +
+                     current_user.re_slots.count
+        expect(json.length).to eq slot_count
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("title")
+        expect(json.first).to have_key("locationId")
+        expect(json.first).to have_key("startDate")
+        expect(json.first).to have_key("endDate")
+        expect(json.first).to have_key("settings")
+        expect(json.first).to have_key("createdAt")
+        expect(json.first).to have_key("updatedAt")
+        expect(json.first).to have_key("deletedAt")
+        expect(json.first).to have_key("creatorId")
+        expect(json.first).to have_key("notes")
+        expect(json.first).to have_key("likes")
+        expect(json.first).to have_key("commentsCounter")
+        expect(json.first).to have_key("visibility")
+        expect(json.first).to have_key("photos")
+        expect(json.first).to have_key("voices")
+        expect(json.first).to have_key("videos")
+        expect(json.first).to have_key("url")
+        expect(json)
+          .to include("id" => std_slot_1.id,
+                      "title" => std_slot_1.title,
+                      "locationId" => std_slot_1.location_id,
+                      "startDate" => std_slot_1.start_date.as_json,
+                      "endDate" => std_slot_1.end_date.as_json,
+                      "createdAt" => std_slot_1.created_at.as_json,
+                      "updatedAt" => std_slot_1.updated_at.as_json,
+                      "deletedAt" => std_slot_1.deleted_at,
+                      "settings" => {
+                        'alerts' => current_user.alerts(std_slot_1) },
+                      "notes" => std_slot_1.notes,
+                      "likes" => std_slot_1.likes.count,
+                      "commentsCounter" => std_slot_1.comments.count,
+                      "photos" => std_slot_1.photos,
+                      "voices" => std_slot_1.voices,
+                      "videos" => std_slot_1.videos,
+                      "visibility" => std_slot_1.visibility,
+                      "url" => v1_slot_url(std_slot_1, format: :json),
+                      "creatorId" => std_slot_1.creator.id
+                     )
+        expect(json)
+          .to include("id" => std_slot_2.id,
+                      "title" => std_slot_2.title,
+                      "locationId" => std_slot_2.location_id,
+                      "startDate" => std_slot_2.start_date.as_json,
+                      "endDate" => std_slot_2.end_date.as_json,
+                      "settings" => {
+                        'alerts' => current_user.alerts(std_slot_2) },
+                      "createdAt" => std_slot_2.created_at.as_json,
+                      "updatedAt" => std_slot_2.updated_at.as_json,
+                      "deletedAt" => std_slot_2.deleted_at,
+                      "notes" => std_slot_2.notes,
+                      "likes" => std_slot_2.likes.count,
+                      "commentsCounter" => std_slot_2.comments.count,
+                      "photos" => std_slot_2.photos,
+                      "voices" => std_slot_2.voices,
+                      "videos" => std_slot_2.videos,
+                      "visibility" => std_slot_2.visibility,
+                      "url" => v1_slot_url(std_slot_2, format: :json),
+                      "creatorId" => std_slot_2.creator.id
+                     )
+        expect(json)
+          .to include("id" => re_slots[0].id,
+                      "title" => re_slots[0].title,
+                      "locationId" => re_slots[0].location_id,
+                      "startDate" => re_slots[0].start_date.as_json,
+                      "endDate" => re_slots[0].end_date.as_json,
+                      "settings" => {
+                        'alerts' => current_user.alerts(re_slots[0]) },
+                      "createdAt" => re_slots[0].created_at.as_json,
+                      "updatedAt" => re_slots[0].updated_at.as_json,
+                      "deletedAt" => re_slots[0].deleted_at,
+                      "notes" => re_slots[0].notes,
+                      "likes" => re_slots[0].likes.count,
+                      "commentsCounter" => re_slots[0].comments.count,
+                      "photos" => re_slots[0].photos,
+                      "voices" => re_slots[0].voices,
+                      "videos" => re_slots[0].videos,
+                      "url" => v1_slot_url(re_slots[0], format: :json),
+                      "creatorId" => re_slots[0].creator.id
+                     )
+      end
+    end
+
+    describe "Get slots for other user" do
+      let(:joe) { create(:user, username: "Joe") }
+      let(:id) { joe.id }
+
+      let!(:std_slot_secret) { create(:std_slot, owner: joe) }
+      let!(:std_slot_friend) { create(:std_slot, :friendslot, owner: joe) }
+      let!(:std_slot_public) { create(:std_slot, :publicslot, owner: joe) }
+      let!(:re_slots) { create(:re_slot, slotter: joe) }
+      let(:incommon_groupslot) { create(:group_slot) }
+
+      describe "befriended user" do
+        let!(:friendship) {
+          create(:friendship, :established, user: joe, friend: current_user) }
+        let(:groupslot) { create(:group_slot) }
+        let!(:memberships) {
+          create(:membership, :active, group: groupslot.group, user: current_user)
+          create(:membership, :active, group: groupslot.group, user: joe)
+          create(:membership, :active, group: incommon_groupslot.group, user: joe)
+        }
+
+        example "Get slots for befriended user", document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'friend' or 'public', ReSlots & shared" \
+                      " GroupSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.friend_visible.count +
+                       joe.std_slots.public_visible.count +
+                       current_user.shared_group_slots(joe).count +
+                       joe.re_slots.count
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).to include groupslot.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+
+      describe "unrelated user with common groups" do
+        let(:groupslot) { create(:group_slot) }
+        let!(:memberships) {
+          create(:membership, :active, group: groupslot.group, user: current_user)
+          create(:membership, :active, group: groupslot.group, user: joe)
+          create(:membership, :active, group: incommon_groupslot.group, user: joe)
+        }
+
+        example "Get slots of unrelated user with common groups",
+                document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'public', 'public'-ReSlots & shared" \
+                      " GroupSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.public_visible.count +
+                       joe.re_slots.count +
+                       current_user.shared_group_slots(joe).count
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).not_to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).to include groupslot.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+
+      describe "unrelated user" do
+        example "Get slots of unrelated user", document: :v1 do
+          explanation "Returns an array which includes StandardSlots with" \
+                      " visibility 'public' and 'public'-ReSlots\n\n" \
+                      "If a user is authenticated the slot settings" \
+                      " (alerts) will be included."
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = joe.std_slots.public_visible.count + joe.re_slots.count
+          expect(json.length).to eq slot_count
+          expect(response_body).not_to include std_slot_secret.title
+          expect(response_body).not_to include std_slot_friend.title
+          expect(response_body).to include std_slot_public.title
+          expect(response_body).not_to include incommon_groupslot.title
+        end
+      end
+    end
+  end
+
+  get "/v1/users/friendslots" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :creatorId, "ID of the User who created the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :notes, "A list of all notes on the slot"
+    response_field :likes, "Number of likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :photos, "Photos for the slot"
+    response_field :voices, "Voice recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :visibility, "Visibility if it's a StandardSlot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
+    let(:bob) { create(:user, :with_private_slot) }
+    let!(:re_slot) { create(:re_slot, slotter: bob) }
+    let!(:friendships) {
+      create(:friendship, :established, user: bob, friend: current_user)
+      create(:friendship, :established, user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established, user: create(:user, :with_public_slot),
+             friend: current_user)
+    }
+    let(:id) { current_user.id }
+
+    example "Get slots of current users friends", document: :v1 do
+      explanation "Returns an array which includes the public and" \
+                  " friend-visible StandardSlots &" \
+                  " ReSlots of all friends from the current user"
+      do_request
+
+      expect(response_status).to eq(200)
+      slot_count = 0
+      current_user.friends.each do |friend|
+        slot_count += friend.std_slots.friend_visible.count
+        slot_count += friend.std_slots.public_visible.count
+        slot_count += friend.re_slots.count
+      end
+      expect(json.length).to eq slot_count
     end
   end
 
@@ -257,7 +528,7 @@ resource "Users" do
                   "If the friendship was already initiated by the other User" \
                   " it will be accepted.\n\n" \
                   # "returns a list of all User IDs for which a friendship was" \
-                  # " created (request of fully established)\n\n." \
+                  # " created (requested or fully established)\n\n." \
                   "returns 404 if an User ID is invalid"
 
       do_request

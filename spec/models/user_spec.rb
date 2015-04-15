@@ -168,6 +168,29 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :shared_group_slots do
+    let(:user) { create(:user) }
+    let(:bob) { create(:user) }
+
+    let!(:slot_1) { create(:group_slot) }
+    let!(:slot_2) { create(:group_slot) }
+    let!(:slot_3) { create(:group_slot) }
+
+    let!(:memberships) {
+      create(:membership, :active, group: slot_1.group, user: user)
+      create(:membership, :active, group: slot_1.group, user: bob)
+      create(:membership, :active, group: slot_2.group, user: user)
+      create(:membership, :active, group: slot_2.group, user: bob)
+      create(:membership, :active, group: slot_3.group, user: bob)
+    }
+
+    it "returns slots from common groups but not from other groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).to include slot_1
+      expect(result).not_to include slot_3
+    end
+  end
+
   describe :update_alerts do
     let(:slot) { create(:std_slot, :friendslot, owner: user) }
 

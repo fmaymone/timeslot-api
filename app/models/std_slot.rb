@@ -1,6 +1,9 @@
 class StdSlot < BaseSlot
   self.table_name = model_name.plural
 
+  scope :friend_visible, -> { where visibility: '01' }
+  scope :public_visible, -> { where visibility: '11' }
+
   belongs_to :owner, class_name: User, inverse_of: :std_slots
 
   validates :meta_slot, presence: true

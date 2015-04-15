@@ -102,6 +102,7 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def active_slots(meta_slot)
+    # std_slots.active + re_slots.active + group_slots.active
     slots = []
     slots.push(*std_slots.active.where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
@@ -109,12 +110,15 @@ class User < ActiveRecord::Base
   end
 
   # including deleted slots
-  def all_slots
+  def my_slots
+    # std_slots + re_slots
     slots = []
     slots.push(*std_slots)
-    slots.push(*group_slots)
     slots.push(*re_slots)
-    # TODO: add slots from friends
+  end
+
+  def shared_group_slots(user)
+    group_slots.merge(groups.where('groups.id IN (?)', user.groups.ids))
   end
 
   def prepare_for_slot_deletion(slot)

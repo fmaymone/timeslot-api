@@ -2,16 +2,6 @@ module V1
   class SlotsController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
 
-    # GET /v1/slots
-    # return all slots (std, group, re) of the current user
-    # should almost probably also include slots from friends
-    def index
-      authorize :slot
-      @slots = policy_scope(:slot)
-
-      render :index
-    end
-
     # GET /v1/slots/1
     def show
       @slot = BaseSlot.get(params[:id])
