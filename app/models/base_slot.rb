@@ -4,8 +4,24 @@ class BaseSlot < ActiveRecord::Base
   # it shares postgres inheritance semantics at the db level with its subtypes
   class InterfaceNotImplementedError < NoMethodError; end
 
+  # If a new SlotType is added to the app, it also needs to be added here
+  # I tried to solve this by meta programming but it's not worth the effort
+  enum slot_type: { base_slot: 0,
+                    std_slot_private: 1,
+                    std_slot_friends: 2,
+                    std_slot_public: 3,
+                    group_slot_members: 4,
+                    group_slot_public: 5,
+                    re_slot_friends: 6,
+                    re_slot_public: 7,
+                    BaseSlot: 8,
+                    GroupSlot: 9,
+                    StdSlot: 10,
+                    ReSlot: 11
+                  }
+
   after_commit AuditLog
-  before_create :unique_slot_id
+  after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
 
@@ -22,6 +38,10 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+
+  def set_slot_type
+    self.slot_type ||= self.class.to_s.to_sym
+  end
 
   def photos
     media_items.image.order(:position)
@@ -166,12 +186,6 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  private def unique_slot_id
-    identifier = self.class.slot_map[self.class.model_name.name]
-    slot_id_string = identifier + self.class.count.to_s
-    self.id = slot_id_string.to_i
-  end
-
   private def add_photos(items)
     items.each do |item|
       add_media(item.permit(:public_id, :position).merge(media_type: 'image'))
@@ -215,17 +229,9 @@ class BaseSlot < ActiveRecord::Base
 
   ## class methods ##
 
-  def self.slot_map
-    { 'BaseSlot' => '10',
-      'StdSlot' => '11',
-      'GroupSlot' => '12',
-      'ReSlot' => '13' }
-  end
-
   def self.get(slot_id)
-    class_name = slot_map.invert[slot_id.to_s[0, 2]]
-    fail ActiveRecord::RecordNotFound if class_name.nil?
-    class_name.constantize.find(slot_id)
+    bs = BaseSlot.find(slot_id)
+    bs.slot_type.constantize.find(slot_id)
   end
 
   def self.get_many(slot_ids)
