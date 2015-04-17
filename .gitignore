@@ -92,3 +92,5 @@ rails_best_practices_output.html
 spec/logo.jpg
 
 public/ptl.html
+
+.ackrc
