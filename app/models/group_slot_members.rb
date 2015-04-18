@@ -1,0 +1,2 @@
+class GroupSlotMembers < GroupSlot
+end

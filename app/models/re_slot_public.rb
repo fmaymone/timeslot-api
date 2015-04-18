@@ -1,0 +1,2 @@
+class ReSlotPublic < ReSlot
+end

@@ -1,0 +1,2 @@
+class ReSlotFriends < ReSlot
+end

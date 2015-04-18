@@ -1,0 +1,2 @@
+class GroupSlotPublic < GroupSlot
+end

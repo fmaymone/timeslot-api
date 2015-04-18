@@ -6,11 +6,18 @@ class BaseSlot < ActiveRecord::Base
 
   # If a new SlotType is added to the app, it also needs to be added here
   # I tried to solve this by meta programming but it's not worth the effort
-  SLOT_TYPES = { BaseSlot: 0,
-                 StdSlot: 1,
-                 StdSlotPrivate: 2,
-                 GroupSlot: 8,
-                 ReSlot: 9
+  SLOT_TYPES = { StdSlotPrivate: 1,
+                 StdSlotFriends: 2,
+                 StdSlotPublic: 3,
+                 GroupSlotMembers: 4,
+                 GroupSlotPublic: 5,
+                 ReSlotFriends: 6,
+                 ReSlotPublic: 7,
+                 # mabye remove the following
+                 BaseSlot: 0,
+                 StdSlot: 20,
+                 GroupSlot: 21,
+                 ReSlot: 22,
               }
 
   enum slot_type: SLOT_TYPES
@@ -19,6 +26,7 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # there is also a default scope defined as class method
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
@@ -223,6 +231,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   ## class methods ##
+
+  def self.default_scope
+    where(slot_type: SLOT_TYPES[to_s.to_sym]) unless self == BaseSlot
+  end
 
   def self.get(slot_id)
     bs = BaseSlot.find(slot_id)

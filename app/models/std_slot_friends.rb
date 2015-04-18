@@ -1,0 +1,2 @@
+class StdSlotFriends < StdSlot
+end
