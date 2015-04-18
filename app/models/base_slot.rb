@@ -6,19 +6,14 @@ class BaseSlot < ActiveRecord::Base
 
   # If a new SlotType is added to the app, it also needs to be added here
   # I tried to solve this by meta programming but it's not worth the effort
-  enum slot_type: { base_slot: 0,
-                    std_slot_private: 1,
-                    std_slot_friends: 2,
-                    std_slot_public: 3,
-                    group_slot_members: 4,
-                    group_slot_public: 5,
-                    re_slot_friends: 6,
-                    re_slot_public: 7,
-                    BaseSlot: 8,
-                    GroupSlot: 9,
-                    StdSlot: 10,
-                    ReSlot: 11
-                  }
+  SLOT_TYPES = { BaseSlot: 0,
+                 StdSlot: 1,
+                 StdSlotPrivate: 2,
+                 GroupSlot: 8,
+                 ReSlot: 9
+              }
+
+  enum slot_type: SLOT_TYPES
 
   after_commit AuditLog
   after_initialize :set_slot_type, if: :new_record?
@@ -38,10 +33,6 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
-
-  def set_slot_type
-    self.slot_type ||= self.class.to_s.to_sym
-  end
 
   def photos
     media_items.image.order(:position)
@@ -154,6 +145,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   ## private instance methods ##
+
+  private def set_slot_type
+    self.slot_type ||= self.class.to_s.to_sym
+  end
 
   private def update_media(media_params)
     media_map = [:photos, :voices, :videos]
