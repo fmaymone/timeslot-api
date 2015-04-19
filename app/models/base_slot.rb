@@ -6,6 +6,9 @@ class BaseSlot < ActiveRecord::Base
 
   # If a new SlotType is added to the app, it also needs to be added here
   # I tried to solve this by meta programming but it's not worth the effort
+  # and I want to be sure the same integers are used for the same slot type
+  # Using the classnames as constants is not so pretty but I don't know about
+  # a real downside yet and it saves an additional conversion to snake_case
   SLOT_TYPES = { StdSlotPrivate: 1,
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
