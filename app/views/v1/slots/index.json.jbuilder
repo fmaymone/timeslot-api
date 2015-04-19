@@ -21,11 +21,9 @@ json.array!(@slots) do |slot|
   json.partial! 'v1/media/voices', media: slot.voices
   json.partial! 'v1/media/videos', media: slot.videos
 
-  if slot.class == StdSlot
-    json.visibility slot.visibility
-  elsif slot.class == GroupSlot
-    json.group_id slot.group.id
-  end
+  json.partial! 'v1/slots/visibility', slot: slot
+  json.group_id slot.group.id if slot.class == GroupSlot
+
   json.url v1_slot_url(slot, format: :json)
   json.creator_id slot.creator.id
 end
