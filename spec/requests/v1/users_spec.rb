@@ -271,22 +271,30 @@ RSpec.describe "V1::Users", type: :request do
   end
 
   describe "GET /v1/users/:id/slots" do
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slot_1) {
-      create(:std_slot_private, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slot_2) {
-      create(:std_slot_private, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
+    let(:group_member) { create(:membership, user: current_user) }
+    let!(:group_slot) { create(:group_slot, group: group_member.group) }
+    let!(:slots) do
+      slots = []
+      slots.push create(:std_slot_private, owner: current_user)
+      slots.push create(:std_slot_friends, owner: current_user)
+      slots.push create(:std_slot_public, owner: current_user)
+      slots.push(*create_list(:re_slot, 2, slotter: current_user))
+    end
 
     it "returns success" do
       get "/v1/users/#{current_user.id}/slots", {}, auth_header
       expect(response.status).to be(200)
     end
 
-    it "returns all slots for the current_user" do
+    it "returns all stdslots & reslots for the current_user" do
       get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      slots_count = 2 + re_slots.size
+      slots_count = slots.size
       expect(json.length).to eq slots_count
+    end
+
+    it "excludes groupslots of the current_user" do
+      get "/v1/users/#{current_user.id}/slots", {}, auth_header
+      expect(response.body).not_to include group_slot.title
     end
   end
 

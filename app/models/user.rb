@@ -19,6 +19,14 @@ class User < ActiveRecord::Base
 
   # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
+
+  has_many :std_slots_private, class_name: StdSlotPrivate,
+           foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_friends, class_name: StdSlotFriends,
+           foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_public, class_name: StdSlotPublic,
+           foreign_key: :owner_id, inverse_of: :owner
+
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
   has_many :group_slots, through: :groups
 
@@ -102,19 +110,13 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def active_slots(meta_slot)
+    # TODO
     # std_slots.active + re_slots.active + group_slots.active
     slots = []
-    slots.push(*std_slots.active.where(meta_slot: meta_slot))
+    slots.push(*std_slots_private.active.where(meta_slot: meta_slot))
+    # slots.push(*StdSlot.active.of(self).where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
-  end
-
-  # including deleted slots
-  def my_slots
-    # std_slots + re_slots
-    slots = []
-    slots.push(*std_slots)
-    slots.push(*re_slots)
   end
 
   def shared_group_slots(user)
@@ -236,39 +238,47 @@ class User < ActiveRecord::Base
   ## private methods ##
 
   private def default_alert?(slot, alerts)
-    if slot.class == StdSlot
-      return alerts == default_private_alerts if slot.private?
-      return alerts == default_own_friendslot_alerts if slot.friendslot?
-      return alerts == default_own_public_alerts if slot.public?
-      # TODO: add friends friendslot
-      # TODO: add friends publicslot
-    elsif slot.class == GroupSlot
-      ms = memberships.find_by(group_id: slot.group.id)
-      default_membership_alerts = ms.try(:default_alerts)
-      return alerts == default_group_alerts if default_membership_alerts.nil?
-      return alerts == default_membership_alerts
-    elsif slot.class == ReSlot
-      return alerts == default_reslot_alerts
-    end
-    false
+    alerts == default_alert(slot)
   end
 
   private def default_alert(slot)
-    if slot.class == StdSlot
-      return default_private_alerts if slot.private?
-      return default_own_friendslot_alerts if slot.friendslot?
-      return default_own_public_alerts if slot.public?
-      # TODO: add friends friendslot
-      # TODO: add friends publicslot
-    elsif slot.class == GroupSlot
-      membership = memberships.find_by(group_id: slot.group.id)
-      if !membership.nil? && !membership.default_alerts.nil?
-        return membership.default_alerts
-      elsif !membership.nil?
-        return default_group_alerts
-      end
-    elsif slot.class == ReSlot
-      return default_reslot_alerts
+    case slot
+    when StdSlotPrivate
+      default_private_alerts
+    when StdSlotFriends
+      default_own_friendslot_alerts
+    when StdSlotPublic
+      default_own_public_alerts
+    # TODO: add friends friendslot
+    # TODO: add friends publicslot
+    when ReSlotFriends
+      default_reslot_alerts
+    when ReSlotPublic
+      default_reslot_alerts
+    when GroupSlotMembers
+      group_alert slot
+    when GroupSlotPublic
+      group_alert slot
+    when ReSlot
+      # TODO: change this
+      default_reslot_alerts
+    when GroupSlot
+      # TODO: change this
+      group_alert slot
+    else
+      # TODO: Airbrake
+      p 'this should not happen'
+      fail
+    end
+  end
+
+  private def group_alert(slot)
+    membership = memberships.find_by(group_id: slot.group.id)
+
+    if membership.try(:default_alerts)
+      membership.default_alerts
+    elsif !membership.nil?
+      default_group_alerts
     end
   end
 
@@ -283,7 +293,9 @@ class User < ActiveRecord::Base
 
   private def multiple_representations(slot)
     representations = []
-    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_private.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_friends.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_public.where(meta_slot: slot.meta_slot))
     representations.push(*re_slots.where(meta_slot: slot.meta_slot))
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end

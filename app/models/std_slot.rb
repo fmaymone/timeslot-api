@@ -1,31 +1,44 @@
 class StdSlot < BaseSlot
   self.table_name = model_name.plural
-
-  scope :friend_visible, -> { where visibility: '01' }
-  scope :public_visible, -> { where visibility: '11' }
+  # include OptimallyInheritable
+  # support_sti_for %w(StdSlotPrivate StdSlotPublic)
 
   belongs_to :owner, class_name: User, inverse_of: :std_slots
+  # for some strange reason the association is not found even tough it
+  # works for meta_slot just the same
+  belongs_to :shared_by, class_name: User
 
   validates :meta_slot, presence: true
-  validates :visibility, presence: true
+  validates :visibility, presence: true # TODO: remove
 
   def related_users
     [owner]
   end
 
+  # TODO: remove this three helpers
   def private?
-    visibility == "00"
+    self.StdSlotPrivate?
+    # visibility == "00"
   end
 
   def friendslot?
-    visibility == "01"
+    self.StdSlotFriends?
+    # visibility == "01"
   end
 
   def public?
-    visibility == "11"
+    self.StdSlotPublic?
+    # visibility == "11"
   end
 
   def prepare_for_deletion
+  end
+
+  # I can throw a User object at this and AR automagically takes the ID - nice
+  # or dangerous?
+  # btw I made this classmethod to circumvent my default_scope on the slot_type
+  def self.of(user_id)
+    StdSlot.unscoped.where(owner: user_id)
   end
 
   def self.create_with_meta(meta:, visibility:, media: nil, notes: nil,

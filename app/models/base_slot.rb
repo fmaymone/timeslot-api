@@ -262,14 +262,14 @@ class BaseSlot < ActiveRecord::Base
   def self.create_slot(slot, slot_type, copy_details, user)
     case slot_type
     when "private_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '00')
+      new_slot = StdSlotPrivate.create(meta_slot: slot.meta_slot, owner: user,
+                                       visibility: '00')
     when "friend_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '01')
+      new_slot = StdSlotFriends.create(meta_slot: slot.meta_slot, owner: user,
+                                       visibility: '01')
     when "public_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '11')
+      new_slot = StdSlotPublic.create(meta_slot: slot.meta_slot, owner: user,
+                                      visibility: '11')
     when "re_slots"
       new_slot = ReSlot.create_from_slot(predecessor: slot, slotter: user)
     else

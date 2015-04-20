@@ -17,15 +17,16 @@ class SlotPolicy < ApplicationPolicy
     # common groups (if any) if user is unrelated to current user
     def resolve
       if current_user == requested_user
-        current_user.my_slots
+        StdSlot.of(current_user) +
+          current_user.re_slots
       elsif current_user.friend_with? requested_user
-        requested_user.std_slots.friend_visible +
-          requested_user.std_slots.public_visible +
+        requested_user.std_slots_friends +
+          requested_user.std_slots_public +
           requested_user.re_slots +
           current_user.shared_group_slots(requested_user)
       else
         # TODO: only return reslots from public sources BKD-124
-        requested_user.std_slots.public_visible +
+        requested_user.std_slots_public +
           # requested_user.re_slots.public +
           requested_user.re_slots +
           current_user.shared_group_slots(requested_user)
@@ -36,8 +37,8 @@ class SlotPolicy < ApplicationPolicy
     def friend_slots
       slots = []
       current_user.friends.each do |friend|
-        slots.push(*friend.std_slots.friend_visible)
-        slots.push(*friend.std_slots.public_visible)
+        slots.push(*friend.std_slots_friends)
+        slots.push(*friend.std_slots_public)
         slots.push(*friend.re_slots)
       end
       slots

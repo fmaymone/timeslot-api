@@ -260,7 +260,7 @@ resource "Users" do
       let(:id) { current_user.id }
 
       let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
-      let!(:std_slot_2) { create(:std_slot_private, owner: current_user) }
+      let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
       let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
       example "Get slots for current user", document: :v1 do
@@ -271,8 +271,7 @@ resource "Users" do
         do_request
 
         expect(response_status).to eq(200)
-        slot_count = current_user.std_slots.count +
-                     current_user.group_slots.count +
+        slot_count = StdSlot.of(current_user).count +
                      current_user.re_slots.count
         expect(json.length).to eq slot_count
         expect(json.first).to have_key("id")
@@ -310,50 +309,9 @@ resource "Users" do
                       "photos" => std_slot_1.photos,
                       "voices" => std_slot_1.voices,
                       "videos" => std_slot_1.videos,
-                      "visibility" => std_slot_1.visibility,
+                      "visibility" => std_slot_1.visibilityy,
                       "url" => v1_slot_url(std_slot_1, format: :json),
                       "creatorId" => std_slot_1.creator.id
-                     )
-        expect(json)
-          .to include("id" => std_slot_2.id,
-                      "title" => std_slot_2.title,
-                      "locationId" => std_slot_2.location_id,
-                      "startDate" => std_slot_2.start_date.as_json,
-                      "endDate" => std_slot_2.end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_2) },
-                      "createdAt" => std_slot_2.created_at.as_json,
-                      "updatedAt" => std_slot_2.updated_at.as_json,
-                      "deletedAt" => std_slot_2.deleted_at,
-                      "notes" => std_slot_2.notes,
-                      "likes" => std_slot_2.likes.count,
-                      "commentsCounter" => std_slot_2.comments.count,
-                      "photos" => std_slot_2.photos,
-                      "voices" => std_slot_2.voices,
-                      "videos" => std_slot_2.videos,
-                      "visibility" => std_slot_2.visibility,
-                      "url" => v1_slot_url(std_slot_2, format: :json),
-                      "creatorId" => std_slot_2.creator.id
-                     )
-        expect(json)
-          .to include("id" => re_slots[0].id,
-                      "title" => re_slots[0].title,
-                      "locationId" => re_slots[0].location_id,
-                      "startDate" => re_slots[0].start_date.as_json,
-                      "endDate" => re_slots[0].end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(re_slots[0]) },
-                      "createdAt" => re_slots[0].created_at.as_json,
-                      "updatedAt" => re_slots[0].updated_at.as_json,
-                      "deletedAt" => re_slots[0].deleted_at,
-                      "notes" => re_slots[0].notes,
-                      "likes" => re_slots[0].likes.count,
-                      "commentsCounter" => re_slots[0].comments.count,
-                      "photos" => re_slots[0].photos,
-                      "voices" => re_slots[0].voices,
-                      "videos" => re_slots[0].videos,
-                      "url" => v1_slot_url(re_slots[0], format: :json),
-                      "creatorId" => re_slots[0].creator.id
                      )
       end
     end
@@ -387,8 +345,8 @@ resource "Users" do
           do_request
 
           expect(response_status).to eq(200)
-          slot_count = joe.std_slots.friend_visible.count +
-                       joe.std_slots.public_visible.count +
+          slot_count = joe.std_slots_friends.count +
+                       joe.std_slots_public.count +
                        current_user.shared_group_slots(joe).count +
                        joe.re_slots.count
           expect(json.length).to eq slot_count
@@ -419,7 +377,7 @@ resource "Users" do
           do_request
 
           expect(response_status).to eq(200)
-          slot_count = joe.std_slots.public_visible.count +
+          slot_count = joe.std_slots_public.count +
                        joe.re_slots.count +
                        current_user.shared_group_slots(joe).count
           expect(json.length).to eq slot_count
@@ -441,7 +399,7 @@ resource "Users" do
           do_request
 
           expect(response_status).to eq(200)
-          slot_count = joe.std_slots.public_visible.count + joe.re_slots.count
+          slot_count = joe.std_slots_public.count + joe.re_slots.count
           expect(json.length).to eq slot_count
           expect(response_body).not_to include std_slot_secret.title
           expect(response_body).not_to include std_slot_friend.title
@@ -494,8 +452,8 @@ resource "Users" do
       expect(response_status).to eq(200)
       slot_count = 0
       current_user.friends.each do |friend|
-        slot_count += friend.std_slots.friend_visible.count
-        slot_count += friend.std_slots.public_visible.count
+        slot_count += friend.std_slots_friends.count
+        slot_count += friend.std_slots_public.count
         slot_count += friend.re_slots.count
       end
       expect(json.length).to eq slot_count
