@@ -1378,12 +1378,12 @@ RSpec.describe "V1::Slots", type: :request do
       it "creates a new slot" do
         expect {
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        }.to change(StdSlot, :count).by 1
+        }.to change(StdSlot.unscoped, :count).by 1
       end
 
       it "owner of the new slot is current user" do
         post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        expect(StdSlot.last.owner).to eq current_user
+        expect(StdSlot.unscoped.last.owner).to eq current_user
       end
 
       it "deletes to original slot" do
@@ -1400,7 +1400,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "creates a new slot" do
         expect {
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        }.to change(StdSlot, :count).by 1
+        }.to change(StdSlot.unscoped, :count).by 1
       end
     end
 

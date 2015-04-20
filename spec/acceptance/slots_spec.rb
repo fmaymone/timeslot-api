@@ -975,9 +975,9 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 2
-        expect(StdSlot.last.friendslot?).to be true
-        expect(StdSlot.last.title).to eq slot.title
-        expect(StdSlot.last.end_date).to eq slot.end_date
+        expect(StdSlot.unscoped.last.StdSlotFriends?).to be true
+        expect(StdSlot.unscoped.last.title).to eq slot.title
+        expect(StdSlot.unscoped.last.end_date).to eq slot.end_date
       end
     end
   end
