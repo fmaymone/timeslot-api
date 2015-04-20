@@ -126,7 +126,8 @@ RSpec.describe User, type: :model do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
 
     context "user has std_slot with the specified meta_slot" do
-      let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
+      let!(:std_slot) {
+        create(:std_slot_private, meta_slot: meta_slot, owner: user) }
 
       it "returns std_slot" do
         expect(user.active_slots(meta_slot)).to include std_slot
@@ -160,7 +161,7 @@ RSpec.describe User, type: :model do
 
     context "user has deleted std_slot with the specified meta_slot" do
       let!(:std_slot) {
-        create(:std_slot, :deleted, meta_slot: meta_slot, owner: user)
+        create(:std_slot_private, :deleted, meta_slot: meta_slot, owner: user)
       }
       it "returns empty array" do
         expect(user.active_slots(meta_slot).empty?).to be true
@@ -192,7 +193,7 @@ RSpec.describe User, type: :model do
   end
 
   describe :update_alerts do
-    let(:slot) { create(:std_slot, :friendslot, owner: user) }
+    let(:slot) { create(:std_slot_friends, owner: user) }
 
     describe "no existing SlotSetting" do
       it "returns the SlotSetting object" do
@@ -255,7 +256,7 @@ RSpec.describe User, type: :model do
 
   describe :alerts do
     context "private StdSlot" do
-      let(:std_slot) { create(:std_slot, owner: user) }
+      let(:std_slot) { create(:std_slot_private, owner: user) }
       before { user.update(default_private_alerts: '0000000010') }
 
       describe "existing default alert for user" do
@@ -277,7 +278,7 @@ RSpec.describe User, type: :model do
     end
 
     context "own friend StdSlot" do
-      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let(:std_slot) { create(:std_slot_friends, owner: user) }
       before { user.update(default_own_friendslot_alerts: '1010101010') }
 
       describe "existing default alert for user" do
@@ -338,7 +339,7 @@ RSpec.describe User, type: :model do
     end
 
     context "several slot representations" do
-      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let(:std_slot) { create(:std_slot_friends, owner: user) }
       let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
       let!(:membership) {
         create(:membership, :active, group: group_slot.group, user: user) }
@@ -802,7 +803,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "prepare_for_slot_deletion" do
-    let(:slot) { create(:std_slot, owner: user) }
+    let(:slot) { create(:std_slot_private, owner: user) }
     let!(:slot_setting) {
       create(:slot_setting, meta_slot: slot.meta_slot, user: user) }
 
@@ -814,7 +815,7 @@ RSpec.describe User, type: :model do
 
     describe "user has a representation of meta_slot" do
       let!(:std_slot) {
-        create(:std_slot, meta_slot: slot.meta_slot, owner: user) }
+        create(:std_slot_private, meta_slot: slot.meta_slot, owner: user) }
 
       it "doesn't set deleted_at" do
         user.prepare_for_slot_deletion slot

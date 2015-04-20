@@ -259,8 +259,8 @@ resource "Users" do
     describe "Get slots for current user" do
       let(:id) { current_user.id }
 
-      let!(:std_slot_1) { create(:std_slot, owner: current_user) }
-      let!(:std_slot_2) { create(:std_slot, owner: current_user) }
+      let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
+      let!(:std_slot_2) { create(:std_slot_private, owner: current_user) }
       let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
 
       example "Get slots for current user", document: :v1 do
@@ -362,9 +362,9 @@ resource "Users" do
       let(:joe) { create(:user, username: "Joe") }
       let(:id) { joe.id }
 
-      let!(:std_slot_secret) { create(:std_slot, owner: joe) }
-      let!(:std_slot_friend) { create(:std_slot, :friendslot, owner: joe) }
-      let!(:std_slot_public) { create(:std_slot, :publicslot, owner: joe) }
+      let!(:std_slot_secret) { create(:std_slot_private, owner: joe) }
+      let!(:std_slot_friend) { create(:std_slot_friends, owner: joe) }
+      let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
       let!(:re_slots) { create(:re_slot, slotter: joe) }
       let(:incommon_groupslot) { create(:group_slot) }
 

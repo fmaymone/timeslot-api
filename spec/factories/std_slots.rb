@@ -4,14 +4,6 @@ FactoryGirl.define do
 
     # TODO: remove visibility and traits
     visibility '00' # private
-
-    trait :publicslot do
-      visibility '11'
-    end
-
-    trait :friendslot do
-      visibility '01'
-    end
   end
 
   factory :std_slot_private, class: StdSlotPrivate, parent: :std_slot do

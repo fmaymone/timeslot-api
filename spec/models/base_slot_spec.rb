@@ -61,15 +61,15 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :get_many do
-    let(:std_slots) { create_list(:std_slot, 3) }
+    let(:std_slots) { create_list(:std_slot_private, 3) }
     let(:group_slots) { create_list(:group_slot, 2) }
-    let(:other_slots) { create_list(:std_slot, 2) }
+    let(:other_slots) { create_list(:re_slot, 2) }
 
     it "returns a list of specific slots" do
       a = []
-      [std_slots, group_slots].each {
-        |slots| a << slots.collect(&:id)
-      }
+      [std_slots, group_slots].each do |slots|
+        a << slots.collect(&:id)
+      end
       result = BaseSlot.get_many(a.flatten)
       expect(result).to include(*std_slots)
       expect(result).to include(*group_slots)
@@ -101,7 +101,7 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :set_share_id do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:user) { create(:user) }
 
     it "adds a share url to the slot" do
@@ -113,11 +113,11 @@ RSpec.describe BaseSlot, type: :model do
     it "adds shared_by to the slot" do
       std_slot.set_share_id(user)
       std_slot.reload
-      expect(std_slot.shared_by).to eq user
+      expect(std_slot.shared_by_id).to eq user.id
     end
 
     context "existing share url" do
-      let(:std_slot) { create(:std_slot, share_id: '12345678') }
+      let(:std_slot) { create(:std_slot_public, share_id: '12345678') }
 
       it "doesn't overwrite an existing share url" do
         std_slot.set_share_id(user)
@@ -195,7 +195,7 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :comments_with_details do
-    let(:std_slot) { create(:std_slot, :with_comments) }
+    let(:std_slot) { create(:std_slot_friends, :with_comments) }
     let(:user) { create(:user) }
 
     it "returns all comments for the slot" do

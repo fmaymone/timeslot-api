@@ -52,7 +52,7 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     context "return std_slots via json" do
-      let!(:std_slot) { create(:std_slot, owner: current_user) }
+      let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
       it "return std_slots for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
@@ -273,9 +273,9 @@ RSpec.describe "V1::Users", type: :request do
   describe "GET /v1/users/:id/slots" do
     let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
     let!(:std_slot_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
+      create(:std_slot_private, meta_slot: metas[0], owner: current_user) }
     let!(:std_slot_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
+      create(:std_slot_private, meta_slot: metas[1], owner: current_user) }
     let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
 
     it "returns success" do

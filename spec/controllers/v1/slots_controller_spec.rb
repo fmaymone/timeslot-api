@@ -9,7 +9,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET show" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
 
     it "returns http success" do
       get :show, id: std_slot.id

@@ -82,7 +82,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "media" do
-      let(:slot) { create(:std_slot, :with_media) }
+      let(:slot) { create(:std_slot_private, :with_media) }
 
       it "invalidates belonging media_items" do
         slot.delete
@@ -92,7 +92,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "notes" do
-      let(:slot) { create(:std_slot, :with_notes) }
+      let(:slot) { create(:std_slot_private, :with_notes) }
 
       it "deletes belonging notes" do
         slot.delete
@@ -102,7 +102,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "likes" do
-      let(:slot) { create(:std_slot, :with_likes) }
+      let(:slot) { create(:std_slot_private, :with_likes) }
 
       it "deletes belonging likes" do
         slot.delete

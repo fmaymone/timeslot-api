@@ -8,7 +8,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:id" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
 
     context "GroupSlot, with valid ID" do
       let(:group) { create(:group, owner: current_user) }
@@ -25,7 +25,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "StdSlot, with location" do
       let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot, :publicslot, meta_slot: meta_slot) }
+      let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
       it "returns the location" do
         get "/v1/slots/#{std_slot.id}"
@@ -59,7 +59,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['startDate']).to eq(std_slot.start_date.as_json)
         expect(json['endDate']).to eq(std_slot.end_date.as_json)
         expect(json['notes']).to eq(std_slot.notes)
-        expect(json['visibility']).to eq(std_slot.visibility)
+        expect(json['visibility']).to eq 'public'
       end
 
       it "does return the slot title" do
@@ -79,7 +79,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "ReSlot, with valid ID" do
       let(:std_slot) {
-        create(:std_slot, :publicslot, :with_media, :with_notes) }
+        create(:std_slot_public, :with_media, :with_notes) }
       let(:re_slot_1) {
         create(:re_slot, predecessor: std_slot,
                meta_slot: std_slot.meta_slot, parent: std_slot) }
@@ -592,7 +592,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     describe "handling non-media params" do
       context "valid params" do
@@ -637,7 +637,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "invalid params" do
         describe "User not owner of StdSlot" do
-          let(:std_slot) { create(:std_slot) }
+          let(:std_slot) { create(:std_slot_private) }
 
           it "responds with Not Found (404)" do
             patch "/v1/stdslot/#{std_slot.id}",
@@ -741,7 +741,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with valid params" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
         }
@@ -754,7 +754,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch non-existing note" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
         }
@@ -767,7 +767,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with invalid params" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "" }] }
         }
@@ -849,7 +849,7 @@ RSpec.describe "V1::Slots", type: :request do
         context "missing position parameter" do
           let(:media) { [{ publicId: "foo-image" }] }
           let!(:std_slot) {
-            create(:std_slot, :with_media, owner: current_user)
+            create(:std_slot_private, :with_media, owner: current_user)
           }
 
           it "adds it" do
@@ -1125,7 +1125,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1228,7 +1228,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:id/share" do
-    let(:slot) { create(:std_slot, :publicslot) }
+    let(:slot) { create(:std_slot_public) }
 
     it "returns data of slot including share url" do
       get "/v1/slots/#{slot.id}/share", {}, auth_header
@@ -1240,7 +1240,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:uid/slotdata" do
-    let!(:slot) { create(:std_slot, :with_notes, :with_location,
+    let!(:slot) { create(:std_slot_private, :with_notes, :with_location,
                          :with_real_photo, share_id: '12345xyz',
                          shared_by: create(:user)) }
     before { current_user.webview! }
@@ -1254,7 +1254,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/like" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
 
     it "creates a new like" do
@@ -1295,7 +1295,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/1/likes" do
-    let(:std_slot) { create(:std_slot, :publicslot, :with_likes) }
+    let(:std_slot) { create(:std_slot_public, :with_likes) }
 
     context "ReSlot" do
       let(:re_slot) {
@@ -1309,7 +1309,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
@@ -1331,7 +1331,7 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:group) { create(:group) }
 
     describe "copy without details" do
-      let!(:std_slot) { create(:std_slot, :publicslot) }
+      let!(:std_slot) { create(:std_slot_public) }
       let(:copy_params) { { copyTo: [
                               { target: 'public_slots',
                                 details: 'false' },
@@ -1347,7 +1347,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "copy with details" do
-      let!(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_likes,
+      let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
                                :with_notes) }
       let(:copy_params) { { copyTo: [
                               { target: 'public_slots',
@@ -1369,7 +1369,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/move" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     context "move to public slots" do
       let(:move_params) { { target: 'public_slots',
@@ -1406,7 +1406,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "move to friendslots with details" do
       let!(:std_slot) {
-        create(:std_slot, :with_real_photo, owner: current_user) }
+        create(:std_slot_private, :with_real_photo, owner: current_user) }
       let(:photo) { std_slot.media_items.first }
       let(:move_params) { { target: 'friend_slots',
                             details: true } }

@@ -56,7 +56,7 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe "parent attributes" do
-    let(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_notes) }
+    let(:std_slot) { create(:std_slot_public, :with_media, :with_notes) }
     let(:re_slot_1) { create(:re_slot, predecessor: std_slot,
                              meta_slot: std_slot.meta_slot, parent: std_slot) }
     let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,

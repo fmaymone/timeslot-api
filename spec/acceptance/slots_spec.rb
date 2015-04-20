@@ -32,9 +32,11 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot1) { create(:std_slot, :with_media, owner: current_user) }
+      let(:slot1) {
+        create(:std_slot_private, :with_media, owner: current_user) }
       let(:slot2) {
-        create(:std_slot, :with_media, meta_slot: meta_slot, owner: current_user) }
+        create(:std_slot_private, :with_media, meta_slot: meta_slot,
+               owner: current_user) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot2.meta_slot,
@@ -143,7 +145,7 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot, :with_media, :with_likes, :publicslot,
+      let(:slot) { create(:std_slot_public, :with_media, :with_likes,
                           meta_slot: meta_slot, share_id: 'abcd1234') }
 
       let!(:slot_setting) { create(:slot_setting,
@@ -536,7 +538,7 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
 
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
     let(:id) { std_slot.id }
 
     describe "Update an existing StdSlot" do
@@ -581,7 +583,7 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(
           [notes.first[:title], notes.second[:title]]
-        ).to include StdSlot.last.notes.last.title
+        ).to include std_slot.notes.last.title
       end
     end
 
@@ -661,7 +663,7 @@ resource "Slots" do
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:std_slot) { create(:std_slot, :with_media, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, :with_media, owner: current_user) }
 
     describe "Delete Standard Slot" do
       let(:id) { std_slot.id }
@@ -679,7 +681,6 @@ resource "Slots" do
                                 "title" => std_slot.title,
                                 "startDate" => std_slot.start_date.as_json,
                                 "endDate" => std_slot.end_date.as_json,
-                                "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
@@ -820,7 +821,7 @@ resource "Slots" do
     parameter :id, "ID of the Slot to make a comment on", required: true
     parameter :content, "Content of the comment", required: true
 
-    let(:slot) { create(:std_slot, :friendslot, :with_comments) }
+    let(:slot) { create(:std_slot_friends, :with_comments) }
     let!(:friendship) {
       create(:friendship, :established, friend: slot.owner, user: current_user)
     }
@@ -914,7 +915,7 @@ resource "Slots" do
                         "Must be one of [true/false]",
               scope: :copyTo
 
-    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
+    let(:slot) { create(:std_slot_public, :with_comments) }
     let(:group) { create(:group, :members_can_post) }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -957,7 +958,7 @@ resource "Slots" do
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'true', must be one of [true/false]"
 
-    let(:slot) { create(:std_slot, :with_media, owner: current_user) }
+    let(:slot) { create(:std_slot_private, :with_media, owner: current_user) }
 
     describe "Move Slot from private to friends" do
       let(:id) { slot.id }
