@@ -265,6 +265,9 @@ class User < ActiveRecord::Base
     when GroupSlot
       # TODO: change this
       group_alert slot
+    when StdSlot
+      p 'std slot in alerts'
+      default_private_alerts
     else
       # TODO: Airbrake
       p 'this should not happen'

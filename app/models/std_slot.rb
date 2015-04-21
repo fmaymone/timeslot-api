@@ -15,22 +15,6 @@ class StdSlot < BaseSlot
     [owner]
   end
 
-  # TODO: remove this three helpers
-  def private?
-    self.StdSlotPrivate?
-    # visibility == "00"
-  end
-
-  def friendslot?
-    self.StdSlotFriends?
-    # visibility == "01"
-  end
-
-  def public?
-    self.StdSlotPublic?
-    # visibility == "11"
-  end
-
   def prepare_for_deletion
   end
 
