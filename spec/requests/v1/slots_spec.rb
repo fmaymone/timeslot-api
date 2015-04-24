@@ -271,7 +271,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "create GroupSlot via copy from existing slot" do
+    describe "create GroupSlot for existing metaslot" do
       context "copy GroupSlot from existing std_slot" do
         let!(:existing_slot) { create(:std_slot) }
         let(:group_slot_params) {
@@ -1328,37 +1328,92 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/copy" do
-    let!(:group) { create(:group) }
+    # rspec seems to have bug regarding post parameters with array of hashes
+    # so I can not test copying into stdslots and groupslots at the same time
+    # however, from the console it seems to work that's why I think it's rspec
+    # using :
 
-    describe "copy without details" do
-      let!(:std_slot) { create(:std_slot_public) }
+    # let(:copy_params) { { copyTo: [
+    #                         { slot_type: 'public', details: 'false' },
+    #                         { group_id: group_1.id, details: 'false' }
+    #                       ] } }
+
+    # gives me:
+
+    # pry(#<V1::SlotsController>)> params
+    # => {"copyTo"=>[
+    #          {"slot_type"=>"public", "details"=>"false", "group_id"=>"6"},
+    #          {"details"=>"false"}],
+
+    # couldn't find a way to solve this yet
+
+    let(:group_1) { create(:group) }
+    let(:group_2) { create(:group) }
+
+    describe "copy groupSlot to stdslots without details" do
+      let!(:group_slot) { create(:group_slot_public, :with_likes, :with_notes) }
+
       let(:copy_params) { { copyTo: [
-                              { target: 'public_slots',
+                              { slot_type: 'public',
                                 details: 'false' },
-                              { target: group.name,
-                                details: false }
+                              { slot_type: 'private',
+                                details: 'false' }
                             ] } }
 
-      it "creates a new slot" do
+      it "creates new slots" do
         expect {
-          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        }.to change(BaseSlot, :count).by 2
+          post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
+        }.to change(BaseSlot.unscoped, :count).by 2
       end
     end
 
-    describe "copy with details" do
+    describe "copy into groups without details" do
+      let!(:std_slot) { create(:std_slot_public) }
+      let(:copy_params) { { copyTo: [
+                              { group_id: group_1.id,
+                                details: 'false' },
+                              { group_id: group_2.id,
+                                details: 'false' }
+                            ] } }
+
+      it "creates new slots" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
+        }.to change(GroupSlot.unscoped, :count).by 2
+      end
+    end
+
+    describe "copy stdslot with details into stdslot" do
+      let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
+                               :with_notes) }
+      let(:copy_params) { { copyTo: [ { slot_type: 'private',
+                                        details: 'true' }] } }
+
+      it "copys media data and notes unless explictly disabled" do
+        post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
+        new_slot = BaseSlot.unscoped.last
+        pp BaseSlot.all
+        pp GroupSlot.all
+
+        expect(new_slot.notes.size).to eq 3
+        expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
+        expect(new_slot.likes.size).to eq 0
+        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.photos.first.public_id).to eq group_slot.photos.first.public_id
+      end
+    end
+
+    describe "copy stdslot with details into groups" do
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
                                :with_notes) }
-      let(:copy_params) { { copyTo: [
-                              { target: 'public_slots',
+      let(:copy_params) { { copyTo: [{ group_id: group_1.id,
                                 details: 'true' },
-                              { target: group.name,
-                                details: true }
-                            ] } }
+                              { group_id: group_2.id,
+                                details: true }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        new_slot = GroupSlot.last
+        new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0

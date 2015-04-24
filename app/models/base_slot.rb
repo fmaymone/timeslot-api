@@ -140,10 +140,19 @@ class BaseSlot < ActiveRecord::Base
 
   def copy_to(targets, user)
     targets.each do |target|
+      visibility = target["slot_type"] if target["slot_type"]
+      group = Group.find(target["group_id"]) if target["group_id"]
       details = target["details"].to_s
+
+      new_slot = BaseSlot.create_slot(meta: { meta_slot_id: meta_slot_id },
+                                      visibility: visibility,
+                                      group: group,
+                                      user: user)
+
       # YAML.load converts to boolean
-      copy_details = details ? true : YAML.load(details)
-      self.class.create_slot(self, target["target"], copy_details, user)
+      BaseSlot.duplicate_slot_details(self, new_slot) if YAML.load(details)
+
+      new_slot
     end
   end
 

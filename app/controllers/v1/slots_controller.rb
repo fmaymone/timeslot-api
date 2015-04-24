@@ -296,8 +296,9 @@ module V1
       params.require(:content)
     end
 
+    # TODO: use Camelcase
     private def copy_params
-      target_params = [:target, :details]
+      target_params = [:slot_type, :group_id, :details]
       params.require(:copyTo).map do |p|
         ActionController::Parameters.new(p.to_hash).permit(target_params)
       end
