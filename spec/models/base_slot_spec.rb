@@ -34,6 +34,61 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
+  describe "create_slot" do
+    let(:meta_param) { attributes_for(:meta_slot) }
+    let(:group) { create(:group) }
+    let(:note_param) {
+      [ActionController::Parameters.new(attributes_for(:note))] }
+    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
+    let(:user) { create(:user) }
+
+    it "creates a new StdSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                    user: user)
+      }.to change(StdSlot.unscoped, :count).by 1
+    end
+
+    it "creates a new GroupSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, group: group,
+                                    user: user)
+      }.to change(GroupSlot.unscoped, :count).by 1
+    end
+
+    it "creates a new MetaSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                    user: user)
+      }.to change(MetaSlot, :count).by 1
+    end
+
+    it "creates a new Note" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'public',
+                                    notes: note_param, user: user)
+      }.to change(Note, :count).by 1
+    end
+
+    it "creates a new SlotSetting" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'private',
+                                    alerts: alert_param, user: user)
+      }.to change(SlotSetting, :count).by 1
+    end
+
+    context "existing metaslot" do
+      let!(:meta_param) { { 'meta_slot_id' => create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                      user: user)
+        }.not_to change(MetaSlot, :count)
+      end
+    end
+  end
+
   describe :photos do
     let(:std_slot) { create(:std_slot) }
     let!(:media) {

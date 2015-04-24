@@ -21,7 +21,7 @@ class BaseSlot < ActiveRecord::Base
                  StdSlot: 20,
                  GroupSlot: 21,
                  ReSlot: 22,
-              }
+               }
 
   enum slot_type: SLOT_TYPES
 
@@ -259,7 +259,33 @@ class BaseSlot < ActiveRecord::Base
     upcoming.order('meta_slots.start_date').first
   end
 
-  def self.create_slot(slot, slot_type, copy_details, user)
+  def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
+                       notes: nil, alerts: nil, user: nil)
+
+    return false unless visibility || group
+
+    meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
+    return meta_slot unless meta_slot.errors.empty?
+
+    if visibility
+      slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
+                                 user: user)
+    elsif group
+      slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
+    end
+
+    return slot unless slot.errors.empty?
+
+    if (media || notes || alerts)
+      slot.update_from_params(media: media, notes: notes, alerts: alerts,
+                              user: user)
+    end
+
+    slot
+  end
+
+  # TODO: refactor, used by copy + move
+  def self.create_slot_disabled(slot, slot_type, copy_details, user)
     case slot_type
     when "private_slots"
       new_slot = StdSlotPrivate.create(meta_slot: slot.meta_slot, owner: user,
@@ -282,7 +308,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def self.duplicate_slot_details(old_slot, new_slot)
-    old_slot.media_items.reverse.each do |item|
+    old_slot.media_items.reverse_each do |item|
       attr = item.attributes
       attr.delete('id')
       new_slot.media_items.create(attr)
