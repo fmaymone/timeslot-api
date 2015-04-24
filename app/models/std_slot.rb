@@ -9,7 +9,7 @@ class StdSlot < BaseSlot
   belongs_to :shared_by, class_name: User
 
   validates :meta_slot, presence: true
-  validates :visibility, presence: true # TODO: remove
+  # validates :visibility, presence: true # TODO: remove
 
   def related_users
     [owner]
@@ -25,17 +25,17 @@ class StdSlot < BaseSlot
     StdSlot.unscoped.where(owner: user_id)
   end
 
-  def self.create_with_meta(meta:, visibility:, media: nil, notes: nil,
-                            alerts: nil, user: nil)
-    meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
-    return meta_slot unless meta_slot.errors.empty?
+  def self.create_slot(meta_slot:, visibility:, user: nil)
+    case visibility
+    when 'private'
+      slot_type = StdSlotPrivate
+    when 'friends'
+      slot_type = StdSlotFriends
+    when 'public'
+      slot_type = StdSlotPublic
+    end
 
-    slot = create(visibility.merge(meta_slot: meta_slot, owner: user))
-    return slot unless slot.errors.empty?
-
-    slot.update_from_params(meta: nil, media: media, notes: notes,
-                            alerts: alerts, user: user)
-    slot
+    slot_type.create(meta_slot: meta_slot, owner: user)
   end
 
   # for Pundit
