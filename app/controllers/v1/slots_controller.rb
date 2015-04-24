@@ -21,7 +21,7 @@ module V1
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = StdSlot.create_with_meta(meta: meta_params, visibility: std_param,
+      @slot = StdSlot.create_with_meta(meta: meta_params, visibility: visibility,
                                        media: media_params, notes: note_param,
                                        alerts: alerts_param, user: current_user)
       if @slot.errors.empty?
@@ -34,7 +34,6 @@ module V1
 
     # POST /v1/groupslot
     def create_groupslot
-      group = Group.find(group_param)
       authorize GroupSlot.new(group: group)
 
       @slot = GroupSlot.create_with_meta(meta: meta_params, group_id: group_param,
@@ -81,7 +80,7 @@ module V1
       @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
-      @slot.update(std_param) if params["visibility"].present?
+      @slot.update(visibility) if params["visibility"].present?
       @slot.update_from_params(meta: meta_params, media: media_params,
                                notes: note_param, alerts: alerts_param,
                                user: current_user)
@@ -262,7 +261,11 @@ module V1
       params.require(:groupId)
     end
 
-    private def std_param
+    private def group
+      Group.find(params[:groupId]) if params[:groupId].present?
+    end
+
+    private def visibility
       params.require(:visibility)
       params.permit(:visibility)
     end
