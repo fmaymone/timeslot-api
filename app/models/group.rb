@@ -62,7 +62,7 @@ class Group < ActiveRecord::Base
   end
 
   private def add_owner_as_member
-    Membership.create(group_id: id, user_id: owner.id).activate
+    Membership.create(group_id: id, user_id: owner.id, state: '111')
   end
 
   def self.create_with_image(group_params:, invitees: nil, group_image: nil)
