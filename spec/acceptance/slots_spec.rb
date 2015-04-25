@@ -267,7 +267,7 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
-      response_field :visibility, "Visibility of the slot"
+      response_field :visibility, "Visibility of the slot (private/friends/public)"
       response_field :createdAt, "Creation datetime of the slot"
       response_field :updatedAt, "Last update of the slot"
       response_field :deletedAt, "Deletion datetime of the slot"
@@ -281,7 +281,7 @@ resource "Slots" do
                      { title: "and another title",
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
 
       example "Create StandardSlot", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
@@ -313,7 +313,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
       let(:alerts) { "oh no" }
 
       example "Create std slot with invalid params returns 422 & failure details",
@@ -335,7 +335,7 @@ resource "Slots" do
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
 
       example "Create std slot with missing requiered params returns 422" \
               " & failure details", document: false do
@@ -923,9 +923,9 @@ resource "Slots" do
 
     describe "Copy Slot into several targets" do
       let(:id) { slot.id }
-      let(:target_1) { { target: 'friend_slots',
+      let(:target_1) { { slot_type: 'friends',
                          details: 'true' } }
-      let(:target_2) { { target: group.name,
+      let(:target_2) { { group_id: group.id,
                          details: true } }
 
       let(:copyTo) { [target_1, target_2] }
@@ -939,8 +939,8 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 3
-        expect(GroupSlot.last.title).to eq slot.title
-        expect(GroupSlot.last.end_date).to eq slot.end_date
+        expect(GroupSlot.unscoped.last.title).to eq slot.title
+        expect(GroupSlot.unscoped.last.end_date).to eq slot.end_date
       end
     end
   end

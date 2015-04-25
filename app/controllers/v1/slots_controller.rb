@@ -21,9 +21,10 @@ module V1
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = StdSlot.create_with_meta(meta: meta_params, visibility: visibility,
-                                       media: media_params, notes: note_param,
-                                       alerts: alerts_param, user: current_user)
+      @slot = BaseSlot.create_slot(meta: meta_params, visibility: visibility,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
+
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -266,8 +267,14 @@ module V1
     end
 
     private def visibility
-      params.require(:visibility)
-      params.permit(:visibility)
+      visibility = params.require(:visibility)
+      valid_values = %w(private friends public)
+
+      unless valid_values.include? visibility
+        fail ActionController::ParameterMissing,
+             "visibility must be one of #{valid_values}"
+      end
+      visibility
     end
 
     private def re_params
@@ -276,7 +283,8 @@ module V1
 
     private def meta_params
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId)
-      p.transform_keys(&:underscore)
+      p.transform_keys!(&:underscore)
+      p.transform_keys(&:to_sym)
     end
 
     private def alerts_param

@@ -114,7 +114,7 @@ RSpec.describe "V1::Slots", type: :request do
     context "StdSlot with valid params" do
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: '01', settings: { alerts: '1110001100' })
+          visibility: 'private', settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -126,30 +126,30 @@ RSpec.describe "V1::Slots", type: :request do
       it "adds a new StdSlot entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(StdSlot, :count).by(1)
+        }.to change(StdSlot.unscoped, :count).by 1
       end
 
       it "adds a new MetaSlot entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(MetaSlot, :count).by(1)
+        }.to change(MetaSlot, :count).by 1
       end
 
       it "adds a new SlotSetting entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(SlotSetting, :count).by(1)
+        }.to change(SlotSetting, :count).by 1
       end
 
       it "returns the ID of the new slot" do
         post "/v1/stdslot/", valid_slot, auth_header
-        expect(json['id']).to eq(StdSlot.last.id)
+        expect(json['id']).to eq(StdSlot.unscoped.last.id)
       end
     end
 
     context "with invalid params" do
       let(:invalid_attributes) {
-        attr = attributes_for(:meta_slot).merge(visibility: '01')
+        attr = attributes_for(:meta_slot).merge(visibility: 'private')
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       describe "does not add a new entry to the DB" do
@@ -199,7 +199,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-09-08 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", slot.merge(visibility: '11'), auth_header
+          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -210,7 +210,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-07-07 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", slot.merge(visibility: '11'), auth_header
+          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
