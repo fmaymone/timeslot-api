@@ -1426,8 +1426,8 @@ RSpec.describe "V1::Slots", type: :request do
   describe "POST /v1/slots/:id/move" do
     let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
-    context "move to public slots" do
-      let(:move_params) { { target: 'public_slots',
+    context "move to public slots without details" do
+      let(:move_params) { { slotType: 'public',
                             details: 'false' } }
 
       it "creates a new slot" do
@@ -1449,7 +1449,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "move to friendslots without details" do
-      let(:move_params) { { target: 'friend_slots',
+      let(:move_params) { { slotType: 'friends',
                             details: false } }
 
       it "creates a new slot" do
@@ -1463,7 +1463,7 @@ RSpec.describe "V1::Slots", type: :request do
       let!(:std_slot) {
         create(:std_slot_private, :with_real_photo, owner: current_user) }
       let(:photo) { std_slot.media_items.first }
-      let(:move_params) { { target: 'friend_slots',
+      let(:move_params) { { slotType: 'friends',
                             details: true } }
       before {
         Cloudinary::Uploader.remove_tag("replaced", photo.public_id)
@@ -1476,6 +1476,17 @@ RSpec.describe "V1::Slots", type: :request do
         expect(tags).not_to include "replaced" if tags
         photo.reload
         expect(photo.deleted_at?).to be true
+      end
+    end
+
+    context "move to group without details" do
+      let(:move_params) { { groupId: create(:group).id,
+                            details: false } }
+
+      it "creates a new groupslot" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+        }.to change(GroupSlot.unscoped, :count).by 1
       end
     end
   end

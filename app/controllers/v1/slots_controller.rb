@@ -238,19 +238,16 @@ module V1
     end
 
     # POST /v1/slots/1/copy
-    # - target (private_slots, friend_slots, public_slots, groupname)
-    # - with_details(media, comments, likes)
     def copy
       @slot = BaseSlot.get(params[:id])
       authorize @slot
       @slot.copy_to(copy_params, current_user)
 
       head :ok
+      # TODO: return the newly generated slots
     end
 
     # POST /v1/slots/1/move
-    # - target (private_slots, friend_slots, public_slots, re_slots, groupname)
-    # - with_details(media, comments, likes)
     def move
       old_slot = BaseSlot.get(params[:id])
       authorize old_slot
@@ -310,8 +307,8 @@ module V1
     end
 
     private def move_params
-      params.require(:target)
-      params.permit(:target, :details)
+      p = params.permit(:slotType, :groupId, :details)
+      p.transform_keys(&:underscore)
     end
   end
 end

@@ -140,27 +140,13 @@ class BaseSlot < ActiveRecord::Base
 
   def copy_to(targets, user)
     targets.each do |target|
-      visibility = target["slot_type"] if target["slot_type"]
-      group = Group.find(target["group_id"]) if target["group_id"]
-      details = target["details"].to_s
-
-      new_slot = BaseSlot.create_slot(meta: { meta_slot_id: meta_slot_id },
-                                      visibility: visibility,
-                                      group: group,
-                                      user: user)
-
-      # YAML.load converts to boolean
-      BaseSlot.duplicate_slot_details(self, new_slot) if YAML.load(details)
-
-      new_slot
+      BaseSlot.duplicate_slot(self, target, user)
     end
   end
 
   def move_to(target, user)
-    details = target["details"].to_s
-    move_details = details ? true : YAML.load(details)
-    new_slot = self.class.create_slot(self, target['target'], move_details, user)
-    delete
+    new_slot = BaseSlot.duplicate_slot(self, target, user)
+    delete if new_slot.errors.empty?
     new_slot
   end
 
@@ -271,7 +257,8 @@ class BaseSlot < ActiveRecord::Base
   def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
                        notes: nil, alerts: nil, user: nil)
 
-    return false unless visibility || group
+    # TODO: improve
+    fail unless visibility || group
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
@@ -293,27 +280,19 @@ class BaseSlot < ActiveRecord::Base
     slot
   end
 
-  # TODO: refactor, used by copy + move
-  def self.create_slot_disabled(slot, slot_type, copy_details, user)
-    case slot_type
-    when "private_slots"
-      new_slot = StdSlotPrivate.create(meta_slot: slot.meta_slot, owner: user,
-                                       visibility: '00')
-    when "friend_slots"
-      new_slot = StdSlotFriends.create(meta_slot: slot.meta_slot, owner: user,
-                                       visibility: '01')
-    when "public_slots"
-      new_slot = StdSlotPublic.create(meta_slot: slot.meta_slot, owner: user,
-                                      visibility: '11')
-    when "re_slots"
-      new_slot = ReSlot.create_from_slot(predecessor: slot, slotter: user)
-    else
-      group = Group.find_by name: slot_type
-      new_slot = GroupSlot.create(meta_slot: slot.meta_slot, group: group)
-    end
+  def self.duplicate_slot(source, target, user)
+    visibility = target["slot_type"] if target["slot_type"]
+    group = Group.find(target["group_id"]) if target["group_id"]
+    # YAML.load converts to boolean
+    with_details = YAML.load(target["details"].to_s)
 
-    duplicate_slot_details(slot, new_slot) if copy_details
-    new_slot
+    duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
+                                  visibility: visibility,
+                                  group: group,
+                                  user: user)
+
+    duplicate_slot_details(source, duplicated_slot) if with_details
+    duplicated_slot
   end
 
   def self.duplicate_slot_details(old_slot, new_slot)

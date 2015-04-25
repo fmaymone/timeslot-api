@@ -949,11 +949,10 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :target, "Type of slot to move to. Must be own of " \
-                       "[private_slots/friend_slots/public_slots/re_slots] " \
-                       "or a name of a group where the user is allowed " \
-                       "to post.",
-              required: true
+    parameter :slotType, "Type of slot to move to. Must be own of " \
+                          "[private/friends/public]"
+    parameter :groupId, "Contains the group ID if moving into a group" \
+                         " User must be allowed to post to this group"
     parameter :details, "Move all media data and notes to the new " \
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'true', must be one of [true/false]"
@@ -962,12 +961,13 @@ resource "Slots" do
 
     describe "Move Slot from private to friends" do
       let(:id) { slot.id }
-      let(:target) { 'friend_slots' }
+      let(:slotType) { 'friends' }
       let(:details) { 'true' }
 
       example "Move Slot from private Slots to Friend Slots", document: :v1 do
         explanation "A new slot will be created with  " \
-                    "the same Metadata as it's source. If details is " \
+                    "the same Metadata as it's source. Either slotType or " \
+                    "groupId must be provided! If details is " \
                     "set to 'true' all media items and notes will " \
                     "be duplicated. The source will be deleted afterwards " \
                     "and with it all comments and likes."
