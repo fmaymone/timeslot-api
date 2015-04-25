@@ -37,9 +37,10 @@ module V1
     def create_groupslot
       authorize GroupSlot.new(group: group)
 
-      @slot = GroupSlot.create_with_meta(meta: meta_params, group_id: group_param,
-                                         media: media_params, notes: note_param,
-                                         alerts: alerts_param, user: current_user)
+      @slot = BaseSlot.create_slot(meta: meta_params, group: group,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
+
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -258,12 +259,8 @@ module V1
       render :show, locals: { slot: new_slot }
     end
 
-    private def group_param
-      params.require(:groupId)
-    end
-
     private def group
-      Group.find(params[:groupId]) if params[:groupId].present?
+      Group.find(params.require(:groupId))
     end
 
     private def visibility

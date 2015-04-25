@@ -92,7 +92,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new GroupSlot" do
         expect {
           post :create_groupslot, valid_attributes, valid_session
-        }.to change(GroupSlot, :count).by(1)
+        }.to change(GroupSlot.unscoped, :count).by(1)
       end
 
       it "creates a new SlotSetting" do

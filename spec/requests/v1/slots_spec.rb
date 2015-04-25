@@ -256,7 +256,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "adds a new group_slot entry to the DB" do
         expect {
           post "/v1/groupslot/", valid_slot, auth_header
-        }.to change(GroupSlot, :count).by(1)
+        }.to change(GroupSlot.unscoped, :count).by(1)
       end
 
       it "adds a new meta_slot entry to the DB" do
@@ -267,7 +267,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "returns the ID of the new slot" do
         post "/v1/groupslot/", valid_slot, auth_header
-        expect(json['id']).to eq(GroupSlot.last.id)
+        expect(json['id']).to eq(GroupSlot.unscoped.last.id)
       end
     end
 
@@ -287,7 +287,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
       end
 
@@ -306,12 +306,12 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
 
         it "sets the correct group on the new group_slot" do
           post "/v1/groupslot/", group_slot_params, auth_header
-          expect(GroupSlot.last.group_id).to eq group.id
+          expect(GroupSlot.unscoped.last.group_id).to eq group.id
         end
       end
 
@@ -330,7 +330,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
       end
     end

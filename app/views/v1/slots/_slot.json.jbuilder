@@ -24,8 +24,8 @@ json.partial! 'v1/slots/settings', slot: slot if current_user
 
 json.partial! 'v1/slots/visibility', slot: slot
 
-json.group_id slot.group.id if slot.class == GroupSlot
-# json.group_id slot.group.id if slot.try(:group)
+# json.group_id slot.group.id if slot.class < GroupSlot
+json.group_id slot.group.id if slot.try(:group)
 
 json.slotter_id slot.slotter.id if slot.class == ReSlot
 
