@@ -602,14 +602,6 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response).to have_http_status(:ok)
         end
 
-        it "updates the visibiltiy of a given StdSlot" do
-          std_slot.update(visibility: "00")
-          patch "/v1/stdslot/#{std_slot.id}",
-                { visibility: "11" }, auth_header
-          std_slot.reload
-          expect(std_slot.visibility).to eq("11")
-        end
-
         it "updates the title of a given StdSlot" do
           std_slot.meta_slot.title = "Old title"
           patch "/v1/stdslot/#{std_slot.id}",
@@ -1012,7 +1004,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "valid params" do
         let(:new_params) { { title: '2015',
-                             visibility: '01',
                              notes: [note] } }
 
         it "returns success" do
@@ -1024,14 +1015,12 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
           std_slot.reload
           expect(std_slot.title).to eq '2015'
-          expect(std_slot.visibility).to eq '01'
           expect(std_slot.notes.size).to eq(1)
         end
       end
 
       context "invalid params" do
         let(:new_params) { { title: '',
-                             visibility: '01',
                              notes: [note] } }
 
         it "returns unprocessable entity" do

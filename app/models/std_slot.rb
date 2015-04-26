@@ -1,15 +1,12 @@
 class StdSlot < BaseSlot
   self.table_name = model_name.plural
-  # include OptimallyInheritable
-  # support_sti_for %w(StdSlotPrivate StdSlotPublic)
 
   belongs_to :owner, class_name: User, inverse_of: :std_slots
   # for some strange reason the association is not found even tough it
   # works for meta_slot just the same
   belongs_to :shared_by, class_name: User
 
-  validates :meta_slot, presence: true
-  # validates :visibility, presence: true # TODO: remove
+  validates :owner, presence: true
 
   def related_users
     [owner]

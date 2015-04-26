@@ -204,14 +204,6 @@ describe SlotPolicy do
           expect(subject).to permit(user, slot)
         end
       end
-
-      context "for a visitor" do
-        let(:user) { nil }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
     end
 
     context "own friendslot" do
@@ -259,6 +251,15 @@ describe SlotPolicy do
         it "denies access" do
           expect(subject).not_to permit(user, slot)
         end
+      end
+    end
+
+    context "for a visitor" do
+      let(:slot) { create(:std_slot_public) }
+      let(:user) { nil }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
       end
     end
   end

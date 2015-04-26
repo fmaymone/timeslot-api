@@ -82,7 +82,6 @@ module V1
       @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
-      @slot.update(visibility) if params["visibility"].present?
       @slot.update_from_params(meta: meta_params, media: media_params,
                                notes: note_param, alerts: alerts_param,
                                user: current_user)
