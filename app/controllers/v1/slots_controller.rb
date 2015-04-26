@@ -298,17 +298,17 @@ module V1
       params.require(:content)
     end
 
-    # TODO: use Camelcase
     private def copy_params
-      target_params = [:slot_type, :group_id, :details]
+      target_params = [:slotType, :groupId, :details]
       params.require(:copyTo).map do |p|
-        ActionController::Parameters.new(p.to_hash).permit(target_params)
+        t = ActionController::Parameters.new(p.to_hash).permit(target_params)
+        t.transform_keys { |key| key.underscore.to_sym }
       end
     end
 
     private def move_params
       p = params.permit(:slotType, :groupId, :details)
-      p.transform_keys(&:underscore)
+      p.transform_keys { |key| key.underscore.to_sym }
     end
   end
 end

@@ -281,10 +281,11 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def self.duplicate_slot(source, target, user)
-    visibility = target["slot_type"] if target["slot_type"]
-    group = Group.find(target["group_id"]) if target["group_id"]
+    visibility = target[:slot_type] if target[:slot_type]
+    group = Group.find(target[:group_id]) if target[:group_id]
+    details = target[:details]
     # YAML.load converts to boolean
-    with_details = YAML.load(target["details"].to_s)
+    with_details = details.present? ? YAML.load(details.to_s) : true
 
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,

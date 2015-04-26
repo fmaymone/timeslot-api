@@ -904,18 +904,18 @@ resource "Slots" do
 
     parameter :copyTo, "contains an array of the copy targets",
               required: true
-    parameter :target, "Type of slot to copy to. Must be own of " \
-                       "[private_slots/friend_slots/public_slots] " \
-                       "or a name of a group where the user is allowed " \
-                       "to post.",
-              required: true,
+    parameter :slotType, "Type of slot to copy to. Must be own of " \
+                         "[private/friends/public]",
+              scope: :copyTo
+    parameter :groupId, "ID of the group to copy to, user must be allowed " \
+                         "to post to this group",
               scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",
               scope: :copyTo
 
-    let(:slot) { create(:std_slot_public, :with_comments) }
+    let(:slot) { create(:std_slot_public, :with_notes) }
     let(:group) { create(:group, :members_can_post) }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -923,10 +923,9 @@ resource "Slots" do
 
     describe "Copy Slot into several targets" do
       let(:id) { slot.id }
-      let(:target_1) { { slot_type: 'friends',
+      let(:target_1) { { slotType: 'friends',
                          details: 'true' } }
-      let(:target_2) { { group_id: group.id,
-                         details: true } }
+      let(:target_2) { { groupId: group.id } }
 
       let(:copyTo) { [target_1, target_2] }
 
@@ -939,8 +938,14 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 3
-        expect(GroupSlot.unscoped.last.title).to eq slot.title
-        expect(GroupSlot.unscoped.last.end_date).to eq slot.end_date
+        new_stdslotfriends = StdSlotFriends.last
+        expect(new_stdslotfriends.title).to eq slot.title
+        expect(new_stdslotfriends.end_date).to eq slot.end_date
+        expect(new_stdslotfriends.notes.length).to eq slot.notes.length
+        new_groupslot = GroupSlot.unscoped.last
+        expect(new_groupslot.title).to eq slot.title
+        expect(new_groupslot.end_date).to eq slot.end_date
+        expect(new_groupslot.notes.length).to eq slot.notes.length
       end
     end
   end

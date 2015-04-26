@@ -1354,9 +1354,9 @@ RSpec.describe "V1::Slots", type: :request do
       let!(:group_slot) { create(:group_slot_public, :with_likes, :with_notes) }
 
       let(:copy_params) { { copyTo: [
-                              { slot_type: 'public',
+                              { slotType: 'public',
                                 details: 'false' },
-                              { slot_type: 'private',
+                              { slotType: 'private',
                                 details: 'false' }
                             ] } }
 
@@ -1370,9 +1370,9 @@ RSpec.describe "V1::Slots", type: :request do
     describe "copy into groups without details" do
       let!(:std_slot) { create(:std_slot_public) }
       let(:copy_params) { { copyTo: [
-                              { group_id: group_1.id,
+                              { groupId: group_1.id,
                                 details: 'false' },
-                              { group_id: group_2.id,
+                              { groupId: group_2.id,
                                 details: 'false' }
                             ] } }
 
@@ -1386,15 +1386,12 @@ RSpec.describe "V1::Slots", type: :request do
     describe "copy stdslot with details into stdslot" do
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
                                :with_notes) }
-      let(:copy_params) { { copyTo: [ { slot_type: 'private',
+      let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
         new_slot = BaseSlot.unscoped.last
-        pp BaseSlot.all
-        pp GroupSlot.all
-
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
@@ -1406,10 +1403,10 @@ RSpec.describe "V1::Slots", type: :request do
     describe "copy stdslot with details into groups" do
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
                                :with_notes) }
-      let(:copy_params) { { copyTo: [{ group_id: group_1.id,
-                                details: 'true' },
-                              { group_id: group_2.id,
-                                details: true }] } }
+      let(:copy_params) { { copyTo: [{ groupId: group_1.id,
+                                       details: 'true' },
+                                     { groupId: group_2.id,
+                                       details: true }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
