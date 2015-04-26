@@ -261,7 +261,7 @@ resource "Users" do
 
       let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
       let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
-      let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
+      let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
 
       example "Get slots for current user", document: :v1 do
         explanation "Returns an array which includes StandardSlots &" \
@@ -309,7 +309,7 @@ resource "Users" do
                       "photos" => std_slot_1.photos,
                       "voices" => std_slot_1.voices,
                       "videos" => std_slot_1.videos,
-                      "visibility" => std_slot_1.visibilityy,
+                      "visibility" => std_slot_1.visibility,
                       "url" => v1_slot_url(std_slot_1, format: :json),
                       "creatorId" => std_slot_1.creator.id
                      )

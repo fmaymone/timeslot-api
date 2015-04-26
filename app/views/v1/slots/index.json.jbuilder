@@ -7,7 +7,8 @@ json.array!(@slots) do |slot|
                 :updated_at,
                 :deleted_at,
                 :start_date,
-                :end_date
+                :end_date,
+                :visibility
                )
   if current_user
     json.partial! 'v1/slots/settings', slot: slot
@@ -21,8 +22,7 @@ json.array!(@slots) do |slot|
   json.partial! 'v1/media/voices', media: slot.voices
   json.partial! 'v1/media/videos', media: slot.videos
 
-  json.partial! 'v1/slots/visibility', slot: slot
-  json.group_id slot.group.id if slot.class == GroupSlot
+  json.group_id slot.group.id if slot.try(:group)
 
   json.url v1_slot_url(slot, format: :json)
   json.creator_id slot.creator.id

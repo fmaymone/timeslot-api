@@ -45,6 +45,10 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
 
+  def visibility
+    slot_type.constantize.try(:visibility)
+  end
+
   def photos
     media_items.image.order(:position)
   end
