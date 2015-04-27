@@ -5,7 +5,8 @@ json.extract!(slot,
               :updated_at,
               :deleted_at,
               :start_date,
-              :end_date
+              :end_date,
+              :visibility
              )
 
 json.location do
@@ -20,17 +21,12 @@ json.creator do
   json.partial! 'v1/users/user', user: slot.creator
 end
 
-if current_user
- json.partial! 'v1/slots/settings', slot: slot
-end
+json.partial! 'v1/slots/settings', slot: slot if current_user
 
-if slot.class == StdSlot
-  json.visibility slot.visibility
-elsif slot.class == GroupSlot
-  json.group_id slot.group.id
-elsif slot.class == ReSlot
-  json.slotter_id slot.slotter.id
-end
+# json.group_id slot.group.id if slot.class < GroupSlot
+json.group_id slot.group.id if slot.try(:group)
+
+json.slotter_id slot.slotter.id if slot.class == ReSlot
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
 

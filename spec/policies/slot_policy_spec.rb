@@ -63,7 +63,7 @@ describe SlotPolicy do
   permissions :add_comment?, :show_comments?, :reslot_history? do
     context "own private slot" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, owner: user) }
+      let(:slot) { create(:std_slot_private, owner: user) }
 
       it "denies access" do
         expect(subject).not_to permit(user, slot)
@@ -74,7 +74,7 @@ describe SlotPolicy do
   permissions :show?, :show_likes?, :copy?, :share_url? do
     context "own private slot" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, owner: user) }
+      let(:slot) { create(:std_slot_private, owner: user) }
 
       it "allows access" do
         expect(subject).to permit(user, slot)
@@ -87,7 +87,7 @@ describe SlotPolicy do
       let(:user) { nil }
 
       context "public slot" do
-        let(:slot) { create(:std_slot, :publicslot) }
+        let(:slot) { create(:std_slot_public) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -101,7 +101,7 @@ describe SlotPolicy do
       let(:user) { nil }
 
       context "public slot" do
-        let(:slot) { create(:std_slot, :publicslot) }
+        let(:slot) { create(:std_slot_public) }
 
         it "denies access" do
           expect(subject).not_to permit(user, slot)
@@ -117,7 +117,7 @@ describe SlotPolicy do
         let(:user) { create(:user) }
 
         context "public slot" do
-          let(:slot) { create(:std_slot, :publicslot) }
+          let(:slot) { create(:std_slot_public) }
 
           it "allows access" do
             expect(subject).to permit(user, slot)
@@ -125,7 +125,7 @@ describe SlotPolicy do
         end
 
         context "friend slot if slot owner is friend" do
-          let(:slot) { create(:std_slot, :friendslot) }
+          let(:slot) { create(:std_slot_friends) }
 
           it "allows access" do
             create(:friendship, :established, user: user, friend: slot.owner)
@@ -134,7 +134,7 @@ describe SlotPolicy do
         end
 
         context "friend slot if slot owner is not friend" do
-          let(:slot) { create(:std_slot, :friendslot) }
+          let(:slot) { create(:std_slot_friends) }
 
           it "denies access" do
             expect(subject).not_to permit(user, slot)
@@ -152,7 +152,7 @@ describe SlotPolicy do
         let(:user) { nil }
 
         context "friend slot" do
-          let(:slot) { create(:std_slot, :friendslot) }
+          let(:slot) { create(:std_slot_friends) }
 
           it "denies access" do
             expect(subject).not_to permit(user, slot)
@@ -195,7 +195,7 @@ describe SlotPolicy do
 
   permissions :move? do
     context "own private slot" do
-      let(:slot) { create(:std_slot, owner: user) }
+      let(:slot) { create(:std_slot_private, owner: user) }
 
       context "for a user" do
         let(:user) { create(:user) }
@@ -204,18 +204,10 @@ describe SlotPolicy do
           expect(subject).to permit(user, slot)
         end
       end
-
-      context "for a visitor" do
-        let(:user) { nil }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
     end
 
     context "own friendslot" do
-      let(:slot) { create(:std_slot, :friendslot, owner: user) }
+      let(:slot) { create(:std_slot_friends, owner: user) }
 
       context "for a user" do
         let(:user) { create(:user) }
@@ -225,18 +217,20 @@ describe SlotPolicy do
         end
 
         it "denies access if target is private_slots" do
-          skip
+          skip 'limit copy-to targets to increasing visibility'
           expect(subject).not_to permit(user, slot)
         end
       end
     end
 
     context "own public slot" do
-      let(:slot) { create(:std_slot, :publicslot, owner: user) }
+      let(:slot) { create(:std_slot_public, owner: user) }
       let(:user) { create(:user) }
 
+      # should a public stdslot be allowed to be moved to a public group?
+      # visibility would stay the same...
       it "denies access" do
-        skip
+        skip 'limit copy-to targets to increasing visibility'
         expect(subject).not_to permit(user, slot)
       end
     end
@@ -259,6 +253,15 @@ describe SlotPolicy do
         it "denies access" do
           expect(subject).not_to permit(user, slot)
         end
+      end
+    end
+
+    context "for a visitor" do
+      let(:slot) { create(:std_slot_public) }
+      let(:user) { nil }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, slot)
       end
     end
   end

@@ -17,15 +17,16 @@ class SlotPolicy < ApplicationPolicy
     # common groups (if any) if user is unrelated to current user
     def resolve
       if current_user == requested_user
-        current_user.my_slots
+        StdSlot.of(current_user) +
+          current_user.re_slots
       elsif current_user.friend_with? requested_user
-        requested_user.std_slots.friend_visible +
-          requested_user.std_slots.public_visible +
+        requested_user.std_slots_friends +
+          requested_user.std_slots_public +
           requested_user.re_slots +
           current_user.shared_group_slots(requested_user)
       else
         # TODO: only return reslots from public sources BKD-124
-        requested_user.std_slots.public_visible +
+        requested_user.std_slots_public +
           # requested_user.re_slots.public +
           requested_user.re_slots +
           current_user.shared_group_slots(requested_user)
@@ -36,8 +37,8 @@ class SlotPolicy < ApplicationPolicy
     def friend_slots
       slots = []
       current_user.friends.each do |friend|
-        slots.push(*friend.std_slots.friend_visible)
-        slots.push(*friend.std_slots.public_visible)
+        slots.push(*friend.std_slots_friends)
+        slots.push(*friend.std_slots_public)
         slots.push(*friend.re_slots)
       end
       slots
@@ -52,7 +53,9 @@ class SlotPolicy < ApplicationPolicy
   # true if slot is public
   # true if the current user is allowed to see this slot
   def show?
-    return true if slot.try(:public?) # allow for visitors
+    return true if slot.StdSlotPublic?
+    return true if slot.ReSlotPublic?
+    return true if slot.GroupSlotPublic?
     show_to_current_user?
   end
 
@@ -88,18 +91,18 @@ class SlotPolicy < ApplicationPolicy
 
   # false if slot is private? (screen doesn't have 'Add a comment')
   def add_comment?
-    return false if slot.try(:private?)
+    return false if slot.StdSlotPrivate?
     show_to_current_user?
   end
 
   def show_comments?
-    return false if slot.try(:private?)
+    return false if slot.StdSlotPrivate?
     show?
   end
 
   # ASK: can only logged in users see the history?
   def reslot_history?
-    return false if slot.try(:private?)
+    return false if slot.StdSlotPrivate?
     show_to_current_user?
   end
 
@@ -129,10 +132,11 @@ class SlotPolicy < ApplicationPolicy
     # true if it's a public slot
     # true if it is my slot
     # true if slot is friendslot and from a friend aka I'm a friend of the slot owner
-    if slot.try(:visibility)
-      return true if slot.public?
+    # if slot.try(:visibility)
+    if slot.class < StdSlot
+      return true if slot.StdSlotPublic?
       return true if current_user == slot.owner
-      return true if slot.friendslot? && current_user.friend_with?(slot.owner)
+      return true if slot.StdSlotFriends? && current_user.friend_with?(slot.owner)
     end
 
     # re slot
@@ -141,17 +145,21 @@ class SlotPolicy < ApplicationPolicy
     # true if it's a reslot from a public slot
     # later: true if it's a reslot from a pulic group's groupslot
     if slot.try(:slotter)
+    # if slot.class < ReSlot or slot.class == ReSlot
+      return true if slot.ReSlotPublic?
       return true if current_user == slot.slotter
       return true if current_user.friend_with?(slot.slotter)
+      # TODO: remove following lines later, they should not be necessary then
       parent = BaseSlot.get(slot.parent.id)
-      return true if parent.try(:public?)
-      # return true if parent.try(:group).try(:public?)
+      return true if parent.StdSlotPublic?
+      # return true if parent.GroupSlotPublic?
     end
 
     # group slot
     # true if slot is group slot and i am member of the group
     # later: true if it's a groupslot in a pulic group
     if slot.try(:group)
+      return true if slot.GroupSlotPublic?
       return true if slot.group.members.include? current_user
     end
 

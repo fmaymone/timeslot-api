@@ -89,7 +89,7 @@ RSpec.describe MetaSlot, type: :model do
     end
 
     context "existing metaslot" do
-      let!(:meta_params) { { 'meta_slot_id' => create(:meta_slot).id } }
+      let!(:meta_params) { { meta_slot_id: create(:meta_slot).id } }
 
       it "doesn't create a new MetaSlot" do
         expect {

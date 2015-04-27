@@ -40,7 +40,8 @@ CREATE TABLE base_slots (
     meta_slot_id integer,
     id integer NOT NULL,
     share_id character varying(8) DEFAULT ''::character varying,
-    shared_by_id integer
+    shared_by_id integer,
+    slot_type integer NOT NULL
 );
 
 
@@ -421,7 +422,6 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 --
 
 CREATE TABLE std_slots (
-    visibility bit(2) DEFAULT B'11'::"bit",
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
@@ -964,4 +964,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150214163709');
 INSERT INTO schema_migrations (version) VALUES ('20150221012103');
 
 INSERT INTO schema_migrations (version) VALUES ('20150408130844');
+
+INSERT INTO schema_migrations (version) VALUES ('20150417143753');
+
+INSERT INTO schema_migrations (version) VALUES ('20150426210456');
 

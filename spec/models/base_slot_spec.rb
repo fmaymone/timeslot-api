@@ -34,6 +34,61 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
+  describe "create_slot" do
+    let(:meta_param) { attributes_for(:meta_slot) }
+    let(:group) { create(:group) }
+    let(:note_param) {
+      [ActionController::Parameters.new(attributes_for(:note))] }
+    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
+    let(:user) { create(:user) }
+
+    it "creates a new StdSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                    user: user)
+      }.to change(StdSlot.unscoped, :count).by 1
+    end
+
+    it "creates a new GroupSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, group: group,
+                                    user: user)
+      }.to change(GroupSlot.unscoped, :count).by 1
+    end
+
+    it "creates a new MetaSlot" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                    user: user)
+      }.to change(MetaSlot, :count).by 1
+    end
+
+    it "creates a new Note" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'public',
+                                    notes: note_param, user: user)
+      }.to change(Note, :count).by 1
+    end
+
+    it "creates a new SlotSetting" do
+      expect {
+        described_class.create_slot(meta: meta_param, visibility: 'private',
+                                    alerts: alert_param, user: user)
+      }.to change(SlotSetting, :count).by 1
+    end
+
+    context "existing metaslot" do
+      let!(:meta_param) { { meta_slot_id: create(:meta_slot).id } }
+
+      it "doesn't create a new MetaSlot" do
+        expect {
+          described_class.create_slot(meta: meta_param, visibility: 'friends',
+                                      user: user)
+        }.not_to change(MetaSlot, :count)
+      end
+    end
+  end
+
   describe :photos do
     let(:std_slot) { create(:std_slot) }
     let!(:media) {
@@ -61,15 +116,15 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :get_many do
-    let(:std_slots) { create_list(:std_slot, 3) }
+    let(:std_slots) { create_list(:std_slot_private, 3) }
     let(:group_slots) { create_list(:group_slot, 2) }
-    let(:other_slots) { create_list(:std_slot, 2) }
+    let(:other_slots) { create_list(:re_slot, 2) }
 
     it "returns a list of specific slots" do
       a = []
-      [std_slots, group_slots].each {
-        |slots| a << slots.collect(&:id)
-      }
+      [std_slots, group_slots].each do |slots|
+        a << slots.collect(&:id)
+      end
       result = BaseSlot.get_many(a.flatten)
       expect(result).to include(*std_slots)
       expect(result).to include(*group_slots)
@@ -101,7 +156,7 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :set_share_id do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:user) { create(:user) }
 
     it "adds a share url to the slot" do
@@ -113,11 +168,11 @@ RSpec.describe BaseSlot, type: :model do
     it "adds shared_by to the slot" do
       std_slot.set_share_id(user)
       std_slot.reload
-      expect(std_slot.shared_by).to eq user
+      expect(std_slot.shared_by_id).to eq user.id
     end
 
     context "existing share url" do
-      let(:std_slot) { create(:std_slot, share_id: '12345678') }
+      let(:std_slot) { create(:std_slot_public, share_id: '12345678') }
 
       it "doesn't overwrite an existing share url" do
         std_slot.set_share_id(user)
@@ -195,7 +250,7 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :comments_with_details do
-    let(:std_slot) { create(:std_slot, :with_comments) }
+    let(:std_slot) { create(:std_slot_friends, :with_comments) }
     let(:user) { create(:user) }
 
     it "returns all comments for the slot" do

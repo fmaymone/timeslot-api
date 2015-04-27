@@ -14,6 +14,7 @@ RSpec.describe StdSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
+  it { is_expected.to respond_to(:slot_type) }
   it { is_expected.to belong_to(:owner).inverse_of(:std_slots) }
   it { is_expected.to belong_to(:meta_slot) }
 
@@ -24,51 +25,29 @@ RSpec.describe StdSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "create_with_meta" do
-    let(:meta_param) { attributes_for(:meta_slot) }
-    let(:std_param) { attributes_for(:std_slot) }
-    let(:note_param) {
-      [ActionController::Parameters.new(attributes_for(:note))] }
-    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
+  describe "create_slot" do
+    let!(:meta_slot) { create(:meta_slot) }
     let(:user) { create(:user) }
 
-    it "creates a new StdSlot" do
+    it "creates a new StdSlotPrivate" do
       expect {
-        described_class.create_with_meta(meta: meta_param, visibility: std_param,
-                                         user: user)
-      }.to change(StdSlot, :count).by 1
+        described_class.create_slot(meta_slot: meta_slot, visibility: 'private',
+                                    user: user)
+      }.to change(StdSlotPrivate, :count).by 1
     end
 
-    it "creates a new MetaSlot" do
+    it "creates a new StdSlotFriends" do
       expect {
-        described_class.create_with_meta(meta: meta_param, visibility: std_param,
-                                         user: user)
-      }.to change(MetaSlot, :count).by 1
+        described_class.create_slot(meta_slot: meta_slot, visibility: 'friends',
+                                    user: user)
+      }.to change(StdSlotFriends, :count).by 1
     end
 
-    it "creates a new Note" do
+    it "creates a new StdSlotPublic" do
       expect {
-        described_class.create_with_meta(meta: meta_param, visibility: std_param,
-                                         notes: note_param, user: user)
-      }.to change(Note, :count).by 1
-    end
-
-    it "creates a new SlotSetting" do
-      expect {
-        described_class.create_with_meta(meta: meta_param, visibility: std_param,
-                                         alerts: alert_param, user: user)
-      }.to change(SlotSetting, :count).by 1
-    end
-
-    context "existing metaslot" do
-      let!(:meta_param) { { 'meta_slot_id' => create(:meta_slot).id } }
-
-      it "doesn't create a new MetaSlot" do
-        expect {
-          described_class.create_with_meta(meta: meta_param, visibility: std_param,
-                                         user: user)
-        }.not_to change(MetaSlot, :count)
-      end
+        described_class.create_slot(meta_slot: meta_slot, visibility: 'public',
+                                    user: user)
+      }.to change(StdSlotPublic, :count).by 1
     end
   end
 
@@ -82,7 +61,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "media" do
-      let(:slot) { create(:std_slot, :with_media) }
+      let(:slot) { create(:std_slot_private, :with_media) }
 
       it "invalidates belonging media_items" do
         slot.delete
@@ -92,7 +71,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "notes" do
-      let(:slot) { create(:std_slot, :with_notes) }
+      let(:slot) { create(:std_slot_private, :with_notes) }
 
       it "deletes belonging notes" do
         slot.delete
@@ -102,7 +81,7 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "likes" do
-      let(:slot) { create(:std_slot, :with_likes) }
+      let(:slot) { create(:std_slot_private, :with_likes) }
 
       it "deletes belonging likes" do
         slot.delete

@@ -32,9 +32,11 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot1) { create(:std_slot, :with_media, owner: current_user) }
+      let(:slot1) {
+        create(:std_slot_private, :with_media, owner: current_user) }
       let(:slot2) {
-        create(:std_slot, :with_media, meta_slot: meta_slot, owner: current_user) }
+        create(:std_slot_private, :with_media, meta_slot: meta_slot,
+               owner: current_user) }
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot2.meta_slot,
@@ -143,7 +145,7 @@ resource "Slots" do
       response_field :videos, "Videos recordings for the slot"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot, :with_media, :with_likes, :publicslot,
+      let(:slot) { create(:std_slot_public, :with_media, :with_likes,
                           meta_slot: meta_slot, share_id: 'abcd1234') }
 
       let!(:slot_setting) { create(:slot_setting,
@@ -265,7 +267,7 @@ resource "Slots" do
       response_field :creatorId, "ID of the User who created the slot"
       response_field :alerts, "Alerts for the slot"
       response_field :note, "A Note on the slot"
-      response_field :visibility, "Visibility of the slot"
+      response_field :visibility, "Visibility of the slot (private/friends/public)"
       response_field :createdAt, "Creation datetime of the slot"
       response_field :updatedAt, "Last update of the slot"
       response_field :deletedAt, "Deletion datetime of the slot"
@@ -279,7 +281,7 @@ resource "Slots" do
                      { title: "and another title",
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
 
       example "Create StandardSlot", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
@@ -311,7 +313,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
       let(:alerts) { "oh no" }
 
       example "Create std slot with invalid params returns 422 & failure details",
@@ -333,7 +335,7 @@ resource "Slots" do
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { '01' }
+      let(:visibility) { 'private' }
 
       example "Create std slot with missing requiered params returns 422" \
               " & failure details", document: false do
@@ -536,7 +538,7 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
 
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
     let(:id) { std_slot.id }
 
     describe "Update an existing StdSlot" do
@@ -581,7 +583,7 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(
           [notes.first[:title], notes.second[:title]]
-        ).to include StdSlot.last.notes.last.title
+        ).to include std_slot.notes.last.title
       end
     end
 
@@ -661,7 +663,7 @@ resource "Slots" do
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:std_slot) { create(:std_slot, :with_media, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, :with_media, owner: current_user) }
 
     describe "Delete Standard Slot" do
       let(:id) { std_slot.id }
@@ -679,7 +681,6 @@ resource "Slots" do
                                 "title" => std_slot.title,
                                 "startDate" => std_slot.start_date.as_json,
                                 "endDate" => std_slot.end_date.as_json,
-                                "visibility" => std_slot.visibility,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
@@ -820,7 +821,7 @@ resource "Slots" do
     parameter :id, "ID of the Slot to make a comment on", required: true
     parameter :content, "Content of the comment", required: true
 
-    let(:slot) { create(:std_slot, :friendslot, :with_comments) }
+    let(:slot) { create(:std_slot_friends, :with_comments) }
     let!(:friendship) {
       create(:friendship, :established, friend: slot.owner, user: current_user)
     }
@@ -903,18 +904,18 @@ resource "Slots" do
 
     parameter :copyTo, "contains an array of the copy targets",
               required: true
-    parameter :target, "Type of slot to copy to. Must be own of " \
-                       "[private_slots/friend_slots/public_slots] " \
-                       "or a name of a group where the user is allowed " \
-                       "to post.",
-              required: true,
+    parameter :slotType, "Type of slot to copy to. Must be own of " \
+                         "[private/friends/public]",
+              scope: :copyTo
+    parameter :groupId, "ID of the group to copy to, user must be allowed " \
+                         "to post to this group",
               scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",
               scope: :copyTo
 
-    let(:slot) { create(:std_slot, :publicslot, :with_comments) }
+    let(:slot) { create(:std_slot_public, :with_notes) }
     let(:group) { create(:group, :members_can_post) }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -922,10 +923,9 @@ resource "Slots" do
 
     describe "Copy Slot into several targets" do
       let(:id) { slot.id }
-      let(:target_1) { { target: 'friend_slots',
+      let(:target_1) { { slotType: 'friends',
                          details: 'true' } }
-      let(:target_2) { { target: group.name,
-                         details: true } }
+      let(:target_2) { { groupId: group.id } }
 
       let(:copyTo) { [target_1, target_2] }
 
@@ -938,8 +938,14 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 3
-        expect(GroupSlot.last.title).to eq slot.title
-        expect(GroupSlot.last.end_date).to eq slot.end_date
+        new_stdslotfriends = StdSlotFriends.last
+        expect(new_stdslotfriends.title).to eq slot.title
+        expect(new_stdslotfriends.end_date).to eq slot.end_date
+        expect(new_stdslotfriends.notes.length).to eq slot.notes.length
+        new_groupslot = GroupSlot.unscoped.last
+        expect(new_groupslot.title).to eq slot.title
+        expect(new_groupslot.end_date).to eq slot.end_date
+        expect(new_groupslot.notes.length).to eq slot.notes.length
       end
     end
   end
@@ -948,25 +954,25 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :target, "Type of slot to move to. Must be own of " \
-                       "[private_slots/friend_slots/public_slots/re_slots] " \
-                       "or a name of a group where the user is allowed " \
-                       "to post.",
-              required: true
+    parameter :slotType, "Type of slot to move to. Must be own of " \
+                          "[private/friends/public]"
+    parameter :groupId, "Contains the group ID if moving into a group" \
+                         " User must be allowed to post to this group"
     parameter :details, "Move all media data and notes to the new " \
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'true', must be one of [true/false]"
 
-    let(:slot) { create(:std_slot, :with_media, owner: current_user) }
+    let(:slot) { create(:std_slot_private, :with_media, owner: current_user) }
 
     describe "Move Slot from private to friends" do
       let(:id) { slot.id }
-      let(:target) { 'friend_slots' }
+      let(:slotType) { 'friends' }
       let(:details) { 'true' }
 
       example "Move Slot from private Slots to Friend Slots", document: :v1 do
         explanation "A new slot will be created with  " \
-                    "the same Metadata as it's source. If details is " \
+                    "the same Metadata as it's source. Either slotType or " \
+                    "groupId must be provided! If details is " \
                     "set to 'true' all media items and notes will " \
                     "be duplicated. The source will be deleted afterwards " \
                     "and with it all comments and likes."
@@ -974,9 +980,9 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 2
-        expect(StdSlot.last.friendslot?).to be true
-        expect(StdSlot.last.title).to eq slot.title
-        expect(StdSlot.last.end_date).to eq slot.end_date
+        expect(StdSlot.unscoped.last.StdSlotFriends?).to be true
+        expect(StdSlot.unscoped.last.title).to eq slot.title
+        expect(StdSlot.unscoped.last.end_date).to eq slot.end_date
       end
     end
   end
