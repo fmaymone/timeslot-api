@@ -24,6 +24,12 @@ You can reslot friends slots. They will be visible to your friends afterwards.
 
 It is only possible to reslot public slots or friendslots from friends.
 It's not possible to reslot Groupslots, they can only be copied (and in some cases moved-> probably not).
+This might only be true for private groups, because if you can see a slot in a private/standard group than it means
+you are already a member of the group and so the slot is yours anyway.
+But for public groups this is not true. You should be allowed to reslot groupslots from public groups imho.
+Maybe we shouldn't be too restrictive here, what if I erroneously put a slot into friendsvisible.
+I must to be able to change it...
+
 A reslot is visible to everybody if the original/parent slot is public.
 A reslot is visible to the users friends if the original/parent slot a friendslot.
 

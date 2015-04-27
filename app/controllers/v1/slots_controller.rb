@@ -79,7 +79,9 @@ module V1
 
     # PATCH /v1/stdslot/1
     def update_stdslot
-      @slot = StdSlot.unscoped.find(params[:id])
+      # see policy for thoughts about the different options
+      @slot = StdSlot.of(current_user).find(params[:id])
+      # @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
       @slot.update_from_params(meta: meta_params, media: media_params,
@@ -124,10 +126,8 @@ module V1
       end
     end
 
-    # see policy for thoughts about the different options
     # DELETE /v1/std_slot/1
     def destroy_stdslot
-      # @slot = StdSlot.unscoped.find(params[:id])
       @slot = StdSlot.of(current_user).find(params[:id])
       authorize @slot
 

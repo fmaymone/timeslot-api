@@ -456,7 +456,6 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from GroupSlot" do
-        skip "not supported"
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
           attributes_for(:re_slot, predecessorId: pred.id)

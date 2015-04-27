@@ -217,7 +217,7 @@ describe SlotPolicy do
         end
 
         it "denies access if target is private_slots" do
-          skip
+          skip 'limit copy-to targets to increasing visibility'
           expect(subject).not_to permit(user, slot)
         end
       end
@@ -227,8 +227,10 @@ describe SlotPolicy do
       let(:slot) { create(:std_slot_public, owner: user) }
       let(:user) { create(:user) }
 
+      # should a public stdslot be allowed to be moved to a public group?
+      # visibility would stay the same...
       it "denies access" do
-        skip
+        skip 'limit copy-to targets to increasing visibility'
         expect(subject).not_to permit(user, slot)
       end
     end
