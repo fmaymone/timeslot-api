@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -96,6 +110,41 @@ CREATE SEQUENCE comments_id_seq
 --
 
 ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
+
+
+--
+-- Name: connects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE connects (
+    id integer NOT NULL,
+    user_id integer NOT NULL,
+    provider_id integer NOT NULL,
+    social_id integer NOT NULL,
+    social_data hstore DEFAULT ''::hstore,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: connects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE connects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: connects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 
 --
@@ -492,6 +541,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY connects ALTER COLUMN id SET DEFAULT nextval('connects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
 
 
@@ -610,6 +666,14 @@ ALTER TABLE ONLY comments
 
 
 --
+-- Name: connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY connects
+    ADD CONSTRAINT connects_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -686,6 +750,20 @@ ALTER TABLE ONLY users
 --
 
 CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user_id, slot_id);
+
+
+--
+-- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_connects_on_social_id_and_user_id ON connects USING btree (social_id, user_id);
+
+
+--
+-- Name: index_connects_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
 
 
 --
@@ -968,4 +1046,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150408130844');
 INSERT INTO schema_migrations (version) VALUES ('20150417143753');
 
 INSERT INTO schema_migrations (version) VALUES ('20150426210456');
+
+INSERT INTO schema_migrations (version) VALUES ('20150428150031');
 
