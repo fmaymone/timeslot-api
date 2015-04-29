@@ -40,8 +40,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "when email is not present" do
-    before { user.email = "" }
-    it { should_not be_valid }
+    before { user.email = nil }
+    it { is_expected.to be_valid }
   end
 
   describe "when email is too long" do

@@ -58,9 +58,11 @@ class User < ActiveRecord::Base
   validates :username, presence: true, length: { maximum: 50 }
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
-  validates :email, presence: true, length: { maximum: 254 },
+  validates :email,
+            length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
-            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
+            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
+            if: 'self.email'
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
   validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"

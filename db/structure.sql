@@ -490,7 +490,7 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    email character varying(255) DEFAULT ''::character varying,
+    email character varying(255),
     password_digest character varying(60) NOT NULL,
     auth_token character varying(27),
     role smallint,
@@ -1048,4 +1048,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150417143753');
 INSERT INTO schema_migrations (version) VALUES ('20150426210456');
 
 INSERT INTO schema_migrations (version) VALUES ('20150428150031');
+
+INSERT INTO schema_migrations (version) VALUES ('20150429103206');
 
