@@ -491,7 +491,7 @@ CREATE TABLE users (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     email character varying(255),
-    password_digest character varying(60) NOT NULL,
+    password_digest character varying(60),
     auth_token character varying(27),
     role smallint,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -500,7 +500,14 @@ CREATE TABLE users (
     default_friends_friendslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
-    default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit"
+    default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
+    phone integer,
+    location_id integer,
+    public_url character varying(255),
+    push boolean DEFAULT true,
+    slot_default_location_id integer,
+    slot_default_duration integer,
+    slot_default_type_id integer
 );
 
 
@@ -1050,4 +1057,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150426210456');
 INSERT INTO schema_migrations (version) VALUES ('20150428150031');
 
 INSERT INTO schema_migrations (version) VALUES ('20150429103206');
+
+INSERT INTO schema_migrations (version) VALUES ('20150429104404');
 

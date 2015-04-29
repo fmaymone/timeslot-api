@@ -53,6 +53,11 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # settings
+  has_one :location
+  has_one :slot_default_location, class_name: Location
+  # has_one :slot_default_type, class_name: SlotType
+
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
@@ -65,7 +70,13 @@ class User < ActiveRecord::Base
             if: 'self.email'
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
-  validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
+  validates :password, length: { minimum: 5, maximum: 72 }, allow_nil: true #, if: "self.password"
+
+  validates_numericality_of :slot_default_duration,
+                            only_integer: true,
+                            allow_nil: true
+  validates :phone, uniqueness: true, numericality: { only_integer: true },
+            allow_nil: true
 
   ## user specific ##
 

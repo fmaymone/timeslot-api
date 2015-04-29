@@ -10,11 +10,11 @@ RSpec.describe "V1::Connects", type: :request do
   describe "POST /v1/fb-connect" do
     let(:payload) do
       {
-        "id" => 10152854206708061,
+        "socialId" => 10152854206708061,
         "first_name" => "Silvi",
         "last_name" => "Ivlis",
         "middle_name" => "O",
-        "name" => "Silvi O Ivlis",
+        "username" => "Silvi O Ivlis",
         "gender" => "male",
         "link" => "https://www.facebook.com/app_scoped_user_id/10152854206708061/",
         "locale" => "en_US",
@@ -26,7 +26,7 @@ RSpec.describe "V1::Connects", type: :request do
       }
     end
 
-    context "new user", :focus do
+    context "new user" do
       let(:slots) { slots.push create(:std_slot_public, owner: current_user) }
 
       it "returns success" do
