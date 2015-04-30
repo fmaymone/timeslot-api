@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include TS_Role
-  has_secure_password
+  has_secure_password validations: false
 
   # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
@@ -54,8 +54,8 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   # settings
-  has_one :location
-  has_one :slot_default_location, class_name: Location
+  # has_one :location
+  # has_one :slot_default_location, class_name: Location
   # has_one :slot_default_type, class_name: SlotType
 
   ## validations ##
