@@ -121,7 +121,7 @@ CREATE TABLE connects (
     user_id bigint NOT NULL,
     provider_id integer NOT NULL,
     social_id bigint NOT NULL,
-    social_data hstore DEFAULT ''::hstore,
+    data hstore DEFAULT ''::hstore,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -501,13 +501,13 @@ CREATE TABLE users (
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
+    phone character varying(35),
     location_id bigint,
     public_url character varying(255),
     push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
-    phone character varying(35),
     phone_verified boolean DEFAULT false,
     email_verified boolean DEFAULT false
 );
