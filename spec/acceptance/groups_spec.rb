@@ -2,7 +2,7 @@ require 'documentation_helper'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   # index
@@ -17,7 +17,8 @@ resource "Groups" do
     response_field :image, "URL of the group image"
     response_field :url, "ressource URL for the group"
 
-    let!(:current_user) { create(:user, :with_3_groups, :with_3_own_groups) }
+    let!(:current_user) { create(:user, :with_email, :with_password,
+                                 :with_3_groups, :with_3_own_groups) }
 
     example "Get all groups where current user is member or owner",
             document: :v1 do

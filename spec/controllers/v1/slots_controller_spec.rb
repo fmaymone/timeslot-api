@@ -5,7 +5,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     request.accept = "application/json"
     request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:valid_session) { {} }
 
   describe "GET show" do
