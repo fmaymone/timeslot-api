@@ -255,6 +255,28 @@ RSpec.describe "V1::Users", type: :request do
         end
       end
 
+      context "phone" do
+        it "updates the phone of a given user" do
+          patch "/v1/users", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.phone).to eq("1423423134")
+        end
+
+        it "doesn't update the auth_token if new phone" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new phone" do
+          old_digest = current_user.password_digest
+          patch "/v1/users", { phone: "123123213" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
       context "password" do
         it "updates the password_digest if new password" do
           expect {
@@ -267,6 +289,45 @@ RSpec.describe "V1::Users", type: :request do
           patch "/v1/users", { password: "newsecret" }, auth_header
           current_user.reload
           expect(current_user.auth_token).not_to eq old_token
+        end
+      end
+
+      context "other attributes" do
+        it "updates the public URL of a given user" do
+          patch "/v1/users", { publicUrl: 'uffie' }, auth_header
+          current_user.reload
+          expect(current_user.public_url).to eq 'uffie'
+        end
+
+        it "updates the push notification state of a given user" do
+          patch "/v1/users", { push: true }, auth_header
+          current_user.reload
+          expect(current_user.push).to be true
+        end
+
+        it "updates the location of a given user" do
+          patch "/v1/users", { locationId: 423423143 }, auth_header
+          current_user.reload
+          expect(current_user.location_id).to eq(423423143)
+        end
+
+        it "updates the slot default location id of a given user" do
+          patch "/v1/users", { slotDefaultLocationId: '323323232' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_location_id).to eq(323323232)
+        end
+
+        it "updates the slot_default_duration of a given user" do
+          patch "/v1/users", { slotDefaultDuration: 1000000 }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_duration).to eq(1000000)
+        end
+
+        it "updates the default slot type of a given user" do
+          skip 'needs slottype table'
+          patch "/v1/users", { slotDefaultType: 'StdSlotPrivate' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_type).to eq(StdSlotPrivate)
         end
       end
     end

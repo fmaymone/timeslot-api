@@ -14,6 +14,30 @@ resource "Users" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
+    response_field :email, "Email of user (max. 255 characters)"
+    response_field :phone, "Phone number of user (max. 35 characters)"
+    response_field :locationId, "Home location of user"
+    response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+    response_field :push, "Send push Notifications (true/false)"
+    response_field :slotDefaultDuration, "Default Slot Duration in seconds"
+    response_field :slotDefaultTypeId, "Default Slot Type - WIP"
+    response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
+    response_field :defaultPrivateAlerts,
+                   "Default alerts for private slots of this user"
+    response_field :defaultOwnFriendslotAlerts,
+                   "Default alerts for the friendslots of this user"
+    response_field :defaultOwnPublicAlerts,
+                   "Default alerts for the public slots of this user"
+    response_field :defaultFriendsFriendslotAlerts,
+                   "Default alerts for the friendslots from friends of this user"
+    response_field :defaultFriendsPublicAlerts,
+                   "Default alerts for the public slots from friends of this user"
+    response_field :defaultReslotAlerts,
+                   "Default alerts for the reslots of this user"
+    response_field :defaultGroupAlerts,
+                   "Default alerts for all groupslots of this user" \
+                   " where no specific alert is set. Groupslots" \
+                   " may also have their own default alerts per group"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -141,6 +165,15 @@ resource "Users" do
     describe "Update current users data" do
 
       parameter :username, "Updated username of user (max. 50 characters)"
+      parameter :email, "Email of user (max. 255 characters)"
+      parameter :phone, "Phone number of user (max. 35 characters)"
+      parameter :locationId, "Home location of user"
+      parameter :image, "URL of the user image"
+      parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+      parameter :push, "Send push Notifications (true/false)"
+      parameter :slotDefaultDuration, "Default Slot Duration in seconds"
+      parameter :slotDefaultTypeId, "Default Slot Type - WIP"
+      parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
       parameter :defaultPrivateAlerts,
                 "Default alerts for private slots of this user"
       parameter :defaultOwnFriendslotAlerts,
