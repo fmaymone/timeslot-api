@@ -67,15 +67,17 @@ class User < ActiveRecord::Base
             length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
-            if: 'self.email'
+            allow_nil: true # if: 'self.email'
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
-  validates :password, length: { minimum: 5, maximum: 72 }, allow_nil: true #, if: "self.password"
+  validates :password, length: { minimum: 5, maximum: 72 }, allow_nil: true
 
   validates_numericality_of :slot_default_duration,
                             only_integer: true,
                             allow_nil: true
-  validates :phone, uniqueness: true, numericality: { only_integer: true },
+  validates :phone,
+            uniqueness: true,
+            length: { maximum: 35 },
             allow_nil: true
 
   ## user specific ##
@@ -331,8 +333,12 @@ class User < ActiveRecord::Base
     new_user
   end
 
-  def self.sign_in(email, password)
-    user = User.find_by email: email
+  def self.sign_in(email: nil, phone: nil, password:)
+    if email
+      user = User.find_by email: email
+    elsif phone
+      user = User.find_by phone: phone
+    end
     current_user = user.try(:authenticate, password)
     current_user.update(auth_token: generate_auth_token) if current_user
     current_user

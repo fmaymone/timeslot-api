@@ -2,6 +2,8 @@
 
 ##Changes since version from 27.4.15
 - email is not requiered anymore for user creation
+- signup/signin is possible with phone number instead of email
+
 
 - new endpoints:
 

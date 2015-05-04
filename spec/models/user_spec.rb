@@ -19,7 +19,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
-  # it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
@@ -71,6 +70,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "when email address is already taken" do
+    before { user.email = 'kw@ts.com' }
     it "won't be valid" do
       user.save
       user_with_same_email = user.dup
@@ -81,9 +81,20 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "when phone number is already taken" do
+    before { user.phone = '12345678' }
+    it "won't be valid" do
+      user.save
+      user_with_same_phone = user.dup
+      user_with_same_phone.save
+
+      expect(user_with_same_phone).not_to be_valid
+    end
+  end
+
   describe "authentication params" do
     context "valid params" do
-      let(:new_user) { build(:user) }
+      let(:new_user) { build(:user, :with_email, :with_password) }
 
       it "succeeds if password is long enough" do
         expect(new_user.save).to be true
@@ -99,15 +110,15 @@ RSpec.describe User, type: :model do
         new_user.save
         expect(new_user.auth_token.present?).to be true
       end
+
+      it "succeeds if password missing" do
+        user.password = nil
+        expect(user.save).to be true
+      end
     end
 
     context "invalid params" do
       let(:invalid_user) { build(:user) }
-
-      it "fails if password missing" do
-        invalid_user.password = nil
-        expect(invalid_user.save).to be false
-      end
 
       it "fails if password too short" do
         invalid_user.password = "han"
@@ -761,21 +772,37 @@ RSpec.describe User, type: :model do
   end
 
   describe "sign_in" do
-    let!(:user) { create(:user, password: 'timeslot') }
+    let(:user) { create(:user, :with_email, :with_password) }
 
-    context "valid params" do
+    context "with email" do
       it "returns the user" do
-        expect(User.sign_in(user.email, user.password)).to eq user
+        expect(
+          User.sign_in(email: user.email, password: user.password)
+        ).to eq user
+      end
+    end
+
+    context "with phone" do
+      let(:user) { create(:user, :with_phone, :with_password) }
+
+      it "returns the user" do
+        expect(
+          User.sign_in(phone: user.phone, password: user.password)
+        ).to eq user
       end
     end
 
     context "invalid params" do
       it "returns false if invalid password" do
-        expect(User.sign_in(user.email, 'marzipan')).to be false
+        expect(
+          User.sign_in(email: user.email, password: 'marzipan')
+        ).to be false
       end
 
       it "returns nil if invalid email" do
-        expect(User.sign_in('marzipan', user.password)).to be nil
+        expect(
+          User.sign_in(email: 'marzipan', password: user.password)
+        ).to be nil
       end
     end
   end
