@@ -318,7 +318,7 @@ class User < ActiveRecord::Base
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
-  private def set_auth_token
+  def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
 

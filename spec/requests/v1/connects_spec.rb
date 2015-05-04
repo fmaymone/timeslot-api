@@ -2,10 +2,6 @@ require 'rails_helper'
 
 RSpec.describe "V1::Connects", type: :request do
   let(:json) { JSON.parse(response.body) }
-  # let!(:current_user) { create(:user) }
-  # let(:auth_header) do
-    # { 'Authorization' => "Token token=#{current_user.auth_token}" }
-  # end
 
   describe "POST /v1/fb-connect" do
     let(:payload) do
@@ -27,10 +23,7 @@ RSpec.describe "V1::Connects", type: :request do
     end
 
     context "new user" do
-      let(:slots) { slots.push create(:std_slot_public, owner: current_user) }
-
       it "returns success" do
-        p 'hole'
         post "/v1/fb-connect", payload
         expect(response.status).to be(200)
       end
@@ -41,6 +34,12 @@ RSpec.describe "V1::Connects", type: :request do
         }.to change(Connect, :count).by 1
       end
 
+      it "saves additional data for the connect" do
+        post "/v1/fb-connect", payload
+        connect = Connect.last
+        expect(connect.data).to have_key 'first_name'
+      end
+
       it "creates a new user model" do
         expect {
           post "/v1/fb-connect", payload
@@ -49,13 +48,36 @@ RSpec.describe "V1::Connects", type: :request do
 
       it "returns an auth token" do
         post "/v1/fb-connect", payload
-        expect(json).to have_key :authToken
+        expect(json).to have_key 'authToken'
       end
-
     end
 
-    context "existing user" do
+    context "existing user and identity" do
+      let(:user) { create(:user) }
+      let!(:identity) {
+        create(:connect, user: user, social_id: payload['socialId']) }
 
+      it "returns success" do
+        post "/v1/fb-connect", payload
+        expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload
+        }.not_to change(Connect, :count)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload
+        }.not_to change(User, :count)
+      end
+
+      it "returns an auth token" do
+        post "/v1/fb-connect", payload
+        expect(json).to have_key 'authToken'
+      end
     end
   end
 end
