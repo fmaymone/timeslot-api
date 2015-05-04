@@ -501,13 +501,15 @@ CREATE TABLE users (
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
-    phone integer,
     location_id bigint,
     public_url character varying(255),
     push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
-    slot_default_type_id integer
+    slot_default_type_id integer,
+    phone character varying(35),
+    phone_verified boolean DEFAULT false,
+    email_verified boolean DEFAULT false
 );
 
 
@@ -1061,4 +1063,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150429103206');
 INSERT INTO schema_migrations (version) VALUES ('20150429104404');
 
 INSERT INTO schema_migrations (version) VALUES ('20150429205903');
+
+INSERT INTO schema_migrations (version) VALUES ('20150504094941');
 
