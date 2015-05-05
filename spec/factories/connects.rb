@@ -4,14 +4,16 @@ FactoryGirl.define do
     user
     social_id 10152854206708061
 
-    after(:build) do |connect|
+    before :create do |connect|
       Rails.application.load_seed
       connect.provider = Provider.find_by name: 'facebook'
     end
 
     trait :twitter do
       social_id 3186786310
-      provider Provider.find_by name: 'twitter'
+      before :create do |connect|
+        connect.provider = Provider.find_by name: 'twitter'
+      end
     end
   end
 end

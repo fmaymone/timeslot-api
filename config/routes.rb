@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
     post 'fb-connect', to: 'connects#facebook_connect'
+    post 'tw-connect', to: 'connects#twitter_connect'
 
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
     post 'slots', to: 'slots#show_many', as: 'slots_read'

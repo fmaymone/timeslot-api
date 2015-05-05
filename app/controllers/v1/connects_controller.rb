@@ -5,21 +5,22 @@ module V1
 
     # POST /v1/fb-connect
     def facebook_connect
-      provider = Provider.find_by name: 'facebook'
-      ip = identity_params.merge(provider: provider)
-      social_connect([ip, facebook_params])
+      social_connect('facebook', facebook_params)
     end
 
     # POST /v1/tw-connect
     def twitter_connect
-
+      social_connect('twitter', twitter_params)
     end
 
-    private def social_connect(data)
+    private def social_connect(provider_name, social_params)
+      provider = Provider.find_by name: provider_name
+      ip = identity_params.merge(provider: provider)
+
       if current_user
-        social_merge_or_connect(data)
+        social_merge_or_connect([ip, social_params])
       else
-        social_signup_or_signin(data)
+        social_signup_or_signin([ip, social_params])
       end
     end
 
@@ -60,6 +61,10 @@ module V1
     private def facebook_params
       params.permit(:first_name, :last_name, :middle_name, :gender, :link,
                     :locale, :timezone, :updated_at, :verified, :email, :token)
+    end
+
+    private def twitter_params
+      params.permit(:auth_token, :auth_secret)
     end
   end
 end
