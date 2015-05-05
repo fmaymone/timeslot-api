@@ -2,6 +2,10 @@ require 'rails_helper'
 
 RSpec.describe "V1::Connects", type: :request do
   let(:json) { JSON.parse(response.body) }
+  let!(:current_user) { create(:user, :with_email, :with_password) }
+  let(:auth_header) do
+    { 'Authorization' => "Token token=#{current_user.auth_token}" }
+  end
 
   describe "POST /v1/fb-connect" do
     let(:payload) do
@@ -22,10 +26,16 @@ RSpec.describe "V1::Connects", type: :request do
       }
     end
 
-    context "new user" do
+    context "new user (social sign up)" do
       it "returns success" do
         post "/v1/fb-connect", payload
         expect(response.status).to be(200)
+      end
+
+      it "creates a new user model" do
+        expect {
+          post "/v1/fb-connect", payload
+        }.to change(User, :count).by 1
       end
 
       it "creates a new connect model" do
@@ -40,19 +50,13 @@ RSpec.describe "V1::Connects", type: :request do
         expect(connect.data).to have_key 'first_name'
       end
 
-      it "creates a new user model" do
-        expect {
-          post "/v1/fb-connect", payload
-        }.to change(User, :count).by 1
-      end
-
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
       end
     end
 
-    context "existing user and identity" do
+    context "existing user and identity (social sign in)" do
       let(:user) { create(:user) }
       let!(:identity) {
         create(:connect, user: user, social_id: payload['socialId']) }
@@ -62,21 +66,78 @@ RSpec.describe "V1::Connects", type: :request do
         expect(response.status).to be(200)
       end
 
-      it "doesn't create a new connect model" do
-        expect {
-          post "/v1/fb-connect", payload
-        }.not_to change(Connect, :count)
-      end
-
       it "doesn't create a new user model" do
         expect {
           post "/v1/fb-connect", payload
         }.not_to change(User, :count)
       end
 
+      it "doesn't create a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload
+        }.not_to change(Connect, :count)
+      end
+
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
+      end
+    end
+
+    context "signed-in user without existing facebook identity (connect)" do
+      it "returns success" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(User, :count)
+      end
+
+      it "creates a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.to change(Connect, :count).by 1
+      end
+
+      it "saves additional data for the connect" do
+        post "/v1/fb-connect", payload, auth_header
+        connect = Connect.last
+        expect(connect.data).to have_key 'first_name'
+      end
+
+      it "doesn't return an auth token" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).not_to include 'authToken'
+      end
+    end
+
+    context "signed-in user with existing facebook identity (merge)" do
+      let!(:identity) {
+        create(:connect, user: current_user, social_id: payload['socialId']) }
+
+      it "returns success" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(User, :count)
+      end
+
+      it "doesn't create a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(Connect, :count)
+      end
+
+      it "doesn't return an auth token" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).not_to include 'authToken'
       end
     end
   end

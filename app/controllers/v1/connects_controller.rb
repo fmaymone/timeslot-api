@@ -5,24 +5,17 @@ module V1
 
     # POST /v1/fb-connect
     def facebook_connect
-      identity = Connect.find_by social_id: identity_params[:social_id]
-
-      if identity
-        @user = identity.user
+      if current_user
+        current_user.connect_or_merge(identity_params, facebook_params)
       else
-        @user = User.create(params.permit(:username))
-        return unless @user.errors.empty?
-        @user.set_auth_token
-
-        identity = Connect.create(user: @user, provider_id: 0,
-                                  social_id: identity_params[:social_id],
-                                  data: facebook_params)
-        # there shouldn't be anything which could go wrong here...
-        fail "couldn't create identity" if identity.errors.any?
+        @user = User.create_or_signin_via_social(identity_params, facebook_params)
       end
 
       if @user
         render 'v1/users/signup'
+      elsif current_user
+        @user = current_user
+        render 'v1/users/show'
       else
         render json: {
                  error: "couldn't find or create user for given credentials" },

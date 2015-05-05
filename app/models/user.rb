@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
-          as: :mediable
+           as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: "creator_id", inverse_of: :creator
@@ -98,6 +98,24 @@ class User < ActiveRecord::Base
 
   def reset_password
     update(password: 'autechre')
+  end
+
+  def connect_or_merge(identity_params, social_params)
+    identity = Connect.find_by social_id: identity_params[:social_id]
+
+    if identity
+      merge(identity)
+    else
+      identity = Connect.create(user: self, provider_id: 0,
+                                social_id: identity_params[:social_id],
+                                data: social_params)
+      errors.add("couldn't create identity") if identity.errors.any?
+    end
+  end
+
+  def merge(identity)
+    # TODO, might do this in a service object
+    p 'TODO: merge hell'
   end
 
   def inactivate
@@ -330,6 +348,23 @@ class User < ActiveRecord::Base
     new_user = create(params.except("public_id"))
     return new_user unless new_user.errors.empty?
     AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
+    new_user
+  end
+
+  def self.create_or_signin_via_social(identity_params, social_params)
+    identity = Connect.find_by social_id: identity_params[:social_id]
+    # refresh auth_token here?
+    return identity.user if identity
+
+    new_user = User.create(username: identity_params[:username])
+    return new_user unless new_user.errors.empty?
+    new_user.set_auth_token
+
+    identity = Connect.create(user: new_user, provider_id: 0,
+                              social_id: identity_params[:social_id],
+                              data: social_params)
+
+    new_user.errors.add("couldn't create identity") if identity.errors.any?
     new_user
   end
 
