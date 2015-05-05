@@ -101,15 +101,18 @@ class User < ActiveRecord::Base
   end
 
   def connect_or_merge(identity_params, social_params)
-    identity = Connect.find_by social_id: identity_params[:social_id]
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
 
     if identity
       merge(identity)
     else
-      identity = Connect.create(user: self, provider_id: 0,
+      identity = Connect.create(user: self,
                                 social_id: identity_params[:social_id],
+                                provider: identity_params[:provider],
                                 data: social_params)
-      errors.add("couldn't create identity") if identity.errors.any?
+
+      errors.add(:connect, identity.errors) if identity.errors.any?
     end
   end
 
@@ -352,7 +355,8 @@ class User < ActiveRecord::Base
   end
 
   def self.create_or_signin_via_social(identity_params, social_params)
-    identity = Connect.find_by social_id: identity_params[:social_id]
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
     # refresh auth_token here?
     return identity.user if identity
 
@@ -360,11 +364,12 @@ class User < ActiveRecord::Base
     return new_user unless new_user.errors.empty?
     new_user.set_auth_token
 
-    identity = Connect.create(user: new_user, provider_id: 0,
+    identity = Connect.create(user: new_user,
+                              provider: identity_params[:provider],
                               social_id: identity_params[:social_id],
                               data: social_params)
 
-    new_user.errors.add("couldn't create identity") if identity.errors.any?
+    new_user.errors.add(connect: identity.errors) if identity.errors.any?
     new_user
   end
 
