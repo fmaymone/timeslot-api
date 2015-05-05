@@ -88,6 +88,11 @@ RSpec.configure do |config|
   config.around(:each, :db) do |example|
     with_std_out_logger { example.run }
   end
+
+  config.before(:each, :seed) do
+    Rails.application.load_seed
+    # load "#{Rails.root}/db/seeds.rb"
+  end
 end
 
 def with_std_out_logger

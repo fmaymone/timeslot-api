@@ -26,7 +26,7 @@ RSpec.describe "V1::Connects", type: :request do
       }
     end
 
-    context "new user (social sign up)" do
+    context "new user (social sign up)", :seed do
       it "returns success" do
         post "/v1/fb-connect", payload
         expect(response.status).to be(200)
@@ -54,12 +54,18 @@ RSpec.describe "V1::Connects", type: :request do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
       end
+
+      context "invalid data" do
+        it "returns an error" do
+          post "/v1/fb-connect", payload.merge(username: 'x' * 55)
+          expect(json).to have_key 'error'
+        end
+      end
     end
 
     context "existing user and identity (social sign in)" do
-      let(:user) { create(:user) }
       let!(:identity) {
-        create(:connect, user: user, social_id: payload['socialId']) }
+        create(:connect, user: create(:user), social_id: payload['socialId']) }
 
       it "returns success" do
         post "/v1/fb-connect", payload
@@ -84,7 +90,7 @@ RSpec.describe "V1::Connects", type: :request do
       end
     end
 
-    context "signed-in user without existing facebook identity (connect)" do
+    context "signed-in user without existing facebook identity (connect)", :seed do
       it "returns success" do
         post "/v1/fb-connect", payload, auth_header
         expect(response.status).to be(200)
