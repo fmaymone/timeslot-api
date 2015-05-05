@@ -5,17 +5,32 @@ module V1
 
     # POST /v1/fb-connect
     def facebook_connect
-      if current_user
-        current_user.connect_or_merge(identity_params, facebook_params)
-      else
-        @user = User.create_or_signin_via_social(identity_params, facebook_params)
-      end
+      provider = Provider.find_by name: 'facebook'
+      ip = identity_params.merge(provider: provider)
+      social_connect([ip, facebook_params])
+    end
 
-      if @user
+    # POST /v1/tw-connect
+    def twitter_connect
+
+    end
+
+    private def social_connect(data)
+      if current_user
+        social_merge_or_connect(data)
+      else
+        social_signup_or_signin(data)
+      end
+    end
+
+    private def social_signup_or_signin(data)
+      @user = User.create_or_signin_via_social(*data)
+
+      if @user.errors.any?
+        render json: { error: @user.errors.messages },
+               status: :unprocessable_entity
+      elsif @user
         render 'v1/users/signup'
-      elsif current_user
-        @user = current_user
-        render 'v1/users/show'
       else
         render json: {
                  error: "couldn't find or create user for given credentials" },
@@ -23,9 +38,16 @@ module V1
       end
     end
 
-    # POST /v1/tw-connect
-    def twitter_connect
+    private def social_merge_or_connect(data)
+      current_user.connect_or_merge(*data)
 
+      if current_user.errors.any?
+        render json: { error: current_user.errors.messages },
+               status: :unprocessable_entity
+      else
+        @user = current_user
+        render 'v1/users/show'
+      end
     end
 
     private def identity_params
