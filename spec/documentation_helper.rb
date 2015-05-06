@@ -17,6 +17,7 @@ RspecApiDocumentation.configure do |config|
 
   # Location of templates
   # config.template_path = "inside of the gem"
+  config.template_path = Rails.root.join("doc")
 
   # Filter by example document type
   config.filter = :all
