@@ -1,10 +1,10 @@
 # TS RAILS BACKEND
 
-* [CHANGELOG](/CHANGELOG.md)
+* [CHANGELOG](CHANGELOG.md)
 * [App-Specification](doc/app_specification.md)
-* [Api Endpoint Documentation](/doc/api/index.markdown)
-* [Entity Relationship Diagram](/doc/erd_adv-final-18.2.15.pdf)
-* [How-To Setup Development Environment](/doc/setup_devenv.md)
+* [Api Endpoint Documentation](doc/api/index.markdown)
+* [Entity Relationship Diagram](doc/erd_adv-final-18.2.15.pdf)
+* [How-To Setup Development Environment](doc/setup_devenv.md)
 
 # Notes
 
@@ -78,7 +78,6 @@ ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ```
 
-
 # More Tools
 
 ## Webserver
@@ -104,6 +103,7 @@ database and re-run all migrations: ```RAILS_ENV=test rake db:migrate:reset```
 
 ### Flags
 
+Flag | Effect
 -------------|------------------
 ```:focus``` | let only marked specs run
 ```:db``` | print the database interactions of the specific spec to the console
