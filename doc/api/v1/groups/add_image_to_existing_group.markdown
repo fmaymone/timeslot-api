@@ -30,7 +30,7 @@ Description : URL for this media item
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=rcknBd9HrwW9UYm5xknv1KUQRig
+Authorization: Token token=rZ42Js-8ta4Nrm8WT234R2jYQWM
 Host: example.org
 Cookie: </pre>
 
@@ -39,18 +39,20 @@ Cookie: </pre>
 <pre>PATCH /v1/groups/15</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "image" : {
     "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg"
   }
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=rcknBd9HrwW9UYm5xknv1KUQRig&quot; \
+	-H &quot;Authorization: Token token=rZ42Js-8ta4Nrm8WT234R2jYQWM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -61,10 +63,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;c862c94a36aa4bcd88961b03b7893179&quot;
+ETag: &quot;0d010deee43032c132bca415f211061b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1558f464-d09a-496a-bdb5-0f4bb817170c
-X-Runtime: 0.013127
+X-Request-Id: a7f73e70-aa24-451c-8e7e-c624e159089d
+X-Runtime: 0.016538
 Content-Length: 250</pre>
 
 #### Status
@@ -73,15 +75,17 @@ Content-Length: 250</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 15,
   "name" : "foo",
   "ownerId" : 54,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-06T14:45:15.005Z",
-  "updatedAt" : "2015-05-06T14:45:15.005Z",
+  "createdAt" : "2015-05-06T21:29:29.529Z",
+  "updatedAt" : "2015-05-06T21:29:29.529Z",
   "deletedAt" : null,
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
   "membershipState" : "active"
-}</pre>
+}
+```

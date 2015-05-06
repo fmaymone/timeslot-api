@@ -39,7 +39,7 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=u3wA5zRH-3S1_PrFTzp6HEP_e9E
+Authorization: Token token=t94PNw737J89QfPAKm17Gw6pwIM
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/19/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=u3wA5zRH-3S1_PrFTzp6HEP_e9E&quot; \
+	-H &quot;Authorization: Token token=t94PNw737J89QfPAKm17Gw6pwIM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,8 +64,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: &quot;7de9fa2d00de9f6cd86e544cf1fc4b27&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ae7875c5-111f-4550-9b43-0f1d44ec702f
-X-Runtime: 0.011409
+X-Request-Id: d2765116-5986-41a3-bb3d-7800781a5563
+X-Runtime: 0.014702
 Content-Length: 503</pre>
 
 #### Status
@@ -74,7 +74,8 @@ Content-Length: 503</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "groupId" : 19,
   "size" : 6,
   "members" : [
@@ -109,4 +110,5 @@ Content-Length: 503</pre>
       "userUrl" : "http://example.org/v1/users/78"
     }
   ]
-}</pre>
+}
+```

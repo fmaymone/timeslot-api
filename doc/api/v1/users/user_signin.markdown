@@ -36,11 +36,13 @@ Cookie: </pre>
 <pre>POST /v1/users/signin</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "email" : "user56@email.com",
   "password" : "timeslot"
-}</pre>
+}
+```
+
 
 #### cURL
 
@@ -57,10 +59,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;de2e89a50f50c915a85b88990bf5159d&quot;
+ETag: &quot;131ab22825bf88341a3f92905b69c475&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d04ac662-c2dc-4cf8-8e5b-85cbe6ba4704
-X-Runtime: 0.009572
+X-Request-Id: 013f83fe-8cce-48aa-9352-8855c1697ad2
+X-Runtime: 0.080050
 Content-Length: 101</pre>
 
 #### Status
@@ -69,9 +71,11 @@ Content-Length: 101</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 213,
   "username" : "User 212",
   "email" : "user56@email.com",
-  "authToken" : "5tUoyuGaWN894kY9ADEBS2oZ6nI"
-}</pre>
+  "authToken" : "fa8Cxy7_jyWTiO6qQo9CXLzLvTA"
+}
+```

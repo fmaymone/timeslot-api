@@ -84,7 +84,7 @@ Description : Deletion of user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=b_5hGEB-NBz0pWGHdncweHgCsFI
+Authorization: Token token=zrQjiev-qLE_aFDdy_SiRR6kQcI
 Host: example.org
 Cookie: </pre>
 
@@ -96,7 +96,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/211&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=b_5hGEB-NBz0pWGHdncweHgCsFI&quot; \
+	-H &quot;Authorization: Token token=zrQjiev-qLE_aFDdy_SiRR6kQcI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -107,10 +107,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;45d30e8b6f1be9cb3b86b05fe5e8b26e&quot;
+ETag: &quot;f5506c42dae22fc5b5e8ecb1f2c91ecb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d3f96515-e3af-4d00-a668-000f4ce39877
-X-Runtime: 0.026381
+X-Request-Id: f65b6eb1-4a22-4811-9f06-6ff6606e1d70
+X-Runtime: 0.027108
 Content-Length: 701</pre>
 
 #### Status
@@ -119,7 +119,8 @@ Content-Length: 701</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 211,
   "username" : "User 211",
   "email" : "user55@email.com",
@@ -139,8 +140,8 @@ Content-Length: 701</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "push" : true,
-  "createdAt" : "2015-05-06T14:45:17.280Z",
-  "updatedAt" : "2015-05-06T14:45:17.280Z",
+  "createdAt" : "2015-05-06T21:29:38.900Z",
+  "updatedAt" : "2015-05-06T21:29:38.900Z",
   "deletedAt" : null,
   "image" : null,
   "slotCount" : 0,
@@ -148,4 +149,5 @@ Content-Length: 701</pre>
   "friendsCount" : 0,
   "friendships" : [],
   "groups" : []
-}</pre>
+}
+```

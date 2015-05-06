@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=eMpJ5eDrF5laTJp4Pr8sfXYZIo8
+Authorization: Token token=Aew-lmidEuZ809sbfQbMu6U0VOg
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/232/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=eMpJ5eDrF5laTJp4Pr8sfXYZIo8&quot; \
+	-H &quot;Authorization: Token token=Aew-lmidEuZ809sbfQbMu6U0VOg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;b24ce1e8130bd40e90051346af19952a&quot;
+ETag: &quot;9f18c593ca49f35adcc518f23f8e6603&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7922f558-deef-41b9-bc46-b554253076ba
-X-Runtime: 0.073611
+X-Request-Id: 962b7209-2ca8-4469-a518-d7675bd85b78
+X-Runtime: 0.107550
 Content-Length: 1655</pre>
 
 #### Status
@@ -101,13 +101,14 @@ Content-Length: 1655</pre>
 
 #### Body
 
-<pre>[
+```javascript
+[
   {
     "id" : 67,
     "title" : "Slot title 59",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.651Z",
-    "updatedAt" : "2015-05-06T14:45:17.651Z",
+    "createdAt" : "2015-05-06T21:29:40.084Z",
+    "updatedAt" : "2015-05-06T21:29:40.084Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-06T11:44:02.000Z",
@@ -128,8 +129,8 @@ Content-Length: 1655</pre>
     "id" : 68,
     "title" : "Slot title 60",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.656Z",
-    "updatedAt" : "2015-05-06T14:45:17.656Z",
+    "createdAt" : "2015-05-06T21:29:40.090Z",
+    "updatedAt" : "2015-05-06T21:29:40.090Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-07T12:44:02.000Z",
@@ -150,8 +151,8 @@ Content-Length: 1655</pre>
     "id" : 70,
     "title" : "Slot title 62",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.663Z",
-    "updatedAt" : "2015-05-06T14:45:17.673Z",
+    "createdAt" : "2015-05-06T21:29:40.102Z",
+    "updatedAt" : "2015-05-06T21:29:40.114Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-09T14:44:02.000Z",
@@ -172,8 +173,8 @@ Content-Length: 1655</pre>
     "id" : 72,
     "title" : "Slot title 64",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.694Z",
-    "updatedAt" : "2015-05-06T14:45:17.694Z",
+    "createdAt" : "2015-05-06T21:29:40.203Z",
+    "updatedAt" : "2015-05-06T21:29:40.203Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-11T16:44:02.000Z",
@@ -191,4 +192,5 @@ Content-Length: 1655</pre>
     "url" : "http://example.org/v1/slots/72",
     "creatorId" : 242
   }
-]</pre>
+]
+```

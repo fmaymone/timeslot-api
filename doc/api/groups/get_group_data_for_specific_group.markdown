@@ -53,7 +53,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=qqQJCAkZR9RL05QDNiROpFQvDKA
+Authorization: Token token=YLyuwoYW6T_gA7O7xZgr8GUyqoQ
 Host: example.org
 Cookie: </pre>
 
@@ -65,7 +65,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/12&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qqQJCAkZR9RL05QDNiROpFQvDKA&quot; \
+	-H &quot;Authorization: Token token=YLyuwoYW6T_gA7O7xZgr8GUyqoQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,10 +76,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;1ee31491689b82bf9c83a43e86854a5e&quot;
+ETag: &quot;83659fe9c08fa7847eb300227a63d6b7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b6784726-b236-4d2f-9f0d-d4bb680d009e
-X-Runtime: 0.008985
+X-Request-Id: 0aadf609-25b9-42df-b3e7-7df9fc9caa80
+X-Runtime: 0.011042
 Content-Length: 227</pre>
 
 #### Status
@@ -88,15 +88,17 @@ Content-Length: 227</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 12,
   "name" : "Testgroup 12",
   "ownerId" : 48,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-06T14:45:14.903Z",
-  "updatedAt" : "2015-05-06T14:45:14.903Z",
+  "createdAt" : "2015-05-06T21:29:29.207Z",
+  "updatedAt" : "2015-05-06T21:29:29.207Z",
   "deletedAt" : null,
   "image" : null,
   "membershipState" : "active"
-}</pre>
+}
+```

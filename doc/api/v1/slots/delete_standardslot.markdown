@@ -17,7 +17,7 @@ Description : ID of the Standard Slot to delete
 
 #### Headers
 
-<pre>Authorization: Token token=pOXpSV4jB-a6hsY30T56ZZROnwI
+<pre>Authorization: Token token=MdXQm2ch9nNH_15hm2tUhyhrqzI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -29,7 +29,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/36&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=pOXpSV4jB-a6hsY30T56ZZROnwI&quot; \
+	-H &quot;Authorization: Token token=MdXQm2ch9nNH_15hm2tUhyhrqzI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;a1ecddc215c95224de5deaa64016949a&quot;
+ETag: &quot;02abf5cb516680f95d0b574169d602d3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 30c90e57-b188-47b0-bf75-62a05791aaa0
-X-Runtime: 0.122406
+X-Request-Id: 7992b8ec-c087-4e33-a747-e948e8ece6ff
+X-Runtime: 3.427098
 Content-Length: 531</pre>
 
 #### Status
@@ -53,12 +53,13 @@ Content-Length: 531</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 36,
   "title" : "Slot title 34",
-  "createdAt" : "2015-05-06T14:45:16.566Z",
-  "updatedAt" : "2015-05-06T14:45:16.668Z",
-  "deletedAt" : "2015-05-06T14:45:16.666Z",
+  "createdAt" : "2015-05-06T21:29:33.937Z",
+  "updatedAt" : "2015-05-06T21:29:37.339Z",
+  "deletedAt" : "2015-05-06T21:29:37.337Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-08T10:44:02.000Z",
   "visibility" : "private",
@@ -66,8 +67,8 @@ Content-Length: 531</pre>
   "creator" : {
     "id" : 161,
     "username" : "User 161",
-    "createdAt" : "2015-05-06T14:45:16.564Z",
-    "updatedAt" : "2015-05-06T14:45:16.564Z",
+    "createdAt" : "2015-05-06T21:29:33.935Z",
+    "updatedAt" : "2015-05-06T21:29:33.935Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -80,4 +81,5 @@ Content-Length: 531</pre>
   "photos" : [],
   "voices" : [],
   "videos" : []
-}</pre>
+}
+```

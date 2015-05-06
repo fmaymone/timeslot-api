@@ -33,7 +33,7 @@ Description : Allows members to post new slots
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=3F_0iBqIv77dusOG7GB_ZYyAvMg
+Authorization: Token token=9vLkPHBuCETYnVw0BOqq-swmVfQ
 Host: example.org
 Cookie: </pre>
 
@@ -42,18 +42,20 @@ Cookie: </pre>
 <pre>PATCH /v1/groups/14</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "name" : "bar",
   "membersCanInvite" : true,
   "membersCanPost" : true
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/14&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=3F_0iBqIv77dusOG7GB_ZYyAvMg&quot; \
+	-H &quot;Authorization: Token token=9vLkPHBuCETYnVw0BOqq-swmVfQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,10 +66,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;d728952a5aa8f6eb324f635f93416c06&quot;
+ETag: &quot;c7cc0a81233fd1d118ea5b63603c5912&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d21a62b8-3e91-429b-b850-e1aabef7ebb4
-X-Runtime: 0.008758
+X-Request-Id: 5d3ea3eb-f59b-4ef4-8a12-fdbab94d6a49
+X-Runtime: 0.012853
 Content-Length: 216</pre>
 
 #### Status
@@ -76,15 +78,17 @@ Content-Length: 216</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 14,
   "name" : "bar",
   "ownerId" : 53,
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-05-06T14:45:14.983Z",
-  "updatedAt" : "2015-05-06T14:45:14.991Z",
+  "createdAt" : "2015-05-06T21:29:29.433Z",
+  "updatedAt" : "2015-05-06T21:29:29.446Z",
   "deletedAt" : null,
   "image" : null,
   "membershipState" : "active"
-}</pre>
+}
+```

@@ -39,7 +39,7 @@ Description : Visibility of slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=_X2rQIrJigfTkQcSZVOx5Kkkhiw
+Authorization: Token token=uAno9yjHVCVkEP8anrF2EdShEO0
 Host: example.org
 Cookie: </pre>
 
@@ -48,16 +48,18 @@ Cookie: </pre>
 <pre>PATCH /v1/stdslot/32</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "title" : "New title for a Slot"
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/32&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=_X2rQIrJigfTkQcSZVOx5Kkkhiw&quot; \
+	-H &quot;Authorization: Token token=uAno9yjHVCVkEP8anrF2EdShEO0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -68,10 +70,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;be5d6aec839573ce6f8c467cc9f587dd&quot;
+ETag: &quot;c7764fabf55a1d5b7b93a5f8f393503a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c30f4537-cb09-4f97-a8da-150935d27d5f
-X-Runtime: 0.027176
+X-Request-Id: 2b0d9464-2217-4f7b-8bdd-0a4a85e1cf9e
+X-Runtime: 0.036140
 Content-Length: 516</pre>
 
 #### Status
@@ -80,11 +82,12 @@ Content-Length: 516</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 32,
   "title" : "New title for a Slot",
-  "createdAt" : "2015-05-06T14:45:16.365Z",
-  "updatedAt" : "2015-05-06T14:45:16.365Z",
+  "createdAt" : "2015-05-06T21:29:33.432Z",
+  "updatedAt" : "2015-05-06T21:29:33.432Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-04T06:44:02.000Z",
@@ -93,8 +96,8 @@ Content-Length: 516</pre>
   "creator" : {
     "id" : 153,
     "username" : "User 153",
-    "createdAt" : "2015-05-06T14:45:16.363Z",
-    "updatedAt" : "2015-05-06T14:45:16.363Z",
+    "createdAt" : "2015-05-06T21:29:33.430Z",
+    "updatedAt" : "2015-05-06T21:29:33.430Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -107,4 +110,5 @@ Content-Length: 516</pre>
   "photos" : [],
   "voices" : [],
   "videos" : []
-}</pre>
+}
+```

@@ -24,7 +24,7 @@ Defaults to &#39;true&#39;, must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=53MHJvRlzrV7vVaP85mCsEssBs8
+Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8
 Host: example.org
 Cookie: </pre>
 
@@ -33,17 +33,19 @@ Cookie: </pre>
 <pre>POST /v1/slots/56/move</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "slotType" : "friends",
   "details" : "true"
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/56/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=53MHJvRlzrV7vVaP85mCsEssBs8&quot; \
+	-H &quot;Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -54,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;fa41c3e004ab9586546d6129b0628e95&quot;
+ETag: &quot;aa56024ced9bb729e00a1c44d428d06e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a4c913ad-9064-4a8b-82c5-18a7c64a587d
-X-Runtime: 0.056278
+X-Request-Id: 70a78971-bd1c-4490-a074-cd738c2f344e
+X-Runtime: 0.070746
 Content-Length: 694</pre>
 
 #### Status
@@ -66,11 +68,12 @@ Content-Length: 694</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 57,
   "title" : "Slot title 49",
-  "createdAt" : "2015-05-06T14:45:17.224Z",
-  "updatedAt" : "2015-05-06T14:45:17.224Z",
+  "createdAt" : "2015-05-06T21:29:38.760Z",
+  "updatedAt" : "2015-05-06T21:29:38.760Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-23T01:44:02.000Z",
@@ -79,8 +82,8 @@ Content-Length: 694</pre>
   "creator" : {
     "id" : 210,
     "username" : "User 210",
-    "createdAt" : "2015-05-06T14:45:17.205Z",
-    "updatedAt" : "2015-05-06T14:45:17.205Z",
+    "createdAt" : "2015-05-06T21:29:38.739Z",
+    "updatedAt" : "2015-05-06T21:29:38.739Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -109,4 +112,5 @@ Content-Length: 694</pre>
   ],
   "voices" : [],
   "videos" : []
-}</pre>
+}
+```

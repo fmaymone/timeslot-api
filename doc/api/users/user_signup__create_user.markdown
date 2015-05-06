@@ -44,12 +44,14 @@ Cookie: </pre>
 <pre>POST /v1/users</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "username" : "foo",
   "email" : "someone@timeslot.com",
   "password" : "secret-thing"
-}</pre>
+}
+```
+
 
 #### cURL
 
@@ -66,10 +68,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;9801ddf7d8f6086c2c3c0ad4ca893c62&quot;
+ETag: &quot;6d8eb78ed21630fd367a56f6498e7684&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f5cc10c7-66a9-49c9-93c9-acfdced44b1c
-X-Runtime: 0.008073
+X-Request-Id: 86e05dda-217b-40ee-8cd9-c5aa177bd5d7
+X-Runtime: 0.079812
 Content-Length: 100</pre>
 
 #### Status
@@ -78,9 +80,11 @@ Content-Length: 100</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 212,
   "username" : "foo",
   "email" : "someone@timeslot.com",
-  "authToken" : "uXiAmsMk_yn1YGKIR9_EfzwadmA"
-}</pre>
+  "authToken" : "NyTiZrYqaJp07D3WeSQWq1kPRxY"
+}
+```

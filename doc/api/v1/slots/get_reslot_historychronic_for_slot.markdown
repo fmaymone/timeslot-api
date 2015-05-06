@@ -19,7 +19,7 @@ Description : ID of the Slot to get the chronic for
 
 #### Headers
 
-<pre>Authorization: Token token=xY8fmnobAksE_usWmqqwqfyrp0c
+<pre>Authorization: Token token=6_wuAKUoaYsxhA3iDxIfPdYCtZo
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +30,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/52/history&quot; -X GET \
-	-H &quot;Authorization: Token token=xY8fmnobAksE_usWmqqwqfyrp0c&quot; \
+	-H &quot;Authorization: Token token=6_wuAKUoaYsxhA3iDxIfPdYCtZo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;31b983c24e15c4d8897d33e65e3fbc35&quot;
+ETag: &quot;e52bb1e6b7f38c474034ef3bf3e29f2c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 43a76366-b25b-4d3c-8fde-705da527be5a
-X-Runtime: 0.022206
+X-Request-Id: 09188281-46e4-47ce-b9f9-6363feb84e98
+X-Runtime: 0.045150
 Content-Length: 266</pre>
 
 #### Status
@@ -53,22 +53,24 @@ Content-Length: 266</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "predecessors" : [
     {
       "id" : 203,
       "username" : "User 203",
       "userImage" : null,
-      "timestamp" : "2015-05-06T14:45:17.091Z"
+      "timestamp" : "2015-05-06T21:29:38.376Z"
     },
     {
       "id" : 202,
       "username" : "User 202",
       "userImage" : null,
-      "timestamp" : "2015-05-06T14:45:17.086Z"
+      "timestamp" : "2015-05-06T21:29:38.370Z"
     }
   ],
   "parentUserId" : 201,
   "parentUsername" : "User 201",
   "parentUserImage" : null
-}</pre>
+}
+```

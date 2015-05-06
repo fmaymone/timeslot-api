@@ -31,7 +31,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=2mnQBFsDirrfjCegy2OrUgB81dE
+Authorization: Token token=6tE-tBqoenx1kG_mOY1uYs0aSA8
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2mnQBFsDirrfjCegy2OrUgB81dE&quot; \
+	-H &quot;Authorization: Token token=6tE-tBqoenx1kG_mOY1uYs0aSA8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,8 +56,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: &quot;d04cee0bbbe53daa32a8d279c8a24aae&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 660eefbf-5db4-4f17-9a45-0141e2e3c1ca
-X-Runtime: 0.067538
+X-Request-Id: acaa6ab6-ca83-44b4-ac79-ec1a40b54454
+X-Runtime: 0.089591
 Content-Length: 679</pre>
 
 #### Status
@@ -66,7 +66,8 @@ Content-Length: 679</pre>
 
 #### Body
 
-<pre>[
+```javascript
+[
   {
     "id" : 11,
     "name" : "Testgroup 11",
@@ -115,4 +116,5 @@ Content-Length: 679</pre>
     "image" : null,
     "url" : "http://example.org/v1/groups/6"
   }
-]</pre>
+]
+```

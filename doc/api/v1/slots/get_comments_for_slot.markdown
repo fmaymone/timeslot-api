@@ -19,7 +19,7 @@ Description : ID of the Slot to get the comments for
 
 #### Headers
 
-<pre>Authorization: Token token=g84o3G7nLTH9UUn45pWmsiEvrJg
+<pre>Authorization: Token token=QglY-nFAuynQNrnhy6elTRDHzcc
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +30,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/48/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=g84o3G7nLTH9UUn45pWmsiEvrJg&quot; \
+	-H &quot;Authorization: Token token=QglY-nFAuynQNrnhy6elTRDHzcc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;b50bb7e695ec741fb1778b03eeceb710&quot;
+ETag: &quot;7b208f0a1d19c56939f6b98eb416a615&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 08978035-629c-48e3-b95c-782b40c85704
-X-Runtime: 0.015944
+X-Request-Id: 545fa085-60bd-4174-b331-6ef4425c8a73
+X-Runtime: 0.019737
 Content-Length: 557</pre>
 
 #### Status
@@ -53,33 +53,35 @@ Content-Length: 557</pre>
 
 #### Body
 
-<pre>[
+```javascript
+[
   {
-    "createdAt" : "2015-05-06T14:45:17.024Z",
+    "createdAt" : "2015-05-06T21:29:38.238Z",
     "content" : "hate no one, love only a few",
     "userId" : 195,
     "username" : "User 195",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T14:45:17.038Z",
+    "createdAt" : "2015-05-06T21:29:38.245Z",
     "content" : "hate no one, love only a few",
     "userId" : 196,
     "username" : "User 196",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T14:45:17.042Z",
+    "createdAt" : "2015-05-06T21:29:38.251Z",
     "content" : "hate no one, love only a few",
     "userId" : 197,
     "username" : "User 197",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T14:45:17.055Z",
+    "createdAt" : "2015-05-06T21:29:38.333Z",
     "content" : "hate no one, love only a few",
     "userId" : 199,
     "username" : "User 199",
     "userimage" : "dfhjghjkdisudgfds7iy38"
   }
-]</pre>
+]
+```

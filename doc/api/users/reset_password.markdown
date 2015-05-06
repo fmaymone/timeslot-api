@@ -31,10 +31,12 @@ Cookie: </pre>
 <pre>POST /v1/users/reset</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "email" : "user58@email.com"
-}</pre>
+}
+```
+
 
 #### cURL
 
@@ -53,8 +55,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ae97be6b-4723-4cad-8745-9e04ee03d515
-X-Runtime: 0.008651
+X-Request-Id: dab46c16-2d5a-4cf8-9227-c91a9eaf0743
+X-Runtime: 0.077282
 Content-Length: 1</pre>
 
 #### Status
@@ -63,7 +65,9 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre> </pre>
+```javascript
+ 
+```
 ### Request
 
 #### Headers
@@ -77,8 +81,10 @@ Cookie: </pre>
 <pre>POST v1/users/signin</pre>
 
 #### Body
+```javascript
+email=user58%40email.com&password=autechre
+```
 
-<pre>email=user58%40email.com&password=autechre</pre>
 
 #### cURL
 
@@ -94,10 +100,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;c679f9a5b654d57587fffba849d4b08a&quot;
+ETag: &quot;257303ee76d499cd3ea85bc9b060e47f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c47e37a8-9466-45a7-be65-6e51c87d74eb
-X-Runtime: 0.008765
+X-Request-Id: 534d661e-70fc-49e6-84b9-53c725d3cf97
+X-Runtime: 0.081684
 Content-Length: 101</pre>
 
 #### Status
@@ -106,9 +112,11 @@ Content-Length: 101</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 215,
   "username" : "User 214",
   "email" : "user58@email.com",
-  "authToken" : "9tNOulANZ9PVYrHes_rLv-XPhko"
-}</pre>
+  "authToken" : "w1H9HUWh6sqoPi8EOIOd9ewmWcc"
+}
+```

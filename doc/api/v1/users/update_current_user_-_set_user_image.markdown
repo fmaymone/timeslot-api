@@ -27,7 +27,7 @@ Description : URL for this media item
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=rHr0EusX9RzkOPCDu7uNkuowKzw
+Authorization: Token token=9D6fucJrGle3yY2WSfeNCE9xD8k
 Host: example.org
 Cookie: </pre>
 
@@ -36,18 +36,20 @@ Cookie: </pre>
 <pre>PATCH /v1/users</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "image" : {
     "publicId" : "v1234567/xcvjghjkdisudgfds7iyf.jpg"
   }
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=rHr0EusX9RzkOPCDu7uNkuowKzw&quot; \
+	-H &quot;Authorization: Token token=9D6fucJrGle3yY2WSfeNCE9xD8k&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -58,10 +60,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;7a8ce68905dbb2f44cef9a10fb69547b&quot;
+ETag: &quot;be5d3fa83dacf51ae705d2e69e90edbd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 717080df-6bb3-431e-9127-9ff10381d5e0
-X-Runtime: 0.018903
+X-Request-Id: b539e8a5-de3d-4b00-9116-7a46b622dc30
+X-Runtime: 0.024694
 Content-Length: 733</pre>
 
 #### Status
@@ -70,7 +72,8 @@ Content-Length: 733</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 217,
   "username" : "User 216",
   "email" : "user60@email.com",
@@ -90,8 +93,8 @@ Content-Length: 733</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "push" : true,
-  "createdAt" : "2015-05-06T14:45:17.416Z",
-  "updatedAt" : "2015-05-06T14:45:17.416Z",
+  "createdAt" : "2015-05-06T21:29:39.664Z",
+  "updatedAt" : "2015-05-06T21:29:39.664Z",
   "deletedAt" : null,
   "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
   "slotCount" : 0,
@@ -99,4 +102,5 @@ Content-Length: 733</pre>
   "friendsCount" : 0,
   "friendships" : [],
   "groups" : []
-}</pre>
+}
+```

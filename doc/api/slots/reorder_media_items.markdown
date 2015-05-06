@@ -31,7 +31,7 @@ Description : Sorting order of the image/video/voice. If not supplied the media 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=KIu_mmtPCvwaZsc2PwCfFyAAN-k
+Authorization: Token token=RYTLKXVhmTVjrWsFC7hngvQDfZs
 Host: example.org
 Cookie: </pre>
 
@@ -40,8 +40,8 @@ Cookie: </pre>
 <pre>PATCH /v1/stdslot/35</pre>
 
 #### Body
-
-<pre>{
+```javascript
+{
   "photos" : [
     {
       "mediaId" : 32,
@@ -56,13 +56,15 @@ Cookie: </pre>
       "position" : 1
     }
   ]
-}</pre>
+}
+```
+
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/35&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=KIu_mmtPCvwaZsc2PwCfFyAAN-k&quot; \
+	-H &quot;Authorization: Token token=RYTLKXVhmTVjrWsFC7hngvQDfZs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,10 +75,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;fb93fc5ef2f7c11b25a790118ac4f7ea&quot;
+ETag: &quot;90c26041e4b257e46e61a5c2dd08324e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5a0f83f1-37bf-4b23-8dce-aa480f623bcc
-X-Runtime: 0.034108
+X-Request-Id: db6800b3-47b3-428c-8c58-5232abc746dc
+X-Runtime: 0.043354
 Content-Length: 694</pre>
 
 #### Status
@@ -85,11 +87,12 @@ Content-Length: 694</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 35,
   "title" : "Slot title 33",
-  "createdAt" : "2015-05-06T14:45:16.510Z",
-  "updatedAt" : "2015-05-06T14:45:16.510Z",
+  "createdAt" : "2015-05-06T21:29:33.802Z",
+  "updatedAt" : "2015-05-06T21:29:33.802Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-07T09:44:02.000Z",
@@ -98,8 +101,8 @@ Content-Length: 694</pre>
   "creator" : {
     "id" : 159,
     "username" : "User 159",
-    "createdAt" : "2015-05-06T14:45:16.508Z",
-    "updatedAt" : "2015-05-06T14:45:16.508Z",
+    "createdAt" : "2015-05-06T21:29:33.799Z",
+    "updatedAt" : "2015-05-06T21:29:33.799Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -128,4 +131,5 @@ Content-Length: 694</pre>
   ],
   "voices" : [],
   "videos" : []
-}</pre>
+}
+```

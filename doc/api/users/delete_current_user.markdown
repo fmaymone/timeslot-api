@@ -11,7 +11,7 @@ returns user data
 
 #### Headers
 
-<pre>Authorization: Token token=wwZjOkdNt92BIoc2_uwWStKN6ig
+<pre>Authorization: Token token=KN76ucFEp4wnWrdQTA2-1Q3Exvs
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -23,7 +23,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=wwZjOkdNt92BIoc2_uwWStKN6ig&quot; \
+	-H &quot;Authorization: Token token=KN76ucFEp4wnWrdQTA2-1Q3Exvs&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -35,10 +35,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;d6011a3a04a3f6d4ffc6bbb9594f235b&quot;
+ETag: &quot;cedd5f1d40b13cfc4a9a37e462ec0596&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 73c6c828-eb20-4abe-9e8b-371fdccc828a
-X-Runtime: 0.028174
+X-Request-Id: a41429ac-18b2-4898-8d32-54146562398a
+X-Runtime: 0.033125
 Content-Length: 723</pre>
 
 #### Status
@@ -47,7 +47,8 @@ Content-Length: 723</pre>
 
 #### Body
 
-<pre>{
+```javascript
+{
   "id" : 218,
   "username" : "User 217",
   "email" : "user61@email.com",
@@ -67,13 +68,14 @@ Content-Length: 723</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "push" : true,
-  "createdAt" : "2015-05-06T14:45:17.450Z",
-  "updatedAt" : "2015-05-06T14:45:17.460Z",
-  "deletedAt" : "2015-05-06T14:45:17.458Z",
+  "createdAt" : "2015-05-06T21:29:39.770Z",
+  "updatedAt" : "2015-05-06T21:29:39.783Z",
+  "deletedAt" : "2015-05-06T21:29:39.781Z",
   "image" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
   "friendships" : [],
   "groups" : []
-}</pre>
+}
+```

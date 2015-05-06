@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=9VR9p6T-1rpadAf2L28GvjTjAxg
+Authorization: Token token=G6SNby4vQmlTu94JYZDlmQhweDM
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/260/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9VR9p6T-1rpadAf2L28GvjTjAxg&quot; \
+	-H &quot;Authorization: Token token=G6SNby4vQmlTu94JYZDlmQhweDM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;02e9ea931996943b8646fed7ac01e553&quot;
+ETag: &quot;0d565dbe416439f18b0dce9ce1ed5b76&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c212f55b-6fd1-4b83-89a1-9561edbea6a2
-X-Runtime: 0.044218
+X-Request-Id: 6af0d75d-35bc-48ec-8018-fc884ef61dc7
+X-Runtime: 0.066505
 Content-Length: 821</pre>
 
 #### Status
@@ -101,13 +101,14 @@ Content-Length: 821</pre>
 
 #### Body
 
-<pre>[
+```javascript
+[
   {
     "id" : 84,
     "title" : "Slot title 76",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.950Z",
-    "updatedAt" : "2015-05-06T14:45:17.950Z",
+    "createdAt" : "2015-05-06T21:29:40.608Z",
+    "updatedAt" : "2015-05-06T21:29:40.608Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-23T04:44:02.000Z",
@@ -128,8 +129,8 @@ Content-Length: 821</pre>
     "id" : 86,
     "title" : "Slot title 78",
     "locationId" : null,
-    "createdAt" : "2015-05-06T14:45:17.958Z",
-    "updatedAt" : "2015-05-06T14:45:17.969Z",
+    "createdAt" : "2015-05-06T21:29:40.619Z",
+    "updatedAt" : "2015-05-06T21:29:40.631Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-25T06:44:02.000Z",
@@ -146,4 +147,5 @@ Content-Length: 821</pre>
     "url" : "http://example.org/v1/slots/86",
     "creatorId" : 266
   }
-]</pre>
+]
+```
