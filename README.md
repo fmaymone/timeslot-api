@@ -1,6 +1,6 @@
 # TS RAILS BACKEND
 
-* [Get all groups where current user is member or owner](/doc/api/groups/get_all_groups_where_current_user_is_member_or_owner.markdown)
+* [CHANGELOG](/CHANGELOG.md)
 * [App-Specification](/doc/app_specification.md)
 * [Api Endpoint Documentation](/doc/api/index.markdown)
 * [Entity Relationship Diagram](/doc/erd_adv-final-18.2.15.pdf)
