@@ -5,8 +5,7 @@ RSpec.describe V1::GroupsController, type: :controller do
     request.accept = "application/json"
     request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
-
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:valid_attributes) do
     attr = attributes_for(:group)
     attr.transform_keys { |key| key.to_s.camelize(:lower) }

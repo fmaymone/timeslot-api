@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include TS_Role
-  has_secure_password
+  has_secure_password validations: false
 
   # allows a user to be signed in after sign up
   before_save :set_auth_token, if: 'self.password'
@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
-          as: :mediable
+           as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: "creator_id", inverse_of: :creator
@@ -53,17 +53,32 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # settings
+  # has_one :location
+  # has_one :slot_default_location, class_name: Location
+  # has_one :slot_default_type, class_name: SlotType
+
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
-  validates :email, presence: true, length: { maximum: 254 },
+  validates :email,
+            length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
-            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
+            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
+            allow_nil: true # if: 'self.email'
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
-  validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
+  validates :password, length: { minimum: 5, maximum: 72 }, allow_nil: true
+
+  validates_numericality_of :slot_default_duration,
+                            only_integer: true,
+                            allow_nil: true
+  validates :phone,
+            uniqueness: true,
+            length: { maximum: 35 },
+            allow_nil: true
 
   ## user specific ##
 
@@ -83,6 +98,27 @@ class User < ActiveRecord::Base
 
   def reset_password
     update(password: 'autechre')
+  end
+
+  def connect_or_merge(identity_params, social_params)
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
+
+    if identity
+      merge(identity)
+    else
+      identity = Connect.create(user: self,
+                                social_id: identity_params[:social_id],
+                                provider: identity_params[:provider],
+                                data: social_params)
+
+      errors.add(:connect, identity.errors) if identity.errors.any?
+    end
+  end
+
+  def merge(identity)
+    # TODO, might do this in a service object
+    p 'TODO: merge hell'
   end
 
   def inactivate
@@ -303,7 +339,7 @@ class User < ActiveRecord::Base
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
-  private def set_auth_token
+  def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
 
@@ -318,8 +354,31 @@ class User < ActiveRecord::Base
     new_user
   end
 
-  def self.sign_in(email, password)
-    user = User.find_by email: email
+  def self.create_or_signin_via_social(identity_params, social_params)
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
+    # refresh auth_token here?
+    return identity.user if identity
+
+    new_user = User.create(username: identity_params[:username])
+    return new_user unless new_user.errors.empty?
+    new_user.set_auth_token
+
+    identity = Connect.create(user: new_user,
+                              provider: identity_params[:provider],
+                              social_id: identity_params[:social_id],
+                              data: social_params)
+
+    new_user.errors.add(connect: identity.errors) if identity.errors.any?
+    new_user
+  end
+
+  def self.sign_in(email: nil, phone: nil, password:)
+    if email
+      user = User.find_by email: email
+    elsif phone
+      user = User.find_by phone: phone
+    end
     current_user = user.try(:authenticate, password)
     current_user.update(auth_token: generate_auth_token) if current_user
     current_user

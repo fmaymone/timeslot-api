@@ -2,7 +2,7 @@ require 'documentation_helper'
 
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   post "/v1/slots" do

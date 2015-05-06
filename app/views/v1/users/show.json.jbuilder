@@ -2,6 +2,14 @@ json.extract!(@user,
               :id,
               :username,
               :email,
+              :email_verified,
+              :phone,
+              :phone_verified,
+              :public_url,
+              :location_id,
+              :slot_default_duration,
+              :slot_default_location_id,
+              :slot_default_type_id,
               :default_private_alerts,
               :default_own_friendslot_alerts,
               :default_own_public_alerts,
@@ -9,6 +17,7 @@ json.extract!(@user,
               :default_friends_public_alerts,
               :default_reslot_alerts,
               :default_group_alerts,
+              :push,
               :created_at,
               :updated_at,
               :deleted_at)
@@ -40,4 +49,3 @@ if @user == current_user
     json.state membership.humanize
   end
 end
-

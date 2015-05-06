@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "V1::Users", type: :request do
   let(:json) { JSON.parse(response.body) }
-  let!(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
@@ -36,7 +36,9 @@ RSpec.describe "V1::Users", type: :request do
       it "return all friendships for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('friendships')
-        expect(json['friendships'][0]['friend_id']).to eq(current_user.initiated_friendships.active[0].friend_id)
+        expect(
+          json['friendships'][0]['friend_id']
+        ).to eq(current_user.initiated_friendships.active[0].friend_id)
         expect(json['friendships'].length).to eq(current_user.friendships.length)
       end
     end
@@ -84,33 +86,35 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "POST /v1/users" do
     describe "with valid params" do
-      let(:valid_attributes) {
-        attributes_for(:user).merge!(image: { publicId: 'foobar' },
-                                     password: 'timeslot')
-      }
-      it "returns ID of created user" do
-        post "/v1/users", valid_attributes
-        expect(json).to have_key('id')
+      context "email" do
+        let(:valid_attributes) {
+          attributes_for(:user, :with_email, :with_password)
+        }
+        it "returns ID of created user" do
+          post "/v1/users", valid_attributes
+          expect(json).to have_key('id')
+        end
       end
 
-      it "adds an user image" do
-        skip "it's not possible to set a user image on signup"
-        post "/v1/users", valid_attributes
-        expect(json["image"]).to eq "foobar"
+      context "phone" do
+        let(:valid_attributes) {
+          attributes_for(:user, :with_phone, :with_password)
+        }
+        it "returns ID of created user" do
+          post "/v1/users", valid_attributes
+          expect(json).to have_key('id')
+        end
       end
     end
 
     describe "with invalid params" do
-      let(:missing_email) { { username: 'foo', password: 'foo' } }
+      let(:missing_email_and_phone) { { username: 'foo', password: 'foo' } }
       let(:missing_password) { { username: 'foo', email: 'test@timeslot.com' } }
-      let(:invalid_image_url) {
-        { username: 'foo', image: { publicId: '' }, password: 'foobar' }
-      }
 
-      it "returns an error if email is missing" do
-        post "/v1/users", missing_email
+      it "returns an error if email or phone is missing" do
+        post "/v1/users", missing_email_and_phone
         expect(json).to have_key "error"
-        expect(response.body).to include 'invalid email'
+        expect(response.body).to include 'email'
       end
 
       it "returns an error if no password supplied" do
@@ -118,41 +122,60 @@ RSpec.describe "V1::Users", type: :request do
         expect(json).to have_key "error"
         expect(response.body).to include 'password'
       end
-
-      it "returns an error for invalid image url" do
-        post "/v1/users", invalid_image_url
-        expect(json).to have_key "error"
-        expect(response.body).to include 'publicId'
-      end
     end
   end
 
   describe "POST /v1/users/signin" do
-    let!(:user) { create(:user, password: 'timeslot') }
-
     describe "with valid params" do
-      let(:valid_attributes) {
-        { email: user.email, password: 'timeslot' }
-      }
-      it "returns OK" do
-        post "/v1/users/signin", valid_attributes
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "creates a new auth_token for user" do
-        expect {
+      context "email" do
+        let!(:user) { create(:user, :with_email, password: 'timeslot') }
+        let(:valid_attributes) {
+          { email: user.email, password: 'timeslot' }
+        }
+        it "returns OK" do
           post "/v1/users/signin", valid_attributes
-          user.reload
-        }.to change(user, :auth_token)
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "creates a new auth_token for user" do
+          expect {
+            post "/v1/users/signin", valid_attributes
+            user.reload
+          }.to change(user, :auth_token)
+        end
+
+        it "returns auth_token for user" do
+          post "/v1/users/signin", valid_attributes
+          expect(json).to have_key('authToken')
+        end
       end
 
-      it "returns auth_token for user" do
-        post "/v1/users/signin", valid_attributes
-        expect(json).to have_key('authToken')
+      context "phone" do
+        let!(:user) { create(:user, :with_phone, password: 'timeslot') }
+        let(:valid_attributes) {
+          { phone: user.phone, password: 'timeslot' }
+        }
+        it "returns OK" do
+          post "/v1/users/signin", valid_attributes
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "creates a new auth_token for user" do
+          expect {
+            post "/v1/users/signin", valid_attributes
+            user.reload
+          }.to change(user, :auth_token)
+        end
+
+        it "returns auth_token for user" do
+          post "/v1/users/signin", valid_attributes
+          expect(json).to have_key('authToken')
+        end
       end
     end
 
     describe "with invalid params" do
+      let!(:user) { create(:user, :with_email, :with_phone, password: 'short') }
       let(:invalid_attributes) {
         { email: user.email, password: 'not timeslot' }
       }
@@ -164,6 +187,11 @@ RSpec.describe "V1::Users", type: :request do
       it "returns an error" do
         post "/v1/users/signin", invalid_attributes
         expect(json).to have_key "error"
+      end
+
+      it "returns unauthorized" do
+        post "/v1/users/signin", { phone: user.phone, password: 'longer' }
+        expect(response).to have_http_status :unauthorized
       end
     end
   end
@@ -227,6 +255,28 @@ RSpec.describe "V1::Users", type: :request do
         end
       end
 
+      context "phone" do
+        it "updates the phone of a given user" do
+          patch "/v1/users", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.phone).to eq("1423423134")
+        end
+
+        it "doesn't update the auth_token if new phone" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new phone" do
+          old_digest = current_user.password_digest
+          patch "/v1/users", { phone: "123123213" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
       context "password" do
         it "updates the password_digest if new password" do
           expect {
@@ -239,6 +289,45 @@ RSpec.describe "V1::Users", type: :request do
           patch "/v1/users", { password: "newsecret" }, auth_header
           current_user.reload
           expect(current_user.auth_token).not_to eq old_token
+        end
+      end
+
+      context "other attributes" do
+        it "updates the public URL of a given user" do
+          patch "/v1/users", { publicUrl: 'uffie' }, auth_header
+          current_user.reload
+          expect(current_user.public_url).to eq 'uffie'
+        end
+
+        it "updates the push notification state of a given user" do
+          patch "/v1/users", { push: true }, auth_header
+          current_user.reload
+          expect(current_user.push).to be true
+        end
+
+        it "updates the location of a given user" do
+          patch "/v1/users", { locationId: 423423143 }, auth_header
+          current_user.reload
+          expect(current_user.location_id).to eq(423423143)
+        end
+
+        it "updates the slot default location id of a given user" do
+          patch "/v1/users", { slotDefaultLocationId: '323323232' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_location_id).to eq(323323232)
+        end
+
+        it "updates the slot_default_duration of a given user" do
+          patch "/v1/users", { slotDefaultDuration: 1000000 }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_duration).to eq(1000000)
+        end
+
+        it "updates the default slot type of a given user" do
+          skip 'needs slottype table'
+          patch "/v1/users", { slotDefaultType: 'StdSlotPrivate' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_type).to eq(StdSlotPrivate)
         end
       end
     end
@@ -264,6 +353,7 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     it "doesn't delete the current user" do
+      expect(current_user).not_to be nil # make sure he exists
       expect {
         delete "/v1/users", {}, auth_header
       }.not_to change(User, :count)

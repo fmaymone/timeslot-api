@@ -23,6 +23,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
+--
+-- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION hstore; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -37,10 +51,10 @@ CREATE TABLE base_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    meta_slot_id integer,
-    id integer NOT NULL,
+    meta_slot_id bigint NOT NULL,
+    id bigint NOT NULL,
     share_id character varying(8) DEFAULT ''::character varying,
-    shared_by_id integer,
+    shared_by_id bigint,
     slot_type integer NOT NULL
 );
 
@@ -69,9 +83,9 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 --
 
 CREATE TABLE comments (
-    id integer NOT NULL,
-    user_id integer,
-    slot_id integer,
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    slot_id bigint NOT NULL,
     content text,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -99,13 +113,48 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
+-- Name: connects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE connects (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    provider_id integer NOT NULL,
+    social_id bigint NOT NULL,
+    data hstore DEFAULT ''::hstore,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: connects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE connects_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: connects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
+
+
+--
 -- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE friendships (
-    id integer NOT NULL,
-    user_id integer,
-    friend_id integer,
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    friend_id bigint NOT NULL,
     state bit(2) DEFAULT B'00'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -137,10 +186,10 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
-    group_id integer,
+    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    meta_slot_id integer,
+    meta_slot_id bigint,
     deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
@@ -151,9 +200,9 @@ INHERITS (base_slots);
 --
 
 CREATE TABLE groups (
-    id integer NOT NULL,
-    owner_id integer,
-    name character varying(255),
+    id bigint NOT NULL,
+    owner_id bigint NOT NULL,
+    name character varying(255) NOT NULL,
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
@@ -186,9 +235,9 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 --
 
 CREATE TABLE likes (
-    id integer NOT NULL,
-    user_id integer,
-    base_slot_id integer,
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    base_slot_id bigint NOT NULL,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -219,13 +268,13 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 --
 
 CREATE TABLE media_items (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     media_type character varying(255),
     public_id character varying(255),
     "position" integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    mediable_id integer,
+    mediable_id bigint,
     mediable_type character varying(255),
     deleted_at timestamp without time zone,
     duration integer,
@@ -257,9 +306,9 @@ ALTER SEQUENCE media_items_id_seq OWNED BY media_items.id;
 --
 
 CREATE TABLE memberships (
-    id integer NOT NULL,
-    user_id integer,
-    group_id integer,
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    group_id bigint NOT NULL,
     notifications boolean DEFAULT true,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
@@ -293,15 +342,15 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 --
 
 CREATE TABLE meta_slots (
-    id integer NOT NULL,
-    title character varying(48),
-    start_date timestamp without time zone,
-    end_date timestamp without time zone,
-    creator_id integer,
+    id bigint NOT NULL,
+    title character varying(48) NOT NULL,
+    start_date timestamp without time zone NOT NULL,
+    end_date timestamp without time zone NOT NULL,
+    creator_id bigint NOT NULL,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    location_id integer
+    location_id bigint
 );
 
 
@@ -329,8 +378,8 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 --
 
 CREATE TABLE notes (
-    id integer NOT NULL,
-    base_slot_id integer,
+    id bigint NOT NULL,
+    base_slot_id bigint NOT NULL,
     title character varying(255) NOT NULL,
     content text DEFAULT ''::text,
     deleted_at timestamp without time zone,
@@ -359,17 +408,48 @@ ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
 
 
 --
+-- Name: providers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE providers (
+    id integer NOT NULL,
+    name character varying(20) NOT NULL,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone
+);
+
+
+--
+-- Name: providers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE providers_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: providers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
+
+
+--
 -- Name: re_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE re_slots (
-    predecessor_id integer NOT NULL,
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    meta_slot_id integer NOT NULL,
-    slotter_id integer NOT NULL,
-    parent_id integer NOT NULL
+    meta_slot_id bigint,
+    slotter_id bigint NOT NULL,
+    parent_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -388,13 +468,13 @@ CREATE TABLE schema_migrations (
 --
 
 CREATE TABLE slot_settings (
-    user_id integer,
-    meta_slot_id integer,
+    user_id bigint NOT NULL,
+    meta_slot_id bigint NOT NULL,
     alerts bit(10) DEFAULT B'0000000000'::"bit",
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    id integer NOT NULL
+    id bigint NOT NULL
 );
 
 
@@ -425,8 +505,8 @@ CREATE TABLE std_slots (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    meta_slot_id integer,
-    owner_id integer
+    meta_slot_id bigint,
+    owner_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -436,13 +516,13 @@ INHERITS (base_slots);
 --
 
 CREATE TABLE users (
-    id integer NOT NULL,
+    id bigint NOT NULL,
     username character varying(50),
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    email character varying(255) DEFAULT ''::character varying,
-    password_digest character varying(60) NOT NULL,
+    email character varying(255),
+    password_digest character varying(60),
     auth_token character varying(27),
     role smallint,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -451,7 +531,16 @@ CREATE TABLE users (
     default_friends_friendslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
-    default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit"
+    default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
+    phone character varying(35),
+    location_id bigint,
+    public_url character varying(255),
+    push boolean DEFAULT true,
+    slot_default_location_id bigint,
+    slot_default_duration integer,
+    slot_default_type_id integer,
+    phone_verified boolean DEFAULT false,
+    email_verified boolean DEFAULT false
 );
 
 
@@ -486,6 +575,13 @@ ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_s
 --
 
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY connects ALTER COLUMN id SET DEFAULT nextval('connects_id_seq'::regclass);
 
 
 --
@@ -555,6 +651,13 @@ ALTER TABLE ONLY notes ALTER COLUMN id SET DEFAULT nextval('notes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -607,6 +710,14 @@ ALTER TABLE ONLY base_slots
 
 ALTER TABLE ONLY comments
     ADD CONSTRAINT comments_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY connects
+    ADD CONSTRAINT connects_pkey PRIMARY KEY (id);
 
 
 --
@@ -666,6 +777,14 @@ ALTER TABLE ONLY notes
 
 
 --
+-- Name: providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY providers
+    ADD CONSTRAINT providers_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -686,6 +805,20 @@ ALTER TABLE ONLY users
 --
 
 CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user_id, slot_id);
+
+
+--
+-- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_connects_on_social_id_and_user_id ON connects USING btree (social_id, user_id);
+
+
+--
+-- Name: index_connects_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
 
 
 --
@@ -968,4 +1101,16 @@ INSERT INTO schema_migrations (version) VALUES ('20150408130844');
 INSERT INTO schema_migrations (version) VALUES ('20150417143753');
 
 INSERT INTO schema_migrations (version) VALUES ('20150426210456');
+
+INSERT INTO schema_migrations (version) VALUES ('20150428150031');
+
+INSERT INTO schema_migrations (version) VALUES ('20150429103206');
+
+INSERT INTO schema_migrations (version) VALUES ('20150429104404');
+
+INSERT INTO schema_migrations (version) VALUES ('20150429205903');
+
+INSERT INTO schema_migrations (version) VALUES ('20150504094941');
+
+INSERT INTO schema_migrations (version) VALUES ('20150505110742');
 

@@ -1,13 +1,22 @@
 FactoryGirl.define do
   sequence(:username) { |n| "User #{n}" }
   sequence(:email) { |n| "user#{n}@email.com" }
+  sequence(:phone) { |n| "#{n}243#{n}" }
 
   factory :user, aliases: [:owner, :member] do
     username
-    email
 
-    # to submit user password on create, allow explicit overwrite
-    after(:build) { |user| user.password = 'timeslot' unless user.password }
+    trait :with_email do
+      email
+    end
+
+    trait :with_phone do
+      phone
+    end
+
+    trait :with_password do
+      password 'timeslot'
+    end
 
     trait :with_image do
       after :create do |user|

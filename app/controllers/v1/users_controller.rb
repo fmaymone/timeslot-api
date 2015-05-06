@@ -24,7 +24,7 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_params)
+      @user = User.create_with_image(user_create_params)
 
       if @user.errors.empty?
         render :signup, status: :created
@@ -38,7 +38,7 @@ module V1
     # returns auth_token if correct email and password are send
     def signin
       authorize :user
-      @user = User.sign_in(*credentials)
+      @user = User.sign_in(credentials)
 
       if @user
         render :signup
@@ -136,11 +136,26 @@ module V1
       head :ok
     end
 
+    private def user_create_params
+      params.require(:email) unless params[:phone].present?
+      params.require(:phone) unless params[:email].present?
+      params.require(:password)
+      params.require(:username)
+      params.permit(:username, :email, :phone, :password)
+    end
+
     private def user_params
       p = params.permit(:username,
                         :email,
+                        :phone,
                         :password,
                         :image,
+                        :locationId,
+                        :publicUrl,
+                        :push,
+                        :slotDefaultDuration,
+                        :slotDefaultLocationId,
+                        :slotDefaultTypeId,
                         :defaultPrivateAlerts,
                         :defaultOwnFriendslotAlerts,
                         :defaultOwnPublicAlerts,
@@ -161,7 +176,10 @@ module V1
     end
 
     private def credentials
-      [params.require(:email), params.require(:password)]
+      params.require(:password)
+      params.require(:email) unless params[:phone].present?
+      params.require(:phone) unless params[:email].present?
+      params.permit(:email, :phone, :password).transform_keys(&:to_sym)
     end
   end
 end
