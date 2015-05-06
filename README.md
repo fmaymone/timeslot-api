@@ -1,7 +1,7 @@
 # TS RAILS BACKEND
 
 * [CHANGELOG](/CHANGELOG.md)
-* [App-Specification](/doc/app_specification.md)
+* [App-Specification](doc/app_specification.md)
 * [Api Endpoint Documentation](/doc/api/index.markdown)
 * [Entity Relationship Diagram](/doc/erd_adv-final-18.2.15.pdf)
 * [How-To Setup Development Environment](/doc/setup_devenv.md)
@@ -104,7 +104,12 @@ database and re-run all migrations: ```RAILS_ENV=test rake db:migrate:reset```
 
 ### Flags
 
-Beside the ```:focus``` flag, which let only flagged specs run a ```:db``` flag can be used to print the database interactions of the specific spec to the console.
+-------------|------------------
+```:focus``` | let only marked specs run
+```:db``` | print the database interactions of the specific spec to the console
+```:vcr``` | use vcr to mock external requests, see below
+```:seed``` | load database seeds
+```:commit``` | persist data in database, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
 
@@ -130,6 +135,8 @@ Detects n+1 database queries.
 
 To run specs automatically if a file was edited.
 At the end of this document is my somewhat messy Guardfile with some customizations.
+
+* [Example Guardfile](/doc/guardfile_silvio.md)
 
 ## Debugger / REPL
 
@@ -228,7 +235,3 @@ gem install rubocop rubocop-rspec rails_best_practices
 
 * [Marked 2](http://marked2app.com/)
 * [Mou](http://25.io/mou/)
-
-#### Guard
-
-* [Example Guardfile](/doc/guardfile_silvio.md)
