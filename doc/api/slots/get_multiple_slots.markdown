@@ -71,10 +71,10 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Accept: application/json
-Authorization: Token token=G4bGyvr6tCmK8hi2zsLpxlfgOyQ
+<pre>Content-Type: application/json
+Accept: application/json
+Authorization: Token token=BLZd7DXzLgO3BH1-oF9cZNPduOg
 Host: example.org
-Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
@@ -83,15 +83,20 @@ Cookie: </pre>
 
 #### Body
 
-<pre>ids[]=24&ids[]=23</pre>
+<pre>{
+  "ids" : [
+    24,
+    23
+  ]
+}</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots&quot; -d &#39;ids[]=24&amp;ids[]=23&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
+	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=G4bGyvr6tCmK8hi2zsLpxlfgOyQ&quot; \
-	-H &quot;Host: example.org&quot; \
-	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
+	-H &quot;Authorization: Token token=BLZd7DXzLgO3BH1-oF9cZNPduOg&quot; \
+	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
 
@@ -101,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;6cc16f3bfc65bafc78898e47904843e8&quot;
+ETag: &quot;0612c464f7a3980269f2efb49566e6f7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3463425a-100b-4794-a55f-16ff9da61683
-X-Runtime: 0.046732
+X-Request-Id: 564ee8de-a440-4b5a-bd18-9864ddaad9b9
+X-Runtime: 0.045895
 Content-Length: 1730</pre>
 
 #### Status
@@ -118,8 +123,8 @@ Content-Length: 1730</pre>
     "id" : 24,
     "title" : "Slot title 26",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:50.521Z",
-    "updatedAt" : "2015-05-06T11:28:50.521Z",
+    "createdAt" : "2015-05-06T14:45:15.973Z",
+    "updatedAt" : "2015-05-06T14:45:15.973Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-27T02:44:02.000Z",
@@ -156,8 +161,8 @@ Content-Length: 1730</pre>
     "id" : 23,
     "title" : "Slot title 25",
     "locationId" : 200719253,
-    "createdAt" : "2015-05-06T11:28:50.492Z",
-    "updatedAt" : "2015-05-06T11:28:50.492Z",
+    "createdAt" : "2015-05-06T14:45:15.944Z",
+    "updatedAt" : "2015-05-06T14:45:15.944Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-26T01:44:02.000Z",

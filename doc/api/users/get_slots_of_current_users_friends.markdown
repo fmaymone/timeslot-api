@@ -64,7 +64,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=uqTuW400Ik5H3lEHrTDZ0Ld_5Ds
+Authorization: Token token=FndIK9fGItKKdLdagKfsNBtFUVA
 Host: example.org
 Cookie: </pre>
 
@@ -76,7 +76,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=uqTuW400Ik5H3lEHrTDZ0Ld_5Ds&quot; \
+	-H &quot;Authorization: Token token=FndIK9fGItKKdLdagKfsNBtFUVA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,10 +87,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;1371f4a8f9e3bee57fd58cc56912f75f&quot;
+ETag: &quot;ba164450b21e8b56d1eb742a8dc28742&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 744736b7-6a57-4c96-8322-421aa8a87fb8
-X-Runtime: 0.072081
+X-Request-Id: 84015f5c-a35e-4ee3-b0d6-2b511996498f
+X-Runtime: 0.069829
 Content-Length: 1234</pre>
 
 #### Status
@@ -104,8 +104,8 @@ Content-Length: 1234</pre>
     "id" : 91,
     "title" : "Slot title 83",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:52.686Z",
-    "updatedAt" : "2015-05-06T11:28:52.697Z",
+    "createdAt" : "2015-05-06T14:45:18.049Z",
+    "updatedAt" : "2015-05-06T14:45:18.060Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-03T11:44:02.000Z",
@@ -126,8 +126,8 @@ Content-Length: 1234</pre>
     "id" : 93,
     "title" : "Slot title 85",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:52.716Z",
-    "updatedAt" : "2015-05-06T11:28:52.716Z",
+    "createdAt" : "2015-05-06T14:45:18.076Z",
+    "updatedAt" : "2015-05-06T14:45:18.076Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-05T13:44:02.000Z",
@@ -148,8 +148,8 @@ Content-Length: 1234</pre>
     "id" : 94,
     "title" : "Slot title 86",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:52.726Z",
-    "updatedAt" : "2015-05-06T11:28:52.726Z",
+    "createdAt" : "2015-05-06T14:45:18.088Z",
+    "updatedAt" : "2015-05-06T14:45:18.088Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-06T14:44:02.000Z",

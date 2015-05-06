@@ -31,7 +31,7 @@ Description : Sorting order of the image/video/voice. If not supplied the media 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=JnyveJuEsc7nd4O5GyaCSkXnibg
+Authorization: Token token=KIu_mmtPCvwaZsc2PwCfFyAAN-k
 Host: example.org
 Cookie: </pre>
 
@@ -41,13 +41,28 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"photos":[{"mediaId":32,"position":2},{"mediaId":33,"position":0},{"mediaId":34,"position":1}]}</pre>
+<pre>{
+  "photos" : [
+    {
+      "mediaId" : 32,
+      "position" : 2
+    },
+    {
+      "mediaId" : 33,
+      "position" : 0
+    },
+    {
+      "mediaId" : 34,
+      "position" : 1
+    }
+  ]
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/35&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=JnyveJuEsc7nd4O5GyaCSkXnibg&quot; \
+	-H &quot;Authorization: Token token=KIu_mmtPCvwaZsc2PwCfFyAAN-k&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -58,10 +73,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;8251fb84a1b26b2a98373c8a83b6f945&quot;
+ETag: &quot;fb93fc5ef2f7c11b25a790118ac4f7ea&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cd9202e0-a38f-471c-a3c3-64f6c11cf920
-X-Runtime: 0.036285
+X-Request-Id: 5a0f83f1-37bf-4b23-8dce-aa480f623bcc
+X-Runtime: 0.034108
 Content-Length: 694</pre>
 
 #### Status
@@ -73,8 +88,8 @@ Content-Length: 694</pre>
 <pre>{
   "id" : 35,
   "title" : "Slot title 33",
-  "createdAt" : "2015-05-06T11:28:51.099Z",
-  "updatedAt" : "2015-05-06T11:28:51.099Z",
+  "createdAt" : "2015-05-06T14:45:16.510Z",
+  "updatedAt" : "2015-05-06T14:45:16.510Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-07T09:44:02.000Z",
@@ -83,8 +98,8 @@ Content-Length: 694</pre>
   "creator" : {
     "id" : 159,
     "username" : "User 159",
-    "createdAt" : "2015-05-06T11:28:51.097Z",
-    "updatedAt" : "2015-05-06T11:28:51.097Z",
+    "createdAt" : "2015-05-06T14:45:16.508Z",
+    "updatedAt" : "2015-05-06T14:45:16.508Z",
     "deletedAt" : null
   },
   "settings" : {

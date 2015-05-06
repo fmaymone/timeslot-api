@@ -56,7 +56,7 @@ Description : Deletion datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=ly7iNJiQq8_S-mAfVsSyWyjTFto
+Authorization: Token token=U9Y0gTcxEy-Oig5sSzIOnJSB6aA
 Host: example.org
 Cookie: </pre>
 
@@ -66,14 +66,16 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"predecessorId":30}</pre>
+<pre>{
+  "predecessorId" : 30
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:30}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ly7iNJiQq8_S-mAfVsSyWyjTFto&quot; \
+	-H &quot;Authorization: Token token=U9Y0gTcxEy-Oig5sSzIOnJSB6aA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -84,10 +86,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;48b17eee31583ee9142c185d76b3d1d8&quot;
+ETag: &quot;7acdc6961036e906bc98030bd83053b6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3fa3ba88-7943-4e8a-b0f3-41e49cd16c3e
-X-Runtime: 0.025934
+X-Request-Id: af12373f-2b4d-4a90-aaf0-b2120f07eebc
+X-Runtime: 0.028504
 Content-Length: 520</pre>
 
 #### Status
@@ -99,8 +101,8 @@ Content-Length: 520</pre>
 <pre>{
   "id" : 31,
   "title" : "Slot title 28",
-  "createdAt" : "2015-05-06T11:28:50.884Z",
-  "updatedAt" : "2015-05-06T11:28:50.884Z",
+  "createdAt" : "2015-05-06T14:45:16.313Z",
+  "updatedAt" : "2015-05-06T14:45:16.313Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-02T04:44:02.000Z",
@@ -109,8 +111,8 @@ Content-Length: 520</pre>
   "creator" : {
     "id" : 148,
     "username" : "User 148",
-    "createdAt" : "2015-05-06T11:28:50.869Z",
-    "updatedAt" : "2015-05-06T11:28:50.869Z",
+    "createdAt" : "2015-05-06T14:45:16.294Z",
+    "updatedAt" : "2015-05-06T14:45:16.294Z",
     "deletedAt" : null
   },
   "settings" : {

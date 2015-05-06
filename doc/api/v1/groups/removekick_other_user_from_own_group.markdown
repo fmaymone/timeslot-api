@@ -28,7 +28,7 @@ Description : ID of the user to kick
 
 #### Headers
 
-<pre>Authorization: Token token=RZtPQJJEqNzpC1J5FLOy0dRa2Ow
+<pre>Authorization: Token token=sLB8lb88izb3578LpoyTTy8ddRc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -40,7 +40,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/29/members/114&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=RZtPQJJEqNzpC1J5FLOy0dRa2Ow&quot; \
+	-H &quot;Authorization: Token token=sLB8lb88izb3578LpoyTTy8ddRc&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -54,8 +54,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 67f35e44-513d-48ea-964a-34c9f585b46a
-X-Runtime: 0.011655
+X-Request-Id: fd644c6d-b70d-4c94-bc64-c0d611ba50d9
+X-Runtime: 0.011112
 Content-Length: 1</pre>
 
 #### Status
@@ -64,4 +64,4 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre></pre>
+<pre> </pre>

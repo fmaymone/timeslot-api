@@ -33,7 +33,7 @@ Description : Updated Enddate and Time of the Slot (startdate + duration)
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=mc6a_8eeMIEO-2HdbU5n0pP65hs
+Authorization: Token token=ZdGHvo2eN7h9xtisAwUFCXk-ghs
 Host: example.org
 Cookie: </pre>
 
@@ -43,13 +43,15 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"title":"New title for a Slot"}</pre>
+<pre>{
+  "title" : "New title for a Slot"
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/metaslot/33&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=mc6a_8eeMIEO-2HdbU5n0pP65hs&quot; \
+	-H &quot;Authorization: Token token=ZdGHvo2eN7h9xtisAwUFCXk-ghs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -60,8 +62,8 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Cache-Control: no-cache
-X-Request-Id: fe8417a2-12bd-4b00-9419-38bf60fc3c21
-X-Runtime: 0.007417</pre>
+X-Request-Id: 4b9f3268-eb11-441d-ac5c-836e1e4442ad
+X-Runtime: 0.007150</pre>
 
 #### Status
 

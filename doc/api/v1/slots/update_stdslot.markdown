@@ -39,7 +39,7 @@ Description : Visibility of slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zv_GuvahvQIc43iFP7l_ONgVuAA
+Authorization: Token token=_X2rQIrJigfTkQcSZVOx5Kkkhiw
 Host: example.org
 Cookie: </pre>
 
@@ -49,13 +49,15 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"title":"New title for a Slot"}</pre>
+<pre>{
+  "title" : "New title for a Slot"
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/32&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zv_GuvahvQIc43iFP7l_ONgVuAA&quot; \
+	-H &quot;Authorization: Token token=_X2rQIrJigfTkQcSZVOx5Kkkhiw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,10 +68,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;053ef98d93efd35d75206b16b29dc237&quot;
+ETag: &quot;be5d6aec839573ce6f8c467cc9f587dd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70764eed-9da6-445a-8393-639fe7a39e9c
-X-Runtime: 0.027798
+X-Request-Id: c30f4537-cb09-4f97-a8da-150935d27d5f
+X-Runtime: 0.027176
 Content-Length: 516</pre>
 
 #### Status
@@ -81,8 +83,8 @@ Content-Length: 516</pre>
 <pre>{
   "id" : 32,
   "title" : "New title for a Slot",
-  "createdAt" : "2015-05-06T11:28:50.943Z",
-  "updatedAt" : "2015-05-06T11:28:50.943Z",
+  "createdAt" : "2015-05-06T14:45:16.365Z",
+  "updatedAt" : "2015-05-06T14:45:16.365Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-04T06:44:02.000Z",
@@ -91,8 +93,8 @@ Content-Length: 516</pre>
   "creator" : {
     "id" : 153,
     "username" : "User 153",
-    "createdAt" : "2015-05-06T11:28:50.941Z",
-    "updatedAt" : "2015-05-06T11:28:50.941Z",
+    "createdAt" : "2015-05-06T14:45:16.363Z",
+    "updatedAt" : "2015-05-06T14:45:16.363Z",
     "deletedAt" : null
   },
   "settings" : {

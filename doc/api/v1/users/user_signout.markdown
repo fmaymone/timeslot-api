@@ -12,7 +12,7 @@ returns 403 if there was no current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=yR1_k9jkJAbt0qc7koVKNKbgCfs
+Authorization: Token token=4aoFtFlM8hFoBq0UpWkHZs7vkLA
 Host: example.org
 Cookie: </pre>
 
@@ -24,7 +24,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/signout&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=yR1_k9jkJAbt0qc7koVKNKbgCfs&quot; \
+	-H &quot;Authorization: Token token=4aoFtFlM8hFoBq0UpWkHZs7vkLA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -37,8 +37,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 740f6621-3f20-4a8e-b926-15c9d6138119
-X-Runtime: 0.008920
+X-Request-Id: 30207422-4cf1-4862-917b-00c4aa99b108
+X-Runtime: 0.005418
 Content-Length: 1</pre>
 
 #### Status
@@ -47,4 +47,4 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre></pre>
+<pre> </pre>

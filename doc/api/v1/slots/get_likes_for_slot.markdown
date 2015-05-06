@@ -19,7 +19,7 @@ Description : ID of the Slot to get the likes for
 
 #### Headers
 
-<pre>Authorization: Token token=yma8f3JjBvtziIpKBZWWriEw9Fg
+<pre>Authorization: Token token=8T2aVele9_fLwhYd3cgzIr36aXY
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +30,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/46/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=yma8f3JjBvtziIpKBZWWriEw9Fg&quot; \
+	-H &quot;Authorization: Token token=8T2aVele9_fLwhYd3cgzIr36aXY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;007e2913a3e84f94e00f6625144a212f&quot;
+ETag: &quot;7691a3964e80d2138772210acc1db4dd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ed8cebdf-a745-4884-b355-8096b5215145
-X-Runtime: 0.016536
+X-Request-Id: b3f1e4c1-dd81-48f3-875d-87df59e2c358
+X-Runtime: 0.015614
 Content-Length: 393</pre>
 
 #### Status
@@ -55,25 +55,25 @@ Content-Length: 393</pre>
 
 <pre>[
   {
-    "createdAt" : "2015-05-06T11:28:51.528Z",
+    "createdAt" : "2015-05-06T14:45:16.926Z",
     "userId" : 182,
     "username" : "User 182",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.535Z",
+    "createdAt" : "2015-05-06T14:45:16.929Z",
     "userId" : 183,
     "username" : "User 183",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.539Z",
+    "createdAt" : "2015-05-06T14:45:16.935Z",
     "userId" : 184,
     "username" : "User 184",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.552Z",
+    "createdAt" : "2015-05-06T14:45:16.947Z",
     "userId" : 186,
     "username" : "User 186",
     "userimage" : "dfhjghjkdisudgfds7iy37"

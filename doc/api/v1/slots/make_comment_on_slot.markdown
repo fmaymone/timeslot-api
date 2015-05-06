@@ -19,7 +19,7 @@ Description : Content of the comment
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=OK4TUrJ-_Rho-fTuY65aJ0EQ8js
+Authorization: Token token=_eYS1EvvvEHAWH2cj4mD8Wy5Kq4
 Host: example.org
 Cookie: </pre>
 
@@ -29,13 +29,15 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"content":"Liebe ist ein Kind der Freiheit"}</pre>
+<pre>{
+  "content" : "Liebe ist ein Kind der Freiheit"
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/47/comment&quot; -d &#39;{&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=OK4TUrJ-_Rho-fTuY65aJ0EQ8js&quot; \
+	-H &quot;Authorization: Token token=_eYS1EvvvEHAWH2cj4mD8Wy5Kq4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -48,8 +50,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9c40da6c-293d-4845-98d6-5a90f03dba0f
-X-Runtime: 0.010192
+X-Request-Id: 102b6e32-97e1-4d4d-9f74-03c7090bae7b
+X-Runtime: 0.010609
 Content-Length: 1</pre>
 
 #### Status
@@ -58,4 +60,4 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre></pre>
+<pre> </pre>

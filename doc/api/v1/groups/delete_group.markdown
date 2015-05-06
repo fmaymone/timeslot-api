@@ -21,7 +21,7 @@ Description : ID of the group to delete
 
 #### Headers
 
-<pre>Authorization: Token token=b2zJi9ViXCUXOyyMrwVNf9_NUZQ
+<pre>Authorization: Token token=hwOzWGlap0PGQXlu6ZmVq_E57DI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -33,7 +33,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=b2zJi9ViXCUXOyyMrwVNf9_NUZQ&quot; \
+	-H &quot;Authorization: Token token=hwOzWGlap0PGQXlu6ZmVq_E57DI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -45,10 +45,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;554291ff9b15ad8e07eb898eb43f6788&quot;
+ETag: &quot;e7a048f1e302e9a155e2a089b46f3428&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70085111-19b2-409c-97e4-be2e60f3a584
-X-Runtime: 0.057648
+X-Request-Id: 45784ef5-b8c8-4926-babc-b7f70af8593d
+X-Runtime: 0.055534
 Content-Length: 250</pre>
 
 #### Status
@@ -63,9 +63,9 @@ Content-Length: 250</pre>
   "ownerId" : 55,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-06T11:28:49.528Z",
-  "updatedAt" : "2015-05-06T11:28:49.601Z",
-  "deletedAt" : "2015-05-06T11:28:49.600Z",
+  "createdAt" : "2015-05-06T14:45:15.034Z",
+  "updatedAt" : "2015-05-06T14:45:15.100Z",
+  "deletedAt" : "2015-05-06T14:45:15.099Z",
   "image" : null,
   "membershipState" : "deleted"
 }</pre>

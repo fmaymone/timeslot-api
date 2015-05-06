@@ -27,7 +27,7 @@ Must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=qqQGoYL6sFxQ_EDLBv6TdQHqiAc
+Authorization: Token token=jM7u0x3kGB9L-Ywsof-30EkjdZ8
 Host: example.org
 Cookie: </pre>
 
@@ -37,13 +37,23 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"copyTo":[{"slotType":"friends","details":"true"},{"groupId":45}]}</pre>
+<pre>{
+  "copyTo" : [
+    {
+      "slotType" : "friends",
+      "details" : "true"
+    },
+    {
+      "groupId" : 45
+    }
+  ]
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/53/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:45}]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=qqQGoYL6sFxQ_EDLBv6TdQHqiAc&quot; \
+	-H &quot;Authorization: Token token=jM7u0x3kGB9L-Ywsof-30EkjdZ8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,8 +66,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6b978b12-a65e-40cc-98bb-8cbbb48ccb62
-X-Runtime: 0.032479
+X-Request-Id: a6a651a1-be85-4b5f-81a8-74aa604d9558
+X-Runtime: 0.032445
 Content-Length: 1</pre>
 
 #### Status
@@ -66,4 +76,4 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre></pre>
+<pre> </pre>

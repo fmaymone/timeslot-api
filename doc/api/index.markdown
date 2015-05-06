@@ -25,7 +25,6 @@
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
-* [Get slot](slots/get_slot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)

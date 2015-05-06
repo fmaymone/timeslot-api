@@ -46,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;7d32f87d68d34a819adfdb6501958bf7&quot;
+ETag: &quot;4db02ecbfbcfddd7d0ee6d0fc9f86da9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 37339d36-ca31-4e96-94d7-3210e833486b
-X-Runtime: 0.027553
+X-Request-Id: c95f21fc-b142-4e90-9437-5dd0f57366dd
+X-Runtime: 0.012116
 Content-Length: 144</pre>
 
 #### Status
@@ -59,8 +59,8 @@ Content-Length: 144</pre>
 #### Body
 
 <pre>{
-  "signature" : "3971a2e8a63f3b953b2478300bdd695fb43fd6e2",
+  "signature" : "fe307e1bb905fbab243081b8bd768ca1a0b9ee2e",
   "apiKey" : 255241985667644,
-  "publicId" : "xnhjval54vrwsfzm2jkg",
-  "timestamp" : "20150506112850"
+  "publicId" : "bzvb1jbjyqomwtjvoksc",
+  "timestamp" : "20150506144515"
 }</pre>

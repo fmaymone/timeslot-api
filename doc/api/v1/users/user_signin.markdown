@@ -37,7 +37,10 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"email":"user56@email.com","password":"timeslot"}</pre>
+<pre>{
+  "email" : "user56@email.com",
+  "password" : "timeslot"
+}</pre>
 
 #### cURL
 
@@ -54,10 +57,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;18257d6dc30fb5addb8aa97130d2dc73&quot;
+ETag: &quot;de2e89a50f50c915a85b88990bf5159d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6f694c46-e171-4aea-8f87-fd3b8d1c0604
-X-Runtime: 0.008602
+X-Request-Id: d04ac662-c2dc-4cf8-8e5b-85cbe6ba4704
+X-Runtime: 0.009572
 Content-Length: 101</pre>
 
 #### Status
@@ -70,5 +73,5 @@ Content-Length: 101</pre>
   "id" : 213,
   "username" : "User 212",
   "email" : "user56@email.com",
-  "authToken" : "vUKzF43ArFXwGahJuHMK3rMuUNE"
+  "authToken" : "5tUoyuGaWN894kY9ADEBS2oZ6nI"
 }</pre>

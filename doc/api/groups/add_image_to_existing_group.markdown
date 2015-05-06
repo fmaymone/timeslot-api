@@ -30,7 +30,7 @@ Description : URL for this media item
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RyJ3zTKk1anZON1EVEZcekRMEGg
+Authorization: Token token=rcknBd9HrwW9UYm5xknv1KUQRig
 Host: example.org
 Cookie: </pre>
 
@@ -40,13 +40,17 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"image":{"publicId":"v1234567/dfhjghjkdisudgfds7iyf.jpg"}}</pre>
+<pre>{
+  "image" : {
+    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg"
+  }
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RyJ3zTKk1anZON1EVEZcekRMEGg&quot; \
+	-H &quot;Authorization: Token token=rcknBd9HrwW9UYm5xknv1KUQRig&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -57,10 +61,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;22f355999198719714393ffe927d9bd0&quot;
+ETag: &quot;c862c94a36aa4bcd88961b03b7893179&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 14a98ff5-5961-4fb2-aa6f-a29e872cc128
-X-Runtime: 0.014258
+X-Request-Id: 1558f464-d09a-496a-bdb5-0f4bb817170c
+X-Runtime: 0.013127
 Content-Length: 250</pre>
 
 #### Status
@@ -75,8 +79,8 @@ Content-Length: 250</pre>
   "ownerId" : 54,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-06T11:28:49.498Z",
-  "updatedAt" : "2015-05-06T11:28:49.498Z",
+  "createdAt" : "2015-05-06T14:45:15.005Z",
+  "updatedAt" : "2015-05-06T14:45:15.005Z",
   "deletedAt" : null,
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
   "membershipState" : "active"

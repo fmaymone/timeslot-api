@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=C5Ys8-3y07gaiIzMGrZSjhtL0fU
+Authorization: Token token=9VR9p6T-1rpadAf2L28GvjTjAxg
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/260/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=C5Ys8-3y07gaiIzMGrZSjhtL0fU&quot; \
+	-H &quot;Authorization: Token token=9VR9p6T-1rpadAf2L28GvjTjAxg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;f8145c0f02f8460c3c07470c26e57053&quot;
+ETag: &quot;02e9ea931996943b8646fed7ac01e553&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8b56b334-f362-43cf-83d4-e983c565636d
-X-Runtime: 0.045594
+X-Request-Id: c212f55b-6fd1-4b83-89a1-9561edbea6a2
+X-Runtime: 0.044218
 Content-Length: 821</pre>
 
 #### Status
@@ -106,8 +106,8 @@ Content-Length: 821</pre>
     "id" : 84,
     "title" : "Slot title 76",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:52.584Z",
-    "updatedAt" : "2015-05-06T11:28:52.584Z",
+    "createdAt" : "2015-05-06T14:45:17.950Z",
+    "updatedAt" : "2015-05-06T14:45:17.950Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-23T04:44:02.000Z",
@@ -128,8 +128,8 @@ Content-Length: 821</pre>
     "id" : 86,
     "title" : "Slot title 78",
     "locationId" : null,
-    "createdAt" : "2015-05-06T11:28:52.592Z",
-    "updatedAt" : "2015-05-06T11:28:52.603Z",
+    "createdAt" : "2015-05-06T14:45:17.958Z",
+    "updatedAt" : "2015-05-06T14:45:17.969Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-25T06:44:02.000Z",

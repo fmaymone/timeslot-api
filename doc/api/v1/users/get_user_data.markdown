@@ -84,7 +84,7 @@ Description : Deletion of user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ZxWLX59z1foSltX75XKbHYTOYi4
+Authorization: Token token=b_5hGEB-NBz0pWGHdncweHgCsFI
 Host: example.org
 Cookie: </pre>
 
@@ -96,7 +96,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/211&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ZxWLX59z1foSltX75XKbHYTOYi4&quot; \
+	-H &quot;Authorization: Token token=b_5hGEB-NBz0pWGHdncweHgCsFI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -107,10 +107,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;c3d3b728757f5f09a4993cffd58fb756&quot;
+ETag: &quot;45d30e8b6f1be9cb3b86b05fe5e8b26e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0cffbc06-fc31-447c-a296-739f302bcd7b
-X-Runtime: 0.024523
+X-Request-Id: d3f96515-e3af-4d00-a668-000f4ce39877
+X-Runtime: 0.026381
 Content-Length: 701</pre>
 
 #### Status
@@ -139,8 +139,8 @@ Content-Length: 701</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "push" : true,
-  "createdAt" : "2015-05-06T11:28:51.900Z",
-  "updatedAt" : "2015-05-06T11:28:51.900Z",
+  "createdAt" : "2015-05-06T14:45:17.280Z",
+  "updatedAt" : "2015-05-06T14:45:17.280Z",
   "deletedAt" : null,
   "image" : null,
   "slotCount" : 0,

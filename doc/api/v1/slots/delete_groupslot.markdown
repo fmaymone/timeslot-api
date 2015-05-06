@@ -17,7 +17,7 @@ Description : ID of the Group Slot to delete
 
 #### Headers
 
-<pre>Authorization: Token token=eUaNNpM4RTQYXm6Q99Kw3I8YhzA
+<pre>Authorization: Token token=szpBNJu4N3UGWJjnYbnXyPkrnxI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -29,7 +29,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groupslot/38&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=eUaNNpM4RTQYXm6Q99Kw3I8YhzA&quot; \
+	-H &quot;Authorization: Token token=szpBNJu4N3UGWJjnYbnXyPkrnxI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;2a27ce48fc9bc86a1944c3420cdca017&quot;
+ETag: &quot;f9969095ea8c8745bad0e24803ae1bab&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a6493e89-862a-4013-9840-c69e5e9c993d
-X-Runtime: 0.046360
+X-Request-Id: 30596668-d95b-4aaa-bd91-154b5f64925c
+X-Runtime: 0.043661
 Content-Length: 539</pre>
 
 #### Status
@@ -56,9 +56,9 @@ Content-Length: 539</pre>
 <pre>{
   "id" : 38,
   "title" : "Slot title 36",
-  "createdAt" : "2015-05-06T11:28:51.332Z",
-  "updatedAt" : "2015-05-06T11:28:51.355Z",
-  "deletedAt" : "2015-05-06T11:28:51.353Z",
+  "createdAt" : "2015-05-06T14:45:16.738Z",
+  "updatedAt" : "2015-05-06T14:45:16.759Z",
+  "deletedAt" : "2015-05-06T14:45:16.757Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-10T12:44:02.000Z",
   "visibility" : null,
@@ -66,8 +66,8 @@ Content-Length: 539</pre>
   "creator" : {
     "id" : 165,
     "username" : "User 165",
-    "createdAt" : "2015-05-06T11:28:51.330Z",
-    "updatedAt" : "2015-05-06T11:28:51.330Z",
+    "createdAt" : "2015-05-06T14:45:16.736Z",
+    "updatedAt" : "2015-05-06T14:45:16.736Z",
     "deletedAt" : null
   },
   "settings" : {

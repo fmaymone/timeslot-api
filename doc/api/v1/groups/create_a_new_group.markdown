@@ -38,7 +38,7 @@ Description : ID of the new group
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=BKHg-S6Iuszy5bqKGVC93toqC94
+Authorization: Token token=Vmwzdf1c-T7I7__KeE_It-nSYDs
 Host: example.org
 Cookie: </pre>
 
@@ -48,14 +48,21 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"name":"foo","invitees":[49,50,51]}</pre>
+<pre>{
+  "name" : "foo",
+  "invitees" : [
+    49,
+    50,
+    51
+  ]
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[49,50,51]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BKHg-S6Iuszy5bqKGVC93toqC94&quot; \
+	-H &quot;Authorization: Token token=Vmwzdf1c-T7I7__KeE_It-nSYDs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,10 +73,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;327000c1d5ce3ade5455e7de118a2a3e&quot;
+ETag: &quot;9f6ba1fa99b57b87385f7468b0855225&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: df977917-0000-46ca-bc55-c3af661463e1
-X-Runtime: 0.033237
+X-Request-Id: e63c5819-469a-4c1b-8f7b-6ac4609a7592
+X-Runtime: 0.031014
 Content-Length: 217</pre>
 
 #### Status
@@ -84,8 +91,8 @@ Content-Length: 217</pre>
   "ownerId" : 52,
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-06T11:28:49.429Z",
-  "updatedAt" : "2015-05-06T11:28:49.429Z",
+  "createdAt" : "2015-05-06T14:45:14.940Z",
+  "updatedAt" : "2015-05-06T14:45:14.940Z",
   "deletedAt" : null,
   "image" : null,
   "membershipState" : "active"

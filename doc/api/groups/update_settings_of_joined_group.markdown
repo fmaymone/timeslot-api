@@ -30,7 +30,7 @@ Description : set default alerts for slots in this group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4tLUL6lBT_zlz73xViCccoqFNUA
+Authorization: Token token=cpcrjYyXKNpThVapEX3B95-3yw8
 Host: example.org
 Cookie: </pre>
 
@@ -40,13 +40,18 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"settings":{"notifications":"false","defaultAlerts":"1111100000"}}</pre>
+<pre>{
+  "settings" : {
+    "notifications" : "false",
+    "defaultAlerts" : "1111100000"
+  }
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/32/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4tLUL6lBT_zlz73xViCccoqFNUA&quot; \
+	-H &quot;Authorization: Token token=cpcrjYyXKNpThVapEX3B95-3yw8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -59,8 +64,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5ce55a0d-ec37-41f7-96ab-1e4c7a987f5a
-X-Runtime: 0.008184
+X-Request-Id: 2cc60d72-463c-43ab-8216-a0718dd7757c
+X-Runtime: 0.007366
 Content-Length: 1</pre>
 
 #### Status
@@ -69,4 +74,4 @@ Content-Length: 1</pre>
 
 #### Body
 
-<pre></pre>
+<pre> </pre>

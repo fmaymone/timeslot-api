@@ -19,7 +19,7 @@ Description : ID of the Slot to get the comments for
 
 #### Headers
 
-<pre>Authorization: Token token=5rnWbnMGeOV7i8YOkwGyQ6TkKvI
+<pre>Authorization: Token token=g84o3G7nLTH9UUn45pWmsiEvrJg
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +30,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/48/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=5rnWbnMGeOV7i8YOkwGyQ6TkKvI&quot; \
+	-H &quot;Authorization: Token token=g84o3G7nLTH9UUn45pWmsiEvrJg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;bb9302ecf2c391cf67765de4e20833f8&quot;
+ETag: &quot;b50bb7e695ec741fb1778b03eeceb710&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 26920e74-59fd-4e36-ae78-eb89e3ae60e6
-X-Runtime: 0.015222
+X-Request-Id: 08978035-629c-48e3-b95c-782b40c85704
+X-Runtime: 0.015944
 Content-Length: 557</pre>
 
 #### Status
@@ -55,28 +55,28 @@ Content-Length: 557</pre>
 
 <pre>[
   {
-    "createdAt" : "2015-05-06T11:28:51.628Z",
+    "createdAt" : "2015-05-06T14:45:17.024Z",
     "content" : "hate no one, love only a few",
     "userId" : 195,
     "username" : "User 195",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.635Z",
+    "createdAt" : "2015-05-06T14:45:17.038Z",
     "content" : "hate no one, love only a few",
     "userId" : 196,
     "username" : "User 196",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.639Z",
+    "createdAt" : "2015-05-06T14:45:17.042Z",
     "content" : "hate no one, love only a few",
     "userId" : 197,
     "username" : "User 197",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T11:28:51.666Z",
+    "createdAt" : "2015-05-06T14:45:17.055Z",
     "content" : "hate no one, love only a few",
     "userId" : 199,
     "username" : "User 199",

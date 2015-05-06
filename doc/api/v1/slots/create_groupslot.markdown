@@ -73,7 +73,7 @@ Description : Creation datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=yZfZ9Jxua8iauRiAsuZhYzpFOCE
+Authorization: Token token=94LwIH5Wr8FdjAXcyHrN5diy0f4
 Host: example.org
 Cookie: </pre>
 
@@ -83,14 +83,23 @@ Cookie: </pre>
 
 #### Body
 
-<pre>{"title":"Time for a Slot","startDate":"2014-09-08T13:31:02.000Z","endDate":"2014-09-13T22:03:24.000Z","groupId":38,"note":"revolutionizing the calendar","settings":{"alerts":"0101010101"}}</pre>
+<pre>{
+  "title" : "Time for a Slot",
+  "startDate" : "2014-09-08T13:31:02.000Z",
+  "endDate" : "2014-09-13T22:03:24.000Z",
+  "groupId" : 38,
+  "note" : "revolutionizing the calendar",
+  "settings" : {
+    "alerts" : "0101010101"
+  }
+}</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;groupId&quot;:38,&quot;note&quot;:&quot;revolutionizing the calendar&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=yZfZ9Jxua8iauRiAsuZhYzpFOCE&quot; \
+	-H &quot;Authorization: Token token=94LwIH5Wr8FdjAXcyHrN5diy0f4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -101,10 +110,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;89800891da7e034f4b26e7ec191e5fca&quot;
+ETag: &quot;5cdd2f3beefa8f4fe818d66ed2c469cf&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ba16675c-b163-4c9a-a06a-1879fc1a6dbc
-X-Runtime: 0.030913
+X-Request-Id: 86c175e2-4aba-4415-8434-a16bd8ca4372
+X-Runtime: 0.026568
 Content-Length: 524</pre>
 
 #### Status
@@ -116,8 +125,8 @@ Content-Length: 524</pre>
 <pre>{
   "id" : 28,
   "title" : "Time for a Slot",
-  "createdAt" : "2015-05-06T11:28:50.790Z",
-  "updatedAt" : "2015-05-06T11:28:50.790Z",
+  "createdAt" : "2015-05-06T14:45:16.223Z",
+  "updatedAt" : "2015-05-06T14:45:16.223Z",
   "deletedAt" : null,
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
@@ -126,8 +135,8 @@ Content-Length: 524</pre>
   "creator" : {
     "id" : 145,
     "username" : "User 145",
-    "createdAt" : "2015-05-06T11:28:50.767Z",
-    "updatedAt" : "2015-05-06T11:28:50.767Z",
+    "createdAt" : "2015-05-06T14:45:16.204Z",
+    "updatedAt" : "2015-05-06T14:45:16.204Z",
     "deletedAt" : null
   },
   "settings" : {
