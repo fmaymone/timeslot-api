@@ -150,6 +150,8 @@ resource "Users" do
 
       expect(response_status).to eq(200)
 
+      # the Content-Type should be 'application/json',
+      # but is 'application/x-www-form-urlencoded'
       client.post "v1/users/signin", { email: user.email, password: 'autechre' }
       user.reload
       expect(status).to eq(200)

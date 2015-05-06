@@ -6,6 +6,7 @@ resource "Slots" do
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   post "/v1/slots" do
+    header "Content-Type", "application/json"
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -46,9 +47,7 @@ resource "Slots" do
         create_list :voice, 2, mediable: slot2
         create_list :video, 2, mediable: slot2
       }
-      let(:raw_post) do
-        { ids: [slot1.id, slot2.id] }
-      end
+      let(:ids) { [slot1.id, slot2.id] }
 
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
