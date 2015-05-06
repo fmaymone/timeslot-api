@@ -1,5 +1,17 @@
 ##Temporary space to collect knowledge on the app functionality and workflows
 
+# Users
+
+# social signup/signin/connect
+
+When a User has a 'normal' timeslot account (signup via email/pw) and in parallel
+a social-signup account (e.g. via facebook) it is not possible to merge them.
+Same applies if someone wants to add an email address to an account, and the
+email is already used for another account, the action will fail.
+
+When a user signs up via facebook and we can recognize the email address, the
+accounts should be merged.
+
 # Slots
 ## ReSlots
 

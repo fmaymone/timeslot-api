@@ -1,5 +1,8 @@
 # TS RAILS BACKEND
 
+* [Get all groups where current user is member or owner](/doc/api/groups/get_all_groups_where_current_user_is_member_or_owner.markdown)
+* [App-Specification](/doc/app_specification.md)
+
 ## Set up Rails dev env
 
 * Install homebrew:
