@@ -2,7 +2,9 @@
 
 ###Changes since version from 27.4.15
 - signup/signin is possible with phone number instead of email
-- user has new attributes (location, push(-notifications), default slot settings)
+- user has new attributes (location, push(-notifications), default slot settings,
+phone, phone verified, email verified)
+- updating user password requires valid old password
 
 - new endpoints:
     - /v1/fb-connect

@@ -218,6 +218,26 @@ resource "Users" do
       end
     end
 
+    describe "Update password for User" do
+      parameter :password, "new password", required: true
+      parameter :old_password, "valid old password", required: true
+
+      let(:password) { "slimetot" }
+      let(:old_password) { "timeslot" }
+
+      example "Update current user - update password", document: :v1 do
+        explanation "The valid old password needs to be send along" \
+                    "returns 200 and the users data if the password was" \
+                    " successfully updated"
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user.password_digest).not_to be nil
+        expect(current_user.try(:authenticate, 'slimetot')).to eq current_user
+      end
+    end
+
     describe "Set image for User" do
       parameter :image, "Scope for attributes of new image",
                 required: true

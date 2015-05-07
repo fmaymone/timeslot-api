@@ -278,17 +278,58 @@ RSpec.describe "V1::Users", type: :request do
       end
 
       context "password" do
+        let(:current_user) { create(:user, :with_email, password: 'timeslot') }
+
         it "updates the password_digest if new password" do
-          expect {
-            patch "/v1/users", { password: "newsecret" }, auth_header
-          }.to change(current_user, :password_digest)
+          old_digest = current_user.password_digest
+          patch "/v1/users", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
+          current_user.reload
+          expect(old_digest.eql? current_user.password_digest).to be false
         end
 
-        it "updates the auth_token if new password" do
-          old_token = current_user.auth_token
-          patch "/v1/users", { password: "newsecret" }, auth_header
+        it "allows signin with the new password" do
+          patch "/v1/users", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
           current_user.reload
-          expect(current_user.auth_token).not_to eq old_token
+          expect(current_user.try(:authenticate, "newsecret")).to eq current_user
+        end
+
+        it "doesn't update the auth_token if new password" do
+          old_token = current_user.auth_token
+          patch "/v1/users", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        context "invalid data" do
+          it "missing old password returns error" do
+            patch "/v1/users", { password: "newsecret" }, auth_header
+            expect(response).to have_http_status :unprocessable_entity
+            expect(json).to have_key 'error'
+          end
+
+          it "missing old password doesn't change password_digest" do
+            old_digest = current_user.password_digest
+            patch "/v1/users", { password: "newsecret" }, auth_header
+            current_user.reload
+            expect(old_digest.eql? current_user.password_digest).to be true
+          end
+
+          it "incorrect old password" do
+            patch "/v1/users", { old_password: "slimetot",
+                                 password: "newsecret" }, auth_header
+            expect(response).to have_http_status :unauthorized
+          end
+
+          it "incorrect old password doesn't change password_digest" do
+            old_digest = current_user.password_digest
+            patch "/v1/users", { old_password: "slimetot",
+                                 password: "newsecret" }, auth_header
+            current_user.reload
+            expect(old_digest.eql? current_user.password_digest).to be true
+          end
         end
       end
 
