@@ -10,7 +10,18 @@ Same applies if someone wants to add an email address to an account, and the
 email is already used for another account, the action will fail.
 
 When a user signs up via facebook and we can recognize the email address, the
-accounts should be merged.
+facebook account should be connected to the existing account.
+We assume that this user is the real owner of the email address bc facebook
+only submits verified email addresses.
+
+It will be possible to add an email/phone and password to an facebook/twitter
+signed-up account. Then it will be possible to use the normal timeslot signin.
+Because there is no pre-existing timeslot-password the user doesn't need (can
+not) enter it. We accept this security issue.
+
+If a user has a facebook-signed-up timeslot account and deletes his facebook
+account might be able to re-discover his account via forget password feature IF
+the facebook account came with a password (or he added an email/phone later on).
 
 # Slots
 ## ReSlots

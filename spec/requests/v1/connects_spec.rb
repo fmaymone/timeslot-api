@@ -38,6 +38,11 @@ RSpec.describe "V1::Connects", type: :request do
         }.to change(User, :count).by 1
       end
 
+      it "sets the fbemail as the email for the new user" do
+        post "/v1/fb-connect", payload
+        expect(User.last.email).to eq payload['email']
+      end
+
       it "creates a new connect model" do
         expect {
           post "/v1/fb-connect", payload
@@ -56,10 +61,30 @@ RSpec.describe "V1::Connects", type: :request do
       end
 
       context "invalid data" do
-        it "returns an error" do
+        it "invalid username returns an error" do
           post "/v1/fb-connect", payload.merge(username: 'x' * 55)
           expect(json).to have_key 'error'
         end
+      end
+    end
+
+    context "existing user without existing identity (matching email)", :focus, :seed do
+      let!(:user) { create(:user) }
+
+      it "returns success" do
+        post "/v1/fb-connect", payload.merge(email: user.email)
+        expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload.merge(email: user.email)
+        }.not_to change(User, :count)
+      end
+
+      it "" do
+        post "/v1/fb-connect", payload.merge(email: user.email)
+        expect(json).to eq 1
       end
     end
 

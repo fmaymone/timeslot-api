@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
-  before_save :set_auth_token, if: 'self.password'
+  before_create :set_auth_token
   after_commit AuditLog
 
   ## associations ##
@@ -98,6 +98,7 @@ class User < ActiveRecord::Base
 
   def reset_password
     update(password: 'autechre')
+    set_auth_token
   end
 
   def connect_or_merge(identity_params, social_params)
@@ -360,17 +361,25 @@ class User < ActiveRecord::Base
     # refresh auth_token here?
     return identity.user if identity
 
-    new_user = User.create(username: identity_params[:username])
-    return new_user unless new_user.errors.empty?
-    new_user.set_auth_token
+    user = detect_or_create(identity_params[:username], social_params[:email])
+    return user unless user.errors.empty?
+    user.set_auth_token # maybe only for new users but not for detected ones...?
 
-    identity = Connect.create(user: new_user,
+    identity = Connect.create(user: user,
                               provider: identity_params[:provider],
                               social_id: identity_params[:social_id],
                               data: social_params)
 
-    new_user.errors.add(connect: identity.errors) if identity.errors.any?
-    new_user
+    user.errors.add(connect: identity.errors) if identity.errors.any?
+    user
+  end
+
+  def self.detect_or_create(username, email)
+    user = User.find_by email: email if email
+
+    new_user_attr = { username: username }
+    new_user_attr.merge!(email: email) if email
+    user || User.create(new_user_attr)
   end
 
   def self.sign_in(email: nil, phone: nil, password:)
