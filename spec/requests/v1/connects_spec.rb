@@ -38,6 +38,11 @@ RSpec.describe "V1::Connects", type: :request do
         }.to change(User, :count).by 1
       end
 
+      it "sets the fbemail as the email for the new user" do
+        post "/v1/fb-connect", payload
+        expect(User.last.email).to eq payload['email']
+      end
+
       it "creates a new connect model" do
         expect {
           post "/v1/fb-connect", payload
@@ -56,10 +61,36 @@ RSpec.describe "V1::Connects", type: :request do
       end
 
       context "invalid data" do
-        it "returns an error" do
+        it "invalid username returns an error" do
           post "/v1/fb-connect", payload.merge(username: 'x' * 55)
           expect(json).to have_key 'error'
         end
+      end
+    end
+
+    context "existing user without existing identity (matching email)", :seed do
+      let!(:user) { create(:user, :with_email) }
+
+      it "returns success" do
+        post "/v1/fb-connect", payload.merge(email: user.email)
+        expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload.merge(email: user.email)
+        }.not_to change(User, :count)
+      end
+
+      it "creates a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload.merge(email: user.email)
+        }.to change(Connect, :count).by 1
+      end
+
+      it "returns an auth token" do
+        post "/v1/fb-connect", payload.merge(email: user.email)
+        expect(json).to have_key 'authToken'
       end
     end
 
@@ -120,13 +151,45 @@ RSpec.describe "V1::Connects", type: :request do
       end
     end
 
-    context "signed-in user with existing facebook identity (merge)" do
+    context "signed-in user with existing facebook identity (re-connect)" do
       let!(:identity) {
         create(:connect, user: current_user, social_id: payload['socialId']) }
 
       it "returns success" do
         post "/v1/fb-connect", payload, auth_header
         expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(User, :count)
+      end
+
+      it "doesn't create a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(Connect, :count)
+      end
+
+      it "doesn't return an auth token" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).not_to include 'authToken'
+      end
+    end
+
+    context "signed-in user & existing facebook identity with other user connected (collision)" do
+      let!(:identity) {
+        create(:connect, social_id: payload['socialId']) }
+
+      it "returns unprocessable entity" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "returns an error" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).to include 'account already connected'
       end
 
       it "doesn't create a new user model" do

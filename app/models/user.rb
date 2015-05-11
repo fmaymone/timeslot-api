@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
-  before_save :set_auth_token, if: 'self.password'
+  before_create :set_auth_token
   after_commit AuditLog
 
   ## associations ##
@@ -98,6 +98,7 @@ class User < ActiveRecord::Base
 
   def reset_password
     update(password: 'autechre')
+    set_auth_token
   end
 
   def connect_or_merge(identity_params, social_params)
@@ -105,7 +106,8 @@ class User < ActiveRecord::Base
                              provider: identity_params[:provider]).take
 
     if identity
-      merge(identity)
+      msg = 'social account already connected to other timeslot account'
+      errors.add(:connect, msg) unless self == identity.user
     else
       identity = Connect.create(user: self,
                                 social_id: identity_params[:social_id],
@@ -116,16 +118,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def merge(identity)
-    # TODO, might do this in a service object
-    p 'TODO: merge hell'
-  end
-
   def inactivate
     # Everything needs to stay available so that if user comes back all content
     # is still there
     # TODO: add spec
 
+    # set social connects to deleted
     # created_slots set creator to unknown /  deleted user
     # own_groups set creator to unknown /  deleted user
     # StdSlots
@@ -360,17 +358,27 @@ class User < ActiveRecord::Base
     # refresh auth_token here?
     return identity.user if identity
 
-    new_user = User.create(username: identity_params[:username])
-    return new_user unless new_user.errors.empty?
-    new_user.set_auth_token
+    user = detect_or_create(identity_params[:username], social_params[:email])
+    return user unless user.errors.empty?
+    user.set_auth_token # maybe only for new users but not for detected ones...?
 
-    identity = Connect.create(user: new_user,
+    identity = Connect.create(user: user,
                               provider: identity_params[:provider],
                               social_id: identity_params[:social_id],
                               data: social_params)
 
-    new_user.errors.add(connect: identity.errors) if identity.errors.any?
-    new_user
+    user.errors.add(connect: identity.errors) if identity.errors.any?
+    user
+  end
+
+  # this is kind of a security issue. If you have a facebook account with a
+  # verified email and another user has used that email for timeslot, the user
+  # with the facebook account will get access to the other users account.
+  # It can be argued that one shouldn't use an email address which isn't his own
+  # The problem should vanish when we start using verified email addresses
+  def self.detect_or_create(username, email)
+    user = User.find_by email: email if email
+    user || User.create(username: username, email: email)
   end
 
   def self.sign_in(email: nil, phone: nil, password:)

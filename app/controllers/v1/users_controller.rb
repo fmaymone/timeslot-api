@@ -72,7 +72,15 @@ module V1
     # PATCH /v1/users/1
     def update
       authorize :user
-      @user = current_user.update_with_image(user_params) unless user_params.empty?
+      return head :unprocessable_entity if user_params.empty?
+
+      # move this into pundit
+      if params[:password].present?
+        password = params.require(:old_password)
+        pw_correct = current_user == current_user.try(:authenticate, password)
+        return head :unauthorized unless pw_correct
+      end
+      @user = current_user.update_with_image(user_params)
 
       if @user.errors.empty?
         render :show
