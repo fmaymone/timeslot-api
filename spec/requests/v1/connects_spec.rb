@@ -151,13 +151,45 @@ RSpec.describe "V1::Connects", type: :request do
       end
     end
 
-    context "signed-in user with existing facebook identity (merge)" do
+    context "signed-in user with existing facebook identity (re-connect)" do
       let!(:identity) {
         create(:connect, user: current_user, social_id: payload['socialId']) }
 
       it "returns success" do
         post "/v1/fb-connect", payload, auth_header
         expect(response.status).to be(200)
+      end
+
+      it "doesn't create a new user model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(User, :count)
+      end
+
+      it "doesn't create a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(Connect, :count)
+      end
+
+      it "doesn't return an auth token" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).not_to include 'authToken'
+      end
+    end
+
+    context "signed-in user & existing facebook identity with other user connected (collision)" do
+      let!(:identity) {
+        create(:connect, social_id: payload['socialId']) }
+
+      it "returns unprocessable entity" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "returns an error" do
+        post "/v1/fb-connect", payload, auth_header
+        expect(response.body).to include 'account already connected'
       end
 
       it "doesn't create a new user model" do

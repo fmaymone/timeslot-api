@@ -106,7 +106,8 @@ class User < ActiveRecord::Base
                              provider: identity_params[:provider]).take
 
     if identity
-      merge(identity)
+      msg = 'social account already connected to other timeslot account'
+      errors.add(:connect, msg) unless self == identity.user
     else
       identity = Connect.create(user: self,
                                 social_id: identity_params[:social_id],
@@ -115,11 +116,6 @@ class User < ActiveRecord::Base
 
       errors.add(:connect, identity.errors) if identity.errors.any?
     end
-  end
-
-  def merge(identity)
-    # TODO, might do this in a service object
-    p 'TODO: merge hell'
   end
 
   def inactivate
