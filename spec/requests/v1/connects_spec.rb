@@ -68,8 +68,8 @@ RSpec.describe "V1::Connects", type: :request do
       end
     end
 
-    context "existing user without existing identity (matching email)", :focus, :seed do
-      let!(:user) { create(:user) }
+    context "existing user without existing identity (matching email)", :seed do
+      let!(:user) { create(:user, :with_email) }
 
       it "returns success" do
         post "/v1/fb-connect", payload.merge(email: user.email)
@@ -82,9 +82,15 @@ RSpec.describe "V1::Connects", type: :request do
         }.not_to change(User, :count)
       end
 
-      it "" do
+      it "creates a new connect model" do
+        expect {
+          post "/v1/fb-connect", payload.merge(email: user.email)
+        }.to change(Connect, :count).by 1
+      end
+
+      it "returns an auth token" do
         post "/v1/fb-connect", payload.merge(email: user.email)
-        expect(json).to eq 1
+        expect(json).to have_key 'authToken'
       end
     end
 

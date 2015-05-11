@@ -374,12 +374,14 @@ class User < ActiveRecord::Base
     user
   end
 
+  # this is kind of a security issue. If you have a facebook account with a
+  # verified email and another user has used that email for timeslot, the user
+  # with the facebook account will get access to the other users account.
+  # It can be argued that one shouldn't use an email address which isn't his own
+  # The problem should vanish when we start using verified email addresses
   def self.detect_or_create(username, email)
     user = User.find_by email: email if email
-
-    new_user_attr = { username: username }
-    new_user_attr.merge!(email: email) if email
-    user || User.create(new_user_attr)
+    user || User.create(username: username, email: email)
   end
 
   def self.sign_in(email: nil, phone: nil, password:)
