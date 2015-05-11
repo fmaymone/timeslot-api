@@ -78,8 +78,8 @@ RSpec.describe "V1::Users", type: :request do
 
       it "return group memberships for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('groups')
-        expect(json['groups'][0]).to eq(membership[0])
+        expect(json).to have_key('memberships')
+        expect(json['memberships'][0]).to eq(membership[0])
       end
     end
   end

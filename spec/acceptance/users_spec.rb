@@ -14,47 +14,110 @@ resource "Users" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
-    response_field :email, "Email of user (max. 255 characters)"
-    response_field :phone, "Phone number of user (max. 35 characters)"
     response_field :locationId, "Home location of user"
-    response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
     response_field :push, "Send push Notifications (true/false)"
-    response_field :slotDefaultDuration, "Default Slot Duration in seconds"
-    response_field :slotDefaultTypeId, "Default Slot Type - WIP"
-    response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
-    response_field :defaultPrivateAlerts,
-                   "Default alerts for private slots of this user"
-    response_field :defaultOwnFriendslotAlerts,
-                   "Default alerts for the friendslots of this user"
-    response_field :defaultOwnPublicAlerts,
-                   "Default alerts for the public slots of this user"
-    response_field :defaultFriendsFriendslotAlerts,
-                   "Default alerts for the friendslots from friends of this user"
-    response_field :defaultFriendsPublicAlerts,
-                   "Default alerts for the public slots from friends of this user"
-    response_field :defaultReslotAlerts,
-                   "Default alerts for the reslots of this user"
-    response_field :defaultGroupAlerts,
-                   "Default alerts for all groupslots of this user" \
-                   " where no specific alert is set. Groupslots" \
-                   " may also have their own default alerts per group"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
+    response_field :slotCount, "Number of slots for this user"
+    response_field :reslotCount, "Number of reslots for this user"
+    response_field :friendsCount, "Number of friends for this user"
 
-    let(:id) { current_user.id }
+    context "own data" do
+      response_field :email, "Email of user (max. 255 characters)"
+      response_field :phone, "Phone number of user (max. 35 characters)"
+      response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+      response_field :slotDefaultDuration, "Default Slot Duration in seconds"
+      response_field :slotDefaultTypeId, "Default Slot Type - WIP"
+      response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
+      response_field :defaultPrivateAlerts,
+                     "Default alerts for private slots of this user"
+      response_field :defaultOwnFriendslotAlerts,
+                     "Default alerts for the friendslots of this user"
+      response_field :defaultOwnPublicAlerts,
+                     "Default alerts for the public slots of this user"
+      response_field :defaultFriendsFriendslotAlerts,
+                     "Default alerts for the friendslots from friends of this user"
+      response_field :defaultFriendsPublicAlerts,
+                     "Default alerts for the public slots from friends of this user"
+      response_field :defaultReslotAlerts,
+                     "Default alerts for the reslots of this user"
+      response_field :defaultGroupAlerts,
+                     "Default alerts for all groupslots of this user" \
+                     " where no specific alert is set. Groupslots" \
+                     " may also have their own default alerts per group"
+      response_field :friendships, "all connections to other users"
+      response_field :memberships, "all connections to groups"
 
-    example "Get user data", document: :v1 do
-      explanation "returns 404 if ID is invalid\n\n"
-      do_request
+      let(:id) { current_user.id }
 
-      expect(response_status).to eq(200)
-      expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                    'slotCount', 'groups')
-      ).to eq(current_user.attributes.as_json
-               .except("auth_token", "password_digest", "role")
-               .transform_keys { |key| key.camelize(:lower) })
+      example "Get own user data", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key "id"
+        expect(json).to have_key "username"
+        expect(json).to have_key "image"
+        expect(json).to have_key "locationId"
+        expect(json).not_to have_key "push" # wip
+        expect(json).to have_key "createdAt"
+        expect(json).to have_key "updatedAt"
+        expect(json).to have_key "deletedAt"
+        expect(json).to have_key "slotCount"
+        expect(json).to have_key "reslotCount"
+        expect(json).to have_key "friendsCount"
+        expect(json).to have_key "defaultPrivateAlerts"
+        expect(json).to have_key "slotDefaultDuration"
+        expect(json).not_to have_key "authToken"
+        expect(json).not_to have_key "passwordDigest"
+        expect(json).not_to have_key "role"
+
+        expect(
+          json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                      'slotCount', 'memberships')
+        ).to eq(current_user.attributes.as_json
+                 .except("auth_token", "password_digest", "role", "push")
+                 .transform_keys { |key| key.camelize(:lower) })
+      end
+    end
+
+    context "other user" do
+      let(:user) { create(:user) }
+      let(:id) { user.id }
+
+      example "Get other users data", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key "id"
+        expect(json).to have_key "username"
+        expect(json).to have_key "image"
+        expect(json).to have_key "locationId"
+        # expect(json).to have_key "notifications"
+        expect(json).to have_key "createdAt"
+        expect(json).to have_key "updatedAt"
+        expect(json).to have_key "deletedAt"
+        expect(json).to have_key "slotCount"
+        expect(json).to have_key "reslotCount"
+        expect(json).to have_key "friendsCount"
+        expect(json).not_to have_key "authToken"
+        expect(json).not_to have_key "passwordDigest"
+        expect(json).not_to have_key "role"
+        expect(
+          json.except('image', 'friendsCount', 'reslotCount', 'slotCount')
+        ).to eq(user.attributes.as_json
+                 .except("auth_token", "password_digest", "role", 'public_url',
+                         'push', 'email', 'email_verified', 'phone', 'phone_verified',
+                         'default_private_alerts', 'default_own_friendslot_alerts',
+                         'default_own_public_alerts', 'default_friends_friendslot_alerts',
+                         'default_friends_public_alerts', 'default_reslot_alerts',
+                         'default_group_alerts', 'slot_default_duration',
+                         'slot_default_type_id', 'slot_default_location_id'
+                        )
+                 .transform_keys { |key| key.camelize(:lower) })
+      end
     end
   end
 
@@ -211,9 +274,9 @@ resource "Users" do
         expect(response_status).to eq(200)
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'groups')
+                      'slotCount', 'memberships')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role")
+                 .except("auth_token", "password_digest", "role", 'push')
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end
@@ -280,12 +343,6 @@ resource "Users" do
       current_user.reload
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                    'slotCount', 'groups')
-      ).to eq(current_user.attributes.as_json
-               .except("auth_token", "password_digest", "role")
-               .transform_keys{ |key| key.camelize(:lower) })
     end
   end
 

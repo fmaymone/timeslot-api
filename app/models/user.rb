@@ -123,6 +123,7 @@ class User < ActiveRecord::Base
     # is still there
     # TODO: add spec
 
+    # set social connects to deleted
     # created_slots set creator to unknown /  deleted user
     # own_groups set creator to unknown /  deleted user
     # StdSlots
