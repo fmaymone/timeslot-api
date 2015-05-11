@@ -1,5 +1,15 @@
 # API V1
 
+## Connects
+
+* [Sign up with facebook](connects/sign_up_with_facebook.markdown)
+* [Sign up/in with facebook (matching email address)](connects/sign_upin_with_facebook_(matching_email_address).markdown)
+* [Sign in with facebook](connects/sign_in_with_facebook.markdown)
+* [Connect facebook account](connects/connect_facebook_account.markdown)
+* [Sign up with twitter](connects/sign_up_with_twitter.markdown)
+* [Sign in with twitter](connects/sign_in_with_twitter.markdown)
+* [Connect twitter account](connects/connect_twitter_account.markdown)
+
 ## Groups
 
 * [Get all groups where current user is member or owner](groups/get_all_groups_where_current_user_is_member_or_owner.markdown)
@@ -45,12 +55,14 @@
 
 ## Users
 
-* [Get user data](users/get_user_data.markdown)
+* [Get own user data](users/get_own_user_data.markdown)
+* [Get other users data](users/get_other_users_data.markdown)
 * [User signup / Create user](users/user_signup__create_user.markdown)
 * [User signin](users/user_signin.markdown)
 * [User signout](users/user_signout.markdown)
 * [Reset password](users/reset_password.markdown)
 * [Update current user - change username and default alerts](users/update_current_user_-_change_username_and_default_alerts.markdown)
+* [Update current user - update password](users/update_current_user_-_update_password.markdown)
 * [Update current user - set user image](users/update_current_user_-_set_user_image.markdown)
 * [Delete current user](users/delete_current_user.markdown)
 * [Get slots for current user](users/get_slots_for_current_user.markdown)
