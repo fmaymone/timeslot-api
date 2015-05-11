@@ -2,6 +2,8 @@ module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
                        only: [:create, :signin, :reset_password]
+    skip_after_action :verify_authorized, only: :slots
+    after_action :verify_policy_scoped, only: :slots
 
     # GET /v1/users
     def index
@@ -10,18 +12,6 @@ module V1
 
       render :index
     end
-
-    # GET /v1/users/1/slots
-    # method was added for demo purposes
-    # def show_slots
-    #   user = User.find(params[:id])
-    #   @slots = []
-    #   @slots.push(*user.std_slots)
-    #   @slots.push(*user.re_slots)
-    #   @slots.push(*user.group_slots)
-
-    #   render "v1/slots/index"
-    # end
 
     # GET /v1/users/1
     def show
@@ -34,7 +24,7 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_params)
+      @user = User.create_with_image(user_create_params)
 
       if @user.errors.empty?
         render :signup, status: :created
@@ -48,7 +38,7 @@ module V1
     # returns auth_token if correct email and password are send
     def signin
       authorize :user
-      @user = User.sign_in(*credentials)
+      @user = User.sign_in(credentials)
 
       if @user
         render :signup
@@ -82,7 +72,15 @@ module V1
     # PATCH /v1/users/1
     def update
       authorize :user
-      @user = current_user.update_with_image(user_params) unless user_params.empty?
+      return head :unprocessable_entity if user_params.empty?
+
+      # move this into pundit
+      if params[:password].present?
+        password = params.require(:old_password)
+        pw_correct = current_user == current_user.try(:authenticate, password)
+        return head :unauthorized unless pw_correct
+      end
+      @user = current_user.update_with_image(user_params)
 
       if @user.errors.empty?
         render :show
@@ -106,6 +104,28 @@ module V1
       end
     end
 
+    # GET /v1/users/1/slots
+    def slots
+      @slots = policy_scope(:slot)
+
+      render "v1/slots/index"
+    end
+
+    # GET /v1/users/friendslots
+    # This is weird and not nice, pundit scopes seem way to inflexible...
+    # the 'resolve' method for SlotPolicy is already used by 'slots' method
+    # using another name doesn't trigger 'performed' for the scoped policy
+    # while the business logic is now in the policy instead of the model,
+    # the instantiation of the policy is ugly as shit
+    def slots_from_friends
+      authorize :user
+
+      ctx = UserContext.new(current_user, nil)
+      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+
+      render "v1/slots/index"
+    end
+
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends
@@ -124,11 +144,26 @@ module V1
       head :ok
     end
 
+    private def user_create_params
+      params.require(:email) unless params[:phone].present?
+      params.require(:phone) unless params[:email].present?
+      params.require(:password)
+      params.require(:username)
+      params.permit(:username, :email, :phone, :password)
+    end
+
     private def user_params
       p = params.permit(:username,
                         :email,
+                        :phone,
                         :password,
                         :image,
+                        :locationId,
+                        :publicUrl,
+                        :push,
+                        :slotDefaultDuration,
+                        :slotDefaultLocationId,
+                        :slotDefaultTypeId,
                         :defaultPrivateAlerts,
                         :defaultOwnFriendslotAlerts,
                         :defaultOwnPublicAlerts,
@@ -149,7 +184,10 @@ module V1
     end
 
     private def credentials
-      [params.require(:email), params.require(:password)]
+      params.require(:password)
+      params.require(:email) unless params[:phone].present?
+      params.require(:phone) unless params[:email].present?
+      params.permit(:email, :phone, :password).transform_keys(&:to_sym)
     end
   end
 end

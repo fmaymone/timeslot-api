@@ -2,40 +2,13 @@ require 'rails_helper'
 
 RSpec.describe "V1::Slots", type: :request do
   let(:json) { JSON.parse(response.body) }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  describe "GET /v1/slots" do
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slot_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slot_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) { create_list(:re_slot, 3, slotter: current_user) }
-
-    let(:groups) { create_list(:group, 2) }
-    let!(:memberships) {
-      create(:membership, group: groups[0], user: current_user)
-      create(:membership, group: groups[1], user: current_user) }
-    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
-    let!(:group_slots_2) { create_list(:group_slot, 5, group: groups[1]) }
-
-    it "returns success" do
-      get "/v1/slots", {}, auth_header
-      expect(response.status).to be(200)
-    end
-
-    it "returns all slots for the current_user" do
-      get "/v1/slots", {}, auth_header
-      slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
-      expect(json.length).to eq slots_count
-    end
-  end
-
   describe "GET /v1/slots/:id" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
 
     context "GroupSlot, with valid ID" do
       let(:group) { create(:group, owner: current_user) }
@@ -52,7 +25,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "StdSlot, with location" do
       let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot, :publicslot, meta_slot: meta_slot) }
+      let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
       it "returns the location" do
         get "/v1/slots/#{std_slot.id}"
@@ -86,7 +59,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['startDate']).to eq(std_slot.start_date.as_json)
         expect(json['endDate']).to eq(std_slot.end_date.as_json)
         expect(json['notes']).to eq(std_slot.notes)
-        expect(json['visibility']).to eq(std_slot.visibility)
+        expect(json['visibility']).to eq 'public'
       end
 
       it "does return the slot title" do
@@ -106,7 +79,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "ReSlot, with valid ID" do
       let(:std_slot) {
-        create(:std_slot, :publicslot, :with_media, :with_notes) }
+        create(:std_slot_public, :with_media, :with_notes) }
       let(:re_slot_1) {
         create(:re_slot, predecessor: std_slot,
                meta_slot: std_slot.meta_slot, parent: std_slot) }
@@ -141,7 +114,7 @@ RSpec.describe "V1::Slots", type: :request do
     context "StdSlot with valid params" do
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: '01', settings: { alerts: '1110001100' })
+          visibility: 'private', settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -153,30 +126,30 @@ RSpec.describe "V1::Slots", type: :request do
       it "adds a new StdSlot entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(StdSlot, :count).by(1)
+        }.to change(StdSlot.unscoped, :count).by 1
       end
 
       it "adds a new MetaSlot entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(MetaSlot, :count).by(1)
+        }.to change(MetaSlot, :count).by 1
       end
 
       it "adds a new SlotSetting entry to the DB" do
         expect {
           post "/v1/stdslot/", valid_slot, auth_header
-        }.to change(SlotSetting, :count).by(1)
+        }.to change(SlotSetting, :count).by 1
       end
 
       it "returns the ID of the new slot" do
         post "/v1/stdslot/", valid_slot, auth_header
-        expect(json['id']).to eq(StdSlot.last.id)
+        expect(json['id']).to eq(StdSlot.unscoped.last.id)
       end
     end
 
     context "with invalid params" do
       let(:invalid_attributes) {
-        attr = attributes_for(:meta_slot).merge(visibility: '01')
+        attr = attributes_for(:meta_slot).merge(visibility: 'private')
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       describe "does not add a new entry to the DB" do
@@ -226,7 +199,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-09-08 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", slot.merge(visibility: '11'), auth_header
+          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -237,7 +210,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 end_date: "2014-07-07 13:31:02")
           slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
-          post "/v1/stdslot/", slot.merge(visibility: '11'), auth_header
+          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -283,7 +256,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "adds a new group_slot entry to the DB" do
         expect {
           post "/v1/groupslot/", valid_slot, auth_header
-        }.to change(GroupSlot, :count).by(1)
+        }.to change(GroupSlot.unscoped, :count).by(1)
       end
 
       it "adds a new meta_slot entry to the DB" do
@@ -294,11 +267,11 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "returns the ID of the new slot" do
         post "/v1/groupslot/", valid_slot, auth_header
-        expect(json['id']).to eq(GroupSlot.last.id)
+        expect(json['id']).to eq(GroupSlot.unscoped.last.id)
       end
     end
 
-    describe "create GroupSlot via copy from existing slot" do
+    describe "create GroupSlot for existing metaslot" do
       context "copy GroupSlot from existing std_slot" do
         let!(:existing_slot) { create(:std_slot) }
         let(:group_slot_params) {
@@ -314,7 +287,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
       end
 
@@ -333,12 +306,12 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
 
         it "sets the correct group on the new group_slot" do
           post "/v1/groupslot/", group_slot_params, auth_header
-          expect(GroupSlot.last.group_id).to eq group.id
+          expect(GroupSlot.unscoped.last.group_id).to eq group.id
         end
       end
 
@@ -357,7 +330,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "adds a new group_slot entry to the DB" do
           expect {
             post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot, :count).by(1)
+          }.to change(GroupSlot.unscoped, :count).by(1)
         end
       end
     end
@@ -483,7 +456,6 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from GroupSlot" do
-        skip "not supported"
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
           attributes_for(:re_slot, predecessorId: pred.id)
@@ -619,7 +591,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     describe "handling non-media params" do
       context "valid params" do
@@ -627,14 +599,6 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}",
                 { title: "Something" }, auth_header
           expect(response).to have_http_status(:ok)
-        end
-
-        it "updates the visibiltiy of a given StdSlot" do
-          std_slot.update(visibility: "00")
-          patch "/v1/stdslot/#{std_slot.id}",
-                { visibility: "11" }, auth_header
-          std_slot.reload
-          expect(std_slot.visibility).to eq("11")
         end
 
         it "updates the title of a given StdSlot" do
@@ -664,7 +628,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "invalid params" do
         describe "User not owner of StdSlot" do
-          let(:std_slot) { create(:std_slot) }
+          let(:std_slot) { create(:std_slot_private) }
 
           it "responds with Not Found (404)" do
             patch "/v1/stdslot/#{std_slot.id}",
@@ -768,7 +732,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with valid params" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
         }
@@ -781,7 +745,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch non-existing note" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
         }
@@ -794,7 +758,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with invalid params" do
-        let(:std_slot) { create(:std_slot, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "" }] }
         }
@@ -876,7 +840,7 @@ RSpec.describe "V1::Slots", type: :request do
         context "missing position parameter" do
           let(:media) { [{ publicId: "foo-image" }] }
           let!(:std_slot) {
-            create(:std_slot, :with_media, owner: current_user)
+            create(:std_slot_private, :with_media, owner: current_user)
           }
 
           it "adds it" do
@@ -1039,7 +1003,6 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "valid params" do
         let(:new_params) { { title: '2015',
-                             visibility: '01',
                              notes: [note] } }
 
         it "returns success" do
@@ -1051,14 +1014,12 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
           std_slot.reload
           expect(std_slot.title).to eq '2015'
-          expect(std_slot.visibility).to eq '01'
           expect(std_slot.notes.size).to eq(1)
         end
       end
 
       context "invalid params" do
         let(:new_params) { { title: '',
-                             visibility: '01',
                              notes: [note] } }
 
         it "returns unprocessable entity" do
@@ -1152,7 +1113,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1255,7 +1216,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:id/share" do
-    let(:slot) { create(:std_slot, :publicslot) }
+    let(:slot) { create(:std_slot_public) }
 
     it "returns data of slot including share url" do
       get "/v1/slots/#{slot.id}/share", {}, auth_header
@@ -1267,7 +1228,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:uid/slotdata" do
-    let!(:slot) { create(:std_slot, :with_notes, :with_location,
+    let!(:slot) { create(:std_slot_private, :with_notes, :with_location,
                          :with_real_photo, share_id: '12345xyz',
                          shared_by: create(:user)) }
     before { current_user.webview! }
@@ -1281,7 +1242,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/like" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
 
     it "creates a new like" do
@@ -1322,7 +1283,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/1/likes" do
-    let(:std_slot) { create(:std_slot, :publicslot, :with_likes) }
+    let(:std_slot) { create(:std_slot_public, :with_likes) }
 
     context "ReSlot" do
       let(:re_slot) {
@@ -1336,7 +1297,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
     let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
@@ -1355,37 +1316,89 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/copy" do
-    let!(:group) { create(:group) }
+    # rspec seems to have bug regarding post parameters with array of hashes
+    # so I can not test copying into stdslots and groupslots at the same time
+    # however, from the console it seems to work that's why I think it's rspec
+    # using :
 
-    describe "copy without details" do
-      let!(:std_slot) { create(:std_slot, :publicslot) }
+    # let(:copy_params) { { copyTo: [
+    #                         { slot_type: 'public', details: 'false' },
+    #                         { group_id: group_1.id, details: 'false' }
+    #                       ] } }
+
+    # gives me:
+
+    # pry(#<V1::SlotsController>)> params
+    # => {"copyTo"=>[
+    #          {"slot_type"=>"public", "details"=>"false", "group_id"=>"6"},
+    #          {"details"=>"false"}],
+
+    # couldn't find a way to solve this yet
+
+    let(:group_1) { create(:group) }
+    let(:group_2) { create(:group) }
+
+    describe "copy groupSlot to stdslots without details" do
+      let!(:group_slot) { create(:group_slot_public, :with_likes, :with_notes) }
+
       let(:copy_params) { { copyTo: [
-                              { target: 'public_slots',
+                              { slotType: 'public',
                                 details: 'false' },
-                              { target: group.name,
-                                details: false }
+                              { slotType: 'private',
+                                details: 'false' }
                             ] } }
 
-      it "creates a new slot" do
+      it "creates new slots" do
         expect {
-          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        }.to change(BaseSlot, :count).by 2
+          post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
+        }.to change(BaseSlot.unscoped, :count).by 2
       end
     end
 
-    describe "copy with details" do
-      let!(:std_slot) { create(:std_slot, :publicslot, :with_media, :with_likes,
-                               :with_notes) }
+    describe "copy into groups without details" do
+      let!(:std_slot) { create(:std_slot_public) }
       let(:copy_params) { { copyTo: [
-                              { target: 'public_slots',
-                                details: 'true' },
-                              { target: group.name,
-                                details: true }
+                              { groupId: group_1.id,
+                                details: 'false' },
+                              { groupId: group_2.id,
+                                details: 'false' }
                             ] } }
+
+      it "creates new slots" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
+        }.to change(GroupSlot.unscoped, :count).by 2
+      end
+    end
+
+    describe "copy stdslot with details into stdslot" do
+      let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
+                               :with_notes) }
+      let(:copy_params) { { copyTo: [ { slotType: 'private',
+                                        details: 'true' }] } }
+
+      it "copys media data and notes unless explictly disabled" do
+        post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
+        new_slot = BaseSlot.unscoped.last
+        expect(new_slot.notes.size).to eq 3
+        expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
+        expect(new_slot.likes.size).to eq 0
+        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.photos.first.public_id).to eq group_slot.photos.first.public_id
+      end
+    end
+
+    describe "copy stdslot with details into groups" do
+      let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
+                               :with_notes) }
+      let(:copy_params) { { copyTo: [{ groupId: group_1.id,
+                                       details: 'true' },
+                                     { groupId: group_2.id,
+                                       details: true }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        new_slot = GroupSlot.last
+        new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
@@ -1396,21 +1409,21 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/move" do
-    let!(:std_slot) { create(:std_slot, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
-    context "move to public slots" do
-      let(:move_params) { { target: 'public_slots',
+    context "move to public slots without details" do
+      let(:move_params) { { slotType: 'public',
                             details: 'false' } }
 
       it "creates a new slot" do
         expect {
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        }.to change(StdSlot, :count).by 1
+        }.to change(StdSlot.unscoped, :count).by 1
       end
 
       it "owner of the new slot is current user" do
         post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        expect(StdSlot.last.owner).to eq current_user
+        expect(StdSlot.unscoped.last.owner).to eq current_user
       end
 
       it "deletes to original slot" do
@@ -1421,21 +1434,21 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "move to friendslots without details" do
-      let(:move_params) { { target: 'friend_slots',
+      let(:move_params) { { slotType: 'friends',
                             details: false } }
 
       it "creates a new slot" do
         expect {
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        }.to change(StdSlot, :count).by 1
+        }.to change(StdSlot.unscoped, :count).by 1
       end
     end
 
     context "move to friendslots with details" do
       let!(:std_slot) {
-        create(:std_slot, :with_real_photo, owner: current_user) }
+        create(:std_slot_private, :with_real_photo, owner: current_user) }
       let(:photo) { std_slot.media_items.first }
-      let(:move_params) { { target: 'friend_slots',
+      let(:move_params) { { slotType: 'friends',
                             details: true } }
       before {
         Cloudinary::Uploader.remove_tag("replaced", photo.public_id)
@@ -1448,6 +1461,17 @@ RSpec.describe "V1::Slots", type: :request do
         expect(tags).not_to include "replaced" if tags
         photo.reload
         expect(photo.deleted_at?).to be true
+      end
+    end
+
+    context "move to group without details" do
+      let(:move_params) { { groupId: create(:group).id,
+                            details: false } }
+
+      it "creates a new groupslot" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
+        }.to change(GroupSlot.unscoped, :count).by 1
       end
     end
   end

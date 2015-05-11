@@ -4,7 +4,7 @@ RSpec.describe V1::UsersController, type: :controller do
   before(:each) {
     request.accept = "application/json"
   }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:valid_attributes) { attributes_for(:user, username: "current user") }
   let(:invalid_attributes) { attributes_for(:user, username: nil) }
   let(:valid_session) { {} }
@@ -30,7 +30,7 @@ RSpec.describe V1::UsersController, type: :controller do
   end
 
   describe "POST create" do
-    let(:valid_attributes) { attributes_for(:user, password: "something") }
+    let(:valid_attributes) { attributes_for(:user, :with_email, :with_password) }
 
     describe "with valid params" do
       it "creates a new User" do

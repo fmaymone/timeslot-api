@@ -1,0 +1,80 @@
+# {{ resource_name }} API
+
+## {{ description }}
+
+### {{ http_method }} {{ route }}
+{{# explanation }}
+
+{{ explanation }}
+{{/ explanation }}
+{{# has_parameters? }}
+
+### Parameters
+{{# parameters }}
+
+Name : {{ name }}{{# required }} *- required -*{{/ required }}
+Description : {{ description }}
+{{/ parameters }}
+
+{{/ has_parameters? }}
+{{# has_response_fields? }}
+
+### Response Fields
+{{# response_fields }}
+
+Name : {{ name }}
+Description : {{ description }}
+{{/ response_fields }}
+
+{{/ has_response_fields? }}
+{{# requests }}
+### Request
+
+#### Headers
+
+<pre>{{ request_headers_text }}</pre>
+
+#### Route
+
+<pre>{{ request_method }} {{ request_path }}</pre>
+{{# request_query_parameters_text }}
+
+#### Query Parameters
+
+<pre>{{ request_query_parameters_text }}</pre>
+{{/ request_query_parameters_text }}
+{{# request_body }}
+
+#### Body
+```javascript
+{{{ request_body_pretty }}}
+```
+
+{{/ request_body }}
+{{# curl }}
+
+#### cURL
+
+<pre class="request">{{ curl }}</pre>
+{{/ curl }}
+
+{{# response_status }}
+### Response
+
+#### Headers
+
+<pre>{{ response_headers_text }}</pre>
+
+#### Status
+
+<pre>{{ response_status }} {{ response_status_text}}</pre>
+
+{{# response_body }}
+#### Body
+
+```javascript
+{{{ response_body_pretty }}}
+```
+{{/ response_body }}
+{{/ response_status }}
+{{/ requests }}

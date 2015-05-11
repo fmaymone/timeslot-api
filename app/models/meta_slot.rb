@@ -36,7 +36,7 @@ class MetaSlot < ActiveRecord::Base
   end
 
   def self.find_or_add(meta_params)
-    meta_id = meta_params['meta_slot_id']
+    meta_id = meta_params[:meta_slot_id]
     MetaSlot.where(id: meta_id).first_or_create(meta_params)
   end
 end

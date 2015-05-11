@@ -2,16 +2,6 @@ module V1
   class SlotsController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
 
-    # GET /v1/slots
-    # return all slots (std, group, re) of the current user
-    # should almost probably also include slots from friends
-    def index
-      authorize :slot
-      @slots = policy_scope(:slot)
-
-      render :index
-    end
-
     # GET /v1/slots/1
     def show
       @slot = BaseSlot.get(params[:id])
@@ -31,9 +21,10 @@ module V1
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = StdSlot.create_with_meta(meta: meta_params, visibility: std_param,
-                                       media: media_params, notes: note_param,
-                                       alerts: alerts_param, user: current_user)
+      @slot = BaseSlot.create_slot(meta: meta_params, visibility: visibility,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
+
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -44,12 +35,12 @@ module V1
 
     # POST /v1/groupslot
     def create_groupslot
-      group = Group.find(group_param)
       authorize GroupSlot.new(group: group)
 
-      @slot = GroupSlot.create_with_meta(meta: meta_params, group_id: group_param,
-                                         media: media_params, notes: note_param,
-                                         alerts: alerts_param, user: current_user)
+      @slot = BaseSlot.create_slot(meta: meta_params, group: group,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
+
       if @slot.errors.empty?
         render :show, status: :created, locals: { slot: @slot }
       else
@@ -88,10 +79,11 @@ module V1
 
     # PATCH /v1/stdslot/1
     def update_stdslot
-      @slot = current_user.std_slots.find(params[:id])
+      # see policy for thoughts about the different options
+      @slot = StdSlot.of(current_user).find(params[:id])
+      # @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
-      @slot.update(std_param) if params["visibility"].present?
       @slot.update_from_params(meta: meta_params, media: media_params,
                                notes: note_param, alerts: alerts_param,
                                user: current_user)
@@ -136,7 +128,7 @@ module V1
 
     # DELETE /v1/std_slot/1
     def destroy_stdslot
-      @slot = current_user.std_slots.find(params.require(:id))
+      @slot = StdSlot.of(current_user).find(params[:id])
       authorize @slot
 
       if @slot.delete
@@ -245,19 +237,16 @@ module V1
     end
 
     # POST /v1/slots/1/copy
-    # - target (private_slots, friend_slots, public_slots, groupname)
-    # - with_details(media, comments, likes)
     def copy
       @slot = BaseSlot.get(params[:id])
       authorize @slot
       @slot.copy_to(copy_params, current_user)
 
       head :ok
+      # TODO: return the newly generated slots
     end
 
     # POST /v1/slots/1/move
-    # - target (private_slots, friend_slots, public_slots, re_slots, groupname)
-    # - with_details(media, comments, likes)
     def move
       old_slot = BaseSlot.get(params[:id])
       authorize old_slot
@@ -266,13 +255,19 @@ module V1
       render :show, locals: { slot: new_slot }
     end
 
-    private def group_param
-      params.require(:groupId)
+    private def group
+      Group.find(params.require(:groupId))
     end
 
-    private def std_param
-      params.require(:visibility)
-      params.permit(:visibility)
+    private def visibility
+      visibility = params.require(:visibility)
+      valid_values = %w(private friends public)
+
+      unless valid_values.include? visibility
+        fail ActionController::ParameterMissing,
+             "visibility must be one of #{valid_values}"
+      end
+      visibility
     end
 
     private def re_params
@@ -281,7 +276,8 @@ module V1
 
     private def meta_params
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId)
-      p.transform_keys(&:underscore)
+      p.transform_keys!(&:underscore)
+      p.transform_keys(&:to_sym)
     end
 
     private def alerts_param
@@ -302,15 +298,16 @@ module V1
     end
 
     private def copy_params
-      target_params = [:target, :details]
+      target_params = [:slotType, :groupId, :details]
       params.require(:copyTo).map do |p|
-        ActionController::Parameters.new(p.to_hash).permit(target_params)
+        t = ActionController::Parameters.new(p.to_hash).permit(target_params)
+        t.transform_keys { |key| key.underscore.to_sym }
       end
     end
 
     private def move_params
-      params.require(:target)
-      params.permit(:target, :details)
+      p = params.permit(:slotType, :groupId, :details)
+      p.transform_keys { |key| key.underscore.to_sym }
     end
   end
 end

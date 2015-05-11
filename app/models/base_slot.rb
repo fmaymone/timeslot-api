@@ -4,10 +4,32 @@ class BaseSlot < ActiveRecord::Base
   # it shares postgres inheritance semantics at the db level with its subtypes
   class InterfaceNotImplementedError < NoMethodError; end
 
+  # If a new SlotType is added to the app, it also needs to be added here
+  # I tried to solve this by meta programming but it's not worth the effort
+  # and I want to be sure the same integers are used for the same slot type
+  # Using the classnames as constants is not so pretty but I don't know about
+  # a real downside yet and it saves an additional conversion to snake_case
+  SLOT_TYPES = { StdSlotPrivate: 1,
+                 StdSlotFriends: 2,
+                 StdSlotPublic: 3,
+                 GroupSlotMembers: 4,
+                 GroupSlotPublic: 5,
+                 ReSlotFriends: 6,
+                 ReSlotPublic: 7,
+                 # mabye remove the following
+                 BaseSlot: 0,
+                 StdSlot: 20,
+                 GroupSlot: 21,
+                 ReSlot: 22,
+               }
+
+  enum slot_type: SLOT_TYPES
+
   after_commit AuditLog
-  before_create :unique_slot_id
+  after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # there is also a default scope defined as class method
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
@@ -22,6 +44,10 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+
+  def visibility
+    slot_type.constantize.try(:visibility)
+  end
 
   def photos
     media_items.image.order(:position)
@@ -118,22 +144,21 @@ class BaseSlot < ActiveRecord::Base
 
   def copy_to(targets, user)
     targets.each do |target|
-      details = target["details"].to_s
-      # YAML.load converts to boolean
-      copy_details = details ? true : YAML.load(details)
-      self.class.create_slot(self, target["target"], copy_details, user)
+      BaseSlot.duplicate_slot(self, target, user)
     end
   end
 
   def move_to(target, user)
-    details = target["details"].to_s
-    move_details = details ? true : YAML.load(details)
-    new_slot = self.class.create_slot(self, target['target'], move_details, user)
-    delete
+    new_slot = BaseSlot.duplicate_slot(self, target, user)
+    delete if new_slot.errors.empty?
     new_slot
   end
 
   ## private instance methods ##
+
+  private def set_slot_type
+    self.slot_type ||= self.class.to_s.to_sym
+  end
 
   private def update_media(media_params)
     media_map = [:photos, :voices, :videos]
@@ -164,12 +189,6 @@ class BaseSlot < ActiveRecord::Base
     when :videos
       add_videos(collection)
     end
-  end
-
-  private def unique_slot_id
-    identifier = self.class.slot_map[self.class.model_name.name]
-    slot_id_string = identifier + self.class.count.to_s
-    self.id = slot_id_string.to_i
   end
 
   private def add_photos(items)
@@ -215,17 +234,13 @@ class BaseSlot < ActiveRecord::Base
 
   ## class methods ##
 
-  def self.slot_map
-    { 'BaseSlot' => '10',
-      'StdSlot' => '11',
-      'GroupSlot' => '12',
-      'ReSlot' => '13' }
+  def self.default_scope
+    where(slot_type: SLOT_TYPES[to_s.to_sym]) unless self == BaseSlot
   end
 
   def self.get(slot_id)
-    class_name = slot_map.invert[slot_id.to_s[0, 2]]
-    fail ActiveRecord::RecordNotFound if class_name.nil?
-    class_name.constantize.find(slot_id)
+    bs = BaseSlot.find(slot_id)
+    bs.slot_type.constantize.find(slot_id)
   end
 
   def self.get_many(slot_ids)
@@ -243,30 +258,50 @@ class BaseSlot < ActiveRecord::Base
     upcoming.order('meta_slots.start_date').first
   end
 
-  def self.create_slot(slot, slot_type, copy_details, user)
-    case slot_type
-    when "private_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '00')
-    when "friend_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '01')
-    when "public_slots"
-      new_slot = StdSlot.create(meta_slot: slot.meta_slot, owner: user,
-                                visibility: '11')
-    when "re_slots"
-      new_slot = ReSlot.create_from_slot(predecessor: slot, slotter: user)
-    else
-      group = Group.find_by name: slot_type
-      new_slot = GroupSlot.create(meta_slot: slot.meta_slot, group: group)
+  def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
+                       notes: nil, alerts: nil, user: nil)
+
+    # TODO: improve
+    fail unless visibility || group
+
+    meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
+    return meta_slot unless meta_slot.errors.empty?
+
+    if visibility
+      slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
+                                 user: user)
+    elsif group
+      slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
     end
 
-    duplicate_slot_details(slot, new_slot) if copy_details
-    new_slot
+    return slot unless slot.errors.empty?
+
+    if (media || notes || alerts)
+      slot.update_from_params(media: media, notes: notes, alerts: alerts,
+                              user: user)
+    end
+
+    slot
+  end
+
+  def self.duplicate_slot(source, target, user)
+    visibility = target[:slot_type] if target[:slot_type]
+    group = Group.find(target[:group_id]) if target[:group_id]
+    details = target[:details]
+    # YAML.load converts to boolean
+    with_details = details.present? ? YAML.load(details.to_s) : true
+
+    duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
+                                  visibility: visibility,
+                                  group: group,
+                                  user: user)
+
+    duplicate_slot_details(source, duplicated_slot) if with_details
+    duplicated_slot
   end
 
   def self.duplicate_slot_details(old_slot, new_slot)
-    old_slot.media_items.reverse.each do |item|
+    old_slot.media_items.reverse_each do |item|
       attr = item.attributes
       attr.delete('id')
       new_slot.media_items.create(attr)

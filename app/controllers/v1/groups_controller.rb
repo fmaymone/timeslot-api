@@ -20,7 +20,11 @@ module V1
     # POST /v1/groups
     def create
       authorize :group
-      @group = Group.create_with_image(group_params.merge(owner: current_user))
+
+      @group = Group.create_with_image(
+        group_params: group_params.merge(owner: current_user),
+        invitees: params[:invitees],
+        group_image: group_image)
 
       if @group.errors.empty?
         render :show, status: :created
@@ -35,7 +39,9 @@ module V1
     def update
       @group = Group.find(group_id)
       authorize @group
-      @group.update_with_image(group_params) unless group_params.empty?
+
+      @group.update_with_image(group_params: group_params,
+                               group_image: group_image)
 
       if @group.errors.empty?
         render :show
@@ -56,6 +62,14 @@ module V1
         render json: { error: @group.errors },
                status: :unprocessable_entity
       end
+    end
+
+    # GET /v1/groups/:group_id/members
+    def slots
+      @group = Group.find(group_id)
+      authorize @group
+
+      render :slots
     end
 
     # GET /v1/groups/:group_id/members
@@ -114,7 +128,7 @@ module V1
     def invite
       group = Group.find(group_id)
       authorize group
-      group.invite_users(params.require(:ids))
+      group.invite_users(params.require(:invitees))
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }
@@ -168,11 +182,12 @@ module V1
 
     private def group_params
       p = params.permit(:name, :membersCanPost, :membersCanInvite)
-      if params[:image].present?
-        image_param = params.require(:image).require(:publicId)
-        p.merge!("public_id" => image_param)
-      end
       p.transform_keys(&:underscore)
+    end
+
+    private def group_image
+      return nil unless params[:image].present?
+      params.require(:image).require(:publicId)
     end
 
     private def group_id

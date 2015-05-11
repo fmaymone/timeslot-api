@@ -5,33 +5,11 @@ RSpec.describe V1::SlotsController, type: :controller do
     request.accept = "application/json"
     request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
-  let(:current_user) { create(:user) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    let(:metas) { create_list(:meta_slot, 2, creator: current_user) }
-    let!(:std_slots_1) {
-      create(:std_slot, meta_slot: metas[0], owner: current_user) }
-    let!(:std_slots_2) {
-      create(:std_slot, meta_slot: metas[1], owner: current_user) }
-    let!(:re_slots) { create_list(:re_slot, 4, slotter: current_user) }
-
-    let(:groups) { create_list(:group, 2) }
-    let!(:memberships) {
-      create(:membership, group: groups[0], user: current_user)
-      create(:membership, group: groups[1], user: current_user) }
-    let!(:group_slots_1) { create_list(:group_slot, 3, group: groups[0]) }
-    let!(:group_slots_2) { create_list(:group_slot, 5, group: groups[1]) }
-
-    it "assigns all slots as @slots" do
-      get :index, {}, valid_session
-      slots_count = 2 + re_slots.size + group_slots_1.size + group_slots_2.size
-      expect(assigns(:slots).length).to eq slots_count
-    end
-  end
-
   describe "GET show" do
-    let(:std_slot) { create(:std_slot, :publicslot) }
+    let(:std_slot) { create(:std_slot_public) }
 
     it "returns http success" do
       get :show, id: std_slot.id
@@ -53,7 +31,7 @@ RSpec.describe V1::SlotsController, type: :controller do
     describe "with valid params" do
       let(:valid_attributes) {
         attr = attributes_for(:meta_slot, creator: current_user).merge(
-          visibility: '01')
+          visibility: 'private')
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
       it "responds with http status Created (201)" do
@@ -75,7 +53,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new StdSlot" do
         expect {
           post :create_stdslot, valid_attributes, valid_session
-        }.to change(StdSlot, :count).by(1)
+        }.to change(StdSlot.unscoped, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
@@ -114,7 +92,7 @@ RSpec.describe V1::SlotsController, type: :controller do
       it "creates a new GroupSlot" do
         expect {
           post :create_groupslot, valid_attributes, valid_session
-        }.to change(GroupSlot, :count).by(1)
+        }.to change(GroupSlot.unscoped, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
@@ -276,7 +254,8 @@ RSpec.describe V1::SlotsController, type: :controller do
 
         context "by users std_slot" do
           let!(:std_slot) {
-            create(:std_slot, meta_slot: reslot.meta_slot, owner: current_user) }
+            create(:std_slot_private, meta_slot: reslot.meta_slot,
+                   owner: current_user) }
 
           it "doesn't set deleted_at on the slot_setting" do
             reslot.meta_slot.update(creator: current_user)

@@ -33,8 +33,8 @@ db/*.sqlite3
 /coverage/
 /db/*.javadb/
 /db/*.sqlite3
-/doc/api/
-/doc/app/
+# /doc/api/
+# /doc/app/
 /doc/features.html
 /doc/specs.html
 /public/cache
@@ -92,3 +92,7 @@ rails_best_practices_output.html
 spec/logo.jpg
 
 public/ptl.html
+
+.ackrc
+
+doc/api.zip

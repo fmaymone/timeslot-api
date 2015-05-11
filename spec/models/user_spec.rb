@@ -19,7 +19,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
-  # it { is_expected.to have_many(:meta_slots).through(:slot_settings) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
@@ -40,8 +39,8 @@ RSpec.describe User, type: :model do
   end
 
   describe "when email is not present" do
-    before { user.email = "" }
-    it { should_not be_valid }
+    before { user.email = nil }
+    it { is_expected.to be_valid }
   end
 
   describe "when email is too long" do
@@ -71,6 +70,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "when email address is already taken" do
+    before { user.email = 'kw@ts.com' }
     it "won't be valid" do
       user.save
       user_with_same_email = user.dup
@@ -81,9 +81,20 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe "when phone number is already taken" do
+    before { user.phone = '12345678' }
+    it "won't be valid" do
+      user.save
+      user_with_same_phone = user.dup
+      user_with_same_phone.save
+
+      expect(user_with_same_phone).not_to be_valid
+    end
+  end
+
   describe "authentication params" do
     context "valid params" do
-      let(:new_user) { build(:user) }
+      let(:new_user) { build(:user, :with_email, :with_password) }
 
       it "succeeds if password is long enough" do
         expect(new_user.save).to be true
@@ -99,15 +110,15 @@ RSpec.describe User, type: :model do
         new_user.save
         expect(new_user.auth_token.present?).to be true
       end
+
+      it "succeeds if password missing" do
+        user.password = nil
+        expect(user.save).to be true
+      end
     end
 
     context "invalid params" do
       let(:invalid_user) { build(:user) }
-
-      it "fails if password missing" do
-        invalid_user.password = nil
-        expect(invalid_user.save).to be false
-      end
 
       it "fails if password too short" do
         invalid_user.password = "han"
@@ -126,7 +137,8 @@ RSpec.describe User, type: :model do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
 
     context "user has std_slot with the specified meta_slot" do
-      let!(:std_slot) { create(:std_slot, meta_slot: meta_slot, owner: user) }
+      let!(:std_slot) {
+        create(:std_slot_private, meta_slot: meta_slot, owner: user) }
 
       it "returns std_slot" do
         expect(user.active_slots(meta_slot)).to include std_slot
@@ -160,7 +172,7 @@ RSpec.describe User, type: :model do
 
     context "user has deleted std_slot with the specified meta_slot" do
       let!(:std_slot) {
-        create(:std_slot, :deleted, meta_slot: meta_slot, owner: user)
+        create(:std_slot_private, :deleted, meta_slot: meta_slot, owner: user)
       }
       it "returns empty array" do
         expect(user.active_slots(meta_slot).empty?).to be true
@@ -168,8 +180,31 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :shared_group_slots do
+    let(:user) { create(:user) }
+    let(:bob) { create(:user) }
+
+    let!(:slot_1) { create(:group_slot) }
+    let!(:slot_2) { create(:group_slot) }
+    let!(:slot_3) { create(:group_slot) }
+
+    let!(:memberships) {
+      create(:membership, :active, group: slot_1.group, user: user)
+      create(:membership, :active, group: slot_1.group, user: bob)
+      create(:membership, :active, group: slot_2.group, user: user)
+      create(:membership, :active, group: slot_2.group, user: bob)
+      create(:membership, :active, group: slot_3.group, user: bob)
+    }
+
+    it "returns slots from common groups but not from other groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).to include slot_1
+      expect(result).not_to include slot_3
+    end
+  end
+
   describe :update_alerts do
-    let(:slot) { create(:std_slot, :friendslot, owner: user) }
+    let(:slot) { create(:std_slot_friends, owner: user) }
 
     describe "no existing SlotSetting" do
       it "returns the SlotSetting object" do
@@ -232,7 +267,7 @@ RSpec.describe User, type: :model do
 
   describe :alerts do
     context "private StdSlot" do
-      let(:std_slot) { create(:std_slot, owner: user) }
+      let(:std_slot) { create(:std_slot_private, owner: user) }
       before { user.update(default_private_alerts: '0000000010') }
 
       describe "existing default alert for user" do
@@ -254,7 +289,7 @@ RSpec.describe User, type: :model do
     end
 
     context "own friend StdSlot" do
-      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let(:std_slot) { create(:std_slot_friends, owner: user) }
       before { user.update(default_own_friendslot_alerts: '1010101010') }
 
       describe "existing default alert for user" do
@@ -315,7 +350,7 @@ RSpec.describe User, type: :model do
     end
 
     context "several slot representations" do
-      let(:std_slot) { create(:std_slot, :friendslot, owner: user) }
+      let(:std_slot) { create(:std_slot_friends, owner: user) }
       let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
       let!(:membership) {
         create(:membership, :active, group: group_slot.group, user: user) }
@@ -737,21 +772,37 @@ RSpec.describe User, type: :model do
   end
 
   describe "sign_in" do
-    let!(:user) { create(:user, password: 'timeslot') }
+    let(:user) { create(:user, :with_email, :with_password) }
 
-    context "valid params" do
+    context "with email" do
       it "returns the user" do
-        expect(User.sign_in(user.email, user.password)).to eq user
+        expect(
+          User.sign_in(email: user.email, password: user.password)
+        ).to eq user
+      end
+    end
+
+    context "with phone" do
+      let(:user) { create(:user, :with_phone, :with_password) }
+
+      it "returns the user" do
+        expect(
+          User.sign_in(phone: user.phone, password: user.password)
+        ).to eq user
       end
     end
 
     context "invalid params" do
       it "returns false if invalid password" do
-        expect(User.sign_in(user.email, 'marzipan')).to be false
+        expect(
+          User.sign_in(email: user.email, password: 'marzipan')
+        ).to be false
       end
 
       it "returns nil if invalid email" do
-        expect(User.sign_in('marzipan', user.password)).to be nil
+        expect(
+          User.sign_in(email: 'marzipan', password: user.password)
+        ).to be nil
       end
     end
   end
@@ -779,7 +830,7 @@ RSpec.describe User, type: :model do
   end
 
   describe "prepare_for_slot_deletion" do
-    let(:slot) { create(:std_slot, owner: user) }
+    let(:slot) { create(:std_slot_private, owner: user) }
     let!(:slot_setting) {
       create(:slot_setting, meta_slot: slot.meta_slot, user: user) }
 
@@ -791,7 +842,7 @@ RSpec.describe User, type: :model do
 
     describe "user has a representation of meta_slot" do
       let!(:std_slot) {
-        create(:std_slot, meta_slot: slot.meta_slot, owner: user) }
+        create(:std_slot_private, meta_slot: slot.meta_slot, owner: user) }
 
       it "doesn't set deleted_at" do
         user.prepare_for_slot_deletion slot

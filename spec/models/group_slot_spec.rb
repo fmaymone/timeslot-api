@@ -14,6 +14,7 @@ RSpec.describe GroupSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
+  it { is_expected.to respond_to(:slot_type) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:group).inverse_of(:group_slots) }
 
@@ -33,6 +34,24 @@ RSpec.describe GroupSlot, type: :model do
     end
   end
 
+  describe "create_slot" do
+    let!(:meta_slot) { create(:meta_slot) }
+    let!(:group) { create(:group) }
+
+    it "creates a new GroupSlotMembers" do
+      expect {
+        described_class.create_slot(meta_slot: meta_slot, group: group)
+      }.to change(GroupSlotMembers, :count).by 1
+    end
+
+    it "creates a new GroupSlotPublic" do
+      skip "I don't have public groups yet"
+      expect {
+        described_class.create_slot(meta_slot: meta_slot, group: group)
+      }.to change(GroupSlotPublic, :count).by 1
+    end
+  end
+
   describe :delete do
     let(:group) { create(:group) }
     let(:group_slot) { create(:group_slot, group: group) }
@@ -43,54 +62,6 @@ RSpec.describe GroupSlot, type: :model do
 
     it "notifies group about a change" do
       expect { group_slot.delete }.to change(group_slot.group, :updated_at)
-    end
-  end
-
-  describe "create_with_meta" do
-    let(:user) { create(:user) }
-    let(:meta_param) { attributes_for(:meta_slot) }
-    let(:group) { create(:group, owner: user) }
-    let(:note_param) {
-      [ActionController::Parameters.new(attributes_for(:note))] }
-    let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
-
-    it "creates a new GroupSlot" do
-      expect {
-        described_class.create_with_meta(meta: meta_param, group_id: group.id,
-                                         user: user)
-      }.to change(GroupSlot, :count).by 1
-    end
-
-    it "creates a new MetaSlot" do
-      expect {
-        described_class.create_with_meta(meta: meta_param, group_id: group.id,
-                                         user: user)
-      }.to change(MetaSlot, :count).by 1
-    end
-
-    it "creates a new Note" do
-      expect {
-        described_class.create_with_meta(meta: meta_param, group_id: group.id,
-                                         notes: note_param, user: user)
-      }.to change(Note, :count).by 1
-    end
-
-    it "creates a new SlotSetting" do
-      expect {
-        described_class.create_with_meta(meta: meta_param, group_id: group.id,
-                                         alerts: alert_param, user: user)
-      }.to change(SlotSetting, :count).by 1
-    end
-
-    context "existing metaslot" do
-      let!(:meta_param) { { 'meta_slot_id' => create(:meta_slot).id } }
-
-      it "doesn't create a new MetaSlot" do
-        expect {
-          described_class.create_with_meta(meta: meta_param, group_id: group.id,
-                                           user: user)
-        }.not_to change(MetaSlot, :count)
-      end
     end
   end
 end

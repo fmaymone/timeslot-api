@@ -1,16 +1,16 @@
 class User < ActiveRecord::Base
   include TS_Role
-  has_secure_password
+  has_secure_password validations: false
 
   # allows a user to be signed in after sign up
-  before_save :set_auth_token, if: 'self.password'
+  before_create :set_auth_token
   after_commit AuditLog
 
   ## associations ##
 
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
-          as: :mediable
+           as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: "creator_id", inverse_of: :creator
@@ -19,6 +19,14 @@ class User < ActiveRecord::Base
 
   # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
+
+  has_many :std_slots_private, class_name: StdSlotPrivate,
+           foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_friends, class_name: StdSlotFriends,
+           foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_public, class_name: StdSlotPublic,
+           foreign_key: :owner_id, inverse_of: :owner
+
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
   has_many :group_slots, through: :groups
 
@@ -45,17 +53,32 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # settings
+  # has_one :location
+  # has_one :slot_default_location, class_name: Location
+  # has_one :slot_default_type, class_name: SlotType
+
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
-  validates :email, presence: true, length: { maximum: 254 },
+  validates :email,
+            length: { maximum: 254 },
             uniqueness: { case_sensitive: false },
-            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" }
+            format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
+            allow_nil: true # if: 'self.email'
 
   # because bcrypt MAX_PASSWORD_LENGTH_ALLOWED = 72
-  validates :password, length: { minimum: 5, maximum: 72 }, if: "self.password"
+  validates :password, length: { minimum: 5, maximum: 72 }, allow_nil: true
+
+  validates_numericality_of :slot_default_duration,
+                            only_integer: true,
+                            allow_nil: true
+  validates :phone,
+            uniqueness: true,
+            length: { maximum: 35 },
+            allow_nil: true
 
   ## user specific ##
 
@@ -75,6 +98,24 @@ class User < ActiveRecord::Base
 
   def reset_password
     update(password: 'autechre')
+    set_auth_token
+  end
+
+  def connect_or_merge(identity_params, social_params)
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
+
+    if identity
+      msg = 'social account already connected to other timeslot account'
+      errors.add(:connect, msg) unless self == identity.user
+    else
+      identity = Connect.create(user: self,
+                                social_id: identity_params[:social_id],
+                                provider: identity_params[:provider],
+                                data: social_params)
+
+      errors.add(:connect, identity.errors) if identity.errors.any?
+    end
   end
 
   def inactivate
@@ -82,6 +123,7 @@ class User < ActiveRecord::Base
     # is still there
     # TODO: add spec
 
+    # set social connects to deleted
     # created_slots set creator to unknown /  deleted user
     # own_groups set creator to unknown /  deleted user
     # StdSlots
@@ -102,19 +144,17 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def active_slots(meta_slot)
+    # TODO
+    # std_slots.active + re_slots.active + group_slots.active
     slots = []
-    slots.push(*std_slots.active.where(meta_slot: meta_slot))
+    slots.push(*std_slots_private.active.where(meta_slot: meta_slot))
+    # slots.push(*StdSlot.active.of(self).where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end
 
-  # including deleted slots
-  def all_slots
-    slots = []
-    slots.push(*std_slots)
-    slots.push(*group_slots)
-    slots.push(*re_slots)
-    # TODO: add slots from friends
+  def shared_group_slots(user)
+    group_slots.merge(groups.where('groups.id IN (?)', user.groups.ids))
   end
 
   def prepare_for_slot_deletion(slot)
@@ -232,39 +272,50 @@ class User < ActiveRecord::Base
   ## private methods ##
 
   private def default_alert?(slot, alerts)
-    if slot.class == StdSlot
-      return alerts == default_private_alerts if slot.private?
-      return alerts == default_own_friendslot_alerts if slot.friendslot?
-      return alerts == default_own_public_alerts if slot.public?
-      # TODO: add friends friendslot
-      # TODO: add friends publicslot
-    elsif slot.class == GroupSlot
-      ms = memberships.find_by(group_id: slot.group.id)
-      default_membership_alerts = ms.try(:default_alerts)
-      return alerts == default_group_alerts if default_membership_alerts.nil?
-      return alerts == default_membership_alerts
-    elsif slot.class == ReSlot
-      return alerts == default_reslot_alerts
-    end
-    false
+    alerts == default_alert(slot)
   end
 
   private def default_alert(slot)
-    if slot.class == StdSlot
-      return default_private_alerts if slot.private?
-      return default_own_friendslot_alerts if slot.friendslot?
-      return default_own_public_alerts if slot.public?
-      # TODO: add friends friendslot
-      # TODO: add friends publicslot
-    elsif slot.class == GroupSlot
-      membership = memberships.find_by(group_id: slot.group.id)
-      if !membership.nil? && !membership.default_alerts.nil?
-        return membership.default_alerts
-      elsif !membership.nil?
-        return default_group_alerts
-      end
-    elsif slot.class == ReSlot
-      return default_reslot_alerts
+    case slot
+    when StdSlotPrivate
+      default_private_alerts
+    when StdSlotFriends
+      default_own_friendslot_alerts
+    when StdSlotPublic
+      default_own_public_alerts
+    # TODO: add friends friendslot
+    # TODO: add friends publicslot
+    when ReSlotFriends
+      default_reslot_alerts
+    when ReSlotPublic
+      default_reslot_alerts
+    when GroupSlotMembers
+      group_alert slot
+    when GroupSlotPublic
+      group_alert slot
+    when ReSlot
+      # TODO: change this
+      default_reslot_alerts
+    when GroupSlot
+      # TODO: change this
+      group_alert slot
+    when StdSlot
+      p 'std slot in alerts'
+      default_private_alerts
+    else
+      # TODO: Airbrake
+      p 'this should not happen'
+      fail
+    end
+  end
+
+  private def group_alert(slot)
+    membership = memberships.find_by(group_id: slot.group.id)
+
+    if membership.try(:default_alerts)
+      membership.default_alerts
+    elsif !membership.nil?
+      default_group_alerts
     end
   end
 
@@ -279,12 +330,14 @@ class User < ActiveRecord::Base
 
   private def multiple_representations(slot)
     representations = []
-    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_private.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_friends.where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots_public.where(meta_slot: slot.meta_slot))
     representations.push(*re_slots.where(meta_slot: slot.meta_slot))
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
-  private def set_auth_token
+  def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
 
@@ -299,8 +352,41 @@ class User < ActiveRecord::Base
     new_user
   end
 
-  def self.sign_in(email, password)
-    user = User.find_by email: email
+  def self.create_or_signin_via_social(identity_params, social_params)
+    identity = Connect.where(social_id: identity_params[:social_id],
+                             provider: identity_params[:provider]).take
+    # refresh auth_token here?
+    return identity.user if identity
+
+    user = detect_or_create(identity_params[:username], social_params[:email])
+    return user unless user.errors.empty?
+    user.set_auth_token # maybe only for new users but not for detected ones...?
+
+    identity = Connect.create(user: user,
+                              provider: identity_params[:provider],
+                              social_id: identity_params[:social_id],
+                              data: social_params)
+
+    user.errors.add(connect: identity.errors) if identity.errors.any?
+    user
+  end
+
+  # this is kind of a security issue. If you have a facebook account with a
+  # verified email and another user has used that email for timeslot, the user
+  # with the facebook account will get access to the other users account.
+  # It can be argued that one shouldn't use an email address which isn't his own
+  # The problem should vanish when we start using verified email addresses
+  def self.detect_or_create(username, email)
+    user = User.find_by email: email if email
+    user || User.create(username: username, email: email)
+  end
+
+  def self.sign_in(email: nil, phone: nil, password:)
+    if email
+      user = User.find_by email: email
+    elsif phone
+      user = User.find_by phone: phone
+    end
     current_user = user.try(:authenticate, password)
     current_user.update(auth_token: generate_auth_token) if current_user
     current_user
