@@ -213,13 +213,15 @@ resource "Users" do
 
       expect(response_status).to eq(200)
 
-      # the Content-Type should be 'application/json',
-      # but is 'application/x-www-form-urlencoded'
-      client.post "v1/users/signin", { email: user.email, password: 'autechre' }
-      user.reload
-      expect(status).to eq(200)
-      expect(json).to have_key "authToken"
-      expect(json['authToken']).to eq user.auth_token
+      no_doc do
+        # the Content-Type should be 'application/json',
+        # but is 'application/x-www-form-urlencoded'
+        client.post "v1/users/signin", { email: user.email, password: 'autechre' }
+        user.reload
+        expect(status).to eq(200)
+        expect(json).to have_key "authToken"
+        expect(json['authToken']).to eq user.auth_token
+      end
     end
   end
 
@@ -289,7 +291,7 @@ resource "Users" do
       let(:old_password) { "timeslot" }
 
       example "Update current user - update password", document: :v1 do
-        explanation "The valid old password needs to be send along" \
+        explanation "The valid old password needs to be send along\n\n" \
                     "returns 200 and the users data if the password was" \
                     " successfully updated"
         do_request
