@@ -277,7 +277,7 @@ module V1
     private def meta_params
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId)
       p.transform_keys!(&:underscore)
-      p.transform_keys(&:to_sym)
+      p.symbolize_keys
     end
 
     private def alerts_param
