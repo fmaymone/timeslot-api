@@ -27,10 +27,16 @@ gem 'rails_12factor', group: :production
 gem 'cloudinary'
 gem 'airbrake'
 
+# use pry also on heroku
+gem 'pry-rails'
+gem 'pry-byebug'
+
 group :development do
   gem 'spring'
 
-  gem 'pry-rails'
+  # gem 'pry-rails'
+
+  gem 'pry-doc'
 
   gem "rails-erd"
 
@@ -38,7 +44,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'pry-byebug'
+  # gem 'pry-byebug'
 
   gem 'spring-commands-rspec'
 

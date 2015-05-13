@@ -138,6 +138,9 @@ GEM
     pry-byebug (3.1.0)
       byebug (~> 4.0)
       pry (~> 0.10)
+    pry-doc (0.6.0)
+      pry (~> 0.9)
+      yard (~> 0.8)
     pry-rails (0.3.4)
       pry (>= 0.9.10)
     pundit (1.0.0)
@@ -245,6 +248,7 @@ GEM
     webmock (1.21.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
+    yard (0.8.7.6)
 
 PLATFORMS
   ruby
@@ -262,6 +266,7 @@ DEPENDENCIES
   oj_mimic_json
   pg
   pry-byebug
+  pry-doc
   pry-rails
   pundit
   railroady
