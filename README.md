@@ -1,8 +1,9 @@
 # TS RAILS BACKEND
 
 * [CHANGELOG](CHANGELOG.md)
-* [App-Specification](doc/app_specification.md)
 * [Api Endpoint Documentation](doc/api/index.markdown)
+* [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
+* [App-Specification](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-final-18.2.15.pdf)
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 
@@ -179,9 +180,7 @@ bin/rake generate_lean_erd
 bin/rake generate_adv_erd
 ```
 
-## Git & JIRA
-
-[Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
+## Git
 
 At the moment we use a mix of the GitFlow Workflow and the Forking Workflow.
 
