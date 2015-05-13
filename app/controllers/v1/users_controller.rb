@@ -187,7 +187,7 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password).transform_keys(&:to_sym)
+      params.permit(:email, :phone, :password).symbolize_keys
     end
   end
 end
