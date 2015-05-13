@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.1.4'
 
-gem 'rails', '4.1.4'
+gem 'rails', '4.2.1'
 
 gem 'rails-api'
 
@@ -54,7 +54,7 @@ group :development, :test do
 end
 
 group :development, :test, :herokutest do
-  gem 'rspec-rails', '~> 3.0.0'
+  gem 'rspec-rails', '~> 3.1.0'
 
   gem 'factory_girl_rails'
 

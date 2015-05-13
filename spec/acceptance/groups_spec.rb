@@ -619,6 +619,8 @@ resource "Groups" do
         # see: http://stackoverflow.com/questions/5170008/rails-validating-inclusion-of-a-boolean-fails-tests
         example "invalid boolean parameters evaluate to 'false'",
                 document: false do
+          skip 'documentation purpose'
+          # The following will change with Rails 5
           explanation "Every non-true value will be evaluated to false so" \
                       " there is no 'invalid' parameter.\n\n" \
                       "I leave this test here for documentation purposes."
