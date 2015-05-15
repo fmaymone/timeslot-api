@@ -4,7 +4,7 @@
 ###v0.2.0-alpha on t2s2-dev
 - using release tags on github for versioning
 - Rails 4.2, Gems updated
-
+- adding AWS SDK
 
 ###v0.1.0-alpha on t2s2-silvio-dev
 - signup/signin is possible with phone number instead of email

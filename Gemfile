@@ -26,6 +26,7 @@ gem 'rails_12factor', group: :production
 # third party services
 gem 'cloudinary'
 gem 'airbrake'
+gem 'aws-sdk', '~> 2'
 
 # use pry also on heroku
 gem 'pry-rails'

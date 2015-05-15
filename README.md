@@ -29,6 +29,20 @@ Using them usually requires setting some environment variables.
 This can be done via .env of with [another approach](http://stackoverflow.com/a/11765775/531439).
 The following env variables are expected:
 
+## AWS
+
+[Docs](http://docs.aws.amazon.com/sdkforruby/api/index.html)
+
+```bash
+ENV['AWS_ACCESS_KEY_ID']
+ENV['AWS_SECRET_ACCESS_KEY']
+ENV['AWS_REGION']
+```
+
+### We use the following services
+
+* [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
+
 ## Cloudinary
 
 Cloud Service for our Media Data.
