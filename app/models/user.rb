@@ -355,8 +355,10 @@ class User < ActiveRecord::Base
   def self.create_or_signin_via_social(identity_params, social_params)
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
-    # refresh auth_token here?
-    return identity.user if identity
+    if identity
+      identity.user.set_auth_token unless identity.user.auth_token
+      return identity.user
+    end
 
     user = detect_or_create(identity_params[:username], social_params[:email])
     return user unless user.errors.empty?
