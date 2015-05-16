@@ -33,7 +33,7 @@ Name : image
 Description : URL of the user image
 
 Name : authToken
-Description : Auth Token if user wasn&#39;t signed in
+Description : Auth Token
 
 ### Request
 

@@ -43,7 +43,7 @@ resource "Connects" do
     let(:token) { "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj" }
 
     context "signup/signin" do
-      response_field :authToken, "Auth Token (if user wasn't signed in)"
+      response_field :authToken, "Auth Token"
 
       context "sign up" do
         example "Sign up with facebook", document: :v1 do
@@ -140,9 +140,8 @@ resource "Connects" do
     let(:auth_token) { "3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV" }
     let(:auth_secret) { "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x" }
 
-
     context "signup/signin" do
-      response_field :authToken, "Auth Token for HTTP Header"
+      response_field :authToken, "Auth Token"
 
       context "sign up" do
         example "Sign up with twitter", document: :v1 do
