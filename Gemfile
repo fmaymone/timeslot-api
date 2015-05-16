@@ -35,6 +35,12 @@ group :development do
   gem "rails-erd"
 
   gem "railroady"
+
+  gem "rails_best_practices"
+
+  gem "rubocop"
+
+  gem "rubocop-rspec"
 end
 
 group :development, :test do

@@ -58,6 +58,7 @@ RSpec.describe "V1::Connects", type: :request do
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
       end
 
       context "invalid data" do
@@ -95,8 +96,9 @@ RSpec.describe "V1::Connects", type: :request do
     end
 
     context "existing user and identity (social sign in)" do
+      let!(:user) { create(:user) }
       let!(:identity) {
-        create(:connect, user: create(:user), social_id: payload['socialId']) }
+        create(:connect, user: user, social_id: payload['socialId']) }
 
       it "returns success" do
         post "/v1/fb-connect", payload
@@ -118,6 +120,14 @@ RSpec.describe "V1::Connects", type: :request do
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
+      end
+
+      it "creates an auth token if non exists" do
+        user.update(auth_token: nil)
+        post "/v1/fb-connect", payload
+        expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
       end
     end
 

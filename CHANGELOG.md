@@ -6,6 +6,7 @@
 - upgrade Ruby to 2.1.6
 - upgrade Rails to 4.2
 - update all Gems
+- fix BKD-160 create auth token on social signin if none exists
 
 
 ###v0.1.0-alpha on t2s2-silvio-dev

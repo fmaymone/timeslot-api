@@ -63,9 +63,6 @@ Description : Username of the user
 Name : email
 Description : Email of the user
 
-Name : authToken
-Description : Auth Token (if user wasn&#39;t signed in)
-
 ### Request
 
 #### Headers
