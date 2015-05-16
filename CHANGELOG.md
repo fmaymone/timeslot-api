@@ -1,9 +1,11 @@
 #Changelog
 
 
-###v0.2.0-alpha on t2s2-dev
+###v0.1.1-alpha on t2s2-silvio-dev
 - using release tags on github for versioning
-- Rails 4.2, Gems updated
+- upgrade Ruby to 2.1.6
+- upgrade Rails to 4.2
+- update all Gems
 
 
 ###v0.1.0-alpha on t2s2-silvio-dev
