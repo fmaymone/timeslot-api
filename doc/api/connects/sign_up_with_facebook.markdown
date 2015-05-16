@@ -4,7 +4,9 @@
 
 ### POST /v1/fb-connect
 
-returns 200 and an authTokenreturns 422 if facebook email already used by other user
+returns 200 and an authToken
+
+returns 422 if facebook email already used by other user
 
 ### Parameters
 
@@ -60,7 +62,7 @@ Name : email
 Description : Email of the user
 
 Name : authToken
-Description : Auth Token (if user wasn&#39;t signed in)
+Description : Auth Token
 
 ### Request
 

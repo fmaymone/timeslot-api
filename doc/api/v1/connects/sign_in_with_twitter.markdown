@@ -35,7 +35,7 @@ Name : image
 Description : URL of the user image
 
 Name : authToken
-Description : Auth Token if user wasn&#39;t signed in
+Description : Auth Token
 
 ### Request
 
@@ -74,10 +74,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;5e344df79491df44eecc6640b09fe980&quot;
+ETag: W/&quot;6b7574d3bb7a36867b79e8f428e72008&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f3088ccc-f84b-450c-8845-bf0053b6fc8a
-X-Runtime: 0.013221
+X-Request-Id: b9ab65cd-46f7-4468-9104-25573fc1317b
+X-Runtime: 0.007847
 Content-Length: 91</pre>
 
 #### Status
@@ -91,6 +91,6 @@ Content-Length: 91</pre>
   "id" : 51,
   "username" : "alexandrospar",
   "email" : null,
-  "authToken" : "gfaGaHlONBsA73eV5NuQZU2ICMg"
+  "authToken" : "-Zk_pWs69G9U5H1LeatXLBv5BIU"
 }
 ```

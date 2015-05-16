@@ -34,15 +34,12 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : authToken
-Description : Auth Token if user wasn&#39;t signed in
-
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=w9tTOqMyQlJW4Jpe-nHxNORE6b0
+Authorization: Token token=cTNIU1DoxN4aQyOBCZQl3ol2BbI
 Host: example.org
 Cookie: </pre>
 
@@ -65,7 +62,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=w9tTOqMyQlJW4Jpe-nHxNORE6b0&quot; \
+	-H &quot;Authorization: Token token=cTNIU1DoxN4aQyOBCZQl3ol2BbI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,10 +73,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;485c4c29e39405deaf449e0761d235ad&quot;
+ETag: W/&quot;93ab0d6d16bd58be6360958b99dfb55a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5dd41970-c547-4006-a73d-c145b96788fc
-X-Runtime: 0.023194
+X-Request-Id: 93c83284-a4b5-4262-95ff-7793a2dc7fc6
+X-Runtime: 0.022306
 Content-Length: 691</pre>
 
 #### Status
@@ -108,8 +105,8 @@ Content-Length: 691</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-11T14:48:20.763Z",
-  "updatedAt" : "2015-05-11T14:48:20.763Z",
+  "createdAt" : "2015-05-16T04:02:50.450Z",
+  "updatedAt" : "2015-05-16T04:02:50.450Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],

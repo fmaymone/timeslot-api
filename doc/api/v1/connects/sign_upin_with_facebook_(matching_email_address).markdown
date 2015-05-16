@@ -60,7 +60,7 @@ Name : email
 Description : Email of the user
 
 Name : authToken
-Description : Auth Token (if user wasn&#39;t signed in)
+Description : Auth Token
 
 ### Request
 
@@ -108,10 +108,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;91b7b19d32fe030004a95fbb031e1cfe&quot;
+ETag: W/&quot;db31224584cb66da861ddf200f8fffe6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e07197b4-a967-4658-9556-8e521554171f
-X-Runtime: 0.007060
+X-Request-Id: 067c1bda-bda1-476c-8bf7-f211a01cd8b6
+X-Runtime: 0.007327
 Content-Length: 100</pre>
 
 #### Status
@@ -125,6 +125,6 @@ Content-Length: 100</pre>
   "id" : 44,
   "username" : "User 43",
   "email" : "alexpar@gmail.com",
-  "authToken" : "7tDub7ljhxdAYQbtfp1A-ssN7Cc"
+  "authToken" : "bzwYjZgNRCYs9qmvexSvBJoU1lA"
 }
 ```

@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.4'
+ruby '2.1.6'
 
 gem 'rails', '4.2.1'
 
@@ -35,6 +35,12 @@ group :development do
   gem "rails-erd"
 
   gem "railroady"
+
+  gem "rails_best_practices"
+
+  gem "rubocop"
+
+  gem "rubocop-rspec"
 end
 
 group :development, :test do

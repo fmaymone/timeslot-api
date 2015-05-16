@@ -4,7 +4,9 @@
 
 ### POST /v1/fb-connect
 
-returns 200 and an authTokenreturns 422 if facebook email already used by other user
+returns 200 and an authToken
+
+returns 422 if facebook email already used by other user
 
 ### Parameters
 
@@ -60,7 +62,7 @@ Name : email
 Description : Email of the user
 
 Name : authToken
-Description : Auth Token (if user wasn&#39;t signed in)
+Description : Auth Token
 
 ### Request
 
@@ -108,10 +110,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;e8e68574025778e0369d6cd37480c72c&quot;
+ETag: W/&quot;4eb4a5b6e348358c139054d9005b4ab6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2f763ee8-e670-496c-a247-2e640e436937
-X-Runtime: 0.035952
+X-Request-Id: 5c827d71-4642-4af5-8903-789d2e319e4f
+X-Runtime: 0.036080
 Content-Length: 106</pre>
 
 #### Status
@@ -125,6 +127,6 @@ Content-Length: 106</pre>
   "id" : 43,
   "username" : "Silvi O Ivlis",
   "email" : "alexpar@gmail.com",
-  "authToken" : "hh8X_tWSGeRfOyVcOdrQNXw0UVA"
+  "authToken" : "1HV6HgRkN2z4ZmM-1fn8QA4lEwA"
 }
 ```
