@@ -1,4 +1,9 @@
+require 'custom_formatter'
+
 Rails.application.configure do
+  # allow outgoing http connections
+  WebMock.disable!
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -21,6 +26,7 @@ Rails.application.configure do
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
+  config.active_record.raise_in_transactional_callbacks = true
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
@@ -34,4 +40,10 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # Use custom logging formatter.
+  config.log_formatter = Logging::CustomFormatter.new
+
+  # print SQL to console
+  ActiveRecord::Base.logger = ActiveSupport::Logger.new(STDOUT)
 end
