@@ -58,6 +58,7 @@ RSpec.describe "V1::Connects", type: :request do
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
       end
 
       context "invalid data" do
@@ -69,34 +70,69 @@ RSpec.describe "V1::Connects", type: :request do
     end
 
     context "existing user without existing identity (matching email)", :seed do
-      let!(:user) { create(:user, :with_email) }
+      context "non-verified email address" do
+        let!(:user) { create(:user, :with_email, email_verified: false) }
 
-      it "returns success" do
-        post "/v1/fb-connect", payload.merge(email: user.email)
-        expect(response.status).to be(200)
-      end
-
-      it "doesn't create a new user model" do
-        expect {
+        it "returns unprocessable entity" do
           post "/v1/fb-connect", payload.merge(email: user.email)
-        }.not_to change(User, :count)
-      end
+          expect(response.status).to be(422)
+        end
 
-      it "creates a new connect model" do
-        expect {
+        it "returns an error" do
           post "/v1/fb-connect", payload.merge(email: user.email)
-        }.to change(Connect, :count).by 1
+          expect(json).to have_key 'error'
+        end
+
+        it "doesn't create a new user model" do
+          expect {
+            post "/v1/fb-connect", payload.merge(email: user.email)
+          }.not_to change(User, :count)
+        end
+
+        it "doesn't create a new connect model" do
+          expect {
+            post "/v1/fb-connect", payload.merge(email: user.email)
+          }.not_to change(Connect, :count)
+        end
+
+        it "doesn't return an auth token" do
+          post "/v1/fb-connect", payload.merge(email: user.email)
+          expect(json).not_to have_key 'authToken'
+        end
       end
 
-      it "returns an auth token" do
-        post "/v1/fb-connect", payload.merge(email: user.email)
-        expect(json).to have_key 'authToken'
+      context "verified email address" do
+        let!(:user) { create(:user, :with_email, email_verified: true) }
+
+        it "returns success" do
+          post "/v1/fb-connect", payload.merge(email: user.email)
+          expect(response.status).to be(200)
+        end
+
+        it "doesn't create a new user model" do
+          expect {
+            post "/v1/fb-connect", payload.merge(email: user.email)
+          }.not_to change(User, :count)
+        end
+
+        it "creates a new connect model" do
+          expect {
+            post "/v1/fb-connect", payload.merge(email: user.email)
+          }.to change(Connect, :count).by 1
+        end
+
+        it "returns an auth token" do
+          post "/v1/fb-connect", payload.merge(email: user.email)
+          expect(json).to have_key 'authToken'
+          expect(json['authToken']).to eq user.auth_token
+        end
       end
     end
 
     context "existing user and identity (social sign in)" do
+      let!(:user) { create(:user) }
       let!(:identity) {
-        create(:connect, user: create(:user), social_id: payload['socialId']) }
+        create(:connect, user: user, social_id: payload['socialId']) }
 
       it "returns success" do
         post "/v1/fb-connect", payload
@@ -118,6 +154,14 @@ RSpec.describe "V1::Connects", type: :request do
       it "returns an auth token" do
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
+      end
+
+      it "creates an auth token if non exists" do
+        user.update(auth_token: nil)
+        post "/v1/fb-connect", payload
+        expect(json).to have_key 'authToken'
+        expect(json['authToken']).not_to be nil
       end
     end
 
@@ -148,6 +192,12 @@ RSpec.describe "V1::Connects", type: :request do
       it "doesn't return an auth token" do
         post "/v1/fb-connect", payload, auth_header
         expect(response.body).not_to include 'authToken'
+      end
+
+      it "returns 422 if email address already used by other timeslot user" do
+        create(:user, email: payload['email'])
+        post "/v1/fb-connect", payload, auth_header
+        expect(response).to have_http_status 422
       end
     end
 

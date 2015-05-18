@@ -27,7 +27,6 @@ resource "Connects" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :email, "Email of the user"
-    response_field :authToken, "Auth Token (if user wasn't signed in)"
 
     let(:socialId) { 10152854206708061 }
     let(:username) { "Silvi O Ivlis" }
@@ -43,44 +42,52 @@ resource "Connects" do
     let(:email) { "alexpar@gmail.com" }
     let(:token) { "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj" }
 
-    context "sign up" do
-      example "Sign up with facebook", document: :v1 do
-        explanation "returns 200 and an authToken" \
-                    "returns 422 if facebook email already used by other user"
-        do_request
+    context "signup/signin" do
+      response_field :authToken, "Auth Token"
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key 'authToken'
+      context "sign up" do
+        example "Sign up with facebook", document: :v1 do
+          explanation "returns 200 and an authToken\n\n" \
+                      "returns 422 if facebook email already used by other user"
+          do_request
+
+          expect(response_status).to eq(200)
+          expect(json).to have_key 'authToken'
+        end
       end
-    end
 
-    context "sign up/in (matching email)" do
-      let!(:user) { create(:user, email: email) }
+      context "sign up/in (matching email)" do
+        let!(:user) { create(:user, email: email, email_verified: true) }
 
-      example "Sign up/in with facebook (matching email address)",
-              document: :v1 do
-        explanation "returns 200 and signs the user with the matching " \
-                    "email address in (we assume he is the legit owner of " \
-                    "the existing timeslot account)"
-        do_request
+        example "Sign up/in with facebook (matching email address)",
+                document: :v1 do
+          explanation "returns 200 and signs the user with the matching " \
+                      "email address in if the email on timeslot is verified " \
+                      "(we assume he is the legit owner of the existing" \
+                      "timeslot account)\n\n" \
+                      "returns 422 if the email is used by other timeslot " \
+                      "user but is not verified (We don't have better idea " \
+                      "or specification yet)"
+          do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key 'authToken'
+          expect(response_status).to eq(200)
+          expect(json).to have_key 'authToken'
+        end
       end
-    end
 
-    context "sign in" do
-      let(:user) { create(:user) }
-      let!(:identity) {
-        create(:connect, user: user, social_id: socialId) }
+      context "sign in" do
+        let(:user) { create(:user) }
+        let!(:identity) {
+          create(:connect, user: user, social_id: socialId) }
 
-      example "Sign in with facebook", document: :v1 do
-        explanation "Existing connection to the submitted facebook account\n\n" \
-                    "returns 200 and an authToken"
-        do_request
+        example "Sign in with facebook", document: :v1 do
+          explanation "Existing connection to the submitted facebook account\n\n" \
+                      "returns 200 and an authToken"
+          do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key 'authToken'
+          expect(response_status).to eq(200)
+          expect(json).to have_key 'authToken'
+        end
       end
     end
 
@@ -131,35 +138,38 @@ resource "Connects" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
-    response_field :authToken, "Auth Token if user wasn't signed in"
 
     let(:socialId) { 3186786310 }
     let(:username) { "alexandrospar" }
     let(:auth_token) { "3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV" }
     let(:auth_secret) { "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x" }
 
-    context "sign up" do
-      example "Sign up with twitter", document: :v1 do
-        explanation "returns 200 and an authToken"
-        do_request
+    context "signup/signin" do
+      response_field :authToken, "Auth Token"
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key 'authToken'
+      context "sign up" do
+        example "Sign up with twitter", document: :v1 do
+          explanation "returns 200 and an authToken"
+          do_request
+
+          expect(response_status).to eq(200)
+          expect(json).to have_key 'authToken'
+        end
       end
-    end
 
-    context "sign in" do
-      let(:user) { create(:user) }
-      let!(:identity) {
-        create(:connect, user: user, social_id: socialId) }
+      context "sign in" do
+        let(:user) { create(:user) }
+        let!(:identity) {
+          create(:connect, user: user, social_id: socialId) }
 
-      example "Sign in with twitter", document: :v1 do
-        explanation "Existing connection to the submitted twitter account\n\n" \
-                    "returns 200 and an authToken"
-        do_request
+        example "Sign in with twitter", document: :v1 do
+          explanation "Existing connection to the submitted twitter account\n\n" \
+                      "returns 200 and an authToken"
+          do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key 'authToken'
+          expect(response_status).to eq(200)
+          expect(json).to have_key 'authToken'
+        end
       end
     end
 
