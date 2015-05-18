@@ -1,6 +1,16 @@
 #Changelog
 
 
+###v0.1.3-alpha on t2s2-
+Social Connect:
+- don't recreate existing authToken when user matched by facebook email
+- only match facebook email if timeslot email is verified (until now no email
+address is verified so basically there is no matching)
+- if an unverified timeslot email matches an error is returned
+- return error if user tries to connect facebook account with email which is
+already used by another timeslot user (no matter the verified state)
+
+
 ###v0.1.2-alpha on t2s2-dev
 - using release tags on github for versioning
 - upgrade Ruby to 2.1.6

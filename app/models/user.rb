@@ -105,9 +105,14 @@ class User < ActiveRecord::Base
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
 
+    user = User.find_by email: social_params[:email] if social_params[:email]
+
     if identity
       msg = 'social account already connected to other timeslot account'
       errors.add(:connect, msg) unless self == identity.user
+    elsif user && self != user
+      msg = 'social email already used by other timeslot account'
+      errors.add(:connect, msg)
     else
       identity = Connect.create(user: self,
                                 social_id: identity_params[:social_id],
@@ -116,6 +121,10 @@ class User < ActiveRecord::Base
 
       errors.add(:connect, identity.errors) if identity.errors.any?
     end
+  end
+
+  def set_auth_token
+    self.auth_token = self.class.generate_auth_token
   end
 
   def inactivate
@@ -303,9 +312,9 @@ class User < ActiveRecord::Base
       p 'std slot in alerts'
       default_private_alerts
     else
-      # TODO: Airbrake
-      p 'this should not happen'
-      fail
+      msg = "unknown slottype #{slot} for user #{self}"
+      Airbrake.notify(msg)
+      fail ActiveRecord::StatementInvalid, msg
     end
   end
 
@@ -337,10 +346,6 @@ class User < ActiveRecord::Base
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
 
-  def set_auth_token
-    self.auth_token = self.class.generate_auth_token
-  end
-
   ## class methods ##
 
   # technically this is not neccessary bc it's not possible to set an image on
@@ -362,7 +367,7 @@ class User < ActiveRecord::Base
 
     user = detect_or_create(identity_params[:username], social_params[:email])
     return user unless user.errors.empty?
-    user.set_auth_token # maybe only for new users but not for detected ones...?
+    user.set_auth_token unless user.auth_token
 
     identity = Connect.create(user: user,
                               provider: identity_params[:provider],
@@ -373,13 +378,17 @@ class User < ActiveRecord::Base
     user
   end
 
-  # this is kind of a security issue. If you have a facebook account with a
-  # verified email and another user has used that email for timeslot, the user
-  # with the facebook account will get access to the other users account.
-  # It can be argued that one shouldn't use an email address which isn't his own
-  # The problem should vanish when we start using verified email addresses
+  # Issue to be decided upon later but for now we keep this behaviour:
+  # If there is a timeslot account with an unverified email address and another
+  # user tries to log in with facebook and has this email verified in facebook,
+  # the other user can not log in via facebook (gets 422)
   def self.detect_or_create(username, email)
     user = User.find_by email: email if email
+    if user
+      msg = "#{email} is already used by other timeslot user (unverified email)"
+      Airbrake.notify(msg)
+      fail ActiveRecord::StatementInvalid, msg unless user.email_verified
+    end
     user || User.create(username: username, email: email)
   end
 
