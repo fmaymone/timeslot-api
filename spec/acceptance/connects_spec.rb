@@ -57,13 +57,17 @@ resource "Connects" do
       end
 
       context "sign up/in (matching email)" do
-        let!(:user) { create(:user, email: email) }
+        let!(:user) { create(:user, email: email, email_verified: true) }
 
         example "Sign up/in with facebook (matching email address)",
                 document: :v1 do
           explanation "returns 200 and signs the user with the matching " \
-                      "email address in (we assume he is the legit owner of " \
-                      "the existing timeslot account)"
+                      "email address in if the email on timeslot is verified " \
+                      "(we assume he is the legit owner of the existing" \
+                      "timeslot account)\n\n" \
+                      "returns 422 if the email is used by other timeslot " \
+                      "user but is not verified (We don't have better idea " \
+                      "or specification yet)"
           do_request
 
           expect(response_status).to eq(200)
