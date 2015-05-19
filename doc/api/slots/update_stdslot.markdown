@@ -39,7 +39,7 @@ Description : Visibility of slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=uAno9yjHVCVkEP8anrF2EdShEO0
+Authorization: Token token=-z6EOfF4jepi--sN9ZILhst69Nc
 Host: example.org
 Cookie: </pre>
 
@@ -59,7 +59,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/32&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=uAno9yjHVCVkEP8anrF2EdShEO0&quot; \
+	-H &quot;Authorization: Token token=-z6EOfF4jepi--sN9ZILhst69Nc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -70,10 +70,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;c7764fabf55a1d5b7b93a5f8f393503a&quot;
+ETag: W/&quot;b748fd48bdc851c28c3270aaa103682e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2b0d9464-2217-4f7b-8bdd-0a4a85e1cf9e
-X-Runtime: 0.036140
+X-Request-Id: a9f8d865-98a8-417e-ac9e-422e7f0d4560
+X-Runtime: 0.030776
 Content-Length: 516</pre>
 
 #### Status
@@ -86,18 +86,18 @@ Content-Length: 516</pre>
 {
   "id" : 32,
   "title" : "New title for a Slot",
-  "createdAt" : "2015-05-06T21:29:33.432Z",
-  "updatedAt" : "2015-05-06T21:29:33.432Z",
+  "createdAt" : "2015-05-19T10:51:50.855Z",
+  "updatedAt" : "2015-05-19T10:51:50.855Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-04T06:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 153,
-    "username" : "User 153",
-    "createdAt" : "2015-05-06T21:29:33.430Z",
-    "updatedAt" : "2015-05-06T21:29:33.430Z",
+    "id" : 163,
+    "username" : "User 160",
+    "createdAt" : "2015-05-19T10:51:50.853Z",
+    "updatedAt" : "2015-05-19T10:51:50.853Z",
     "deletedAt" : null
   },
   "settings" : {

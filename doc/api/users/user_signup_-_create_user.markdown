@@ -1,6 +1,6 @@
 # Users API
 
-## User signup / Create user
+## User signup - Create user
 
 ### POST /v1/users
 
@@ -146,10 +146,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6775009dcdab7f0e18c510951150eda1&quot;
+ETag: W/&quot;2d5c6952b4202c355855534d371dcf0d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d7a7788b-4bc0-4e13-a7a1-9c35404401c6
-X-Runtime: 0.010689
+X-Request-Id: 86beb87a-e994-454a-bb57-3e3b25249312
+X-Runtime: 0.010469
 Content-Length: 695</pre>
 
 #### Status
@@ -179,11 +179,11 @@ Content-Length: 695</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:34:28.607Z",
-  "updatedAt" : "2015-05-19T10:34:28.607Z",
+  "createdAt" : "2015-05-19T10:51:52.094Z",
+  "updatedAt" : "2015-05-19T10:51:52.094Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "ZGr-4HBjOG-VOrEtC7jMkLMxUms"
+  "authToken" : "brebJHuHV44e3XcZzr5qtX-CrxA"
 }
 ```

@@ -156,7 +156,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=3Yi4cNSyMhYbaY7tMqmaa0FUjuE
+Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc
 Host: example.org
 Cookie: </pre>
 
@@ -177,7 +177,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=3Yi4cNSyMhYbaY7tMqmaa0FUjuE&quot; \
+	-H &quot;Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -188,10 +188,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;89bbeea9f7c0a37a35a8cdb4ecc4a64f&quot;
+ETag: W/&quot;e8b4b6a003e5916b5c124ede4b45120f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c0647359-55eb-4c97-b7ea-355c5e101754
-X-Runtime: 0.021423
+X-Request-Id: 435f81e6-ae70-4ede-b90f-519faa03688f
+X-Runtime: 0.018583
 Content-Length: 709</pre>
 
 #### Status
@@ -221,8 +221,8 @@ Content-Length: 709</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:34:28.689Z",
-  "updatedAt" : "2015-05-19T10:34:28.699Z",
+  "createdAt" : "2015-05-19T10:51:52.181Z",
+  "updatedAt" : "2015-05-19T10:51:52.188Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],

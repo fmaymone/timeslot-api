@@ -66,19 +66,19 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Muu27Ftm711ry8Q6a6i1MsZyVZM
+Authorization: Token token=NdYZqfU78GddfWoOGM8d_djMMlk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/246/slots</pre>
+<pre>GET /v1/users/259/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/246/slots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:3000/v1/users/259/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Muu27Ftm711ry8Q6a6i1MsZyVZM&quot; \
+	-H &quot;Authorization: Token token=NdYZqfU78GddfWoOGM8d_djMMlk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;9eca3ad7f6ba979df10522b590ef96cc&quot;
+ETag: W/&quot;96aff3752ea9ef33bd75a830b522a8ca&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 518f9d8a-9cd7-4671-85ed-3fca7cd0c4cc
-X-Runtime: 0.080832
+X-Request-Id: 5be45b67-6146-4d6a-9697-91d68e3ba8b1
+X-Runtime: 0.063002
 Content-Length: 1242</pre>
 
 #### Status
@@ -107,8 +107,8 @@ Content-Length: 1242</pre>
     "id" : 76,
     "title" : "Slot title 68",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:40.364Z",
-    "updatedAt" : "2015-05-06T21:29:40.364Z",
+    "createdAt" : "2015-05-19T10:51:52.685Z",
+    "updatedAt" : "2015-05-19T10:51:52.685Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-15T20:44:02.000Z",
@@ -123,14 +123,14 @@ Content-Length: 1242</pre>
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/76",
-    "creatorId" : 249
+    "creatorId" : 262
   },
   {
     "id" : 78,
     "title" : "Slot title 70",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:40.375Z",
-    "updatedAt" : "2015-05-06T21:29:40.387Z",
+    "createdAt" : "2015-05-19T10:51:52.695Z",
+    "updatedAt" : "2015-05-19T10:51:52.712Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-17T22:44:02.000Z",
@@ -145,14 +145,14 @@ Content-Length: 1242</pre>
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/78",
-    "creatorId" : 252
+    "creatorId" : 265
   },
   {
     "id" : 80,
     "title" : "Slot title 72",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:40.402Z",
-    "updatedAt" : "2015-05-06T21:29:40.402Z",
+    "createdAt" : "2015-05-19T10:51:52.725Z",
+    "updatedAt" : "2015-05-19T10:51:52.725Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-19T00:44:02.000Z",
@@ -168,7 +168,7 @@ Content-Length: 1242</pre>
     "videos" : [],
     "groupId" : 48,
     "url" : "http://example.org/v1/slots/80",
-    "creatorId" : 255
+    "creatorId" : 268
   }
 ]
 ```

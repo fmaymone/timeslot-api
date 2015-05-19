@@ -23,7 +23,7 @@ Description : ID of the group
 
 #### Headers
 
-<pre>Authorization: Token token=yXhQitPrSxEKjnOLQcUVk35ozlI
+<pre>Authorization: Token token=tBvLKowNAPSIzqNlDCPOR2FRJBI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -35,7 +35,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/26/members&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=yXhQitPrSxEKjnOLQcUVk35ozlI&quot; \
+	-H &quot;Authorization: Token token=tBvLKowNAPSIzqNlDCPOR2FRJBI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -48,8 +48,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: a983f136-49eb-4aad-9798-8e54a76c801a
-X-Runtime: 0.008249
+X-Request-Id: 49b2ce2e-8d14-4ef8-8bd1-c287c06b4b6a
+X-Runtime: 0.008266
 Content-Length: 0</pre>
 
 #### Status

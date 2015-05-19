@@ -27,7 +27,7 @@ Must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=iWI89xHgjPvCBuLHMc-PXMDmRbU
+Authorization: Token token=RMbOaT2kIf5PqxD93Me-LGU1aek
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/53/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:45}]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=iWI89xHgjPvCBuLHMc-PXMDmRbU&quot; \
+	-H &quot;Authorization: Token token=RMbOaT2kIf5PqxD93Me-LGU1aek&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -67,8 +67,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: c72b9d34-6c0a-4ba2-a7aa-7e8a0905ad54
-X-Runtime: 0.036606
+X-Request-Id: 2cb25ba4-fa98-4444-bde2-00d3c5dfc1c1
+X-Runtime: 0.090602
 Content-Length: 0</pre>
 
 #### Status

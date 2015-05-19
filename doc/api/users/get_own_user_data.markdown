@@ -28,8 +28,8 @@ Description : URL of the user image
 Name : locationId
 Description : Home location of user
 
-Name : push
-Description : Send push Notifications (true/false)
+Name : locationName
+Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -99,7 +99,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=HgL0r0_Z6I5ZiggS2Rfe0vLBs3Y
+Authorization: Token token=qiZOoFQvdvMklggHphRtKOhooq8
 Host: example.org
 Cookie: </pre>
 
@@ -111,7 +111,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/221&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=HgL0r0_Z6I5ZiggS2Rfe0vLBs3Y&quot; \
+	-H &quot;Authorization: Token token=qiZOoFQvdvMklggHphRtKOhooq8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,11 +122,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;be6aff2e2367551d28ee9cb5c587e145&quot;
+ETag: W/&quot;f68ed1fc5102b4ce8bbd809eaae4c7bc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: aa9a960b-5e42-4e3d-af74-6f6b251c4dca
-X-Runtime: 0.020460
-Content-Length: 694</pre>
+X-Request-Id: bc2e8079-5e9f-4577-b5d8-18bf6191b270
+X-Runtime: 0.019344
+Content-Length: 714</pre>
 
 #### Status
 
@@ -144,6 +144,7 @@ Content-Length: 694</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "locationId" : null,
+  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -154,8 +155,8 @@ Content-Length: 694</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-11T14:39:14.204Z",
-  "updatedAt" : "2015-05-11T14:39:14.204Z",
+  "createdAt" : "2015-05-19T10:51:52.034Z",
+  "updatedAt" : "2015-05-19T10:51:52.034Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],

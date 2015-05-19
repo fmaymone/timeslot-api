@@ -28,8 +28,8 @@ Description : URL of the user image
 Name : locationId
 Description : Home location of user
 
-Name : push
-Description : Send push Notifications (true/false)
+Name : locationName
+Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -54,7 +54,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=fe4NvUnwbgshPVa8dRkFwyQrxfE
+Authorization: Token token=dEuoAkA_WKejBGQchFf2i_d8Vfo
 Host: example.org
 Cookie: </pre>
 
@@ -66,7 +66,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/users/222&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=fe4NvUnwbgshPVa8dRkFwyQrxfE&quot; \
+	-H &quot;Authorization: Token token=dEuoAkA_WKejBGQchFf2i_d8Vfo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -77,11 +77,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;48b4a073c4b8fc18bfcdf1f76fb70ca6&quot;
+ETag: W/&quot;beb60ffd4257f680baa7a7b59abdb7ee&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9a2ae98b-7d37-4892-90f0-b9c3b3d47c51
-X-Runtime: 0.010805
-Content-Length: 205</pre>
+X-Request-Id: b4680ea3-129d-4232-8b6a-e1828eb1f556
+X-Runtime: 0.014205
+Content-Length: 225</pre>
 
 #### Status
 
@@ -94,8 +94,9 @@ Content-Length: 205</pre>
   "id" : 222,
   "username" : "User 219",
   "locationId" : null,
-  "createdAt" : "2015-05-11T14:39:14.232Z",
-  "updatedAt" : "2015-05-11T14:39:14.232Z",
+  "locationName" : null,
+  "createdAt" : "2015-05-19T10:51:52.062Z",
+  "updatedAt" : "2015-05-19T10:51:52.062Z",
   "deletedAt" : null,
   "image" : null,
   "slotCount" : 0,
