@@ -110,11 +110,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;e8e68574025778e0369d6cd37480c72c&quot;
+ETag: W/&quot;364db154de7f157ddb7acfaf0b8d235f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2f763ee8-e670-496c-a247-2e640e436937
-X-Runtime: 0.035952
-Content-Length: 106</pre>
+X-Request-Id: d475dee4-5ea9-4b4b-9f58-76245c1dd1aa
+X-Runtime: 0.056614
+Content-Length: 701</pre>
 
 #### Status
 
@@ -127,6 +127,27 @@ Content-Length: 106</pre>
   "id" : 43,
   "username" : "Silvi O Ivlis",
   "email" : "alexpar@gmail.com",
-  "authToken" : "hh8X_tWSGeRfOyVcOdrQNXw0UVA"
+  "emailVerified" : false,
+  "phone" : null,
+  "phoneVerified" : false,
+  "publicUrl" : null,
+  "locationId" : null,
+  "locationName" : null,
+  "slotDefaultDuration" : null,
+  "slotDefaultLocationId" : null,
+  "slotDefaultTypeId" : null,
+  "defaultPrivateAlerts" : "0000000000",
+  "defaultOwnFriendslotAlerts" : "0000000000",
+  "defaultOwnPublicAlerts" : "0000000000",
+  "defaultFriendsFriendslotAlerts" : "0000000000",
+  "defaultFriendsPublicAlerts" : "0000000000",
+  "defaultReslotAlerts" : "0000000000",
+  "defaultGroupAlerts" : "0000000000",
+  "createdAt" : "2015-05-19T10:34:25.267Z",
+  "updatedAt" : "2015-05-19T10:34:25.267Z",
+  "deletedAt" : null,
+  "friendships" : [],
+  "memberships" : [],
+  "authToken" : "gPhUKtLMvS7BQ75rM3Umj8LRFJ0"
 }
 ```

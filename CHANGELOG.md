@@ -5,6 +5,7 @@
 - new attributes for User:
   - location_name (string) (max 128) until we have a proper location handling
   - device_token (string) (max 128) ios device token for push notifications
+- also return full user attributes on signup/signin
 
 ###v0.1.3-alpha on t2s2-
 Social Connect:

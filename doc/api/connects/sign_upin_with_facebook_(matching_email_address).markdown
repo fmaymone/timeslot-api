@@ -4,7 +4,9 @@
 
 ### POST /v1/fb-connect
 
-returns 200 and signs the user with the matching email address in (we assume he is the legit owner of the existing timeslot account)
+returns 200 and signs the user with the matching email address in if the email on timeslot is verified (we assume he is the legit owner of the existingtimeslot account)
+
+returns 422 if the email is used by other timeslot user but is not verified (We don&#39;t have better idea or specification yet)
 
 ### Parameters
 
@@ -108,11 +110,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;91b7b19d32fe030004a95fbb031e1cfe&quot;
+ETag: W/&quot;62b02c6380cc9e4639213acb97e32b93&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e07197b4-a967-4658-9556-8e521554171f
-X-Runtime: 0.007060
-Content-Length: 100</pre>
+X-Request-Id: 706b3357-e77d-4c9f-8620-7d19328788a4
+X-Runtime: 0.017491
+Content-Length: 694</pre>
 
 #### Status
 
@@ -125,6 +127,27 @@ Content-Length: 100</pre>
   "id" : 44,
   "username" : "User 43",
   "email" : "alexpar@gmail.com",
-  "authToken" : "7tDub7ljhxdAYQbtfp1A-ssN7Cc"
+  "emailVerified" : true,
+  "phone" : null,
+  "phoneVerified" : false,
+  "publicUrl" : null,
+  "locationId" : null,
+  "locationName" : null,
+  "slotDefaultDuration" : null,
+  "slotDefaultLocationId" : null,
+  "slotDefaultTypeId" : null,
+  "defaultPrivateAlerts" : "0000000000",
+  "defaultOwnFriendslotAlerts" : "0000000000",
+  "defaultOwnPublicAlerts" : "0000000000",
+  "defaultFriendsFriendslotAlerts" : "0000000000",
+  "defaultFriendsPublicAlerts" : "0000000000",
+  "defaultReslotAlerts" : "0000000000",
+  "defaultGroupAlerts" : "0000000000",
+  "createdAt" : "2015-05-19T10:34:25.312Z",
+  "updatedAt" : "2015-05-19T10:34:25.312Z",
+  "deletedAt" : null,
+  "friendships" : [],
+  "memberships" : [],
+  "authToken" : "FGKnNCOfR9VgIbbz8tuskYgXim4"
 }
 ```
