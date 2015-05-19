@@ -15,7 +15,8 @@ resource "Users" do
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
     response_field :locationId, "Home location of user"
-    response_field :push, "Send push Notifications (true/false)"
+    response_field :locationName, "Home location of user as String (temporary)"
+    # response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -77,7 +78,8 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", "push")
+                 .except("auth_token", "password_digest", "role", "push",
+                         "device_token")
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end
@@ -95,6 +97,7 @@ resource "Users" do
         expect(json).to have_key "username"
         expect(json).to have_key "image"
         expect(json).to have_key "locationId"
+        expect(json).to have_key "locationName"
         # expect(json).to have_key "notifications"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
@@ -109,7 +112,8 @@ resource "Users" do
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'email', 'email_verified', 'phone', 'phone_verified',
+                         'push', 'device_token', 'email', 'email_verified',
+                         'phone', 'phone_verified',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
                          'default_friends_public_alerts', 'default_reslot_alerts',
@@ -230,14 +234,17 @@ resource "Users" do
     header "Authorization", :auth_header
 
     describe "Update current users data" do
-
       parameter :username, "Updated username of user (max. 50 characters)"
       parameter :email, "Email of user (max. 255 characters)"
       parameter :phone, "Phone number of user (max. 35 characters)"
-      parameter :locationId, "Home location of user"
+      parameter :locationId, "ID of users home location"
+      parameter :locationName,
+                "Home location of user as String (temporary) (max. 128 chars)"
       parameter :image, "URL of the user image"
       parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-      parameter :push, "Send push Notifications (true/false)"
+      parameter :deviceToken,
+                "IOS Device Token for Push Notifications (max. 128 chars)"
+      # parameter :push, "Send push Notifications (true/false)"
       parameter :slotDefaultDuration, "Default Slot Duration in seconds"
       parameter :slotDefaultTypeId, "Default Slot Type - WIP"
       parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
@@ -278,7 +285,8 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", 'push')
+                 .except('auth_token', 'password_digest', 'role', 'push',
+                        'device_token')
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end

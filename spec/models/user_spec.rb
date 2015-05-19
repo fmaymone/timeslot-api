@@ -14,6 +14,8 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
+  it { is_expected.to respond_to(:location_name) }
+  it { is_expected.to respond_to(:device_token) }
   it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }

@@ -8,6 +8,7 @@ if @user == current_user
                 :phone_verified,
                 :public_url,
                 :location_id,
+                :location_name,
                 :slot_default_duration,
                 :slot_default_location_id,
                 :slot_default_type_id,
@@ -52,6 +53,7 @@ else
                 :id,
                 :username,
                 :location_id,
+                :location_name,
                 :created_at,
                 :updated_at,
                 :deleted_at
