@@ -23,7 +23,7 @@ Description : Array of User IDs to create a friendship for
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=fCsxpwMA_9k2Zu54evcNN-4H2sg
+Authorization: Token token=3-Xv7PerTHNpp8kFYKA5R41_e2A
 Host: example.org
 Cookie: </pre>
 
@@ -35,12 +35,12 @@ Cookie: </pre>
 ```javascript
 {
   "ids" : [
-    284,
-    286,
-    290,
-    287,
-    288,
-    289
+    297,
+    299,
+    303,
+    300,
+    301,
+    302
   ]
 }
 ```
@@ -48,10 +48,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/add_friends&quot; -d &#39;{&quot;ids&quot;:[284,286,290,287,288,289]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/users/add_friends&quot; -d &#39;{&quot;ids&quot;:[297,299,303,300,301,302]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=fCsxpwMA_9k2Zu54evcNN-4H2sg&quot; \
+	-H &quot;Authorization: Token token=3-Xv7PerTHNpp8kFYKA5R41_e2A&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,18 +62,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
-ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
-Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5eb36917-b7c2-4962-83e8-4fa1f92fac50
-X-Runtime: 0.045834
-Content-Length: 1</pre>
+Cache-Control: no-cache
+X-Request-Id: 34b1c655-52e2-4862-8789-92f68b705197
+X-Runtime: 0.045538
+Content-Length: 0</pre>
 
 #### Status
 
 <pre>200 OK</pre>
 
-#### Body
-
-```javascript
- 
-```

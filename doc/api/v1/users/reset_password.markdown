@@ -53,18 +53,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
-ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
-Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3a431851-ff0d-406b-b812-61b6cdb0e361
-X-Runtime: 0.011741
-Content-Length: 1</pre>
+Cache-Control: no-cache
+X-Request-Id: c8190b6e-b36d-4632-8e16-a4e969b16609
+X-Runtime: 0.006918
+Content-Length: 0</pre>
 
 #### Status
 
 <pre>200 OK</pre>
 
-#### Body
-
-```javascript
- 
-```
