@@ -210,35 +210,27 @@ resource "Users" do
     end
   end
 
-  # TODO: not ready for production!!! this needs email sending capability...
-  post "/v1/users/reset" do
+  post "/v1/users/reset", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
     parameter :email, "Email of the user for whom to reset password",
               required: true
 
-    let(:user) { create(:user, :with_email, password: "nottimeslot") }
+    let(:user) do
+      create(:user,
+             email: 'success@simulator.amazonses.com',
+             password: "nottimeslot")
+    end
     let(:email) { user.email }
 
     example "Reset password", document: :v1 do
-      explanation "This is not ready for production!!!\n\n" \
-                  "Resets password to 'autechre'\n\n" \
+      explanation "Resets password and sends it to user via email\n\n" \
                   "returns OK if valid email\n\n" \
                   "returns 403 if invalid email"
       do_request
 
       expect(response_status).to eq(200)
-
-      no_doc do
-        # the Content-Type should be 'application/json',
-        # but is 'application/x-www-form-urlencoded'
-        client.post "v1/users/signin", { email: user.email, password: 'autechre' }
-        user.reload
-        expect(status).to eq(200)
-        expect(json).to have_key "authToken"
-        expect(json['authToken']).to eq user.auth_token
-      end
     end
   end
 

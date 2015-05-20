@@ -97,8 +97,44 @@ class User < ActiveRecord::Base
   end
 
   def reset_password
-    update(password: 'autechre')
+    new_password = SecureRandom.urlsafe_base64(6)
+    update(password: new_password)
     set_auth_token
+
+    begin
+      ses = Aws::SES::Client.new
+      ses.send_email(
+        source: "silvio@timeslot.com",
+        # source: "support@timeslot.com",
+        destination: {
+          to_addresses: [email]
+        },
+        message: {
+          subject: {
+            data: "Your new Password for Timeslot",
+            # charset: "Charset",
+          },
+          body: {
+            text: {
+              data: "Your new timeslot password: #{new_password}",
+              # charset: "Charset",
+            },
+            html: {
+              data: "<h3>Your new timeslot password</h3>" \
+                    "<p>#{new_password}</p>",
+              # charset: "Charset",
+            }
+          }
+        },
+        # reply_to_addresses: ["passwords@timeslot.com"],
+        # return_path: "invalid_email_address@timeslot.com"
+        return_path: "silvio@timeslot.com"
+      )
+    rescue Aws::SES::Errors::ServiceError => exception
+      Rails.logger.error exception
+      Airbrake.notify(aws_sns_error: exception)
+      raise exception if Rails.env.test? || Rails.env.development?
+    end
   end
 
   def connect_or_merge(identity_params, social_params)

@@ -809,10 +809,14 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :reset_password do
-    let!(:user) { create(:user, password: 'timeslot') }
-
+  describe :reset_password, :vcr do
     context "valid params" do
+      let!(:user) do
+        create(:user,
+               email: 'success@simulator.amazonses.com',
+               password: 'timeslot')
+      end
+
       it "resets the password" do
         initial_pwd_digest = user.password_digest
         user.reset_password
@@ -826,7 +830,9 @@ RSpec.describe User, type: :model do
       end
 
       it "sends an email to the user" do
-        skip 'needs mailer'
+        aws_response = user.reset_password
+        expect(aws_response.successful?).to be true
+        expect(aws_response.try(:message_id)).not_to be nil
       end
     end
   end
