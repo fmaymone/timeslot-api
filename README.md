@@ -29,6 +29,20 @@ Using them usually requires setting some environment variables.
 This can be done via .env of with [another approach](http://stackoverflow.com/a/11765775/531439).
 The following env variables are expected:
 
+## AWS
+
+[Docs](http://docs.aws.amazon.com/sdkforruby/api/index.html)
+
+```bash
+ENV['AWS_ACCESS_KEY_ID']
+ENV['AWS_SECRET_ACCESS_KEY']
+ENV['AWS_REGION']
+```
+
+### We use the following services
+
+* [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
+
 ## Cloudinary
 
 Cloud Service for our Media Data.
@@ -126,7 +140,17 @@ end
 
 ### [VCR](https://github.com/vcr/vcr)
 
-The specs use the vcr gem (and webmock), which records external requests on the first run and on previous runs always returns this response. This makes that specs faster and allows them to be run offline, but also hides if there had been changes in the external API which breaks the comunication.
+The specs use the vcr gem (and webmock), which records external requests on the
+first run and on previous runs always returns this response. This makes that
+specs faster and allows them to be run offline, but also hides if there had been
+changes in the external API which breaks the comunication.
+
+To enable outgoing http requests in specs (Rails test env)  edit the first line
+in the ```spec/support/vcr_setup.rb``` file.
+
+To enable outgoing http requests in the Rails Dev Env there is a setting in
+the ```development.rb``` file:
+```WebMock.allow_net_connect!```
 
 ### [Bullet](https://github.com/flyerhzm/bullet)
 

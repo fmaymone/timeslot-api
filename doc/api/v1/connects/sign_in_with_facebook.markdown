@@ -110,11 +110,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;424c64a0945d6c58d608e488408df7fe&quot;
+ETag: W/&quot;1bbc8e0f8d6e32ae9c59ef4978885dc3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 931f4c2f-f3d8-448a-a729-bccde07926f1
-X-Runtime: 0.007293
-Content-Length: 85</pre>
+X-Request-Id: e0a6db4a-9f07-426d-b606-f461b8576eea
+X-Runtime: 0.009150
+Content-Length: 680</pre>
 
 #### Status
 
@@ -127,6 +127,27 @@ Content-Length: 85</pre>
   "id" : 45,
   "username" : "User 44",
   "email" : null,
-  "authToken" : "0GGuPFmbc4m3_9Fi-MEhj_n6g7c"
+  "emailVerified" : false,
+  "phone" : null,
+  "phoneVerified" : false,
+  "publicUrl" : null,
+  "locationId" : null,
+  "locationName" : null,
+  "slotDefaultDuration" : null,
+  "slotDefaultLocationId" : null,
+  "slotDefaultTypeId" : null,
+  "defaultPrivateAlerts" : "0000000000",
+  "defaultOwnFriendslotAlerts" : "0000000000",
+  "defaultOwnPublicAlerts" : "0000000000",
+  "defaultFriendsFriendslotAlerts" : "0000000000",
+  "defaultFriendsPublicAlerts" : "0000000000",
+  "defaultReslotAlerts" : "0000000000",
+  "defaultGroupAlerts" : "0000000000",
+  "createdAt" : "2015-05-19T10:51:48.799Z",
+  "updatedAt" : "2015-05-19T10:51:48.799Z",
+  "deletedAt" : null,
+  "friendships" : [],
+  "memberships" : [],
+  "authToken" : "Dl9XHS1-fluZAowZmQaPUqKEIEg"
 }
 ```

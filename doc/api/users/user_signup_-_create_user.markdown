@@ -1,20 +1,28 @@
 # Users API
 
-## Update current user - update password
+## User signup - Create user
 
-### PATCH /v1/users
+### POST /v1/users
 
-The valid old password needs to be send along
+Either an email or phone number must be provided
 
-returns 200 and the users data if the password was successfully updated
+returns 422 if parameters are missing
+
+returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : password *- required -*
-Description : new password
+Name : username *- required -*
+Description : Username of user (max. 50 characters)
 
-Name : old_password *- required -*
-Description : valid old password
+Name : email
+Description : Email of user (max. 254 characters)
+
+Name : phone
+Description : Phone number of user (max. 35 characters)
+
+Name : password *- required -*
+Description : Password for user (min. 5 &amp; max. 72 characters)
 
 
 ### Response Fields
@@ -97,33 +105,37 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : authToken
+Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=UBjeqxaFeV1qfDH-xjOaPiAouYU
+Accept: application/json
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/users</pre>
+<pre>POST /v1/users</pre>
 
 #### Body
 ```javascript
 {
-  "password" : "slimetot",
-  "old_password" : "timeslot"
+  "username" : "foo",
+  "email" : "someone@timeslot.com",
+  "password" : "secret-thing"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;password&quot;:&quot;slimetot&quot;,&quot;old_password&quot;:&quot;timeslot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=UBjeqxaFeV1qfDH-xjOaPiAouYU&quot; \
+	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -134,23 +146,23 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;32c5be79255355f9c3d319dc33640eb2&quot;
+ETag: W/&quot;2d5c6952b4202c355855534d371dcf0d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ca88cdb1-7139-4544-b90a-59e571df55fc
-X-Runtime: 0.024392
-Content-Length: 714</pre>
+X-Request-Id: 86beb87a-e994-454a-bb57-3e3b25249312
+X-Runtime: 0.010469
+Content-Length: 695</pre>
 
 #### Status
 
-<pre>200 OK</pre>
+<pre>201 Created</pre>
 
 #### Body
 
 ```javascript
 {
-  "id" : 229,
-  "username" : "User 225",
-  "email" : "user64@email.com",
+  "id" : 224,
+  "username" : "foo",
+  "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -167,14 +179,11 @@ Content-Length: 714</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.210Z",
-  "updatedAt" : "2015-05-19T10:51:52.221Z",
+  "createdAt" : "2015-05-19T10:51:52.094Z",
+  "updatedAt" : "2015-05-19T10:51:52.094Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "authToken" : "brebJHuHV44e3XcZzr5qtX-CrxA"
 }
 ```

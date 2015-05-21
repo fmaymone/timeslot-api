@@ -27,7 +27,7 @@ Must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=kyDOvYOpIpyCbfXKER4jiJ6qrRU
+Authorization: Token token=RMbOaT2kIf5PqxD93Me-LGU1aek
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/53/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:45}]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=kyDOvYOpIpyCbfXKER4jiJ6qrRU&quot; \
+	-H &quot;Authorization: Token token=RMbOaT2kIf5PqxD93Me-LGU1aek&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,18 +66,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
-ETag: &quot;7215ee9c7d9dc229d2921a40e899ec5f&quot;
-Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 12d0e3f9-646f-42fa-9ac3-e013bff785e2
-X-Runtime: 0.035348
-Content-Length: 1</pre>
+Cache-Control: no-cache
+X-Request-Id: 2cb25ba4-fa98-4444-bde2-00d3c5dfc1c1
+X-Runtime: 0.090602
+Content-Length: 0</pre>
 
 #### Status
 
 <pre>200 OK</pre>
 
-#### Body
-
-```javascript
- 
-```
