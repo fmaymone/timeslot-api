@@ -140,7 +140,17 @@ end
 
 ### [VCR](https://github.com/vcr/vcr)
 
-The specs use the vcr gem (and webmock), which records external requests on the first run and on previous runs always returns this response. This makes that specs faster and allows them to be run offline, but also hides if there had been changes in the external API which breaks the comunication.
+The specs use the vcr gem (and webmock), which records external requests on the
+first run and on previous runs always returns this response. This makes that
+specs faster and allows them to be run offline, but also hides if there had been
+changes in the external API which breaks the comunication.
+
+To enable outgoing http requests in specs (Rails test env)  edit the first line
+in the ```spec/support/vcr_setup.rb``` file.
+
+To enable outgoing http requests in the Rails Dev Env there is a setting in
+the ```development.rb``` file:
+```WebMock.allow_net_connect!```
 
 ### [Bullet](https://github.com/flyerhzm/bullet)
 
