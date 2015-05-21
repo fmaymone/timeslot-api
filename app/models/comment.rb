@@ -1,4 +1,6 @@
 class Comment < ActiveRecord::Base
+  after_commit AuditLog
+
   belongs_to :slot, class_name: BaseSlot, inverse_of: :comments
   belongs_to :user
 
