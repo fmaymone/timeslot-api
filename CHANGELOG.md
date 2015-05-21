@@ -1,6 +1,6 @@
 #Changelog
 
-## v0.2.0-alpha on t2s2-
+## v0.2.0-alpha on t2s2-silvio-dev
 - return full user attributes on signup/signin
 
 ### new attributes for User:
