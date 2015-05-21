@@ -231,6 +231,46 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
+-- Name: ios_locations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE ios_locations (
+    id bigint NOT NULL,
+    name character varying(128) NOT NULL,
+    street character varying(128) DEFAULT ''::character varying,
+    city character varying(128) DEFAULT ''::character varying,
+    postcode character varying(32) DEFAULT ''::character varying,
+    country character varying(64) DEFAULT ''::character varying,
+    geo_position point,
+    latitude double precision,
+    longitude double precision,
+    creator_id bigint NOT NULL,
+    private_location boolean DEFAULT true NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: ios_locations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE ios_locations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ios_locations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE ios_locations_id_seq OWNED BY ios_locations.id;
+
+
+--
 -- Name: likes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -618,6 +658,13 @@ ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY ios_locations ALTER COLUMN id SET DEFAULT nextval('ios_locations_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
 
 
@@ -739,6 +786,14 @@ ALTER TABLE ONLY groups
 
 
 --
+-- Name: ios_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY ios_locations
+    ADD CONSTRAINT ios_locations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -856,6 +911,13 @@ CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_
 --
 
 CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
+
+
+--
+-- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON ios_locations USING btree (name, latitude, longitude);
 
 
 --
@@ -1117,4 +1179,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150504094941');
 INSERT INTO schema_migrations (version) VALUES ('20150505110742');
 
 INSERT INTO schema_migrations (version) VALUES ('20150519084309');
+
+INSERT INTO schema_migrations (version) VALUES ('20150521115806');
 
