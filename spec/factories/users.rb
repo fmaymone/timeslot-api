@@ -3,7 +3,7 @@ FactoryGirl.define do
   sequence(:email) { |n| "user#{n}@email.com" }
   sequence(:phone) { |n| "#{n}243#{n}" }
 
-  factory :user, aliases: [:owner, :member] do
+  factory :user, aliases: [:owner, :member, :creator] do
     username
 
     trait :with_email do
