@@ -24,7 +24,7 @@ Defaults to &#39;true&#39;, must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8
+Authorization: Token token=HD0rcBkGULZ6A1QNz0WZAgwkDps
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/56/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8&quot; \
+	-H &quot;Authorization: Token token=HD0rcBkGULZ6A1QNz0WZAgwkDps&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;aa56024ced9bb729e00a1c44d428d06e&quot;
+ETag: W/&quot;3e31243f36f51dbfc2c5c3599d15662b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70a78971-bd1c-4490-a074-cd738c2f344e
-X-Runtime: 0.070746
+X-Request-Id: ef2dd004-90c8-4fd5-b89b-3d11ce4de3da
+X-Runtime: 0.061342
 Content-Length: 694</pre>
 
 #### Status
@@ -72,18 +72,18 @@ Content-Length: 694</pre>
 {
   "id" : 57,
   "title" : "Slot title 49",
-  "createdAt" : "2015-05-06T21:29:38.760Z",
-  "updatedAt" : "2015-05-06T21:29:38.760Z",
+  "createdAt" : "2015-05-19T10:51:51.968Z",
+  "updatedAt" : "2015-05-19T10:51:51.968Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-23T01:44:02.000Z",
   "visibility" : "friends",
   "location" : null,
   "creator" : {
-    "id" : 210,
-    "username" : "User 210",
-    "createdAt" : "2015-05-06T21:29:38.739Z",
-    "updatedAt" : "2015-05-06T21:29:38.739Z",
+    "id" : 220,
+    "username" : "User 217",
+    "createdAt" : "2015-05-19T10:51:51.949Z",
+    "updatedAt" : "2015-05-19T10:51:51.949Z",
     "deletedAt" : null
   },
   "settings" : {

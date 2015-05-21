@@ -39,7 +39,7 @@ Description : URL of the user image
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=w9tTOqMyQlJW4Jpe-nHxNORE6b0
+Authorization: Token token=sjqFFNNtj_6tbcPcD3HfSMKuChw
 Host: example.org
 Cookie: </pre>
 
@@ -62,7 +62,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=w9tTOqMyQlJW4Jpe-nHxNORE6b0&quot; \
+	-H &quot;Authorization: Token token=sjqFFNNtj_6tbcPcD3HfSMKuChw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,11 +73,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;485c4c29e39405deaf449e0761d235ad&quot;
+ETag: W/&quot;be35920bf1460f8266ad9b2a329297ea&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5dd41970-c547-4006-a73d-c145b96788fc
-X-Runtime: 0.023194
-Content-Length: 691</pre>
+X-Request-Id: 85ef5fa4-0e8f-47b7-b6c5-d2d92990ebf7
+X-Runtime: 0.021149
+Content-Length: 711</pre>
 
 #### Status
 
@@ -95,6 +95,7 @@ Content-Length: 691</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "locationId" : null,
+  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -105,8 +106,8 @@ Content-Length: 691</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-11T14:48:20.763Z",
-  "updatedAt" : "2015-05-11T14:48:20.763Z",
+  "createdAt" : "2015-05-19T10:51:48.963Z",
+  "updatedAt" : "2015-05-19T10:51:48.963Z",
   "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],

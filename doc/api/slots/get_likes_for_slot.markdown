@@ -19,7 +19,7 @@ Description : ID of the Slot to get the likes for
 
 #### Headers
 
-<pre>Authorization: Token token=a0C-4_WDQ6eeqE8IvbpE0ghQWCQ
+<pre>Authorization: Token token=jaN6NhYxX3LEK7NMtzbGlqFlptM
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +30,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/46/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=a0C-4_WDQ6eeqE8IvbpE0ghQWCQ&quot; \
+	-H &quot;Authorization: Token token=jaN6NhYxX3LEK7NMtzbGlqFlptM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +41,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;6b213ca029d46f214a07f0cf10d225b0&quot;
+ETag: W/&quot;53bdb01d9b2b965f2c8a9802362b1d92&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7566468e-c6d0-4e42-a29b-9d30604c2a6e
-X-Runtime: 0.019978
+X-Request-Id: 8dd45e68-7f2a-4024-8e6d-e56348d2ee03
+X-Runtime: 0.019193
 Content-Length: 393</pre>
 
 #### Status
@@ -56,27 +56,27 @@ Content-Length: 393</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-05-06T21:29:37.990Z",
-    "userId" : 182,
-    "username" : "User 182",
+    "createdAt" : "2015-05-19T10:51:51.569Z",
+    "userId" : 192,
+    "username" : "User 189",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:37.997Z",
-    "userId" : 183,
-    "username" : "User 183",
+    "createdAt" : "2015-05-19T10:51:51.574Z",
+    "userId" : 193,
+    "username" : "User 190",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.001Z",
-    "userId" : 184,
-    "username" : "User 184",
+    "createdAt" : "2015-05-19T10:51:51.578Z",
+    "userId" : 194,
+    "username" : "User 191",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.082Z",
-    "userId" : 186,
-    "username" : "User 186",
+    "createdAt" : "2015-05-19T10:51:51.594Z",
+    "userId" : 196,
+    "username" : "User 193",
     "userimage" : "dfhjghjkdisudgfds7iy37"
   }
 ]

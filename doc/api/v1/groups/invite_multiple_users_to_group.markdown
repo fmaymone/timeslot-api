@@ -27,7 +27,7 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=x6w7tTuQUHodVBUG_Mc5MCnZbME
+Authorization: Token token=fqlCO57-oZFER0tmKTm6c_Qykok
 Host: example.org
 Cookie: </pre>
 
@@ -39,9 +39,9 @@ Cookie: </pre>
 ```javascript
 {
   "invitees" : [
-    105,
-    106,
-    107
+    115,
+    116,
+    117
   ]
 }
 ```
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[105,106,107]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[115,116,117]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=x6w7tTuQUHodVBUG_Mc5MCnZbME&quot; \
+	-H &quot;Authorization: Token token=fqlCO57-oZFER0tmKTm6c_Qykok&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,10 +62,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;6aa31d55cc80f5783091a38ec1cb86de&quot;
+ETag: W/&quot;690a4e6f4aa689b5968d09c5c35d3e3d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 95f6a3f5-650f-41e3-aa6e-53fa1d00b9e4
-X-Runtime: 0.040012
+X-Request-Id: a310a9be-1a07-4427-9791-2957bd7c800d
+X-Runtime: 0.034474
 Content-Length: 219</pre>
 
 #### Status
@@ -80,22 +80,22 @@ Content-Length: 219</pre>
   "size" : 4,
   "related" : [
     {
-      "userId" : 104,
+      "userId" : 114,
       "state" : "111",
       "deletedAt" : null
     },
     {
-      "userId" : 105,
+      "userId" : 115,
       "state" : "011",
       "deletedAt" : null
     },
     {
-      "userId" : 106,
+      "userId" : 116,
       "state" : "011",
       "deletedAt" : null
     },
     {
-      "userId" : 107,
+      "userId" : 117,
       "state" : "011",
       "deletedAt" : null
     }

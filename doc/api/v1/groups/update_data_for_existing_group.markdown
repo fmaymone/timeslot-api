@@ -33,7 +33,7 @@ Description : Allows members to post new slots
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=9vLkPHBuCETYnVw0BOqq-swmVfQ
+Authorization: Token token=2NJOwWm7JoUlW39vZuxsJr7zQ1I
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/groups/14&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=9vLkPHBuCETYnVw0BOqq-swmVfQ&quot; \
+	-H &quot;Authorization: Token token=2NJOwWm7JoUlW39vZuxsJr7zQ1I&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,10 +66,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;c7cc0a81233fd1d118ea5b63603c5912&quot;
+ETag: W/&quot;d3ff04a2180ea1b3587a19b89467fcab&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5d3ea3eb-f59b-4ef4-8a12-fdbab94d6a49
-X-Runtime: 0.012853
+X-Request-Id: cae32edd-8456-4f4d-8713-0de365493b6a
+X-Runtime: 0.009590
 Content-Length: 216</pre>
 
 #### Status
@@ -82,11 +82,11 @@ Content-Length: 216</pre>
 {
   "id" : 14,
   "name" : "bar",
-  "ownerId" : 53,
+  "ownerId" : 63,
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-05-06T21:29:29.433Z",
-  "updatedAt" : "2015-05-06T21:29:29.446Z",
+  "createdAt" : "2015-05-19T10:51:49.217Z",
+  "updatedAt" : "2015-05-19T10:51:49.226Z",
   "deletedAt" : null,
   "image" : null,
   "membershipState" : "active"

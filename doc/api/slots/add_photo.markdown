@@ -35,7 +35,7 @@ Description : Timeslot internal ID for this media item
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RbBaaHGTdY_2CZKIl4SFhqk4hgA
+Authorization: Token token=BvdLNVDcW6C4ONK_krCZOHDzN4s
 Host: example.org
 Cookie: </pre>
 
@@ -60,7 +60,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/34&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;position&quot;:&quot;1&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RbBaaHGTdY_2CZKIl4SFhqk4hgA&quot; \
+	-H &quot;Authorization: Token token=BvdLNVDcW6C4ONK_krCZOHDzN4s&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -71,10 +71,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;f15819942df8ae97931d255796016f9b&quot;
+ETag: W/&quot;12cbaefcf71f0958ce45d97c31538ee8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0237c448-2310-4d36-bbec-8f4d6c36a434
-X-Runtime: 0.036814
+X-Request-Id: 5ef560e2-3bfe-467d-82c5-d618e341034b
+X-Runtime: 0.034951
 Content-Length: 582</pre>
 
 #### Status
@@ -87,18 +87,18 @@ Content-Length: 582</pre>
 {
   "id" : 34,
   "title" : "Slot title 32",
-  "createdAt" : "2015-05-06T21:29:33.679Z",
-  "updatedAt" : "2015-05-06T21:29:33.679Z",
+  "createdAt" : "2015-05-19T10:51:50.959Z",
+  "updatedAt" : "2015-05-19T10:51:50.959Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-06T08:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 157,
-    "username" : "User 157",
-    "createdAt" : "2015-05-06T21:29:33.677Z",
-    "updatedAt" : "2015-05-06T21:29:33.677Z",
+    "id" : 167,
+    "username" : "User 164",
+    "createdAt" : "2015-05-19T10:51:50.956Z",
+    "updatedAt" : "2015-05-19T10:51:50.956Z",
     "deletedAt" : null
   },
   "settings" : {

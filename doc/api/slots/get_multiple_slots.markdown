@@ -73,7 +73,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=VOa8FVPYprWSMZ7UlO7aUKateck
+Authorization: Token token=sfWVEDZXPU1mrVVoo_QN7N1X2MQ
 Host: example.org
 Cookie: </pre>
 
@@ -97,7 +97,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=VOa8FVPYprWSMZ7UlO7aUKateck&quot; \
+	-H &quot;Authorization: Token token=sfWVEDZXPU1mrVVoo_QN7N1X2MQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -108,10 +108,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;2c6a3425dc58ee308de4d9072440fd1a&quot;
+ETag: W/&quot;aabbdee7ad814da79e1983f3d6e4a383&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d807e341-f2a7-4b4f-9df3-117c003c8a73
-X-Runtime: 0.060676
+X-Request-Id: 1c77f86b-4862-4819-b64e-d416f3d41cd5
+X-Runtime: 0.065039
 Content-Length: 1730</pre>
 
 #### Status
@@ -126,8 +126,8 @@ Content-Length: 1730</pre>
     "id" : 24,
     "title" : "Slot title 26",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:32.192Z",
-    "updatedAt" : "2015-05-06T21:29:32.192Z",
+    "createdAt" : "2015-05-19T10:51:50.316Z",
+    "updatedAt" : "2015-05-19T10:51:50.316Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-27T02:44:02.000Z",
@@ -158,14 +158,14 @@ Content-Length: 1730</pre>
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/24",
-    "creatorId" : 134
+    "creatorId" : 144
   },
   {
     "id" : 23,
     "title" : "Slot title 25",
     "locationId" : 200719253,
-    "createdAt" : "2015-05-06T21:29:32.164Z",
-    "updatedAt" : "2015-05-06T21:29:32.164Z",
+    "createdAt" : "2015-05-19T10:51:50.283Z",
+    "updatedAt" : "2015-05-19T10:51:50.283Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-26T01:44:02.000Z",
@@ -239,7 +239,7 @@ Content-Length: 1730</pre>
       }
     ],
     "url" : "http://example.org/v1/slots/23",
-    "creatorId" : 133
+    "creatorId" : 143
   }
 ]
 ```

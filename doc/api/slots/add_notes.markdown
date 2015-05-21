@@ -23,7 +23,7 @@ Description : Content of the note
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=vAiVufgjdyFSCFdtZY9cF_Ebz9A
+Authorization: Token token=h99tQ6we2rw3ecnusOUURMJFejY
 Host: example.org
 Cookie: </pre>
 
@@ -52,7 +52,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/33&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=vAiVufgjdyFSCFdtZY9cF_Ebz9A&quot; \
+	-H &quot;Authorization: Token token=h99tQ6we2rw3ecnusOUURMJFejY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,10 +63,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;628c5d7913f35220fc0933d2151898b7&quot;
+ETag: W/&quot;41508ef82f978a7e2b06aa2b257e4560&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dfdfadbb-e722-498a-80d9-1dc4e053d5b3
-X-Runtime: 0.037747
+X-Request-Id: f6092db3-6eab-4776-8fa6-a4c014a80d64
+X-Runtime: 0.035778
 Content-Length: 748</pre>
 
 #### Status
@@ -79,18 +79,18 @@ Content-Length: 748</pre>
 {
   "id" : 33,
   "title" : "Slot title 31",
-  "createdAt" : "2015-05-06T21:29:33.555Z",
-  "updatedAt" : "2015-05-06T21:29:33.555Z",
+  "createdAt" : "2015-05-19T10:51:50.904Z",
+  "updatedAt" : "2015-05-19T10:51:50.904Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-05T07:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 155,
-    "username" : "User 155",
-    "createdAt" : "2015-05-06T21:29:33.553Z",
-    "updatedAt" : "2015-05-06T21:29:33.553Z",
+    "id" : 165,
+    "username" : "User 162",
+    "createdAt" : "2015-05-19T10:51:50.901Z",
+    "updatedAt" : "2015-05-19T10:51:50.901Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -101,13 +101,13 @@ Content-Length: 748</pre>
       "id" : 5,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-06T21:29:33.570Z"
+      "createdAt" : "2015-05-19T10:51:50.917Z"
     },
     {
       "id" : 4,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-06T21:29:33.568Z"
+      "createdAt" : "2015-05-19T10:51:50.915Z"
     }
   ],
   "likes" : 0,
