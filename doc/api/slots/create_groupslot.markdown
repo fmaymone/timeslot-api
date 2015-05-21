@@ -73,7 +73,7 @@ Description : Creation datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=72AWaCARcZnZK8M5YjKoDJqBWEE
+Authorization: Token token=izMOf5J_-hb5nzL6hOcdmN_w2ww
 Host: example.org
 Cookie: </pre>
 
@@ -101,7 +101,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;groupId&quot;:38,&quot;note&quot;:&quot;revolutionizing the calendar&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=72AWaCARcZnZK8M5YjKoDJqBWEE&quot; \
+	-H &quot;Authorization: Token token=izMOf5J_-hb5nzL6hOcdmN_w2ww&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -112,10 +112,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;cb7a66131701d2514ef2146a51a51c0a&quot;
+ETag: W/&quot;d297721b2fb4200307e67eace9e880f4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a97fc580-9620-4821-b503-45d4759299e0
-X-Runtime: 0.035209
+X-Request-Id: 76d7948b-3c98-4304-bf57-5a3a1efed06a
+X-Runtime: 0.031594
 Content-Length: 524</pre>
 
 #### Status
@@ -128,18 +128,18 @@ Content-Length: 524</pre>
 {
   "id" : 28,
   "title" : "Time for a Slot",
-  "createdAt" : "2015-05-06T21:29:32.923Z",
-  "updatedAt" : "2015-05-06T21:29:32.923Z",
+  "createdAt" : "2015-05-19T10:51:50.686Z",
+  "updatedAt" : "2015-05-19T10:51:50.686Z",
   "deletedAt" : null,
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
   "visibility" : "members",
   "location" : null,
   "creator" : {
-    "id" : 145,
-    "username" : "User 145",
-    "createdAt" : "2015-05-06T21:29:32.900Z",
-    "updatedAt" : "2015-05-06T21:29:32.900Z",
+    "id" : 155,
+    "username" : "User 152",
+    "createdAt" : "2015-05-19T10:51:50.664Z",
+    "updatedAt" : "2015-05-19T10:51:50.664Z",
     "deletedAt" : null
   },
   "settings" : {

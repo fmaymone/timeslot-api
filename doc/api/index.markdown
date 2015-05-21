@@ -35,6 +35,7 @@
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
+* [Get slot](slots/get_slot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
@@ -57,7 +58,7 @@
 
 * [Get own user data](users/get_own_user_data.markdown)
 * [Get other users data](users/get_other_users_data.markdown)
-* [User signup / Create user](users/user_signup__create_user.markdown)
+* [User signup - Create user](users/user_signup_-_create_user.markdown)
 * [User signin](users/user_signin.markdown)
 * [User signout](users/user_signout.markdown)
 * [Reset password](users/reset_password.markdown)

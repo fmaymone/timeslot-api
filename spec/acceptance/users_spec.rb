@@ -5,49 +5,58 @@ resource "Users" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  get "/v1/users/:id" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the user to get", required: true
-
+  shared_context "default user response fields" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
     response_field :locationId, "Home location of user"
-    response_field :push, "Send push Notifications (true/false)"
+    response_field :locationName, "Home location of user as String (temporary)"
+    # response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
     response_field :slotCount, "Number of slots for this user"
     response_field :reslotCount, "Number of reslots for this user"
     response_field :friendsCount, "Number of friends for this user"
+  end
+
+  shared_context "current user response fields" do
+    include_context "default user response fields"
+
+    response_field :email, "Email of user (max. 255 characters)"
+    response_field :phone, "Phone number of user (max. 35 characters)"
+    response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+    response_field :slotDefaultDuration, "Default Slot Duration in seconds"
+    response_field :slotDefaultTypeId, "Default Slot Type - WIP"
+    response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
+    response_field :defaultPrivateAlerts,
+                   "Default alerts for private slots of this user"
+    response_field :defaultOwnFriendslotAlerts,
+                   "Default alerts for the friendslots of this user"
+    response_field :defaultOwnPublicAlerts,
+                   "Default alerts for the public slots of this user"
+    response_field :defaultFriendsFriendslotAlerts,
+                   "Default alerts for the friendslots from friends of this user"
+    response_field :defaultFriendsPublicAlerts,
+                   "Default alerts for the public slots from friends of this user"
+    response_field :defaultReslotAlerts,
+                   "Default alerts for the reslots of this user"
+    response_field :defaultGroupAlerts,
+                   "Default alerts for all groupslots of this user" \
+                   " where no specific alert is set. Groupslots" \
+                   " may also have their own default alerts per group"
+    response_field :friendships, "all connections to other users"
+    response_field :memberships, "all connections to groups"
+  end
+
+  get "/v1/users/:id" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the user to get", required: true
 
     context "own data" do
-      response_field :email, "Email of user (max. 255 characters)"
-      response_field :phone, "Phone number of user (max. 35 characters)"
-      response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-      response_field :slotDefaultDuration, "Default Slot Duration in seconds"
-      response_field :slotDefaultTypeId, "Default Slot Type - WIP"
-      response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
-      response_field :defaultPrivateAlerts,
-                     "Default alerts for private slots of this user"
-      response_field :defaultOwnFriendslotAlerts,
-                     "Default alerts for the friendslots of this user"
-      response_field :defaultOwnPublicAlerts,
-                     "Default alerts for the public slots of this user"
-      response_field :defaultFriendsFriendslotAlerts,
-                     "Default alerts for the friendslots from friends of this user"
-      response_field :defaultFriendsPublicAlerts,
-                     "Default alerts for the public slots from friends of this user"
-      response_field :defaultReslotAlerts,
-                     "Default alerts for the reslots of this user"
-      response_field :defaultGroupAlerts,
-                     "Default alerts for all groupslots of this user" \
-                     " where no specific alert is set. Groupslots" \
-                     " may also have their own default alerts per group"
-      response_field :friendships, "all connections to other users"
-      response_field :memberships, "all connections to groups"
+      include_context "current user response fields"
 
       let(:id) { current_user.id }
 
@@ -77,12 +86,15 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", "push")
+                 .except("auth_token", "password_digest", "role", "push",
+                         "device_token")
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end
 
     context "other user" do
+      include_context "default user response fields"
+
       let(:user) { create(:user) }
       let(:id) { user.id }
 
@@ -95,6 +107,7 @@ resource "Users" do
         expect(json).to have_key "username"
         expect(json).to have_key "image"
         expect(json).to have_key "locationId"
+        expect(json).to have_key "locationName"
         # expect(json).to have_key "notifications"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
@@ -109,7 +122,8 @@ resource "Users" do
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'email', 'email_verified', 'phone', 'phone_verified',
+                         'push', 'device_token', 'email', 'email_verified',
+                         'phone', 'phone_verified',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
                          'default_friends_public_alerts', 'default_reslot_alerts',
@@ -132,13 +146,15 @@ resource "Users" do
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
 
-    response_field :id, "ID of the new user"
+    include_context "current user response fields"
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
 
     let(:username) { "foo" }
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
 
-    example "User signup / Create user", document: :v1 do
+    example "User signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
                   "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
@@ -159,6 +175,7 @@ resource "Users" do
     parameter :email, "Email of the user to authenticate", required: true
     parameter :password, "Password for the user to authenticate", required: true
 
+    include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
 
@@ -193,35 +210,27 @@ resource "Users" do
     end
   end
 
-  # TODO: not ready for production!!! this needs email sending capability...
-  post "/v1/users/reset" do
+  post "/v1/users/reset", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
     parameter :email, "Email of the user for whom to reset password",
               required: true
 
-    let(:user) { create(:user, :with_email, password: "nottimeslot") }
+    let(:user) do
+      create(:user,
+             email: 'success@simulator.amazonses.com',
+             password: "nottimeslot")
+    end
     let(:email) { user.email }
 
     example "Reset password", document: :v1 do
-      explanation "This is not ready for production!!!\n\n" \
-                  "Resets password to 'autechre'\n\n" \
+      explanation "Resets password and sends it to user via email\n\n" \
                   "returns OK if valid email\n\n" \
                   "returns 403 if invalid email"
       do_request
 
       expect(response_status).to eq(200)
-
-      no_doc do
-        # the Content-Type should be 'application/json',
-        # but is 'application/x-www-form-urlencoded'
-        client.post "v1/users/signin", { email: user.email, password: 'autechre' }
-        user.reload
-        expect(status).to eq(200)
-        expect(json).to have_key "authToken"
-        expect(json['authToken']).to eq user.auth_token
-      end
     end
   end
 
@@ -229,15 +238,20 @@ resource "Users" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    describe "Update current users data" do
+    include_context "current user response fields"
 
+    describe "Update current users data" do
       parameter :username, "Updated username of user (max. 50 characters)"
       parameter :email, "Email of user (max. 255 characters)"
       parameter :phone, "Phone number of user (max. 35 characters)"
-      parameter :locationId, "Home location of user"
+      parameter :locationId, "ID of users home location"
+      parameter :locationName,
+                "Home location of user as String (temporary) (max. 128 chars)"
       parameter :image, "URL of the user image"
       parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-      parameter :push, "Send push Notifications (true/false)"
+      parameter :deviceToken,
+                "IOS Device Token for Push Notifications (max. 128 chars)"
+      # parameter :push, "Send push Notifications (true/false)"
       parameter :slotDefaultDuration, "Default Slot Duration in seconds"
       parameter :slotDefaultTypeId, "Default Slot Type - WIP"
       parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
@@ -278,7 +292,8 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", 'push')
+                 .except('auth_token', 'password_digest', 'role', 'push',
+                         'device_token')
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end
@@ -310,8 +325,6 @@ resource "Users" do
                 required: true,
                 scope: :image
 
-      response_field :image, "URL for this media item"
-
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
       example "Update current user - set user image", document: :v1 do
@@ -335,6 +348,8 @@ resource "Users" do
 
   delete "/v1/users" do
     header "Authorization", :auth_header
+
+    include_context "current user response fields"
 
     example "Delete current user", document: :v1 do
       explanation "Sets 'deletedAt' attr for user who is logged in" \

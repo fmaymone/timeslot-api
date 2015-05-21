@@ -26,11 +26,13 @@ gem 'rails_12factor', group: :production
 # third party services
 gem 'cloudinary'
 gem 'airbrake'
+gem 'aws-sdk', '~> 2'
+
+# use pry also on heroku
+gem 'pry-rails'
 
 group :development do
   gem 'spring'
-
-  gem 'pry-rails'
 
   gem "rails-erd"
 
@@ -45,6 +47,8 @@ end
 
 group :development, :test do
   gem 'pry-byebug'
+
+  gem 'pry-doc'
 
   gem 'spring-commands-rspec'
 

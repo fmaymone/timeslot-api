@@ -517,14 +517,14 @@ INHERITS (base_slots);
 
 CREATE TABLE users (
     id bigint NOT NULL,
-    username character varying(50),
+    username character varying(50) NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     email character varying(255),
     password_digest character varying(60),
     auth_token character varying(27),
-    role smallint,
+    role smallint NOT NULL,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_private_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_own_friendslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -532,15 +532,17 @@ CREATE TABLE users (
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
-    phone character varying(35),
     location_id bigint,
     public_url character varying(255),
     push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
-    phone_verified boolean DEFAULT false,
-    email_verified boolean DEFAULT false
+    phone character varying(35),
+    phone_verified boolean DEFAULT false NOT NULL,
+    email_verified boolean DEFAULT false NOT NULL,
+    location_name character varying(128),
+    device_token character varying(128)
 );
 
 
@@ -1113,4 +1115,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150429205903');
 INSERT INTO schema_migrations (version) VALUES ('20150504094941');
 
 INSERT INTO schema_migrations (version) VALUES ('20150505110742');
+
+INSERT INTO schema_migrations (version) VALUES ('20150519084309');
 

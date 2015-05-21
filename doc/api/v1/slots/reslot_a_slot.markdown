@@ -56,7 +56,7 @@ Description : Deletion datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=g1qP4lukMB3UjC6MBCn5AfMIHqk
+Authorization: Token token=Tw3qvnga8nV5r9U6Ohc1RjJhvMk
 Host: example.org
 Cookie: </pre>
 
@@ -77,7 +77,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:30}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=g1qP4lukMB3UjC6MBCn5AfMIHqk&quot; \
+	-H &quot;Authorization: Token token=Tw3qvnga8nV5r9U6Ohc1RjJhvMk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -88,10 +88,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;f083574f0150fb8c2151e2cd7cfc9387&quot;
+ETag: W/&quot;ca22957740406c34909dda69ab0df363&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d4ee1c4a-bcfe-481a-9cac-b3337dee3338
-X-Runtime: 0.033193
+X-Request-Id: 3a90bef9-d2d5-4768-abbb-78fac5debac6
+X-Runtime: 0.032477
 Content-Length: 520</pre>
 
 #### Status
@@ -104,24 +104,24 @@ Content-Length: 520</pre>
 {
   "id" : 31,
   "title" : "Slot title 28",
-  "createdAt" : "2015-05-06T21:29:33.236Z",
-  "updatedAt" : "2015-05-06T21:29:33.236Z",
+  "createdAt" : "2015-05-19T10:51:50.793Z",
+  "updatedAt" : "2015-05-19T10:51:50.793Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-02T04:44:02.000Z",
   "visibility" : null,
   "location" : null,
   "creator" : {
-    "id" : 148,
-    "username" : "User 148",
-    "createdAt" : "2015-05-06T21:29:33.147Z",
-    "updatedAt" : "2015-05-06T21:29:33.147Z",
+    "id" : 158,
+    "username" : "User 155",
+    "createdAt" : "2015-05-19T10:51:50.773Z",
+    "updatedAt" : "2015-05-19T10:51:50.773Z",
     "deletedAt" : null
   },
   "settings" : {
     "alerts" : "0000000000"
   },
-  "slotterId" : 150,
+  "slotterId" : 160,
   "notes" : [],
   "likes" : 0,
   "commentsCounter" : 0,

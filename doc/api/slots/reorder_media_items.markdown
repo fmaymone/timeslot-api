@@ -31,7 +31,7 @@ Description : Sorting order of the image/video/voice. If not supplied the media 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RYTLKXVhmTVjrWsFC7hngvQDfZs
+Authorization: Token token=q7662wb8AAXa98bj1vg5aUQnjzY
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/35&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RYTLKXVhmTVjrWsFC7hngvQDfZs&quot; \
+	-H &quot;Authorization: Token token=q7662wb8AAXa98bj1vg5aUQnjzY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,10 +75,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;90c26041e4b257e46e61a5c2dd08324e&quot;
+ETag: W/&quot;737f8553d3818d190d0436f76f31cb1b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: db6800b3-47b3-428c-8c58-5232abc746dc
-X-Runtime: 0.043354
+X-Request-Id: ec0cbeb3-5f57-4a45-a297-ca0d1f8899a5
+X-Runtime: 0.043013
 Content-Length: 694</pre>
 
 #### Status
@@ -91,18 +91,18 @@ Content-Length: 694</pre>
 {
   "id" : 35,
   "title" : "Slot title 33",
-  "createdAt" : "2015-05-06T21:29:33.802Z",
-  "updatedAt" : "2015-05-06T21:29:33.802Z",
+  "createdAt" : "2015-05-19T10:51:51.013Z",
+  "updatedAt" : "2015-05-19T10:51:51.013Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-07T09:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 159,
-    "username" : "User 159",
-    "createdAt" : "2015-05-06T21:29:33.799Z",
-    "updatedAt" : "2015-05-06T21:29:33.799Z",
+    "id" : 169,
+    "username" : "User 166",
+    "createdAt" : "2015-05-19T10:51:51.010Z",
+    "updatedAt" : "2015-05-19T10:51:51.010Z",
     "deletedAt" : null
   },
   "settings" : {
