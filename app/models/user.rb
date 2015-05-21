@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
            as: :mediable
 
   has_many :created_slots, class_name: MetaSlot,
-           foreign_key: "creator_id", inverse_of: :creator
+           foreign_key: :creator_id, inverse_of: :creator
 
   has_many :slot_settings, inverse_of: :user
 
