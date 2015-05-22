@@ -5,6 +5,39 @@ resource "Slots" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
+  shared_context "default slot response fields" do
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :createdAt, "Creation of slot"
+    response_field :updatedAt, "Last update of slot"
+    response_field :deletedAt, "Delete date of slot or nil"
+    response_field :location, "Location data for the slot"
+    response_field :creator, "User who created the slot"
+    response_field :settings,
+                   "Only included if it's a slot of the current User ""(created-/friend-/re-/groupslot)\n\n" \
+                              ", contains User specific settings for this slot (alerts)"
+    response_field :visibility, "Visibiltiy of the slot"
+    response_field :notes, "Notes on the slot"
+    response_field :likes, "Likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
+    response_field :images, "Images for the slot"
+    response_field :voices, "Voice recordings for the slot"
+    response_field :videos, "Videos recordings for the slot"
+  end
+
+  shared_context "group slot response fields" do
+    include_context "default slot response fields"
+    response_field :groupId, "ID of the group the slot belongs to"
+  end
+
+  shared_context "reslot response fields" do
+    include_context "default slot response fields"
+    response_field :slotterId, "ID of the User who did reslot"
+  end
+
   post "/v1/slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -13,24 +46,7 @@ resource "Slots" do
     parameter :ids, "Array of slot IDs to get", required: true
 
     describe "Get several slots at once" do
-
-      response_field :id, "ID of the slot"
-      response_field :title, "Title of the slot"
-      response_field :startDate, "Startdate of the slot"
-      response_field :endDate, "Enddate of the slot"
-      response_field :createdAt, "Creation of slot"
-      response_field :updatedAt, "Latest update of slot in db"
-      response_field :deletedAt, "Delete date of slot or nil"
-      response_field :location, "Location data for the slot"
-      response_field :creator, "User who created the slot"
-      response_field :settings, "User specific settings for the slot (alerts)"
-      response_field :visibility, "Visibiltiy of the slot"
-      response_field :notes, "Notes on the slot"
-      response_field :likes, "Counter for likes of the slot"
-      response_field :commentsCounter, "Number of comments on the slot"
-      response_field :images, "Images for the slot"
-      response_field :voices, "Voice recordings for the slot"
-      response_field :videos, "Videos recordings for the slot"
+      include_context "default slot response fields"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot1) {
@@ -123,25 +139,7 @@ resource "Slots" do
     parameter :id, "ID of the slot to get", required: true
 
     describe "Get slot with valid ID" do
-
-      response_field :id, "ID of the slot"
-      response_field :title, "Title of the slot"
-      response_field :startDate, "Startdate of the slot"
-      response_field :endDate, "Enddate of the slot"
-      response_field :createdAt, "Creation of slot"
-      response_field :updatedAt, "Latest update of slot in db"
-      response_field :deletedAt, "Delete date of slot or nil"
-      response_field :location, "Location data for the slot"
-      response_field :creator, "User who created the slot"
-      response_field :settings, "User specific settings for the slot (alerts)"
-      response_field :visibility, "Visibiltiy of the slot"
-      response_field :notes, "Notes on the slot"
-      response_field :likes, "Likes for the slot"
-      response_field :commentsCounter, "Number of comments on the slot"
-      response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-      response_field :images, "Images for the slot"
-      response_field :voices, "Voice recordings for the slot"
-      response_field :videos, "Videos recordings for the slot"
+      include_context "default slot response fields"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
@@ -255,21 +253,9 @@ resource "Slots" do
     parameter :alerts, "Alerts for the Slot", scope: :settings
 
     describe "Create new standard slot" do
+      parameter :visibility, "Visibility of the Slot", required: true
 
-      parameter :visibility, "Visibility of the Slot",
-                required: true
-
-      response_field :id, "ID of the new slot"
-      response_field :title, "Title of the new slot"
-      response_field :startDate, "Startdate of the new slot"
-      response_field :endDate, "Enddate of the new slot"
-      response_field :creatorId, "ID of the User who created the slot"
-      response_field :alerts, "Alerts for the slot"
-      response_field :note, "A Note on the slot"
-      response_field :visibility, "Visibility of the slot (private/friends/public)"
-      response_field :createdAt, "Creation datetime of the slot"
-      response_field :updatedAt, "Last update of the slot"
-      response_field :deletedAt, "Deletion datetime of the slot"
+      include_context "default slot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -303,7 +289,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with invalid params" do
-
       parameter :visibility, "Visibility of the Slot",
                 required: true
 
@@ -326,7 +311,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with missing requiered params" do
-
       parameter :visibility, "Visibility of the Slot",
                 required: true
 
@@ -370,16 +354,7 @@ resource "Slots" do
     let(:group) { create(:group, owner: current_user) }
 
     describe "Create new group slot" do
-
-      response_field :id, "ID of the new slot"
-      response_field :title, "Title of the new slot"
-      response_field :startDate, "Startdate of the new slot"
-      response_field :endDate, "Enddate of the new slot"
-      response_field :creatorId, "ID of the User who created the slot"
-      response_field :alerts, "Alerts for the slot"
-      response_field :note, "A Note on the slot"
-      response_field :groupId, "ID of the group the slot belongs to"
-      response_field :createdAt, "Creation datetime of the slot"
+      include_context "group slot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -410,7 +385,6 @@ resource "Slots" do
     end
 
     describe "Create group slot with invalid params" do
-
       response_field :error, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
@@ -430,7 +404,6 @@ resource "Slots" do
     end
 
     describe "Create group slot with missing requiered params" do
-
       response_field :endDate, "The missing parameter"
 
       let(:title) { "Time for a Slot" }
@@ -461,17 +434,7 @@ resource "Slots" do
     let(:pred) { create(:std_slot) }
 
     describe "Reslot a StandardSlot" do
-
-      response_field :id, "ID of the new slot"
-      response_field :title, "Title of the slot"
-      response_field :startDate, "Startdate of the slot"
-      response_field :endDate, "Enddate of the slot"
-      response_field :creatorId, "ID of the User who created the slot"
-      response_field :slotterId, "ID of the User who did reslot"
-      response_field :note, "A Note on the slot"
-      response_field :createdAt, "Creation datetime of the slot"
-      response_field :updatedAt, "Last update of the slot"
-      response_field :deletedAt, "Deletion datetime of the slot"
+      include_context "reslot response fields"
 
       let(:predecessorId) { pred.id }
       let(:note) { "re-revolutionizing the calendar" }
@@ -537,6 +500,8 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
 
+    include_context "default slot response fields"
+
     let!(:std_slot) { create(:std_slot_private, owner: current_user) }
     let(:id) { std_slot.id }
 
@@ -586,8 +551,7 @@ resource "Slots" do
       end
     end
 
-    describe "Adding media items to existing slot" do
-
+    describe "Add Photos to existing slot" do
       parameter :photos, "Scope for array of new photos/voices/videos",
                 required: true
       parameter :publicId, "Cloudinary ID / URL",
@@ -596,12 +560,10 @@ resource "Slots" do
                            " If not submitted it will be added at the end",
                 scope: :photos
 
-      response_field :mediaItemId, "Timeslot internal ID for this media item"
-
       let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7iyf.jpg",
                       position: "1"] }
 
-      example "Add photo", document: :v1 do
+      example "Add photo(s)", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -619,7 +581,6 @@ resource "Slots" do
     end
 
     describe "Reordering media data of existing slot" do
-
       parameter :photos, "Array with mediaIds and position parameter",
                 required: true
       parameter :mediaId, "Timeslot's internal ID for this media item",
@@ -662,9 +623,12 @@ resource "Slots" do
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
-    let!(:std_slot) { create(:std_slot_private, :with_media, owner: current_user) }
-
+    let!(:std_slot) {
+      create(:std_slot_private, :with_media, owner: current_user)
+    }
     describe "Delete Standard Slot" do
+      include_context "default slot response fields"
+
       let(:id) { std_slot.id }
 
       example "Delete StandardSlot", document: :v1 do
@@ -708,6 +672,8 @@ resource "Slots" do
     let!(:group_slot) { create(:group_slot, group: group) }
 
     describe "Delete Group Slot" do
+      include_context "group slot response fields"
+
       let(:id) { group_slot.id }
 
       example "Delete GroupSlot", document: :v1 do
@@ -883,7 +849,7 @@ resource "Slots" do
 
     let(:id) { reslot_3.id }
 
-    example "Get Reslot History/Chronic for Slot", document: :v1 do
+    example "Get Reslot History aka Chronic for Slot", document: :v1 do
       explanation "returns list of all previous reslots for the slot." \
                   " Includes User data and timestamp.\n\n" \
                   "returns 401 if User not allowed to see reslot history\n\n" \
@@ -907,7 +873,7 @@ resource "Slots" do
                          "[private/friends/public]",
               scope: :copyTo
     parameter :groupId, "ID of the group to copy to, user must be allowed " \
-                         "to post to this group",
+                        "to post to this group",
               scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
@@ -954,9 +920,9 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :slotType, "Type of slot to move to. Must be own of " \
-                          "[private/friends/public]"
+                         "[private/friends/public]"
     parameter :groupId, "Contains the group ID if moving into a group" \
-                         " User must be allowed to post to this group"
+                        " User must be allowed to post to this group"
     parameter :details, "Move all media data and notes to the new " \
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'true', must be one of [true/false]"
