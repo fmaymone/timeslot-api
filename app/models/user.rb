@@ -397,13 +397,14 @@ class User < ActiveRecord::Base
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
     if identity
-      identity.user.set_auth_token unless identity.user.auth_token
+      no_token = identity.user.auth_token.nil?
+      identity.user.update(auth_token: generate_auth_token) if no_token
       return identity.user
     end
 
     user = detect_or_create(identity_params[:username], social_params[:email])
     return user unless user.errors.empty?
-    user.set_auth_token unless user.auth_token
+    user.update(auth_token: generate_auth_token) unless user.auth_token
 
     identity = Connect.create(user: user,
                               provider: identity_params[:provider],
