@@ -16,8 +16,9 @@ resource "Slots" do
     response_field :location, "Location data for the slot"
     response_field :creator, "User who created the slot"
     response_field :settings,
-                   "Only included if it's a slot of the current User ""(created-/friend-/re-/groupslot)\n\n" \
-                              ", contains User specific settings for this slot (alerts)"
+                   "Only included if it's a slot of the current User " \
+                   "(created-/friend-/re-/groupslot),\n\n" \
+                   "contains User specific settings for this slot (alerts)"
     response_field :visibility, "Visibiltiy of the slot"
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
@@ -623,6 +624,8 @@ resource "Slots" do
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
+    include_context "default slot response fields"
+
     let!(:std_slot) {
       create(:std_slot_private, :with_media, owner: current_user)
     }
@@ -667,6 +670,8 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Group Slot to delete", required: true
+
+    include_context "group slot response fields"
 
     let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
@@ -714,6 +719,8 @@ resource "Slots" do
 
     parameter :id, "ID of the ReSlot to delete", required: true
 
+    include_context "reslot response fields"
+
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
@@ -753,6 +760,9 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Slot to get the likes for", required: true
+
+    response_field :array, "containing creation date of the Like and " \
+                           "details of the user who made the Like"
 
     let(:slot) { create(:group_slot, :with_likes) }
     let!(:membership) {
@@ -808,6 +818,9 @@ resource "Slots" do
 
     parameter :id, "ID of the Slot to get the comments for", required: true
 
+    response_field :array, "containing comment content and creation date and " \
+                           "details of the user who made the comment"
+
     let(:slot) { create(:group_slot, :with_comments) }
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
@@ -837,6 +850,14 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Slot to get the chronic for", required: true
+
+    response_field :predecessors,
+                   "Array of Users who had (re-)slottet that slot before"
+    # TODO: change parentUser to default user object, call it parentCreator
+    response_field :parentUserId, "ID of the creator of the original slot"
+    response_field :parentUsername,
+                   "Username of the creator of the original slot"
+    response_field :parentUserImage, "Image of the creator of the original slot"
 
     let!(:slot) { create(:std_slot) }
     let!(:reslot_1) { create(:re_slot, predecessor: slot,
@@ -927,6 +948,8 @@ resource "Slots" do
                         " slot. Otherwise they will be deleted.\n\n" \
                         "Defaults to 'true', must be one of [true/false]"
 
+    include_context "group slot response fields"
+
     let(:slot) { create(:std_slot_private, :with_media, owner: current_user) }
 
     describe "Move Slot from private to friends" do
@@ -940,7 +963,8 @@ resource "Slots" do
                     "groupId must be provided! If details is " \
                     "set to 'true' all media items and notes will " \
                     "be duplicated. The source will be deleted afterwards " \
-                    "and with it all comments and likes."
+                    "and with it all comments and likes.\n\n" \
+                    "Returns 200 and the data of the new slot."
         do_request
 
         expect(response_status).to eq(200)
