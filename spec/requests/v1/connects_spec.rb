@@ -125,6 +125,17 @@ RSpec.describe "V1::Connects", type: :request do
           post "/v1/fb-connect", payload.merge(email: user.email)
           expect(json).to have_key 'authToken'
           expect(json['authToken']).to eq user.auth_token
+          user.reload
+          expect(user.auth_token).not_to be nil
+        end
+
+        it "creates and persists an auth token if non exists" do
+          user.update(auth_token: nil)
+          post "/v1/fb-connect", payload.merge(email: user.email)
+          expect(json).to have_key 'authToken'
+          expect(json['authToken']).not_to be nil
+          user.reload
+          expect(user.auth_token).not_to be nil
         end
       end
     end
@@ -157,11 +168,13 @@ RSpec.describe "V1::Connects", type: :request do
         expect(json['authToken']).not_to be nil
       end
 
-      it "creates an auth token if non exists" do
+      it "creates and persists an auth token if non exists" do
         user.update(auth_token: nil)
         post "/v1/fb-connect", payload
         expect(json).to have_key 'authToken'
         expect(json['authToken']).not_to be nil
+        user.reload
+        expect(user.auth_token).not_to be nil
       end
     end
 
