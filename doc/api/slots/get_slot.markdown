@@ -32,7 +32,7 @@ Name : createdAt
 Description : Creation of slot
 
 Name : updatedAt
-Description : Latest update of slot in db
+Description : Last update of slot
 
 Name : deletedAt
 Description : Delete date of slot or nil
@@ -44,7 +44,9 @@ Name : creator
 Description : User who created the slot
 
 Name : settings
-Description : User specific settings for the slot (alerts)
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
 
 Name : visibility
 Description : Visibiltiy of the slot
@@ -75,7 +77,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=fQ4p5bVP3heLjaBR0p72ldWSeeE
+Authorization: Token token=dEq67I61Dhwn2CrMiLDhGi1Gs_s
 Host: example.org
 Cookie: </pre>
 
@@ -87,7 +89,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/25&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=fQ4p5bVP3heLjaBR0p72ldWSeeE&quot; \
+	-H &quot;Authorization: Token token=dEq67I61Dhwn2CrMiLDhGi1Gs_s&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -98,11 +100,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;06a25ec889d676cdb24b7266a7f4d5f2&quot;
+ETag: W/&quot;00f44db882fe0facd45a540a07f8d00a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d04008ac-d1b2-449e-bc1b-ee7d2874a8ae
-X-Runtime: 0.033015
-Content-Length: 1253</pre>
+X-Request-Id: 570f4440-af56-4910-b1f2-cd01f30610d8
+X-Runtime: 0.217161
+Content-Length: 1247</pre>
 
 #### Status
 
@@ -114,18 +116,18 @@ Content-Length: 1253</pre>
 {
   "id" : 25,
   "title" : "Slot title 27",
-  "createdAt" : "2015-05-19T10:51:50.413Z",
-  "updatedAt" : "2015-05-19T10:51:50.413Z",
+  "createdAt" : "2015-05-22T15:50:01.141Z",
+  "updatedAt" : "2015-05-22T15:50:01.141Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-01T03:44:02.000Z",
   "visibility" : "public",
   "location" : null,
   "creator" : {
-    "id" : 146,
-    "username" : "User 143",
-    "createdAt" : "2015-05-19T10:51:50.406Z",
-    "updatedAt" : "2015-05-19T10:51:50.406Z",
+    "id" : 147,
+    "username" : "User 144",
+    "createdAt" : "2015-05-22T15:50:01.134Z",
+    "updatedAt" : "2015-05-22T15:50:01.134Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -139,32 +141,32 @@ Content-Length: 1253</pre>
     {
       "mediaId" : 21,
       "clyid" : "dfhjghjkdisudgfds7iy18",
-      "postition" : 0
+      "position" : 0
     },
     {
       "mediaId" : 22,
       "clyid" : "dfhjghjkdisudgfds7iy19",
-      "postition" : 1
+      "position" : 1
     },
     {
       "mediaId" : 23,
       "clyid" : "dfhjghjkdisudgfds7iy20",
-      "postition" : 2
+      "position" : 2
     },
     {
       "mediaId" : 24,
       "clyid" : "dfhjghjkdisudgfds7iy21",
-      "postition" : 3
+      "position" : 3
     },
     {
       "mediaId" : 25,
       "clyid" : "dfhjghjkdisudgfds7iy22",
-      "postition" : 4
+      "position" : 4
     },
     {
       "mediaId" : 26,
       "clyid" : "dfhjghjkdisudgfds7iy23",
-      "postition" : 5
+      "position" : 5
     }
   ],
   "voices" : [

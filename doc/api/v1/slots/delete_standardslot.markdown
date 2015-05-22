@@ -13,11 +13,126 @@ returns 404 if ID is invalid
 Name : id *- required -*
 Description : ID of the Standard Slot to delete
 
+
+### Response Fields
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=If9153pmpJbT3mlG_KpVGy479_s
+<pre>Authorization: Token token=SVWsExmHSmu6ntCwnV_5kv1GJTk
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -29,7 +144,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/36&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=If9153pmpJbT3mlG_KpVGy479_s&quot; \
+	-H &quot;Authorization: Token token=SVWsExmHSmu6ntCwnV_5kv1GJTk&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -41,10 +156,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ec123ff7cf05df5018bf4488fca02ce6&quot;
+ETag: W/&quot;5f76d79826f9e6dc6057967c1d458971&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3b717992-11ce-42d1-8f4a-dee941c0bfff
-X-Runtime: 0.170706
+X-Request-Id: ec8c30ab-50ec-46d9-930d-a93f5985ac1e
+X-Runtime: 0.169130
 Content-Length: 531</pre>
 
 #### Status
@@ -57,18 +172,18 @@ Content-Length: 531</pre>
 {
   "id" : 36,
   "title" : "Slot title 34",
-  "createdAt" : "2015-05-19T10:51:51.095Z",
-  "updatedAt" : "2015-05-19T10:51:51.243Z",
-  "deletedAt" : "2015-05-19T10:51:51.241Z",
+  "createdAt" : "2015-05-22T15:50:02.152Z",
+  "updatedAt" : "2015-05-22T15:50:02.299Z",
+  "deletedAt" : "2015-05-22T15:50:02.296Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-08T10:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 171,
-    "username" : "User 168",
-    "createdAt" : "2015-05-19T10:51:51.092Z",
-    "updatedAt" : "2015-05-19T10:51:51.092Z",
+    "id" : 172,
+    "username" : "User 169",
+    "createdAt" : "2015-05-22T15:50:02.148Z",
+    "updatedAt" : "2015-05-22T15:50:02.148Z",
     "deletedAt" : null
   },
   "settings" : {

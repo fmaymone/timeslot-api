@@ -18,12 +18,71 @@ Description : Title of the note
 Name : content *- required -*
 Description : Content of the note
 
+
+### Response Fields
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=h99tQ6we2rw3ecnusOUURMJFejY
+Authorization: Token token=qYjqKa1JKQwrJZNqQt5lqvzpQEQ
 Host: example.org
 Cookie: </pre>
 
@@ -52,7 +111,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/33&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=h99tQ6we2rw3ecnusOUURMJFejY&quot; \
+	-H &quot;Authorization: Token token=qYjqKa1JKQwrJZNqQt5lqvzpQEQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,10 +122,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;41508ef82f978a7e2b06aa2b257e4560&quot;
+ETag: W/&quot;198ce8ba066c528ba2f51752590c38d3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f6092db3-6eab-4776-8fa6-a4c014a80d64
-X-Runtime: 0.035778
+X-Request-Id: 61a4795c-5a2d-4042-9b6e-a4bab860f219
+X-Runtime: 0.032778
 Content-Length: 748</pre>
 
 #### Status
@@ -79,18 +138,18 @@ Content-Length: 748</pre>
 {
   "id" : 33,
   "title" : "Slot title 31",
-  "createdAt" : "2015-05-19T10:51:50.904Z",
-  "updatedAt" : "2015-05-19T10:51:50.904Z",
+  "createdAt" : "2015-05-22T15:50:01.963Z",
+  "updatedAt" : "2015-05-22T15:50:01.963Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-05T07:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 165,
-    "username" : "User 162",
-    "createdAt" : "2015-05-19T10:51:50.901Z",
-    "updatedAt" : "2015-05-19T10:51:50.901Z",
+    "id" : 166,
+    "username" : "User 163",
+    "createdAt" : "2015-05-22T15:50:01.959Z",
+    "updatedAt" : "2015-05-22T15:50:01.959Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -101,13 +160,13 @@ Content-Length: 748</pre>
       "id" : 5,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-19T10:51:50.917Z"
+      "createdAt" : "2015-05-22T15:50:01.977Z"
     },
     {
       "id" : 4,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-19T10:51:50.915Z"
+      "createdAt" : "2015-05-22T15:50:01.974Z"
     }
   ],
   "likes" : 0,

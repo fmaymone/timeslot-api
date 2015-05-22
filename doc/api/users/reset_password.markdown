@@ -4,9 +4,7 @@
 
 ### POST /v1/users/reset
 
-This is not ready for production!!!
-
-Resets password to &#39;autechre&#39;
+Resets password and sends it to user via email
 
 returns OK if valid email
 
@@ -33,14 +31,14 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user62@email.com"
+  "email" : "success@simulator.amazonses.com"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;user62@email.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -54,8 +52,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: edaa5069-a2d9-4c5d-bf06-1ba118c503a3
-X-Runtime: 0.007089
+X-Request-Id: 17900315-d8df-4842-aa23-9baddd81468a
+X-Runtime: 0.156393
 Content-Length: 0</pre>
 
 #### Status

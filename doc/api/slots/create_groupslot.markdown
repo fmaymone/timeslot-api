@@ -41,31 +41,63 @@ Description : Alerts for the Slot
 ### Response Fields
 
 Name : id
-Description : ID of the new slot
+Description : ID of the slot
 
 Name : title
-Description : Title of the new slot
+Description : Title of the slot
 
 Name : startDate
-Description : Startdate of the new slot
+Description : Startdate of the slot
 
 Name : endDate
-Description : Enddate of the new slot
+Description : Enddate of the slot
 
-Name : creatorId
-Description : ID of the User who created the slot
+Name : createdAt
+Description : Creation of slot
 
-Name : alerts
-Description : Alerts for the slot
+Name : updatedAt
+Description : Last update of slot
 
-Name : note
-Description : A Note on the slot
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
 
 Name : groupId
 Description : ID of the group the slot belongs to
-
-Name : createdAt
-Description : Creation datetime of the slot
 
 ### Request
 
@@ -73,7 +105,7 @@ Description : Creation datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=izMOf5J_-hb5nzL6hOcdmN_w2ww
+Authorization: Token token=PK9Opa2OTUYxxqKd3IO_r-SRYnU
 Host: example.org
 Cookie: </pre>
 
@@ -101,7 +133,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;groupId&quot;:38,&quot;note&quot;:&quot;revolutionizing the calendar&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=izMOf5J_-hb5nzL6hOcdmN_w2ww&quot; \
+	-H &quot;Authorization: Token token=PK9Opa2OTUYxxqKd3IO_r-SRYnU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -112,10 +144,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d297721b2fb4200307e67eace9e880f4&quot;
+ETag: W/&quot;489f678c0a86bc6519d11bbc154b324d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 76d7948b-3c98-4304-bf57-5a3a1efed06a
-X-Runtime: 0.031594
+X-Request-Id: 68993e35-d425-4747-9f33-cd1001967b6a
+X-Runtime: 0.041158
 Content-Length: 524</pre>
 
 #### Status
@@ -128,18 +160,18 @@ Content-Length: 524</pre>
 {
   "id" : 28,
   "title" : "Time for a Slot",
-  "createdAt" : "2015-05-19T10:51:50.686Z",
-  "updatedAt" : "2015-05-19T10:51:50.686Z",
+  "createdAt" : "2015-05-22T15:50:01.732Z",
+  "updatedAt" : "2015-05-22T15:50:01.732Z",
   "deletedAt" : null,
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
   "visibility" : "members",
   "location" : null,
   "creator" : {
-    "id" : 155,
-    "username" : "User 152",
-    "createdAt" : "2015-05-19T10:51:50.664Z",
-    "updatedAt" : "2015-05-19T10:51:50.664Z",
+    "id" : 156,
+    "username" : "User 153",
+    "createdAt" : "2015-05-22T15:50:01.708Z",
+    "updatedAt" : "2015-05-22T15:50:01.708Z",
     "deletedAt" : null
   },
   "settings" : {

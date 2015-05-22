@@ -1,6 +1,6 @@
 # Slots API
 
-## Add photo
+## Add photo(s)
 
 ### PATCH /v1/stdslot/:id
 
@@ -27,15 +27,68 @@ Description : Sorting order of the new media item. If not submitted it will be a
 
 ### Response Fields
 
-Name : mediaItemId
-Description : Timeslot internal ID for this media item
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
 
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=BvdLNVDcW6C4ONK_krCZOHDzN4s
+Authorization: Token token=K6-Ey4X168BcARpRM0KPcahC5c4
 Host: example.org
 Cookie: </pre>
 
@@ -60,7 +113,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/34&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;position&quot;:&quot;1&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=BvdLNVDcW6C4ONK_krCZOHDzN4s&quot; \
+	-H &quot;Authorization: Token token=K6-Ey4X168BcARpRM0KPcahC5c4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -71,11 +124,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;12cbaefcf71f0958ce45d97c31538ee8&quot;
+ETag: W/&quot;df5e6ea3a94b71a071477f80779154f3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5ef560e2-3bfe-467d-82c5-d618e341034b
-X-Runtime: 0.034951
-Content-Length: 582</pre>
+X-Request-Id: b5c96fc5-5125-4ed0-83ea-a2cc64403cba
+X-Runtime: 0.033437
+Content-Length: 581</pre>
 
 #### Status
 
@@ -87,18 +140,18 @@ Content-Length: 582</pre>
 {
   "id" : 34,
   "title" : "Slot title 32",
-  "createdAt" : "2015-05-19T10:51:50.959Z",
-  "updatedAt" : "2015-05-19T10:51:50.959Z",
+  "createdAt" : "2015-05-22T15:50:02.018Z",
+  "updatedAt" : "2015-05-22T15:50:02.018Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-06T08:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 167,
-    "username" : "User 164",
-    "createdAt" : "2015-05-19T10:51:50.956Z",
-    "updatedAt" : "2015-05-19T10:51:50.956Z",
+    "id" : 168,
+    "username" : "User 165",
+    "createdAt" : "2015-05-22T15:50:02.013Z",
+    "updatedAt" : "2015-05-22T15:50:02.013Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -112,7 +165,7 @@ Content-Length: 582</pre>
     {
       "mediaId" : 31,
       "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-      "postition" : 1
+      "position" : 1
     }
   ],
   "voices" : [],
