@@ -202,7 +202,7 @@ INHERITS (base_slots);
 CREATE TABLE groups (
     id bigint NOT NULL,
     owner_id bigint NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying NOT NULL,
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
@@ -236,7 +236,7 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 CREATE TABLE ios_locations (
     id bigint NOT NULL,
-    name character varying(128) NOT NULL,
+    name character varying(128),
     street character varying(128) DEFAULT ''::character varying,
     city character varying(128) DEFAULT ''::character varying,
     postcode character varying(32) DEFAULT ''::character varying,
@@ -247,7 +247,8 @@ CREATE TABLE ios_locations (
     creator_id bigint NOT NULL,
     private_location boolean DEFAULT true NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    auid bigint
 );
 
 
@@ -309,16 +310,16 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 CREATE TABLE media_items (
     id bigint NOT NULL,
-    media_type character varying(255),
-    public_id character varying(255),
+    media_type character varying,
+    public_id character varying,
     "position" integer,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     mediable_id bigint,
-    mediable_type character varying(255),
+    mediable_type character varying,
     deleted_at timestamp without time zone,
     duration integer,
-    thumbnail character varying(255)
+    thumbnail character varying
 );
 
 
@@ -390,7 +391,8 @@ CREATE TABLE meta_slots (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    location_id bigint
+    location_id bigint,
+    ios_location_id bigint
 );
 
 
@@ -420,7 +422,7 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 CREATE TABLE notes (
     id bigint NOT NULL,
     base_slot_id bigint NOT NULL,
-    title character varying(255) NOT NULL,
+    title character varying NOT NULL,
     content text DEFAULT ''::text,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -499,7 +501,7 @@ INHERITS (base_slots);
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -561,7 +563,7 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    email character varying(255),
+    email character varying,
     password_digest character varying(60),
     auth_token character varying(27),
     role smallint NOT NULL,
@@ -572,13 +574,13 @@ CREATE TABLE users (
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
+    phone character varying(35),
     location_id bigint,
-    public_url character varying(255),
+    public_url character varying,
     push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
-    phone character varying(35),
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
     location_name character varying(128),
@@ -865,6 +867,13 @@ CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user
 
 
 --
+-- Name: index_connects_on_social_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_connects_on_social_id ON connects USING btree (social_id);
+
+
+--
 -- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -914,10 +923,17 @@ CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
 
 
 --
--- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_ios_locations_on_auid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON ios_locations USING btree (name, latitude, longitude);
+CREATE UNIQUE INDEX index_ios_locations_on_auid ON ios_locations USING btree (auid);
+
+
+--
+-- Name: index_ios_locations_on_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_ios_locations_on_latitude_and_longitude ON ios_locations USING btree (latitude, longitude);
 
 
 --
@@ -928,10 +944,10 @@ CREATE UNIQUE INDEX index_likes_on_user_id_and_base_slot_id ON likes USING btree
 
 
 --
--- Name: index_media_items_on_mediable_id_and_mediable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_media_items_on_mediable_type_and_mediable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_media_items_on_mediable_id_and_mediable_type ON media_items USING btree (mediable_id, mediable_type);
+CREATE INDEX index_media_items_on_mediable_type_and_mediable_id ON media_items USING btree (mediable_type, mediable_id);
 
 
 --
@@ -1181,4 +1197,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150505110742');
 INSERT INTO schema_migrations (version) VALUES ('20150519084309');
 
 INSERT INTO schema_migrations (version) VALUES ('20150521115806');
+
+INSERT INTO schema_migrations (version) VALUES ('20150526100738');
 

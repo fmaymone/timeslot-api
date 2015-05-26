@@ -3,5 +3,5 @@ class IosLocation < ActiveRecord::Base
 
   belongs_to :creator, class_name: User
 
-  validates_presence_of :name, :creator
+  validates_presence_of :creator
 end

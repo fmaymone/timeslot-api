@@ -13,12 +13,10 @@ class MetaSlot < ActiveRecord::Base
   validate :enddate_is_after_startdate
 
   def location
-    begin
-      Location.find(location_id)
-    rescue => e
-      Airbrake.notify(e)
-      nil
-    end
+    Location.find(location_id)
+  rescue => e
+    Airbrake.notify(e)
+    nil
   end
 
   def unregister

@@ -12,15 +12,11 @@ RSpec.describe IosLocation, type: :model do
   it { is_expected.to respond_to(:country) }
   it { is_expected.to respond_to(:latitude) }
   it { is_expected.to respond_to(:longitude) }
+  it { is_expected.to respond_to(:auid) }
   it { is_expected.to respond_to(:private_location) }
   it { is_expected.to belong_to(:creator) }
 
   it { is_expected.to be_valid }
-
-  describe "when name is not present" do
-    before { ios_location.name = "" }
-    it { is_expected.to_not be_valid }
-  end
 
   describe "when creator is not present" do
     before { ios_location.creator = nil }
