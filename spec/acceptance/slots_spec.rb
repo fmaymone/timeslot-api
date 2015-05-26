@@ -252,6 +252,24 @@ resource "Slots" do
     parameter :notes, "Notes for to the Slot"
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
+    parameter :iosLocation, "IOS location associated with this slot"
+    parameter :name, "Name of the IOS location (128 chars)",
+              scope: :iosLocation
+    parameter :street, "Street of IOS location (128 chars)",
+              scope: :iosLocation
+    parameter :city, "City of IOS location (128 chars)",
+              scope: :iosLocation
+    parameter :postcode, "Postcode of IOS location (32 chars)",
+              scope: :iosLocation
+    parameter :country, "Country of IOS location (64 chars)",
+              scope: :iosLocation
+    parameter :latitude, "Latitude of IOS location", scope: :iosLocation
+    parameter :longitude, "Longitude of IOS location", scope: :iosLocation
+    parameter :auid, "Apple UID of the location", scope: :iosLocation
+    parameter :private_location,
+              "private location for this user (true/false) [not yet " \
+              "sure what it will mean technically]",
+              scope: :iosLocation
 
     describe "Create new standard slot" do
       parameter :visibility, "Visibility of the Slot", required: true
@@ -261,7 +279,6 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      let(:locationId) { 200_719_253 }
       let(:notes) { [{ title: "revolutionizing the calendar",
                        content: "this is content" },
                      { title: "and another title",
@@ -269,23 +286,75 @@ resource "Slots" do
       let(:alerts) { '0101010101' }
       let(:visibility) { 'private' }
 
-      example "Create StandardSlot", document: :v1 do
-        explanation "Returns data of new slot.\n\n" \
-                    "Missing unrequiered fields will be filled" \
-                    " with default values.\n\n" \
-                    "returns 422 if parameters are invalid\n\n" \
-                    "returns 422 if required parameters are missing"
-        do_request
+      context "slot without location" do
+        example "Create StandardSlot", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "Missing unrequiered fields will be filled" \
+                      " with default values.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
 
-        expect(response_status).to eq(201)
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("creator")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("visibility")
-        expect(json["notes"].length).to eq(notes.length)
+          expect(response_status).to eq(201)
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+          expect(json).to have_key("startDate")
+          expect(json).to have_key("endDate")
+          expect(json).to have_key("creator")
+          expect(json).to have_key("notes")
+          expect(json).to have_key("visibility")
+          expect(json["notes"].length).to eq(notes.length)
+        end
+      end
+
+      context "slot with default location" do
+        let(:locationId) { 200_719_253 }
+
+        example "Create StandardSlot", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "Missing unrequiered fields will be filled" \
+                      " with default values.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          expect(response_status).to eq(201)
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+          expect(json).to have_key("location")
+          # expect(json['location']).not_to be nil
+        end
+      end
+
+      context "slot with IOS location", :focus do
+        let(:name) { 'Soho House' }
+        let(:street) { 'Torstrasse 1' }
+        let(:city) { 'Berlin' }
+        let(:postcode) { '10119' }
+        let(:country) { 'Germany' }
+        # google 52.527654, 13.415670
+        # apple 52.527335,13.414259
+        let(:latitude) { '52.527335' }
+        let(:longitude) { '13.414259' }
+        let(:auid) { 9_032_563_782_833_995_324 }
+        # postgres biggest bigint: 9223372036854775807
+
+        example "Create StandardSlot with IOS Location", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "Missing unrequiered fields will be filled" \
+                      " with default values.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          expect(response_status).to eq(201)
+          slot = StdSlotPrivate.last
+          expect(slot.ios_location_id).not_to be nil
+          expect(json).to have_key("id")
+          expect(json).to have_key("location")
+          location = json['location']
+          expect(location['name']).to eq 'Soho House'
+        end
       end
     end
 
