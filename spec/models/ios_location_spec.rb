@@ -14,6 +14,7 @@ RSpec.describe IosLocation, type: :model do
   it { is_expected.to respond_to(:longitude) }
   it { is_expected.to respond_to(:auid) }
   it { is_expected.to respond_to(:private_location) }
+  it { is_expected.to have_one(:meta_slot) }
   it { is_expected.to belong_to(:creator) }
 
   it { is_expected.to be_valid }

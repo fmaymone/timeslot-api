@@ -5,6 +5,7 @@ class MetaSlot < ActiveRecord::Base
   has_many :slot_settings, inverse_of: :meta_slot
   has_many :slots, -> { where deleted_at: nil }, class_name: BaseSlot,
            inverse_of: :meta_slot
+  belongs_to :ios_location, inverse_of: :meta_slot
 
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
