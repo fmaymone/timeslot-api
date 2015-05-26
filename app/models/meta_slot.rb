@@ -36,6 +36,13 @@ class MetaSlot < ActiveRecord::Base
 
   def self.find_or_add(meta_params)
     meta_id = meta_params[:meta_slot_id]
-    MetaSlot.where(id: meta_id).first_or_create(meta_params)
+    MetaSlot.where(id: meta_id).first_or_create do |meta_slot|
+      meta_slot.update(meta_params.except(:ios_location))
+      return meta_slot if meta_params[:ios_location].nil?
+
+      ios_params = meta_params[:ios_location].merge(creator: meta_params[:creator])
+      ios_location = IosLocation.create(ios_params)
+      meta_slot.update(ios_location: ios_location)
+    end
   end
 end

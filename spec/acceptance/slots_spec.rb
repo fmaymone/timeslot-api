@@ -201,11 +201,11 @@ resource "Slots" do
                                  "postcode" => slot.location.postcode,
                                  "country" => slot.location.country,
                                  "longitude" => slot.location.longitude,
-                                 "latitude" => slot.location.latitude,
-                                 "createdAt" => slot.location.created.as_json,
-                                 "updatedAt" => slot.location.last_update.as_json,
-                                 "categories" => slot.location.categories,
-                                 "images" => slot.location.images
+                                 "latitude" => slot.location.latitude
+                                 # "createdAt" => slot.location.created.as_json,
+                                 # "updatedAt" => slot.location.last_update.as_json,
+                                 # "categories" => slot.location.categories,
+                                 # "images" => slot.location.images
                                },
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
@@ -268,7 +268,7 @@ resource "Slots" do
     parameter :auid, "Apple UID of the location", scope: :iosLocation
     parameter :private_location,
               "private location for this user (true/false) [not yet " \
-              "sure what it will mean technically]",
+              "sure what it will mean technically] -> default: false",
               scope: :iosLocation
 
     describe "Create new standard slot" do
@@ -326,7 +326,7 @@ resource "Slots" do
         end
       end
 
-      context "slot with IOS location", :focus do
+      context "slot with IOS location" do
         let(:name) { 'Soho House' }
         let(:street) { 'Torstrasse 1' }
         let(:city) { 'Berlin' }
@@ -337,6 +337,7 @@ resource "Slots" do
         let(:latitude) { '52.527335' }
         let(:longitude) { '13.414259' }
         let(:auid) { 9_032_563_782_833_995_324 }
+        let(:private_location) { false }
         # postgres biggest bigint: 9223372036854775807
 
         example "Create StandardSlot with IOS Location", document: :v1 do
