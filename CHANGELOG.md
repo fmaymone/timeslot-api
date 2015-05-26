@@ -2,6 +2,9 @@
 
 ## v0.3.0 on t2s2-dev
 
+### support for IOS Location
+- add slot now accepts a complete address
+
 
 ## v0.2.1 on t2s2-silvio-dev
 - fix bug where auth_token was not persisted on social signin

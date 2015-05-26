@@ -7,10 +7,10 @@ else
   json.city location_data.city
   json.postcode location_data.postcode
   json.country location_data.country
-  json.longitude location_data.longitude
   json.latitude location_data.latitude
-  json.created_at location_data.created
-  json.updated_at location_data.last_update
-  json.categories location_data.categories
-  json.images location_data.images
+  json.longitude location_data.longitude
+# json.created_at location_data.created
+  # json.updated_at location_data.last_update
+  # json.categories location_data.categories
+  # json.images location_data.images
 end
