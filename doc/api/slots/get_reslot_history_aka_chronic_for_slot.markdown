@@ -1,6 +1,6 @@
 # Slots API
 
-## Get Reslot History/Chronic for Slot
+## Get Reslot History aka Chronic for Slot
 
 ### GET /v1/slots/:id/history
 
@@ -15,11 +15,26 @@ returns 404 if ID is invalid
 Name : id *- required -*
 Description : ID of the Slot to get the chronic for
 
+
+### Response Fields
+
+Name : predecessors
+Description : Array of Users who had (re-)slottet that slot before
+
+Name : parentUserId
+Description : ID of the creator of the original slot
+
+Name : parentUsername
+Description : Username of the creator of the original slot
+
+Name : parentUserImage
+Description : Image of the creator of the original slot
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=dIAdWX4mj-QWL-ozAO4kvVGpfRI
+<pre>Authorization: Token token=VMxNMXsWuLOBTSEmHcnEygYY2vo
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +45,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/52/history&quot; -X GET \
-	-H &quot;Authorization: Token token=dIAdWX4mj-QWL-ozAO4kvVGpfRI&quot; \
+	-H &quot;Authorization: Token token=VMxNMXsWuLOBTSEmHcnEygYY2vo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b5a7fa005180bff344172b4ef82f4b33&quot;
+ETag: W/&quot;79380561ffe96dc5f5b148a4d9602414&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: df2196d0-5a45-40f4-be0c-fc70fb6a395b
-X-Runtime: 0.023068
+X-Request-Id: 45d4ab7e-3e63-4f52-b657-6fededf22e6c
+X-Runtime: 0.080455
 Content-Length: 266</pre>
 
 #### Status
@@ -57,20 +72,20 @@ Content-Length: 266</pre>
 {
   "predecessors" : [
     {
+      "id" : 214,
+      "username" : "User 211",
+      "userImage" : null,
+      "timestamp" : "2015-05-22T15:50:02.817Z"
+    },
+    {
       "id" : 213,
       "username" : "User 210",
       "userImage" : null,
-      "timestamp" : "2015-05-19T10:51:51.766Z"
-    },
-    {
-      "id" : 212,
-      "username" : "User 209",
-      "userImage" : null,
-      "timestamp" : "2015-05-19T10:51:51.760Z"
+      "timestamp" : "2015-05-22T15:50:02.811Z"
     }
   ],
-  "parentUserId" : 211,
-  "parentUsername" : "User 208",
+  "parentUserId" : 212,
+  "parentUsername" : "User 209",
   "parentUserImage" : null
 }
 ```

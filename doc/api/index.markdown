@@ -35,14 +35,15 @@
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
-* [Get slot](slots/get_slot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
+* [Create StandardSlot](slots/create_standardslot.markdown)
+* [Create StandardSlot with IOS Location](slots/create_standardslot_with_ios_location.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
 * [Update MetaSlot](slots/update_metaslot.markdown)
 * [Update StdSlot](slots/update_stdslot.markdown)
 * [Add notes](slots/add_notes.markdown)
-* [Add photo](slots/add_photo.markdown)
+* [Add photo(s)](slots/add_photo(s).markdown)
 * [Reorder media items](slots/reorder_media_items.markdown)
 * [Delete StandardSlot](slots/delete_standardslot.markdown)
 * [Delete GroupSlot](slots/delete_groupslot.markdown)
@@ -50,7 +51,7 @@
 * [Get Likes for Slot](slots/get_likes_for_slot.markdown)
 * [Make Comment on Slot](slots/make_comment_on_slot.markdown)
 * [Get Comments for Slot](slots/get_comments_for_slot.markdown)
-* [Get Reslot History/Chronic for Slot](slots/get_reslot_historychronic_for_slot.markdown)
+* [Get Reslot History aka Chronic for Slot](slots/get_reslot_history_aka_chronic_for_slot.markdown)
 * [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
 * [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)
 

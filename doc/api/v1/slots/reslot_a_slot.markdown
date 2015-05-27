@@ -21,7 +21,7 @@ Description : ID of the Slot which was resloted
 ### Response Fields
 
 Name : id
-Description : ID of the new slot
+Description : ID of the slot
 
 Name : title
 Description : Title of the slot
@@ -32,23 +32,52 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
-Name : creatorId
-Description : ID of the User who created the slot
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
 
 Name : slotterId
 Description : ID of the User who did reslot
-
-Name : note
-Description : A Note on the slot
-
-Name : createdAt
-Description : Creation datetime of the slot
-
-Name : updatedAt
-Description : Last update of the slot
-
-Name : deletedAt
-Description : Deletion datetime of the slot
 
 ### Request
 
@@ -56,7 +85,7 @@ Description : Deletion datetime of the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Tw3qvnga8nV5r9U6Ohc1RjJhvMk
+Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0
 Host: example.org
 Cookie: </pre>
 
@@ -67,17 +96,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 30
+  "predecessorId" : 32
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:30}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:32}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Tw3qvnga8nV5r9U6Ohc1RjJhvMk&quot; \
+	-H &quot;Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -88,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ca22957740406c34909dda69ab0df363&quot;
+ETag: W/&quot;a83af074da2ad18a6899a046d3b3eba0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3a90bef9-d2d5-4768-abbb-78fac5debac6
-X-Runtime: 0.032477
-Content-Length: 520</pre>
+X-Request-Id: 02e98428-98c1-4b16-a386-97efbc48fcef
+X-Runtime: 0.048691
+Content-Length: 623</pre>
 
 #### Status
 
@@ -102,26 +131,35 @@ Content-Length: 520</pre>
 
 ```javascript
 {
-  "id" : 31,
+  "id" : 33,
   "title" : "Slot title 28",
-  "createdAt" : "2015-05-19T10:51:50.793Z",
-  "updatedAt" : "2015-05-19T10:51:50.793Z",
+  "createdAt" : "2015-05-27T12:18:00.919Z",
+  "updatedAt" : "2015-05-27T12:18:00.919Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-02T04:44:02.000Z",
   "visibility" : null,
-  "location" : null,
+  "location" : {
+    "id" : 30,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 158,
-    "username" : "User 155",
-    "createdAt" : "2015-05-19T10:51:50.773Z",
-    "updatedAt" : "2015-05-19T10:51:50.773Z",
+    "id" : 188,
+    "username" : "User 185",
+    "createdAt" : "2015-05-27T12:18:00.895Z",
+    "updatedAt" : "2015-05-27T12:18:00.895Z",
     "deletedAt" : null
   },
   "settings" : {
     "alerts" : "0000000000"
   },
-  "slotterId" : 160,
+  "slotterId" : 191,
   "notes" : [],
   "likes" : 0,
   "commentsCounter" : 0,

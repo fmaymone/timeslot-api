@@ -275,7 +275,14 @@ module V1
     end
 
     private def meta_params
-      p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId)
+      if params[:locationId].present? && params[:iosLocation].present?
+        msg = "LocationId and IosLocation can not both be submitted"
+        fail ActionController::ParameterMissing, msg
+      end
+      p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
+                        iosLocation:
+                          [:name, :street, :city, :postcode, :country, :auid,
+                           :latitude, :longitude, :private_location])
       p.transform_keys!(&:underscore)
       p.symbolize_keys
     end
