@@ -32,7 +32,7 @@ Name : createdAt
 Description : Creation of slot
 
 Name : updatedAt
-Description : Latest update of slot in db
+Description : Last update of slot
 
 Name : deletedAt
 Description : Delete date of slot or nil
@@ -44,7 +44,9 @@ Name : creator
 Description : User who created the slot
 
 Name : settings
-Description : User specific settings for the slot (alerts)
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
 
 Name : visibility
 Description : Visibiltiy of the slot
@@ -53,10 +55,13 @@ Name : notes
 Description : Notes on the slot
 
 Name : likes
-Description : Counter for likes of the slot
+Description : Likes for the slot
 
 Name : commentsCounter
 Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
 
 Name : images
 Description : Images for the slot
@@ -73,7 +78,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=VOa8FVPYprWSMZ7UlO7aUKateck
+Authorization: Token token=iE1gSnu2T3_6jBulz6wq3-kK2bc
 Host: example.org
 Cookie: </pre>
 
@@ -97,7 +102,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=VOa8FVPYprWSMZ7UlO7aUKateck&quot; \
+	-H &quot;Authorization: Token token=iE1gSnu2T3_6jBulz6wq3-kK2bc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -108,11 +113,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;2c6a3425dc58ee308de4d9072440fd1a&quot;
+ETag: W/&quot;b4cbc69fd50906bc40e8af370ff408d3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d807e341-f2a7-4b4f-9df3-117c003c8a73
-X-Runtime: 0.060676
-Content-Length: 1730</pre>
+X-Request-Id: c467b8eb-3435-46da-8b61-9a29860355b7
+X-Runtime: 0.050625
+Content-Length: 1721</pre>
 
 #### Status
 
@@ -126,8 +131,8 @@ Content-Length: 1730</pre>
     "id" : 24,
     "title" : "Slot title 26",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:32.192Z",
-    "updatedAt" : "2015-05-06T21:29:32.192Z",
+    "createdAt" : "2015-05-22T15:50:01.062Z",
+    "updatedAt" : "2015-05-22T15:50:01.062Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-27T02:44:02.000Z",
@@ -142,30 +147,30 @@ Content-Length: 1730</pre>
       {
         "mediaId" : 18,
         "clyid" : "dfhjghjkdisudgfds7iy15",
-        "postition" : 10
+        "position" : 10
       },
       {
         "mediaId" : 19,
         "clyid" : "dfhjghjkdisudgfds7iy16",
-        "postition" : 11
+        "position" : 11
       },
       {
         "mediaId" : 20,
         "clyid" : "dfhjghjkdisudgfds7iy17",
-        "postition" : 12
+        "position" : 12
       }
     ],
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/24",
-    "creatorId" : 134
+    "creatorId" : 145
   },
   {
     "id" : 23,
     "title" : "Slot title 25",
     "locationId" : 200719253,
-    "createdAt" : "2015-05-06T21:29:32.164Z",
-    "updatedAt" : "2015-05-06T21:29:32.164Z",
+    "createdAt" : "2015-05-22T15:50:01.013Z",
+    "updatedAt" : "2015-05-22T15:50:01.013Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-26T01:44:02.000Z",
@@ -180,32 +185,32 @@ Content-Length: 1730</pre>
       {
         "mediaId" : 8,
         "clyid" : "dfhjghjkdisudgfds7iy5",
-        "postition" : 0
+        "position" : 0
       },
       {
         "mediaId" : 9,
         "clyid" : "dfhjghjkdisudgfds7iy6",
-        "postition" : 1
+        "position" : 1
       },
       {
         "mediaId" : 10,
         "clyid" : "dfhjghjkdisudgfds7iy7",
-        "postition" : 2
+        "position" : 2
       },
       {
         "mediaId" : 11,
         "clyid" : "dfhjghjkdisudgfds7iy8",
-        "postition" : 3
+        "position" : 3
       },
       {
         "mediaId" : 12,
         "clyid" : "dfhjghjkdisudgfds7iy9",
-        "postition" : 4
+        "position" : 4
       },
       {
         "mediaId" : 13,
         "clyid" : "dfhjghjkdisudgfds7iy10",
-        "postition" : 5
+        "position" : 5
       }
     ],
     "voices" : [
@@ -239,7 +244,7 @@ Content-Length: 1730</pre>
       }
     ],
     "url" : "http://example.org/v1/slots/23",
-    "creatorId" : 133
+    "creatorId" : 144
   }
 ]
 ```

@@ -66,19 +66,19 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=G6SNby4vQmlTu94JYZDlmQhweDM
+Authorization: Token token=SlTeTTwA85CadDdSSkGNf0KbYN8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/260/slots</pre>
+<pre>GET /v1/users/273/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/260/slots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:3000/v1/users/273/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=G6SNby4vQmlTu94JYZDlmQhweDM&quot; \
+	-H &quot;Authorization: Token token=SlTeTTwA85CadDdSSkGNf0KbYN8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;0d565dbe416439f18b0dce9ce1ed5b76&quot;
+ETag: W/&quot;4d5142d4d25a586414b189dc462ff3f3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6af0d75d-35bc-48ec-8018-fc884ef61dc7
-X-Runtime: 0.066505
+X-Request-Id: 9b58ba84-b63c-4d5a-b7d6-ea08ef5d1ede
+X-Runtime: 0.045958
 Content-Length: 821</pre>
 
 #### Status
@@ -107,8 +107,8 @@ Content-Length: 821</pre>
     "id" : 84,
     "title" : "Slot title 76",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:40.608Z",
-    "updatedAt" : "2015-05-06T21:29:40.608Z",
+    "createdAt" : "2015-05-19T10:51:52.847Z",
+    "updatedAt" : "2015-05-19T10:51:52.847Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-23T04:44:02.000Z",
@@ -123,14 +123,14 @@ Content-Length: 821</pre>
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/84",
-    "creatorId" : 263
+    "creatorId" : 276
   },
   {
     "id" : 86,
     "title" : "Slot title 78",
     "locationId" : null,
-    "createdAt" : "2015-05-06T21:29:40.619Z",
-    "updatedAt" : "2015-05-06T21:29:40.631Z",
+    "createdAt" : "2015-05-19T10:51:52.857Z",
+    "updatedAt" : "2015-05-19T10:51:52.873Z",
     "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
     "endDate" : "2014-10-25T06:44:02.000Z",
@@ -145,7 +145,7 @@ Content-Length: 821</pre>
     "voices" : [],
     "videos" : [],
     "url" : "http://example.org/v1/slots/86",
-    "creatorId" : 266
+    "creatorId" : 279
   }
 ]
 ```

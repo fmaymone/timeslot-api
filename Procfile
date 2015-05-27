@@ -1,1 +1,1 @@
-web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb --no-default-middleware
+web: bundle exec puma -C config/puma.rb

@@ -15,11 +15,17 @@ returns 404 if ID is invalid
 Name : id *- required -*
 Description : ID of the Slot to get the comments for
 
+
+### Response Fields
+
+Name : array
+Description : containing comment content and creation date and details of the user who made the comment
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=QglY-nFAuynQNrnhy6elTRDHzcc
+<pre>Authorization: Token token=VuD5kGZBlpQoeZlqETyCfzrpzAs
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +36,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/48/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=QglY-nFAuynQNrnhy6elTRDHzcc&quot; \
+	-H &quot;Authorization: Token token=VuD5kGZBlpQoeZlqETyCfzrpzAs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +47,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;7b208f0a1d19c56939f6b98eb416a615&quot;
+ETag: W/&quot;3e81e36a2b9c22683c0c143b9c393160&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 545fa085-60bd-4174-b331-6ef4425c8a73
-X-Runtime: 0.019737
+X-Request-Id: 4b2796a0-1203-4425-934b-aa114ee271bd
+X-Runtime: 0.015677
 Content-Length: 557</pre>
 
 #### Status
@@ -56,31 +62,31 @@ Content-Length: 557</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-05-06T21:29:38.238Z",
+    "createdAt" : "2015-05-22T15:50:02.747Z",
     "content" : "hate no one, love only a few",
-    "userId" : 195,
-    "username" : "User 195",
+    "userId" : 206,
+    "username" : "User 203",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.245Z",
+    "createdAt" : "2015-05-22T15:50:02.751Z",
     "content" : "hate no one, love only a few",
-    "userId" : 196,
-    "username" : "User 196",
+    "userId" : 207,
+    "username" : "User 204",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.251Z",
+    "createdAt" : "2015-05-22T15:50:02.756Z",
     "content" : "hate no one, love only a few",
-    "userId" : 197,
-    "username" : "User 197",
+    "userId" : 208,
+    "username" : "User 205",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.333Z",
+    "createdAt" : "2015-05-22T15:50:02.774Z",
     "content" : "hate no one, love only a few",
-    "userId" : 199,
-    "username" : "User 199",
+    "userId" : 210,
+    "username" : "User 207",
     "userimage" : "dfhjghjkdisudgfds7iy38"
   }
 ]

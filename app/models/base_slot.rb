@@ -40,7 +40,8 @@ class BaseSlot < ActiveRecord::Base
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
-           :title=, :start_date=, :end_date=, :creator=, :location_id=,
+           :ios_location_id, :ios_location,
+           :title=, :start_date=, :end_date=, :creator=, :location_id=, :ios_location=,
            to: :meta_slot
 
   validates :meta_slot, presence: true

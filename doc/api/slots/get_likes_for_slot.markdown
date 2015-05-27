@@ -15,11 +15,17 @@ returns 404 if ID is invalid
 Name : id *- required -*
 Description : ID of the Slot to get the likes for
 
+
+### Response Fields
+
+Name : array
+Description : containing creation date of the Like and details of the user who made the Like
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=a0C-4_WDQ6eeqE8IvbpE0ghQWCQ
+<pre>Authorization: Token token=ryRO-OnFnvvc5r9cnjsxW59Rjc0
 Host: example.org
 Cookie: </pre>
 
@@ -30,7 +36,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:3000/v1/slots/46/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=a0C-4_WDQ6eeqE8IvbpE0ghQWCQ&quot; \
+	-H &quot;Authorization: Token token=ryRO-OnFnvvc5r9cnjsxW59Rjc0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -41,10 +47,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;6b213ca029d46f214a07f0cf10d225b0&quot;
+ETag: W/&quot;f7ccb60323f5cda2ad33235aa94d127d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7566468e-c6d0-4e42-a29b-9d30604c2a6e
-X-Runtime: 0.019978
+X-Request-Id: ffd52d58-ab45-4ac2-80d9-b5dec349d655
+X-Runtime: 0.020661
 Content-Length: 393</pre>
 
 #### Status
@@ -56,27 +62,27 @@ Content-Length: 393</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-05-06T21:29:37.990Z",
-    "userId" : 182,
-    "username" : "User 182",
+    "createdAt" : "2015-05-22T15:50:02.618Z",
+    "userId" : 193,
+    "username" : "User 190",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:37.997Z",
-    "userId" : 183,
-    "username" : "User 183",
+    "createdAt" : "2015-05-22T15:50:02.622Z",
+    "userId" : 194,
+    "username" : "User 191",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.001Z",
-    "userId" : 184,
-    "username" : "User 184",
+    "createdAt" : "2015-05-22T15:50:02.626Z",
+    "userId" : 195,
+    "username" : "User 192",
     "userimage" : null
   },
   {
-    "createdAt" : "2015-05-06T21:29:38.082Z",
-    "userId" : 186,
-    "username" : "User 186",
+    "createdAt" : "2015-05-22T15:50:02.641Z",
+    "userId" : 197,
+    "username" : "User 194",
     "userimage" : "dfhjghjkdisudgfds7iy37"
   }
 ]

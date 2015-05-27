@@ -6,6 +6,8 @@
 
 A new slot will be created with  the same Metadata as it&#39;s source. Either slotType or groupId must be provided! If details is set to &#39;true&#39; all media items and notes will be duplicated. The source will be deleted afterwards and with it all comments and likes.
 
+Returns 200 and the data of the new slot.
+
 ### Parameters
 
 Name : slotType
@@ -19,18 +21,80 @@ Description : Move all media data and notes to the new  slot. Otherwise they wil
 
 Defaults to &#39;true&#39;, must be one of [true/false]
 
+
+### Response Fields
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
+Name : groupId
+Description : ID of the group the slot belongs to
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8
+Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/56/move</pre>
+<pre>POST /v1/slots/58/move</pre>
 
 #### Body
 ```javascript
@@ -43,9 +107,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots/56/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/slots/58/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=__F2GecVE2ticqN37bo1tcU6sl8&quot; \
+	-H &quot;Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,11 +120,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: &quot;aa56024ced9bb729e00a1c44d428d06e&quot;
+ETag: W/&quot;f23783cbcd890a390792877a27142d11&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70a78971-bd1c-4490-a074-cd738c2f344e
-X-Runtime: 0.070746
-Content-Length: 694</pre>
+X-Request-Id: 09eb72bc-1577-4286-bd9b-2f87daa62bec
+X-Runtime: 0.061317
+Content-Length: 794</pre>
 
 #### Status
 
@@ -70,20 +134,29 @@ Content-Length: 694</pre>
 
 ```javascript
 {
-  "id" : 57,
+  "id" : 59,
   "title" : "Slot title 49",
-  "createdAt" : "2015-05-06T21:29:38.760Z",
-  "updatedAt" : "2015-05-06T21:29:38.760Z",
+  "createdAt" : "2015-05-27T12:18:02.213Z",
+  "updatedAt" : "2015-05-27T12:18:02.213Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-23T01:44:02.000Z",
   "visibility" : "friends",
-  "location" : null,
+  "location" : {
+    "id" : 51,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 210,
-    "username" : "User 210",
-    "createdAt" : "2015-05-06T21:29:38.739Z",
-    "updatedAt" : "2015-05-06T21:29:38.739Z",
+    "id" : 271,
+    "username" : "User 268",
+    "createdAt" : "2015-05-27T12:18:02.190Z",
+    "updatedAt" : "2015-05-27T12:18:02.190Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -97,17 +170,17 @@ Content-Length: 694</pre>
     {
       "mediaId" : 46,
       "clyid" : "dfhjghjkdisudgfds7iy39",
-      "postition" : 0
+      "position" : 0
     },
     {
       "mediaId" : 47,
       "clyid" : "dfhjghjkdisudgfds7iy40",
-      "postition" : 1
+      "position" : 1
     },
     {
       "mediaId" : 48,
       "clyid" : "dfhjghjkdisudgfds7iy41",
-      "postition" : 2
+      "position" : 2
     }
   ],
   "voices" : [],

@@ -2,7 +2,8 @@ require 'custom_formatter'
 
 Rails.application.configure do
   # allow outgoing http connections
-  WebMock.disable!
+  # WebMock.disable!
+  WebMock.allow_net_connect!
 
   # Settings specified here will take precedence over those in config/application.rb.
 
