@@ -138,19 +138,19 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=iLhQ_quy8ukq_7nym270ppOest4
+<pre>Authorization: Token token=5Js-j5ddTq-DJK1zy3-zkRnJuIY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groupslot/38</pre>
+<pre>DELETE /v1/groupslot/40</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groupslot/38&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=iLhQ_quy8ukq_7nym270ppOest4&quot; \
+<pre class="request">curl &quot;http://localhost:3000/v1/groupslot/40&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=5Js-j5ddTq-DJK1zy3-zkRnJuIY&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -162,11 +162,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e5346ed1d66329fc394656de3dd1fa55&quot;
+ETag: W/&quot;27e32bd9b6d0fbc3462978314054311a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 024f6481-67b8-4b03-ad7d-646a280eda8a
-X-Runtime: 0.064158
-Content-Length: 539</pre>
+X-Request-Id: c4501916-19d9-42e1-9768-4a9d8bb5830c
+X-Runtime: 0.048432
+Content-Length: 642</pre>
 
 #### Status
 
@@ -176,20 +176,29 @@ Content-Length: 539</pre>
 
 ```javascript
 {
-  "id" : 38,
+  "id" : 40,
   "title" : "Slot title 36",
-  "createdAt" : "2015-05-22T15:50:02.379Z",
-  "updatedAt" : "2015-05-22T15:50:02.404Z",
-  "deletedAt" : "2015-05-22T15:50:02.401Z",
+  "createdAt" : "2015-05-27T12:18:01.514Z",
+  "updatedAt" : "2015-05-27T12:18:01.537Z",
+  "deletedAt" : "2015-05-27T12:18:01.535Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-10T12:44:02.000Z",
   "visibility" : null,
-  "location" : null,
+  "location" : {
+    "id" : 38,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 176,
-    "username" : "User 173",
-    "createdAt" : "2015-05-22T15:50:02.375Z",
-    "updatedAt" : "2015-05-22T15:50:02.375Z",
+    "id" : 213,
+    "username" : "User 210",
+    "createdAt" : "2015-05-27T12:18:01.503Z",
+    "updatedAt" : "2015-05-27T12:18:01.503Z",
     "deletedAt" : null
   },
   "settings" : {

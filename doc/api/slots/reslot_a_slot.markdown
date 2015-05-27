@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=v5-RZeYmo1ibse-yJJYv4HdXJGo
+Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0
 Host: example.org
 Cookie: </pre>
 
@@ -96,17 +96,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 30
+  "predecessorId" : 32
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:30}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:32}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=v5-RZeYmo1ibse-yJJYv4HdXJGo&quot; \
+	-H &quot;Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -117,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cb94d244d4b814c4e7f1c7a90fce3063&quot;
+ETag: W/&quot;a83af074da2ad18a6899a046d3b3eba0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dfdf33e1-273b-41cf-9c9b-8f2b3221900a
-X-Runtime: 0.030356
-Content-Length: 520</pre>
+X-Request-Id: 02e98428-98c1-4b16-a386-97efbc48fcef
+X-Runtime: 0.048691
+Content-Length: 623</pre>
 
 #### Status
 
@@ -131,26 +131,35 @@ Content-Length: 520</pre>
 
 ```javascript
 {
-  "id" : 31,
+  "id" : 33,
   "title" : "Slot title 28",
-  "createdAt" : "2015-05-22T15:50:01.858Z",
-  "updatedAt" : "2015-05-22T15:50:01.858Z",
+  "createdAt" : "2015-05-27T12:18:00.919Z",
+  "updatedAt" : "2015-05-27T12:18:00.919Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-02T04:44:02.000Z",
   "visibility" : null,
-  "location" : null,
+  "location" : {
+    "id" : 30,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 159,
-    "username" : "User 156",
-    "createdAt" : "2015-05-22T15:50:01.830Z",
-    "updatedAt" : "2015-05-22T15:50:01.830Z",
+    "id" : 188,
+    "username" : "User 185",
+    "createdAt" : "2015-05-27T12:18:00.895Z",
+    "updatedAt" : "2015-05-27T12:18:00.895Z",
     "deletedAt" : null
   },
   "settings" : {
     "alerts" : "0000000000"
   },
-  "slotterId" : 161,
+  "slotterId" : 191,
   "notes" : [],
   "likes" : 0,
   "commentsCounter" : 0,

@@ -79,19 +79,19 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=OG_PUZ926S0CHaHeFKHJQys0UQY
+<pre>Authorization: Token token=uEX1pcWUSDFWXS3TNymeWMOiSLs
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/reslot/41</pre>
+<pre>DELETE /v1/reslot/43</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/reslot/41&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=OG_PUZ926S0CHaHeFKHJQys0UQY&quot; \
+<pre class="request">curl &quot;http://localhost:3000/v1/reslot/43&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=uEX1pcWUSDFWXS3TNymeWMOiSLs&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,11 +103,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1f8aaeda87c7f7653370e62b8bc83fd5&quot;
+ETag: W/&quot;a29687a03f63e0669c5c40ae390dbc20&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ee24eef4-57df-4ea8-8350-2417f69c82fb
-X-Runtime: 0.039852
-Content-Length: 542</pre>
+X-Request-Id: 203005ad-cd5e-4630-9595-d5e7d155847e
+X-Runtime: 0.042102
+Content-Length: 645</pre>
 
 #### Status
 
@@ -117,26 +117,35 @@ Content-Length: 542</pre>
 
 ```javascript
 {
-  "id" : 41,
+  "id" : 43,
   "title" : "Slot title 39",
-  "createdAt" : "2015-05-22T15:50:02.494Z",
-  "updatedAt" : "2015-05-22T15:50:02.528Z",
-  "deletedAt" : "2015-05-22T15:50:02.525Z",
+  "createdAt" : "2015-05-27T12:18:01.626Z",
+  "updatedAt" : "2015-05-27T12:18:01.727Z",
+  "deletedAt" : "2015-05-27T12:18:01.723Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-13T15:44:02.000Z",
   "visibility" : null,
-  "location" : null,
+  "location" : {
+    "id" : 41,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 182,
-    "username" : "User 179",
-    "createdAt" : "2015-05-22T15:50:02.497Z",
-    "updatedAt" : "2015-05-22T15:50:02.497Z",
+    "id" : 222,
+    "username" : "User 219",
+    "createdAt" : "2015-05-27T12:18:01.630Z",
+    "updatedAt" : "2015-05-27T12:18:01.630Z",
     "deletedAt" : null
   },
   "settings" : {
     "alerts" : "0000000000"
   },
-  "slotterId" : 179,
+  "slotterId" : 218,
   "notes" : [],
   "likes" : 0,
   "commentsCounter" : 0,

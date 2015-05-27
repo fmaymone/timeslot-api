@@ -35,6 +35,36 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
+Name : iosLocation
+Description : IOS location associated with this slot
+
+Name : name
+Description : Name of the IOS location (128 chars)
+
+Name : street
+Description : Street of IOS location (128 chars)
+
+Name : city
+Description : City of IOS location (128 chars)
+
+Name : postcode
+Description : Postcode of IOS location (32 chars)
+
+Name : country
+Description : Country of IOS location (64 chars)
+
+Name : latitude
+Description : Latitude of IOS location
+
+Name : longitude
+Description : Longitude of IOS location
+
+Name : auid
+Description : Apple UID of the location
+
+Name : private_location
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
 Name : visibility *- required -*
 Description : Visibility of the Slot
 
@@ -103,7 +133,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=BzRoa-pvvsAs5PIX2TimRwZUArg
+Authorization: Token token=yovaMpkclaZh4VS3GbkxLis8jSc
 Host: example.org
 Cookie: </pre>
 
@@ -141,7 +171,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;locationId&quot;:200719253,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BzRoa-pvvsAs5PIX2TimRwZUArg&quot; \
+	-H &quot;Authorization: Token token=yovaMpkclaZh4VS3GbkxLis8jSc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -152,10 +182,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e35e1c0aa26bc34e498bb5f3430753e9&quot;
+ETag: W/&quot;553c864ae78f12065ec54ccd118e0e99&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9376278d-58f5-4549-9532-0ae4afadd0ac
-X-Runtime: 0.222974
+X-Request-Id: 3859975c-e059-4c33-8ce2-e111acbbdf66
+X-Runtime: 0.039151
 Content-Length: 731</pre>
 
 #### Status
@@ -166,20 +196,20 @@ Content-Length: 731</pre>
 
 ```javascript
 {
-  "id" : 26,
+  "id" : 27,
   "title" : "Time for a Slot",
-  "createdAt" : "2015-05-22T15:50:01.450Z",
-  "updatedAt" : "2015-05-22T15:50:01.450Z",
+  "createdAt" : "2015-05-27T12:18:00.654Z",
+  "updatedAt" : "2015-05-27T12:18:00.654Z",
   "deletedAt" : null,
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 153,
-    "username" : "User 150",
-    "createdAt" : "2015-05-22T15:50:01.439Z",
-    "updatedAt" : "2015-05-22T15:50:01.439Z",
+    "id" : 181,
+    "username" : "User 178",
+    "createdAt" : "2015-05-27T12:18:00.644Z",
+    "updatedAt" : "2015-05-27T12:18:00.644Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -187,16 +217,16 @@ Content-Length: 731</pre>
   },
   "notes" : [
     {
-      "id" : 3,
+      "id" : 5,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-05-22T15:50:01.455Z"
+      "createdAt" : "2015-05-27T12:18:00.659Z"
     },
     {
-      "id" : 2,
+      "id" : 4,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-05-22T15:50:01.453Z"
+      "createdAt" : "2015-05-27T12:18:00.657Z"
     }
   ],
   "likes" : 0,
