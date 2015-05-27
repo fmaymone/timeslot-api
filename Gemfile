@@ -20,7 +20,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 
 # for heroku
-gem 'unicorn'
+gem 'puma'
 gem 'rails_12factor', group: :production
 
 # third party services
