@@ -13,23 +13,138 @@ returns 404 if ID is invalid
 Name : id *- required -*
 Description : ID of the Standard Slot to delete
 
+
+### Response Fields
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=If9153pmpJbT3mlG_KpVGy479_s
+<pre>Authorization: Token token=GqD7L5wjClpkJlQUS82WEAgS00w
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/stdslot/36</pre>
+<pre>DELETE /v1/stdslot/38</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/36&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=If9153pmpJbT3mlG_KpVGy479_s&quot; \
+<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/38&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=GqD7L5wjClpkJlQUS82WEAgS00w&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -41,11 +156,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ec123ff7cf05df5018bf4488fca02ce6&quot;
+ETag: W/&quot;aa87dae420cdc824dedb5063de000192&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3b717992-11ce-42d1-8f4a-dee941c0bfff
-X-Runtime: 0.170706
-Content-Length: 531</pre>
+X-Request-Id: 9af7789c-79d3-4778-aea1-e469fb078398
+X-Runtime: 0.182541
+Content-Length: 634</pre>
 
 #### Status
 
@@ -55,20 +170,29 @@ Content-Length: 531</pre>
 
 ```javascript
 {
-  "id" : 36,
+  "id" : 38,
   "title" : "Slot title 34",
-  "createdAt" : "2015-05-19T10:51:51.095Z",
-  "updatedAt" : "2015-05-19T10:51:51.243Z",
-  "deletedAt" : "2015-05-19T10:51:51.241Z",
+  "createdAt" : "2015-05-27T12:18:01.261Z",
+  "updatedAt" : "2015-05-27T12:18:01.419Z",
+  "deletedAt" : "2015-05-27T12:18:01.417Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-08T10:44:02.000Z",
   "visibility" : "private",
-  "location" : null,
+  "location" : {
+    "id" : 36,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 171,
-    "username" : "User 168",
-    "createdAt" : "2015-05-19T10:51:51.092Z",
-    "updatedAt" : "2015-05-19T10:51:51.092Z",
+    "id" : 207,
+    "username" : "User 204",
+    "createdAt" : "2015-05-27T12:18:01.252Z",
+    "updatedAt" : "2015-05-27T12:18:01.252Z",
     "deletedAt" : null
   },
   "settings" : {

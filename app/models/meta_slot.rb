@@ -5,6 +5,7 @@ class MetaSlot < ActiveRecord::Base
   has_many :slot_settings, inverse_of: :meta_slot
   has_many :slots, -> { where deleted_at: nil }, class_name: BaseSlot,
            inverse_of: :meta_slot
+  belongs_to :ios_location, inverse_of: :meta_slot
 
   validates :creator, presence: true
   validates :title, presence: true, length: { maximum: 48 }
@@ -13,12 +14,10 @@ class MetaSlot < ActiveRecord::Base
   validate :enddate_is_after_startdate
 
   def location
-    begin
-      Location.find(location_id)
-    rescue => e
-      Airbrake.notify(e)
-      nil
-    end
+    Location.find(location_id)
+  rescue => e
+    Airbrake.notify(e)
+    nil
   end
 
   def unregister
@@ -37,6 +36,20 @@ class MetaSlot < ActiveRecord::Base
 
   def self.find_or_add(meta_params)
     meta_id = meta_params[:meta_slot_id]
-    MetaSlot.where(id: meta_id).first_or_create(meta_params)
+    MetaSlot.where(id: meta_id).first_or_create do |meta_slot|
+      meta_slot.update(meta_params.except(:ios_location))
+      return meta_slot if meta_params[:ios_location].nil?
+
+      ios_params = meta_params[:ios_location]
+      if ios_params[:auid].present?
+        ios_location = IosLocation.find_by(auid: ios_params[:auid])
+      elsif ios_params[:latitude].present? && ios_params[:longitude].present?
+        ios_location = IosLocation.where(
+          latitude: ios_params[:latitude], longitude: ios_params[:longitude]).take
+      end
+      ios_location ||= IosLocation.create(
+        ios_params.merge(creator: meta_params[:creator]))
+      meta_slot.update(ios_location: ios_location)
+    end
   end
 end

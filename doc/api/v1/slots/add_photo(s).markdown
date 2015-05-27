@@ -1,25 +1,28 @@
 # Slots API
 
-## Move Slot from private Slots to Friend Slots
+## Add photo(s)
 
-### POST /v1/slots/:id/move
+### PATCH /v1/stdslot/:id
 
-A new slot will be created with  the same Metadata as it&#39;s source. Either slotType or groupId must be provided! If details is set to &#39;true&#39; all media items and notes will be duplicated. The source will be deleted afterwards and with it all comments and likes.
+First a cloudinary signature needs to be fetched by the client from the API. After uploading the image to cloudinary client updates the slot with the image information.
 
-Returns 200 and the data of the new slot.
+returns 422 if the media data is invalid
+
+returns 200 and slot details including the new mediaID
 
 ### Parameters
 
-Name : slotType
-Description : Type of slot to move to. Must be own of [private/friends/public]
+Name : id *- required -*
+Description : ID of the slot to update
 
-Name : groupId
-Description : Contains the group ID if moving into a group User must be allowed to post to this group
+Name : photos *- required -*
+Description : Scope for array of new photos/voices/videos
 
-Name : details
-Description : Move all media data and notes to the new  slot. Otherwise they will be deleted.
+Name : publicId *- required -*
+Description : Cloudinary ID / URL
 
-Defaults to &#39;true&#39;, must be one of [true/false]
+Name : position
+Description : Sorting order of the new media item. If not submitted it will be added at the end
 
 
 ### Response Fields
@@ -80,36 +83,37 @@ Description : Voice recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
-Name : groupId
-Description : ID of the group the slot belongs to
-
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw
+Authorization: Token token=2V9kXr7Pi9hTgE266u2yFrd2NJ4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/58/move</pre>
+<pre>PATCH /v1/stdslot/36</pre>
 
 #### Body
 ```javascript
 {
-  "slotType" : "friends",
-  "details" : "true"
+  "photos" : [
+    {
+      "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+      "position" : "1"
+    }
+  ]
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots/58/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/36&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;position&quot;:&quot;1&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw&quot; \
+	-H &quot;Authorization: Token token=2V9kXr7Pi9hTgE266u2yFrd2NJ4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,11 +124,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f23783cbcd890a390792877a27142d11&quot;
+ETag: W/&quot;0eb612695367b434e52257025167da51&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 09eb72bc-1577-4286-bd9b-2f87daa62bec
-X-Runtime: 0.061317
-Content-Length: 794</pre>
+X-Request-Id: 2706cdb8-9376-49d1-b0a0-9c420f5336f9
+X-Runtime: 0.036846
+Content-Length: 684</pre>
 
 #### Status
 
@@ -134,16 +138,16 @@ Content-Length: 794</pre>
 
 ```javascript
 {
-  "id" : 59,
-  "title" : "Slot title 49",
-  "createdAt" : "2015-05-27T12:18:02.213Z",
-  "updatedAt" : "2015-05-27T12:18:02.213Z",
+  "id" : 36,
+  "title" : "Slot title 32",
+  "createdAt" : "2015-05-27T12:18:01.126Z",
+  "updatedAt" : "2015-05-27T12:18:01.126Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
-  "endDate" : "2014-10-23T01:44:02.000Z",
-  "visibility" : "friends",
+  "endDate" : "2014-10-06T08:44:02.000Z",
+  "visibility" : "private",
   "location" : {
-    "id" : 51,
+    "id" : 34,
     "name" : "berlin",
     "street" : "",
     "city" : "",
@@ -153,10 +157,10 @@ Content-Length: 794</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 271,
-    "username" : "User 268",
-    "createdAt" : "2015-05-27T12:18:02.190Z",
-    "updatedAt" : "2015-05-27T12:18:02.190Z",
+    "id" : 201,
+    "username" : "User 198",
+    "createdAt" : "2015-05-27T12:18:01.117Z",
+    "updatedAt" : "2015-05-27T12:18:01.117Z",
     "deletedAt" : null
   },
   "settings" : {
@@ -168,19 +172,9 @@ Content-Length: 794</pre>
   "shareUrl" : null,
   "photos" : [
     {
-      "mediaId" : 46,
-      "clyid" : "dfhjghjkdisudgfds7iy39",
-      "position" : 0
-    },
-    {
-      "mediaId" : 47,
-      "clyid" : "dfhjghjkdisudgfds7iy40",
+      "mediaId" : 31,
+      "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
       "position" : 1
-    },
-    {
-      "mediaId" : 48,
-      "clyid" : "dfhjghjkdisudgfds7iy41",
-      "position" : 2
     }
   ],
   "voices" : [],
