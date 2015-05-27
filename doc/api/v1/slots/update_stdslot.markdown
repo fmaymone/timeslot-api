@@ -34,12 +34,71 @@ Description : Location ID
 Name : visibility
 Description : Visibility of slot
 
+
+### Response Fields
+
+Name : id
+Description : ID of the slot
+
+Name : title
+Description : Title of the slot
+
+Name : startDate
+Description : Startdate of the slot
+
+Name : endDate
+Description : Enddate of the slot
+
+Name : createdAt
+Description : Creation of slot
+
+Name : updatedAt
+Description : Last update of slot
+
+Name : deletedAt
+Description : Delete date of slot or nil
+
+Name : location
+Description : Location data for the slot
+
+Name : creator
+Description : User who created the slot
+
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
+Name : visibility
+Description : Visibiltiy of the slot
+
+Name : notes
+Description : Notes on the slot
+
+Name : likes
+Description : Likes for the slot
+
+Name : commentsCounter
+Description : Number of comments on the slot
+
+Name : shareUrl
+Description : Share URL for this slot, nil if not yet shared
+
+Name : images
+Description : Images for the slot
+
+Name : voices
+Description : Voice recordings for the slot
+
+Name : videos
+Description : Videos recordings for the slot
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=-z6EOfF4jepi--sN9ZILhst69Nc
+Authorization: Token token=xBkAjpqGXFP0uGcKyY_zLnoUFjo
 Host: example.org
 Cookie: </pre>
 
@@ -59,7 +118,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:3000/v1/stdslot/32&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=-z6EOfF4jepi--sN9ZILhst69Nc&quot; \
+	-H &quot;Authorization: Token token=xBkAjpqGXFP0uGcKyY_zLnoUFjo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -70,10 +129,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b748fd48bdc851c28c3270aaa103682e&quot;
+ETag: W/&quot;97880ad47a959f663eeaaa3560417b79&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a9f8d865-98a8-417e-ac9e-422e7f0d4560
-X-Runtime: 0.030776
+X-Request-Id: 8f045e72-1164-42d1-8034-e8c8deb0d6fe
+X-Runtime: 0.030764
 Content-Length: 516</pre>
 
 #### Status
@@ -86,18 +145,18 @@ Content-Length: 516</pre>
 {
   "id" : 32,
   "title" : "New title for a Slot",
-  "createdAt" : "2015-05-19T10:51:50.855Z",
-  "updatedAt" : "2015-05-19T10:51:50.855Z",
+  "createdAt" : "2015-05-22T15:50:01.915Z",
+  "updatedAt" : "2015-05-22T15:50:01.915Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-04T06:44:02.000Z",
   "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 163,
-    "username" : "User 160",
-    "createdAt" : "2015-05-19T10:51:50.853Z",
-    "updatedAt" : "2015-05-19T10:51:50.853Z",
+    "id" : 164,
+    "username" : "User 161",
+    "createdAt" : "2015-05-22T15:50:01.911Z",
+    "updatedAt" : "2015-05-22T15:50:01.911Z",
     "deletedAt" : null
   },
   "settings" : {
