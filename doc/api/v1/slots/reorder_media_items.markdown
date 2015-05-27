@@ -90,13 +90,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=bFqA9FbYLG7hh29HNY1Xo72G350
+Authorization: Token token=-IGlRXvyNJdRjKtX-YCHDPfNpLU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/35</pre>
+<pre>PATCH /v1/stdslot/37</pre>
 
 #### Body
 ```javascript
@@ -121,9 +121,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/35&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=bFqA9FbYLG7hh29HNY1Xo72G350&quot; \
+	-H &quot;Authorization: Token token=-IGlRXvyNJdRjKtX-YCHDPfNpLU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -134,11 +134,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6ab4b8623b1f45a174c63995234b9430&quot;
+ETag: W/&quot;cbcea024172c4ec2642b9dab9c732622&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c2dcd59f-a3b8-41a6-86a6-813157853b87
-X-Runtime: 0.039180
-Content-Length: 691</pre>
+X-Request-Id: d0df772a-ad79-4248-b558-c2720a4951bf
+X-Runtime: 0.041658
+Content-Length: 794</pre>
 
 #### Status
 
@@ -148,20 +148,29 @@ Content-Length: 691</pre>
 
 ```javascript
 {
-  "id" : 35,
+  "id" : 37,
   "title" : "Slot title 33",
-  "createdAt" : "2015-05-22T15:50:02.075Z",
-  "updatedAt" : "2015-05-22T15:50:02.075Z",
+  "createdAt" : "2015-05-27T12:18:01.188Z",
+  "updatedAt" : "2015-05-27T12:18:01.188Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-07T09:44:02.000Z",
   "visibility" : "private",
-  "location" : null,
+  "location" : {
+    "id" : 35,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 170,
-    "username" : "User 167",
-    "createdAt" : "2015-05-22T15:50:02.070Z",
-    "updatedAt" : "2015-05-22T15:50:02.070Z",
+    "id" : 204,
+    "username" : "User 201",
+    "createdAt" : "2015-05-27T12:18:01.179Z",
+    "updatedAt" : "2015-05-27T12:18:01.179Z",
     "deletedAt" : null
   },
   "settings" : {

@@ -88,13 +88,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=eMUTIDDHrqvVQTy9ZlpUPiEbo9s
+Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/56/move</pre>
+<pre>POST /v1/slots/58/move</pre>
 
 #### Body
 ```javascript
@@ -107,9 +107,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots/56/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:3000/v1/slots/58/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=eMUTIDDHrqvVQTy9ZlpUPiEbo9s&quot; \
+	-H &quot;Authorization: Token token=Cwu3BvIWg1zMJTszf4ysajvZMHw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,11 +120,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a547fd2899743d5c70aa40955ecd03b0&quot;
+ETag: W/&quot;f23783cbcd890a390792877a27142d11&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 552bbb02-b316-4302-bfb7-71af1df93883
-X-Runtime: 0.060762
-Content-Length: 691</pre>
+X-Request-Id: 09eb72bc-1577-4286-bd9b-2f87daa62bec
+X-Runtime: 0.061317
+Content-Length: 794</pre>
 
 #### Status
 
@@ -134,20 +134,29 @@ Content-Length: 691</pre>
 
 ```javascript
 {
-  "id" : 57,
+  "id" : 59,
   "title" : "Slot title 49",
-  "createdAt" : "2015-05-22T15:50:03.020Z",
-  "updatedAt" : "2015-05-22T15:50:03.020Z",
+  "createdAt" : "2015-05-27T12:18:02.213Z",
+  "updatedAt" : "2015-05-27T12:18:02.213Z",
   "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
   "endDate" : "2014-10-23T01:44:02.000Z",
   "visibility" : "friends",
-  "location" : null,
+  "location" : {
+    "id" : 51,
+    "name" : "berlin",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "creator" : {
-    "id" : 221,
-    "username" : "User 218",
-    "createdAt" : "2015-05-22T15:50:02.999Z",
-    "updatedAt" : "2015-05-22T15:50:02.999Z",
+    "id" : 271,
+    "username" : "User 268",
+    "createdAt" : "2015-05-27T12:18:02.190Z",
+    "updatedAt" : "2015-05-27T12:18:02.190Z",
     "deletedAt" : null
   },
   "settings" : {

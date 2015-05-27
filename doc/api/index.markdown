@@ -35,8 +35,9 @@
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
-* [Get slot](slots/get_slot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
+* [Create StandardSlot](slots/create_standardslot.markdown)
+* [Create StandardSlot with IOS Location](slots/create_standardslot_with_ios_location.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
 * [Update MetaSlot](slots/update_metaslot.markdown)
