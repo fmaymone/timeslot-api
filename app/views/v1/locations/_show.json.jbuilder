@@ -9,7 +9,7 @@ else
   json.country location_data.country
   json.latitude location_data.latitude
   json.longitude location_data.longitude
-# json.created_at location_data.created
+  # json.created_at location_data.created
   # json.updated_at location_data.last_update
   # json.categories location_data.categories
   # json.images location_data.images

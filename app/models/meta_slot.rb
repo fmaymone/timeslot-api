@@ -40,8 +40,15 @@ class MetaSlot < ActiveRecord::Base
       meta_slot.update(meta_params.except(:ios_location))
       return meta_slot if meta_params[:ios_location].nil?
 
-      ios_params = meta_params[:ios_location].merge(creator: meta_params[:creator])
-      ios_location = IosLocation.create(ios_params)
+      ios_params = meta_params[:ios_location]
+      if ios_params[:auid].present?
+        ios_location = IosLocation.find_by(auid: ios_params[:auid])
+      elsif ios_params[:latitude].present? && ios_params[:longitude].present?
+        ios_location = IosLocation.where(
+          latitude: ios_params[:latitude], longitude: ios_params[:longitude]).take
+      end
+      ios_location ||= IosLocation.create(
+        ios_params.merge(creator: meta_params[:creator]))
       meta_slot.update(ios_location: ios_location)
     end
   end
