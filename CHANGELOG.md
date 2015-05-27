@@ -1,6 +1,7 @@
 #Changelog
 
 ## v0.3.0 on t2s2-dev
+- use Puma as Webserver on Heroku instead of Unicorn
 
 ### support for IOS Location
 - add slot now accepts a complete address

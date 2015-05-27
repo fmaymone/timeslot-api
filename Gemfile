@@ -21,6 +21,7 @@ gem 'oj_mimic_json'
 
 # for heroku
 gem 'puma'
+gem "rack-timeout"
 gem 'rails_12factor', group: :production
 
 # third party services
