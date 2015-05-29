@@ -2,6 +2,13 @@ class ApplicationController < ActionController::API
   include TS_Authenticable
   include Pundit
 
+  # Raised when the value of a parameter is invalid.
+  class ParameterInvalid < StandardError
+    def initialize(param, value)
+      super("#{value} is not a valid value for param: #{param}")
+    end
+  end
+
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
 
@@ -23,6 +30,10 @@ class ApplicationController < ActionController::API
 
   rescue_from Pundit::NotAuthorizedError do
     head :unauthorized
+  end
+
+  rescue_from ParameterInvalid do |exception|
+    render json: { error: exception.message }, status: :unprocessable_entity
   end
 
   class UserContext

@@ -520,6 +520,14 @@ RSpec.describe "V1::Slots", type: :request do
         metaslot.reload
         expect(metaslot.end_date).to eq("2014-11-11 13:31:02")
       end
+
+      it "sets slot to 'open End' if empty end_date" do
+        patch "/v1/metaslot/#{metaslot.id}",
+              { endDate: "" }, auth_header
+        expect(response).to have_http_status(:no_content)
+        expect(metaslot.end_date).to eq("2014-07-07 23:59:59")
+        expect(metaslot.open_end).to be true
+      end
     end
 
     context "with invalid params" do
@@ -565,18 +573,11 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response.body).to include('blank')
         end
 
-        it "for empty end_date" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { endDate: "" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
         it "for invalid end_date" do
           patch "/v1/metaslot/#{metaslot.id}",
                 { endDate: "|$%^@wer" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
+          expect(response.body).to include('not a valid value')
         end
 
         it "if start_date equals end_date" do
@@ -687,7 +688,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}",
                   { endDate: "|$%^@wer" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
-            expect(response.body).to include('blank')
+            expect(response.body).to include('not a valid value')
           end
 
           it "if start_date equals end_date" do
