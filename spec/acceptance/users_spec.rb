@@ -405,14 +405,14 @@ resource "Users" do
         expect(json.length).to eq slot_count
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("title")
-        expect(json.first).to have_key("locationId")
+        expect(json.first).to have_key("location")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
         expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
         expect(json.first).to have_key("deletedAt")
-        expect(json.first).to have_key("creatorId")
+        expect(json.first).to have_key("creator")
         expect(json.first).to have_key("notes")
         expect(json.first).to have_key("likes")
         expect(json.first).to have_key("commentsCounter")
@@ -421,15 +421,15 @@ resource "Users" do
         expect(json.first).to have_key("voices")
         expect(json.first).to have_key("videos")
         expect(json.first).to have_key("url")
-        expect(json)
+        expect(json.first.except('location', 'creator', 'shareUrl'))
           .to include("id" => std_slot_1.id,
                       "title" => std_slot_1.title,
-                      "locationId" => std_slot_1.location_id,
-                      "startDate" => std_slot_1.start_date.as_json,
-                      "endDate" => std_slot_1.end_date.as_json,
                       "createdAt" => std_slot_1.created_at.as_json,
                       "updatedAt" => std_slot_1.updated_at.as_json,
                       "deletedAt" => std_slot_1.deleted_at,
+                      "startDate" => std_slot_1.start_date.as_json,
+                      "visibility" => std_slot_1.visibility,
+                      "endDate" => std_slot_1.end_date.as_json,
                       "settings" => {
                         'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,
@@ -438,9 +438,7 @@ resource "Users" do
                       "photos" => std_slot_1.photos,
                       "voices" => std_slot_1.voices,
                       "videos" => std_slot_1.videos,
-                      "visibility" => std_slot_1.visibility,
-                      "url" => v1_slot_url(std_slot_1, format: :json),
-                      "creatorId" => std_slot_1.creator.id
+                      "url" => v1_slot_url(std_slot_1, format: :json)
                      )
       end
     end

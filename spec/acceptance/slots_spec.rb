@@ -81,9 +81,9 @@ resource "Slots" do
         expect(json.last).to have_key("title")
         expect(json.last).to have_key("startDate")
         expect(json.last).to have_key("endDate")
-        expect(json.last).to have_key("locationId")
+        expect(json.last).to have_key("location")
         # expect(json.last['location']).to have_key("name")
-        expect(json.last).to have_key("creatorId")
+        expect(json.last).to have_key("creator")
         # expect(json.last['creator']).to have_key("username")
         # expect(json.last).to have_key("settings")
         # expect(json.last['settings']).to have_key("alerts")
@@ -473,7 +473,8 @@ resource "Slots" do
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
-        expect(json).to have_key("groupId")
+        expect(json).to have_key("group")
+        expect(json['group']).to have_key("id")
         expect(response_status).to eq(201)
       end
     end
@@ -786,7 +787,9 @@ resource "Slots" do
                                 "title" => group_slot.title,
                                 "startDate" => group_slot.start_date.as_json,
                                 "endDate" => group_slot.end_date.as_json,
-                                "groupId" => group_slot.group.id,
+                                "group" => {
+                                  "id" => group_slot.group.id
+                                },
                                 "createdAt" => group_slot.created_at.as_json,
                                 "updatedAt" => group_slot.updated_at.as_json,
                                 "deletedAt" => group_slot.deleted_at.as_json,

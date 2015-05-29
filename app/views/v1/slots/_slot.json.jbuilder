@@ -27,7 +27,11 @@ end
 json.partial! 'v1/slots/settings', slot: slot if current_user
 
 # json.group_id slot.group.id if slot.class < GroupSlot
-json.group_id slot.group.id if slot.try(:group)
+if slot.try(:group)
+  json.group do
+    json.id slot.group.id
+  end
+end
 
 json.slotter_id slot.slotter.id if slot.class == ReSlot
 

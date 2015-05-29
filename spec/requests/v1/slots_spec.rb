@@ -17,9 +17,9 @@ RSpec.describe "V1::Slots", type: :request do
       it "returns success" do
         get "/v1/slots/#{group_slot.id}", {}, auth_header
         expect(response).to have_http_status(200)
-        expect(json).to have_key('groupId')
         expect(json['id']).to eq(group_slot.id)
-        expect(json['groupId']).to eq(group_slot.group_id)
+        expect(json).to have_key('group')
+        expect(json['group']['id']).to eq(group_slot.group_id)
       end
     end
 
