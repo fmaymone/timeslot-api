@@ -170,7 +170,7 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
-        expect(json['location']).to have_key("name")
+        # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
         expect(json).to have_key("settings")
@@ -194,19 +194,20 @@ resource "Slots" do
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
-                 "location" => { "id" => 200_719_253,
-                                 "name" => slot.location.name,
-                                 "street" => slot.location.street,
-                                 "city" => slot.location.city,
-                                 "postcode" => slot.location.postcode,
-                                 "country" => slot.location.country,
-                                 "longitude" => slot.location.longitude,
-                                 "latitude" => slot.location.latitude
-                                 # "createdAt" => slot.location.created.as_json,
-                                 # "updatedAt" => slot.location.last_update.as_json,
-                                 # "categories" => slot.location.categories,
-                                 # "images" => slot.location.images
-                               },
+                 "location" => nil,
+                 # "location" => { "id" => 200_719_253,
+                 #                 "name" => slot.location.name,
+                 #                 "street" => slot.location.street,
+                 #                 "city" => slot.location.city,
+                 #                 "postcode" => slot.location.postcode,
+                 #                 "country" => slot.location.country,
+                 #                 "longitude" => slot.location.longitude,
+                 #                 "latitude" => slot.location.latitude
+                 #                 # "createdAt" => slot.location.created.as_json,
+                 #                 # "updatedAt" => slot.location.last_update.as_json,
+                 #                 # "categories" => slot.location.categories,
+                 #                 # "images" => slot.location.images
+                 #               },
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
