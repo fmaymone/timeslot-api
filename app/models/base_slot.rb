@@ -40,7 +40,7 @@ class BaseSlot < ActiveRecord::Base
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
-           :ios_location_id, :ios_location,
+           :ios_location_id, :ios_location, :open_end,
            :title=, :start_date=, :end_date=, :creator=, :location_id=, :ios_location=,
            to: :meta_slot
 

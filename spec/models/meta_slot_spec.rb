@@ -35,9 +35,14 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when end_date is not present" do
+  describe "when end_date is missing" do
     before { meta_slot.end_date = "" }
-    it { is_expected.to_not be_valid }
+    it { is_expected.to be_valid }
+    it "sets the enddate to the end of the start day" do
+      meta_slot.save
+      expect(meta_slot.end_date)
+        .to eq meta_slot.start_date.to_datetime.at_end_of_day
+    end
   end
 
   describe "when creator is not present" do
