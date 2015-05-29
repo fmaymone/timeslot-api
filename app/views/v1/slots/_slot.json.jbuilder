@@ -5,9 +5,10 @@ json.extract!(slot,
               :updated_at,
               :deleted_at,
               :start_date,
-              :end_date,
               :visibility
              )
+
+json.end_date slot.open_end ? nil : slot.end_date
 
 json.location do
   if slot.location_id.nil? && slot.ios_location_id.nil?

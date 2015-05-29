@@ -1,6 +1,15 @@
 class MetaSlot < ActiveRecord::Base
   after_commit AuditLog
 
+  # set 'openEnd' slots to end at the end of the starting day
+  before_validation do |metaslot|
+    if end_date.nil? && start_date
+      # need to cast to_datetime bc of different millisecond precision
+      metaslot.update(end_date: start_date.to_datetime.at_end_of_day)
+      metaslot.update(open_end: true)
+    end
+  end
+
   belongs_to :creator, class_name: User, inverse_of: :created_slots
   has_many :slot_settings, inverse_of: :meta_slot
   has_many :slots, -> { where deleted_at: nil }, class_name: BaseSlot,

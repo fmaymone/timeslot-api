@@ -2,11 +2,12 @@ json.extract!(slot,
               :id,
               :title,
               :start_date,
-              :end_date,
               :created_at,
               :updated_at,
               :deleted_at
              )
+
+json.end_date slot.open_end ? nil : slot.end_date
 
 if current_user
   json.partial! 'v1/slots/settings', slot: slot
