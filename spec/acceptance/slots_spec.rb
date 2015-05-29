@@ -310,7 +310,7 @@ resource "Slots" do
       context "slot with default location" do
         let(:locationId) { 200_719_253 }
 
-        example "Create StandardSlot", document: :v1 do
+        example "Create StandardSlot with default location", document: :v1 do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -323,6 +323,28 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("location")
           # expect(json['location']).not_to be nil
+        end
+      end
+
+      context "slot with open End" do
+        let(:endDate) { '' }
+
+        example "Create StandardSlot with open End", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "The empty endDate will internally be set to the end of" \
+                      " the start day but will not be returned in json.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          expect(response_status).to eq(201)
+          new_slot = StdSlot.unscoped.last
+          expect(new_slot.end_date)
+            .to eq new_slot.start_date.to_datetime.at_end_of_day
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+          expect(json).to have_key("endDate")
+          expect(json['endDate']).to be nil
         end
       end
 
@@ -385,10 +407,10 @@ resource "Slots" do
       parameter :visibility, "Visibility of the Slot",
                 required: true
 
-      response_field :endDate, "The missing parameter"
+      response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
       let(:visibility) { 'private' }
 
       example "Create std slot with missing requiered params returns 422" \
@@ -398,7 +420,7 @@ resource "Slots" do
 
         expect(response_status).to eq 422
         expect(json).to have_key("error")
-        expect(response_body).to include "end_date"
+        expect(response_body).to include "start_date"
       end
     end
   end
@@ -475,10 +497,10 @@ resource "Slots" do
     end
 
     describe "Create group slot with missing requiered params" do
-      response_field :endDate, "The missing parameter"
+      response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
       let(:groupId) { group.id }
 
       example "Create group slot with missing requiered params returns 422" \
@@ -488,7 +510,7 @@ resource "Slots" do
 
         expect(response_status).to eq 422
         expect(json).to have_key("error")
-        expect(response_body).to include "end_date"
+        expect(response_body).to include "start_date"
       end
     end
   end
@@ -540,7 +562,6 @@ resource "Slots" do
     parameter :id, "ID of the slot to update", required: true
 
     describe "Update an existing MetaSlot" do
-
       parameter :title, "Updated title of slot"
       parameter :startDate, "Updated Startdate and Time of the Slot"
       parameter :endDate,

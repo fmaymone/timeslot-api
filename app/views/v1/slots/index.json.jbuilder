@@ -7,9 +7,11 @@ json.array!(@slots) do |slot|
                 :updated_at,
                 :deleted_at,
                 :start_date,
-                :end_date,
                 :visibility
                )
+
+  json.end_date slot.open_end ? nil : slot.end_date
+
   if current_user
     json.partial! 'v1/slots/settings', slot: slot
   end
