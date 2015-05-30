@@ -548,11 +548,11 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
-        expect(json).to have_key("slotterId")
+        expect(json).to have_key("slotter")
+        expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
-        expect(json["slotterId"]).to eq current_user.id
       end
     end
   end
@@ -832,7 +832,9 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => re_slot.id,
                                 "title" => re_slot.title,
-                                "slotterId" => re_slot.slotter.id,
+                                "slotter" => {
+                                  "id" => re_slot.slotter.id
+                                },
                                 "createdAt" => re_slot.created_at.as_json,
                                 "updatedAt" => re_slot.updated_at.as_json,
                                 "deletedAt" => re_slot.deleted_at.as_json,

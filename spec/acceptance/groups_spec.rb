@@ -258,17 +258,17 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({ "groupId" => group.id,
+      expect(json).to include({ "id" => group.id,
                                 "slotCount" => slots.length })
       expect(json["slots"].length).to eq slots.length
-      expect(json["slots"])
+      expect(json["slots"].first.except('location'))
         .to include("id" => slots.first.id,
                     "title" => slots.first.title,
                     "startDate" => slots[0].start_date.as_json,
-                    "endDate" => slots[0].end_date.as_json,
                     "createdAt" => slots[0].created_at.as_json,
                     "updatedAt" => slots[0].updated_at.as_json,
                     "deletedAt" => slots[0].deleted_at,
+                    "endDate" => slots[0].end_date.as_json,
                     "settings" => {
                       'alerts' => current_user.alerts(slots[0]) },
                     "photos" => slots[0].photos,

@@ -1,11 +1,10 @@
 json.extract!(slot,
               :id,
               :title,
+              :start_date,
               :created_at,
               :updated_at,
-              :deleted_at,
-              :start_date,
-              :visibility
+              :deleted_at
              )
 
 json.end_date slot.open_end ? nil : slot.end_date
@@ -24,24 +23,29 @@ json.creator do
   json.partial! 'v1/users/user', user: slot.creator
 end
 
+json.notes slot.notes, partial: 'v1/slots/note', as: :note
+
+json.partial! 'v1/media/photos', media: slot.photos
+json.partial! 'v1/media/voices', media: slot.voices
+json.partial! 'v1/media/videos', media: slot.videos
+
 json.partial! 'v1/slots/settings', slot: slot if current_user
+
+json.visibility slot.visibility if slot.try(:visibility)
 
 # json.group_id slot.group.id if slot.class < GroupSlot
 if slot.try(:group)
   json.group do
     json.id slot.group.id
   end
+elsif slot.class == ReSlot
+  json.slotter do
+    json.id slot.slotter.id
+  end
 end
 
-json.slotter_id slot.slotter.id if slot.class == ReSlot
-
-json.notes slot.notes, partial: 'v1/slots/note', as: :note
-
 json.likes slot.likes.count
+
 json.commentsCounter slot.comments.count
 
 json.partial! 'v1/slots/share_url', share_id: slot.share_id
-
-json.partial! 'v1/media/photos', media: slot.photos
-json.partial! 'v1/media/voices', media: slot.voices
-json.partial! 'v1/media/videos', media: slot.videos
