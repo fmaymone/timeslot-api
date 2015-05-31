@@ -5,6 +5,19 @@ resource "Groups" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
+  shared_context "default group response fields" do
+    response_field :id, "ID of the group"
+    response_field :name, "name of the group"
+    response_field :owner, "user info of group owner"
+    response_field :membersCanPost, "Can subscribers add slots?"
+    response_field :membersCanInvite, "Can subscribers invite friends?"
+    response_field :image, "URL of the group image"
+    response_field :createdAt, "Creation of group"
+    response_field :updatedAt, "Latest update of group in db"
+    response_field :deletedAt, "Deletion of group"
+    response_field :membershipState, "Membership state for current user"
+  end
+
   # index
   get "/v1/groups" do
     header "Accept", "application/json"
@@ -44,16 +57,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get", required: true
 
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :ownerId, "user id of group owner"
-    response_field :membersCanPost, "Can subscribers add slots?"
-    response_field :membersCanInvite, "Can subscribers invite friends?"
-    response_field :image, "URL of the group image"
-    response_field :createdAt, "Creation of group"
-    response_field :updatedAt, "Latest update of group in db"
-    response_field :deletedAt, "Deletion of group"
-    response_field :membershipState, "Membership state for current user"
+    include_context "default group response fields"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -86,7 +90,7 @@ resource "Groups" do
     parameter :membersCanInvite, "Can subscribers invite friends?"
     parameter :invitees, "Array of User IDs to be invited"
 
-    response_field :id, "ID of the new group"
+    include_context "default group response fields"
 
     let(:name) { "foo" }
     let(:invitees) { create_list(:user, 3).collect(&:id) }
@@ -115,6 +119,8 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to update", required: true
+
+    include_context "default group response fields"
 
     let(:group) do
       create(:group, name: "foo", owner: current_user,
@@ -158,8 +164,6 @@ resource "Groups" do
                 required: true,
                 scope: :image
 
-      response_field :image, "URL for this media item"
-
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
 
       example "Add image to existing group", document: :v1 do
@@ -186,6 +190,8 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to delete", required: true
+
+    include_context "default group response fields"
 
     let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
