@@ -7,7 +7,7 @@ RspecApiDocumentation.configure do |config|
   config.app = Rails.application
 
   # Output folder
-  config.docs_dir = Rails.root.join("doc", "api")
+  config.docs_dir = Rails.root.join("doc", "api", "v1")
 
   # An array of output format(s).
   # Possible values are :json, :html, :combined_text, :combined_json,
