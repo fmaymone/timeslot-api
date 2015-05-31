@@ -3,8 +3,7 @@
 ## v0.4.0 on t2s2-silvio-dev
 - accept empty endDate for slots. It will internally be set to the end of the
 start day but will not be returned via JSON
-- slot json now always has creator, group and location objects instead of
-creatorId, groupId and locationId
+- json now mostly has nested objects instead of only the IDs
 
 
 ## v0.3.0 on t2s2-dev

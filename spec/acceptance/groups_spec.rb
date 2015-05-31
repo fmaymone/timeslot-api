@@ -73,9 +73,11 @@ resource "Groups" do
       expect(response_status).to eq(200)
       group.reload
       expect(
-        json.except('image', 'membershipState')
-      ).to eq(group.attributes.as_json
+        json.except('image', 'membershipState', 'owner')
+      ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
+      expect(json).to have_key "owner"
+      expect(json['owner']['id']).to eq group.owner.id
     end
   end
 
@@ -151,9 +153,11 @@ resource "Groups" do
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'membershipState')
-        ).to eq(group.attributes.as_json
+          json.except('image', 'membershipState', 'owner')
+        ).to eq(group.attributes.as_json.except('owner_id')
                  .transform_keys { |key| key.camelize(:lower) })
+        expect(json).to have_key "owner"
+        expect(json['owner']['id']).to eq group.owner.id
       end
     end
 
@@ -212,9 +216,11 @@ resource "Groups" do
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'membershipState')
-      ).to eq(group.attributes.as_json
+        json.except('image', 'membershipState', 'owner')
+      ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
+      expect(json).to have_key "owner"
+      expect(json['owner']['id']).to eq group.owner.id
     end
 
     describe "current user not group owner" do
@@ -349,6 +355,7 @@ resource "Groups" do
     response_field :related, "Array of related users"
     response_field :userId, "ID of user", scope: :related
     response_field :state, "state of membership", scope: :related
+    response_field :deletedAt, "Deletion date of membership", scope: :related
 
     let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
