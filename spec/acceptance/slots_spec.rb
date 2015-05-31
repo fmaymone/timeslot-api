@@ -212,7 +212,8 @@ resource "Slots" do
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
-                                "deletedAt" => nil },
+                                "deletedAt" => nil,
+                                "image" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
@@ -878,10 +879,11 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.likes.count
-        expect(json.first).to have_key "userId"
-        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "liker"
         expect(json.first).to have_key "createdAt"
-        expect(json.first).to have_key "userimage"
+        expect(json.first["liker"]).to have_key "id"
+        expect(json.first["liker"]).to have_key "image"
+        expect(json.last["liker"]["id"]).to eq like.user.id
       end
     end
   end
@@ -936,8 +938,8 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.comments.count
-        expect(json.first).to have_key "userId"
-        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "commenter"
+        expect(json.first["commenter"]).to have_key "username"
         expect(json.first).to have_key "content"
       end
     end
@@ -976,8 +978,8 @@ resource "Slots" do
 
       expect(response_status).to eq(200)
       expect(json['predecessors'].size).to eq 2
-      expect(json).to have_key("parentUserId")
-      expect(json["parentUserId"]).to eq slot.owner.id
+      expect(json).to have_key("parentUser")
+      expect(json["parentUser"]["id"]).to eq slot.owner.id
     end
   end
 
