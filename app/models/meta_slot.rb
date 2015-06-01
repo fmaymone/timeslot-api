@@ -5,7 +5,11 @@ class MetaSlot < ActiveRecord::Base
   before_validation do |metaslot|
     if end_date.nil? && start_date
       # need to cast to_datetime bc of different millisecond precision
-      metaslot.update(end_date: start_date.to_datetime.at_end_of_day)
+      if start_date < start_date.to_datetime.at_middle_of_day
+        metaslot.update(end_date: start_date.to_datetime.at_end_of_day)
+      else
+        metaslot.update(end_date: start_date.to_datetime.next_day.at_midday)
+      end
       metaslot.update(open_end: true)
     end
   end

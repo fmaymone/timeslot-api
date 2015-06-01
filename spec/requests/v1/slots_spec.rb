@@ -154,7 +154,7 @@ RSpec.describe "V1::Slots", type: :request do
         slot = StdSlot.unscoped.last
         # need to cast to_datetime bc of different millisecond precision
         expect(slot.end_date)
-          .to eq slot.start_date.to_datetime.at_end_of_day
+          .to eq slot.start_date.to_datetime.next_day.at_midday
         expect(slot.open_end).to be true
       end
     end
@@ -532,7 +532,7 @@ RSpec.describe "V1::Slots", type: :request do
         metaslot.reload
         # need to cast to_datetime bc of different millisecond precision
         expect(metaslot.end_date)
-          .to eq metaslot.start_date.to_datetime.at_end_of_day
+          .to eq metaslot.start_date.to_datetime.next_day.at_midday
         expect(metaslot.open_end).to be true
       end
     end
@@ -647,7 +647,7 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           # need to cast to_datetime bc of different millisecond precision
           expect(std_slot.end_date)
-            .to eq std_slot.start_date.to_datetime.at_end_of_day
+            .to eq std_slot.start_date.to_datetime.next_day.at_midday
           expect(std_slot.open_end).to be true
         end
       end

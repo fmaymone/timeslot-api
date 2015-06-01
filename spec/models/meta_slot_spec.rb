@@ -38,10 +38,23 @@ RSpec.describe MetaSlot, type: :model do
   describe "when end_date is missing" do
     before { meta_slot.end_date = "" }
     it { is_expected.to be_valid }
-    it "sets the enddate to the end of the start day" do
-      meta_slot.save
-      expect(meta_slot.end_date)
-        .to eq meta_slot.start_date.to_datetime.at_end_of_day
+
+    context "start_date before noon" do
+      it "sets the enddate to the end of the start day" do
+        meta_slot.update(start_date: "2014-09-28T07:31:02Z")
+        meta_slot.save
+        expect(meta_slot.end_date)
+          .to eq meta_slot.start_date.to_datetime.at_end_of_day
+      end
+    end
+
+    context "start_date after noon" do
+      it "sets the enddate to noon of next day" do
+        meta_slot.update(start_date: "2014-09-28T13:31:02Z")
+        meta_slot.save
+        expect(meta_slot.end_date)
+          .to eq meta_slot.start_date.to_datetime.next_day.at_midday
+      end
     end
   end
 
