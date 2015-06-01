@@ -9,8 +9,7 @@ resource "Users" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
-    response_field :locationId, "Home location of user"
-    response_field :locationName, "Home location of user as String (temporary)"
+    response_field :location, "Home location of user"
     # response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
@@ -68,7 +67,7 @@ resource "Users" do
         expect(json).to have_key "id"
         expect(json).to have_key "username"
         expect(json).to have_key "image"
-        expect(json).to have_key "locationId"
+        expect(json).to have_key "location"
         expect(json).not_to have_key "push" # wip
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
@@ -84,18 +83,19 @@ resource "Users" do
 
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships')
+                      'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
                  .except("auth_token", "password_digest", "role", "push",
-                         "device_token")
+                         "device_token", "location_id")
                  .transform_keys { |key| key.camelize(:lower) })
+        expect(json['location']).to eq nil
       end
     end
 
     context "other user" do
       include_context "default user response fields"
 
-      let(:user) { create(:user) }
+      let(:user) { create(:user, :with_location) }
       let(:id) { user.id }
 
       example "Get other users data", document: :v1 do
@@ -106,8 +106,7 @@ resource "Users" do
         expect(json).to have_key "id"
         expect(json).to have_key "username"
         expect(json).to have_key "image"
-        expect(json).to have_key "locationId"
-        expect(json).to have_key "locationName"
+        expect(json).to have_key "location"
         # expect(json).to have_key "notifications"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
@@ -119,11 +118,11 @@ resource "Users" do
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
         expect(
-          json.except('image', 'friendsCount', 'reslotCount', 'slotCount')
+          json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
                          'push', 'device_token', 'email', 'email_verified',
-                         'phone', 'phone_verified',
+                         'phone', 'phone_verified', 'location_id',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
                          'default_friends_public_alerts', 'default_reslot_alerts',
@@ -131,6 +130,7 @@ resource "Users" do
                          'slot_default_type_id', 'slot_default_location_id'
                         )
                  .transform_keys { |key| key.camelize(:lower) })
+        expect(json['location']['name']).to eq "Acapulco"
       end
     end
   end
@@ -240,38 +240,35 @@ resource "Users" do
 
     include_context "current user response fields"
 
-    describe "Update current users data" do
-      parameter :username, "Updated username of user (max. 50 characters)"
-      parameter :email, "Email of user (max. 255 characters)"
-      parameter :phone, "Phone number of user (max. 35 characters)"
-      parameter :locationId, "ID of users home location"
-      parameter :locationName,
-                "Home location of user as String (temporary) (max. 128 chars)"
-      parameter :image, "URL of the user image"
-      parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-      parameter :deviceToken,
-                "IOS Device Token for Push Notifications (max. 128 chars)"
-      # parameter :push, "Send push Notifications (true/false)"
-      parameter :slotDefaultDuration, "Default Slot Duration in seconds"
-      parameter :slotDefaultTypeId, "Default Slot Type - WIP"
-      parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
-      parameter :defaultPrivateAlerts,
-                "Default alerts for private slots of this user"
-      parameter :defaultOwnFriendslotAlerts,
-                "Default alerts for the friendslots of this user"
-      parameter :defaultOwnPublicAlerts,
-                "Default alerts for the public slots of this user"
-      parameter :defaultFriendsFriendslotAlerts,
-                "Default alerts for the friendslots from friends of this user"
-      parameter :defaultFriendsPublicAlerts,
-                "Default alerts for the public slots from friends of this user"
-      parameter :defaultReslotAlerts,
-                "Default alerts for the reslots of this user"
-      parameter :defaultGroupAlerts,
-                "Default alerts for all groupslots of this user" \
-                " where no specific alert is set. Groupslots" \
-                " may also have their own default alerts per group"
+    parameter :username, "Updated username of user (max. 50 characters)"
+    parameter :email, "Email of user (max. 255 characters)"
+    parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :image, "URL of the user image"
+    parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+    parameter :deviceToken,
+              "IOS Device Token for Push Notifications (max. 128 chars)"
+    # parameter :push, "Send push Notifications (true/false)"
+    parameter :slotDefaultDuration, "Default Slot Duration in seconds"
+    parameter :slotDefaultTypeId, "Default Slot Type - WIP"
+    parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
+    parameter :defaultPrivateAlerts,
+              "Default alerts for private slots of this user"
+    parameter :defaultOwnFriendslotAlerts,
+              "Default alerts for the friendslots of this user"
+    parameter :defaultOwnPublicAlerts,
+              "Default alerts for the public slots of this user"
+    parameter :defaultFriendsFriendslotAlerts,
+              "Default alerts for the friendslots from friends of this user"
+    parameter :defaultFriendsPublicAlerts,
+              "Default alerts for the public slots from friends of this user"
+    parameter :defaultReslotAlerts,
+              "Default alerts for the reslots of this user"
+    parameter :defaultGroupAlerts,
+              "Default alerts for all groupslots of this user" \
+              " where no specific alert is set. Groupslots" \
+              " may also have their own default alerts per group"
 
+    describe "Update current users data" do
       let(:username) { "bar" }
       let(:defaultPrivateAlerts) { '0111011100' }
 
@@ -290,10 +287,10 @@ resource "Users" do
         expect(response_status).to eq(200)
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships')
+                      'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
                  .except('auth_token', 'password_digest', 'role', 'push',
-                         'device_token')
+                         'device_token', 'location_id')
                  .transform_keys { |key| key.camelize(:lower) })
       end
     end
@@ -342,6 +339,41 @@ resource "Users" do
         current_user.reload
         expect(current_user.image).not_to be nil
         expect(current_user.image.public_id).to eq publicId
+      end
+    end
+
+    describe "Set location for User" do
+      parameter :location, "ID of users home location"
+      parameter :name, "Name of the IOS location (128 chars)",
+                scope: :location
+      parameter :street, "Street of IOS location (128 chars)",
+                scope: :location
+      parameter :city, "City of IOS location (128 chars)",
+                scope: :location
+      parameter :postcode, "Postcode of IOS location (32 chars)",
+                scope: :location
+      parameter :country, "Country of IOS location (64 chars)",
+                scope: :location
+      parameter :latitude, "Latitude of IOS location", scope: :location
+      parameter :longitude, "Longitude of IOS location", scope: :location
+      parameter :auid, "Apple UID of the location", scope: :location
+      parameter :private_location,
+                "private location for this user (true/false) [not yet " \
+                "sure what it will mean technically] -> default: false",
+                scope: :location
+
+      let(:name) { "Acapulco" }
+
+      example "Update current user - set location", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user.location).not_to be nil
+        expect(current_user.location.name).to eq 'Acapulco'
+        expect(json).to have_key("location")
+        expect(json["location"]).not_to be nil
+        expect(json["location"]["name"]).to eq "Acapulco"
       end
     end
   end
