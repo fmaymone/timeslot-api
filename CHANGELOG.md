@@ -7,6 +7,9 @@ midday, but end_date will not be returned via JSON
 - user has now an ios_location as home address (tough it's only called 'location'
 - json now mostly has nested objects instead of only the IDs
 user: locationId
+slot: creatorId, groupId and locationId
+group: groupId => id, ownerId
+
 
 ## v0.3.0 on t2s2-dev
 - use Puma as Webserver on Heroku instead of Unicorn
