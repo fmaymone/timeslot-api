@@ -583,7 +583,6 @@ CREATE TABLE users (
     phone character varying(35),
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
-    location_name character varying(128),
     device_token character varying(128)
 );
 
@@ -1203,4 +1202,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150526100738');
 INSERT INTO schema_migrations (version) VALUES ('20150527102505');
 
 INSERT INTO schema_migrations (version) VALUES ('20150528130614');
+
+INSERT INTO schema_migrations (version) VALUES ('20150601135924');
 

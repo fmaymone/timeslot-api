@@ -54,7 +54,8 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   # settings
-  # has_one :location
+  belongs_to :location, class_name: IosLocation
+  accepts_nested_attributes_for :location, reject_if: :all_blank
   # has_one :slot_default_location, class_name: Location
   # has_one :slot_default_type, class_name: SlotType
 
