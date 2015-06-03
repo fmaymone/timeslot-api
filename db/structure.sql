@@ -186,11 +186,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
-    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    deleted_at timestamp without time zone
+    group_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -383,7 +383,7 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 
 CREATE TABLE meta_slots (
     id bigint NOT NULL,
-    title character varying(48) NOT NULL,
+    title character varying(60) NOT NULL,
     start_date timestamp without time zone NOT NULL,
     end_date timestamp without time zone NOT NULL,
     creator_id bigint NOT NULL,
@@ -485,11 +485,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -1204,4 +1204,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150527102505');
 INSERT INTO schema_migrations (version) VALUES ('20150528130614');
 
 INSERT INTO schema_migrations (version) VALUES ('20150601135924');
+
+INSERT INTO schema_migrations (version) VALUES ('20150603142220');
 

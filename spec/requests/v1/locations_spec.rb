@@ -5,6 +5,7 @@ RSpec.describe "V1::Locations", type: :request do
 
   describe "GET /locations/search" do
     it "returns search results", :vcr do
+      skip "currently no location search service from datateam available"
       get "/v1/locations/search", { q: "berghain", pos: "13.0,52.0", limit: 10 }
       expect(response.status).to be(200)
       expect(json.length).to eq 10
