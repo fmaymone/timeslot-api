@@ -7,7 +7,7 @@ RspecApiDocumentation.configure do |config|
   config.app = Rails.application
 
   # Output folder
-  config.docs_dir = Rails.root.join("doc", "api")
+  config.docs_dir = Rails.root.join("doc", "api", "v1")
 
   # An array of output format(s).
   # Possible values are :json, :html, :combined_text, :combined_json,
@@ -27,7 +27,7 @@ RspecApiDocumentation.configure do |config|
 
   # Used when adding a cURL output to the docs
   # config.curl_host = nil
-  config.curl_host = 'http://localhost:3000'
+  config.curl_host = 'http://localhost:5000'
 
   # Used when adding a cURL output to the docs
   # Allows you to filter out headers that are not needed in the cURL request,

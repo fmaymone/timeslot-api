@@ -133,7 +133,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=yovaMpkclaZh4VS3GbkxLis8jSc
+Authorization: Token token=c-bfu2fY__f5ccxalu5rSKKp8Qk
 Host: example.org
 Cookie: </pre>
 
@@ -147,7 +147,6 @@ Cookie: </pre>
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
-  "locationId" : 200719253,
   "notes" : [
     {
       "title" : "revolutionizing the calendar",
@@ -168,10 +167,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;locationId&quot;:200719253,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=yovaMpkclaZh4VS3GbkxLis8jSc&quot; \
+	-H &quot;Authorization: Token token=c-bfu2fY__f5ccxalu5rSKKp8Qk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -182,11 +181,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;553c864ae78f12065ec54ccd118e0e99&quot;
+ETag: W/&quot;695b6885ff853587aa9084ca32f36bed&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3859975c-e059-4c33-8ce2-e111acbbdf66
-X-Runtime: 0.039151
-Content-Length: 731</pre>
+X-Request-Id: 2f89f6db-de9a-4361-96cf-b735efef2b23
+X-Runtime: 0.039901
+Content-Length: 744</pre>
 
 #### Status
 
@@ -196,44 +195,45 @@ Content-Length: 731</pre>
 
 ```javascript
 {
-  "id" : 27,
+  "id" : 26,
   "title" : "Time for a Slot",
-  "createdAt" : "2015-05-27T12:18:00.654Z",
-  "updatedAt" : "2015-05-27T12:18:00.654Z",
-  "deletedAt" : null,
   "startDate" : "2014-09-08T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:38.246Z",
+  "updatedAt" : "2015-06-03T10:39:38.246Z",
+  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
-  "visibility" : "private",
   "location" : null,
   "creator" : {
-    "id" : 181,
-    "username" : "User 178",
-    "createdAt" : "2015-05-27T12:18:00.644Z",
-    "updatedAt" : "2015-05-27T12:18:00.644Z",
-    "deletedAt" : null
-  },
-  "settings" : {
-    "alerts" : "0101010101"
+    "id" : 180,
+    "username" : "User 177",
+    "createdAt" : "2015-06-03T10:39:38.235Z",
+    "updatedAt" : "2015-06-03T10:39:38.235Z",
+    "deletedAt" : null,
+    "image" : null
   },
   "notes" : [
     {
-      "id" : 5,
+      "id" : 3,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-05-27T12:18:00.659Z"
+      "createdAt" : "2015-06-03T10:39:38.251Z"
     },
     {
-      "id" : 4,
+      "id" : 2,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-05-27T12:18:00.657Z"
+      "createdAt" : "2015-06-03T10:39:38.249Z"
     }
   ],
-  "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null,
   "photos" : [],
   "voices" : [],
-  "videos" : []
+  "videos" : [],
+  "settings" : {
+    "alerts" : "0101010101"
+  },
+  "visibility" : "private",
+  "likes" : 0,
+  "commentsCounter" : 0,
+  "shareUrl" : null
 }
 ```

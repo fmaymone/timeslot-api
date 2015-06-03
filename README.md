@@ -4,7 +4,7 @@
 * [Api Endpoint Documentation](doc/api/index.markdown)
 * [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
 * [App-Specification](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
-* [Entity Relationship Diagram](doc/erd_adv-final-18.2.15.pdf)
+* [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 
 # Notes
@@ -150,7 +150,9 @@ in the ```spec/support/vcr_setup.rb``` file.
 
 To enable outgoing http requests in the Rails Dev Env there is a setting in
 the ```development.rb``` file:
-```WebMock.allow_net_connect!```
+```
+WebMock.allow_net_connect!
+```
 
 ### [Bullet](https://github.com/flyerhzm/bullet)
 
@@ -247,6 +249,7 @@ gem install rubocop rubocop-rspec rails_best_practices
 
 * [Cocoa Rest Client](http://mmattozzi.github.io/cocoa-rest-client/)
 * [Postman](https://chrome.google.com/webstore/detail/postman-rest-client/fdmmgilgnpjigdojojpjoooidkmcomcm) - addon for google chrome
+* [RESTClient](https://addons.mozilla.org/en-US/firefox/addon/restclient/) - addon for firefox
 
 #### Database Tools
 

@@ -158,8 +158,10 @@ module V1
                         :phone,
                         :password,
                         :image,
-                        :locationId,
-                        :locationName,
+                        { location: [:name, :street, :city, :postcode, :country,
+                                     :latitude, :longitude, :private_location,
+                                     :auid] },
+                        :name,
                         :publicUrl,
                         :deviceToken,
                         :push,
@@ -178,6 +180,12 @@ module V1
         img_param = params.require(:image).require(:publicId)
         p.merge!("public_id" => img_param)
       end
+
+      if params[:location].present?
+        p[:location_attributes] = p.delete 'location'
+        p[:location_attributes][:creator] = current_user
+      end
+
       p.transform_keys(&:underscore)
     end
 

@@ -78,7 +78,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=iE1gSnu2T3_6jBulz6wq3-kK2bc
+Authorization: Token token=ZhC3DZR-NgvOMlWhckuIeY8zeKI
 Host: example.org
 Cookie: </pre>
 
@@ -99,10 +99,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=iE1gSnu2T3_6jBulz6wq3-kK2bc&quot; \
+	-H &quot;Authorization: Token token=ZhC3DZR-NgvOMlWhckuIeY8zeKI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -113,11 +113,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b4cbc69fd50906bc40e8af370ff408d3&quot;
+ETag: W/&quot;41be10ae970f8c830c7df79671808d8c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c467b8eb-3435-46da-8b61-9a29860355b7
-X-Runtime: 0.050625
-Content-Length: 1721</pre>
+X-Request-Id: 1ddc4ce6-9144-4467-8363-88daf168d17f
+X-Runtime: 0.070321
+Content-Length: 2119</pre>
 
 #### Status
 
@@ -130,19 +130,30 @@ Content-Length: 1721</pre>
   {
     "id" : 24,
     "title" : "Slot title 26",
-    "locationId" : null,
-    "createdAt" : "2015-05-22T15:50:01.062Z",
-    "updatedAt" : "2015-05-22T15:50:01.062Z",
-    "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:38.026Z",
+    "updatedAt" : "2015-06-03T10:39:38.026Z",
+    "deletedAt" : null,
     "endDate" : "2014-10-27T02:44:02.000Z",
-    "visibility" : "private",
-    "settings" : {
-      "alerts" : "0000000000"
+    "location" : {
+      "id" : 27,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 170,
+      "username" : "User 167",
+      "createdAt" : "2015-06-03T10:39:38.016Z",
+      "updatedAt" : "2015-06-03T10:39:38.016Z",
+      "deletedAt" : null,
+      "image" : null
     },
     "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
     "photos" : [
       {
         "mediaId" : 18,
@@ -162,25 +173,33 @@ Content-Length: 1721</pre>
     ],
     "voices" : [],
     "videos" : [],
-    "url" : "http://example.org/v1/slots/24",
-    "creatorId" : 145
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "visibility" : "private",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/24"
   },
   {
     "id" : 23,
     "title" : "Slot title 25",
-    "locationId" : 200719253,
-    "createdAt" : "2015-05-22T15:50:01.013Z",
-    "updatedAt" : "2015-05-22T15:50:01.013Z",
-    "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:37.983Z",
+    "updatedAt" : "2015-06-03T10:39:37.983Z",
+    "deletedAt" : null,
     "endDate" : "2014-10-26T01:44:02.000Z",
-    "visibility" : "private",
-    "settings" : {
-      "alerts" : "1110001100"
+    "location" : null,
+    "creator" : {
+      "id" : 168,
+      "username" : "User 165",
+      "createdAt" : "2015-06-03T10:39:37.969Z",
+      "updatedAt" : "2015-06-03T10:39:37.969Z",
+      "deletedAt" : null,
+      "image" : null
     },
     "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
     "photos" : [
       {
         "mediaId" : 8,
@@ -243,8 +262,14 @@ Content-Length: 1721</pre>
         "thumbnail=" : null
       }
     ],
-    "url" : "http://example.org/v1/slots/23",
-    "creatorId" : 144
+    "settings" : {
+      "alerts" : "1110001100"
+    },
+    "visibility" : "private",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/23"
   }
 ]
 ```

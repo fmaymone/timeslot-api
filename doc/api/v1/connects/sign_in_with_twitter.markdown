@@ -62,7 +62,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
@@ -74,11 +74,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f2e7b8df089194b7c4989e746d1a87db&quot;
+ETag: W/&quot;5ed1048806bddfa9d04e171b39712250&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d378d588-caa5-41a8-9a7e-4702378f7451
-X-Runtime: 0.011989
-Content-Length: 686</pre>
+X-Request-Id: 4bb13202-2424-4da0-bd27-6e5bb3508183
+X-Runtime: 0.020916
+Content-Length: 724</pre>
 
 #### Status
 
@@ -88,15 +88,21 @@ Content-Length: 686</pre>
 
 ```javascript
 {
-  "id" : 51,
+  "id" : 72,
   "username" : "alexandrospar",
+  "createdAt" : "2015-06-03T10:39:36.453Z",
+  "updatedAt" : "2015-06-03T10:39:36.453Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
   "email" : null,
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -107,11 +113,8 @@ Content-Length: 686</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:48.944Z",
-  "updatedAt" : "2015-05-19T10:51:48.944Z",
-  "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "08AUCDlEOtlpUZdCniykmxJFgDc"
+  "authToken" : "TAzfKzz_uQhUf6AyJqJuWziyyD8"
 }
 ```

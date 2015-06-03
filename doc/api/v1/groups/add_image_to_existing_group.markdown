@@ -22,15 +22,42 @@ Description : Cloudinary ID / URL
 
 ### Response Fields
 
+Name : id
+Description : ID of the group
+
+Name : name
+Description : name of the group
+
+Name : owner
+Description : user info of group owner
+
+Name : membersCanPost
+Description : Can subscribers add slots?
+
+Name : membersCanInvite
+Description : Can subscribers invite friends?
+
 Name : image
-Description : URL for this media item
+Description : URL of the group image
+
+Name : createdAt
+Description : Creation of group
+
+Name : updatedAt
+Description : Latest update of group in db
+
+Name : deletedAt
+Description : Deletion of group
+
+Name : membershipState
+Description : Membership state for current user
 
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=IuSTC6Ni4i1xwaYX89Y1oaEUiLI
+Authorization: Token token=F6EIZjlTtg5G4hG9YwACGi-UeSg
 Host: example.org
 Cookie: </pre>
 
@@ -50,9 +77,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=IuSTC6Ni4i1xwaYX89Y1oaEUiLI&quot; \
+	-H &quot;Authorization: Token token=F6EIZjlTtg5G4hG9YwACGi-UeSg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,11 +90,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ee47c333e884879961d9d695b5ac0d67&quot;
+ETag: W/&quot;b7c84dcd8597308bc220ca2e1ec98ded&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 53f50481-8073-498e-ae0c-d73280408c0c
-X-Runtime: 0.017017
-Content-Length: 250</pre>
+X-Request-Id: ebcdd63b-e673-4f24-a73c-78e08de0a1c1
+X-Runtime: 0.019142
+Content-Length: 384</pre>
 
 #### Status
 
@@ -79,13 +106,20 @@ Content-Length: 250</pre>
 {
   "id" : 15,
   "name" : "foo",
-  "ownerId" : 64,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-19T10:51:49.242Z",
-  "updatedAt" : "2015-05-19T10:51:49.242Z",
+  "createdAt" : "2015-06-03T10:39:36.778Z",
+  "updatedAt" : "2015-06-03T10:39:36.778Z",
   "deletedAt" : null,
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+  "owner" : {
+    "id" : 85,
+    "username" : "User 82",
+    "createdAt" : "2015-06-03T10:39:36.774Z",
+    "updatedAt" : "2015-06-03T10:39:36.774Z",
+    "deletedAt" : null,
+    "image" : null
+  },
   "membershipState" : "active"
 }
 ```

@@ -34,7 +34,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/media-signature&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/media-signature&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
@@ -46,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d17a0d2a1239d5bc73e2e777362b7081&quot;
+ETag: W/&quot;5b9d0a230e7184a36271265f954f0b60&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d097bfd6-6d27-475f-80f9-950365e39a31
-X-Runtime: 0.014528
+X-Request-Id: 4d4c1682-9b32-4e43-ade5-787a16059969
+X-Runtime: 0.031087
 Content-Length: 144</pre>
 
 #### Status
@@ -60,9 +60,9 @@ Content-Length: 144</pre>
 
 ```javascript
 {
-  "signature" : "5b0a48630c0f8b42e40c551dbffe2ce6a182aa62",
+  "signature" : "a6e54743953ad57a7e7765486dd7b973a783e3e9",
   "apiKey" : 255241985667644,
-  "publicId" : "xorw21eawrlqg01hgdiv",
-  "timestamp" : "20150519105150"
+  "publicId" : "hdk1ntrakoqmtthoiwhh",
+  "timestamp" : "20150603103937"
 }
 ```

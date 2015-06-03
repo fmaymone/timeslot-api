@@ -25,12 +25,6 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
-Name : locationId
-Description : ID of users home location
-
-Name : locationName
-Description : Home location of user as String (temporary) (max. 128 chars)
-
 Name : image
 Description : URL of the user image
 
@@ -82,11 +76,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -156,7 +147,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc
+Authorization: Token token=HGc4SnGpSLZd98V7kmGh9CsAr6M
 Host: example.org
 Cookie: </pre>
 
@@ -175,9 +166,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc&quot; \
+	-H &quot;Authorization: Token token=HGc4SnGpSLZd98V7kmGh9CsAr6M&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -188,11 +179,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e8b4b6a003e5916b5c124ede4b45120f&quot;
+ETag: W/&quot;a251ab053a2f0c4a168d0ac4e529d1a7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 435f81e6-ae70-4ede-b90f-519faa03688f
-X-Runtime: 0.018583
-Content-Length: 709</pre>
+X-Request-Id: 5247404a-18d6-4c0d-bcf4-ca09c312a972
+X-Runtime: 0.016987
+Content-Length: 687</pre>
 
 #### Status
 
@@ -202,15 +193,21 @@ Content-Length: 709</pre>
 
 ```javascript
 {
-  "id" : 228,
+  "id" : 282,
   "username" : "bar",
-  "email" : "user63@email.com",
+  "createdAt" : "2015-06-03T10:39:40.376Z",
+  "updatedAt" : "2015-06-03T10:39:40.383Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
+  "email" : "user65@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -221,14 +218,7 @@ Content-Length: 709</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.181Z",
-  "updatedAt" : "2015-05-19T10:51:52.188Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```

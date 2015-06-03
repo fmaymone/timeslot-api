@@ -10,6 +10,10 @@ FactoryGirl.define do
       email
     end
 
+    trait :with_location do
+      location
+    end
+
     trait :with_phone do
       phone
     end

@@ -279,6 +279,13 @@ module V1
         msg = "LocationId and IosLocation can not both be submitted"
         fail ActionController::ParameterMissing, msg
       end
+
+      if params[:endDate].present?
+        enddate = (params[:endDate])
+        valid_date = Time.zone.parse(enddate)
+        fail ParameterInvalid.new(:end_date, enddate) unless valid_date
+      end
+
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
                         iosLocation:
                           [:name, :street, :city, :postcode, :country, :auid,
