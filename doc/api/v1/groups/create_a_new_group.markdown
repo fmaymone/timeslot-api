@@ -30,7 +30,34 @@ Description : Array of User IDs to be invited
 ### Response Fields
 
 Name : id
-Description : ID of the new group
+Description : ID of the group
+
+Name : name
+Description : name of the group
+
+Name : owner
+Description : user info of group owner
+
+Name : membersCanPost
+Description : Can subscribers add slots?
+
+Name : membersCanInvite
+Description : Can subscribers invite friends?
+
+Name : image
+Description : URL of the group image
+
+Name : createdAt
+Description : Creation of group
+
+Name : updatedAt
+Description : Latest update of group in db
+
+Name : deletedAt
+Description : Deletion of group
+
+Name : membershipState
+Description : Membership state for current user
 
 ### Request
 
@@ -38,7 +65,7 @@ Description : ID of the new group
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=TEu0ISBQad6-JY193r-NrgdMLpo
+Authorization: Token token=LEoOZVyMmKlX0xUa6F9l3e3mfSk
 Host: example.org
 Cookie: </pre>
 
@@ -51,9 +78,9 @@ Cookie: </pre>
 {
   "name" : "foo",
   "invitees" : [
-    59,
-    60,
-    61
+    80,
+    81,
+    82
   ]
 }
 ```
@@ -61,10 +88,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[59,60,61]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[80,81,82]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=TEu0ISBQad6-JY193r-NrgdMLpo&quot; \
+	-H &quot;Authorization: Token token=LEoOZVyMmKlX0xUa6F9l3e3mfSk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,11 +102,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8893dbdd4c0965fc8d84f1523696b70e&quot;
+ETag: W/&quot;357a654bab521c779c27ac10a01f7076&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4cdfd7ea-b3f2-4947-999b-40323449ae5a
-X-Runtime: 0.043530
-Content-Length: 217</pre>
+X-Request-Id: cf68f3c3-03eb-424f-91d2-7b547fb80f4b
+X-Runtime: 0.042981
+Content-Length: 351</pre>
 
 #### Status
 
@@ -91,13 +118,20 @@ Content-Length: 217</pre>
 {
   "id" : 13,
   "name" : "foo",
-  "ownerId" : 62,
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-19T10:51:49.160Z",
-  "updatedAt" : "2015-05-19T10:51:49.160Z",
+  "createdAt" : "2015-06-03T10:39:36.680Z",
+  "updatedAt" : "2015-06-03T10:39:36.680Z",
   "deletedAt" : null,
   "image" : null,
+  "owner" : {
+    "id" : 83,
+    "username" : "User 80",
+    "createdAt" : "2015-06-03T10:39:36.672Z",
+    "updatedAt" : "2015-06-03T10:39:36.672Z",
+    "deletedAt" : null,
+    "image" : null
+  },
   "membershipState" : "active"
 }
 ```

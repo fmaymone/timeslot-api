@@ -98,7 +98,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
@@ -110,11 +110,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5eee44884027b2efe01f7a96cf62b8a6&quot;
+ETag: W/&quot;6271a609e31240eff48e7d2e91a34298&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 192e5927-cc25-4faf-99d8-21739337ff47
-X-Runtime: 0.054257
-Content-Length: 701</pre>
+X-Request-Id: bcdfc1f9-7c52-4b19-ab98-b1ece8d410d3
+X-Runtime: 0.084055
+Content-Length: 739</pre>
 
 #### Status
 
@@ -124,15 +124,21 @@ Content-Length: 701</pre>
 
 ```javascript
 {
-  "id" : 43,
+  "id" : 64,
   "username" : "Silvi O Ivlis",
+  "createdAt" : "2015-06-03T10:39:36.182Z",
+  "updatedAt" : "2015-06-03T10:39:36.182Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
   "email" : "alexpar@gmail.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -143,11 +149,8 @@ Content-Length: 701</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:48.724Z",
-  "updatedAt" : "2015-05-19T10:51:48.724Z",
-  "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "CUUCxM-sOqnFBVC0dzqYY13KDwg"
+  "authToken" : "j53NxXhnPsd0w536nZKzYJe2yBQ"
 }
 ```

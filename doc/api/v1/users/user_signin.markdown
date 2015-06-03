@@ -28,11 +28,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -116,7 +113,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user60@email.com",
+  "email" : "user63@email.com",
   "password" : "timeslot"
 }
 ```
@@ -124,7 +121,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user60@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user63@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -137,11 +134,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aa5aa031a98075a3e850fab0736fd607&quot;
+ETag: W/&quot;270dce670bb241d0d3270d3ca478b2ad&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 842c4ffd-2405-460e-b210-cc4a70fccba7
-X-Runtime: 0.012086
-Content-Length: 696</pre>
+X-Request-Id: cbee925e-9813-42a0-a078-bff37ed67dd7
+X-Runtime: 0.020858
+Content-Length: 734</pre>
 
 #### Status
 
@@ -151,15 +148,21 @@ Content-Length: 696</pre>
 
 ```javascript
 {
-  "id" : 225,
-  "username" : "User 221",
-  "email" : "user60@email.com",
+  "id" : 279,
+  "username" : "User 275",
+  "createdAt" : "2015-06-03T10:39:40.160Z",
+  "updatedAt" : "2015-06-03T10:39:40.169Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
+  "email" : "user63@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -170,11 +173,8 @@ Content-Length: 696</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.107Z",
-  "updatedAt" : "2015-05-19T10:51:52.115Z",
-  "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "WWYxHAXbM7h_8tyQrMCYw27GvrI"
+  "authToken" : "yREtTPXaZ-iEROq1K8us4hqb8_s"
 }
 ```

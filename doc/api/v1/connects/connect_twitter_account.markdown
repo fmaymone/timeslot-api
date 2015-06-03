@@ -39,7 +39,7 @@ Description : URL of the user image
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=sjqFFNNtj_6tbcPcD3HfSMKuChw
+Authorization: Token token=m8cqnoT2v9eYQxsTGiP-MEK_bhI
 Host: example.org
 Cookie: </pre>
 
@@ -60,9 +60,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=sjqFFNNtj_6tbcPcD3HfSMKuChw&quot; \
+	-H &quot;Authorization: Token token=m8cqnoT2v9eYQxsTGiP-MEK_bhI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,11 +73,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;be35920bf1460f8266ad9b2a329297ea&quot;
+ETag: W/&quot;d145940f053b19df7c5d4820962b62dd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 85ef5fa4-0e8f-47b7-b6c5-d2d92990ebf7
-X-Runtime: 0.021149
-Content-Length: 711</pre>
+X-Request-Id: 81f7d23a-b06c-4737-a98e-7ce171ab1881
+X-Runtime: 0.017804
+Content-Length: 689</pre>
 
 #### Status
 
@@ -87,15 +87,21 @@ Content-Length: 711</pre>
 
 ```javascript
 {
-  "id" : 52,
-  "username" : "User 49",
+  "id" : 73,
+  "username" : "User 70",
+  "createdAt" : "2015-06-03T10:39:36.483Z",
+  "updatedAt" : "2015-06-03T10:39:36.483Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
   "email" : "user3@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -106,14 +112,7 @@ Content-Length: 711</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:48.963Z",
-  "updatedAt" : "2015-05-19T10:51:48.963Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```

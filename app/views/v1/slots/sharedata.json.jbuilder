@@ -7,8 +7,8 @@ json.extract!(slot,
               :end_date
              )
 
-if slot.location_id.nil?
-  json.address json.nil!
+if slot.location_id.nil? || slot.location.nil?
+  json.address ''
 else
   address = ""
   address << "#{slot.location.name}, " if slot.location.name

@@ -5,6 +5,19 @@ resource "Groups" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
+  shared_context "default group response fields" do
+    response_field :id, "ID of the group"
+    response_field :name, "name of the group"
+    response_field :owner, "user info of group owner"
+    response_field :membersCanPost, "Can subscribers add slots?"
+    response_field :membersCanInvite, "Can subscribers invite friends?"
+    response_field :image, "URL of the group image"
+    response_field :createdAt, "Creation of group"
+    response_field :updatedAt, "Latest update of group in db"
+    response_field :deletedAt, "Deletion of group"
+    response_field :membershipState, "Membership state for current user"
+  end
+
   # index
   get "/v1/groups" do
     header "Accept", "application/json"
@@ -44,16 +57,7 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to get", required: true
 
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :ownerId, "user id of group owner"
-    response_field :membersCanPost, "Can subscribers add slots?"
-    response_field :membersCanInvite, "Can subscribers invite friends?"
-    response_field :image, "URL of the group image"
-    response_field :createdAt, "Creation of group"
-    response_field :updatedAt, "Latest update of group in db"
-    response_field :deletedAt, "Deletion of group"
-    response_field :membershipState, "Membership state for current user"
+    include_context "default group response fields"
 
     let(:group) { create(:group) }
     let(:group_id) { group.id }
@@ -69,9 +73,11 @@ resource "Groups" do
       expect(response_status).to eq(200)
       group.reload
       expect(
-        json.except('image', 'membershipState')
-      ).to eq(group.attributes.as_json
+        json.except('image', 'membershipState', 'owner')
+      ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
+      expect(json).to have_key "owner"
+      expect(json['owner']['id']).to eq group.owner.id
     end
   end
 
@@ -86,7 +92,7 @@ resource "Groups" do
     parameter :membersCanInvite, "Can subscribers invite friends?"
     parameter :invitees, "Array of User IDs to be invited"
 
-    response_field :id, "ID of the new group"
+    include_context "default group response fields"
 
     let(:name) { "foo" }
     let(:invitees) { create_list(:user, 3).collect(&:id) }
@@ -115,6 +121,8 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_id, "ID of the group to update", required: true
+
+    include_context "default group response fields"
 
     let(:group) do
       create(:group, name: "foo", owner: current_user,
@@ -145,9 +153,11 @@ resource "Groups" do
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'membershipState')
-        ).to eq(group.attributes.as_json
+          json.except('image', 'membershipState', 'owner')
+        ).to eq(group.attributes.as_json.except('owner_id')
                  .transform_keys { |key| key.camelize(:lower) })
+        expect(json).to have_key "owner"
+        expect(json['owner']['id']).to eq group.owner.id
       end
     end
 
@@ -157,8 +167,6 @@ resource "Groups" do
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :image
-
-      response_field :image, "URL for this media item"
 
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
 
@@ -187,6 +195,8 @@ resource "Groups" do
 
     parameter :group_id, "ID of the group to delete", required: true
 
+    include_context "default group response fields"
+
     let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }
     let!(:memberships) { create_list(:membership, 4, :active, group: group) }
@@ -206,9 +216,11 @@ resource "Groups" do
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'membershipState')
-      ).to eq(group.attributes.as_json
+        json.except('image', 'membershipState', 'owner')
+      ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
+      expect(json).to have_key "owner"
+      expect(json['owner']['id']).to eq group.owner.id
     end
 
     describe "current user not group owner" do
@@ -258,17 +270,17 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({ "groupId" => group.id,
+      expect(json).to include({ "id" => group.id,
                                 "slotCount" => slots.length })
       expect(json["slots"].length).to eq slots.length
-      expect(json["slots"])
+      expect(json["slots"].first.except('location'))
         .to include("id" => slots.first.id,
                     "title" => slots.first.title,
                     "startDate" => slots[0].start_date.as_json,
-                    "endDate" => slots[0].end_date.as_json,
                     "createdAt" => slots[0].created_at.as_json,
                     "updatedAt" => slots[0].updated_at.as_json,
                     "deletedAt" => slots[0].deleted_at,
+                    "endDate" => slots[0].end_date.as_json,
                     "settings" => {
                       'alerts' => current_user.alerts(slots[0]) },
                     "photos" => slots[0].photos,
@@ -343,6 +355,7 @@ resource "Groups" do
     response_field :related, "Array of related users"
     response_field :userId, "ID of user", scope: :related
     response_field :state, "state of membership", scope: :related
+    response_field :deletedAt, "Deletion date of membership", scope: :related
 
     let(:group) { create(:group, owner: current_user) }
     let(:group_id) { group.id }

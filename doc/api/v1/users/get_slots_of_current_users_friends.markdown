@@ -64,7 +64,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=9xGdUO4HH6lgK3bWjayhHgcPhUs
+Authorization: Token token=YFFvXc8XMjt7VhAstq-Spbqw_Ic
 Host: example.org
 Cookie: </pre>
 
@@ -74,9 +74,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/friendslots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9xGdUO4HH6lgK3bWjayhHgcPhUs&quot; \
+	-H &quot;Authorization: Token token=YFFvXc8XMjt7VhAstq-Spbqw_Ic&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,11 +87,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3b2bdb1c4548645c076db1c7445e1827&quot;
+ETag: W/&quot;b0dfebe8ee48a84fa48f34d34e4b4ac2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 21cd106c-cecb-4ce1-a153-47492e4d2e51
-X-Runtime: 0.062489
-Content-Length: 1234</pre>
+X-Request-Id: fc133402-9d6a-413f-afb8-c19263683d4d
+X-Runtime: 0.076564
+Content-Length: 1999</pre>
 
 #### Status
 
@@ -102,70 +102,123 @@ Content-Length: 1234</pre>
 ```javascript
 [
   {
-    "id" : 91,
-    "title" : "Slot title 83",
-    "locationId" : null,
-    "createdAt" : "2015-05-19T10:51:52.967Z",
-    "updatedAt" : "2015-05-19T10:51:52.980Z",
-    "deletedAt" : null,
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "endDate" : "2014-10-03T11:44:02.000Z",
-    "visibility" : null,
-    "settings" : {
-      "alerts" : "0000000000"
-    },
-    "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "photos" : [],
-    "voices" : [],
-    "videos" : [],
-    "url" : "http://example.org/v1/slots/91",
-    "creatorId" : 289
-  },
-  {
-    "id" : 93,
-    "title" : "Slot title 85",
-    "locationId" : null,
-    "createdAt" : "2015-05-19T10:51:53.001Z",
-    "updatedAt" : "2015-05-19T10:51:53.001Z",
-    "deletedAt" : null,
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "endDate" : "2014-10-05T13:44:02.000Z",
-    "visibility" : "friends",
-    "settings" : {
-      "alerts" : "0000000000"
-    },
-    "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "photos" : [],
-    "voices" : [],
-    "videos" : [],
-    "url" : "http://example.org/v1/slots/93",
-    "creatorId" : 294
-  },
-  {
     "id" : 94,
-    "title" : "Slot title 86",
-    "locationId" : null,
-    "createdAt" : "2015-05-19T10:51:53.012Z",
-    "updatedAt" : "2015-05-19T10:51:53.012Z",
-    "deletedAt" : null,
+    "title" : "Slot title 83",
     "startDate" : "2014-09-28T13:31:02.000Z",
-    "endDate" : "2014-10-06T14:44:02.000Z",
-    "visibility" : "public",
-    "settings" : {
-      "alerts" : "0000000000"
+    "createdAt" : "2015-06-03T10:39:41.442Z",
+    "updatedAt" : "2015-06-03T10:39:41.479Z",
+    "deletedAt" : null,
+    "endDate" : "2014-10-03T11:44:02.000Z",
+    "location" : {
+      "id" : 87,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 377,
+      "username" : "User 370",
+      "createdAt" : "2015-06-03T10:39:41.446Z",
+      "updatedAt" : "2015-06-03T10:39:41.446Z",
+      "deletedAt" : null,
+      "image" : null
     },
     "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
     "photos" : [],
     "voices" : [],
     "videos" : [],
-    "url" : "http://example.org/v1/slots/94",
-    "creatorId" : 296
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "slotter" : {
+      "id" : 371
+    },
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/94"
+  },
+  {
+    "id" : 96,
+    "title" : "Slot title 85",
+    "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:41.509Z",
+    "updatedAt" : "2015-06-03T10:39:41.509Z",
+    "deletedAt" : null,
+    "endDate" : "2014-10-05T13:44:02.000Z",
+    "location" : {
+      "id" : 89,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 384,
+      "username" : "User 377",
+      "createdAt" : "2015-06-03T10:39:41.499Z",
+      "updatedAt" : "2015-06-03T10:39:41.499Z",
+      "deletedAt" : null,
+      "image" : null
+    },
+    "notes" : [],
+    "photos" : [],
+    "voices" : [],
+    "videos" : [],
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "visibility" : "friends",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/96"
+  },
+  {
+    "id" : 97,
+    "title" : "Slot title 86",
+    "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:41.529Z",
+    "updatedAt" : "2015-06-03T10:39:41.529Z",
+    "deletedAt" : null,
+    "endDate" : "2014-10-06T14:44:02.000Z",
+    "location" : {
+      "id" : 90,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 387,
+      "username" : "User 380",
+      "createdAt" : "2015-06-03T10:39:41.519Z",
+      "updatedAt" : "2015-06-03T10:39:41.519Z",
+      "deletedAt" : null,
+      "image" : null
+    },
+    "notes" : [],
+    "photos" : [],
+    "voices" : [],
+    "videos" : [],
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "visibility" : "public",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/97"
   }
 ]
 ```

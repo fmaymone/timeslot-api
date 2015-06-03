@@ -25,18 +25,18 @@ Description : containing creation date of the Like and details of the user who m
 
 #### Headers
 
-<pre>Authorization: Token token=ryRO-OnFnvvc5r9cnjsxW59Rjc0
+<pre>Authorization: Token token=CEQLCSWHsMBl582zDkO8TsrwfHM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/46/likes</pre>
+<pre>GET /v1/slots/49/likes</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots/46/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=ryRO-OnFnvvc5r9cnjsxW59Rjc0&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/49/likes&quot; -X GET \
+	-H &quot;Authorization: Token token=CEQLCSWHsMBl582zDkO8TsrwfHM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -47,11 +47,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f7ccb60323f5cda2ad33235aa94d127d&quot;
+ETag: W/&quot;29a700c8c56acf5563943e4e03c33e42&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ffd52d58-ab45-4ac2-80d9-b5dec349d655
-X-Runtime: 0.020661
-Content-Length: 393</pre>
+X-Request-Id: 0f8fc68c-27f7-4a10-a4bb-2d29f5412ae5
+X-Runtime: 0.022463
+Content-Length: 781</pre>
 
 #### Status
 
@@ -62,28 +62,48 @@ Content-Length: 393</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-05-22T15:50:02.618Z",
-    "userId" : 193,
-    "username" : "User 190",
-    "userimage" : null
+    "createdAt" : "2015-06-03T10:39:39.554Z",
+    "liker" : {
+      "id" : 240,
+      "username" : "User 237",
+      "createdAt" : "2015-06-03T10:39:39.551Z",
+      "updatedAt" : "2015-06-03T10:39:39.551Z",
+      "deletedAt" : null,
+      "image" : null
+    }
   },
   {
-    "createdAt" : "2015-05-22T15:50:02.622Z",
-    "userId" : 194,
-    "username" : "User 191",
-    "userimage" : null
+    "createdAt" : "2015-06-03T10:39:39.558Z",
+    "liker" : {
+      "id" : 241,
+      "username" : "User 238",
+      "createdAt" : "2015-06-03T10:39:39.556Z",
+      "updatedAt" : "2015-06-03T10:39:39.556Z",
+      "deletedAt" : null,
+      "image" : null
+    }
   },
   {
-    "createdAt" : "2015-05-22T15:50:02.626Z",
-    "userId" : 195,
-    "username" : "User 192",
-    "userimage" : null
+    "createdAt" : "2015-06-03T10:39:39.567Z",
+    "liker" : {
+      "id" : 242,
+      "username" : "User 239",
+      "createdAt" : "2015-06-03T10:39:39.561Z",
+      "updatedAt" : "2015-06-03T10:39:39.561Z",
+      "deletedAt" : null,
+      "image" : null
+    }
   },
   {
-    "createdAt" : "2015-05-22T15:50:02.641Z",
-    "userId" : 197,
-    "username" : "User 194",
-    "userimage" : "dfhjghjkdisudgfds7iy37"
+    "createdAt" : "2015-06-03T10:39:39.588Z",
+    "liker" : {
+      "id" : 244,
+      "username" : "User 241",
+      "createdAt" : "2015-06-03T10:39:39.582Z",
+      "updatedAt" : "2015-06-03T10:39:39.582Z",
+      "deletedAt" : null,
+      "image" : "dfhjghjkdisudgfds7iy37"
+    }
   }
 ]
 ```

@@ -39,7 +39,7 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=CEAEEK1lemyzFsoJdFjsJFvZL8k
+Authorization: Token token=RQ7dtoO_qHYK7B41cBg0H6DkVSE
 Host: example.org
 Cookie: </pre>
 
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/19/members&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/19/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=CEAEEK1lemyzFsoJdFjsJFvZL8k&quot; \
+	-H &quot;Authorization: Token token=RQ7dtoO_qHYK7B41cBg0H6DkVSE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,11 +62,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a06e5cd98d5af22334ea4e7fbd56ff5a&quot;
+ETag: W/&quot;18400060c5db8df78aa15474a63d332b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d6a0afcf-6628-42e1-a9bf-be0082c100a7
-X-Runtime: 0.010868
-Content-Length: 503</pre>
+X-Request-Id: e7f12577-29e8-48ed-8539-79bea89272e6
+X-Runtime: 0.014607
+Content-Length: 521</pre>
 
 #### Status
 
@@ -80,34 +80,34 @@ Content-Length: 503</pre>
   "size" : 6,
   "members" : [
     {
-      "userId" : 82,
-      "username" : "User 79",
-      "userUrl" : "http://example.org/v1/users/82"
+      "userId" : 107,
+      "username" : "User 104",
+      "userUrl" : "http://example.org/v1/users/107"
     },
     {
-      "userId" : 83,
-      "username" : "User 80",
-      "userUrl" : "http://example.org/v1/users/83"
+      "userId" : 108,
+      "username" : "User 105",
+      "userUrl" : "http://example.org/v1/users/108"
     },
     {
-      "userId" : 84,
-      "username" : "User 81",
-      "userUrl" : "http://example.org/v1/users/84"
+      "userId" : 109,
+      "username" : "User 106",
+      "userUrl" : "http://example.org/v1/users/109"
     },
     {
-      "userId" : 85,
-      "username" : "User 82",
-      "userUrl" : "http://example.org/v1/users/85"
+      "userId" : 110,
+      "username" : "User 107",
+      "userUrl" : "http://example.org/v1/users/110"
     },
     {
-      "userId" : 86,
-      "username" : "User 83",
-      "userUrl" : "http://example.org/v1/users/86"
+      "userId" : 111,
+      "username" : "User 108",
+      "userUrl" : "http://example.org/v1/users/111"
     },
     {
-      "userId" : 88,
-      "username" : "User 85",
-      "userUrl" : "http://example.org/v1/users/88"
+      "userId" : 113,
+      "username" : "User 110",
+      "userUrl" : "http://example.org/v1/users/113"
     }
   ]
 }

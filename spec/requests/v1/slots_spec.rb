@@ -17,9 +17,9 @@ RSpec.describe "V1::Slots", type: :request do
       it "returns success" do
         get "/v1/slots/#{group_slot.id}", {}, auth_header
         expect(response).to have_http_status(200)
-        expect(json).to have_key('groupId')
         expect(json['id']).to eq(group_slot.id)
-        expect(json['groupId']).to eq(group_slot.group_id)
+        expect(json).to have_key('group')
+        expect(json['group']['id']).to eq(group_slot.group_id)
       end
     end
 
@@ -28,6 +28,7 @@ RSpec.describe "V1::Slots", type: :request do
       let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
       it "returns the location" do
+        skip "no location database @ data team"
         get "/v1/slots/#{std_slot.id}"
         expect(json).to have_key('location')
         expect(json['location']['id']).to eq 200719253
@@ -145,6 +146,17 @@ RSpec.describe "V1::Slots", type: :request do
         post "/v1/stdslot/", valid_slot, auth_header
         expect(json['id']).to eq(StdSlot.unscoped.last.id)
       end
+
+      it "sets slot to 'open End' if empty end_date" do
+        valid_slot[:endDate] = ""
+        post "/v1/stdslot/", valid_slot, auth_header
+        expect(response).to have_http_status(:created)
+        slot = StdSlot.unscoped.last
+        # need to cast to_datetime bc of different millisecond precision
+        expect(slot.end_date)
+          .to eq slot.start_date.to_datetime.next_day.at_midday
+        expect(slot.open_end).to be true
+      end
     end
 
     context "with invalid params" do
@@ -181,13 +193,6 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "for invalid start_date" do
           invalid_attributes[:startDate] = "|$%^@wer"
-          post "/v1/stdslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for empty end_date" do
-          invalid_attributes[:endDate] = ""
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
@@ -520,6 +525,16 @@ RSpec.describe "V1::Slots", type: :request do
         metaslot.reload
         expect(metaslot.end_date).to eq("2014-11-11 13:31:02")
       end
+
+      it "sets slot to 'open End' if empty end_date" do
+        patch "/v1/metaslot/#{metaslot.id}", { endDate: "" }, auth_header
+        expect(response).to have_http_status(:no_content)
+        metaslot.reload
+        # need to cast to_datetime bc of different millisecond precision
+        expect(metaslot.end_date)
+          .to eq metaslot.start_date.to_datetime.next_day.at_midday
+        expect(metaslot.open_end).to be true
+      end
     end
 
     context "with invalid params" do
@@ -565,18 +580,11 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response.body).to include('blank')
         end
 
-        it "for empty end_date" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { endDate: "" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
         it "for invalid end_date" do
           patch "/v1/metaslot/#{metaslot.id}",
                 { endDate: "|$%^@wer" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
+          expect(response.body).to include('not a valid value')
         end
 
         it "if start_date equals end_date" do
@@ -632,6 +640,16 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.end_date).to eq("2014-11-11 13:31:02")
         end
+
+        it "sets slot to 'open End' if empty end_date" do
+          patch "/v1/stdslot/#{std_slot.id}", { endDate: "" }, auth_header
+          expect(response).to have_http_status(:ok)
+          std_slot.reload
+          # need to cast to_datetime bc of different millisecond precision
+          expect(std_slot.end_date)
+            .to eq std_slot.start_date.to_datetime.next_day.at_midday
+          expect(std_slot.open_end).to be true
+        end
       end
 
       context "invalid params" do
@@ -676,18 +694,11 @@ RSpec.describe "V1::Slots", type: :request do
             expect(response.body).to include('blank')
           end
 
-          it "for empty end_date" do
-            patch "/v1/stdslot/#{std_slot.id}",
-                  { endDate: "" }, auth_header
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response.body).to include('blank')
-          end
-
           it "for invalid end_date" do
             patch "/v1/stdslot/#{std_slot.id}",
                   { endDate: "|$%^@wer" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
-            expect(response.body).to include('blank')
+            expect(response.body).to include('not a valid value')
           end
 
           it "if start_date equals end_date" do

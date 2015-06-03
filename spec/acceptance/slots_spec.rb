@@ -81,9 +81,9 @@ resource "Slots" do
         expect(json.last).to have_key("title")
         expect(json.last).to have_key("startDate")
         expect(json.last).to have_key("endDate")
-        expect(json.last).to have_key("locationId")
+        expect(json.last).to have_key("location")
         # expect(json.last['location']).to have_key("name")
-        expect(json.last).to have_key("creatorId")
+        expect(json.last).to have_key("creator")
         # expect(json.last['creator']).to have_key("username")
         # expect(json.last).to have_key("settings")
         # expect(json.last['settings']).to have_key("alerts")
@@ -170,7 +170,7 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
-        expect(json['location']).to have_key("name")
+        # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
         expect(json).to have_key("settings")
@@ -194,24 +194,26 @@ resource "Slots" do
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
-                 "location" => { "id" => 200_719_253,
-                                 "name" => slot.location.name,
-                                 "street" => slot.location.street,
-                                 "city" => slot.location.city,
-                                 "postcode" => slot.location.postcode,
-                                 "country" => slot.location.country,
-                                 "longitude" => slot.location.longitude,
-                                 "latitude" => slot.location.latitude
-                                 # "createdAt" => slot.location.created.as_json,
-                                 # "updatedAt" => slot.location.last_update.as_json,
-                                 # "categories" => slot.location.categories,
-                                 # "images" => slot.location.images
-                               },
+                 "location" => nil,
+                 # "location" => { "id" => 200_719_253,
+                 #                 "name" => slot.location.name,
+                 #                 "street" => slot.location.street,
+                 #                 "city" => slot.location.city,
+                 #                 "postcode" => slot.location.postcode,
+                 #                 "country" => slot.location.country,
+                 #                 "longitude" => slot.location.longitude,
+                 #                 "latitude" => slot.location.latitude
+                 #                 # "createdAt" => slot.location.created.as_json,
+                 #                 # "updatedAt" => slot.location.last_update.as_json,
+                 #                 # "categories" => slot.location.categories,
+                 #                 # "images" => slot.location.images
+                 #               },
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
-                                "deletedAt" => nil },
+                                "deletedAt" => nil,
+                                "image" => nil },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
@@ -310,7 +312,7 @@ resource "Slots" do
       context "slot with default location" do
         let(:locationId) { 200_719_253 }
 
-        example "Create StandardSlot", document: :v1 do
+        example "Create StandardSlot with default location", document: :v1 do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -323,6 +325,28 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("location")
           # expect(json['location']).not_to be nil
+        end
+      end
+
+      context "slot with open End" do
+        let(:endDate) { '' }
+
+        example "Create StandardSlot with open End", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "The empty endDate will internally be set to the end of" \
+                      " the start day but will not be returned in json.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          expect(response_status).to eq(201)
+          new_slot = StdSlot.unscoped.last
+          expect(new_slot.end_date)
+            .to eq new_slot.start_date.to_datetime.next_day.at_noon
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+          expect(json).to have_key("endDate")
+          expect(json['endDate']).to be nil
         end
       end
 
@@ -385,10 +409,10 @@ resource "Slots" do
       parameter :visibility, "Visibility of the Slot",
                 required: true
 
-      response_field :endDate, "The missing parameter"
+      response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
       let(:visibility) { 'private' }
 
       example "Create std slot with missing requiered params returns 422" \
@@ -398,7 +422,7 @@ resource "Slots" do
 
         expect(response_status).to eq 422
         expect(json).to have_key("error")
-        expect(response_body).to include "end_date"
+        expect(response_body).to include "start_date"
       end
     end
   end
@@ -450,7 +474,8 @@ resource "Slots" do
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
-        expect(json).to have_key("groupId")
+        expect(json).to have_key("group")
+        expect(json['group']).to have_key("id")
         expect(response_status).to eq(201)
       end
     end
@@ -475,10 +500,10 @@ resource "Slots" do
     end
 
     describe "Create group slot with missing requiered params" do
-      response_field :endDate, "The missing parameter"
+      response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
       let(:groupId) { group.id }
 
       example "Create group slot with missing requiered params returns 422" \
@@ -488,7 +513,7 @@ resource "Slots" do
 
         expect(response_status).to eq 422
         expect(json).to have_key("error")
-        expect(response_body).to include "end_date"
+        expect(response_body).to include "start_date"
       end
     end
   end
@@ -524,11 +549,11 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
-        expect(json).to have_key("slotterId")
+        expect(json).to have_key("slotter")
+        expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
-        expect(json["slotterId"]).to eq current_user.id
       end
     end
   end
@@ -540,7 +565,6 @@ resource "Slots" do
     parameter :id, "ID of the slot to update", required: true
 
     describe "Update an existing MetaSlot" do
-
       parameter :title, "Updated title of slot"
       parameter :startDate, "Updated Startdate and Time of the Slot"
       parameter :endDate,
@@ -764,7 +788,9 @@ resource "Slots" do
                                 "title" => group_slot.title,
                                 "startDate" => group_slot.start_date.as_json,
                                 "endDate" => group_slot.end_date.as_json,
-                                "groupId" => group_slot.group.id,
+                                "group" => {
+                                  "id" => group_slot.group.id
+                                },
                                 "createdAt" => group_slot.created_at.as_json,
                                 "updatedAt" => group_slot.updated_at.as_json,
                                 "deletedAt" => group_slot.deleted_at.as_json,
@@ -807,7 +833,9 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to include("id" => re_slot.id,
                                 "title" => re_slot.title,
-                                "slotterId" => re_slot.slotter.id,
+                                "slotter" => {
+                                  "id" => re_slot.slotter.id
+                                },
                                 "createdAt" => re_slot.created_at.as_json,
                                 "updatedAt" => re_slot.updated_at.as_json,
                                 "deletedAt" => re_slot.deleted_at.as_json,
@@ -851,10 +879,11 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.likes.count
-        expect(json.first).to have_key "userId"
-        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "liker"
         expect(json.first).to have_key "createdAt"
-        expect(json.first).to have_key "userimage"
+        expect(json.first["liker"]).to have_key "id"
+        expect(json.first["liker"]).to have_key "image"
+        expect(json.last["liker"]["id"]).to eq like.user.id
       end
     end
   end
@@ -909,8 +938,8 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.comments.count
-        expect(json.first).to have_key "userId"
-        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "commenter"
+        expect(json.first["commenter"]).to have_key "username"
         expect(json.first).to have_key "content"
       end
     end
@@ -949,8 +978,8 @@ resource "Slots" do
 
       expect(response_status).to eq(200)
       expect(json['predecessors'].size).to eq 2
-      expect(json).to have_key("parentUserId")
-      expect(json["parentUserId"]).to eq slot.owner.id
+      expect(json).to have_key("parentUser")
+      expect(json["parentUser"]["id"]).to eq slot.owner.id
     end
   end
 
