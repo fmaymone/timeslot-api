@@ -156,7 +156,11 @@ class User < ActiveRecord::Base
                                 provider: identity_params[:provider],
                                 data: social_params)
 
-      errors.add(:connect, identity.errors) if identity.errors.any?
+      if identity.errors.any?
+        errors.add(:connect, identity.errors)
+      elsif social_params[:email] and email.nil?
+        update(email: social_params[:email])
+      end
     end
   end
 
