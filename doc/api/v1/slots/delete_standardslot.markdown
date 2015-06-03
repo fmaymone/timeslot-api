@@ -132,19 +132,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=GqD7L5wjClpkJlQUS82WEAgS00w
+<pre>Authorization: Token token=lMK7a-5wnY3j6KEcye1o6vJwnOg
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/stdslot/38</pre>
+<pre>DELETE /v1/stdslot/39</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/38&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=GqD7L5wjClpkJlQUS82WEAgS00w&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=lMK7a-5wnY3j6KEcye1o6vJwnOg&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -156,11 +156,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aa87dae420cdc824dedb5063de000192&quot;
+ETag: W/&quot;a04adb93364895fcb8cddd0e2a6a8c74&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9af7789c-79d3-4778-aea1-e469fb078398
-X-Runtime: 0.182541
-Content-Length: 634</pre>
+X-Request-Id: 952e14f5-8d82-44d2-af65-8d2140f3d5ce
+X-Runtime: 0.183704
+Content-Length: 649</pre>
 
 #### Status
 
@@ -170,17 +170,16 @@ Content-Length: 634</pre>
 
 ```javascript
 {
-  "id" : 38,
+  "id" : 39,
   "title" : "Slot title 34",
-  "createdAt" : "2015-05-27T12:18:01.261Z",
-  "updatedAt" : "2015-05-27T12:18:01.419Z",
-  "deletedAt" : "2015-05-27T12:18:01.417Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:39.004Z",
+  "updatedAt" : "2015-06-03T10:39:39.162Z",
+  "deletedAt" : "2015-06-03T10:39:39.159Z",
   "endDate" : "2014-10-08T10:44:02.000Z",
-  "visibility" : "private",
   "location" : {
     "id" : 36,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -189,21 +188,23 @@ Content-Length: 634</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 207,
-    "username" : "User 204",
-    "createdAt" : "2015-05-27T12:18:01.252Z",
-    "updatedAt" : "2015-05-27T12:18:01.252Z",
-    "deletedAt" : null
+    "id" : 208,
+    "username" : "User 205",
+    "createdAt" : "2015-06-03T10:39:38.995Z",
+    "updatedAt" : "2015-06-03T10:39:38.995Z",
+    "deletedAt" : null,
+    "image" : null
   },
+  "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "settings" : {
     "alerts" : "0000000000"
   },
-  "notes" : [],
+  "visibility" : "private",
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : null,
-  "photos" : [],
-  "voices" : [],
-  "videos" : []
+  "shareUrl" : null
 }
 ```

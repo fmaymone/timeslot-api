@@ -35,8 +35,10 @@
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
+* [Get slot](slots/get_slot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
-* [Create StandardSlot](slots/create_standardslot.markdown)
+* [Create StandardSlot with default location](slots/create_standardslot_with_default_location.markdown)
+* [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
 * [Create StandardSlot with IOS Location](slots/create_standardslot_with_ios_location.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
@@ -66,6 +68,7 @@
 * [Update current user - change username and default alerts](users/update_current_user_-_change_username_and_default_alerts.markdown)
 * [Update current user - update password](users/update_current_user_-_update_password.markdown)
 * [Update current user - set user image](users/update_current_user_-_set_user_image.markdown)
+* [Update current user - set location](users/update_current_user_-_set_location.markdown)
 * [Delete current user](users/delete_current_user.markdown)
 * [Get slots for current user](users/get_slots_for_current_user.markdown)
 * [Get slots for befriended user](users/get_slots_for_befriended_user.markdown)

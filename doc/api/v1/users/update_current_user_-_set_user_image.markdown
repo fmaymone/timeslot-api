@@ -10,6 +10,54 @@ returns 200 and the users data if the image was successfully added or updated
 
 ### Parameters
 
+Name : username
+Description : Updated username of user (max. 50 characters)
+
+Name : email
+Description : Email of user (max. 255 characters)
+
+Name : phone
+Description : Phone number of user (max. 35 characters)
+
+Name : image
+Description : URL of the user image
+
+Name : publicUrl
+Description : Public URL for user on Timeslot (max. 255 chars)
+
+Name : deviceToken
+Description : IOS Device Token for Push Notifications (max. 128 chars)
+
+Name : slotDefaultDuration
+Description : Default Slot Duration in seconds
+
+Name : slotDefaultTypeId
+Description : Default Slot Type - WIP
+
+Name : slotDefaultLocationId
+Description : Default Slot Location ID - WIP
+
+Name : defaultPrivateAlerts
+Description : Default alerts for private slots of this user
+
+Name : defaultOwnFriendslotAlerts
+Description : Default alerts for the friendslots of this user
+
+Name : defaultOwnPublicAlerts
+Description : Default alerts for the public slots of this user
+
+Name : defaultFriendsFriendslotAlerts
+Description : Default alerts for the friendslots from friends of this user
+
+Name : defaultFriendsPublicAlerts
+Description : Default alerts for the public slots from friends of this user
+
+Name : defaultReslotAlerts
+Description : Default alerts for the reslots of this user
+
+Name : defaultGroupAlerts
+Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
 Name : image *- required -*
 Description : Scope for attributes of new image
 
@@ -28,11 +76,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -102,7 +147,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=VOV_LSffiVG_8GnXSXRCwQFV6wY
+Authorization: Token token=WNRQWPNecR4cxp_wQg7h_oMro74
 Host: example.org
 Cookie: </pre>
 
@@ -122,9 +167,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=VOV_LSffiVG_8GnXSXRCwQFV6wY&quot; \
+	-H &quot;Authorization: Token token=WNRQWPNecR4cxp_wQg7h_oMro74&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -135,11 +180,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b244ba6ea2d0be9065ae80dbfc9afaeb&quot;
+ETag: W/&quot;cef012e3a6251693af09b5f5453afd59&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f4f1822a-252c-4b72-ac87-6b758e8312f6
-X-Runtime: 0.020765
-Content-Length: 746</pre>
+X-Request-Id: fcdb191d-240e-4755-bf19-04ab12b7c37d
+X-Runtime: 0.020304
+Content-Length: 724</pre>
 
 #### Status
 
@@ -149,15 +194,21 @@ Content-Length: 746</pre>
 
 ```javascript
 {
-  "id" : 230,
-  "username" : "User 226",
-  "email" : "user65@email.com",
+  "id" : 284,
+  "username" : "User 280",
+  "createdAt" : "2015-06-03T10:39:40.440Z",
+  "updatedAt" : "2015-06-03T10:39:40.440Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
+  "email" : "user67@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -168,14 +219,7 @@ Content-Length: 746</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.246Z",
-  "updatedAt" : "2015-05-19T10:51:52.246Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```

@@ -9,6 +9,7 @@ midday, but end_date will not be returned via JSON
 user: locationId
 slot: creatorId, groupId and locationId
 group: groupId => id, ownerId
+- update ERDs
 
 
 ## v0.3.0 on t2s2-dev

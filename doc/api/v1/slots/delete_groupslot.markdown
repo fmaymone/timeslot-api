@@ -138,19 +138,19 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=5Js-j5ddTq-DJK1zy3-zkRnJuIY
+<pre>Authorization: Token token=W8oC8XleEg89RnKih3xsqKLl9Mw
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groupslot/40</pre>
+<pre>DELETE /v1/groupslot/41</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groupslot/40&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=5Js-j5ddTq-DJK1zy3-zkRnJuIY&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/41&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=W8oC8XleEg89RnKih3xsqKLl9Mw&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -162,11 +162,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;27e32bd9b6d0fbc3462978314054311a&quot;
+ETag: W/&quot;25d487282193dd19069cd28e84b76922&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c4501916-19d9-42e1-9768-4a9d8bb5830c
-X-Runtime: 0.048432
-Content-Length: 642</pre>
+X-Request-Id: a5a5b000-82c6-4a77-823b-e06cac91c85e
+X-Runtime: 0.051720
+Content-Length: 644</pre>
 
 #### Status
 
@@ -176,17 +176,16 @@ Content-Length: 642</pre>
 
 ```javascript
 {
-  "id" : 40,
+  "id" : 41,
   "title" : "Slot title 36",
-  "createdAt" : "2015-05-27T12:18:01.514Z",
-  "updatedAt" : "2015-05-27T12:18:01.537Z",
-  "deletedAt" : "2015-05-27T12:18:01.535Z",
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:39.274Z",
+  "updatedAt" : "2015-06-03T10:39:39.297Z",
+  "deletedAt" : "2015-06-03T10:39:39.295Z",
   "endDate" : "2014-10-10T12:44:02.000Z",
-  "visibility" : null,
   "location" : {
     "id" : 38,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -195,22 +194,25 @@ Content-Length: 642</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 213,
-    "username" : "User 210",
-    "createdAt" : "2015-05-27T12:18:01.503Z",
-    "updatedAt" : "2015-05-27T12:18:01.503Z",
-    "deletedAt" : null
+    "id" : 214,
+    "username" : "User 211",
+    "createdAt" : "2015-06-03T10:39:39.250Z",
+    "updatedAt" : "2015-06-03T10:39:39.250Z",
+    "deletedAt" : null,
+    "image" : null
   },
+  "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "settings" : {
     "alerts" : "0000000000"
   },
-  "groupId" : 41,
-  "notes" : [],
+  "group" : {
+    "id" : 41
+  },
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : null,
-  "photos" : [],
-  "voices" : [],
-  "videos" : []
+  "shareUrl" : null
 }
 ```

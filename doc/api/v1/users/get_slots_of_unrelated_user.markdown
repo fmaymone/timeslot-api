@@ -66,19 +66,19 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=SlTeTTwA85CadDdSSkGNf0KbYN8
+Authorization: Token token=C1sVBYDHXUqCvm4h1RsXF7Dwg64
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/273/slots</pre>
+<pre>GET /v1/users/352/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/273/slots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/352/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=SlTeTTwA85CadDdSSkGNf0KbYN8&quot; \
+	-H &quot;Authorization: Token token=C1sVBYDHXUqCvm4h1RsXF7Dwg64&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,11 +89,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4d5142d4d25a586414b189dc462ff3f3&quot;
+ETag: W/&quot;64b764c47667c771bc5d459ec2408982&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9b58ba84-b63c-4d5a-b7d6-ea08ef5d1ede
-X-Runtime: 0.045958
-Content-Length: 821</pre>
+X-Request-Id: 1381b0b9-ac3e-480f-bb34-e69b82577298
+X-Runtime: 0.065747
+Content-Length: 1332</pre>
 
 #### Status
 
@@ -104,48 +104,84 @@ Content-Length: 821</pre>
 ```javascript
 [
   {
-    "id" : 84,
+    "id" : 87,
     "title" : "Slot title 76",
-    "locationId" : null,
-    "createdAt" : "2015-05-19T10:51:52.847Z",
-    "updatedAt" : "2015-05-19T10:51:52.847Z",
-    "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:41.263Z",
+    "updatedAt" : "2015-06-03T10:39:41.263Z",
+    "deletedAt" : null,
     "endDate" : "2014-10-23T04:44:02.000Z",
-    "visibility" : "public",
-    "settings" : {
-      "alerts" : "0000000000"
+    "location" : {
+      "id" : 80,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 357,
+      "username" : "User 350",
+      "createdAt" : "2015-06-03T10:39:41.254Z",
+      "updatedAt" : "2015-06-03T10:39:41.254Z",
+      "deletedAt" : null,
+      "image" : null
     },
     "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
     "photos" : [],
     "voices" : [],
     "videos" : [],
-    "url" : "http://example.org/v1/slots/84",
-    "creatorId" : 276
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "visibility" : "public",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/87"
   },
   {
-    "id" : 86,
+    "id" : 89,
     "title" : "Slot title 78",
-    "locationId" : null,
-    "createdAt" : "2015-05-19T10:51:52.857Z",
-    "updatedAt" : "2015-05-19T10:51:52.873Z",
-    "deletedAt" : null,
     "startDate" : "2014-09-28T13:31:02.000Z",
+    "createdAt" : "2015-06-03T10:39:41.283Z",
+    "updatedAt" : "2015-06-03T10:39:41.306Z",
+    "deletedAt" : null,
     "endDate" : "2014-10-25T06:44:02.000Z",
-    "visibility" : null,
-    "settings" : {
-      "alerts" : "0000000000"
+    "location" : {
+      "id" : 82,
+      "name" : "Acapulco",
+      "street" : "",
+      "city" : "",
+      "postcode" : "",
+      "country" : "",
+      "latitude" : null,
+      "longitude" : null
+    },
+    "creator" : {
+      "id" : 362,
+      "username" : "User 355",
+      "createdAt" : "2015-06-03T10:39:41.285Z",
+      "updatedAt" : "2015-06-03T10:39:41.285Z",
+      "deletedAt" : null,
+      "image" : null
     },
     "notes" : [],
-    "likes" : 0,
-    "commentsCounter" : 0,
     "photos" : [],
     "voices" : [],
     "videos" : [],
-    "url" : "http://example.org/v1/slots/86",
-    "creatorId" : 279
+    "settings" : {
+      "alerts" : "0000000000"
+    },
+    "slotter" : {
+      "id" : 352
+    },
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null,
+    "url" : "http://example.org/v1/slots/89"
   }
 ]
 ```

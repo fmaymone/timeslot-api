@@ -90,13 +90,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=-IGlRXvyNJdRjKtX-YCHDPfNpLU
+Authorization: Token token=TQokD4MCXAi8pCVI634jxZ7x0ns
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/37</pre>
+<pre>PATCH /v1/stdslot/38</pre>
 
 #### Body
 ```javascript
@@ -121,9 +121,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=-IGlRXvyNJdRjKtX-YCHDPfNpLU&quot; \
+	-H &quot;Authorization: Token token=TQokD4MCXAi8pCVI634jxZ7x0ns&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -134,11 +134,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cbcea024172c4ec2642b9dab9c732622&quot;
+ETag: W/&quot;603037c64734325df7a4eae71453a0c4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d0df772a-ad79-4248-b558-c2720a4951bf
-X-Runtime: 0.041658
-Content-Length: 794</pre>
+X-Request-Id: befeb346-ff55-4c3b-b0ac-da4c02858eaa
+X-Runtime: 0.042184
+Content-Length: 809</pre>
 
 #### Status
 
@@ -148,17 +148,16 @@ Content-Length: 794</pre>
 
 ```javascript
 {
-  "id" : 37,
+  "id" : 38,
   "title" : "Slot title 33",
-  "createdAt" : "2015-05-27T12:18:01.188Z",
-  "updatedAt" : "2015-05-27T12:18:01.188Z",
-  "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:38.928Z",
+  "updatedAt" : "2015-06-03T10:39:38.928Z",
+  "deletedAt" : null,
   "endDate" : "2014-10-07T09:44:02.000Z",
-  "visibility" : "private",
   "location" : {
     "id" : 35,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -167,19 +166,14 @@ Content-Length: 794</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 204,
-    "username" : "User 201",
-    "createdAt" : "2015-05-27T12:18:01.179Z",
-    "updatedAt" : "2015-05-27T12:18:01.179Z",
-    "deletedAt" : null
-  },
-  "settings" : {
-    "alerts" : "0000000000"
+    "id" : 205,
+    "username" : "User 202",
+    "createdAt" : "2015-06-03T10:39:38.906Z",
+    "updatedAt" : "2015-06-03T10:39:38.906Z",
+    "deletedAt" : null,
+    "image" : null
   },
   "notes" : [],
-  "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null,
   "photos" : [
     {
       "mediaId" : 33,
@@ -198,6 +192,13 @@ Content-Length: 794</pre>
     }
   ],
   "voices" : [],
-  "videos" : []
+  "videos" : [],
+  "settings" : {
+    "alerts" : "0000000000"
+  },
+  "visibility" : "private",
+  "likes" : 0,
+  "commentsCounter" : 0,
+  "shareUrl" : null
 }
 ```

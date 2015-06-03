@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0
+Authorization: Token token=Uf1Vr-532JhEJMinfNuGablwjqo
 Host: example.org
 Cookie: </pre>
 
@@ -96,17 +96,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 32
+  "predecessorId" : 33
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:32}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:33}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=UPjuCkmUeWE83DokN97XkeX7Fu0&quot; \
+	-H &quot;Authorization: Token token=Uf1Vr-532JhEJMinfNuGablwjqo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -117,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a83af074da2ad18a6899a046d3b3eba0&quot;
+ETag: W/&quot;f17ce43fc801da9ece1b9bfe1cd2abff&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 02e98428-98c1-4b16-a386-97efbc48fcef
-X-Runtime: 0.048691
-Content-Length: 623</pre>
+X-Request-Id: 15bf2f0c-b6b0-41fc-905a-8c32900407fb
+X-Runtime: 0.037699
+Content-Length: 625</pre>
 
 #### Status
 
@@ -131,17 +131,16 @@ Content-Length: 623</pre>
 
 ```javascript
 {
-  "id" : 33,
+  "id" : 34,
   "title" : "Slot title 28",
-  "createdAt" : "2015-05-27T12:18:00.919Z",
-  "updatedAt" : "2015-05-27T12:18:00.919Z",
-  "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:38.640Z",
+  "updatedAt" : "2015-06-03T10:39:38.640Z",
+  "deletedAt" : null,
   "endDate" : "2014-10-02T04:44:02.000Z",
-  "visibility" : null,
   "location" : {
     "id" : 30,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -150,22 +149,25 @@ Content-Length: 623</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 188,
-    "username" : "User 185",
-    "createdAt" : "2015-05-27T12:18:00.895Z",
-    "updatedAt" : "2015-05-27T12:18:00.895Z",
-    "deletedAt" : null
+    "id" : 189,
+    "username" : "User 186",
+    "createdAt" : "2015-06-03T10:39:38.613Z",
+    "updatedAt" : "2015-06-03T10:39:38.613Z",
+    "deletedAt" : null,
+    "image" : null
   },
+  "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "settings" : {
     "alerts" : "0000000000"
   },
-  "slotterId" : 191,
-  "notes" : [],
+  "slotter" : {
+    "id" : 192
+  },
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : null,
-  "photos" : [],
-  "voices" : [],
-  "videos" : []
+  "shareUrl" : null
 }
 ```

@@ -25,11 +25,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -99,19 +96,19 @@ Description : all connections to groups
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=qiZOoFQvdvMklggHphRtKOhooq8
+Authorization: Token token=FVhvk5G4I4iFqfpP8WG6IyHGwpc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/221</pre>
+<pre>GET /v1/users/274</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/221&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/274&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qiZOoFQvdvMklggHphRtKOhooq8&quot; \
+	-H &quot;Authorization: Token token=FVhvk5G4I4iFqfpP8WG6IyHGwpc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,11 +119,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f68ed1fc5102b4ce8bbd809eaae4c7bc&quot;
+ETag: W/&quot;c9516e3cf52c40240dffc611d2f1a898&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bc2e8079-5e9f-4577-b5d8-18bf6191b270
-X-Runtime: 0.019344
-Content-Length: 714</pre>
+X-Request-Id: bc086095-47d0-46de-b0f0-9d6e49a9ff65
+X-Runtime: 0.020800
+Content-Length: 692</pre>
 
 #### Status
 
@@ -136,15 +133,21 @@ Content-Length: 714</pre>
 
 ```javascript
 {
-  "id" : 221,
-  "username" : "User 218",
-  "email" : "user58@email.com",
+  "id" : 274,
+  "username" : "User 271",
+  "createdAt" : "2015-06-03T10:39:40.069Z",
+  "updatedAt" : "2015-06-03T10:39:40.069Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
+  "email" : "user61@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -155,14 +158,7 @@ Content-Length: 714</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.034Z",
-  "updatedAt" : "2015-05-19T10:51:52.034Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```

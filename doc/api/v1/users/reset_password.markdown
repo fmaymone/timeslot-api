@@ -38,7 +38,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -52,8 +52,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 17900315-d8df-4842-aa23-9baddd81468a
-X-Runtime: 0.156393
+X-Request-Id: a0ccaa94-88d1-4779-9092-e44286b54eb6
+X-Runtime: 0.157641
 Content-Length: 0</pre>
 
 #### Status

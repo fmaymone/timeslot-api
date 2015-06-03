@@ -34,18 +34,18 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=VMxNMXsWuLOBTSEmHcnEygYY2vo
+<pre>Authorization: Token token=ux_VGjjaadvcUpDZ4WP5DMVbI-U
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/52/history</pre>
+<pre>GET /v1/slots/55/history</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/slots/52/history&quot; -X GET \
-	-H &quot;Authorization: Token token=VMxNMXsWuLOBTSEmHcnEygYY2vo&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/55/history&quot; -X GET \
+	-H &quot;Authorization: Token token=ux_VGjjaadvcUpDZ4WP5DMVbI-U&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,11 +56,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;79380561ffe96dc5f5b148a4d9602414&quot;
+ETag: W/&quot;225ed52ac5de3cdf3a7f254bd203f578&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 45d4ab7e-3e63-4f52-b657-6fededf22e6c
-X-Runtime: 0.080455
-Content-Length: 266</pre>
+X-Request-Id: 8986c65c-066b-4c5a-b5bf-eda55b06792d
+X-Runtime: 0.023187
+Content-Length: 350</pre>
 
 #### Status
 
@@ -72,20 +72,25 @@ Content-Length: 266</pre>
 {
   "predecessors" : [
     {
-      "id" : 214,
-      "username" : "User 211",
+      "id" : 264,
+      "username" : "User 261",
       "userImage" : null,
-      "timestamp" : "2015-05-22T15:50:02.817Z"
+      "timestamp" : "2015-06-03T10:39:39.835Z"
     },
     {
-      "id" : 213,
-      "username" : "User 210",
+      "id" : 263,
+      "username" : "User 260",
       "userImage" : null,
-      "timestamp" : "2015-05-22T15:50:02.811Z"
+      "timestamp" : "2015-06-03T10:39:39.827Z"
     }
   ],
-  "parentUserId" : 212,
-  "parentUsername" : "User 209",
-  "parentUserImage" : null
+  "parentUser" : {
+    "id" : 262,
+    "username" : "User 259",
+    "createdAt" : "2015-06-03T10:39:39.821Z",
+    "updatedAt" : "2015-06-03T10:39:39.821Z",
+    "deletedAt" : null,
+    "image" : null
+  }
 }
 ```

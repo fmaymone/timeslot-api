@@ -98,13 +98,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=UKTjeZ9h8BgCXwzDvVbjF8MTnJA
+Authorization: Token token=wxQV3daGu047N_D0Qwa8Nst37Tg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/34</pre>
+<pre>PATCH /v1/stdslot/35</pre>
 
 #### Body
 ```javascript
@@ -116,9 +116,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/34&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=UKTjeZ9h8BgCXwzDvVbjF8MTnJA&quot; \
+	-H &quot;Authorization: Token token=wxQV3daGu047N_D0Qwa8Nst37Tg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -129,11 +129,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;803cf67b2b68a19f5dd43bfe5e4b49ee&quot;
+ETag: W/&quot;bb5558ba0a7df37cc24d2dce7bfc8bcc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 51e982ee-f799-43cc-9b10-caa9104e5ea3
-X-Runtime: 0.033023
-Content-Length: 619</pre>
+X-Request-Id: ad332821-6268-4274-ba4d-fd414dd8a741
+X-Runtime: 0.037911
+Content-Length: 634</pre>
 
 #### Status
 
@@ -143,17 +143,16 @@ Content-Length: 619</pre>
 
 ```javascript
 {
-  "id" : 34,
+  "id" : 35,
   "title" : "New title for a Slot",
-  "createdAt" : "2015-05-27T12:18:01.008Z",
-  "updatedAt" : "2015-05-27T12:18:01.008Z",
-  "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:38.722Z",
+  "updatedAt" : "2015-06-03T10:39:38.722Z",
+  "deletedAt" : null,
   "endDate" : "2014-10-04T06:44:02.000Z",
-  "visibility" : "private",
   "location" : {
     "id" : 32,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -162,21 +161,23 @@ Content-Length: 619</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 195,
-    "username" : "User 192",
-    "createdAt" : "2015-05-27T12:18:00.998Z",
-    "updatedAt" : "2015-05-27T12:18:00.998Z",
-    "deletedAt" : null
+    "id" : 196,
+    "username" : "User 193",
+    "createdAt" : "2015-06-03T10:39:38.712Z",
+    "updatedAt" : "2015-06-03T10:39:38.712Z",
+    "deletedAt" : null,
+    "image" : null
   },
+  "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "settings" : {
     "alerts" : "0000000000"
   },
-  "notes" : [],
+  "visibility" : "private",
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : null,
-  "photos" : [],
-  "voices" : [],
-  "videos" : []
+  "shareUrl" : null
 }
 ```
