@@ -241,7 +241,7 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :title, "Title of slot (max. 48 characters)",
+    parameter :title, "Title of slot (max. 60 characters)",
               required: true
     parameter :startDate,
               "Startdate and Time of the Slot",
