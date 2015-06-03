@@ -84,3 +84,13 @@ createuser -P -d ts_rails_backend
 bundle exec rake db:create
 rake db:migrate
 ```
+
+* prepare local server and test env
+
+```bash
+gem install foreman
+foreman start
+
+rake db:migrate RAILS_ENV=test
+rspec
+```
