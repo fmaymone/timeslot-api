@@ -4,8 +4,7 @@
 * [Api Endpoint Documentation](doc/api/index.markdown)
 * [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
 * [App-Specification](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
-* [Entity Relationship Diagram 1](doc/erd_adv.pdf)
-* [Entity Relationship Diagram 2](doc/erd.pdf)
+* [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 
 # Notes
