@@ -73,13 +73,10 @@ class Friendship < ActiveRecord::Base
 
   def humanize
     case state
-      when "00"
-        then "offered"
-      when "11"
-        then "established"
-      when "01"
-        then "rejected"
-      else "undefined"
-    end 
+    when "00" then "offered"
+    when "11" then "established"
+    when "01" then "rejected"
+    else "undefined"
+    end
   end
 end
