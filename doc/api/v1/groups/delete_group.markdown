@@ -17,11 +17,44 @@ returns 404 if ID is invalid
 Name : group_id *- required -*
 Description : ID of the group to delete
 
+
+### Response Fields
+
+Name : id
+Description : ID of the group
+
+Name : name
+Description : name of the group
+
+Name : owner
+Description : user info of group owner
+
+Name : membersCanPost
+Description : Can subscribers add slots?
+
+Name : membersCanInvite
+Description : Can subscribers invite friends?
+
+Name : image
+Description : URL of the group image
+
+Name : createdAt
+Description : Creation of group
+
+Name : updatedAt
+Description : Latest update of group in db
+
+Name : deletedAt
+Description : Deletion of group
+
+Name : membershipState
+Description : Membership state for current user
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=NUO6VZEkYAs7MB8ebOmG6-fyAjQ
+<pre>Authorization: Token token=_8or3Yt5Lw6hBmHjTuP7JG23JZY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -32,8 +65,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=NUO6VZEkYAs7MB8ebOmG6-fyAjQ&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=_8or3Yt5Lw6hBmHjTuP7JG23JZY&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -45,11 +78,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6d09f2aca9376b3555d096b4bbb14db6&quot;
+ETag: W/&quot;247b4ff3a2fa8bdd95f865831d5021ef&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5bb670cd-d0e7-4b65-a168-a75934cbee50
-X-Runtime: 0.062734
-Content-Length: 250</pre>
+X-Request-Id: a0ba8cbf-6aa2-4781-97fb-fc1717a0e852
+X-Runtime: 0.067522
+Content-Length: 384</pre>
 
 #### Status
 
@@ -61,13 +94,20 @@ Content-Length: 250</pre>
 {
   "id" : 16,
   "name" : "Testgroup 13",
-  "ownerId" : 65,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-19T10:51:49.278Z",
-  "updatedAt" : "2015-05-19T10:51:49.354Z",
-  "deletedAt" : "2015-05-19T10:51:49.354Z",
+  "createdAt" : "2015-06-03T10:39:36.816Z",
+  "updatedAt" : "2015-06-03T10:39:36.897Z",
+  "deletedAt" : "2015-06-03T10:39:36.896Z",
   "image" : null,
+  "owner" : {
+    "id" : 86,
+    "username" : "User 83",
+    "createdAt" : "2015-06-03T10:39:36.813Z",
+    "updatedAt" : "2015-06-03T10:39:36.846Z",
+    "deletedAt" : null,
+    "image" : null
+  },
   "membershipState" : "deleted"
 }
 ```

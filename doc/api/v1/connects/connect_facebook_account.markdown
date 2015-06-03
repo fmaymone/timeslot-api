@@ -68,7 +68,7 @@ Description : Email of the user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=WwUAGTSH_8DvNY-D__2ejYamNUw
+Authorization: Token token=RgShad_i9i8fKIMTrb98IvsCjv8
 Host: example.org
 Cookie: </pre>
 
@@ -98,9 +98,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=WwUAGTSH_8DvNY-D__2ejYamNUw&quot; \
+	-H &quot;Authorization: Token token=RgShad_i9i8fKIMTrb98IvsCjv8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -111,11 +111,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2ff6ff8a4d439a24db1ef07420154163&quot;
+ETag: W/&quot;197430afcd3ffc2e60952aef7aa15630&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fdba78d7-2142-4c1e-b5a9-2ceb0c8d48f5
-X-Runtime: 0.032327
-Content-Length: 711</pre>
+X-Request-Id: fd45674c-c79e-417f-a7d6-41e29a692d35
+X-Runtime: 0.023921
+Content-Length: 689</pre>
 
 #### Status
 
@@ -125,15 +125,21 @@ Content-Length: 711</pre>
 
 ```javascript
 {
-  "id" : 46,
-  "username" : "User 45",
+  "id" : 67,
+  "username" : "User 66",
+  "createdAt" : "2015-06-03T10:39:36.333Z",
+  "updatedAt" : "2015-06-03T10:39:36.333Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
   "email" : "user1@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -144,14 +150,7 @@ Content-Length: 711</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:48.832Z",
-  "updatedAt" : "2015-05-19T10:51:48.832Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```

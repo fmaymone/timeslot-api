@@ -25,11 +25,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -54,19 +51,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=dEuoAkA_WKejBGQchFf2i_d8Vfo
+Authorization: Token token=v6ah3Uh_Ap0Acx7Ti9T4ZG3ALbs
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/222</pre>
+<pre>GET /v1/users/276</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users/222&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/276&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=dEuoAkA_WKejBGQchFf2i_d8Vfo&quot; \
+	-H &quot;Authorization: Token token=v6ah3Uh_Ap0Acx7Ti9T4ZG3ALbs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -77,11 +74,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;beb60ffd4257f680baa7a7b59abdb7ee&quot;
+ETag: W/&quot;50d5b0ee0c2318d9c0b908164f0e1e69&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b4680ea3-129d-4232-8b6a-e1828eb1f556
-X-Runtime: 0.014205
-Content-Length: 225</pre>
+X-Request-Id: 9e95d1b7-2e2f-47eb-9c74-5e79b445cba3
+X-Runtime: 0.012091
+Content-Length: 308</pre>
 
 #### Status
 
@@ -91,13 +88,21 @@ Content-Length: 225</pre>
 
 ```javascript
 {
-  "id" : 222,
-  "username" : "User 219",
-  "locationId" : null,
-  "locationName" : null,
-  "createdAt" : "2015-05-19T10:51:52.062Z",
-  "updatedAt" : "2015-05-19T10:51:52.062Z",
+  "id" : 276,
+  "username" : "User 272",
+  "createdAt" : "2015-06-03T10:39:40.106Z",
+  "updatedAt" : "2015-06-03T10:39:40.106Z",
   "deletedAt" : null,
+  "location" : {
+    "id" : 52,
+    "name" : "Acapulco",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
   "image" : null,
   "slotCount" : 0,
   "reslotCount" : 0,

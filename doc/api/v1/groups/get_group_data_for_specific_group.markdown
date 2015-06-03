@@ -24,8 +24,8 @@ Description : ID of the group
 Name : name
 Description : name of the group
 
-Name : ownerId
-Description : user id of group owner
+Name : owner
+Description : user info of group owner
 
 Name : membersCanPost
 Description : Can subscribers add slots?
@@ -53,7 +53,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=L9cJAdiv5vC7YMf5TCwHewHlwkQ
+Authorization: Token token=pIOO-RlvgmV6MAGoUS_FecfI_og
 Host: example.org
 Cookie: </pre>
 
@@ -63,9 +63,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/12&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/12&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=L9cJAdiv5vC7YMf5TCwHewHlwkQ&quot; \
+	-H &quot;Authorization: Token token=pIOO-RlvgmV6MAGoUS_FecfI_og&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,11 +76,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5d3861aa6716df44e9ce857b8ff5b410&quot;
+ETag: W/&quot;62a2662c0b4bd1b428196b446b5283fa&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cc359dd7-f1cc-4f68-a269-8c7b3e0267af
-X-Runtime: 0.021509
-Content-Length: 227</pre>
+X-Request-Id: b400bb76-dd5a-492f-9108-fabe9eaee2bb
+X-Runtime: 0.013027
+Content-Length: 361</pre>
 
 #### Status
 
@@ -92,13 +92,20 @@ Content-Length: 227</pre>
 {
   "id" : 12,
   "name" : "Testgroup 12",
-  "ownerId" : 58,
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-05-19T10:51:49.107Z",
-  "updatedAt" : "2015-05-19T10:51:49.107Z",
+  "createdAt" : "2015-06-03T10:39:36.632Z",
+  "updatedAt" : "2015-06-03T10:39:36.632Z",
   "deletedAt" : null,
   "image" : null,
+  "owner" : {
+    "id" : 79,
+    "username" : "User 76",
+    "createdAt" : "2015-06-03T10:39:36.631Z",
+    "updatedAt" : "2015-06-03T10:39:36.631Z",
+    "deletedAt" : null,
+    "image" : null
+  },
   "membershipState" : "active"
 }
 ```

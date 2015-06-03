@@ -36,11 +36,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -133,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -146,11 +143,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2d5c6952b4202c355855534d371dcf0d&quot;
+ETag: W/&quot;8ab960d7a179a37e982062438d2e9d5d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 86beb87a-e994-454a-bb57-3e3b25249312
-X-Runtime: 0.010469
-Content-Length: 695</pre>
+X-Request-Id: 52aeaae9-a913-48a5-940e-6a0ab96a6078
+X-Runtime: 0.018309
+Content-Length: 733</pre>
 
 #### Status
 
@@ -160,15 +157,21 @@ Content-Length: 695</pre>
 
 ```javascript
 {
-  "id" : 224,
+  "id" : 278,
   "username" : "foo",
+  "createdAt" : "2015-06-03T10:39:40.139Z",
+  "updatedAt" : "2015-06-03T10:39:40.139Z",
+  "deletedAt" : null,
+  "location" : null,
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -179,11 +182,8 @@ Content-Length: 695</pre>
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.094Z",
-  "updatedAt" : "2015-05-19T10:51:52.094Z",
-  "deletedAt" : null,
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "brebJHuHV44e3XcZzr5qtX-CrxA"
+  "authToken" : "gL8LUwrlc1X42C_EDxsQ7oZVAsc"
 }
 ```
