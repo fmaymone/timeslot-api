@@ -347,9 +347,9 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "updates the location of a given user" do
-          patch "/v1/users", { locationId: 423423143 }, auth_header
+          patch "/v1/users", { location: { name: 'Bonn' } }, auth_header
           current_user.reload
-          expect(current_user.location_id).to eq(423423143)
+          expect(current_user.location.name).to eq('Bonn')
         end
 
         it "updates the slot default location id of a given user" do

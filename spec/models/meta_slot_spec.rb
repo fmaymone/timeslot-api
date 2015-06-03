@@ -8,6 +8,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
+  it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:creator) }
   it { is_expected.to respond_to(:location_id) }
   it { is_expected.to respond_to(:ios_location_id) }
@@ -15,7 +16,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to have_many(:slots).inverse_of(:meta_slot) }
   it { is_expected.to belong_to(:creator).inverse_of(:created_slots) }
-  it { is_expected.to belong_to(:ios_location).inverse_of(:meta_slot) }
+  it { is_expected.to belong_to(:ios_location) }
 
   it { is_expected.to be_valid }
 
@@ -34,9 +35,27 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when end_date is not present" do
+  describe "when end_date is missing" do
     before { meta_slot.end_date = "" }
-    it { is_expected.to_not be_valid }
+    it { is_expected.to be_valid }
+
+    context "start_date before noon" do
+      it "sets the enddate to the end of the start day" do
+        meta_slot.update(start_date: "2014-09-28T07:31:02Z")
+        meta_slot.save
+        expect(meta_slot.end_date)
+          .to eq meta_slot.start_date.to_datetime.at_end_of_day
+      end
+    end
+
+    context "start_date after noon" do
+      it "sets the enddate to noon of next day" do
+        meta_slot.update(start_date: "2014-09-28T13:31:02Z")
+        meta_slot.save
+        expect(meta_slot.end_date)
+          .to eq meta_slot.start_date.to_datetime.next_day.at_midday
+      end
+    end
   end
 
   describe "when creator is not present" do

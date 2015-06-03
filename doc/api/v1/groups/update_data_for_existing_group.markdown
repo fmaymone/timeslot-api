@@ -28,12 +28,45 @@ Description : Allows members to invite other users
 Name : membersCanPost
 Description : Allows members to post new slots
 
+
+### Response Fields
+
+Name : id
+Description : ID of the group
+
+Name : name
+Description : name of the group
+
+Name : owner
+Description : user info of group owner
+
+Name : membersCanPost
+Description : Can subscribers add slots?
+
+Name : membersCanInvite
+Description : Can subscribers invite friends?
+
+Name : image
+Description : URL of the group image
+
+Name : createdAt
+Description : Creation of group
+
+Name : updatedAt
+Description : Latest update of group in db
+
+Name : deletedAt
+Description : Deletion of group
+
+Name : membershipState
+Description : Membership state for current user
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2NJOwWm7JoUlW39vZuxsJr7zQ1I
+Authorization: Token token=XC-WsxtwU4SfgfP2Wjy9oNsecTg
 Host: example.org
 Cookie: </pre>
 
@@ -53,9 +86,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/groups/14&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/14&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2NJOwWm7JoUlW39vZuxsJr7zQ1I&quot; \
+	-H &quot;Authorization: Token token=XC-WsxtwU4SfgfP2Wjy9oNsecTg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,11 +99,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d3ff04a2180ea1b3587a19b89467fcab&quot;
+ETag: W/&quot;87c900950b1aacb762009f7fc5d626ee&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cae32edd-8456-4f4d-8713-0de365493b6a
-X-Runtime: 0.009590
-Content-Length: 216</pre>
+X-Request-Id: 95a8ff3d-736f-4353-a81f-c226ce103067
+X-Runtime: 0.011330
+Content-Length: 350</pre>
 
 #### Status
 
@@ -82,13 +115,20 @@ Content-Length: 216</pre>
 {
   "id" : 14,
   "name" : "bar",
-  "ownerId" : 63,
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-05-19T10:51:49.217Z",
-  "updatedAt" : "2015-05-19T10:51:49.226Z",
+  "createdAt" : "2015-06-03T10:39:36.749Z",
+  "updatedAt" : "2015-06-03T10:39:36.759Z",
   "deletedAt" : null,
   "image" : null,
+  "owner" : {
+    "id" : 84,
+    "username" : "User 81",
+    "createdAt" : "2015-06-03T10:39:36.746Z",
+    "updatedAt" : "2015-06-03T10:39:36.746Z",
+    "deletedAt" : null,
+    "image" : null
+  },
   "membershipState" : "active"
 }
 ```

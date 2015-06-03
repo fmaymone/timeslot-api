@@ -1,13 +1,11 @@
+json.partial! 'v1/users/basic_user', user: @user
+
 json.extract!(user,
-              :id,
-              :username,
               :email,
               :email_verified,
               :phone,
               :phone_verified,
               :public_url,
-              :location_id,
-              :location_name,
               # :push, # wird gerade ueberarbeitet
               :slot_default_duration,
               :slot_default_location_id,
@@ -18,10 +16,7 @@ json.extract!(user,
               :default_friends_friendslot_alerts,
               :default_friends_public_alerts,
               :default_reslot_alerts,
-              :default_group_alerts,
-              :created_at,
-              :updated_at,
-              :deleted_at
+              :default_group_alerts
              )
 tmp = []
 

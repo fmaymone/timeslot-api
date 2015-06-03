@@ -82,13 +82,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=CAzPL0_7CP_OzU54pr39pE3A_pI
+Authorization: Token token=zKXP7I8DAUbFzGMPvGshSA-40Lw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/35</pre>
+<pre>PATCH /v1/stdslot/36</pre>
 
 #### Body
 ```javascript
@@ -109,9 +109,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/stdslot/35&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/36&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=CAzPL0_7CP_OzU54pr39pE3A_pI&quot; \
+	-H &quot;Authorization: Token token=zKXP7I8DAUbFzGMPvGshSA-40Lw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,11 +122,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7f976b2196e8abe55bb615ffebf23e34&quot;
+ETag: W/&quot;4e91f9d9bf1c244edfb1cdb129221ca0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 51d82281-6238-4fb7-8d93-e3526823d86b
-X-Runtime: 0.038907
-Content-Length: 851</pre>
+X-Request-Id: cab8e36b-3724-43ef-bf29-f6bfff01c591
+X-Runtime: 0.040757
+Content-Length: 868</pre>
 
 #### Status
 
@@ -136,17 +136,16 @@ Content-Length: 851</pre>
 
 ```javascript
 {
-  "id" : 35,
+  "id" : 36,
   "title" : "Slot title 31",
-  "createdAt" : "2015-05-27T12:18:01.063Z",
-  "updatedAt" : "2015-05-27T12:18:01.063Z",
-  "deletedAt" : null,
   "startDate" : "2014-09-28T13:31:02.000Z",
+  "createdAt" : "2015-06-03T10:39:38.787Z",
+  "updatedAt" : "2015-06-03T10:39:38.787Z",
+  "deletedAt" : null,
   "endDate" : "2014-10-05T07:44:02.000Z",
-  "visibility" : "private",
   "location" : {
     "id" : 33,
-    "name" : "berlin",
+    "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
@@ -155,34 +154,36 @@ Content-Length: 851</pre>
     "longitude" : null
   },
   "creator" : {
-    "id" : 198,
-    "username" : "User 195",
-    "createdAt" : "2015-05-27T12:18:01.055Z",
-    "updatedAt" : "2015-05-27T12:18:01.055Z",
-    "deletedAt" : null
-  },
-  "settings" : {
-    "alerts" : "0000000000"
+    "id" : 199,
+    "username" : "User 196",
+    "createdAt" : "2015-06-03T10:39:38.778Z",
+    "updatedAt" : "2015-06-03T10:39:38.778Z",
+    "deletedAt" : null,
+    "image" : null
   },
   "notes" : [
     {
-      "id" : 9,
+      "id" : 11,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-27T12:18:01.077Z"
+      "createdAt" : "2015-06-03T10:39:38.801Z"
     },
     {
-      "id" : 8,
+      "id" : 10,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-05-27T12:18:01.075Z"
+      "createdAt" : "2015-06-03T10:39:38.799Z"
     }
   ],
-  "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null,
   "photos" : [],
   "voices" : [],
-  "videos" : []
+  "videos" : [],
+  "settings" : {
+    "alerts" : "0000000000"
+  },
+  "visibility" : "private",
+  "likes" : 0,
+  "commentsCounter" : 0,
+  "shareUrl" : null
 }
 ```

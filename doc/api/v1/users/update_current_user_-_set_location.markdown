@@ -1,18 +1,8 @@
 # Users API
 
-## Update current user - change username and default alerts
+## Update current user - set location
 
 ### PATCH /v1/users
-
-E.g, change username and set default alerts
-
-returns user data
-
-returns 404 if ID is invalid
-
-returns 422 if parameters are missing
-
-returns 422 if parameters are invalid
 
 ### Parameters
 
@@ -24,12 +14,6 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
-
-Name : locationId
-Description : ID of users home location
-
-Name : locationName
-Description : Home location of user as String (temporary) (max. 128 chars)
 
 Name : image
 Description : URL of the user image
@@ -70,6 +54,36 @@ Description : Default alerts for the reslots of this user
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
 
+Name : location
+Description : ID of users home location
+
+Name : name
+Description : Name of the IOS location (128 chars)
+
+Name : street
+Description : Street of IOS location (128 chars)
+
+Name : city
+Description : City of IOS location (128 chars)
+
+Name : postcode
+Description : Postcode of IOS location (32 chars)
+
+Name : country
+Description : Country of IOS location (64 chars)
+
+Name : latitude
+Description : Latitude of IOS location
+
+Name : longitude
+Description : Longitude of IOS location
+
+Name : auid
+Description : Apple UID of the location
+
+Name : private_location
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
 
 ### Response Fields
 
@@ -82,11 +96,8 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : locationId
+Name : location
 Description : Home location of user
-
-Name : locationName
-Description : Home location of user as String (temporary)
 
 Name : createdAt
 Description : Creation of user
@@ -156,7 +167,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc
+Authorization: Token token=iWgGH30oi1HCaFJd1TsuzdlWmas
 Host: example.org
 Cookie: </pre>
 
@@ -167,17 +178,18 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "username" : "bar",
-  "defaultPrivateAlerts" : "0111011100"
+  "location" : {
+    "name" : "Acapulco"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:3000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=1JUjK-V1zMmYgUSl3qeZ-vP8Hxc&quot; \
+	-H &quot;Authorization: Token token=iWgGH30oi1HCaFJd1TsuzdlWmas&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -188,11 +200,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e8b4b6a003e5916b5c124ede4b45120f&quot;
+ETag: W/&quot;738c2f9fdc93d3ee9af4a5ed2e643af6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 435f81e6-ae70-4ede-b90f-519faa03688f
-X-Runtime: 0.018583
-Content-Length: 709</pre>
+X-Request-Id: fb805707-9225-4179-811a-ee45b64867d7
+X-Runtime: 0.024444
+Content-Length: 797</pre>
 
 #### Status
 
@@ -202,33 +214,41 @@ Content-Length: 709</pre>
 
 ```javascript
 {
-  "id" : 228,
-  "username" : "bar",
-  "email" : "user63@email.com",
+  "id" : 285,
+  "username" : "User 281",
+  "createdAt" : "2015-06-03T10:39:40.472Z",
+  "updatedAt" : "2015-06-03T10:39:40.482Z",
+  "deletedAt" : null,
+  "location" : {
+    "id" : 53,
+    "name" : "Acapulco",
+    "street" : "",
+    "city" : "",
+    "postcode" : "",
+    "country" : "",
+    "latitude" : null,
+    "longitude" : null
+  },
+  "image" : null,
+  "slotCount" : 0,
+  "reslotCount" : 0,
+  "friendsCount" : 0,
+  "email" : "user68@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "locationId" : null,
-  "locationName" : null,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0111011100",
+  "defaultPrivateAlerts" : "0000000000",
   "defaultOwnFriendslotAlerts" : "0000000000",
   "defaultOwnPublicAlerts" : "0000000000",
   "defaultFriendsFriendslotAlerts" : "0000000000",
   "defaultFriendsPublicAlerts" : "0000000000",
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
-  "createdAt" : "2015-05-19T10:51:52.181Z",
-  "updatedAt" : "2015-05-19T10:51:52.188Z",
-  "deletedAt" : null,
   "friendships" : [],
-  "memberships" : [],
-  "image" : null,
-  "slotCount" : 0,
-  "reslotCount" : 0,
-  "friendsCount" : 0
+  "memberships" : []
 }
 ```
