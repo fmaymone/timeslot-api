@@ -97,6 +97,8 @@ resource "Connects" do
       example "Connect facebook account", document: :v1 do
         explanation "User must be signed in, no existing connection " \
                     "to the submitted facebook account\n\n" \
+                    "If Facebook provides an email and the user has no " \
+                    "timeslot email set, the fb email will be used.\n\n" \
                     "returns 200 and the user data\n\n" \
                     "returns 422 if email already used by other user"
         do_request

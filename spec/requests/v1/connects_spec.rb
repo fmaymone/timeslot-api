@@ -207,6 +207,22 @@ RSpec.describe "V1::Connects", type: :request do
         expect(response.body).not_to include 'authToken'
       end
 
+      it "sets timeslot email if none is set and facebook provides one" do
+        current_user.update(email: nil)
+        post "/v1/fb-connect", payload, auth_header
+        current_user.reload
+        expect(current_user.email).to eq payload['email']
+        expect(json).to have_key 'email'
+        expect(json['email']).to eq payload['email']
+      end
+
+      it "doesn't set timeslot email if one is set and facebook provides one" do
+        expect {
+          post "/v1/fb-connect", payload, auth_header
+        }.not_to change(current_user, :email)
+        expect(json['email']).not_to eq payload['email']
+      end
+
       it "returns 422 if email address already used by other timeslot user" do
         create(:user, email: payload['email'])
         post "/v1/fb-connect", payload, auth_header

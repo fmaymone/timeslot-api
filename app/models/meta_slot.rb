@@ -21,7 +21,7 @@ class MetaSlot < ActiveRecord::Base
   belongs_to :ios_location
 
   validates :creator, presence: true
-  validates :title, presence: true, length: { maximum: 48 }
+  validates :title, presence: true, length: { maximum: 60 }
   validates :start_date, presence: true
   validates :end_date, presence: true
   validate :enddate_is_after_startdate

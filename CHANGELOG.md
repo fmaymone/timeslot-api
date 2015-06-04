@@ -1,5 +1,14 @@
 #Changelog
 
+## latest
+
+## v0.4.0 on t2s2-silvio-dev
+- increase max. slot title length from 48 to 60
+- set facebook email as timeslot email if none is set
+- use new timeslot email addresses for AWS SES
+- render group membership state as string instead of bits
+
+
 ## v0.4.0 on t2s2-silvio-dev
 - accept empty endDate for slots. It will internally be set to the end of the
 start day if start before midday and to middle of next day if start_date after

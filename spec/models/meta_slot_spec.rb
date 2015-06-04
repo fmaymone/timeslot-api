@@ -26,7 +26,7 @@ RSpec.describe MetaSlot, type: :model do
   end
 
   describe "when title is too long" do
-    before { meta_slot.title = "a" * 49 }
+    before { meta_slot.title = "a" * 61 }
     it { is_expected.to_not be_valid }
   end
 
