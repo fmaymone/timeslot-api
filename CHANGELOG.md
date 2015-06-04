@@ -2,7 +2,11 @@
 
 ## latest
 
-- increase max. slot tile length from 48 to 60
+## v0.4.0 on t2s2-silvio-dev
+- increase max. slot title length from 48 to 60
+- set facebook email as timeslot email if none is set
+- use new timeslot email addresses for AWS SES
+- render group membership state as string instead of bits
 
 
 ## v0.4.0 on t2s2-silvio-dev
