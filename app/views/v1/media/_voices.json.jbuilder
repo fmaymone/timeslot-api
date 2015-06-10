@@ -1,6 +1,4 @@
 json.voices media do |item|
-  json.media_id item.id
-  json.clyid item.public_id
-  json.position item.position
+  json.partial! 'v1/media/basic_media', item: item
   json.duration = item.duration
 end

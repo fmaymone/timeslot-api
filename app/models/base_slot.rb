@@ -194,21 +194,24 @@ class BaseSlot < ActiveRecord::Base
 
   private def add_photos(items)
     items.each do |item|
-      add_media(item.permit(:public_id, :position).merge(media_type: 'image'))
+      add_media(item.permit(:public_id, :position, :local_id)
+                 .merge(media_type: 'image'))
     end
   end
 
   private def add_voices(items)
     items.each do |item|
-      add_media(item.permit(:public_id, :position, :duration)
+      add_media(item.permit(:public_id, :position, :local_id, :duration)
                  .merge(media_type: 'voice'))
     end
   end
 
   private def add_videos(items)
     items.each do |item|
-      add_media(item.permit(:public_id, :position, :duration, :thumbnail)
-                 .merge(media_type: 'video'))
+      add_media(
+        item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
+        .merge(media_type: 'video')
+      )
     end
   end
 
