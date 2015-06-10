@@ -14,7 +14,10 @@ json.location do
   end
 end
 
-json.image user.image ? user.image.public_id : nil
+json.image do
+  json.clyid user.image.try(:public_id) ? user.image.public_id : nil
+  json.local_id user.image.try(:local_id) ? user.image.local_id : nil
+end
 
 json.slot_count user.std_slots.count
 json.reslot_count user.re_slots.count

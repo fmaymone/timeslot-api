@@ -83,9 +83,9 @@ class User < ActiveRecord::Base
 
   ## user specific ##
 
-  def update_with_image(params)
-    update(params.except("public_id"))
-    AddImage.call(self, params["public_id"]) if params["public_id"].present?
+  def update_with_image(params: nil, image: nil)
+    update(params.except("public_id")) if params
+    AddImage.call(self, image["public_id"], image["local_id"]) if image
     self
   end
 
@@ -389,10 +389,11 @@ class User < ActiveRecord::Base
 
   # technically this is not neccessary bc it's not possible to set an image on
   # signup, at least in the ios app right now
-  def self.create_with_image(params)
-    new_user = create(params.except("public_id"))
+  def self.create_with_image(params:, image: nil)
+    new_user = create(params)
     return new_user unless new_user.errors.empty?
-    AddImage.call(new_user, params["public_id"]) if params["public_id"].present?
+
+    AddImage.call(new_user, image["public_id"], image["local_id"]) if image
     new_user
   end
 
