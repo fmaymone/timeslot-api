@@ -646,17 +646,28 @@ resource "Slots" do
       end
     end
 
-    describe "Add Photos to existing slot" do
-      parameter :photos, "Scope for array of new photos/voices/videos",
-                required: true
+    describe "Add Media to existing slot" do
+      parameter :photos, "array of new photos"
+      parameter :voices, "array of new audio recordings"
+      parameter :videos, "array of new videos"
       parameter :publicId, "Cloudinary ID / URL",
                 required: true, scope: :photos
       parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :photos
+      parameter :localId, "IOS specific local identifier for media item"
+      parameter :duration, "only for video and voice items"
+      parameter :thumbnail, "public URL for video thumbnail"
 
-      let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-                      position: "1"] }
+      response_field :clyid, "Cloudinary URL of the media item"
+      response_field :position, "Sorting order position of the media item"
+      response_field :localId, "Ios specific local identifier"
+      response_field :duration, "Duration of audio/video file"
+      response_field :thumbnail, "Clouinary public URL of the video thumbnail"
+
+      let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
+                      position: "1",
+                      localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
 
       example "Add photo(s)", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -670,6 +681,12 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to have_key("photos")
         expect(*json['photos']).to have_key("mediaId")
+        expect(*json['photos']).to have_key("clyid")
+        expect(*json['photos']).to have_key("localId")
+        expect(json['photos'].first["clyid"])
+          .to eq "v1234567/dfhjghjkdisudgfds7sly.jpg"
+        expect(json['photos'].first["localId"])
+          .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
         std_slot.reload
         expect(std_slot.photos.size).to eq 1
       end

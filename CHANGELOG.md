@@ -1,6 +1,7 @@
 #Changelog
 
 ## latest
+- accept local identifier for slot media items and return it in JSON
 
 ## v0.4.0 on t2s2-silvio-dev
 - increase max. slot title length from 48 to 60
