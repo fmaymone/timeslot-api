@@ -1,10 +1,14 @@
 #Changelog
 
 ## latest
+- accept local identifier for user image and return it in JSON
+- accept local identifier for group image and return it in JSON
+
 
 ## v0.4.2 on t2s2-silvio-dev
 - return only upcoming friends slots sorted by startdate
 - accept local identifier for slot media items and return it in JSON
+
 
 ## v0.4.1 on t2s2-silvio-dev
 - increase max. slot title length from 48 to 60

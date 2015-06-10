@@ -24,8 +24,8 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(user_create_params)
-
+      @user = User.create_with_image(params: user_create_params,
+                                     image: user_image)
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -72,7 +72,6 @@ module V1
     # PATCH /v1/users/1
     def update
       authorize :user
-      return head :unprocessable_entity if user_params.empty?
 
       # move this into pundit
       if params[:password].present?
@@ -80,7 +79,9 @@ module V1
         pw_correct = current_user == current_user.try(:authenticate, password)
         return head :unauthorized unless pw_correct
       end
-      @user = current_user.update_with_image(user_params)
+
+      @user = current_user.update_with_image(params: user_params,
+                                             image: user_image)
 
       if @user.errors.empty?
         render :show
@@ -176,17 +177,18 @@ module V1
                         :defaultReslotAlerts,
                         :defaultGroupAlerts)
 
-      if params[:image].present?
-        img_param = params.require(:image).require(:publicId)
-        p.merge!("public_id" => img_param)
-      end
-
       if params[:location].present?
         p[:location_attributes] = p.delete 'location'
         p[:location_attributes][:creator] = current_user
       end
+      p.transform_keys(&:underscore) if p
+    end
 
+    private def user_image
+      return nil unless params[:image].present?
+      p = params.require(:image).permit(:publicId, :localId)
       p.transform_keys(&:underscore)
+      p.transform_keys { |key| key.underscore.to_sym }
     end
 
     private def friends_ids

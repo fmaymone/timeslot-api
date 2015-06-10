@@ -321,8 +321,11 @@ resource "Users" do
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :image
+      parameter :localId, "IOS local identifier",
+                scope: :image
 
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
+      let(:localId) { "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
 
       example "Update current user - set user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -333,12 +336,16 @@ resource "Users" do
                     " successfully added or updated"
         do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key("image")
-        expect(json["image"]).to eq publicId
         current_user.reload
         expect(current_user.image).not_to be nil
         expect(current_user.image.public_id).to eq publicId
+        expect(current_user.image.local_id).to eq localId
+        expect(response_status).to eq(200)
+        expect(json).to have_key("image")
+        expect(json["image"]).to have_key "clyid"
+        expect(json["image"]).to have_key "localId"
+        expect(json["image"]["clyid"]).to eq publicId
+        expect(json["image"]["localId"]).to eq localId
       end
     end
 
