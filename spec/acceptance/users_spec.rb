@@ -594,11 +594,13 @@ resource "Users" do
     let(:bob) { create(:user, :with_private_slot) }
     let!(:re_slot) { create(:re_slot, slotter: bob) }
     let!(:friendships) {
+      create(:friendship, :established,
+             user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established,
+             user: current_user,
+             friend: create(:user, :with_public_slot))
       create(:friendship, :established, user: bob, friend: current_user)
-      create(:friendship, :established, user: create(:user, :with_friend_slot),
-             friend: current_user)
-      create(:friendship, :established, user: create(:user, :with_public_slot),
-             friend: current_user)
     }
     let(:id) { current_user.id }
 

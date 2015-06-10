@@ -105,8 +105,7 @@ class User < ActiveRecord::Base
     begin
       ses = Aws::SES::Client.new
       ses.send_email(
-        source: "silvio@timeslot.com",
-        # source: "support@timeslot.com",
+        source: "support@timeslot.com",
         destination: {
           to_addresses: [email]
         },
@@ -127,9 +126,8 @@ class User < ActiveRecord::Base
             }
           }
         },
-        # reply_to_addresses: ["passwords@timeslot.com"],
-        # return_path: "invalid_email_address@timeslot.com"
-        return_path: "silvio@timeslot.com"
+        reply_to_addresses: ["passwords@timeslot.com"],
+        return_path: "invalid_email_address@timeslot.com"
       )
     rescue Aws::SES::Errors::ServiceError => exception
       Rails.logger.error exception

@@ -2,7 +2,11 @@
 
 ## latest
 
-## v0.4.0 on t2s2-silvio-dev
+## v0.4.2 on t2s2-silvio-dev
+- return only upcoming friends slots sorted by startdate
+- accept local identifier for slot media items and return it in JSON
+
+## v0.4.1 on t2s2-silvio-dev
 - increase max. slot title length from 48 to 60
 - set facebook email as timeslot email if none is set
 - use new timeslot email addresses for AWS SES

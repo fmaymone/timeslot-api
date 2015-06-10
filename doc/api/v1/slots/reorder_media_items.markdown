@@ -90,7 +90,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=TQokD4MCXAi8pCVI634jxZ7x0ns
+Authorization: Token token=Y7hp1IDsnNVwEbsQtQ1HjHf0MJM
 Host: example.org
 Cookie: </pre>
 
@@ -123,7 +123,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=TQokD4MCXAi8pCVI634jxZ7x0ns&quot; \
+	-H &quot;Authorization: Token token=Y7hp1IDsnNVwEbsQtQ1HjHf0MJM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -134,11 +134,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;603037c64734325df7a4eae71453a0c4&quot;
+ETag: W/&quot;8ca5bbd6a936b207a08b745340ab6efd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: befeb346-ff55-4c3b-b0ac-da4c02858eaa
-X-Runtime: 0.042184
-Content-Length: 809</pre>
+X-Request-Id: 44357395-76a4-4780-8050-ec14fecf5843
+X-Runtime: 0.054882
+Content-Length: 854</pre>
 
 #### Status
 
@@ -150,11 +150,11 @@ Content-Length: 809</pre>
 {
   "id" : 38,
   "title" : "Slot title 33",
-  "startDate" : "2014-09-28T13:31:02.000Z",
-  "createdAt" : "2015-06-03T10:39:38.928Z",
-  "updatedAt" : "2015-06-03T10:39:38.928Z",
+  "startDate" : "2019-09-07T09:44:02.000Z",
+  "createdAt" : "2015-06-10T11:53:26.029Z",
+  "updatedAt" : "2015-06-10T11:53:26.029Z",
   "deletedAt" : null,
-  "endDate" : "2014-10-07T09:44:02.000Z",
+  "endDate" : "2019-10-07T09:44:02.000Z",
   "location" : {
     "id" : 35,
     "name" : "Acapulco",
@@ -168,8 +168,8 @@ Content-Length: 809</pre>
   "creator" : {
     "id" : 205,
     "username" : "User 202",
-    "createdAt" : "2015-06-03T10:39:38.906Z",
-    "updatedAt" : "2015-06-03T10:39:38.906Z",
+    "createdAt" : "2015-06-10T11:53:26.020Z",
+    "updatedAt" : "2015-06-10T11:53:26.020Z",
     "deletedAt" : null,
     "image" : null
   },
@@ -178,17 +178,20 @@ Content-Length: 809</pre>
     {
       "mediaId" : 33,
       "clyid" : "dfhjghjkdisudgfds7iy29",
-      "position" : 0
+      "position" : 0,
+      "localId" : null
     },
     {
       "mediaId" : 34,
       "clyid" : "dfhjghjkdisudgfds7iy30",
-      "position" : 1
+      "position" : 1,
+      "localId" : null
     },
     {
       "mediaId" : 32,
       "clyid" : "dfhjghjkdisudgfds7iy28",
-      "position" : 2
+      "position" : 2,
+      "localId" : null
     }
   ],
   "voices" : [],

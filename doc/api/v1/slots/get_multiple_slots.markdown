@@ -78,7 +78,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=ZhC3DZR-NgvOMlWhckuIeY8zeKI
+Authorization: Token token=JLrCWZBOmyI2qJVlb8_3MHBzxbk
 Host: example.org
 Cookie: </pre>
 
@@ -102,7 +102,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ZhC3DZR-NgvOMlWhckuIeY8zeKI&quot; \
+	-H &quot;Authorization: Token token=JLrCWZBOmyI2qJVlb8_3MHBzxbk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -113,11 +113,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;41be10ae970f8c830c7df79671808d8c&quot;
+ETag: W/&quot;d77581243cb257a8404fdfa0a772a532&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1ddc4ce6-9144-4467-8363-88daf168d17f
-X-Runtime: 0.070321
-Content-Length: 2119</pre>
+X-Request-Id: 21e82b2b-8ed4-4d13-968d-4784aaf8806f
+X-Runtime: 0.118017
+Content-Length: 2314</pre>
 
 #### Status
 
@@ -130,11 +130,11 @@ Content-Length: 2119</pre>
   {
     "id" : 24,
     "title" : "Slot title 26",
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "createdAt" : "2015-06-03T10:39:38.026Z",
-    "updatedAt" : "2015-06-03T10:39:38.026Z",
+    "startDate" : "2019-09-27T02:44:02.000Z",
+    "createdAt" : "2015-06-10T11:53:23.873Z",
+    "updatedAt" : "2015-06-10T11:53:23.873Z",
     "deletedAt" : null,
-    "endDate" : "2014-10-27T02:44:02.000Z",
+    "endDate" : "2019-10-27T02:44:02.000Z",
     "location" : {
       "id" : 27,
       "name" : "Acapulco",
@@ -148,8 +148,8 @@ Content-Length: 2119</pre>
     "creator" : {
       "id" : 170,
       "username" : "User 167",
-      "createdAt" : "2015-06-03T10:39:38.016Z",
-      "updatedAt" : "2015-06-03T10:39:38.016Z",
+      "createdAt" : "2015-06-10T11:53:23.863Z",
+      "updatedAt" : "2015-06-10T11:53:23.863Z",
       "deletedAt" : null,
       "image" : null
     },
@@ -158,17 +158,20 @@ Content-Length: 2119</pre>
       {
         "mediaId" : 18,
         "clyid" : "dfhjghjkdisudgfds7iy15",
-        "position" : 10
+        "position" : 10,
+        "localId" : null
       },
       {
         "mediaId" : 19,
         "clyid" : "dfhjghjkdisudgfds7iy16",
-        "position" : 11
+        "position" : 11,
+        "localId" : null
       },
       {
         "mediaId" : 20,
         "clyid" : "dfhjghjkdisudgfds7iy17",
-        "position" : 12
+        "position" : 12,
+        "localId" : null
       }
     ],
     "voices" : [],
@@ -185,17 +188,17 @@ Content-Length: 2119</pre>
   {
     "id" : 23,
     "title" : "Slot title 25",
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "createdAt" : "2015-06-03T10:39:37.983Z",
-    "updatedAt" : "2015-06-03T10:39:37.983Z",
+    "startDate" : "2019-09-26T01:44:02.000Z",
+    "createdAt" : "2015-06-10T11:53:23.827Z",
+    "updatedAt" : "2015-06-10T11:53:23.827Z",
     "deletedAt" : null,
-    "endDate" : "2014-10-26T01:44:02.000Z",
+    "endDate" : "2019-10-26T01:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 168,
       "username" : "User 165",
-      "createdAt" : "2015-06-03T10:39:37.969Z",
-      "updatedAt" : "2015-06-03T10:39:37.969Z",
+      "createdAt" : "2015-06-10T11:53:23.816Z",
+      "updatedAt" : "2015-06-10T11:53:23.816Z",
       "deletedAt" : null,
       "image" : null
     },
@@ -204,32 +207,38 @@ Content-Length: 2119</pre>
       {
         "mediaId" : 8,
         "clyid" : "dfhjghjkdisudgfds7iy5",
-        "position" : 0
+        "position" : 0,
+        "localId" : null
       },
       {
         "mediaId" : 9,
         "clyid" : "dfhjghjkdisudgfds7iy6",
-        "position" : 1
+        "position" : 1,
+        "localId" : null
       },
       {
         "mediaId" : 10,
         "clyid" : "dfhjghjkdisudgfds7iy7",
-        "position" : 2
+        "position" : 2,
+        "localId" : null
       },
       {
         "mediaId" : 11,
         "clyid" : "dfhjghjkdisudgfds7iy8",
-        "position" : 3
+        "position" : 3,
+        "localId" : null
       },
       {
         "mediaId" : 12,
         "clyid" : "dfhjghjkdisudgfds7iy9",
-        "position" : 4
+        "position" : 4,
+        "localId" : null
       },
       {
         "mediaId" : 13,
         "clyid" : "dfhjghjkdisudgfds7iy10",
-        "position" : 5
+        "position" : 5,
+        "localId" : null
       }
     ],
     "voices" : [
@@ -237,12 +246,14 @@ Content-Length: 2119</pre>
         "mediaId" : 14,
         "clyid" : "dfhjghjkdisudgfds7iy11",
         "position" : 6,
+        "localId" : null,
         "duration=" : null
       },
       {
         "mediaId" : 15,
         "clyid" : "dfhjghjkdisudgfds7iy12",
         "position" : 7,
+        "localId" : null,
         "duration=" : null
       }
     ],
@@ -251,6 +262,7 @@ Content-Length: 2119</pre>
         "mediaId" : 16,
         "clyid" : "dfhjghjkdisudgfds7iy13",
         "position" : 8,
+        "localId" : null,
         "duration=" : null,
         "thumbnail=" : null
       },
@@ -258,6 +270,7 @@ Content-Length: 2119</pre>
         "mediaId" : 17,
         "clyid" : "dfhjghjkdisudgfds7iy14",
         "position" : 9,
+        "localId" : null,
         "duration=" : null,
         "thumbnail=" : null
       }

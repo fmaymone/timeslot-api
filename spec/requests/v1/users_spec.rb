@@ -451,4 +451,48 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
   end
+
+  describe "GET /v1/users/friendslots" do
+    let(:bob) { create(:user, :with_private_slot) }
+    let!(:bob_slots) do
+      create(:re_slot, slotter: bob)
+      create(:std_slot_friends, owner: bob, title: 'bobslot')
+      create(:std_slot_friends, owner: bob, title: 'bobslot-past',
+             start_date: Time.zone.yesterday)
+    end
+
+    let!(:friendships) {
+      create(:friendship, :established,
+             user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established,
+             user: current_user,
+             friend: create(:user, :with_public_slot))
+      create(:friendship, :established, user: bob, friend: current_user)
+    }
+
+    it "returns success" do
+      get "/v1/users/friendslots", {}, auth_header
+      expect(response.status).to be(200)
+    end
+
+    it "includes all the right slots" do
+      get "/v1/users/friendslots", {}, auth_header
+      expect(response.body).to include 'bobslot'
+      expect(json.size).to be 4
+    end
+
+    it "orders the slots by startdate" do
+      get "/v1/users/friendslots", {}, auth_header
+      expect(json.first['startDate']).to be <= json.second['startDate']
+      expect(json.second['startDate']).to be <= json.third['startDate']
+      expect(json.third['startDate']).to be <= json.last['startDate']
+    end
+
+    it "only includes upcoming slots" do
+      get "/v1/users/friendslots", {}, auth_header
+      expect(json.first['startDate']).to be >= Time.zone.now
+      expect(response.body).not_to include 'bobslot-past'
+    end
+  end
 end

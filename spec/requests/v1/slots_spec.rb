@@ -148,6 +148,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       it "sets slot to 'open End' if empty end_date" do
+        valid_slot[:startDate] = "2014-09-08 13:31:02"
         valid_slot[:endDate] = ""
         post "/v1/stdslot/", valid_slot, auth_header
         expect(response).to have_http_status(:created)
@@ -519,20 +520,21 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       it "updates the end_date of a given metaslot" do
-        metaslot.update(end_date: "2014-09-09 13:31:02")
+        metaslot.update(end_date: "2019-09-09 13:31:02")
         patch "/v1/metaslot/#{metaslot.id}",
-              { endDate: "2014-11-11 13:31:02" }, auth_header
+              { endDate: "2019-12-11 13:31:02" }, auth_header
         metaslot.reload
-        expect(metaslot.end_date).to eq("2014-11-11 13:31:02")
+        expect(metaslot.end_date).to eq("2019-12-11 13:31:02")
       end
 
       it "sets slot to 'open End' if empty end_date" do
+        metaslot.update(start_date: "2014-09-08 07:31:02")
         patch "/v1/metaslot/#{metaslot.id}", { endDate: "" }, auth_header
         expect(response).to have_http_status(:no_content)
         metaslot.reload
         # need to cast to_datetime bc of different millisecond precision
         expect(metaslot.end_date)
-          .to eq metaslot.start_date.to_datetime.next_day.at_midday
+          .to eq metaslot.start_date.to_datetime.at_end_of_day
         expect(metaslot.open_end).to be true
       end
     end
@@ -634,14 +636,15 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "updates the end_date of a given StdSlot" do
-          std_slot.meta_slot.update(end_date: "2014-09-09 13:31:02")
+          std_slot.meta_slot.update(end_date: "2019-12-09 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}",
-                { endDate: "2014-11-11 13:31:02" }, auth_header
+                { endDate: "2019-12-11 13:31:02" }, auth_header
           std_slot.reload
-          expect(std_slot.end_date).to eq("2014-11-11 13:31:02")
+          expect(std_slot.end_date).to eq("2019-12-11 13:31:02")
         end
 
         it "sets slot to 'open End' if empty end_date" do
+          std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}", { endDate: "" }, auth_header
           expect(response).to have_http_status(:ok)
           std_slot.reload

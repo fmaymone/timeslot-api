@@ -37,11 +37,11 @@ class SlotPolicy < ApplicationPolicy
     def friend_slots
       slots = []
       current_user.friends.each do |friend|
-        slots.push(*friend.std_slots_friends)
-        slots.push(*friend.std_slots_public)
-        slots.push(*friend.re_slots)
+        slots.push(*friend.std_slots_friends.upcoming)
+        slots.push(*friend.std_slots_public.upcoming)
+        slots.push(*friend.re_slots.upcoming)
       end
-      slots
+      slots.sort { |x, y| x.start_date <=> y.start_date }
     end
   end
 

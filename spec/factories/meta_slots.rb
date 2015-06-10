@@ -1,9 +1,11 @@
 FactoryGirl.define do
+  # in some places I'm only loading 'upcoming' slots, so at some point in 2019
+  # the testdata will not fullfill this
   factory :meta_slot do
     creator
     sequence(:title) { |n| "Slot title #{n}" }
-    start_date "2014-09-28 13:31:02"
-    sequence(:end_date, 1) { |n| "2014-10-#{(n % 27) + 1} #{n % 24}:44:02}" }
+    sequence(:start_date, 1) { |n| "2019-09-#{(n % 27) + 1} #{n % 24}:44:02}" }
+    sequence(:end_date, 1) { |n| "2019-10-#{(n % 27) + 1} #{n % 24}:44:02}" }
     ios_location
   end
 end
