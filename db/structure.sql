@@ -202,7 +202,7 @@ INHERITS (base_slots);
 CREATE TABLE groups (
     id bigint NOT NULL,
     owner_id bigint NOT NULL,
-    name character varying(255) NOT NULL,
+    name character varying NOT NULL,
     members_can_post boolean DEFAULT true,
     members_can_invite boolean DEFAULT false,
     created_at timestamp without time zone,
@@ -318,7 +318,9 @@ CREATE TABLE media_items (
     mediable_type character varying(255),
     deleted_at timestamp without time zone,
     duration integer,
-    thumbnail character varying(255)
+    thumbnail character varying(255),
+    local_id character varying(64),
+    creator_id bigint
 );
 
 
@@ -422,7 +424,7 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 CREATE TABLE notes (
     id bigint NOT NULL,
     base_slot_id bigint NOT NULL,
-    title character varying(255) NOT NULL,
+    title character varying NOT NULL,
     content text DEFAULT ''::text,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -501,7 +503,7 @@ INHERITS (base_slots);
 --
 
 CREATE TABLE schema_migrations (
-    version character varying(255) NOT NULL
+    version character varying NOT NULL
 );
 
 
@@ -563,7 +565,7 @@ CREATE TABLE users (
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
-    email character varying(255),
+    email character varying,
     password_digest character varying(60),
     auth_token character varying(27),
     role smallint NOT NULL,
@@ -574,13 +576,13 @@ CREATE TABLE users (
     default_own_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_friends_public_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_reslot_alerts bit(10) DEFAULT B'0000000000'::"bit",
+    phone character varying(35),
     location_id bigint,
-    public_url character varying(255),
+    public_url character varying,
     push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
-    phone character varying(35),
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
     device_token character varying(128)
@@ -866,6 +868,13 @@ CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user
 
 
 --
+-- Name: index_connects_on_social_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_connects_on_social_id ON connects USING btree (social_id);
+
+
+--
 -- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -936,10 +945,10 @@ CREATE UNIQUE INDEX index_likes_on_user_id_and_base_slot_id ON likes USING btree
 
 
 --
--- Name: index_media_items_on_mediable_id_and_mediable_type; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_media_items_on_mediable_type_and_mediable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE INDEX index_media_items_on_mediable_id_and_mediable_type ON media_items USING btree (mediable_id, mediable_type);
+CREATE INDEX index_media_items_on_mediable_type_and_mediable_id ON media_items USING btree (mediable_type, mediable_id);
 
 
 --
@@ -1206,4 +1215,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150528130614');
 INSERT INTO schema_migrations (version) VALUES ('20150601135924');
 
 INSERT INTO schema_migrations (version) VALUES ('20150603142220');
+
+INSERT INTO schema_migrations (version) VALUES ('20150610092616');
 
