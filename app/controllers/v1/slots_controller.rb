@@ -303,8 +303,11 @@ module V1
     end
 
     private def media_params
-      item_params = [:publicId, :position, :mediaId]
-      params.permit(photos: item_params, voices: item_params, videos: item_params)
+      media_params = [:publicId, :position, :mediaId, :localId]
+      voice_params = [media_params, :duration].flatten
+      video_params = [media_params, :duration, :thumbnail].flatten
+      params.permit(photos: media_params, voices: voice_params,
+                    videos: video_params)
     end
 
     private def comment_param
