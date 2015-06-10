@@ -1047,6 +1047,14 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
     end
+
+    context :ios_location do
+    let(:new_params) { { iosLocation: {city: 'Berlin'} } }
+        it "update iosLocation" do
+             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+             expect(response).to have_http_status :ok
+        end
+    end
   end
 
   describe "PATCH /v1/groupslot/:id" do
