@@ -2,6 +2,7 @@
 
 ## latest
 - accept local identifier for user image and return it in JSON
+- accept local identifier for group image and return it in JSON
 
 
 ## v0.4.2 on t2s2-silvio-dev
