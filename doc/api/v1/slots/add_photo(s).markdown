@@ -15,14 +15,29 @@ returns 200 and slot details including the new mediaID
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : photos *- required -*
-Description : Scope for array of new photos/voices/videos
+Name : photos
+Description : array of new photos
+
+Name : voices
+Description : array of new audio recordings
+
+Name : videos
+Description : array of new videos
 
 Name : publicId *- required -*
 Description : Cloudinary ID / URL
 
 Name : position
 Description : Sorting order of the new media item. If not submitted it will be added at the end
+
+Name : localId
+Description : IOS specific local identifier for media item
+
+Name : duration
+Description : only for video and voice items
+
+Name : thumbnail
+Description : public URL for video thumbnail
 
 
 ### Response Fields
@@ -83,12 +98,27 @@ Description : Voice recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
+Name : clyid
+Description : Cloudinary URL of the media item
+
+Name : position
+Description : Sorting order position of the media item
+
+Name : localId
+Description : Ios specific local identifier
+
+Name : duration
+Description : Duration of audio/video file
+
+Name : thumbnail
+Description : Clouinary public URL of the video thumbnail
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=uhARDtGloSMWZmiElpIYjHjCTzU
+Authorization: Token token=pPOkrHtGHg9qkJQgR0YYsBW07EM
 Host: example.org
 Cookie: </pre>
 
@@ -101,8 +131,9 @@ Cookie: </pre>
 {
   "photos" : [
     {
-      "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-      "position" : "1"
+      "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
+      "position" : "1",
+      "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
     }
   ]
 }
@@ -111,9 +142,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;position&quot;:&quot;1&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=uhARDtGloSMWZmiElpIYjHjCTzU&quot; \
+	-H &quot;Authorization: Token token=pPOkrHtGHg9qkJQgR0YYsBW07EM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -124,11 +155,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6bca6e7ca521ef27b2e3b729be768512&quot;
+ETag: W/&quot;da6fc6991a8b179a9ba2a7a88ad75699&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: efa0d90f-3cf0-461c-811f-82240b312b74
-X-Runtime: 0.035482
-Content-Length: 699</pre>
+X-Request-Id: dc38a49d-ef1a-4da5-882b-a74330439b5b
+X-Runtime: 0.046728
+Content-Length: 755</pre>
 
 #### Status
 
@@ -140,11 +171,11 @@ Content-Length: 699</pre>
 {
   "id" : 37,
   "title" : "Slot title 32",
-  "startDate" : "2014-09-28T13:31:02.000Z",
-  "createdAt" : "2015-06-03T10:39:38.852Z",
-  "updatedAt" : "2015-06-03T10:39:38.852Z",
+  "startDate" : "2019-09-06T08:44:02.000Z",
+  "createdAt" : "2015-06-10T11:53:25.889Z",
+  "updatedAt" : "2015-06-10T11:53:25.889Z",
   "deletedAt" : null,
-  "endDate" : "2014-10-06T08:44:02.000Z",
+  "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : {
     "id" : 34,
     "name" : "Acapulco",
@@ -158,8 +189,8 @@ Content-Length: 699</pre>
   "creator" : {
     "id" : 202,
     "username" : "User 199",
-    "createdAt" : "2015-06-03T10:39:38.843Z",
-    "updatedAt" : "2015-06-03T10:39:38.843Z",
+    "createdAt" : "2015-06-10T11:53:25.879Z",
+    "updatedAt" : "2015-06-10T11:53:25.879Z",
     "deletedAt" : null,
     "image" : null
   },
@@ -167,8 +198,9 @@ Content-Length: 699</pre>
   "photos" : [
     {
       "mediaId" : 31,
-      "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-      "position" : 1
+      "clyid" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
+      "position" : 1,
+      "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
     }
   ],
   "voices" : [],
