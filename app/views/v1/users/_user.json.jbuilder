@@ -5,4 +5,7 @@ json.extract!(user,
               :updated_at,
               :deleted_at)
 
-json.image user.image ? user.image.public_id : nil
+json.image do
+  json.clyid user.image.try(:public_id) ? user.image.public_id : nil
+  json.local_id user.image.try(:local_id) ? user.image.local_id : nil
+end

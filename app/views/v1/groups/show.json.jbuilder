@@ -9,7 +9,10 @@ json.extract!(
   :deleted_at
 )
 
-json.image @group.image ? @group.image.public_id : nil
+json.image do
+  json.clyid @group.image ? @group.image.public_id : nil
+  json.local_id @group.image.try(:local_id) ? @group.image.local_id : nil
+end
 
 json.owner do
   json.partial! 'v1/users/user', user: @group.owner

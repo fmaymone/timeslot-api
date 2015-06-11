@@ -34,7 +34,7 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=ux_VGjjaadvcUpDZ4WP5DMVbI-U
+<pre>Authorization: Token token=HC1xRULnPipktn4bBDOYGbUGvCE
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/55/history&quot; -X GET \
-	-H &quot;Authorization: Token token=ux_VGjjaadvcUpDZ4WP5DMVbI-U&quot; \
+	-H &quot;Authorization: Token token=HC1xRULnPipktn4bBDOYGbUGvCE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,11 +56,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;225ed52ac5de3cdf3a7f254bd203f578&quot;
+ETag: W/&quot;df2da9deb1a9cd3f13b7fbb8c8ac8814&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8986c65c-066b-4c5a-b5bf-eda55b06792d
-X-Runtime: 0.023187
-Content-Length: 350</pre>
+X-Request-Id: a4026555-d3ab-41a2-9ca9-182247c34a4c
+X-Runtime: 0.028673
+Content-Length: 375</pre>
 
 #### Status
 
@@ -72,25 +72,28 @@ Content-Length: 350</pre>
 {
   "predecessors" : [
     {
-      "id" : 264,
-      "username" : "User 261",
+      "id" : 217,
+      "username" : "User 214",
       "userImage" : null,
-      "timestamp" : "2015-06-03T10:39:39.835Z"
+      "timestamp" : "2015-06-11T16:20:56.316Z"
     },
     {
-      "id" : 263,
-      "username" : "User 260",
+      "id" : 216,
+      "username" : "User 213",
       "userImage" : null,
-      "timestamp" : "2015-06-03T10:39:39.827Z"
+      "timestamp" : "2015-06-11T16:20:56.306Z"
     }
   ],
   "parentUser" : {
-    "id" : 262,
-    "username" : "User 259",
-    "createdAt" : "2015-06-03T10:39:39.821Z",
-    "updatedAt" : "2015-06-03T10:39:39.821Z",
+    "id" : 215,
+    "username" : "User 212",
+    "createdAt" : "2015-06-11T16:20:56.294Z",
+    "updatedAt" : "2015-06-11T16:20:56.294Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   }
 }
 ```

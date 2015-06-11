@@ -19,6 +19,9 @@ Description : Scope for attributes of new image
 Name : publicId *- required -*
 Description : Cloudinary ID / URL
 
+Name : localId
+Description : IOS local identifier
+
 
 ### Response Fields
 
@@ -57,7 +60,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=F6EIZjlTtg5G4hG9YwACGi-UeSg
+Authorization: Token token=ZAJJRjInGzw6YTk7Mj6b8vPuvSw
 Host: example.org
 Cookie: </pre>
 
@@ -69,7 +72,8 @@ Cookie: </pre>
 ```javascript
 {
   "image" : {
-    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg"
+    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
   }
 }
 ```
@@ -77,9 +81,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=F6EIZjlTtg5G4hG9YwACGi-UeSg&quot; \
+	-H &quot;Authorization: Token token=ZAJJRjInGzw6YTk7Mj6b8vPuvSw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -90,11 +94,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b7c84dcd8597308bc220ca2e1ec98ded&quot;
+ETag: W/&quot;bcc4b6d84a45cab2e7dcb2336f4e2950&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ebcdd63b-e673-4f24-a73c-78e08de0a1c1
-X-Runtime: 0.019142
-Content-Length: 384</pre>
+X-Request-Id: c973e999-a83c-468e-9a2b-2ece2114f652
+X-Runtime: 0.021558
+Content-Length: 475</pre>
 
 #### Status
 
@@ -108,17 +112,23 @@ Content-Length: 384</pre>
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-03T10:39:36.778Z",
-  "updatedAt" : "2015-06-03T10:39:36.778Z",
+  "createdAt" : "2015-06-11T16:20:49.793Z",
+  "updatedAt" : "2015-06-11T16:20:49.793Z",
   "deletedAt" : null,
-  "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+  "image" : {
+    "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+  },
   "owner" : {
-    "id" : 85,
-    "username" : "User 82",
-    "createdAt" : "2015-06-03T10:39:36.774Z",
-    "updatedAt" : "2015-06-03T10:39:36.774Z",
+    "id" : 65,
+    "username" : "User 62",
+    "createdAt" : "2015-06-11T16:20:49.790Z",
+    "updatedAt" : "2015-06-11T16:20:49.790Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "membershipState" : "active"
 }

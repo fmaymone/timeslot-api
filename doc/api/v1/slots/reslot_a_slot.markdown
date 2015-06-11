@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Uf1Vr-532JhEJMinfNuGablwjqo
+Authorization: Token token=Ft8mPK19KmRpeamozt5m5TBWDU8
 Host: example.org
 Cookie: </pre>
 
@@ -106,7 +106,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:33}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Uf1Vr-532JhEJMinfNuGablwjqo&quot; \
+	-H &quot;Authorization: Token token=Ft8mPK19KmRpeamozt5m5TBWDU8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -117,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f17ce43fc801da9ece1b9bfe1cd2abff&quot;
+ETag: W/&quot;129599fd32baba58ab06e1e2f705885c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 15bf2f0c-b6b0-41fc-905a-8c32900407fb
-X-Runtime: 0.037699
-Content-Length: 625</pre>
+X-Request-Id: 7ad2091f-5c23-4924-87f1-362a23a35fe4
+X-Runtime: 0.040038
+Content-Length: 545</pre>
 
 #### Status
 
@@ -133,28 +133,22 @@ Content-Length: 625</pre>
 {
   "id" : 34,
   "title" : "Slot title 28",
-  "startDate" : "2014-09-28T13:31:02.000Z",
-  "createdAt" : "2015-06-03T10:39:38.640Z",
-  "updatedAt" : "2015-06-03T10:39:38.640Z",
+  "startDate" : "2019-09-02T04:44:02.000Z",
+  "createdAt" : "2015-06-11T16:20:54.282Z",
+  "updatedAt" : "2015-06-11T16:20:54.282Z",
   "deletedAt" : null,
-  "endDate" : "2014-10-02T04:44:02.000Z",
-  "location" : {
-    "id" : 30,
-    "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
-    "latitude" : null,
-    "longitude" : null
-  },
+  "endDate" : "2019-10-02T04:44:02.000Z",
+  "location" : null,
   "creator" : {
-    "id" : 189,
-    "username" : "User 186",
-    "createdAt" : "2015-06-03T10:39:38.613Z",
-    "updatedAt" : "2015-06-03T10:39:38.613Z",
+    "id" : 162,
+    "username" : "User 159",
+    "createdAt" : "2015-06-11T16:20:54.190Z",
+    "updatedAt" : "2015-06-11T16:20:54.190Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "notes" : [],
   "photos" : [],
@@ -164,7 +158,7 @@ Content-Length: 625</pre>
     "alerts" : "0000000000"
   },
   "slotter" : {
-    "id" : 192
+    "id" : 164
   },
   "likes" : 0,
   "commentsCounter" : 0,

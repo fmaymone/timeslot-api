@@ -213,7 +213,10 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => nil },
+                                "image" => {
+                                  "clyid" => nil,
+                                  "localId" => nil
+                                } },
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,

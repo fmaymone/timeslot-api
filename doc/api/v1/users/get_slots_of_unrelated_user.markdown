@@ -66,19 +66,19 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=C1sVBYDHXUqCvm4h1RsXF7Dwg64
+Authorization: Token token=UAuHC_pMASw8QkQe4taaFVPUIw4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/352/slots</pre>
+<pre>GET /v1/users/279/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/352/slots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/279/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=C1sVBYDHXUqCvm4h1RsXF7Dwg64&quot; \
+	-H &quot;Authorization: Token token=UAuHC_pMASw8QkQe4taaFVPUIw4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,11 +89,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;64b764c47667c771bc5d459ec2408982&quot;
+ETag: W/&quot;06cac6214fdf0a0804b0a2c63e94113e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1381b0b9-ac3e-480f-bb34-e69b82577298
-X-Runtime: 0.065747
-Content-Length: 1332</pre>
+X-Request-Id: 8b0ffe75-7f14-42e9-b620-ed9cbc817b38
+X-Runtime: 0.068310
+Content-Length: 1172</pre>
 
 #### Status
 
@@ -106,28 +106,22 @@ Content-Length: 1332</pre>
   {
     "id" : 87,
     "title" : "Slot title 76",
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "createdAt" : "2015-06-03T10:39:41.263Z",
-    "updatedAt" : "2015-06-03T10:39:41.263Z",
+    "startDate" : "2019-09-23T04:44:02.000Z",
+    "createdAt" : "2015-06-11T16:21:01.632Z",
+    "updatedAt" : "2015-06-11T16:21:01.632Z",
     "deletedAt" : null,
-    "endDate" : "2014-10-23T04:44:02.000Z",
-    "location" : {
-      "id" : 80,
-      "name" : "Acapulco",
-      "street" : "",
-      "city" : "",
-      "postcode" : "",
-      "country" : "",
-      "latitude" : null,
-      "longitude" : null
-    },
+    "endDate" : "2019-10-23T04:44:02.000Z",
+    "location" : null,
     "creator" : {
-      "id" : 357,
-      "username" : "User 350",
-      "createdAt" : "2015-06-03T10:39:41.254Z",
-      "updatedAt" : "2015-06-03T10:39:41.254Z",
+      "id" : 282,
+      "username" : "User 275",
+      "createdAt" : "2015-06-11T16:21:01.627Z",
+      "updatedAt" : "2015-06-11T16:21:01.627Z",
       "deletedAt" : null,
-      "image" : null
+      "image" : {
+        "clyid" : null,
+        "localId" : null
+      }
     },
     "notes" : [],
     "photos" : [],
@@ -145,28 +139,22 @@ Content-Length: 1332</pre>
   {
     "id" : 89,
     "title" : "Slot title 78",
-    "startDate" : "2014-09-28T13:31:02.000Z",
-    "createdAt" : "2015-06-03T10:39:41.283Z",
-    "updatedAt" : "2015-06-03T10:39:41.306Z",
+    "startDate" : "2019-09-25T06:44:02.000Z",
+    "createdAt" : "2015-06-11T16:21:01.644Z",
+    "updatedAt" : "2015-06-11T16:21:01.662Z",
     "deletedAt" : null,
-    "endDate" : "2014-10-25T06:44:02.000Z",
-    "location" : {
-      "id" : 82,
-      "name" : "Acapulco",
-      "street" : "",
-      "city" : "",
-      "postcode" : "",
-      "country" : "",
-      "latitude" : null,
-      "longitude" : null
-    },
+    "endDate" : "2019-10-25T06:44:02.000Z",
+    "location" : null,
     "creator" : {
-      "id" : 362,
-      "username" : "User 355",
-      "createdAt" : "2015-06-03T10:39:41.285Z",
-      "updatedAt" : "2015-06-03T10:39:41.285Z",
+      "id" : 285,
+      "username" : "User 278",
+      "createdAt" : "2015-06-11T16:21:01.647Z",
+      "updatedAt" : "2015-06-11T16:21:01.647Z",
       "deletedAt" : null,
-      "image" : null
+      "image" : {
+        "clyid" : null,
+        "localId" : null
+      }
     },
     "notes" : [],
     "photos" : [],
@@ -176,7 +164,7 @@ Content-Length: 1332</pre>
       "alerts" : "0000000000"
     },
     "slotter" : {
-      "id" : 352
+      "id" : 279
     },
     "likes" : 0,
     "commentsCounter" : 0,

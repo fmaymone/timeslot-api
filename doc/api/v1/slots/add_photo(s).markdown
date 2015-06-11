@@ -118,7 +118,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=pPOkrHtGHg9qkJQgR0YYsBW07EM
+Authorization: Token token=PCcScNfkPCI61fpLNmDSw0sMBEY
 Host: example.org
 Cookie: </pre>
 
@@ -144,7 +144,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=pPOkrHtGHg9qkJQgR0YYsBW07EM&quot; \
+	-H &quot;Authorization: Token token=PCcScNfkPCI61fpLNmDSw0sMBEY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -155,11 +155,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;da6fc6991a8b179a9ba2a7a88ad75699&quot;
+ETag: W/&quot;570bd86ce477e03df4d1b423ae79b2d7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dc38a49d-ef1a-4da5-882b-a74330439b5b
-X-Runtime: 0.046728
-Content-Length: 755</pre>
+X-Request-Id: a4a2dafd-4a0d-4213-b0d6-0d14bf4be918
+X-Runtime: 0.042835
+Content-Length: 675</pre>
 
 #### Status
 
@@ -172,27 +172,21 @@ Content-Length: 755</pre>
   "id" : 37,
   "title" : "Slot title 32",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-06-10T11:53:25.889Z",
-  "updatedAt" : "2015-06-10T11:53:25.889Z",
+  "createdAt" : "2015-06-11T16:20:54.743Z",
+  "updatedAt" : "2015-06-11T16:20:54.743Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
-  "location" : {
-    "id" : 34,
-    "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
-    "latitude" : null,
-    "longitude" : null
-  },
+  "location" : null,
   "creator" : {
-    "id" : 202,
-    "username" : "User 199",
-    "createdAt" : "2015-06-10T11:53:25.879Z",
-    "updatedAt" : "2015-06-10T11:53:25.879Z",
+    "id" : 171,
+    "username" : "User 168",
+    "createdAt" : "2015-06-11T16:20:54.739Z",
+    "updatedAt" : "2015-06-11T16:20:54.739Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "notes" : [],
   "photos" : [
