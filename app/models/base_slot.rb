@@ -41,10 +41,12 @@ class BaseSlot < ActiveRecord::Base
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
            :ios_location_id, :ios_location, :open_end,
-           :title=, :start_date=, :end_date=, :creator=, :location_id=, :ios_location=,
+           :title=, :start_date=, :end_date=, :creator=, :location_id=,
            to: :meta_slot
 
   validates :meta_slot, presence: true
+
+  # getter
 
   def visibility
     slot_type.constantize.try(:visibility)
@@ -60,6 +62,26 @@ class BaseSlot < ActiveRecord::Base
 
   def videos
     media_items.video.order(:position)
+  end
+
+  def likes_with_details
+    likes.includes([:user])
+  end
+
+  def comments_with_details
+    comments.includes([:user])
+  end
+
+  # setter
+
+  def ios_location=(location)
+    if location[:latitude].present? && location[:longitude].present?
+      new_location = IosLocation.where(
+        latitude: location[:latitude], longitude: location[:longitude]).take
+    end
+
+    new_location ||= IosLocation.create(location.merge(creator: owner))
+    meta_slot.update(ios_location: new_location)
   end
 
   def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
@@ -112,18 +134,10 @@ class BaseSlot < ActiveRecord::Base
     like.try(:delete)
   end
 
-  def likes_with_details
-    likes.includes([:user])
-  end
-
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
     return new_comment if new_comment.valid?
     errors.add(:comment, new_comment.errors)
-  end
-
-  def comments_with_details
-    comments.includes([:user])
   end
 
   def set_share_id(user)

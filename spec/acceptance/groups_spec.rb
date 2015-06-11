@@ -167,8 +167,11 @@ resource "Groups" do
       parameter :publicId, "Cloudinary ID / URL",
                 required: true,
                 scope: :image
+      parameter :localId, "IOS local identifier",
+                scope: :image
 
       let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
+      let(:localId) { "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -179,12 +182,16 @@ resource "Groups" do
                     " successfully added or updated"
         do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key("image")
-        expect(json["image"]).to eq publicId
         group.reload
         expect(group.image).not_to be nil
         expect(group.image.public_id).to eq publicId
+        expect(group.image.local_id).to eq localId
+        expect(response_status).to eq(200)
+        expect(json).to have_key("image")
+        expect(json["image"]).to have_key "clyid"
+        expect(json["image"]).to have_key "localId"
+        expect(json["image"]["clyid"]).to eq publicId
+        expect(json["image"]["localId"]).to eq localId
       end
     end
   end

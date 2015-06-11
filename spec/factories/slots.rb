@@ -7,6 +7,10 @@ FactoryGirl.define do
     location_id 200_719_253
   end
 
+  trait :with_ios_location do
+    association :meta_slot, :with_ioslocation, strategy: :build
+  end
+
   trait :with_real_photo do
     after :create do |slot|
       create :real_slot_photo, mediable: slot

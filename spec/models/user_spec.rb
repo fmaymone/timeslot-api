@@ -722,8 +722,9 @@ RSpec.describe User, type: :model do
   end
 
   describe "create_with_image" do
-    let(:user_params) { attributes_for(:user, password: 'something') }
-
+    let(:user_params) {
+      { params: attributes_for(:user, password: 'something') }
+    }
     context "valid params" do
       it "creates a new user" do
         expect {
@@ -739,32 +740,43 @@ RSpec.describe User, type: :model do
       end
 
       it "sets an image if provided" do
-        user_params.merge!("public_id" => 'foobar')
+        user_params.merge!(image: { "public_id" => 'foobar' })
+
         expect {
           User.create_with_image(user_params)
         }.to change(MediaItem, :count).by 1
-        expect(User.last.image.public_id).to eq user_params["public_id"]
+        expect(User.last.image.public_id).to eq "foobar"
+      end
+
+      it "sets the local_id for an image if provided" do
+        user_params.merge!(
+          image: {"public_id" => 'foobar',
+                  "local_id" => "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
+        )
+        User.create_with_image(user_params)
+        expect(User.last.image.local_id)
+          .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
       end
     end
 
     context "invalid params" do
       it "doesn't create a new user if username is nil" do
-        user_params[:username] = nil
+        user_params[:params][:username] = nil
         expect {
           User.create_with_image(user_params)
         }.not_to change(User, :count)
       end
 
-      it "creates a new user even if mediaitems public_id is nil" do
-        user_params.merge!("public_id" => nil)
+      it "creates a new user even if media items public_id is nil" do
+        user_params.merge!(image: { "public_id" => nil })
 
         expect {
           User.create_with_image(user_params)
         }.to change(User, :count).by 1
       end
 
-      it "doesn't create a new mediaitem if public_id is nil" do
-        user_params.merge!("public_id" => nil)
+      it "doesn't create a new media item if public_id is nil" do
+        user_params.merge!(image: { "public_id" => nil })
 
         expect {
           User.create_with_image(user_params)
