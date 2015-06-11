@@ -41,7 +41,7 @@ Description : Deletion date of membership
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=XcylOLko_S__ztt4RRHcKU9uYm8
+Authorization: Token token=G2pDW3exLPig-MolOoaRkDxRnAg
 Host: example.org
 Cookie: </pre>
 
@@ -53,7 +53,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/21/related&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=XcylOLko_S__ztt4RRHcKU9uYm8&quot; \
+	-H &quot;Authorization: Token token=G2pDW3exLPig-MolOoaRkDxRnAg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,11 +64,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;550c8625d892e77169f843d3c1a22424&quot;
+ETag: W/&quot;37a89328d7cf6849650276e23d99cb1f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2c0d6c3b-934f-48d2-86cb-350c06bfcfc0
-X-Runtime: 0.019517
-Content-Length: 423</pre>
+X-Request-Id: fed59149-5908-4c6a-bcdc-7c438a309b3c
+X-Runtime: 0.023921
+Content-Length: 446</pre>
 
 #### Status
 
@@ -82,39 +82,39 @@ Content-Length: 423</pre>
   "size" : 7,
   "related" : [
     {
-      "userId" : 121,
-      "state" : "111",
+      "userId" : 97,
+      "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 122,
-      "state" : "111",
+      "userId" : 98,
+      "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 123,
-      "state" : "011",
+      "userId" : 99,
+      "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 124,
-      "state" : "011",
+      "userId" : 100,
+      "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 125,
-      "state" : "011",
-      "deletedAt" : "2015-06-03T10:39:34.922Z"
+      "userId" : 101,
+      "state" : "invited",
+      "deletedAt" : "2015-06-11T16:20:47.232Z"
     },
     {
-      "userId" : 126,
-      "state" : "011",
-      "deletedAt" : "2015-06-03T10:39:34.922Z"
+      "userId" : 102,
+      "state" : "invited",
+      "deletedAt" : "2015-06-11T16:20:47.232Z"
     },
     {
-      "userId" : 127,
-      "state" : "011",
-      "deletedAt" : "2015-06-03T10:39:34.922Z"
+      "userId" : 103,
+      "state" : "invited",
+      "deletedAt" : "2015-06-11T16:20:47.232Z"
     }
   ]
 }

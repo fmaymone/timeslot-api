@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=LEoOZVyMmKlX0xUa6F9l3e3mfSk
+Authorization: Token token=Sf4FTGxLnjuGgbJS-VFWm9-QwJ0
 Host: example.org
 Cookie: </pre>
 
@@ -78,9 +78,9 @@ Cookie: </pre>
 {
   "name" : "foo",
   "invitees" : [
-    80,
-    81,
-    82
+    60,
+    61,
+    62
   ]
 }
 ```
@@ -88,10 +88,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[80,81,82]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[60,61,62]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LEoOZVyMmKlX0xUa6F9l3e3mfSk&quot; \
+	-H &quot;Authorization: Token token=Sf4FTGxLnjuGgbJS-VFWm9-QwJ0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,11 +102,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;357a654bab521c779c27ac10a01f7076&quot;
+ETag: W/&quot;c96a269ee69b6a368a32686435cd9ad2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cf68f3c3-03eb-424f-91d2-7b547fb80f4b
-X-Runtime: 0.042981
-Content-Length: 351</pre>
+X-Request-Id: c75c6525-f5bb-4dc3-8b41-1a4fb73bf483
+X-Runtime: 0.042409
+Content-Length: 401</pre>
 
 #### Status
 
@@ -120,17 +120,23 @@ Content-Length: 351</pre>
   "name" : "foo",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-03T10:39:36.680Z",
-  "updatedAt" : "2015-06-03T10:39:36.680Z",
+  "createdAt" : "2015-06-11T16:20:49.563Z",
+  "updatedAt" : "2015-06-11T16:20:49.563Z",
   "deletedAt" : null,
-  "image" : null,
+  "image" : {
+    "clyid" : null,
+    "localId" : null
+  },
   "owner" : {
-    "id" : 83,
-    "username" : "User 80",
-    "createdAt" : "2015-06-03T10:39:36.672Z",
-    "updatedAt" : "2015-06-03T10:39:36.672Z",
+    "id" : 63,
+    "username" : "User 60",
+    "createdAt" : "2015-06-11T16:20:49.555Z",
+    "updatedAt" : "2015-06-11T16:20:49.555Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "membershipState" : "active"
 }

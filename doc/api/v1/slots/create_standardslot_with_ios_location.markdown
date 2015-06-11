@@ -15,7 +15,7 @@ returns 422 if required parameters are missing
 ### Parameters
 
 Name : title *- required -*
-Description : Title of slot (max. 48 characters)
+Description : Title of slot (max. 60 characters)
 
 Name : startDate *- required -*
 Description : Startdate and Time of the Slot
@@ -133,7 +133,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=cCgWbgNTWJyKQINkwEZ7BPni7iY
+Authorization: Token token=f2zAiBdfdvN_3LLQPtKTgOPzG-I
 Host: example.org
 Cookie: </pre>
 
@@ -181,7 +181,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;iosLocation&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;street&quot;:&quot;Torstrasse 1&quot;,&quot;city&quot;:&quot;Berlin&quot;,&quot;postcode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;auid&quot;:9032563782833995324,&quot;private_location&quot;:false},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=cCgWbgNTWJyKQINkwEZ7BPni7iY&quot; \
+	-H &quot;Authorization: Token token=f2zAiBdfdvN_3LLQPtKTgOPzG-I&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -192,11 +192,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e5cd5ab86a3012e45d2eba2dd5c68983&quot;
+ETag: W/&quot;136b5b2ded856ea77b476fe6009d166e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ab485c8a-36db-410a-b20c-0ca03049e341
-X-Runtime: 0.044484
-Content-Length: 891</pre>
+X-Request-Id: 1c0df385-326a-4c69-a503-8871e31fed11
+X-Runtime: 0.050355
+Content-Length: 915</pre>
 
 #### Status
 
@@ -209,12 +209,12 @@ Content-Length: 891</pre>
   "id" : 29,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-03T10:39:38.422Z",
-  "updatedAt" : "2015-06-03T10:39:38.422Z",
+  "createdAt" : "2015-06-11T16:20:53.653Z",
+  "updatedAt" : "2015-06-11T16:20:53.653Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : 29,
+    "id" : 2,
     "name" : "Soho House",
     "street" : "Torstrasse 1",
     "city" : "Berlin",
@@ -224,25 +224,28 @@ Content-Length: 891</pre>
     "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 183,
-    "username" : "User 180",
-    "createdAt" : "2015-06-03T10:39:38.405Z",
-    "updatedAt" : "2015-06-03T10:39:38.405Z",
+    "id" : 156,
+    "username" : "User 153",
+    "createdAt" : "2015-06-11T16:20:53.632Z",
+    "updatedAt" : "2015-06-11T16:20:53.632Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "notes" : [
-    {
-      "id" : 9,
-      "title" : "and another title",
-      "content" : "more content here",
-      "createdAt" : "2015-06-03T10:39:38.429Z"
-    },
     {
       "id" : 8,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-03T10:39:38.426Z"
+      "createdAt" : "2015-06-11T16:20:53.656Z"
+    },
+    {
+      "id" : 9,
+      "title" : "and another title",
+      "content" : "more content here",
+      "createdAt" : "2015-06-11T16:20:53.658Z"
     }
   ],
   "photos" : [],

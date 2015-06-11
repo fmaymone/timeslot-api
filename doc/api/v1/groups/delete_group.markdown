@@ -54,7 +54,7 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=_8or3Yt5Lw6hBmHjTuP7JG23JZY
+<pre>Authorization: Token token=mLyq5HraN73LStk4sO8UR6UwKrA
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -66,7 +66,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=_8or3Yt5Lw6hBmHjTuP7JG23JZY&quot; \
+	-H &quot;Authorization: Token token=mLyq5HraN73LStk4sO8UR6UwKrA&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -78,11 +78,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;247b4ff3a2fa8bdd95f865831d5021ef&quot;
+ETag: W/&quot;f5b99a46062b11ccae743f7b56da7363&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a0ba8cbf-6aa2-4781-97fb-fc1717a0e852
-X-Runtime: 0.067522
-Content-Length: 384</pre>
+X-Request-Id: 84a063a0-46e6-49fd-8e22-b31408b8bfce
+X-Runtime: 0.076949
+Content-Length: 434</pre>
 
 #### Status
 
@@ -96,17 +96,23 @@ Content-Length: 384</pre>
   "name" : "Testgroup 13",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-03T10:39:36.816Z",
-  "updatedAt" : "2015-06-03T10:39:36.897Z",
-  "deletedAt" : "2015-06-03T10:39:36.896Z",
-  "image" : null,
+  "createdAt" : "2015-06-11T16:20:49.901Z",
+  "updatedAt" : "2015-06-11T16:20:49.988Z",
+  "deletedAt" : "2015-06-11T16:20:49.987Z",
+  "image" : {
+    "clyid" : null,
+    "localId" : null
+  },
   "owner" : {
-    "id" : 86,
-    "username" : "User 83",
-    "createdAt" : "2015-06-03T10:39:36.813Z",
-    "updatedAt" : "2015-06-03T10:39:36.846Z",
+    "id" : 66,
+    "username" : "User 63",
+    "createdAt" : "2015-06-11T16:20:49.898Z",
+    "updatedAt" : "2015-06-11T16:20:49.933Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "membershipState" : "deleted"
 }

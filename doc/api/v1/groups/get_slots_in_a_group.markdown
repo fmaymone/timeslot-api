@@ -69,7 +69,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=yelVf8zi2yHMTJEYggpBFAHeuyI
+Authorization: Token token=sfZp8yl8d93WLyVK4CmHRX_cpXg
 Host: example.org
 Cookie: </pre>
 
@@ -81,7 +81,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/18/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=yelVf8zi2yHMTJEYggpBFAHeuyI&quot; \
+	-H &quot;Authorization: Token token=sfZp8yl8d93WLyVK4CmHRX_cpXg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -92,11 +92,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e3b330f4f3d70c1c77101e36de0bad54&quot;
+ETag: W/&quot;04c02ee1ed226cf8682592310ffb7f05&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fb03a202-2c80-4d03-af4d-b8e726c517e8
-X-Runtime: 0.121754
-Content-Length: 2695</pre>
+X-Request-Id: 6a7cb007-8c54-4f1d-9fe9-50cad0b56b9d
+X-Runtime: 0.141131
+Content-Length: 2371</pre>
 
 #### Status
 
@@ -108,33 +108,27 @@ Content-Length: 2695</pre>
 {
   "id" : 18,
   "slotCount" : 4,
-  "upcomingCount" : 0,
+  "upcomingCount" : 4,
   "slots" : [
     {
       "id" : 19,
       "title" : "Slot title 21",
-      "startDate" : "2014-09-28T13:31:02.000Z",
-      "createdAt" : "2015-06-03T10:39:36.990Z",
-      "updatedAt" : "2015-06-03T10:39:36.990Z",
+      "startDate" : "2019-09-22T21:44:02.000Z",
+      "createdAt" : "2015-06-11T16:20:50.136Z",
+      "updatedAt" : "2015-06-11T16:20:50.136Z",
       "deletedAt" : null,
-      "endDate" : "2014-10-22T21:44:02.000Z",
-      "location" : {
-        "id" : 22,
-        "name" : "Acapulco",
-        "street" : "",
-        "city" : "",
-        "postcode" : "",
-        "country" : "",
-        "latitude" : null,
-        "longitude" : null
-      },
+      "endDate" : "2019-10-22T21:44:02.000Z",
+      "location" : null,
       "creator" : {
-        "id" : 98,
-        "username" : "User 95",
-        "createdAt" : "2015-06-03T10:39:36.980Z",
-        "updatedAt" : "2015-06-03T10:39:36.980Z",
+        "id" : 78,
+        "username" : "User 75",
+        "createdAt" : "2015-06-11T16:20:50.131Z",
+        "updatedAt" : "2015-06-11T16:20:50.131Z",
         "deletedAt" : null,
-        "image" : null
+        "image" : {
+          "clyid" : null,
+          "localId" : null
+        }
       },
       "notes" : [],
       "photos" : [],
@@ -154,28 +148,22 @@ Content-Length: 2695</pre>
     {
       "id" : 20,
       "title" : "Slot title 22",
-      "startDate" : "2014-09-28T13:31:02.000Z",
-      "createdAt" : "2015-06-03T10:39:37.002Z",
-      "updatedAt" : "2015-06-03T10:39:37.002Z",
+      "startDate" : "2019-09-23T22:44:02.000Z",
+      "createdAt" : "2015-06-11T16:20:50.143Z",
+      "updatedAt" : "2015-06-11T16:20:50.143Z",
       "deletedAt" : null,
-      "endDate" : "2014-10-23T22:44:02.000Z",
-      "location" : {
-        "id" : 23,
-        "name" : "Acapulco",
-        "street" : "",
-        "city" : "",
-        "postcode" : "",
-        "country" : "",
-        "latitude" : null,
-        "longitude" : null
-      },
+      "endDate" : "2019-10-23T22:44:02.000Z",
+      "location" : null,
       "creator" : {
-        "id" : 100,
-        "username" : "User 97",
-        "createdAt" : "2015-06-03T10:39:36.993Z",
-        "updatedAt" : "2015-06-03T10:39:36.993Z",
+        "id" : 79,
+        "username" : "User 76",
+        "createdAt" : "2015-06-11T16:20:50.139Z",
+        "updatedAt" : "2015-06-11T16:20:50.139Z",
         "deletedAt" : null,
-        "image" : null
+        "image" : {
+          "clyid" : null,
+          "localId" : null
+        }
       },
       "notes" : [],
       "photos" : [],
@@ -195,28 +183,22 @@ Content-Length: 2695</pre>
     {
       "id" : 21,
       "title" : "Slot title 23",
-      "startDate" : "2014-09-28T13:31:02.000Z",
-      "createdAt" : "2015-06-03T10:39:37.016Z",
-      "updatedAt" : "2015-06-03T10:39:37.016Z",
+      "startDate" : "2019-09-24T23:44:02.000Z",
+      "createdAt" : "2015-06-11T16:20:50.150Z",
+      "updatedAt" : "2015-06-11T16:20:50.150Z",
       "deletedAt" : null,
-      "endDate" : "2014-10-24T23:44:02.000Z",
-      "location" : {
-        "id" : 24,
-        "name" : "Acapulco",
-        "street" : "",
-        "city" : "",
-        "postcode" : "",
-        "country" : "",
-        "latitude" : null,
-        "longitude" : null
-      },
+      "endDate" : "2019-10-24T23:44:02.000Z",
+      "location" : null,
       "creator" : {
-        "id" : 102,
-        "username" : "User 99",
-        "createdAt" : "2015-06-03T10:39:37.005Z",
-        "updatedAt" : "2015-06-03T10:39:37.005Z",
+        "id" : 80,
+        "username" : "User 77",
+        "createdAt" : "2015-06-11T16:20:50.145Z",
+        "updatedAt" : "2015-06-11T16:20:50.145Z",
         "deletedAt" : null,
-        "image" : null
+        "image" : {
+          "clyid" : null,
+          "localId" : null
+        }
       },
       "notes" : [],
       "photos" : [],
@@ -236,28 +218,22 @@ Content-Length: 2695</pre>
     {
       "id" : 22,
       "title" : "Slot title 24",
-      "startDate" : "2014-09-28T13:31:02.000Z",
-      "createdAt" : "2015-06-03T10:39:37.031Z",
-      "updatedAt" : "2015-06-03T10:39:37.031Z",
+      "startDate" : "2019-09-25T00:44:02.000Z",
+      "createdAt" : "2015-06-11T16:20:50.158Z",
+      "updatedAt" : "2015-06-11T16:20:50.158Z",
       "deletedAt" : null,
-      "endDate" : "2014-10-25T00:44:02.000Z",
-      "location" : {
-        "id" : 25,
-        "name" : "Acapulco",
-        "street" : "",
-        "city" : "",
-        "postcode" : "",
-        "country" : "",
-        "latitude" : null,
-        "longitude" : null
-      },
+      "endDate" : "2019-10-25T00:44:02.000Z",
+      "location" : null,
       "creator" : {
-        "id" : 104,
-        "username" : "User 101",
-        "createdAt" : "2015-06-03T10:39:37.019Z",
-        "updatedAt" : "2015-06-03T10:39:37.019Z",
+        "id" : 81,
+        "username" : "User 78",
+        "createdAt" : "2015-06-11T16:20:50.153Z",
+        "updatedAt" : "2015-06-11T16:20:50.153Z",
         "deletedAt" : null,
-        "image" : null
+        "image" : {
+          "clyid" : null,
+          "localId" : null
+        }
       },
       "notes" : [],
       "photos" : [],
