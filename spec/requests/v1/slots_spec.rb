@@ -1055,9 +1055,13 @@ RSpec.describe "V1::Slots", type: :request do
       let(:new_params) { { iosLocation: { city: 'Berlin' } } }
 
       it "update iosLocation" do
-        skip "needs fix, ios location bug"
         patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+        std_slot.reload
+        expect(std_slot.ios_location).not_to be nil
+        expect(std_slot.ios_location.city).to eq 'Berlin'
         expect(response).to have_http_status :ok
+        expect(json).to have_key 'location'
+        expect(json['location']['city']).to eq 'Berlin'
       end
     end
   end

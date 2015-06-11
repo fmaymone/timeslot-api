@@ -6,6 +6,9 @@ FactoryGirl.define do
     sequence(:title) { |n| "Slot title #{n}" }
     sequence(:start_date, 1) { |n| "2019-09-#{(n % 27) + 1} #{n % 24}:44:02}" }
     sequence(:end_date, 1) { |n| "2019-10-#{(n % 27) + 1} #{n % 24}:44:02}" }
+  end
+
+  trait :with_ioslocation do
     ios_location
   end
 end

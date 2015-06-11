@@ -51,6 +51,33 @@ RSpec.describe StdSlot, type: :model do
     end
   end
 
+  describe :update do
+    let(:slot) { create(:std_slot, :with_ios_location) }
+    let(:new_location) { { ios_location: { city: 'chicago' } } }
+
+    context "same location" do
+      it "updates the location of a slot" do
+        expect {
+          slot.update(new_location)
+        }.to change(slot.meta_slot, :ios_location)
+        expect(slot.ios_location.city).to eq 'chicago'
+      end
+    end
+
+    context "same location" do
+      let(:new_location) do
+        { ios_location: { latitude: slot.ios_location.latitude,
+                          longitude: slot.ios_location.longitude } }
+      end
+
+      it "doesn't update the location of a slot if same lat/long" do
+        expect {
+          slot.update(new_location)
+        }.not_to change(slot.meta_slot, :ios_location)
+      end
+    end
+  end
+
   describe :delete do
     let(:slot) { create(:std_slot) }
 
