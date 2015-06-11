@@ -27,7 +27,7 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=LFozNHTMY47LdyMOm9DNZEnYmbI
+Authorization: Token token=0O0v325V2BZ3V12Zo6czvz3ueGk
 Host: example.org
 Cookie: </pre>
 
@@ -39,9 +39,9 @@ Cookie: </pre>
 ```javascript
 {
   "invitees" : [
-    140,
-    141,
-    142
+    116,
+    117,
+    118
   ]
 }
 ```
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[140,141,142]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[116,117,118]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=LFozNHTMY47LdyMOm9DNZEnYmbI&quot; \
+	-H &quot;Authorization: Token token=0O0v325V2BZ3V12Zo6czvz3ueGk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,11 +62,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a7e5c2c1716ec40c0dfa0e893abfca86&quot;
+ETag: W/&quot;42e3e3f66718d831a200651f98c28819&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e5af5675-144a-4a51-a3e5-1e7f8a79e7f5
-X-Runtime: 0.032577
-Content-Length: 219</pre>
+X-Request-Id: e0347a46-3504-4543-b411-3d11992d0217
+X-Runtime: 0.039881
+Content-Length: 234</pre>
 
 #### Status
 
@@ -80,23 +80,23 @@ Content-Length: 219</pre>
   "size" : 4,
   "related" : [
     {
-      "userId" : 139,
-      "state" : "111",
+      "userId" : 115,
+      "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 140,
-      "state" : "011",
+      "userId" : 116,
+      "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 141,
-      "state" : "011",
+      "userId" : 117,
+      "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 142,
-      "state" : "011",
+      "userId" : 118,
+      "state" : "invited",
       "deletedAt" : null
     }
   ]

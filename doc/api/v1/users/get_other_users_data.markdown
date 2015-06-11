@@ -51,19 +51,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=v6ah3Uh_Ap0Acx7Ti9T4ZG3ALbs
+Authorization: Token token=w1QusUtnvLbHaTG1Wy_PQKid_X4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/276</pre>
+<pre>GET /v1/users/227</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/276&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/227&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=v6ah3Uh_Ap0Acx7Ti9T4ZG3ALbs&quot; \
+	-H &quot;Authorization: Token token=w1QusUtnvLbHaTG1Wy_PQKid_X4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -74,11 +74,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;50d5b0ee0c2318d9c0b908164f0e1e69&quot;
+ETag: W/&quot;c4ae791a1ce0c0925b32a2454ec7bb01&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9e95d1b7-2e2f-47eb-9c74-5e79b445cba3
-X-Runtime: 0.012091
-Content-Length: 308</pre>
+X-Request-Id: cbcc81d6-4132-4003-9e6b-ce686bdce4ad
+X-Runtime: 0.037707
+Content-Length: 337</pre>
 
 #### Status
 
@@ -88,22 +88,25 @@ Content-Length: 308</pre>
 
 ```javascript
 {
-  "id" : 276,
-  "username" : "User 272",
-  "createdAt" : "2015-06-03T10:39:40.106Z",
-  "updatedAt" : "2015-06-03T10:39:40.106Z",
+  "id" : 227,
+  "username" : "User 223",
+  "createdAt" : "2015-06-11T16:20:56.896Z",
+  "updatedAt" : "2015-06-11T16:20:56.896Z",
   "deletedAt" : null,
   "location" : {
-    "id" : 52,
+    "id" : 3,
     "name" : "Acapulco",
     "street" : "",
     "city" : "",
     "postcode" : "",
     "country" : "",
-    "latitude" : null,
-    "longitude" : null
+    "latitude" : 51.234,
+    "longitude" : -11.993
   },
-  "image" : null,
+  "image" : {
+    "clyid" : null,
+    "localId" : null
+  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0

@@ -88,7 +88,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=UUUBF3jMJdudnCa8PcBpXD8rUcA
+Authorization: Token token=HFiEoLSIIolVFv2zQ9mI2SmPrBI
 Host: example.org
 Cookie: </pre>
 
@@ -109,7 +109,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/59/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=UUUBF3jMJdudnCa8PcBpXD8rUcA&quot; \
+	-H &quot;Authorization: Token token=HFiEoLSIIolVFv2zQ9mI2SmPrBI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,11 +120,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5228a8d6b59bb435b99bda387038d111&quot;
+ETag: W/&quot;b22e48fd89a607a810969be35c9018bc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b64dc443-caf2-41dc-923e-e24dfa86725d
-X-Runtime: 0.083708
-Content-Length: 854</pre>
+X-Request-Id: 8dd346fd-970b-49ff-9069-9dd15ebd94cc
+X-Runtime: 0.086719
+Content-Length: 774</pre>
 
 #### Status
 
@@ -137,27 +137,21 @@ Content-Length: 854</pre>
   "id" : 60,
   "title" : "Slot title 49",
   "startDate" : "2019-09-23T01:44:02.000Z",
-  "createdAt" : "2015-06-10T11:53:27.928Z",
-  "updatedAt" : "2015-06-10T11:53:27.928Z",
+  "createdAt" : "2015-06-11T16:20:56.697Z",
+  "updatedAt" : "2015-06-11T16:20:56.697Z",
   "deletedAt" : null,
   "endDate" : "2019-10-23T01:44:02.000Z",
-  "location" : {
-    "id" : 51,
-    "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
-    "latitude" : null,
-    "longitude" : null
-  },
+  "location" : null,
   "creator" : {
-    "id" : 272,
-    "username" : "User 269",
-    "createdAt" : "2015-06-10T11:53:27.897Z",
-    "updatedAt" : "2015-06-10T11:53:27.897Z",
+    "id" : 224,
+    "username" : "User 221",
+    "createdAt" : "2015-06-11T16:20:56.668Z",
+    "updatedAt" : "2015-06-11T16:20:56.668Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "notes" : [],
   "photos" : [

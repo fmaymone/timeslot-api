@@ -64,6 +64,9 @@ Description : Scope for attributes of new image
 Name : publicId *- required -*
 Description : Cloudinary ID / URL
 
+Name : localId
+Description : IOS local identifier
+
 
 ### Response Fields
 
@@ -147,7 +150,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=WNRQWPNecR4cxp_wQg7h_oMro74
+Authorization: Token token=frS6qcz4geWHvprAmkjPfDsfTp8
 Host: example.org
 Cookie: </pre>
 
@@ -159,7 +162,8 @@ Cookie: </pre>
 ```javascript
 {
   "image" : {
-    "publicId" : "v1234567/xcvjghjkdisudgfds7iyf.jpg"
+    "publicId" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
+    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
   }
 }
 ```
@@ -167,9 +171,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=WNRQWPNecR4cxp_wQg7h_oMro74&quot; \
+	-H &quot;Authorization: Token token=frS6qcz4geWHvprAmkjPfDsfTp8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,11 +184,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cef012e3a6251693af09b5f5453afd59&quot;
+ETag: W/&quot;9bde34c0c2f75defc2bfdabe73c826a9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fcdb191d-240e-4755-bf19-04ab12b7c37d
-X-Runtime: 0.020304
-Content-Length: 724</pre>
+X-Request-Id: a7d36329-c736-47af-b913-48727c996cc0
+X-Runtime: 0.029588
+Content-Length: 790</pre>
 
 #### Status
 
@@ -194,13 +198,16 @@ Content-Length: 724</pre>
 
 ```javascript
 {
-  "id" : 284,
-  "username" : "User 280",
-  "createdAt" : "2015-06-03T10:39:40.440Z",
-  "updatedAt" : "2015-06-03T10:39:40.440Z",
+  "id" : 235,
+  "username" : "User 231",
+  "createdAt" : "2015-06-11T16:21:00.444Z",
+  "updatedAt" : "2015-06-11T16:21:00.444Z",
   "deletedAt" : null,
   "location" : null,
-  "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
+  "image" : {
+    "clyid" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
+    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,

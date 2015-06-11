@@ -132,7 +132,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=lMK7a-5wnY3j6KEcye1o6vJwnOg
+<pre>Authorization: Token token=MazLBS3xmFdT_VPXP3V3OjaxV_I
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -144,7 +144,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=lMK7a-5wnY3j6KEcye1o6vJwnOg&quot; \
+	-H &quot;Authorization: Token token=MazLBS3xmFdT_VPXP3V3OjaxV_I&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -156,11 +156,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a04adb93364895fcb8cddd0e2a6a8c74&quot;
+ETag: W/&quot;a1626a88ff98d99780c540c76c17a5ce&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 952e14f5-8d82-44d2-af65-8d2140f3d5ce
-X-Runtime: 0.183704
-Content-Length: 649</pre>
+X-Request-Id: 7efc7624-cdaa-4d7b-a797-bfb42cce8bd6
+X-Runtime: 0.166427
+Content-Length: 569</pre>
 
 #### Status
 
@@ -172,28 +172,22 @@ Content-Length: 649</pre>
 {
   "id" : 39,
   "title" : "Slot title 34",
-  "startDate" : "2014-09-28T13:31:02.000Z",
-  "createdAt" : "2015-06-03T10:39:39.004Z",
-  "updatedAt" : "2015-06-03T10:39:39.162Z",
-  "deletedAt" : "2015-06-03T10:39:39.159Z",
-  "endDate" : "2014-10-08T10:44:02.000Z",
-  "location" : {
-    "id" : 36,
-    "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
-    "latitude" : null,
-    "longitude" : null
-  },
+  "startDate" : "2019-09-08T10:44:02.000Z",
+  "createdAt" : "2015-06-11T16:20:55.019Z",
+  "updatedAt" : "2015-06-11T16:20:55.153Z",
+  "deletedAt" : "2015-06-11T16:20:55.151Z",
+  "endDate" : "2019-10-08T10:44:02.000Z",
+  "location" : null,
   "creator" : {
-    "id" : 208,
-    "username" : "User 205",
-    "createdAt" : "2015-06-03T10:39:38.995Z",
-    "updatedAt" : "2015-06-03T10:39:38.995Z",
+    "id" : 175,
+    "username" : "User 172",
+    "createdAt" : "2015-06-11T16:20:55.014Z",
+    "updatedAt" : "2015-06-11T16:20:55.014Z",
     "deletedAt" : null,
-    "image" : null
+    "image" : {
+      "clyid" : null,
+      "localId" : null
+    }
   },
   "notes" : [],
   "photos" : [],

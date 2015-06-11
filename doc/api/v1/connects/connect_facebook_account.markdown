@@ -70,7 +70,7 @@ Description : Email of the user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=fPa5AUrjd_-oForierLomozRKsU
+Authorization: Token token=r8soNo5RlZ32uhsWOKOe3kIk2rw
 Host: example.org
 Cookie: </pre>
 
@@ -102,7 +102,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=fPa5AUrjd_-oForierLomozRKsU&quot; \
+	-H &quot;Authorization: Token token=r8soNo5RlZ32uhsWOKOe3kIk2rw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -113,11 +113,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1a68738091e8a45ac82b84fe76ae18cf&quot;
+ETag: W/&quot;9adbc0cc2272e571ab0139e84f95e3ad&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b8cd579d-b523-4953-823c-4c1c8dc629d4
-X-Runtime: 0.026348
-Content-Length: 689</pre>
+X-Request-Id: b5883209-fd55-4132-bf09-78253e9930ab
+X-Runtime: 0.033889
+Content-Length: 714</pre>
 
 #### Status
 
@@ -127,13 +127,16 @@ Content-Length: 689</pre>
 
 ```javascript
 {
-  "id" : 67,
-  "username" : "User 66",
-  "createdAt" : "2015-06-10T11:53:20.142Z",
-  "updatedAt" : "2015-06-10T11:53:20.142Z",
+  "id" : 47,
+  "username" : "User 46",
+  "createdAt" : "2015-06-11T16:20:48.813Z",
+  "updatedAt" : "2015-06-11T16:20:48.813Z",
   "deletedAt" : null,
   "location" : null,
-  "image" : null,
+  "image" : {
+    "clyid" : null,
+    "localId" : null
+  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,

@@ -1,9 +1,13 @@
 #Changelog
 
 ## latest
+
+## v0.4.3 on t2s2-silvio-dev
 - accept local identifier for user image and return it in JSON
 - accept local identifier for group image and return it in JSON
+- image of a user and group is now a hash with keys clyid and localId
 - FIX bug where slot can not be updated with a location
+
 
 ## v0.4.2 on t2s2-silvio-dev
 - return only upcoming friends slots sorted by startdate
