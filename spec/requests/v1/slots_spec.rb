@@ -1051,17 +1051,128 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context :ios_location do
-      let(:new_params) { { iosLocation: { city: 'Berlin' } } }
+    describe :ios_location do
+      let(:new_params) do
+        { iosLocation: { city: "Berlin", name: "Berlin", country: "Germany",
+                         longitude: 13.4113999, latitude: 52.5234051
+                       } }
+      end
 
-      it "update iosLocation" do
-        patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
-        std_slot.reload
-        expect(std_slot.ios_location).not_to be nil
-        expect(std_slot.ios_location.city).to eq 'Berlin'
-        expect(response).to have_http_status :ok
-        expect(json).to have_key 'location'
-        expect(json['location']['city']).to eq 'Berlin'
+      context "new ios_location" do
+        it "creates a new iosLocation" do
+          expect {
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+          }.to change(IosLocation, :count).by 1
+          new_location = IosLocation.last
+          expect(new_location.city).to eq 'Berlin'
+        end
+
+        describe "slot without ios_location" do
+          it "sets the iosLocation" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            std_slot.reload
+            expect(std_slot.ios_location).not_to be nil
+            expect(std_slot.ios_location.city).to eq 'Berlin'
+          end
+
+          it "returns ok" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "returns the new location" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(json).to have_key 'location'
+            expect(json['location']).not_to be nil
+            expect(json['location']['city']).to eq 'Berlin'
+          end
+        end
+
+        describe "slot with ios_location" do
+          let(:std_slot) do
+            create(:std_slot_public, :with_ios_location, owner: current_user,
+                   title: 'whoa')
+          end
+
+          it "updates iosLocation" do
+            expect(std_slot.ios_location.city).not_to eq 'Berlin'
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            std_slot.reload
+            expect(std_slot.ios_location).not_to be nil
+            expect(std_slot.ios_location.city).to eq 'Berlin'
+          end
+
+          it "returns ok" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "returns the new location" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(json).to have_key 'location'
+            expect(json['location']).not_to be nil
+            expect(json['location']['city']).to eq 'Berlin'
+          end
+        end
+      end
+
+      context "duplicate ios_location" do
+        let!(:existing_location) do
+          create(:ios_location, city: "Berlin", name: "Berlin", country: "Germany",
+                 longitude: 13.4113999, latitude: 52.5234051)
+        end
+
+        it "doesn't create a new iosLocation" do
+          expect {
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+          }.not_to change(IosLocation, :count)
+        end
+
+        describe "slot without ios_location" do
+          it "sets the iosLocation" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            std_slot.reload
+            expect(std_slot.ios_location).not_to be nil
+            expect(std_slot.ios_location.city).to eq 'Berlin'
+          end
+
+          it "returns ok" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "returns the new location" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(json).to have_key 'location'
+            expect(json['location']).not_to be nil
+            expect(json['location']['city']).to eq 'Berlin'
+          end
+        end
+
+        describe "slot with ios_location" do
+          let(:std_slot) {
+            create(:std_slot_public, :with_ios_location, owner: current_user)
+          }
+
+          it "updates iosLocation" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            std_slot.reload
+            expect(std_slot.ios_location).not_to be nil
+            expect(std_slot.ios_location.city).to eq 'Berlin'
+          end
+
+          it "returns ok" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "returns the new location" do
+            patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
+            expect(json).to have_key 'location'
+            expect(json['location']).not_to be nil
+            expect(json['location']['city']).to eq 'Berlin'
+          end
+        end
       end
     end
   end

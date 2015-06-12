@@ -290,8 +290,8 @@ module V1
                         iosLocation:
                           [:name, :street, :city, :postcode, :country, :auid,
                            :latitude, :longitude, :private_location])
-      p.transform_keys!(&:underscore)
-      p.symbolize_keys
+      p.deep_transform_keys!(&:underscore)
+      p.deep_symbolize_keys
     end
 
     private def alerts_param
