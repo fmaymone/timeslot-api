@@ -2,6 +2,14 @@
 
 ## latest
 
+### change attributes for Ios Location:
+- remove street, city, postcode, auid
+- add thoroughfare, sub_thoroughfare, locality, sub_locality, administrative_area,
+  sub_administrative_area, postal_code, iso_country_code, in_land_water, ocean,
+  areas_of_interest
+- increase name, country to 255 chars
+
+
 ## v0.4.3 on t2s2-silvio-dev
 - accept local identifier for user image and return it in JSON
 - accept local identifier for group image and return it in JSON

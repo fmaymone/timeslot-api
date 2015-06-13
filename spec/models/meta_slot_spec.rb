@@ -126,31 +126,6 @@ RSpec.describe MetaSlot, type: :model do
           end
         end
 
-        context "with existing ios_location (auid)" do
-          let(:ios_location) { attributes_for(:ios_location, auid: 123) }
-          let!(:existing_ios_loc) {
-            create(:ios_location, auid: ios_location[:auid]) }
-
-          it "creates a new MetaSlot" do
-            expect {
-              described_class.find_or_add(meta_params.merge(creator: user))
-            }.to change(MetaSlot, :count).by 1
-          end
-
-          it "doesn't create a new IosLocation" do
-            expect {
-              described_class.find_or_add(meta_params.merge(creator: user))
-            }.not_to change(IosLocation, :count)
-          end
-
-          it "returns the new metaslot with the correct ios location" do
-            result = described_class.find_or_add(meta_params.merge(creator: user))
-            expect(result.class).to eq described_class
-            expect(result.errors.messages.empty?).to be true
-            expect(result.ios_location_id).to eq existing_ios_loc.id
-          end
-        end
-
         context "with existing ios_location (latitude/longitude)" do
           let(:ios_location) do
             attributes_for(:ios_location,

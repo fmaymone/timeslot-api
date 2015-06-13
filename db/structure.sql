@@ -186,11 +186,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
+    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    group_id bigint NOT NULL
+    deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
 
@@ -236,18 +236,25 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 CREATE TABLE ios_locations (
     id bigint NOT NULL,
-    name character varying(128),
-    street character varying(128) DEFAULT ''::character varying,
-    city character varying(128) DEFAULT ''::character varying,
-    postcode character varying(32) DEFAULT ''::character varying,
-    country character varying(64) DEFAULT ''::character varying,
+    name character varying(255) DEFAULT ''::character varying,
+    thoroughfare character varying(255),
+    sub_thoroughfare character varying(255),
+    locality character varying(255),
+    sub_locality character varying(255),
+    administrative_area character varying(255),
+    sub_administrative_area character varying(255),
+    postal_code character varying(32),
+    country character varying(255),
+    iso_country_code character varying(8),
+    in_land_water character varying(255),
+    ocean character varying(255),
+    areas_of_interest character varying(255),
     latitude double precision,
     longitude double precision,
     creator_id bigint NOT NULL,
-    private_location boolean DEFAULT true NOT NULL,
+    private_location boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    auid bigint
+    updated_at timestamp without time zone NOT NULL
 );
 
 
@@ -487,11 +494,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -924,17 +931,10 @@ CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
 
 
 --
--- Name: index_ios_locations_on_auid; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
-CREATE UNIQUE INDEX index_ios_locations_on_auid ON ios_locations USING btree (auid);
-
-
---
--- Name: index_ios_locations_on_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_ios_locations_on_latitude_and_longitude ON ios_locations USING btree (latitude, longitude);
+CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON ios_locations USING btree (name, latitude, longitude);
 
 
 --
@@ -1217,4 +1217,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150601135924');
 INSERT INTO schema_migrations (version) VALUES ('20150603142220');
 
 INSERT INTO schema_migrations (version) VALUES ('20150610092616');
+
+INSERT INTO schema_migrations (version) VALUES ('20150612093738');
 

@@ -288,8 +288,11 @@ module V1
 
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
                         iosLocation:
-                          [:name, :street, :city, :postcode, :country, :auid,
-                           :latitude, :longitude, :private_location])
+                          [:name, :thoroughfare, :sub_thoroughfare,
+                           :locality, :sub_locality, :administrative_area,
+                           :sub_administrative_area, :postal_code, :country,
+                           :iso_country_code, :in_land_water, :ocean, :latitude,
+                           :longitude, :private_location, :areas_of_interest])
       p.deep_transform_keys!(&:underscore)
       p.deep_symbolize_keys
     end

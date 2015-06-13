@@ -1053,7 +1053,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe :ios_location do
       let(:new_params) do
-        { iosLocation: { city: "Berlin", name: "Berlin", country: "Germany",
+        { iosLocation: { locality: "Berlin", name: "Berlin", country: "Germany",
                          longitude: 13.4113999, latitude: 52.5234051
                        } }
       end
@@ -1064,7 +1064,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
           }.to change(IosLocation, :count).by 1
           new_location = IosLocation.last
-          expect(new_location.city).to eq 'Berlin'
+          expect(new_location.locality).to eq 'Berlin'
         end
 
         describe "slot without ios_location" do
@@ -1072,7 +1072,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
-            expect(std_slot.ios_location.city).to eq 'Berlin'
+            expect(std_slot.ios_location.locality).to eq 'Berlin'
           end
 
           it "returns ok" do
@@ -1084,7 +1084,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
-            expect(json['location']['city']).to eq 'Berlin'
+            expect(json['location']['locality']).to eq 'Berlin'
           end
         end
 
@@ -1095,11 +1095,11 @@ RSpec.describe "V1::Slots", type: :request do
           end
 
           it "updates iosLocation" do
-            expect(std_slot.ios_location.city).not_to eq 'Berlin'
+            expect(std_slot.ios_location.locality).not_to eq 'Berlin'
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
-            expect(std_slot.ios_location.city).to eq 'Berlin'
+            expect(std_slot.ios_location.locality).to eq 'Berlin'
           end
 
           it "returns ok" do
@@ -1111,14 +1111,14 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
-            expect(json['location']['city']).to eq 'Berlin'
+            expect(json['location']['locality']).to eq 'Berlin'
           end
         end
       end
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, city: "Berlin", name: "Berlin", country: "Germany",
+          create(:ios_location, locality: "Berlin", name: "Berlin", country: "Germany",
                  longitude: 13.4113999, latitude: 52.5234051)
         end
 
@@ -1133,7 +1133,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
-            expect(std_slot.ios_location.city).to eq 'Berlin'
+            expect(std_slot.ios_location.locality).to eq 'Berlin'
           end
 
           it "returns ok" do
@@ -1145,7 +1145,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
-            expect(json['location']['city']).to eq 'Berlin'
+            expect(json['location']['locality']).to eq 'Berlin'
           end
         end
 
@@ -1158,7 +1158,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
-            expect(std_slot.ios_location.city).to eq 'Berlin'
+            expect(std_slot.ios_location.locality).to eq 'Berlin'
           end
 
           it "returns ok" do
@@ -1170,7 +1170,7 @@ RSpec.describe "V1::Slots", type: :request do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
-            expect(json['location']['city']).to eq 'Berlin'
+            expect(json['location']['locality']).to eq 'Berlin'
           end
         end
       end

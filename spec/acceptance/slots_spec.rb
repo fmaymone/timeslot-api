@@ -195,19 +195,6 @@ resource "Slots" do
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
                  "location" => nil,
-                 # "location" => { "id" => 200_719_253,
-                 #                 "name" => slot.location.name,
-                 #                 "street" => slot.location.street,
-                 #                 "city" => slot.location.city,
-                 #                 "postcode" => slot.location.postcode,
-                 #                 "country" => slot.location.country,
-                 #                 "longitude" => slot.location.longitude,
-                 #                 "latitude" => slot.location.latitude
-                 #                 # "createdAt" => slot.location.created.as_json,
-                 #                 # "updatedAt" => slot.location.last_update.as_json,
-                 #                 # "categories" => slot.location.categories,
-                 #                 # "images" => slot.location.images
-                 #               },
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
@@ -258,19 +245,28 @@ resource "Slots" do
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
     parameter :iosLocation, "IOS location associated with this slot"
-    parameter :name, "Name of the IOS location (128 chars)",
+    parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
               scope: :iosLocation
-    parameter :street, "Street of IOS location (128 chars)",
+    parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
               scope: :iosLocation
-    parameter :city, "City of IOS location (128 chars)",
+    parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
               scope: :iosLocation
-    parameter :postcode, "Postcode of IOS location (32 chars)",
+    parameter :locality, "city, e.g. Berlin (255 chars)",
               scope: :iosLocation
-    parameter :country, "Country of IOS location (64 chars)",
+    parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
               scope: :iosLocation
-    parameter :latitude, "Latitude of IOS location", scope: :iosLocation
-    parameter :longitude, "Longitude of IOS location", scope: :iosLocation
-    parameter :auid, "Apple UID of the location", scope: :iosLocation
+    parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
+              scope: :iosLocation
+    parameter :country, "country, e.g. Germany (255 chars)",
+              scope: :iosLocation
+    parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
+              scope: :iosLocation
+    parameter :inLandWater, "e.g. Lake Tahoe", scope: :iosLocation
+    parameter :ocean, "e.g. Pacific Ocean", scope: :iosLocation
+    parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
+              scope: :iosLocation
+    parameter :latitude, "Latitude", scope: :iosLocation
+    parameter :longitude, "Longitude", scope: :iosLocation
     parameter :private_location,
               "private location for this user (true/false) [not yet " \
               "sure what it will mean technically] -> default: false",
@@ -355,17 +351,15 @@ resource "Slots" do
 
       context "slot with IOS location" do
         let(:name) { 'Soho House' }
-        let(:street) { 'Torstrasse 1' }
-        let(:city) { 'Berlin' }
-        let(:postcode) { '10119' }
+        let(:thoroughfare) { 'Torstrasse 1' }
+        let(:locality) { 'Berlin' }
+        let(:postal_code) { '10119' }
         let(:country) { 'Germany' }
         # google 52.527654, 13.415670
         # apple 52.527335,13.414259
         let(:latitude) { '52.527335' }
         let(:longitude) { '13.414259' }
-        let(:auid) { 9_032_563_782_833_995_324 }
         let(:private_location) { false }
-        # postgres biggest bigint: 9223372036854775807
 
         example "Create StandardSlot with IOS Location", document: :v1 do
           explanation "Returns data of new slot.\n\n" \
@@ -375,9 +369,9 @@ resource "Slots" do
                       "returns 422 if required parameters are missing"
           do_request
 
-          expect(response_status).to eq(201)
           slot = StdSlotPrivate.last
           expect(slot.ios_location_id).not_to be nil
+          expect(response_status).to eq(201)
           expect(json).to have_key("id")
           expect(json).to have_key("location")
           location = json['location']

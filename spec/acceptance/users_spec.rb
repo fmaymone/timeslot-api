@@ -351,19 +351,28 @@ resource "Users" do
 
     describe "Set location for User" do
       parameter :location, "ID of users home location"
-      parameter :name, "Name of the IOS location (128 chars)",
+      parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
                 scope: :location
-      parameter :street, "Street of IOS location (128 chars)",
+      parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
                 scope: :location
-      parameter :city, "City of IOS location (128 chars)",
+      parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
                 scope: :location
-      parameter :postcode, "Postcode of IOS location (32 chars)",
+      parameter :locality, "city, e.g. Berlin (255 chars)",
                 scope: :location
-      parameter :country, "Country of IOS location (64 chars)",
+      parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
                 scope: :location
-      parameter :latitude, "Latitude of IOS location", scope: :location
-      parameter :longitude, "Longitude of IOS location", scope: :location
-      parameter :auid, "Apple UID of the location", scope: :location
+      parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
+                scope: :location
+      parameter :country, "country, e.g. Germany (255 chars)",
+                scope: :location
+      parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
+                scope: :location
+      parameter :inLandWater, "e.g. Lake Tahoe", scope: :location
+      parameter :ocean, "e.g. Pacific Ocean", scope: :location
+      parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
+                scope: :location
+      parameter :latitude, "Latitude", scope: :location
+      parameter :longitude, "Longitude", scope: :location
       parameter :private_location,
                 "private location for this user (true/false) [not yet " \
                 "sure what it will mean technically] -> default: false",
