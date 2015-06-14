@@ -465,9 +465,7 @@ resource "Users" do
         expect(json.first).to have_key("likes")
         expect(json.first).to have_key("commentsCounter")
         expect(json.first).to have_key("visibility")
-        expect(json.first).to have_key("photos")
-        expect(json.first).to have_key("voices")
-        expect(json.first).to have_key("videos")
+        expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
         expect(json.first.except('location', 'creator', 'shareUrl'))
           .to include("id" => std_slot_1.id,
@@ -483,9 +481,7 @@ resource "Users" do
                       "notes" => std_slot_1.notes,
                       "likes" => std_slot_1.likes.count,
                       "commentsCounter" => std_slot_1.comments.count,
-                      "photos" => std_slot_1.photos,
-                      "voices" => std_slot_1.voices,
-                      "videos" => std_slot_1.videos,
+                      "media" => std_slot_1.media_items,
                       "url" => v1_slot_url(std_slot_1, format: :json)
                      )
       end

@@ -183,10 +183,8 @@ resource "Slots" do
         expect(json).to have_key("commentsCounter")
         expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
-        expect(json).to have_key("photos")
-        expect(json).to have_key("voices")
-        expect(json).to have_key("videos")
-        expect(json.except('photos', 'voices', 'videos', 'shareUrl'))
+        expect(json).to have_key("media")
+        expect(json.except('media', 'shareUrl'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -210,8 +208,8 @@ resource "Slots" do
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count
                 )
-        expect(json["photos"].length).to eq(slot.photos.length)
-        expect(json["photos"].first['clyid']).to eq(slot.photos.first.public_id)
+        expect(json["media"].length).to eq(slot.media_items.length)
+        expect(response_body).to include slot.photos.first.public_id
         expect(json["shareUrl"]).to include slot.share_id
       end
     end
@@ -675,17 +673,16 @@ resource "Slots" do
                     "returns 200 and slot details including the new mediaID"
         do_request
 
-        expect(response_status).to eq(200)
-        expect(json).to have_key("photos")
-        expect(*json['photos']).to have_key("mediaId")
-        expect(*json['photos']).to have_key("clyid")
-        expect(*json['photos']).to have_key("localId")
-        expect(json['photos'].first["clyid"])
-          .to eq "v1234567/dfhjghjkdisudgfds7sly.jpg"
-        expect(json['photos'].first["localId"])
-          .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
         std_slot.reload
         expect(std_slot.photos.size).to eq 1
+        expect(response_status).to eq(200)
+        expect(json).to have_key("media")
+        expect(*json['media']).to have_key("mediaId")
+        expect(*json['media']).to have_key("clyid")
+        expect(*json['media']).to have_key("localId")
+        expect(response_body).to include "v1234567/dfhjghjkdisudgfds7sly.jpg"
+        expect(response_body)
+          .to include "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
       end
     end
 

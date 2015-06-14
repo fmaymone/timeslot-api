@@ -290,9 +290,7 @@ resource "Groups" do
                     "endDate" => slots[0].end_date.as_json,
                     "settings" => {
                       'alerts' => current_user.alerts(slots[0]) },
-                    "photos" => slots[0].photos,
-                    "voices" => slots[0].voices,
-                    "videos" => slots[0].videos,
+                    "media" => slots[0].media_items,
                     "url" => v1_slot_url(slots[0], format: :json)
                    )
     end

@@ -95,10 +95,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "has the same media items as the parent slot" do
         get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-        expect(json).to have_key('photos')
-        expect(
-          json['photos'].first['clyid']
-        ).to eq(std_slot.photos.first.public_id)
+        expect(json).to have_key('media')
+        expect(response.body).to include std_slot.photos.first.public_id
       end
 
       it "has the same notes as the parent slot" do
@@ -817,13 +815,13 @@ RSpec.describe "V1::Slots", type: :request do
         it "returns a mediaId" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
-          expect(*json['photos']).to have_key('mediaId')
+          expect(*json['media']).to have_key('mediaId')
         end
 
         it "returns the ID of new media_item" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
-          expect(json['photos'][0]['mediaId']).to eq std_slot.media_items[0].id
+          expect(json['media'][0]['mediaId']).to eq std_slot.media_items[0].id
         end
 
         it "adds a new image" do
