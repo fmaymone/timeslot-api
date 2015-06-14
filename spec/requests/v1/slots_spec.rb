@@ -1053,9 +1053,9 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe :ios_location do
       let(:new_params) do
-        { iosLocation: { locality: "Berlin", name: "Berlin", country: "Germany",
-                         longitude: 13.4113999, latitude: 52.5234051
-                       } }
+        { location: { locality: "Berlin", name: "Berlin", country: "Germany",
+                      longitude: 13.4113999, latitude: 52.5234051
+                    } }
       end
 
       context "new ios_location" do

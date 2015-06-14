@@ -244,33 +244,33 @@ resource "Slots" do
     parameter :notes, "Notes for to the Slot"
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
-    parameter :iosLocation, "IOS location associated with this slot"
+    parameter :location, "IOS location associated with this slot"
     parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :locality, "city, e.g. Berlin (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :country, "country, e.g. Germany (255 chars)",
-              scope: :iosLocation
+              scope: :location
     parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
-              scope: :iosLocation
-    parameter :inLandWater, "e.g. Lake Tahoe", scope: :iosLocation
-    parameter :ocean, "e.g. Pacific Ocean", scope: :iosLocation
+              scope: :location
+    parameter :inLandWater, "e.g. Lake Tahoe", scope: :location
+    parameter :ocean, "e.g. Pacific Ocean", scope: :location
     parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
-              scope: :iosLocation
-    parameter :latitude, "Latitude", scope: :iosLocation
-    parameter :longitude, "Longitude", scope: :iosLocation
+              scope: :location
+    parameter :latitude, "Latitude", scope: :location
+    parameter :longitude, "Longitude", scope: :location
     parameter :private_location,
               "private location for this user (true/false) [not yet " \
               "sure what it will mean technically] -> default: false",
-              scope: :iosLocation
+              scope: :location
 
     describe "Create new standard slot" do
       parameter :visibility, "Visibility of the Slot", required: true
