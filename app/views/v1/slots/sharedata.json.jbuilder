@@ -12,9 +12,9 @@ if slot.location_id.nil? || slot.location.nil?
 else
   address = ""
   address << "#{slot.location.name}, " if slot.location.name
-  address << "#{slot.location.street}, " if slot.location.street
-  address << "#{slot.location.city}, " if slot.location.city
-  address << "#{slot.location.postcode}, " if slot.location.postcode
+  address << "#{slot.location.street}, " if slot.location.thoroughfare
+  address << "#{slot.location.city}, " if slot.location.locality
+  address << "#{slot.location.postcode}, " if slot.location.postal_code
   address << "#{slot.location.country}" if slot.location.country
   json.address address
 end

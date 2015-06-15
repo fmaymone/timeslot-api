@@ -98,7 +98,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=yXgVMw2G7tD8Gwxf7cz6Y1ceItE
+Authorization: Token token=KjP_-hBEoCsUGM95MGE1KE2In6k
 Host: example.org
 Cookie: </pre>
 
@@ -118,7 +118,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=yXgVMw2G7tD8Gwxf7cz6Y1ceItE&quot; \
+	-H &quot;Authorization: Token token=KjP_-hBEoCsUGM95MGE1KE2In6k&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -129,11 +129,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4ce00d14f2c7b0303488a41708005f33&quot;
+ETag: W/&quot;24f311fa9c1756d7cdd0351611bcb1df&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2ce3a96f-d9f9-471f-90f2-9e6122e98236
-X-Runtime: 0.039251
-Content-Length: 554</pre>
+X-Request-Id: 7c3b6e24-e4de-4701-a3d5-ea114c84722b
+X-Runtime: 0.034236
+Content-Length: 529</pre>
 
 #### Status
 
@@ -146,16 +146,16 @@ Content-Length: 554</pre>
   "id" : 35,
   "title" : "New title for a Slot",
   "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-06-11T16:20:54.487Z",
-  "updatedAt" : "2015-06-11T16:20:54.487Z",
+  "createdAt" : "2015-06-15T08:50:39.024Z",
+  "updatedAt" : "2015-06-15T08:50:39.024Z",
   "deletedAt" : null,
   "endDate" : "2019-10-04T06:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 167,
     "username" : "User 164",
-    "createdAt" : "2015-06-11T16:20:54.482Z",
-    "updatedAt" : "2015-06-11T16:20:54.482Z",
+    "createdAt" : "2015-06-15T08:50:39.019Z",
+    "updatedAt" : "2015-06-15T08:50:39.019Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -163,9 +163,7 @@ Content-Length: 554</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0000000000"
   },

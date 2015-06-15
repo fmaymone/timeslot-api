@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=21jWi1y0Aph7W3z3z09LTdKuiao
+Authorization: Token token=usGxCit4U5-ir684BxVMyZMVP1s
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/265/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=21jWi1y0Aph7W3z3z09LTdKuiao&quot; \
+	-H &quot;Authorization: Token token=usGxCit4U5-ir684BxVMyZMVP1s&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,11 +89,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bd456d920c72f940fa8860285f68f4a6&quot;
+ETag: W/&quot;16246e648db1310e84fae0855476ed6e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 42066e50-e4b3-4922-a2db-226892a8182f
-X-Runtime: 0.101349
-Content-Length: 1754</pre>
+X-Request-Id: 3f81007b-c09b-419c-9b71-365ad2e954f9
+X-Runtime: 0.093615
+Content-Length: 1679</pre>
 
 #### Status
 
@@ -107,16 +107,16 @@ Content-Length: 1754</pre>
     "id" : 79,
     "title" : "Slot title 68",
     "startDate" : "2019-09-15T20:44:02.000Z",
-    "createdAt" : "2015-06-11T16:21:01.343Z",
-    "updatedAt" : "2015-06-11T16:21:01.343Z",
+    "createdAt" : "2015-06-15T08:50:45.675Z",
+    "updatedAt" : "2015-06-15T08:50:45.675Z",
     "deletedAt" : null,
     "endDate" : "2019-10-15T20:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 268,
       "username" : "User 262",
-      "createdAt" : "2015-06-11T16:21:01.338Z",
-      "updatedAt" : "2015-06-11T16:21:01.338Z",
+      "createdAt" : "2015-06-15T08:50:45.669Z",
+      "updatedAt" : "2015-06-15T08:50:45.669Z",
       "deletedAt" : null,
       "image" : {
         "clyid" : null,
@@ -124,9 +124,7 @@ Content-Length: 1754</pre>
       }
     },
     "notes" : [],
-    "photos" : [],
-    "voices" : [],
-    "videos" : [],
+    "media" : [],
     "settings" : {
       "alerts" : "0000000000"
     },
@@ -140,16 +138,16 @@ Content-Length: 1754</pre>
     "id" : 81,
     "title" : "Slot title 70",
     "startDate" : "2019-09-17T22:44:02.000Z",
-    "createdAt" : "2015-06-11T16:21:01.355Z",
-    "updatedAt" : "2015-06-11T16:21:01.372Z",
+    "createdAt" : "2015-06-15T08:50:45.694Z",
+    "updatedAt" : "2015-06-15T08:50:45.718Z",
     "deletedAt" : null,
     "endDate" : "2019-10-17T22:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 271,
       "username" : "User 265",
-      "createdAt" : "2015-06-11T16:21:01.358Z",
-      "updatedAt" : "2015-06-11T16:21:01.358Z",
+      "createdAt" : "2015-06-15T08:50:45.697Z",
+      "updatedAt" : "2015-06-15T08:50:45.697Z",
       "deletedAt" : null,
       "image" : {
         "clyid" : null,
@@ -157,9 +155,7 @@ Content-Length: 1754</pre>
       }
     },
     "notes" : [],
-    "photos" : [],
-    "voices" : [],
-    "videos" : [],
+    "media" : [],
     "settings" : {
       "alerts" : "0000000000"
     },
@@ -175,16 +171,16 @@ Content-Length: 1754</pre>
     "id" : 83,
     "title" : "Slot title 72",
     "startDate" : "2019-09-19T00:44:02.000Z",
-    "createdAt" : "2015-06-11T16:21:01.388Z",
-    "updatedAt" : "2015-06-11T16:21:01.388Z",
+    "createdAt" : "2015-06-15T08:50:45.737Z",
+    "updatedAt" : "2015-06-15T08:50:45.737Z",
     "deletedAt" : null,
     "endDate" : "2019-10-19T00:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 274,
       "username" : "User 268",
-      "createdAt" : "2015-06-11T16:21:01.375Z",
-      "updatedAt" : "2015-06-11T16:21:01.375Z",
+      "createdAt" : "2015-06-15T08:50:45.723Z",
+      "updatedAt" : "2015-06-15T08:50:45.723Z",
       "deletedAt" : null,
       "image" : {
         "clyid" : null,
@@ -192,9 +188,7 @@ Content-Length: 1754</pre>
       }
     },
     "notes" : [],
-    "photos" : [],
-    "voices" : [],
-    "videos" : [],
+    "media" : [],
     "settings" : {
       "alerts" : "0000000000"
     },

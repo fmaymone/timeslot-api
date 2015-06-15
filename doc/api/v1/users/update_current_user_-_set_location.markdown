@@ -58,28 +58,43 @@ Name : location
 Description : ID of users home location
 
 Name : name
-Description : Name of the IOS location (128 chars)
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
 
-Name : street
-Description : Street of IOS location (128 chars)
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
 
-Name : city
-Description : City of IOS location (128 chars)
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
 
-Name : postcode
-Description : Postcode of IOS location (32 chars)
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
 
 Name : country
-Description : Country of IOS location (64 chars)
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
 
 Name : latitude
-Description : Latitude of IOS location
+Description : Latitude
 
 Name : longitude
-Description : Longitude of IOS location
-
-Name : auid
-Description : Apple UID of the location
+Description : Longitude
 
 Name : private_location
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
@@ -167,7 +182,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Y7V5AReMK3usKb0XczdSUfA8c1g
+Authorization: Token token=CgA-BzurvMYbdCr4eRGfy_o1eOs
 Host: example.org
 Cookie: </pre>
 
@@ -189,7 +204,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Y7V5AReMK3usKb0XczdSUfA8c1g&quot; \
+	-H &quot;Authorization: Token token=CgA-BzurvMYbdCr4eRGfy_o1eOs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -200,11 +215,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5160fa9a3a7ffb15641ca8712f5230b3&quot;
+ETag: W/&quot;19160568d04ded7f25a6a00f3162b41f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1a7c9c55-eb1a-4c2d-81d0-037ac944e5ce
-X-Runtime: 0.027574
-Content-Length: 821</pre>
+X-Request-Id: 99418a00-1502-4137-ad48-e2b7669f2ef6
+X-Runtime: 0.025795
+Content-Length: 1000</pre>
 
 #### Status
 
@@ -216,16 +231,23 @@ Content-Length: 821</pre>
 {
   "id" : 236,
   "username" : "User 232",
-  "createdAt" : "2015-06-11T16:21:00.558Z",
-  "updatedAt" : "2015-06-11T16:21:00.571Z",
+  "createdAt" : "2015-06-15T08:50:44.880Z",
+  "updatedAt" : "2015-06-15T08:50:44.893Z",
   "deletedAt" : null,
   "location" : {
     "id" : 4,
     "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
+    "thoroughfare" : null,
+    "subThoroughfare" : null,
+    "locality" : null,
+    "subLocality" : null,
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : null,
+    "isoCountryCode" : null,
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
     "latitude" : null,
     "longitude" : null
   },

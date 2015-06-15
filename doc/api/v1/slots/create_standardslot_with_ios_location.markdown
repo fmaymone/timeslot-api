@@ -35,32 +35,47 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : iosLocation
+Name : location
 Description : IOS location associated with this slot
 
 Name : name
-Description : Name of the IOS location (128 chars)
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
 
-Name : street
-Description : Street of IOS location (128 chars)
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
 
-Name : city
-Description : City of IOS location (128 chars)
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
 
-Name : postcode
-Description : Postcode of IOS location (32 chars)
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
 
 Name : country
-Description : Country of IOS location (64 chars)
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
 
 Name : latitude
-Description : Latitude of IOS location
+Description : Latitude
 
 Name : longitude
-Description : Longitude of IOS location
-
-Name : auid
-Description : Apple UID of the location
+Description : Longitude
 
 Name : private_location
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
@@ -133,7 +148,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=f2zAiBdfdvN_3LLQPtKTgOPzG-I
+Authorization: Token token=7rjdgDWzaw_CebsaYFmdXJqqgEY
 Host: example.org
 Cookie: </pre>
 
@@ -160,15 +175,13 @@ Cookie: </pre>
   "settings" : {
     "alerts" : "0101010101"
   },
-  "iosLocation" : {
+  "location" : {
     "name" : "Soho House",
-    "street" : "Torstrasse 1",
-    "city" : "Berlin",
-    "postcode" : "10119",
+    "thoroughfare" : "Torstrasse 1",
+    "locality" : "Berlin",
     "country" : "Germany",
     "latitude" : "52.527335",
     "longitude" : "13.414259",
-    "auid" : 9032563782833995324,
     "private_location" : false
   },
   "visibility" : "private"
@@ -178,10 +191,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;iosLocation&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;street&quot;:&quot;Torstrasse 1&quot;,&quot;city&quot;:&quot;Berlin&quot;,&quot;postcode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;auid&quot;:9032563782833995324,&quot;private_location&quot;:false},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;private_location&quot;:false},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=f2zAiBdfdvN_3LLQPtKTgOPzG-I&quot; \
+	-H &quot;Authorization: Token token=7rjdgDWzaw_CebsaYFmdXJqqgEY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -192,11 +205,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;136b5b2ded856ea77b476fe6009d166e&quot;
+ETag: W/&quot;8401c27625e639d8d6a6a9c0828b2d4e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1c0df385-326a-4c69-a503-8871e31fed11
-X-Runtime: 0.050355
-Content-Length: 915</pre>
+X-Request-Id: ebd63ca8-4a78-4527-9772-b5368c6a6c93
+X-Runtime: 0.046797
+Content-Length: 1053</pre>
 
 #### Status
 
@@ -209,25 +222,32 @@ Content-Length: 915</pre>
   "id" : 29,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-11T16:20:53.653Z",
-  "updatedAt" : "2015-06-11T16:20:53.653Z",
+  "createdAt" : "2015-06-15T08:50:38.195Z",
+  "updatedAt" : "2015-06-15T08:50:38.195Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
     "id" : 2,
     "name" : "Soho House",
-    "street" : "Torstrasse 1",
-    "city" : "Berlin",
-    "postcode" : "10119",
-    "country" : "Germany",
+    "thoroughfare" : "Torstrasse 1",
+    "subThoroughfare" : null,
+    "locality" : "Berlin",
+    "subLocality" : null,
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : null,
+    "isoCountryCode" : null,
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
     "latitude" : 52.527335,
     "longitude" : 13.414259
   },
   "creator" : {
     "id" : 156,
     "username" : "User 153",
-    "createdAt" : "2015-06-11T16:20:53.632Z",
-    "updatedAt" : "2015-06-11T16:20:53.632Z",
+    "createdAt" : "2015-06-15T08:50:38.172Z",
+    "updatedAt" : "2015-06-15T08:50:38.172Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -239,18 +259,16 @@ Content-Length: 915</pre>
       "id" : 8,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-11T16:20:53.656Z"
+      "createdAt" : "2015-06-15T08:50:38.198Z"
     },
     {
       "id" : 9,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-11T16:20:53.658Z"
+      "createdAt" : "2015-06-15T08:50:38.200Z"
     }
   ],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0101010101"
   },
