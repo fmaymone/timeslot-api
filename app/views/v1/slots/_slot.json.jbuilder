@@ -25,9 +25,7 @@ end
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
 
-json.partial! 'v1/media/photos', media: slot.photos
-json.partial! 'v1/media/voices', media: slot.voices
-json.partial! 'v1/media/videos', media: slot.videos
+json.partial! 'v1/media/media_items', media: slot.media_items
 
 json.partial! 'v1/slots/settings', slot: slot if current_user
 

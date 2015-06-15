@@ -53,14 +53,14 @@ RSpec.describe StdSlot, type: :model do
 
   describe :update do
     let(:slot) { create(:std_slot, :with_ios_location) }
-    let(:new_location) { { ios_location: { city: 'chicago' } } }
+    let(:new_location) { { ios_location: { locality: 'chicago' } } }
 
     context "same location" do
       it "updates the location of a slot" do
         expect {
           slot.update(new_location)
         }.to change(slot.meta_slot, :ios_location)
-        expect(slot.ios_location.city).to eq 'chicago'
+        expect(slot.ios_location.locality).to eq 'chicago'
       end
     end
 
