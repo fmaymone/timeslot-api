@@ -138,19 +138,19 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=ez7zNM7pe0yLu1PXwnOKilAuYYY
+<pre>Authorization: Token token=bbvMf46P4vKxoGd82SVlwnrB2h0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groupslot/41</pre>
+<pre>DELETE /v1/groupslot/42</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/41&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=ez7zNM7pe0yLu1PXwnOKilAuYYY&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/42&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=bbvMf46P4vKxoGd82SVlwnrB2h0&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -162,11 +162,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;82583741e12c1ad5820c436296b07cdd&quot;
+ETag: W/&quot;b0645cb41de70f94e33712bf364eed59&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 030bf142-ddff-4400-b2fe-4fccfd7c0578
-X-Runtime: 0.062859
-Content-Length: 539</pre>
+X-Request-Id: cc42c968-3323-4b62-a0f8-650568dafa50
+X-Runtime: 0.052457
+Content-Length: 575</pre>
 
 #### Status
 
@@ -176,19 +176,19 @@ Content-Length: 539</pre>
 
 ```javascript
 {
-  "id" : 41,
-  "title" : "Slot title 36",
-  "startDate" : "2019-09-10T12:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.917Z",
-  "updatedAt" : "2015-06-15T08:50:39.944Z",
-  "deletedAt" : "2015-06-15T08:50:39.940Z",
-  "endDate" : "2019-10-10T12:44:02.000Z",
+  "id" : 42,
+  "title" : "Slot title 37",
+  "startDate" : "2019-09-11T13:44:02.000Z",
+  "createdAt" : "2015-06-15T11:19:15.047Z",
+  "updatedAt" : "2015-06-15T11:19:15.068Z",
+  "deletedAt" : "2015-06-15T11:19:15.066Z",
+  "endDate" : "2019-10-11T13:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 179,
-    "username" : "User 176",
-    "createdAt" : "2015-06-15T08:50:39.913Z",
-    "updatedAt" : "2015-06-15T08:50:39.913Z",
+    "id" : 181,
+    "username" : "User 178",
+    "createdAt" : "2015-06-15T11:19:15.043Z",
+    "updatedAt" : "2015-06-15T11:19:15.043Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -196,6 +196,9 @@ Content-Length: 539</pre>
     }
   },
   "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"
