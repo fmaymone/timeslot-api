@@ -159,9 +159,13 @@ module V1
                         :phone,
                         :password,
                         :image,
-                        { location: [:name, :street, :city, :postcode, :country,
-                                     :latitude, :longitude, :private_location,
-                                     :auid] },
+                        { location:
+                            [:name, :thoroughfare, :sub_thoroughfare, :locality,
+                             :sub_locality, :ocean, :administrative_area,
+                             :sub_administrative_area, :postal_code, :country,
+                             :iso_country_code, :in_land_water, :latitude,
+                             :longitude, :private_location, :areas_of_interest]
+                        },
                         :name,
                         :publicUrl,
                         :deviceToken,

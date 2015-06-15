@@ -351,19 +351,28 @@ resource "Users" do
 
     describe "Set location for User" do
       parameter :location, "ID of users home location"
-      parameter :name, "Name of the IOS location (128 chars)",
+      parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
                 scope: :location
-      parameter :street, "Street of IOS location (128 chars)",
+      parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
                 scope: :location
-      parameter :city, "City of IOS location (128 chars)",
+      parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
                 scope: :location
-      parameter :postcode, "Postcode of IOS location (32 chars)",
+      parameter :locality, "city, e.g. Berlin (255 chars)",
                 scope: :location
-      parameter :country, "Country of IOS location (64 chars)",
+      parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
                 scope: :location
-      parameter :latitude, "Latitude of IOS location", scope: :location
-      parameter :longitude, "Longitude of IOS location", scope: :location
-      parameter :auid, "Apple UID of the location", scope: :location
+      parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
+                scope: :location
+      parameter :country, "country, e.g. Germany (255 chars)",
+                scope: :location
+      parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
+                scope: :location
+      parameter :inLandWater, "e.g. Lake Tahoe", scope: :location
+      parameter :ocean, "e.g. Pacific Ocean", scope: :location
+      parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
+                scope: :location
+      parameter :latitude, "Latitude", scope: :location
+      parameter :longitude, "Longitude", scope: :location
       parameter :private_location,
                 "private location for this user (true/false) [not yet " \
                 "sure what it will mean technically] -> default: false",
@@ -456,9 +465,7 @@ resource "Users" do
         expect(json.first).to have_key("likes")
         expect(json.first).to have_key("commentsCounter")
         expect(json.first).to have_key("visibility")
-        expect(json.first).to have_key("photos")
-        expect(json.first).to have_key("voices")
-        expect(json.first).to have_key("videos")
+        expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
         expect(json.first.except('location', 'creator', 'shareUrl'))
           .to include("id" => std_slot_1.id,
@@ -474,9 +481,7 @@ resource "Users" do
                       "notes" => std_slot_1.notes,
                       "likes" => std_slot_1.likes.count,
                       "commentsCounter" => std_slot_1.comments.count,
-                      "photos" => std_slot_1.photos,
-                      "voices" => std_slot_1.voices,
-                      "videos" => std_slot_1.videos,
+                      "media" => std_slot_1.media_items,
                       "url" => v1_slot_url(std_slot_1, format: :json)
                      )
       end

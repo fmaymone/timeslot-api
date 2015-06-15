@@ -54,9 +54,7 @@ class MetaSlot < ActiveRecord::Base
       return meta_slot if meta_params[:ios_location].nil?
 
       ios_params = meta_params[:ios_location]
-      if ios_params[:auid].present?
-        ios_location = IosLocation.find_by(auid: ios_params[:auid])
-      elsif ios_params[:latitude].present? && ios_params[:longitude].present?
+      if ios_params[:latitude].present? && ios_params[:longitude].present?
         ios_location = IosLocation.where(
           latitude: ios_params[:latitude], longitude: ios_params[:longitude]).take
       end
