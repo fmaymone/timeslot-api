@@ -1,6 +1,9 @@
 #Changelog
 
 ## latest
+
+
+## v0.5.0 on t2s2-dev
 - when setting a slot location: renamed json key from iosLocation to location
 - unify slot media items in one array called 'media' instead of separate arrays
   for photo, voice and video, added item type info for every item

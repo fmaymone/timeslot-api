@@ -105,7 +105,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=wgn2gQ9lJ6xsPIJ04DY2_K41V7E
+Authorization: Token token=DwdTGYEPS3l25wKxQWwjObSmHZU
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;groupId&quot;:38,&quot;note&quot;:&quot;revolutionizing the calendar&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=wgn2gQ9lJ6xsPIJ04DY2_K41V7E&quot; \
+	-H &quot;Authorization: Token token=DwdTGYEPS3l25wKxQWwjObSmHZU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,11 +144,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d8aaa24fc3f776136096fb62c912f017&quot;
+ETag: W/&quot;012f216e782414555f255181a0032fbe&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 88a7b09a-ba33-49b2-9f47-9151a6e3b5d1
-X-Runtime: 0.040084
-Content-Length: 567</pre>
+X-Request-Id: e26588e0-c9ca-45ff-8d69-21d00e6f9bb8
+X-Runtime: 0.037104
+Content-Length: 542</pre>
 
 #### Status
 
@@ -161,16 +161,16 @@ Content-Length: 567</pre>
   "id" : 31,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-11T16:20:53.963Z",
-  "updatedAt" : "2015-06-11T16:20:53.963Z",
+  "createdAt" : "2015-06-15T08:50:38.504Z",
+  "updatedAt" : "2015-06-15T08:50:38.504Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
     "id" : 159,
     "username" : "User 156",
-    "createdAt" : "2015-06-11T16:20:53.939Z",
-    "updatedAt" : "2015-06-11T16:20:53.939Z",
+    "createdAt" : "2015-06-15T08:50:38.481Z",
+    "updatedAt" : "2015-06-15T08:50:38.481Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -178,9 +178,7 @@ Content-Length: 567</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0101010101"
   },

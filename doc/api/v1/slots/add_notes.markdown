@@ -82,7 +82,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RpXwUk1lB6_E950cUHgnNVRIeEc
+Authorization: Token token=QvL20wFFC2nEbTmM016ve6quVfQ
 Host: example.org
 Cookie: </pre>
 
@@ -111,7 +111,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/36&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RpXwUk1lB6_E950cUHgnNVRIeEc&quot; \
+	-H &quot;Authorization: Token token=QvL20wFFC2nEbTmM016ve6quVfQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,11 +122,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;95d083e8fbd2bd28f68f6ffbd2cdcaa3&quot;
+ETag: W/&quot;8dc1f7f3b107fa0a5a2831a40c50c12d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 02675878-682f-4aad-85fb-9ce0188b7c6b
-X-Runtime: 0.044030
-Content-Length: 788</pre>
+X-Request-Id: 1a498572-5c21-435d-acce-65a8d34db4d0
+X-Runtime: 0.042071
+Content-Length: 763</pre>
 
 #### Status
 
@@ -139,16 +139,16 @@ Content-Length: 788</pre>
   "id" : 36,
   "title" : "Slot title 31",
   "startDate" : "2019-09-05T07:44:02.000Z",
-  "createdAt" : "2015-06-11T16:20:54.612Z",
-  "updatedAt" : "2015-06-11T16:20:54.612Z",
+  "createdAt" : "2015-06-15T08:50:39.146Z",
+  "updatedAt" : "2015-06-15T08:50:39.146Z",
   "deletedAt" : null,
   "endDate" : "2019-10-05T07:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 169,
     "username" : "User 166",
-    "createdAt" : "2015-06-11T16:20:54.607Z",
-    "updatedAt" : "2015-06-11T16:20:54.607Z",
+    "createdAt" : "2015-06-15T08:50:39.142Z",
+    "updatedAt" : "2015-06-15T08:50:39.142Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -160,18 +160,16 @@ Content-Length: 788</pre>
       "id" : 10,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-11T16:20:54.627Z"
+      "createdAt" : "2015-06-15T08:50:39.161Z"
     },
     {
       "id" : 11,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-11T16:20:54.630Z"
+      "createdAt" : "2015-06-15T08:50:39.163Z"
     }
   ],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0000000000"
   },

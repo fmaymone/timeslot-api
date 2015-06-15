@@ -138,7 +138,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=-eI37jgTMgTYSBaZuWgfJA0kd94
+<pre>Authorization: Token token=ez7zNM7pe0yLu1PXwnOKilAuYYY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -150,7 +150,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/41&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=-eI37jgTMgTYSBaZuWgfJA0kd94&quot; \
+	-H &quot;Authorization: Token token=ez7zNM7pe0yLu1PXwnOKilAuYYY&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -162,11 +162,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;665eff08ece0ce4f5f925284300aa0c1&quot;
+ETag: W/&quot;82583741e12c1ad5820c436296b07cdd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1d4967d0-3f78-40eb-8aaf-280f38514636
-X-Runtime: 0.064200
-Content-Length: 564</pre>
+X-Request-Id: 030bf142-ddff-4400-b2fe-4fccfd7c0578
+X-Runtime: 0.062859
+Content-Length: 539</pre>
 
 #### Status
 
@@ -179,16 +179,16 @@ Content-Length: 564</pre>
   "id" : 41,
   "title" : "Slot title 36",
   "startDate" : "2019-09-10T12:44:02.000Z",
-  "createdAt" : "2015-06-11T16:20:55.390Z",
-  "updatedAt" : "2015-06-11T16:20:55.417Z",
-  "deletedAt" : "2015-06-11T16:20:55.415Z",
+  "createdAt" : "2015-06-15T08:50:39.917Z",
+  "updatedAt" : "2015-06-15T08:50:39.944Z",
+  "deletedAt" : "2015-06-15T08:50:39.940Z",
   "endDate" : "2019-10-10T12:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 179,
     "username" : "User 176",
-    "createdAt" : "2015-06-11T16:20:55.384Z",
-    "updatedAt" : "2015-06-11T16:20:55.384Z",
+    "createdAt" : "2015-06-15T08:50:39.913Z",
+    "updatedAt" : "2015-06-15T08:50:39.913Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -196,9 +196,7 @@ Content-Length: 564</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0000000000"
   },

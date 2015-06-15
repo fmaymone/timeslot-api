@@ -35,32 +35,47 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : iosLocation
+Name : location
 Description : IOS location associated with this slot
 
 Name : name
-Description : Name of the IOS location (128 chars)
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
 
-Name : street
-Description : Street of IOS location (128 chars)
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
 
-Name : city
-Description : City of IOS location (128 chars)
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
 
-Name : postcode
-Description : Postcode of IOS location (32 chars)
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
 
 Name : country
-Description : Country of IOS location (64 chars)
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
 
 Name : latitude
-Description : Latitude of IOS location
+Description : Latitude
 
 Name : longitude
-Description : Longitude of IOS location
-
-Name : auid
-Description : Apple UID of the location
+Description : Longitude
 
 Name : private_location
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
@@ -133,7 +148,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=N98ReYc2DP0Cv8IyOwgwaI2mp44
+Authorization: Token token=jyUAh5udkPHeB7PRolst2suurqE
 Host: example.org
 Cookie: </pre>
 
@@ -170,7 +185,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=N98ReYc2DP0Cv8IyOwgwaI2mp44&quot; \
+	-H &quot;Authorization: Token token=jyUAh5udkPHeB7PRolst2suurqE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -181,11 +196,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;888ad80127b0f89cfffe3c76d1b13098&quot;
+ETag: W/&quot;26682c616d415112db5bd55e29863aa3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5e0c537e-6786-4496-bc61-a41885c139ad
-X-Runtime: 0.042291
-Content-Length: 747</pre>
+X-Request-Id: a4985d05-9113-420b-b8df-5f3d417d89af
+X-Runtime: 0.040145
+Content-Length: 722</pre>
 
 #### Status
 
@@ -198,16 +213,16 @@ Content-Length: 747</pre>
   "id" : 28,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-11T16:20:53.526Z",
-  "updatedAt" : "2015-06-11T16:20:53.526Z",
+  "createdAt" : "2015-06-15T08:50:38.066Z",
+  "updatedAt" : "2015-06-15T08:50:38.066Z",
   "deletedAt" : null,
   "endDate" : null,
   "location" : null,
   "creator" : {
     "id" : 155,
     "username" : "User 152",
-    "createdAt" : "2015-06-11T16:20:53.511Z",
-    "updatedAt" : "2015-06-11T16:20:53.511Z",
+    "createdAt" : "2015-06-15T08:50:38.050Z",
+    "updatedAt" : "2015-06-15T08:50:38.050Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -219,18 +234,16 @@ Content-Length: 747</pre>
       "id" : 6,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-11T16:20:53.529Z"
+      "createdAt" : "2015-06-15T08:50:38.069Z"
     },
     {
       "id" : 7,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-11T16:20:53.532Z"
+      "createdAt" : "2015-06-15T08:50:38.072Z"
     }
   ],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0101010101"
   },
