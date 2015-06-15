@@ -88,13 +88,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=qdc0Jg3fLjH1DrjW1PfVvt78hGI
+Authorization: Token token=q-qyznixIJODIi9Fy3gTGegUREg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/59/move</pre>
+<pre>POST /v1/slots/60/move</pre>
 
 #### Body
 ```javascript
@@ -107,9 +107,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/59/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/60/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=qdc0Jg3fLjH1DrjW1PfVvt78hGI&quot; \
+	-H &quot;Authorization: Token token=q-qyznixIJODIi9Fy3gTGegUREg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,11 +120,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7163396980bd96a3985b16721a8e7a07&quot;
+ETag: W/&quot;9f458d26ec67da07a28c1c7520212983&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7a85a6ca-5f03-49b0-a6a9-3f5392473f52
-X-Runtime: 0.076434
-Content-Length: 809</pre>
+X-Request-Id: 73f19771-f35b-45d0-8df0-2808e30b115d
+X-Runtime: 0.067050
+Content-Length: 1072</pre>
 
 #### Status
 
@@ -134,19 +134,19 @@ Content-Length: 809</pre>
 
 ```javascript
 {
-  "id" : 60,
-  "title" : "Slot title 49",
-  "startDate" : "2019-09-23T01:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:41.199Z",
-  "updatedAt" : "2015-06-15T08:50:41.199Z",
+  "id" : 61,
+  "title" : "Slot title 50",
+  "startDate" : "2019-09-24T02:44:02.000Z",
+  "createdAt" : "2015-06-15T11:19:15.622Z",
+  "updatedAt" : "2015-06-15T11:19:15.622Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-23T01:44:02.000Z",
+  "endDate" : "2019-10-24T02:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 224,
-    "username" : "User 221",
-    "createdAt" : "2015-06-15T08:50:41.174Z",
-    "updatedAt" : "2015-06-15T08:50:41.174Z",
+    "id" : 226,
+    "username" : "User 223",
+    "createdAt" : "2015-06-15T11:19:15.603Z",
+    "updatedAt" : "2015-06-15T11:19:15.603Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -154,6 +154,28 @@ Content-Length: 809</pre>
     }
   },
   "notes" : [],
+  "photos" : [
+    {
+      "mediaId" : 46,
+      "clyid" : "dfhjghjkdisudgfds7iy39",
+      "position" : 0,
+      "localId" : null
+    },
+    {
+      "mediaId" : 47,
+      "clyid" : "dfhjghjkdisudgfds7iy40",
+      "position" : 1,
+      "localId" : null
+    },
+    {
+      "mediaId" : 48,
+      "clyid" : "dfhjghjkdisudgfds7iy41",
+      "position" : 2,
+      "localId" : null
+    }
+  ],
+  "voices" : [],
+  "videos" : [],
   "media" : [
     {
       "mediaId" : 48,

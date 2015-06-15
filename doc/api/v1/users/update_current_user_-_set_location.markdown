@@ -182,7 +182,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=CgA-BzurvMYbdCr4eRGfy_o1eOs
+Authorization: Token token=RDOgXXaG-c9PqalwbfX9meVeqcw
 Host: example.org
 Cookie: </pre>
 
@@ -204,7 +204,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=CgA-BzurvMYbdCr4eRGfy_o1eOs&quot; \
+	-H &quot;Authorization: Token token=RDOgXXaG-c9PqalwbfX9meVeqcw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -215,11 +215,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;19160568d04ded7f25a6a00f3162b41f&quot;
+ETag: W/&quot;a7185416457c26ed8c991ea689e3502d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 99418a00-1502-4137-ad48-e2b7669f2ef6
-X-Runtime: 0.025795
-Content-Length: 1000</pre>
+X-Request-Id: fa2a9182-2a80-449e-838a-096929a0e648
+X-Runtime: 0.025457
+Content-Length: 1039</pre>
 
 #### Status
 
@@ -229,13 +229,13 @@ Content-Length: 1000</pre>
 
 ```javascript
 {
-  "id" : 236,
-  "username" : "User 232",
-  "createdAt" : "2015-06-15T08:50:44.880Z",
-  "updatedAt" : "2015-06-15T08:50:44.893Z",
+  "id" : 238,
+  "username" : "User 234",
+  "createdAt" : "2015-06-15T11:19:16.086Z",
+  "updatedAt" : "2015-06-15T11:19:16.095Z",
   "deletedAt" : null,
   "location" : {
-    "id" : 4,
+    "id" : 5,
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -244,12 +244,14 @@ Content-Length: 1000</pre>
     "administrativeArea" : null,
     "subAdministrativeArea" : null,
     "postalCode" : null,
+    "country" : null,
     "isoCountryCode" : null,
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : null,
-    "longitude" : null
+    "longitude" : null,
+    "privateLocation" : false
   },
   "image" : {
     "clyid" : null,
@@ -258,7 +260,7 @@ Content-Length: 1000</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user68@email.com",
+  "email" : "user69@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

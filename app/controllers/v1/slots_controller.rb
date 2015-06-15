@@ -288,11 +288,11 @@ module V1
 
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
                         location:
-                          [:name, :thoroughfare, :sub_thoroughfare,
-                           :locality, :sub_locality, :administrative_area,
-                           :sub_administrative_area, :postal_code, :country,
-                           :iso_country_code, :in_land_water, :ocean, :latitude,
-                           :longitude, :private_location, :areas_of_interest])
+                          [:name, :thoroughfare, :subThoroughfare,
+                           :locality, :subLocality, :administrativeArea,
+                           :subAdministrativeArea, :postalCode, :country,
+                           :isoCountryCode, :inLandWater, :ocean, :latitude,
+                           :longitude, :privateLocation, :areasOfInterest])
       p[:iosLocation] = p.delete(:location) if params[:location].present?
       p.deep_transform_keys!(&:underscore)
       p.deep_symbolize_keys

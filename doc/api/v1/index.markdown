@@ -47,6 +47,7 @@
 * [Add notes](slots/add_notes.markdown)
 * [Add photo(s)](slots/add_photo(s).markdown)
 * [Reorder media items](slots/reorder_media_items.markdown)
+* [Update location of StandardSlot](slots/update_location_of_standardslot.markdown)
 * [Delete StandardSlot](slots/delete_standardslot.markdown)
 * [Delete GroupSlot](slots/delete_groupslot.markdown)
 * [Delete ReSlot](slots/delete_reslot.markdown)
@@ -77,4 +78,3 @@
 * [Get slots of current users friends](users/get_slots_of_current_users_friends.markdown)
 * [Add Friends - Request Friendship / Accept Friend Request](users/add_friends_-_request_friendship__accept_friend_request.markdown)
 * [Remove Friends - Unfriending / Refuse Friend Requests](users/remove_friends_-_unfriending__refuse_friend_requests.markdown)
-

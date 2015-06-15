@@ -17,6 +17,72 @@ returns 200 and slot details on success
 Name : id *- required -*
 Description : ID of the slot to update
 
+Name : title *- required -*
+Description : Title of slot (max. 60 characters)
+
+Name : startDate *- required -*
+Description : Startdate and Time of the Slot
+
+Name : endDate *- required -*
+Description : Enddate and Time of the Slot (startdate + duration)
+
+Name : locationId
+Description : ID of the location associated with this slot
+
+Name : notes
+Description : Notes for to the Slot
+
+Name : settings
+Description : User specific settings for the slot (alerts)
+
+Name : alerts
+Description : Alerts for the Slot
+
+Name : location
+Description : IOS location associated with this slot
+
+Name : name
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
+
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
+
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
+
+Name : country
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
+
+Name : latitude
+Description : Latitude
+
+Name : longitude
+Description : Longitude
+
+Name : privateLocation
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
 Name : photos *- required -*
 Description : Array with mediaIds and position parameter
 
@@ -90,7 +156,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=qkzdZoCRIjlUuu8KTFO_r6fwjx0
+Authorization: Token token=vjqBO-2z0J93vltfRhqAMtvQuJ8
 Host: example.org
 Cookie: </pre>
 
@@ -123,7 +189,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;photos&quot;:[{&quot;mediaId&quot;:32,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=qkzdZoCRIjlUuu8KTFO_r6fwjx0&quot; \
+	-H &quot;Authorization: Token token=vjqBO-2z0J93vltfRhqAMtvQuJ8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -134,11 +200,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9b96d5192ab59bd98c8f6b695ca29067&quot;
+ETag: W/&quot;042f7d55230dbfed46d0e66e62673844&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 24f8f134-e2e2-49b0-9e1b-83f3493b802a
-X-Runtime: 0.049251
-Content-Length: 809</pre>
+X-Request-Id: 9f1d5eff-24b7-4e6d-b352-410213033154
+X-Runtime: 0.056184
+Content-Length: 1072</pre>
 
 #### Status
 
@@ -151,16 +217,16 @@ Content-Length: 809</pre>
   "id" : 38,
   "title" : "Slot title 33",
   "startDate" : "2019-09-07T09:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.409Z",
-  "updatedAt" : "2015-06-15T08:50:39.409Z",
+  "createdAt" : "2015-06-15T11:19:14.611Z",
+  "updatedAt" : "2015-06-15T11:19:14.611Z",
   "deletedAt" : null,
   "endDate" : "2019-10-07T09:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 173,
     "username" : "User 170",
-    "createdAt" : "2015-06-15T08:50:39.404Z",
-    "updatedAt" : "2015-06-15T08:50:39.404Z",
+    "createdAt" : "2015-06-15T11:19:14.607Z",
+    "updatedAt" : "2015-06-15T11:19:14.607Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -168,6 +234,28 @@ Content-Length: 809</pre>
     }
   },
   "notes" : [],
+  "photos" : [
+    {
+      "mediaId" : 33,
+      "clyid" : "dfhjghjkdisudgfds7iy29",
+      "position" : 0,
+      "localId" : null
+    },
+    {
+      "mediaId" : 34,
+      "clyid" : "dfhjghjkdisudgfds7iy30",
+      "position" : 1,
+      "localId" : null
+    },
+    {
+      "mediaId" : 32,
+      "clyid" : "dfhjghjkdisudgfds7iy28",
+      "position" : 2,
+      "localId" : null
+    }
+  ],
+  "voices" : [],
+  "videos" : [],
   "media" : [
     {
       "mediaId" : 34,
