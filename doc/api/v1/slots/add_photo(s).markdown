@@ -118,7 +118,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=PCcScNfkPCI61fpLNmDSw0sMBEY
+Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE
 Host: example.org
 Cookie: </pre>
 
@@ -144,7 +144,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=PCcScNfkPCI61fpLNmDSw0sMBEY&quot; \
+	-H &quot;Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -155,11 +155,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;570bd86ce477e03df4d1b423ae79b2d7&quot;
+ETag: W/&quot;d76013dcefe47e658d984ac9b266aea6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a4a2dafd-4a0d-4213-b0d6-0d14bf4be918
-X-Runtime: 0.042835
-Content-Length: 675</pre>
+X-Request-Id: d1c002b0-e925-4b1d-a636-e60f6c3a824d
+X-Runtime: 0.038081
+Content-Length: 670</pre>
 
 #### Status
 
@@ -172,16 +172,16 @@ Content-Length: 675</pre>
   "id" : 37,
   "title" : "Slot title 32",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-06-11T16:20:54.743Z",
-  "updatedAt" : "2015-06-11T16:20:54.743Z",
+  "createdAt" : "2015-06-15T08:50:39.280Z",
+  "updatedAt" : "2015-06-15T08:50:39.280Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 171,
     "username" : "User 168",
-    "createdAt" : "2015-06-11T16:20:54.739Z",
-    "updatedAt" : "2015-06-11T16:20:54.739Z",
+    "createdAt" : "2015-06-15T08:50:39.275Z",
+    "updatedAt" : "2015-06-15T08:50:39.275Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -189,16 +189,15 @@ Content-Length: 675</pre>
     }
   },
   "notes" : [],
-  "photos" : [
+  "media" : [
     {
       "mediaId" : 31,
       "clyid" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : 1,
-      "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+      "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
+      "mediaType" : "photo"
     }
   ],
-  "voices" : [],
-  "videos" : [],
   "settings" : {
     "alerts" : "0000000000"
   },

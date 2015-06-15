@@ -132,7 +132,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=MazLBS3xmFdT_VPXP3V3OjaxV_I
+<pre>Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -144,7 +144,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=MazLBS3xmFdT_VPXP3V3OjaxV_I&quot; \
+	-H &quot;Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -156,11 +156,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a1626a88ff98d99780c540c76c17a5ce&quot;
+ETag: W/&quot;e1ea5f8175a2a8175abe2bfeb72017c2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7efc7624-cdaa-4d7b-a797-bfb42cce8bd6
-X-Runtime: 0.166427
-Content-Length: 569</pre>
+X-Request-Id: 22dd8ec5-d432-4861-bdbf-e34fa19e176d
+X-Runtime: 0.142817
+Content-Length: 831</pre>
 
 #### Status
 
@@ -173,16 +173,16 @@ Content-Length: 569</pre>
   "id" : 39,
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-11T16:20:55.019Z",
-  "updatedAt" : "2015-06-11T16:20:55.153Z",
-  "deletedAt" : "2015-06-11T16:20:55.151Z",
+  "createdAt" : "2015-06-15T08:50:39.554Z",
+  "updatedAt" : "2015-06-15T08:50:39.671Z",
+  "deletedAt" : "2015-06-15T08:50:39.669Z",
   "endDate" : "2019-10-08T10:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 175,
     "username" : "User 172",
-    "createdAt" : "2015-06-11T16:20:55.014Z",
-    "updatedAt" : "2015-06-11T16:20:55.014Z",
+    "createdAt" : "2015-06-15T08:50:39.549Z",
+    "updatedAt" : "2015-06-15T08:50:39.549Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -190,9 +190,29 @@ Content-Length: 569</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [
+    {
+      "mediaId" : 37,
+      "clyid" : "dfhjghjkdisudgfds7iy33",
+      "position" : 2,
+      "localId" : null,
+      "mediaType" : "photo"
+    },
+    {
+      "mediaId" : 36,
+      "clyid" : "dfhjghjkdisudgfds7iy32",
+      "position" : 1,
+      "localId" : null,
+      "mediaType" : "photo"
+    },
+    {
+      "mediaId" : 35,
+      "clyid" : "dfhjghjkdisudgfds7iy31",
+      "position" : 0,
+      "localId" : null,
+      "mediaType" : "photo"
+    }
+  ],
   "settings" : {
     "alerts" : "0000000000"
   },

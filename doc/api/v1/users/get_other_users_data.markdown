@@ -51,7 +51,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=w1QusUtnvLbHaTG1Wy_PQKid_X4
+Authorization: Token token=QN_ZJTLWfHcholUHSeWAaGMyRi8
 Host: example.org
 Cookie: </pre>
 
@@ -63,7 +63,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/227&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=w1QusUtnvLbHaTG1Wy_PQKid_X4&quot; \
+	-H &quot;Authorization: Token token=QN_ZJTLWfHcholUHSeWAaGMyRi8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -74,11 +74,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c4ae791a1ce0c0925b32a2454ec7bb01&quot;
+ETag: W/&quot;f3b07f1b1f0d3fe2d7c88b04902f70b6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cbcc81d6-4132-4003-9e6b-ce686bdce4ad
-X-Runtime: 0.037707
-Content-Length: 337</pre>
+X-Request-Id: 62adda88-a9a1-4348-ac67-e0ad525b39ea
+X-Runtime: 0.017616
+Content-Length: 516</pre>
 
 #### Status
 
@@ -90,16 +90,23 @@ Content-Length: 337</pre>
 {
   "id" : 227,
   "username" : "User 223",
-  "createdAt" : "2015-06-11T16:20:56.896Z",
-  "updatedAt" : "2015-06-11T16:20:56.896Z",
+  "createdAt" : "2015-06-15T08:50:41.390Z",
+  "updatedAt" : "2015-06-15T08:50:41.390Z",
   "deletedAt" : null,
   "location" : {
     "id" : 3,
     "name" : "Acapulco",
-    "street" : "",
-    "city" : "",
-    "postcode" : "",
-    "country" : "",
+    "thoroughfare" : null,
+    "subThoroughfare" : null,
+    "locality" : null,
+    "subLocality" : null,
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : null,
+    "isoCountryCode" : null,
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
     "latitude" : 51.234,
     "longitude" : -11.993
   },

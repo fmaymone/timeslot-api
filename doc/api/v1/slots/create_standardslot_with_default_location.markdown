@@ -35,32 +35,47 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : iosLocation
+Name : location
 Description : IOS location associated with this slot
 
 Name : name
-Description : Name of the IOS location (128 chars)
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
 
-Name : street
-Description : Street of IOS location (128 chars)
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
 
-Name : city
-Description : City of IOS location (128 chars)
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
 
-Name : postcode
-Description : Postcode of IOS location (32 chars)
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
 
 Name : country
-Description : Country of IOS location (64 chars)
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
 
 Name : latitude
-Description : Latitude of IOS location
+Description : Latitude
 
 Name : longitude
-Description : Longitude of IOS location
-
-Name : auid
-Description : Apple UID of the location
+Description : Longitude
 
 Name : private_location
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
@@ -133,7 +148,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=RSa9De_m02_oc0xf7jlDRyHT1I4
+Authorization: Token token=XOaWCizv0PIWJbFz7CCVCHB8Mjk
 Host: example.org
 Cookie: </pre>
 
@@ -171,7 +186,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;locationId&quot;:200719253,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=RSa9De_m02_oc0xf7jlDRyHT1I4&quot; \
+	-H &quot;Authorization: Token token=XOaWCizv0PIWJbFz7CCVCHB8Mjk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -182,11 +197,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a2b27627aeec91d935baa3eb1454a6d6&quot;
+ETag: W/&quot;6bdbd7183251eb726d2ce46b06dcde20&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 90062915-4520-4735-8fbe-a6d42d7ed45a
-X-Runtime: 0.075997
-Content-Length: 769</pre>
+X-Request-Id: 610c1b2a-1733-4443-bd97-36bcf3645a10
+X-Runtime: 0.045050
+Content-Length: 744</pre>
 
 #### Status
 
@@ -199,16 +214,16 @@ Content-Length: 769</pre>
   "id" : 27,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-11T16:20:53.383Z",
-  "updatedAt" : "2015-06-11T16:20:53.383Z",
+  "createdAt" : "2015-06-15T08:50:37.935Z",
+  "updatedAt" : "2015-06-15T08:50:37.935Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
     "id" : 154,
     "username" : "User 151",
-    "createdAt" : "2015-06-11T16:20:53.357Z",
-    "updatedAt" : "2015-06-11T16:20:53.357Z",
+    "createdAt" : "2015-06-15T08:50:37.921Z",
+    "updatedAt" : "2015-06-15T08:50:37.921Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -220,18 +235,16 @@ Content-Length: 769</pre>
       "id" : 4,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-11T16:20:53.393Z"
+      "createdAt" : "2015-06-15T08:50:37.938Z"
     },
     {
       "id" : 5,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-11T16:20:53.397Z"
+      "createdAt" : "2015-06-15T08:50:37.940Z"
     }
   ],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
+  "media" : [],
   "settings" : {
     "alerts" : "0101010101"
   },
