@@ -9,6 +9,72 @@
 Name : id *- required -*
 Description : ID of the slot to update
 
+Name : title *- required -*
+Description : Title of slot (max. 60 characters)
+
+Name : startDate *- required -*
+Description : Startdate and Time of the Slot
+
+Name : endDate *- required -*
+Description : Enddate and Time of the Slot (startdate + duration)
+
+Name : locationId
+Description : ID of the location associated with this slot
+
+Name : notes
+Description : Notes for to the Slot
+
+Name : settings
+Description : User specific settings for the slot (alerts)
+
+Name : alerts
+Description : Alerts for the Slot
+
+Name : location
+Description : IOS location associated with this slot
+
+Name : name
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
+
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
+
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
+
+Name : country
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
+
+Name : latitude
+Description : Latitude
+
+Name : longitude
+Description : Longitude
+
+Name : privateLocation
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
 Name : notes *- required -*
 Description : Scope for new notes
 
@@ -82,7 +148,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=QvL20wFFC2nEbTmM016ve6quVfQ
+Authorization: Token token=cAeyTFhQkwYGXFTR07O47Ms5RC0
 Host: example.org
 Cookie: </pre>
 
@@ -111,7 +177,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/36&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=QvL20wFFC2nEbTmM016ve6quVfQ&quot; \
+	-H &quot;Authorization: Token token=cAeyTFhQkwYGXFTR07O47Ms5RC0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,11 +188,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8dc1f7f3b107fa0a5a2831a40c50c12d&quot;
+ETag: W/&quot;2ac3d045eb77058b5733f87937503deb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1a498572-5c21-435d-acce-65a8d34db4d0
-X-Runtime: 0.042071
-Content-Length: 763</pre>
+X-Request-Id: 63dc057e-3a4e-4c23-b8f7-cc4c86ea4dd9
+X-Runtime: 0.035083
+Content-Length: 799</pre>
 
 #### Status
 
@@ -139,16 +205,16 @@ Content-Length: 763</pre>
   "id" : 36,
   "title" : "Slot title 31",
   "startDate" : "2019-09-05T07:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.146Z",
-  "updatedAt" : "2015-06-15T08:50:39.146Z",
+  "createdAt" : "2015-06-15T11:19:14.496Z",
+  "updatedAt" : "2015-06-15T11:19:14.496Z",
   "deletedAt" : null,
   "endDate" : "2019-10-05T07:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 169,
     "username" : "User 166",
-    "createdAt" : "2015-06-15T08:50:39.142Z",
-    "updatedAt" : "2015-06-15T08:50:39.142Z",
+    "createdAt" : "2015-06-15T11:19:14.492Z",
+    "updatedAt" : "2015-06-15T11:19:14.492Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -160,15 +226,18 @@ Content-Length: 763</pre>
       "id" : 10,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-15T08:50:39.161Z"
+      "createdAt" : "2015-06-15T11:19:14.506Z"
     },
     {
       "id" : 11,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-15T08:50:39.163Z"
+      "createdAt" : "2015-06-15T11:19:14.509Z"
     }
   ],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"

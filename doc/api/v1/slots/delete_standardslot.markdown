@@ -132,19 +132,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0
+<pre>Authorization: Token token=CtRaw57H-7wpmnGKxiUj3OzrYss
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/stdslot/39</pre>
+<pre>DELETE /v1/stdslot/40</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/40&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=CtRaw57H-7wpmnGKxiUj3OzrYss&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -156,11 +156,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e1ea5f8175a2a8175abe2bfeb72017c2&quot;
+ETag: W/&quot;8ca5ccceae0dfe3c9f8ec3b6b68ae4d8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 22dd8ec5-d432-4861-bdbf-e34fa19e176d
-X-Runtime: 0.142817
-Content-Length: 831</pre>
+X-Request-Id: f890a1b9-9adb-410b-a946-578ba769065f
+X-Runtime: 0.181770
+Content-Length: 867</pre>
 
 #### Status
 
@@ -170,19 +170,19 @@ Content-Length: 831</pre>
 
 ```javascript
 {
-  "id" : 39,
-  "title" : "Slot title 34",
-  "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.554Z",
-  "updatedAt" : "2015-06-15T08:50:39.671Z",
-  "deletedAt" : "2015-06-15T08:50:39.669Z",
-  "endDate" : "2019-10-08T10:44:02.000Z",
+  "id" : 40,
+  "title" : "Slot title 35",
+  "startDate" : "2019-09-09T11:44:02.000Z",
+  "createdAt" : "2015-06-15T11:19:14.751Z",
+  "updatedAt" : "2015-06-15T11:19:14.908Z",
+  "deletedAt" : "2015-06-15T11:19:14.906Z",
+  "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 175,
-    "username" : "User 172",
-    "createdAt" : "2015-06-15T08:50:39.549Z",
-    "updatedAt" : "2015-06-15T08:50:39.549Z",
+    "id" : 177,
+    "username" : "User 174",
+    "createdAt" : "2015-06-15T11:19:14.747Z",
+    "updatedAt" : "2015-06-15T11:19:14.747Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -190,6 +190,9 @@ Content-Length: 831</pre>
     }
   },
   "notes" : [],
+  "photos" : [],
+  "voices" : [],
+  "videos" : [],
   "media" : [
     {
       "mediaId" : 37,

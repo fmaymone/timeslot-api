@@ -1,18 +1,16 @@
 # Slots API
 
-## Update StdSlot
+## Update location of StandardSlot
 
 ### PATCH /v1/stdslot/:id
 
-Update content of StdSlot.
+Returns data of new slot.
 
-User must be owner of StdSlot.
-
-returns 200 and slot data if update succeded 
-
-returns 404 if User not owner or ID is invalid
+Missing unrequiered fields will be filled with default values.
 
 returns 422 if parameters are invalid
+
+returns 422 if required parameters are missing
 
 ### Parameters
 
@@ -85,21 +83,6 @@ Description : Longitude
 Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
-Name : title
-Description : Updated title of slot
-
-Name : startDate
-Description : Updated Startdate and Time of the Slot
-
-Name : endDate
-Description : Updated Enddate and Time of the Slot (startdate + duration)
-
-Name : locationId
-Description : Location ID
-
-Name : visibility
-Description : Visibility of slot
-
 
 ### Response Fields
 
@@ -164,27 +147,39 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=o89qxhkWqRKhQCNn0tWvWbeh4Zs
+Authorization: Token token=wjHzuD-x1HMYTGYyenYwSDD4_zQ
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/35</pre>
+<pre>PATCH /v1/stdslot/39</pre>
 
 #### Body
 ```javascript
 {
-  "title" : "New title for a Slot"
+  "location" : {
+    "name" : "Soho House",
+    "thoroughfare" : "Torstrasse 1",
+    "subThoroughfare" : "1",
+    "locality" : "Berlin",
+    "subLocality" : "Mitte",
+    "postalCode" : "10119",
+    "country" : "Germany",
+    "isoCountryCode" : "GER",
+    "latitude" : "52.527335",
+    "longitude" : "13.414259",
+    "privateLocation" : true
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=o89qxhkWqRKhQCNn0tWvWbeh4Zs&quot; \
+	-H &quot;Authorization: Token token=wjHzuD-x1HMYTGYyenYwSDD4_zQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -195,11 +190,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;420f5a227955eebf3099125d1dc11c82&quot;
+ETag: W/&quot;6728e1f28a0034c078afa27cebbee575&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 10eec6d8-7113-4822-ba1b-c2ab02fc87cf
-X-Runtime: 0.034140
-Content-Length: 565</pre>
+X-Request-Id: 33072607-fceb-4bbe-a4e7-10d039f4fcdd
+X-Runtime: 0.035476
+Content-Length: 916</pre>
 
 #### Status
 
@@ -209,19 +204,37 @@ Content-Length: 565</pre>
 
 ```javascript
 {
-  "id" : 35,
-  "title" : "New title for a Slot",
-  "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:14.444Z",
-  "updatedAt" : "2015-06-15T11:19:14.444Z",
+  "id" : 39,
+  "title" : "Slot title 34",
+  "startDate" : "2019-09-08T10:44:02.000Z",
+  "createdAt" : "2015-06-15T11:19:14.694Z",
+  "updatedAt" : "2015-06-15T11:19:14.694Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T06:44:02.000Z",
-  "location" : null,
+  "endDate" : "2019-10-08T10:44:02.000Z",
+  "location" : {
+    "id" : 3,
+    "name" : "Soho House",
+    "thoroughfare" : "Torstrasse 1",
+    "subThoroughfare" : "1",
+    "locality" : "Berlin",
+    "subLocality" : "Mitte",
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : "10119",
+    "country" : "Germany",
+    "isoCountryCode" : "GER",
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
+    "latitude" : 52.527335,
+    "longitude" : 13.414259,
+    "privateLocation" : true
+  },
   "creator" : {
-    "id" : 167,
-    "username" : "User 164",
-    "createdAt" : "2015-06-15T11:19:14.440Z",
-    "updatedAt" : "2015-06-15T11:19:14.440Z",
+    "id" : 175,
+    "username" : "User 172",
+    "createdAt" : "2015-06-15T11:19:14.689Z",
+    "updatedAt" : "2015-06-15T11:19:14.689Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
