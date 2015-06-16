@@ -307,11 +307,15 @@ module V1
     end
 
     private def media_params
-      media_params = [:publicId, :position, :mediaId, :localId]
-      voice_params = [media_params, :duration].flatten
-      video_params = [media_params, :duration, :thumbnail].flatten
-      params.permit(photos: media_params, voices: voice_params,
-                    videos: video_params)
+      p = params.permit(media: [:publicId,
+                                :position,
+                                :mediaId,
+                                :localId,
+                                :mediaType,
+                                :duration,
+                                :thumbnail])
+      p.deep_transform_keys!(&:underscore)
+      p.deep_symbolize_keys[:media]
     end
 
     private def comment_param

@@ -646,14 +646,16 @@ resource "Slots" do
     end
 
     describe "Add Media to existing slot" do
-      parameter :photos, "array of new photos"
-      parameter :voices, "array of new audio recordings"
-      parameter :videos, "array of new videos"
+      parameter :media, "array of new media items"
+      parameter :mediaType, "one of photo/video/voice",
+                required: true, scope: :media
       parameter :publicId, "Cloudinary ID / URL",
-                required: true, scope: :photos
+                required: true, scope: :media
+      parameter :localId, "iOS local ID",
+                scope: :media
       parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
-                scope: :photos
+                scope: :media
       parameter :localId, "IOS specific local identifier for media item"
       parameter :duration, "only for video and voice items"
       parameter :thumbnail, "public URL for video thumbnail"
@@ -664,9 +666,10 @@ resource "Slots" do
       response_field :duration, "Duration of audio/video file"
       response_field :thumbnail, "Clouinary public URL of the video thumbnail"
 
-      let(:photos) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
-                      position: "1",
-                      localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
+      let(:media) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
+                     position: "1",
+                     mediaType: 'photo',
+                     localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
 
       example "Add photo(s)", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -679,10 +682,13 @@ resource "Slots" do
 
         std_slot.reload
         expect(std_slot.photos.size).to eq 1
+        expect(std_slot.photos.first.public_id)
+          .to eq "v1234567/dfhjghjkdisudgfds7sly.jpg"
         expect(response_status).to eq(200)
         expect(json).to have_key("media")
         expect(*json['media']).to have_key("mediaId")
         expect(*json['media']).to have_key("clyid")
+        expect(*json['media']).to have_key("mediaType")
         expect(*json['media']).to have_key("localId")
         expect(response_body).to include "v1234567/dfhjghjkdisudgfds7sly.jpg"
         expect(response_body)
@@ -691,25 +697,28 @@ resource "Slots" do
     end
 
     describe "Reordering media data of existing slot" do
-      parameter :photos, "Array with mediaIds and position parameter",
+      parameter :media, "Array with mediaIds and position parameter",
                 required: true
       parameter :mediaId, "Timeslot's internal ID for this media item",
-                required: true, scope: :photos
+                required: true, scope: :media
       parameter :position, "Sorting order of the image/video/voice. If not " \
                            "supplied the media items will be sortet as they" \
                            " are ordered in the array.",
-                required: true, scope: :photos
+                required: true, scope: :media
 
       let!(:photo_1) { create(:slot_image, mediable: std_slot, position: 0) }
       let!(:photo_2) { create(:slot_image, mediable: std_slot, position: 1) }
       let!(:photo_3) { create(:slot_image, mediable: std_slot, position: 2) }
 
-      let(:photos) { [{ mediaId: photo_1.id,
-                        position: 2 },
-                      { mediaId: photo_2.id,
-                        position: 0 },
-                      { mediaId: photo_3.id,
-                        position: 1 }] }
+      let(:media) { [{ mediaId: photo_1.id,
+                       mediaType: 'photo',
+                       position: 2 },
+                     { mediaId: photo_2.id,
+                       mediaType: 'photo',
+                       position: 0 },
+                     { mediaId: photo_3.id,
+                       mediaType: 'photo',
+                       position: 1 }] }
 
       example "Reorder media items", document: :v1 do
         explanation "An array with the media_item keys and corresponding" \
