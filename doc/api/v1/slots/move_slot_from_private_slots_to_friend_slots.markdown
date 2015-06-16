@@ -88,7 +88,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=q-qyznixIJODIi9Fy3gTGegUREg
+Authorization: Token token=5wrX90TlBsP7dmUWfjMAhyvG_q4
 Host: example.org
 Cookie: </pre>
 
@@ -109,7 +109,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/60/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=q-qyznixIJODIi9Fy3gTGegUREg&quot; \
+	-H &quot;Authorization: Token token=5wrX90TlBsP7dmUWfjMAhyvG_q4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,11 +120,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9f458d26ec67da07a28c1c7520212983&quot;
+ETag: W/&quot;5ba2b131af0e73b72cee9ac73e789aff&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 73f19771-f35b-45d0-8df0-2808e30b115d
-X-Runtime: 0.067050
-Content-Length: 1072</pre>
+X-Request-Id: 4e65a583-9fbe-4575-ac86-616554b1a947
+X-Runtime: 0.086053
+Content-Length: 809</pre>
 
 #### Status
 
@@ -137,16 +137,16 @@ Content-Length: 1072</pre>
   "id" : 61,
   "title" : "Slot title 50",
   "startDate" : "2019-09-24T02:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:15.622Z",
-  "updatedAt" : "2015-06-15T11:19:15.622Z",
+  "createdAt" : "2015-06-16T15:50:00.444Z",
+  "updatedAt" : "2015-06-16T15:50:00.444Z",
   "deletedAt" : null,
   "endDate" : "2019-10-24T02:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 226,
     "username" : "User 223",
-    "createdAt" : "2015-06-15T11:19:15.603Z",
-    "updatedAt" : "2015-06-15T11:19:15.603Z",
+    "createdAt" : "2015-06-16T15:50:00.418Z",
+    "updatedAt" : "2015-06-16T15:50:00.418Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -154,28 +154,6 @@ Content-Length: 1072</pre>
     }
   },
   "notes" : [],
-  "photos" : [
-    {
-      "mediaId" : 46,
-      "clyid" : "dfhjghjkdisudgfds7iy39",
-      "position" : 0,
-      "localId" : null
-    },
-    {
-      "mediaId" : 47,
-      "clyid" : "dfhjghjkdisudgfds7iy40",
-      "position" : 1,
-      "localId" : null
-    },
-    {
-      "mediaId" : 48,
-      "clyid" : "dfhjghjkdisudgfds7iy41",
-      "position" : 2,
-      "localId" : null
-    }
-  ],
-  "voices" : [],
-  "videos" : [],
   "media" : [
     {
       "mediaId" : 48,

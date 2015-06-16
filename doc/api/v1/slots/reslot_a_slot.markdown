@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=E80rCpusl3-A1tSUGKw9z5vWyt8
+Authorization: Token token=M9hvOA6WTm7bSS1WqDAI6b09zhE
 Host: example.org
 Cookie: </pre>
 
@@ -106,7 +106,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:33}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=E80rCpusl3-A1tSUGKw9z5vWyt8&quot; \
+	-H &quot;Authorization: Token token=M9hvOA6WTm7bSS1WqDAI6b09zhE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -117,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4865ea1393b2e5f1a2acda9e82136e94&quot;
+ETag: W/&quot;fcf608f5775d3517f65f453ffded64ef&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c723aeb4-4255-4880-9798-a1fb825d8a1f
-X-Runtime: 0.034560
-Content-Length: 556</pre>
+X-Request-Id: 686b099c-81e1-4a24-872b-b4e288a045dc
+X-Runtime: 0.035731
+Content-Length: 520</pre>
 
 #### Status
 
@@ -134,16 +134,16 @@ Content-Length: 556</pre>
   "id" : 34,
   "title" : "Slot title 28",
   "startDate" : "2019-09-02T04:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:14.382Z",
-  "updatedAt" : "2015-06-15T11:19:14.382Z",
+  "createdAt" : "2015-06-16T15:49:54.735Z",
+  "updatedAt" : "2015-06-16T15:49:54.735Z",
   "deletedAt" : null,
   "endDate" : "2019-10-02T04:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 162,
     "username" : "User 159",
-    "createdAt" : "2015-06-15T11:19:14.361Z",
-    "updatedAt" : "2015-06-15T11:19:14.361Z",
+    "createdAt" : "2015-06-16T15:49:54.643Z",
+    "updatedAt" : "2015-06-16T15:49:54.643Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -151,9 +151,6 @@ Content-Length: 556</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"

@@ -147,7 +147,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=wjHzuD-x1HMYTGYyenYwSDD4_zQ
+Authorization: Token token=D5KWVnHq_PxkAOnORj45upRt4e4
 Host: example.org
 Cookie: </pre>
 
@@ -179,7 +179,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=wjHzuD-x1HMYTGYyenYwSDD4_zQ&quot; \
+	-H &quot;Authorization: Token token=D5KWVnHq_PxkAOnORj45upRt4e4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -190,11 +190,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6728e1f28a0034c078afa27cebbee575&quot;
+ETag: W/&quot;6e7c898de3ef0df4a1ecd1006aa6963c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 33072607-fceb-4bbe-a4e7-10d039f4fcdd
-X-Runtime: 0.035476
-Content-Length: 916</pre>
+X-Request-Id: 5f6eb5a1-5d8f-46ef-811c-81808a19d14a
+X-Runtime: 0.045223
+Content-Length: 880</pre>
 
 #### Status
 
@@ -207,8 +207,8 @@ Content-Length: 916</pre>
   "id" : 39,
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:14.694Z",
-  "updatedAt" : "2015-06-15T11:19:14.694Z",
+  "createdAt" : "2015-06-16T15:49:55.456Z",
+  "updatedAt" : "2015-06-16T15:49:55.456Z",
   "deletedAt" : null,
   "endDate" : "2019-10-08T10:44:02.000Z",
   "location" : {
@@ -233,8 +233,8 @@ Content-Length: 916</pre>
   "creator" : {
     "id" : 175,
     "username" : "User 172",
-    "createdAt" : "2015-06-15T11:19:14.689Z",
-    "updatedAt" : "2015-06-15T11:19:14.689Z",
+    "createdAt" : "2015-06-16T15:49:55.450Z",
+    "updatedAt" : "2015-06-16T15:49:55.450Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -242,9 +242,6 @@ Content-Length: 916</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"

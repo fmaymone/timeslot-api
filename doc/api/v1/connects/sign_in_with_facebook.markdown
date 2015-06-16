@@ -110,10 +110,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;45b5dc6955f8f85af76e9c8b45fdbc13&quot;
+ETag: W/&quot;69b05b6fefd00669a3b47163f619399a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2876f4be-62c2-4d28-85c7-5a549dbfcd40
-X-Runtime: 0.030927
+X-Request-Id: 1b479916-9360-4c8f-8436-aad885c545f3
+X-Runtime: 0.025027
 Content-Length: 743</pre>
 
 #### Status
@@ -126,8 +126,8 @@ Content-Length: 743</pre>
 {
   "id" : 46,
   "username" : "User 45",
-  "createdAt" : "2015-06-11T16:20:48.686Z",
-  "updatedAt" : "2015-06-11T16:20:48.686Z",
+  "createdAt" : "2015-06-16T15:49:49.485Z",
+  "updatedAt" : "2015-06-16T15:49:49.485Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -154,6 +154,6 @@ Content-Length: 743</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "QogaTk2uA6JduwD1W7XPMM4iYhQ"
+  "authToken" : "v6AD03RBXOjh62b4GR026q1ksw4"
 }
 ```
