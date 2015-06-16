@@ -77,7 +77,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=2oXd_-dlHHHq7fgagYwXrZHm5hI
+Authorization: Token token=zZBuTDlRSSBhga16phgU8M5Kw64
 Host: example.org
 Cookie: </pre>
 
@@ -89,7 +89,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/25&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2oXd_-dlHHHq7fgagYwXrZHm5hI&quot; \
+	-H &quot;Authorization: Token token=zZBuTDlRSSBhga16phgU8M5Kw64&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -100,11 +100,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5b7994f331c44a388dbc87400c3c2f4a&quot;
+ETag: W/&quot;5592c9912ddcb8f21db2c788c285299f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 515176da-f1ba-4107-87d1-f6140580050f
-X-Runtime: 0.039814
-Content-Length: 1590</pre>
+X-Request-Id: 6928c8f9-c7cb-4b81-b5b8-bbe7960a3172
+X-Runtime: 0.035275
+Content-Length: 1612</pre>
 
 #### Status
 
@@ -117,16 +117,16 @@ Content-Length: 1590</pre>
   "id" : 25,
   "title" : "Slot title 27",
   "startDate" : "2019-09-01T03:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:37.531Z",
-  "updatedAt" : "2015-06-15T08:50:37.531Z",
+  "createdAt" : "2015-06-16T15:49:53.475Z",
+  "updatedAt" : "2015-06-16T15:49:53.475Z",
   "deletedAt" : null,
   "endDate" : "2019-10-01T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 147,
     "username" : "User 144",
-    "createdAt" : "2015-06-15T08:50:37.522Z",
-    "updatedAt" : "2015-06-15T08:50:37.522Z",
+    "createdAt" : "2015-06-16T15:49:53.466Z",
+    "updatedAt" : "2015-06-16T15:49:53.466Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -218,6 +218,6 @@ Content-Length: 1590</pre>
   "visibility" : "public",
   "likes" : 3,
   "commentsCounter" : 0,
-  "shareUrl" : "abcd1234"
+  "shareUrl" : "http://localhost:3100/abcd1234"
 }
 ```

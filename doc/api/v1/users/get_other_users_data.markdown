@@ -51,19 +51,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=QN_ZJTLWfHcholUHSeWAaGMyRi8
+Authorization: Token token=f-_WuaWzqoeDJcdj4LqqJ_X1hNU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/227</pre>
+<pre>GET /v1/users/229</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/227&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/229&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=QN_ZJTLWfHcholUHSeWAaGMyRi8&quot; \
+	-H &quot;Authorization: Token token=f-_WuaWzqoeDJcdj4LqqJ_X1hNU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -74,11 +74,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f3b07f1b1f0d3fe2d7c88b04902f70b6&quot;
+ETag: W/&quot;85655410cb212576c76a56dd5435c472&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 62adda88-a9a1-4348-ac67-e0ad525b39ea
-X-Runtime: 0.017616
-Content-Length: 516</pre>
+X-Request-Id: a2983154-8ace-4520-a46a-deacca2f156e
+X-Runtime: 0.037852
+Content-Length: 555</pre>
 
 #### Status
 
@@ -88,13 +88,13 @@ Content-Length: 516</pre>
 
 ```javascript
 {
-  "id" : 227,
-  "username" : "User 223",
-  "createdAt" : "2015-06-15T08:50:41.390Z",
-  "updatedAt" : "2015-06-15T08:50:41.390Z",
+  "id" : 229,
+  "username" : "User 225",
+  "createdAt" : "2015-06-16T15:50:00.639Z",
+  "updatedAt" : "2015-06-16T15:50:00.639Z",
   "deletedAt" : null,
   "location" : {
-    "id" : 3,
+    "id" : 4,
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -103,12 +103,14 @@ Content-Length: 516</pre>
     "administrativeArea" : null,
     "subAdministrativeArea" : null,
     "postalCode" : null,
+    "country" : null,
     "isoCountryCode" : null,
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 51.234,
-    "longitude" : -11.993
+    "longitude" : -11.993,
+    "privateLocation" : false
   },
   "image" : {
     "clyid" : null,

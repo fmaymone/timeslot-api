@@ -15,17 +15,83 @@ returns 200 and slot details including the new mediaID
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : photos
-Description : array of new photos
+Name : title *- required -*
+Description : Title of slot (max. 60 characters)
 
-Name : voices
-Description : array of new audio recordings
+Name : startDate *- required -*
+Description : Startdate and Time of the Slot
 
-Name : videos
-Description : array of new videos
+Name : endDate *- required -*
+Description : Enddate and Time of the Slot (startdate + duration)
+
+Name : locationId
+Description : ID of the location associated with this slot
+
+Name : notes
+Description : Notes for to the Slot
+
+Name : settings
+Description : User specific settings for the slot (alerts)
+
+Name : alerts
+Description : Alerts for the Slot
+
+Name : location
+Description : IOS location associated with this slot
+
+Name : name
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
+
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
+
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
+
+Name : country
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
+
+Name : latitude
+Description : Latitude
+
+Name : longitude
+Description : Longitude
+
+Name : privateLocation
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
+Name : media
+Description : array of new media items
+
+Name : mediaType *- required -*
+Description : one of photo/video/voice
 
 Name : publicId *- required -*
 Description : Cloudinary ID / URL
+
+Name : localId
+Description : iOS local ID
 
 Name : position
 Description : Sorting order of the new media item. If not submitted it will be added at the end
@@ -118,7 +184,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE
+Authorization: Token token=4xALTi-Nj1KaiwRX2yHVRdbd_IM
 Host: example.org
 Cookie: </pre>
 
@@ -129,10 +195,11 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "photos" : [
+  "media" : [
     {
       "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : "1",
+      "mediaType" : "photo",
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
     }
   ]
@@ -142,9 +209,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;photo&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE&quot; \
+	-H &quot;Authorization: Token token=4xALTi-Nj1KaiwRX2yHVRdbd_IM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -155,10 +222,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d76013dcefe47e658d984ac9b266aea6&quot;
+ETag: W/&quot;0f36d4b7a4da613978ddb7aa6f250c99&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d1c002b0-e925-4b1d-a636-e60f6c3a824d
-X-Runtime: 0.038081
+X-Request-Id: ba83f94b-d3ff-42a1-b6d6-f2fde0bf6271
+X-Runtime: 0.039202
 Content-Length: 670</pre>
 
 #### Status
@@ -172,16 +239,16 @@ Content-Length: 670</pre>
   "id" : 37,
   "title" : "Slot title 32",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.280Z",
-  "updatedAt" : "2015-06-15T08:50:39.280Z",
+  "createdAt" : "2015-06-16T15:49:55.184Z",
+  "updatedAt" : "2015-06-16T15:49:55.184Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 171,
     "username" : "User 168",
-    "createdAt" : "2015-06-15T08:50:39.275Z",
-    "updatedAt" : "2015-06-15T08:50:39.275Z",
+    "createdAt" : "2015-06-16T15:49:55.179Z",
+    "updatedAt" : "2015-06-16T15:49:55.179Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,

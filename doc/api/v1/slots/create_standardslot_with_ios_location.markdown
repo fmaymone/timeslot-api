@@ -77,7 +77,7 @@ Description : Latitude
 Name : longitude
 Description : Longitude
 
-Name : private_location
+Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
 Name : visibility *- required -*
@@ -148,7 +148,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=7rjdgDWzaw_CebsaYFmdXJqqgEY
+Authorization: Token token=IMakfrSDbOa9OpRRHcmzEhVLn70
 Host: example.org
 Cookie: </pre>
 
@@ -181,8 +181,7 @@ Cookie: </pre>
     "locality" : "Berlin",
     "country" : "Germany",
     "latitude" : "52.527335",
-    "longitude" : "13.414259",
-    "private_location" : false
+    "longitude" : "13.414259"
   },
   "visibility" : "private"
 }
@@ -191,10 +190,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;private_location&quot;:false},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=7rjdgDWzaw_CebsaYFmdXJqqgEY&quot; \
+	-H &quot;Authorization: Token token=IMakfrSDbOa9OpRRHcmzEhVLn70&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -205,11 +204,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8401c27625e639d8d6a6a9c0828b2d4e&quot;
+ETag: W/&quot;43bf0ae742a2d6cc65646110ea87cb04&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ebd63ca8-4a78-4527-9772-b5368c6a6c93
-X-Runtime: 0.046797
-Content-Length: 1053</pre>
+X-Request-Id: 92bcc12e-fc1c-4ba2-ad0d-28a5b2e600e3
+X-Runtime: 0.046531
+Content-Length: 1097</pre>
 
 #### Status
 
@@ -222,8 +221,8 @@ Content-Length: 1053</pre>
   "id" : 29,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-15T08:50:38.195Z",
-  "updatedAt" : "2015-06-15T08:50:38.195Z",
+  "createdAt" : "2015-06-16T15:49:54.115Z",
+  "updatedAt" : "2015-06-16T15:49:54.115Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
@@ -236,18 +235,20 @@ Content-Length: 1053</pre>
     "administrativeArea" : null,
     "subAdministrativeArea" : null,
     "postalCode" : null,
+    "country" : "Germany",
     "isoCountryCode" : null,
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259
+    "longitude" : 13.414259,
+    "privateLocation" : false
   },
   "creator" : {
     "id" : 156,
     "username" : "User 153",
-    "createdAt" : "2015-06-15T08:50:38.172Z",
-    "updatedAt" : "2015-06-15T08:50:38.172Z",
+    "createdAt" : "2015-06-16T15:49:54.092Z",
+    "updatedAt" : "2015-06-16T15:49:54.092Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -259,13 +260,13 @@ Content-Length: 1053</pre>
       "id" : 8,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-15T08:50:38.198Z"
+      "createdAt" : "2015-06-16T15:49:54.118Z"
     },
     {
       "id" : 9,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-15T08:50:38.200Z"
+      "createdAt" : "2015-06-16T15:49:54.120Z"
     }
   ],
   "media" : [],

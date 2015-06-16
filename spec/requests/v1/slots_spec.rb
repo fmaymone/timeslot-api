@@ -799,11 +799,12 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "handling media items" do
-      let(:add_media_item) { { photos: media } }
+      let(:add_media_item) { { media: media } }
 
       context "add images with valid params" do
         let(:media) do
           [{ publicId: "foo-image",
+             mediaType: 'photo',
              position: "1" }]
         end
 
@@ -858,7 +859,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "missing position parameter" do
-          let(:media) { [{ publicId: "foo-image" }] }
+          let(:media) { [{ publicId: "foo-image", mediaType: "photo" }] }
           let!(:std_slot) {
             create(:std_slot_private, :with_media, owner: current_user)
           }
@@ -874,7 +875,9 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "existing position parameter" do
-          let(:media) { [{ publicId: "foo-image", position: "0" }] }
+          let(:media) { [{ publicId: "foo-image",
+                           mediaType: 'photo',
+                           position: "0" }] }
 
           it "updates existing position" do
             existing_1 = create(:slot_image, mediable: std_slot, position: 0)
@@ -896,7 +899,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "add images with invalid params" do
-        let(:media) { [{ position: "0" }] }
+        let(:media) { [{ position: "0", mediaType: 'photo' }] }
 
         it "returns 422 if publicId is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
@@ -920,12 +923,15 @@ RSpec.describe "V1::Slots", type: :request do
 
         context "with valid params" do
           let(:media_reordering) do
-            { photos: [
+            { media: [
                 { mediaId: media_item_1.id,
+                  mediaType: 'photo',
                   position: 2 },
                 { mediaId: media_item_2.id,
+                  mediaType: 'photo',
                   position: 0 },
                 { mediaId: media_item_3.id,
+                  mediaType: 'photo',
                   position: 1 }
               ] }
           end
@@ -948,12 +954,15 @@ RSpec.describe "V1::Slots", type: :request do
           describe "invalid mediaId" do
             let(:invalid_id) { media_item_3.id + 1 }
             let(:media_reordering) do
-              { photos: [
+              { media: [
                   { mediaId: media_item_1.id,
+                    mediaType: 'photo',
                     position: 2 },
                   { mediaId: media_item_2.id,
+                    mediaType: 'photo',
                     position: 0 },
                   { mediaId: invalid_id,
+                    mediaType: 'photo',
                     position: 1 }
                 ] }
             end
@@ -967,12 +976,15 @@ RSpec.describe "V1::Slots", type: :request do
 
           describe "invalid sorting" do
             let(:media_reordering) do
-              { photos: [
+              { media: [
                   { mediaId: media_item_1.id,
+                    mediaType: 'photo',
                     position: 1 },
                   { mediaId: media_item_2.id,
+                    mediaType: 'photo',
                     position: 0 },
                   { mediaId: media_item_3.id,
+                    mediaType: 'photo',
                     position: 1 }
                 ] }
             end
@@ -989,12 +1001,14 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "video" do
         let(:media) do
-          [{ publicId: "foo-video" }]
+          [{ publicId: "foo-video",
+             mediaType: "video"
+           }]
         end
 
         it "adds a new video" do
           patch "/v1/stdslot/#{std_slot.id}",
-                { videos: media }, auth_header
+                { media: media }, auth_header
           std_slot.reload
           expect(std_slot.videos[0].media_type).to eq 'video'
           expect(std_slot.videos[0].position).to eq 0
@@ -1005,12 +1019,13 @@ RSpec.describe "V1::Slots", type: :request do
       context "voice" do
         let(:media) do
           [{ publicId: "foo-voice",
+             mediaType: "voice",
              position: "1" }]
         end
 
         it "adds a new voice item" do
           patch "/v1/stdslot/#{std_slot.id}",
-                { voices: media }, auth_header
+                { media: media }, auth_header
           std_slot.reload
           expect(std_slot.voices[0].media_type).to eq 'voice'
           expect(std_slot.voices[0].public_id).to eq(media.first[:publicId])
@@ -1215,9 +1230,10 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "with valid media params" do
-      let(:add_media_item) { { photos: media } }
+      let(:add_media_item) { { media: media } }
       let(:media) do
         [{ publicId: "foo-image",
+           mediaType: 'photo',
            position: "1" }]
       end
 
