@@ -15,6 +15,72 @@ returns 200 and slot details including the new mediaID
 Name : id *- required -*
 Description : ID of the slot to update
 
+Name : title *- required -*
+Description : Title of slot (max. 60 characters)
+
+Name : startDate *- required -*
+Description : Startdate and Time of the Slot
+
+Name : endDate *- required -*
+Description : Enddate and Time of the Slot (startdate + duration)
+
+Name : locationId
+Description : ID of the location associated with this slot
+
+Name : notes
+Description : Notes for to the Slot
+
+Name : settings
+Description : User specific settings for the slot (alerts)
+
+Name : alerts
+Description : Alerts for the Slot
+
+Name : location
+Description : IOS location associated with this slot
+
+Name : name
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
+
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
+
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
+
+Name : country
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
+
+Name : latitude
+Description : Latitude
+
+Name : longitude
+Description : Longitude
+
+Name : privateLocation
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
+
 Name : photos
 Description : array of new photos
 
@@ -118,7 +184,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE
+Authorization: Token token=HALWvzfaTf8UuDpeHKZZ2x5UhVQ
 Host: example.org
 Cookie: </pre>
 
@@ -144,7 +210,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;photos&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=O2-Ig0op2tQcJNxSCoAg68W8vgE&quot; \
+	-H &quot;Authorization: Token token=HALWvzfaTf8UuDpeHKZZ2x5UhVQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -155,11 +221,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d76013dcefe47e658d984ac9b266aea6&quot;
+ETag: W/&quot;0780c3e5af61dff8a018678eb1f5456b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d1c002b0-e925-4b1d-a636-e60f6c3a824d
-X-Runtime: 0.038081
-Content-Length: 670</pre>
+X-Request-Id: 29e2a932-4022-42ed-a341-4ddbf5574064
+X-Runtime: 0.038843
+Content-Length: 834</pre>
 
 #### Status
 
@@ -172,16 +238,16 @@ Content-Length: 670</pre>
   "id" : 37,
   "title" : "Slot title 32",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.280Z",
-  "updatedAt" : "2015-06-15T08:50:39.280Z",
+  "createdAt" : "2015-06-15T11:19:14.553Z",
+  "updatedAt" : "2015-06-15T11:19:14.553Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 171,
     "username" : "User 168",
-    "createdAt" : "2015-06-15T08:50:39.275Z",
-    "updatedAt" : "2015-06-15T08:50:39.275Z",
+    "createdAt" : "2015-06-15T11:19:14.549Z",
+    "updatedAt" : "2015-06-15T11:19:14.549Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -189,6 +255,16 @@ Content-Length: 670</pre>
     }
   },
   "notes" : [],
+  "photos" : [
+    {
+      "mediaId" : 31,
+      "clyid" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
+      "position" : 1,
+      "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+    }
+  ],
+  "voices" : [],
+  "videos" : [],
   "media" : [
     {
       "mediaId" : 31,
