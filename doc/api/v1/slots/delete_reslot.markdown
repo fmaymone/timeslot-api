@@ -79,7 +79,7 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=P5219L66YQgXlL8TRfpnv2jP3rE
+<pre>Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=P5219L66YQgXlL8TRfpnv2jP3rE&quot; \
+	-H &quot;Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,11 +103,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1d45600feb0b0c7cef324ee17cf81be5&quot;
+ETag: W/&quot;2908883bf7db89e404b22c6f05f6bef1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 110b2ca9-61ea-41ce-b916-38e3d7971f7f
-X-Runtime: 0.039916
-Content-Length: 578</pre>
+X-Request-Id: 71afbe70-2b5d-4c14-bc68-9a8bfa6ad877
+X-Runtime: 0.050213
+Content-Length: 542</pre>
 
 #### Status
 
@@ -120,16 +120,16 @@ Content-Length: 578</pre>
   "id" : 45,
   "title" : "Slot title 40",
   "startDate" : "2019-09-14T16:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:15.150Z",
-  "updatedAt" : "2015-06-15T11:19:15.185Z",
-  "deletedAt" : "2015-06-15T11:19:15.182Z",
+  "createdAt" : "2015-06-16T15:49:59.456Z",
+  "updatedAt" : "2015-06-16T15:49:59.498Z",
+  "deletedAt" : "2015-06-16T15:49:59.494Z",
   "endDate" : "2019-10-14T16:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 187,
     "username" : "User 184",
-    "createdAt" : "2015-06-15T11:19:15.155Z",
-    "updatedAt" : "2015-06-15T11:19:15.155Z",
+    "createdAt" : "2015-06-16T15:49:59.459Z",
+    "updatedAt" : "2015-06-16T15:49:59.459Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -137,9 +137,6 @@ Content-Length: 578</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"

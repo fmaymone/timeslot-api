@@ -2,6 +2,9 @@
 
 ## latest
 
+## v0.5.2 on t2s2-dev
+- unify slot media items into one array with type info for every item
+
 
 ## v0.5.1 on t2s2-silvio-dev
 - fix whitelisted location attributes from snake_case to camelCase

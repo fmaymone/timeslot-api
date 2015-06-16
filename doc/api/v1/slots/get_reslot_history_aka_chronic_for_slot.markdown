@@ -34,18 +34,18 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=HC1xRULnPipktn4bBDOYGbUGvCE
+<pre>Authorization: Token token=DLQpoe_a9E_xsaBJRZHb3n2upM0
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/55/history</pre>
+<pre>GET /v1/slots/56/history</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/55/history&quot; -X GET \
-	-H &quot;Authorization: Token token=HC1xRULnPipktn4bBDOYGbUGvCE&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/56/history&quot; -X GET \
+	-H &quot;Authorization: Token token=DLQpoe_a9E_xsaBJRZHb3n2upM0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;df2da9deb1a9cd3f13b7fbb8c8ac8814&quot;
+ETag: W/&quot;a1610bb738dd422736880d7f4d362236&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a4026555-d3ab-41a2-9ca9-182247c34a4c
-X-Runtime: 0.028673
+X-Request-Id: ac5d3153-7b5d-43f5-b63f-6e98055ce5c0
+X-Runtime: 0.027746
 Content-Length: 375</pre>
 
 #### Status
@@ -72,23 +72,23 @@ Content-Length: 375</pre>
 {
   "predecessors" : [
     {
-      "id" : 217,
-      "username" : "User 214",
+      "id" : 219,
+      "username" : "User 216",
       "userImage" : null,
-      "timestamp" : "2015-06-11T16:20:56.316Z"
+      "timestamp" : "2015-06-16T15:50:00.084Z"
     },
     {
-      "id" : 216,
-      "username" : "User 213",
+      "id" : 218,
+      "username" : "User 215",
       "userImage" : null,
-      "timestamp" : "2015-06-11T16:20:56.306Z"
+      "timestamp" : "2015-06-16T15:50:00.077Z"
     }
   ],
   "parentUser" : {
-    "id" : 215,
-    "username" : "User 212",
-    "createdAt" : "2015-06-11T16:20:56.294Z",
-    "updatedAt" : "2015-06-11T16:20:56.294Z",
+    "id" : 217,
+    "username" : "User 214",
+    "createdAt" : "2015-06-16T15:50:00.071Z",
+    "updatedAt" : "2015-06-16T15:50:00.071Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,

@@ -51,7 +51,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=NwYd4-IK2jaO-pN-hWmlZSJoEj8
+Authorization: Token token=f-_WuaWzqoeDJcdj4LqqJ_X1hNU
 Host: example.org
 Cookie: </pre>
 
@@ -63,7 +63,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/229&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=NwYd4-IK2jaO-pN-hWmlZSJoEj8&quot; \
+	-H &quot;Authorization: Token token=f-_WuaWzqoeDJcdj4LqqJ_X1hNU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -74,10 +74,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5c86943f6b0db7ebda33b7a8119a3941&quot;
+ETag: W/&quot;85655410cb212576c76a56dd5435c472&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d45e2fae-29bb-4940-b18a-0f9f01313b97
-X-Runtime: 0.015419
+X-Request-Id: a2983154-8ace-4520-a46a-deacca2f156e
+X-Runtime: 0.037852
 Content-Length: 555</pre>
 
 #### Status
@@ -90,8 +90,8 @@ Content-Length: 555</pre>
 {
   "id" : 229,
   "username" : "User 225",
-  "createdAt" : "2015-06-15T11:19:15.727Z",
-  "updatedAt" : "2015-06-15T11:19:15.727Z",
+  "createdAt" : "2015-06-16T15:50:00.639Z",
+  "updatedAt" : "2015-06-16T15:50:00.639Z",
   "deletedAt" : null,
   "location" : {
     "id" : 4,

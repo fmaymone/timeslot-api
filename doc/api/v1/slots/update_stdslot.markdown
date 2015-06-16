@@ -164,7 +164,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=o89qxhkWqRKhQCNn0tWvWbeh4Zs
+Authorization: Token token=yEphzODk_N_sFxMfxX_GzsvfAdA
 Host: example.org
 Cookie: </pre>
 
@@ -184,7 +184,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=o89qxhkWqRKhQCNn0tWvWbeh4Zs&quot; \
+	-H &quot;Authorization: Token token=yEphzODk_N_sFxMfxX_GzsvfAdA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -195,11 +195,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;420f5a227955eebf3099125d1dc11c82&quot;
+ETag: W/&quot;2491c86be7734bb9ca4334203451ec82&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 10eec6d8-7113-4822-ba1b-c2ab02fc87cf
-X-Runtime: 0.034140
-Content-Length: 565</pre>
+X-Request-Id: 922ff352-51fc-4a81-9733-17745974750b
+X-Runtime: 0.035566
+Content-Length: 529</pre>
 
 #### Status
 
@@ -212,16 +212,16 @@ Content-Length: 565</pre>
   "id" : 35,
   "title" : "New title for a Slot",
   "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-06-15T11:19:14.444Z",
-  "updatedAt" : "2015-06-15T11:19:14.444Z",
+  "createdAt" : "2015-06-16T15:49:54.936Z",
+  "updatedAt" : "2015-06-16T15:49:54.936Z",
   "deletedAt" : null,
   "endDate" : "2019-10-04T06:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 167,
     "username" : "User 164",
-    "createdAt" : "2015-06-15T11:19:14.440Z",
-    "updatedAt" : "2015-06-15T11:19:14.440Z",
+    "createdAt" : "2015-06-16T15:49:54.931Z",
+    "updatedAt" : "2015-06-16T15:49:54.931Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -229,9 +229,6 @@ Content-Length: 565</pre>
     }
   },
   "notes" : [],
-  "photos" : [],
-  "voices" : [],
-  "videos" : [],
   "media" : [],
   "settings" : {
     "alerts" : "0000000000"

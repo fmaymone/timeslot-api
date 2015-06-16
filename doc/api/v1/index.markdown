@@ -78,3 +78,4 @@
 * [Get slots of current users friends](users/get_slots_of_current_users_friends.markdown)
 * [Add Friends - Request Friendship / Accept Friend Request](users/add_friends_-_request_friendship__accept_friend_request.markdown)
 * [Remove Friends - Unfriending / Refuse Friend Requests](users/remove_friends_-_unfriending__refuse_friend_requests.markdown)
+
