@@ -600,13 +600,6 @@ resource "Slots" do
     let(:id) { std_slot.id }
 
     describe "Update an existing StdSlot" do
-      parameter :title, "Updated title of slot"
-      parameter :startDate, "Updated Startdate and Time of the Slot"
-      parameter :endDate,
-                "Updated Enddate and Time of the Slot (startdate + duration)"
-      parameter :locationId, "Location ID"
-      parameter :visibility, "Visibility of slot"
-
       let(:title) { "New title for a Slot" }
 
       example "Update StdSlot", document: :v1 do
@@ -651,12 +644,11 @@ resource "Slots" do
                 required: true, scope: :media
       parameter :publicId, "Cloudinary ID / URL",
                 required: true, scope: :media
-      parameter :localId, "iOS local ID",
+      parameter :localId, "iOS local ID (max 512 chars)",
                 scope: :media
       parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :media
-      parameter :localId, "IOS specific local identifier for media item"
       parameter :duration, "only for video and voice items"
       parameter :thumbnail, "public URL for video thumbnail"
 
