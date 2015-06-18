@@ -45,8 +45,6 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
-  # validates :local_id, length: { maximum: 512 } => in media item
-  # TODO: add more validations for max length
 
   # getter
 

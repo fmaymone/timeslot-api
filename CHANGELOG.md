@@ -2,6 +2,10 @@
 
 ## latest
 
+## v0.5.3 on t2s2-dev
+- increase length of media item local_id from 64 to 512
+
+
 ## v0.5.2 on t2s2-dev
 - unify slot media items into one array with type info for every item
 

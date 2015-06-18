@@ -14,7 +14,7 @@ class MediaItem < ActiveRecord::Base
   validates :position, presence: true, if: :belongs_to_slot?
   validates :mediable_id, presence: true
   validates :mediable_type, presence: true
-  validates :local_id, length: { maximum: 64 }
+  validates :local_id, length: { maximum: 512 }
 
   def belongs_to_slot?
     mediable_type == "BaseSlot"
