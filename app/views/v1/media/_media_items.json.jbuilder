@@ -3,10 +3,11 @@ json.media media do |item|
   json.media_type item.media_type
 
   if item.media_type == "voice"
-    json.duration = item.duration
+    json.duration item.duration
+    json.title item.title
   elsif item.media_type == "video"
-    json.duration = item.duration
-    json.thumbnail = item.thumbnail
+    json.duration item.duration
+    json.thumbnail item.thumbnail
   else
     # need to overwrite media_type for photos or it would say 'image'
     json.media_type 'photo'

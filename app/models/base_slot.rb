@@ -194,8 +194,9 @@ class BaseSlot < ActiveRecord::Base
         add_media(item.permit(:public_id, :position, :local_id)
                    .merge(media_type: 'image'))
       when 'voice'
-        add_media(item.permit(:public_id, :position, :local_id, :duration)
-                   .merge(media_type: 'voice'))
+        add_media(
+          item.permit(:public_id, :position, :local_id, :duration, :title)
+          .merge(media_type: 'voice'))
       when 'video'
         add_media(
           item.permit(:public_id, :position, :local_id, :duration, :thumbnail)

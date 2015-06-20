@@ -324,10 +324,11 @@ CREATE TABLE media_items (
     mediable_id bigint,
     mediable_type character varying(255),
     deleted_at timestamp without time zone,
-    duration integer,
+    duration real,
     thumbnail character varying(255),
     local_id character varying(512),
-    creator_id bigint
+    creator_id bigint,
+    title character varying(64)
 );
 
 
@@ -1221,4 +1222,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150610092616');
 INSERT INTO schema_migrations (version) VALUES ('20150612093738');
 
 INSERT INTO schema_migrations (version) VALUES ('20150618062654');
+
+INSERT INTO schema_migrations (version) VALUES ('20150619113120');
 

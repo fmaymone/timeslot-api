@@ -1007,8 +1007,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "adds a new video" do
-          patch "/v1/stdslot/#{std_slot.id}",
-                { media: media }, auth_header
+          patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
           std_slot.reload
           expect(std_slot.videos[0].media_type).to eq 'video'
           expect(std_slot.videos[0].position).to eq 0
@@ -1020,15 +1019,28 @@ RSpec.describe "V1::Slots", type: :request do
         let(:media) do
           [{ publicId: "foo-voice",
              mediaType: "voice",
+             title: 'Nice sound',
              position: "1" }]
         end
 
         it "adds a new voice item" do
-          patch "/v1/stdslot/#{std_slot.id}",
-                { media: media }, auth_header
+          patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
           std_slot.reload
           expect(std_slot.voices[0].media_type).to eq 'voice'
+          expect(std_slot.voices[0].title).to eq 'Nice sound'
           expect(std_slot.voices[0].public_id).to eq(media.first[:publicId])
+        end
+
+        it "returns voice item in json" do
+          patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
+          expect(json).to have_key 'media'
+          expect(json['media'].first).to have_key 'mediaId'
+          expect(json['media'].first).to have_key 'clyid'
+          expect(json['media'].first).to have_key 'localId'
+          expect(json['media'].first).to have_key 'position'
+          expect(json['media'].first).to have_key 'duration'
+          expect(json['media'].first).to have_key 'title'
+          expect(json['media'].first['title']).to eq 'Nice sound'
         end
       end
     end
