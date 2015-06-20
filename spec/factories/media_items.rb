@@ -29,9 +29,9 @@ FactoryGirl.define do
     position
   end
 
-  factory :voice, class: "MediaItem" do
+  factory :audio, class: "MediaItem" do
     association :mediable, factory: :slot
-    media_type "voice"
+    media_type "audio"
     public_id
     position
   end

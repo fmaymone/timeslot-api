@@ -25,7 +25,7 @@ resource "Slots" do
     response_field :commentsCounter, "Number of comments on the slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
-    response_field :voices, "Voice recordings for the slot"
+    response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos recordings for the slot"
   end
 
@@ -108,7 +108,7 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: slot2
-        create_list :voice, 2, mediable: slot2
+        create_list :audio, 2, mediable: slot2
         create_list :video, 2, mediable: slot2
       }
       let(:ids) { [slot1.id, slot2.id] }
@@ -142,9 +142,9 @@ resource "Slots" do
         expect(json.last).to have_key("commentsCounter")
         expect(json.last).to have_key("visibility")
         # expect(json.last).to have_key("photos")
-        # expect(json.last).to have_key("voices")
+        # expect(json.last).to have_key("audios")
         # expect(json.last).to have_key("videos")
-        # expect(json.last.except('photos', 'voices', 'videos'))
+        # expect(json.last.except('photos', 'audios', 'videos'))
         #   .to eq("id" => slot.id,
         #          "title" => slot.title,
         #          "startDate" => slot.start_date.as_json,
@@ -199,7 +199,7 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: slot
-        create_list :voice, 2, mediable: slot
+        create_list :audio, 2, mediable: slot
         create_list :video, 2, mediable: slot
       }
       let(:id) { slot.id }
@@ -637,7 +637,7 @@ resource "Slots" do
 
     describe "Add Media to existing slot" do
       parameter :media, "array of new media items"
-      parameter :mediaType, "one of photo/video/voice",
+      parameter :mediaType, "one of photo/video/audio",
                 required: true, scope: :media
       parameter :publicId, "Cloudinary ID / URL",
                 required: true, scope: :media
@@ -646,7 +646,7 @@ resource "Slots" do
       parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :media
-      parameter :duration, "only for video and voice items"
+      parameter :duration, "only for video and audio items"
       parameter :thumbnail, "public URL for video thumbnail"
 
       response_field :clyid, "Cloudinary URL of the media item"
@@ -691,7 +691,7 @@ resource "Slots" do
                 required: true
       parameter :mediaId, "Timeslot's internal ID for this media item",
                 required: true, scope: :media
-      parameter :position, "Sorting order of the image/video/voice. If not " \
+      parameter :position, "Sorting order of the image/video/audio. If not " \
                            "supplied the media items will be sortet as they" \
                            " are ordered in the array.",
                 required: true, scope: :media

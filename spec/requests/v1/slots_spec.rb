@@ -1015,23 +1015,23 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
-      context "voice" do
+      context "audio" do
         let(:media) do
-          [{ publicId: "foo-voice",
-             mediaType: "voice",
+          [{ publicId: "foo-audio",
+             mediaType: "audio",
              title: 'Nice sound',
              position: "1" }]
         end
 
-        it "adds a new voice item" do
+        it "adds a new audio item" do
           patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
           std_slot.reload
-          expect(std_slot.voices[0].media_type).to eq 'voice'
-          expect(std_slot.voices[0].title).to eq 'Nice sound'
-          expect(std_slot.voices[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.audios[0].media_type).to eq 'audio'
+          expect(std_slot.audios[0].title).to eq 'Nice sound'
+          expect(std_slot.audios[0].public_id).to eq(media.first[:publicId])
         end
 
-        it "returns voice item in json" do
+        it "returns audio item in json" do
           patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
           expect(json).to have_key 'media'
           expect(json['media'].first).to have_key 'mediaId'
