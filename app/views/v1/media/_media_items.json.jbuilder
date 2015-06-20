@@ -8,8 +8,5 @@ json.media media do |item|
   elsif item.media_type == "video"
     json.duration item.duration
     json.thumbnail item.thumbnail
-  else
-    # need to overwrite media_type for photos or it would say 'image'
-    json.media_type 'photo'
   end
 end

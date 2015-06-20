@@ -7,7 +7,7 @@ RSpec.describe BaseSlot, type: :model do
 
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:media_items) }
-  it { is_expected.to respond_to(:photos) }
+  it { is_expected.to respond_to(:images) }
   it { is_expected.to respond_to(:audios) }
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to have_many(:media_items) }
@@ -89,7 +89,7 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :photos do
+  describe :images do
     let(:std_slot) { create(:std_slot) }
     let!(:media) {
       create_list :slot_image, 3, mediable: std_slot
@@ -98,7 +98,7 @@ RSpec.describe BaseSlot, type: :model do
     }
     it "returns all slot media items of type image" do
       expect(std_slot.media_items.length).to eq 7
-      expect(std_slot.photos.length).to eq 3
+      expect(std_slot.images.length).to eq 3
     end
   end
 

@@ -96,7 +96,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "has the same media items as the parent slot" do
         get "/v1/slots/#{re_slot_2.id}", {}, auth_header
         expect(json).to have_key('media')
-        expect(response.body).to include std_slot.photos.first.public_id
+        expect(response.body).to include std_slot.images.first.public_id
       end
 
       it "has the same notes as the parent slot" do
@@ -804,7 +804,7 @@ RSpec.describe "V1::Slots", type: :request do
       context "add images with valid params" do
         let(:media) do
           [{ publicId: "foo-image",
-             mediaType: 'photo',
+             mediaType: 'image',
              position: "1" }]
         end
 
@@ -835,7 +835,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
           expect(std_slot.media_items[0].media_type).to eq 'image'
-          expect(std_slot.photos[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.images[0].public_id).to eq(media.first[:publicId])
           expect(std_slot.media_items[0].position)
             .to eq(media.first[:position].to_i)
         end
@@ -859,7 +859,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "missing position parameter" do
-          let(:media) { [{ publicId: "foo-image", mediaType: "photo" }] }
+          let(:media) { [{ publicId: "foo-image", mediaType: "image" }] }
           let!(:std_slot) {
             create(:std_slot_private, :with_media, owner: current_user)
           }
@@ -876,7 +876,7 @@ RSpec.describe "V1::Slots", type: :request do
 
         context "existing position parameter" do
           let(:media) { [{ publicId: "foo-image",
-                           mediaType: 'photo',
+                           mediaType: 'image',
                            position: "0" }] }
 
           it "updates existing position" do
@@ -899,7 +899,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "add images with invalid params" do
-        let(:media) { [{ position: "0", mediaType: 'photo' }] }
+        let(:media) { [{ position: "0", mediaType: 'image' }] }
 
         it "returns 422 if publicId is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
@@ -925,13 +925,13 @@ RSpec.describe "V1::Slots", type: :request do
           let(:media_reordering) do
             { media: [
                 { mediaId: media_item_1.id,
-                  mediaType: 'photo',
+                  mediaType: 'image',
                   position: 2 },
                 { mediaId: media_item_2.id,
-                  mediaType: 'photo',
+                  mediaType: 'image',
                   position: 0 },
                 { mediaId: media_item_3.id,
-                  mediaType: 'photo',
+                  mediaType: 'image',
                   position: 1 }
               ] }
           end
@@ -956,13 +956,13 @@ RSpec.describe "V1::Slots", type: :request do
             let(:media_reordering) do
               { media: [
                   { mediaId: media_item_1.id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 2 },
                   { mediaId: media_item_2.id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 0 },
                   { mediaId: invalid_id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 1 }
                 ] }
             end
@@ -978,13 +978,13 @@ RSpec.describe "V1::Slots", type: :request do
             let(:media_reordering) do
               { media: [
                   { mediaId: media_item_1.id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 1 },
                   { mediaId: media_item_2.id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 0 },
                   { mediaId: media_item_3.id,
-                    mediaType: 'photo',
+                    mediaType: 'image',
                     position: 1 }
                 ] }
             end
@@ -1245,7 +1245,7 @@ RSpec.describe "V1::Slots", type: :request do
       let(:add_media_item) { { media: media } }
       let(:media) do
         [{ publicId: "foo-image",
-           mediaType: 'photo',
+           mediaType: 'image',
            position: "1" }]
       end
 
@@ -1257,7 +1257,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "adds new media to the parent slot" do
         patch "/v1/reslot/#{re_slot.id}", add_media_item, auth_header
         re_slot.reload
-        expect(re_slot.photos.first.public_id).to eq("foo-image")
+        expect(re_slot.images.first.public_id).to eq("foo-image")
       end
     end
 
@@ -1402,7 +1402,7 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "GET /v1/slots/:uid/slotdata" do
     let!(:slot) { create(:std_slot_private, :with_notes, :with_location,
-                         :with_real_photo, share_id: '12345xyz',
+                         :with_real_image, share_id: '12345xyz',
                          shared_by: create(:user)) }
     before { current_user.webview! }
 
@@ -1557,7 +1557,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
-        expect(new_slot.photos.first.public_id).to eq group_slot.photos.first.public_id
+        expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
       end
     end
 
@@ -1576,7 +1576,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
-        expect(new_slot.photos.first.public_id).to eq std_slot.photos.first.public_id
+        expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
       end
     end
   end
@@ -1619,21 +1619,21 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "move to friendslots with details" do
       let!(:std_slot) {
-        create(:std_slot_private, :with_real_photo, owner: current_user) }
-      let(:photo) { std_slot.media_items.first }
+        create(:std_slot_private, :with_real_image, owner: current_user) }
+      let(:image) { std_slot.media_items.first }
       let(:move_params) { { slotType: 'friends',
                             details: true } }
       before {
-        Cloudinary::Uploader.remove_tag("replaced", photo.public_id)
+        Cloudinary::Uploader.remove_tag("replaced", image.public_id)
       }
 
       it "doesn't mark the cloudinary resource as deleted", :vcr do
         post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
 
-        tags = Cloudinary::Api.resource(photo.public_id)["tags"]
+        tags = Cloudinary::Api.resource(image.public_id)["tags"]
         expect(tags).not_to include "replaced" if tags
-        photo.reload
-        expect(photo.deleted_at?).to be true
+        image.reload
+        expect(image.deleted_at?).to be true
       end
     end
 

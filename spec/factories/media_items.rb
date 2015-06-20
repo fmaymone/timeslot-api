@@ -22,7 +22,7 @@ FactoryGirl.define do
     public_id "sample"
   end
 
-  factory :real_slot_photo, class: "MediaItem" do
+  factory :real_slot_image, class: "MediaItem" do
     association :mediable, factory: :slot
     media_type "image"
     public_id "sample"

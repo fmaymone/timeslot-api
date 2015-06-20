@@ -36,4 +36,4 @@ json.notes slot.notes, partial: 'v1/slots/note', as: :note
 json.partial! 'v1/slots/share_url', share_id: slot.share_id
 json.shared_by slot.shared_by.username
 
-json.photos slot.photos.try(:first) ? slot.photos.first.public_id : nil
+json.images slot.images.try(:first) ? slot.images.first.public_id : nil

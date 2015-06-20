@@ -141,10 +141,10 @@ resource "Slots" do
         expect(json.last).to have_key("likes")
         expect(json.last).to have_key("commentsCounter")
         expect(json.last).to have_key("visibility")
-        # expect(json.last).to have_key("photos")
+        # expect(json.last).to have_key("images")
         # expect(json.last).to have_key("audios")
         # expect(json.last).to have_key("videos")
-        # expect(json.last.except('photos', 'audios', 'videos'))
+        # expect(json.last.except('images', 'audios', 'videos'))
         #   .to eq("id" => slot.id,
         #          "title" => slot.title,
         #          "startDate" => slot.start_date.as_json,
@@ -174,8 +174,8 @@ resource "Slots" do
         #          "visibility" => slot.visibility,
         #          "notes" => slot.notes
         #         )
-        # expect(json.last["photos"].length).to eq(slot.photos.length)
-        # expect(json.last["photos"].first['clyid']).to eq(slot.photos.first.public_id)
+        # expect(json.last["images"].length).to eq(slot.images.length)
+        # expect(json.last["images"].first['clyid']).to eq(slot.images.first.public_id)
       end
     end
   end
@@ -256,7 +256,7 @@ resource "Slots" do
                  "commentsCounter" => slot.comments.count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
-        expect(response_body).to include slot.photos.first.public_id
+        expect(response_body).to include slot.images.first.public_id
         expect(json["shareUrl"]).to include slot.share_id
       end
     end
@@ -637,7 +637,7 @@ resource "Slots" do
 
     describe "Add Media to existing slot" do
       parameter :media, "array of new media items"
-      parameter :mediaType, "one of photo/video/audio",
+      parameter :mediaType, "one of image/video/audio",
                 required: true, scope: :media
       parameter :publicId, "Cloudinary ID / URL",
                 required: true, scope: :media
@@ -658,7 +658,7 @@ resource "Slots" do
 
       let(:media) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
                      position: "1",
-                     mediaType: 'photo',
+                     mediaType: 'image',
                      localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
 
       example "Update Slot - Add media", document: :v1 do
@@ -671,8 +671,8 @@ resource "Slots" do
         do_request
 
         std_slot.reload
-        expect(std_slot.photos.size).to eq 1
-        expect(std_slot.photos.first.public_id)
+        expect(std_slot.images.size).to eq 1
+        expect(std_slot.images.first.public_id)
           .to eq "v1234567/dfhjghjkdisudgfds7sly.jpg"
         expect(response_status).to eq(200)
         expect(json).to have_key("media")
@@ -696,18 +696,18 @@ resource "Slots" do
                            " are ordered in the array.",
                 required: true, scope: :media
 
-      let!(:photo_1) { create(:slot_image, mediable: std_slot, position: 0) }
-      let!(:photo_2) { create(:slot_image, mediable: std_slot, position: 1) }
-      let!(:photo_3) { create(:slot_image, mediable: std_slot, position: 2) }
+      let!(:image_1) { create(:slot_image, mediable: std_slot, position: 0) }
+      let!(:image_2) { create(:slot_image, mediable: std_slot, position: 1) }
+      let!(:image_3) { create(:slot_image, mediable: std_slot, position: 2) }
 
-      let(:media) { [{ mediaId: photo_1.id,
-                       mediaType: 'photo',
+      let(:media) { [{ mediaId: image_1.id,
+                       mediaType: 'image',
                        position: 2 },
-                     { mediaId: photo_2.id,
-                       mediaType: 'photo',
+                     { mediaId: image_2.id,
+                       mediaType: 'image',
                        position: 0 },
-                     { mediaId: photo_3.id,
-                       mediaType: 'photo',
+                     { mediaId: image_3.id,
+                       mediaType: 'image',
                        position: 1 }] }
 
       example "Update Slot - Reorder media items", document: :v1 do
@@ -720,9 +720,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(std_slot.media_items.find(photo_1.id).position).to eq(2)
-        expect(std_slot.media_items.find(photo_2.id).position).to eq(0)
-        expect(std_slot.media_items.find(photo_3.id).position).to eq(1)
+        expect(std_slot.media_items.find(image_1.id).position).to eq(2)
+        expect(std_slot.media_items.find(image_2.id).position).to eq(0)
+        expect(std_slot.media_items.find(image_3.id).position).to eq(1)
       end
     end
 

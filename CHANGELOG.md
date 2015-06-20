@@ -4,6 +4,7 @@
 - add title to media items of type voice/audio
 - change type of media items duration from int to float
 - rename voice to audio
+- rename photo to image
 
 
 ## v0.5.3 on t2s2-dev

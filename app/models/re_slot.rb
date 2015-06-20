@@ -5,8 +5,8 @@ class ReSlot < BaseSlot
   belongs_to :predecessor, class_name: BaseSlot
   belongs_to :parent, class_name: BaseSlot
 
-  delegate :media_items, :notes, :likes, :comments, :photos, :audios, :videos,
-           :media_items=, :notes=, :likes=, :comments=, :photos=, :audios=, :videos=,
+  delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
+           :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
   validates :slotter, presence: true
