@@ -46,33 +46,37 @@ resource "Slots" do
               "Startdate and Time of the Slot",
               required: true
     parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration)",
+              "Enddate and Time of the Slot (startdate + duration). Empty " \
+              "for slots with open end",
               required: true
-    parameter :locationId,
-              "ID of the location associated with this slot"
-    parameter :notes, "Notes for to the Slot"
+    parameter :location, "Location associated with this slot (see example)"
+    parameter :media, "Media items (image/audio/video) of to the Slot " \
+                      "(see example)"
+    parameter :notes, "Notes for to the Slot (see example)"
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
-    parameter :location, "IOS location associated with this slot"
-    parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
+  end
+
+  shared_context "ios location params" do
+    parameter :name, "Name of the location, eg. Timeslot Inc. (255 chars)",
               scope: :location
-    parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
+    parameter :thoroughfare, "Street address, eg. Dolziger Str. 9 (255 ch.)",
               scope: :location
-    parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
+    parameter :subThoroughfare, "house number, eg. 9 (255 chars)",
               scope: :location
     parameter :locality, "city, e.g. Berlin (255 chars)",
               scope: :location
-    parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
+    parameter :subLocality, "neighborhood, common name, eg. Mitte (255 ch.)",
               scope: :location
-    parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
+    parameter :postalCode, "zip code, eg. 94114 (32 chars)",
               scope: :location
-    parameter :country, "country, e.g. Germany (255 chars)",
+    parameter :country, "country, eg. Germany (255 chars)",
               scope: :location
-    parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
+    parameter :isoCountryCode, "Country Code, eg. US (8 chars)",
               scope: :location
-    parameter :inLandWater, "e.g. Lake Tahoe", scope: :location
-    parameter :ocean, "e.g. Pacific Ocean", scope: :location
-    parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
+    parameter :inLandWater, "eg. Lake Tahoe", scope: :location
+    parameter :ocean, "eg. Pacific Ocean", scope: :location
+    parameter :areasOfInterest, "eg. Volkspark Friedrichshain",
               scope: :location
     parameter :latitude, "Latitude", scope: :location
     parameter :longitude, "Longitude", scope: :location
@@ -313,7 +317,7 @@ resource "Slots" do
       context "slot with default location" do
         let(:locationId) { 200_719_253 }
 
-        example "Create StandardSlot with default location", document: :v1 do
+        example "Create StandardSlot with default location", document: :false do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -352,6 +356,8 @@ resource "Slots" do
       end
 
       context "slot with IOS location" do
+        include_context "ios location params"
+
         let(:name) { 'Soho House' }
         let(:thoroughfare) { 'Torstrasse 1' }
         let(:locality) { 'Berlin' }
@@ -363,7 +369,7 @@ resource "Slots" do
         let(:longitude) { '13.414259' }
         let(:private_location) { false }
 
-        example "Create StandardSlot with IOS Location", document: :v1 do
+        example "Create StandardSlot with IOS Location", document: :false do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -431,19 +437,10 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :title, "Title of slot (max. 48 characters)",
+    include_context "default slot parameter"
+
+    parameter :groupId, "ID of the group to which the Slot belongs",
               required: true
-    parameter :startDate,
-              "Startdate and Time of the Slot",
-              required: true
-    parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration)",
-              required: true
-    parameter :groupId, "Group ID if GroupSlot",
-              required: true
-    parameter :note, "A note which belongs to the Slot"
-    parameter :settings, "User specific settings for the slot (alerts)"
-    parameter :alerts, "Alerts for the Slot", scope: :settings
 
     let(:group) { create(:group, owner: current_user) }
 
@@ -628,7 +625,7 @@ resource "Slots" do
 
       let(:notes) { [attributes_for(:note), attributes_for(:note)] }
 
-      example "Add notes", document: :v1 do
+      example "Update Slot - Add notes", document: :v1 do
         do_request
 
         expect(response_status).to eq(200)
@@ -656,6 +653,7 @@ resource "Slots" do
       response_field :position, "Sorting order position of the media item"
       response_field :localId, "Ios specific local identifier"
       response_field :duration, "Duration of audio/video file"
+      response_field :title, "Title of audio file"
       response_field :thumbnail, "Clouinary public URL of the video thumbnail"
 
       let(:media) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
@@ -663,7 +661,7 @@ resource "Slots" do
                      mediaType: 'photo',
                      localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
 
-      example "Add photo(s)", document: :v1 do
+      example "Update Slot - Add media", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -712,7 +710,7 @@ resource "Slots" do
                        mediaType: 'photo',
                        position: 1 }] }
 
-      example "Reorder media items", document: :v1 do
+      example "Update Slot - Reorder media items", document: :v1 do
         explanation "An array with the media_item keys and corresponding" \
                     " position/ordering number (starting from 0) for all" \
                     " images of the slot must be send.\n\n" \
@@ -729,6 +727,8 @@ resource "Slots" do
     end
 
     describe "slot with IOS location" do
+      include_context "ios location params"
+
       let(:name) { 'Soho House' }
       let(:thoroughfare) { 'Torstrasse 1' }
       let(:subThoroughfare) { '1' }
@@ -743,7 +743,7 @@ resource "Slots" do
       let(:longitude) { '13.414259' }
       let(:privateLocation) { true }
 
-      example "Update location of StandardSlot", document: :v1 do
+      example "Update Slot - Add Location", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
                     "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
@@ -774,8 +774,6 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Standard Slot to delete", required: true
-
-    include_context "default slot response fields"
 
     let!(:std_slot) {
       create(:std_slot_private, :with_media, owner: current_user)
@@ -821,8 +819,6 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Group Slot to delete", required: true
-
-    include_context "group slot response fields"
 
     let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
@@ -872,11 +868,11 @@ resource "Slots" do
 
     parameter :id, "ID of the ReSlot to delete", required: true
 
-    include_context "reslot response fields"
-
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
+      include_context "reslot response fields"
+
       let(:id) { re_slot.id }
 
       example "Delete ReSlot", document: :v1 do
@@ -928,8 +924,8 @@ resource "Slots" do
       let(:id) { slot.id }
 
       example "Get Likes for Slot", document: :v1 do
-        explanation "returns a list of all likes for the slot." \
-                    " Includes User data and timestamp.\n\n" \
+        explanation "returns a list of all likes for the slot. " \
+                    "Includes User data and timestamp.\n\n" \
                     "returns 401 if User not allowed to see Likes data\n\n" \
                     "returns 404 if ID is invalid"
         do_request
