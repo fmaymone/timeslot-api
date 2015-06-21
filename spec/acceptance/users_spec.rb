@@ -342,9 +342,9 @@ resource "Users" do
         expect(current_user.image.local_id).to eq localId
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
-        expect(json["image"]).to have_key "clyid"
+        expect(json["image"]).to have_key "publicId"
         expect(json["image"]).to have_key "localId"
-        expect(json["image"]["clyid"]).to eq publicId
+        expect(json["image"]["publicId"]).to eq publicId
         expect(json["image"]["localId"]).to eq localId
       end
     end

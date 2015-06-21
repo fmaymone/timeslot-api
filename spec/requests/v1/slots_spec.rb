@@ -1035,7 +1035,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", { media: media }, auth_header
           expect(json).to have_key 'media'
           expect(json['media'].first).to have_key 'mediaId'
-          expect(json['media'].first).to have_key 'clyid'
+          expect(json['media'].first).to have_key 'publicId'
           expect(json['media'].first).to have_key 'localId'
           expect(json['media'].first).to have_key 'position'
           expect(json['media'].first).to have_key 'duration'

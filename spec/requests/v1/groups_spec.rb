@@ -26,7 +26,7 @@ RSpec.describe "V1::Groups", type: :request do
     it "adds an group image" do
       post "/v1/groups", new_params.merge(image: { publicId: 'foobar' }),
            auth_header
-      expect(json["image"]["clyid"]).to eq "foobar"
+      expect(json["image"]["publicId"]).to eq "foobar"
     end
 
     context "invite multiple members on group creation" do

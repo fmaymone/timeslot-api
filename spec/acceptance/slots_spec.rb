@@ -175,7 +175,7 @@ resource "Slots" do
         #          "notes" => slot.notes
         #         )
         # expect(json.last["images"].length).to eq(slot.images.length)
-        # expect(json.last["images"].first['clyid']).to eq(slot.images.first.public_id)
+        # expect(json.last["images"].first['publicId']).to eq(slot.images.first.public_id)
       end
     end
   end
@@ -246,7 +246,7 @@ resource "Slots" do
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
                                 "image" => {
-                                  "clyid" => nil,
+                                  "publicId" => nil,
                                   "localId" => nil
                                 } },
                  "settings" => { 'alerts' => '1110001100' },
@@ -649,7 +649,7 @@ resource "Slots" do
       parameter :duration, "only for video and audio items"
       parameter :thumbnail, "public URL for video thumbnail"
 
-      response_field :clyid, "Cloudinary URL of the media item"
+      response_field :publicId, "Cloudinary URL of the media item"
       response_field :position, "Sorting order position of the media item"
       response_field :localId, "Ios specific local identifier"
       response_field :duration, "Duration of audio/video file"
@@ -677,7 +677,7 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json).to have_key("media")
         expect(*json['media']).to have_key("mediaId")
-        expect(*json['media']).to have_key("clyid")
+        expect(*json['media']).to have_key("publicId")
         expect(*json['media']).to have_key("mediaType")
         expect(*json['media']).to have_key("localId")
         expect(response_body).to include "v1234567/dfhjghjkdisudgfds7sly.jpg"
