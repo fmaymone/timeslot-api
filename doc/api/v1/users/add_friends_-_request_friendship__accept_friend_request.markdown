@@ -23,7 +23,7 @@ Description : Array of User IDs to create a friendship for
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=fT9_lToG5cUbb-CblimbznTlSX0
+Authorization: Token token=rP1xNUSNbwO1zGTrLqAN0BkZJFs
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/users/add_friends&quot; -d &#39;{&quot;ids&quot;:[305,307,311,308,309,310]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=fT9_lToG5cUbb-CblimbznTlSX0&quot; \
+	-H &quot;Authorization: Token token=rP1xNUSNbwO1zGTrLqAN0BkZJFs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,8 +63,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 5cb0d176-9a5e-42d7-bb20-40e86443e5e1
-X-Runtime: 0.046601
+X-Request-Id: 33985577-d248-4a03-854f-73e0a953db40
+X-Runtime: 0.051131
 Content-Length: 0</pre>
 
 #### Status

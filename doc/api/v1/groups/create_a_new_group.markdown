@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=M14f00VMdMm6f2bqG-iMLkZKQP8
+Authorization: Token token=3TrN3gE2v3V8SpepfHAdU08JZ0M
 Host: example.org
 Cookie: </pre>
 
@@ -91,7 +91,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[60,61,62]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=M14f00VMdMm6f2bqG-iMLkZKQP8&quot; \
+	-H &quot;Authorization: Token token=3TrN3gE2v3V8SpepfHAdU08JZ0M&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,11 +102,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d2cb428275f165c0f1409abb8aa25287&quot;
+ETag: W/&quot;fcd49c8d89d6579418dcf846a6ab04ca&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f9f8593f-6a7e-47a7-b6cf-791e6378c663
-X-Runtime: 0.046410
-Content-Length: 401</pre>
+X-Request-Id: e224fbc3-b118-4919-b754-ae4200c5f5dc
+X-Runtime: 0.044433
+Content-Length: 407</pre>
 
 #### Status
 
@@ -120,21 +120,21 @@ Content-Length: 401</pre>
   "name" : "foo",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-16T15:49:50.304Z",
-  "updatedAt" : "2015-06-16T15:49:50.304Z",
+  "createdAt" : "2015-06-22T08:44:15.188Z",
+  "updatedAt" : "2015-06-22T08:44:15.188Z",
   "deletedAt" : null,
   "image" : {
-    "clyid" : null,
+    "publicId" : null,
     "localId" : null
   },
   "owner" : {
     "id" : 63,
     "username" : "User 60",
-    "createdAt" : "2015-06-16T15:49:50.296Z",
-    "updatedAt" : "2015-06-16T15:49:50.296Z",
+    "createdAt" : "2015-06-22T08:44:15.180Z",
+    "updatedAt" : "2015-06-22T08:44:15.180Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

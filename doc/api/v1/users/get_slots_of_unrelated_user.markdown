@@ -37,11 +37,11 @@ Description : Number of likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : photos
-Description : Photos for the slot
+Name : images
+Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos for the slot
@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=IQD-0TrN14Q5myrVaK0jtaWppbw
+Authorization: Token token=STo8B-iRFhfRcW-kODmx6A6hPfg
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/281/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=IQD-0TrN14Q5myrVaK0jtaWppbw&quot; \
+	-H &quot;Authorization: Token token=STo8B-iRFhfRcW-kODmx6A6hPfg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,11 +89,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b1c4bdf3213403fd4941c1f58a2af991&quot;
+ETag: W/&quot;80e0a296697f108efc96df418eb3575f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2e53b98e-259d-490c-82d8-60e0e2562887
-X-Runtime: 0.066353
-Content-Length: 1122</pre>
+X-Request-Id: 4ff8573e-c3ec-4455-a022-827d67be66af
+X-Runtime: 0.062195
+Content-Length: 1128</pre>
 
 #### Status
 
@@ -107,19 +107,19 @@ Content-Length: 1122</pre>
     "id" : 88,
     "title" : "Slot title 77",
     "startDate" : "2019-09-24T05:44:02.000Z",
-    "createdAt" : "2015-06-16T15:50:04.345Z",
-    "updatedAt" : "2015-06-16T15:50:04.345Z",
+    "createdAt" : "2015-06-22T08:44:29.574Z",
+    "updatedAt" : "2015-06-22T08:44:29.574Z",
     "deletedAt" : null,
     "endDate" : "2019-10-24T05:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 284,
       "username" : "User 277",
-      "createdAt" : "2015-06-16T15:50:04.340Z",
-      "updatedAt" : "2015-06-16T15:50:04.340Z",
+      "createdAt" : "2015-06-22T08:44:29.569Z",
+      "updatedAt" : "2015-06-22T08:44:29.569Z",
       "deletedAt" : null,
       "image" : {
-        "clyid" : null,
+        "publicId" : null,
         "localId" : null
       }
     },
@@ -138,19 +138,19 @@ Content-Length: 1122</pre>
     "id" : 90,
     "title" : "Slot title 79",
     "startDate" : "2019-09-26T07:44:02.000Z",
-    "createdAt" : "2015-06-16T15:50:04.357Z",
-    "updatedAt" : "2015-06-16T15:50:04.373Z",
+    "createdAt" : "2015-06-22T08:44:29.592Z",
+    "updatedAt" : "2015-06-22T08:44:29.608Z",
     "deletedAt" : null,
     "endDate" : "2019-10-26T07:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 287,
       "username" : "User 280",
-      "createdAt" : "2015-06-16T15:50:04.360Z",
-      "updatedAt" : "2015-06-16T15:50:04.360Z",
+      "createdAt" : "2015-06-22T08:44:29.595Z",
+      "updatedAt" : "2015-06-22T08:44:29.595Z",
       "deletedAt" : null,
       "image" : {
-        "clyid" : null,
+        "publicId" : null,
         "localId" : null
       }
     },
