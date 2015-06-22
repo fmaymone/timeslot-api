@@ -1,6 +1,12 @@
 #Changelog
 
 ## latest
+- add title to media items of type voice/audio
+- change type of media items duration from int to float
+- rename voice to audio
+- rename photo to image
+- rename clyid to publicId
+
 
 ## v0.5.3 on t2s2-dev
 - increase length of media item local_id from 64 to 512

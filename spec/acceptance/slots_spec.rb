@@ -25,7 +25,7 @@ resource "Slots" do
     response_field :commentsCounter, "Number of comments on the slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
-    response_field :voices, "Voice recordings for the slot"
+    response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos recordings for the slot"
   end
 
@@ -46,33 +46,37 @@ resource "Slots" do
               "Startdate and Time of the Slot",
               required: true
     parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration)",
+              "Enddate and Time of the Slot (startdate + duration). Empty " \
+              "for slots with open end",
               required: true
-    parameter :locationId,
-              "ID of the location associated with this slot"
-    parameter :notes, "Notes for to the Slot"
+    parameter :location, "Location associated with this slot (see example)"
+    parameter :media, "Media items (image/audio/video) of to the Slot " \
+                      "(see example)"
+    parameter :notes, "Notes for to the Slot (see example)"
     parameter :settings, "User specific settings for the slot (alerts)"
     parameter :alerts, "Alerts for the Slot", scope: :settings
-    parameter :location, "IOS location associated with this slot"
-    parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
+  end
+
+  shared_context "ios location params" do
+    parameter :name, "Name of the location, eg. Timeslot Inc. (255 chars)",
               scope: :location
-    parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
+    parameter :thoroughfare, "Street address, eg. Dolziger Str. 9 (255 ch.)",
               scope: :location
-    parameter :subThoroughfare, "house number, e.g. 9 (255 chars)",
+    parameter :subThoroughfare, "house number, eg. 9 (255 chars)",
               scope: :location
     parameter :locality, "city, e.g. Berlin (255 chars)",
               scope: :location
-    parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
+    parameter :subLocality, "neighborhood, common name, eg. Mitte (255 ch.)",
               scope: :location
-    parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
+    parameter :postalCode, "zip code, eg. 94114 (32 chars)",
               scope: :location
-    parameter :country, "country, e.g. Germany (255 chars)",
+    parameter :country, "country, eg. Germany (255 chars)",
               scope: :location
-    parameter :isoCountryCode, "Country Code, e.g. US (8 chars)",
+    parameter :isoCountryCode, "Country Code, eg. US (8 chars)",
               scope: :location
-    parameter :inLandWater, "e.g. Lake Tahoe", scope: :location
-    parameter :ocean, "e.g. Pacific Ocean", scope: :location
-    parameter :areasOfInterest, "e.g. Volkspark Friedrichshain",
+    parameter :inLandWater, "eg. Lake Tahoe", scope: :location
+    parameter :ocean, "eg. Pacific Ocean", scope: :location
+    parameter :areasOfInterest, "eg. Volkspark Friedrichshain",
               scope: :location
     parameter :latitude, "Latitude", scope: :location
     parameter :longitude, "Longitude", scope: :location
@@ -104,7 +108,7 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: slot2
-        create_list :voice, 2, mediable: slot2
+        create_list :audio, 2, mediable: slot2
         create_list :video, 2, mediable: slot2
       }
       let(:ids) { [slot1.id, slot2.id] }
@@ -137,10 +141,10 @@ resource "Slots" do
         expect(json.last).to have_key("likes")
         expect(json.last).to have_key("commentsCounter")
         expect(json.last).to have_key("visibility")
-        # expect(json.last).to have_key("photos")
-        # expect(json.last).to have_key("voices")
+        # expect(json.last).to have_key("images")
+        # expect(json.last).to have_key("audios")
         # expect(json.last).to have_key("videos")
-        # expect(json.last.except('photos', 'voices', 'videos'))
+        # expect(json.last.except('images', 'audios', 'videos'))
         #   .to eq("id" => slot.id,
         #          "title" => slot.title,
         #          "startDate" => slot.start_date.as_json,
@@ -170,8 +174,8 @@ resource "Slots" do
         #          "visibility" => slot.visibility,
         #          "notes" => slot.notes
         #         )
-        # expect(json.last["photos"].length).to eq(slot.photos.length)
-        # expect(json.last["photos"].first['clyid']).to eq(slot.photos.first.public_id)
+        # expect(json.last["images"].length).to eq(slot.images.length)
+        # expect(json.last["images"].first['publicId']).to eq(slot.images.first.public_id)
       end
     end
   end
@@ -195,7 +199,7 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: slot
-        create_list :voice, 2, mediable: slot
+        create_list :audio, 2, mediable: slot
         create_list :video, 2, mediable: slot
       }
       let(:id) { slot.id }
@@ -242,7 +246,7 @@ resource "Slots" do
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
                                 "image" => {
-                                  "clyid" => nil,
+                                  "publicId" => nil,
                                   "localId" => nil
                                 } },
                  "settings" => { 'alerts' => '1110001100' },
@@ -252,7 +256,7 @@ resource "Slots" do
                  "commentsCounter" => slot.comments.count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
-        expect(response_body).to include slot.photos.first.public_id
+        expect(response_body).to include slot.images.first.public_id
         expect(json["shareUrl"]).to include slot.share_id
       end
     end
@@ -313,7 +317,7 @@ resource "Slots" do
       context "slot with default location" do
         let(:locationId) { 200_719_253 }
 
-        example "Create StandardSlot with default location", document: :v1 do
+        example "Create StandardSlot with default location", document: :false do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -352,6 +356,8 @@ resource "Slots" do
       end
 
       context "slot with IOS location" do
+        include_context "ios location params"
+
         let(:name) { 'Soho House' }
         let(:thoroughfare) { 'Torstrasse 1' }
         let(:locality) { 'Berlin' }
@@ -363,7 +369,7 @@ resource "Slots" do
         let(:longitude) { '13.414259' }
         let(:private_location) { false }
 
-        example "Create StandardSlot with IOS Location", document: :v1 do
+        example "Create StandardSlot with IOS Location", document: :false do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
@@ -431,19 +437,10 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :title, "Title of slot (max. 48 characters)",
+    include_context "default slot parameter"
+
+    parameter :groupId, "ID of the group to which the Slot belongs",
               required: true
-    parameter :startDate,
-              "Startdate and Time of the Slot",
-              required: true
-    parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration)",
-              required: true
-    parameter :groupId, "Group ID if GroupSlot",
-              required: true
-    parameter :note, "A note which belongs to the Slot"
-    parameter :settings, "User specific settings for the slot (alerts)"
-    parameter :alerts, "Alerts for the Slot", scope: :settings
 
     let(:group) { create(:group, owner: current_user) }
 
@@ -628,7 +625,7 @@ resource "Slots" do
 
       let(:notes) { [attributes_for(:note), attributes_for(:note)] }
 
-      example "Add notes", document: :v1 do
+      example "Update Slot - Add notes", document: :v1 do
         do_request
 
         expect(response_status).to eq(200)
@@ -640,7 +637,7 @@ resource "Slots" do
 
     describe "Add Media to existing slot" do
       parameter :media, "array of new media items"
-      parameter :mediaType, "one of photo/video/voice",
+      parameter :mediaType, "one of image/video/audio",
                 required: true, scope: :media
       parameter :publicId, "Cloudinary ID / URL",
                 required: true, scope: :media
@@ -649,21 +646,22 @@ resource "Slots" do
       parameter :position, "Sorting order of the new media item." \
                            " If not submitted it will be added at the end",
                 scope: :media
-      parameter :duration, "only for video and voice items"
+      parameter :duration, "only for video and audio items"
       parameter :thumbnail, "public URL for video thumbnail"
 
-      response_field :clyid, "Cloudinary URL of the media item"
+      response_field :publicId, "Cloudinary URL of the media item"
       response_field :position, "Sorting order position of the media item"
       response_field :localId, "Ios specific local identifier"
       response_field :duration, "Duration of audio/video file"
+      response_field :title, "Title of audio file"
       response_field :thumbnail, "Clouinary public URL of the video thumbnail"
 
       let(:media) { [publicId: "v1234567/dfhjghjkdisudgfds7sly.jpg",
                      position: "1",
-                     mediaType: 'photo',
+                     mediaType: 'image',
                      localId: "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"] }
 
-      example "Add photo(s)", document: :v1 do
+      example "Update Slot - Add media", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary client updates the slot with the image" \
@@ -673,13 +671,13 @@ resource "Slots" do
         do_request
 
         std_slot.reload
-        expect(std_slot.photos.size).to eq 1
-        expect(std_slot.photos.first.public_id)
+        expect(std_slot.images.size).to eq 1
+        expect(std_slot.images.first.public_id)
           .to eq "v1234567/dfhjghjkdisudgfds7sly.jpg"
         expect(response_status).to eq(200)
         expect(json).to have_key("media")
         expect(*json['media']).to have_key("mediaId")
-        expect(*json['media']).to have_key("clyid")
+        expect(*json['media']).to have_key("publicId")
         expect(*json['media']).to have_key("mediaType")
         expect(*json['media']).to have_key("localId")
         expect(response_body).to include "v1234567/dfhjghjkdisudgfds7sly.jpg"
@@ -693,26 +691,26 @@ resource "Slots" do
                 required: true
       parameter :mediaId, "Timeslot's internal ID for this media item",
                 required: true, scope: :media
-      parameter :position, "Sorting order of the image/video/voice. If not " \
+      parameter :position, "Sorting order of the image/video/audio. If not " \
                            "supplied the media items will be sortet as they" \
                            " are ordered in the array.",
                 required: true, scope: :media
 
-      let!(:photo_1) { create(:slot_image, mediable: std_slot, position: 0) }
-      let!(:photo_2) { create(:slot_image, mediable: std_slot, position: 1) }
-      let!(:photo_3) { create(:slot_image, mediable: std_slot, position: 2) }
+      let!(:image_1) { create(:slot_image, mediable: std_slot, position: 0) }
+      let!(:image_2) { create(:slot_image, mediable: std_slot, position: 1) }
+      let!(:image_3) { create(:slot_image, mediable: std_slot, position: 2) }
 
-      let(:media) { [{ mediaId: photo_1.id,
-                       mediaType: 'photo',
+      let(:media) { [{ mediaId: image_1.id,
+                       mediaType: 'image',
                        position: 2 },
-                     { mediaId: photo_2.id,
-                       mediaType: 'photo',
+                     { mediaId: image_2.id,
+                       mediaType: 'image',
                        position: 0 },
-                     { mediaId: photo_3.id,
-                       mediaType: 'photo',
+                     { mediaId: image_3.id,
+                       mediaType: 'image',
                        position: 1 }] }
 
-      example "Reorder media items", document: :v1 do
+      example "Update Slot - Reorder media items", document: :v1 do
         explanation "An array with the media_item keys and corresponding" \
                     " position/ordering number (starting from 0) for all" \
                     " images of the slot must be send.\n\n" \
@@ -722,13 +720,15 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(std_slot.media_items.find(photo_1.id).position).to eq(2)
-        expect(std_slot.media_items.find(photo_2.id).position).to eq(0)
-        expect(std_slot.media_items.find(photo_3.id).position).to eq(1)
+        expect(std_slot.media_items.find(image_1.id).position).to eq(2)
+        expect(std_slot.media_items.find(image_2.id).position).to eq(0)
+        expect(std_slot.media_items.find(image_3.id).position).to eq(1)
       end
     end
 
     describe "slot with IOS location" do
+      include_context "ios location params"
+
       let(:name) { 'Soho House' }
       let(:thoroughfare) { 'Torstrasse 1' }
       let(:subThoroughfare) { '1' }
@@ -743,7 +743,7 @@ resource "Slots" do
       let(:longitude) { '13.414259' }
       let(:privateLocation) { true }
 
-      example "Update location of StandardSlot", document: :v1 do
+      example "Update Slot - Add Location", document: :v1 do
         explanation "Returns data of new slot.\n\n" \
                     "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
@@ -774,8 +774,6 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Standard Slot to delete", required: true
-
-    include_context "default slot response fields"
 
     let!(:std_slot) {
       create(:std_slot_private, :with_media, owner: current_user)
@@ -821,8 +819,6 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Group Slot to delete", required: true
-
-    include_context "group slot response fields"
 
     let(:group) { create(:group, owner: current_user) }
     let!(:group_slot) { create(:group_slot, group: group) }
@@ -872,11 +868,11 @@ resource "Slots" do
 
     parameter :id, "ID of the ReSlot to delete", required: true
 
-    include_context "reslot response fields"
-
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
+      include_context "reslot response fields"
+
       let(:id) { re_slot.id }
 
       example "Delete ReSlot", document: :v1 do
@@ -928,8 +924,8 @@ resource "Slots" do
       let(:id) { slot.id }
 
       example "Get Likes for Slot", document: :v1 do
-        explanation "returns a list of all likes for the slot." \
-                    " Includes User data and timestamp.\n\n" \
+        explanation "returns a list of all likes for the slot. " \
+                    "Includes User data and timestamp.\n\n" \
                     "returns 401 if User not allowed to see Likes data\n\n" \
                     "returns 404 if ID is invalid"
         do_request

@@ -65,13 +65,13 @@ RSpec.describe ReSlot, type: :model do
     it "contains the same media items and notes as the parent slot" do
       expect(re_slot_1.notes).to eq std_slot.notes
       expect(re_slot_1.media_items).to eq std_slot.media_items
-      expect(re_slot_1.photos).to eq std_slot.photos
-      expect(re_slot_1.voices).to eq std_slot.voices
+      expect(re_slot_1.images).to eq std_slot.images
+      expect(re_slot_1.audios).to eq std_slot.audios
       expect(re_slot_1.videos).to eq std_slot.videos
       expect(re_slot_2.notes).to eq std_slot.notes
       expect(re_slot_2.media_items).to eq std_slot.media_items
-      expect(re_slot_2.photos).to eq std_slot.photos
-      expect(re_slot_2.voices).to eq std_slot.voices
+      expect(re_slot_2.images).to eq std_slot.images
+      expect(re_slot_2.audios).to eq std_slot.audios
       expect(re_slot_2.videos).to eq std_slot.videos
     end
   end

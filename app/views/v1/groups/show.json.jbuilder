@@ -10,7 +10,7 @@ json.extract!(
 )
 
 json.image do
-  json.clyid @group.image ? @group.image.public_id : nil
+  json.public_id @group.image ? @group.image.public_id : nil
   json.local_id @group.image.try(:local_id) ? @group.image.local_id : nil
 end
 

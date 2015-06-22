@@ -52,12 +52,12 @@ class BaseSlot < ActiveRecord::Base
     slot_type.constantize.try(:visibility)
   end
 
-  def photos
+  def images
     media_items.image.order(:position)
   end
 
-  def voices
-    media_items.voice.order(:position)
+  def audios
+    media_items.audio.order(:position)
   end
 
   def videos
@@ -190,12 +190,13 @@ class BaseSlot < ActiveRecord::Base
     items.each do |item_hash|
       item = ActionController::Parameters.new(item_hash)
       case item[:media_type]
-      when 'photo'
+      when 'image'
         add_media(item.permit(:public_id, :position, :local_id)
                    .merge(media_type: 'image'))
-      when 'voice'
-        add_media(item.permit(:public_id, :position, :local_id, :duration)
-                   .merge(media_type: 'voice'))
+      when 'audio'
+        add_media(
+          item.permit(:public_id, :position, :local_id, :duration, :title)
+          .merge(media_type: 'audio'))
       when 'video'
         add_media(
           item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
