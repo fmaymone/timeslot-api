@@ -312,6 +312,7 @@ module V1
                                 :mediaId,
                                 :localId,
                                 :mediaType,
+                                :title,
                                 :duration,
                                 :thumbnail])
       p.deep_transform_keys!(&:underscore)
