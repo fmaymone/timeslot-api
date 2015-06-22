@@ -60,7 +60,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=q7CPFdri1SxGW3llvwlvPCY2ZSY
+Authorization: Token token=xj48z2MIbNByB71HxLtf-KBN0H8
 Host: example.org
 Cookie: </pre>
 
@@ -83,7 +83,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=q7CPFdri1SxGW3llvwlvPCY2ZSY&quot; \
+	-H &quot;Authorization: Token token=xj48z2MIbNByB71HxLtf-KBN0H8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,11 +94,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;19720f682dbdbc34a3ad0567e1e07564&quot;
+ETag: W/&quot;1615363955ce4239846ad046e807bfb2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 036a0dd6-0fba-444a-a74d-24ae0db6c826
-X-Runtime: 0.021582
-Content-Length: 475</pre>
+X-Request-Id: 777e796b-5ba7-42f2-acfd-b74db6449227
+X-Runtime: 0.020826
+Content-Length: 481</pre>
 
 #### Status
 
@@ -112,21 +112,21 @@ Content-Length: 475</pre>
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-16T15:49:50.540Z",
-  "updatedAt" : "2015-06-16T15:49:50.540Z",
+  "createdAt" : "2015-06-22T08:44:15.417Z",
+  "updatedAt" : "2015-06-22T08:44:15.417Z",
   "deletedAt" : null,
   "image" : {
-    "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
     "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
   },
   "owner" : {
     "id" : 65,
     "username" : "User 62",
-    "createdAt" : "2015-06-16T15:49:50.537Z",
-    "updatedAt" : "2015-06-16T15:49:50.537Z",
+    "createdAt" : "2015-06-22T08:44:15.415Z",
+    "updatedAt" : "2015-06-22T08:44:15.415Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

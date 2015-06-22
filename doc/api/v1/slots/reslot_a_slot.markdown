@@ -70,8 +70,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=M9hvOA6WTm7bSS1WqDAI6b09zhE
+Authorization: Token token=EzNSvCljeuGJFuZwUODiVFkr7ow
 Host: example.org
 Cookie: </pre>
 
@@ -106,7 +106,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:33}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=M9hvOA6WTm7bSS1WqDAI6b09zhE&quot; \
+	-H &quot;Authorization: Token token=EzNSvCljeuGJFuZwUODiVFkr7ow&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -117,11 +117,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fcf608f5775d3517f65f453ffded64ef&quot;
+ETag: W/&quot;aedba558d172864e6cc4aea99bdd7bac&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 686b099c-81e1-4a24-872b-b4e288a045dc
-X-Runtime: 0.035731
-Content-Length: 520</pre>
+X-Request-Id: 43f97c8f-40ba-43a7-b192-c5ebe2c60751
+X-Runtime: 0.035654
+Content-Length: 523</pre>
 
 #### Status
 
@@ -134,19 +134,19 @@ Content-Length: 520</pre>
   "id" : 34,
   "title" : "Slot title 28",
   "startDate" : "2019-09-02T04:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:54.735Z",
-  "updatedAt" : "2015-06-16T15:49:54.735Z",
+  "createdAt" : "2015-06-22T08:44:19.683Z",
+  "updatedAt" : "2015-06-22T08:44:19.683Z",
   "deletedAt" : null,
   "endDate" : "2019-10-02T04:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 162,
     "username" : "User 159",
-    "createdAt" : "2015-06-16T15:49:54.643Z",
-    "updatedAt" : "2015-06-16T15:49:54.643Z",
+    "createdAt" : "2015-06-22T08:44:19.587Z",
+    "updatedAt" : "2015-06-22T08:44:19.587Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
