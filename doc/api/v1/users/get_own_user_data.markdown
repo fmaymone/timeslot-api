@@ -96,7 +96,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=iPfgAg4-3fRlSqdoUxdYDTniFRQ
+Authorization: Token token=gC5-i_HdaTPPmIzePjUN_p7A1Bg
 Host: example.org
 Cookie: </pre>
 
@@ -108,7 +108,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/227&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=iPfgAg4-3fRlSqdoUxdYDTniFRQ&quot; \
+	-H &quot;Authorization: Token token=gC5-i_HdaTPPmIzePjUN_p7A1Bg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -119,11 +119,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8bb91b818a141cb4f233672df597d942&quot;
+ETag: W/&quot;be21de9e36707b6898cf104ec7dfe2ea&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6910a4fa-c6ad-4340-bea9-904ea6317fb3
-X-Runtime: 0.025380
-Content-Length: 717</pre>
+X-Request-Id: ee060080-fe63-4c8c-9042-8d8d160b6042
+X-Runtime: 0.024874
+Content-Length: 720</pre>
 
 #### Status
 
@@ -135,12 +135,12 @@ Content-Length: 717</pre>
 {
   "id" : 227,
   "username" : "User 224",
-  "createdAt" : "2015-06-16T15:50:00.598Z",
-  "updatedAt" : "2015-06-16T15:50:00.598Z",
+  "createdAt" : "2015-06-22T08:44:25.750Z",
+  "updatedAt" : "2015-06-22T08:44:25.750Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
-    "clyid" : null,
+    "publicId" : null,
     "localId" : null
   },
   "slotCount" : 0,

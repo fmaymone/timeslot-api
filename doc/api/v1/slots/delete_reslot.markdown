@@ -66,8 +66,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -79,7 +79,7 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk
+<pre>Authorization: Token token=ysDH5j2L4MpNaO2l3ye6bX3lryI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk&quot; \
+	-H &quot;Authorization: Token token=ysDH5j2L4MpNaO2l3ye6bX3lryI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,11 +103,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2908883bf7db89e404b22c6f05f6bef1&quot;
+ETag: W/&quot;71dd0eef581a24f96f428f5798ebb594&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 71afbe70-2b5d-4c14-bc68-9a8bfa6ad877
-X-Runtime: 0.050213
-Content-Length: 542</pre>
+X-Request-Id: b4e624a9-6aa1-4279-af52-6ae6a82fe1f7
+X-Runtime: 0.052792
+Content-Length: 545</pre>
 
 #### Status
 
@@ -120,19 +120,19 @@ Content-Length: 542</pre>
   "id" : 45,
   "title" : "Slot title 40",
   "startDate" : "2019-09-14T16:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:59.456Z",
-  "updatedAt" : "2015-06-16T15:49:59.498Z",
-  "deletedAt" : "2015-06-16T15:49:59.494Z",
+  "createdAt" : "2015-06-22T08:44:24.583Z",
+  "updatedAt" : "2015-06-22T08:44:24.623Z",
+  "deletedAt" : "2015-06-22T08:44:24.617Z",
   "endDate" : "2019-10-14T16:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 187,
     "username" : "User 184",
-    "createdAt" : "2015-06-16T15:49:59.459Z",
-    "updatedAt" : "2015-06-16T15:49:59.459Z",
+    "createdAt" : "2015-06-22T08:44:24.585Z",
+    "updatedAt" : "2015-06-22T08:44:24.585Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

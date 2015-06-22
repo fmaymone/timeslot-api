@@ -1,6 +1,6 @@
 # Slots API
 
-## Update location of StandardSlot
+## Update Slot - Add Location
 
 ### PATCH /v1/stdslot/:id
 
@@ -24,13 +24,16 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
@@ -38,41 +41,38 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : location
-Description : IOS location associated with this slot
-
 Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+Description : Name of the location, eg. Timeslot Inc. (255 chars)
 
 Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
+Description : Street address, eg. Dolziger Str. 9 (255 ch.)
 
 Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
+Description : house number, eg. 9 (255 chars)
 
 Name : locality
 Description : city, e.g. Berlin (255 chars)
 
 Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
+Description : neighborhood, common name, eg. Mitte (255 ch.)
 
 Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
+Description : zip code, eg. 94114 (32 chars)
 
 Name : country
-Description : country, e.g. Germany (255 chars)
+Description : country, eg. Germany (255 chars)
 
 Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
+Description : Country Code, eg. US (8 chars)
 
 Name : inLandWater
-Description : e.g. Lake Tahoe
+Description : eg. Lake Tahoe
 
 Name : ocean
-Description : e.g. Pacific Ocean
+Description : eg. Pacific Ocean
 
 Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
+Description : eg. Volkspark Friedrichshain
 
 Name : latitude
 Description : Latitude
@@ -136,8 +136,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -147,7 +147,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=D5KWVnHq_PxkAOnORj45upRt4e4
+Authorization: Token token=Dvn0xwmXONOLEzK0ufcaSP-cqL0
 Host: example.org
 Cookie: </pre>
 
@@ -179,7 +179,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=D5KWVnHq_PxkAOnORj45upRt4e4&quot; \
+	-H &quot;Authorization: Token token=Dvn0xwmXONOLEzK0ufcaSP-cqL0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -190,11 +190,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6e7c898de3ef0df4a1ecd1006aa6963c&quot;
+ETag: W/&quot;601415cf69e68c011f40345ad65bc13d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5f6eb5a1-5d8f-46ef-811c-81808a19d14a
-X-Runtime: 0.045223
-Content-Length: 880</pre>
+X-Request-Id: 313054dd-0689-4a14-b540-fb982a74d371
+X-Runtime: 0.042665
+Content-Length: 883</pre>
 
 #### Status
 
@@ -207,8 +207,8 @@ Content-Length: 880</pre>
   "id" : 39,
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:55.456Z",
-  "updatedAt" : "2015-06-16T15:49:55.456Z",
+  "createdAt" : "2015-06-22T08:44:20.419Z",
+  "updatedAt" : "2015-06-22T08:44:20.419Z",
   "deletedAt" : null,
   "endDate" : "2019-10-08T10:44:02.000Z",
   "location" : {
@@ -233,11 +233,11 @@ Content-Length: 880</pre>
   "creator" : {
     "id" : 175,
     "username" : "User 172",
-    "createdAt" : "2015-06-16T15:49:55.450Z",
-    "updatedAt" : "2015-06-16T15:49:55.450Z",
+    "createdAt" : "2015-06-22T08:44:20.414Z",
+    "updatedAt" : "2015-06-22T08:44:20.414Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

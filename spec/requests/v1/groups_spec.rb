@@ -26,7 +26,7 @@ RSpec.describe "V1::Groups", type: :request do
     it "adds an group image" do
       post "/v1/groups", new_params.merge(image: { publicId: 'foobar' }),
            auth_header
-      expect(json["image"]["clyid"]).to eq "foobar"
+      expect(json["image"]["publicId"]).to eq "foobar"
     end
 
     context "invite multiple members on group creation" do
@@ -179,9 +179,9 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:group_slots) {
         create_list(:group_slot, 3, :with_media, group: group) }
 
-      it "deletes all photos on the group slots" do
-        g_slots_img_first = group.group_slots.first.photos.first
-        g_slots_img_last = group.group_slots.first.photos.last
+      it "deletes all images on the group slots" do
+        g_slots_img_first = group.group_slots.first.images.first
+        g_slots_img_last = group.group_slots.first.images.last
         delete "/v1/groups/#{group.id}", {}, auth_header
         g_slots_img_first.reload
         g_slots_img_last.reload

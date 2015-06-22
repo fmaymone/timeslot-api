@@ -39,7 +39,7 @@ Description : URL of the user image
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4Wdi86a4l-uEXvAw4Lq1crrtQQc
+Authorization: Token token=WKQaJrWGwBnJtnEYfJBsmtrflR4
 Host: example.org
 Cookie: </pre>
 
@@ -62,7 +62,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4Wdi86a4l-uEXvAw4Lq1crrtQQc&quot; \
+	-H &quot;Authorization: Token token=WKQaJrWGwBnJtnEYfJBsmtrflR4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,11 +73,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dc34a23ad9a5ed013b7959e60534bca6&quot;
+ETag: W/&quot;7bb82d8e0f69efef6dc60b4438c251bc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5220d149-5c50-46ab-91f2-b3e28547fce0
-X-Runtime: 0.023308
-Content-Length: 714</pre>
+X-Request-Id: 5ce8d445-aeeb-42de-8057-85240d156556
+X-Runtime: 0.021520
+Content-Length: 717</pre>
 
 #### Status
 
@@ -89,12 +89,12 @@ Content-Length: 714</pre>
 {
   "id" : 53,
   "username" : "User 50",
-  "createdAt" : "2015-06-16T15:49:49.895Z",
-  "updatedAt" : "2015-06-16T15:49:49.895Z",
+  "createdAt" : "2015-06-22T08:44:14.766Z",
+  "updatedAt" : "2015-06-22T08:44:14.766Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
-    "clyid" : null,
+    "publicId" : null,
     "localId" : null
   },
   "slotCount" : 0,

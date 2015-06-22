@@ -342,9 +342,9 @@ resource "Users" do
         expect(current_user.image.local_id).to eq localId
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
-        expect(json["image"]).to have_key "clyid"
+        expect(json["image"]).to have_key "publicId"
         expect(json["image"]).to have_key "localId"
-        expect(json["image"]["clyid"]).to eq publicId
+        expect(json["image"]["publicId"]).to eq publicId
         expect(json["image"]["localId"]).to eq localId
       end
     end
@@ -424,8 +424,8 @@ resource "Users" do
     response_field :notes, "A list of all notes on the slot"
     response_field :likes, "Number of likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
-    response_field :photos, "Photos for the slot"
-    response_field :voices, "Voice recordings for the slot"
+    response_field :images, "Images for the slot"
+    response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos for the slot"
     response_field :url, "direct url to fetch the slot"
     response_field :visibility, "Visibility if it's a StandardSlot"
@@ -594,8 +594,8 @@ resource "Users" do
     response_field :notes, "A list of all notes on the slot"
     response_field :likes, "Number of likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
-    response_field :photos, "Photos for the slot"
-    response_field :voices, "Voice recordings for the slot"
+    response_field :images, "Images for the slot"
+    response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos for the slot"
     response_field :url, "direct url to fetch the slot"
     response_field :visibility, "Visibility if it's a StandardSlot"

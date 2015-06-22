@@ -1,3 +1,3 @@
-json.photos media do |item|
+json.images media do |item|
   json.partial! 'v1/media/basic_media', item: item
 end

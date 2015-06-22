@@ -26,79 +26,22 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
-
-Name : location
-Description : IOS location associated with this slot
-
-Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
-
-Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
-
-Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
-
-Name : locality
-Description : city, e.g. Berlin (255 chars)
-
-Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
-
-Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
-
-Name : country
-Description : country, e.g. Germany (255 chars)
-
-Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
-
-Name : inLandWater
-Description : e.g. Lake Tahoe
-
-Name : ocean
-Description : e.g. Pacific Ocean
-
-Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
-
-Name : latitude
-Description : Latitude
-
-Name : longitude
-Description : Longitude
-
-Name : privateLocation
-Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
-
-Name : title
-Description : Updated title of slot
-
-Name : startDate
-Description : Updated Startdate and Time of the Slot
-
-Name : endDate
-Description : Updated Enddate and Time of the Slot (startdate + duration)
-
-Name : locationId
-Description : Location ID
-
-Name : visibility
-Description : Visibility of slot
 
 
 ### Response Fields
@@ -153,8 +96,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -164,7 +107,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=yEphzODk_N_sFxMfxX_GzsvfAdA
+Authorization: Token token=dgx07TCNMOgA-S1SA8KMwKgC42M
 Host: example.org
 Cookie: </pre>
 
@@ -184,7 +127,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=yEphzODk_N_sFxMfxX_GzsvfAdA&quot; \
+	-H &quot;Authorization: Token token=dgx07TCNMOgA-S1SA8KMwKgC42M&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -195,11 +138,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2491c86be7734bb9ca4334203451ec82&quot;
+ETag: W/&quot;825e8ce1b82c5f499cf392da17db727d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 922ff352-51fc-4a81-9733-17745974750b
-X-Runtime: 0.035566
-Content-Length: 529</pre>
+X-Request-Id: bbfee9f8-a5c8-40a2-8b2b-6b22c0e9f9dc
+X-Runtime: 0.034921
+Content-Length: 532</pre>
 
 #### Status
 
@@ -212,19 +155,19 @@ Content-Length: 529</pre>
   "id" : 35,
   "title" : "New title for a Slot",
   "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:54.936Z",
-  "updatedAt" : "2015-06-16T15:49:54.936Z",
+  "createdAt" : "2015-06-22T08:44:19.887Z",
+  "updatedAt" : "2015-06-22T08:44:19.887Z",
   "deletedAt" : null,
   "endDate" : "2019-10-04T06:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 167,
     "username" : "User 164",
-    "createdAt" : "2015-06-16T15:49:54.931Z",
-    "updatedAt" : "2015-06-16T15:49:54.931Z",
+    "createdAt" : "2015-06-22T08:44:19.883Z",
+    "updatedAt" : "2015-06-22T08:44:19.883Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

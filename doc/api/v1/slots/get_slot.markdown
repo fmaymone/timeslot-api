@@ -66,8 +66,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -77,7 +77,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=zZBuTDlRSSBhga16phgU8M5Kw64
+Authorization: Token token=ILxxo9oCjMwpdJTy2cfGcZ10Gj8
 Host: example.org
 Cookie: </pre>
 
@@ -89,7 +89,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/25&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zZBuTDlRSSBhga16phgU8M5Kw64&quot; \
+	-H &quot;Authorization: Token token=ILxxo9oCjMwpdJTy2cfGcZ10Gj8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -100,11 +100,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5592c9912ddcb8f21db2c788c285299f&quot;
+ETag: W/&quot;aa7e550e2287688dfbaf0eb8a9bfe8e9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6928c8f9-c7cb-4b81-b5b8-bbe7960a3172
-X-Runtime: 0.035275
-Content-Length: 1612</pre>
+X-Request-Id: 55e6409e-eb9b-4776-aa7c-006fe0c49db8
+X-Runtime: 0.038396
+Content-Length: 1665</pre>
 
 #### Status
 
@@ -117,19 +117,19 @@ Content-Length: 1612</pre>
   "id" : 25,
   "title" : "Slot title 27",
   "startDate" : "2019-09-01T03:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:53.475Z",
-  "updatedAt" : "2015-06-16T15:49:53.475Z",
+  "createdAt" : "2015-06-22T08:44:18.394Z",
+  "updatedAt" : "2015-06-22T08:44:18.394Z",
   "deletedAt" : null,
   "endDate" : "2019-10-01T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 147,
     "username" : "User 144",
-    "createdAt" : "2015-06-16T15:49:53.466Z",
-    "updatedAt" : "2015-06-16T15:49:53.466Z",
+    "createdAt" : "2015-06-22T08:44:18.386Z",
+    "updatedAt" : "2015-06-22T08:44:18.386Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
@@ -137,79 +137,81 @@ Content-Length: 1612</pre>
   "media" : [
     {
       "mediaId" : 30,
-      "clyid" : "dfhjghjkdisudgfds7iy27",
+      "publicId" : "dfhjghjkdisudgfds7iy27",
       "position" : 9,
       "localId" : null,
       "mediaType" : "video",
-      "duration=" : null,
-      "thumbnail=" : null
+      "duration" : null,
+      "thumbnail" : null
     },
     {
       "mediaId" : 29,
-      "clyid" : "dfhjghjkdisudgfds7iy26",
+      "publicId" : "dfhjghjkdisudgfds7iy26",
       "position" : 8,
       "localId" : null,
       "mediaType" : "video",
-      "duration=" : null,
-      "thumbnail=" : null
+      "duration" : null,
+      "thumbnail" : null
     },
     {
       "mediaId" : 28,
-      "clyid" : "dfhjghjkdisudgfds7iy25",
+      "publicId" : "dfhjghjkdisudgfds7iy25",
       "position" : 7,
       "localId" : null,
-      "mediaType" : "voice",
-      "duration=" : null
+      "mediaType" : "audio",
+      "duration" : null,
+      "title" : null
     },
     {
       "mediaId" : 27,
-      "clyid" : "dfhjghjkdisudgfds7iy24",
+      "publicId" : "dfhjghjkdisudgfds7iy24",
       "position" : 6,
       "localId" : null,
-      "mediaType" : "voice",
-      "duration=" : null
+      "mediaType" : "audio",
+      "duration" : null,
+      "title" : null
     },
     {
       "mediaId" : 26,
-      "clyid" : "dfhjghjkdisudgfds7iy23",
+      "publicId" : "dfhjghjkdisudgfds7iy23",
       "position" : 5,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 25,
-      "clyid" : "dfhjghjkdisudgfds7iy22",
+      "publicId" : "dfhjghjkdisudgfds7iy22",
       "position" : 4,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 24,
-      "clyid" : "dfhjghjkdisudgfds7iy21",
+      "publicId" : "dfhjghjkdisudgfds7iy21",
       "position" : 3,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 23,
-      "clyid" : "dfhjghjkdisudgfds7iy20",
+      "publicId" : "dfhjghjkdisudgfds7iy20",
       "position" : 2,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 22,
-      "clyid" : "dfhjghjkdisudgfds7iy19",
+      "publicId" : "dfhjghjkdisudgfds7iy19",
       "position" : 1,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 21,
-      "clyid" : "dfhjghjkdisudgfds7iy18",
+      "publicId" : "dfhjghjkdisudgfds7iy18",
       "position" : 0,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     }
   ],
   "settings" : {

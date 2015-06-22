@@ -1,6 +1,6 @@
 # Slots API
 
-## Add photo(s)
+## Update Slot - Add media
 
 ### PATCH /v1/stdslot/:id
 
@@ -22,13 +22,16 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
@@ -36,71 +39,23 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : location
-Description : IOS location associated with this slot
-
-Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
-
-Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
-
-Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
-
-Name : locality
-Description : city, e.g. Berlin (255 chars)
-
-Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
-
-Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
-
-Name : country
-Description : country, e.g. Germany (255 chars)
-
-Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
-
-Name : inLandWater
-Description : e.g. Lake Tahoe
-
-Name : ocean
-Description : e.g. Pacific Ocean
-
-Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
-
-Name : latitude
-Description : Latitude
-
-Name : longitude
-Description : Longitude
-
-Name : privateLocation
-Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
-
 Name : media
 Description : array of new media items
 
 Name : mediaType *- required -*
-Description : one of photo/video/voice
+Description : one of image/video/audio
 
 Name : publicId *- required -*
 Description : Cloudinary ID / URL
 
 Name : localId
-Description : iOS local ID
+Description : iOS local ID (max 512 chars)
 
 Name : position
 Description : Sorting order of the new media item. If not submitted it will be added at the end
 
-Name : localId
-Description : IOS specific local identifier for media item
-
 Name : duration
-Description : only for video and voice items
+Description : only for video and audio items
 
 Name : thumbnail
 Description : public URL for video thumbnail
@@ -158,13 +113,13 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
 
-Name : clyid
+Name : publicId
 Description : Cloudinary URL of the media item
 
 Name : position
@@ -176,6 +131,9 @@ Description : Ios specific local identifier
 Name : duration
 Description : Duration of audio/video file
 
+Name : title
+Description : Title of audio file
+
 Name : thumbnail
 Description : Clouinary public URL of the video thumbnail
 
@@ -184,7 +142,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4xALTi-Nj1KaiwRX2yHVRdbd_IM
+Authorization: Token token=2b_owoeYZBczXYoWjwv-YED70t8
 Host: example.org
 Cookie: </pre>
 
@@ -199,7 +157,7 @@ Cookie: </pre>
     {
       "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : "1",
-      "mediaType" : "photo",
+      "mediaType" : "image",
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
     }
   ]
@@ -209,9 +167,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;photo&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4xALTi-Nj1KaiwRX2yHVRdbd_IM&quot; \
+	-H &quot;Authorization: Token token=2b_owoeYZBczXYoWjwv-YED70t8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -222,11 +180,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0f36d4b7a4da613978ddb7aa6f250c99&quot;
+ETag: W/&quot;c6447edcb31aef89baa28d67636fca19&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ba83f94b-d3ff-42a1-b6d6-f2fde0bf6271
-X-Runtime: 0.039202
-Content-Length: 670</pre>
+X-Request-Id: 76e53a98-54f0-4a56-9db9-f67bee1a82d7
+X-Runtime: 0.038404
+Content-Length: 676</pre>
 
 #### Status
 
@@ -239,19 +197,19 @@ Content-Length: 670</pre>
   "id" : 37,
   "title" : "Slot title 32",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:55.184Z",
-  "updatedAt" : "2015-06-16T15:49:55.184Z",
+  "createdAt" : "2015-06-22T08:44:20.143Z",
+  "updatedAt" : "2015-06-22T08:44:20.143Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 171,
     "username" : "User 168",
-    "createdAt" : "2015-06-16T15:49:55.179Z",
-    "updatedAt" : "2015-06-16T15:49:55.179Z",
+    "createdAt" : "2015-06-22T08:44:20.138Z",
+    "updatedAt" : "2015-06-22T08:44:20.138Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
@@ -259,10 +217,10 @@ Content-Length: 670</pre>
   "media" : [
     {
       "mediaId" : 31,
-      "clyid" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
+      "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
-      "mediaType" : "photo"
+      "mediaType" : "image"
     }
   ],
   "settings" : {
