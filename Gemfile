@@ -20,7 +20,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 
 # for heroku
-gem 'puma', platforms: :ruby # exclude installation on Windows
+gem 'puma'
 gem "rack-timeout"
 gem 'rails_12factor', group: :production
 
@@ -62,8 +62,6 @@ group :development, :test do
   gem 'vcr'
 
   gem 'webmock'
-
-  gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 end
 
 group :development, :test, :herokutest do

@@ -9,5 +9,3 @@ module TS_Role
     self.role ||= :basic
   end
 end
-
-rake db:seed
