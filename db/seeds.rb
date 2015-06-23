@@ -8,3 +8,4 @@
 
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
+User.create(name: 'webview', role: :webview, password: , email:)

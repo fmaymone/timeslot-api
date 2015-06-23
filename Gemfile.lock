@@ -64,6 +64,7 @@ GEM
       aws-sdk-core (= 2.0.43)
     aws_cf_signer (0.1.3)
     bcrypt (3.1.10)
+    bcrypt (3.1.10-x86-mingw32)
     builder (3.2.2)
     bullet (4.14.7)
       activesupport (>= 3.0.0)
@@ -94,6 +95,7 @@ GEM
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
     ffi (1.9.8)
+    ffi (1.9.8-x86-mingw32)
     formatador (0.2.5)
     globalid (0.3.5)
       activesupport (>= 4.1.0)
@@ -112,6 +114,7 @@ GEM
       guard-compat (~> 1.1)
       rspec (>= 2.99.0, < 4.0)
     hitimes (1.2.2)
+    hitimes (1.2.2-x86-mingw32)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -140,6 +143,8 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
+    nokogiri (1.6.6.2-x86-mingw32)
+      mini_portile (~> 0.6.0)
     notiffany (0.0.6)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -148,11 +153,17 @@ GEM
     parser (2.2.2.3)
       ast (>= 1.1, < 3.0)
     pg (0.18.2)
+    pg (0.18.2-x86-mingw32)
     powerpack (0.1.1)
     pry (0.10.1)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    pry (0.10.1-x86-mingw32)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+      win32console (~> 1.3)
     pry-byebug (3.1.0)
       byebug (~> 4.0)
       pry (~> 0.10)
@@ -226,6 +237,11 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
+    rest-client (1.8.0-x86-mingw32)
+      ffi (~> 1.9)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 3.0)
+      netrc (~> 0.7)
     rspec (3.1.0)
       rspec-core (~> 3.1.0)
       rspec-expectations (~> 3.1.0)
@@ -276,18 +292,23 @@ GEM
       hitimes
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
+    tzinfo-data (1.2015.5)
+      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
+    unf_ext (0.0.7.1-x86-mingw32)
     uniform_notifier (1.9.0)
     vcr (2.9.3)
     webmock (1.21.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
+    win32console (1.3.2-x86-mingw32)
     yard (0.8.7.6)
 
 PLATFORMS
   ruby
+  x86-mingw32
 
 DEPENDENCIES
   airbrake
@@ -322,5 +343,9 @@ DEPENDENCIES
   shoulda-matchers
   spring
   spring-commands-rspec
+  tzinfo-data
   vcr
   webmock
+
+BUNDLED WITH
+   1.10.4
