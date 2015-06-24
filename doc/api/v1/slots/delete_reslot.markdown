@@ -79,19 +79,19 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=PgjjzDX5MWDUxVBwFH42TAycBGU
+<pre>Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/reslot/44</pre>
+<pre>DELETE /v1/reslot/45</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot/44&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=PgjjzDX5MWDUxVBwFH42TAycBGU&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,10 +103,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b2529a44b4a1c660c130101804498df3&quot;
+ETag: W/&quot;2908883bf7db89e404b22c6f05f6bef1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e46867ac-c714-4527-bf14-224db3ae9e12
-X-Runtime: 0.055616
+X-Request-Id: 71afbe70-2b5d-4c14-bc68-9a8bfa6ad877
+X-Runtime: 0.050213
 Content-Length: 542</pre>
 
 #### Status
@@ -117,19 +117,19 @@ Content-Length: 542</pre>
 
 ```javascript
 {
-  "id" : 44,
-  "title" : "Slot title 39",
-  "startDate" : "2019-09-13T15:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:40.173Z",
-  "updatedAt" : "2015-06-15T08:50:40.216Z",
-  "deletedAt" : "2015-06-15T08:50:40.213Z",
-  "endDate" : "2019-10-13T15:44:02.000Z",
+  "id" : 45,
+  "title" : "Slot title 40",
+  "startDate" : "2019-09-14T16:44:02.000Z",
+  "createdAt" : "2015-06-16T15:49:59.456Z",
+  "updatedAt" : "2015-06-16T15:49:59.498Z",
+  "deletedAt" : "2015-06-16T15:49:59.494Z",
+  "endDate" : "2019-10-14T16:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 185,
-    "username" : "User 182",
-    "createdAt" : "2015-06-15T08:50:40.176Z",
-    "updatedAt" : "2015-06-15T08:50:40.176Z",
+    "id" : 187,
+    "username" : "User 184",
+    "createdAt" : "2015-06-16T15:49:59.459Z",
+    "updatedAt" : "2015-06-16T15:49:59.459Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
@@ -142,7 +142,7 @@ Content-Length: 542</pre>
     "alerts" : "0000000000"
   },
   "slotter" : {
-    "id" : 182
+    "id" : 184
   },
   "likes" : 0,
   "commentsCounter" : 0,

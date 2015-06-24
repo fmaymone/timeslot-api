@@ -60,7 +60,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=ZAJJRjInGzw6YTk7Mj6b8vPuvSw
+Authorization: Token token=q7CPFdri1SxGW3llvwlvPCY2ZSY
 Host: example.org
 Cookie: </pre>
 
@@ -83,7 +83,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=ZAJJRjInGzw6YTk7Mj6b8vPuvSw&quot; \
+	-H &quot;Authorization: Token token=q7CPFdri1SxGW3llvwlvPCY2ZSY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,10 +94,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bcc4b6d84a45cab2e7dcb2336f4e2950&quot;
+ETag: W/&quot;19720f682dbdbc34a3ad0567e1e07564&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c973e999-a83c-468e-9a2b-2ece2114f652
-X-Runtime: 0.021558
+X-Request-Id: 036a0dd6-0fba-444a-a74d-24ae0db6c826
+X-Runtime: 0.021582
 Content-Length: 475</pre>
 
 #### Status
@@ -112,8 +112,8 @@ Content-Length: 475</pre>
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-11T16:20:49.793Z",
-  "updatedAt" : "2015-06-11T16:20:49.793Z",
+  "createdAt" : "2015-06-16T15:49:50.540Z",
+  "updatedAt" : "2015-06-16T15:49:50.540Z",
   "deletedAt" : null,
   "image" : {
     "clyid" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
@@ -122,8 +122,8 @@ Content-Length: 475</pre>
   "owner" : {
     "id" : 65,
     "username" : "User 62",
-    "createdAt" : "2015-06-11T16:20:49.790Z",
-    "updatedAt" : "2015-06-11T16:20:49.790Z",
+    "createdAt" : "2015-06-16T15:49:50.537Z",
+    "updatedAt" : "2015-06-16T15:49:50.537Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,

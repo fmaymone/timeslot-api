@@ -52,12 +52,12 @@ class BaseSlot < ActiveRecord::Base
     slot_type.constantize.try(:visibility)
   end
 
-  def photos
+  def images
     media_items.image.order(:position)
   end
 
-  def voices
-    media_items.voice.order(:position)
+  def audios
+    media_items.audio.order(:position)
   end
 
   def videos
@@ -175,57 +175,34 @@ class BaseSlot < ActiveRecord::Base
     self.slot_type ||= self.class.to_s.to_sym
   end
 
-  private def update_media(media_params)
-    media_map = [:photos, :voices, :videos]
-
-    media_map.each do |media_type|
-      next unless media_params[media_type].present?
-
-      items = media_params[media_type].each do |item|
-        item.transform_keys!(&:underscore)
+  private def update_media(items)
+    # check if existing media items, if yes, assume reordering
+    if items.first.key? :media_id
+      unless MediaItem.reorder_media items
+        errors.add(:media_items, 'invalid ordering')
       end
+    else
+      add_media_items(items)
+    end
+  end
 
-      if items.first.key? "media_id"
-        unless MediaItem.reorder_media items
-          errors.add(:media_items, 'invalid ordering')
-        end
-      else
-        add_media_items(items, media_type)
+  private def add_media_items(items)
+    items.each do |item_hash|
+      item = ActionController::Parameters.new(item_hash)
+      case item[:media_type]
+      when 'image'
+        add_media(item.permit(:public_id, :position, :local_id)
+                   .merge(media_type: 'image'))
+      when 'audio'
+        add_media(
+          item.permit(:public_id, :position, :local_id, :duration, :title)
+          .merge(media_type: 'audio'))
+      when 'video'
+        add_media(
+          item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
+          .merge(media_type: 'video')
+        )
       end
-    end
-  end
-
-  private def add_media_items(collection, media_type)
-    case media_type
-    when :photos
-      add_photos(collection)
-    when :voices
-      add_voices(collection)
-    when :videos
-      add_videos(collection)
-    end
-  end
-
-  private def add_photos(items)
-    items.each do |item|
-      add_media(item.permit(:public_id, :position, :local_id)
-                 .merge(media_type: 'image'))
-    end
-  end
-
-  private def add_voices(items)
-    items.each do |item|
-      add_media(item.permit(:public_id, :position, :local_id, :duration)
-                 .merge(media_type: 'voice'))
-    end
-  end
-
-  private def add_videos(items)
-    items.each do |item|
-      add_media(
-        item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
-        .merge(media_type: 'video')
-      )
     end
   end
 

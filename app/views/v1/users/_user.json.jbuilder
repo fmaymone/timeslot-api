@@ -6,6 +6,6 @@ json.extract!(user,
               :deleted_at)
 
 json.image do
-  json.clyid user.image.try(:public_id) ? user.image.public_id : nil
+  json.public_id user.image.try(:public_id) ? user.image.public_id : nil
   json.local_id user.image.try(:local_id) ? user.image.local_id : nil
 end

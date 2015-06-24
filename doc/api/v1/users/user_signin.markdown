@@ -113,7 +113,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user63@email.com",
+  "email" : "user64@email.com",
   "password" : "timeslot"
 }
 ```
@@ -121,7 +121,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user63@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user64@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -134,10 +134,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1796804eab5a8b4f3b39b6c24b6926b6&quot;
+ETag: W/&quot;7016131e0a2ecd06f1501015a6bada2b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2fdaef6d-f1e8-4e15-8982-40785d487295
-X-Runtime: 0.108260
+X-Request-Id: 592a2bdf-cdc3-4029-8a1c-a6f3e2e70b55
+X-Runtime: 0.090849
 Content-Length: 759</pre>
 
 #### Status
@@ -148,10 +148,10 @@ Content-Length: 759</pre>
 
 ```javascript
 {
-  "id" : 230,
-  "username" : "User 226",
-  "createdAt" : "2015-06-11T16:20:57.202Z",
-  "updatedAt" : "2015-06-11T16:20:57.288Z",
+  "id" : 232,
+  "username" : "User 228",
+  "createdAt" : "2015-06-16T15:50:00.935Z",
+  "updatedAt" : "2015-06-16T15:50:01.014Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -161,7 +161,7 @@ Content-Length: 759</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user63@email.com",
+  "email" : "user64@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -178,6 +178,6 @@ Content-Length: 759</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "CEvUHtiiatQqPmCd5UJRmaHjmlQ"
+  "authToken" : "EE6P6ImJqQfEtXBiEUb5Fr8fCPk"
 }
 ```

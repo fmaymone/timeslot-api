@@ -88,13 +88,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=qdc0Jg3fLjH1DrjW1PfVvt78hGI
+Authorization: Token token=5wrX90TlBsP7dmUWfjMAhyvG_q4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/59/move</pre>
+<pre>POST /v1/slots/60/move</pre>
 
 #### Body
 ```javascript
@@ -107,9 +107,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/59/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/60/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=qdc0Jg3fLjH1DrjW1PfVvt78hGI&quot; \
+	-H &quot;Authorization: Token token=5wrX90TlBsP7dmUWfjMAhyvG_q4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,10 +120,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7163396980bd96a3985b16721a8e7a07&quot;
+ETag: W/&quot;5ba2b131af0e73b72cee9ac73e789aff&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7a85a6ca-5f03-49b0-a6a9-3f5392473f52
-X-Runtime: 0.076434
+X-Request-Id: 4e65a583-9fbe-4575-ac86-616554b1a947
+X-Runtime: 0.086053
 Content-Length: 809</pre>
 
 #### Status
@@ -134,19 +134,19 @@ Content-Length: 809</pre>
 
 ```javascript
 {
-  "id" : 60,
-  "title" : "Slot title 49",
-  "startDate" : "2019-09-23T01:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:41.199Z",
-  "updatedAt" : "2015-06-15T08:50:41.199Z",
+  "id" : 61,
+  "title" : "Slot title 50",
+  "startDate" : "2019-09-24T02:44:02.000Z",
+  "createdAt" : "2015-06-16T15:50:00.444Z",
+  "updatedAt" : "2015-06-16T15:50:00.444Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-23T01:44:02.000Z",
+  "endDate" : "2019-10-24T02:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 224,
-    "username" : "User 221",
-    "createdAt" : "2015-06-15T08:50:41.174Z",
-    "updatedAt" : "2015-06-15T08:50:41.174Z",
+    "id" : 226,
+    "username" : "User 223",
+    "createdAt" : "2015-06-16T15:50:00.418Z",
+    "updatedAt" : "2015-06-16T15:50:00.418Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,
