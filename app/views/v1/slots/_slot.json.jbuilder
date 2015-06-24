@@ -4,8 +4,7 @@ json.extract!(slot,
               :start_date,
               :created_at,
               :updated_at,
-              :deleted_at,
-              :open_end
+              :deleted_at
              )
 
 json.end_date slot.open_end ? nil : slot.end_date

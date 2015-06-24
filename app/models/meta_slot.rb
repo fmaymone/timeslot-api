@@ -11,8 +11,6 @@ class MetaSlot < ActiveRecord::Base
         metaslot.update(end_date: start_date.to_datetime.next_day.at_midday)
       end
       metaslot.update(open_end: true)
-    else
-      metaslot.update(open_end: false)
     end
   end
 
