@@ -4,17 +4,19 @@ class MediaItem < ActiveRecord::Base
   belongs_to :mediable, polymorphic: true
 
   scope :image, -> { where media_type: 'image' }
-  scope :voice, -> { where media_type: 'voice' }
+  scope :audio, -> { where media_type: 'audio' }
   scope :video, -> { where media_type: 'video' }
 
   validates :media_type,
             presence: true,
-            inclusion: { in: %w(image voice video) }
+            inclusion: { in: %w(image audio video) }
   validates :public_id, presence: true
   validates :position, presence: true, if: :belongs_to_slot?
   validates :mediable_id, presence: true
   validates :mediable_type, presence: true
-  validates :local_id, length: { maximum: 64 }
+  validates :local_id, length: { maximum: 512 }
+  validates :thumbnail, length: { maximum: 255 }
+  validates :title, length: { maximum: 64 }
 
   def belongs_to_slot?
     mediable_type == "BaseSlot"

@@ -89,7 +89,7 @@ Description : all connections to groups
 
 #### Headers
 
-<pre>Authorization: Token token=XxHtl4XrhevA2LfnvApk8WGgmM4
+<pre>Authorization: Token token=9AabmI4yKIrUCGwhrMZ9FGhOaXc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -101,7 +101,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=XxHtl4XrhevA2LfnvApk8WGgmM4&quot; \
+	-H &quot;Authorization: Token token=9AabmI4yKIrUCGwhrMZ9FGhOaXc&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -113,10 +113,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3db93cf4e325c55ae9e3744bb16790b0&quot;
+ETag: W/&quot;f72c1e303e636aa4b034942eeff60af3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 61f9a14a-d42d-45c5-aa7b-cecf1b784e11
-X-Runtime: 0.039741
+X-Request-Id: 0ff2d958-ee03-4ada-b085-3161ed0ccb80
+X-Runtime: 0.044145
 Content-Length: 739</pre>
 
 #### Status
@@ -127,11 +127,11 @@ Content-Length: 739</pre>
 
 ```javascript
 {
-  "id" : 237,
-  "username" : "User 233",
-  "createdAt" : "2015-06-11T16:21:00.664Z",
-  "updatedAt" : "2015-06-11T16:21:00.680Z",
-  "deletedAt" : "2015-06-11T16:21:00.678Z",
+  "id" : 239,
+  "username" : "User 235",
+  "createdAt" : "2015-06-16T15:50:03.432Z",
+  "updatedAt" : "2015-06-16T15:50:03.447Z",
+  "deletedAt" : "2015-06-16T15:50:03.445Z",
   "location" : null,
   "image" : {
     "clyid" : null,
@@ -140,7 +140,7 @@ Content-Length: 739</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user69@email.com",
+  "email" : "user70@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

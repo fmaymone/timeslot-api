@@ -110,10 +110,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e00375d399ddb6da2c27c69aa80f6e1b&quot;
+ETag: W/&quot;0d7facd0fb4cebcc34ce2995d17feb42&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d4dd2e63-7848-4bdd-a6dc-cbcf87bae854
-X-Runtime: 0.113488
+X-Request-Id: b274fab9-13e5-4768-9969-6464fd763659
+X-Runtime: 0.148365
 Content-Length: 764</pre>
 
 #### Status
@@ -126,8 +126,8 @@ Content-Length: 764</pre>
 {
   "id" : 44,
   "username" : "Silvi O Ivlis",
-  "createdAt" : "2015-06-11T16:20:48.460Z",
-  "updatedAt" : "2015-06-11T16:20:48.460Z",
+  "createdAt" : "2015-06-16T15:49:49.293Z",
+  "updatedAt" : "2015-06-16T15:49:49.293Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -154,6 +154,6 @@ Content-Length: 764</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "V8pK3nx8Na7VUp305St7vw05i5o"
+  "authToken" : "elGW0-Q0c8IdrVZhyviVS2uwIXs"
 }
 ```

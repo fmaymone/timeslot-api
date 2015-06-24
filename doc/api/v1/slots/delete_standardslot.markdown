@@ -132,19 +132,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0
+<pre>Authorization: Token token=JKEIfMVWD_CBC4S7MoO4c-jS4mA
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/stdslot/39</pre>
+<pre>DELETE /v1/stdslot/40</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=POdj3eQWVIijCnugKznngjRC-N0&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/40&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=JKEIfMVWD_CBC4S7MoO4c-jS4mA&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -156,10 +156,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e1ea5f8175a2a8175abe2bfeb72017c2&quot;
+ETag: W/&quot;a610f6fa04ca915aa76c938fb38a8273&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 22dd8ec5-d432-4861-bdbf-e34fa19e176d
-X-Runtime: 0.142817
+X-Request-Id: f556081e-cb9d-4810-8649-51a3514c402c
+X-Runtime: 3.421782
 Content-Length: 831</pre>
 
 #### Status
@@ -170,19 +170,19 @@ Content-Length: 831</pre>
 
 ```javascript
 {
-  "id" : 39,
-  "title" : "Slot title 34",
-  "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-15T08:50:39.554Z",
-  "updatedAt" : "2015-06-15T08:50:39.671Z",
-  "deletedAt" : "2015-06-15T08:50:39.669Z",
-  "endDate" : "2019-10-08T10:44:02.000Z",
+  "id" : 40,
+  "title" : "Slot title 35",
+  "startDate" : "2019-09-09T11:44:02.000Z",
+  "createdAt" : "2015-06-16T15:49:55.590Z",
+  "updatedAt" : "2015-06-16T15:49:58.985Z",
+  "deletedAt" : "2015-06-16T15:49:58.983Z",
+  "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 175,
-    "username" : "User 172",
-    "createdAt" : "2015-06-15T08:50:39.549Z",
-    "updatedAt" : "2015-06-15T08:50:39.549Z",
+    "id" : 177,
+    "username" : "User 174",
+    "createdAt" : "2015-06-16T15:49:55.584Z",
+    "updatedAt" : "2015-06-16T15:49:55.584Z",
     "deletedAt" : null,
     "image" : {
       "clyid" : null,

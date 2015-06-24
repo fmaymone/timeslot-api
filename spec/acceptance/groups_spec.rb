@@ -188,9 +188,9 @@ resource "Groups" do
         expect(group.image.local_id).to eq localId
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
-        expect(json["image"]).to have_key "clyid"
+        expect(json["image"]).to have_key "publicId"
         expect(json["image"]).to have_key "localId"
-        expect(json["image"]["clyid"]).to eq publicId
+        expect(json["image"]["publicId"]).to eq publicId
         expect(json["image"]["localId"]).to eq localId
       end
     end
@@ -256,9 +256,7 @@ resource "Groups" do
     response_field :startDate, "Startdate of the slot"
     response_field :endDate, "Enddate of the slot"
     response_field :alerts, "Alerts for the slot for the current user"
-    response_field :photos, "Photos for the slot"
-    response_field :voices, "Voice recordings for the slot"
-    response_field :videos, "Videos for the slot"
+    response_field :media, "Media items of the slot"
     response_field :url, "direct url to fetch the slot"
     response_field :createdAt, "Creation datetime of the slot"
     response_field :updatedAt, "Last update of the slot"
