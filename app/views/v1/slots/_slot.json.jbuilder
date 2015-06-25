@@ -9,8 +9,6 @@ json.extract!(slot,
               :open_end
              )
 
-#json.end_date slot.open_end ? nil : slot.end_date
-
 json.location do
   if slot.location_id.nil? && slot.ios_location_id.nil?
     json.nil!
