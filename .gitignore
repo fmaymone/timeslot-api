@@ -62,6 +62,9 @@ pickle-email-*.html
 # Mac finder artifacts
 .DS_Store
 
+# Ignore Eclipse Project Temporary File 
+.project
+
 # Netbeans project directory
 /nbproject/
 
@@ -96,3 +99,5 @@ public/ptl.html
 .ackrc
 
 doc/api.zip
+db/structure.sql
+Gemfile.lock

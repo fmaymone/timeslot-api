@@ -35,28 +35,40 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when end_date is missing" do
-    before { meta_slot.end_date = "" }
+  describe "when end_date is missing" do       
+    before { meta_slot.update(start_date: "2014-09-28T13:31:02Z", end_date: nil) }
     it { is_expected.to be_valid }
-
+    
     context "start_date before noon" do
       it "sets the enddate to the end of the start day" do
-        meta_slot.update(start_date: "2014-09-28T07:31:02Z")
-        meta_slot.save
-        expect(meta_slot.end_date)
-          .to eq meta_slot.start_date.to_datetime.at_end_of_day
+        meta_slot.update(start_date: "2014-09-28T09:31:02Z", end_date: nil)
+        expect(meta_slot.end_date).to eq meta_slot.start_date.to_datetime.at_end_of_day
       end
     end
-
-    context "start_date after noon" do
+    
+    context "start_date after noon" do 
       it "sets the enddate to noon of next day" do
-        meta_slot.update(start_date: "2014-09-28T13:31:02Z")
-        meta_slot.save
-        expect(meta_slot.end_date)
-          .to eq meta_slot.start_date.to_datetime.next_day.at_midday
+        meta_slot.update(start_date: "2014-09-28T15:31:02Z", end_date: nil)
+        expect(meta_slot.end_date).to eq meta_slot.start_date.to_datetime.next_day.at_midday
+      end
+    end   
+     
+    context "start_date is valid" do
+      it "set open_end to true" do
+        expect(meta_slot.open_end).to be true
       end
     end
   end
+  
+  describe "if end_date is set then update open_end to false" do
+    before { meta_slot.update(start_date: "2014-09-28T13:31:02Z", end_date: nil) }
+    it "sets the end_date and assign false to open_end" do
+      #!TODO: open_end
+      meta_slot.update(end_date: "2014-09-30T07:31:02Z")
+      expect(meta_slot.end_date).to eq "2014-09-30T07:31:02Z"
+      expect(meta_slot.open_end).to be false
+    end 
+  end 
 
   describe "when creator is not present" do
     before { meta_slot.creator = nil }
