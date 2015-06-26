@@ -3,14 +3,15 @@ class MetaSlot < ActiveRecord::Base
 
   # set 'openEnd' slots to end at the end of the starting day
   before_validation do |metaslot|
-    if end_date.nil? && start_date
-      # need to cast to_datetime bc of different millisecond precision
+    if (end_date.nil? || end_date.blank?) && start_date
       if start_date < start_date.to_datetime.at_middle_of_day
-        metaslot.update(end_date: start_date.to_datetime.at_end_of_day)
+        metaslot.end_date = start_date.to_datetime.at_end_of_day
       else
-        metaslot.update(end_date: start_date.to_datetime.next_day.at_midday)
+        metaslot.end_date = start_date.to_datetime.next_day.at_midday
       end
-      metaslot.update(open_end: true)
+      metaslot.open_end = true
+    elsif open_end
+      metaslot.open_end = false
     end
   end
 
