@@ -2,12 +2,12 @@ json.extract!(slot,
               :id,
               :title,
               :start_date,
+              :end_date,
               :created_at,
               :updated_at,
-              :deleted_at
+              :deleted_at,
+              :open_end
              )
-
-json.end_date slot.open_end ? nil : slot.end_date
 
 json.location do
   if slot.location_id.nil? && slot.ios_location_id.nil?
