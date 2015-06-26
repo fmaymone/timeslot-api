@@ -362,7 +362,7 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("endDate")
           expect(json).to have_key("openEnd")
-          expect(json['endDate']).to eq new_slot.end_date
+          expect(json['endDate']).to eq new_slot.end_date.as_json
           expect(json['openEnd']).to be true
         end
       end

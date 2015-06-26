@@ -10,8 +10,9 @@ class MetaSlot < ActiveRecord::Base
         metaslot.end_date = start_date.to_datetime.next_day.at_midday
       end
       metaslot.open_end = true
-    elsif open_end
-      metaslot.open_end = false
+    # elsif open_end
+      # TODO
+      # metaslot.open_end = false
     end
   end
 
