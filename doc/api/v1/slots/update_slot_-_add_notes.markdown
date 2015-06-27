@@ -16,7 +16,7 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
+Description : Enddate and Time of the Slot (startdate + duration).
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -56,6 +56,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -106,7 +109,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=gw9EDGfKgW_8t4h0RUOmraFoqwU
+Authorization: Token token=kDwvA_3I9ubEdY0kGLzJePf_eiE
 Host: example.org
 Cookie: </pre>
 
@@ -135,7 +138,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/36&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=gw9EDGfKgW_8t4h0RUOmraFoqwU&quot; \
+	-H &quot;Authorization: Token token=kDwvA_3I9ubEdY0kGLzJePf_eiE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -146,11 +149,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;80ff2da2fc776d45fa6748aa00a88606&quot;
+ETag: W/&quot;3000149553e18d5033c29d9ae01bd548&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f1a8e87d-1728-4661-98fe-fd3e78558180
-X-Runtime: 0.043306
-Content-Length: 766</pre>
+X-Request-Id: 2c5a36dc-1025-4fa1-b113-cbdaecb5e555
+X-Runtime: 0.056526
+Content-Length: 782</pre>
 
 #### Status
 
@@ -163,16 +166,17 @@ Content-Length: 766</pre>
   "id" : 36,
   "title" : "Slot title 31",
   "startDate" : "2019-09-05T07:44:02.000Z",
-  "createdAt" : "2015-06-22T08:44:20.012Z",
-  "updatedAt" : "2015-06-22T08:44:20.012Z",
-  "deletedAt" : null,
   "endDate" : "2019-10-05T07:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:15.793Z",
+  "updatedAt" : "2015-06-27T07:27:15.793Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 169,
     "username" : "User 166",
-    "createdAt" : "2015-06-22T08:44:20.008Z",
-    "updatedAt" : "2015-06-22T08:44:20.008Z",
+    "createdAt" : "2015-06-27T07:27:15.789Z",
+    "updatedAt" : "2015-06-27T07:27:15.789Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -184,13 +188,13 @@ Content-Length: 766</pre>
       "id" : 10,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-22T08:44:20.027Z"
+      "createdAt" : "2015-06-27T07:27:15.809Z"
     },
     {
       "id" : 11,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
-      "createdAt" : "2015-06-22T08:44:20.029Z"
+      "createdAt" : "2015-06-27T07:27:15.811Z"
     }
   ],
   "media" : [],

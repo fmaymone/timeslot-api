@@ -1,4 +1,6 @@
 #Changelog
+
+## v0.6.2 on t2s2-dev
 - fix more issues with open_end slots
 
 

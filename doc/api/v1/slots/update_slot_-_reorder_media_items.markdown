@@ -24,7 +24,7 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
+Description : Enddate and Time of the Slot (startdate + duration).
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -64,6 +64,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -114,7 +117,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zvIRt31tocZ_mC9UjnOT_i3_qhY
+Authorization: Token token=ShMAP71QrOLRC8lUqfHVFfFKFMA
 Host: example.org
 Cookie: </pre>
 
@@ -150,7 +153,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:32,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zvIRt31tocZ_mC9UjnOT_i3_qhY&quot; \
+	-H &quot;Authorization: Token token=ShMAP71QrOLRC8lUqfHVFfFKFMA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -161,11 +164,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a97464c542ff26f13478d0f65218c477&quot;
+ETag: W/&quot;646d6753b26f43742d2146d0b0644a7e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7dcc4a25-c771-4eca-a738-bfc2491903e9
-X-Runtime: 0.047821
-Content-Length: 821</pre>
+X-Request-Id: 40b524dd-141f-4c50-9282-398435de94c8
+X-Runtime: 0.052608
+Content-Length: 837</pre>
 
 #### Status
 
@@ -178,16 +181,17 @@ Content-Length: 821</pre>
   "id" : 38,
   "title" : "Slot title 33",
   "startDate" : "2019-09-07T09:44:02.000Z",
-  "createdAt" : "2015-06-22T08:44:20.274Z",
-  "updatedAt" : "2015-06-22T08:44:20.274Z",
-  "deletedAt" : null,
   "endDate" : "2019-10-07T09:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:16.073Z",
+  "updatedAt" : "2015-06-27T07:27:16.073Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 173,
     "username" : "User 170",
-    "createdAt" : "2015-06-22T08:44:20.270Z",
-    "updatedAt" : "2015-06-22T08:44:20.270Z",
+    "createdAt" : "2015-06-27T07:27:16.068Z",
+    "updatedAt" : "2015-06-27T07:27:16.068Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -28,6 +28,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : openEnd
+Description : OpenEnd Boolean Flag
+
 Name : createdAt
 Description : Creation of slot
 
@@ -76,7 +79,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=TqY1wxveh9JB6t5MEXET2AEzw5Q
+<pre>Authorization: Token token=EIEiNAjjfz4ZprIdzsSd_JT4mEE
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -88,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/40&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=TqY1wxveh9JB6t5MEXET2AEzw5Q&quot; \
+	-H &quot;Authorization: Token token=EIEiNAjjfz4ZprIdzsSd_JT4mEE&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -100,11 +103,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f2f3551718566c145df847eb16c62233&quot;
+ETag: W/&quot;fca3ea5f4044f2afa5b922f1651df8f6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 632e1a74-dafe-4ab0-bdae-d21eb029d9a2
-X-Runtime: 3.572403
-Content-Length: 843</pre>
+X-Request-Id: 3515f726-993b-479d-8f89-5b8ed011f3e1
+X-Runtime: 3.433078
+Content-Length: 859</pre>
 
 #### Status
 
@@ -117,16 +120,17 @@ Content-Length: 843</pre>
   "id" : 40,
   "title" : "Slot title 35",
   "startDate" : "2019-09-09T11:44:02.000Z",
-  "createdAt" : "2015-06-22T08:44:20.553Z",
-  "updatedAt" : "2015-06-22T08:44:24.104Z",
-  "deletedAt" : "2015-06-22T08:44:24.102Z",
   "endDate" : "2019-10-09T11:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:16.357Z",
+  "updatedAt" : "2015-06-27T07:27:19.763Z",
+  "deletedAt" : "2015-06-27T07:27:19.761Z",
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 177,
     "username" : "User 174",
-    "createdAt" : "2015-06-22T08:44:20.548Z",
-    "updatedAt" : "2015-06-22T08:44:20.548Z",
+    "createdAt" : "2015-06-27T07:27:16.352Z",
+    "updatedAt" : "2015-06-27T07:27:16.352Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

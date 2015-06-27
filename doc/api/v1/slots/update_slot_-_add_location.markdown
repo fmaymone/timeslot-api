@@ -24,7 +24,7 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
+Description : Enddate and Time of the Slot (startdate + duration).
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -98,6 +98,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : openEnd
+Description : OpenEnd Boolean Flag
+
 Name : createdAt
 Description : Creation of slot
 
@@ -147,7 +150,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Dvn0xwmXONOLEzK0ufcaSP-cqL0
+Authorization: Token token=QV3lPSIz1lsZ2BFm-oNsXZPYrr4
 Host: example.org
 Cookie: </pre>
 
@@ -179,7 +182,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Dvn0xwmXONOLEzK0ufcaSP-cqL0&quot; \
+	-H &quot;Authorization: Token token=QV3lPSIz1lsZ2BFm-oNsXZPYrr4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -190,11 +193,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;601415cf69e68c011f40345ad65bc13d&quot;
+ETag: W/&quot;40f5c72111a11014ac41f2c65b199cab&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 313054dd-0689-4a14-b540-fb982a74d371
-X-Runtime: 0.042665
-Content-Length: 883</pre>
+X-Request-Id: da7af786-cf57-40db-a369-7549bc11c681
+X-Runtime: 0.046629
+Content-Length: 899</pre>
 
 #### Status
 
@@ -207,10 +210,11 @@ Content-Length: 883</pre>
   "id" : 39,
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-06-22T08:44:20.419Z",
-  "updatedAt" : "2015-06-22T08:44:20.419Z",
-  "deletedAt" : null,
   "endDate" : "2019-10-08T10:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:16.223Z",
+  "updatedAt" : "2015-06-27T07:27:16.223Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : {
     "id" : 3,
     "name" : "Soho House",
@@ -233,8 +237,8 @@ Content-Length: 883</pre>
   "creator" : {
     "id" : 175,
     "username" : "User 172",
-    "createdAt" : "2015-06-22T08:44:20.414Z",
-    "updatedAt" : "2015-06-22T08:44:20.414Z",
+    "createdAt" : "2015-06-27T07:27:16.218Z",
+    "updatedAt" : "2015-06-27T07:27:16.218Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

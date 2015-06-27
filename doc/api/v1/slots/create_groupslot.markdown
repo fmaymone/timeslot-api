@@ -23,7 +23,7 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
+Description : Enddate and Time of the Slot (startdate + duration).
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -57,6 +57,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -111,7 +114,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=PUYHf3SVEgV0LxAEyxvevg5mr0s
+Authorization: Token token=-7CJPQ2WbmPHojjfaaIPkxVX-xI
 Host: example.org
 Cookie: </pre>
 
@@ -138,7 +141,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:38}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=PUYHf3SVEgV0LxAEyxvevg5mr0s&quot; \
+	-H &quot;Authorization: Token token=-7CJPQ2WbmPHojjfaaIPkxVX-xI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -149,11 +152,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b1e963bb6ed87539ff3729036518c60b&quot;
+ETag: W/&quot;94554d63d8e89dc54c023f0f31d6d636&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c9a6b1ae-8797-48a5-8017-b73e485ca69f
-X-Runtime: 0.036865
-Content-Length: 545</pre>
+X-Request-Id: 00c5a7c1-f850-445d-b0b0-12d0956f6655
+X-Runtime: 0.038079
+Content-Length: 561</pre>
 
 #### Status
 
@@ -166,16 +169,17 @@ Content-Length: 545</pre>
   "id" : 31,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-22T08:44:19.357Z",
-  "updatedAt" : "2015-06-22T08:44:19.357Z",
-  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "createdAt" : "2015-06-27T07:27:15.131Z",
+  "updatedAt" : "2015-06-27T07:27:15.131Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 159,
     "username" : "User 156",
-    "createdAt" : "2015-06-22T08:44:19.333Z",
-    "updatedAt" : "2015-06-22T08:44:19.333Z",
+    "createdAt" : "2015-06-27T07:27:15.107Z",
+    "updatedAt" : "2015-06-27T07:27:15.107Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
