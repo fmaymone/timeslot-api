@@ -1,17 +1,15 @@
 class MetaSlot < ActiveRecord::Base
   after_commit AuditLog
 
-  # set 'openEnd' slots to end at the end of the starting day
+  # give 'openEnd' slots an end
   before_validation do |metaslot|
-    if (end_date.nil? || end_date.blank?) && start_date
+    if open_end || end_date.blank?
       if start_date < start_date.to_datetime.at_middle_of_day
         metaslot.end_date = start_date.to_datetime.at_end_of_day
       else
         metaslot.end_date = start_date.to_datetime.next_day.at_midday
       end
       metaslot.open_end = true
-    elsif open_end
-      metaslot.open_end = false
     end
   end
 
