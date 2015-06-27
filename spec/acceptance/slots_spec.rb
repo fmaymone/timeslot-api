@@ -10,6 +10,7 @@ resource "Slots" do
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
     response_field :endDate, "Enddate of the slot"
+    response_field :openEnd, "OpenEnd Boolean Flag"
     response_field :createdAt, "Creation of slot"
     response_field :updatedAt, "Last update of slot"
     response_field :deletedAt, "Delete date of slot or nil"
@@ -46,9 +47,11 @@ resource "Slots" do
               "Startdate and Time of the Slot",
               required: true
     parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration). Empty " \
-              "for slots with open end",
+              "Enddate and Time of the Slot (startdate + duration).",
               required: true
+    #parameter :openEnd,
+    #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
+    #          required: true
     parameter :location, "Location associated with this slot (see example)"
     parameter :media, "Media items (image/audio/video) of to the Slot " \
                       "(see example)"
@@ -128,6 +131,7 @@ resource "Slots" do
         expect(json.last).to have_key("title")
         expect(json.last).to have_key("startDate")
         expect(json.last).to have_key("endDate")
+        expect(json.last).to have_key("openEnd")
         expect(json.last).to have_key("location")
         # expect(json.last['location']).to have_key("name")
         expect(json.last).to have_key("creator")
@@ -216,6 +220,7 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("openEnd")
         expect(json).to have_key("location")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -236,6 +241,7 @@ resource "Slots" do
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
+                 "openEnd" => slot.open_end,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
@@ -286,6 +292,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      #let(:openEnd) { false }
       let(:notes) { [{ title: "revolutionizing the calendar",
                        content: "this is content" },
                      { title: "and another title",
@@ -307,10 +314,12 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("startDate")
           expect(json).to have_key("endDate")
+          expect(json).to have_key("openEnd")
           expect(json).to have_key("creator")
           expect(json).to have_key("notes")
           expect(json).to have_key("visibility")
           expect(json["notes"].length).to eq(notes.length)
+          expect(json['openEnd']).to be false
         end
       end
 
@@ -330,6 +339,7 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("location")
           # expect(json['location']).not_to be nil
+          expect(json['openEnd']).to be false
         end
       end
 
@@ -351,7 +361,9 @@ resource "Slots" do
           expect(json).to have_key("id")
           expect(json).to have_key("title")
           expect(json).to have_key("endDate")
-          expect(json['endDate']).to be nil
+          expect(json).to have_key("openEnd")
+          expect(json['endDate']).to eq new_slot.end_date.as_json
+          expect(json['openEnd']).to be true
         end
       end
 
@@ -397,6 +409,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-10T13:31:02.000Z" }
+      #let(:openEnd) { false }
       let(:visibility) { 'private' }
       let(:alerts) { "oh no" }
 
@@ -450,6 +463,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      #let(:openEnd) { false }
       let(:note) { "revolutionizing the calendar" }
       let(:alerts) { '0101010101' }
       let(:groupId) { group.id }
@@ -468,6 +482,7 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("openEnd")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("group")
@@ -544,11 +559,14 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("openEnd")
         expect(json).to have_key("creator")
         expect(json).to have_key("slotter")
         expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
+        expect(json["endDate"]).to eq pred.end_date.as_json
+        expect(json["openEnd"]).to eq pred.open_end
         expect(json["creator"]["id"]).to eq pred.creator.id
       end
     end
@@ -563,8 +581,8 @@ resource "Slots" do
     describe "Update an existing MetaSlot" do
       parameter :title, "Updated title of slot"
       parameter :startDate, "Updated Startdate and Time of the Slot"
-      parameter :endDate,
-                "Updated Enddate and Time of the Slot (startdate + duration)"
+      parameter :endDate, "Updated Enddate and Time of the Slot (startdate + duration)"
+      #parameter :openEnd, "Updated OpenEnd Boolean Flag"
 
       let!(:meta_slot) { create(:meta_slot, creator: current_user) }
       let(:id) { meta_slot.id }
@@ -796,6 +814,7 @@ resource "Slots" do
                                 "title" => std_slot.title,
                                 "startDate" => std_slot.start_date.as_json,
                                 "endDate" => std_slot.end_date.as_json,
+                                "openEnd" => std_slot.open_end,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
@@ -841,6 +860,7 @@ resource "Slots" do
                                 "title" => group_slot.title,
                                 "startDate" => group_slot.start_date.as_json,
                                 "endDate" => group_slot.end_date.as_json,
+                                "openEnd" => group_slot.open_end,
                                 "group" => {
                                   "id" => group_slot.group.id
                                 },

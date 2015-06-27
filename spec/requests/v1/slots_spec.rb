@@ -47,6 +47,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json).to have_key('title')
         expect(json).to have_key('startDate')
         expect(json).to have_key('endDate')
+        expect(json).to have_key('openEnd')
         expect(json).to have_key('notes')
         expect(json).to have_key('visibility')
         expect(json).to have_key('createdAt')
@@ -59,6 +60,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['title']).to eq(std_slot.title)
         expect(json['startDate']).to eq(std_slot.start_date.as_json)
         expect(json['endDate']).to eq(std_slot.end_date.as_json)
+        expect(json['openEnd']).to eq(std_slot.open_end)
         expect(json['notes']).to eq(std_slot.notes)
         expect(json['visibility']).to eq 'public'
       end
@@ -348,8 +350,9 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "with invalid params" do
+      let(:metaslot) { attributes_for(:meta_slot).merge(groupId: group.id) }
       let(:invalid_attributes) {
-        attributes_for(:meta_slot).merge(groupId: group.id)
+        metaslot.transform_keys! { |key| key.to_s.camelize(:lower) }
       }
       describe "does not add a new entry to the DB" do
         it "with missing group ID" do
@@ -370,21 +373,14 @@ RSpec.describe "V1::Slots", type: :request do
 
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
-          invalid_attributes[:title] = ""
+          metaslot[:title] = ""
           post "/v1/groupslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
-          invalid_attributes[:start_date] = "|$%^@wer"
-          post "/v1/groupslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for empty end_date" do
-          invalid_attributes[:endDate] = ""
+          metaslot[:start_date] = "|$%^@wer"
           post "/v1/groupslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
@@ -523,6 +519,7 @@ RSpec.describe "V1::Slots", type: :request do
               { endDate: "2019-12-11 13:31:02" }, auth_header
         metaslot.reload
         expect(metaslot.end_date).to eq("2019-12-11 13:31:02")
+        expect(metaslot.open_end).to be false
       end
 
       it "sets slot to 'open End' if empty end_date" do
@@ -639,6 +636,7 @@ RSpec.describe "V1::Slots", type: :request do
                 { endDate: "2019-12-11 13:31:02" }, auth_header
           std_slot.reload
           expect(std_slot.end_date).to eq("2019-12-11 13:31:02")
+          expect(std_slot.open_end).to be false
         end
 
         it "sets slot to 'open End' if empty end_date" do

@@ -20,7 +20,7 @@ gem 'oj'
 gem 'oj_mimic_json'
 
 # for heroku
-gem 'puma'
+gem 'puma', platforms: :ruby # exclude installation on Windows
 gem "rack-timeout"
 gem 'rails_12factor', group: :production
 
@@ -33,8 +33,6 @@ gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
 
 group :development do
-  gem 'spring'
-
   gem "rails-erd"
 
   gem "railroady"
@@ -50,6 +48,8 @@ group :development, :test do
   gem 'pry-byebug'
 
   gem 'pry-doc'
+  
+  gem 'spring'
 
   gem 'spring-commands-rspec'
 
@@ -62,6 +62,8 @@ group :development, :test do
   gem 'vcr'
 
   gem 'webmock'
+
+  gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 end
 
 group :development, :test, :herokutest do

@@ -21,7 +21,7 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration). Empty for slots with open end
+Description : Enddate and Time of the Slot (startdate + duration).
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -55,6 +55,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -106,7 +109,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=3_EEMWZrpLdAtwvUsLEZX0RS5Qo
+Authorization: Token token=fSrXOQa6x5pSbdi9c9xQmnrxTiU
 Host: example.org
 Cookie: </pre>
 
@@ -143,7 +146,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3_EEMWZrpLdAtwvUsLEZX0RS5Qo&quot; \
+	-H &quot;Authorization: Token token=fSrXOQa6x5pSbdi9c9xQmnrxTiU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -154,11 +157,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8a1ed68f0beaf9076f333d8183142990&quot;
+ETag: W/&quot;e3b885b0bb3f5b038c1540a110e4a30d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 79e3d822-aa6f-446c-935b-ab6c5c8d7966
-X-Runtime: 0.043196
-Content-Length: 747</pre>
+X-Request-Id: b65c5523-3250-4a3f-a02d-88311a10378d
+X-Runtime: 0.041617
+Content-Length: 763</pre>
 
 #### Status
 
@@ -171,16 +174,17 @@ Content-Length: 747</pre>
   "id" : 26,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-22T08:44:18.680Z",
-  "updatedAt" : "2015-06-22T08:44:18.680Z",
-  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "createdAt" : "2015-06-27T07:27:14.430Z",
+  "updatedAt" : "2015-06-27T07:27:14.430Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 153,
     "username" : "User 150",
-    "createdAt" : "2015-06-22T08:44:18.662Z",
-    "updatedAt" : "2015-06-22T08:44:18.662Z",
+    "createdAt" : "2015-06-27T07:27:14.416Z",
+    "updatedAt" : "2015-06-27T07:27:14.416Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -192,13 +196,13 @@ Content-Length: 747</pre>
       "id" : 2,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-22T08:44:18.683Z"
+      "createdAt" : "2015-06-27T07:27:14.434Z"
     },
     {
       "id" : 3,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-22T08:44:18.685Z"
+      "createdAt" : "2015-06-27T07:27:14.436Z"
     }
   ],
   "media" : [],
