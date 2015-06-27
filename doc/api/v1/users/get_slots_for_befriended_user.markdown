@@ -22,6 +22,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : openEnd
+Description : OpenEnd Boolean Flag of the slot
+
 Name : creatorId
 Description : ID of the User who created the slot
 
@@ -66,7 +69,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=CR3LGRrhFHVH5XF7mqRrqG-IweU
+Authorization: Token token=JKJg8-SASTllz5MR9rNGJXezVOs
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +81,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/253/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=CR3LGRrhFHVH5XF7mqRrqG-IweU&quot; \
+	-H &quot;Authorization: Token token=JKJg8-SASTllz5MR9rNGJXezVOs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,11 +92,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;90c70e2053756eaea12a9c741b52f7fb&quot;
+ETag: W/&quot;4438cb02c1646bc6861e3f847f783522&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4b5016cc-7db6-4825-b663-7c4b0997d2ba
-X-Runtime: 0.113864
-Content-Length: 2253</pre>
+X-Request-Id: 2e2f5bb0-f6b6-48b9-95fe-5170e26ff8bd
+X-Runtime: 0.122378
+Content-Length: 2317</pre>
 
 #### Status
 
@@ -107,16 +110,17 @@ Content-Length: 2253</pre>
     "id" : 71,
     "title" : "Slot title 60",
     "startDate" : "2019-09-07T12:44:02.000Z",
-    "createdAt" : "2015-06-22T08:44:28.961Z",
-    "updatedAt" : "2015-06-22T08:44:28.961Z",
-    "deletedAt" : null,
     "endDate" : "2019-10-07T12:44:02.000Z",
+    "createdAt" : "2015-06-27T07:27:24.660Z",
+    "updatedAt" : "2015-06-27T07:27:24.660Z",
+    "deletedAt" : null,
+    "openEnd" : false,
     "location" : null,
     "creator" : {
       "id" : 255,
       "username" : "User 250",
-      "createdAt" : "2015-06-22T08:44:28.955Z",
-      "updatedAt" : "2015-06-22T08:44:28.955Z",
+      "createdAt" : "2015-06-27T07:27:24.653Z",
+      "updatedAt" : "2015-06-27T07:27:24.653Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -138,16 +142,17 @@ Content-Length: 2253</pre>
     "id" : 72,
     "title" : "Slot title 61",
     "startDate" : "2019-09-08T13:44:02.000Z",
-    "createdAt" : "2015-06-22T08:44:28.969Z",
-    "updatedAt" : "2015-06-22T08:44:28.969Z",
-    "deletedAt" : null,
     "endDate" : "2019-10-08T13:44:02.000Z",
+    "createdAt" : "2015-06-27T07:27:24.668Z",
+    "updatedAt" : "2015-06-27T07:27:24.668Z",
+    "deletedAt" : null,
+    "openEnd" : false,
     "location" : null,
     "creator" : {
       "id" : 256,
       "username" : "User 251",
-      "createdAt" : "2015-06-22T08:44:28.964Z",
-      "updatedAt" : "2015-06-22T08:44:28.964Z",
+      "createdAt" : "2015-06-27T07:27:24.663Z",
+      "updatedAt" : "2015-06-27T07:27:24.663Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -169,16 +174,17 @@ Content-Length: 2253</pre>
     "id" : 74,
     "title" : "Slot title 63",
     "startDate" : "2019-09-10T15:44:02.000Z",
-    "createdAt" : "2015-06-22T08:44:28.982Z",
-    "updatedAt" : "2015-06-22T08:44:29.001Z",
-    "deletedAt" : null,
     "endDate" : "2019-10-10T15:44:02.000Z",
+    "createdAt" : "2015-06-27T07:27:24.680Z",
+    "updatedAt" : "2015-06-27T07:27:24.704Z",
+    "deletedAt" : null,
+    "openEnd" : false,
     "location" : null,
     "creator" : {
       "id" : 259,
       "username" : "User 254",
-      "createdAt" : "2015-06-22T08:44:28.988Z",
-      "updatedAt" : "2015-06-22T08:44:28.988Z",
+      "createdAt" : "2015-06-27T07:27:24.683Z",
+      "updatedAt" : "2015-06-27T07:27:24.683Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -202,16 +208,17 @@ Content-Length: 2253</pre>
     "id" : 76,
     "title" : "Slot title 65",
     "startDate" : "2019-09-12T17:44:02.000Z",
-    "createdAt" : "2015-06-22T08:44:29.095Z",
-    "updatedAt" : "2015-06-22T08:44:29.095Z",
-    "deletedAt" : null,
     "endDate" : "2019-10-12T17:44:02.000Z",
+    "createdAt" : "2015-06-27T07:27:24.796Z",
+    "updatedAt" : "2015-06-27T07:27:24.796Z",
+    "deletedAt" : null,
+    "openEnd" : false,
     "location" : null,
     "creator" : {
       "id" : 263,
       "username" : "User 258",
-      "createdAt" : "2015-06-22T08:44:29.083Z",
-      "updatedAt" : "2015-06-22T08:44:29.083Z",
+      "createdAt" : "2015-06-27T07:27:24.784Z",
+      "updatedAt" : "2015-06-27T07:27:24.784Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
