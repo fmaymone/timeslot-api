@@ -350,8 +350,9 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "with invalid params" do
+      let(:metaslot) { attributes_for(:meta_slot).merge(groupId: group.id) }
       let(:invalid_attributes) {
-        attributes_for(:meta_slot).merge(groupId: group.id)
+        metaslot.transform_keys! { |key| key.to_s.camelize(:lower) }
       }
       describe "does not add a new entry to the DB" do
         it "with missing group ID" do
@@ -372,14 +373,14 @@ RSpec.describe "V1::Slots", type: :request do
 
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
-          invalid_attributes[:title] = ""
+          metaslot[:title] = ""
           post "/v1/groupslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
-          invalid_attributes[:start_date] = "|$%^@wer"
+          metaslot[:start_date] = "|$%^@wer"
           post "/v1/groupslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')

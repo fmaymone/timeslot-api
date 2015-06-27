@@ -70,7 +70,7 @@ RSpec.describe MetaSlot, type: :model do
       meta_slot.update(start_date: "2014-09-28T13:31:02Z", end_date: nil)
     }
     it "sets the end_date and assign false to open_end" do
-      meta_slot.update(end_date: "2014-09-30T07:31:02Z")
+      meta_slot.update(end_date: "2014-09-30T07:31:02Z", open_end: false)
       expect(meta_slot.end_date).to eq "2014-09-30T07:31:02Z"
       expect(meta_slot.open_end).to be false
     end
