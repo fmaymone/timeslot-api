@@ -649,6 +649,36 @@ RSpec.describe "V1::Slots", type: :request do
             .to eq std_slot.start_date.to_datetime.next_day.at_midday
           expect(std_slot.open_end).to be true
         end
+
+        context "slot with open end", :focus do
+          let!(:std_slot) do
+            create(:std_slot_private,
+                   owner: current_user,
+                   start_date: "2014-09-08 13:31:02",
+                   end_date: "")
+          end
+          let(:endDate) { "2014-09-08 15:18:31" }
+
+          it "unsets 'openEnd' if end_date is set" do
+            expect(std_slot.open_end).to be true
+            patch "/v1/stdslot/#{std_slot.id}", { endDate: endDate }, auth_header
+            std_slot.reload
+            expect(std_slot.end_date).to eq endDate
+            expect(std_slot.open_end).to be false
+            expect(response).to have_http_status(:ok)
+            expect(json['openEnd']).to be false
+          end
+
+          it "doesn't unset 'openEnd' if same 'open' end_date is resubmitted" do
+            expect(std_slot.open_end).to be true
+            expect {
+              patch "/v1/stdslot/#{std_slot.id}",
+                    { endDate: std_slot.end_date }, auth_header
+            }.not_to change(std_slot, :open_end)
+            expect(response).to have_http_status(:ok)
+            expect(json['openEnd']).to be true
+          end
+        end
       end
 
       context "invalid params" do
@@ -1544,7 +1574,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe "copy stdslot with details into stdslot" do
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                               :with_notes) }
+                                 :with_notes) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
