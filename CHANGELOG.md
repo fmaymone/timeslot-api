@@ -1,5 +1,9 @@
 #Changelog
 
+## v0.6.3 on t2s2-dev
+- the daily fix for open_end
+
+
 ## v0.6.2 on t2s2-dev
 - fix more issues with open_end slots
 
