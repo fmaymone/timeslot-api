@@ -3,6 +3,7 @@ module TS_Authenticable
     base.include ActionController::HttpAuthentication::Token::ControllerMethods
     base.include ActionController::Caching
     base.include ActionController::Helpers
+    # base.before_action :authenticate_user_agent
     base.before_action :authenticate_user_from_token!
     base.helper_method :current_user
   end
@@ -24,5 +25,16 @@ module TS_Authenticable
   def render_unauthorized
     headers['WWW-Authenticate'] = 'Token realm="Application"'
     render json: 'Bad credentials', status: :unauthorized
+  end
+
+  def authenticate_user_agent
+    p Rails.env
+    p request.user_agent
+    p request.user_agent.match(/iPad|iPhone|iPod/)
+    if Rails.env.production?
+      unless request.user_agent.match(/iPad|iPhone|iPod/) #the request is made by an "Apple" device
+        render json: 'enviroment or user_agent is not authorized', status: :forbidden
+      end
+    end
   end
 end
