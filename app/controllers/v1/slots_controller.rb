@@ -280,7 +280,6 @@ module V1
         fail ActionController::ParameterMissing, msg
       end
 
-      # Check validity of date format
       if params[:endDate].present?
         enddate = (params[:endDate])
         valid_date = Time.zone.parse(enddate)
