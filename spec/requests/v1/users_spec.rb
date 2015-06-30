@@ -14,14 +14,14 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
-  describe "User_agent" , :focus do 
+  describe "User_agent" do 
     context "is an IOS device" do
       let(:auth_header) do
         { "HTTP_USER_AGENT" => 
           "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7" }
       end
       it "is not forbidden" do
-        #stub_const('RAILS_ENV', 'production')
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
         get "/v1/users", {}, auth_header
         expect(response.status).not_to be 403
       end
@@ -32,7 +32,7 @@ RSpec.describe "V1::Users", type: :request do
         {"HTTP_USER_AGENT" => "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)"}
       end
       it "is forbidden" do
-        #stub_const('RAILS_ENV', 'production')
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
         get "/v1/users", {}, auth_header
         expect(response.status).to be 403
       end

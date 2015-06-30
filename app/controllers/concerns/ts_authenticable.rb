@@ -28,11 +28,10 @@ module TS_Authenticable
   end
 
   def authenticate_user_agent
-    p Rails.env
-    p request.user_agent
-    p request.user_agent.match(/iPad|iPhone|iPod/)
-    unless Rails.env.development? || request.user_agent.match(/iPad|iPhone|iPod/) #change to 'if Rails.env.production?'
-      render json: 'enviroment or user_agent is not authorized', status: :forbidden
+    if Rails.env.production?
+      if not request.user_agent.match(/iPad|iPhone|iPod/)
+        render json: 'enviroment or user_agent is not authorized', status: :forbidden
+      end
     end
   end
 end
