@@ -185,7 +185,7 @@ resource "Users" do
 
     example "User signin", document: :v1 do
       explanation "returns OK and an AuthToken if credentials match\n\n" \
-                  "returns 403 if credentials invalid"
+                  "returns 401 if credentials invalid"
       do_request
 
       expect(response_status).to eq(200)
