@@ -1183,6 +1183,7 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("openEnd")
         expect(json).to have_key("location")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -1203,6 +1204,7 @@ resource "Slots" do
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
+                 "openEnd" => slot.open_end,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at,
