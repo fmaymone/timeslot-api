@@ -41,7 +41,7 @@ class BaseSlot < ActiveRecord::Base
 
   delegate :title, :start_date, :end_date, :creator, :location_id, :location,
            :ios_location_id, :ios_location, :open_end,
-           :title=, :start_date=, :end_date=, :creator=, :location_id=,
+           :title=, :start_date=, :end_date=, :creator=, :location_id=, :open_end=,
            to: :meta_slot
 
   validates :meta_slot, presence: true

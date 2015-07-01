@@ -33,8 +33,6 @@ gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
 
 group :development do
-  gem 'spring'
-
   gem "rails-erd"
 
   gem "railroady"
@@ -50,6 +48,8 @@ group :development, :test do
   gem 'pry-byebug'
 
   gem 'pry-doc'
+  
+  gem 'spring'
 
   gem 'spring-commands-rspec'
 

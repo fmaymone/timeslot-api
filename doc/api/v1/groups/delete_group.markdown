@@ -54,7 +54,7 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=YkwCcYYQ1_dM-H4K639VpBccwYU
+<pre>Authorization: Token token=p2Mnl91sGx6xnqW4nV5urggeE7Q
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -66,7 +66,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=YkwCcYYQ1_dM-H4K639VpBccwYU&quot; \
+	-H &quot;Authorization: Token token=p2Mnl91sGx6xnqW4nV5urggeE7Q&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -78,11 +78,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;91cc6312eae00eac159a584c048226a6&quot;
+ETag: W/&quot;c3f438fa1d8faf320ed6854353739bc0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 73add46b-83c4-4613-9f90-87019e422a12
-X-Runtime: 0.075268
-Content-Length: 434</pre>
+X-Request-Id: a5e42700-e809-4a3e-8ef2-77feb39949b5
+X-Runtime: 0.084690
+Content-Length: 440</pre>
 
 #### Status
 
@@ -96,21 +96,21 @@ Content-Length: 434</pre>
   "name" : "Testgroup 13",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-06-16T15:49:50.648Z",
-  "updatedAt" : "2015-06-16T15:49:50.734Z",
-  "deletedAt" : "2015-06-16T15:49:50.733Z",
+  "createdAt" : "2015-06-22T08:44:15.526Z",
+  "updatedAt" : "2015-06-22T08:44:15.619Z",
+  "deletedAt" : "2015-06-22T08:44:15.618Z",
   "image" : {
-    "clyid" : null,
+    "publicId" : null,
     "localId" : null
   },
   "owner" : {
     "id" : 66,
     "username" : "User 63",
-    "createdAt" : "2015-06-16T15:49:50.645Z",
-    "updatedAt" : "2015-06-16T15:49:50.680Z",
+    "createdAt" : "2015-06-22T08:44:15.523Z",
+    "updatedAt" : "2015-06-22T08:44:15.559Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

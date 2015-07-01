@@ -28,64 +28,8 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
-Name : createdAt
-Description : Creation of slot
-
-Name : updatedAt
-Description : Last update of slot
-
-Name : deletedAt
-Description : Delete date of slot or nil
-
-Name : location
-Description : Location data for the slot
-
-Name : creator
-Description : User who created the slot
-
-Name : settings
-Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
-
-contains User specific settings for this slot (alerts)
-
-Name : visibility
-Description : Visibiltiy of the slot
-
-Name : notes
-Description : Notes on the slot
-
-Name : likes
-Description : Likes for the slot
-
-Name : commentsCounter
-Description : Number of comments on the slot
-
-Name : shareUrl
-Description : Share URL for this slot, nil if not yet shared
-
-Name : images
-Description : Images for the slot
-
-Name : voices
-Description : Voice recordings for the slot
-
-Name : videos
-Description : Videos recordings for the slot
-
-Name : groupId
-Description : ID of the group the slot belongs to
-
-Name : id
-Description : ID of the slot
-
-Name : title
-Description : Title of the slot
-
-Name : startDate
-Description : Startdate of the slot
-
-Name : endDate
-Description : Enddate of the slot
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -125,8 +69,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -138,7 +82,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=0h0I1Yp8qj13ppeiHT0p2D4j0iQ
+<pre>Authorization: Token token=7-8YfrnUTPkSRdo_uAysVyCx3Bw
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -150,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/42&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=0h0I1Yp8qj13ppeiHT0p2D4j0iQ&quot; \
+	-H &quot;Authorization: Token token=7-8YfrnUTPkSRdo_uAysVyCx3Bw&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -162,11 +106,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8faf8e9c795c3adf4eef857dcd9ca20c&quot;
+ETag: W/&quot;946d16cf89a980bf949d8818c86f36e7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 677a4b18-e9f7-4f4e-b6a7-19fe3eed3d5d
-X-Runtime: 0.055120
-Content-Length: 539</pre>
+X-Request-Id: 0628c102-f402-4f76-8a15-7d3a5884d887
+X-Runtime: 0.064693
+Content-Length: 558</pre>
 
 #### Status
 
@@ -179,19 +123,20 @@ Content-Length: 539</pre>
   "id" : 42,
   "title" : "Slot title 37",
   "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:59.210Z",
-  "updatedAt" : "2015-06-16T15:49:59.236Z",
-  "deletedAt" : "2015-06-16T15:49:59.233Z",
   "endDate" : "2019-10-11T13:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:19.996Z",
+  "updatedAt" : "2015-06-27T07:27:20.022Z",
+  "deletedAt" : "2015-06-27T07:27:20.020Z",
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 181,
     "username" : "User 178",
-    "createdAt" : "2015-06-16T15:49:59.205Z",
-    "updatedAt" : "2015-06-16T15:49:59.205Z",
+    "createdAt" : "2015-06-27T07:27:19.991Z",
+    "updatedAt" : "2015-06-27T07:27:19.991Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

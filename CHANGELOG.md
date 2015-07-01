@@ -1,6 +1,14 @@
 #Changelog
 
-## latest
+## v0.6.2 on t2s2-dev
+- fix more issues with open_end slots
+
+
+## v0.6.1 on t2s2-dev
+- allow empty string for enddate if it's a slot with open end
+
+
+## v0.6.0 on t2s2-dev
 - add title to media items of type voice/audio
 - change type of media items duration from int to float
 - rename voice to audio

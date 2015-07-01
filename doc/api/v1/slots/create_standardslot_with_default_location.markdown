@@ -21,64 +21,22 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration).
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
-
-Name : location
-Description : IOS location associated with this slot
-
-Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
-
-Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
-
-Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
-
-Name : locality
-Description : city, e.g. Berlin (255 chars)
-
-Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
-
-Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
-
-Name : country
-Description : country, e.g. Germany (255 chars)
-
-Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
-
-Name : inLandWater
-Description : e.g. Lake Tahoe
-
-Name : ocean
-Description : e.g. Pacific Ocean
-
-Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
-
-Name : latitude
-Description : Latitude
-
-Name : longitude
-Description : Longitude
-
-Name : privateLocation
-Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
 Name : visibility *- required -*
 Description : Visibility of the Slot
@@ -97,6 +55,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -136,8 +97,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -148,7 +109,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=l35frUlua2Z1SwtOcXnNgthvHH4
+Authorization: Token token=S-HTXuL5PDVUPiuAQi62Jy3nmcw
 Host: example.org
 Cookie: </pre>
 
@@ -162,7 +123,6 @@ Cookie: </pre>
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
-  "locationId" : 200719253,
   "notes" : [
     {
       "title" : "revolutionizing the calendar",
@@ -183,10 +143,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;locationId&quot;:200719253,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=l35frUlua2Z1SwtOcXnNgthvHH4&quot; \
+	-H &quot;Authorization: Token token=S-HTXuL5PDVUPiuAQi62Jy3nmcw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -197,11 +157,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a430951506a61c160641c3d42a22b621&quot;
+ETag: W/&quot;abcba147fdf66032101ee766e562cd3f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5b6f6109-a451-480d-bdcf-529374139191
-X-Runtime: 0.046613
-Content-Length: 744</pre>
+X-Request-Id: 32faa28c-47b1-4006-b479-4d983dfa191a
+X-Runtime: 0.036911
+Content-Length: 763</pre>
 
 #### Status
 
@@ -214,19 +174,20 @@ Content-Length: 744</pre>
   "id" : 27,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-16T15:49:53.862Z",
-  "updatedAt" : "2015-06-16T15:49:53.862Z",
-  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "createdAt" : "2015-06-27T07:27:14.553Z",
+  "updatedAt" : "2015-06-27T07:27:14.553Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 154,
     "username" : "User 151",
-    "createdAt" : "2015-06-16T15:49:53.849Z",
-    "updatedAt" : "2015-06-16T15:49:53.849Z",
+    "createdAt" : "2015-06-27T07:27:14.539Z",
+    "updatedAt" : "2015-06-27T07:27:14.539Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
@@ -235,13 +196,13 @@ Content-Length: 744</pre>
       "id" : 4,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-16T15:49:53.865Z"
+      "createdAt" : "2015-06-27T07:27:14.556Z"
     },
     {
       "id" : 5,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-16T15:49:53.868Z"
+      "createdAt" : "2015-06-27T07:27:14.558Z"
     }
   ],
   "media" : [],

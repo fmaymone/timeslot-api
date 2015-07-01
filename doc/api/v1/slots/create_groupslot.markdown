@@ -17,25 +17,31 @@ returns 422 if required parameters are missing
 ### Parameters
 
 Name : title *- required -*
-Description : Title of slot (max. 48 characters)
+Description : Title of slot (max. 60 characters)
 
 Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration).
 
-Name : groupId *- required -*
-Description : Group ID if GroupSlot
+Name : location
+Description : Location associated with this slot (see example)
 
-Name : note
-Description : A note which belongs to the Slot
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
+
+Name : notes
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
+
+Name : groupId *- required -*
+Description : ID of the group to which the Slot belongs
 
 
 ### Response Fields
@@ -51,6 +57,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -90,8 +99,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -105,7 +114,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=NL__6fuPNreobpCLVc2EFWdqdo8
+Authorization: Token token=-7CJPQ2WbmPHojjfaaIPkxVX-xI
 Host: example.org
 Cookie: </pre>
 
@@ -119,21 +128,20 @@ Cookie: </pre>
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
-  "groupId" : 38,
-  "note" : "revolutionizing the calendar",
   "settings" : {
     "alerts" : "0101010101"
-  }
+  },
+  "groupId" : 38
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;groupId&quot;:38,&quot;note&quot;:&quot;revolutionizing the calendar&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:38}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=NL__6fuPNreobpCLVc2EFWdqdo8&quot; \
+	-H &quot;Authorization: Token token=-7CJPQ2WbmPHojjfaaIPkxVX-xI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,11 +152,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;93e233d3e80f7a0dcf7f7b02d0b53eeb&quot;
+ETag: W/&quot;94554d63d8e89dc54c023f0f31d6d636&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: eaf39971-a80b-4a31-9211-cee4eb17c8de
-X-Runtime: 0.035679
-Content-Length: 542</pre>
+X-Request-Id: 00c5a7c1-f850-445d-b0b0-12d0956f6655
+X-Runtime: 0.038079
+Content-Length: 561</pre>
 
 #### Status
 
@@ -161,19 +169,20 @@ Content-Length: 542</pre>
   "id" : 31,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-16T15:49:54.420Z",
-  "updatedAt" : "2015-06-16T15:49:54.420Z",
-  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "createdAt" : "2015-06-27T07:27:15.131Z",
+  "updatedAt" : "2015-06-27T07:27:15.131Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 159,
     "username" : "User 156",
-    "createdAt" : "2015-06-16T15:49:54.395Z",
-    "updatedAt" : "2015-06-16T15:49:54.395Z",
+    "createdAt" : "2015-06-27T07:27:15.107Z",
+    "updatedAt" : "2015-06-27T07:27:15.107Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

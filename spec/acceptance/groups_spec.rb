@@ -255,6 +255,7 @@ resource "Groups" do
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
     response_field :endDate, "Enddate of the slot"
+    response_field :openEnd, "OpenEnd Boolean Flag of the slot"
     response_field :alerts, "Alerts for the slot for the current user"
     response_field :media, "Media items of the slot"
     response_field :url, "direct url to fetch the slot"
@@ -286,6 +287,7 @@ resource "Groups" do
                     "updatedAt" => slots[0].updated_at.as_json,
                     "deletedAt" => slots[0].deleted_at,
                     "endDate" => slots[0].end_date.as_json,
+                    "openEnd" => slots[0].open_end.as_json,
                     "settings" => {
                       'alerts' => current_user.alerts(slots[0]) },
                     "media" => slots[0].media_items,

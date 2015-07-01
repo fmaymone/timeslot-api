@@ -1,6 +1,6 @@
 # Slots API
 
-## Reorder media items
+## Update Slot - Reorder media items
 
 ### PATCH /v1/stdslot/:id
 
@@ -24,64 +24,22 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration).
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
-
-Name : location
-Description : IOS location associated with this slot
-
-Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
-
-Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
-
-Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
-
-Name : locality
-Description : city, e.g. Berlin (255 chars)
-
-Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
-
-Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
-
-Name : country
-Description : country, e.g. Germany (255 chars)
-
-Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
-
-Name : inLandWater
-Description : e.g. Lake Tahoe
-
-Name : ocean
-Description : e.g. Pacific Ocean
-
-Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
-
-Name : latitude
-Description : Latitude
-
-Name : longitude
-Description : Longitude
-
-Name : privateLocation
-Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
 Name : media *- required -*
 Description : Array with mediaIds and position parameter
@@ -90,7 +48,7 @@ Name : mediaId *- required -*
 Description : Timeslot&#39;s internal ID for this media item
 
 Name : position *- required -*
-Description : Sorting order of the image/video/voice. If not supplied the media items will be sortet as they are ordered in the array.
+Description : Sorting order of the image/video/audio. If not supplied the media items will be sortet as they are ordered in the array.
 
 
 ### Response Fields
@@ -106,6 +64,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -145,8 +106,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -156,7 +117,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=-YdntIkI6BvDwPrwsROBkZ5slsU
+Authorization: Token token=ShMAP71QrOLRC8lUqfHVFfFKFMA
 Host: example.org
 Cookie: </pre>
 
@@ -170,17 +131,17 @@ Cookie: </pre>
   "media" : [
     {
       "mediaId" : 32,
-      "mediaType" : "photo",
+      "mediaType" : "image",
       "position" : 2
     },
     {
       "mediaId" : 33,
-      "mediaType" : "photo",
+      "mediaType" : "image",
       "position" : 0
     },
     {
       "mediaId" : 34,
-      "mediaType" : "photo",
+      "mediaType" : "image",
       "position" : 1
     }
   ]
@@ -190,9 +151,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:32,&quot;mediaType&quot;:&quot;photo&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;mediaType&quot;:&quot;photo&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;mediaType&quot;:&quot;photo&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/38&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:32,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:33,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:34,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=-YdntIkI6BvDwPrwsROBkZ5slsU&quot; \
+	-H &quot;Authorization: Token token=ShMAP71QrOLRC8lUqfHVFfFKFMA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -203,11 +164,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;52258444b8b7042ce5df3fbee7a679fd&quot;
+ETag: W/&quot;646d6753b26f43742d2146d0b0644a7e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4caa5d5e-3737-46be-9960-a9c2bdb9f495
-X-Runtime: 0.045533
-Content-Length: 809</pre>
+X-Request-Id: 40b524dd-141f-4c50-9282-398435de94c8
+X-Runtime: 0.052608
+Content-Length: 837</pre>
 
 #### Status
 
@@ -220,19 +181,20 @@ Content-Length: 809</pre>
   "id" : 38,
   "title" : "Slot title 33",
   "startDate" : "2019-09-07T09:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:55.311Z",
-  "updatedAt" : "2015-06-16T15:49:55.311Z",
-  "deletedAt" : null,
   "endDate" : "2019-10-07T09:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:16.073Z",
+  "updatedAt" : "2015-06-27T07:27:16.073Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 173,
     "username" : "User 170",
-    "createdAt" : "2015-06-16T15:49:55.307Z",
-    "updatedAt" : "2015-06-16T15:49:55.307Z",
+    "createdAt" : "2015-06-27T07:27:16.068Z",
+    "updatedAt" : "2015-06-27T07:27:16.068Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
@@ -240,24 +202,24 @@ Content-Length: 809</pre>
   "media" : [
     {
       "mediaId" : 34,
-      "clyid" : "dfhjghjkdisudgfds7iy30",
+      "publicId" : "dfhjghjkdisudgfds7iy30",
       "position" : 1,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 33,
-      "clyid" : "dfhjghjkdisudgfds7iy29",
+      "publicId" : "dfhjghjkdisudgfds7iy29",
       "position" : 0,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     },
     {
       "mediaId" : 32,
-      "clyid" : "dfhjghjkdisudgfds7iy28",
+      "publicId" : "dfhjghjkdisudgfds7iy28",
       "position" : 2,
       "localId" : null,
-      "mediaType" : "photo"
+      "mediaType" : "image"
     }
   ],
   "settings" : {
