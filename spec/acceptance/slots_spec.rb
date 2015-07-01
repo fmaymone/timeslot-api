@@ -1127,14 +1127,14 @@ resource "Slots" do
       end
     end
   end
-  get "slots/:id/share" do
+  get "/v1/slots/:id/share" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to share", required: true
 
     describe "Share slot with valid ID" do
-      include_context "default share slot response fields"
+      include_context "default slot response fields"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
@@ -1152,10 +1152,10 @@ resource "Slots" do
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
-      exmaple "Share slot", document: :v1 do
+      example "Share slot", document: :v1 do
         explanation "if a user is authenticated the slot shareUrl" \
-                    "will be included\n\n" \
-                    "returns 404 id ID is invalid"
+                    " will be included\n\n" \
+                    "returns 404 if ID is invalid"
         do_request
 
         expect(response_status).to eq(200)
