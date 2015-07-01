@@ -21,13 +21,16 @@ Name : startDate *- required -*
 Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration)
+Description : Enddate and Time of the Slot (startdate + duration).
 
-Name : locationId
-Description : ID of the location associated with this slot
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
 
 Name : notes
-Description : Notes for to the Slot
+Description : Notes for to the Slot (see example)
 
 Name : settings
 Description : User specific settings for the slot (alerts)
@@ -35,41 +38,41 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : location
-Description : IOS location associated with this slot
+Name : visibility *- required -*
+Description : Visibility of the Slot
 
 Name : name
-Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+Description : Name of the location, eg. Timeslot Inc. (255 chars)
 
 Name : thoroughfare
-Description : Street address, Dolziger Str. 9 (255 chars)
+Description : Street address, eg. Dolziger Str. 9 (255 ch.)
 
 Name : subThoroughfare
-Description : house number, e.g. 9 (255 chars)
+Description : house number, eg. 9 (255 chars)
 
 Name : locality
 Description : city, e.g. Berlin (255 chars)
 
 Name : subLocality
-Description : neighborhood, common name, e.g. Mitte (255 chars)
+Description : neighborhood, common name, eg. Mitte (255 ch.)
 
 Name : postalCode
-Description : zip code, e.g. 94114 (32 chars)
+Description : zip code, eg. 94114 (32 chars)
 
 Name : country
-Description : country, e.g. Germany (255 chars)
+Description : country, eg. Germany (255 chars)
 
 Name : isoCountryCode
-Description : Country Code, e.g. US (8 chars)
+Description : Country Code, eg. US (8 chars)
 
 Name : inLandWater
-Description : e.g. Lake Tahoe
+Description : eg. Lake Tahoe
 
 Name : ocean
-Description : e.g. Pacific Ocean
+Description : eg. Pacific Ocean
 
 Name : areasOfInterest
-Description : e.g. Volkspark Friedrichshain
+Description : eg. Volkspark Friedrichshain
 
 Name : latitude
 Description : Latitude
@@ -79,9 +82,6 @@ Description : Longitude
 
 Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
-
-Name : visibility *- required -*
-Description : Visibility of the Slot
 
 
 ### Response Fields
@@ -97,6 +97,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : openEnd
+Description : OpenEnd Boolean Flag
 
 Name : createdAt
 Description : Creation of slot
@@ -136,8 +139,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -148,7 +151,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=IMakfrSDbOa9OpRRHcmzEhVLn70
+Authorization: Token token=1OUMNspXitCqLAbgyzQgyaRloJg
 Host: example.org
 Cookie: </pre>
 
@@ -175,6 +178,7 @@ Cookie: </pre>
   "settings" : {
     "alerts" : "0101010101"
   },
+  "visibility" : "private",
   "location" : {
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
@@ -182,18 +186,17 @@ Cookie: </pre>
     "country" : "Germany",
     "latitude" : "52.527335",
     "longitude" : "13.414259"
-  },
-  "visibility" : "private"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=IMakfrSDbOa9OpRRHcmzEhVLn70&quot; \
+	-H &quot;Authorization: Token token=1OUMNspXitCqLAbgyzQgyaRloJg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -204,11 +207,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;43bf0ae742a2d6cc65646110ea87cb04&quot;
+ETag: W/&quot;1c65705e157771b349791e30cf070bdd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 92bcc12e-fc1c-4ba2-ad0d-28a5b2e600e3
-X-Runtime: 0.046531
-Content-Length: 1097</pre>
+X-Request-Id: 7b067cf2-1dd5-452c-b7cc-8618cc726637
+X-Runtime: 0.052509
+Content-Length: 1116</pre>
 
 #### Status
 
@@ -221,10 +224,11 @@ Content-Length: 1097</pre>
   "id" : 29,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-06-16T15:49:54.115Z",
-  "updatedAt" : "2015-06-16T15:49:54.115Z",
-  "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "createdAt" : "2015-06-27T07:27:14.816Z",
+  "updatedAt" : "2015-06-27T07:27:14.816Z",
+  "deletedAt" : null,
+  "openEnd" : false,
   "location" : {
     "id" : 2,
     "name" : "Soho House",
@@ -247,11 +251,11 @@ Content-Length: 1097</pre>
   "creator" : {
     "id" : 156,
     "username" : "User 153",
-    "createdAt" : "2015-06-16T15:49:54.092Z",
-    "updatedAt" : "2015-06-16T15:49:54.092Z",
+    "createdAt" : "2015-06-27T07:27:14.792Z",
+    "updatedAt" : "2015-06-27T07:27:14.792Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },
@@ -260,13 +264,13 @@ Content-Length: 1097</pre>
       "id" : 8,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
-      "createdAt" : "2015-06-16T15:49:54.118Z"
+      "createdAt" : "2015-06-27T07:27:14.819Z"
     },
     {
       "id" : 9,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-06-16T15:49:54.120Z"
+      "createdAt" : "2015-06-27T07:27:14.821Z"
     }
   ],
   "media" : [],

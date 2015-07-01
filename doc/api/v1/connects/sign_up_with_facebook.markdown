@@ -110,11 +110,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0d7facd0fb4cebcc34ce2995d17feb42&quot;
+ETag: W/&quot;137e4c4a5952ee49fcf575bc1d167596&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b274fab9-13e5-4768-9969-6464fd763659
-X-Runtime: 0.148365
-Content-Length: 764</pre>
+X-Request-Id: 482ab324-870f-4fd1-b3b5-3a370df57136
+X-Runtime: 0.153636
+Content-Length: 767</pre>
 
 #### Status
 
@@ -126,12 +126,12 @@ Content-Length: 764</pre>
 {
   "id" : 44,
   "username" : "Silvi O Ivlis",
-  "createdAt" : "2015-06-16T15:49:49.293Z",
-  "updatedAt" : "2015-06-16T15:49:49.293Z",
+  "createdAt" : "2015-06-22T08:44:14.170Z",
+  "updatedAt" : "2015-06-22T08:44:14.170Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
-    "clyid" : null,
+    "publicId" : null,
     "localId" : null
   },
   "slotCount" : 0,
@@ -154,6 +154,6 @@ Content-Length: 764</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "elGW0-Q0c8IdrVZhyviVS2uwIXs"
+  "authToken" : "8MOvVeAr-UDE_9lG9U-Kl8ae9n4"
 }
 ```

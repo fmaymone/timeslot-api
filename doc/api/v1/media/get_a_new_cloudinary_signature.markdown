@@ -4,7 +4,7 @@
 
 ### GET /v1/media-signature
 
-Cloundinary signed parameters to be used for client side image or raw data (voice/video) upload.
+Cloundinary signed parameters to be used for client side image, video or raw data (audio) upload.
 
 ### Response Fields
 
@@ -46,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bedf97de7bd7e59ed2b2b4dde22a03e9&quot;
+ETag: W/&quot;20c2fcdba1b28928c000a9dcefc82dd8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ca94439c-2bae-492a-9212-f03c291294c8
-X-Runtime: 0.018250
+X-Request-Id: ef21754a-1cfd-44cb-8125-8940b430e755
+X-Runtime: 0.019226
 Content-Length: 144</pre>
 
 #### Status
@@ -60,9 +60,9 @@ Content-Length: 144</pre>
 
 ```javascript
 {
-  "signature" : "e5a883da6b534ad4c79eb98cff5339d2b90036cf",
+  "signature" : "5c266c9d9d84ea8d56d713df72af7b9e8e2677df",
   "apiKey" : 255241985667644,
-  "publicId" : "wlavqwaj2litals1ltcv",
-  "timestamp" : "20150616154953"
+  "publicId" : "rtibmlhj3iqsusgahxkx",
+  "timestamp" : "20150622084418"
 }
 ```

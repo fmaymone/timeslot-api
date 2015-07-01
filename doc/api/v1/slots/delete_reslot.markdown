@@ -28,6 +28,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : openEnd
+Description : OpenEnd Boolean Flag
+
 Name : createdAt
 Description : Creation of slot
 
@@ -66,8 +69,8 @@ Description : Share URL for this slot, nil if not yet shared
 Name : images
 Description : Images for the slot
 
-Name : voices
-Description : Voice recordings for the slot
+Name : audios
+Description : Audio recordings for the slot
 
 Name : videos
 Description : Videos recordings for the slot
@@ -79,7 +82,7 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk
+<pre>Authorization: Token token=09ahQDC4j4aVWwB3X9EONF3twg0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=h9ZUcyNNFw5Kd-dsvsEiW3X_0Qk&quot; \
+	-H &quot;Authorization: Token token=09ahQDC4j4aVWwB3X9EONF3twg0&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,11 +106,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2908883bf7db89e404b22c6f05f6bef1&quot;
+ETag: W/&quot;88f5970aa9b4f906bb153296d6c88fc6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 71afbe70-2b5d-4c14-bc68-9a8bfa6ad877
-X-Runtime: 0.050213
-Content-Length: 542</pre>
+X-Request-Id: 98d8d033-bfa7-4b28-be8a-bab4acb0a607
+X-Runtime: 0.054734
+Content-Length: 561</pre>
 
 #### Status
 
@@ -120,19 +123,20 @@ Content-Length: 542</pre>
   "id" : 45,
   "title" : "Slot title 40",
   "startDate" : "2019-09-14T16:44:02.000Z",
-  "createdAt" : "2015-06-16T15:49:59.456Z",
-  "updatedAt" : "2015-06-16T15:49:59.498Z",
-  "deletedAt" : "2015-06-16T15:49:59.494Z",
   "endDate" : "2019-10-14T16:44:02.000Z",
+  "createdAt" : "2015-06-27T07:27:20.257Z",
+  "updatedAt" : "2015-06-27T07:27:20.299Z",
+  "deletedAt" : "2015-06-27T07:27:20.296Z",
+  "openEnd" : false,
   "location" : null,
   "creator" : {
     "id" : 187,
     "username" : "User 184",
-    "createdAt" : "2015-06-16T15:49:59.459Z",
-    "updatedAt" : "2015-06-16T15:49:59.459Z",
+    "createdAt" : "2015-06-27T07:27:20.260Z",
+    "updatedAt" : "2015-06-27T07:27:20.260Z",
     "deletedAt" : null,
     "image" : {
-      "clyid" : null,
+      "publicId" : null,
       "localId" : null
     }
   },

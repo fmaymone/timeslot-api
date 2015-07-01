@@ -281,12 +281,6 @@ module V1
       end
 
       # Check validity of date format
-      if params[:endDate].present?
-        enddate = (params[:endDate])
-        valid_date = Time.zone.parse(enddate)
-        fail ParameterInvalid.new(:end_date, enddate) unless valid_date
-      end
-
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
                         location:
                           [:name, :thoroughfare, :subThoroughfare,
@@ -295,6 +289,19 @@ module V1
                            :isoCountryCode, :inLandWater, :ocean, :latitude,
                            :longitude, :privateLocation, :areasOfInterest])
       p[:iosLocation] = p.delete(:location) if params[:location].present?
+
+      if params.key? :endDate
+        if params[:endDate].blank?
+          # empty end_date means slot with open_end
+          p[:open_end] = true
+        else
+          # validate submitted end_date
+          enddate = (params[:endDate])
+          valid_date = Time.zone.parse(enddate)
+          fail ParameterInvalid.new(:end_date, enddate) unless valid_date
+        end
+      end
+
       p.deep_transform_keys!(&:underscore)
       p.deep_symbolize_keys
     end
