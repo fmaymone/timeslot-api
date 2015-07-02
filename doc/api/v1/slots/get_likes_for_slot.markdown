@@ -25,7 +25,7 @@ Description : containing creation date of the Like and details of the user who m
 
 #### Headers
 
-<pre>Authorization: Token token=5ZXE2hx4FVjFKAZBdduYCcegPoY
+<pre>Authorization: Token token=-I4B-rMigvYb0PE3uWqtyP0Cy_g
 Host: example.org
 Cookie: </pre>
 
@@ -36,7 +36,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/50/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=5ZXE2hx4FVjFKAZBdduYCcegPoY&quot; \
+	-H &quot;Authorization: Token token=-I4B-rMigvYb0PE3uWqtyP0Cy_g&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -47,10 +47,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d04b34dd2840afba1abbce8921b9ad37&quot;
+ETag: W/&quot;ef2ce896376e330d989239fe68a03009&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 309a7a56-d504-4a61-9e34-79555e834346
-X-Runtime: 0.029525
+X-Request-Id: 863a0bb9-f9d2-4f55-b612-4f65c4b3a6be
+X-Runtime: 0.026685
 Content-Length: 893</pre>
 
 #### Status
@@ -62,12 +62,12 @@ Content-Length: 893</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-06-22T08:44:24.797Z",
+    "createdAt" : "2015-07-02T12:34:20.320Z",
     "liker" : {
-      "id" : 198,
+      "id" : 210,
       "username" : "User 195",
-      "createdAt" : "2015-06-22T08:44:24.795Z",
-      "updatedAt" : "2015-06-22T08:44:24.795Z",
+      "createdAt" : "2015-07-02T12:34:20.317Z",
+      "updatedAt" : "2015-07-02T12:34:20.317Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -76,12 +76,12 @@ Content-Length: 893</pre>
     }
   },
   {
-    "createdAt" : "2015-06-22T08:44:24.802Z",
+    "createdAt" : "2015-07-02T12:34:20.327Z",
     "liker" : {
-      "id" : 199,
+      "id" : 211,
       "username" : "User 196",
-      "createdAt" : "2015-06-22T08:44:24.800Z",
-      "updatedAt" : "2015-06-22T08:44:24.800Z",
+      "createdAt" : "2015-07-02T12:34:20.323Z",
+      "updatedAt" : "2015-07-02T12:34:20.323Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -90,12 +90,12 @@ Content-Length: 893</pre>
     }
   },
   {
-    "createdAt" : "2015-06-22T08:44:24.808Z",
+    "createdAt" : "2015-07-02T12:34:20.333Z",
     "liker" : {
-      "id" : 200,
+      "id" : 212,
       "username" : "User 197",
-      "createdAt" : "2015-06-22T08:44:24.805Z",
-      "updatedAt" : "2015-06-22T08:44:24.805Z",
+      "createdAt" : "2015-07-02T12:34:20.329Z",
+      "updatedAt" : "2015-07-02T12:34:20.329Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -104,12 +104,12 @@ Content-Length: 893</pre>
     }
   },
   {
-    "createdAt" : "2015-06-22T08:44:24.892Z",
+    "createdAt" : "2015-07-02T12:34:20.355Z",
     "liker" : {
-      "id" : 202,
+      "id" : 214,
       "username" : "User 199",
-      "createdAt" : "2015-06-22T08:44:24.887Z",
-      "updatedAt" : "2015-06-22T08:44:24.887Z",
+      "createdAt" : "2015-07-02T12:34:20.348Z",
+      "updatedAt" : "2015-07-02T12:34:20.348Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : "dfhjghjkdisudgfds7iy37",

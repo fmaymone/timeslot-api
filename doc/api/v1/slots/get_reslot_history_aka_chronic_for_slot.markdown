@@ -34,7 +34,7 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=P-nWkvr-sIud56SAoQy0uCGOo_Q
+<pre>Authorization: Token token=9Gs-F3nLZdtzNckZVALjU0Rdk6U
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/56/history&quot; -X GET \
-	-H &quot;Authorization: Token token=P-nWkvr-sIud56SAoQy0uCGOo_Q&quot; \
+	-H &quot;Authorization: Token token=9Gs-F3nLZdtzNckZVALjU0Rdk6U&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7934e1e5fd0bcbb1c4f4b818f269fd8b&quot;
+ETag: W/&quot;096b6e7e7ac0bc348835d7eea2ded0b7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 402e1309-ac28-4ad9-8916-a8777727aa2b
-X-Runtime: 0.025730
+X-Request-Id: 7705f1f5-bdf0-4aaf-8805-3a2ed4e7f8ce
+X-Runtime: 0.026478
 Content-Length: 378</pre>
 
 #### Status
@@ -72,23 +72,23 @@ Content-Length: 378</pre>
 {
   "predecessors" : [
     {
-      "id" : 219,
+      "id" : 231,
       "username" : "User 216",
       "userImage" : null,
-      "timestamp" : "2015-06-22T08:44:25.227Z"
+      "timestamp" : "2015-07-02T12:34:20.588Z"
     },
     {
-      "id" : 218,
+      "id" : 230,
       "username" : "User 215",
       "userImage" : null,
-      "timestamp" : "2015-06-22T08:44:25.220Z"
+      "timestamp" : "2015-07-02T12:34:20.579Z"
     }
   ],
   "parentUser" : {
-    "id" : 217,
+    "id" : 229,
     "username" : "User 214",
-    "createdAt" : "2015-06-22T08:44:25.214Z",
-    "updatedAt" : "2015-06-22T08:44:25.214Z",
+    "createdAt" : "2015-07-02T12:34:20.570Z",
+    "updatedAt" : "2015-07-02T12:34:20.570Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

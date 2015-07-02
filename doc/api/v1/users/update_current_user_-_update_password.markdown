@@ -147,7 +147,7 @@ Description : all connections to groups
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=H5-Zs86xaz5b4YaQznS9a33GhZ8
+Authorization: Token token=TzuPAnsF94mcZXhT94RnhAt3eEQ
 Host: example.org
 Cookie: </pre>
 
@@ -168,7 +168,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;password&quot;:&quot;slimetot&quot;,&quot;old_password&quot;:&quot;timeslot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=H5-Zs86xaz5b4YaQznS9a33GhZ8&quot; \
+	-H &quot;Authorization: Token token=TzuPAnsF94mcZXhT94RnhAt3eEQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -179,10 +179,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ba313527ecd887c608f8bdfb91ba0370&quot;
+ETag: W/&quot;100a48d8a4226d4c3b27d63ee185f9ac&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e3de2403-2d75-4061-adab-9760694ff5fb
-X-Runtime: 0.160788
+X-Request-Id: d69b3d42-a32a-40d1-842c-e48850049a3d
+X-Runtime: 0.026158
 Content-Length: 720</pre>
 
 #### Status
@@ -193,10 +193,10 @@ Content-Length: 720</pre>
 
 ```javascript
 {
-  "id" : 236,
-  "username" : "User 232",
-  "createdAt" : "2015-06-22T08:44:28.086Z",
-  "updatedAt" : "2015-06-22T08:44:28.234Z",
+  "id" : 255,
+  "username" : "User 239",
+  "createdAt" : "2015-07-02T12:34:25.740Z",
+  "updatedAt" : "2015-07-02T12:34:25.758Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -206,7 +206,7 @@ Content-Length: 720</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user67@email.com",
+  "email" : "user69@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

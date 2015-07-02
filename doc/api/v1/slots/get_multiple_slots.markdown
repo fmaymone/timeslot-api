@@ -81,7 +81,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=uWS1FLIGbGBaGvAgYaGcTKUZktY
+Authorization: Token token=OpTo4c-PVrm8sxbM4DvpuuQxu6I
 Host: example.org
 Cookie: </pre>
 
@@ -105,7 +105,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[24,23]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=uWS1FLIGbGBaGvAgYaGcTKUZktY&quot; \
+	-H &quot;Authorization: Token token=OpTo4c-PVrm8sxbM4DvpuuQxu6I&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -116,10 +116,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ff8776570286153097172d901df4f799&quot;
+ETag: W/&quot;f0317167e7ecdfce8f9f5170121ca083&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6744bd10-5c95-4ce4-9681-dd1dbee830c2
-X-Runtime: 0.088574
+X-Request-Id: c481da82-e313-4211-8e5f-4ac2118f2fc8
+X-Runtime: 0.149054
 Content-Length: 2568</pre>
 
 #### Status
@@ -135,16 +135,16 @@ Content-Length: 2568</pre>
     "title" : "Slot title 26",
     "startDate" : "2019-09-27T02:44:02.000Z",
     "endDate" : "2019-10-27T02:44:02.000Z",
-    "createdAt" : "2015-06-27T07:27:13.964Z",
-    "updatedAt" : "2015-06-27T07:27:13.964Z",
+    "createdAt" : "2015-07-02T12:34:18.314Z",
+    "updatedAt" : "2015-07-02T12:34:18.314Z",
     "deletedAt" : null,
     "openEnd" : false,
     "location" : null,
     "creator" : {
-      "id" : 145,
+      "id" : 157,
       "username" : "User 142",
-      "createdAt" : "2015-06-27T07:27:13.957Z",
-      "updatedAt" : "2015-06-27T07:27:13.957Z",
+      "createdAt" : "2015-07-02T12:34:18.307Z",
+      "updatedAt" : "2015-07-02T12:34:18.307Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -189,16 +189,16 @@ Content-Length: 2568</pre>
     "title" : "Slot title 25",
     "startDate" : "2019-09-26T01:44:02.000Z",
     "endDate" : "2019-10-26T01:44:02.000Z",
-    "createdAt" : "2015-06-27T07:27:13.920Z",
-    "updatedAt" : "2015-06-27T07:27:13.920Z",
+    "createdAt" : "2015-07-02T12:34:18.269Z",
+    "updatedAt" : "2015-07-02T12:34:18.269Z",
     "deletedAt" : null,
     "openEnd" : false,
     "location" : null,
     "creator" : {
-      "id" : 144,
+      "id" : 156,
       "username" : "User 141",
-      "createdAt" : "2015-06-27T07:27:13.913Z",
-      "updatedAt" : "2015-06-27T07:27:13.913Z",
+      "createdAt" : "2015-07-02T12:34:18.261Z",
+      "updatedAt" : "2015-07-02T12:34:18.261Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
