@@ -650,7 +650,7 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.open_end).to be true
         end
 
-        context "slot with open end", :focus do
+        context "slot with open end" do
           let!(:std_slot) do
             create(:std_slot_private,
                    owner: current_user,
