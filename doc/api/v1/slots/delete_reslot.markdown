@@ -82,7 +82,7 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=09ahQDC4j4aVWwB3X9EONF3twg0
+<pre>Authorization: Token token=bvgJbifBhSLnovyJI8vyv9kaQkc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -94,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=09ahQDC4j4aVWwB3X9EONF3twg0&quot; \
+	-H &quot;Authorization: Token token=bvgJbifBhSLnovyJI8vyv9kaQkc&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;88f5970aa9b4f906bb153296d6c88fc6&quot;
+ETag: W/&quot;eb7156c30d4f977068cac5f803f2b315&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 98d8d033-bfa7-4b28-be8a-bab4acb0a607
-X-Runtime: 0.054734
+X-Request-Id: 3cb025fa-e4e4-44b2-8dc9-025f354ce244
+X-Runtime: 0.050990
 Content-Length: 561</pre>
 
 #### Status
@@ -124,16 +124,16 @@ Content-Length: 561</pre>
   "title" : "Slot title 40",
   "startDate" : "2019-09-14T16:44:02.000Z",
   "endDate" : "2019-10-14T16:44:02.000Z",
-  "createdAt" : "2015-06-27T07:27:20.257Z",
-  "updatedAt" : "2015-06-27T07:27:20.299Z",
-  "deletedAt" : "2015-06-27T07:27:20.296Z",
+  "createdAt" : "2015-07-02T12:34:20.156Z",
+  "updatedAt" : "2015-07-02T12:34:20.198Z",
+  "deletedAt" : "2015-07-02T12:34:20.194Z",
   "openEnd" : false,
   "location" : null,
   "creator" : {
-    "id" : 187,
+    "id" : 199,
     "username" : "User 184",
-    "createdAt" : "2015-06-27T07:27:20.260Z",
-    "updatedAt" : "2015-06-27T07:27:20.260Z",
+    "createdAt" : "2015-07-02T12:34:20.160Z",
+    "updatedAt" : "2015-07-02T12:34:20.160Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -146,7 +146,7 @@ Content-Length: 561</pre>
     "alerts" : "0000000000"
   },
   "slotter" : {
-    "id" : 184
+    "id" : 196
   },
   "likes" : 0,
   "commentsCounter" : 0,

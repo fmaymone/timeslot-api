@@ -280,6 +280,7 @@ module V1
         fail ActionController::ParameterMissing, msg
       end
 
+      # Check validity of date format
       p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
                         location:
                           [:name, :thoroughfare, :subThoroughfare,
@@ -298,7 +299,7 @@ module V1
           enddate = (params[:endDate])
           valid_date = Time.zone.parse(enddate)
           fail ParameterInvalid.new(:end_date, enddate) unless valid_date
-          p[:open_end] = false unless valid_date == @slot.end_date
+          p[:open_end] = false unless valid_date == @slot.try(:end_date) #TODO: add spec
         end
       end
 

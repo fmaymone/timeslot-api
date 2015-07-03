@@ -8,3 +8,4 @@
 
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
+User.create(username: 'webview', role: 1) #produces an auth_token to be used in TS_SLOT_WEBSHARING enviroment variables

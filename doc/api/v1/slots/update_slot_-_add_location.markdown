@@ -150,7 +150,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=QV3lPSIz1lsZ2BFm-oNsXZPYrr4
+Authorization: Token token=lJ3ALssbRPv9UE-YaFzg0OKMmGU
 Host: example.org
 Cookie: </pre>
 
@@ -182,7 +182,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=QV3lPSIz1lsZ2BFm-oNsXZPYrr4&quot; \
+	-H &quot;Authorization: Token token=lJ3ALssbRPv9UE-YaFzg0OKMmGU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -193,10 +193,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;40f5c72111a11014ac41f2c65b199cab&quot;
+ETag: W/&quot;e818b29489706f63cae79b710f776411&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: da7af786-cf57-40db-a369-7549bc11c681
-X-Runtime: 0.046629
+X-Request-Id: b9712b2d-392d-4074-9ad9-0b7608d68221
+X-Runtime: 0.047359
 Content-Length: 899</pre>
 
 #### Status
@@ -211,8 +211,8 @@ Content-Length: 899</pre>
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
   "endDate" : "2019-10-08T10:44:02.000Z",
-  "createdAt" : "2015-06-27T07:27:16.223Z",
-  "updatedAt" : "2015-06-27T07:27:16.223Z",
+  "createdAt" : "2015-07-02T12:34:19.500Z",
+  "updatedAt" : "2015-07-02T12:34:19.500Z",
   "deletedAt" : null,
   "openEnd" : false,
   "location" : {
@@ -235,10 +235,10 @@ Content-Length: 899</pre>
     "privateLocation" : true
   },
   "creator" : {
-    "id" : 175,
+    "id" : 187,
     "username" : "User 172",
-    "createdAt" : "2015-06-27T07:27:16.218Z",
-    "updatedAt" : "2015-06-27T07:27:16.218Z",
+    "createdAt" : "2015-07-02T12:34:19.494Z",
+    "updatedAt" : "2015-07-02T12:34:19.494Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

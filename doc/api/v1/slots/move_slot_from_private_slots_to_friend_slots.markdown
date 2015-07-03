@@ -91,7 +91,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=u2wBnOPjqXddoK-ShznDkBclYPg
+Authorization: Token token=Crx8ImH9TsQ4R7MvbV64gpih9cQ
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/60/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=u2wBnOPjqXddoK-ShznDkBclYPg&quot; \
+	-H &quot;Authorization: Token token=Crx8ImH9TsQ4R7MvbV64gpih9cQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,10 +123,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;426c2581d74ddea722123b0c7d2a6ac5&quot;
+ETag: W/&quot;b0aa9d4af5a6b8c3d1626c419ce7866c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a63421fd-0f30-441a-acb3-487305b71de1
-X-Runtime: 0.084662
+X-Request-Id: d5d47590-a547-4247-ada9-aed79e878a3b
+X-Runtime: 0.079135
 Content-Length: 837</pre>
 
 #### Status
@@ -141,16 +141,16 @@ Content-Length: 837</pre>
   "title" : "Slot title 50",
   "startDate" : "2019-09-24T02:44:02.000Z",
   "endDate" : "2019-10-24T02:44:02.000Z",
-  "createdAt" : "2015-06-27T07:27:21.321Z",
-  "updatedAt" : "2015-06-27T07:27:21.321Z",
+  "createdAt" : "2015-07-02T12:34:20.776Z",
+  "updatedAt" : "2015-07-02T12:34:20.776Z",
   "deletedAt" : null,
   "openEnd" : false,
   "location" : null,
   "creator" : {
-    "id" : 226,
+    "id" : 238,
     "username" : "User 223",
-    "createdAt" : "2015-06-27T07:27:21.296Z",
-    "updatedAt" : "2015-06-27T07:27:21.296Z",
+    "createdAt" : "2015-07-02T12:34:20.745Z",
+    "updatedAt" : "2015-07-02T12:34:20.745Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
