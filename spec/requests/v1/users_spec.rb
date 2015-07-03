@@ -4,7 +4,7 @@ RSpec.describe "V1::Users", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) do
-    { 'Authorization' => "Token token=#{current_user.auth_token}"}
+    { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
   describe "GET /v1/users" do
