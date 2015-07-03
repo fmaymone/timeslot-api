@@ -30,7 +30,8 @@ module TS_Authenticable
   def authenticate_user_agent
     if Rails.env.production?
       if not request.user_agent.match(/iPad|iPhone|iPod/)
-        render json: 'enviroment or user_agent is not authorized', status: :forbidden
+        render json: 'request not authorized, error: 57', status: :forbidden
+        # no special reason for 57, just to be able to identify the msg
       end
     end
   end
