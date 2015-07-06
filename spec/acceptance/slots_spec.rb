@@ -1148,7 +1148,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id/share", :focus do
+  get "/v1/slots/:id/share" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
