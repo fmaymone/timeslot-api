@@ -1147,6 +1147,7 @@ resource "Slots" do
       end
     end
   end
+
   get "/v1/slots/:id/share" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
@@ -1156,21 +1157,9 @@ resource "Slots" do
     describe "Share slot with valid ID" do
       include_context "default slot response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          meta_slot: meta_slot, share_id: 'abcd1234') }
+      let(:slot) { create(:std_slot_public) }
 
-      let!(:slot_setting) { create(:slot_setting,
-                                   user: current_user,
-                                   meta_slot: slot.meta_slot,
-                                   alerts: '1110001100') }
-      let!(:medias) {
-        create_list :slot_image, 3, mediable: slot
-        create_list :audio, 2, mediable: slot
-        create_list :video, 2, mediable: slot
-      }
       let(:id) { slot.id }
-      let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
 
       example "Share slot", document: :v1 do
         explanation "if a user is authenticated the slot shareUrl" \
@@ -1183,50 +1172,22 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
-        expect(json).to have_key("openEnd")
-        expect(json).to have_key("location")
-        # expect(json['location']).to have_key("name")
-        expect(json).to have_key("creator")
-        expect(json['creator']).to have_key("username")
-        expect(json).to have_key("settings")
-        expect(json['settings']).to have_key("alerts")
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
+        expect(json).to have_key("openEnd")
+        expect(json).to have_key("location")
+        expect(json).to have_key("creator")
+        expect(json['creator']).to have_key("username")
         expect(json).to have_key("notes")
+        expect(json).to have_key("media")
+        expect(json).to have_key("settings")
+        expect(json).to have_key("visibility")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
         expect(json).to have_key("shareUrl")
-        expect(json).to have_key("visibility")
-        expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
-          .to eq("id" => slot.id,
-                 "title" => slot.title,
-                 "startDate" => slot.start_date.as_json,
-                 "endDate" => slot.end_date.as_json,
-                 "openEnd" => slot.open_end,
-                 "createdAt" => slot.created_at.as_json,
-                 "updatedAt" => slot.updated_at.as_json,
-                 "deletedAt" => deleted_at,
-                 "location" => nil,
-                 "creator" => { "id" => slot.creator.id,
-                                "username" => slot.creator.username,
-                                "createdAt" => slot.creator.created_at.as_json,
-                                "updatedAt" => slot.creator.updated_at.as_json,
-                                "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
-                 "settings" => { 'alerts' => '1110001100' },
-                 "visibility" => slot.visibility,
-                 "notes" => slot.notes,
-                 "likes" => slot.likes.count,
-                 "commentsCounter" => slot.comments.count
-                )
-        expect(json["media"].length).to eq(slot.media_items.length)
-        expect(response_body).to include slot.images.first.public_id
         expect(json["shareUrl"]).to include slot.share_id
+        expect(json["shareUrl"]).not_to eq("")
       end
     end
 

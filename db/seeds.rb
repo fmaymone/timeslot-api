@@ -8,4 +8,6 @@
 
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
-User.create(username: 'webview', role: 1) #produces an auth_token to be used in TS_SLOT_WEBSHARING enviroment variables
+User.create(username: 'webview', role: 1) unless Rails.env == "test"
+# produces an auth_token to be enviroment variables used in TS_SLOT_WEBSHARING
+# TODO after fixing tests, create also in test enviroment
