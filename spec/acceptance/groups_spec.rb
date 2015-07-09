@@ -285,9 +285,8 @@ resource "Groups" do
                     "startDate" => slots[0].start_date.as_json,
                     "createdAt" => slots[0].created_at.as_json,
                     "updatedAt" => slots[0].updated_at.as_json,
-                    "deletedAt" => slots[0].deleted_at,
+                    "deletedAt" => slots[0].deleted_at.as_json,
                     "endDate" => slots[0].end_date.as_json,
-                    "openEnd" => slots[0].open_end.as_json,
                     "settings" => {
                       'alerts' => current_user.alerts(slots[0]) },
                     "media" => slots[0].media_items,
