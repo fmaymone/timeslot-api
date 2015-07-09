@@ -455,8 +455,7 @@ resource "Users" do
         expect(json.first).to have_key("title")
         expect(json.first).to have_key("location")
         expect(json.first).to have_key("startDate")
-        #expect(json.first).to have_key("endDate")
-        #expect(json.first).to have_key("openEnd")
+        expect(json.first).to have_key("endDate")
         expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
@@ -476,8 +475,7 @@ resource "Users" do
                       "deletedAt" => std_slot_1.deleted_at.as_json,
                       "startDate" => std_slot_1.start_date.as_json,
                       "visibility" => std_slot_1.visibility,
-                      #"endDate" => std_slot_1.end_date.as_json,
-                      #"openEnd" => std_slot_1.open_end,
+                      "endDate" => std_slot_1.end_date.as_json,
                       "settings" => {
                         'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,

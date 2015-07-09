@@ -241,7 +241,7 @@ resource "Slots" do
                  "endDate" => slot.end_date.as_json,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
-                 "deletedAt" => deleted_at,
+                 "deletedAt" => deleted_at.as_json,
                  "location" => nil,
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
@@ -803,7 +803,6 @@ resource "Slots" do
                                 "title" => std_slot.title,
                                 "startDate" => std_slot.start_date.as_json,
                                 "endDate" => std_slot.end_date.as_json,
-                                #"openEnd" => std_slot.open_end,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
@@ -849,7 +848,6 @@ resource "Slots" do
                                 "title" => group_slot.title,
                                 "startDate" => group_slot.start_date.as_json,
                                 "endDate" => group_slot.end_date.as_json,
-                                #"openEnd" => group_slot.open_end,
                                 "group" => {
                                   "id" => group_slot.group.id
                                 },
