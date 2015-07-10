@@ -46,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;20c2fcdba1b28928c000a9dcefc82dd8&quot;
+ETag: W/&quot;cc05989cc8af6694b6fe3f75e81c044b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ef21754a-1cfd-44cb-8125-8940b430e755
-X-Runtime: 0.019226
+X-Request-Id: e5d08a5b-1077-492f-a59a-945762bb793c
+X-Runtime: 0.046455
 Content-Length: 144</pre>
 
 #### Status
@@ -60,9 +60,9 @@ Content-Length: 144</pre>
 
 ```javascript
 {
-  "signature" : "5c266c9d9d84ea8d56d713df72af7b9e8e2677df",
-  "apiKey" : 255241985667644,
-  "publicId" : "rtibmlhj3iqsusgahxkx",
-  "timestamp" : "20150622084418"
+  "signature" : "42ad0d81e0823ff88eacabe6a0d1781ce4e5c1b7",
+  "apiKey" : 615731726882135,
+  "publicId" : "tx8nfxdhpyoxetwby8ek",
+  "timestamp" : "20150702123418"
 }
 ```

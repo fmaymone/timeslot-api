@@ -55,6 +55,7 @@
 * [Get Reslot History aka Chronic for Slot](slots/get_reslot_history_aka_chronic_for_slot.markdown)
 * [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
 * [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)
+* [Share slot](slots/share_slot.markdown)
 
 ## Users
 
@@ -63,7 +64,6 @@
 * [User signup - Create user](users/user_signup_-_create_user.markdown)
 * [User signin](users/user_signin.markdown)
 * [User signout](users/user_signout.markdown)
-* [Reset password](users/reset_password.markdown)
 * [Update current user - change username and default alerts](users/update_current_user_-_change_username_and_default_alerts.markdown)
 * [Update current user - update password](users/update_current_user_-_update_password.markdown)
 * [Update current user - set user image](users/update_current_user_-_set_user_image.markdown)

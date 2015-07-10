@@ -23,7 +23,7 @@ Description : Array of User IDs to create a friendship for
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=rP1xNUSNbwO1zGTrLqAN0BkZJFs
+Authorization: Token token=YS2-tstjd0zceU3EmTvncejRMcA
 Host: example.org
 Cookie: </pre>
 
@@ -35,12 +35,12 @@ Cookie: </pre>
 ```javascript
 {
   "ids" : [
-    305,
-    307,
-    311,
-    308,
-    309,
-    310
+    324,
+    326,
+    330,
+    327,
+    328,
+    329
   ]
 }
 ```
@@ -48,10 +48,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/add_friends&quot; -d &#39;{&quot;ids&quot;:[305,307,311,308,309,310]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/add_friends&quot; -d &#39;{&quot;ids&quot;:[324,326,330,327,328,329]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=rP1xNUSNbwO1zGTrLqAN0BkZJFs&quot; \
+	-H &quot;Authorization: Token token=YS2-tstjd0zceU3EmTvncejRMcA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,8 +63,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 33985577-d248-4a03-854f-73e0a953db40
-X-Runtime: 0.051131
+X-Request-Id: b8bfa61d-5995-49d5-b44e-04ce140af4f5
+X-Runtime: 0.056031
 Content-Length: 0</pre>
 
 #### Status

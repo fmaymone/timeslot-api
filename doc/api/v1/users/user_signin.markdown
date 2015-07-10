@@ -6,7 +6,7 @@
 
 returns OK and an AuthToken if credentials match
 
-returns 403 if credentials invalid
+returns 401 if credentials invalid
 
 ### Parameters
 
@@ -113,7 +113,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user64@email.com",
+  "email" : "user66@email.com",
   "password" : "timeslot"
 }
 ```
@@ -121,7 +121,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user64@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user66@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -134,10 +134,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5896d45befac30372cf928ba34ca1163&quot;
+ETag: W/&quot;e958a571034c833de1cdd7a3a8562af6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: aa218bed-4b5f-4e68-844b-de1dcfbd01db
-X-Runtime: 0.091638
+X-Request-Id: a565f54b-88ab-432b-ba72-2db752f8fde8
+X-Runtime: 0.027658
 Content-Length: 762</pre>
 
 #### Status
@@ -148,10 +148,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 232,
-  "username" : "User 228",
-  "createdAt" : "2015-06-22T08:44:26.062Z",
-  "updatedAt" : "2015-06-22T08:44:26.141Z",
+  "id" : 251,
+  "username" : "User 235",
+  "createdAt" : "2015-07-02T12:34:21.146Z",
+  "updatedAt" : "2015-07-02T12:34:21.157Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -161,7 +161,7 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user64@email.com",
+  "email" : "user66@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -178,6 +178,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "yl0pEF_HgcVQFKaeEpRvGDyl9KE"
+  "authToken" : "C3vXM0pi9Qc-mldlVs2ekcCDi9c"
 }
 ```

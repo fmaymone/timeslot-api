@@ -13,7 +13,7 @@ RSpec.describe "V1::Ios", type: :request do
       get "/v1/ios/clean-db"
       expect(response.status).to be(200)
       expect(BaseSlot.count).to be 0
-      expect(User.count).to be 0
+      expect(User.count).to be 0 # doesn't clean webview user. TODO realize why with webslot view, after cleaning we have 36 users and not 1
     end
   end
 end
