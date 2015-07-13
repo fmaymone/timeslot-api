@@ -81,6 +81,11 @@ class BaseSlot < ActiveRecord::Base
     end
 
     new_location ||= IosLocation.create(location.merge(creator: owner))
+
+    #update custom label for location (same geo-location can have several names)
+    unless location[:name].blank?
+      new_location[:name] = location[:name]
+    end
     meta_slot.update(ios_location: new_location)
   end
 
