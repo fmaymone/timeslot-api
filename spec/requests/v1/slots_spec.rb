@@ -1105,7 +1105,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe :ios_location do
       let(:new_params) do
-        { location: { locality: "Berlin", name: "Berlin", country: "Germany",
+        { location: { locality: "Berlin", name: "Berlin Custom", country: "Germany",
                       longitude: 13.4113999, latitude: 52.5234051
                     } }
       end
@@ -1170,7 +1170,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, locality: "Berlin", name: "Berlin", country: "Germany",
+          create(:ios_location, locality: "Berlin", name: "Berlin Custom", country: "Germany",
                  longitude: 13.4113999, latitude: 52.5234051)
         end
 
@@ -1186,6 +1186,7 @@ RSpec.describe "V1::Slots", type: :request do
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
             expect(std_slot.ios_location.locality).to eq 'Berlin'
+            expect(std_slot.ios_location.name).to eq 'Berlin Custom'
           end
 
           it "returns ok" do
@@ -1198,6 +1199,7 @@ RSpec.describe "V1::Slots", type: :request do
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
             expect(json['location']['locality']).to eq 'Berlin'
+            expect(json['location']['name']).to eq 'Berlin Custom'
           end
         end
 
@@ -1211,6 +1213,7 @@ RSpec.describe "V1::Slots", type: :request do
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
             expect(std_slot.ios_location.locality).to eq 'Berlin'
+            expect(std_slot.ios_location.name).to eq 'Berlin Custom'
           end
 
           it "returns ok" do
@@ -1223,6 +1226,7 @@ RSpec.describe "V1::Slots", type: :request do
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
             expect(json['location']['locality']).to eq 'Berlin'
+            expect(json['location']['name']).to eq 'Berlin Custom'
           end
         end
       end

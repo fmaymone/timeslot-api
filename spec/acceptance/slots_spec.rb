@@ -775,6 +775,23 @@ resource "Slots" do
         expect(location['privateLocation']).to be true
       end
     end
+
+    describe "slot with IOS Custom label location" do
+      include_context "ios location params"
+
+      let(:name) { 'Soho House Custom' }
+      let(:latitude) { '52.527335' }
+      let(:longitude) { '13.414259' }
+
+      example "Update Slot - Custom Location Label", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("location")
+        expect(json['location']['name']).to eq 'Soho House Custom'
+      end
+    end
   end
 
   delete "/v1/stdslot/:id" do
