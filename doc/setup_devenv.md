@@ -1,5 +1,15 @@
 ## Prerequisites Ubuntu
 
+* uninstall rvm if installed:
+```bash
+rvm implode
+```
+
+* Install homebrew:
+```bash
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/linuxbrew/go/install)"
+```
+
 * Install some dependencies for Ruby:
 ```bash
 sudo apt-get update
