@@ -1,5 +1,6 @@
 ## Prerequisites Ubuntu
 
+
 * Install some dependencies for Ruby:
 ```bash
 sudo apt-get update
@@ -22,6 +23,13 @@ git clone https://github.com/sstephenson/rbenv-gem-rehash.git ~/.rbenv/plugins/r
 
 * install postgresql
 
+```bash
+sudo apt-get install -y postgresql-9.3 postgresql-server-dev-9.3 postgresql-contrib-9.3 postgresql-client-9.3 postgresql-doc-9.3  libpq-dev
+sudo su - postgres -c "psql -c \"ALTER USER postgres WITH PASSWORD 'JMDF83M2A';\""
+echo "localhost:5432:*:postgres:JMDF83M2A" >> ~/.pgpass
+chmod 0600 ~/.pgpass
+```
+
 ## Prerequisites OSX
 
 * uninstall rvm if installed:
@@ -31,7 +39,7 @@ rvm implode
 
 * Install homebrew:
 ```bash
-$ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 ```
 
 * Add to end of .bashrc / .zshrc:
@@ -52,6 +60,7 @@ eval "$(rbenv init -)"
 export PATH=bin:$PATH
 ```
 
+
 ## Setup dev env
 
 * install ruby:
@@ -59,7 +68,6 @@ export PATH=bin:$PATH
 rbenv install 2.1.6
 rbenv global 2.1.6
 ruby -v
-
 ```
 
 * install bundler, don't install documentation for gems:
@@ -73,24 +81,40 @@ gem install bundler
 bundle install
 ```
 
+
 ## Postgres database creation
 
-* create local user and when prompt for password enter "9dh39fd"
+* create local user on OSX (when prompt for password enter "9dh39fd")
 ```bash
 createuser -P -d ts_rails_backend
 ```
+
+* create local user on Linux
+```bash
+psql -h localhost -U postgres -c "CREATE ROLE ts_rails_backend WITH SUPERUSER LOGIN PASSWORD '9dh39fd'"
+echo "localhost:5432:*:ts_rails_backend:9dh39fd" >> ~/.pgpass
+```
+
 * initialization database and run migrations
 ```bash
 bundle exec rake db:create
 rake db:migrate
 ```
 
+
+## Start server
+
 * prepare local server and test env
 
 ```bash
 gem install foreman
 foreman start
+```
 
+
+## Run tests
+
+```bash
 rake db:migrate RAILS_ENV=test
 rspec
 ```
