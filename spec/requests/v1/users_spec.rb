@@ -31,11 +31,11 @@ RSpec.describe "V1::Users", type: :request do
       let(:auth_header) do
         {"HTTP_USER_AGENT" => "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; Trident/6.0)"}
       end
-      it "is forbidden" do
-        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
-        get "/v1/users", {}, auth_header
-        expect(response.status).to be 403
-      end
+      #it "is forbidden" do
+      #  allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
+      #  get "/v1/users", {}, auth_header
+      #  expect(response.status).to be 403
+      #end
     end
   end
 
