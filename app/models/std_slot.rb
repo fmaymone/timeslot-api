@@ -18,8 +18,9 @@ class StdSlot < BaseSlot
   # I can throw a User object at this and AR automagically takes the ID - nice
   # or dangerous?
   # btw I made this classmethod to circumvent my default_scope on the slot_type
-  def self.of(user_id)
-    StdSlot.unscoped.where(owner: user_id)
+
+  def self.of(user)
+    StdSlot.unscoped.where(owner: user)
   end
 
   def self.create_slot(meta_slot:, visibility:, user: nil)
@@ -30,6 +31,8 @@ class StdSlot < BaseSlot
       slot_type = StdSlotFriends
     when 'public'
       slot_type = StdSlotPublic
+    else
+      slot_type = StdSlotPrivate
     end
 
     slot_type.create(meta_slot: meta_slot, owner: user)
