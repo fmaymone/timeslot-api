@@ -99,7 +99,8 @@ class BaseSlot < ActiveRecord::Base
 
   def add_media(item)
     item.merge!(position: media_items.size) unless item.key? "position"
-    item.merge!(mediable_id: id, mediable_type: BaseSlot)
+    item.merge!(mediable_id: id, mediable_type: BaseSlot,
+                creator_id: creator[:id])
 
     new_media = MediaItem.new(item)
     unless new_media.valid?
@@ -122,9 +123,11 @@ class BaseSlot < ActiveRecord::Base
   def update_notes(new_notes)
     new_notes.each do |note|
       if note.key? 'id'
-        notes.find(note["id"]).update(note.permit(:title, :content))
+        notes.find(note["id"]).update(note.permit(:title, :content, :creator_id)
+                         .merge!(creator_id: creator[:id]))
       else
-        notes.create(note.permit(:title, :content))
+        notes.create(note.permit(:title, :content, :creator_id)
+                         .merge!(creator_id: creator[:id]))
       end
     end
   end
@@ -196,15 +199,15 @@ class BaseSlot < ActiveRecord::Base
       item = ActionController::Parameters.new(item_hash)
       case item[:media_type]
       when 'image'
-        add_media(item.permit(:public_id, :position, :local_id)
-                   .merge(media_type: 'image'))
+        add_media(item.permit(:public_id, :position, :local_id, :creator_id)
+          .merge(media_type: 'image'))
       when 'audio'
         add_media(
-          item.permit(:public_id, :position, :local_id, :duration, :title)
+          item.permit(:public_id, :position, :local_id, :duration, :title, :creator_id)
           .merge(media_type: 'audio'))
       when 'video'
         add_media(
-          item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
+          item.permit(:public_id, :position, :local_id, :duration, :thumbnail, :creator_id)
           .merge(media_type: 'video')
         )
       end
