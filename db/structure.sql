@@ -186,11 +186,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
-    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    deleted_at timestamp without time zone
+    group_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -436,7 +436,8 @@ CREATE TABLE notes (
     content text DEFAULT ''::text,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    creator_id bigint
 );
 
 
@@ -495,11 +496,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -1224,4 +1225,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150612093738');
 INSERT INTO schema_migrations (version) VALUES ('20150618062654');
 
 INSERT INTO schema_migrations (version) VALUES ('20150619113120');
+
+INSERT INTO schema_migrations (version) VALUES ('20150724110859');
 
