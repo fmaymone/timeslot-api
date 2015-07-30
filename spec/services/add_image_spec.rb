@@ -18,7 +18,8 @@ RSpec.describe AddImage, type: :service do
           AddImage.call(user, public_id)
         }.to change(user.images, :first)
         expect(user.image).not_to be nil
-        expect(user.image.media_type).to eq "image"
+        expect(user.image.media_type).to eq('image')
+        expect(user.image.creator_id).to eq(user.id)
       end
     end
 
@@ -46,7 +47,8 @@ RSpec.describe AddImage, type: :service do
             AddImage.call(user, public_id)
           }.to change(MediaItem, :count).by 1
 
-          expect(user.image.public_id).to eq public_id
+          expect(user.image.public_id).to eq(public_id)
+          expect(user.image.creator_id).to eq(user.id)
         end
       end
     end

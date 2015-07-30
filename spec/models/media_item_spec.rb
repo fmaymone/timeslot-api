@@ -15,6 +15,7 @@ RSpec.describe MediaItem, type: :model do
   it { is_expected.to respond_to(:mediable_type) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:local_id) }
+  it { is_expected.to respond_to(:creator_id) }
 
   it { is_expected.to be_valid }
 
@@ -45,6 +46,11 @@ RSpec.describe MediaItem, type: :model do
 
   describe "when mediable_type is not present" do
     before { media_item.mediable_type = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when creator_id is missing" do
+    before { media_item.creator_id = nil }
     it { is_expected.to_not be_valid }
   end
 

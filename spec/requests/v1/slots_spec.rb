@@ -749,6 +749,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "handling notes" do
+
       let(:note) { attributes_for(:note) }
       let(:add_note) { { notes: [note] } }
 
@@ -761,21 +762,24 @@ RSpec.describe "V1::Slots", type: :request do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(1)
+        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
       end
 
       it "adds the submitted note to the db" do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
-        expect(std_slot.notes[0].title).to eq(note[:title])
-        expect(std_slot.notes[0].content).to eq(note[:content])
+        expect(std_slot.notes.first.title).to eq(note[:title])
+        expect(std_slot.notes.first.content).to eq(note[:content])
+        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
       end
 
       it "adds an additional new note" do
-        create(:note, slot: std_slot)
+        create(:note, slot: std_slot, creator: current_user)
 
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(2)
+        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
       end
 
       context "patch with valid params" do
@@ -788,6 +792,7 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.notes.size).to eq 1
           expect(std_slot.notes.first.title).to eq "something new"
+          expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
         end
       end
 
@@ -856,6 +861,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
           expect(std_slot.media_items.size).to eq(1)
+          expect(std_slot.images[0][:creator_id]).to eq(current_user[:id])
         end
 
         it "adds the submitted image to the db" do
@@ -1560,7 +1566,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "copy into groups without details" do
-      let!(:std_slot) { create(:std_slot_public) }
+      let!(:std_slot) { create(:std_slot_public, owner: current_user) }
       let(:copy_params) { { copyTo: [
                               { groupId: group_1.id,
                                 details: 'false' },
@@ -1577,24 +1583,26 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe "copy stdslot with details into stdslot" do
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                                 :with_notes) }
+                                 :with_notes ) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
+        #TODO may this is an implementation bug?
         new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
+        expect(new_slot.images.first.creator_id).to eq current_user.id
       end
     end
 
     describe "copy stdslot with details into groups" do
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
-                               :with_notes) }
+                               :with_notes, owner: current_user ) }
       let(:copy_params) { { copyTo: [{ groupId: group_1.id,
                                        details: 'true' },
                                      { groupId: group_2.id,
@@ -1602,6 +1610,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
+        #TODO may this is an implementation bug?
         new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
