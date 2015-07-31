@@ -20,4 +20,4 @@ FROM (
         FROM information_schema.tables
     ) AS all_tables
     ORDER BY total_size DESC
-) AS pretty_sizes
+) AS pretty_sizes ORDER BY table_name ASC
