@@ -83,9 +83,9 @@ class User < ActiveRecord::Base
 
   ## user specific ##
 
-  def update_with_image(params: nil, image: nil)
+  def update_with_image(params: nil, image: nil, user: nil)
     update(params.except("public_id")) if params
-    AddImage.call(self, image["public_id"], image["local_id"], self.id) if image
+    AddImage.call(self, image["public_id"], image["local_id"], user.id) if image
     self
   end
 

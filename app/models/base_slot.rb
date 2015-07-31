@@ -296,13 +296,13 @@ class BaseSlot < ActiveRecord::Base
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
                                   group: group,
-                                  user: user)
+                                  user: user) # user => current_user
 
-    duplicate_slot_details(source, duplicated_slot) if with_details
+    duplicate_slot_details(source, duplicated_slot, user) if with_details
     duplicated_slot
   end
 
-  def self.duplicate_slot_details(old_slot, new_slot)
+  def self.duplicate_slot_details(old_slot, new_slot, user)
     old_slot.media_items.reverse_each do |item|
       attr = item.attributes
       attr.delete('id')
@@ -310,7 +310,9 @@ class BaseSlot < ActiveRecord::Base
     end
 
     old_slot.notes.each do |note|
-      new_slot.notes.create(title: note.title, content: note.content)
+      new_slot.notes.create(title: note.title,
+                            content: note.content,
+                            creator: user) # user => current_user
     end
   end
 

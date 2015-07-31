@@ -320,6 +320,7 @@ module V1
                                 :position,
                                 :mediaId,
                                 :localId,
+                                :creatorId,
                                 :mediaType,
                                 :title,
                                 :duration,
