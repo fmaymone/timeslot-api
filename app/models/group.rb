@@ -27,7 +27,7 @@ class Group < ActiveRecord::Base
 
   def update_with_image(group_params: nil, image: nil)
     update(group_params) if group_params
-    AddImage.call(self, image["public_id"], image["local_id"]) if image
+    AddImage.call(self, image["public_id"], image["local_id"], owner.id) if image
     self
   end
 
@@ -70,7 +70,7 @@ class Group < ActiveRecord::Base
     return new_group unless new_group.errors.empty?
 
     new_group.invite_users(invitees) if invitees
-    AddImage.call(new_group, image[:public_id], image[:local_id]) if image
+    AddImage.call(new_group, image[:public_id], image[:local_id], new_group.owner.id) if image
     new_group
   end
 end
