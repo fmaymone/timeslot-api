@@ -6,33 +6,34 @@ RSpec.describe AddImage, type: :service do
 
   let(:user) { FactoryGirl.create(:user) }
   let(:public_id) { FactoryGirl.attributes_for(:mock_image)[:public_id] }
+  let(:creator_id) { user.id }
 
   describe :call do
     describe "passing valid parameters" do
       it "returns true" do
-        expect(AddImage.call(user, public_id)).to eq true
+        expect(AddImage.call(user, public_id, nil, creator_id)).to eq true
       end
 
       it "it creates a new MediaItem of type image" do
         expect {
-          AddImage.call(user, public_id)
+          AddImage.call(user, public_id, nil, creator_id)
         }.to change(user.images, :first)
         expect(user.image).not_to be nil
         expect(user.image.media_type).to eq('image')
-        expect(user.image.creator_id).to eq(user.id)
+        expect(user.image.creator_id).to eq(creator_id)
       end
     end
 
     describe "passing invalid image data" do
       it "returns model with errors" do
-        AddImage.call(user, nil)
+        AddImage.call(user, nil, nil, creator_id)
         expect(user.errors.blank?).not_to be true
         expect(user.errors.messages).to have_key :mediaItem
       end
 
       it "doesn't create a new MediaItem" do
         expect {
-          AddImage.call(user, nil)
+          AddImage.call(user, nil, nil, creator_id)
         }.not_to change(MediaItem, :count)
       end
     end
@@ -44,11 +45,11 @@ RSpec.describe AddImage, type: :service do
         it "updates the image", :vcr do
           expect(user.image.public_id).not_to eq public_id
           expect {
-            AddImage.call(user, public_id)
+            AddImage.call(user, public_id, nil, creator_id)
           }.to change(MediaItem, :count).by 1
 
           expect(user.image.public_id).to eq(public_id)
-          expect(user.image.creator_id).to eq(user.id)
+          expect(user.image.creator_id).to eq(creator_id)
         end
       end
     end

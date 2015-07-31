@@ -135,12 +135,11 @@ RSpec.describe BaseSlot, type: :model do
   describe :add_media do
     let(:user) { create(:user) }
     let(:std_slot) { create(:std_slot, owner: user) }
-    let(:new_video) { attributes_for(:video, creator: user) }
-    #let(:new_video) { build(:video, creator_id: user.id).attributes.symbolize_keys }
+    let(:new_video) { attributes_for(:video) }
 
     it "adds a new media item to the slot" do
 
-      std_slot.add_media(new_video)
+      std_slot.add_media(new_video, user.id)
 
       std_slot.reload
       expect(std_slot.videos.length).to eq 1
@@ -150,7 +149,7 @@ RSpec.describe BaseSlot, type: :model do
 
     it "doesn't add an invalid item" do
       new_video["public_id"] = ''
-      std_slot.add_media(new_video)
+      std_slot.add_media(new_video, user.id)
       std_slot.reload
       expect(std_slot.videos.length).to eq 0
       expect(*std_slot.errors.messages.any?).to be true

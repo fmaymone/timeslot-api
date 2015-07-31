@@ -762,7 +762,7 @@ RSpec.describe "V1::Slots", type: :request do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(1)
-        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       it "adds the submitted note to the db" do
@@ -770,7 +770,7 @@ RSpec.describe "V1::Slots", type: :request do
         std_slot.reload
         expect(std_slot.notes.first.title).to eq(note[:title])
         expect(std_slot.notes.first.content).to eq(note[:content])
-        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       it "adds an additional new note" do
@@ -779,7 +779,7 @@ RSpec.describe "V1::Slots", type: :request do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(2)
-        expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       context "patch with valid params" do
@@ -792,7 +792,7 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.notes.size).to eq 1
           expect(std_slot.notes.first.title).to eq "something new"
-          expect(std_slot.notes.first.creator_id).to eq(current_user[:id])
+          expect(std_slot.notes.first.creator_id).to eq(current_user.id)
         end
       end
 
@@ -861,7 +861,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
           expect(std_slot.media_items.size).to eq(1)
-          expect(std_slot.images[0][:creator_id]).to eq(current_user[:id])
+          expect(std_slot.images.first.creator_id).to eq(current_user.id)
         end
 
         it "adds the submitted image to the db" do
@@ -1589,7 +1589,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
-        #TODO may this is an implementation bug?
+        #TODO optimize *.unscoped.last
         new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
@@ -1610,8 +1610,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        #TODO may this is an implementation bug?
-        new_slot = BaseSlot.unscoped.last
+        #TODO optimize *.unscoped.last
+        new_slot = StdSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
