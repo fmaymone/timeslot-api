@@ -419,7 +419,6 @@ resource "Users" do
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
     response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag of the slot"
     response_field :creatorId, "ID of the User who created the slot"
     response_field :alerts, "Alerts for the slot for the current user"
     response_field :notes, "A list of all notes on the slot"
@@ -457,7 +456,6 @@ resource "Users" do
         expect(json.first).to have_key("location")
         expect(json.first).to have_key("startDate")
         expect(json.first).to have_key("endDate")
-        expect(json.first).to have_key("openEnd")
         expect(json.first).to have_key("settings")
         expect(json.first).to have_key("createdAt")
         expect(json.first).to have_key("updatedAt")
@@ -474,11 +472,10 @@ resource "Users" do
                       "title" => std_slot_1.title,
                       "createdAt" => std_slot_1.created_at.as_json,
                       "updatedAt" => std_slot_1.updated_at.as_json,
-                      "deletedAt" => std_slot_1.deleted_at,
+                      "deletedAt" => std_slot_1.deleted_at.as_json,
                       "startDate" => std_slot_1.start_date.as_json,
                       "visibility" => std_slot_1.visibility,
                       "endDate" => std_slot_1.end_date.as_json,
-                      "openEnd" => std_slot_1.open_end,
                       "settings" => {
                         'alerts' => current_user.alerts(std_slot_1) },
                       "notes" => std_slot_1.notes,
@@ -592,7 +589,6 @@ resource "Users" do
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
     response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag of the slot"
     response_field :creatorId, "ID of the User who created the slot"
     response_field :alerts, "Alerts for the slot for the current user"
     response_field :notes, "A list of all notes on the slot"

@@ -131,7 +131,6 @@ resource "Slots" do
         expect(json.last).to have_key("title")
         expect(json.last).to have_key("startDate")
         expect(json.last).to have_key("endDate")
-        expect(json.last).to have_key("openEnd")
         expect(json.last).to have_key("location")
         # expect(json.last['location']).to have_key("name")
         expect(json.last).to have_key("creator")
@@ -220,7 +219,6 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
-        expect(json).to have_key("openEnd")
         expect(json).to have_key("location")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -241,10 +239,9 @@ resource "Slots" do
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
-                 "openEnd" => slot.open_end,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
-                 "deletedAt" => deleted_at,
+                 "deletedAt" => deleted_at.as_json,
                  "location" => nil,
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
@@ -314,12 +311,10 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("startDate")
           expect(json).to have_key("endDate")
-          expect(json).to have_key("openEnd")
           expect(json).to have_key("creator")
           expect(json).to have_key("notes")
           expect(json).to have_key("visibility")
           expect(json["notes"].length).to eq(notes.length)
-          expect(json['openEnd']).to be false
         end
       end
 
@@ -339,7 +334,7 @@ resource "Slots" do
           expect(json).to have_key("title")
           expect(json).to have_key("location")
           # expect(json['location']).not_to be nil
-          expect(json['openEnd']).to be false
+          #expect(json['openEnd']).to be false
         end
       end
 
@@ -360,10 +355,7 @@ resource "Slots" do
             .to eq new_slot.start_date.to_datetime.next_day.at_noon
           expect(json).to have_key("id")
           expect(json).to have_key("title")
-          expect(json).to have_key("endDate")
-          expect(json).to have_key("openEnd")
-          expect(json['endDate']).to eq new_slot.end_date.as_json
-          expect(json['openEnd']).to be true
+          expect(json['endDate']).to be nil
         end
       end
 
@@ -482,7 +474,6 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
-        expect(json).to have_key("openEnd")
         expect(json).to have_key("creator")
         expect(json).to have_key("notes")
         expect(json).to have_key("group")
@@ -559,14 +550,12 @@ resource "Slots" do
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
-        expect(json).to have_key("openEnd")
         expect(json).to have_key("creator")
         expect(json).to have_key("slotter")
         expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["endDate"]).to eq pred.end_date.as_json
-        expect(json["openEnd"]).to eq pred.open_end
         expect(json["creator"]["id"]).to eq pred.creator.id
       end
     end
@@ -786,6 +775,23 @@ resource "Slots" do
         expect(location['privateLocation']).to be true
       end
     end
+
+    describe "slot with IOS Custom label location" do
+      include_context "ios location params"
+
+      let(:name) { 'Soho House Custom' }
+      let(:latitude) { '52.527335' }
+      let(:longitude) { '13.414259' }
+
+      example "Update Slot - Custom Location Label", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("location")
+        expect(json['location']['name']).to eq 'Soho House Custom'
+      end
+    end
   end
 
   delete "/v1/stdslot/:id" do
@@ -814,7 +820,6 @@ resource "Slots" do
                                 "title" => std_slot.title,
                                 "startDate" => std_slot.start_date.as_json,
                                 "endDate" => std_slot.end_date.as_json,
-                                "openEnd" => std_slot.open_end,
                                 "createdAt" => std_slot.created_at.as_json,
                                 "updatedAt" => std_slot.updated_at.as_json,
                                 "deletedAt" => std_slot.deleted_at.as_json,
@@ -860,7 +865,6 @@ resource "Slots" do
                                 "title" => group_slot.title,
                                 "startDate" => group_slot.start_date.as_json,
                                 "endDate" => group_slot.end_date.as_json,
-                                "openEnd" => group_slot.open_end,
                                 "group" => {
                                   "id" => group_slot.group.id
                                 },
@@ -1175,7 +1179,6 @@ resource "Slots" do
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
-        expect(json).to have_key("openEnd")
         expect(json).to have_key("location")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
