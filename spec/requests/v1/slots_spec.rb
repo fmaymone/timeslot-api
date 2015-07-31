@@ -1583,7 +1583,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe "copy stdslot with details into stdslot" do
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                                 :with_notes ) }
+                                 :with_notes) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
@@ -1596,13 +1596,13 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
-        expect(new_slot.images.first.creator_id).to eq current_user.id
+        expect(new_slot.images.first.creator_id).not_to eq current_user.id
       end
     end
 
     describe "copy stdslot with details into groups" do
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
-                               :with_notes, owner: current_user ) }
+                               :with_notes) }
       let(:copy_params) { { copyTo: [{ groupId: group_1.id,
                                        details: 'true' },
                                      { groupId: group_2.id,
@@ -1617,6 +1617,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
+        expect(new_slot.images.first.creator_id).not_to eq current_user.id
       end
     end
   end

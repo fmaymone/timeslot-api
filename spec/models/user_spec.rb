@@ -746,6 +746,7 @@ RSpec.describe User, type: :model do
           User.create_with_image(user_params)
         }.to change(MediaItem, :count).by 1
         expect(User.last.image.public_id).to eq "foobar"
+        expect(User.last.image.creator_id).to eq User.last.id
       end
 
       it "sets the local_id for an image if provided" do
