@@ -192,6 +192,34 @@ class User < ActiveRecord::Base
     slot_settings.each(&:undelete)
   end
 
+  ## media related ##
+
+  def media_for(current_user)
+    medias = []
+    if self == current_user
+      # Get all owned media items of current user:
+      medias = MediaItem.where(creator_id: current_user.id)
+      # Why this association does not work?: medias = current_user.media_items
+    else
+      # Get all public media items of specific user (also for guests):
+      std_slots_public.each do |slot|
+        medias += slot.media
+      end
+      # Get all friendship related media items:
+      if self.friend_with?(current_user)
+        std_slots_friends.each do |slot|
+          medias += slot.media
+        end
+      end
+      # Get all group related media items:
+      # TODO: can visitors also have access to media items of public group slots?
+      group_slots.where('group_slots.group_id IN (?)', current_user.groups.ids).each do |slot|
+        medias += slot.media
+      end
+    end
+    medias
+  end
+
   ## slot related ##
 
   def active_slots(meta_slot)

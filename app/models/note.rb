@@ -16,6 +16,10 @@ class Note < ActiveRecord::Base
     slot.errors.add(:note, errors)
   end
 
+  def media_type
+    'note'
+  end
+
   # if belonging slot is deleted
   def delete
     ts_soft_delete

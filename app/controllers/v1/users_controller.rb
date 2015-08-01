@@ -127,6 +127,16 @@ module V1
       render "v1/slots/index"
     end
 
+    # GET /v1/users/1/media
+    # get all media items of the given user
+    def media_items
+      authorize :user
+      #@current_user ||= @user = User.create(username: 'webview', role: 1)
+      target_user = User.find_by(id: params.require(:user_id))
+      @media_items = target_user.media_for(@current_user)
+      render "v1/media/index"
+    end
+
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends
