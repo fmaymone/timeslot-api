@@ -411,6 +411,105 @@ resource "Users" do
     end
   end
 
+  get "/v1/users/:id/media" do
+    header 'Authorization', :auth_header
+
+    let!(:target_user) { create(:user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media, owner: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media, owner: target_user) }
+    let!(:id) { target_user[:id] }
+    let!(:auth_header) { "Token token=#{current_user.auth_token}" }
+
+    parameter :id, "ID of the User to get the MediaItems for", required: true
+    response_field :array, "containing media items as a list of MediaItem"
+
+    context "As a visitor get all public media items of a user" do
+      let!(:visitor) { create(:user, username: 'webview', role: 1) }
+      let(:current_user) { visitor }
+      let(:auth_header) { "Token token=#{visitor.auth_token}" }
+
+      example "As a visitor get all public media items of a specific user" do
+        explanation "Returns an array which includes all media items of the given user."
+
+        header 'Authorization', :auth_header
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq(target_user.media_for(visitor).count)
+        expect(json.length).to eq(6)
+        expect(json.first).to have_key('mediaType')
+      end
+    end
+
+    context "Get all owned media items of a auth user" do
+      let(:current_user) { target_user }
+
+      example "Get all media items of a specific user", document: :v1 do
+        explanation "Returns an array which includes all media items of the given user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq(current_user.media_for(current_user).count)
+        expect(json.length).to eq(12)
+        expect(json.first).to have_key('mediaType')
+      end
+    end
+
+    context "Get media items of a given auth user" do
+      example "Get public media list of a given user" do
+        explanation "Returns an array which includes all media items of the given user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq(target_user.media_for(current_user).count)
+        expect(json.length).to eq(6)
+        expect(json.first).to have_key('mediaType')
+      end
+    end
+
+    context "Get media items of a friendship" do
+      let!(:friend) { create(:user) }
+      let!(:slot_friend) { create(:std_slot_friends, :with_media, owner: friend) }
+      let!(:friendship) { create(:friendship, :established, user: current_user, friend: friend) }
+      let(:id) { friend[:id] }
+
+      example "Get media list from friendslots shared with this user" do
+        explanation "Returns an array which includes all media items including friendship."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq(friend.media_for(current_user).count)
+        expect(json.length).to eq(6)
+        expect(json.first).to have_key('mediaType')
+      end
+    end
+
+    context "Get media items of a group" do
+      let!(:member) { create(:user) }
+      let!(:slot_group) { create(:group_slot, :with_media_group) }
+      let!(:memberships) {
+        create(:membership, :active, group: slot_group.group, user: current_user)
+        create(:membership, :active, group: slot_group.group, user: member)
+      }
+      let(:id) { member[:id] }
+
+      example "Get media list of a shared public group" do
+        explanation "Returns an array which includes all media items including group."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq(member.media_for(current_user).count)
+        expect(json.length).to eq(6)
+        expect(json.first).to have_key('mediaType')
+      end
+    end
+  end
+
   get "/v1/users/:id/slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
