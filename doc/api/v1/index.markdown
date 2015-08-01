@@ -69,6 +69,7 @@
 * [Update current user - set user image](users/update_current_user_-_set_user_image.markdown)
 * [Update current user - set location](users/update_current_user_-_set_location.markdown)
 * [Delete current user](users/delete_current_user.markdown)
+* [Get all media items of a specific user](users/get_all_media_items_of_a_specific_user.markdown)
 * [Get slots for current user](users/get_slots_for_current_user.markdown)
 * [Get slots for befriended user](users/get_slots_for_befriended_user.markdown)
 * [Get slots of unrelated user with common groups](users/get_slots_of_unrelated_user_with_common_groups.markdown)
