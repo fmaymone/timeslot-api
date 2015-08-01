@@ -177,7 +177,7 @@ RSpec.describe "V1::Groups", type: :request do
 
     context "group_slots media" do
       let!(:group_slots) {
-        create_list(:group_slot, 3, :with_media, group: group) }
+        create_list(:group_slot, 3, :with_media_group, group: group) }
 
       it "deletes all images on the group slots" do
         g_slots_img_first = group.group_slots.first.images.first

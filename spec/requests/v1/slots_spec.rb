@@ -1576,7 +1576,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "copy stdslot with details into stdslot" do
-      let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
+      let!(:group_slot) { create(:group_slot_public, :with_media_group, :with_likes,
                                  :with_notes) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
@@ -1587,7 +1587,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
       end
     end
@@ -1606,7 +1606,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
       end
     end
