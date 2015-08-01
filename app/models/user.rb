@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
            as: :mediable
 
+  has_many :media_items, -> { where deleted_at: nil }, class_name: MediaItem, as: :mediable,
+           foreign_key: :creator_id, inverse_of: :creator
+
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: :creator_id, inverse_of: :creator
 

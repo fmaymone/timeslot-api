@@ -7,8 +7,7 @@ class MediaItem < ActiveRecord::Base
   scope :audio, -> { where media_type: 'audio' }
   scope :video, -> { where media_type: 'video' }
 
-  validates :media_type,
-            presence: true,
+  validates :media_type, presence: true,
             inclusion: { in: %w(image audio video) }
   validates :public_id, presence: true
   validates :position, presence: true, if: :belongs_to_slot?
