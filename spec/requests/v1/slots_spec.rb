@@ -1611,7 +1611,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
         #TODO optimize *.unscoped.last
-        new_slot = StdSlot.unscoped.last
+        new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
