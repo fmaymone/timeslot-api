@@ -203,21 +203,21 @@ class User < ActiveRecord::Base
     else
       # Get all public media items of specific user (also for guests):
       std_slots_public.each do |slot|
-        medias += slot.media
+        medias += slot.media_items
       end
       # Get all friendship related media items:
       if self.friend_with?(current_user)
         std_slots_friends.each do |slot|
-          medias += slot.media
+          medias += slot.media_items
         end
       end
       # Get all group related media items:
       # TODO: can visitors also have access to media items of public group slots?
       group_slots.where('group_slots.group_id IN (?)', current_user.groups.ids).each do |slot|
-        medias += slot.media
+        medias += slot.media_items
       end
     end
-    medias
+    medias.sort_by(&:position)
   end
 
   ## slot related ##

@@ -64,10 +64,6 @@ class BaseSlot < ActiveRecord::Base
     media_items.video.order(:position)
   end
 
-  def media
-    (media_items.image + media_items.audio + media_items.video).sort_by(&:position)
-  end
-
   def likes_with_details
     likes.includes([:user])
   end

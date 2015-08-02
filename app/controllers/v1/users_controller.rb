@@ -129,11 +129,12 @@ module V1
 
     # GET /v1/users/1/media
     # get all media items of the given user
+    # TODO: how to handle visitors here?
     def media_items
       authorize :user
       #@current_user ||= @user = User.create(username: 'webview', role: 1)
       target_user = User.find_by(id: params.require(:user_id))
-      @media_items = target_user.media_for(@current_user)
+      @media_items = target_user.media_for(current_user)
       render "v1/media/index"
     end
 
