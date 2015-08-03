@@ -10,7 +10,7 @@ class Note < ActiveRecord::Base
   validates :slot, presence: true
   validates :title, presence: true # max length?
   validates :content, presence: true # max length?
-  validates :creator_id, presence: true
+  validates :creator, presence: true
 
   private def propagate_error
     slot.errors.add(:note, errors)

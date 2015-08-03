@@ -286,7 +286,7 @@ class BaseSlot < ActiveRecord::Base
     slot
   end
 
-  def self.duplicate_slot(source, target, user)
+  def self.duplicate_slot(source, target, current_user)
     visibility = target[:slot_type] if target[:slot_type]
     group = Group.find(target[:group_id]) if target[:group_id]
     details = target[:details]
@@ -296,9 +296,9 @@ class BaseSlot < ActiveRecord::Base
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
                                   group: group,
-                                  user: user) # user => current_user
+                                  user: current_user)
 
-    duplicate_slot_details(source, duplicated_slot, user) if with_details
+    duplicate_slot_details(source, duplicated_slot, current_user) if with_details
     duplicated_slot
   end
 
