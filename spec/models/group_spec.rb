@@ -125,7 +125,7 @@ RSpec.describe Group, type: :model do
     context "invalid params" do
       it "doesn't create a new group if groupname is nil" do
         expect {
-          Group.create_with_image(group_params: { name: nil })
+          Group.create_with_image(group_params: { name: nil }, user: user)
         }.not_to change(Group, :count)
       end
     end

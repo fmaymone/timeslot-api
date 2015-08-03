@@ -1,5 +1,5 @@
 class AddImage
-  def self.call(model, public_id, local_id = nil, creator_id)
+  def self.call(model, creator_id, public_id, local_id = nil)
     media_item = MediaItem.new(public_id: public_id, mediable_id: model.id,
                                media_type: "image", mediable_type: model.class,
                                local_id: local_id, creator_id: creator_id)

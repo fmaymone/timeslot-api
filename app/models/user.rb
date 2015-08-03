@@ -85,7 +85,7 @@ class User < ActiveRecord::Base
 
   def update_with_image(params: nil, image: nil, user: nil)
     update(params.except("public_id")) if params
-    AddImage.call(self, image["public_id"], image["local_id"], user.id) if image
+    AddImage.call(self, user.id, image["public_id"], image["local_id"]) if image
     self
   end
 
@@ -393,7 +393,7 @@ class User < ActiveRecord::Base
     new_user = create(params)
     return new_user unless new_user.errors.empty?
 
-    AddImage.call(new_user, image["public_id"], image["local_id"], new_user.id) if image
+    AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
 
