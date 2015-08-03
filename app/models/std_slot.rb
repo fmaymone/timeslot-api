@@ -31,7 +31,7 @@ class StdSlot < BaseSlot
     when 'public'
       slot_type = StdSlotPublic
     else
-      (user||meta_slot).errors.add(:visibility, 'invalid slot visibility')
+      meta_slot.errors.add(:visibility, 'invalid slot visibility')
       # TODO: raise exception
       return
     end
