@@ -16,6 +16,8 @@ RSpec.describe MediaItem, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:local_id) }
   it { is_expected.to respond_to(:creator_id) }
+  it { is_expected.to belong_to(:creator).class_name(:User) }
+  it { is_expected.to belong_to(:mediable) }
 
   it { is_expected.to be_valid }
 

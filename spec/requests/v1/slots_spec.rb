@@ -1581,28 +1581,33 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "copy stdslot with details into stdslot" do
+    describe "copy stdslot with details into groups" do
+      let!(:current_user) { create(:user) }
+      let!(:user) { create(:user) }
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                                 :with_notes) }
+                                 :with_notes, creator: user) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
-        #TODO optimize *.unscoped.last
         new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
+        expect(new_slot.images.first.id).not_to eq group_slot.images.first.id
+        expect(new_slot.images.first.creator_id).to eq user.id
         expect(new_slot.images.first.creator_id).not_to eq current_user.id
       end
     end
 
-    describe "copy stdslot with details into groups" do
+    describe "copy stdslot with details into stdslot" do
+      let!(:current_user) { create(:user) }
+      let!(:user) { create(:user) }
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
-                               :with_notes) }
+                               :with_notes, creator: user) }
       let(:copy_params) { { copyTo: [{ groupId: group_1.id,
                                        details: 'true' },
                                      { groupId: group_2.id,
@@ -1610,13 +1615,14 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "copys media data and notes unless explictly disabled" do
         post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        #TODO optimize *.unscoped.last
         new_slot = BaseSlot.unscoped.last
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
         expect(new_slot.media_items.size).to eq 3
         expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
+        expect(new_slot.images.first.id).not_to eq std_slot.images.first.id
+        expect(new_slot.images.first.creator_id).to eq user.id
         expect(new_slot.images.first.creator_id).not_to eq current_user.id
       end
     end

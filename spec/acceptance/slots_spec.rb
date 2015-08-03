@@ -1100,7 +1100,6 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(BaseSlot.all.length).to eq 3
-        #TODO optimize *.unscoped.last
         new_stdslotfriends = StdSlotFriends.last
         expect(new_stdslotfriends.title).to eq slot.title
         expect(new_stdslotfriends.end_date).to eq slot.end_date

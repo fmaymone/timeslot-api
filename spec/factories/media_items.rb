@@ -10,7 +10,7 @@ FactoryGirl.define do
     position
     creator
   end
-#
+
   factory :mock_image, class: "MediaItem" do
     association :mediable, factory: :user
     media_type "image"

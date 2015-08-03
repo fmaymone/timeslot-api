@@ -10,6 +10,7 @@ RSpec.describe Note, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:creator_id) }
   it { is_expected.to belong_to(:slot).inverse_of(:notes) }
+  it { is_expected.to belong_to(:creator).class_name(:User) }
 
   it { is_expected.to be_valid }
 

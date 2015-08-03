@@ -36,6 +36,12 @@ RSpec.describe AddImage, type: :service do
           AddImage.call(user, creator_id, nil)
         }.not_to change(MediaItem, :count)
       end
+
+      it "doesn't create a new MediaItem if creator_id is missing" do
+        expect {
+          AddImage.call(user, public_id, nil)
+        }.not_to change(MediaItem, :count)
+      end
     end
 
     describe "existing image" do
