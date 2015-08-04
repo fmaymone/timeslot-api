@@ -1,7 +1,7 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password]
+                       only: [:create, :signin, :reset_password, :media_items]
     skip_after_action :verify_authorized, only: :slots
     after_action :verify_policy_scoped, only: :slots
 
@@ -129,10 +129,8 @@ module V1
 
     # GET /v1/users/1/media
     # get all media items of the given user
-    # TODO: how to handle visitors here?
     def media_items
       authorize :user
-      #@current_user ||= @user = User.create(username: 'webview', role: 1)
       target_user = User.find_by(id: params.require(:user_id))
       @media_items = target_user.media_for(current_user)
       render "v1/media/index"
