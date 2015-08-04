@@ -74,6 +74,7 @@ RSpec.describe "V1::Users", type: :request do
       it "return number of established friends for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('friendsCount')
+        expect(json['friendsCount']).to be(1)
         expect(json['friendsCount']).to eq(current_user.friends.length)
       end
     end
@@ -84,7 +85,8 @@ RSpec.describe "V1::Users", type: :request do
       it "return std_slots for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('slotCount')
-        expect(json['slotCount']).to eq(current_user.std_slots.length)
+        expect(json['slotCount']).to be(1)
+        expect(json['slotCount']).to eq(current_user.std_slots.unscoped.length)
       end
     end
 
@@ -94,6 +96,7 @@ RSpec.describe "V1::Users", type: :request do
       it "return re_slots for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('reslotCount')
+        expect(json['reslotCount']).to be(1)
         expect(json['reslotCount']).to eq(current_user.re_slots.length)
       end
     end

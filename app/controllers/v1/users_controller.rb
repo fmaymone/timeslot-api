@@ -81,7 +81,8 @@ module V1
       end
 
       @user = current_user.update_with_image(params: user_params,
-                                             image: user_image)
+                                             image: user_image,
+                                             user: current_user)
 
       if @user.errors.empty?
         render :show

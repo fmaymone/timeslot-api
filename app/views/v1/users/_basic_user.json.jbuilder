@@ -19,6 +19,6 @@ json.image do
   json.local_id user.image.try(:local_id) ? user.image.local_id : nil
 end
 
-json.slot_count user.std_slots.count
+json.slot_count user.std_slots.unscoped.count
 json.reslot_count user.re_slots.count
 json.friends_count user.friends.count

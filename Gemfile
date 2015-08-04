@@ -28,6 +28,7 @@ gem 'rails_12factor', '0.0.3', group: :production
 gem 'cloudinary', '1.1.0'
 gem 'airbrake', '4.3.0'
 gem 'aws-sdk', '2.1.7'
+gem 'newrelic_rpm', '3.12.1.298'
 
 # use pry also on heroku
 gem 'pry-rails', '0.3.4'

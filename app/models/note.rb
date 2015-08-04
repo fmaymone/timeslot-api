@@ -5,6 +5,7 @@ class Note < ActiveRecord::Base
 
   belongs_to :slot, class_name: BaseSlot, foreign_key: "base_slot_id",
              inverse_of: :notes
+  belongs_to :creator, class_name: User
 
   validates :slot, presence: true
   validates :title, presence: true # max length?
