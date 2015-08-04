@@ -92,14 +92,15 @@ class BaseSlot < ActiveRecord::Base
   def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
     # statement order is important, otherwise added errors may be overwritten
     update(meta) if meta
-    update_media(media) if media
-    update_notes(notes) if notes
+    update_media(media, user.id) if media
+    update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
   end
 
-  def add_media(item)
+  def add_media(item, creator_id)
     item.merge!(position: media_items.size) unless item.key? "position"
-    item.merge!(mediable_id: id, mediable_type: BaseSlot)
+    item.merge!(mediable_id: id, mediable_type: BaseSlot,
+                creator_id: creator_id)
 
     new_media = MediaItem.new(item)
     unless new_media.valid?
@@ -119,12 +120,14 @@ class BaseSlot < ActiveRecord::Base
     new_media.save
   end
 
-  def update_notes(new_notes)
+  def update_notes(new_notes, creator_id)
     new_notes.each do |note|
       if note.key? 'id'
-        notes.find(note["id"]).update(note.permit(:title, :content))
+        notes.find(note["id"]).update(note.permit(:title, :content)
+                         .merge!(creator_id: creator_id))
       else
-        notes.create(note.permit(:title, :content))
+        notes.create(note.permit(:title, :content)
+                         .merge!(creator_id: creator_id))
       end
     end
   end
@@ -180,33 +183,32 @@ class BaseSlot < ActiveRecord::Base
     self.slot_type ||= self.class.to_s.to_sym
   end
 
-  private def update_media(items)
+  private def update_media(items, creator_id)
     # check if existing media items, if yes, assume reordering
     if items.first.key? :media_id
       unless MediaItem.reorder_media items
         errors.add(:media_items, 'invalid ordering')
       end
     else
-      add_media_items(items)
+      add_media_items(items, creator_id)
     end
   end
 
-  private def add_media_items(items)
+  private def add_media_items(items, creator_id)
     items.each do |item_hash|
       item = ActionController::Parameters.new(item_hash)
       case item[:media_type]
       when 'image'
         add_media(item.permit(:public_id, :position, :local_id)
-                   .merge(media_type: 'image'))
+          .merge(media_type: 'image'), creator_id)
       when 'audio'
         add_media(
           item.permit(:public_id, :position, :local_id, :duration, :title)
-          .merge(media_type: 'audio'))
+          .merge(media_type: 'audio'), creator_id)
       when 'video'
         add_media(
           item.permit(:public_id, :position, :local_id, :duration, :thumbnail)
-          .merge(media_type: 'video')
-        )
+          .merge(media_type: 'video'), creator_id)
       end
     end
   end
@@ -284,7 +286,7 @@ class BaseSlot < ActiveRecord::Base
     slot
   end
 
-  def self.duplicate_slot(source, target, user)
+  def self.duplicate_slot(source, target, current_user)
     visibility = target[:slot_type] if target[:slot_type]
     group = Group.find(target[:group_id]) if target[:group_id]
     details = target[:details]
@@ -294,13 +296,13 @@ class BaseSlot < ActiveRecord::Base
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
                                   group: group,
-                                  user: user)
+                                  user: current_user)
 
-    duplicate_slot_details(source, duplicated_slot) if with_details
+    duplicate_slot_details(source, duplicated_slot, current_user) if with_details
     duplicated_slot
   end
 
-  def self.duplicate_slot_details(old_slot, new_slot)
+  def self.duplicate_slot_details(old_slot, new_slot, user)
     old_slot.media_items.reverse_each do |item|
       attr = item.attributes
       attr.delete('id')
@@ -308,7 +310,9 @@ class BaseSlot < ActiveRecord::Base
     end
 
     old_slot.notes.each do |note|
-      new_slot.notes.create(title: note.title, content: note.content)
+      new_slot.notes.create(title: note.title,
+                            content: note.content,
+                            creator: user) # user => current_user
     end
   end
 
