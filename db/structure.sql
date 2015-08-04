@@ -437,7 +437,7 @@ CREATE TABLE notes (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    creator_id bigint
+    creator_id bigint NOT NULL
 );
 
 

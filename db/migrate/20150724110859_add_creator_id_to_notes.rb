@@ -1,6 +1,6 @@
 class AddCreatorIdToNotes < ActiveRecord::Migration
   def up
-    add_column :notes, :creator_id, 'bigint', null: false, default: false
+    add_column :notes, :creator_id, 'bigint', null: false
   end
 
   def down
