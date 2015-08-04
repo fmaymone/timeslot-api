@@ -30,8 +30,11 @@ class StdSlot < BaseSlot
       slot_type = StdSlotFriends
     when 'public'
       slot_type = StdSlotPublic
+    else
+      meta_slot.errors.add(:visibility, 'invalid slot visibility')
+      # TODO: raise exception
+      return
     end
-
     slot_type.create(meta_slot: meta_slot, owner: user)
   end
 
