@@ -415,21 +415,24 @@ resource "Users" do
     header 'Authorization', :auth_header
 
     let!(:target_user) { create(:user) }
-    let!(:slot_public) { create(:std_slot_public, :with_media, owner: target_user) }
-    let!(:slot_private) { create(:std_slot_private, :with_media, owner: target_user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                 owner: target_user, creator: target_user) }
     let!(:id) { target_user[:id] }
     let!(:auth_header) { "Token token=#{current_user.auth_token}" }
 
     parameter :id, "ID of the User to get the MediaItems for", required: true
     response_field :array, "containing media items as a list of MediaItem"
 
-    context "As a visitor get all public media items of a user" do
-      let!(:visitor) { create(:user, username: 'webview', role: 1) }
-      let(:current_user) { visitor }
-      let(:auth_header) { "Token token=#{visitor.auth_token}" }
+    context "As a visitor get all public media items of a specific user" do
+      let!(:visitor) { create(:user) }
+      let!(:current_user) { visitor }
+      let(:auth_header) { nil }
 
       example "As a visitor get all public media items of a specific user" do
-        explanation "Returns an array which includes all media items of the given user."
+        explanation "Returns an array which includes all public media items " \
+                    "of the given user to a visitor."
 
         header 'Authorization', :auth_header
 
@@ -438,15 +441,26 @@ resource "Users" do
         expect(response_status).to eq(200)
         expect(json.length).to eq(target_user.media_for(visitor).count)
         expect(json.length).to eq(6)
-        expect(json.first).to have_key('mediaType')
+        expect(json.first).to include(
+          slot_public.media_items.first.attributes
+              .extract!(:public_id, :local_id, :media_type, :position)
+              .merge(media_id: slot_public.media_items.first.id)
+              .transform_keys { |key| key.to_s.camelize(:lower) }
+        )
+        expect(json.last).to include(
+          slot_public.media_items.last.attributes
+              .extract!(:public_id, :local_id, :media_type, :position)
+              .merge(media_id: slot_public.media_items.last.id)
+              .transform_keys { |key| key.to_s.camelize(:lower) }
+        )
       end
     end
 
-    context "Get all owned media items of a auth user" do
-      let(:current_user) { target_user }
+    context "Get all media items for the current_user" do
+      let!(:current_user) { target_user }
 
-      example "Get all media items of a specific user", document: :v1 do
-        explanation "Returns an array which includes all media items of the given user."
+      example "Get all media items for the current_user" do
+        explanation "Returns an array which includes all media items of the current_user."
 
         do_request
 
@@ -454,12 +468,14 @@ resource "Users" do
         expect(json.length).to eq(current_user.media_for(current_user).count)
         expect(json.length).to eq(12)
         expect(json.first).to have_key('mediaType')
+        expect(json.first['publicId']).to eq(slot_public.media_items.first.public_id)
+        expect(json.last['publicId']).to eq(slot_private.media_items.last.public_id)
       end
     end
 
-    context "Get media items of a given auth user" do
-      example "Get public media list of a given user" do
-        explanation "Returns an array which includes all media items of the given user."
+    context "Get all public media items of a specific user" do
+      example "Get all media items of an user", document: :v1 do
+        explanation "Returns an array which includes all public media items of a specific user."
 
         do_request
 
@@ -467,17 +483,21 @@ resource "Users" do
         expect(json.length).to eq(target_user.media_for(current_user).count)
         expect(json.length).to eq(6)
         expect(json.first).to have_key('mediaType')
+        expect(json.first['publicId']).to eq(slot_public.media_items.first.public_id)
+        expect(json.last['publicId']).to eq(slot_public.media_items.last.public_id)
       end
     end
 
-    context "Get media items of a friendship" do
+    context "Get all public media items of a friend" do
       let!(:friend) { create(:user) }
-      let!(:slot_friend) { create(:std_slot_friends, :with_media, owner: friend) }
-      let!(:friendship) { create(:friendship, :established, user: current_user, friend: friend) }
+      let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                  owner: friend, creator: friend) }
+      let!(:friendship) { create(:friendship, :established,
+                                 user: current_user, friend: friend) }
       let(:id) { friend[:id] }
 
-      example "Get media list from friendslots shared with this user" do
-        explanation "Returns an array which includes all media items including friendship."
+      example "Get all public media items of a friend" do
+        explanation "Returns an array which includes all public media items of a friend."
 
         do_request
 
@@ -485,20 +505,23 @@ resource "Users" do
         expect(json.length).to eq(friend.media_for(current_user).count)
         expect(json.length).to eq(6)
         expect(json.first).to have_key('mediaType')
+        expect(json.first['publicId']).to eq(slot_friend.media_items.first.public_id)
+        expect(json.last['publicId']).to eq(slot_friend.media_items.last.public_id)
       end
     end
 
-    context "Get media items of a group" do
+    context "Get public media items of a user with a common group" do
       let!(:member) { create(:user) }
-      let!(:slot_group) { create(:group_slot, :with_media_group) }
+      let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
       let!(:memberships) {
         create(:membership, :active, group: slot_group.group, user: current_user)
         create(:membership, :active, group: slot_group.group, user: member)
       }
       let(:id) { member[:id] }
 
-      example "Get media list of a shared public group" do
-        explanation "Returns an array which includes all media items including group."
+      example "Get public media items of a user with a common group" do
+        explanation "Returns an array which includes all public media  " \
+                    "items of a user with a common group."
 
         do_request
 
@@ -506,6 +529,8 @@ resource "Users" do
         expect(json.length).to eq(member.media_for(current_user).count)
         expect(json.length).to eq(6)
         expect(json.first).to have_key('mediaType')
+        expect(json.first['publicId']).to eq(slot_group.media_items.first.public_id)
+        expect(json.last['publicId']).to eq(slot_group.media_items.last.public_id)
       end
     end
   end

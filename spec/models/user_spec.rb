@@ -136,45 +136,69 @@ RSpec.describe User, type: :model do
 
   describe :media_itens do
     let!(:target_user) { create(:user) }
-    let!(:slot_public) { create(:std_slot_public, :with_media, owner: target_user) }
-    let!(:slot_private) { create(:std_slot_private, :with_media, owner: target_user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                 owner: target_user, creator: target_user) }
 
-    context "Get all owned media items of a user" do
-      it "returns list of all owned media items of an user" do
+    context "Get all media items for the current_user" do
+      it "Returns an array which includes all media items of the current_user." do
         result = target_user.media_for(target_user)
         expect(result.length).to eq(12)
       end
     end
 
-    context "Get public media list of a given user" do
-      it "returns list of all public items of an specific user" do
+    context "Get all public media items of a specific user" do
+      it "Returns an array which includes all public media items of a specific user." do
         result = target_user.media_for(user)
         expect(result.length).to eq(6)
       end
     end
 
-    context "Get media list of a friendship" do
+    context "Get all public media items of a friend" do
       let!(:friend) { create(:user) }
-      let!(:slot_friend) { create(:std_slot_friends, :with_media, owner: friend) }
-      let!(:friendship) { create(:friendship, :established, user: user, friend: friend) }
+      let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                  owner: friend, creator: friend) }
+      let!(:friendship) { create(:friendship, :established,
+                                 user: user, friend: friend) }
 
-      it "returns list of all media items related to a friendship" do
+      it "Returns an array which includes all public media items of a friend." do
         result = friend.media_for(user)
         expect(result.length).to eq(6)
       end
     end
 
-    context "Get media list of a common public groups" do
+    context "Get public media items of a user with a common group" do
       let!(:member) { create(:user) }
-      let!(:slot_group) { create(:group_slot, :with_media_group) }
-      let!(:memberships) {
-        create(:membership, :active, group: slot_group.group, user: user)
-        create(:membership, :active, group: slot_group.group, user: member)
-      }
+      let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+      let!(:membership1) { create(:membership, :active,
+                                  group: slot_group.group, user: user) }
+      let!(:membership2) { create(:membership, :active,
+                                  group: slot_group.group, user: member) }
 
-      it "returns list of all media items related to a common group" do
+      it "Returns an array which includes all public media items of a user with a common group." do
         result = member.media_for(user)
         expect(result.length).to eq(6)
+      end
+
+      describe "Do not get group related media list if an user has left this group" do
+        it "Returns an empty array" do
+          result = member.media_for(user)
+          expect(result.length).to eq(6)
+          user.leave_group(slot_group.group.id)
+          result = member.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
+
+      describe "Do not get group related media list if an user has left the membership" do
+        it "Returns an empty array" do
+          result = member.media_for(user)
+          expect(result.length).to eq(6)
+          membership1.leave
+          result = member.media_for(user)
+          expect(result.length).to eq(0)
+        end
       end
     end
   end

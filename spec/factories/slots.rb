@@ -43,17 +43,9 @@ FactoryGirl.define do
 
   trait :with_media do
     after :create do |slot|
-      create_list :slot_image, 3, mediable: slot, creator: slot.owner
-      create_list :video, 2, mediable: slot, creator: slot.owner
-      create_list :audio, 1, mediable: slot, creator: slot.owner
-    end
-  end
-
-  trait :with_media_group do
-    after :create do |slot|
-      create_list :slot_image, 3, mediable: slot
-      create_list :video, 2, mediable: slot
-      create_list :audio, 1, mediable: slot
+      create_list :slot_image, 3, mediable: slot, creator: slot.creator
+      create_list :video, 2, mediable: slot, creator: slot.creator
+      create_list :audio, 1, mediable: slot, creator: slot.creator
     end
   end
 end
