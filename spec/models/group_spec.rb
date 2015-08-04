@@ -110,7 +110,7 @@ RSpec.describe Group, type: :model do
                                   user: user)
         }.to change(MediaItem, :count).by 1
         expect(Group.last.image.public_id).to eq image[:public_id]
-        expect(Group.last.image.creator_id).to eq user[:id]
+        expect(Group.last.image.creator).to eq user
       end
 
       it "sets the local_id on the image if provided" do
@@ -118,7 +118,7 @@ RSpec.describe Group, type: :model do
                                 image: image,
                                 user: user)
         expect(Group.last.image.local_id).to eq image[:local_id]
-        expect(Group.last.image.creator_id).to eq user[:id]
+        expect(Group.last.image.creator).to eq user
       end
     end
 
