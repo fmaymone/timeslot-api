@@ -14,13 +14,4 @@ RSpec.describe V1::MediaController, type: :controller do
       expect(response).to render_template("show")
     end
   end
-
-  describe "GET index" do
-    it "renders a full list of media items" do
-      expect(get: "/v1/users/1/media")
-          .to route_to("v1/users#media_items",
-                       user_id: '1',
-                       format: :json)
-    end
-  end
 end

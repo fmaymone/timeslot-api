@@ -39,8 +39,7 @@ RSpec.describe V1::UsersController, type: :routing do
 
     it "routes to #media" do
       expect(get: "/v1/users/1/media")
-          .to route_to("v1/users#media_items",
-                       user_id: '1', format: :json)
+        .to route_to("v1/users#media_items", user_id: '1', format: :json)
     end
 
     it "routes to #slots" do
