@@ -134,7 +134,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :media_itens do
+  describe :media_items do
     let!(:target_user) { create(:user) }
     let!(:slot_public) { create(:std_slot_public, :with_media,
                                 owner: target_user, creator: target_user) }
@@ -155,20 +155,21 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "Get all public media items of a friend" do
+    context "Get all friend-visible media items of a user" do
       let!(:friend) { create(:user) }
       let!(:slot_friend) { create(:std_slot_friends, :with_media,
                                   owner: friend, creator: friend) }
       let!(:friendship) { create(:friendship, :established,
                                  user: user, friend: friend) }
 
-      it "Returns an array which includes all public media items of a friend." do
+      it "Returns an array which includes all media items of this user " \
+         "which are public or friend-visible." do
         result = friend.media_for(user)
         expect(result.length).to eq(6)
       end
     end
 
-    context "Get public media items of a user with a common group" do
+    context "Get group-related media items of a user with a common group" do
       let!(:member) { create(:user) }
       let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
       let!(:membership1) { create(:membership, :active,
@@ -176,12 +177,13 @@ RSpec.describe User, type: :model do
       let!(:membership2) { create(:membership, :active,
                                   group: slot_group.group, user: member) }
 
-      it "Returns an array which includes all public media items of a user with a common group." do
+      it "Returns an array which includes all media items " \
+         "of a specific user with a common group." do
         result = member.media_for(user)
         expect(result.length).to eq(6)
       end
 
-      describe "Do not get group related media list if an user has left this group" do
+      describe "Do not get group-related media list if an user has left this group" do
         it "Returns an empty array" do
           result = member.media_for(user)
           expect(result.length).to eq(6)
@@ -191,7 +193,7 @@ RSpec.describe User, type: :model do
         end
       end
 
-      describe "Do not get group related media list if an user has left the membership" do
+      describe "Do not get group-related media list if an user has left the membership" do
         it "Returns an empty array" do
           result = member.media_for(user)
           expect(result.length).to eq(6)
