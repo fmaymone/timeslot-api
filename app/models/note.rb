@@ -11,14 +11,9 @@ class Note < ActiveRecord::Base
   validates :title, presence: true # max length?
   validates :content, presence: true # max length?
   validates :creator, presence: true
-  validates :media_type, presence: true
 
   private def propagate_error
     slot.errors.add(:note, errors)
-  end
-
-  def media_type
-    'note'
   end
 
   # if belonging slot is deleted

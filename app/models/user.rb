@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
            as: :mediable
 
-  has_many :media_items, -> { where deleted_at: nil }, class_name: MediaItem,
+  has_many :media_items, -> { where deleted_at: nil },
            foreign_key: :creator_id, inverse_of: :creator
 
   has_many :created_slots, class_name: MetaSlot,
@@ -197,7 +197,7 @@ class User < ActiveRecord::Base
   def media_for(current_user)
     medias = []
     if self == current_user
-      # Get all owned media items of current user:
+      # Get all media items of current user:
       medias = media_items
     else
       # Get all public media items of specific user (also for visitors):
