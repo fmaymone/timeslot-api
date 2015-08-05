@@ -167,6 +167,26 @@ RSpec.describe User, type: :model do
         result = friend.media_for(user)
         expect(result.length).to eq(6)
       end
+
+      describe "Do not get friend-related media items if the user removed this friend" do
+        it "Returns an empty array" do
+          result = friend.media_for(user)
+          expect(result.length).to eq(6)
+          user.remove_friends([friend.id])
+          result = friend.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
+
+      describe "Do not get friend-related media items if the friendship was canceled" do
+        it "Returns an empty array" do
+          result = friend.media_for(user)
+          expect(result.length).to eq(6)
+          user.friendship(friend.id).reject
+          result = friend.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
     end
 
     context "Get group-related media items of a user with a common group" do
