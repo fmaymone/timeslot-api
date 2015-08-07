@@ -357,6 +357,3 @@ DEPENDENCIES
   tzinfo-data (= 1.2015.5)
   vcr (= 2.9.3)
   webmock (= 1.21.0)
-
-BUNDLED WITH
-   1.10.6
