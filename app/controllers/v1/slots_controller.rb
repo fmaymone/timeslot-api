@@ -116,7 +116,7 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
       authorize @slot
 
-      @slot.parent.update_from_params(media: media_params, notes: note_param)
+      @slot.parent.update_from_params(media: media_params, notes: note_param, user: current_user)
       @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
@@ -320,6 +320,7 @@ module V1
                                 :position,
                                 :mediaId,
                                 :localId,
+                                :creatorId,
                                 :mediaType,
                                 :title,
                                 :duration,

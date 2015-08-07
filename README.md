@@ -210,7 +210,12 @@ bin/rake generate_adv_erd
 
 At the moment we use a mix of the GitFlow Workflow and the Forking Workflow.
 
+* [Git Workflow Backend Developer](doc/git_workflow_developer.md)
 * [Comparing Workflows - Atlassian](https://www.atlassian.com/git/tutorials/comparing-workflows)
+
+
+## Git Flow Tool (not used at the moment)
+
 * [GitFlow Explained](http://datasift.github.io/gitflow/IntroducingGitFlow.html)
 * [GitFlow Tutorial](http://www.effectivetrainings.de/blog/2012/04/22/git-flow-einfaches-arbeiten-mit-dem-perfekten-git-workflow/) (german)
 
