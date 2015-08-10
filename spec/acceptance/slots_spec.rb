@@ -629,8 +629,11 @@ resource "Slots" do
       parameter :content, "Content of the note",
                 required: true,
                 scope: :notes
+      parameter :localId, "Local ID of the note, temporary feature",
+                scope: :notes
 
-      let(:notes) { [attributes_for(:note), attributes_for(:note)] }
+      let(:notes) { [attributes_for(:note).merge(localId: '123321'),
+                     attributes_for(:note)] }
 
       example "Update Slot - Add notes", document: :v1 do
         do_request
@@ -639,6 +642,7 @@ resource "Slots" do
         expect(
           [notes.first[:title], notes.second[:title]]
         ).to include std_slot.notes.last.title
+        expect(response_body).to include '123321'
       end
     end
 

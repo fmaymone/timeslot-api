@@ -122,11 +122,11 @@ class BaseSlot < ActiveRecord::Base
 
   def update_notes(new_notes, creator_id)
     new_notes.each do |note|
-      if note.key? 'id'
-        notes.find(note["id"]).update(note.permit(:title, :content)
+      if note.key? :id
+        notes.find(note[:id]).update(note.permit(:title, :content)
                          .merge!(creator_id: creator_id))
       else
-        notes.create(note.permit(:title, :content)
+        notes.create(note.permit(:title, :content, :local_id)
                          .merge!(creator_id: creator_id))
       end
     end

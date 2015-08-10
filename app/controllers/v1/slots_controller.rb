@@ -312,7 +312,13 @@ module V1
     end
 
     private def note_param
-      params.require(:notes) if params[:notes].present?
+      if params[:notes].present?
+        note_params = [:id, :title, :content, :localId]
+        params.require(:notes).map do |p|
+          note = ActionController::Parameters.new(p.to_hash).permit(note_params)
+          note.transform_keys { |key| key.underscore.to_sym }
+        end
+      end
     end
 
     private def media_params
