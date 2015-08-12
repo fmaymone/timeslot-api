@@ -225,6 +225,12 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
+        it "for missing visibility" do
+          invalid_attributes.extract! 'visibility'
+          post "/v1/stdslot/", invalid_attributes, auth_header
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
         it "for invalid characters for visibility" do
           invalid_attributes[:visibility] = "$$"
           post "/v1/stdslot/", invalid_attributes, auth_header
@@ -628,6 +634,14 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.start_date).to eq("2014-07-07 13:31:02")
         end
 
+        it "updates the visibility of a given StdSlot" do
+          expect(std_slot.visibility).to eq 'private'
+          patch "/v1/stdslot/#{std_slot.id}",
+                { visibility: 'public' }, auth_header
+          std_slot.reload
+          expect(std_slot.visibility).to eq 'public'
+        end
+
         it "updates the end_date of a given StdSlot" do
           std_slot.meta_slot.update(end_date: "2019-12-09 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}",
@@ -743,6 +757,20 @@ RSpec.describe "V1::Slots", type: :request do
                   { endDate: "2014-07-07 13:31:02" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('start_date')
+          end
+
+          it "for invalid visibility" do
+            patch "/v1/stdslot/#{std_slot.id}",
+                  { visibility: "Something" }, auth_header
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('visibility')
+          end
+
+          it "for empty visibility" do
+            patch "/v1/stdslot/#{std_slot.id}",
+                  { visibility: '' }, auth_header
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('visibility')
           end
         end
       end

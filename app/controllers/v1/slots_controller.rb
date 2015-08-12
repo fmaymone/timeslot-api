@@ -21,7 +21,8 @@ module V1
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params, visibility: visibility,
+      @slot = BaseSlot.create_slot(meta: meta_params,
+                                   visibility: enforce_visibility,
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
@@ -84,9 +85,9 @@ module V1
       # @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
-      @slot.update_from_params(meta: meta_params, media: media_params,
-                               notes: note_param, alerts: alerts_param,
-                               user: current_user)
+      @slot.update_from_params(meta: meta_params, visibility: visibility,
+                               media: media_params, notes: note_param,
+                               alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }
@@ -259,8 +260,15 @@ module V1
       Group.find(params.require(:groupId))
     end
 
+    private def enforce_visibility
+      params.require :visibility
+      visibility
+    end
+
     private def visibility
-      visibility = params.require(:visibility)
+      return nil unless params.key? :visibility
+
+      visibility = params[:visibility]
       valid_values = %w(private friends public)
 
       unless valid_values.include? visibility
@@ -312,12 +320,12 @@ module V1
     end
 
     private def note_param
-      if params[:notes].present?
-        note_params = [:id, :title, :content, :localId]
-        params.require(:notes).map do |p|
-          note = ActionController::Parameters.new(p.to_hash).permit(note_params)
-          note.transform_keys { |key| key.underscore.to_sym }
-        end
+      return nil unless params.key? :notes
+
+      note_params = [:id, :title, :content, :localId]
+      params[:notes].map do |p|
+        note = ActionController::Parameters.new(p.to_hash).permit(note_params)
+        note.transform_keys { |key| key.underscore.to_sym }
       end
     end
 
