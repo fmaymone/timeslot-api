@@ -56,6 +56,9 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # device related
+  has_many :devices, foreign_key: "user_id", inverse_of: :user
+
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
