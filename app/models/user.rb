@@ -427,34 +427,36 @@ class User < ActiveRecord::Base
 
   # technically this is not neccessary bc it's not possible to set an image on
   # signup, at least in the ios app right now
-  def self.create_with_image(params:, image: nil)
+  def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
+    Device.detect_or_create(new_user, *device) if device
     return new_user unless new_user.errors.empty?
-
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
 
-  def self.create_or_signin_via_social(identity_params, social_params)
+  def self.create_or_signin_via_social(identity_params, social_params, device: nil)
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
     if identity
       no_token = identity.user.auth_token.nil?
+      Device.detect_or_create(identity.user, *device) if device
       identity.user.update(auth_token: generate_auth_token) if no_token
       return identity.user
+    else
+      user = detect_or_create(identity_params[:username], social_params[:email])
+      Device.detect_or_create(user, *device) if device
+      return user unless user.errors.empty?
+      user.update(auth_token: generate_auth_token) unless user.auth_token
+
+      identity = Connect.create(user: user,
+                                provider: identity_params[:provider],
+                                social_id: identity_params[:social_id],
+                                data: social_params)
+
+      user.errors.add(connect: identity.errors) if identity.errors.any?
+      user
     end
-
-    user = detect_or_create(identity_params[:username], social_params[:email])
-    return user unless user.errors.empty?
-    user.update(auth_token: generate_auth_token) unless user.auth_token
-
-    identity = Connect.create(user: user,
-                              provider: identity_params[:provider],
-                              social_id: identity_params[:social_id],
-                              data: social_params)
-
-    user.errors.add(connect: identity.errors) if identity.errors.any?
-    user
   end
 
   # Issue to be decided upon later but for now we keep this behaviour:
@@ -471,15 +473,24 @@ class User < ActiveRecord::Base
     user || User.create(username: username, email: email)
   end
 
-  def self.sign_in(email: nil, phone: nil, password:)
+  def self.sign_in(email: nil, phone: nil, password:, device: nil)
     if email
       user = User.find_by email: email
     elsif phone
       user = User.find_by phone: phone
     end
     current_user = user.try(:authenticate, password)
-    current_user.update(auth_token: generate_auth_token) if current_user
+    if current_user
+      Device.detect_or_create(current_user, *device) if device
+      current_user.update(auth_token: generate_auth_token)
+    end
     current_user
+  end
+
+  def notify(params)
+    devices.each do |device|
+      device.notify(params) if device.push
+    end
   end
 
   def self.generate_auth_token
