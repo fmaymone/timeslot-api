@@ -457,6 +457,69 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  describe "GET /v1/users/:id/media" do
+    let!(:target_user) { create(:user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                 owner: target_user, creator: target_user) }
+
+    context "Get all media items for the current_user" do
+      let(:auth_header) do
+        { 'Authorization' => "Token token=#{target_user.auth_token}" }
+      end
+
+      it "Returns an array which includes all media items of the current_user." do
+        get "/v1/users/#{target_user.id}/media", {}, auth_header
+        expect(response).to have_http_status(:ok)
+        expect(json.length).to eq(target_user.media_for(target_user).size)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "Get all public media items of a specific user" do
+      it "Returns an array which includes all public media items of a specific user." do
+        get "/v1/users/#{target_user.id}/media", {}, auth_header
+        expect(response).to have_http_status(:ok)
+        expect(json.length).to eq(target_user.media_for(current_user).count)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get all friend-visible media items of a user" do
+      let!(:friend) { create(:user) }
+      let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                  owner: friend, creator: friend) }
+      let!(:friendship) { create(:friendship, :established,
+                                 user: current_user, friend: friend) }
+
+      it "Returns an array which includes all media items of this user " \
+         "which are public or friend-visible." do
+        get "/v1/users/#{friend.id}/media", {}, auth_header
+        expect(response).to have_http_status(:ok)
+        expect(json.length).to eq(friend.media_for(current_user).count)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get group-related media items of a user with a common group" do
+      let!(:member) { create(:user) }
+      let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+      let!(:memberships) {
+        create(:membership, :active, group: slot_group.group, user: current_user)
+        create(:membership, :active, group: slot_group.group, user: member)
+      }
+
+      it "Returns an array which includes all media " \
+         "items of a specific user with a common group." do
+        get "/v1/users/#{member.id}/media", {}, auth_header
+        expect(response).to have_http_status(:ok)
+        expect(json.length).to eq(member.media_for(current_user).count)
+        expect(json.length).to eq(6)
+      end
+    end
+  end
+
   describe "POST /v1/users/add_friends" do
     let(:john) { create(:user, username: "John") }
 

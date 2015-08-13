@@ -411,6 +411,134 @@ resource "Users" do
     end
   end
 
+  get "/v1/users/:id/media" do
+    header 'Authorization', :auth_header
+
+    let!(:target_user) { create(:user) }
+    let!(:friend) { create(:user) }
+    let!(:member) { create(:user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_friend_public) { create(:std_slot_public, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_friend_private) { create(:std_slot_private, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+    let!(:slot_group_public) { create(:std_slot_public, :with_media,
+                                owner: member, creator: member) }
+    let!(:slot_group_private) { create(:std_slot_private, :with_media,
+                                owner: member, creator: member) }
+    let!(:friendship) { create(:friendship, :established,
+                                user: current_user, friend: friend) }
+    let!(:memberships) {
+      create(:membership, :active, group: slot_group.group, user: current_user)
+      create(:membership, :active, group: slot_group.group, user: member)
+    }
+    let!(:id) { target_user[:id] }
+    let!(:auth_header) { "Token token=#{current_user.auth_token}" }
+
+    parameter :id, "ID of the User to get the MediaItems for", required: true
+    response_field :array, "containing media items as a list of MediaItem"
+
+    context "Get media items as a visitor" do
+      let!(:visitor) { create(:user) }
+      let!(:current_user) { visitor }
+      let(:auth_header) { nil }
+
+      example "As a visitor get all public media items of a specific user" do
+        explanation "Returns an array which includes all public media items " \
+                    "of the specific user."
+
+        header 'Authorization', :auth_header
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get all media items for the current user" do
+      let!(:current_user) { target_user }
+
+      example "Get all media items for the current user" do
+        explanation "Returns an array which includes all media items of the current user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "Get all public media items of a specific user" do
+      example "Get media items of an user", document: :v1 do
+        explanation "Returns an array which includes all public media items of a specific user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get all friend-visible media items of a user" do
+      let(:id) { friend[:id] }
+
+      example "Get all friend-visible media items of a user" do
+        explanation "Returns an array which includes all media items of this user " \
+                    "which are public or friend-visible."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_friend.media_items[0].public_id)
+        expect(response_body).to include(slot_friend_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(response_body).not_to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "Get group-related media items of a specific user" do
+      let(:id) { member[:id] }
+
+      example "Get group-related media items of a specific user with a common group" do
+        explanation "Returns an array which includes all media " \
+                    "items of a specific user with a common group."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_group.media_items[0].public_id)
+        expect(response_body).to include(slot_group_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+  end
+
   get "/v1/users/:id/slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header

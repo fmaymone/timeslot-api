@@ -44,6 +44,8 @@ FactoryGirl.define do
   trait :with_media do
     after :create do |slot|
       create_list :slot_image, 3, mediable: slot, creator: slot.creator
+      create_list :video, 2, mediable: slot, creator: slot.creator
+      create_list :audio, 1, mediable: slot, creator: slot.creator
     end
   end
 end

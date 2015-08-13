@@ -16,6 +16,12 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true if a user is logged in
+  # also true for visitors
+  def media_items?
+    current_user?
+  end
+
   # no prerequisites
   def create?
     true

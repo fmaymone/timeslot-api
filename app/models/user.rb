@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
            as: :mediable
 
+  has_many :media_items, -> { where deleted_at: nil },
+           foreign_key: :creator_id, inverse_of: :creator
+
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: :creator_id, inverse_of: :creator
 
@@ -187,6 +190,38 @@ class User < ActiveRecord::Base
   # TODO: add spec
   def activate
     slot_settings.each(&:undelete)
+  end
+
+  ## media related ##
+
+  def media_for(current_user)
+    medias = []
+    if self == current_user
+      # Get all media items of current user:
+      medias = media_items
+    else
+      # Get all public media items of specific user (also for visitors):
+      std_slots_public.each do |slot|
+        medias += slot.media_items
+      end
+      # Get items for authorized users
+      unless current_user.nil?
+        # Get all friendship related media items:
+        if self.friend_with?(current_user)
+          std_slots_friends.each do |slot|
+            medias += slot.media_items
+          end
+        end
+        # Get all group related media items:
+        # TODO: can visitors also have access to media items of public group slots?
+        group_slots.where('group_slots.group_id IN (?)', current_user.groups.ids).each do |slot|
+          if current_user.active_member?(slot.group.id)
+            medias += slot.media_items
+          end
+        end
+      end
+    end
+    medias.sort_by(&:created_at)
   end
 
   ## slot related ##

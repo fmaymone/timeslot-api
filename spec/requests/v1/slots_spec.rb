@@ -1623,7 +1623,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
         expect(new_slot.images.first.id).not_to eq group_slot.images.first.id
         expect(new_slot.images.first.creator).to eq user
@@ -1646,7 +1646,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
         expect(new_slot.images.first.id).not_to eq std_slot.images.first.id
         expect(new_slot.images.first.creator).to eq user

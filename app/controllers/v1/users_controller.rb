@@ -1,7 +1,7 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password]
+                       only: [:create, :signin, :reset_password, :media_items]
     skip_after_action :verify_authorized, only: :slots
     after_action :verify_policy_scoped, only: :slots
 
@@ -126,6 +126,15 @@ module V1
       @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
 
       render "v1/slots/index"
+    end
+
+    # GET /v1/users/1/media
+    # get all media items of the given user
+    def media_items
+      authorize :user
+      target_user = User.find_by(id: params.require(:user_id))
+      @media_items = target_user.media_for(current_user)
+      render "v1/media/index"
     end
 
     # POST /v1/users/add_friends
