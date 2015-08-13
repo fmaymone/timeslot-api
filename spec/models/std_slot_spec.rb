@@ -56,8 +56,6 @@ RSpec.describe StdSlot, type: :model do
         described_class.create_slot(meta_slot: meta_slot, visibility: 'unknown',
                                     user: user)
       }.not_to change(StdSlotPublic, :count)
-      expect(meta_slot.errors.messages).to have_key(:visibility)
-      expect(meta_slot.errors.messages[:visibility][0]).to eq("invalid slot visibility")
     end
 
     it "does not create a new StdSlot if visibility is empty" do
@@ -65,8 +63,6 @@ RSpec.describe StdSlot, type: :model do
         described_class.create_slot(meta_slot: meta_slot, visibility: '',
                                     user: user)
       }.not_to change(StdSlotPublic, :count)
-      expect(meta_slot.errors.messages).to have_key(:visibility)
-      expect(meta_slot.errors.messages[:visibility][0]).to eq("invalid slot visibility")
     end
   end
 
