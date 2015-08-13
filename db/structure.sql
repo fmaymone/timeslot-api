@@ -148,6 +148,44 @@ ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 
 --
+-- Name: devices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE devices (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    device_id character varying(128) NOT NULL,
+    system character varying(10) NOT NULL,
+    version character varying(10) NOT NULL,
+    token character varying(128) DEFAULT ''::character varying,
+    endpoint character varying(128) DEFAULT ''::character varying,
+    push boolean DEFAULT true,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone
+);
+
+
+--
+-- Name: devices_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE devices_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: devices_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
+
+
+--
 -- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -186,11 +224,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
-    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    deleted_at timestamp without time zone
+    group_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -497,11 +535,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -589,13 +627,11 @@ CREATE TABLE users (
     phone character varying(35),
     location_id bigint,
     public_url character varying,
-    push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
-    email_verified boolean DEFAULT false NOT NULL,
-    device_token character varying(128)
+    email_verified boolean DEFAULT false NOT NULL
 );
 
 
@@ -637,6 +673,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY connects ALTER COLUMN id SET DEFAULT nextval('connects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::regclass);
 
 
 --
@@ -783,6 +826,14 @@ ALTER TABLE ONLY connects
 
 
 --
+-- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY devices
+    ADD CONSTRAINT devices_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -896,6 +947,20 @@ CREATE UNIQUE INDEX index_connects_on_social_id_and_user_id ON connects USING bt
 --
 
 CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
+
+
+--
+-- Name: index_devices_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_devices_on_user_id ON devices USING btree (user_id);
+
+
+--
+-- Name: index_devices_on_user_id_and_device_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_devices_on_user_id_and_device_id ON devices USING btree (user_id, device_id);
 
 
 --
@@ -1228,6 +1293,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150618062654');
 INSERT INTO schema_migrations (version) VALUES ('20150619113120');
 
 INSERT INTO schema_migrations (version) VALUES ('20150724110859');
+
+INSERT INTO schema_migrations (version) VALUES ('20150808172817');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810155024');
 
