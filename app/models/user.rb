@@ -429,7 +429,7 @@ class User < ActiveRecord::Base
   # signup, at least in the ios app right now
   def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
-    Device.detect_or_create(new_user, *device) if device
+    Device.detect_or_create(new_user, device) if device
     return new_user unless new_user.errors.empty?
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
@@ -440,12 +440,12 @@ class User < ActiveRecord::Base
                              provider: identity_params[:provider]).take
     if identity
       no_token = identity.user.auth_token.nil?
-      Device.detect_or_create(identity.user, *device) if device
+      Device.detect_or_create(identity.user, device) if device
       identity.user.update(auth_token: generate_auth_token) if no_token
       return identity.user
     else
       user = detect_or_create(identity_params[:username], social_params[:email])
-      Device.detect_or_create(user, *device) if device
+      Device.detect_or_create(user, device) if device
       return user unless user.errors.empty?
       user.update(auth_token: generate_auth_token) unless user.auth_token
 
@@ -481,7 +481,7 @@ class User < ActiveRecord::Base
     end
     current_user = user.try(:authenticate, password)
     if current_user
-      Device.detect_or_create(current_user, *device) if device
+      Device.detect_or_create(current_user, device) if device
       current_user.update(auth_token: generate_auth_token)
     end
     current_user
