@@ -6,7 +6,6 @@ json.extract!(user,
               :phone,
               :phone_verified,
               :public_url,
-              # :push, # wird gerade ueberarbeitet
               :slot_default_duration,
               :slot_default_location_id,
               :slot_default_type_id,
@@ -23,14 +22,12 @@ tmp = []
 user.initiated_friendships.active.each do |friendship|
   tmp.push( { 'friend_id' => friendship.friend.id,
               'state' => friendship.humanize,
-              # 'push' => friendship.push,
               'initiator' => friendship.user_id } )
 end
 
 user.received_friendships.active.each do |friendship|
   tmp.push( { 'friend_id' => friendship.user.id,
               'state' => friendship.humanize,
-              # 'push' => friendship.push,
               'initiator' => friendship.user_id } )
 end
 

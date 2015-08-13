@@ -368,12 +368,6 @@ RSpec.describe "V1::Users", type: :request do
           expect(current_user.public_url).to eq 'uffie'
         end
 
-        it "updates the push notification state of a given user" do
-          patch "/v1/users", { push: true }, auth_header
-          current_user.reload
-          expect(current_user.push).to be true
-        end
-
         it "updates the location of a given user" do
           patch "/v1/users", { location: { name: 'Bonn' } }, auth_header
           current_user.reload
