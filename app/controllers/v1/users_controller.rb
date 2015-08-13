@@ -155,6 +155,26 @@ module V1
       head :ok
     end
 
+    # PATCH /v1/users/device
+    # updates a device of the user if one exist
+    def update_device
+      authorize :user
+      device = current_user.devices.find_by(device_id: params.require(:id))
+
+      if device
+        if params[:endpoint] == false
+          device.unregister_endpoint
+        elsif params[:token]
+          device.register_endpoint(params[:token])
+        end
+        if params.has_key?(:push)
+          device.update_columns({push: params[:push] })
+        end
+      end
+
+      head :ok
+    end
+
     private def user_create_params
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
@@ -178,8 +198,6 @@ module V1
                         },
                         :name,
                         :publicUrl,
-                        :deviceToken,
-                        :push,
                         :slotDefaultDuration,
                         :slotDefaultLocationId,
                         :slotDefaultTypeId,
