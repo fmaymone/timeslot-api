@@ -2,7 +2,7 @@ require 'documentation_helper'
 
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user, :with_email, :with_password) }
+  let(:current_user) { create(:user, :with_email, :with_password, :with_device) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   shared_context "default user response fields" do
@@ -46,6 +46,7 @@ resource "Users" do
                    " may also have their own default alerts per group"
     response_field :friendships, "all connections to other users"
     response_field :memberships, "all connections to groups"
+    response_field :devices, "all devices from user"
   end
 
   get "/v1/users/:id" do
@@ -145,6 +146,14 @@ resource "Users" do
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
+    parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' } "
+    parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+              scope: :device
+    parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+              scope: :device
+    parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+              scope: :device
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
@@ -168,18 +177,26 @@ resource "Users" do
     end
   end
 
-  post "/v1/users/signin" do
+  post "/v1/users/signin", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
     parameter :email, "Email of the user to authenticate", required: true
     parameter :password, "Password for the user to authenticate", required: true
+    parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' } "
+    parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+              scope: :device
+    parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+              scope: :device
+    parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+              scope: :device
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
 
-    let(:user) { create(:user, :with_email, password: "timeslot") }
+    let(:user) { create(:user, :with_email, :with_device, password: "timeslot") }
     let(:email) { user.email }
     let(:password) { "timeslot" }
 
@@ -245,8 +262,8 @@ resource "Users" do
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :image, "URL of the user image"
     parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-    parameter :deviceToken,
-              "IOS Device Token for Push Notifications (max. 128 chars)"
+    #parameter :deviceToken,
+    #          "IOS Device Token for Push Notifications (max. 128 chars)"
     # parameter :push, "Send push Notifications (true/false)"
     parameter :slotDefaultDuration, "Default Slot Duration in seconds"
     parameter :slotDefaultTypeId, "Default Slot Type - WIP"
@@ -535,6 +552,77 @@ resource "Users" do
         expect(response_body).not_to include(slot_public.media_items[0].public_id)
         expect(response_body).not_to include(slot_private.media_items[0].public_id)
         expect(json.length).to eq(12)
+      end
+    end
+  end
+
+  patch "/v1/users/device" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "A unique device ID (required)"
+    parameter :token, "The device token which is used for device services"
+    parameter :push, "Boolean to turn on/off push notifications"
+    parameter :endpoint, "Boolean flag to unregister endpoint"
+
+    describe "Update specific device of the current user" do
+      let(:id) { current_user.devices.last[:device_id] }
+      let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
+
+      example "Register endpoint to push notifications to a device", document: :v1 do
+        explanation "returns OK if endpoint was successfully added\n\n" \
+                    "returns 403 if there was no current user\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are missing or invalid"
+
+        current_user.devices.last[:endpoint] = ''
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user.devices.last[:device_id]).to eq(id)
+        expect(current_user.devices.last[:token]).to eq(token)
+        expect(current_user.devices.last[:endpoint]).to eq(
+          'arn:aws:sns:us-west-2:293488554927:endpoint/APNS_SANDBOX/Timeslot-iOS/bac63567-f197-3aa2-8e24-77e567cfa042'
+        )
+        expect(current_user.devices.last[:push]).to be(true)
+      end
+
+      context do
+        let(:token) { nil }
+        let(:endpoint) { false }
+
+        example "Unregister device from push notification service", :vcr, document: :v1 do
+          explanation "returns OK if endpoint was successfully added\n\n" \
+                      "returns 403 if there was no current user\n\n" \
+                      "returns 404 if ID is invalid\n\n" \
+                      "returns 422 if parameters are missing or invalid"
+          do_request
+
+          expect(response_status).to eq(200)
+          current_user.reload
+          expect(current_user.devices.last[:device_id]).to eq(id)
+          expect(current_user.devices.last[:endpoint]).to eq('')
+          expect(current_user.devices.last[:push]).to be(false)
+        end
+      end
+    end
+
+    describe "Turn on/off push notifications for a specific device" do
+      let(:id) { current_user.devices.last[:device_id] }
+      let(:push) { false }
+
+      example "Turn on/off push notifications for a specific device", :vcr, document: :v1 do
+        explanation "returns OK if endpoint was successfully added\n\n" \
+                    "returns 403 if there was no current user\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameters are missing or invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user.devices.last[:device_id]).to eq(id)
+        expect(current_user.devices.last[:push]).to be(false)
       end
     end
   end

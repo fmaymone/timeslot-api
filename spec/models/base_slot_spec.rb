@@ -225,8 +225,9 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :create_comment do
-    let(:std_slot) { create(:std_slot) }
+  describe :create_comment, :vcr do
+    let(:owner) { create(:user, :with_device) }
+    let(:std_slot) { create(:std_slot, owner: owner) }
     let(:user) { create(:user) }
 
     it "adds a new comment to the slot" do
