@@ -777,7 +777,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "handling notes" do
-
       let(:note) { attributes_for(:note) }
       let(:add_note) { { notes: [note] } }
 
