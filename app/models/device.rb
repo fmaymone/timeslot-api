@@ -95,15 +95,14 @@ class Device < ActiveRecord::Base
     end
   end
 
-  # @Silvio ... I need help on this implementation step
-  # I figured out how the ts_soft_delete is used internally, but why the test fails?
-  # This stupidly attribute-override will fix it for now:
-  def deleted_at?
-    true
-  end
-
   # delete if user deactivates his profile
   def delete
+    unregister_endpoint
+    update_columns({ deleted_at: Time.zone.now })
+  rescue => err
+    Rails.logger.error err
+    Airbrake.notify(err)
+  ensure
     ts_soft_delete
   end
 end

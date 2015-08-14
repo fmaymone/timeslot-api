@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
            through: :received_friendships, source: :user
 
   # device related
-  has_many :devices, foreign_key: "user_id", inverse_of: :user
+  has_many :devices, inverse_of: :user
 
   # settings
   belongs_to :location, class_name: IosLocation
@@ -187,6 +187,7 @@ class User < ActiveRecord::Base
     image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
+    devices.each(&:delete)
     ts_soft_delete and return self
   end
 
