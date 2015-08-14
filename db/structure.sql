@@ -155,8 +155,8 @@ CREATE TABLE devices (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
     device_id character varying(128) NOT NULL,
-    system character varying(10) NOT NULL,
-    version character varying(10) NOT NULL,
+    system character varying(8) NOT NULL,
+    version character varying(8) NOT NULL,
     token character varying(128) DEFAULT ''::character varying,
     endpoint character varying(128) DEFAULT ''::character varying,
     push boolean DEFAULT true,
@@ -365,7 +365,7 @@ CREATE TABLE media_items (
     duration real,
     thumbnail character varying(255),
     local_id character varying(512),
-    creator_id bigint,
+    creator_id bigint NOT NULL,
     title character varying(64)
 );
 
@@ -950,17 +950,17 @@ CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
 
 
 --
+-- Name: index_devices_on_device_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX index_devices_on_device_id ON devices USING btree (device_id);
+
+
+--
 -- Name: index_devices_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_devices_on_user_id ON devices USING btree (user_id);
-
-
---
--- Name: index_devices_on_user_id_and_device_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_devices_on_user_id_and_device_id ON devices USING btree (user_id, device_id);
 
 
 --
