@@ -75,10 +75,12 @@
 * [Update current user - set location](users/update_current_user_-_set_location.markdown)
 * [Delete current user](users/delete_current_user.markdown)
 * [Get media items of an user](users/get_media_items_of_an_user.markdown)
+* [Register endpoint to push notifications to a device](users/register_endpoint_to_push_notifications_to_a_device.markdown)
+* [Turn on/off push notifications for a specific device](users/turn_onoff_push_notifications_for_a_specific_device.markdown)
+* [Get slots for current user](users/get_slots_for_current_user.markdown)
 * [Get slots for befriended user](users/get_slots_for_befriended_user.markdown)
 * [Get slots of unrelated user with common groups](users/get_slots_of_unrelated_user_with_common_groups.markdown)
 * [Get slots of unrelated user](users/get_slots_of_unrelated_user.markdown)
 * [Get slots of current users friends](users/get_slots_of_current_users_friends.markdown)
 * [Add Friends - Request Friendship / Accept Friend Request](users/add_friends_-_request_friendship__accept_friend_request.markdown)
 * [Remove Friends - Unfriending / Refuse Friend Requests](users/remove_friends_-_unfriending__refuse_friend_requests.markdown)
-

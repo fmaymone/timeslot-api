@@ -24,6 +24,18 @@ Description : Phone number of user (max. 35 characters)
 Name : password *- required -*
 Description : Password for user (min. 5 &amp; max. 72 characters)
 
+Name : device
+Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; } 
+
+Name : system
+Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
+
+Name : version
+Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
+
+Name : deviceId
+Description : A unique hardware ID from the current device (max. 128 chars) 
+
 
 ### Response Fields
 
@@ -102,6 +114,9 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 Name : authToken
 Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
 
@@ -143,10 +158,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1c5af6a80eff4e65212a6fa616de1567&quot;
+ETag: W/&quot;9d9d537238c41251390086cebeeed09f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d22a0428-19eb-4bc4-8580-861ece68b751
-X-Runtime: 0.027268
+X-Request-Id: a7485a19-7c44-4a5b-a5c6-5a0f4c734a98
+X-Runtime: 0.020835
 Content-Length: 761</pre>
 
 #### Status
@@ -157,10 +172,10 @@ Content-Length: 761</pre>
 
 ```javascript
 {
-  "id" : 250,
+  "id" : 267,
   "username" : "foo",
-  "createdAt" : "2015-07-02T12:34:21.114Z",
-  "updatedAt" : "2015-07-02T12:34:21.114Z",
+  "createdAt" : "2015-08-14T13:58:57.504Z",
+  "updatedAt" : "2015-08-14T13:58:57.504Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -187,6 +202,6 @@ Content-Length: 761</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "k4CE49Zrii35_B_HCM-HlB6Tulk"
+  "authToken" : "Lv8RpI2Z3hmRh5iGOgWz5ZXwkpg"
 }
 ```

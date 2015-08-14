@@ -31,9 +31,6 @@ Description : URL of the user image
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
-Name : deviceToken
-Description : IOS Device Token for Push Notifications (max. 128 chars)
-
 Name : slotDefaultDuration
 Description : Default Slot Duration in seconds
 
@@ -142,12 +139,15 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=HLC4f-JuQj-M-hmXVZ2U84p8zvc
+Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE
 Host: example.org
 Cookie: </pre>
 
@@ -168,7 +168,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=HLC4f-JuQj-M-hmXVZ2U84p8zvc&quot; \
+	-H &quot;Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -179,10 +179,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;468bfbbe18b58d5a6afddefbcac5f1de&quot;
+ETag: W/&quot;1c3d7f11892ef4084aaf38343a2e90f7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 515c6b92-66a2-4739-9754-b7ef46af9cf1
-X-Runtime: 0.071716
+X-Request-Id: 2315fc58-a45d-4678-800c-29408befdaa1
+X-Runtime: 0.023490
 Content-Length: 715</pre>
 
 #### Status
@@ -193,10 +193,10 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 254,
+  "id" : 270,
   "username" : "bar",
-  "createdAt" : "2015-07-02T12:34:25.622Z",
-  "updatedAt" : "2015-07-02T12:34:25.648Z",
+  "createdAt" : "2015-08-14T13:58:57.594Z",
+  "updatedAt" : "2015-08-14T13:58:57.606Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -206,7 +206,7 @@ Content-Length: 715</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user68@email.com",
+  "email" : "user69@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
