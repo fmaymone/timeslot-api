@@ -279,11 +279,11 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    parameter :visibility, "Visibility of the Slot (private/friends/public)",
+              required: true
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
-      parameter :visibility, "Visibility of the Slot", required: true
-
       include_context "default slot response fields"
 
       let(:title) { "Time for a Slot" }
@@ -393,9 +393,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with invalid params" do
-      parameter :visibility, "Visibility of the Slot",
-                required: true
-
       response_field :error, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
@@ -416,9 +413,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with missing requiered params" do
-      parameter :visibility, "Visibility of the Slot",
-                required: true
-
       response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
@@ -597,6 +591,8 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
+    parameter :visibility, "Visibility of the Slot to update " \
+                           "(private/friends/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
@@ -606,7 +602,7 @@ resource "Slots" do
     describe "Update an existing StdSlot" do
       let(:title) { "New title for a Slot" }
 
-      example "Update StdSlot", document: :v1 do
+      example "Update StdSlot - change title", document: :v1 do
         explanation "Update content of StdSlot.\n\n" \
                     "User must be owner of StdSlot.\n\n" \
                     "returns 200 and slot data if update succeded \n\n" \
@@ -617,6 +613,24 @@ resource "Slots" do
         expect(response_status).to eq(200)
         std_slot.reload
         expect(std_slot.title).to eq title
+      end
+    end
+
+    describe "Change visibility of an existing StdSlot" do
+      let(:visibility) { 'friends' }
+
+      example "Update StdSlot - change visibility", document: :v1 do
+        explanation "Update visibility of StdSlot.\n\n" \
+                    "User must be owner of StdSlot.\n\n" \
+                    "returns 200 and slot data if update succeded \n\n" \
+                    "returns 404 if User not owner or ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid"
+        expect(std_slot.visibility).to eq 'private'
+        do_request
+
+        expect(response_status).to eq(200)
+        std_slot.reload
+        expect(std_slot.visibility).to eq 'friends'
       end
     end
 

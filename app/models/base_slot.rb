@@ -20,7 +20,7 @@ class BaseSlot < ActiveRecord::Base
                  BaseSlot: 0,
                  StdSlot: 20,
                  GroupSlot: 21,
-                 ReSlot: 22,
+                 ReSlot: 22
                }
 
   enum slot_type: SLOT_TYPES
