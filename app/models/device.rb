@@ -9,17 +9,34 @@ class Device < ActiveRecord::Base
   validates :version, presence: true
   validates :push, presence: true, inclusion: [true, false]
 
-  def self.detect_or_create(user, system: nil, version: nil, device_id: nil)
-    return if device_id.nil? || system.nil? || version.nil?
-    device = find_by(device_id: device_id) if device_id
-    device || create(user: user,
-                     system: system,
-                     version: version,
-                     device_id: device_id)
+  def self.detect_or_create(user, device_id:, system:, version:)
+    device = find_by(device_id: device_id)
+    if device
+      device.update(user: user)
+    else
+      create(user: user,
+             system: system,
+             version: version,
+             device_id: device_id)
+    end
   end
 
-  def register_endpoint(token, push: true)
-    return if token.nil? || endpoint
+  def update_device(params)
+    update_columns(
+      params.extract!(:deviceId,
+                      :system,
+                      :version,
+                      :push).transform_keys{ |key| key.to_s.underscore }
+    )
+    if params[:endpoint] == false
+      unregister_endpoint
+    elsif params[:token]
+      register_endpoint(params[:token])
+    end
+  end
+
+  def register_endpoint(token)
+    return if token.nil?
     case system
     when 'ios'
       sns_endpoint = register_endpoint_ios(token)
@@ -27,27 +44,16 @@ class Device < ActiveRecord::Base
       sns_endpoint = nil
     end
     if sns_endpoint
-      endpoint_registered = Device.where(endpoint: sns_endpoint)
-      if endpoint_registered.empty?
-        update(user: user,
-               token: token,
-               endpoint: sns_endpoint,
-               push: push)
-      else
-        # set new timestamp to updated_at
-        endpoint_registered[0].touch(:updated_at)
-      end
+      update_columns({ token: token, endpoint: sns_endpoint })
     end
   end
 
   private def register_endpoint_ios(token)
     begin
       Aws::SNS::Client.new.create_platform_endpoint(
-          platform_application_arn:
-              ENV['AWS_PLATFORM_APPLICATION_ARN'],
-          token:
-              token,
-          #TODO: what we will do with this attributes?
+          platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_ARN'],
+          token: token,
+          #TODO: pass here custom parameters to the notification
           attributes: {} #{ 'UserId' => user.id.to_s }
       )[:endpoint_arn]
     rescue Aws::SNS::Errors::ServiceError => exception
@@ -58,10 +64,10 @@ class Device < ActiveRecord::Base
   end
 
   def unregister_endpoint
-    if endpoint
+    unless endpoint.empty?
       begin
         Aws::SNS::Client.new.delete_endpoint({ endpoint_arn: endpoint })
-        update_columns({endpoint: '', push: false})
+        update_columns({ endpoint: '', push: false })
       rescue Aws::SNS::Errors::ServiceError => exception
         Rails.logger.error exception
         Airbrake.notify(aws_sns_error: exception)
@@ -78,13 +84,15 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  private def notify_ios(sns, message:, alert: '', sound: 'default', badge: 1, extra: {a: 1, b: 2})
+  private def notify_ios(sns, message:, alert: '', sound: 'default',
+                         badge: 1, extra: {a: 1, b: 2})
     begin
       sns.publish(target_arn: endpoint, message: {
         default: message,
         APNS_SANDBOX: {
             aps: {
-                alert: alert, sound: sound, badge: badge, extra: extra
+                alert: alert, sound: sound,
+                badge: badge, extra: extra
             }
         }
       }.to_json, message_structure: "json")

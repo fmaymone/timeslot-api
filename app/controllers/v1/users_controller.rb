@@ -159,17 +159,11 @@ module V1
     # updates a device of the user if one exist
     def update_device
       authorize :user
-      device = current_user.devices.find_by(device_id: params.require(:id))
+      device = current_user.devices.find_by(device_id: params.require(:deviceId))
 
       if device
-        if params[:endpoint] == false
-          device.unregister_endpoint
-        elsif params[:token]
-          device.register_endpoint(params[:token])
-        end
-        if params.has_key?(:push)
-          device.update_columns({push: params[:push] })
-        end
+        device.update_device(params.permit(:deviceId, :token, #:endpoint,
+                                           :system, :version, :push))
       end
 
       head :ok
