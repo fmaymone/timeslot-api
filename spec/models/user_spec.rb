@@ -26,7 +26,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:group_slots).through(:groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
-  it { is_expected.to have_many(:devices).with_foreign_key(:user_id).inverse_of(:user) }
+  it { is_expected.to have_many(:devices).inverse_of(:user) }
   it { is_expected.to belong_to(:location) }
 
   it { is_expected.to be_valid }

@@ -82,19 +82,13 @@ RSpec.describe Device, type: :model do
     end
   end
 
-  describe :create_endpoint, :vcr do
+  describe :register_endpoint, :vcr do
     let(:user) { create(:user, :with_device) }
     let(:token) { '999a077973ae7af48c835e4a15973be1fe7db412945ead30007e31c4b5f33500' }
 
     it "adds a new endpoint to the user" do
       expect {
         device.register_endpoint(token)
-      }.to change(Device, :count).by 1
-    end
-
-    it "removes an endpoint from the user" do
-      expect {
-        device.unregister_endpoint
       }.to change(Device, :count).by 1
     end
 
@@ -113,6 +107,17 @@ RSpec.describe Device, type: :model do
           device.register_endpoint(token)
         }.not_to change(Device, :count)
       end
+    end
+  end
+
+  describe :unregister_endpoint, :vcr do
+    let(:user) { create(:user, :with_device) }
+    let(:token) { '999a077973ae7af48c835e4a15973be1fe7db412945ead30007e31c4b5f33500' }
+
+    it "removes an endpoint from the user" do
+      expect {
+        device.unregister_endpoint
+      }.to change(Device, :count).by 1
     end
   end
 end
