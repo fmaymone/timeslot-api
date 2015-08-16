@@ -153,13 +153,12 @@ ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 CREATE TABLE devices (
     id bigint NOT NULL,
-    user_id bigint NOT NULL,
+    user_id bigint,
     device_id character varying(128) NOT NULL,
     system character varying(8) NOT NULL,
     version character varying(8) NOT NULL,
-    token character varying(128) DEFAULT ''::character varying,
-    endpoint character varying(128) DEFAULT ''::character varying,
-    push boolean DEFAULT true,
+    token character varying(128),
+    endpoint character varying(128),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone
@@ -224,11 +223,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
+    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    group_id bigint NOT NULL
+    deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
 
@@ -535,11 +534,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -615,7 +614,6 @@ CREATE TABLE users (
     deleted_at timestamp without time zone,
     email character varying,
     password_digest character varying(60),
-    auth_token character varying(27),
     role smallint NOT NULL,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_private_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -631,7 +629,9 @@ CREATE TABLE users (
     slot_default_duration integer,
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
-    email_verified boolean DEFAULT false NOT NULL
+    email_verified boolean DEFAULT false NOT NULL,
+    auth_token character varying(27),
+    push boolean DEFAULT true
 );
 
 
@@ -950,13 +950,6 @@ CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
 
 
 --
--- Name: index_devices_on_device_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_devices_on_device_id ON devices USING btree (device_id);
-
-
---
 -- Name: index_devices_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1101,13 +1094,6 @@ CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot
 --
 
 CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
-
-
---
--- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
 
 
 --
