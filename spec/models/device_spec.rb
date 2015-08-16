@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Device, type: :model do
+RSpec.describe Device, :aws, type: :model do
   let(:device) { create(:device) }
 
   subject { device }
@@ -11,7 +11,6 @@ RSpec.describe Device, type: :model do
   it { is_expected.to respond_to(:version) }
   it { is_expected.to respond_to(:token) }
   it { is_expected.to respond_to(:endpoint) }
-  it { is_expected.to respond_to(:push) }
   it { is_expected.to respond_to(:created_at) }
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to belong_to(:user) }
@@ -38,11 +37,6 @@ RSpec.describe Device, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when push state is not present" do
-    before { device.push = nil }
-    it { is_expected.to_not be_valid }
-  end
-
   describe :device, :vcr do
     let(:user) { create(:user) }
     let(:device) {
@@ -54,7 +48,7 @@ RSpec.describe Device, type: :model do
 
     it "adds a new device to the user" do
       expect {
-        Device.detect_or_create(user, *[device])
+        Device.detect_or_create(user, device)
       }.to change(user.devices, :count).by 1
     end
 
@@ -62,21 +56,21 @@ RSpec.describe Device, type: :model do
       it "doesn't add a new device" do
         device[:system] = nil
         expect {
-          Device.detect_or_create(user, *[device])
+          Device.detect_or_create(user, device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device" do
         device[:version] = nil
         expect {
-          Device.detect_or_create(user, *[device])
+          Device.detect_or_create(user, device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device" do
         device[:device_id] = nil
         expect {
-          Device.detect_or_create(user, *[device])
+          Device.detect_or_create(user, device)
         }.not_to change(Device, :count)
       end
     end
@@ -93,17 +87,25 @@ RSpec.describe Device, type: :model do
       }.to change(device, :endpoint)
     end
 
+    context "find older device by token and re-assign to the current device" do
+      let(:device1) { create(:device, :with_endpoint, user: user) }
+      let(:device2) { create(:device, user: user) }
+      let(:token) { device1.token }
+
+      it "moves an old endpoint to a new device of the user" do
+        expect {
+          device2.register_endpoint(token)
+        }.to change(Device, :count)
+        expect(device2.endpoint).to eq(device1.endpoint)
+        expect(device2.token).to eq(device1.token)
+        expect(device2.device_id).not_to eq(device1.device_id)
+      end
+    end
+
     context "invalid params" do
       it "doesn't add a new device to the user" do
         expect {
           device.register_endpoint(nil)
-        }.not_to change(device, :endpoint)
-      end
-
-      it "doesn't add a new device to the user" do
-        device[:system] = nil
-        expect {
-          device.register_endpoint(token)
         }.not_to change(device, :endpoint)
       end
     end

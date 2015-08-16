@@ -889,10 +889,7 @@ RSpec.describe User, type: :model do
 
   describe "sign_in" do
     let(:user) { create(:user, :with_email, :with_password) }
-    let!(:device) { attributes_for(:device).extract!(:user,
-                                                     :system,
-                                                     :version,
-                                                     :device_id) }
+
     context "with email" do
       it "returns the user" do
         expect(
@@ -911,6 +908,18 @@ RSpec.describe User, type: :model do
       end
     end
 
+    context "with device" do
+      let!(:device) { attributes_for(:device).extract!(:user,
+                                                       :system,
+                                                       :version,
+                                                       :device_id) }
+      it "sets a device if provided" do
+        expect {
+          User.sign_in(email: user.email, password: user.password, device: device)
+        }.to change(Device, :count).by 1
+      end
+    end
+
     context "invalid params" do
       it "returns false if invalid password" do
         expect(
@@ -923,12 +932,6 @@ RSpec.describe User, type: :model do
           User.sign_in(email: 'marzipan', password: user.password)
         ).to be nil
       end
-    end
-
-    it "sets a device if provided" do
-      expect {
-        User.sign_in(email: user.email, password: user.password, device: device)
-      }.to change(Device, :count).by 1
     end
   end
 

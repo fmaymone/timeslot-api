@@ -10,7 +10,7 @@ resource "Users" do
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
     response_field :location, "Home location of user"
-    # response_field :push, "Send push Notifications (true/false)"
+    response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -262,9 +262,7 @@ resource "Users" do
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :image, "URL of the user image"
     parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-    #parameter :deviceToken,
-    #          "IOS Device Token for Push Notifications (max. 128 chars)"
-    # parameter :push, "Send push Notifications (true/false)"
+    parameter :push, "Send push Notifications (true/false)"
     parameter :slotDefaultDuration, "Default Slot Duration in seconds"
     parameter :slotDefaultTypeId, "Default Slot Type - WIP"
     parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
@@ -407,6 +405,20 @@ resource "Users" do
         expect(json).to have_key("location")
         expect(json["location"]).not_to be nil
         expect(json["location"]["name"]).to eq "Acapulco"
+      end
+    end
+
+    describe "Turn on/off push notifications for a user" do
+      let(:push) { false }
+
+      example "Turn on/off push notifications for a specific device", document: :v1 do
+        expect(current_user[:push]).to be(true)
+
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user[:push]).to be(false)
       end
     end
   end
@@ -556,73 +568,76 @@ resource "Users" do
     end
   end
 
-  patch "/v1/users/device" do
+  patch "/v1/users/device", :aws do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :deviceId, "A unique device ID (required)"
+    parameter :deviceId, "A unique device ID", required: true
+    parameter :system, "A shorthand of the operating system from the current device"
+    parameter :version, "The version number of the devices operating system"
     parameter :token, "The device token which is used for device services"
-    parameter :push, "Boolean flag to turn on/off push notifications for the current device"
+    parameter :endpoint, "Boolean flag to unregister device from all extern services"
 
     describe "Update specific device of the current user" do
       let(:device) { create(:device, user: current_user) }
       let(:deviceId) { device[:device_id] }
-      let(:token) { device[:token] }
+      let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
 
-      example "Register endpoint to push notifications to a device", :vcr, document: :v1 do
+      example "Register endpoint to push notifications for a device", :vcr, document: :v1 do
         explanation "returns OK if endpoint was successfully added\n\n" \
-                    "returns 403 if there was no current user\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
+                    "returns 401 if auth token is invalid\n\n" \
                     "returns 422 if parameters are missing or invalid"
+
+        expect(current_user.devices.last[:token]).to eq(nil)
+        expect(current_user.devices.last[:endpoint]).to eq(nil)
+
         do_request
 
+        result = current_user.reload.devices.last
         expect(response_status).to eq(200)
-        current_user.reload
-        expect(current_user.devices.last[:device_id]).to eq(deviceId)
-        expect(current_user.devices.last[:token]).to eq(token)
-        expect(current_user.devices.last[:endpoint]).to eq(
-          'arn:aws:sns:us-west-2:293488554927:endpoint/APNS_SANDBOX/Timeslot-iOS/bac63567-f197-3aa2-8e24-77e567cfa042'
-        )
-        expect(current_user.devices.last[:push]).to be(true)
+        expect(result[:device_id]).to eq(deviceId)
+        expect(result[:token]).to eq(token)
+        expect(result[:endpoint]).to eq('String')
       end
 
-      # TODO: I will rethink about if we really need this in the endpoint
-      # context do
-      #   let(:token) { nil }
-      #   let(:endpoint) { false }
-      #
-      #   example "Unregister device from push notification service", :vcr, document: :v1 do
-      #     explanation "returns OK if endpoint was successfully removed\n\n" \
-      #                 "returns 403 if there was no current user\n\n" \
-      #                 "returns 404 if ID is invalid\n\n" \
-      #                 "returns 422 if parameters are missing or invalid"
-      #     do_request
-      #
-      #     expect(response_status).to eq(200)
-      #     current_user.reload
-      #     expect(current_user.devices.last[:device_id]).to eq(deviceId)
-      #     expect(current_user.devices.last[:endpoint]).to eq('')
-      #     expect(current_user.devices.last[:push]).to be(false)
-      #   end
-      # end
-    end
+      context do
+        let(:device) { create(:device, :with_endpoint, user: current_user) }
+        let(:deviceId) { device[:device_id] }
+        let(:token) { device[:token] }
+        let(:endpoint) { false }
 
-    describe "Turn on/off push notifications for a specific device" do
-      let(:device) { create(:device, :with_endpoint, user: current_user) }
-      let(:deviceId) { device[:device_id] }
-      let(:push) { false }
+        example "Unregister device from push notification service", :vcr, document: :v1 do
+          explanation "returns OK if endpoint was successfully removed\n\n" \
+                      "returns 401 if auth token is invalid\n\n" \
+                      "returns 422 if parameters are missing or invalid"
+          do_request
 
-      example "Turn on/off push notifications for a specific device", document: :v1 do
-        explanation "returns OK if state was successfully edited\n\n" \
-                    "returns 403 if there was no current user\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
-                    "returns 422 if parameters are missing or invalid"
-        do_request
+          expect(response_status).to eq(200)
+          result = current_user.reload.devices.last
+          expect(result[:device_id]).to eq(deviceId)
+          expect(result[:token]).to eq(token)
+          expect(result[:endpoint]).to eq(nil)
+        end
+      end
 
-        expect(response_status).to eq(200)
-        current_user.reload
-        expect(current_user.devices.last[:device_id]).to eq(deviceId)
-        expect(current_user.devices.last[:push]).to be(false)
+      context do
+        let(:device) { create(:device, user: current_user) }
+        let(:deviceId) { device[:device_id] }
+        let(:system) { 'android' }
+        let(:version) { '5.0b' }
+
+        example "Update default device attributes", :vcr, document: :v1 do
+          explanation "returns OK if endpoint was successfully removed\n\n" \
+                      "returns 401 if auth token is invalid\n\n" \
+                      "returns 422 if parameters are missing or invalid"
+          do_request
+
+          expect(response_status).to eq(200)
+          result = current_user.reload.devices.last
+          expect(result[:device_id]).to eq(deviceId)
+          expect(result[:system]).to eq('android')
+          expect(result[:version]).to eq('5.0b')
+        end
       end
     end
   end
