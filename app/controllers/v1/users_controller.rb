@@ -25,7 +25,8 @@ module V1
     def create
       authorize :user
       @user = User.create_with_image(params: user_create_params,
-                                     image: user_image)
+                                     image: user_image,
+                                     device: user_device)
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -38,6 +39,7 @@ module V1
     # returns auth_token if correct email and password are send
     def signin
       authorize :user
+      credentials.merge!(device: user_device) if params[:device].present?
       @user = User.sign_in(credentials)
 
       if @user
@@ -83,7 +85,6 @@ module V1
       @user = current_user.update_with_image(params: user_params,
                                              image: user_image,
                                              user: current_user)
-
       if @user.errors.empty?
         render :show
       else
@@ -157,15 +158,19 @@ module V1
 
     # PATCH /v1/users/device
     # updates a device of the user if one exist
+    # if device not exist creates a new one with the passed attributes
     def update_device
       authorize :user
-      device = current_user.devices.find_by(device_id: params.require(:deviceId))
+      device = Device.detect_or_create(current_user,
+                                       device_id: params.require(:deviceId),
+                                       system: params[:system],
+                                       version: params[:version])
 
-      if device
-        device.update_device(params.permit(:deviceId, :token, #:endpoint,
-                                           :system, :version, :push))
-      end
-
+      device.update_device(params.permit(:deviceId,
+                                         :token,
+                                         :endpoint,
+                                         :system,
+                                         :version).transform_keys{ |key| key.to_s.underscore })
       head :ok
     end
 
@@ -192,6 +197,7 @@ module V1
                         },
                         :name,
                         :publicUrl,
+                        :push,
                         :slotDefaultDuration,
                         :slotDefaultLocationId,
                         :slotDefaultTypeId,
@@ -213,6 +219,13 @@ module V1
     private def user_image
       return nil unless params[:image].present?
       p = params.require(:image).permit(:publicId, :localId)
+      p.transform_keys(&:underscore)
+      p.transform_keys { |key| key.underscore.to_sym }
+    end
+
+    private def user_device
+      return nil unless params[:device].present?
+      p = params.require(:device).permit(:deviceId, :system, :version)
       p.transform_keys(&:underscore)
       p.transform_keys { |key| key.underscore.to_sym }
     end
