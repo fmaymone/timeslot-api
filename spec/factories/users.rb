@@ -5,6 +5,7 @@ FactoryGirl.define do
 
   factory :user, aliases: [:owner, :member, :creator] do
     username
+    push true
 
     trait :with_email do
       email
