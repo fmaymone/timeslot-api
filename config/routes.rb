@@ -73,6 +73,11 @@ Rails.application.routes.draw do
           to: 'users#media_items',
           as: 'user_media',
           constraints: { id: /\d+/ }
+
+      get ':user_id/slots/now',
+          to: 'users#slots_now',
+          constraints: { id: /\d+/ }
+
       get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'

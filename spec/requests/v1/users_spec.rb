@@ -430,30 +430,64 @@ RSpec.describe "V1::Users", type: :request do
   end
 
   describe "GET /v1/users/:id/slots" do
-    let(:group_member) { create(:membership, user: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group_member.group) }
-    let!(:slots) do
-      slots = []
-      slots.push create(:std_slot_private, owner: current_user)
-      slots.push create(:std_slot_friends, owner: current_user)
-      slots.push create(:std_slot_public, owner: current_user)
-      slots.push(*create_list(:re_slot, 2, slotter: current_user))
+    describe "my Slots, no pagination" do
+      let(:group_member) { create(:membership, user: current_user) }
+      let!(:group_slot) { create(:group_slot, group: group_member.group) }
+      let!(:slots) do
+        slots = []
+        slots.push create(:std_slot_private, owner: current_user)
+        slots.push create(:std_slot_friends, owner: current_user)
+        slots.push create(:std_slot_public, owner: current_user)
+        slots.push(*create_list(:re_slot, 2, slotter: current_user))
+      end
+
+      it "returns success" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns all stdslots & reslots for the current_user" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        slots_count = slots.size
+        expect(json.length).to eq slots_count
+      end
+
+      it "excludes groupslots of the current_user" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        expect(response.body).not_to include group_slot.title
+      end
     end
 
-    it "returns success" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      expect(response.status).to be(200)
-    end
+    describe "my Slots, with pagination" do
+      let(:upcoming_slots) { create_list(:std_slot_private, 12,
+                                         start_date: Time.zone.tomorrow,
+                                         owner: current_user) }
+      let(:ongoing_slot) { create(:std_slot_friends,
+                                  start_date: Time.zone.yesterday,
+                                  end_date: Time.zone.tomorrow,
+                                  owner: current_user) }
+      let(:ongoing_slots) { create_list(:std_slot_friends, 12,
+                                        start_date: Time.zone.yesterday,
+                                        end_date: Time.zone.tomorrow,
+                                        owner: current_user) }
+      let(:past_slot) { create(:std_slot_public,
+                               start_date: Time.zone.yesterday.at_midday,
+                               end_date: Time.zone.yesterday.end_of_day,
+                               owner: current_user) }
+      let(:past_slots) { create_list(:std_slot_public, 12,
+                                     start_date: Time.zone.yesterday.at_midday,
+                                     end_date: Time.zone.yesterday.end_of_day,
+                                     owner: current_user) }
 
-    it "returns all stdslots & reslots for the current_user" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      slots_count = slots.size
-      expect(json.length).to eq slots_count
-    end
-
-    it "excludes groupslots of the current_user" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      expect(response.body).not_to include group_slot.title
+      describe "GET slots for current user" do
+        context "now", :focus do
+          it "returns 20 active and upcoming slots" do
+            [upcoming_slots, ongoing_slots, past_slot]
+            get "/v1/users/#{current_user.id}/slots/now", {}, auth_header
+            expect(response.status).to be(200)
+          end
+        end
+      end
     end
   end
 
