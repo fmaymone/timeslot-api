@@ -432,8 +432,8 @@ class User < ActiveRecord::Base
   # signup, at least in the ios app right now
   def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
-    Device.detect_or_create(new_user, device) if device && new_user.id
     return new_user unless new_user.errors.empty?
+    Device.detect_or_create(new_user, device) if device && new_user.id
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
@@ -448,9 +448,9 @@ class User < ActiveRecord::Base
       return identity.user
     else
       user = detect_or_create(identity_params[:username], social_params[:email])
-      Device.detect_or_create(user, device) if device
       return user unless user.errors.empty?
       user.update(auth_token: generate_auth_token) unless user.auth_token
+      Device.detect_or_create(user, device) if device
 
       identity = Connect.create(user: user,
                                 provider: identity_params[:provider],
