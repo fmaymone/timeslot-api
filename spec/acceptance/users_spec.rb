@@ -236,7 +236,6 @@ resource "Users" do
       let(:device) { attributes_for(:device) }
 
       example "User signin and creates a new specific device", document: :v1 do
-        pp device
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
@@ -257,7 +256,6 @@ resource "Users" do
       let(:device) { attributes_for(:device) }
 
       example "User signin with an existing specific device", document: :v1 do
-        pp device
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
