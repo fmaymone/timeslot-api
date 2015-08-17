@@ -79,7 +79,6 @@
 * [Update current user - turn on/off push notifications](users/update_current_user_-_turn_onoff_push_notifications.markdown)
 * [Delete current user](users/delete_current_user.markdown)
 * [Get all media items of a specific user](users/get_all_media_items_of_a_specific_user.markdown)
-* [Turn on/off push notifications for a specific device](users/turn_onoff_push_notifications_for_a_specific_device.markdown)
 * [Device - Register endpoint to push notifications for a device](users/device_-_register_endpoint_to_push_notifications_for_a_device.markdown)
 * [Device - Unregister device from push notification service](users/device_-_unregister_device_from_push_notification_service.markdown)
 * [Device - Update default device attributes](users/device_-_update_default_device_attributes.markdown)
