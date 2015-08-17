@@ -28,6 +28,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -99,7 +102,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=lqtdSNIvTOBecHDGlNC95Hh38XM
+Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg
 Host: example.org
 Cookie: </pre>
 
@@ -111,7 +114,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/263&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=lqtdSNIvTOBecHDGlNC95Hh38XM&quot; \
+	-H &quot;Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -122,10 +125,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2e471d886da20ff39bef8fe5fe3321ae&quot;
+ETag: W/&quot;b47068f0db89e5688ac8b5188028c10c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 57c26fd8-a9a2-465b-968b-76786d8d8a8b
-X-Runtime: 0.025671
+X-Request-Id: 9bca1755-f6f7-472a-a2cd-2a043f808a73
+X-Runtime: 0.015941
 Content-Length: 720</pre>
 
 #### Status
@@ -138,8 +141,8 @@ Content-Length: 720</pre>
 {
   "id" : 263,
   "username" : "User 260",
-  "createdAt" : "2015-08-14T13:58:57.418Z",
-  "updatedAt" : "2015-08-14T13:58:57.418Z",
+  "createdAt" : "2015-08-17T11:32:00.190Z",
+  "updatedAt" : "2015-08-17T11:32:00.190Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {

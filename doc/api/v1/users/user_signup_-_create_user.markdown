@@ -24,18 +24,6 @@ Description : Phone number of user (max. 35 characters)
 Name : password *- required -*
 Description : Password for user (min. 5 &amp; max. 72 characters)
 
-Name : device
-Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; } 
-
-Name : system
-Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
-
-Name : version
-Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
-
-Name : deviceId
-Description : A unique hardware ID from the current device (max. 128 chars) 
-
 
 ### Response Fields
 
@@ -50,6 +38,9 @@ Description : URL of the user image
 
 Name : location
 Description : Home location of user
+
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : createdAt
 Description : Creation of user
@@ -158,10 +149,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9d9d537238c41251390086cebeeed09f&quot;
+ETag: W/&quot;307a48cb211e6073bbe14c12aba6a23a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a7485a19-7c44-4a5b-a5c6-5a0f4c734a98
-X-Runtime: 0.020835
+X-Request-Id: 2aecc4dd-a88a-436b-b305-f869eb3a2d51
+X-Runtime: 0.012676
 Content-Length: 761</pre>
 
 #### Status
@@ -174,8 +165,8 @@ Content-Length: 761</pre>
 {
   "id" : 267,
   "username" : "foo",
-  "createdAt" : "2015-08-14T13:58:57.504Z",
-  "updatedAt" : "2015-08-14T13:58:57.504Z",
+  "createdAt" : "2015-08-17T11:32:00.244Z",
+  "updatedAt" : "2015-08-17T11:32:00.244Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -202,6 +193,6 @@ Content-Length: 761</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "Lv8RpI2Z3hmRh5iGOgWz5ZXwkpg"
+  "authToken" : "Viz94ROSt1LvexxRw8H6hjXRV7E"
 }
 ```

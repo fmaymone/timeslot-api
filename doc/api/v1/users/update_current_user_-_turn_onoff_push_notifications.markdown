@@ -1,20 +1,58 @@
 # Users API
 
-## User signin
+## Update current user - turn on/off push notifications
 
-### POST /v1/users/signin
-
-returns OK and an AuthToken if credentials match
-
-returns 401 if credentials invalid
+### PATCH /v1/users
 
 ### Parameters
 
-Name : email *- required -*
-Description : Email of the user to authenticate
+Name : username
+Description : Updated username of user (max. 50 characters)
 
-Name : password *- required -*
-Description : Password for the user to authenticate
+Name : email
+Description : Email of user (max. 255 characters)
+
+Name : phone
+Description : Phone number of user (max. 35 characters)
+
+Name : image
+Description : URL of the user image
+
+Name : publicUrl
+Description : Public URL for user on Timeslot (max. 255 chars)
+
+Name : push
+Description : Send push Notifications (true/false)
+
+Name : slotDefaultDuration
+Description : Default Slot Duration in seconds
+
+Name : slotDefaultTypeId
+Description : Default Slot Type - WIP
+
+Name : slotDefaultLocationId
+Description : Default Slot Location ID - WIP
+
+Name : defaultPrivateAlerts
+Description : Default alerts for private slots of this user
+
+Name : defaultOwnFriendslotAlerts
+Description : Default alerts for the friendslots of this user
+
+Name : defaultOwnPublicAlerts
+Description : Default alerts for the public slots of this user
+
+Name : defaultFriendsFriendslotAlerts
+Description : Default alerts for the friendslots from friends of this user
+
+Name : defaultFriendsPublicAlerts
+Description : Default alerts for the public slots from friends of this user
+
+Name : defaultReslotAlerts
+Description : Default alerts for the reslots of this user
+
+Name : defaultGroupAlerts
+Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
 
 
 ### Response Fields
@@ -100,36 +138,32 @@ Description : all connections to groups
 Name : devices
 Description : all devices from user
 
-Name : authToken
-Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
-
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Accept: application/json
+Authorization: Token token=_3i5F2T3I_nTml1YSsv_vJpp5sA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/users/signin</pre>
+<pre>PATCH /v1/users</pre>
 
 #### Body
 ```javascript
 {
-  "email" : "user67@email.com",
-  "password" : "timeslot"
+  "push" : false
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user67@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;push&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Accept: application/json&quot; \
+	-H &quot;Authorization: Token token=_3i5F2T3I_nTml1YSsv_vJpp5sA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -140,11 +174,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4bac55bfa45ff2913b1eb68b5c2727af&quot;
+ETag: W/&quot;92ecc59244b1dc57873f5e5d99e52366&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a6b7392-d30a-4c66-8b55-eb2caf3d987e
-X-Runtime: 0.016666
-Content-Length: 762</pre>
+X-Request-Id: 2f925125-dfaf-44f8-b619-f6f8553d68a6
+X-Runtime: 0.012639
+Content-Length: 720</pre>
 
 #### Status
 
@@ -154,10 +188,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 269,
-  "username" : "User 264",
-  "createdAt" : "2015-08-17T11:32:00.279Z",
-  "updatedAt" : "2015-08-17T11:32:00.287Z",
+  "id" : 278,
+  "username" : "User 273",
+  "createdAt" : "2015-08-17T11:32:00.522Z",
+  "updatedAt" : "2015-08-17T11:32:00.530Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -167,7 +201,7 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user67@email.com",
+  "email" : "user75@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -183,7 +217,6 @@ Content-Length: 762</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
-  "memberships" : [],
-  "authToken" : "rweC3H0wQHi5MzOLi_B70UHfMa4"
+  "memberships" : []
 }
 ```

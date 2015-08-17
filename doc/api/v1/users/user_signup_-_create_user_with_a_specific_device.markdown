@@ -1,20 +1,40 @@
 # Users API
 
-## User signin
+## User signup - Create user with a specific device
 
-### POST /v1/users/signin
+### POST /v1/users
 
-returns OK and an AuthToken if credentials match
+Either an email or phone number must be provided
 
-returns 401 if credentials invalid
+returns 422 if parameters are missing
+
+returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : email *- required -*
-Description : Email of the user to authenticate
+Name : username *- required -*
+Description : Username of user (max. 50 characters)
+
+Name : email
+Description : Email of user (max. 254 characters)
+
+Name : phone
+Description : Phone number of user (max. 35 characters)
 
 Name : password *- required -*
-Description : Password for the user to authenticate
+Description : Password for user (min. 5 &amp; max. 72 characters)
+
+Name : device *- required -*
+Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; }
+
+Name : system *- required -*
+Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
+
+Name : version *- required -*
+Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
+
+Name : deviceId *- required -*
+Description : A unique hardware ID from the current device (max. 128 chars) 
 
 
 ### Response Fields
@@ -114,20 +134,26 @@ Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/users/signin</pre>
+<pre>POST /v1/users</pre>
 
 #### Body
 ```javascript
 {
-  "email" : "user67@email.com",
-  "password" : "timeslot"
+  "username" : "foo",
+  "email" : "someone@timeslot.com",
+  "password" : "secret-thing",
+  "device" : {
+    "device_id" : "sn-4346287341083478676543954",
+    "system" : "ios",
+    "version" : "6.0"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user67@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-4346287341083478676543954&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -140,24 +166,24 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4bac55bfa45ff2913b1eb68b5c2727af&quot;
+ETag: W/&quot;0ad119e12e9bd441506001f1d7fb1c4b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a6b7392-d30a-4c66-8b55-eb2caf3d987e
-X-Runtime: 0.016666
-Content-Length: 762</pre>
+X-Request-Id: 805c1a82-07bd-47f7-908b-a9d837e41934
+X-Runtime: 0.016450
+Content-Length: 761</pre>
 
 #### Status
 
-<pre>200 OK</pre>
+<pre>201 Created</pre>
 
 #### Body
 
 ```javascript
 {
-  "id" : 269,
-  "username" : "User 264",
-  "createdAt" : "2015-08-17T11:32:00.279Z",
-  "updatedAt" : "2015-08-17T11:32:00.287Z",
+  "id" : 268,
+  "username" : "foo",
+  "createdAt" : "2015-08-17T11:32:00.261Z",
+  "updatedAt" : "2015-08-17T11:32:00.261Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -167,7 +193,7 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user67@email.com",
+  "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -184,6 +210,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "rweC3H0wQHi5MzOLi_B70UHfMa4"
+  "authToken" : "8JiVRe3Maueall60JXl4Y01lA9E"
 }
 ```
