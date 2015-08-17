@@ -146,14 +146,6 @@ resource "Users" do
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
-    parameter :device, "A key-value-paired array which describes the device, " \
-                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' } "
-    parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
-              scope: :device
-    parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
-              scope: :device
-    parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
-              scope: :device
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
@@ -175,6 +167,34 @@ resource "Users" do
       expect(json).to have_key 'email'
       expect(json).to have_key 'authToken'
     end
+
+    context do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+                scope: :device, required: true
+      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+                scope: :device, required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:user) { create(:user) }
+      let(:id) { user[:id] }
+      let(:device) { attributes_for(:device) }
+
+      example "User signup - Create user with a specific device", document: :v1 do
+        explanation "Either an email or phone number must be provided\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key 'id'
+        expect(json).to have_key 'username'
+        expect(json).to have_key 'email'
+        expect(json).to have_key 'authToken'
+      end
+    end
   end
 
   post "/v1/users/signin", :vcr do
@@ -183,20 +203,12 @@ resource "Users" do
 
     parameter :email, "Email of the user to authenticate", required: true
     parameter :password, "Password for the user to authenticate", required: true
-    parameter :device, "A key-value-paired array which describes the device, " \
-                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' } "
-    parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
-              scope: :device
-    parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
-              scope: :device
-    parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
-              scope: :device
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
 
-    let(:user) { create(:user, :with_email, :with_device, password: "timeslot") }
+    let(:user) { create(:user, :with_email, password: "timeslot") }
     let(:email) { user.email }
     let(:password) { "timeslot" }
 
@@ -209,6 +221,52 @@ resource "Users" do
       user.reload
       expect(json).to have_key "authToken"
       expect(json['authToken']).to eq user.auth_token
+    end
+
+    context do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+                scope: :device, required: true
+      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+                scope: :device, required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:device) { attributes_for(:device) }
+
+      example "User signin and creates a new specific device", document: :v1 do
+        pp device
+        explanation "returns OK and an AuthToken if credentials match\n\n" \
+                    "returns 401 if credentials invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        user.reload
+        expect(json).to have_key "authToken"
+        expect(json['authToken']).to eq user.auth_token
+      end
+    end
+
+    context do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:device) { attributes_for(:device) }
+
+      example "User signin with an existing specific device", document: :v1 do
+        pp device
+        explanation "returns OK and an AuthToken if credentials match\n\n" \
+                    "returns 401 if credentials invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        user.reload
+        expect(json).to have_key "authToken"
+        expect(json['authToken']).to eq user.auth_token
+      end
     end
   end
 
@@ -411,7 +469,7 @@ resource "Users" do
     describe "Turn on/off push notifications for a user" do
       let(:push) { false }
 
-      example "Turn on/off push notifications for a specific device", document: :v1 do
+      example "Update current user - turn on/off push notifications", document: :v1 do
         expect(current_user[:push]).to be(true)
 
         do_request
@@ -583,7 +641,7 @@ resource "Users" do
       let(:deviceId) { device[:device_id] }
       let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
 
-      example "Register endpoint to push notifications for a device", :vcr, document: :v1 do
+      example "Device - Register endpoint to push notifications for a device", :vcr, document: :v1 do
         explanation "returns OK if endpoint was successfully added\n\n" \
                     "returns 401 if auth token is invalid\n\n" \
                     "returns 422 if parameters are missing or invalid"
@@ -606,7 +664,7 @@ resource "Users" do
         let(:token) { device[:token] }
         let(:endpoint) { false }
 
-        example "Unregister device from push notification service", :vcr, document: :v1 do
+        example "Device - Unregister device from push notification service", :vcr, document: :v1 do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"
@@ -626,7 +684,7 @@ resource "Users" do
         let(:system) { 'android' }
         let(:version) { '5.0b' }
 
-        example "Update default device attributes", :vcr, document: :v1 do
+        example "Device - Update default device attributes", document: :v1 do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"

@@ -818,8 +818,7 @@ RSpec.describe User, type: :model do
       { params: attributes_for(:user, password: 'something') }
     }
 
-    let!(:device) { attributes_for(:device).extract!(:user,
-                                                     :system,
+    let!(:device) { attributes_for(:device).extract!(:system,
                                                      :version,
                                                      :device_id) }
     context "valid params" do
@@ -909,8 +908,7 @@ RSpec.describe User, type: :model do
     end
 
     context "with device" do
-      let!(:device) { attributes_for(:device).extract!(:user,
-                                                       :system,
+      let!(:device) { attributes_for(:device).extract!(:system,
                                                        :version,
                                                        :device_id) }
       it "sets a device if provided" do
