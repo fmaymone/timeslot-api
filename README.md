@@ -43,6 +43,10 @@ ENV['AWS_REGION']
 
 * [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
 
+```bash
+ENV['AWS_PLATFORM_APPLICATION_IOS']
+```
+
 ## Cloudinary
 
 Cloud Service for our Media Data.
@@ -58,7 +62,6 @@ On Heroku the configuration is handled by the cloudinary addon.
 ## Location DB
 
 The Data Team provides a database based on OSM Location Data. This DB is transparently available for the backend. At the moment we use a ssh tunnel for connecting.
-
 
 ```
 ENV['LOCATION_DB_URI'] # postgres uri of locations production db
