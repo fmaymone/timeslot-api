@@ -1,7 +1,7 @@
 class CreateDevices < ActiveRecord::Migration
   def up
     create_table :devices do |t|
-      t.references :user, index: true
+      t.references :user, index: true, null: false
       t.string :device_id, limit: 128, null: false, unique: true
       t.string :system, limit: 8, null: false
       t.string :version, limit: 8, null: false

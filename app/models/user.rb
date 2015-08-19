@@ -170,6 +170,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def notify(params)
+    # currently it is not possible to bulk multiple notifications into one request to AWS SNS
+    # to handle multiple notifications we need topics and subscriber but this mess things up
+    # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
+    if push && deleted_at.nil?
+      client = Device.create_client
+      devices.each do |device|
+        device.notify(client, params)
+      end
+    end
+  end
+
   def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
@@ -488,16 +500,6 @@ class User < ActiveRecord::Base
       Device.detect_or_create(current_user, device) if device
     end
     current_user
-  end
-
-  def notify(params)
-    # currently it is not possible to bulk multiple notifications into one request to AWS SNS
-    # to handle multiple notifications we need topics and subscriber but this mess things up
-    # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
-    client = Device.create_client
-    devices.each do |device|
-      device.notify(client, params)
-    end
   end
 
   def self.generate_auth_token

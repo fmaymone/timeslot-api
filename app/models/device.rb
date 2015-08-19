@@ -8,28 +8,6 @@ class Device < ActiveRecord::Base
   validates :system, presence: true
   validates :version, presence: true
 
-  def self.create_client
-    Aws::SNS::Client.new
-  end
-
-  def self.detect_or_create(user, params)
-    # prevent saving of unknown devices
-    return nil if params[:device_id].nil?
-    # the device_id is an unique serial from the hardware (uuid) and
-    # could change if the user re-install the app
-    if (device = find_by(device_id: params[:device_id]))
-      # different users can login on the same device (gradual)
-      device.update(user: user)
-    else
-      # users can use multiple devices at the same time (simultaneously)
-      device = create(user: user,
-                      system: params[:system],
-                      version: params[:version],
-                      device_id: params[:device_id])
-    end
-    device
-  end
-
   def update_device(params)
     update(params.extract!(:device_id,
                            :system,
@@ -51,7 +29,7 @@ class Device < ActiveRecord::Base
       device.destroy
     end
     # sets new endpoint if not exist or update if new token was passed
-    if endpoint.nil? || token.eql?(self.token) == false
+    if endpoint.nil? || (token.eql?(self.token) == false)
       case system
       when 'ios'
         endpoint_arn = register_endpoint_ios(token)
@@ -61,19 +39,6 @@ class Device < ActiveRecord::Base
       if endpoint_arn
         update(token: token, endpoint: endpoint_arn)
       end
-    end
-  end
-
-  private def register_endpoint_ios(token)
-    begin
-      Device.create_client.create_platform_endpoint(
-          platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
-          token: token)[:endpoint_arn]
-    rescue Aws::SNS::Errors::ServiceError => exception
-      Rails.logger.error exception
-      Airbrake.notify(aws_sns_error: exception)
-      errors.add(:register_endpoint, "could not register endpoint")
-      raise exception if Rails.env.test? || Rails.env.development?
     end
   end
 
@@ -93,11 +58,30 @@ class Device < ActiveRecord::Base
   end
 
   def notify(client, params)
-    if user.push && endpoint
+    if endpoint
       case system
       when 'ios'
         notify_ios(client, *params)
       end
+    end
+  end
+
+  # delete if user deactivates his profile
+  def delete
+    update(deleted_at: Time.zone.now)
+    ts_soft_delete
+  end
+
+  private def register_endpoint_ios(token)
+    begin
+      Device.create_client.create_platform_endpoint(
+          platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
+          token: token)[:endpoint_arn]
+    rescue Aws::SNS::Errors::ServiceError => exception
+      Rails.logger.error exception
+      Airbrake.notify(aws_sns_error: exception)
+      errors.add(:register_endpoint, "could not register endpoint")
+      raise exception if Rails.env.test? || Rails.env.development?
     end
   end
 
@@ -121,10 +105,25 @@ class Device < ActiveRecord::Base
     end
   end
 
-  # delete if user deactivates his profile
-  def delete
-    update(deleted_at: Time.zone.now)
-    unregister_endpoint
-    ts_soft_delete
+  def self.create_client
+    Aws::SNS::Client.new
+  end
+
+  def self.detect_or_create(user, params)
+    # prevent saving of unknown devices
+    return nil if params[:device_id].nil?
+    # the device_id is an unique serial from the hardware (uuid) and
+    # could change if the user re-install the app
+    if (device = find_by(device_id: params[:device_id]))
+      # different users can login on the same device (gradual)
+      device.update(user: user)
+    else
+      # users can use multiple devices at the same time (simultaneously)
+      device = create(user: user,
+                      system: params[:system],
+                      version: params[:version],
+                      device_id: params[:device_id])
+    end
+    device
   end
 end
