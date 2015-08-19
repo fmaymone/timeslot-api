@@ -949,6 +949,58 @@ resource "Slots" do
     end
   end
 
+  post "/v1/slots/:id/like" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to like", required: true
+
+    let(:slot) { create(:std_slot_friends) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
+    describe "Like a Slot" do
+      let(:id) { slot.id }
+
+      example "Like a Slot", document: :v1 do
+        explanation "Current user likes a slot."
+        expect(slot.likes.count).to eq 0
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(slot.likes.count).to eq 1
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/like" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to like", required: true
+
+    let(:slot) { create(:std_slot_friends) }
+    let!(:like) { create(:like, slot: slot, user: current_user) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
+    describe "Unlike a Slot" do
+      let(:id) { slot.id }
+
+      example "Unlike a Slot", document: :v1 do
+        explanation "Current user unlikes a slot."
+        expect(slot.likes.count).to eq 1
+
+        do_request
+
+        expect(response_status).to eq(200)
+        like.reload
+        expect(like.deleted_at?).to be true
+      end
+    end
+  end
+
   get "/v1/slots/:id/likes" do
     header "Authorization", :auth_header
 
