@@ -792,7 +792,7 @@ resource "Users" do
 
       do_request
 
-      expect(status).to be 200
+      expect(response_status).to be 200
       expect(current_user.friends).to include john
       expect(current_user.friends).to include mary
       expect(current_user.requested_friends).to include alice
@@ -831,7 +831,7 @@ resource "Users" do
 
       do_request
 
-      expect(status).to be 200
+      expect(response_status).to be 200
       current_user.reload
       expect(current_user.friends).not_to include john
       expect(current_user.requested_friends).not_to include bob

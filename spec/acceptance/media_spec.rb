@@ -16,7 +16,7 @@ resource "Media" do
                   " image, video or raw data (audio) upload."
       do_request
 
-      expect(status).to eq(201)
+      expect(response_status).to eq(201)
       expect(json).to have_key("signature")
       expect(json).to have_key("publicId")
       expect(json).to have_key("timestamp")
