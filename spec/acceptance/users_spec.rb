@@ -69,7 +69,7 @@ resource "Users" do
         expect(json).to have_key "username"
         expect(json).to have_key "image"
         expect(json).to have_key "location"
-        expect(json).not_to have_key "push" # wip
+        expect(json).to have_key "push"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
         expect(json).to have_key "deletedAt"
@@ -86,7 +86,7 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", "push",
+                 .except("auth_token", "password_digest", "role",
                          "device_token", "location_id")
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json['location']).to eq nil
@@ -193,6 +193,7 @@ resource "Users" do
         expect(json).to have_key 'username'
         expect(json).to have_key 'email'
         expect(json).to have_key 'authToken'
+        expect(json).to have_key 'push'
       end
     end
   end
@@ -360,7 +361,7 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
-                 .except('auth_token', 'password_digest', 'role', 'push',
+                 .except('auth_token', 'password_digest', 'role',
                          'device_token', 'location_id')
                  .transform_keys { |key| key.camelize(:lower) })
       end
