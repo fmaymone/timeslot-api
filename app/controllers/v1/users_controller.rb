@@ -39,7 +39,6 @@ module V1
     # returns auth_token if correct email and password are send
     def signin
       authorize :user
-      credentials.merge!(device: user_device) if params[:device].present?
       @user = User.sign_in(credentials)
 
       if @user
@@ -238,7 +237,7 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password).symbolize_keys
+      params.permit(:email, :phone, :password, :device).symbolize_keys
     end
   end
 end
