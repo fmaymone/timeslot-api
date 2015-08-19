@@ -544,15 +544,16 @@ resource "Users" do
     header "Authorization", :auth_header
 
     parameter :limit, "Query parameter to limit the amount of slots returned." \
-                      "Default is 50. We need a maximum for this."
+                      " Default is 50. We need a maximum for this."
     parameter :pit, "Point-in-time. Query parameter to get slots relative to " \
-                    "specific moment. Must be UTC. Default is Time.zone.now."
-    parameter :status, "Without underscore. Query parameter to filter slots" \
-                        " relative to a " \
-                        "point-in-time. Must be one of " \
-                        "[past, ongoing, upcoming, now, around, all].\n\n" \
-                        "Default is 'all'. Now = ongoing + upcoming. " \
-                        "TODO: around = ongoing + upcoming + past (until limit)"
+                    "specific moment. Must be UTC. " \
+                    "Default is Time.zone.now (on the server)."
+    parameter :status, "Query parameter to filter slots relative to a " \
+                       "point-in-time. Must be one of " \
+                       "[past, ongoing, upcoming, now, around, all].\n" \
+                       "Default is 'all'. Now = ongoing + upcoming. " \
+                       "TODO: around = ongoing + [upcoming + past] (equally " \
+                       "filled until limit)."
 
     response_field :id, "ID of the slot"
     response_field :title, "Title of the slot"
