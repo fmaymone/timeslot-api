@@ -23,12 +23,14 @@ tmp = []
 user.initiated_friendships.active.each do |friendship|
   tmp.push( { 'friend_id' => friendship.friend.id,
               'state' => friendship.humanize,
+              # 'push' => friendship.push,
               'initiator' => friendship.user_id } )
 end
 
 user.received_friendships.active.each do |friendship|
   tmp.push( { 'friend_id' => friendship.user.id,
               'state' => friendship.humanize,
+              # 'push' => friendship.push,
               'initiator' => friendship.user_id } )
 end
 

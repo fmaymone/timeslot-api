@@ -445,7 +445,7 @@ class User < ActiveRecord::Base
   def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
-    Device.detect_or_create(new_user, device) if device && new_user.id
+    Device.detect_or_create(new_user, device) if device
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end

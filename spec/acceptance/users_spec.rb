@@ -168,7 +168,7 @@ resource "Users" do
       expect(json).to have_key 'authToken'
     end
 
-    context do
+    context "Signup and create user with a specific device" do
       parameter :device, "A key-value-paired array which describes the device, " \
                        "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
       parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
@@ -224,7 +224,7 @@ resource "Users" do
       expect(json['authToken']).to eq user.auth_token
     end
 
-    context do
+    context "User signin and creates a new device" do
       parameter :device, "A key-value-paired array which describes the device, " \
                        "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
       parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
@@ -248,7 +248,7 @@ resource "Users" do
       end
     end
 
-    context do
+    context "User signin with an existing device" do
       parameter :device, "A key-value-paired array which describes the device, " \
                        "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
@@ -657,7 +657,7 @@ resource "Users" do
         expect(result[:endpoint]).to eq('String')
       end
 
-      context do
+      context "Unregister device from push notification service" do
         let(:device) { create(:device, :with_endpoint, user: current_user) }
         let(:deviceId) { device[:device_id] }
         let(:token) { device[:token] }
@@ -677,7 +677,7 @@ resource "Users" do
         end
       end
 
-      context do
+      context "Update default device attributes" do
         let(:device) { create(:device, user: current_user) }
         let(:deviceId) { device[:device_id] }
         let(:system) { 'android' }
