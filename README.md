@@ -126,6 +126,7 @@ Flag | Effect
 ```:focus``` | let only marked specs run
 ```:db``` | print the database interactions of the specific spec to the console
 ```:vcr``` | use vcr to mock external requests, see below
+```:aws``` | use aws to mock external requests to AWS service, see below
 ```:seed``` | load database seeds
 ```:commit``` | persist data in database, see below
 
@@ -156,6 +157,11 @@ the ```development.rb``` file:
 ```
 WebMock.allow_net_connect!
 ```
+
+### [AWS]
+
+The specs use the AWS webmock, which simulate external requests to AWS services.
+This allows to test in an special environment where the changes would not store live.
 
 ### [Bullet](https://github.com/flyerhzm/bullet)
 
