@@ -1,6 +1,6 @@
 # Users API
 
-## User signin and creates a new specific device
+## User signin with an existing device
 
 ### POST /v1/users/signin
 
@@ -18,12 +18,6 @@ Description : Password for the user to authenticate
 
 Name : device *- required -*
 Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; }
-
-Name : system *- required -*
-Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
-
-Name : version *- required -*
-Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
 
 Name : deviceId *- required -*
 Description : A unique hardware ID from the current device (max. 128 chars) 
@@ -131,10 +125,10 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user68@email.com",
+  "email" : "user70@email.com",
   "password" : "timeslot",
   "device" : {
-    "device_id" : "sn-5346287341083478676543955",
+    "device_id" : "sn-6346287341083478676543956",
     "system" : "ios",
     "version" : "6.0"
   }
@@ -144,7 +138,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user68@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-5346287341083478676543955&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user70@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-6346287341083478676543956&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -157,11 +151,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1e766cee62951b1c7aa1ca2895aa1444&quot;
+ETag: W/&quot;84d16c683bca27f97438cf38d548ab8a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ae78e04e-0e1b-4a02-8130-c6ac2e2f717b
-X-Runtime: 0.013766
-Content-Length: 762</pre>
+X-Request-Id: b8d69909-ddab-42b1-a3c1-37bec149b09f
+X-Runtime: 0.070306
+Content-Length: 774</pre>
 
 #### Status
 
@@ -171,10 +165,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 270,
-  "username" : "User 265",
-  "createdAt" : "2015-08-17T11:32:00.304Z",
-  "updatedAt" : "2015-08-17T11:32:00.310Z",
+  "id" : 273,
+  "username" : "User 268",
+  "createdAt" : "2015-08-19T10:29:46.880Z",
+  "updatedAt" : "2015-08-19T10:29:46.910Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -184,11 +178,12 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user68@email.com",
+  "email" : "user70@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -201,6 +196,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "gspKvS0VuLti6pzi6IupzB4kuw4"
+  "authToken" : "csXW0x1HfUUSSltuWRyc4sOOeEg"
 }
 ```

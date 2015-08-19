@@ -1,6 +1,6 @@
 # Users API
 
-## User signin with an existing specific device
+## User signin and creates a new device
 
 ### POST /v1/users/signin
 
@@ -18,6 +18,12 @@ Description : Password for the user to authenticate
 
 Name : device *- required -*
 Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; }
+
+Name : system *- required -*
+Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
+
+Name : version *- required -*
+Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
 
 Name : deviceId *- required -*
 Description : A unique hardware ID from the current device (max. 128 chars) 
@@ -128,7 +134,7 @@ Cookie: </pre>
   "email" : "user69@email.com",
   "password" : "timeslot",
   "device" : {
-    "device_id" : "sn-6346287341083478676543956",
+    "device_id" : "sn-5346287341083478676543955",
     "system" : "ios",
     "version" : "6.0"
   }
@@ -138,7 +144,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user69@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-6346287341083478676543956&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user69@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-5346287341083478676543955&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -151,11 +157,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fb96431a2164fc051605ef6aa313ab9b&quot;
+ETag: W/&quot;76a051371fecb68909148a58ac28bfd1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7a5fca89-ffcd-453d-aabe-f6ac9df77495
-X-Runtime: 0.015694
-Content-Length: 762</pre>
+X-Request-Id: ab239232-c7d3-458f-b71d-e8c4b62b8d20
+X-Runtime: 0.065922
+Content-Length: 774</pre>
 
 #### Status
 
@@ -165,10 +171,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 271,
-  "username" : "User 266",
-  "createdAt" : "2015-08-17T11:32:00.328Z",
-  "updatedAt" : "2015-08-17T11:32:00.333Z",
+  "id" : 272,
+  "username" : "User 267",
+  "createdAt" : "2015-08-19T10:29:46.778Z",
+  "updatedAt" : "2015-08-19T10:29:46.807Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -183,6 +189,7 @@ Content-Length: 762</pre>
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -195,6 +202,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "vGRVrMGkLMsNOOX1i9cTGRgQy0U"
+  "authToken" : "012LO_t-96LdngLlz5Pt-MMAjvQ"
 }
 ```

@@ -206,6 +206,7 @@ Content-Length: 720</pre>
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : false,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

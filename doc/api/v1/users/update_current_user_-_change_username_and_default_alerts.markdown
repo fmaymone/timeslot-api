@@ -31,6 +31,9 @@ Description : URL of the user image
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : slotDefaultDuration
 Description : Default Slot Duration in seconds
 
@@ -75,6 +78,9 @@ Description : URL of the user image
 
 Name : location
 Description : Home location of user
+
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : createdAt
 Description : Creation of user
@@ -211,6 +217,7 @@ Content-Length: 715</pre>
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
