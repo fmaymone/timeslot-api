@@ -236,7 +236,7 @@ resource "Users" do
 
       let(:device) { attributes_for(:device) }
 
-      example "User signin and creates a new specific device", document: :v1 do
+      example "User signin and creates a new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
@@ -256,7 +256,7 @@ resource "Users" do
 
       let(:device) { attributes_for(:device) }
 
-      example "User signin with an existing specific device", document: :v1 do
+      example "User signin with an existing device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
@@ -640,7 +640,7 @@ resource "Users" do
       let(:deviceId) { device[:device_id] }
       let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
 
-      example "Device - Register endpoint to push notifications for a device", :vcr, document: :v1 do
+      example "Device - Register endpoint to push notifications for a device", document: :v1 do
         explanation "returns OK if endpoint was successfully added\n\n" \
                     "returns 401 if auth token is invalid\n\n" \
                     "returns 422 if parameters are missing or invalid"
@@ -663,7 +663,7 @@ resource "Users" do
         let(:token) { device[:token] }
         let(:endpoint) { false }
 
-        example "Device - Unregister device from push notification service", :vcr, document: :v1 do
+        example "Device - Unregister device from push notification service", document: :v1 do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"
