@@ -459,12 +459,22 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     describe "my Slots, with pagination" do
-      let(:upcoming_slots) { create_list(:std_slot_private, 12,
+      let(:upcoming_slot) { create(:std_slot_private,
+                                   start_date: Time.zone.tomorrow,
+                                   title: 'upcoming slot',
+                                   owner: current_user) }
+      let(:upcoming_slot_a) { create(:std_slot_private,
+                                     start_date: Time.zone.tomorrow,
+                                     end_date: Time.zone.tomorrow,
+                                     title: 'upcoming slot A',
+                                     owner: current_user) }
+      let(:upcoming_slots) { create_list(:std_slot_private, 11,
                                          start_date: Time.zone.tomorrow,
                                          owner: current_user) }
       let(:ongoing_slot) { create(:std_slot_friends,
                                   start_date: Time.zone.yesterday,
                                   end_date: Time.zone.tomorrow,
+                                  title: 'ongoing slot',
                                   owner: current_user) }
       let(:ongoing_slots) { create_list(:std_slot_friends, 12,
                                         start_date: Time.zone.yesterday,
@@ -473,18 +483,96 @@ RSpec.describe "V1::Users", type: :request do
       let(:past_slot) { create(:std_slot_public,
                                start_date: Time.zone.yesterday.at_midday,
                                end_date: Time.zone.yesterday.end_of_day,
+                               title: 'past slot',
                                owner: current_user) }
-      let(:past_slots) { create_list(:std_slot_public, 12,
+      let(:past_slots) { create_list(:std_slot_public, 13,
                                      start_date: Time.zone.yesterday.at_midday,
                                      end_date: Time.zone.yesterday.end_of_day,
                                      owner: current_user) }
 
       describe "GET slots for current user" do
-        context "now", :focus do
-          it "returns 20 active and upcoming slots" do
-            [upcoming_slots, ongoing_slots, past_slot]
-            get "/v1/users/#{current_user.id}/slots/now", {}, auth_header
-            expect(response.status).to be(200)
+        describe "filter by slot status" do
+          context "ordering" do
+
+          end
+
+          context "all (default)" do
+            it "returns all slots" do
+              [past_slot, ongoing_slot, upcoming_slot]
+
+              get "/v1/users/#{current_user.id}/slots",
+                  {}, auth_header
+
+              expect(response.status).to be(200)
+              expect(json.length).to eq current_user.std_slots.unscoped.length
+              expect(response.body).to include ongoing_slot.title
+              expect(response.body).to include upcoming_slot.title
+              expect(response.body).to include past_slot.title
+            end
+          end
+
+          context "ongoing" do
+            it "returns only ongoing slots" do
+              [past_slot, ongoing_slot, ongoing_slots, upcoming_slots]
+
+              get "/v1/users/#{current_user.id}/slots?status=ongoing",
+                  {}, auth_header
+
+              expect(response.status).to be(200)
+              expect(json.length).to eq ongoing_slots.length + 1
+              expect(response.body).to include ongoing_slot.title
+              expect(response.body).not_to include upcoming_slot.title
+              expect(response.body).not_to include past_slot.title
+            end
+          end
+
+          context "upcoming" do
+            it "returns only upcoming slots" do
+              [past_slot, ongoing_slot, upcoming_slot, upcoming_slots]
+
+              get "/v1/users/#{current_user.id}/slots?status=upcoming",
+                  {}, auth_header
+              expect(response.status).to be(200)
+              expect(json.length).to eq upcoming_slots.length + 1
+              expect(response.body).to include upcoming_slot.title
+              expect(response.body).not_to include ongoing_slot.title
+              expect(response.body).not_to include past_slot.title
+            end
+          end
+
+          context "past" do
+            it "returns only past slots" do
+              [past_slot, past_slots, ongoing_slot, upcoming_slot]
+
+              get "/v1/users/#{current_user.id}/slots?status=past",
+                  {}, auth_header
+              expect(response.status).to be(200)
+              expect(json.length).to eq past_slots.length + 1
+              expect(response.body).to include past_slot.title
+              expect(response.body).not_to include ongoing_slot.title
+              expect(response.body).not_to include upcoming_slot.title
+            end
+          end
+
+          context "now" do
+          # context "now", :focus, :db, :commit do
+            it "returns 20 active and upcoming slots" do
+              [upcoming_slot, ongoing_slot, ongoing_slots, past_slot]
+
+              get "/v1/users/#{current_user.id}/slots?status=now&pit=#{Time.zone.now.as_json}",
+                  {}, auth_header
+
+              # if response.status == 200
+              #   pp json
+              # else
+              #   pp response.body
+              # end
+              # pp json.length
+              expect(response.status).to be(200)
+              expect(response.body).to include ongoing_slot.title
+              expect(response.body).to include upcoming_slot.title
+              expect(response.body).not_to include past_slot.title
+            end
           end
         end
       end

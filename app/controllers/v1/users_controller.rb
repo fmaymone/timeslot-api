@@ -109,55 +109,16 @@ module V1
     # GET /v1/users/1/slots
     # returns all slots for this user
     def slots
-      @slots = policy_scope(:slot)
+      requested_user = User.find(params.require(:user_id))
 
-      render "v1/slots/index"
-    end
+      policy_scope(:slot) # temporary hack to frickle around with pundit later
 
-    # GET /v1/users/1/slots/now
-    # Supports pagination.
-    # Returns all currently active slots (startdate before Time.zone.now,
-    # enddate after Time.zone.now).
-    # If these are less than the limit, slots coming up next will be added
-    # slots starting at the same moment are ordered by enddate
-    # slots with the same start and enddate are ordered by ID
-    def slots_now
-      @slots = policy_scope(:slot)
-
-      render "v1/slots/index"
-    end
-
-    # GET /v1/users/1/slots/around
-    # Supports pagination.
-    # Returns all currently active slots (startdate before Time.zone.now,
-    # enddate after Time.zone.now).
-    # If these are less than the limit, the remaining amount is equally divided
-    # between slots coming up next and past slots (start & enddate have just
-    # been due)
-    # slots starting at the same moment are ordered by enddate
-    # slots with the same start and enddate are ordered by ID
-    def slots_around
-      fail 'TODO'
-
-      render "v1/slots/index"
-    end
-
-    # GET /v1/users/1/slots/next
-    # Supports pagination.
-    # Returns the next set of slots based on the submitted parameter(s).
-    # startdatetime is necessary, enddatetime, slot_id & limit are optional
-    def slots_next
-      fail 'TODO'
-
-      render "v1/slots/index"
-    end
-
-    # GET /v1/users/1/slots/previous
-    # Supports pagination.
-    # Returns the previous set of slots based on the submitted parameter(s)
-    # startdatetime is necessary, enddatetime, slot_id & limit are optional
-    def slots_previous
-      fail 'TODO'
+      if current_user == requested_user
+        query = params.permit(:status, :pit, :limit).symbolize_keys
+        @slots = current_user.my_slots(query) + current_user.re_slots
+      else
+        @slots = policy_scope(:slot)
+      end
 
       render "v1/slots/index"
     end

@@ -187,7 +187,7 @@ class User < ActiveRecord::Base
     ts_soft_delete and return self
   end
 
-  # TODO: add spec
+  # TODO: this is far from being finished, specification missing
   def activate
     slot_settings.each(&:undelete)
   end
@@ -234,6 +234,33 @@ class User < ActiveRecord::Base
     # slots.push(*StdSlot.active.of(self).where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
+  end
+
+  # TODO: add reslots
+  # TODO: ordering
+  # TODO: around
+  # we need a maximum for limit
+  # we should change the default for status to 'now' instead of 'all'
+  def my_slots(pit: Time.zone.now, status: 'all', limit: 50)
+    slots = std_slots.unscoped.joins(:meta_slot)
+    past = "owner_id = ? AND meta_slots.end_date < ?"
+    upcoming = "owner_id = ? AND meta_slots.start_date >= ?"
+    ongoing = "owner_id = ? AND meta_slots.start_date < ? AND meta_slots.end_date >= ?"
+
+    case status
+    when 'upcoming'
+      slots.where(upcoming, id, pit).limit(limit)
+    when 'past'
+      slots.where(past, id, pit).limit(limit)
+    when 'ongoing'
+      slots.where(ongoing, id,  pit, pit).order('meta_slots.start_date').limit(limit)
+    when 'now'
+      slots.where("#{ongoing} OR #{upcoming}", id, pit, pit, id, pit).order('meta_slots.start_date').limit(limit)
+    # when 'around'
+    #   slots.where("#{ongoing} OR #{upcoming}", id, pit, pit, id, pit).limit(limit)
+    else # all
+      slots.where(owner: self).order('meta_slots.start_date').limit(limit)
+    end
   end
 
   def shared_group_slots(user)

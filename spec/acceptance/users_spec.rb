@@ -543,6 +543,17 @@ resource "Users" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    parameter :limit, "Query parameter to limit the amount of slots returned." \
+                      "Default is 50. We need a maximum for this."
+    parameter :pit, "Point-in-time. Query parameter to get slots relative to " \
+                    "specific moment. Must be UTC. Default is Time.zone.now."
+    parameter :status, "Without underscore. Query parameter to filter slots" \
+                        " relative to a " \
+                        "point-in-time. Must be one of " \
+                        "[past, ongoing, upcoming, now, around, all].\n\n" \
+                        "Default is 'all'. Now = ongoing + upcoming. " \
+                        "TODO: around = ongoing + upcoming + past (until limit)"
+
     response_field :id, "ID of the slot"
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
@@ -563,6 +574,9 @@ resource "Users" do
 
     describe "Get slots for current user" do
       let(:id) { current_user.id }
+      let(:status) { 'all' }
+      let(:pit) { Time.zone.now.as_json }
+      let(:limit) { 20 }
 
       let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
       let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
@@ -572,7 +586,9 @@ resource "Users" do
         explanation "Returns an array which includes StandardSlots &" \
                     " ReSlots\n\n" \
                     "If a user is authenticated the slot settings" \
-                    " (alerts) will be included."
+                    " (alerts) will be included.\n\n" \
+                    "The returned slots are ordered by startdate, enddate, id."
+
         do_request
 
         expect(response_status).to eq(200)
