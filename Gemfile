@@ -33,6 +33,9 @@ gem 'newrelic_rpm', '3.12.1.298'
 # use pry also on heroku
 gem 'pry-rails', '0.3.4'
 
+# Worker (background processing)
+gem 'sucker_punch', '1.5.0'
+
 group :development do
   gem "rails-erd", '1.4.0'
 
