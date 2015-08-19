@@ -171,15 +171,8 @@ class User < ActiveRecord::Base
   end
 
   def notify(params)
-    # currently it is not possible to bulk multiple notifications into one request to AWS SNS
-    # to handle multiple notifications we need topics and subscriber but this mess things up
-    # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
-    if push && deleted_at.nil?
-      client = Device.create_client
-      devices.each do |device|
-        device.notify(client, params)
-      end
-    end
+    # we using worker background processing to start request tasks asynchronously
+    NotifyJob.new.async.perform(devices, params) if push && deleted_at.nil?
   end
 
   def set_auth_token
