@@ -630,6 +630,7 @@ CREATE TABLE users (
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
+    lang character varying
     auth_token character varying(27),
     push boolean DEFAULT true
 );
@@ -1283,4 +1284,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150724110859');
 INSERT INTO schema_migrations (version) VALUES ('20150808172817');
 
 INSERT INTO schema_migrations (version) VALUES ('20150810155024');
+
+INSERT INTO schema_migrations (version) VALUES ('20150819181058');
 
