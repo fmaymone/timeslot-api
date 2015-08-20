@@ -19,8 +19,12 @@ module TsRailsBackend
     # config.time_zone = 'Central Time (US & Canada)'
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
+    # https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
+    # 'us' is not suppoerted, we have to choose 'en' instead
+    config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
+    config.i18n.default_locale = :en
+    # http://guides.rubyonrails.org/i18n.html
 
     # no fractional seconds for datime strings
     # ActiveSupport::JSON::Encoding.time_precision = 0
