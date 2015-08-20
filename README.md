@@ -6,6 +6,8 @@
 * [App-Specification](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
+* [Links to Some Useful Extra Information](doc/useful_links.md)
+* [Deployment Proccess](doc/deployment_process.md)
 
 # Notes
 
