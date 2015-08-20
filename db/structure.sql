@@ -153,7 +153,7 @@ ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 CREATE TABLE devices (
     id bigint NOT NULL,
-    user_id bigint,
+    user_id bigint NOT NULL,
     device_id character varying(128) NOT NULL,
     system character varying(8) NOT NULL,
     version character varying(8) NOT NULL,
@@ -223,11 +223,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
-    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    deleted_at timestamp without time zone
+    group_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
@@ -534,11 +534,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )

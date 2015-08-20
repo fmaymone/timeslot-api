@@ -28,18 +28,15 @@ class Device < ActiveRecord::Base
       self.save
       device.destroy
     end
+    return nil if endpoint && token == self.token
     # sets new endpoint if not exist or update if new token was passed
-    if endpoint.nil? || (token.eql?(self.token) == false)
-      case system
-      when 'ios'
-        endpoint_arn = register_endpoint_ios(token)
-      else
-        endpoint_arn = nil
-      end
-      if endpoint_arn
-        update(token: token, endpoint: endpoint_arn)
-      end
+    case system
+    when 'ios'
+      endpoint_arn = register_endpoint_ios(token)
+    else
+      endpoint_arn = nil
     end
+    update(token: token, endpoint: endpoint_arn) if endpoint_arn
   end
 
   def unregister_endpoint

@@ -224,7 +224,7 @@ resource "Users" do
       expect(json['authToken']).to eq user.auth_token
     end
 
-    context "User signin and creates a new device" do
+    context "User signin with new device" do
       parameter :device, "A key-value-paired array which describes the device, " \
                        "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
       parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
@@ -236,7 +236,7 @@ resource "Users" do
 
       let(:device) { attributes_for(:device) }
 
-      example "User signin and creates a new device", document: :v1 do
+      example "User signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request

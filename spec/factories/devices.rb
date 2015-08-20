@@ -4,7 +4,7 @@ FactoryGirl.define do
   sequence(:endpoint) { |n| "arn:aws:sns:us-west-2:293488554927:endpoint/APNS_SANDBOX/Timeslot-iOS/bac63567-f197-3aa2-8e24-77e567cfa04#{n}" }
 
   factory :device do
-    association :user
+    user
     device_id
     system 'ios'
     version '6.0'
