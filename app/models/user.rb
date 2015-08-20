@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
+  validates :lang, length: { is: 2 }, allow_nil: true
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
