@@ -144,6 +144,7 @@ Rails.application.routes.draw do
       get 'ios/clean-db', to: 'ios#clean_db'
     end
 
+    get 'search/:action', to: 'search#:action'
     get 'locations/search', to: 'locations#search'
   end
 
