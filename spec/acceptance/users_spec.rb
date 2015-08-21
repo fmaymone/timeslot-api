@@ -180,7 +180,7 @@ resource "Users" do
 
       let(:user) { create(:user) }
       let(:id) { user[:id] }
-      let(:device) { attributes_for(:device) }
+      let(:device) {[ device: attributes_for(:device) ]}
 
       example "User signup - Create user with a specific device", document: :v1 do
         explanation "Either an email or phone number must be provided\n\n" \
@@ -234,7 +234,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) { attributes_for(:device) }
+      let(:device) {[ device: attributes_for(:device) ]}
 
       example "User signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -254,7 +254,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) { attributes_for(:device) }
+      let(:device) {[ device: attributes_for(:device) ]}
 
       example "User signin with an existing device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -469,13 +469,13 @@ resource "Users" do
       let(:push) { false }
 
       example "Update current user - turn on/off push notifications", document: :v1 do
-        expect(current_user[:push]).to be(true)
+        expect(current_user.push).to be(true)
 
         do_request
 
         expect(response_status).to eq(200)
         current_user.reload
-        expect(current_user[:push]).to be(false)
+        expect(current_user.push).to be(false)
       end
     end
   end

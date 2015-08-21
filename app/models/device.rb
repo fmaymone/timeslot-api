@@ -1,23 +1,12 @@
 class Device < ActiveRecord::Base
   after_commit AuditLog
 
-  belongs_to :user
+  belongs_to :user, inverse_of: :devices
 
   validates :user, presence: true
   validates :device_id, presence: true, uniqueness: true
   validates :system, presence: true
   validates :version, presence: true
-
-  def update_device(params)
-    update(params.extract!(:device_id,
-                           :system,
-                           :version))
-    if params[:endpoint] === false
-      unregister_endpoint
-    elsif params[:token]
-      register_endpoint(params[:token])
-    end
-  end
 
   def register_endpoint(token)
     return false if token.nil?
@@ -106,21 +95,14 @@ class Device < ActiveRecord::Base
     Aws::SNS::Client.new
   end
 
-  def self.detect_or_create(user, params)
-    # prevent saving of unknown devices
-    return nil if params[:device_id].nil?
-    # the device_id is an unique serial from the hardware (uuid) and
-    # could change if the user re-install the app
-    if (device = find_by(device_id: params[:device_id]))
-      # different users can login on the same device (gradual)
-      device.update(user: user)
-    else
-      # users can use multiple devices at the same time (simultaneously)
-      device = create(user: user,
-                      system: params[:system],
-                      version: params[:version],
-                      device_id: params[:device_id])
+  def self.update_or_create(params)
+    return if params.nil?
+    device = find_or_create_by(device_id: params[:device_id])
+    device.update(params.extract!(:user_id, :device_id, :system, :version))
+    if params[:endpoint] === false
+      device.unregister_endpoint
+    elsif params[:token]
+      device.register_endpoint(params[:token])
     end
-    device
   end
 end

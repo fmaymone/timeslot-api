@@ -817,10 +817,8 @@ RSpec.describe User, type: :model do
     let(:user_params) {
       { params: attributes_for(:user, password: 'something') }
     }
+    let(:device) { attributes_for(:device) }
 
-    let(:device) { attributes_for(:device).extract!(:system,
-                                                     :version,
-                                                     :device_id) }
     context "valid params" do
       it "creates a new user" do
         expect {
@@ -908,9 +906,7 @@ RSpec.describe User, type: :model do
     end
 
     context "with device" do
-      let(:device) { attributes_for(:device).extract!(:system,
-                                                       :version,
-                                                       :device_id) }
+      let(:device) { attributes_for(:device) }
       it "sets a device if provided" do
         expect {
           User.sign_in(email: user.email, password: user.password, device: device)

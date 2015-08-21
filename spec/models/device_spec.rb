@@ -12,7 +12,7 @@ RSpec.describe Device, type: :model do
   it { is_expected.to respond_to(:endpoint) }
   it { is_expected.to respond_to(:created_at) }
   it { is_expected.to respond_to(:updated_at) }
-  it { is_expected.to belong_to(:user) }
+  it { is_expected.to belong_to(:user).inverse_of(:devices) }
 
   it { is_expected.to be_valid }
 
@@ -38,16 +38,11 @@ RSpec.describe Device, type: :model do
 
   describe :device do
     let(:user) { create(:user) }
-    let(:device) {
-      attributes_for(:device)
-          .extract!(:system,
-                    :version,
-                    :device_id)
-    }
+    let(:device) { attributes_for(:device) }
 
     it "adds a new device to the user" do
       expect {
-        Device.detect_or_create(user, device)
+        user.devices.update_or_create(device)
       }.to change(user.devices, :count).by 1
     end
 
@@ -55,21 +50,21 @@ RSpec.describe Device, type: :model do
       it "doesn't add a new device if system was not set" do
         device[:system] = nil
         expect {
-          Device.detect_or_create(user, device)
+          user.devices.update_or_create(device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device if version was not set" do
         device[:version] = nil
         expect {
-          Device.detect_or_create(user, device)
+          user.devices.update_or_create(device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device if device_id was not set" do
         device[:device_id] = nil
         expect {
-          Device.detect_or_create(user, device)
+          user.devices.update_or_create(device)
         }.not_to change(Device, :count)
       end
     end
