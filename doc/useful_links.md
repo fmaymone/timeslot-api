@@ -10,3 +10,6 @@
 
 - iOS8 Push Notifications with Ruby
   - https://blog.codelation.com/ruby-all-the-ios-8-push-notifications/
+
+- ElasticSearch
+  - http://www.sitepoint.com/full-text-search-rails-elasticsearch/
