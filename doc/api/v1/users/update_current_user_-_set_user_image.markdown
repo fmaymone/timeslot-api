@@ -25,8 +25,8 @@ Description : URL of the user image
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
-Name : deviceToken
-Description : IOS Device Token for Push Notifications (max. 128 chars)
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : slotDefaultDuration
 Description : Default Slot Duration in seconds
@@ -81,6 +81,9 @@ Description : URL of the user image
 
 Name : location
 Description : Home location of user
+
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : createdAt
 Description : Creation of user
@@ -145,12 +148,15 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=xmwT05dQjgb-kymA_2_zm-ft1Bc
+Authorization: Token token=aaH-_teIKcVlaufUkCG8Vn2VCwo
 Host: example.org
 Cookie: </pre>
 
@@ -173,7 +179,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=xmwT05dQjgb-kymA_2_zm-ft1Bc&quot; \
+	-H &quot;Authorization: Token token=aaH-_teIKcVlaufUkCG8Vn2VCwo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -184,10 +190,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3c11329e914a3cb4f781aa0a235fc454&quot;
+ETag: W/&quot;88ab55dcf2a06302354fae8cb40c1c04&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 84ff05e8-f6da-4e7b-bd75-2dde94e09383
-X-Runtime: 0.033063
+X-Request-Id: 199954c1-cfd6-4a0d-bc55-517bfeaa8ba4
+X-Runtime: 0.027878
 Content-Length: 793</pre>
 
 #### Status
@@ -198,10 +204,10 @@ Content-Length: 793</pre>
 
 ```javascript
 {
-  "id" : 256,
-  "username" : "User 240",
-  "createdAt" : "2015-07-02T12:34:25.788Z",
-  "updatedAt" : "2015-07-02T12:34:25.788Z",
+  "id" : 272,
+  "username" : "User 268",
+  "createdAt" : "2015-08-14T13:58:57.678Z",
+  "updatedAt" : "2015-08-14T13:58:57.678Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -211,11 +217,12 @@ Content-Length: 793</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user70@email.com",
+  "email" : "user71@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

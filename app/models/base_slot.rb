@@ -144,7 +144,11 @@ class BaseSlot < ActiveRecord::Base
 
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
-    return new_comment if new_comment.valid?
+    if new_comment.valid?
+      creator.notify([ message: "The user '#{user.username}' commented on: " \
+                                "'#{meta_slot.title}'." ])
+      return new_comment
+    end
     errors.add(:comment, new_comment.errors)
   end
 

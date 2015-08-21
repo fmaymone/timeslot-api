@@ -22,6 +22,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -85,11 +88,14 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=RK25czSj2koj2p20CpSKZQo2juQ
+<pre>Authorization: Token token=hZdjH114Ft9dKk_cPZXUNogQ-OY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -101,7 +107,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=RK25czSj2koj2p20CpSKZQo2juQ&quot; \
+	-H &quot;Authorization: Token token=hZdjH114Ft9dKk_cPZXUNogQ-OY&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -113,10 +119,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;627b27a330f7b3feb73fa849763a3d52&quot;
+ETag: W/&quot;6c8ec12c4f8d80626233c5910fe81da7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ab1614cd-f479-424c-a3de-8595a8f5d39f
-X-Runtime: 0.043884
+X-Request-Id: 8c798fbe-bede-496f-b0f3-0eea27bceaea
+X-Runtime: 0.065182
 Content-Length: 742</pre>
 
 #### Status
@@ -127,11 +133,11 @@ Content-Length: 742</pre>
 
 ```javascript
 {
-  "id" : 258,
-  "username" : "User 242",
-  "createdAt" : "2015-07-02T12:34:25.885Z",
-  "updatedAt" : "2015-07-02T12:34:25.898Z",
-  "deletedAt" : "2015-07-02T12:34:25.896Z",
+  "id" : 274,
+  "username" : "User 270",
+  "createdAt" : "2015-08-14T13:58:57.819Z",
+  "updatedAt" : "2015-08-14T13:58:57.854Z",
+  "deletedAt" : "2015-08-14T13:58:57.851Z",
   "location" : null,
   "image" : {
     "publicId" : null,
@@ -140,11 +146,12 @@ Content-Length: 742</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user72@email.com",
+  "email" : "user73@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

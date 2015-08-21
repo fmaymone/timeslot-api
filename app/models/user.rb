@@ -56,6 +56,9 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # device related
+  has_many :devices, inverse_of: :user
+
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
@@ -83,6 +86,8 @@ class User < ActiveRecord::Base
             uniqueness: true,
             length: { maximum: 35 },
             allow_nil: true
+
+  validates :push, inclusion: [true, false]
 
   ## user specific ##
 
@@ -165,6 +170,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  def notify(params)
+    # currently it is not possible to bulk multiple notifications into one request to AWS SNS
+    # to handle multiple notifications we need topics and subscriber but this mess things up
+    # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
+    if push && deleted_at.nil?
+      client = Device.create_client
+      devices.each do |device|
+        device.notify(client, params)
+      end
+    end
+  end
+
   def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
@@ -184,6 +201,7 @@ class User < ActiveRecord::Base
     image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
+    devices.each(&:delete)
     ts_soft_delete and return self
   end
 
@@ -424,34 +442,36 @@ class User < ActiveRecord::Base
 
   # technically this is not neccessary bc it's not possible to set an image on
   # signup, at least in the ios app right now
-  def self.create_with_image(params:, image: nil)
+  def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
-
+    new_user.devices.update_or_create(device) if device
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
 
-  def self.create_or_signin_via_social(identity_params, social_params)
+  def self.create_or_signin_via_social(identity_params, social_params, device: nil)
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
     if identity
       no_token = identity.user.auth_token.nil?
       identity.user.update(auth_token: generate_auth_token) if no_token
+      identity.user.devices.update_or_create(device) if device
       return identity.user
+    else
+      user = detect_or_create(identity_params[:username], social_params[:email])
+      return user unless user.errors.empty?
+      user.update(auth_token: generate_auth_token) unless user.auth_token
+      user.devices.update_or_create(device) if device
+
+      identity = Connect.create(user: user,
+                                provider: identity_params[:provider],
+                                social_id: identity_params[:social_id],
+                                data: social_params)
+
+      user.errors.add(connect: identity.errors) if identity.errors.any?
+      user
     end
-
-    user = detect_or_create(identity_params[:username], social_params[:email])
-    return user unless user.errors.empty?
-    user.update(auth_token: generate_auth_token) unless user.auth_token
-
-    identity = Connect.create(user: user,
-                              provider: identity_params[:provider],
-                              social_id: identity_params[:social_id],
-                              data: social_params)
-
-    user.errors.add(connect: identity.errors) if identity.errors.any?
-    user
   end
 
   # Issue to be decided upon later but for now we keep this behaviour:
@@ -468,14 +488,17 @@ class User < ActiveRecord::Base
     user || User.create(username: username, email: email)
   end
 
-  def self.sign_in(email: nil, phone: nil, password:)
+  def self.sign_in(email: nil, phone: nil, device: nil, password:)
     if email
       user = User.find_by email: email
     elsif phone
       user = User.find_by phone: phone
     end
     current_user = user.try(:authenticate, password)
-    current_user.update(auth_token: generate_auth_token) if current_user
+    if current_user
+      current_user.update(auth_token: generate_auth_token)
+      current_user.devices.update_or_create(device) if device
+    end
     current_user
   end
 

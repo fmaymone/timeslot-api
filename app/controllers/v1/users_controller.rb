@@ -25,7 +25,8 @@ module V1
     def create
       authorize :user
       @user = User.create_with_image(params: user_create_params,
-                                     image: user_image)
+                                     image: user_image,
+                                     device: device_params)
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -83,7 +84,6 @@ module V1
       @user = current_user.update_with_image(params: user_params,
                                              image: user_image,
                                              user: current_user)
-
       if @user.errors.empty?
         render :show
       else
@@ -155,6 +155,16 @@ module V1
       head :ok
     end
 
+    # PATCH /v1/users/device
+    # updates a device of the user if one exist
+    # if device not exist creates a new one with the passed attributes
+    def update_device
+      authorize :user
+      current_user.devices.update_or_create(device_params) if params.require(:deviceId)
+
+      head :ok
+    end
+
     private def user_create_params
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
@@ -178,7 +188,6 @@ module V1
                         },
                         :name,
                         :publicUrl,
-                        :deviceToken,
                         :push,
                         :slotDefaultDuration,
                         :slotDefaultLocationId,
@@ -205,6 +214,13 @@ module V1
       p.transform_keys { |key| key.underscore.to_sym }
     end
 
+    private def device_params
+      return nil unless params[:deviceId].present?
+      params.permit(:deviceId, :system, :version, :token, :endpoint)
+            .transform_keys(&:underscore)
+            .symbolize_keys
+    end
+
     private def friends_ids
       params.require(:ids)
     end
@@ -213,7 +229,7 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password).symbolize_keys
+      params.permit(:email, :phone, :password, :device).symbolize_keys
     end
   end
 end

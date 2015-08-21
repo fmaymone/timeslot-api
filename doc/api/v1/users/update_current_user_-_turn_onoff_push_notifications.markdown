@@ -1,18 +1,8 @@
 # Users API
 
-## Update current user - change username and default alerts
+## Update current user - turn on/off push notifications
 
 ### PATCH /v1/users
-
-E.g, change username and set default alerts
-
-returns user data
-
-returns 404 if ID is invalid
-
-returns 422 if parameters are missing
-
-returns 422 if parameters are invalid
 
 ### Parameters
 
@@ -153,7 +143,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE
+Authorization: Token token=_3i5F2T3I_nTml1YSsv_vJpp5sA
 Host: example.org
 Cookie: </pre>
 
@@ -164,17 +154,16 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "username" : "bar",
-  "defaultPrivateAlerts" : "0111011100"
+  "push" : false
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;push&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE&quot; \
+	-H &quot;Authorization: Token token=_3i5F2T3I_nTml1YSsv_vJpp5sA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -185,11 +174,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1c3d7f11892ef4084aaf38343a2e90f7&quot;
+ETag: W/&quot;92ecc59244b1dc57873f5e5d99e52366&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2315fc58-a45d-4678-800c-29408befdaa1
-X-Runtime: 0.023490
-Content-Length: 715</pre>
+X-Request-Id: 2f925125-dfaf-44f8-b619-f6f8553d68a6
+X-Runtime: 0.012639
+Content-Length: 720</pre>
 
 #### Status
 
@@ -199,10 +188,10 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 270,
-  "username" : "bar",
-  "createdAt" : "2015-08-14T13:58:57.594Z",
-  "updatedAt" : "2015-08-14T13:58:57.606Z",
+  "id" : 278,
+  "username" : "User 273",
+  "createdAt" : "2015-08-17T11:32:00.522Z",
+  "updatedAt" : "2015-08-17T11:32:00.530Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -212,16 +201,16 @@ Content-Length: 715</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user69@email.com",
+  "email" : "user75@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
-  "push" : true,
+  "push" : false,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0111011100",
+  "defaultPrivateAlerts" : "0000000000",
   "defaultOwnFriendslotAlerts" : "0000000000",
   "defaultOwnPublicAlerts" : "0000000000",
   "defaultFriendsFriendslotAlerts" : "0000000000",

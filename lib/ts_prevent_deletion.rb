@@ -8,7 +8,7 @@ module TSPreventDeletion
   end
 
   def destroy
-    prevent_remove
+    prevent_remove unless self.class == Device
   end
 
   def delete

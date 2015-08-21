@@ -31,6 +31,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -94,6 +97,9 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 Name : authToken
 Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
 
@@ -113,7 +119,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user66@email.com",
+  "email" : "user67@email.com",
   "password" : "timeslot"
 }
 ```
@@ -121,7 +127,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user66@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user67@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -134,10 +140,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e958a571034c833de1cdd7a3a8562af6&quot;
+ETag: W/&quot;4bac55bfa45ff2913b1eb68b5c2727af&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a565f54b-88ab-432b-ba72-2db752f8fde8
-X-Runtime: 0.027658
+X-Request-Id: 8a6b7392-d30a-4c66-8b55-eb2caf3d987e
+X-Runtime: 0.016666
 Content-Length: 762</pre>
 
 #### Status
@@ -148,10 +154,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 251,
-  "username" : "User 235",
-  "createdAt" : "2015-07-02T12:34:21.146Z",
-  "updatedAt" : "2015-07-02T12:34:21.157Z",
+  "id" : 269,
+  "username" : "User 264",
+  "createdAt" : "2015-08-17T11:32:00.279Z",
+  "updatedAt" : "2015-08-17T11:32:00.287Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -161,11 +167,12 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user66@email.com",
+  "email" : "user67@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -178,6 +185,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "C3vXM0pi9Qc-mldlVs2ekcCDi9c"
+  "authToken" : "rweC3H0wQHi5MzOLi_B70UHfMa4"
 }
 ```

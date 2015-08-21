@@ -6,7 +6,7 @@ json.extract!(user,
               :phone,
               :phone_verified,
               :public_url,
-              # :push, # wird gerade ueberarbeitet
+              :push,
               :slot_default_duration,
               :slot_default_location_id,
               :slot_default_type_id,

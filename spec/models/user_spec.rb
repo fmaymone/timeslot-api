@@ -14,7 +14,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
-  it { is_expected.to respond_to(:device_token) }
+  it { is_expected.to respond_to(:devices) }
   it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
@@ -26,6 +26,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:group_slots).through(:groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
+  it { is_expected.to have_many(:devices).inverse_of(:user) }
   it { is_expected.to belong_to(:location) }
 
   it { is_expected.to be_valid }
@@ -816,6 +817,8 @@ RSpec.describe User, type: :model do
     let(:user_params) {
       { params: attributes_for(:user, password: 'something') }
     }
+    let(:device) { attributes_for(:device) }
+
     context "valid params" do
       it "creates a new user" do
         expect {
@@ -832,7 +835,6 @@ RSpec.describe User, type: :model do
 
       it "sets an image if provided" do
         user_params.merge!(image: { "public_id" => 'foobar' })
-
         expect {
           User.create_with_image(user_params)
         }.to change(MediaItem, :count).by 1
@@ -849,6 +851,13 @@ RSpec.describe User, type: :model do
         expect(User.last.image.local_id)
           .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
       end
+
+      it "sets a device if provided" do
+        user_params.merge!(device: device)
+        expect {
+          User.create_with_image(user_params)
+        }.to change(Device, :count).by 1
+      end
     end
 
     context "invalid params" do
@@ -861,7 +870,6 @@ RSpec.describe User, type: :model do
 
       it "creates a new user even if media items public_id is nil" do
         user_params.merge!(image: { "public_id" => nil })
-
         expect {
           User.create_with_image(user_params)
         }.to change(User, :count).by 1
@@ -869,7 +877,6 @@ RSpec.describe User, type: :model do
 
       it "doesn't create a new media item if public_id is nil" do
         user_params.merge!(image: { "public_id" => nil })
-
         expect {
           User.create_with_image(user_params)
         }.not_to change(MediaItem, :count)
@@ -895,6 +902,15 @@ RSpec.describe User, type: :model do
         expect(
           User.sign_in(phone: user.phone, password: user.password)
         ).to eq user
+      end
+    end
+
+    context "with device" do
+      let(:device) { attributes_for(:device) }
+      it "sets a device if provided" do
+        expect {
+          User.sign_in(email: user.email, password: user.password, device: device)
+        }.to change(Device, :count).by 1
       end
     end
 

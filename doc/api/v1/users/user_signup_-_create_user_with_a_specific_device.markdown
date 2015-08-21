@@ -1,14 +1,10 @@
 # Users API
 
-## Update current user - change username and default alerts
+## User signup - Create user with a specific device
 
-### PATCH /v1/users
+### POST /v1/users
 
-E.g, change username and set default alerts
-
-returns user data
-
-returns 404 if ID is invalid
+Either an email or phone number must be provided
 
 returns 422 if parameters are missing
 
@@ -16,53 +12,29 @@ returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : username
-Description : Updated username of user (max. 50 characters)
+Name : username *- required -*
+Description : Username of user (max. 50 characters)
 
 Name : email
-Description : Email of user (max. 255 characters)
+Description : Email of user (max. 254 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
-Name : image
-Description : URL of the user image
+Name : password *- required -*
+Description : Password for user (min. 5 &amp; max. 72 characters)
 
-Name : publicUrl
-Description : Public URL for user on Timeslot (max. 255 chars)
+Name : device *- required -*
+Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; }
 
-Name : push
-Description : Send push Notifications (true/false)
+Name : system *- required -*
+Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
 
-Name : slotDefaultDuration
-Description : Default Slot Duration in seconds
+Name : version *- required -*
+Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
 
-Name : slotDefaultTypeId
-Description : Default Slot Type - WIP
-
-Name : slotDefaultLocationId
-Description : Default Slot Location ID - WIP
-
-Name : defaultPrivateAlerts
-Description : Default alerts for private slots of this user
-
-Name : defaultOwnFriendslotAlerts
-Description : Default alerts for the friendslots of this user
-
-Name : defaultOwnPublicAlerts
-Description : Default alerts for the public slots of this user
-
-Name : defaultFriendsFriendslotAlerts
-Description : Default alerts for the friendslots from friends of this user
-
-Name : defaultFriendsPublicAlerts
-Description : Default alerts for the public slots from friends of this user
-
-Name : defaultReslotAlerts
-Description : Default alerts for the reslots of this user
-
-Name : defaultGroupAlerts
-Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+Name : deviceId *- required -*
+Description : A unique hardware ID from the current device (max. 128 chars) 
 
 
 ### Response Fields
@@ -148,33 +120,42 @@ Description : all connections to groups
 Name : devices
 Description : all devices from user
 
+Name : authToken
+Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE
+Accept: application/json
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/users</pre>
+<pre>POST /v1/users</pre>
 
 #### Body
 ```javascript
 {
-  "username" : "bar",
-  "defaultPrivateAlerts" : "0111011100"
+  "username" : "foo",
+  "email" : "someone@timeslot.com",
+  "password" : "secret-thing",
+  "device" : {
+    "device_id" : "sn-4346287341083478676543954",
+    "system" : "ios",
+    "version" : "6.0"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-4346287341083478676543954&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE&quot; \
+	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -185,24 +166,24 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1c3d7f11892ef4084aaf38343a2e90f7&quot;
+ETag: W/&quot;0ad119e12e9bd441506001f1d7fb1c4b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2315fc58-a45d-4678-800c-29408befdaa1
-X-Runtime: 0.023490
-Content-Length: 715</pre>
+X-Request-Id: 805c1a82-07bd-47f7-908b-a9d837e41934
+X-Runtime: 0.016450
+Content-Length: 761</pre>
 
 #### Status
 
-<pre>200 OK</pre>
+<pre>201 Created</pre>
 
 #### Body
 
 ```javascript
 {
-  "id" : 270,
-  "username" : "bar",
-  "createdAt" : "2015-08-14T13:58:57.594Z",
-  "updatedAt" : "2015-08-14T13:58:57.606Z",
+  "id" : 268,
+  "username" : "foo",
+  "createdAt" : "2015-08-17T11:32:00.261Z",
+  "updatedAt" : "2015-08-17T11:32:00.261Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -212,7 +193,7 @@ Content-Length: 715</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user69@email.com",
+  "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -221,7 +202,7 @@ Content-Length: 715</pre>
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0111011100",
+  "defaultPrivateAlerts" : "0000000000",
   "defaultOwnFriendslotAlerts" : "0000000000",
   "defaultOwnPublicAlerts" : "0000000000",
   "defaultFriendsFriendslotAlerts" : "0000000000",
@@ -229,6 +210,7 @@ Content-Length: 715</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
-  "memberships" : []
+  "memberships" : [],
+  "authToken" : "8JiVRe3Maueall60JXl4Y01lA9E"
 }
 ```
