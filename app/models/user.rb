@@ -170,11 +170,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def notify(params)
-    # we using worker background processing to start request tasks asynchronously
-    NotifyJob.new.async.perform(devices, params) if push && deleted_at.nil?
-  end
-
   def set_auth_token
     self.auth_token = self.class.generate_auth_token
   end
