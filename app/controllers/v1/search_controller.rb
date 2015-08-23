@@ -1,79 +1,70 @@
 class V1::SearchController < ApplicationController
 
   def index
+    authorize :search
     # default route to "v1/search/"
     # here we can add multi search
-    head :error
+    head 422
   end
 
-  def users
+  def user
     authorize :search
 
-    if(search = search_params)
-      render json: User.where('username LIKE ? OR email LIKE ?', search, search)
-                       .sort{ |a,b| levenshtein(a, b) }.reverse
-    else
-      render json: {}
-    end
+    @users = Search.result(User,
+                           params[:attr] || :username,
+                           query_params,
+                           page_params)
+
+    render "v1/users/index"
   end
 
-  def slots
+  def email
     authorize :search
+    @users = Search.result(User,
+                           params[:attr] || :email,
+                           query_params,
+                           page_params)
 
-    if(search = search_params)
-      render json: MetaSlot.where('title LIKE ?', search)
-                       .sort{ |a,b| levenshtein(a, b) }.reverse
-    else
-      render json: {}
-    end
+    render "v1/users/index"
   end
 
   def media
     authorize :search
+    @media_items = Search.result(MediaItem,
+                                 params[:attr] || :title,
+                                 query_params,
+                                 page_params)
 
-    if(search = search_params)
-      render json: MediaItem.where('title LIKE ?', search)
-                       .sort{ |a,b| levenshtein(a, b) }.reverse
-    else
-      render json: {}
-    end
+    render "v1/media/index"
   end
 
-  private def search_params
-    return false if params.require(:query).length < 3
-    #params.require(:include, :exclude) unless params[:filter].present?
-    #params.permit(:private, :public, :group) unless params[:scope].present?
-    #params.permit(:query, :filter, :scope).symbolize_keys
-    "%" << params[:query] << "%"
+  def slot
+    authorize :search
+    @slots = Search.result(MetaSlot,
+                           params[:attr] || :title,
+                           query_params,
+                           page_params)
+
+    @slots = BaseSlot.where(meta_slot_id: @slots.collect(&:id)) unless @slots.empty?
+
+    render "v1/slots/index"
   end
 
-  #http://stackoverflow.com/questions/8619785/what-is-an-efficient-way-to-measure-similarity-between-two-strings-levenshtein
-  private def levenshtein(s1, s2)
-    d = {}
-    (0..s1.size).each do |row|
-      d[[row, 0]] = row
-    end
-    (0..s2.size).each do |col|
-      d[[0, col]] = col
-    end
-    (1..s1.size).each do |i|
-      (1..s2.size).each do |j|
-        cost = 0
-        if(s1[i-1] != s2[j-1])
-          cost = 1
-        end
-        d[[i, j]] = [d[[i - 1, j]] + 1,
-                     d[[i, j - 1]] + 1,
-                     d[[i - 1, j - 1]] + cost
-        ].min
-        next unless @@damerau
-        if(i > 1 && j > 1 && s1[i-1] == s2[j-2] && s1[i-2] == s2[j-1])
-          d[[i, j]] = [d[[i,j]],
-                       d[[i-2, j-2]] + cost
-          ].min
-        end
-      end
-    end
-    return d[[s1.size, s2.size]]
+  private def query_params
+    "%" << params.require(:query)
+                 .gsub(' ', '%')
+                 .gsub(/[^a-zA-Z0-9%@-_.]/, "") << "%"
   end
+
+  private def page_params
+    params.permit(:page, :limit).symbolize_keys
+  end
+
+  # private def filter_params
+  #   params.permit(:include, :exclude).symbolize_keys
+  # end
+
+  # private def scope_params
+  #   params.require(:scope).permit(:private, :public, :friend, :group).symbolize_keys if params[:scope].present?
+  # end
 end

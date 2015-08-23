@@ -12,12 +12,17 @@ class SearchPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
-  def users?
+  def user?
     current_user?
   end
 
   # true if a user is logged in
-  def slots?
+  def email?
+    current_user?
+  end
+
+  # true if a user is logged in
+  def slot?
     current_user?
   end
 
