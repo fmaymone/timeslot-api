@@ -17,7 +17,7 @@ class Device < ActiveRecord::Base
       self.save
       device.destroy
     end
-    return nil if endpoint && token == self.token
+    return true if endpoint && token == self.token
     # sets new endpoint if not exist or update if new token was passed
     case system
     when 'ios'

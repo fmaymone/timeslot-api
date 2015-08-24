@@ -20,7 +20,7 @@ class NotifyJob
     raise exception if Rails.env.test? || Rails.env.development?
   end
 
-  def perform_later(sec, devices, params)
-    after(sec) { perform(devices, params) }
-  end
+  # def perform_later(sec, devices, params)
+  #   after(sec) { perform(devices, params) }
+  # end
 end
