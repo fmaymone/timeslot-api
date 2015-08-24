@@ -3,20 +3,19 @@ require 'rails_helper'
 RSpec.describe "V1::Search", :focus, type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
-  let(:slot) { create(:std_slot_public, :with_media, creator: current_user) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
   describe "GET /search/" do
-    it "returns 422 if query was missing" do
+    it "returns 422 if action was missing" do
       get "/v1/search/", {}, auth_header
       expect(response.status).to be(422)
     end
   end
 
   describe "GET /search/user" do
-    it "returns 422 if query was missing" do
+    it "returns 422 if parameters was missing" do
       get "/v1/search/user", nil, auth_header
       expect(response.status).to be(422)
     end
@@ -42,6 +41,16 @@ RSpec.describe "V1::Search", :focus, type: :request do
   end
 
   describe "GET /search/user" do
+    let(:query) {{ query: '$~#%a§_+(b)&/?-' }}
+
+    it "returns empty array if filtered query was too short" do
+      get "/v1/search/user", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 0
+    end
+  end
+
+  describe "GET /search/user" do
     let(:query) {{ query: current_user.username }}
 
     it "returns search results of users" do
@@ -54,13 +63,26 @@ RSpec.describe "V1::Search", :focus, type: :request do
   end
 
   describe "GET /search/user" do
-    let!(:users) { create_list(:user, 20) }
-    let(:query) {{ query: 'User', page: 3, limit: 5 }}
+    let!(:user) { create(:user, username: 'Pere Olerence') }
+    let(:query) {{ query: 'péré ôlérencè' }}
+
+    it "returns transliterated search results of users" do
+      get "/v1/search/user", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 1
+      expect(json.first).to have_key('username')
+      expect(json.first).to have_key('id')
+    end
+  end
+
+  describe "GET /search/user" do
+    let!(:users) { create_list(:user, 10) }
+    let(:query) {{ query: 'User', page: 3, limit: 3 }}
 
     it "returns paginated search results of users" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
-      expect(json.length).to eq 5
+      expect(json.length).to eq 3
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
     end
@@ -91,7 +113,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
   describe "GET /search/user" do
     let(:query) {{ query: current_user.email, attr: 'email' }}
 
-    it "returns custom attribute search results of users" do
+    it "returns search results of users by a custom attribute" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
       expect(json.length).to eq 1
@@ -103,7 +125,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
   describe "GET /search/email" do
     let(:query) {{ query: current_user.email }}
 
-    it "returns search results of slots" do
+    it "returns search results of users by email" do
       get "/v1/search/email", query, auth_header
       expect(response.status).to be(200)
       expect(json.length).to eq 1
@@ -113,6 +135,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
   end
 
   describe "GET /search/slot" do
+    let(:slot) { create(:std_slot_public, :with_media, creator: current_user) }
     let(:query) {{ query: slot.title }}
 
     it "returns search results of slots" do
@@ -125,6 +148,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
   end
 
   describe "GET /search/media" do
+    let(:slot) { create(:std_slot_public, :with_media, creator: current_user) }
     let(:query) {{ query: slot.media_items.first.title }}
 
     it "returns search results of media" do
@@ -135,4 +159,44 @@ RSpec.describe "V1::Search", :focus, type: :request do
       expect(json.first).to have_key('mediaType')
     end
   end
+
+  describe "GET /search/group" do
+    let(:group) { create(:group, :with_3_members, name: 'Timeslot Official') }
+    let(:query) {{ query: group.name }}
+
+    it "returns search results of media" do
+      get "/v1/search/group", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 1
+      expect(json.first).to have_key('id')
+      expect(json.first).to have_key('upcomingCount')
+    end
+  end
+
+  describe "GET /search/location" do
+    let(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
+    let(:query) {{ query: ios_location.name }}
+
+    it "returns search results of media" do
+      get "/v1/search/location", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 1
+      expect(json.first).to have_key('latitude')
+      expect(json.first).to have_key('longitude')
+    end
+  end
+
+  describe "GET /search/user" do
+    # http://rails-sqli.org/
+    let(:query) {{ query: "') OR 1--" }}
+
+    it "check immunity of sql injection" do
+      get "/v1/search/user", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 0
+    end
+  end
+
+  # maybe this can help us for testing bad user inputs:
+  # https://github.com/minimaxir/big-list-of-naughty-strings
 end

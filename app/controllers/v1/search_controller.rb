@@ -7,64 +7,69 @@ class V1::SearchController < ApplicationController
     head 422
   end
 
+  # TODO: define and check allowed attributes for searching
   def user
     authorize :search
-
-    @users = Search.result(User,
-                           params[:attr] || :username,
-                           query_params,
-                           page_params)
-
+    @users = Search.new(User, params[:attr] || :username,
+                              query, page)
     render "v1/users/index"
   end
 
   def email
     authorize :search
-    @users = Search.result(User,
-                           params[:attr] || :email,
-                           query_params,
-                           page_params)
-
+    @users = Search.new(User, params[:attr] || :email,
+                              query, page)
     render "v1/users/index"
   end
 
   def media
     authorize :search
-    @media_items = Search.result(MediaItem,
-                                 params[:attr] || :title,
-                                 query_params,
-                                 page_params)
-
+    @media_items = Search.new(MediaItem, params[:attr] || :title,
+                                         query, page)
     render "v1/media/index"
   end
 
   def slot
     authorize :search
-    @slots = Search.result(MetaSlot,
-                           params[:attr] || :title,
-                           query_params,
-                           page_params)
-
-    @slots = BaseSlot.where(meta_slot_id: @slots.collect(&:id)) unless @slots.empty?
-
+    @slots = Search.new(MetaSlot, params[:attr] || :title,
+                                  query, page)
     render "v1/slots/index"
   end
 
-  private def query_params
-    "%" << params.require(:query)
-                 .gsub(' ', '%')
-                 .gsub(/[^a-zA-Z0-9%@-_.]/, "") << "%"
+  def group
+    authorize :search
+    @groups = Search.new(Group, params[:attr] || :name,
+                                query, page)
+    render "v1/groups/index"
   end
 
-  private def page_params
+  def location
+    authorize :search
+    @locations = Search.new(IosLocation, params[:attr] || :name,
+                                         query, page)
+    render "v1/locations/index"
+  end
+
+  private def query
+    # if we need to store usernames/titles with specials signs then we have to
+    # save username/title transliterated as well to get better search results
+    # http://apidock.com/rails/ActiveSupport/Inflector/transliterate
+    ActiveSupport::Inflector
+        .transliterate(params.require(:query))
+        .gsub(/[^a-zA-Z0-9\s@-_.]/, "")
+  end
+
+  private def page
     params.permit(:page, :limit).symbolize_keys
   end
 
-  # private def filter_params
+  # TODO: extend search with filter and scope
+  # private def filter
   #   params.permit(:include, :exclude).symbolize_keys
   # end
-
-  # private def scope_params
-  #   params.require(:scope).permit(:private, :public, :friend, :group).symbolize_keys if params[:scope].present?
+  #
+  # private def scope
+  #   params.require(:scope).permit(:private, :public, :friend, :group)
+  #                         .symbolize_keys if params[:scope].present?
   # end
 end

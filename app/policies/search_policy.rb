@@ -30,4 +30,14 @@ class SearchPolicy < ApplicationPolicy
   def media?
     current_user?
   end
+
+  # true if a user is logged in
+  def group?
+    current_user?
+  end
+
+  # true if a user is logged in
+  def location?
+    current_user?
+  end
 end

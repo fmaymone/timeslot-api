@@ -1,23 +1,29 @@
 class Search
 
-  def self.result(table, attr, query, page_params = nil)
-    return [] if query.length < 5 # 3 chars + 2 special chars: '%123%'
-    paginate(
-        # TODO: define and check allowed attributes in controller
-        table.where(attr.to_s + ' ILIKE ?', query),
+  def self.new(table, attr, query, page_params = nil)
+    return [] if query.length < 3 # 3 chars + 2 special chars: '%123%'
+    page = paginate(
+        table.where(attr.to_s + ' ILIKE ?', "%" << query.gsub(' ', '%') << "%"),
         attr.to_sym,
         query,
         page_params
     )
+    # meta_slots requires change into BaseSlot model for the view part
+    if table == MetaSlot && page.empty? == false
+      page = page.collect(&:id)
+      page = BaseSlot.where(meta_slot_id: page)
+    end
+    page
   end
 
   def self.paginate(result, attr, query, page: 1, limit: 100)
+    return result if result.empty?
     result.sort{ |a, b| levenshtein(a[attr], query) <=> levenshtein(b[attr], query) }
           .drop((page.to_i - 1) * limit.to_i)
           .take(limit.to_i)
   end
 
-  #http://stackoverflow.com/questions/8619785/what-is-an-efficient-way-to-measure-similarity-between-two-strings-levenshtein
+  # http://stackoverflow.com/questions/8619785/what-is-an-efficient-way-to-measure-similarity-between-two-strings-levenshtein
   def self.levenshtein(s1, s2)
     d = {}
     (0..s1.size).each do |row|
