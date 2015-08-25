@@ -17,7 +17,7 @@ class Device < ActiveRecord::Base
       self.save
       device.destroy
     end
-    return nil if endpoint && token == self.token
+    return true if endpoint && token == self.token
     # sets new endpoint if not exist or update if new token was passed
     case system
     when 'ios'
@@ -44,11 +44,9 @@ class Device < ActiveRecord::Base
   end
 
   def notify(client, params)
-    if endpoint
-      case system
-      when 'ios'
-        notify_ios(client, *params)
-      end
+    case system
+    when 'ios'
+      notify_ios(client, *params)
     end
   end
 
@@ -92,7 +90,13 @@ class Device < ActiveRecord::Base
   end
 
   def self.create_client
+    # this client will be overridden by a stub for rspec testings
     Aws::SNS::Client.new
+  end
+
+  def self.notify_all(users, params)
+    # we using worker background processing to start request tasks asynchronously
+    NotifyJob.new.async.perform(users, params)
   end
 
   def self.update_or_create(params)

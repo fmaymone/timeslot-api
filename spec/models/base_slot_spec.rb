@@ -225,11 +225,11 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :create_comment do
-    let(:owner) { create(:user) }
-    let(:std_slot) { create(:std_slot, owner: owner) }
+  describe :create_comment, :aws, :async do
+    let(:creator) { create(:user) }
     let(:user) { create(:user) }
-    let(:device) { create(:device, :with_endpoint, user: owner) }
+    let(:std_slot) { create(:std_slot, creator: creator) }
+    let!(:device) { create(:device, :with_endpoint, user: creator) }
 
     it "adds a new comment to the slot" do
       expect {
