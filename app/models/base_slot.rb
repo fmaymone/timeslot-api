@@ -147,7 +147,7 @@ class BaseSlot < ActiveRecord::Base
     if new_comment.valid?
       Device.notify_all([creator], [ message: I18n.t('notify_create_comment',
                                      name: user.username,
-                                     title: meta_slot.title)])
+                                     title: meta_slot.title) ])
       return new_comment
     end
     errors.add(:comment, new_comment.errors)
