@@ -45,6 +45,10 @@ ENV['AWS_REGION']
 
 * [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
 
+```bash
+ENV['AWS_PLATFORM_APPLICATION_IOS'] # aws arn endpoint (iOS)
+```
+
 ## Cloudinary
 
 Cloud Service for our Media Data.
@@ -60,7 +64,6 @@ On Heroku the configuration is handled by the cloudinary addon.
 ## Location DB
 
 The Data Team provides a database based on OSM Location Data. This DB is transparently available for the backend. At the moment we use a ssh tunnel for connecting.
-
 
 ```
 ENV['LOCATION_DB_URI'] # postgres uri of locations production db
@@ -125,6 +128,8 @@ Flag | Effect
 ```:focus``` | let only marked specs run
 ```:db``` | print the database interactions of the specific spec to the console
 ```:vcr``` | use vcr to mock external requests, see below
+```:aws``` | use aws to mock external requests to AWS service, see below
+```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
 ```:seed``` | load database seeds
 ```:commit``` | persist data in database, see below
 
@@ -155,6 +160,16 @@ the ```development.rb``` file:
 ```
 WebMock.allow_net_connect!
 ```
+
+### AWS
+
+The specs use the AWS webmock, which simulate external requests to AWS services.
+This allows to test in an special environment where the changes would not store live.
+
+### [Sucker Punch] (https://github.com/brandonhilkert/sucker_punch)
+
+The specs use a webmock to handle asynchronously tasks, which is internally handled by the sucker punch gem.
+This allows to test worker threads inside rails specs.
 
 ### [Bullet](https://github.com/flyerhzm/bullet)
 
