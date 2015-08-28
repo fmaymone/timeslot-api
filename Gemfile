@@ -39,6 +39,9 @@ gem 'sucker_punch'
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
 
+# Adding CORS (Cross-Origin Resource Sharing)
+gem 'rack-cors', :require => 'rack/cors'
+
 group :development do
   gem "rails-erd"
 
