@@ -114,7 +114,7 @@ module V1
       policy_scope(:slot) # temporary hack to frickle around with pundit later
 
       if current_user == requested_user
-        query = params.permit(:status, :pit, :limit).symbolize_keys
+        query = params.permit(:status, :moment, :limit).symbolize_keys
         @slots = current_user.my_slots(query) + current_user.re_slots
       else
         @slots = policy_scope(:slot)

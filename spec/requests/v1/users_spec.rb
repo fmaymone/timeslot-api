@@ -584,7 +584,7 @@ RSpec.describe "V1::Users", type: :request do
             it "returns 20 active and upcoming slots" do
               [upcoming_slot, ongoing_slot, ongoing_slots, past_slot]
 
-              get "/v1/users/#{current_user.id}/slots?status=now&pit=#{Time.zone.now.as_json}",
+              get "/v1/users/#{current_user.id}/slots?status=now&moment=#{Time.zone.now.as_json}",
                   {}, auth_header
 
               # if response.status == 200

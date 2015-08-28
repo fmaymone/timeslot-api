@@ -247,7 +247,7 @@ class User < ActiveRecord::Base
   # TODO: around
   # we need a maximum for limit
   # we should change the default for status to 'now' instead of 'all'
-  def my_slots(pit: Time.zone.now, status: 'all', limit: 50)
+  def my_slots(moment: Time.zone.now, status: 'all', limit: 50)
     slots = std_slots.unscoped.joins(:meta_slot)
     past = "owner_id = ? AND meta_slots.end_date < ?"
     upcoming = "owner_id = ? AND meta_slots.start_date >= ?"
@@ -255,15 +255,15 @@ class User < ActiveRecord::Base
 
     case status
     when 'upcoming'
-      slots.where(upcoming, id, pit).limit(limit)
+      slots.where(upcoming, id, moment).limit(limit)
     when 'past'
-      slots.where(past, id, pit).limit(limit)
+      slots.where(past, id, moment).limit(limit)
     when 'ongoing'
-      slots.where(ongoing, id,  pit, pit).order('meta_slots.start_date').limit(limit)
+      slots.where(ongoing, id,  moment, moment).order('meta_slots.start_date').limit(limit)
     when 'now'
-      slots.where("#{ongoing} OR #{upcoming}", id, pit, pit, id, pit).order('meta_slots.start_date').limit(limit)
+      slots.where("#{ongoing} OR #{upcoming}", id, moment, moment, id, moment).order('meta_slots.start_date').limit(limit)
     # when 'around'
-    #   slots.where("#{ongoing} OR #{upcoming}", id, pit, pit, id, pit).limit(limit)
+    #   slots.where("#{ongoing} OR #{upcoming}", id, moment, moment, id, moment).limit(limit)
     else # all
       slots.where(owner: self).order('meta_slots.start_date').limit(limit)
     end

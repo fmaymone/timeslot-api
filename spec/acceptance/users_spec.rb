@@ -705,9 +705,9 @@ resource "Users" do
 
     parameter :limit, "Query parameter to limit the amount of slots returned." \
                       " Default is 50. We need a maximum for this."
-    parameter :pit, "Point-in-time. Query parameter to get slots relative to " \
-                    "specific moment. Must be UTC. " \
-                    "Default is Time.zone.now (on the server)."
+    parameter :moment, "A point in time. Query parameter to get slots " \
+                       "relative to a specific moment. Must be UTC.\n" \
+                       "Default is Time.zone.now (on the server)."
     parameter :status, "Query parameter to filter slots relative to a " \
                        "point-in-time. Must be one of " \
                        "[past, ongoing, upcoming, now, around, all].\n" \
@@ -736,7 +736,7 @@ resource "Users" do
     describe "Get slots for current user" do
       let(:id) { current_user.id }
       let(:status) { 'all' }
-      let(:pit) { Time.zone.now.as_json }
+      let(:moment) { Time.zone.now.as_json }
       let(:limit) { 20 }
 
       let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
