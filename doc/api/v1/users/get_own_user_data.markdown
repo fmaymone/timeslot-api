@@ -28,6 +28,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -91,24 +94,27 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=HJs5mf-YjFAZwIhQPyA-GjAPe6w
+Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/246</pre>
+<pre>GET /v1/users/263</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/246&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/263&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=HJs5mf-YjFAZwIhQPyA-GjAPe6w&quot; \
+	-H &quot;Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -119,10 +125,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;320c47b2f1b0f24b84c2d875c1969b41&quot;
+ETag: W/&quot;b47068f0db89e5688ac8b5188028c10c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b7a45702-b7e1-48bf-be0e-9b4a49c7d084
-X-Runtime: 0.033308
+X-Request-Id: 9bca1755-f6f7-472a-a2cd-2a043f808a73
+X-Runtime: 0.015941
 Content-Length: 720</pre>
 
 #### Status
@@ -133,10 +139,10 @@ Content-Length: 720</pre>
 
 ```javascript
 {
-  "id" : 246,
-  "username" : "User 231",
-  "createdAt" : "2015-07-02T12:34:21.003Z",
-  "updatedAt" : "2015-07-02T12:34:21.003Z",
+  "id" : 263,
+  "username" : "User 260",
+  "createdAt" : "2015-08-17T11:32:00.190Z",
+  "updatedAt" : "2015-08-17T11:32:00.190Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -146,7 +152,7 @@ Content-Length: 720</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user64@email.com",
+  "email" : "user65@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

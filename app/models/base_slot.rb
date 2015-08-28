@@ -33,7 +33,7 @@ class BaseSlot < ActiveRecord::Base
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
-  has_many :likes, inverse_of: :slot
+  has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
            inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
@@ -133,8 +133,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    like = likes.find_by(user: user) || likes.create(user: user)
-    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    like = Like.find_by(slot: self, user: user) || likes.create(user: user)
+    like.update(user: user, deleted_at: nil) if like.deleted_at? # relike after unlike
   end
 
   def destroy_like(user)
@@ -144,7 +144,11 @@ class BaseSlot < ActiveRecord::Base
 
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
-    return new_comment if new_comment.valid?
+    if new_comment.valid?
+      Device.notify_all([creator], [ message: "The user '#{user.username}' commented on: " \
+                                              "'#{meta_slot.title}'." ])
+      return new_comment
+    end
     errors.add(:comment, new_comment.errors)
   end
 

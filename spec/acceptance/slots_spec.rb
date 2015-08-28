@@ -183,7 +183,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id", :vcr do
+  get "/v1/slots/:id" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 

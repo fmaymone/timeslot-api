@@ -93,6 +93,14 @@ RSpec.configure do |config|
     Rails.application.load_seed
     # load "#{Rails.root}/db/seeds.rb"
   end
+
+  config.before(:each, :aws) do
+    allow(Device).to receive(:create_client).and_return(Aws::SNS::Client.new(stub_responses: true))
+  end
+
+  config.before(:each, :async) do
+    require 'sucker_punch/testing/inline'
+  end
 end
 
 def with_std_out_logger

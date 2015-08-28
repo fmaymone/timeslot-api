@@ -429,6 +429,31 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  describe "PATCH /v1/users/device" do
+    it "returns success" do
+      patch "/v1/users/device", { deviceId: 'id-34273647263' }, auth_header
+      expect(response.status).to be(200)
+    end
+
+    context "invalid parameters" do
+      it "doesn't update the device if parameters are empty" do
+        patch "/v1/users/device", {}, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "doesn't update the device if deviceId is invalid" do
+        patch "/v1/users/device", { deviceId: nil }, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "doesn't update the device if token is invalid" do
+        auth_header = { 'Authorization' => "Token token=kh34gshg5345hg3g54" }
+        patch "/v1/users/device", {}, auth_header
+        expect(response.status).to be(401)
+      end
+    end
+  end
+
   describe "GET /v1/users/:id/slots" do
     describe "my Slots, no pagination" do
       let(:group_member) { create(:membership, user: current_user) }

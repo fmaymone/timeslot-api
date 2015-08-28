@@ -44,6 +44,11 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true if a user is logged in
+  def update_device?
+    current_user?
+  end
+
   # true if a user with this email exists
   # however, if this wouldn't be the case the API
   # would already have returned a 404

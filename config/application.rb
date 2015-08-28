@@ -29,5 +29,8 @@ module TsRailsBackend
     config.active_record.schema_format = :sql
 
     Jbuilder.key_format camelize: :lower
+
+    # logger for worker threads from sucker_punch
+    SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
   end
 end

@@ -82,6 +82,7 @@ Rails.application.routes.draw do
       post 'reset', to: 'users#reset_password', as: 'reset_password'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
+      patch 'device', to: 'users#update_device', as: 'update_device'
     end
 
     scope :groups do
