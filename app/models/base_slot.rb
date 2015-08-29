@@ -72,6 +72,10 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  def as_paging_cursor
+    Base64.urlsafe_encode64("#{id}%#{start_date}%#{end_date}")
+  end
+
   # setter
 
   def ios_location=(location)
@@ -317,6 +321,27 @@ class BaseSlot < ActiveRecord::Base
       new_slot.notes.create(title: note.title,
                             content: note.content,
                             creator: user) # user => current_user
+    end
+  end
+
+  # takes an encoded_slot string and returns the matching slot
+  # see: BaseSlot.as_paging_cursor
+  # raises PaginationError if invalid cursor_string or slot not matching anymore
+  def self.from_paging_cursor(encoded_cursor_string)
+    decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
+  rescue ArgumentError
+    raise ApplicationController::PaginationError
+  else
+    begin
+      cursor = decoded_cursor_string.split('%')
+      slot = get(cursor.first)
+    rescue ActiveRecord::RecordNotFound
+      raise ApplicationController::PaginationError
+    else
+      if slot.start_date != cursor.second || slot.end_date != cursor.third
+        fail ApplicationController::PaginationError
+      end
+      slot
     end
   end
 
