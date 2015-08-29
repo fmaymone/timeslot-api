@@ -16,7 +16,7 @@ class BaseSlot < ActiveRecord::Base
                  GroupSlotPublic: 5,
                  ReSlotFriends: 6,
                  ReSlotPublic: 7,
-                 # mabye remove the following
+                 # maybe remove the following
                  BaseSlot: 0,
                  StdSlot: 20,
                  GroupSlot: 21,

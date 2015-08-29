@@ -227,8 +227,8 @@ module V1
     private def device_params
       return nil unless params[:deviceId].present?
       params.permit(:deviceId, :system, :version, :token, :endpoint)
-            .transform_keys(&:underscore)
-            .symbolize_keys
+        .transform_keys(&:underscore)
+        .symbolize_keys
     end
 
     private def friends_ids
