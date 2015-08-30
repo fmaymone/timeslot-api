@@ -32,6 +32,15 @@
 
 * [Get a new cloudinary signature](media/get_a_new_cloudinary_signature.markdown)
 
+## Search
+
+* [Search by username](search/search_by_username.markdown)
+* [Search by custom attribute](search/search_by_custom_attribute.markdown)
+* [Search by slot title](search/search_by_slot_title.markdown)
+* [Search by media title](search/search_by_media_title.markdown)
+* [Search by group name](search/search_by_group_name.markdown)
+* [Search by location name](search/search_by_location_name.markdown)
+
 ## Slots
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
