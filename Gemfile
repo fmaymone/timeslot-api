@@ -87,8 +87,6 @@ group :development, :test, :herokutest do
 
   gem 'shoulda-matchers', '2.8.0', require: false
 
-  # Populator + Faker
-  gem 'populator'
+  # Faker
   gem 'faker'
-
 end

@@ -4,26 +4,27 @@ namespace :db do
   desc "Erase and populate database with seed data"
 
   task :populate => :environment do
-    require 'populator'
-    require 'faker'
 
     # delete db before start
-    [MediaItem, StdSlot, BaseSlot, MetaSlot, User].each(&:delete_all)
+    #[MediaItem, StdSlot, BaseSlot, MetaSlot, User].each(&:delete_all)
 
     # start populate
-    User.populate(5000) do |user|
+    (0..1000).each do
 
-      user.username = Faker::Name.name
-      user.email = Faker::Number.number(5) + Faker::Internet.email
-      user.push = false
+      user = User.create(username: Faker::Name.name
+                         #email: Faker::Number.number(5) + Faker::Internet.email
+                         #password: Faker::Internet.password
+      )
 
-      MetaSlot.populate(20) do |slot|
+      (0..100).each do
 
-        slot.creator_id = user.id
-        slot.title = Populator.words(4..5).titleize #Faker::Name.title
-        slot.start_date = 2.years.ago..2.years.since
-        slot.end_date = 2.years.ago..2.years.since
-        slot.open_end = ['true', 'false']
+        meta_slot = FactoryGirl.create(:meta_slot,
+                                       creator: user,
+                                       title: Faker::Name.title + ' ' + Faker::Name.suffix)
+
+        FactoryGirl.create(:std_slot_public,
+                           owner: user,
+                           meta_slot: meta_slot)
 
         #FactoryGirl.create_list(:slot_image, 5, mediable: slot)
         #FactoryGirl.create_list(:video, 2, mediable: slot)
