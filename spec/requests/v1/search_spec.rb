@@ -1,36 +1,28 @@
 require 'rails_helper'
 
-RSpec.describe "V1::Search", :focus, type: :request do
+RSpec.describe "V1::Search", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  describe "GET /search/" do
-    it "returns 422 if action was missing" do
-      get "/v1/search/", {}, auth_header
-      expect(response.status).to be(422)
-    end
-  end
+  # global search (elastic search)
+  # describe "GET /v1/search/", :vcr do
+  #   it "returns 422 if action was missing" do
+  #     get "/v1/search/", {}, auth_header
+  #     expect(response.status).to be(422)
+  #   end
+  # end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     it "returns 422 if parameters was missing" do
       get "/v1/search/user", nil, auth_header
       expect(response.status).to be(422)
     end
   end
 
-  describe "GET /search/user" do
-    let(:query) { nil }
-
-    it "returns 422 if query was nil" do
-      get "/v1/search/user", query, auth_header
-      expect(response.status).to be(422)
-    end
-  end
-
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let(:query) {{ query: 'Us' }}
 
     it "returns empty array if query was too short" do
@@ -40,7 +32,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let(:query) {{ query: '$~#%a§_+(b)&/?-' }}
 
     it "returns empty array if filtered query was too short" do
@@ -50,7 +42,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let(:query) {{ query: current_user.username }}
 
     it "returns search results of users" do
@@ -62,7 +54,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let!(:user) { create(:user, username: 'Pere Olerence') }
     let(:query) {{ query: 'péré ôlérencè' }}
 
@@ -75,7 +67,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let!(:users) { create_list(:user, 10) }
     let(:query) {{ query: 'User', page: 3, limit: 3 }}
 
@@ -88,29 +80,29 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
-    let(:query) {{ query: 'joh do' }}
-    let!(:users) {[ create(:user, username: 'Foo Bar'),
-                    create(:user, username: 'John Doe'),
-                    create(:user, username: 'John Dolce'),
-                    create(:user, username: 'Johny Doehetry'),
-                    create(:user, username: 'Joh Do'),
-                    create(:user, username: 'John Doeh'),
-                    create(:user, username: 'Jo Do'),
-                    create(:user, username: 'Bar Foo') ]}
+  describe "GET /v1/search/user" do
+    let(:query) {{ query: 'jon do' }}
+    let!(:users) {[ create(:user, :with_email, username: 'Foo Bar'), # not included
+                    create(:user, :with_email, username: 'John Doe'),
+                    create(:user, :with_email, username: 'John Dolce'),
+                    create(:user, :with_email, username: 'Johny Doehetry'),
+                    create(:user, :with_email, username: 'Joh Do'),
+                    create(:user, :with_email, username: 'John Doeh'),
+                    create(:user, :with_email, username: 'Jo Do'),
+                    create(:user, :with_email, username: 'Bar Foo') ]} # not included
 
     it "returns sorted search results of users" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
-      expect(json.length).to eq 5
+      expect(json.length).to eq 6
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
-      expect(json.first['username']).to eq('Joh Do')
+      expect(json.first['username']).to eq('Jo Do')
       expect(json.last['username']).to eq('Johny Doehetry')
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     let(:query) {{ query: current_user.email, attr: 'email' }}
 
     it "returns search results of users by a custom attribute" do
@@ -122,7 +114,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/email" do
+  describe "GET /v1/search/email" do
     let(:query) {{ query: current_user.email }}
 
     it "returns search results of users by email" do
@@ -134,7 +126,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/slot" do
+  describe "GET /v1/search/slot" do
     let(:slot) { create(:std_slot_public, :with_media, creator: current_user) }
     let(:query) {{ query: slot.title }}
 
@@ -147,20 +139,19 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/media" do
+  describe "GET /v1/search/media" do
     let(:slot) { create(:std_slot_public, :with_media, creator: current_user) }
     let(:query) {{ query: slot.media_items.first.title }}
 
     it "returns search results of media" do
       get "/v1/search/media", query, auth_header
       expect(response.status).to be(200)
-      expect(json.length).to eq 1
       expect(json.first).to have_key('mediaId')
       expect(json.first).to have_key('mediaType')
     end
   end
 
-  describe "GET /search/group" do
+  describe "GET /v1/search/group" do
     let(:group) { create(:group, :with_3_members, name: 'Timeslot Official') }
     let(:query) {{ query: group.name }}
 
@@ -173,8 +164,8 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/location" do
-    let(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
+  describe "GET /v1/search/location" do
+    let!(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
     let(:query) {{ query: ios_location.name }}
 
     it "returns search results of media" do
@@ -186,7 +177,7 @@ RSpec.describe "V1::Search", :focus, type: :request do
     end
   end
 
-  describe "GET /search/user" do
+  describe "GET /v1/search/user" do
     # http://rails-sqli.org/
     let(:query) {{ query: "') OR 1--" }}
 
