@@ -33,6 +33,7 @@ class V1::SearchController < ApplicationController
     authorize :search
     @slots = Search.new(MetaSlot, params[:attr] || :title,
                                   query, page)
+    #render json: @slots
     render "v1/slots/index"
   end
 
