@@ -81,23 +81,25 @@ RSpec.describe "V1::Search", type: :request do
   end
 
   describe "GET /v1/search/user" do
-    let(:query) {{ query: 'jon do' }}
+    let(:query) {{ query: 'jon doe' }}
     let!(:users) {[ create(:user, :with_email, username: 'Foo Bar'), # not included
-                    create(:user, :with_email, username: 'John Doe'),
+                    create(:user, :with_email, username: 'John Doe'), # optimum result
                     create(:user, :with_email, username: 'John Dolce'),
-                    create(:user, :with_email, username: 'Johny Doehetry'),
+                    create(:user, :with_email, username: 'Johny Doehetry'), # included
+                    create(:user, :with_email, username: 'Johny Darwin'), # included when metaphone
                     create(:user, :with_email, username: 'Joh Do'),
                     create(:user, :with_email, username: 'John Doeh'),
-                    create(:user, :with_email, username: 'Jo Do'),
+                    create(:user, :with_email, username: 'Jon Doh'),
+                    create(:user, :with_email, username: 'Don John'), # not included when metaphone
                     create(:user, :with_email, username: 'Bar Foo') ]} # not included
 
     it "returns sorted search results of users" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
-      expect(json.length).to eq 6
+      expect(json.length).to eq 7
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
-      expect(json.first['username']).to eq('Jo Do')
+      expect(json.first['username']).to eq('John Doe')
       expect(json.last['username']).to eq('Johny Doehetry')
     end
   end
@@ -111,6 +113,23 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+    end
+  end
+
+  describe "GET /v1/search/user" do
+    let(:query) {{ query: 'Joh Do', method: 'equal' }}
+    let!(:users) {[ create(:user, :with_email, username: 'John Doe'),
+                    create(:user, :with_email, username: 'Joh Do'),
+                    create(:user, :with_email, username: 'John Doeh'),
+                    create(:user, :with_email, username: 'Jon Doh') ]}
+
+    it "returns search results of users by a custom search algorithm" do
+      get "/v1/search/user", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 1
+      expect(json.first).to have_key('username')
+      expect(json.first).to have_key('id')
+      expect(json.first['username']).to eq('Joh Do')
     end
   end
 

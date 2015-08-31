@@ -63,6 +63,28 @@ resource "Search" do
         expect(json.first['id']).to eq(user.id)
       end
     end
+
+    context "search by custom search algorithm" do
+      parameter :method, "The custom search algorithm"
+
+      let!(:user) { create(:user, username: 'John Doe') }
+      let(:query) { 'John Doe' }
+      let(:method) { 'like' }
+
+      example "Search by custom search algorithm", document: :v1 do
+        explanation "returns 404 if query is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to be 1
+        expect(json.first).to have_key "id"
+        expect(json.first).to have_key "username"
+        expect(json.first).to have_key "image"
+        expect(json.first).to have_key "url"
+        expect(json.first).to have_key "friendshipState"
+        expect(json.first['id']).to eq(user.id)
+      end
+    end
   end
 
   # search slots
