@@ -755,23 +755,9 @@ resource "Users" do
         expect(json.first).to have_key("visibility")
         expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
-        expect(json.first.except('location', 'creator', 'shareUrl'))
-          .to include("id" => std_slot_1.id,
-                      "title" => std_slot_1.title,
-                      "createdAt" => std_slot_1.created_at.as_json,
-                      "updatedAt" => std_slot_1.updated_at.as_json,
-                      "deletedAt" => std_slot_1.deleted_at.as_json,
-                      "startDate" => std_slot_1.start_date.as_json,
-                      "visibility" => std_slot_1.visibility,
-                      "endDate" => std_slot_1.end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_1) },
-                      "notes" => std_slot_1.notes,
-                      "likes" => std_slot_1.likes.count,
-                      "commentsCounter" => std_slot_1.comments.count,
-                      "media" => std_slot_1.media_items,
-                      "url" => v1_slot_url(std_slot_1, format: :json)
-                     )
+        expect(response_body).to include(std_slot_1.title)
+        expect(response_body).to include(std_slot_2.title)
+        expect(response_body).to include(re_slots.first.title)
       end
     end
 
