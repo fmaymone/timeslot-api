@@ -42,15 +42,15 @@ class Search
   end
 
   # requires: postgres extension "pg_trgm"
+  # this algorithm is very slow but is often favourized by the community
   # def self.similiar(table, attr, query)
   #   table.where('similarity(' + attr + ', ?) < 5', query)
   # end
 
   def self.paginate(result, attr, query, page, limit)
     return result if result.empty?
-    result.limit(limit)
-          .offset((page - 1) * limit)
-          .select("*", "levenshtein(" + attr + ", '" + query + "') AS distance")
-          .order("distance ASC, " + attr)
+    result.offset((page - 1) * limit)
+          .limit(limit)
+          .order("levenshtein(" + attr + ", '" + query + "') ASC, " + attr)
   end
 end
