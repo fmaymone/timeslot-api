@@ -7,7 +7,7 @@ RSpec.describe "V1::Search", type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  # global search (elastic search)
+  # WebSearch Endpoint (Elastic Search)
   # describe "GET /v1/search/", :vcr do
   #   it "returns 422 if action was missing" do
   #     get "/v1/search/", {}, auth_header
@@ -51,6 +51,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(current_user.id)
     end
   end
 
@@ -64,6 +65,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(user.id)
     end
   end
 
@@ -77,6 +79,8 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 3
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(users[(query[:page] - 1) * query[:limit]].id)
+      expect(json.last['id']).to eq(users[query[:page] * query[:limit]].id - 1)
     end
   end
 
@@ -113,6 +117,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(current_user.id)
     end
   end
 
@@ -142,6 +147,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(current_user.id)
     end
   end
 
@@ -155,6 +161,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('title')
       expect(json.first).to have_key('startDate')
+      expect(json.first['id']).to eq(slot.id)
     end
   end
 
@@ -167,6 +174,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(response.status).to be(200)
       expect(json.first).to have_key('mediaId')
       expect(json.first).to have_key('mediaType')
+      expect(json.first['mediaId']).to eq(slot.media_items.first.id)
     end
   end
 
@@ -174,12 +182,13 @@ RSpec.describe "V1::Search", type: :request do
     let(:group) { create(:group, :with_3_members, name: 'Timeslot Official') }
     let(:query) {{ query: group.name }}
 
-    it "returns search results of media" do
+    it "returns search results of groups" do
       get "/v1/search/group", query, auth_header
       expect(response.status).to be(200)
       expect(json.length).to eq 1
       expect(json.first).to have_key('id')
       expect(json.first).to have_key('upcomingCount')
+      expect(json.first['id']).to eq(group.id)
     end
   end
 
@@ -187,12 +196,13 @@ RSpec.describe "V1::Search", type: :request do
     let!(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
     let(:query) {{ query: ios_location.name }}
 
-    it "returns search results of media" do
+    it "returns search results of locations" do
       get "/v1/search/location", query, auth_header
       expect(response.status).to be(200)
       expect(json.length).to eq 1
       expect(json.first).to have_key('latitude')
       expect(json.first).to have_key('longitude')
+      expect(json.first['id']).to eq(ios_location.id)
     end
   end
 

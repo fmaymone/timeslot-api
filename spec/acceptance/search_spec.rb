@@ -39,6 +39,7 @@ resource "Search" do
         expect(json.first).to have_key "image"
         expect(json.first).to have_key "url"
         expect(json.first).to have_key "friendshipState"
+        expect(json.first['id']).to eq(user.id)
       end
     end
 
@@ -67,8 +68,9 @@ resource "Search" do
     context "search by custom search algorithm" do
       parameter :method, "The custom search algorithm"
 
-      let!(:user) { create(:user, username: 'John Doe') }
-      let(:query) { 'John Doe' }
+      let!(:user1) { create(:user, username: 'John Doe') }
+      let!(:user2) { create(:user, username: 'John Doh') }
+      let(:query) { 'John Do' }
       let(:method) { 'like' }
 
       example "Search by custom search algorithm", document: :v1 do
@@ -76,13 +78,14 @@ resource "Search" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(json.length).to be 1
+        expect(json.length).to be 2
         expect(json.first).to have_key "id"
         expect(json.first).to have_key "username"
         expect(json.first).to have_key "image"
         expect(json.first).to have_key "url"
         expect(json.first).to have_key "friendshipState"
-        expect(json.first['id']).to eq(user.id)
+        expect(json.first['id']).to eq(user1.id)
+        expect(json.last['id']).to eq(user2.id)
       end
     end
   end
