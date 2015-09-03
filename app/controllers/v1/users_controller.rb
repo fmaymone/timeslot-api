@@ -26,7 +26,7 @@ module V1
       authorize :user
       @user = User.create_with_image(params: user_create_params,
                                      image: user_image,
-                                     device: device_params)
+                                     device: device_params(params[:device]))
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -214,11 +214,11 @@ module V1
       p.transform_keys { |key| key.underscore.to_sym }
     end
 
-    private def device_params
-      return nil unless params[:deviceId].present?
-      params.permit(:deviceId, :system, :version, :token, :endpoint)
-            .transform_keys(&:underscore)
-            .symbolize_keys
+    private def device_params(p = nil)
+      return nil unless (p || (p = params))[:deviceId].present?
+      p.permit(:deviceId, :system, :version, :token, :endpoint)
+       .transform_keys(&:underscore)
+       .symbolize_keys
     end
 
     private def friends_ids
