@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     post 'stdslot', to: 'slots#create_stdslot'
     post 'reslot', to: 'slots#create_reslot'
     post 'groupslot', to: 'slots#create_groupslot'
+    post 'webslot', to: 'slots#create_webslot'
 
     patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
