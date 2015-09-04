@@ -180,7 +180,7 @@ resource "Users" do
 
       let(:user) { create(:user) }
       let(:id) { user[:id] }
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signup - Create user with a specific device", document: :v1 do
         explanation "Either an email or phone number must be provided\n\n" \
