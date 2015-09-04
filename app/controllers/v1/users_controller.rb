@@ -160,7 +160,7 @@ module V1
     # if device not exist creates a new one with the passed attributes
     def update_device
       authorize :user
-      current_user.devices.update_or_create(device_params) if params.require(:deviceId)
+      current_user.devices.update_or_create(device_params(params)) if params.require(:deviceId)
 
       head :ok
     end
@@ -214,11 +214,11 @@ module V1
       p.transform_keys { |key| key.underscore.to_sym }
     end
 
-    private def device_params(p = nil)
-      return nil unless (p || (p = params))[:deviceId].present?
-      p.permit(:deviceId, :system, :version, :token, :endpoint)
-       .transform_keys(&:underscore)
-       .symbolize_keys
+    private def device_params(params)
+      return nil unless params[:deviceId].present?
+      params.permit(:deviceId, :system, :version, :token, :endpoint)
+            .transform_keys(&:underscore)
+            .symbolize_keys
     end
 
     private def friends_ids
