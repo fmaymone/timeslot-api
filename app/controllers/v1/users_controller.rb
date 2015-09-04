@@ -215,7 +215,7 @@ module V1
     end
 
     private def device_params(params)
-      return nil unless params[:deviceId].present?
+      return nil unless params && params[:deviceId].present?
       params.permit(:deviceId, :system, :version, :token, :endpoint)
             .transform_keys(&:underscore)
             .symbolize_keys
