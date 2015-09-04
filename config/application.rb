@@ -22,6 +22,9 @@ module TsRailsBackend
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
+    # don't log passwords
+    config.filter_parameters += [:password]
+
     # no fractional seconds for datime strings
     # ActiveSupport::JSON::Encoding.time_precision = 0
 
