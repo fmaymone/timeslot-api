@@ -26,7 +26,7 @@ gem 'rails_12factor', '0.0.3', group: :production
 
 # third party services
 gem 'cloudinary', '1.1.0'
-gem 'airbrake', '4.3.0'
+gem 'airbrake'
 gem 'aws-sdk', '2.1.7'
 gem 'newrelic_rpm', '3.12.1.298'
 
@@ -52,7 +52,7 @@ group :development, :test do
   gem 'pry-byebug', '3.1.0'
 
   gem 'pry-doc', '0.8.0'
-  
+
   gem 'spring', '1.3.6'
 
   gem 'spring-commands-rspec', '1.0.4'
@@ -78,7 +78,7 @@ group :development, :test, :herokutest do
   gem 'database_cleaner', '1.4.1'
 
   # github version contains a monkey patch for pretty printing response body in API docs
-  gem 'rspec_api_documentation', '4.3.0', git: "https://github.com/ts-silvio/rspec_api_documentation.git" 
+  gem 'rspec_api_documentation', '4.3.0', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
   gem 'shoulda-matchers', '2.8.0', require: false
 end
