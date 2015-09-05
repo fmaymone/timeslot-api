@@ -68,11 +68,10 @@ module V1
     # POST /v1/reslot
     def create_webslot
       authorize :stdSlot
-      slot_creator = User.find_by(id: params.require(:creatorId))
+      slot_creator = User.find_by(auth_token: ENV['TS_CRAWLER_KEY'])
 
       @slot = MetaSlot.find_by(creator_id: params.require(:creatorId),
                                start_date: params.require(:startDate),
-                               end_date: params.require(:endDate),
                                title: params.require(:title))
       if @slot
         @slot = BaseSlot.find_by(meta_slot_id: @slot.id)
@@ -86,12 +85,8 @@ module V1
       if @slot.errors.empty?
         authorize :reSlot
         @slot = ReSlot.create_from_slot(predecessor: @slot, slotter: current_user)
-        if @slot.save
-          if @slot.errors.empty?
-            render json: { status: 200 }
-          else
-            render json: { status: 422 }
-          end
+        if @slot.save && @slot.errors.empty?
+          return head :ok
         end
       end
       unless @slot.errors.empty?
