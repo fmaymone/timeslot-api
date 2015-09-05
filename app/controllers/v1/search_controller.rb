@@ -1,12 +1,30 @@
 module V1
-  class SearchController < ApplicationController
+  require 'open-uri'
 
-    # GET /v1/search/
+  class SearchController < ApplicationController
+    skip_before_action :authenticate_user_from_token!, only: :index
+
+    # GET /v1/search/?q=berghain&limit=20&pos=13.0,52.0&date=05.05.2015
+    # Global search through elastic search (crawler)
     def index
       authorize :search
-      # default route to "v1/search/"
-      # here we can add multi search
-      head 422
+
+      search_url = ENV['TS_SEARCH_SERVICE_URL']
+      user = ENV['TS_SEARCH_SERVICE_NAME']
+      pw = ENV['TS_SEARCH_SERVICE_PASSWORD']
+      auth = { http_basic_authentication: [user, pw] }
+
+      query = search_url + "?q=" + params.require(:query) +
+                           "&size=" + (page[:limit] || 10) +
+                           "&date=" + (page[:datetime] || Time.now)
+      begin
+        result = open(query, auth).read
+      rescue => e
+        Airbrake.notify(e)
+        return render json: { error: "Search Service Error: #{e}" },
+                      status: :service_unavailable
+      end
+      render json: result, status: :ok
     end
 
     # GET /v1/search/user
@@ -69,7 +87,7 @@ module V1
     end
 
     private def page
-      params.permit(:page, :limit, :method).symbolize_keys
+      params.permit(:datetime, :page, :limit, :method).symbolize_keys
     end
 
     # Example rails sanitize:
