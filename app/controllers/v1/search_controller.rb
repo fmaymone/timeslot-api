@@ -4,8 +4,8 @@ module V1
   class SearchController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: :index
 
-    # GET /v1/search/?q=berghain&limit=20&pos=13.0,52.0&date=05.05.2015
-    # Global search through elastic search (crawler)
+    # GET /v1/search/?q=berghain&limit=10&timestamp=2015-08-08T12:00
+    # Global search through elastic search (crawler data)
     def index
       authorize :search
 
@@ -15,8 +15,8 @@ module V1
       auth = { http_basic_authentication: [user, pw] }
 
       query = search_url + "?q=" + params.require(:query) +
-                           "&size=" + (page[:limit] || 10) +
-                           "&date=" + (page[:datetime] || Time.now)
+                           "&size=" + (page[:limit] || '10') +
+                           "&timestamp=" + (page[:datetime] || Time.zone.now.strftime('%Y-%m-%dT%H:%M'))
       begin
         result = open(query, auth).read
       rescue => e
