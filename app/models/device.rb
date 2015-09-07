@@ -68,18 +68,30 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  private def notify_ios(client, message:, alert: '', sound: 'default',
-                         badge: 1, extra: {a: 1, b: 2})
+  private def notify_ios(client, message:, alert: '', sound: 'receive_message.wav',
+                         badge: 1, extra: {a: 1, b: 2}, slot_id: "")
     begin
-      client.publish(target_arn: endpoint, message: {
-          default: message,
-          APNS_SANDBOX: {
-              aps: {
-                  alert: alert, sound: sound,
-                  badge: badge, extra: extra
-              }
-          }
-      }.to_json, message_structure: "json")
+      # client.publish(target_arn: endpoint, message: {
+      #     default: message,
+      #     APNS_SANDBOX: {
+      #         aps: {
+      #             alert: alert, sound: sound,
+      #             badge: badge, extra: extra
+      #         }
+      #     }
+      # }.to_json, message_structure: "json")
+
+
+
+      out_message = {:message=>message}
+      apns_string = {}
+      apns_string[:aps] = {:alert => message, :sound => sound, :badge => badge, :slot_id => slot_id}
+      aws_message = {:default => out_message,:APNS_SANDBOX => apns_string.to_json}
+
+      client.publish :message => aws_message.to_json, :target_arn => endpoint, :message_structure => 'json'
+
+
+
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
       Airbrake.notify(aws_sns_error: exception)
