@@ -546,6 +546,7 @@ resource "Slots" do
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("slotter")
+        expect(json).to have_key("visibility")
         expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
@@ -553,6 +554,7 @@ resource "Slots" do
         # temporary change for reslot to submit slotter as creator
         # expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["creator"]["id"]).to eq current_user.id
+        expect(json["visibility"]).to eq pred.visibility
       end
     end
   end

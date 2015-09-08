@@ -48,6 +48,7 @@ elsif slot.class == ReSlot
   json.creator do
     json.partial! 'v1/users/user', user: slot.slotter
   end
+  json.visibility slot.parent.try(:visibility)
 end
 
 json.likes slot.likes.count
