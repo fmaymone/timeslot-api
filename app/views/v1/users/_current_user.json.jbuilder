@@ -1,6 +1,7 @@
 json.partial! 'v1/users/basic_user', user: @user
 
 json.extract!(user,
+              :lang,
               :email,
               :email_verified,
               :phone,

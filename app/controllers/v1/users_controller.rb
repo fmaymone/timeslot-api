@@ -175,6 +175,7 @@ module V1
 
     private def user_params
       p = params.permit(:username,
+                        :lang,
                         :email,
                         :phone,
                         :password,

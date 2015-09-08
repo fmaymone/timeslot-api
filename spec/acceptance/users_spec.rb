@@ -24,6 +24,7 @@ resource "Users" do
 
     response_field :email, "Email of user (max. 255 characters)"
     response_field :phone, "Phone number of user (max. 35 characters)"
+    response_field :lang, "Language code (ISO 639-1)"
     response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
     response_field :slotDefaultDuration, "Default Slot Duration in seconds"
     response_field :slotDefaultTypeId, "Default Slot Type - WIP"
@@ -122,7 +123,7 @@ resource "Users" do
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'device_token', 'email', 'email_verified',
+                         'push', 'device_token', 'email', 'email_verified', 'lang',
                          'phone', 'phone_verified', 'location_id',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
@@ -144,16 +145,17 @@ resource "Users" do
               required: true
     parameter :email, "Email of user (max. 254 characters)"
     parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
-
     let(:username) { "foo" }
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
+    let(:lang) { "de" }
 
     example "User signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
@@ -165,6 +167,7 @@ resource "Users" do
       expect(json).to have_key 'id'
       expect(json).to have_key 'username'
       expect(json).to have_key 'email'
+      expect(json).to have_key 'lang'
       expect(json).to have_key 'authToken'
     end
 
@@ -316,6 +319,7 @@ resource "Users" do
 
     parameter :username, "Updated username of user (max. 50 characters)"
     parameter :email, "Email of user (max. 255 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :image, "URL of the user image"
     parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
@@ -462,6 +466,20 @@ resource "Users" do
         expect(json).to have_key("location")
         expect(json["location"]).not_to be nil
         expect(json["location"]["name"]).to eq "Acapulco"
+      end
+    end
+
+    describe "Set default language for a user" do
+      let(:lang) { 'de' }
+
+      example "Update current user - set default language", document: :v1 do
+        expect(current_user[:lang]).to be(nil)
+
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user[:lang]).to eq('de')
       end
     end
 

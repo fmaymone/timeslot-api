@@ -11,6 +11,7 @@ class ApplicationController < ActionController::API
 
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
+  after_action :set_locale, only: :users
 
   # Enforces access right checks for collections
   # after_action :verify_policy_scoped, only: :index
@@ -52,5 +53,9 @@ class ApplicationController < ActionController::API
     else
       current_user
     end
+  end
+
+  def set_locale
+    I18n.locale = (current_user[:lang] || I18n.default_locale)
   end
 end
