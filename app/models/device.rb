@@ -4,7 +4,7 @@ class Device < ActiveRecord::Base
   belongs_to :user, inverse_of: :devices
 
   validates :user, presence: true
-  validates :device_id, presence: true, uniqueness: true
+  validates :device_id, presence: true
   validates :system, presence: true
   validates :version, presence: true
 
