@@ -6,7 +6,7 @@ json.extract!(slot,
               :updated_at,
               :deleted_at
              )
-             
+
 if slot.open_end == false
   json.end_date slot.end_date
 end
@@ -42,7 +42,11 @@ if slot.try(:group)
   end
 elsif slot.class == ReSlot
   json.slotter do
-    json.id slot.slotter.id
+    json.id slot.slotter_id
+  end
+  # for demo purpose overwrite creator with slotter for reslots
+  json.creator do
+    json.partial! 'v1/users/user', user: slot.slotter
   end
 end
 
