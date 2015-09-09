@@ -160,7 +160,7 @@ module V1
     # if device not exist creates a new one with the passed attributes
     def update_device
       authorize :user
-      current_user.devices.update_or_create(device_params(params)) if params.require(:deviceId)
+      Device.update_or_create(current_user, device_params(params)) if params.require(:deviceId)
 
       head :ok
     end
@@ -230,7 +230,9 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password, :device).symbolize_keys
+      params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
+            .deep_transform_keys(&:underscore)
+            .deep_symbolize_keys
     end
   end
 end

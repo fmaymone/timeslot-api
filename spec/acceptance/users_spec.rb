@@ -237,7 +237,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -257,7 +257,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signin with an existing device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -696,7 +696,7 @@ resource "Users" do
       end
 
       context "Update default device attributes" do
-        let(:device) { create(:device, user: current_user) }
+        let!(:device) { create(:device, user: current_user) }
         let(:deviceId) { device[:device_id] }
         let(:system) { 'android' }
         let(:version) { '5.0b' }
@@ -705,6 +705,7 @@ resource "Users" do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"
+          expect(current_user.reload.devices.last[:device_id]).to eq('ios')
           do_request
 
           expect(response_status).to eq(200)

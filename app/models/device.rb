@@ -13,11 +13,9 @@ class Device < ActiveRecord::Base
     # check if token already exist on an old device
     if(device = Device.find_by(token: token)) && device != self
       self.token = token
-      self.endpoint = device[:endpoint] if device[:endpoint]
       self.save
       device.destroy
     end
-    return true if endpoint && token == self.token
     # sets new endpoint if not exist or update if new token was passed
     case system
     when 'ios'
@@ -99,10 +97,12 @@ class Device < ActiveRecord::Base
     NotifyJob.new.async.perform(users, params)
   end
 
-  def self.update_or_create(params)
+  def self.update_or_create(user, params)
     return if params.nil?
-    device = find_or_create_by(device_id: params[:device_id])
-    device.update(params.extract!(:user_id, :device_id, :system, :version))
+    device = Device.find_by(device_id: params[:device_id]) ||
+             Device.create(params.extract!(:device_id, :system, :version))
+    device.update(user: user)
+    device.update(params)
     if params[:endpoint] === false
       device.unregister_endpoint
     elsif params[:token]
