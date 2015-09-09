@@ -147,7 +147,7 @@ class BaseSlot < ActiveRecord::Base
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
     if new_comment.valid?
-      users = []
+      users = [new_comment.slot.creator]
       new_comment.slot.comments.each do |comment|
         unless user.id.equal?(comment.user.id)
           users << comment.user unless(users.include?(comment.user))
