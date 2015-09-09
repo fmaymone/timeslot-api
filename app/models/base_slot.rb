@@ -135,6 +135,8 @@ class BaseSlot < ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(user: user, deleted_at: nil) if like.deleted_at? # relike after unlike
+    Device.notify_all([self.creator], [ message: "#{user.username} likes your slot",
+                                        slot_id: self.id ])
   end
 
   def destroy_like(user)
@@ -145,9 +147,16 @@ class BaseSlot < ActiveRecord::Base
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
     if new_comment.valid?
-      Device.notify_all([creator], [ message: I18n.t('notify_create_comment',
-                                     name: user.username,
-                                     title: meta_slot.title) ])
+      users = []
+      new_comment.slot.comments.each do |comment|
+        unless user.id.equal?(comment.user.id)
+          users << comment.user unless(users.include?(comment.user))
+        end
+      end
+      Device.notify_all(users, [ message: I18n.t('notify_create_comment',
+                                 name: user.username,
+                                 title: meta_slot.title),
+                                 slot_id: new_comment.slot.id ])
       return new_comment
     end
     errors.add(:comment, new_comment.errors)

@@ -20,4 +20,4 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
-  notify_create_comment: "The user '%{name}' commented on: '%{title}'"
+  notify_create_comment: "%{name} commented on '%{title}'"
