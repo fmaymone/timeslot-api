@@ -31,6 +31,7 @@ module V1
     # TODO: define and check allowed attributes for searching
     def user
       authorize :search
+      return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'username',
                                 query, page)
       render "v1/users/index"
@@ -39,6 +40,7 @@ module V1
     # GET /v1/search/email
     def email
       authorize :search
+      return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'email',
                                 query, page)
       render "v1/users/index"
@@ -47,6 +49,7 @@ module V1
     # GET /v1/search/media
     def media
       authorize :search
+      return head 422 unless has_allowed_params?
       @media_items = Search.new(MediaItem, params[:attr] || 'title',
                                            query, page)
       render "v1/media/index"
@@ -55,6 +58,7 @@ module V1
     # GET /v1/search/slot
     def slot
       authorize :search
+      return head 422 unless has_allowed_params?
       @slots = Search.new(MetaSlot, params[:attr] || 'title',
                                     query, page)
       #render json: @slots
@@ -64,6 +68,7 @@ module V1
     # GET /v1/search/group
     def group
       authorize :search
+      return head 422 unless has_allowed_params?
       @groups = Search.new(Group, params[:attr] || 'name',
                                   query, page)
       render "v1/groups/index"
@@ -72,6 +77,7 @@ module V1
     # GET /v1/search/location
     def location
       authorize :search
+      return head 422 unless has_allowed_params?
       @locations = Search.new(IosLocation, params[:attr] || 'name',
                                            query, page)
       render "v1/locations/index"
@@ -84,6 +90,16 @@ module V1
       ActiveSupport::Inflector
           .transliterate(params.require(:query))
           .gsub(/[^a-zA-Z0-9\s@-_.]/, "")
+    end
+
+    private def has_allowed_params?
+      if params[:attr].present?
+        return false unless params[:attr].in?(%w(username name title email))
+      end
+      if params[:method].present?
+        return false unless params[:method].in?(%w(equal like soundex difference metaphone levenshtein))
+      end
+      true
     end
 
     private def page
