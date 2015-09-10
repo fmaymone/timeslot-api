@@ -559,7 +559,7 @@ resource "Slots" do
     end
   end
 
-  post "/v1/webslot" do
+  post "/v1/webslot", :seed do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
     header "Authorization", :auth_header
@@ -571,26 +571,24 @@ resource "Slots" do
               required: true
     include_context "default slot parameter"
 
-    describe "Create new standard slot" do
+    describe "Create new ReSlot from the Web Search service" do
       include_context "default slot response fields"
 
-      let(:user) { create(:user, username: 'Timeslot Official') }
+      let(:user) { User.find_by(email: 'info@timeslot.com') }
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       let(:visibility) { 'public' }
       let(:creatorId) { user.id }
 
-      example "Create ReSlot from Web", document: :v1 do
+      example "Create new ReSlot from the Web Search service", document: :v1 do
         explanation "Returns status code 200.\n\n" \
                     "Missing unrequiered fields will be filled" \
                     " with default values.\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
         do_request
-
         expect(response_status).to eq(200)
-        expect(json['status']).to eq(200)
 
         base_slot = BaseSlot.last
         expect(base_slot.title).to eq(title)

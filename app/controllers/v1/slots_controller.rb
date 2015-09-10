@@ -68,11 +68,13 @@ module V1
     # POST /v1/reslot
     def create_webslot
       authorize :stdSlot
-      slot_creator = User.find_by(auth_token: ENV['TS_CRAWLER_KEY'])
-
+      # Set Slot Creator:
+      slot_creator = User.find_by(email: 'info@timeslot.com')
+      # Create MetaSlot:
       @slot = MetaSlot.find_by(creator_id: params.require(:creatorId),
                                start_date: params.require(:startDate),
                                title: params.require(:title))
+      # Create BaseSlot:
       if @slot
         @slot = BaseSlot.find_by(meta_slot_id: @slot.id)
       else
@@ -81,18 +83,19 @@ module V1
                                      media: media_params, notes: note_param,
                                      alerts: alerts_param, user: slot_creator)
       end
-
+      # Create ReSlot:
       if @slot.errors.empty?
         authorize :reSlot
         @slot = ReSlot.create_from_slot(predecessor: @slot, slotter: current_user)
-        if @slot.save && @slot.errors.empty?
+        if @slot.errors.empty? && @slot.save
           return head :ok
         end
       end
       unless @slot.errors.empty?
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
+        return render json: { error: @slot.errors },
+                      status: :unprocessable_entity
       end
+      head 422
     end
 
     # PATCH /v1/metaslot/1
