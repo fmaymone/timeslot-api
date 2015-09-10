@@ -39,8 +39,8 @@ class BaseSlot < ActiveRecord::Base
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
   belongs_to :shared_by, class_name: User
 
-  delegate :title, :start_date, :end_date, :creator, :location_id, :location,
-           :ios_location_id, :ios_location, :open_end,
+  delegate :title, :start_date, :end_date, :creator_id, :creator, :location_id,
+           :location, :ios_location_id, :ios_location, :open_end,
            :title=, :start_date=, :end_date=, :creator=, :location_id=, :open_end=,
            to: :meta_slot
 
@@ -134,10 +134,9 @@ class BaseSlot < ActiveRecord::Base
 
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
-    like.update(user: user, deleted_at: nil) if like.deleted_at? # relike after unlike
-    users = [like.slot.creator]
-    Device.notify_all(users, [ message: "#{user.username} likes your slot",
-                               slot_id: self.id ])
+    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    Device.notify_all([creator_id], [ message: "#{user.username} likes your slot",
+                                      slot_id: self.id ])
   end
 
   def destroy_like(user)
@@ -147,25 +146,24 @@ class BaseSlot < ActiveRecord::Base
 
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
-    if new_comment.valid?
-      users = [new_comment.slot.creator]
-      new_comment.slot.comments.each do |comment|
-        unless user.id.equal?(comment.user.id)
-          users << comment.user unless(users.include?(comment.user))
-        end
-      end
-      likes.each do |like|
-        unless user.id.equal?(like.user.id)
-          users << like.user unless(users.include?(like.user))
-        end
-      end
-      Device.notify_all(users, [ message: I18n.t('notify_create_comment',
-                                 name: user.username,
-                                 title: meta_slot.title),
-                                 slot_id: new_comment.slot.id ])
-      return new_comment
-    end
-    errors.add(:comment, new_comment.errors)
+    errors.add(:comment, new_comment.errors) unless new_comment.valid?
+
+    # Is the creator really what we want?
+    # For std_slots we want the owner. For Groupslots?
+    user_ids = [creator_id]
+    user_ids += comments.pluck(:user_id)
+    user_ids += likes.pluck(:user_id)
+    # remove the user who did the actual comment
+    user_ids.delete(user.id)
+
+    message_content = I18n.t('notify_create_comment',
+                             name: user.username,
+                             title: meta_slot.title)
+
+    Device.notify_all(user_ids.uniq, [message: message_content,
+                                      slot_id: new_comment.slot_id])
+
+    new_comment
   end
 
   def set_share_id(user)

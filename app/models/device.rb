@@ -76,7 +76,7 @@ class Device < ActiveRecord::Base
               default: {
                   message: message
               },
-              APNS_SANDBOX: {
+              APNS: {
                   aps: {
                       alert: message,
                       sound: sound,
@@ -84,7 +84,7 @@ class Device < ActiveRecord::Base
                       slot_id: slot_id
                   }
               }.to_json,
-              APNS: {
+              APNS_SANDBOX: {
                   aps: {
                       alert: message,
                       sound: sound,
