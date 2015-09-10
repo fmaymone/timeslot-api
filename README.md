@@ -25,6 +25,15 @@ On first signup the token is also created so a signed up user is already logged 
 We use Pundit for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
 
 
+# Environment Variables
+
+```bash
+ENV['MAX_THREADS'] # number of concurrent Puma Webserver threads, defaults to 5 if not set
+ENV['NOTIFICATION_WORKERS'] # number of concurrent SuckerPunch Notification Workers, defaults to 10 if not set
+ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREADS or 5 if both are not set, BUT should be at least MAX_THREADS + NOTIFICATION_WORKERS
+# maximum on heroku free plan is 20
+```
+
 # External Services
 
 Using them usually requires setting some environment variables.

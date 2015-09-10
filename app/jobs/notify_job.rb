@@ -1,6 +1,6 @@
 class NotifyJob
   include SuckerPunch::Job
-  workers 2
+  workers ENV['NOTIFICATION_WORKERS'] || 5
 
   def perform(users, params)
     ActiveRecord::Base.connection_pool.with_connection do
