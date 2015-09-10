@@ -83,6 +83,14 @@ class Device < ActiveRecord::Base
                       badge: badge,
                       slot_id: slot_id
                   }
+              }.to_json,
+              APNS_SANDBOX: {
+                  aps: {
+                      alert: message,
+                      sound: sound,
+                      badge: badge,
+                      slot_id: slot_id
+                  }
               }.to_json
           }.to_json,
           target_arn: endpoint,

@@ -9,9 +9,9 @@ class NotifyJob
       # to handle multiple notifications we need topics and subscriber but this mess things up, cuz
       # we would need to mirror the most of the logic from backend into an "AWS-topic-model"
       # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
-      users.each do |user|
+      User.find(users).find_each do |user|
         if user.push && user.deleted_at.nil?
-          user.devices.each do |device|
+          user.devices.find_each do |device|
             device.notify(client, params) if device.endpoint
           end
         end
