@@ -149,14 +149,14 @@ class BaseSlot < ActiveRecord::Base
     new_comment = comments.create(user: user, content: content)
     if new_comment.valid?
       users = [new_comment.slot.creator.id]
-      new_comment.slot.comments.find_each do |comment|
+      comments.find_each do |comment|
         unless user.id.equal?(comment.user.id)
-          users << comment.user.id unless(users.include?(comment.user))
+          users << comment.user.id unless(users.include?(comment.user.id))
         end
       end
       likes.find_each do |like|
         unless user.id.equal?(like.user.id)
-          users << like.user.id unless(users.include?(like.user))
+          users << like.user.id unless(users.include?(like.user.id))
         end
       end
       Device.notify_all(users, [ message: I18n.t('notify_create_comment',

@@ -705,7 +705,7 @@ resource "Users" do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"
-          expect(current_user.reload.devices.last[:device_id]).to eq('ios')
+          expect(current_user.reload.devices.last[:system]).to eq('ios')
           do_request
 
           expect(response_status).to eq(200)
