@@ -134,10 +134,9 @@ class BaseSlot < ActiveRecord::Base
 
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
-    like.update(user: user, deleted_at: nil) if like.deleted_at? # relike after unlike
-    users = [like.slot.creator.id]
-    Device.notify_all(users, [ message: "#{user.username} likes your slot",
-                               slot_id: self.id ])
+    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    Device.notify_all([creator_id], [ message: "#{user.username} likes your slot",
+                                      slot_id: self.id ])
   end
 
   def destroy_like(user)
