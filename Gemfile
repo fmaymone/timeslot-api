@@ -39,9 +39,6 @@ gem 'sucker_punch'
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
 
-# Adding CORS (Cross-Origin Resource Sharing)
-gem 'rack-cors', :require => 'rack/cors'
-
 group :development do
   gem "rails-erd"
 
@@ -87,8 +84,6 @@ group :development, :test, :herokutest do
   gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
   gem 'shoulda-matchers', require: false
-
-  gem 'shoulda-matchers', '2.8.0', require: false
 
   # Faker
   gem 'faker'
