@@ -71,7 +71,7 @@ module V1
       # Set Slot Creator:
       slot_creator = User.find_by(email: 'info@timeslot.com')
       # Create MetaSlot:
-      metaslot = MetaSlot.find_by(creator_id: params.require(:creatorId),
+      metaslot = MetaSlot.find_by(creator_id: slot_creator.id,
                                   start_date: params.require(:startDate),
                                   title: params.require(:title))
       # Create BaseSlot:
