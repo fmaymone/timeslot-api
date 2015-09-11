@@ -12,6 +12,12 @@ RSpec.configure do |config|
     DatabaseCleaner.strategy = :truncation
   end
 
+  # whenever we load seed data (via :seed flag) we need to use
+  # the :truncation or :deletion strategy to really empty the database
+  config.before(:each, :seed) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
   config.before(:each) do
     DatabaseCleaner.start
     # HACK: to reset sorting sequence for position

@@ -10,10 +10,8 @@ Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
 
 # Pseudo-User for the webview
-# TODO: add email, otherwise user probably couldn't be created
-User.create(username: 'webview', role: 1) unless Rails.env == "test"
-# produces an auth_token to be enviroment variables used in TS_SLOT_WEBSHARING
-# TODO after fixing tests, create also in test enviroment
+User.create(username: 'webview', role: 1)
+# TS_SLOT_WEBSHARING needs the auth_token of this 'webview' user as env variable
 
 # Pseudo-User for the crawler data/slots
 User.create(username: 'Timeslot Official', role: 1, email: 'info@timeslot.com')
