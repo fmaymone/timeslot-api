@@ -118,4 +118,14 @@ RSpec.describe Device, type: :model do
       expect(device.token).to eq(token)
     end
   end
+
+  describe :notify do
+    let(:client) { double("client") }
+    let(:params) { [{ message: 'hola' }] }
+
+    it "sends a push notification message to the client" do
+      expect(client).to receive(:publish).with(hash_including(message: /hola/))
+      device.notify(client, params)
+    end
+  end
 end
