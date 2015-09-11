@@ -56,6 +56,11 @@ ENV['AWS_REGION']
 
 ```bash
 ENV['AWS_PLATFORM_APPLICATION_IOS'] # aws arn endpoint (iOS)
+
+# enable push endpoints, if not set explicitly endpoint is enabled by default
+# ENV['PUSH_DEFAULT'] = 'true'
+ENV['PUSH_APNS'] = 'false'
+ENV['PUSH_APNS_SANDBOX'] = 'true'
 ```
 
 ## Cloudinary

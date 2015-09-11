@@ -57,8 +57,8 @@ class Device < ActiveRecord::Base
   private def register_endpoint_ios(token)
     begin
       Device.create_client.create_platform_endpoint(
-          platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
-          token: token)[:endpoint_arn]
+        platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
+        token: token)[:endpoint_arn]
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
       Airbrake.notify(aws_sns_error: exception)
@@ -70,32 +70,61 @@ class Device < ActiveRecord::Base
   # push notification to APNS (apple push notification service)
   private def notify_ios(client, message:, alert: '', sound: 'receive_message.wav',
                          badge: 1, extra: {a: 1, b: 2}, slot_id: "")
+
+    payload = {}
+    # defaults to true, if ENV variable not set, otherwise examine
+    if ENV['PUSH_DEFAULT'].nil? ? true : ENV['PUSH_DEFAULT'] == 'true'
+      payload.merge!(default: { message: message })
+    end
+
+    if ENV['PUSH_APNS'].nil? ? true : ENV['PUSH_APNS'] == 'true'
+      payload.merge!({ APNS: { aps: {
+                                 alert: message,
+                                 sound: sound,
+                                 badge: badge,
+                                 slot_id: slot_id
+                               }
+                             }.to_json })
+    end
+
+    if ENV['PUSH_APNS_SANDBOX'].nil? ? true : ENV['PUSH_APNS_SANDBOX'] == 'true'
+      payload.merge!({ APNS_SANDBOX: { aps: {
+                                         alert: message,
+                                         sound: sound,
+                                         badge: badge,
+                                         slot_id: slot_id
+                                       }
+                                     }.to_json })
+    end
+    push_notification = { message: payload.to_json,
+                          target_arn: endpoint,
+                          message_structure: 'json' }
+
+    # push_notification = { message: {
+    #                         default: {
+    #                           message: message
+    #                         },
+    #                         APNS: {
+    #                           aps: {
+    #                             alert: message,
+    #                             sound: sound,
+    #                             badge: badge,
+    #                             slot_id: slot_id
+    #                           }
+    #                         }.to_json,
+    #                         APNS_SANDBOX: {
+    #                           aps: {
+    #                             alert: message,
+    #                             sound: sound,
+    #                             badge: badge,
+    #                             slot_id: slot_id
+    #                           }
+    #                         }.to_json
+    #                       }.to_json,
+    #                       target_arn: endpoint,
+    #                       message_structure: 'json' }
+
     begin
-      client.publish(
-          message: {
-              default: {
-                  message: message
-              },
-              APNS: {
-                  aps: {
-                      alert: message,
-                      sound: sound,
-                      badge: badge,
-                      slot_id: slot_id
-                  }
-              }.to_json,
-              APNS_SANDBOX: {
-                  aps: {
-                      alert: message,
-                      sound: sound,
-                      badge: badge,
-                      slot_id: slot_id
-                  }
-              }.to_json
-          }.to_json,
-          target_arn: endpoint,
-          message_structure: 'json'
-      )
 
       # For testing purposes only:
       # out_message = {:message=>message}
@@ -103,6 +132,7 @@ class Device < ActiveRecord::Base
       # apns_string[:aps] = {:alert => message, :sound => sound, :badge => badge, :slot_id => slot_id}
       # aws_message = {:default => out_message, :APNS_SANDBOX => apns_string.to_json, :APNS => apns_string.to_json}
       # client.publish :message => aws_message.to_json, :target_arn => endpoint, :message_structure => 'json'
+      client.publish(push_notification)
 
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
