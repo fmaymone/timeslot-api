@@ -83,7 +83,17 @@ The Data Team provides a database based on OSM Location Data. This DB is transpa
 ENV['LOCATION_DB_URI'] # postgres uri of locations production db
 ```
 
-## Search Service
+## Search Service (Elastic Search, Crawler)
+
+The Data Team provides an elasticSearch - Location Search Interface for it's location data
+
+```bash
+ENV['TS_SEARCH_SERVICE_NAME'] # username
+ENV['TS_SEARCH_SERVICE_PASSWORD'] # password
+ENV['TS_SEARCH_SERVICE_URL'] # elastic search url
+```
+
+## Location Search Service
 
 The Data Team provides an elasticSearch - Location Search Interface for it's location data
 

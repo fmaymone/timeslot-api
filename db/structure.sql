@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
+
+
+--
 -- Name: hstore; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -35,6 +49,20 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
 SET search_path = public, pg_catalog;
@@ -630,9 +658,9 @@ CREATE TABLE users (
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
-    lang character varying
     auth_token character varying(27),
-    push boolean DEFAULT true
+    push boolean DEFAULT true,
+    lang character varying
 );
 
 
@@ -1286,4 +1314,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150808172817');
 INSERT INTO schema_migrations (version) VALUES ('20150810155024');
 
 INSERT INTO schema_migrations (version) VALUES ('20150819181058');
+
+INSERT INTO schema_migrations (version) VALUES ('20150825113006');
 
