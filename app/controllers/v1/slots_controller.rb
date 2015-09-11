@@ -71,31 +71,28 @@ module V1
       # Set Slot Creator:
       slot_creator = User.find_by(email: 'info@timeslot.com')
       # Create MetaSlot:
-      @slot = MetaSlot.find_by(creator_id: params.require(:creatorId),
-                               start_date: params.require(:startDate),
-                               title: params.require(:title))
+      metaslot = MetaSlot.find_by(creator_id: params.require(:creatorId),
+                                  start_date: params.require(:startDate),
+                                  title: params.require(:title))
       # Create BaseSlot:
-      if @slot
-        @slot = BaseSlot.find_by(meta_slot_id: @slot.id)
+      if metaslot
+        @slot = BaseSlot.find_by(meta_slot_id: metaslot.id)
       else
         @slot = BaseSlot.create_slot(meta: meta_params,
                                      visibility: enforce_visibility,
                                      media: media_params, notes: note_param,
                                      alerts: alerts_param, user: slot_creator)
       end
+
       # Create ReSlot:
       if @slot.errors.empty?
         authorize :reSlot
-        @slot = ReSlot.create_from_slot(predecessor: @slot, slotter: current_user)
-        if @slot.errors.empty? && @slot.save
-          return head :ok
-        end
+        @slot = ReSlot.create_from_slot(predecessor: @slot,
+                                        slotter: current_user)
+        return head :ok if @slot.save
       end
-      unless @slot.errors.empty?
-        return render json: { error: @slot.errors },
-                      status: :unprocessable_entity
-      end
-      head 422
+      render json: { error: @slot.errors },
+             status: :unprocessable_entity
     end
 
     # PATCH /v1/metaslot/1
