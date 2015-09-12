@@ -31,6 +31,7 @@ We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```a
 
 We develop on OSX and Ubuntu.
 So far we use Heroku to deploy our backend.
+We use Jenkins to test all commits to the timeslotinc github repo, usually PRs.
 
 ## Env Variables
 
