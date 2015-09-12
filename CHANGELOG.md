@@ -1,5 +1,21 @@
 #Changelog
 
+## upcoming on tsinc-alpha
+- new endpoint to get all (accessible) media items of a specific user
+- support devices for users
+- integration of Apple Push Notifications via AWS SNS (liking, commenting)
+- support for I18n
+- including sucker punch for asynchronous job processing
+- support searching the backend database form the client
+- add CORS-Header (to make web-reslot demo work)
+- add endpoint to receive crawler slot which becomes a reslot
+- disable prepared statements for postgres
+- increase rack-timeout from 5 to 15 seconds
+- hide passwords from logs
+- new relic integration
+- fix airbrake integration
+
+
 ## v0.6.3 on t2s2-dev
 - the daily fix for open_end
 
