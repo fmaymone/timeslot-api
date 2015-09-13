@@ -42,7 +42,7 @@ RSpec.describe Device, type: :model do
 
     it "adds a new device to the user" do
       expect {
-        user.devices.update_or_create(device)
+        Device.update_or_create(user, device)
       }.to change(user.devices, :count).by 1
     end
 
@@ -50,21 +50,21 @@ RSpec.describe Device, type: :model do
       it "doesn't add a new device if system was not set" do
         device[:system] = nil
         expect {
-          user.devices.update_or_create(device)
+          Device.update_or_create(user, device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device if version was not set" do
         device[:version] = nil
         expect {
-          user.devices.update_or_create(device)
+          Device.update_or_create(user, device)
         }.not_to change(Device, :count)
       end
 
       it "doesn't add a new device if device_id was not set" do
         device[:device_id] = nil
         expect {
-          user.devices.update_or_create(device)
+          Device.update_or_create(user, device)
         }.not_to change(Device, :count)
       end
     end
@@ -90,7 +90,7 @@ RSpec.describe Device, type: :model do
         expect {
           device2.register_endpoint(token)
         }.to change(Device, :count).by 0
-        expect(device2.endpoint).to eq(device1.endpoint)
+        expect(device2.endpoint).to eq("String")
         expect(device2.token).to eq(device1.token)
         expect(device2.device_id).not_to eq(device1.device_id)
       end
@@ -116,6 +116,16 @@ RSpec.describe Device, type: :model do
       }.to change(Device, :count).by 0
       expect(device.endpoint).to be(nil)
       expect(device.token).to eq(token)
+    end
+  end
+
+  describe :notify do
+    let(:client) { double("client") }
+    let(:params) { [{ message: 'hola' }] }
+
+    it "sends a push notification message to the client" do
+      expect(client).to receive(:publish).with(hash_including(message: /hola/))
+      device.notify(client, params)
     end
   end
 end

@@ -3,7 +3,7 @@
 * [CHANGELOG](CHANGELOG.md)
 * [Api Endpoint Documentation](doc/api/v1/index.markdown)
 * [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
-* [App-Specification](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
+* [App-Specification](https://docs.google.com/a/timeslot.com/document/d/12MZDzthoK6RrKhuJKfERfI6xpvZi_DP6ri0VWbZmnPc/edit?usp=sharing) [old app spec](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 * [Links to Some Useful Extra Information](doc/useful_links.md)
@@ -24,6 +24,15 @@ On first signup the token is also created so a signed up user is already logged 
 
 We use Pundit for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
 
+
+# Environment Variables
+
+```bash
+ENV['MAX_THREADS'] # number of concurrent Puma Webserver threads, defaults to 5 if not set
+ENV['NOTIFICATION_WORKERS'] # number of concurrent SuckerPunch Notification Workers, defaults to 5 if not set
+ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREADS or 10 if both are not set, BUT should be at least MAX_THREADS + NOTIFICATION_WORKERS
+# maximum on heroku free plan is 20
+```
 
 # External Services
 
@@ -47,6 +56,11 @@ ENV['AWS_REGION']
 
 ```bash
 ENV['AWS_PLATFORM_APPLICATION_IOS'] # aws arn endpoint (iOS)
+
+# enable push endpoints, if not set explicitly endpoint is enabled by default
+# ENV['PUSH_DEFAULT'] = 'true'
+ENV['PUSH_APNS'] = 'false'
+ENV['PUSH_APNS_SANDBOX'] = 'true'
 ```
 
 ## Cloudinary
@@ -69,7 +83,17 @@ The Data Team provides a database based on OSM Location Data. This DB is transpa
 ENV['LOCATION_DB_URI'] # postgres uri of locations production db
 ```
 
-## Search Service
+## Search Service (Elastic Search, Crawler)
+
+The Data Team provides an elasticSearch - Location Search Interface for it's location data
+
+```bash
+ENV['TS_SEARCH_SERVICE_NAME'] # username
+ENV['TS_SEARCH_SERVICE_PASSWORD'] # password
+ENV['TS_SEARCH_SERVICE_URL'] # elastic search url
+```
+
+## Location Search Service
 
 The Data Team provides an elasticSearch - Location Search Interface for it's location data
 

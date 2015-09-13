@@ -20,6 +20,9 @@ default: &default
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+  # Disable prepared statements for now, see if this fixes heroku db bugs
+  # https://github.com/rails/rails/pull/17607
+  prepared_statements: false
 
 development:
   <<: *default
@@ -84,4 +87,4 @@ test:
 production:
   <<: *default
   url: <%= ENV['DATABASE_URL'] %>
-  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 5 %>
+  pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 10 %>

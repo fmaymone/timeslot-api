@@ -68,6 +68,7 @@ class User < ActiveRecord::Base
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
+  validates :lang, length: { is: 2 }, allow_nil: true
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
@@ -460,7 +461,7 @@ class User < ActiveRecord::Base
   def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
-    new_user.devices.update_or_create(device) if device
+    Device.update_or_create(new_user, device) if device
     AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
@@ -471,13 +472,13 @@ class User < ActiveRecord::Base
     if identity
       no_token = identity.user.auth_token.nil?
       identity.user.update(auth_token: generate_auth_token) if no_token
-      identity.user.devices.update_or_create(device) if device
+      Device.update_or_create(identity.user, device) if device
       return identity.user
     else
       user = detect_or_create(identity_params[:username], social_params[:email])
       return user unless user.errors.empty?
       user.update(auth_token: generate_auth_token) unless user.auth_token
-      user.devices.update_or_create(device) if device
+      Device.update_or_create(user, device) if device
 
       identity = Connect.create(user: user,
                                 provider: identity_params[:provider],
@@ -512,7 +513,7 @@ class User < ActiveRecord::Base
     current_user = user.try(:authenticate, password)
     if current_user
       current_user.update(auth_token: generate_auth_token)
-      current_user.devices.update_or_create(device) if device
+      Device.update_or_create(current_user, device) if device
     end
     current_user
   end

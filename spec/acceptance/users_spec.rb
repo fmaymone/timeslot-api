@@ -24,6 +24,7 @@ resource "Users" do
 
     response_field :email, "Email of user (max. 255 characters)"
     response_field :phone, "Phone number of user (max. 35 characters)"
+    response_field :lang, "Language code (ISO 639-1)"
     response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
     response_field :slotDefaultDuration, "Default Slot Duration in seconds"
     response_field :slotDefaultTypeId, "Default Slot Type - WIP"
@@ -122,7 +123,7 @@ resource "Users" do
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'device_token', 'email', 'email_verified',
+                         'push', 'device_token', 'email', 'email_verified', 'lang',
                          'phone', 'phone_verified', 'location_id',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
@@ -144,16 +145,17 @@ resource "Users" do
               required: true
     parameter :email, "Email of user (max. 254 characters)"
     parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
-
     let(:username) { "foo" }
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
+    let(:lang) { "de" }
 
     example "User signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
@@ -165,6 +167,7 @@ resource "Users" do
       expect(json).to have_key 'id'
       expect(json).to have_key 'username'
       expect(json).to have_key 'email'
+      expect(json).to have_key 'lang'
       expect(json).to have_key 'authToken'
     end
 
@@ -180,7 +183,7 @@ resource "Users" do
 
       let(:user) { create(:user) }
       let(:id) { user[:id] }
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signup - Create user with a specific device", document: :v1 do
         explanation "Either an email or phone number must be provided\n\n" \
@@ -234,7 +237,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -254,7 +257,7 @@ resource "Users" do
       parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
                 scope: :device, required: true
 
-      let(:device) {[ device: attributes_for(:device) ]}
+      let(:device) {{ device: attributes_for(:device) }}
 
       example "User signin with an existing device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
@@ -316,6 +319,7 @@ resource "Users" do
 
     parameter :username, "Updated username of user (max. 50 characters)"
     parameter :email, "Email of user (max. 255 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :image, "URL of the user image"
     parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
@@ -462,6 +466,20 @@ resource "Users" do
         expect(json).to have_key("location")
         expect(json["location"]).not_to be nil
         expect(json["location"]["name"]).to eq "Acapulco"
+      end
+    end
+
+    describe "Set default language for a user" do
+      let(:lang) { 'de' }
+
+      example "Update current user - set default language", document: :v1 do
+        expect(current_user[:lang]).to be(nil)
+
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user[:lang]).to eq('de')
       end
     end
 
@@ -678,7 +696,7 @@ resource "Users" do
       end
 
       context "Update default device attributes" do
-        let(:device) { create(:device, user: current_user) }
+        let!(:device) { create(:device, user: current_user) }
         let(:deviceId) { device[:device_id] }
         let(:system) { 'android' }
         let(:version) { '5.0b' }
@@ -687,6 +705,7 @@ resource "Users" do
           explanation "returns OK if endpoint was successfully removed\n\n" \
                       "returns 401 if auth token is invalid\n\n" \
                       "returns 422 if parameters are missing or invalid"
+          expect(current_user.reload.devices.last[:system]).to eq('ios')
           do_request
 
           expect(response_status).to eq(200)
@@ -772,23 +791,9 @@ resource "Users" do
         expect(json.first).to have_key("visibility")
         expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
-        expect(json.first.except('location', 'creator', 'shareUrl'))
-          .to include("id" => std_slot_1.id,
-                      "title" => std_slot_1.title,
-                      "createdAt" => std_slot_1.created_at.as_json,
-                      "updatedAt" => std_slot_1.updated_at.as_json,
-                      "deletedAt" => std_slot_1.deleted_at.as_json,
-                      "startDate" => std_slot_1.start_date.as_json,
-                      "visibility" => std_slot_1.visibility,
-                      "endDate" => std_slot_1.end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_1) },
-                      "notes" => std_slot_1.notes,
-                      "likes" => std_slot_1.likes.count,
-                      "commentsCounter" => std_slot_1.comments.count,
-                      "media" => std_slot_1.media_items,
-                      "url" => v1_slot_url(std_slot_1, format: :json)
-                     )
+        expect(response_body).to include(std_slot_1.title)
+        expect(response_body).to include(std_slot_2.title)
+        expect(response_body).to include(re_slots.first.title)
       end
     end
 

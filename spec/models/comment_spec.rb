@@ -5,7 +5,6 @@ RSpec.describe Comment, type: :model do
 
     subject { comment }
 
-    it { is_expected.to respond_to(:user) }
     it { is_expected.to respond_to(:slot) }
     it { is_expected.to respond_to(:content) }
     it { is_expected.to respond_to(:created_at) }

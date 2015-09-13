@@ -4,6 +4,10 @@ class StdSlotPolicy < SlotPolicy
     current_user?
   end
 
+  def create_webslot?
+    current_user?
+  end
+
   # true if the user is signed in and
   # the user is slot owner
   # meta data? can they only be updated by the creator?

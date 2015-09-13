@@ -65,6 +65,36 @@ module V1
       end
     end
 
+    # POST /v1/reslot
+    def create_webslot
+      authorize :stdSlot
+      # Set Slot Creator:
+      slot_creator = User.find_by(email: 'info@timeslot.com')
+      # Create MetaSlot:
+      metaslot = MetaSlot.find_by(creator_id: slot_creator.id,
+                                  start_date: params.require(:startDate),
+                                  title: params.require(:title))
+      # Create BaseSlot:
+      if metaslot
+        @slot = BaseSlot.find_by(meta_slot_id: metaslot.id)
+      else
+        @slot = BaseSlot.create_slot(meta: meta_params,
+                                     visibility: enforce_visibility,
+                                     media: media_params, notes: note_param,
+                                     alerts: alerts_param, user: slot_creator)
+      end
+
+      # Create ReSlot:
+      if @slot.errors.empty?
+        authorize :reSlot
+        @slot = ReSlot.create_from_slot(predecessor: @slot,
+                                        slotter: current_user)
+        return head :ok if @slot.save
+      end
+      render json: { error: @slot.errors },
+             status: :unprocessable_entity
+    end
+
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot

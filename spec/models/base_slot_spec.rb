@@ -251,6 +251,61 @@ RSpec.describe BaseSlot, type: :model do
           .to have_key :content
       end
     end
+
+    context "notifications" do
+      it "notifies the slot owner if a new comment was made" do
+        expect(Device).to receive(:notify_all).with(
+                            [std_slot.creator_id], anything)
+        std_slot.create_comment(user, 'some content for the comment')
+      end
+
+      context "existing comments" do
+        let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
+        let(:commenters) { existing_comments.collect(&:user_id) }
+
+        it "notifies previous commenters if a new comment was made" do
+          expect(Device).to receive(:notify_all).with(
+                              [std_slot.creator_id] + commenters, anything)
+          std_slot.create_comment(user, 'some content for the comment')
+        end
+      end
+
+      context "existing likes" do
+        let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
+        let(:likers) { existing_likes.collect(&:user_id) }
+
+        it "notifies the slot likers if a new comment was made" do
+          expect(Device).to receive(:notify_all).with(
+                              [std_slot.creator_id] + likers, anything)
+          std_slot.create_comment(user, 'some content for the comment')
+        end
+
+        context "existing comments and likes" do
+          let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
+          let(:commenters) { existing_comments.collect(&:user_id) }
+          let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
+          let(:likers) { existing_likes.collect(&:user_id) }
+          let!(:liking_commenter) { create(:like, slot: std_slot,
+                                          user: existing_comments.first.user) }
+
+          it "notifies the commenters and likers if a new comment was made" do
+            expect(Device).to receive(:notify_all).with(
+                                [std_slot.creator_id] + commenters + likers,
+                                anything)
+            std_slot.create_comment(user, 'some content for the comment')
+          end
+
+          it "doesn't notify a commenter/liker twice" do
+            notified_ids = [std_slot.creator_id] + commenters + likers
+            notified_ids << liking_commenter.user_id
+            expect(Device).not_to receive(:notify_all).with(
+                                    notified_ids, anything)
+            std_slot.create_comment(user, 'some content for the comment')
+          end
+        end
+      end
+    end
+
   end
 
   describe :comments_with_details do
