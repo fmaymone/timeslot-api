@@ -1,12 +1,13 @@
 json.partial! 'v1/users/basic_user', user: @user
 
 json.extract!(user,
+              :lang,
               :email,
               :email_verified,
               :phone,
               :phone_verified,
               :public_url,
-              # :push, # wird gerade ueberarbeitet
+              :push,
               :slot_default_duration,
               :slot_default_location_id,
               :slot_default_type_id,

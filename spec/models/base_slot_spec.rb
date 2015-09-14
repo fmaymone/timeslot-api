@@ -133,19 +133,21 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :add_media do
+    let(:user) { create(:user) }
     let(:std_slot) { create(:std_slot) }
     let(:new_video) { attributes_for(:video) }
 
     it "adds a new media item to the slot" do
-      std_slot.add_media(new_video)
+      std_slot.add_media(new_video, user.id)
       std_slot.reload
       expect(std_slot.videos.length).to eq 1
+      expect(std_slot.videos.first['creator_id']).to eq(user.id)
       expect(*std_slot.errors.messages.any?).to be false
     end
 
     it "doesn't add an invalid item" do
       new_video["public_id"] = ''
-      std_slot.add_media(new_video)
+      std_slot.add_media(new_video, user.id)
       std_slot.reload
       expect(std_slot.videos.length).to eq 0
       expect(*std_slot.errors.messages.any?).to be true
@@ -223,9 +225,11 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :create_comment do
-    let(:std_slot) { create(:std_slot) }
+  describe :create_comment, :aws, :async do
+    let(:creator) { create(:user) }
     let(:user) { create(:user) }
+    let(:std_slot) { create(:std_slot, creator: creator) }
+    let!(:device) { create(:device, :with_endpoint, user: creator) }
 
     it "adds a new comment to the slot" do
       expect {
@@ -247,6 +251,61 @@ RSpec.describe BaseSlot, type: :model do
           .to have_key :content
       end
     end
+
+    context "notifications" do
+      it "notifies the slot owner if a new comment was made" do
+        expect(Device).to receive(:notify_all).with(
+                            [std_slot.creator_id], anything)
+        std_slot.create_comment(user, 'some content for the comment')
+      end
+
+      context "existing comments" do
+        let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
+        let(:commenters) { existing_comments.collect(&:user_id) }
+
+        it "notifies previous commenters if a new comment was made" do
+          expect(Device).to receive(:notify_all).with(
+                              [std_slot.creator_id] + commenters, anything)
+          std_slot.create_comment(user, 'some content for the comment')
+        end
+      end
+
+      context "existing likes" do
+        let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
+        let(:likers) { existing_likes.collect(&:user_id) }
+
+        it "notifies the slot likers if a new comment was made" do
+          expect(Device).to receive(:notify_all).with(
+                              [std_slot.creator_id] + likers, anything)
+          std_slot.create_comment(user, 'some content for the comment')
+        end
+
+        context "existing comments and likes" do
+          let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
+          let(:commenters) { existing_comments.collect(&:user_id) }
+          let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
+          let(:likers) { existing_likes.collect(&:user_id) }
+          let!(:liking_commenter) { create(:like, slot: std_slot,
+                                          user: existing_comments.first.user) }
+
+          it "notifies the commenters and likers if a new comment was made" do
+            expect(Device).to receive(:notify_all).with(
+                                [std_slot.creator_id] + commenters + likers,
+                                anything)
+            std_slot.create_comment(user, 'some content for the comment')
+          end
+
+          it "doesn't notify a commenter/liker twice" do
+            notified_ids = [std_slot.creator_id] + commenters + likers
+            notified_ids << liking_commenter.user_id
+            expect(Device).not_to receive(:notify_all).with(
+                                    notified_ids, anything)
+            std_slot.create_comment(user, 'some content for the comment')
+          end
+        end
+      end
+    end
+
   end
 
   describe :comments_with_details do

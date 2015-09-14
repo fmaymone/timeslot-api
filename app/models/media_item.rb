@@ -2,13 +2,13 @@ class MediaItem < ActiveRecord::Base
   after_commit AuditLog
 
   belongs_to :mediable, polymorphic: true
+  belongs_to :creator, class_name: User
 
   scope :image, -> { where media_type: 'image' }
   scope :audio, -> { where media_type: 'audio' }
   scope :video, -> { where media_type: 'video' }
 
-  validates :media_type,
-            presence: true,
+  validates :media_type, presence: true,
             inclusion: { in: %w(image audio video) }
   validates :public_id, presence: true
   validates :position, presence: true, if: :belongs_to_slot?
@@ -17,6 +17,7 @@ class MediaItem < ActiveRecord::Base
   validates :local_id, length: { maximum: 512 }
   validates :thumbnail, length: { maximum: 255 }
   validates :title, length: { maximum: 64 }
+  validates :creator, presence: true
 
   def belongs_to_slot?
     mediable_type == "BaseSlot"

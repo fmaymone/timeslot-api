@@ -110,11 +110,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ebb786b45c2016b6604eaa66b39cac2b&quot;
+ETag: W/&quot;bcfeb35428931e0cdb8bddd6f80b2ce6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a016609-6ba9-4866-a7f8-e37d88baaa08
-X-Runtime: 0.040550
-Content-Length: 760</pre>
+X-Request-Id: 28808133-071e-409c-8b9c-4618632d7ae3
+X-Runtime: 0.036134
+Vary: Origin
+Content-Length: 784</pre>
 
 #### Status
 
@@ -124,10 +125,10 @@ Content-Length: 760</pre>
 
 ```javascript
 {
-  "id" : 48,
-  "username" : "User 44",
-  "createdAt" : "2015-07-02T12:34:15.902Z",
-  "updatedAt" : "2015-07-02T12:34:15.902Z",
+  "id" : 59,
+  "username" : "User 52",
+  "createdAt" : "2015-09-14T10:32:37.579Z",
+  "updatedAt" : "2015-09-14T10:32:37.579Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -137,11 +138,13 @@ Content-Length: 760</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
+  "lang" : null,
   "email" : "alexpar@gmail.com",
   "emailVerified" : true,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -154,6 +157,6 @@ Content-Length: 760</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "PDV1xpTE0tu1SNZe1UWfY9CBSW4"
+  "authToken" : "XHfr7ssr-bj6q2VZOfbPyvdaeVs"
 }
 ```

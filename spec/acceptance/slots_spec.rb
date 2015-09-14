@@ -183,7 +183,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id", :vcr do
+  get "/v1/slots/:id" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -279,11 +279,11 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    parameter :visibility, "Visibility of the Slot (private/friends/public)",
+              required: true
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
-      parameter :visibility, "Visibility of the Slot", required: true
-
       include_context "default slot response fields"
 
       let(:title) { "Time for a Slot" }
@@ -393,9 +393,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with invalid params" do
-      parameter :visibility, "Visibility of the Slot",
-                required: true
-
       response_field :error, "Explanation which param couldn't be saved"
 
       let(:title) { "Time for a Slot" }
@@ -416,9 +413,6 @@ resource "Slots" do
     end
 
     describe "Create std slot with missing requiered params" do
-      parameter :visibility, "Visibility of the Slot",
-                required: true
-
       response_field :error, "Contains Error message"
 
       let(:title) { "Time for a Slot" }
@@ -552,11 +546,95 @@ resource "Slots" do
         expect(json).to have_key("endDate")
         expect(json).to have_key("creator")
         expect(json).to have_key("slotter")
+        expect(json).to have_key("visibility")
         expect(json["slotter"]["id"]).to eq current_user.id
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["endDate"]).to eq pred.end_date.as_json
-        expect(json["creator"]["id"]).to eq pred.creator.id
+        # temporary change for reslot to submit slotter as creator
+        # expect(json["creator"]["id"]).to eq pred.creator.id
+        expect(json["creator"]["id"]).to eq current_user.id
+        expect(json["visibility"]).to eq pred.visibility
+      end
+    end
+  end
+
+  post "/v1/webslot", :seed do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :visibility, "Visibility of the Slot (private/friends/public)",
+              required: true
+    parameter :creatorId,
+              "ID of the Creator of the Webslot",
+              required: true
+    include_context "default slot parameter"
+
+    describe "Create new ReSlot from the Web Search service" do
+      include_context "default slot response fields"
+
+      let(:user) { User.find_by(email: 'info@timeslot.com') }
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      let(:visibility) { 'public' }
+      let(:creatorId) { user.id }
+
+      example "Create new ReSlot from the Web Search service", document: :v1 do
+        explanation "Returns status code 200.\n\n" \
+                    "Missing unrequiered fields will be filled" \
+                    " with default values.\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
+        do_request
+        expect(response_status).to eq(200)
+
+        base_slot = BaseSlot.last
+        expect(base_slot.title).to eq(title)
+        expect(base_slot.start_date).to eq(startDate)
+        expect(base_slot.end_date).to eq(endDate)
+        expect(base_slot.meta_slot.creator_id).to eq(creatorId)
+
+        re_slot = ReSlot.last
+        expect(re_slot.slotter_id).to eq(current_user.id)
+        expect(re_slot.meta_slot_id).to eq(base_slot.meta_slot_id)
+      end
+    end
+
+    describe "Create webslot slot with invalid params" do
+      response_field :error, "Explanation which param couldn't be saved"
+
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "abcdefg" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { 'public' }
+
+      example "Create webslot with invalid params returns 422 & failure details",
+              document: false do
+        explanation "Parameters that can not be written to db will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("error")
+      end
+    end
+
+    describe "Create webslot slot with missing required params" do
+      response_field :error, "Contains Error message"
+
+      let(:title) { "Time for a Slot" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
+      let(:visibility) { 'public' }
+      let(:creatorId) { nil }
+
+      example "Create webslot slot with missing requiered params returns 422" \
+              " & failure details", document: false do
+        explanation "Missing requiered fields will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("error")
       end
     end
   end
@@ -597,6 +675,8 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
+    parameter :visibility, "Visibility of the Slot to update " \
+                           "(private/friends/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
@@ -606,7 +686,7 @@ resource "Slots" do
     describe "Update an existing StdSlot" do
       let(:title) { "New title for a Slot" }
 
-      example "Update StdSlot", document: :v1 do
+      example "Update StdSlot - change title", document: :v1 do
         explanation "Update content of StdSlot.\n\n" \
                     "User must be owner of StdSlot.\n\n" \
                     "returns 200 and slot data if update succeded \n\n" \
@@ -620,6 +700,24 @@ resource "Slots" do
       end
     end
 
+    describe "Change visibility of an existing StdSlot" do
+      let(:visibility) { 'friends' }
+
+      example "Update StdSlot - change visibility", document: :v1 do
+        explanation "Update visibility of StdSlot.\n\n" \
+                    "User must be owner of StdSlot.\n\n" \
+                    "returns 200 and slot data if update succeded \n\n" \
+                    "returns 404 if User not owner or ID is invalid\n\n" \
+                    "returns 422 if parameters are invalid"
+        expect(std_slot.visibility).to eq 'private'
+        do_request
+
+        expect(response_status).to eq(200)
+        std_slot.reload
+        expect(std_slot.visibility).to eq 'friends'
+      end
+    end
+
     describe "Add notes" do
       parameter :notes, "Scope for new notes",
                 required: true
@@ -629,8 +727,11 @@ resource "Slots" do
       parameter :content, "Content of the note",
                 required: true,
                 scope: :notes
+      parameter :localId, "Local ID of the note, temporary feature",
+                scope: :notes
 
-      let(:notes) { [attributes_for(:note), attributes_for(:note)] }
+      let(:notes) { [attributes_for(:note).merge(localId: '123321'),
+                     attributes_for(:note)] }
 
       example "Update Slot - Add notes", document: :v1 do
         do_request
@@ -639,6 +740,7 @@ resource "Slots" do
         expect(
           [notes.first[:title], notes.second[:title]]
         ).to include std_slot.notes.last.title
+        expect(response_body).to include '123321'
       end
     end
 
@@ -773,6 +875,23 @@ resource "Slots" do
         expect(location['country']).to eq 'Germany'
         expect(location['isoCountryCode']).to eq 'GER'
         expect(location['privateLocation']).to be true
+      end
+    end
+
+    describe "slot with IOS Custom label location" do
+      include_context "ios location params"
+
+      let(:name) { 'Soho House Custom' }
+      let(:latitude) { '52.527335' }
+      let(:longitude) { '13.414259' }
+
+      example "Update Slot - Custom Location Label", document: :v1 do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("location")
+        expect(json['location']['name']).to eq 'Soho House Custom'
       end
     end
   end
@@ -910,6 +1029,58 @@ resource "Slots" do
               document: false do
         do_request
         expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  post "/v1/slots/:id/like" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to like", required: true
+
+    let(:slot) { create(:std_slot_friends) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
+    describe "Like a Slot" do
+      let(:id) { slot.id }
+
+      example "Like a Slot", document: :v1 do
+        explanation "Current user likes a slot."
+        expect(slot.likes.count).to eq 0
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(slot.likes.count).to eq 1
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/like" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to like", required: true
+
+    let(:slot) { create(:std_slot_friends) }
+    let!(:like) { create(:like, slot: slot, user: current_user) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.owner, user: current_user)
+    }
+    describe "Unlike a Slot" do
+      let(:id) { slot.id }
+
+      example "Unlike a Slot", document: :v1 do
+        explanation "Current user unlikes a slot."
+        expect(slot.likes.count).to eq 1
+
+        do_request
+
+        expect(response_status).to eq(200)
+        like.reload
+        expect(like.deleted_at?).to be true
       end
     end
   end

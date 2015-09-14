@@ -225,6 +225,12 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
+        it "for missing visibility" do
+          invalid_attributes.extract! 'visibility'
+          post "/v1/stdslot/", invalid_attributes, auth_header
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+
         it "for invalid characters for visibility" do
           invalid_attributes[:visibility] = "$$"
           post "/v1/stdslot/", invalid_attributes, auth_header
@@ -628,6 +634,14 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.start_date).to eq("2014-07-07 13:31:02")
         end
 
+        it "updates the visibility of a given StdSlot" do
+          expect(std_slot.visibility).to eq 'private'
+          patch "/v1/stdslot/#{std_slot.id}",
+                { visibility: 'public' }, auth_header
+          std_slot.reload
+          expect(std_slot.visibility).to eq 'public'
+        end
+
         it "updates the end_date of a given StdSlot" do
           std_slot.meta_slot.update(end_date: "2019-12-09 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}",
@@ -744,6 +758,20 @@ RSpec.describe "V1::Slots", type: :request do
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('start_date')
           end
+
+          it "for invalid visibility" do
+            patch "/v1/stdslot/#{std_slot.id}",
+                  { visibility: "Something" }, auth_header
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('visibility')
+          end
+
+          it "for empty visibility" do
+            patch "/v1/stdslot/#{std_slot.id}",
+                  { visibility: '' }, auth_header
+            expect(response).to have_http_status(:unprocessable_entity)
+            expect(response.body).to include('visibility')
+          end
         end
       end
     end
@@ -761,21 +789,24 @@ RSpec.describe "V1::Slots", type: :request do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(1)
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       it "adds the submitted note to the db" do
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
-        expect(std_slot.notes[0].title).to eq(note[:title])
-        expect(std_slot.notes[0].content).to eq(note[:content])
+        expect(std_slot.notes.first.title).to eq(note[:title])
+        expect(std_slot.notes.first.content).to eq(note[:content])
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       it "adds an additional new note" do
-        create(:note, slot: std_slot)
+        create(:note, slot: std_slot, creator: current_user)
 
         patch "/v1/stdslot/#{std_slot.id}", add_note, auth_header
         std_slot.reload
         expect(std_slot.notes.size).to eq(2)
+        expect(std_slot.notes.first.creator_id).to eq(current_user.id)
       end
 
       context "patch with valid params" do
@@ -788,6 +819,7 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.notes.size).to eq 1
           expect(std_slot.notes.first.title).to eq "something new"
+          expect(std_slot.notes.first.creator_id).to eq(current_user.id)
         end
       end
 
@@ -856,6 +888,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
           expect(std_slot.media_items.size).to eq(1)
+          expect(std_slot.images.first.creator_id).to eq(current_user.id)
         end
 
         it "adds the submitted image to the db" do
@@ -1105,7 +1138,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     describe :ios_location do
       let(:new_params) do
-        { location: { locality: "Berlin", name: "Berlin", country: "Germany",
+        { location: { locality: "Berlin", name: "Berlin Custom", country: "Germany",
                       longitude: 13.4113999, latitude: 52.5234051
                     } }
       end
@@ -1170,7 +1203,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, locality: "Berlin", name: "Berlin", country: "Germany",
+          create(:ios_location, locality: "Berlin", name: "Berlin Custom", country: "Germany",
                  longitude: 13.4113999, latitude: 52.5234051)
         end
 
@@ -1186,6 +1219,7 @@ RSpec.describe "V1::Slots", type: :request do
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
             expect(std_slot.ios_location.locality).to eq 'Berlin'
+            expect(std_slot.ios_location.name).to eq 'Berlin Custom'
           end
 
           it "returns ok" do
@@ -1198,6 +1232,7 @@ RSpec.describe "V1::Slots", type: :request do
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
             expect(json['location']['locality']).to eq 'Berlin'
+            expect(json['location']['name']).to eq 'Berlin Custom'
           end
         end
 
@@ -1211,6 +1246,7 @@ RSpec.describe "V1::Slots", type: :request do
             std_slot.reload
             expect(std_slot.ios_location).not_to be nil
             expect(std_slot.ios_location.locality).to eq 'Berlin'
+            expect(std_slot.ios_location.name).to eq 'Berlin Custom'
           end
 
           it "returns ok" do
@@ -1223,6 +1259,7 @@ RSpec.describe "V1::Slots", type: :request do
             expect(json).to have_key 'location'
             expect(json['location']).not_to be nil
             expect(json['location']['locality']).to eq 'Berlin'
+            expect(json['location']['name']).to eq 'Berlin Custom'
           end
         end
       end
@@ -1556,7 +1593,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     describe "copy into groups without details" do
-      let!(:std_slot) { create(:std_slot_public) }
+      let!(:std_slot) { create(:std_slot_public, owner: current_user) }
       let(:copy_params) { { copyTo: [
                               { groupId: group_1.id,
                                 details: 'false' },
@@ -1571,9 +1608,11 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "copy stdslot with details into stdslot" do
+    describe "copy groupslot with details into private stdslot" do
+      let!(:current_user) { create(:user) }
+      let!(:user) { create(:user) }
       let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                                 :with_notes) }
+                                 :with_notes, creator: user) }
       let(:copy_params) { { copyTo: [ { slotType: 'private',
                                         details: 'true' }] } }
 
@@ -1583,14 +1622,18 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
+        expect(new_slot.images.first.id).not_to eq group_slot.images.first.id
+        expect(new_slot.images.first.creator).to eq user
       end
     end
 
-    describe "copy stdslot with details into groups" do
+    describe "copy stdslot with details into groupslot" do
+      let!(:current_user) { create(:user) }
+      let!(:user) { create(:user) }
       let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
-                               :with_notes) }
+                               :with_notes, creator: user) }
       let(:copy_params) { { copyTo: [{ groupId: group_1.id,
                                        details: 'true' },
                                      { groupId: group_2.id,
@@ -1602,8 +1645,10 @@ RSpec.describe "V1::Slots", type: :request do
         expect(new_slot.notes.size).to eq 3
         expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
         expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 3
+        expect(new_slot.media_items.size).to eq 6
         expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
+        expect(new_slot.images.first.id).not_to eq std_slot.images.first.id
+        expect(new_slot.images.first.creator).to eq user
       end
     end
   end
@@ -1673,6 +1718,17 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
         }.to change(GroupSlot.unscoped, :count).by 1
       end
+    end
+  end
+
+  describe "GET /v1/slots/demo" do
+    let!(:std_slot) { create(:std_slot_public) }
+    let!(:re_slot) { create(:re_slot) }
+
+    it "gets the latest/newest slots" do
+      get "/v1/slots/demo", {}, auth_header
+      expect(response.body).to include std_slot.title
+      expect(response.body).to include re_slot.title
     end
   end
 end

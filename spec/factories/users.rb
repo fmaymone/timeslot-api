@@ -22,6 +22,12 @@ FactoryGirl.define do
       password 'timeslot'
     end
 
+    trait :with_device do
+      after :create do |user|
+        create :device, user: user
+      end
+    end
+
     trait :with_image do
       after :create do |user|
         create :mock_image, mediable: user

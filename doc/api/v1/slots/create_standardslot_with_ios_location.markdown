@@ -14,6 +14,9 @@ returns 422 if required parameters are missing
 
 ### Parameters
 
+Name : visibility *- required -*
+Description : Visibility of the Slot (private/friends/public)
+
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -37,9 +40,6 @@ Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
-
-Name : visibility *- required -*
-Description : Visibility of the Slot
 
 Name : name
 Description : Name of the location, eg. Timeslot Inc. (255 chars)
@@ -151,7 +151,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=24YmXibBQqyD6zeOC9tm58NjIh4
+Authorization: Token token=IHRRAq-4_iSDgXa7fIaB9L1bV3U
 Host: example.org
 Cookie: </pre>
 
@@ -162,6 +162,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
+  "visibility" : "private",
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
@@ -178,7 +179,6 @@ Cookie: </pre>
   "settings" : {
     "alerts" : "0101010101"
   },
-  "visibility" : "private",
   "location" : {
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
@@ -193,10 +193,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=24YmXibBQqyD6zeOC9tm58NjIh4&quot; \
+	-H &quot;Authorization: Token token=IHRRAq-4_iSDgXa7fIaB9L1bV3U&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -207,11 +207,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7f70891bf1fa73c2d77cef4ba531b9b6&quot;
+ETag: W/&quot;73d1e98178c4d8cc112a37dc3812d359&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: acaef9be-6568-4a47-95da-8acfd368770f
-X-Runtime: 0.055386
-Content-Length: 1116</pre>
+X-Request-Id: 8b00d987-bb4b-4088-909c-8ee0698e9642
+X-Runtime: 0.061170
+Vary: Origin
+Content-Length: 1130</pre>
 
 #### Status
 
@@ -221,16 +222,15 @@ Content-Length: 1116</pre>
 
 ```javascript
 {
-  "id" : 29,
+  "id" : 31,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "endDate" : "2014-09-13T22:03:24.000Z",
-  "createdAt" : "2015-07-02T12:34:18.844Z",
-  "updatedAt" : "2015-07-02T12:34:18.844Z",
+  "createdAt" : "2015-09-14T10:32:44.410Z",
+  "updatedAt" : "2015-09-14T10:32:44.410Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : 2,
+    "id" : 3,
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -249,10 +249,10 @@ Content-Length: 1116</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 168,
-    "username" : "User 153",
-    "createdAt" : "2015-07-02T12:34:18.820Z",
-    "updatedAt" : "2015-07-02T12:34:18.820Z",
+    "id" : 215,
+    "username" : "User 187",
+    "createdAt" : "2015-09-14T10:32:44.383Z",
+    "updatedAt" : "2015-09-14T10:32:44.383Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -261,16 +261,18 @@ Content-Length: 1116</pre>
   },
   "notes" : [
     {
-      "id" : 8,
-      "title" : "revolutionizing the calendar",
-      "content" : "this is content",
-      "createdAt" : "2015-07-02T12:34:18.848Z"
-    },
-    {
       "id" : 9,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-07-02T12:34:18.852Z"
+      "localId" : null,
+      "createdAt" : "2015-09-14T10:32:44.418Z"
+    },
+    {
+      "id" : 8,
+      "title" : "revolutionizing the calendar",
+      "content" : "this is content",
+      "localId" : null,
+      "createdAt" : "2015-09-14T10:32:44.415Z"
     }
   ],
   "media" : [],

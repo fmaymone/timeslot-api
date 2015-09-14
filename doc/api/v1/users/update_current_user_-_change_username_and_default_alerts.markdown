@@ -22,6 +22,9 @@ Description : Updated username of user (max. 50 characters)
 Name : email
 Description : Email of user (max. 255 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
@@ -31,8 +34,8 @@ Description : URL of the user image
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
-Name : deviceToken
-Description : IOS Device Token for Push Notifications (max. 128 chars)
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : slotDefaultDuration
 Description : Default Slot Duration in seconds
@@ -79,6 +82,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -102,6 +108,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -142,12 +151,15 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=HLC4f-JuQj-M-hmXVZ2U84p8zvc
+Authorization: Token token=i7Dm32xJT1j5xvsJZpwzLdrHY8Q
 Host: example.org
 Cookie: </pre>
 
@@ -168,7 +180,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=HLC4f-JuQj-M-hmXVZ2U84p8zvc&quot; \
+	-H &quot;Authorization: Token token=i7Dm32xJT1j5xvsJZpwzLdrHY8Q&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -179,11 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;468bfbbe18b58d5a6afddefbcac5f1de&quot;
+ETag: W/&quot;ab27cf1ab0093af50cbbf34d1b0e0078&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 515c6b92-66a2-4739-9754-b7ef46af9cf1
-X-Runtime: 0.071716
-Content-Length: 715</pre>
+X-Request-Id: 9d97c817-a61d-47bb-85bc-245405478abe
+X-Runtime: 0.024237
+Vary: Origin
+Content-Length: 739</pre>
 
 #### Status
 
@@ -193,10 +206,10 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 254,
+  "id" : 328,
   "username" : "bar",
-  "createdAt" : "2015-07-02T12:34:25.622Z",
-  "updatedAt" : "2015-07-02T12:34:25.648Z",
+  "createdAt" : "2015-09-14T10:33:01.938Z",
+  "updatedAt" : "2015-09-14T10:33:01.951Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -206,11 +219,13 @@ Content-Length: 715</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user68@email.com",
+  "lang" : null,
+  "email" : "user84@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

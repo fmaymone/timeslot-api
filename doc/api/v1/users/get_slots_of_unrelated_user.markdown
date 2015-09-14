@@ -22,9 +22,6 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
-Name : openEnd
-Description : OpenEnd Boolean Flag of the slot
-
 Name : creatorId
 Description : ID of the User who created the slot
 
@@ -69,19 +66,19 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=hpNhNENpZXU5oHRXIE7aErgbpHA
+Authorization: Token token=5EpPjLPPE6EvB15ZZrfSmZScWrU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/300/slots</pre>
+<pre>GET /v1/users/443/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/300/slots&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/443/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=hpNhNENpZXU5oHRXIE7aErgbpHA&quot; \
+	-H &quot;Authorization: Token token=5EpPjLPPE6EvB15ZZrfSmZScWrU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -92,11 +89,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f22921622a27c1b4e91c9c5fe1e6149b&quot;
+ETag: W/&quot;dad6445f3fdb7b0ed511a473545f5528&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b6606b1b-3f3a-4fc7-a955-6a97e89a8600
-X-Runtime: 0.063831
-Content-Length: 1160</pre>
+X-Request-Id: 8ccbbd17-14c0-4f98-b199-c949766893b1
+X-Runtime: 0.099693
+Vary: Origin
+Content-Length: 1171</pre>
 
 #### Status
 
@@ -107,20 +105,19 @@ Content-Length: 1160</pre>
 ```javascript
 [
   {
-    "id" : 89,
-    "title" : "Slot title 78",
-    "startDate" : "2019-09-25T06:44:02.000Z",
-    "endDate" : "2019-10-25T06:44:02.000Z",
-    "createdAt" : "2015-07-02T12:34:26.682Z",
-    "updatedAt" : "2015-07-02T12:34:26.682Z",
+    "id" : 137,
+    "title" : "Slot title 124",
+    "startDate" : "2019-09-17T04:44:02.000Z",
+    "createdAt" : "2015-09-14T10:33:06.463Z",
+    "updatedAt" : "2015-09-14T10:33:06.463Z",
     "deletedAt" : null,
-    "openEnd" : false,
+    "endDate" : "2019-10-17T04:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 303,
-      "username" : "User 284",
-      "createdAt" : "2015-07-02T12:34:26.676Z",
-      "updatedAt" : "2015-07-02T12:34:26.676Z",
+      "id" : 446,
+      "username" : "User 407",
+      "createdAt" : "2015-09-14T10:33:06.451Z",
+      "updatedAt" : "2015-09-14T10:33:06.451Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -136,23 +133,22 @@ Content-Length: 1160</pre>
     "likes" : 0,
     "commentsCounter" : 0,
     "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/89"
+    "url" : "http://example.org/v1/slots/137"
   },
   {
-    "id" : 91,
-    "title" : "Slot title 80",
-    "startDate" : "2019-09-27T08:44:02.000Z",
-    "endDate" : "2019-10-27T08:44:02.000Z",
-    "createdAt" : "2015-07-02T12:34:26.696Z",
-    "updatedAt" : "2015-07-02T12:34:26.716Z",
+    "id" : 139,
+    "title" : "Slot title 126",
+    "startDate" : "2019-09-19T06:44:02.000Z",
+    "createdAt" : "2015-09-14T10:33:06.481Z",
+    "updatedAt" : "2015-09-14T10:33:06.503Z",
     "deletedAt" : null,
-    "openEnd" : false,
+    "endDate" : "2019-10-19T06:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 306,
-      "username" : "User 287",
-      "createdAt" : "2015-07-02T12:34:26.699Z",
-      "updatedAt" : "2015-07-02T12:34:26.699Z",
+      "id" : 443,
+      "username" : "Joe",
+      "createdAt" : "2015-09-14T10:33:06.428Z",
+      "updatedAt" : "2015-09-14T10:33:06.428Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -165,12 +161,16 @@ Content-Length: 1160</pre>
       "alerts" : "0000000000"
     },
     "slotter" : {
-      "id" : 300
+      "id" : 443
     },
+    "parent" : {
+      "id" : 140
+    },
+    "visibility" : "public",
     "likes" : 0,
     "commentsCounter" : 0,
     "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/91"
+    "url" : "http://example.org/v1/slots/139"
   }
 ]
 ```

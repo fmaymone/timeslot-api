@@ -18,10 +18,20 @@ module V1
       render :index
     end
 
+    # GET /v1/slots/demo
+    def show_last
+      authorize :stdSlot
+      @slots = StdSlotPublic.last(15)
+      @slots += ReSlot.last(15)
+
+      render :index
+    end
+
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params, visibility: visibility,
+      @slot = BaseSlot.create_slot(meta: meta_params,
+                                   visibility: enforce_visibility,
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
@@ -64,6 +74,36 @@ module V1
       end
     end
 
+    # POST /v1/reslot
+    def create_webslot
+      authorize :stdSlot
+      # Set Slot Creator:
+      slot_creator = User.find_by(email: 'info@timeslot.com')
+      # Create MetaSlot:
+      metaslot = MetaSlot.find_by(creator_id: slot_creator.id,
+                                  start_date: params.require(:startDate),
+                                  title: params.require(:title))
+      # Create BaseSlot:
+      if metaslot
+        @slot = BaseSlot.find_by(meta_slot_id: metaslot.id)
+      else
+        @slot = BaseSlot.create_slot(meta: meta_params,
+                                     visibility: enforce_visibility,
+                                     media: media_params, notes: note_param,
+                                     alerts: alerts_param, user: slot_creator)
+      end
+
+      # Create ReSlot:
+      if @slot.errors.empty?
+        authorize :reSlot
+        @slot = ReSlot.create_from_slot(predecessor: @slot,
+                                        slotter: current_user)
+        return head :ok if @slot.save
+      end
+      render json: { error: @slot.errors },
+             status: :unprocessable_entity
+    end
+
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot
@@ -84,9 +124,9 @@ module V1
       # @slot = StdSlot.unscoped.find(params[:id])
       authorize @slot
 
-      @slot.update_from_params(meta: meta_params, media: media_params,
-                               notes: note_param, alerts: alerts_param,
-                               user: current_user)
+      @slot.update_from_params(meta: meta_params, visibility: visibility,
+                               media: media_params, notes: note_param,
+                               alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }
@@ -116,7 +156,7 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
       authorize @slot
 
-      @slot.parent.update_from_params(media: media_params, notes: note_param)
+      @slot.parent.update_from_params(media: media_params, notes: note_param, user: current_user)
       @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
@@ -259,8 +299,15 @@ module V1
       Group.find(params.require(:groupId))
     end
 
+    private def enforce_visibility
+      params.require :visibility
+      visibility
+    end
+
     private def visibility
-      visibility = params.require(:visibility)
+      return nil unless params.key? :visibility
+
+      visibility = params[:visibility]
       valid_values = %w(private friends public)
 
       unless valid_values.include? visibility
@@ -312,7 +359,13 @@ module V1
     end
 
     private def note_param
-      params.require(:notes) if params[:notes].present?
+      return nil unless params.key? :notes
+
+      note_params = [:id, :title, :content, :localId]
+      params[:notes].map do |p|
+        note = ActionController::Parameters.new(p.to_hash).permit(note_params)
+        note.transform_keys { |key| key.underscore.to_sym }
+      end
     end
 
     private def media_params
@@ -320,6 +373,7 @@ module V1
                                 :position,
                                 :mediaId,
                                 :localId,
+                                :creatorId,
                                 :mediaType,
                                 :title,
                                 :duration,

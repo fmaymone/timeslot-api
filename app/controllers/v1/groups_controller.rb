@@ -24,7 +24,8 @@ module V1
       @group = Group.create_with_image(
         group_params: group_params.merge(owner: current_user),
         invitees: params[:invitees],
-        image: group_image)
+        image: group_image,
+        user: current_user)
 
       if @group.errors.empty?
         render :show, status: :created
@@ -40,7 +41,9 @@ module V1
       @group = Group.find(group_id)
       authorize @group
 
-      @group.update_with_image(group_params: group_params, image: group_image)
+      @group.update_with_image(group_params: group_params,
+                               image: group_image,
+                               user: current_user)
 
       if @group.errors.empty?
         render :show

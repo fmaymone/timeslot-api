@@ -31,6 +31,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -54,6 +57,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -94,6 +100,9 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 Name : authToken
 Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
 
@@ -113,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user66@email.com",
+  "email" : "user80@email.com",
   "password" : "timeslot"
 }
 ```
@@ -121,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user66@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user80@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -134,11 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e958a571034c833de1cdd7a3a8562af6&quot;
+ETag: W/&quot;39ced71ad988d4ec9fd0b54924021c15&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a565f54b-88ab-432b-ba72-2db752f8fde8
-X-Runtime: 0.027658
-Content-Length: 762</pre>
+X-Request-Id: c4680a37-38ce-4dc6-a389-d1f5c420aea5
+X-Runtime: 0.096216
+Vary: Origin
+Content-Length: 786</pre>
 
 #### Status
 
@@ -148,10 +158,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 251,
-  "username" : "User 235",
-  "createdAt" : "2015-07-02T12:34:21.146Z",
-  "updatedAt" : "2015-07-02T12:34:21.157Z",
+  "id" : 323,
+  "username" : "User 287",
+  "createdAt" : "2015-09-14T10:32:59.767Z",
+  "updatedAt" : "2015-09-14T10:32:59.849Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -161,11 +171,13 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user66@email.com",
+  "lang" : null,
+  "email" : "user80@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
@@ -178,6 +190,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "C3vXM0pi9Qc-mldlVs2ekcCDi9c"
+  "authToken" : "9byc3YnDSMSZLMg4lnaBc6TlU3c"
 }
 ```

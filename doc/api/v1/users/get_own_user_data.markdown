@@ -28,6 +28,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -51,6 +54,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -91,24 +97,27 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=HJs5mf-YjFAZwIhQPyA-GjAPe6w
+Authorization: Token token=szq_6SnpN6QA1UhbTS8fEIFesCU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/246</pre>
+<pre>GET /v1/users/317</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/246&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/317&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=HJs5mf-YjFAZwIhQPyA-GjAPe6w&quot; \
+	-H &quot;Authorization: Token token=szq_6SnpN6QA1UhbTS8fEIFesCU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -119,11 +128,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;320c47b2f1b0f24b84c2d875c1969b41&quot;
+ETag: W/&quot;b89ba30fc39c656f9cdc2750d2993a83&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b7a45702-b7e1-48bf-be0e-9b4a49c7d084
-X-Runtime: 0.033308
-Content-Length: 720</pre>
+X-Request-Id: e0de5810-9ca8-4cfe-bc48-fa985ac8ce04
+X-Runtime: 0.028117
+Vary: Origin
+Content-Length: 744</pre>
 
 #### Status
 
@@ -133,10 +143,10 @@ Content-Length: 720</pre>
 
 ```javascript
 {
-  "id" : 246,
-  "username" : "User 231",
-  "createdAt" : "2015-07-02T12:34:21.003Z",
-  "updatedAt" : "2015-07-02T12:34:21.003Z",
+  "id" : 317,
+  "username" : "User 283",
+  "createdAt" : "2015-09-14T10:32:59.211Z",
+  "updatedAt" : "2015-09-14T10:32:59.211Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -146,11 +156,13 @@ Content-Length: 720</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user64@email.com",
+  "lang" : null,
+  "email" : "user78@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

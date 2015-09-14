@@ -1,0 +1,2 @@
+Directory used for logs
+

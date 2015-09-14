@@ -6,10 +6,12 @@ Rails.application.routes.draw do
 
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
     post 'slots', to: 'slots#show_many', as: 'slots_read'
+    get 'slots/demo', to: 'slots#show_last', as: 'slots_last'
 
     post 'stdslot', to: 'slots#create_stdslot'
     post 'reslot', to: 'slots#create_reslot'
     post 'groupslot', to: 'slots#create_groupslot'
+    post 'webslot', to: 'slots#create_webslot'
 
     patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
@@ -69,6 +71,10 @@ Rails.application.routes.draw do
           to: 'users#slots',
           as: 'user_slots',
           constraints: { id: /\d+/ }
+      get ':user_id/media',
+          to: 'users#media_items',
+          as: 'user_media',
+          constraints: { id: /\d+/ }
       get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
       post '', to: 'users#create', as: 'user_create'
       patch '', to: 'users#update', as: 'user_update'
@@ -78,6 +84,7 @@ Rails.application.routes.draw do
       post 'reset', to: 'users#reset_password', as: 'reset_password'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
+      patch 'device', to: 'users#update_device', as: 'update_device'
     end
 
     scope :groups do
@@ -138,6 +145,8 @@ Rails.application.routes.draw do
       get 'ios/clean-db', to: 'ios#clean_db'
     end
 
+    get 'search', to: 'search#index'
+    get 'search/:action', to: 'search#:action'
     get 'locations/search', to: 'locations#search'
   end
 

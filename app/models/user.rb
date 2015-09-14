@@ -12,6 +12,9 @@ class User < ActiveRecord::Base
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
            as: :mediable
 
+  has_many :media_items, -> { where deleted_at: nil },
+           foreign_key: :creator_id, inverse_of: :creator
+
   has_many :created_slots, class_name: MetaSlot,
            foreign_key: :creator_id, inverse_of: :creator
 
@@ -53,6 +56,9 @@ class User < ActiveRecord::Base
   has_many :offered_friends, -> { merge Friendship.open },
            through: :received_friendships, source: :user
 
+  # device related
+  has_many :devices, inverse_of: :user
+
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
@@ -62,6 +68,7 @@ class User < ActiveRecord::Base
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
+  validates :lang, length: { is: 2 }, allow_nil: true
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
@@ -81,11 +88,13 @@ class User < ActiveRecord::Base
             length: { maximum: 35 },
             allow_nil: true
 
+  validates :push, inclusion: [true, false]
+
   ## user specific ##
 
-  def update_with_image(params: nil, image: nil)
+  def update_with_image(params: nil, image: nil, user: nil)
     update(params.except("public_id")) if params
-    AddImage.call(self, image["public_id"], image["local_id"]) if image
+    AddImage.call(self, user.id, image["public_id"], image["local_id"]) if image
     self
   end
 
@@ -181,12 +190,45 @@ class User < ActiveRecord::Base
     image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
+    devices.each(&:delete)
     ts_soft_delete and return self
   end
 
   # TODO: add spec
   def activate
     slot_settings.each(&:undelete)
+  end
+
+  ## media related ##
+
+  def media_for(current_user)
+    medias = []
+    if self == current_user
+      # Get all media items of current user:
+      medias = media_items
+    else
+      # Get all public media items of specific user (also for visitors):
+      std_slots_public.each do |slot|
+        medias += slot.media_items
+      end
+      # Get items for authorized users
+      unless current_user.nil?
+        # Get all friendship related media items:
+        if self.friend_with?(current_user)
+          std_slots_friends.each do |slot|
+            medias += slot.media_items
+          end
+        end
+        # Get all group related media items:
+        # TODO: can visitors also have access to media items of public group slots?
+        group_slots.where('group_slots.group_id IN (?)', current_user.groups.ids).each do |slot|
+          if current_user.active_member?(slot.group.id)
+            medias += slot.media_items
+          end
+        end
+      end
+    end
+    medias.sort_by(&:created_at)
   end
 
   ## slot related ##
@@ -389,34 +431,36 @@ class User < ActiveRecord::Base
 
   # technically this is not neccessary bc it's not possible to set an image on
   # signup, at least in the ios app right now
-  def self.create_with_image(params:, image: nil)
+  def self.create_with_image(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
-
-    AddImage.call(new_user, image["public_id"], image["local_id"]) if image
+    Device.update_or_create(new_user, device) if device
+    AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
     new_user
   end
 
-  def self.create_or_signin_via_social(identity_params, social_params)
+  def self.create_or_signin_via_social(identity_params, social_params, device: nil)
     identity = Connect.where(social_id: identity_params[:social_id],
                              provider: identity_params[:provider]).take
     if identity
       no_token = identity.user.auth_token.nil?
       identity.user.update(auth_token: generate_auth_token) if no_token
+      Device.update_or_create(identity.user, device) if device
       return identity.user
+    else
+      user = detect_or_create(identity_params[:username], social_params[:email])
+      return user unless user.errors.empty?
+      user.update(auth_token: generate_auth_token) unless user.auth_token
+      Device.update_or_create(user, device) if device
+
+      identity = Connect.create(user: user,
+                                provider: identity_params[:provider],
+                                social_id: identity_params[:social_id],
+                                data: social_params)
+
+      user.errors.add(connect: identity.errors) if identity.errors.any?
+      user
     end
-
-    user = detect_or_create(identity_params[:username], social_params[:email])
-    return user unless user.errors.empty?
-    user.update(auth_token: generate_auth_token) unless user.auth_token
-
-    identity = Connect.create(user: user,
-                              provider: identity_params[:provider],
-                              social_id: identity_params[:social_id],
-                              data: social_params)
-
-    user.errors.add(connect: identity.errors) if identity.errors.any?
-    user
   end
 
   # Issue to be decided upon later but for now we keep this behaviour:
@@ -433,14 +477,17 @@ class User < ActiveRecord::Base
     user || User.create(username: username, email: email)
   end
 
-  def self.sign_in(email: nil, phone: nil, password:)
+  def self.sign_in(email: nil, phone: nil, device: nil, password:)
     if email
       user = User.find_by email: email
     elsif phone
       user = User.find_by phone: phone
     end
     current_user = user.try(:authenticate, password)
-    current_user.update(auth_token: generate_auth_token) if current_user
+    if current_user
+      current_user.update(auth_token: generate_auth_token)
+      Device.update_or_create(current_user, device) if device
+    end
     current_user
   end
 

@@ -14,6 +14,9 @@ returns 422 if required parameters are missing
 
 ### Parameters
 
+Name : visibility *- required -*
+Description : Visibility of the Slot (private/friends/public)
+
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -37,9 +40,6 @@ Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
-
-Name : visibility *- required -*
-Description : Visibility of the Slot
 
 
 ### Response Fields
@@ -109,7 +109,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=8Br6NK5RajVzXcH8Y1-aSuLdUtw
+Authorization: Token token=DhjW28Ce6xHkinIAYjtzP294uGg
 Host: example.org
 Cookie: </pre>
 
@@ -120,6 +120,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
+  "visibility" : "private",
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
@@ -135,18 +136,17 @@ Cookie: </pre>
   ],
   "settings" : {
     "alerts" : "0101010101"
-  },
-  "visibility" : "private"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=8Br6NK5RajVzXcH8Y1-aSuLdUtw&quot; \
+	-H &quot;Authorization: Token token=DhjW28Ce6xHkinIAYjtzP294uGg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -157,11 +157,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;448cc75370ff72f4a9cbf3a707f1db86&quot;
+ETag: W/&quot;c5df98d31bf68e07754550d734aae299&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 34b9a0f1-b56c-4861-b96f-50ddfb58033d
-X-Runtime: 0.037211
-Content-Length: 763</pre>
+X-Request-Id: 74856241-79f3-404f-84c7-a3f94d87bb46
+X-Runtime: 0.044881
+Vary: Origin
+Content-Length: 777</pre>
 
 #### Status
 
@@ -171,20 +172,19 @@ Content-Length: 763</pre>
 
 ```javascript
 {
-  "id" : 27,
+  "id" : 29,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "endDate" : "2014-09-13T22:03:24.000Z",
-  "createdAt" : "2015-07-02T12:34:18.726Z",
-  "updatedAt" : "2015-07-02T12:34:18.726Z",
+  "createdAt" : "2015-09-14T10:32:44.088Z",
+  "updatedAt" : "2015-09-14T10:32:44.088Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 166,
-    "username" : "User 151",
-    "createdAt" : "2015-07-02T12:34:18.713Z",
-    "updatedAt" : "2015-07-02T12:34:18.713Z",
+    "id" : 213,
+    "username" : "User 185",
+    "createdAt" : "2015-09-14T10:32:44.073Z",
+    "updatedAt" : "2015-09-14T10:32:44.073Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -193,16 +193,18 @@ Content-Length: 763</pre>
   },
   "notes" : [
     {
-      "id" : 4,
-      "title" : "revolutionizing the calendar",
-      "content" : "this is content",
-      "createdAt" : "2015-07-02T12:34:18.729Z"
-    },
-    {
       "id" : 5,
       "title" : "and another title",
       "content" : "more content here",
-      "createdAt" : "2015-07-02T12:34:18.732Z"
+      "localId" : null,
+      "createdAt" : "2015-09-14T10:32:44.098Z"
+    },
+    {
+      "id" : 4,
+      "title" : "revolutionizing the calendar",
+      "content" : "this is content",
+      "localId" : null,
+      "createdAt" : "2015-09-14T10:32:44.094Z"
     }
   ],
   "media" : [],

@@ -14,7 +14,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
-  it { is_expected.to respond_to(:device_token) }
+  it { is_expected.to respond_to(:devices) }
   it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
@@ -26,6 +26,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:group_slots).through(:groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
+  it { is_expected.to have_many(:devices).inverse_of(:user) }
   it { is_expected.to belong_to(:location) }
 
   it { is_expected.to be_valid }
@@ -130,6 +131,97 @@ RSpec.describe User, type: :model do
       it "fails if password too long" do
         invalid_user.password = 'n' * 73
         expect(invalid_user.save).to be false
+      end
+    end
+  end
+
+  describe :media_items do
+    let!(:target_user) { create(:user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                 owner: target_user, creator: target_user) }
+
+    context "Get all media items for the current_user" do
+      it "Returns an array which includes all media items of the current_user." do
+        result = target_user.media_for(target_user)
+        expect(result.length).to eq(12)
+      end
+    end
+
+    context "Get all public media items of a specific user" do
+      it "Returns an array which includes all public media items of a specific user." do
+        result = target_user.media_for(user)
+        expect(result.length).to eq(6)
+      end
+    end
+
+    context "Get all friend-visible media items of a user" do
+      let!(:friend) { create(:user) }
+      let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                  owner: friend, creator: friend) }
+      let!(:friendship) { create(:friendship, :established,
+                                 user: user, friend: friend) }
+
+      it "Returns an array which includes all media items of this user " \
+         "which are public or friend-visible." do
+        result = friend.media_for(user)
+        expect(result.length).to eq(6)
+      end
+
+      describe "Do not get friend-related media items if the user removed this friend" do
+        it "Returns an empty array" do
+          result = friend.media_for(user)
+          expect(result.length).to eq(6)
+          user.remove_friends([friend.id])
+          result = friend.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
+
+      describe "Do not get friend-related media items if the friendship was canceled" do
+        it "Returns an empty array" do
+          result = friend.media_for(user)
+          expect(result.length).to eq(6)
+          user.friendship(friend.id).reject
+          result = friend.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
+    end
+
+    context "Get group-related media items of a user with a common group" do
+      let!(:member) { create(:user) }
+      let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+      let!(:membership1) { create(:membership, :active,
+                                  group: slot_group.group, user: user) }
+      let!(:membership2) { create(:membership, :active,
+                                  group: slot_group.group, user: member) }
+
+      it "Returns an array which includes all media items " \
+         "of a specific user with a common group." do
+        result = member.media_for(user)
+        expect(result.length).to eq(6)
+      end
+
+      describe "Do not get group-related media list if an user has left this group" do
+        it "Returns an empty array" do
+          result = member.media_for(user)
+          expect(result.length).to eq(6)
+          user.leave_group(slot_group.group.id)
+          result = member.media_for(user)
+          expect(result.length).to eq(0)
+        end
+      end
+
+      describe "Do not get group-related media list if an user has left the membership" do
+        it "Returns an empty array" do
+          result = member.media_for(user)
+          expect(result.length).to eq(6)
+          membership1.leave
+          result = member.media_for(user)
+          expect(result.length).to eq(0)
+        end
       end
     end
   end
@@ -725,6 +817,8 @@ RSpec.describe User, type: :model do
     let(:user_params) {
       { params: attributes_for(:user, password: 'something') }
     }
+    let(:device) { attributes_for(:device) }
+
     context "valid params" do
       it "creates a new user" do
         expect {
@@ -741,11 +835,11 @@ RSpec.describe User, type: :model do
 
       it "sets an image if provided" do
         user_params.merge!(image: { "public_id" => 'foobar' })
-
         expect {
           User.create_with_image(user_params)
         }.to change(MediaItem, :count).by 1
         expect(User.last.image.public_id).to eq "foobar"
+        expect(User.last.image.creator_id).to eq User.last.id
       end
 
       it "sets the local_id for an image if provided" do
@@ -756,6 +850,13 @@ RSpec.describe User, type: :model do
         User.create_with_image(user_params)
         expect(User.last.image.local_id)
           .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+      end
+
+      it "sets a device if provided" do
+        user_params.merge!(device: device)
+        expect {
+          User.create_with_image(user_params)
+        }.to change(Device, :count).by 1
       end
     end
 
@@ -769,7 +870,6 @@ RSpec.describe User, type: :model do
 
       it "creates a new user even if media items public_id is nil" do
         user_params.merge!(image: { "public_id" => nil })
-
         expect {
           User.create_with_image(user_params)
         }.to change(User, :count).by 1
@@ -777,7 +877,6 @@ RSpec.describe User, type: :model do
 
       it "doesn't create a new media item if public_id is nil" do
         user_params.merge!(image: { "public_id" => nil })
-
         expect {
           User.create_with_image(user_params)
         }.not_to change(MediaItem, :count)
@@ -803,6 +902,15 @@ RSpec.describe User, type: :model do
         expect(
           User.sign_in(phone: user.phone, password: user.password)
         ).to eq user
+      end
+    end
+
+    context "with device" do
+      let(:device) { attributes_for(:device) }
+      it "sets a device if provided" do
+        expect {
+          User.sign_in(email: user.email, password: user.password, device: device)
+        }.to change(Device, :count).by 1
       end
     end
 

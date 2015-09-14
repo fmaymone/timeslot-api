@@ -2,7 +2,7 @@ require 'documentation_helper'
 
 resource "Users" do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user, :with_email, :with_password) }
+  let(:current_user) { create(:user, :with_email, :with_password, :with_device) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   shared_context "default user response fields" do
@@ -10,7 +10,7 @@ resource "Users" do
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
     response_field :location, "Home location of user"
-    # response_field :push, "Send push Notifications (true/false)"
+    response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -24,6 +24,7 @@ resource "Users" do
 
     response_field :email, "Email of user (max. 255 characters)"
     response_field :phone, "Phone number of user (max. 35 characters)"
+    response_field :lang, "Language code (ISO 639-1)"
     response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
     response_field :slotDefaultDuration, "Default Slot Duration in seconds"
     response_field :slotDefaultTypeId, "Default Slot Type - WIP"
@@ -46,6 +47,7 @@ resource "Users" do
                    " may also have their own default alerts per group"
     response_field :friendships, "all connections to other users"
     response_field :memberships, "all connections to groups"
+    response_field :devices, "all devices from user"
   end
 
   get "/v1/users/:id" do
@@ -68,7 +70,7 @@ resource "Users" do
         expect(json).to have_key "username"
         expect(json).to have_key "image"
         expect(json).to have_key "location"
-        expect(json).not_to have_key "push" # wip
+        expect(json).to have_key "push"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
         expect(json).to have_key "deletedAt"
@@ -85,7 +87,7 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", "push",
+                 .except("auth_token", "password_digest", "role",
                          "device_token", "location_id")
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json['location']).to eq nil
@@ -121,7 +123,7 @@ resource "Users" do
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'device_token', 'email', 'email_verified',
+                         'push', 'device_token', 'email', 'email_verified', 'lang',
                          'phone', 'phone_verified', 'location_id',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
@@ -143,16 +145,17 @@ resource "Users" do
               required: true
     parameter :email, "Email of user (max. 254 characters)"
     parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :password, "Password for user (min. 5 & max. 72 characters)",
               required: true
 
     include_context "current user response fields"
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
-
     let(:username) { "foo" }
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
+    let(:lang) { "de" }
 
     example "User signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
@@ -164,11 +167,41 @@ resource "Users" do
       expect(json).to have_key 'id'
       expect(json).to have_key 'username'
       expect(json).to have_key 'email'
+      expect(json).to have_key 'lang'
       expect(json).to have_key 'authToken'
+    end
+
+    context "Signup and create user with a specific device" do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+                scope: :device, required: true
+      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+                scope: :device, required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:user) { create(:user) }
+      let(:id) { user[:id] }
+      let(:device) {{ device: attributes_for(:device) }}
+
+      example "User signup - Create user with a specific device", document: :v1 do
+        explanation "Either an email or phone number must be provided\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key 'id'
+        expect(json).to have_key 'username'
+        expect(json).to have_key 'email'
+        expect(json).to have_key 'authToken'
+        expect(json).to have_key 'push'
+      end
     end
   end
 
-  post "/v1/users/signin" do
+  post "/v1/users/signin", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
@@ -192,6 +225,50 @@ resource "Users" do
       user.reload
       expect(json).to have_key "authToken"
       expect(json['authToken']).to eq user.auth_token
+    end
+
+    context "User signin with new device" do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+                scope: :device, required: true
+      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+                scope: :device, required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:device) {{ device: attributes_for(:device) }}
+
+      example "User signin with new device", document: :v1 do
+        explanation "returns OK and an AuthToken if credentials match\n\n" \
+                    "returns 401 if credentials invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        user.reload
+        expect(json).to have_key "authToken"
+        expect(json['authToken']).to eq user.auth_token
+      end
+    end
+
+    context "User signin with an existing device" do
+      parameter :device, "A key-value-paired array which describes the device, " \
+                       "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+                scope: :device, required: true
+
+      let(:device) {{ device: attributes_for(:device) }}
+
+      example "User signin with an existing device", document: :v1 do
+        explanation "returns OK and an AuthToken if credentials match\n\n" \
+                    "returns 401 if credentials invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        user.reload
+        expect(json).to have_key "authToken"
+        expect(json['authToken']).to eq user.auth_token
+      end
     end
   end
 
@@ -242,12 +319,11 @@ resource "Users" do
 
     parameter :username, "Updated username of user (max. 50 characters)"
     parameter :email, "Email of user (max. 255 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :image, "URL of the user image"
     parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-    parameter :deviceToken,
-              "IOS Device Token for Push Notifications (max. 128 chars)"
-    # parameter :push, "Send push Notifications (true/false)"
+    parameter :push, "Send push Notifications (true/false)"
     parameter :slotDefaultDuration, "Default Slot Duration in seconds"
     parameter :slotDefaultTypeId, "Default Slot Type - WIP"
     parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
@@ -289,7 +365,7 @@ resource "Users" do
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
-                 .except('auth_token', 'password_digest', 'role', 'push',
+                 .except('auth_token', 'password_digest', 'role',
                          'device_token', 'location_id')
                  .transform_keys { |key| key.camelize(:lower) })
       end
@@ -392,6 +468,34 @@ resource "Users" do
         expect(json["location"]["name"]).to eq "Acapulco"
       end
     end
+
+    describe "Set default language for a user" do
+      let(:lang) { 'de' }
+
+      example "Update current user - set default language", document: :v1 do
+        expect(current_user[:lang]).to be(nil)
+
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user[:lang]).to eq('de')
+      end
+    end
+
+    describe "Turn on/off push notifications for a user" do
+      let(:push) { false }
+
+      example "Update current user - turn on/off push notifications", document: :v1 do
+        expect(current_user.push).to be(true)
+
+        do_request
+
+        expect(response_status).to eq(200)
+        current_user.reload
+        expect(current_user.push).to be(false)
+      end
+    end
   end
 
   delete "/v1/users" do
@@ -408,6 +512,209 @@ resource "Users" do
       current_user.reload
       expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
+    end
+  end
+
+  get "/v1/users/:id/media" do
+    header 'Authorization', :auth_header
+
+    let!(:target_user) { create(:user) }
+    let!(:friend) { create(:user) }
+    let!(:member) { create(:user) }
+    let!(:slot_public) { create(:std_slot_public, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_private) { create(:std_slot_private, :with_media,
+                                owner: target_user, creator: target_user) }
+    let!(:slot_friend) { create(:std_slot_friends, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_friend_public) { create(:std_slot_public, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_friend_private) { create(:std_slot_private, :with_media,
+                                owner: friend, creator: friend) }
+    let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+    let!(:slot_group_public) { create(:std_slot_public, :with_media,
+                                owner: member, creator: member) }
+    let!(:slot_group_private) { create(:std_slot_private, :with_media,
+                                owner: member, creator: member) }
+    let!(:friendship) { create(:friendship, :established,
+                                user: current_user, friend: friend) }
+    let!(:memberships) {
+      create(:membership, :active, group: slot_group.group, user: current_user)
+      create(:membership, :active, group: slot_group.group, user: member)
+    }
+    let!(:id) { target_user[:id] }
+    let!(:auth_header) { "Token token=#{current_user.auth_token}" }
+
+    parameter :id, "ID of the User to get the MediaItems for", required: true
+    response_field :array, "containing media items as a list of MediaItem"
+
+    context "Get media items as a visitor" do
+      let!(:visitor) { create(:user) }
+      let!(:current_user) { visitor }
+      let(:auth_header) { nil }
+
+      example "As a visitor get all public media items of a specific user" do
+        explanation "Returns an array which includes all public media items " \
+                    "of the specific user."
+
+        header 'Authorization', :auth_header
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get all media items for the current user" do
+      let!(:current_user) { target_user }
+
+      example "Get all media items for the current user" do
+        explanation "Returns an array which includes all media items of the current user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "Get all public media items of a specific user" do
+      example "Get media items of an user", document: :v1 do
+        explanation "Returns an array which includes all public media items of a specific user."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(json.length).to eq(6)
+      end
+    end
+
+    context "Get all friend-visible media items of a user" do
+      let(:id) { friend[:id] }
+
+      example "Get all friend-visible media items of a user" do
+        explanation "Returns an array which includes all media items of this user " \
+                    "which are public or friend-visible."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_friend.media_items[0].public_id)
+        expect(response_body).to include(slot_friend_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(response_body).not_to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "Get group-related media items of a specific user" do
+      let(:id) { member[:id] }
+
+      example "Get group-related media items of a specific user with a common group" do
+        explanation "Returns an array which includes all media " \
+                    "items of a specific user with a common group."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_group.media_items[0].public_id)
+        expect(response_body).to include(slot_group_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_group_private.media_items[0].public_id)
+        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+        expect(response_body).not_to include(slot_public.media_items[0].public_id)
+        expect(response_body).not_to include(slot_private.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+  end
+
+  patch "/v1/users/device", :aws do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :deviceId, "A unique device ID", required: true
+    parameter :system, "A shorthand of the operating system from the current device"
+    parameter :version, "The version number of the devices operating system"
+    parameter :token, "The device token which is used for device services"
+    parameter :endpoint, "Boolean flag to unregister device from all extern services"
+
+    describe "Update specific device of the current user" do
+      let(:device) { create(:device, user: current_user) }
+      let(:deviceId) { device[:device_id] }
+      let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
+
+      example "Device - Register endpoint to push notifications for a device", document: :v1 do
+        explanation "returns OK if endpoint was successfully added\n\n" \
+                    "returns 401 if auth token is invalid\n\n" \
+                    "returns 422 if parameters are missing or invalid"
+
+        expect(current_user.devices.last[:token]).to eq(nil)
+        expect(current_user.devices.last[:endpoint]).to eq(nil)
+
+        do_request
+
+        result = current_user.reload.devices.last
+        expect(response_status).to eq(200)
+        expect(result[:device_id]).to eq(deviceId)
+        expect(result[:token]).to eq(token)
+        expect(result[:endpoint]).to eq('String')
+      end
+
+      context "Unregister device from push notification service" do
+        let(:device) { create(:device, :with_endpoint, user: current_user) }
+        let(:deviceId) { device[:device_id] }
+        let(:token) { device[:token] }
+        let(:endpoint) { false }
+
+        example "Device - Unregister device from push notification service", document: :v1 do
+          explanation "returns OK if endpoint was successfully removed\n\n" \
+                      "returns 401 if auth token is invalid\n\n" \
+                      "returns 422 if parameters are missing or invalid"
+          do_request
+
+          expect(response_status).to eq(200)
+          result = current_user.reload.devices.last
+          expect(result[:device_id]).to eq(deviceId)
+          expect(result[:token]).to eq(token)
+          expect(result[:endpoint]).to eq(nil)
+        end
+      end
+
+      context "Update default device attributes" do
+        let!(:device) { create(:device, user: current_user) }
+        let(:deviceId) { device[:device_id] }
+        let(:system) { 'android' }
+        let(:version) { '5.0b' }
+
+        example "Device - Update default device attributes", document: :v1 do
+          explanation "returns OK if endpoint was successfully removed\n\n" \
+                      "returns 401 if auth token is invalid\n\n" \
+                      "returns 422 if parameters are missing or invalid"
+          expect(current_user.reload.devices.last[:system]).to eq('ios')
+          do_request
+
+          expect(response_status).to eq(200)
+          result = current_user.reload.devices.last
+          expect(result[:device_id]).to eq(deviceId)
+          expect(result[:system]).to eq('android')
+          expect(result[:version]).to eq('5.0b')
+        end
+      end
     end
   end
 
@@ -467,23 +774,9 @@ resource "Users" do
         expect(json.first).to have_key("visibility")
         expect(json.first).to have_key("media")
         expect(json.first).to have_key("url")
-        expect(json.first.except('location', 'creator', 'shareUrl'))
-          .to include("id" => std_slot_1.id,
-                      "title" => std_slot_1.title,
-                      "createdAt" => std_slot_1.created_at.as_json,
-                      "updatedAt" => std_slot_1.updated_at.as_json,
-                      "deletedAt" => std_slot_1.deleted_at.as_json,
-                      "startDate" => std_slot_1.start_date.as_json,
-                      "visibility" => std_slot_1.visibility,
-                      "endDate" => std_slot_1.end_date.as_json,
-                      "settings" => {
-                        'alerts' => current_user.alerts(std_slot_1) },
-                      "notes" => std_slot_1.notes,
-                      "likes" => std_slot_1.likes.count,
-                      "commentsCounter" => std_slot_1.comments.count,
-                      "media" => std_slot_1.media_items,
-                      "url" => v1_slot_url(std_slot_1, format: :json)
-                     )
+        expect(response_body).to include(std_slot_1.title)
+        expect(response_body).to include(std_slot_2.title)
+        expect(response_body).to include(re_slots.first.title)
       end
     end
 

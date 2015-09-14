@@ -22,6 +22,9 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
+Name : push
+Description : Send push Notifications (true/false)
+
 Name : createdAt
 Description : Creation of user
 
@@ -45,6 +48,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -85,11 +91,14 @@ Description : all connections to other users
 Name : memberships
 Description : all connections to groups
 
+Name : devices
+Description : all devices from user
+
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=RK25czSj2koj2p20CpSKZQo2juQ
+<pre>Authorization: Token token=ICby87gEOT1nEsccMImsBaCpuLg
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -101,7 +110,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=RK25czSj2koj2p20CpSKZQo2juQ&quot; \
+	-H &quot;Authorization: Token token=ICby87gEOT1nEsccMImsBaCpuLg&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -113,11 +122,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;627b27a330f7b3feb73fa849763a3d52&quot;
+ETag: W/&quot;685a06b588d2670af91dd2adec40c048&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ab1614cd-f479-424c-a3de-8595a8f5d39f
-X-Runtime: 0.043884
-Content-Length: 742</pre>
+X-Request-Id: c6734451-43c7-479d-92e6-c7f09b5a0aeb
+X-Runtime: 0.055923
+Vary: Origin
+Content-Length: 766</pre>
 
 #### Status
 
@@ -127,11 +137,11 @@ Content-Length: 742</pre>
 
 ```javascript
 {
-  "id" : 258,
-  "username" : "User 242",
-  "createdAt" : "2015-07-02T12:34:25.885Z",
-  "updatedAt" : "2015-07-02T12:34:25.898Z",
-  "deletedAt" : "2015-07-02T12:34:25.896Z",
+  "id" : 334,
+  "username" : "User 298",
+  "createdAt" : "2015-09-14T10:33:02.882Z",
+  "updatedAt" : "2015-09-14T10:33:02.908Z",
+  "deletedAt" : "2015-09-14T10:33:02.906Z",
   "location" : null,
   "image" : {
     "publicId" : null,
@@ -140,11 +150,13 @@ Content-Length: 742</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user72@email.com",
+  "lang" : null,
+  "email" : "user90@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

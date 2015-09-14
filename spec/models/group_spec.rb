@@ -89,7 +89,8 @@ RSpec.describe Group, type: :model do
   end
 
   describe "create_with_image" do
-    let(:group_params) { attributes_for(:group).merge("owner" => create(:user)) }
+    let(:user) { create(:user) }
+    let(:group_params) { attributes_for(:group).merge(owner: user) }
     let(:image) { { public_id: 'foobar',
                     local_id: 'B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001' } }
 
@@ -97,27 +98,34 @@ RSpec.describe Group, type: :model do
       it "creates a new group" do
         expect {
           Group.create_with_image(group_params: group_params,
-                                  image: image)
+                                  image: image,
+                                  user: user)
         }.to change(Group, :count).by 1
       end
 
       it "sets an image if provided" do
         expect {
-          Group.create_with_image(group_params: group_params, image: image)
+          Group.create_with_image(group_params: group_params,
+                                  image: image,
+                                  user: user)
         }.to change(MediaItem, :count).by 1
         expect(Group.last.image.public_id).to eq image[:public_id]
+        expect(Group.last.image.creator).to eq user
       end
 
       it "sets the local_id on the image if provided" do
-        Group.create_with_image(group_params: group_params, image: image)
+        Group.create_with_image(group_params: group_params,
+                                image: image,
+                                user: user)
         expect(Group.last.image.local_id).to eq image[:local_id]
+        expect(Group.last.image.creator).to eq user
       end
     end
 
     context "invalid params" do
       it "doesn't create a new group if groupname is nil" do
         expect {
-          Group.create_with_image(group_params: { name: nil })
+          Group.create_with_image(group_params: { name: nil }, user: user)
         }.not_to change(Group, :count)
       end
     end

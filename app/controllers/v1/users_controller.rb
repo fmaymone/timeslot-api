@@ -1,7 +1,7 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password]
+                       only: [:create, :signin, :reset_password, :media_items]
     skip_after_action :verify_authorized, only: :slots
     after_action :verify_policy_scoped, only: :slots
 
@@ -25,7 +25,8 @@ module V1
     def create
       authorize :user
       @user = User.create_with_image(params: user_create_params,
-                                     image: user_image)
+                                     image: user_image,
+                                     device: device_params(params[:device]))
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -81,8 +82,8 @@ module V1
       end
 
       @user = current_user.update_with_image(params: user_params,
-                                             image: user_image)
-
+                                             image: user_image,
+                                             user: current_user)
       if @user.errors.empty?
         render :show
       else
@@ -127,6 +128,15 @@ module V1
       render "v1/slots/index"
     end
 
+    # GET /v1/users/1/media
+    # get all media items of the given user
+    def media_items
+      authorize :user
+      target_user = User.find_by(id: params.require(:user_id))
+      @media_items = target_user.media_for(current_user)
+      render "v1/media/index"
+    end
+
     # POST /v1/users/add_friends
     # creates friend request or accepts friend request if one exists
     def add_friends
@@ -145,6 +155,16 @@ module V1
       head :ok
     end
 
+    # PATCH /v1/users/device
+    # updates a device of the user if one exist
+    # if device not exist creates a new one with the passed attributes
+    def update_device
+      authorize :user
+      Device.update_or_create(current_user, device_params(params)) if params.require(:deviceId)
+
+      head :ok
+    end
+
     private def user_create_params
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
@@ -155,6 +175,7 @@ module V1
 
     private def user_params
       p = params.permit(:username,
+                        :lang,
                         :email,
                         :phone,
                         :password,
@@ -168,7 +189,6 @@ module V1
                         },
                         :name,
                         :publicUrl,
-                        :deviceToken,
                         :push,
                         :slotDefaultDuration,
                         :slotDefaultLocationId,
@@ -195,6 +215,13 @@ module V1
       p.transform_keys { |key| key.underscore.to_sym }
     end
 
+    private def device_params(params)
+      return nil unless params && params[:deviceId].present?
+      params.permit(:deviceId, :system, :version, :token, :endpoint)
+            .transform_keys(&:underscore)
+            .symbolize_keys
+    end
+
     private def friends_ids
       params.require(:ids)
     end
@@ -203,7 +230,9 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password).symbolize_keys
+      params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
+            .deep_transform_keys(&:underscore)
+            .deep_symbolize_keys
     end
   end
 end
