@@ -18,6 +18,15 @@ module V1
       render :index
     end
 
+    # GET /v1/slots/demo
+    def show_last
+      authorize :stdSlot
+      @slots = StdSlotPublic.last(15)
+      @slots += ReSlot.last(15)
+
+      render :index
+    end
+
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot

@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
     get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
     post 'slots', to: 'slots#show_many', as: 'slots_read'
+    get 'slots/demo', to: 'slots#show_last', as: 'slots_last'
 
     post 'stdslot', to: 'slots#create_stdslot'
     post 'reslot', to: 'slots#create_reslot'
