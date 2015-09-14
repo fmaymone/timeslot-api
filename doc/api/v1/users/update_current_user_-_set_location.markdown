@@ -12,6 +12,9 @@ Description : Updated username of user (max. 50 characters)
 Name : email
 Description : Email of user (max. 255 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
@@ -141,6 +144,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -188,7 +194,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=TKx1ebEhc4FeIIRo_LngyPushsU
+Authorization: Token token=yyJNAFbgqZdktoNGSQxRHsGb9S8
 Host: example.org
 Cookie: </pre>
 
@@ -210,7 +216,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=TKx1ebEhc4FeIIRo_LngyPushsU&quot; \
+	-H &quot;Authorization: Token token=yyJNAFbgqZdktoNGSQxRHsGb9S8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -221,11 +227,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d0ea311f1da8cbf630a4a5195828d0a5&quot;
+ETag: W/&quot;4affb32a3685b453126ea00d36133372&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4426d56a-1830-446d-ab20-cf1cc48600bd
-X-Runtime: 0.066148
-Content-Length: 1042</pre>
+X-Request-Id: 5af399dd-20ba-45b3-8cb5-82936724d53a
+X-Runtime: 0.029477
+Vary: Origin
+Content-Length: 1066</pre>
 
 #### Status
 
@@ -235,13 +242,13 @@ Content-Length: 1042</pre>
 
 ```javascript
 {
-  "id" : 273,
-  "username" : "User 269",
-  "createdAt" : "2015-08-14T13:58:57.725Z",
-  "updatedAt" : "2015-08-14T13:58:57.757Z",
+  "id" : 331,
+  "username" : "User 295",
+  "createdAt" : "2015-09-14T10:33:02.494Z",
+  "updatedAt" : "2015-09-14T10:33:02.511Z",
   "deletedAt" : null,
   "location" : {
-    "id" : 6,
+    "id" : 7,
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -266,7 +273,8 @@ Content-Length: 1042</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user72@email.com",
+  "lang" : null,
+  "email" : "user87@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

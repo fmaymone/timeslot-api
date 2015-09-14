@@ -1,6 +1,11 @@
 #Changelog
 
-## upcoming on tsinc-alpha
+## upcoming
+- pagination for user slots
+
+
+## v0.7.0 on tsinc-alpha
+- demo endpoint to get the latest 15 stdslots & latest 15 reslots from all users
 - new endpoint to get all (accessible) media items of a specific user
 - support devices for users
 - integration of Apple Push Notifications via AWS SNS (liking, commenting)

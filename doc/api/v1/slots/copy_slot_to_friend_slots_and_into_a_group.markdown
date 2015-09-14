@@ -27,13 +27,13 @@ Must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=lnjmmwcztM0YUsGu6GosqBUynnQ
+Authorization: Token token=ywdZ5Et6YonmyIh7a7LCL4slpAw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/57/copy</pre>
+<pre>POST /v1/slots/65/copy</pre>
 
 #### Body
 ```javascript
@@ -44,7 +44,7 @@ Cookie: </pre>
       "details" : "true"
     },
     {
-      "groupId" : 45
+      "groupId" : 46
     }
   ]
 }
@@ -53,9 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/57/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:45}]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/65/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:46}]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=lnjmmwcztM0YUsGu6GosqBUynnQ&quot; \
+	-H &quot;Authorization: Token token=ywdZ5Et6YonmyIh7a7LCL4slpAw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -67,8 +67,9 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: da70fad8-a711-4079-8184-e4f664457d9e
-X-Runtime: 0.039990
+X-Request-Id: 7633c6fe-40b7-4980-9763-849ba10c2ce7
+X-Runtime: 0.059151
+Vary: Origin
 Content-Length: 0</pre>
 
 #### Status

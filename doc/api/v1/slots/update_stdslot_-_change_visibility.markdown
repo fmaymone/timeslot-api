@@ -113,13 +113,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=FePng81Tx3L24tuHuIhpK-Fx4a0
+Authorization: Token token=OYuDzCOOSvkkQ59coNcxVhqG2fs
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/36</pre>
+<pre>PATCH /v1/stdslot/40</pre>
 
 #### Body
 ```javascript
@@ -131,9 +131,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/36&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/40&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=FePng81Tx3L24tuHuIhpK-Fx4a0&quot; \
+	-H &quot;Authorization: Token token=OYuDzCOOSvkkQ59coNcxVhqG2fs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,10 +144,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;66008c55f6f384e7a6598e7017fec60d&quot;
+ETag: W/&quot;a935b4f7c1d4fe708393f59891e84f40&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 51edd1f4-7f17-4eb1-8784-dbbb1ac707ea
-X-Runtime: 0.033590
+X-Request-Id: 7756c583-ed77-469d-b11c-eb3dd8d6ddc7
+X-Runtime: 0.043507
+Vary: Origin
 Content-Length: 525</pre>
 
 #### Status
@@ -158,19 +159,19 @@ Content-Length: 525</pre>
 
 ```javascript
 {
-  "id" : 36,
-  "title" : "Slot title 31",
-  "startDate" : "2019-09-05T07:44:02.000Z",
-  "createdAt" : "2015-08-19T10:47:41.555Z",
-  "updatedAt" : "2015-08-19T10:47:41.563Z",
+  "id" : 40,
+  "title" : "Slot title 33",
+  "startDate" : "2019-09-07T09:44:02.000Z",
+  "createdAt" : "2015-09-14T10:32:45.971Z",
+  "updatedAt" : "2015-09-14T10:32:45.984Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-05T07:44:02.000Z",
+  "endDate" : "2019-10-07T09:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 190,
-    "username" : "User 187",
-    "createdAt" : "2015-08-19T10:47:41.550Z",
-    "updatedAt" : "2015-08-19T10:47:41.550Z",
+    "id" : 237,
+    "username" : "User 203",
+    "createdAt" : "2015-09-14T10:32:45.966Z",
+    "updatedAt" : "2015-09-14T10:32:45.966Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

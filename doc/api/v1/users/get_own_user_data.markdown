@@ -55,6 +55,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -102,19 +105,19 @@ Description : all devices from user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg
+Authorization: Token token=szq_6SnpN6QA1UhbTS8fEIFesCU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/263</pre>
+<pre>GET /v1/users/317</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/263&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/317&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=t1rtsFw2ClXIC-cJucSHbB7WgIg&quot; \
+	-H &quot;Authorization: Token token=szq_6SnpN6QA1UhbTS8fEIFesCU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -125,11 +128,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b47068f0db89e5688ac8b5188028c10c&quot;
+ETag: W/&quot;b89ba30fc39c656f9cdc2750d2993a83&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9bca1755-f6f7-472a-a2cd-2a043f808a73
-X-Runtime: 0.015941
-Content-Length: 720</pre>
+X-Request-Id: e0de5810-9ca8-4cfe-bc48-fa985ac8ce04
+X-Runtime: 0.028117
+Vary: Origin
+Content-Length: 744</pre>
 
 #### Status
 
@@ -139,10 +143,10 @@ Content-Length: 720</pre>
 
 ```javascript
 {
-  "id" : 263,
-  "username" : "User 260",
-  "createdAt" : "2015-08-17T11:32:00.190Z",
-  "updatedAt" : "2015-08-17T11:32:00.190Z",
+  "id" : 317,
+  "username" : "User 283",
+  "createdAt" : "2015-09-14T10:32:59.211Z",
+  "updatedAt" : "2015-09-14T10:32:59.211Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -152,11 +156,13 @@ Content-Length: 720</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user65@email.com",
+  "lang" : null,
+  "email" : "user78@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
+  "push" : true,
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,

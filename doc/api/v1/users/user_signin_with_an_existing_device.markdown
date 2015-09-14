@@ -64,6 +64,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -125,12 +128,14 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user70@email.com",
+  "email" : "user82@email.com",
   "password" : "timeslot",
   "device" : {
-    "device_id" : "sn-6346287341083478676543956",
-    "system" : "ios",
-    "version" : "6.0"
+    "device" : {
+      "device_id" : "sn-6346287341083478676543956",
+      "system" : "ios",
+      "version" : "6.0"
+    }
   }
 }
 ```
@@ -138,7 +143,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user70@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-6346287341083478676543956&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user82@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-6346287341083478676543956&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -151,11 +156,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;84d16c683bca27f97438cf38d548ab8a&quot;
+ETag: W/&quot;ecad1ffd9d1c21e5743a687646dc294a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b8d69909-ddab-42b1-a3c1-37bec149b09f
-X-Runtime: 0.070306
-Content-Length: 774</pre>
+X-Request-Id: 652835cd-ea8b-4618-9d97-8239548afded
+X-Runtime: 0.102132
+Vary: Origin
+Content-Length: 786</pre>
 
 #### Status
 
@@ -165,10 +171,10 @@ Content-Length: 774</pre>
 
 ```javascript
 {
-  "id" : 273,
-  "username" : "User 268",
-  "createdAt" : "2015-08-19T10:29:46.880Z",
-  "updatedAt" : "2015-08-19T10:29:46.910Z",
+  "id" : 325,
+  "username" : "User 289",
+  "createdAt" : "2015-09-14T10:33:00.133Z",
+  "updatedAt" : "2015-09-14T10:33:00.214Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -178,7 +184,8 @@ Content-Length: 774</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user70@email.com",
+  "lang" : null,
+  "email" : "user82@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -196,6 +203,6 @@ Content-Length: 774</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "csXW0x1HfUUSSltuWRyc4sOOeEg"
+  "authToken" : "pZ6-_KacYwlB8j4um3vLVL5ui3s"
 }
 ```

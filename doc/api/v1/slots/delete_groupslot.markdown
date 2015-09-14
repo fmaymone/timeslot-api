@@ -82,19 +82,19 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=Dbeg1Ewg9tacv10t1wnflxGwcO4
+<pre>Authorization: Token token=eatlbdO9uAK4bQmeYaYLZpmnQ8Q
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groupslot/42</pre>
+<pre>DELETE /v1/groupslot/48</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/42&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=Dbeg1Ewg9tacv10t1wnflxGwcO4&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/48&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=eatlbdO9uAK4bQmeYaYLZpmnQ8Q&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,11 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;06b7f329d38501a3e6b47a2e02e55e5a&quot;
+ETag: W/&quot;e23b06baa2673e67a42b23344c9edba4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 21118c02-23f9-481f-b571-f96ff650df38
-X-Runtime: 0.057901
-Content-Length: 558</pre>
+X-Request-Id: 6cc1c245-fbb9-41eb-b231-531c8bc48061
+X-Runtime: 0.139814
+Vary: Origin
+Content-Length: 542</pre>
 
 #### Status
 
@@ -120,20 +121,19 @@ Content-Length: 558</pre>
 
 ```javascript
 {
-  "id" : 42,
-  "title" : "Slot title 37",
-  "startDate" : "2019-09-11T13:44:02.000Z",
-  "endDate" : "2019-10-11T13:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:20.029Z",
-  "updatedAt" : "2015-07-02T12:34:20.055Z",
-  "deletedAt" : "2015-07-02T12:34:20.053Z",
-  "openEnd" : false,
+  "id" : 48,
+  "title" : "Slot title 41",
+  "startDate" : "2019-09-15T17:44:02.000Z",
+  "createdAt" : "2015-09-14T10:32:56.844Z",
+  "updatedAt" : "2015-09-14T10:32:56.948Z",
+  "deletedAt" : "2015-09-14T10:32:56.945Z",
+  "endDate" : "2019-10-15T17:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 193,
-    "username" : "User 178",
-    "createdAt" : "2015-07-02T12:34:20.022Z",
-    "updatedAt" : "2015-07-02T12:34:20.022Z",
+    "id" : 256,
+    "username" : "User 222",
+    "createdAt" : "2015-09-14T10:32:56.839Z",
+    "updatedAt" : "2015-09-14T10:32:56.839Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -146,7 +146,7 @@ Content-Length: 558</pre>
     "alerts" : "0000000000"
   },
   "group" : {
-    "id" : 41
+    "id" : 42
   },
   "likes" : 0,
   "commentsCounter" : 0,

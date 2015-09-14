@@ -1,23 +1,24 @@
 # Slots API
 
-## Update StdSlot
+## Create new ReSlot from the Web Search service
 
-### PATCH /v1/stdslot/:id
+### POST /v1/webslot
 
-Update content of StdSlot.
+Returns status code 200.
 
-User must be owner of StdSlot.
-
-returns 200 and slot data if update succeded 
-
-returns 404 if User not owner or ID is invalid
+Missing unrequiered fields will be filled with default values.
 
 returns 422 if parameters are invalid
 
+returns 422 if required parameters are missing
+
 ### Parameters
 
-Name : id *- required -*
-Description : ID of the slot to update
+Name : visibility *- required -*
+Description : Visibility of the Slot (private/friends/public)
+
+Name : creatorId *- required -*
+Description : ID of the Creator of the Webslot
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -110,27 +111,33 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=MZT8nQUP9LmeRiCkpuNveIaggzA
+Accept: application/json
+Authorization: Token token=ZVIOSj4a3cgdHujj9b9Gnp6gFxM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/35</pre>
+<pre>POST /v1/webslot</pre>
 
 #### Body
 ```javascript
 {
-  "title" : "New title for a Slot"
+  "visibility" : "public",
+  "creatorId" : 225,
+  "title" : "Time for a Slot",
+  "startDate" : "2014-09-08T13:31:02.000Z",
+  "endDate" : "2014-09-13T22:03:24.000Z"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/webslot&quot; -d &#39;{&quot;visibility&quot;:&quot;public&quot;,&quot;creatorId&quot;:225,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=MZT8nQUP9LmeRiCkpuNveIaggzA&quot; \
+	-H &quot;Accept: application/json&quot; \
+	-H &quot;Authorization: Token token=ZVIOSj4a3cgdHujj9b9Gnp6gFxM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -140,49 +147,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1cd813db5c3c99720dd01596008fc398&quot;
-Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2e8161b3-dd8f-485a-ad15-459b9ded3151
-X-Runtime: 0.037207
-Content-Length: 548</pre>
+Content-Type: application/json
+Cache-Control: no-cache
+X-Request-Id: 8229f19a-96d2-4c74-b264-3f3f4f1f8374
+X-Runtime: 0.024187
+Vary: Origin
+Content-Length: 0</pre>
 
 #### Status
 
 <pre>200 OK</pre>
 
-#### Body
-
-```javascript
-{
-  "id" : 35,
-  "title" : "New title for a Slot",
-  "startDate" : "2019-09-04T06:44:02.000Z",
-  "endDate" : "2019-10-04T06:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:19.198Z",
-  "updatedAt" : "2015-07-02T12:34:19.198Z",
-  "deletedAt" : null,
-  "openEnd" : false,
-  "location" : null,
-  "creator" : {
-    "id" : 179,
-    "username" : "User 164",
-    "createdAt" : "2015-07-02T12:34:19.191Z",
-    "updatedAt" : "2015-07-02T12:34:19.191Z",
-    "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
-  },
-  "notes" : [],
-  "media" : [],
-  "settings" : {
-    "alerts" : "0000000000"
-  },
-  "visibility" : "private",
-  "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
-}
-```

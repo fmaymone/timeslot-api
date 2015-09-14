@@ -16,6 +16,9 @@ Description : Updated username of user (max. 50 characters)
 Name : email
 Description : Email of user (max. 255 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
@@ -109,6 +112,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -156,7 +162,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=aaH-_teIKcVlaufUkCG8Vn2VCwo
+Authorization: Token token=aTGsa0-tW3z2wPD_O1TosCdlGVk
 Host: example.org
 Cookie: </pre>
 
@@ -179,7 +185,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=aaH-_teIKcVlaufUkCG8Vn2VCwo&quot; \
+	-H &quot;Authorization: Token token=aTGsa0-tW3z2wPD_O1TosCdlGVk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -190,11 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;88ab55dcf2a06302354fae8cb40c1c04&quot;
+ETag: W/&quot;b21acdf9ff4f3ff14765baa502c036cb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 199954c1-cfd6-4a0d-bc55-517bfeaa8ba4
-X-Runtime: 0.027878
-Content-Length: 793</pre>
+X-Request-Id: 2a4b19ca-9fd7-47da-b437-060037cc3cc4
+X-Runtime: 0.032391
+Vary: Origin
+Content-Length: 817</pre>
 
 #### Status
 
@@ -204,10 +211,10 @@ Content-Length: 793</pre>
 
 ```javascript
 {
-  "id" : 272,
-  "username" : "User 268",
-  "createdAt" : "2015-08-14T13:58:57.678Z",
-  "updatedAt" : "2015-08-14T13:58:57.678Z",
+  "id" : 330,
+  "username" : "User 294",
+  "createdAt" : "2015-09-14T10:33:02.374Z",
+  "updatedAt" : "2015-09-14T10:33:02.374Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -217,7 +224,8 @@ Content-Length: 793</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user71@email.com",
+  "lang" : null,
+  "email" : "user86@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
