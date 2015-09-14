@@ -21,6 +21,9 @@ Description : Email of user (max. 254 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : password *- required -*
 Description : Password for user (min. 5 &amp; max. 72 characters)
 
@@ -77,6 +80,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -141,11 +147,14 @@ Cookie: </pre>
 {
   "username" : "foo",
   "email" : "someone@timeslot.com",
+  "lang" : "de",
   "password" : "secret-thing",
   "device" : {
-    "device_id" : "sn-4346287341083478676543954",
-    "system" : "ios",
-    "version" : "6.0"
+    "device" : {
+      "device_id" : "sn-4346287341083478676543954",
+      "system" : "ios",
+      "version" : "6.0"
+    }
   }
 }
 ```
@@ -153,7 +162,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-4346287341083478676543954&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-4346287341083478676543954&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -166,11 +175,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0ad119e12e9bd441506001f1d7fb1c4b&quot;
+ETag: W/&quot;433653eb0fc990ea9622c404aa86046f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 805c1a82-07bd-47f7-908b-a9d837e41934
-X-Runtime: 0.016450
-Content-Length: 761</pre>
+X-Request-Id: 452adc25-ad0d-42b8-88f1-9a82f7585a82
+X-Runtime: 0.113586
+Vary: Origin
+Content-Length: 785</pre>
 
 #### Status
 
@@ -180,10 +190,10 @@ Content-Length: 761</pre>
 
 ```javascript
 {
-  "id" : 268,
+  "id" : 322,
   "username" : "foo",
-  "createdAt" : "2015-08-17T11:32:00.261Z",
-  "updatedAt" : "2015-08-17T11:32:00.261Z",
+  "createdAt" : "2015-09-14T10:32:59.656Z",
+  "updatedAt" : "2015-09-14T10:32:59.656Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -193,6 +203,7 @@ Content-Length: 761</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
+  "lang" : null,
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
@@ -211,6 +222,6 @@ Content-Length: 761</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "8JiVRe3Maueall60JXl4Y01lA9E"
+  "authToken" : "ne8leaQXYcs1uPm95RaZEHV6QrU"
 }
 ```

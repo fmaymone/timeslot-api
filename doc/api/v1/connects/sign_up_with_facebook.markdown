@@ -110,11 +110,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d7797ea2030ca1ad476639d50af7d76e&quot;
+ETag: W/&quot;fa8407b8484fa524d3bae7adeeafba7f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1a43539c-0f5c-4cfe-8f42-4235b37e0727
-X-Runtime: 0.169026
-Content-Length: 767</pre>
+X-Request-Id: 831d0694-140f-4414-9318-52445b784bd6
+X-Runtime: 0.102112
+Vary: Origin
+Content-Length: 791</pre>
 
 #### Status
 
@@ -124,10 +125,10 @@ Content-Length: 767</pre>
 
 ```javascript
 {
-  "id" : 46,
+  "id" : 56,
   "username" : "Silvi O Ivlis",
-  "createdAt" : "2015-07-02T12:34:15.720Z",
-  "updatedAt" : "2015-07-02T12:34:15.720Z",
+  "createdAt" : "2015-09-14T10:32:37.444Z",
+  "updatedAt" : "2015-09-14T10:32:37.444Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -137,6 +138,7 @@ Content-Length: 767</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
+  "lang" : null,
   "email" : "alexpar@gmail.com",
   "emailVerified" : false,
   "phone" : null,
@@ -155,6 +157,6 @@ Content-Length: 767</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "c7NVYv4YDpXVkkAlfc-ovrzRxIg"
+  "authToken" : "NJJWAm1_qT5kYAQ14uQ5uRJLEIc"
 }
 ```

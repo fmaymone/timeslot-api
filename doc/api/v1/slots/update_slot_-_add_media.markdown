@@ -15,6 +15,9 @@ returns 200 and slot details including the new mediaID
 Name : id *- required -*
 Description : ID of the slot to update
 
+Name : visibility
+Description : Visibility of the Slot to update (private/friends/public)
+
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -145,13 +148,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4x2kIfIBUbkYN9POB8Diw7YFIlY
+Authorization: Token token=2PeVu0BH2tpF5KxWYcwZB2wzCQ0
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/37</pre>
+<pre>PATCH /v1/stdslot/42</pre>
 
 #### Body
 ```javascript
@@ -170,9 +173,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/37&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/42&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4x2kIfIBUbkYN9POB8Diw7YFIlY&quot; \
+	-H &quot;Authorization: Token token=2PeVu0BH2tpF5KxWYcwZB2wzCQ0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -183,11 +186,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c09a09640ef5fae8685631db02241ad8&quot;
+ETag: W/&quot;63d48da5f978f078a49692ddfd5f63f9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 26163e64-c6a0-422d-b1ab-a244856d3f03
-X-Runtime: 0.040613
-Content-Length: 692</pre>
+X-Request-Id: 0cab59ce-6093-4985-9905-132650ef53d2
+X-Runtime: 0.064975
+Vary: Origin
+Content-Length: 715</pre>
 
 #### Status
 
@@ -197,20 +201,19 @@ Content-Length: 692</pre>
 
 ```javascript
 {
-  "id" : 37,
-  "title" : "Slot title 32",
-  "startDate" : "2019-09-06T08:44:02.000Z",
-  "endDate" : "2019-10-06T08:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:19.333Z",
-  "updatedAt" : "2015-07-02T12:34:19.333Z",
+  "id" : 42,
+  "title" : "Slot title 35",
+  "startDate" : "2019-09-09T11:44:02.000Z",
+  "createdAt" : "2015-09-14T10:32:46.243Z",
+  "updatedAt" : "2015-09-14T10:32:46.243Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 183,
-    "username" : "User 168",
-    "createdAt" : "2015-07-02T12:34:19.327Z",
-    "updatedAt" : "2015-07-02T12:34:19.327Z",
+    "id" : 241,
+    "username" : "User 207",
+    "createdAt" : "2015-09-14T10:32:46.238Z",
+    "updatedAt" : "2015-09-14T10:32:46.238Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -220,11 +223,12 @@ Content-Length: 692</pre>
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 31,
+      "mediaId" : 41,
       "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
-      "mediaType" : "image"
+      "mediaType" : "image",
+      "createdAt" : "2015-09-14T10:32:46.269Z"
     }
   ],
   "settings" : {

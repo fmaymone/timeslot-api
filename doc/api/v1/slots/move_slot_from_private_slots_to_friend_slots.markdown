@@ -91,13 +91,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Crx8ImH9TsQ4R7MvbV64gpih9cQ
+Authorization: Token token=rhBEv6O2f4Lz8sezOWXUu4d3xAk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/60/move</pre>
+<pre>POST /v1/slots/68/move</pre>
 
 #### Body
 ```javascript
@@ -110,9 +110,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/60/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/68/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Crx8ImH9TsQ4R7MvbV64gpih9cQ&quot; \
+	-H &quot;Authorization: Token token=rhBEv6O2f4Lz8sezOWXUu4d3xAk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,11 +123,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b0aa9d4af5a6b8c3d1626c419ce7866c&quot;
+ETag: W/&quot;1deb217e6ea57e2f29f939e35175afa7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d5d47590-a547-4247-ada9-aed79e878a3b
-X-Runtime: 0.079135
-Content-Length: 837</pre>
+X-Request-Id: 0b95e4b2-e005-4cb1-b779-a18ee8ec53be
+X-Runtime: 0.128643
+Vary: Origin
+Content-Length: 1453</pre>
 
 #### Status
 
@@ -137,20 +138,19 @@ Content-Length: 837</pre>
 
 ```javascript
 {
-  "id" : 61,
-  "title" : "Slot title 50",
-  "startDate" : "2019-09-24T02:44:02.000Z",
-  "endDate" : "2019-10-24T02:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:20.776Z",
-  "updatedAt" : "2015-07-02T12:34:20.776Z",
+  "id" : 69,
+  "title" : "Slot title 56",
+  "startDate" : "2019-09-03T08:44:02.000Z",
+  "createdAt" : "2015-09-14T10:32:58.785Z",
+  "updatedAt" : "2015-09-14T10:32:58.785Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2019-10-03T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 238,
-    "username" : "User 223",
-    "createdAt" : "2015-07-02T12:34:20.745Z",
-    "updatedAt" : "2015-07-02T12:34:20.745Z",
+    "id" : 312,
+    "username" : "User 278",
+    "createdAt" : "2015-09-14T10:32:58.747Z",
+    "updatedAt" : "2015-09-14T10:32:58.747Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -160,25 +160,58 @@ Content-Length: 837</pre>
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 48,
-      "publicId" : "dfhjghjkdisudgfds7iy41",
+      "mediaId" : 70,
+      "publicId" : "dfhjghjkdisudgfds7iy60",
+      "position" : 5,
+      "localId" : null,
+      "mediaType" : "audio",
+      "createdAt" : "2015-09-14T10:32:58.769Z",
+      "duration" : null,
+      "title" : "Title 56"
+    },
+    {
+      "mediaId" : 69,
+      "publicId" : "dfhjghjkdisudgfds7iy59",
+      "position" : 4,
+      "localId" : null,
+      "mediaType" : "video",
+      "createdAt" : "2015-09-14T10:32:58.766Z",
+      "duration" : null,
+      "thumbnail" : null
+    },
+    {
+      "mediaId" : 68,
+      "publicId" : "dfhjghjkdisudgfds7iy58",
+      "position" : 3,
+      "localId" : null,
+      "mediaType" : "video",
+      "createdAt" : "2015-09-14T10:32:58.763Z",
+      "duration" : null,
+      "thumbnail" : null
+    },
+    {
+      "mediaId" : 67,
+      "publicId" : "dfhjghjkdisudgfds7iy57",
       "position" : 2,
       "localId" : null,
-      "mediaType" : "image"
+      "mediaType" : "image",
+      "createdAt" : "2015-09-14T10:32:58.760Z"
     },
     {
-      "mediaId" : 47,
-      "publicId" : "dfhjghjkdisudgfds7iy40",
+      "mediaId" : 66,
+      "publicId" : "dfhjghjkdisudgfds7iy56",
       "position" : 1,
       "localId" : null,
-      "mediaType" : "image"
+      "mediaType" : "image",
+      "createdAt" : "2015-09-14T10:32:58.758Z"
     },
     {
-      "mediaId" : 46,
-      "publicId" : "dfhjghjkdisudgfds7iy39",
+      "mediaId" : 65,
+      "publicId" : "dfhjghjkdisudgfds7iy55",
       "position" : 0,
       "localId" : null,
-      "mediaType" : "image"
+      "mediaType" : "image",
+      "createdAt" : "2015-09-14T10:32:58.755Z"
     }
   ],
   "settings" : {
