@@ -32,7 +32,7 @@ class Device < ActiveRecord::Base
         Device.create_client.delete_endpoint({ endpoint_arn: endpoint })
       rescue Aws::SNS::Errors::ServiceError => exception
         Rails.logger.error exception
-        Airbrake.notify(aws_sns_error: exception)
+        Airbrake.notify(exception)
         errors.add(:unregister_endpoint, "could not unregister endpoint")
         raise exception if Rails.env.test? || Rails.env.development?
       ensure
@@ -61,7 +61,7 @@ class Device < ActiveRecord::Base
         token: token)[:endpoint_arn]
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
-      Airbrake.notify(aws_sns_error: exception)
+      Airbrake.notify(exception)
       errors.add(:register_endpoint, "could not register endpoint")
       raise exception if Rails.env.test? || Rails.env.development?
     end
