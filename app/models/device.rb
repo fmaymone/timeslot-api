@@ -135,16 +135,17 @@ class Device < ActiveRecord::Base
       client.publish(push_notification)
 
     rescue Aws::SNS::Errors::ServiceError => exception
+      # to have at least something
+      Rails.logger.error exception
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
       opts[:params] = { user_id: user_id,
                         device_id: id,
-                        aws_params: exception.params,
-                        aws_operation_name: exception.operation_name,
-                        aws_http_request: exception.http_request,
-                        aws_http_response: exception.http_response,
+                        aws_params: exception.try(:params),
+                        aws_operation_name: exception.try(:operation_name),
+                        aws_http_request: exception.try(:http_request),
+                        aws_http_response: exception.try(:http_response),
                         aws_sns_error: exception }
       Rails.logger.error opts
-      Rails.logger.error exception
       Airbrake.notify(exception, opts)
       # I'm not sure if we ever evaluate the following line
       errors.add(:client, "could not send push notification to device")
