@@ -135,8 +135,14 @@ class Device < ActiveRecord::Base
       client.publish(push_notification)
 
     rescue Aws::SNS::Errors::ServiceError => exception
-      Rails.logger.error exception
-      Airbrake.notify(aws_sns_error: exception)
+      msg = { user_id: user_id, device_id: id }
+      msg.merge!(sucker_punch: "creating push notification failed.")
+      msg.merge!(aws_sns_error: e)
+      Rails.logger.error msg
+      Airbrake.notify(msg)
+      Airbrake.notify(exception, msg)
+      # Rails.logger.error exception
+      # Airbrake.notify(exception, aws_sns_error: exception)
       errors.add(:client, "could not send push notification to device")
     end
   end

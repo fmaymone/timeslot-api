@@ -21,9 +21,14 @@ module V1
     # GET /v1/slots/demo
     def show_last
       authorize :stdSlot
-      @slots = StdSlotPublic.last(15)
-      @slots += ReSlot.last(15)
-
+      begin
+        @slots = StdSlotPublic.last(85)
+        @slots += ReSlot.last(15)
+      rescue => ex
+        Airbrake.notify(ex, demo_endpoint: 'slots could not be collected')
+      ensure
+        @slots = StdSlotPublic.last(25)
+      end
       render :index
     end
 
