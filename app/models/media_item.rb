@@ -35,7 +35,7 @@ class MediaItem < ActiveRecord::Base
     msg.merge!(cloudinary: "adding tag for destroyed media_item failed.")
     msg.merge!(error: e)
     Rails.logger.error msg
-    Airbrake.notify(msg)
+    Airbrake.notify(e, parameters: msg)
   ensure
     ts_soft_delete
   end

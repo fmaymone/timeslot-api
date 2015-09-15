@@ -25,7 +25,7 @@ module V1
         @slots = StdSlotPublic.last(85)
         @slots += ReSlot.last(15)
       rescue => ex
-        Airbrake.notify(ex, demo_endpoint: 'slots could not be collected')
+        Airbrake.notify(ex, error_message: "demo slots couldn't be collected")
       ensure
         @slots = StdSlotPublic.last(25)
       end

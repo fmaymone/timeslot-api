@@ -43,7 +43,7 @@ class StdSlot < BaseSlot
     # a valid value for visibility is already enforced in the controller,
     # so maybe this exception handling is overkill
     msg = "invalid value for visibility: #{visibility}"
-    Airbrake.notify(msg)
+    Airbrake.notify(NameError, error_message: msg)
   else
     slot_type.create(meta_slot: meta_slot, owner: user)
   end
