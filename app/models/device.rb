@@ -138,13 +138,13 @@ class Device < ActiveRecord::Base
       # to have at least something
       Rails.logger.error exception
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
-      opts[:params] = { user_id: user_id,
-                        device_id: id,
-                        aws_params: exception.try(:params),
-                        aws_operation_name: exception.try(:operation_name),
-                        aws_http_request: exception.try(:http_request),
-                        aws_http_response: exception.try(:http_response),
-                        aws_sns_error: exception }
+      opts[:parameters] = { user_id: user_id,
+                            device_id: id,
+                            aws_params: exception.try(:params) || exception.try(:parameters),
+                            aws_operation_name: exception.try(:operation_name),
+                            aws_http_request: exception.try(:http_request),
+                            aws_http_response: exception.try(:http_response),
+                            aws_sns_error: exception }
       Rails.logger.error opts
       Airbrake.notify(exception, opts)
       # I'm not sure if we ever evaluate the following line
