@@ -18,11 +18,15 @@ class NotifyJob
           begin
             device.notify(client, params) if device.endpoint
           rescue => e
-            msg = { user_id: user.id, device_id: device.id }
-            msg.merge!(sucker_punch: "creating push notification for #{user.username} failed.")
-            msg.merge!(aws_sns_error: e)
-            Rails.logger.error msg
-            Airbrake.notify msg
+            # rescuing here has not to much (but some) value bc we already
+            # rescue in the device.notify method
+            opts = {}
+            opts[:parameters] = {
+              user_id: user.id,
+              device_id: device.id,
+              sucker_punch: "push notification for #{user.username} failed" }
+            Rails.logger.error e
+            Airbrake.notify(e, opts)
             raise exception if Rails.env.test? || Rails.env.development?
           end
         end
