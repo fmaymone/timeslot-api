@@ -36,6 +36,12 @@ class StdSlotPolicy < SlotPolicy
   # true if the user is signed in and
   # the user is slot owner
   def destroy_stdslot?
+    # TODO:
+    # current_user? && (slot.owner == current_user.id)
     current_user?
+  end
+
+  def show_slotters?
+    show_to_current_user?
   end
 end

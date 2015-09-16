@@ -267,6 +267,14 @@ module V1
       render :comments
     end
 
+    # GET /v1/slots/1/slotters
+    def show_slotters
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      render :slotters
+    end
+
     # GET /v1/slots/1/history
     def reslot_history
       @slot = BaseSlot.get(params[:id])
