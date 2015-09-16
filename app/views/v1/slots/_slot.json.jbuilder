@@ -52,6 +52,8 @@ elsif slot.class == ReSlot
     json.id slot.parent_id
   end
   json.visibility slot.parent.try(:visibility)
+elsif slot.class < StdSlot
+  json.reslotsCounter slot.reslot_count
 end
 
 json.likes slot.likes.count

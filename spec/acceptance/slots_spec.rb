@@ -24,6 +24,7 @@ resource "Slots" do
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
+    response_field :reslotsCounter, "Number of reslots for this slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
@@ -231,6 +232,7 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("reslotsCounter")
         expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
@@ -256,7 +258,8 @@ resource "Slots" do
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
-                 "commentsCounter" => slot.comments.count
+                 "commentsCounter" => slot.comments.count,
+                 "reslotsCounter" => slot.reslot_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
