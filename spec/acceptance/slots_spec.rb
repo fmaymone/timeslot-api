@@ -602,6 +602,26 @@ resource "Slots" do
       end
     end
 
+    describe "Create webslot which already exist" do
+
+      let(:user) { User.find_by(email: 'info@timeslot.com') }
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-09T13:31:02.000Z" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { 'public' }
+      let(:creatorId) { user.id }
+
+      example "Create webslot which already exist returns 421", document: false do
+        explanation "returns 421 if the slot was already reslottet from the user"
+
+        do_request
+        expect(response_status).to eq(200)
+
+        do_request
+        expect(response_status).to eq(421)
+      end
+    end
+
     describe "Create webslot slot with invalid params" do
       response_field :error, "Explanation which param couldn't be saved"
 
