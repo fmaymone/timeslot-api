@@ -18,7 +18,7 @@ module V1
                            "&size=" + (page[:limit] || '10') +
                            "&timestamp=" + (page[:datetime] || Time.zone.now.strftime('%Y-%m-%dT%H:%M'))
       begin
-        result = open(query, auth).read
+        result = open(URI.escape(query), auth).read
       rescue => e
         Airbrake.notify(e)
         return render json: { error: "Search Service Error: #{e}" },
