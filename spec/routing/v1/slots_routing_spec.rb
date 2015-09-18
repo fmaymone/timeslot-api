@@ -103,6 +103,11 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show_comments", id: "1", format: :json)
     end
 
+    it "routes to #show_slotters" do
+      expect(get: "/v1/slots/1/slotters")
+        .to route_to("v1/slots#show_slotters", id: "1", format: :json)
+    end
+
     it "routes to #reslot_history" do
       expect(get: "/v1/slots/1/history")
         .to route_to("v1/slots#reslot_history", id: "1", format: :json)
