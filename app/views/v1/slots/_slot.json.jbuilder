@@ -44,10 +44,6 @@ elsif slot.class == ReSlot
   json.slotter do
     json.id slot.slotter_id
   end
-  # for demo purpose overwrite creator with slotter for reslots
-  json.creator do
-    json.partial! 'v1/users/user', user: slot.slotter
-  end
   json.parent do
     json.id slot.parent_id
   end
