@@ -83,15 +83,15 @@ module V1
     def create_webslot
       authorize :stdSlot
 
-      # TODO: we need an unique identifier from each crawler slot to re-identify exist reslots
+      # TODO: we need an unique identifier from each crawler slot to re-identify
+      # exist reslots
       # Check if Slot already exist
-      current_user.re_slots.find_each do |reslot|
-        if reslot.meta_slot.start_date == params.require(:startDate) &&
-           reslot.meta_slot.title == params.require(:title)
-
-          return head 421
-        end
-      end
+      user_reslots = current_user.re_slots.unscoped.joins(:meta_slot)
+      same_reslot = user_reslots.where(
+        'meta_slots.start_date = ? AND meta_slots.title = ?',
+        params.require(:startDate), params.require(:title)
+      )
+      return head 421 if same_reslot.any?
 
       # Set Slot Creator:
       slot_creator = User.find_by(email: 'info@timeslot.com')
