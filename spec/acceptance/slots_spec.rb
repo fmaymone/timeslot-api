@@ -24,6 +24,7 @@ resource "Slots" do
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
+    response_field :reslotsCounter, "Number of reslots for this slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
@@ -231,6 +232,7 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("reslotsCounter")
         expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
@@ -256,7 +258,8 @@ resource "Slots" do
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
-                 "commentsCounter" => slot.comments.count
+                 "commentsCounter" => slot.comments.count,
+                 "reslotsCounter" => slot.reslot_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
@@ -1185,6 +1188,41 @@ resource "Slots" do
         expect(json.first).to have_key "commenter"
         expect(json.first["commenter"]).to have_key "username"
         expect(json.first).to have_key "content"
+      end
+    end
+  end
+
+  get "/v1/slots/:id/slotters", :focus do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the slotters for", required: true
+
+    response_field :array, "containing creation date of the ReSlot and " \
+                           "details of the user who did the reslot"
+
+    let(:parent) { create(:std_slot_public) }
+    let!(:reslots) { create_list(:re_slot, 2, parent: parent) }
+
+    describe "Get Slotters for Slot" do
+      let(:id) { parent.id }
+
+      example "Get Slotters for Slot", document: :v1 do
+        explanation "returns a list of all users who reslot the slot. " \
+                    "For now there is no distinction between reslot " \
+                    "visibilities as backend has no support for this yet.\n\n" \
+                    "Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Slotter data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq 2
+        expect(json.first).to have_key "slotter"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first["slotter"]).to have_key "id"
+        expect(json.first["slotter"]).to have_key "image"
+        expect(response_body).to include reslots.first.slotter.username
+        expect(response_body).to include reslots.last.slotter.username
       end
     end
   end

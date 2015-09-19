@@ -49,6 +49,10 @@ Rails.application.routes.draw do
         to: 'slots#show_comments',
         as: 'slot_show_comments',
         constraints: { id: /\d+/ }
+    get 'slots/:id/slotters',
+        to: 'slots#show_slotters',
+        as: 'slot_show_slotters',
+        constraints: { id: /\d+/ }
     get 'slots/:id/history',
         to: 'slots#reslot_history',
         as: 'reslot_history',
