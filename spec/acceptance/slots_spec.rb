@@ -554,9 +554,7 @@ resource "Slots" do
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["endDate"]).to eq pred.end_date.as_json
-        # temporary change for reslot to submit slotter as creator
-        # expect(json["creator"]["id"]).to eq pred.creator.id
-        expect(json["creator"]["id"]).to eq current_user.id
+        expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["visibility"]).to eq pred.visibility
       end
     end
@@ -1192,7 +1190,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id/slotters", :focus do
+  get "/v1/slots/:id/slotters" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Slot to get the slotters for", required: true
