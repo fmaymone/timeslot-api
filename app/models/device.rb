@@ -125,7 +125,7 @@ class Device < ActiveRecord::Base
   def self.notify_all(users, params)
     notify_queue = []
 
-    users.uniq.each do |user|
+    User.where(id: users.uniq).find_each do |user|
       next if !user.push || user.deleted_at?
       user.devices.find_each do |device|
         notify_queue << { params: params, device: device } if device.endpoint

@@ -12,17 +12,16 @@ class NotifyJob
     # https://forums.aws.amazon.com/thread.jspa?messageID=639931#639931
     notify_queue.each do |queue|
       begin
-        Device.notify(client, queue[:device], queue[:params])
+        Device.notify(client, queue['device'], queue['params'])
       rescue => e
         # rescuing here has not to much (but some) value bc we already
         # rescue in the device.notify method
         opts = {}
         opts[:parameters] = {
-          device_id: queue[:device].id,
-          sucker_punch: "push notification from user #{queue[:device].user_id} failed" }
+          device_id: queue['device']['device_id'],
+          sucker_punch: "push notification from user #{queue['device']['user_id']} failed" }
         Rails.logger.error e
         Airbrake.notify(e, opts)
-        raise exception if Rails.env.test? || Rails.env.development?
       end
     end
   end
