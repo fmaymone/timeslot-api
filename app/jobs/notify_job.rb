@@ -18,8 +18,9 @@ class NotifyJob
         # rescue in the device.notify method
         opts = {}
         opts[:parameters] = {
+          user_id: queue['device']['user_id'],
           device_id: queue['device']['device_id'],
-          sucker_punch: "push notification from user #{queue['device']['user_id']} failed" }
+          sucker_punch: "push notification failed" }
         Rails.logger.error e
         Airbrake.notify(e, opts)
       end
