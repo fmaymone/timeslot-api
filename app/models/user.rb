@@ -106,6 +106,7 @@ class User < ActiveRecord::Base
     update!(auth_token: nil)
   end
 
+  # TODO: move email stuff into async job
   def reset_password
     new_password = SecureRandom.urlsafe_base64(6)
     update(password: new_password)
@@ -265,7 +266,7 @@ class User < ActiveRecord::Base
 
   def alerts(slot)
     setting = SlotSetting.where(user: self, meta_slot: slot.meta_slot)
-    if setting.exists?
+    if setting.any?
       setting.take.alerts
     else
       representations = multiple_representations(slot)
@@ -309,6 +310,7 @@ class User < ActiveRecord::Base
     end
   end
 
+  # TODO: send only user_id as param instead of full object
   def friend_with?(user)
     friendship(user.id).try(:established?)
   end
@@ -366,31 +368,30 @@ class User < ActiveRecord::Base
   end
 
   private def default_alert(slot)
-    case slot
-    when StdSlotPrivate
+    case slot.slot_type
+    when 'StdSlotPrivate'
       default_private_alerts
-    when StdSlotFriends
+    when 'StdSlotFriends'
       default_own_friendslot_alerts
-    when StdSlotPublic
+    when 'StdSlotPublic'
       default_own_public_alerts
     # TODO: add friends friendslot
     # TODO: add friends publicslot
-    when ReSlotFriends
+    when 'ReSlotFriends'
       default_reslot_alerts
-    when ReSlotPublic
+    when 'ReSlotPublic'
       default_reslot_alerts
-    when GroupSlotMembers
+    when 'GroupSlotMembers'
       group_alert slot
-    when GroupSlotPublic
+    when 'GroupSlotPublic'
       group_alert slot
-    when ReSlot
+    when 'ReSlot'
       # TODO: change this
       default_reslot_alerts
-    when GroupSlot
+    when 'GroupSlot'
       # TODO: change this
       group_alert slot
-    when StdSlot
-      p 'std slot in alerts'
+    when 'StdSlot'
       default_private_alerts
     else
       # maybe not the best idea, but at least we hear if something goes wrong
@@ -421,9 +422,7 @@ class User < ActiveRecord::Base
 
   private def multiple_representations(slot)
     representations = []
-    representations.push(*std_slots_private.where(meta_slot: slot.meta_slot))
-    representations.push(*std_slots_friends.where(meta_slot: slot.meta_slot))
-    representations.push(*std_slots_public.where(meta_slot: slot.meta_slot))
+    representations.push(*StdSlot.of(id).where(meta_slot: slot.meta_slot))
     representations.push(*re_slots.where(meta_slot: slot.meta_slot))
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end
