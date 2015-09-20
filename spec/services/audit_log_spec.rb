@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AuditLog  do
+describe AuditLog do
   let!(:user) { FactoryGirl.create(:user) }
 
   describe :after_commit, :commit do
