@@ -88,7 +88,7 @@ class Device < ActiveRecord::Base
                                    }.to_json)
     end
     push_notification = { message: payload.to_json,
-                          target_arn: device.endpoint,
+                          target_arn: device['endpoint'],
                           message_structure: 'json' }
 
     begin
@@ -96,8 +96,8 @@ class Device < ActiveRecord::Base
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
-      opts[:parameters] = { user_id: device.user_id,
-                            device_id: device.id,
+      opts[:parameters] = { user_id: device['user_id'],
+                            device_id: device['id'],
                             aws_params: exception.try(:params) || exception.try(:parameters),
                             aws_operation_name: exception.try(:operation_name),
                             aws_http_request: exception.try(:http_request),
@@ -116,7 +116,7 @@ class Device < ActiveRecord::Base
   end
 
   def self.notify(client, device, params)
-    case device.system
+    case device['system']
       when 'ios'
         notify_ios(client, device, *params)
     end
