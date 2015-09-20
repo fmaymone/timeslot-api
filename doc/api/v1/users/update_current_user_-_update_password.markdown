@@ -16,6 +16,9 @@ Description : Updated username of user (max. 50 characters)
 Name : email
 Description : Email of user (max. 255 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
@@ -106,6 +109,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -153,7 +159,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=rY_oX6hACAYXbPzUiQ-v8q-lVoE
+Authorization: Token token=SSvW-0vNAk3BAZ3jqmQ79iSJijs
 Host: example.org
 Cookie: </pre>
 
@@ -174,7 +180,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;password&quot;:&quot;slimetot&quot;,&quot;old_password&quot;:&quot;timeslot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=rY_oX6hACAYXbPzUiQ-v8q-lVoE&quot; \
+	-H &quot;Authorization: Token token=SSvW-0vNAk3BAZ3jqmQ79iSJijs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -185,11 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;87b337c36d4ba61b617c8c48ad615ad2&quot;
+ETag: W/&quot;4b3cbaf3fe8e6e9cff536bbc67a24125&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0e707339-1f26-4faf-ac0b-a1f6687100c8
-X-Runtime: 0.024940
-Content-Length: 720</pre>
+X-Request-Id: 4a16a3b5-5dbc-412c-a1d0-36714ac5bdd5
+X-Runtime: 0.166506
+Vary: Origin
+Content-Length: 744</pre>
 
 #### Status
 
@@ -199,10 +206,10 @@ Content-Length: 720</pre>
 
 ```javascript
 {
-  "id" : 271,
-  "username" : "User 267",
-  "createdAt" : "2015-08-14T13:58:57.636Z",
-  "updatedAt" : "2015-08-14T13:58:57.650Z",
+  "id" : 343,
+  "username" : "User 305",
+  "createdAt" : "2015-09-20T18:49:41.548Z",
+  "updatedAt" : "2015-09-20T18:49:41.707Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -212,7 +219,8 @@ Content-Length: 720</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user70@email.com",
+  "lang" : null,
+  "email" : "user87@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

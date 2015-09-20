@@ -13,6 +13,11 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show_many", format: :json)
     end
 
+    it "routes to #show_last" do
+      expect(get: "/v1/slots/demo")
+        .to route_to("v1/slots#show_last", format: :json)
+    end
+
     it "routes to #create_stdslot" do
       expect(post: "/v1/stdslot")
         .to route_to("v1/slots#create_stdslot", format: :json)
@@ -96,6 +101,11 @@ RSpec.describe V1::SlotsController, type: :routing do
     it "routes to #show_comments" do
       expect(get: "/v1/slots/1/comments")
         .to route_to("v1/slots#show_comments", id: "1", format: :json)
+    end
+
+    it "routes to #show_slotters" do
+      expect(get: "/v1/slots/1/slotters")
+        .to route_to("v1/slots#show_slotters", id: "1", format: :json)
     end
 
     it "routes to #reslot_history" do

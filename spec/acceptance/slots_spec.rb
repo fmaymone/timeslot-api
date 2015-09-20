@@ -24,6 +24,7 @@ resource "Slots" do
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
+    response_field :reslotsCounter, "Number of reslots for this slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
@@ -231,6 +232,7 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("reslotsCounter")
         expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
@@ -256,7 +258,8 @@ resource "Slots" do
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
-                 "commentsCounter" => slot.comments.count
+                 "commentsCounter" => slot.comments.count,
+                 "reslotsCounter" => slot.reslot_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
@@ -551,9 +554,7 @@ resource "Slots" do
         expect(json["title"]).to eq pred.title
         expect(json["startDate"]).to eq pred.start_date.as_json
         expect(json["endDate"]).to eq pred.end_date.as_json
-        # temporary change for reslot to submit slotter as creator
-        # expect(json["creator"]["id"]).to eq pred.creator.id
-        expect(json["creator"]["id"]).to eq current_user.id
+        expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["visibility"]).to eq pred.visibility
       end
     end
@@ -566,20 +567,15 @@ resource "Slots" do
 
     parameter :visibility, "Visibility of the Slot (private/friends/public)",
               required: true
-    parameter :creatorId,
-              "ID of the Creator of the Webslot",
-              required: true
     include_context "default slot parameter"
 
     describe "Create new ReSlot from the Web Search service" do
       include_context "default slot response fields"
 
-      let(:user) { User.find_by(email: 'info@timeslot.com') }
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       let(:visibility) { 'public' }
-      let(:creatorId) { user.id }
 
       example "Create new ReSlot from the Web Search service", document: :v1 do
         explanation "Returns status code 200.\n\n" \
@@ -594,11 +590,29 @@ resource "Slots" do
         expect(base_slot.title).to eq(title)
         expect(base_slot.start_date).to eq(startDate)
         expect(base_slot.end_date).to eq(endDate)
-        expect(base_slot.meta_slot.creator_id).to eq(creatorId)
+        expect(base_slot.meta_slot.creator.email).to eq 'info@timeslot.com'
 
         re_slot = ReSlot.last
         expect(re_slot.slotter_id).to eq(current_user.id)
         expect(re_slot.meta_slot_id).to eq(base_slot.meta_slot_id)
+      end
+    end
+
+    describe "Create webslot which already exist" do
+
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-09T13:31:02.000Z" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { 'public' }
+
+      example "Create webslot which already exist returns 421", document: false do
+        explanation "returns 421 if the slot was already reslottet from the user"
+
+        do_request
+        expect(response_status).to eq(200)
+
+        do_request
+        expect(response_status).to eq(421)
       end
     end
 
@@ -1173,6 +1187,41 @@ resource "Slots" do
         expect(json.first).to have_key "commenter"
         expect(json.first["commenter"]).to have_key "username"
         expect(json.first).to have_key "content"
+      end
+    end
+  end
+
+  get "/v1/slots/:id/slotters" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the slotters for", required: true
+
+    response_field :array, "containing creation date of the ReSlot and " \
+                           "details of the user who did the reslot"
+
+    let(:parent) { create(:std_slot_public) }
+    let!(:reslots) { create_list(:re_slot, 2, parent: parent) }
+
+    describe "Get Slotters for Slot" do
+      let(:id) { parent.id }
+
+      example "Get Slotters for Slot", document: :v1 do
+        explanation "returns a list of all users who reslot the slot. " \
+                    "For now there is no distinction between reslot " \
+                    "visibilities as backend has no support for this yet.\n\n" \
+                    "Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see Slotter data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq 2
+        expect(json.first).to have_key "slotter"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first["slotter"]).to have_key "id"
+        expect(json.first["slotter"]).to have_key "image"
+        expect(response_body).to include reslots.first.slotter.username
+        expect(response_body).to include reslots.last.slotter.username
       end
     end
   end

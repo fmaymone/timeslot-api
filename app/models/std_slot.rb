@@ -30,6 +30,16 @@ class StdSlot < BaseSlot
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
 
+  def reslots
+    # this should not include private reslots
+    # TODO: change it when we have reslots with different visibilities
+    ReSlot.where parent_id: id
+  end
+
+  def reslot_count
+    ReSlot.unscoped.where(parent_id: id).count
+  end
+
   # I can throw a User object at this and AR automagically takes the ID - nice
   # or dangerous?
   # btw I made this classmethod to circumvent my default_scope on the slot_type
@@ -43,7 +53,7 @@ class StdSlot < BaseSlot
     # a valid value for visibility is already enforced in the controller,
     # so maybe this exception handling is overkill
     msg = "invalid value for visibility: #{visibility}"
-    Airbrake.notify(msg)
+    Airbrake.notify(NameError, error_message: msg)
   else
     slot_type.create(meta_slot: meta_slot, owner: user)
   end

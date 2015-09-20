@@ -21,6 +21,9 @@ Description : Email of user (max. 254 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : password *- required -*
 Description : Password for user (min. 5 &amp; max. 72 characters)
 
@@ -65,6 +68,9 @@ Description : Email of user (max. 255 characters)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
+
+Name : lang
+Description : Language code (ISO 639-1)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
@@ -129,6 +135,7 @@ Cookie: </pre>
 {
   "username" : "foo",
   "email" : "someone@timeslot.com",
+  "lang" : "de",
   "password" : "secret-thing"
 }
 ```
@@ -136,7 +143,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -149,11 +156,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;307a48cb211e6073bbe14c12aba6a23a&quot;
+ETag: W/&quot;67dbc2ad209b147d0a0c89e043e34f27&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2aecc4dd-a88a-436b-b305-f869eb3a2d51
-X-Runtime: 0.012676
-Content-Length: 761</pre>
+X-Request-Id: 1b4e7e37-f739-480a-a6cf-16f96eb358e1
+X-Runtime: 0.094087
+Vary: Origin
+Content-Length: 785</pre>
 
 #### Status
 
@@ -163,10 +171,10 @@ Content-Length: 761</pre>
 
 ```javascript
 {
-  "id" : 267,
+  "id" : 335,
   "username" : "foo",
-  "createdAt" : "2015-08-17T11:32:00.244Z",
-  "updatedAt" : "2015-08-17T11:32:00.244Z",
+  "createdAt" : "2015-09-20T18:49:39.265Z",
+  "updatedAt" : "2015-09-20T18:49:39.265Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -176,6 +184,7 @@ Content-Length: 761</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
+  "lang" : null,
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
@@ -194,6 +203,6 @@ Content-Length: 761</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "Viz94ROSt1LvexxRw8H6hjXRV7E"
+  "authToken" : "MBmvcEGDsyq7zpnaHCePCmldBC8"
 }
 ```

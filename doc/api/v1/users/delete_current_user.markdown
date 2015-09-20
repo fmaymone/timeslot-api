@@ -49,6 +49,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -95,7 +98,7 @@ Description : all devices from user
 
 #### Headers
 
-<pre>Authorization: Token token=hZdjH114Ft9dKk_cPZXUNogQ-OY
+<pre>Authorization: Token token=gWepJPoRjc1uu1MOc1-sRam8NeA
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -107,7 +110,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=hZdjH114Ft9dKk_cPZXUNogQ-OY&quot; \
+	-H &quot;Authorization: Token token=gWepJPoRjc1uu1MOc1-sRam8NeA&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -119,11 +122,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6c8ec12c4f8d80626233c5910fe81da7&quot;
+ETag: W/&quot;e1a5a1032fe1ad295fa910da0ca70078&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8c798fbe-bede-496f-b0f3-0eea27bceaea
-X-Runtime: 0.065182
-Content-Length: 742</pre>
+X-Request-Id: 6599e489-eb0f-492c-bd54-3a8754f782de
+X-Runtime: 0.058940
+Vary: Origin
+Content-Length: 766</pre>
 
 #### Status
 
@@ -133,11 +137,11 @@ Content-Length: 742</pre>
 
 ```javascript
 {
-  "id" : 274,
-  "username" : "User 270",
-  "createdAt" : "2015-08-14T13:58:57.819Z",
-  "updatedAt" : "2015-08-14T13:58:57.854Z",
-  "deletedAt" : "2015-08-14T13:58:57.851Z",
+  "id" : 348,
+  "username" : "User 310",
+  "createdAt" : "2015-09-20T18:49:42.332Z",
+  "updatedAt" : "2015-09-20T18:49:42.356Z",
+  "deletedAt" : "2015-09-20T18:49:42.355Z",
   "location" : null,
   "image" : {
     "publicId" : null,
@@ -146,7 +150,8 @@ Content-Length: 742</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user73@email.com",
+  "lang" : null,
+  "email" : "user92@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

@@ -9,26 +9,26 @@ Current user unlikes a slot.
 ### Parameters
 
 Name : id *- required -*
-Description : ID of the Slot to like
+Description : ID of the Slot to unlike
 
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=41O-5R6VS4GsC7o5y0htPrsChCs
+Authorization: Token token=4KbZZMMiUOlXC3c-YCrZiV0OR7A
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/slots/53/like</pre>
+<pre>DELETE /v1/slots/59/like</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/53/like&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/59/like&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=41O-5R6VS4GsC7o5y0htPrsChCs&quot; \
+	-H &quot;Authorization: Token token=4KbZZMMiUOlXC3c-YCrZiV0OR7A&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -40,8 +40,9 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 11246ae4-8573-437f-aeee-4975f5ea96e6
-X-Runtime: 0.010897
+X-Request-Id: 1a4d262b-4128-4621-881d-054f6e873e8c
+X-Runtime: 0.059621
+Vary: Origin
 Content-Length: 0</pre>
 
 #### Status

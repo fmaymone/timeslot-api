@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=oVy-X7cY2XaBlQdbjMI72k6r3xc
+Authorization: Token token=trRQkMhpNkiid8xVrktPSrap7t0
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "deviceId" : "sn-173462873410834786765439517",
+  "deviceId" : "sn-213462873410834786765439521",
   "token" : "a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1",
   "endpoint" : false
 }
@@ -52,9 +52,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-173462873410834786765439517&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1&quot;,&quot;endpoint&quot;:false}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-213462873410834786765439521&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1&quot;,&quot;endpoint&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=oVy-X7cY2XaBlQdbjMI72k6r3xc&quot; \
+	-H &quot;Authorization: Token token=trRQkMhpNkiid8xVrktPSrap7t0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,8 +66,9 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: d10ccead-f34e-45d5-b758-07d729850d18
-X-Runtime: 0.007391
+X-Request-Id: 7e184a07-7d89-46bf-a0ab-3f52a28a44f6
+X-Runtime: 0.012482
+Vary: Origin
 Content-Length: 0</pre>
 
 #### Status

@@ -63,6 +63,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -82,19 +85,19 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=bvgJbifBhSLnovyJI8vyv9kaQkc
+<pre>Authorization: Token token=tjapnkLzjWXcDJpB1skYJDJCr_M
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/reslot/45</pre>
+<pre>DELETE /v1/reslot/53</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot/45&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=bvgJbifBhSLnovyJI8vyv9kaQkc&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot/53&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=tjapnkLzjWXcDJpB1skYJDJCr_M&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,11 +109,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;eb7156c30d4f977068cac5f803f2b315&quot;
+ETag: W/&quot;25dc3486184073e84c50e82cf92f8460&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3cb025fa-e4e4-44b2-8dc9-025f354ce244
-X-Runtime: 0.050990
-Content-Length: 561</pre>
+X-Request-Id: e081695d-89f1-4a76-a915-b8e2b7811212
+X-Runtime: 0.071087
+Vary: Origin
+Content-Length: 586</pre>
 
 #### Status
 
@@ -120,20 +124,19 @@ Content-Length: 561</pre>
 
 ```javascript
 {
-  "id" : 45,
-  "title" : "Slot title 40",
-  "startDate" : "2019-09-14T16:44:02.000Z",
-  "endDate" : "2019-10-14T16:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:20.156Z",
-  "updatedAt" : "2015-07-02T12:34:20.198Z",
-  "deletedAt" : "2015-07-02T12:34:20.194Z",
-  "openEnd" : false,
+  "id" : 53,
+  "title" : "Slot title 44",
+  "startDate" : "2019-09-18T20:44:02.000Z",
+  "createdAt" : "2015-09-20T18:49:36.665Z",
+  "updatedAt" : "2015-09-20T18:49:36.715Z",
+  "deletedAt" : "2015-09-20T18:49:36.711Z",
+  "endDate" : "2019-10-18T20:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 199,
-    "username" : "User 184",
-    "createdAt" : "2015-07-02T12:34:20.160Z",
-    "updatedAt" : "2015-07-02T12:34:20.160Z",
+    "id" : 265,
+    "username" : "User 229",
+    "createdAt" : "2015-09-20T18:49:36.668Z",
+    "updatedAt" : "2015-09-20T18:49:36.668Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -146,8 +149,12 @@ Content-Length: 561</pre>
     "alerts" : "0000000000"
   },
   "slotter" : {
-    "id" : 196
+    "id" : 262
   },
+  "parent" : {
+    "id" : 54
+  },
+  "visibility" : "public",
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

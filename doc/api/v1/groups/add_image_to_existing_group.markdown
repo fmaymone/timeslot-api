@@ -60,7 +60,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=OXMSkcxEeRDX1mZS-76fdWdP3T0
+Authorization: Token token=1jjLU56Er4LU9-dW-1tYW-LvmEM
 Host: example.org
 Cookie: </pre>
 
@@ -83,7 +83,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=OXMSkcxEeRDX1mZS-76fdWdP3T0&quot; \
+	-H &quot;Authorization: Token token=1jjLU56Er4LU9-dW-1tYW-LvmEM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,10 +94,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;41b639f8371a8f24bc27ba6e2eb26794&quot;
+ETag: W/&quot;ee32b216ef1153589a6f6b69a5e11e9a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 57d31c2a-2879-416f-94d4-eb41e49d4998
-X-Runtime: 0.077951
+X-Request-Id: 77c03bc1-0dbe-41c8-8e4a-7a09f800fccc
+X-Runtime: 0.044894
+Vary: Origin
 Content-Length: 481</pre>
 
 #### Status
@@ -112,18 +113,18 @@ Content-Length: 481</pre>
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-07-02T12:34:16.772Z",
-  "updatedAt" : "2015-07-02T12:34:16.772Z",
+  "createdAt" : "2015-09-20T18:49:21.285Z",
+  "updatedAt" : "2015-09-20T18:49:21.285Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
     "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
   },
   "owner" : {
-    "id" : 77,
-    "username" : "User 62",
-    "createdAt" : "2015-07-02T12:34:16.768Z",
-    "updatedAt" : "2015-07-02T12:34:16.768Z",
+    "id" : 94,
+    "username" : "User 70",
+    "createdAt" : "2015-09-20T18:49:21.282Z",
+    "updatedAt" : "2015-09-20T18:49:21.282Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -1,4 +1,6 @@
 class ReSlot < BaseSlot
+  class ReslotHistroyError < StandardError; end
+
   self.table_name = model_name.plural
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
@@ -36,7 +38,8 @@ class ReSlot < BaseSlot
     loop do
       slot = BaseSlot.get(slot.predecessor.id)
       if slot.deleted_at?
-        Airbrake.notify(reslot_history_error: "found deleted predecessor: #{slot}")
+        Airbrake.notify(ReslotHistoryError,
+                        error_message: "found deleted predecessor: #{slot}")
       end
       predecessors << slot
       break if slot.predecessor == slot.parent

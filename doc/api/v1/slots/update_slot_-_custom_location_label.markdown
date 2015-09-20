@@ -1,16 +1,8 @@
 # Slots API
 
-## Update Slot - Add Location
+## Update Slot - Custom Location Label
 
 ### PATCH /v1/stdslot/:id
-
-Returns data of new slot.
-
-Missing unrequiered fields will be filled with default values.
-
-returns 422 if parameters are invalid
-
-returns 422 if required parameters are missing
 
 ### Parameters
 
@@ -156,29 +148,21 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=twPWuBfKuFm_qnz1bleFr37Nmco
+Authorization: Token token=VF91VPsawWd-JtlLJzfOn70U7oI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/46</pre>
+<pre>PATCH /v1/stdslot/47</pre>
 
 #### Body
 ```javascript
 {
   "location" : {
-    "name" : "Soho House",
-    "thoroughfare" : "Torstrasse 1",
-    "subThoroughfare" : "1",
-    "locality" : "Berlin",
-    "subLocality" : "Mitte",
-    "postalCode" : "10119",
-    "country" : "Germany",
-    "isoCountryCode" : "GER",
+    "name" : "Soho House Custom",
     "latitude" : "52.527335",
-    "longitude" : "13.414259",
-    "privateLocation" : true
+    "longitude" : "13.414259"
   }
 }
 ```
@@ -186,9 +170,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/46&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/47&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=twPWuBfKuFm_qnz1bleFr37Nmco&quot; \
+	-H &quot;Authorization: Token token=VF91VPsawWd-JtlLJzfOn70U7oI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -199,12 +183,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a7a2ddbd8bda4d48a99c51ce09803fe7&quot;
+ETag: W/&quot;e6292b3e19514103010ada360c1efda5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 80257032-f3c8-4528-93fb-067af90098b5
-X-Runtime: 0.054447
+X-Request-Id: f259d1a5-3d1d-4019-8788-e9694cff1a09
+X-Runtime: 0.048159
 Vary: Origin
-Content-Length: 883</pre>
+Content-Length: 866</pre>
 
 #### Status
 
@@ -214,37 +198,37 @@ Content-Length: 883</pre>
 
 ```javascript
 {
-  "id" : 46,
-  "title" : "Slot title 37",
-  "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:28.590Z",
-  "updatedAt" : "2015-09-20T18:49:28.590Z",
+  "id" : 47,
+  "title" : "Slot title 38",
+  "startDate" : "2019-09-12T14:44:02.000Z",
+  "createdAt" : "2015-09-20T18:49:28.735Z",
+  "updatedAt" : "2015-09-20T18:49:28.735Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-11T13:44:02.000Z",
+  "endDate" : "2019-10-12T14:44:02.000Z",
   "location" : {
-    "id" : 4,
-    "name" : "Soho House",
-    "thoroughfare" : "Torstrasse 1",
-    "subThoroughfare" : "1",
-    "locality" : "Berlin",
-    "subLocality" : "Mitte",
+    "id" : 5,
+    "name" : "Soho House Custom",
+    "thoroughfare" : null,
+    "subThoroughfare" : null,
+    "locality" : null,
+    "subLocality" : null,
     "administrativeArea" : null,
     "subAdministrativeArea" : null,
-    "postalCode" : "10119",
-    "country" : "Germany",
-    "isoCountryCode" : "GER",
+    "postalCode" : null,
+    "country" : null,
+    "isoCountryCode" : null,
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
     "longitude" : 13.414259,
-    "privateLocation" : true
+    "privateLocation" : false
   },
   "creator" : {
-    "id" : 251,
-    "username" : "User 215",
-    "createdAt" : "2015-09-20T18:49:28.585Z",
-    "updatedAt" : "2015-09-20T18:49:28.585Z",
+    "id" : 253,
+    "username" : "User 217",
+    "createdAt" : "2015-09-20T18:49:28.730Z",
+    "updatedAt" : "2015-09-20T18:49:28.730Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

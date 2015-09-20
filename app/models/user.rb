@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
       )
     rescue Aws::SES::Errors::ServiceError => exception
       Rails.logger.error exception
-      Airbrake.notify(aws_sns_error: exception)
+      Airbrake.notify(exception)
       raise exception if Rails.env.test? || Rails.env.development?
     end
   end
@@ -420,8 +420,9 @@ class User < ActiveRecord::Base
       p 'std slot in alerts'
       default_private_alerts
     else
-      msg = "unknown slottype #{slot} for user #{self}"
-      Airbrake.notify(msg)
+      # maybe not the best idea, but at least we hear if something goes wrong
+      opts = { error_message: "unknown slottype #{slot} for user #{id}" }
+      Airbrake.notify(ActiveRecord::StatementInvalid, opts)
       fail ActiveRecord::StatementInvalid, msg
     end
   end

@@ -93,6 +93,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -114,7 +117,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Uos-f7wbqPqUadLDhgPGsPOgPiQ
+Authorization: Token token=mBINBlYQiUWJUWMLZLKPUG2RV_E
 Host: example.org
 Cookie: </pre>
 
@@ -131,17 +134,17 @@ Cookie: </pre>
   "settings" : {
     "alerts" : "0101010101"
   },
-  "groupId" : 38
+  "groupId" : 39
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:38}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:39}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Uos-f7wbqPqUadLDhgPGsPOgPiQ&quot; \
+	-H &quot;Authorization: Token token=mBINBlYQiUWJUWMLZLKPUG2RV_E&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -152,11 +155,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f14ef20a085fae39652a1047f9d2fef4&quot;
+ETag: W/&quot;10adddb71cb4e717bcdf8b7da9cd5dc0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bc579d3b-1dee-4f91-8a0e-088a8db6ff6a
-X-Runtime: 0.042151
-Content-Length: 561</pre>
+X-Request-Id: 590750a0-21f5-42df-b269-f04729608cc9
+X-Runtime: 0.048792
+Vary: Origin
+Content-Length: 545</pre>
 
 #### Status
 
@@ -166,20 +170,19 @@ Content-Length: 561</pre>
 
 ```javascript
 {
-  "id" : 31,
+  "id" : 33,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "endDate" : "2014-09-13T22:03:24.000Z",
-  "createdAt" : "2015-07-02T12:34:18.966Z",
-  "updatedAt" : "2015-07-02T12:34:18.966Z",
+  "createdAt" : "2015-09-20T18:49:26.676Z",
+  "updatedAt" : "2015-09-20T18:49:26.676Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 171,
-    "username" : "User 156",
-    "createdAt" : "2015-07-02T12:34:18.938Z",
-    "updatedAt" : "2015-07-02T12:34:18.938Z",
+    "id" : 218,
+    "username" : "User 190",
+    "createdAt" : "2015-09-20T18:49:26.648Z",
+    "updatedAt" : "2015-09-20T18:49:26.648Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -193,7 +196,7 @@ Content-Length: 561</pre>
   },
   "visibility" : "members",
   "group" : {
-    "id" : 38
+    "id" : 39
   },
   "likes" : 0,
   "commentsCounter" : 0,

@@ -1,17 +1,32 @@
 # Users API
 
-## Get own user data
+## User signin with new device
 
-### GET /v1/users/:id
+### POST /v1/users/signin
 
-returns 404 if ID is invalid
+returns OK and an AuthToken if credentials match
 
-
+returns 401 if credentials invalid
 
 ### Parameters
 
-Name : id *- required -*
-Description : ID of the user to get
+Name : email *- required -*
+Description : Email of the user to authenticate
+
+Name : password *- required -*
+Description : Password for the user to authenticate
+
+Name : device *- required -*
+Description : A key-value-paired array which describes the device, e.g. device = { system: &#39;ios&#39;, version: &#39;6.0b&#39;, deviceId: &#39;xxx-xxxx-xxx&#39; }
+
+Name : system *- required -*
+Description : A string shorthand of the current device operating system (max. 10 chars), e.g.: &#39;ios&#39;, &#39;android&#39; 
+
+Name : version *- required -*
+Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
+
+Name : deviceId *- required -*
+Description : A unique hardware ID from the current device (max. 128 chars) 
 
 
 ### Response Fields
@@ -100,24 +115,43 @@ Description : all connections to groups
 Name : devices
 Description : all devices from user
 
+Name : authToken
+Description : Authentication Token for the user to be set as a HTTP header in subsequent requests
+
 ### Request
 
 #### Headers
 
-<pre>Accept: application/json
-Authorization: Token token=uSYTCQMD1HSdZAQMk6D7BP6M-mo
+<pre>Content-Type: application/json
+Accept: application/json
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/331</pre>
+<pre>POST /v1/users/signin</pre>
+
+#### Body
+```javascript
+{
+  "email" : "user83@email.com",
+  "password" : "timeslot",
+  "device" : {
+    "device" : {
+      "device_id" : "sn-5346287341083478676543955",
+      "system" : "ios",
+      "version" : "6.0"
+    }
+  }
+}
+```
+
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/331&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user83@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-5346287341083478676543955&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=uSYTCQMD1HSdZAQMk6D7BP6M-mo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -128,12 +162,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0c0549078ee07ce81ab96d4d42d75cce&quot;
+ETag: W/&quot;8719b01f32f2bacf2706f1029bfa7595&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1d174224-cea0-4ee5-99e3-37754b86715f
-X-Runtime: 0.028321
+X-Request-Id: 038b5b9b-d3e0-4ddc-8d91-08213bcac591
+X-Runtime: 0.100531
 Vary: Origin
-Content-Length: 744</pre>
+Content-Length: 786</pre>
 
 #### Status
 
@@ -143,10 +177,10 @@ Content-Length: 744</pre>
 
 ```javascript
 {
-  "id" : 331,
-  "username" : "User 295",
-  "createdAt" : "2015-09-20T18:49:39.031Z",
-  "updatedAt" : "2015-09-20T18:49:39.031Z",
+  "id" : 338,
+  "username" : "User 300",
+  "createdAt" : "2015-09-20T18:49:39.633Z",
+  "updatedAt" : "2015-09-20T18:49:39.714Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -157,7 +191,7 @@ Content-Length: 744</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user80@email.com",
+  "email" : "user83@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -174,6 +208,7 @@ Content-Length: 744</pre>
   "defaultReslotAlerts" : "0000000000",
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
-  "memberships" : []
+  "memberships" : [],
+  "authToken" : "qXH2hIZ5q_qLOpaExfeMgKAlgiY"
 }
 ```

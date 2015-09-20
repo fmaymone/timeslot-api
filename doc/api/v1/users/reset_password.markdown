@@ -52,8 +52,9 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: b8729929-1924-4472-ba2d-a0f71d27b2e5
-X-Runtime: 1.574564
+X-Request-Id: 0555778f-2a30-4297-be25-bd9abd6d2de6
+X-Runtime: 1.273508
+Vary: Origin
 Content-Length: 0</pre>
 
 #### Status

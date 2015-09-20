@@ -58,6 +58,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -119,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user67@email.com",
+  "email" : "user82@email.com",
   "password" : "timeslot"
 }
 ```
@@ -127,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user67@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user82@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -140,11 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4bac55bfa45ff2913b1eb68b5c2727af&quot;
+ETag: W/&quot;d8c33a0162a365dede599980d223bbd9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a6b7392-d30a-4c66-8b55-eb2caf3d987e
-X-Runtime: 0.016666
-Content-Length: 762</pre>
+X-Request-Id: c80738b3-ce0e-4e8c-9310-861cee123a56
+X-Runtime: 0.095045
+Vary: Origin
+Content-Length: 786</pre>
 
 #### Status
 
@@ -154,10 +158,10 @@ Content-Length: 762</pre>
 
 ```javascript
 {
-  "id" : 269,
-  "username" : "User 264",
-  "createdAt" : "2015-08-17T11:32:00.279Z",
-  "updatedAt" : "2015-08-17T11:32:00.287Z",
+  "id" : 337,
+  "username" : "User 299",
+  "createdAt" : "2015-09-20T18:49:39.458Z",
+  "updatedAt" : "2015-09-20T18:49:39.538Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -167,7 +171,8 @@ Content-Length: 762</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user67@email.com",
+  "lang" : null,
+  "email" : "user82@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -185,6 +190,6 @@ Content-Length: 762</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "rweC3H0wQHi5MzOLi_B70UHfMa4"
+  "authToken" : "Hs6oOUzH7TWhMrNTkJDjYUbIHmw"
 }
 ```

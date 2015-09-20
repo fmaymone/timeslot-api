@@ -22,6 +22,9 @@ Description : Updated username of user (max. 50 characters)
 Name : email
 Description : Email of user (max. 255 characters)
 
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
@@ -106,6 +109,9 @@ Description : Email of user (max. 255 characters)
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
 
@@ -153,7 +159,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE
+Authorization: Token token=iM-FT293amPynzPhtqntFrcwGXU
 Host: example.org
 Cookie: </pre>
 
@@ -174,7 +180,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=U21riOQ9_u-mr6PosDV2MBq78bE&quot; \
+	-H &quot;Authorization: Token token=iM-FT293amPynzPhtqntFrcwGXU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -185,11 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1c3d7f11892ef4084aaf38343a2e90f7&quot;
+ETag: W/&quot;f89b2dbc85336859f2c77b075b5e07e9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2315fc58-a45d-4678-800c-29408befdaa1
-X-Runtime: 0.023490
-Content-Length: 715</pre>
+X-Request-Id: ab1fb8d2-ab06-4bcb-8226-ba4df9aaf672
+X-Runtime: 0.023842
+Vary: Origin
+Content-Length: 739</pre>
 
 #### Status
 
@@ -199,10 +206,10 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 270,
+  "id" : 342,
   "username" : "bar",
-  "createdAt" : "2015-08-14T13:58:57.594Z",
-  "updatedAt" : "2015-08-14T13:58:57.606Z",
+  "createdAt" : "2015-09-20T18:49:41.440Z",
+  "updatedAt" : "2015-09-20T18:49:41.453Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -212,7 +219,8 @@ Content-Length: 715</pre>
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "email" : "user69@email.com",
+  "lang" : null,
+  "email" : "user86@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

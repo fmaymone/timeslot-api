@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=-M-x3My2NvZTyu4sEzrQHODwEA8
+Authorization: Token token=aMA1QG1_EWfF1l-ua1ZIcVDvPFI
 Host: example.org
 Cookie: </pre>
 
@@ -78,9 +78,9 @@ Cookie: </pre>
 {
   "name" : "foo",
   "invitees" : [
-    72,
-    73,
-    74
+    89,
+    90,
+    91
   ]
 }
 ```
@@ -88,10 +88,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[72,73,74]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[89,90,91]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=-M-x3My2NvZTyu4sEzrQHODwEA8&quot; \
+	-H &quot;Authorization: Token token=aMA1QG1_EWfF1l-ua1ZIcVDvPFI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,10 +102,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;772a4fac5b20d25213e62ee601877bb6&quot;
+ETag: W/&quot;cf9c52c6463f17814fe61cec2d1d1376&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 285db069-5e58-45f0-9ce3-30edad9a6b69
-X-Runtime: 0.065485
+X-Request-Id: d27821f7-d4c6-4708-a5b7-6550503f454b
+X-Runtime: 0.054624
+Vary: Origin
 Content-Length: 407</pre>
 
 #### Status
@@ -120,18 +121,18 @@ Content-Length: 407</pre>
   "name" : "foo",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-07-02T12:34:16.561Z",
-  "updatedAt" : "2015-07-02T12:34:16.561Z",
+  "createdAt" : "2015-09-20T18:49:21.035Z",
+  "updatedAt" : "2015-09-20T18:49:21.035Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : null,
     "localId" : null
   },
   "owner" : {
-    "id" : 75,
-    "username" : "User 60",
-    "createdAt" : "2015-07-02T12:34:16.547Z",
-    "updatedAt" : "2015-07-02T12:34:16.547Z",
+    "id" : 92,
+    "username" : "User 68",
+    "createdAt" : "2015-09-20T18:49:21.026Z",
+    "updatedAt" : "2015-09-20T18:49:21.026Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

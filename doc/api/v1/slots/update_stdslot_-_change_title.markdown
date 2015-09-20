@@ -1,6 +1,6 @@
 # Slots API
 
-## Update StdSlot
+## Update StdSlot - change title
 
 ### PATCH /v1/stdslot/:id
 
@@ -18,6 +18,9 @@ returns 422 if parameters are invalid
 
 Name : id *- required -*
 Description : ID of the slot to update
+
+Name : visibility
+Description : Visibility of the Slot to update (private/friends/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -93,6 +96,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -110,13 +116,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=MZT8nQUP9LmeRiCkpuNveIaggzA
+Authorization: Token token=VFg9G9bvV9qUmpBeheNWbdhTpqs
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/35</pre>
+<pre>PATCH /v1/stdslot/41</pre>
 
 #### Body
 ```javascript
@@ -128,9 +134,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/35&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/41&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=MZT8nQUP9LmeRiCkpuNveIaggzA&quot; \
+	-H &quot;Authorization: Token token=VFg9G9bvV9qUmpBeheNWbdhTpqs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,11 +147,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1cd813db5c3c99720dd01596008fc398&quot;
+ETag: W/&quot;2982bd416e3c9c8a34a6ca39722c83e9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2e8161b3-dd8f-485a-ad15-459b9ded3151
-X-Runtime: 0.037207
-Content-Length: 548</pre>
+X-Request-Id: 5d013934-9a85-4a63-a5fe-a1036052d591
+X-Runtime: 0.044460
+Vary: Origin
+Content-Length: 532</pre>
 
 #### Status
 
@@ -155,20 +162,19 @@ Content-Length: 548</pre>
 
 ```javascript
 {
-  "id" : 35,
+  "id" : 41,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-04T06:44:02.000Z",
-  "endDate" : "2019-10-04T06:44:02.000Z",
-  "createdAt" : "2015-07-02T12:34:19.198Z",
-  "updatedAt" : "2015-07-02T12:34:19.198Z",
+  "startDate" : "2019-09-06T08:44:02.000Z",
+  "createdAt" : "2015-09-20T18:49:27.829Z",
+  "updatedAt" : "2015-09-20T18:49:27.829Z",
   "deletedAt" : null,
-  "openEnd" : false,
+  "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 179,
-    "username" : "User 164",
-    "createdAt" : "2015-07-02T12:34:19.191Z",
-    "updatedAt" : "2015-07-02T12:34:19.191Z",
+    "id" : 238,
+    "username" : "User 202",
+    "createdAt" : "2015-09-20T18:49:27.824Z",
+    "updatedAt" : "2015-09-20T18:49:27.824Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

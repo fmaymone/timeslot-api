@@ -1720,4 +1720,19 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
   end
+
+  describe "GET /v1/slots/demo" do
+    let!(:std_slot) { create(:std_slot_public) }
+    let!(:re_slot) { create(:re_slot) }
+
+    it "gets the latest/newest stdslots" do
+      get "/v1/slots/demo", {}, auth_header
+      expect(response.body).to include std_slot.title
+    end
+
+    it "dosn't include reslots" do
+      get "/v1/slots/demo", {}, auth_header
+      expect(response.body).not_to include re_slot.title
+    end
+  end
 end
