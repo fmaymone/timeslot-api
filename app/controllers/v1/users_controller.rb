@@ -1,9 +1,8 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password, :media_items]
-    skip_after_action :verify_authorized, only: :slots
-    after_action :verify_policy_scoped, only: :slots
+                       only: [:create, :signin, :reset_password,
+                              :media_items, :slots]
 
     # GET /v1/users
     def index
@@ -107,23 +106,34 @@ module V1
     end
 
     # GET /v1/users/1/slots
-    # returns all slots for this user
+    # returns all slots of the requested user visible for the current user
+    # TODO: ordering
+    # TODO: order by start_date, end_date and id
+    # TODO: add support for cursor
+    # TODO: around status
+    # TODO: add index on start_date and end_date for meta_slots
+    # TODO: make sure the index on auth_token is present in structure.sql
+    # we need a maximum for limit
+    # we should change the default for status to 'now' instead of 'all'
     def slots
-      requested_user = User.find(params.require(:user_id))
+      authorize :user
+      requested_user = User.find(params[:user_id])
 
-      policy_scope(:slot) # temporary hack to frickle around with pundit later
-
-      if current_user == requested_user
-        query = params.permit(:status, :moment, :limit).symbolize_keys
-        @slots = current_user.my_slots(query) + current_user.re_slots
+      @slots = SlotsCollector.call(current_user: current_user,
+                                   user: requested_user,
+                                   **slot_paging_params)
+      if slot_paging_params.blank?
+        render "v1/slots/index"
       else
-        @slots = policy_scope(:slot)
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
       end
-
-      render "v1/slots/index"
     end
 
     # GET /v1/users/friendslots
+    # returns all public and friend-visible slots of all friends from
+    # current user
+    # Concerning pundit:
     # This is weird and not nice, pundit scopes seem way to inflexible...
     # the 'resolve' method for SlotPolicy is already used by 'slots' method
     # using another name doesn't trigger 'performed' for the scoped policy
@@ -243,6 +253,10 @@ module V1
       params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
             .deep_transform_keys(&:underscore)
             .deep_symbolize_keys
+    end
+
+    private def slot_paging_params
+      params.permit(:status, :moment, :limit, :cursor).symbolize_keys
     end
   end
 end
