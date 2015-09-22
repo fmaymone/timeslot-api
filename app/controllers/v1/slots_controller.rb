@@ -21,7 +21,8 @@ module V1
     # GET /v1/slots/demo
     def show_last
       authorize :stdSlot
-      @slots = StdSlotPublic.last(ENV['DEMO_SLOTS_COUNT'] || 100)
+      slot_count = ENV['DEMO_SLOTS_COUNT'].nil? ? 100 : ENV['DEMO_SLOTS_COUNT'].to_i
+      @slots = StdSlotPublic.last(slot_count)
 
       render :index
     end
