@@ -484,18 +484,24 @@ RSpec.describe "V1::Users", type: :request do
       end
 
       describe "my Slots, with pagination" do
-        let(:not_my_upcoming_slot) { create(:std_slot_private,
-                                            start_date: Time.zone.tomorrow,
-                                            title: 'not my upcoming slot') }
+        let!(:not_my_upcoming_slot) { create(:std_slot_private,
+                                             start_date: Time.zone.tomorrow,
+                                             title: 'not my upcoming slot') }
         let(:upcoming_slot) { create(:std_slot_private,
                                      start_date: Time.zone.tomorrow,
                                      title: 'upcoming slot',
                                      owner: current_user) }
-        let(:upcoming_slot_a) { create(:std_slot_private,
-                                       start_date: Time.zone.tomorrow,
-                                       end_date: Time.zone.tomorrow,
-                                       title: 'upcoming slot A',
-                                       owner: current_user) }
+        let(:upcoming_slot_same_startend) {
+          create(:std_slot_private,
+                 start_date: Time.zone.today.next_week,
+                 end_date: Time.zone.today.next_month,
+                 title: 'upcoming slot A',
+                 owner: current_user)
+          create(:std_slot_private,
+                 start_date: Time.zone.today.next_week,
+                 end_date: Time.zone.today.next_month,
+                 title: 'upcoming slot B',
+                 owner: current_user) }
         let(:upcoming_slots) { create_list(:std_slot_private, 3,
                                            start_date: Time.zone.tomorrow,
                                            owner: current_user) }
@@ -504,6 +510,11 @@ RSpec.describe "V1::Users", type: :request do
                                     end_date: Time.zone.tomorrow,
                                     title: 'ongoing slot',
                                     owner: current_user) }
+        let(:upcoming_reslot) { create(:re_slot,
+                                       start_date: Time.zone.tomorrow,
+                                       end_date: Time.zone.today.next_week,
+                                       title: 'upcoming reslot',
+                                       slotter: current_user) }
         let(:ongoing_reslot) { create(:re_slot,
                                       start_date: Time.zone.yesterday,
                                       end_date: Time.zone.tomorrow,
@@ -524,11 +535,43 @@ RSpec.describe "V1::Users", type: :request do
                                        owner: current_user) }
 
         describe "GET slots for current user" do
-          describe "filter by slot status:" do
-            context "ordering" do
+          let(:query_string) {
+            { status: status, moment: Time.zone.now.as_json, limit: 10 } }
+
+          describe "paginate by cursor" do
+            context "upcoming" do
 
             end
+          end
 
+          describe "ordering" do
+            let(:status) { 'now' }
+
+            it "by startdate, enddate, slotid" do
+              [ongoing_slot, ongoing_slots, upcoming_slot,
+               upcoming_slot_same_startend, upcoming_slots, upcoming_reslot]
+
+              get "/v1/users/#{current_user.id}/slots",
+                  query_string, auth_header
+
+              expect(response.status).to be(200)
+              result = json['data']
+
+              result.each_with_index do |slot, index|
+                break if index == result.size - 1
+                next_slot = result[index + 1]
+                expect(slot['startDate']).to be <= next_slot['startDate']
+                if slot['startDate'] == next_slot['startDate']
+                  expect(slot['endDate']).to be <= next_slot['endDate']
+                end
+                if slot['endDate'] == next_slot['endDate']
+                  expect(slot['id']).to be < next_slot['id']
+                end
+              end
+            end
+          end
+
+          describe "filter by slot status:" do
             context "all (default)" do
               it "returns all slots" do
                 [past_slot, ongoing_slot, upcoming_slot]
@@ -592,7 +635,7 @@ RSpec.describe "V1::Users", type: :request do
                 { status: 'now', moment: Time.zone.now.as_json } }
 
               it "returns 20 active and upcoming slots" do
-                [not_my_upcoming_slot, upcoming_slot, ongoing_slot,
+                [upcoming_slot, ongoing_slot,
                  ongoing_slots, past_slot, ongoing_reslot]
 
                 get "/v1/users/#{current_user.id}/slots", query_string,

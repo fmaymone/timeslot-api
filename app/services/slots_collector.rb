@@ -11,27 +11,26 @@ class SlotsCollector
                                       current_user: current_user)
     data = []
 
+    ### fetch slots
     showables.each do |relation|
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: relation)
 
-      ### retrieve all slots
+      ### execute query
       # get [limit] slots from all collections, not efficient but simple
       # and definitly working, TODO: optimize when need is
-      slots = query.retrieve(status: status, moment: moment).paginate(limit)
+      slots = query.retrieve(status: status, moment: moment).paginate(limit).ordered
       data.concat(slots)
     end
 
-    ### order retrieved slots by startdate (or something)
+    ### order retrieved slots by startdate, enddate and id
+    data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
+
     ### and return the first [limit] slots from the collection
     # is any of those prefered over the others?
-    ## sorting:
-    # data.sort!{ |a,b| a.start_date <=> b.start_date }
-    # data.sort_by!(&:start_date)
-    ## ordering:
     # data.first limit
     # data[0, limit]
     # data.take limit
-    data.sort_by!(&:start_date).take limit.to_i
+    data.take limit.to_i
   end
 end
