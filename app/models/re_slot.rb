@@ -52,6 +52,12 @@ class ReSlot < BaseSlot
     update_successors
   end
 
+  def delete
+    slotter.prepare_for_slot_deletion self
+    prepare_for_deletion
+    ts_soft_delete
+  end
+
   private def update_successors
     successors = ReSlot.where(predecessor: self)
     successors.each do |slot|
