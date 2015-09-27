@@ -36,6 +36,9 @@ gem 'pry-rails'
 # Worker (background processing)
 gem 'sucker_punch'
 
+# GetStream.io
+gem 'stream_rails'
+
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
 

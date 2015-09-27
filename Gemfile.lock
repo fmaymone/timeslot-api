@@ -273,6 +273,14 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
+    stream-ruby (2.2.3)
+      http_signatures (~> 0)
+      httparty (~> 0)
+    stream_rails (2.3.1)
+      actionpack (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      railties (>= 3.0.0)
+      stream-ruby (~> 2.2.3)
     sucker_punch (1.5.1)
       celluloid (= 0.16.0)
     terminal-notifier-guard (1.6.4)
@@ -332,6 +340,7 @@ DEPENDENCIES
   shoulda-matchers (~> 3.0)
   spring
   spring-commands-rspec
+  stream_rails
   sucker_punch
   terminal-notifier-guard
   tzinfo-data
