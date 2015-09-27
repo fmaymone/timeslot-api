@@ -10,4 +10,36 @@ class Comment < ActiveRecord::Base
   def delete
     update(deleted_at: Time.zone.now)
   end
+
+  ## -- Trigger activities to Activity Stream >> ##
+
+  include StreamRails::Activity
+  as_activity
+
+  def activity_actor
+    user.id.to_s
+  end
+
+  def activity_verb
+    'comment'
+  end
+
+  def activity_object
+    slot.id.to_s
+  end
+
+  def activity_target
+    slot.creator.user_id.to_s
+  end
+
+  def activity_extra_data
+    {
+        message: I18n.t('notify_create_comment',
+                        name: user.username,
+                        title: slot.meta_slot.title),
+
+        slot: Activity.slot_as_json(slot, user)
+    }
+  end
+  ## << Trigger End -- ##
 end
