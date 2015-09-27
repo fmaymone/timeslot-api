@@ -1512,4 +1512,190 @@ resource "Slots" do
       end
     end
   end
+
+  get "/v1/activity/user", :focus, :vcr, :seed do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    describe "Get the users activity feed" do
+      include_context "default slot response fields"
+
+      let(:user) { User.find_by(username: 'webview', role: 1) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
+
+      example "Get activity feed for the current user", document: :v1 do
+        explanation "if a user is authenticated, then some extra" \
+                    "activity fields are included"
+
+        # Perform an activity
+        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+
+        do_request
+        expect(response_status).to eq(200)
+
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("verb")
+        expect(json.first).to have_key("actor")
+        expect(json.first).to have_key("object")
+        expect(json.first).to have_key("target")
+        expect(json.first).to have_key("message")
+        expect(json.first).to have_key("slot")
+
+        expect(json.first['slot']).to have_key("id")
+        expect(json.first['slot']).to have_key("title")
+        expect(json.first['slot']).to have_key("startDate")
+        expect(json.first['slot']).to have_key("endDate")
+        expect(json.first['slot']).to have_key("location")
+        expect(json.first['slot']).to have_key("creator")
+        expect(json.first['slot']['creator']).to have_key("username")
+        expect(json.first['slot']).to have_key("settings")
+        expect(json.first['slot']['settings']).to have_key("alerts")
+        expect(json.first['slot']).to have_key("createdAt")
+        expect(json.first['slot']).to have_key("updatedAt")
+        expect(json.first['slot']).to have_key("deletedAt")
+        expect(json.first['slot']).to have_key("notes")
+        expect(json.first['slot']).to have_key("likes")
+        expect(json.first['slot']).to have_key("commentsCounter")
+        expect(json.first['slot']).to have_key("reslotsCounter")
+        expect(json.first['slot']).to have_key("shareUrl")
+        expect(json.first['slot']).to have_key("visibility")
+        expect(json.first['slot']).to have_key("media")
+        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+
+        expect(json.first['message']).to eq(message)
+        expect(json.first['verb']).to eq('comment')
+        expect(json.first['actor']).to eq(current_user.id.to_s)
+        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+      end
+    end
+  end
+
+  get "/v1/activity/news", :focus, :vcr, :seed do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :style, "Style of the activity feed data ('flat' or 'aggregated')"
+
+    describe "Get the users activity feed" do
+      include_context "default slot response fields"
+
+      let(:user) { User.find_by(username: 'webview', role: 1) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
+      let(:slot2) { create(:std_slot_public, :with_media, owner: current_user) }
+      let(:style) { 'aggregated' }
+
+      example "Get activity feed for the current user", document: :v1 do
+        explanation "if a user is authenticated, then some extra" \
+                    "activity fields are included"
+
+        # Perform an activity
+        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
+        StdSlotPublic.find(slot2.id).create_comment(user, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+
+        do_request
+        expect(response_status).to eq(200)
+
+        pp json
+
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("verb")
+        expect(json.first).to have_key("actor")
+        expect(json.first).to have_key("object")
+        expect(json.first).to have_key("target")
+        expect(json.first).to have_key("message")
+        expect(json.first).to have_key("slot")
+
+        expect(json.first['slot']).to have_key("id")
+        expect(json.first['slot']).to have_key("title")
+        expect(json.first['slot']).to have_key("startDate")
+        expect(json.first['slot']).to have_key("endDate")
+        expect(json.first['slot']).to have_key("location")
+        expect(json.first['slot']).to have_key("creator")
+        expect(json.first['slot']['creator']).to have_key("username")
+        expect(json.first['slot']).to have_key("settings")
+        expect(json.first['slot']['settings']).to have_key("alerts")
+        expect(json.first['slot']).to have_key("createdAt")
+        expect(json.first['slot']).to have_key("updatedAt")
+        expect(json.first['slot']).to have_key("deletedAt")
+        expect(json.first['slot']).to have_key("notes")
+        expect(json.first['slot']).to have_key("likes")
+        expect(json.first['slot']).to have_key("commentsCounter")
+        expect(json.first['slot']).to have_key("reslotsCounter")
+        expect(json.first['slot']).to have_key("shareUrl")
+        expect(json.first['slot']).to have_key("visibility")
+        expect(json.first['slot']).to have_key("media")
+        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+
+        expect(json.first['message']).to eq(message)
+        expect(json.first['verb']).to eq('comment')
+        expect(json.first['actor']).to eq(current_user.id.to_s)
+        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+      end
+    end
+  end
+
+  get "/v1/activity/notification", :focus, :vcr, :seed do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    describe "Get the users activity feed" do
+      include_context "default slot response fields"
+
+      let(:user) { User.find_by(username: 'webview', role: 1) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
+
+      example "Get activity feed for the current user", document: :v1 do
+        explanation "if a user is authenticated, then some extra" \
+                    "activity fields are included"
+
+        # Perform an activity
+        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+
+        do_request
+        expect(response_status).to eq(200)
+
+        pp json
+
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("verb")
+        expect(json.first).to have_key("actor")
+        expect(json.first).to have_key("object")
+        expect(json.first).to have_key("target")
+        expect(json.first).to have_key("message")
+        expect(json.first).to have_key("slot")
+
+        expect(json.first['slot']).to have_key("id")
+        expect(json.first['slot']).to have_key("title")
+        expect(json.first['slot']).to have_key("startDate")
+        expect(json.first['slot']).to have_key("endDate")
+        expect(json.first['slot']).to have_key("location")
+        expect(json.first['slot']).to have_key("creator")
+        expect(json.first['slot']['creator']).to have_key("username")
+        expect(json.first['slot']).to have_key("settings")
+        expect(json.first['slot']['settings']).to have_key("alerts")
+        expect(json.first['slot']).to have_key("createdAt")
+        expect(json.first['slot']).to have_key("updatedAt")
+        expect(json.first['slot']).to have_key("deletedAt")
+        expect(json.first['slot']).to have_key("notes")
+        expect(json.first['slot']).to have_key("likes")
+        expect(json.first['slot']).to have_key("commentsCounter")
+        expect(json.first['slot']).to have_key("reslotsCounter")
+        expect(json.first['slot']).to have_key("shareUrl")
+        expect(json.first['slot']).to have_key("visibility")
+        expect(json.first['slot']).to have_key("media")
+        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+
+        expect(json.first['message']).to eq(message)
+        expect(json.first['verb']).to eq('comment')
+        expect(json.first['actor']).to eq(current_user.id.to_s)
+        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+      end
+    end
+  end
 end
