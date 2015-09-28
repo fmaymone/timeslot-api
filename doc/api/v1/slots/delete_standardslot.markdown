@@ -63,6 +63,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -79,19 +82,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=iZKFPwTiC_MAoKtnLS8MoOMFRqo
+<pre>Authorization: Token token=46QDv8j2JgCmn7Rw2vQGDmwgZ8U
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/stdslot/46</pre>
+<pre>DELETE /v1/stdslot/48</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/46&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=iZKFPwTiC_MAoKtnLS8MoOMFRqo&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/48&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=46QDv8j2JgCmn7Rw2vQGDmwgZ8U&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7fc36c96f994aa9638059b5fd90e03e9&quot;
+ETag: W/&quot;747cca1fba164b150483140fd7d00cee&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 04a1079b-9ee6-41a4-ab85-5770883603ab
-X-Runtime: 9.721767
+X-Request-Id: 7358d014-eded-4e7d-b340-c539a02126b6
+X-Runtime: 7.224711
 Vary: Origin
 Content-Length: 1475</pre>
 
@@ -118,19 +121,19 @@ Content-Length: 1475</pre>
 
 ```javascript
 {
-  "id" : 46,
+  "id" : 48,
   "title" : "Slot title 39",
   "startDate" : "2019-09-13T15:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:46.889Z",
-  "updatedAt" : "2015-09-14T10:32:56.579Z",
-  "deletedAt" : "2015-09-14T10:32:56.575Z",
+  "createdAt" : "2015-09-28T10:15:49.588Z",
+  "updatedAt" : "2015-09-28T10:15:56.795Z",
+  "deletedAt" : "2015-09-28T10:15:56.793Z",
   "endDate" : "2019-10-13T15:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 252,
-    "username" : "User 218",
-    "createdAt" : "2015-09-14T10:32:46.883Z",
-    "updatedAt" : "2015-09-14T10:32:46.883Z",
+    "id" : 255,
+    "username" : "User 219",
+    "createdAt" : "2015-09-28T10:15:49.583Z",
+    "updatedAt" : "2015-09-28T10:15:49.583Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -145,7 +148,7 @@ Content-Length: 1475</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-14T10:32:46.907Z",
+      "createdAt" : "2015-09-28T10:15:49.606Z",
       "duration" : null,
       "title" : "Title 44"
     },
@@ -155,7 +158,7 @@ Content-Length: 1475</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-14T10:32:46.905Z",
+      "createdAt" : "2015-09-28T10:15:49.604Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -165,7 +168,7 @@ Content-Length: 1475</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-14T10:32:46.902Z",
+      "createdAt" : "2015-09-28T10:15:49.600Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -175,7 +178,7 @@ Content-Length: 1475</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:46.898Z"
+      "createdAt" : "2015-09-28T10:15:49.597Z"
     },
     {
       "mediaId" : 46,
@@ -183,7 +186,7 @@ Content-Length: 1475</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:46.895Z"
+      "createdAt" : "2015-09-28T10:15:49.594Z"
     },
     {
       "mediaId" : 45,
@@ -191,7 +194,7 @@ Content-Length: 1475</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:46.892Z"
+      "createdAt" : "2015-09-28T10:15:49.591Z"
     }
   ],
   "settings" : {

@@ -57,7 +57,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=5_7izF9tsq6bNNPBkuS1yte6wJ4
+Authorization: Token token=TN1PxPV4ppaati8yBK29AdVO_cM
 Host: example.org
 Cookie: </pre>
 
@@ -74,7 +74,7 @@ attr: email</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=john_doe%40email.com&amp;attr=email&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=5_7izF9tsq6bNNPBkuS1yte6wJ4&quot; \
+	-H &quot;Authorization: Token token=TN1PxPV4ppaati8yBK29AdVO_cM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,8 +87,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;43d543cc4cff2f3414677e989398b237&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dd0df49e-652b-4d8e-a053-1d704f62e742
-X-Runtime: 0.014590
+X-Request-Id: 4b00faef-3b1a-45d7-9c14-ccf80148371b
+X-Runtime: 0.014118
 Vary: Origin
 Content-Length: 110</pre>
 

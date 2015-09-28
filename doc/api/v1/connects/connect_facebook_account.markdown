@@ -70,7 +70,7 @@ Description : Email of the user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=fYFDxi4Q61LFNZvk9B_WSEolzCw
+Authorization: Token token=oXS4CKs2b7s3ba5u_yxqPUH5D0Y
 Host: example.org
 Cookie: </pre>
 
@@ -102,7 +102,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=fYFDxi4Q61LFNZvk9B_WSEolzCw&quot; \
+	-H &quot;Authorization: Token token=oXS4CKs2b7s3ba5u_yxqPUH5D0Y&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -113,10 +113,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9deebb994d7672ba6b0b6e4102f95fd5&quot;
+ETag: W/&quot;454ae4207f10004f72cc017419309187&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 68d7b512-81df-4be2-b556-6c1ff4921d62
-X-Runtime: 0.032964
+X-Request-Id: eb02fc7a-4765-4d89-9738-54bf54338a6e
+X-Runtime: 0.029953
 Vary: Origin
 Content-Length: 741</pre>
 
@@ -130,8 +130,8 @@ Content-Length: 741</pre>
 {
   "id" : 66,
   "username" : "User 54",
-  "createdAt" : "2015-09-14T10:32:38.074Z",
-  "updatedAt" : "2015-09-14T10:32:38.074Z",
+  "createdAt" : "2015-09-28T10:15:41.010Z",
+  "updatedAt" : "2015-09-28T10:15:41.010Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {

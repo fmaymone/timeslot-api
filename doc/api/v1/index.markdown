@@ -67,6 +67,7 @@
 * [Get Likes for Slot](slots/get_likes_for_slot.markdown)
 * [Make Comment on Slot](slots/make_comment_on_slot.markdown)
 * [Get Comments for Slot](slots/get_comments_for_slot.markdown)
+* [Get Slotters for Slot](slots/get_slotters_for_slot.markdown)
 * [Get Reslot History aka Chronic for Slot](slots/get_reslot_history_aka_chronic_for_slot.markdown)
 * [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
 * [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)

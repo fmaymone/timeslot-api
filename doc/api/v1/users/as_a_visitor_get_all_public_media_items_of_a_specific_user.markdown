@@ -27,11 +27,11 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/335/media</pre>
+<pre>GET /v1/users/349/media</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/335/media&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/349/media&quot; -X GET \
 	-H &quot;Authorization: &quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
@@ -43,10 +43,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;47775f818d52e48b7b197a1506be6dff&quot;
+ETag: W/&quot;db325314d3de3bfd8e0a62259e3c5e81&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 136ef6e5-14db-434a-a67a-c208b8490a38
-X-Runtime: 0.022419
+X-Request-Id: 961f4533-314c-4194-980d-be11bc3e6b65
+X-Runtime: 0.015555
 Vary: Origin
 Content-Length: 930</pre>
 
@@ -64,7 +64,7 @@ Content-Length: 930</pre>
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:02.971Z"
+    "createdAt" : "2015-09-28T10:16:03.302Z"
   },
   {
     "mediaId" : 73,
@@ -72,7 +72,7 @@ Content-Length: 930</pre>
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:02.975Z"
+    "createdAt" : "2015-09-28T10:16:03.305Z"
   },
   {
     "mediaId" : 74,
@@ -80,7 +80,7 @@ Content-Length: 930</pre>
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:02.978Z"
+    "createdAt" : "2015-09-28T10:16:03.308Z"
   },
   {
     "mediaId" : 75,
@@ -88,7 +88,7 @@ Content-Length: 930</pre>
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:02.981Z",
+    "createdAt" : "2015-09-28T10:16:03.313Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -98,7 +98,7 @@ Content-Length: 930</pre>
     "position" : 4,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:02.985Z",
+    "createdAt" : "2015-09-28T10:16:03.319Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -108,7 +108,7 @@ Content-Length: 930</pre>
     "position" : 5,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-14T10:33:02.988Z",
+    "createdAt" : "2015-09-28T10:16:03.322Z",
     "duration" : null,
     "title" : "Title 62"
   }

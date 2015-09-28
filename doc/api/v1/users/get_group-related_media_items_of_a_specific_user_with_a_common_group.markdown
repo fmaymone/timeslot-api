@@ -21,18 +21,18 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=fghQVg1CQdZzzrkffP3EcvAE3GE
+<pre>Authorization: Token token=zzQwNYHVWUBTTvPGR_6PLr8fcO4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/388/media</pre>
+<pre>GET /v1/users/402/media</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/388/media&quot; -X GET \
-	-H &quot;Authorization: Token token=fghQVg1CQdZzzrkffP3EcvAE3GE&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/402/media&quot; -X GET \
+	-H &quot;Authorization: Token token=zzQwNYHVWUBTTvPGR_6PLr8fcO4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b1f23ba8945d3e04e037d5e11b25f017&quot;
+ETag: W/&quot;0fd13fcff2d04a98c701298eba9af370&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 987c68bc-e8e4-4886-a307-e5ecd6d7cca3
-X-Runtime: 0.028960
+X-Request-Id: 72e5ce96-e47b-40dd-8192-7888b9e78d7e
+X-Runtime: 0.028071
 Vary: Origin
 Content-Length: 1897</pre>
 
@@ -64,7 +64,7 @@ Content-Length: 1897</pre>
     "position" : 30,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.792Z"
+    "createdAt" : "2015-09-28T10:16:05.046Z"
   },
   {
     "mediaId" : 295,
@@ -72,7 +72,7 @@ Content-Length: 1897</pre>
     "position" : 31,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.796Z"
+    "createdAt" : "2015-09-28T10:16:05.049Z"
   },
   {
     "mediaId" : 296,
@@ -80,7 +80,7 @@ Content-Length: 1897</pre>
     "position" : 32,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.805Z"
+    "createdAt" : "2015-09-28T10:16:05.061Z"
   },
   {
     "mediaId" : 297,
@@ -88,7 +88,7 @@ Content-Length: 1897</pre>
     "position" : 33,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:04.808Z",
+    "createdAt" : "2015-09-28T10:16:05.068Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -98,7 +98,7 @@ Content-Length: 1897</pre>
     "position" : 34,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:04.812Z",
+    "createdAt" : "2015-09-28T10:16:05.072Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -108,7 +108,7 @@ Content-Length: 1897</pre>
     "position" : 35,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-14T10:33:04.818Z",
+    "createdAt" : "2015-09-28T10:16:05.075Z",
     "duration" : null,
     "title" : "Title 284"
   },
@@ -118,7 +118,7 @@ Content-Length: 1897</pre>
     "position" : 36,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.829Z"
+    "createdAt" : "2015-09-28T10:16:05.086Z"
   },
   {
     "mediaId" : 301,
@@ -126,7 +126,7 @@ Content-Length: 1897</pre>
     "position" : 37,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.832Z"
+    "createdAt" : "2015-09-28T10:16:05.089Z"
   },
   {
     "mediaId" : 302,
@@ -134,7 +134,7 @@ Content-Length: 1897</pre>
     "position" : 38,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:04.835Z"
+    "createdAt" : "2015-09-28T10:16:05.091Z"
   },
   {
     "mediaId" : 303,
@@ -142,7 +142,7 @@ Content-Length: 1897</pre>
     "position" : 39,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:04.838Z",
+    "createdAt" : "2015-09-28T10:16:05.094Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -152,7 +152,7 @@ Content-Length: 1897</pre>
     "position" : 40,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:04.848Z",
+    "createdAt" : "2015-09-28T10:16:05.117Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -162,7 +162,7 @@ Content-Length: 1897</pre>
     "position" : 41,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-14T10:33:04.851Z",
+    "createdAt" : "2015-09-28T10:16:05.121Z",
     "duration" : null,
     "title" : "Title 290"
   }
