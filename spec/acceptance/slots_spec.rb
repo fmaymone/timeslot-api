@@ -1513,24 +1513,25 @@ resource "Slots" do
     end
   end
 
-  get "/v1/activity/user", :focus, :vcr, :seed do
+  get "/v1/activity/user", :activity do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
     describe "Get the users activity feed" do
       include_context "default slot response fields"
 
-      let(:user) { User.find_by(username: 'webview', role: 1) }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
+      let(:owner) { create(:user, username: 'User 57') }
+      let(:actor) { create(:user, username: 'User 53') }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 21') }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
 
       example "Get activity feed for the current user", document: :v1 do
         explanation "if a user is authenticated, then some extra" \
                     "activity fields are included"
 
         # Perform an activity
-        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+        # StdSlotPublic.find(slot.id).create_comment(actor, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
 
         do_request
         expect(response_status).to eq(200)
@@ -1542,159 +1543,196 @@ resource "Slots" do
         expect(json.first).to have_key("target")
         expect(json.first).to have_key("message")
         expect(json.first).to have_key("slot")
+        expect(json.first).to have_key("user")
 
-        expect(json.first['slot']).to have_key("id")
-        expect(json.first['slot']).to have_key("title")
-        expect(json.first['slot']).to have_key("startDate")
-        expect(json.first['slot']).to have_key("endDate")
-        expect(json.first['slot']).to have_key("location")
-        expect(json.first['slot']).to have_key("creator")
-        expect(json.first['slot']['creator']).to have_key("username")
-        expect(json.first['slot']).to have_key("settings")
-        expect(json.first['slot']['settings']).to have_key("alerts")
-        expect(json.first['slot']).to have_key("createdAt")
-        expect(json.first['slot']).to have_key("updatedAt")
-        expect(json.first['slot']).to have_key("deletedAt")
-        expect(json.first['slot']).to have_key("notes")
-        expect(json.first['slot']).to have_key("likes")
-        expect(json.first['slot']).to have_key("commentsCounter")
-        expect(json.first['slot']).to have_key("reslotsCounter")
-        expect(json.first['slot']).to have_key("shareUrl")
-        expect(json.first['slot']).to have_key("visibility")
-        expect(json.first['slot']).to have_key("media")
-        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+        activity_slot = json.first['slot']
+        expect(activity_slot).to have_key("id")
+        expect(activity_slot).to have_key("title")
+        expect(activity_slot).to have_key("startDate")
+        expect(activity_slot).to have_key("endDate")
+        expect(activity_slot).to have_key("location")
+        expect(activity_slot).to have_key("creator")
+        expect(activity_slot['creator']).to have_key("username")
+        expect(activity_slot).to have_key("settings")
+        expect(activity_slot['settings']).to have_key("alerts")
+        expect(activity_slot).to have_key("createdAt")
+        expect(activity_slot).to have_key("updatedAt")
+        expect(activity_slot).to have_key("deletedAt")
+        expect(activity_slot).to have_key("notes")
+        expect(activity_slot).to have_key("likes")
+        expect(activity_slot).to have_key("commentsCounter")
+        expect(activity_slot).to have_key("reslotsCounter")
+        expect(activity_slot).to have_key("shareUrl")
+        expect(activity_slot).to have_key("visibility")
+        expect(activity_slot).to have_key("media")
+        expect(activity_slot['media'].length).to eq(slot.media_items.length)
+
+        activity_user = json.first['user']
+        expect(activity_user).to have_key("id")
+        expect(activity_user).to have_key("username")
+        expect(activity_user).to have_key("image")
+        expect(activity_user).to have_key("friendsCount")
+        expect(activity_user).to have_key("reslotCount")
+        expect(activity_user).to have_key("slotCount")
 
         expect(json.first['message']).to eq(message)
-        expect(json.first['verb']).to eq('comment')
-        expect(json.first['actor']).to eq(current_user.id.to_s)
-        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+        expect(json.first['verb']).to eq("comment")
+        expect(activity_user['username']).to eq(actor.username)
+        #expect(json.first['actor']).to eq(actor.id.to_s)
+        #expect(json.first['object']).to eq(slot.comments.last.slot.id.to_s)
       end
     end
   end
 
-  get "/v1/activity/news", :focus, :vcr, :seed do
+  get "/v1/activity/news", :activity do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :style, "Style of the activity feed data ('flat' or 'aggregated')"
+    parameter :style, "Style of the news activity feed ('flat' or 'aggregated')"
 
     describe "Get the users activity feed" do
       include_context "default slot response fields"
 
-      let(:user) { User.find_by(username: 'webview', role: 1) }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
-      let(:slot2) { create(:std_slot_public, :with_media, owner: current_user) }
+      let(:owner) { create(:user, username: 'User 57') }
+      let(:actor) { create(:user, username: 'User 53') }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 22') }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
       let(:style) { 'aggregated' }
 
       example "Get activity feed for the current user", document: :v1 do
-        explanation "if a user is authenticated, then some extra" \
-                    "activity fields are included"
+        explanation "some extra activity fields are included"
 
         # Perform an activity
-        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
-        StdSlotPublic.find(slot2.id).create_comment(user, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+        # StdSlotPublic.find(slot.id).create_comment(user, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
 
         do_request
         expect(response_status).to eq(200)
 
-        pp json
-
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("verb")
-        expect(json.first).to have_key("actor")
-        expect(json.first).to have_key("object")
-        expect(json.first).to have_key("target")
-        expect(json.first).to have_key("message")
-        expect(json.first).to have_key("slot")
+        expect(json.first).to have_key("activities")
+        expect(json.first).to have_key("activity_count")
+        expect(json.first).to have_key("group")
 
-        expect(json.first['slot']).to have_key("id")
-        expect(json.first['slot']).to have_key("title")
-        expect(json.first['slot']).to have_key("startDate")
-        expect(json.first['slot']).to have_key("endDate")
-        expect(json.first['slot']).to have_key("location")
-        expect(json.first['slot']).to have_key("creator")
-        expect(json.first['slot']['creator']).to have_key("username")
-        expect(json.first['slot']).to have_key("settings")
-        expect(json.first['slot']['settings']).to have_key("alerts")
-        expect(json.first['slot']).to have_key("createdAt")
-        expect(json.first['slot']).to have_key("updatedAt")
-        expect(json.first['slot']).to have_key("deletedAt")
-        expect(json.first['slot']).to have_key("notes")
-        expect(json.first['slot']).to have_key("likes")
-        expect(json.first['slot']).to have_key("commentsCounter")
-        expect(json.first['slot']).to have_key("reslotsCounter")
-        expect(json.first['slot']).to have_key("shareUrl")
-        expect(json.first['slot']).to have_key("visibility")
-        expect(json.first['slot']).to have_key("media")
-        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+        activity = json.first['activities'].first
+        expect(activity).to have_key("actor")
+        expect(activity).to have_key("object")
+        expect(activity).to have_key("target")
+        expect(activity).to have_key("message")
+        expect(activity).to have_key("slot")
+        expect(activity).to have_key("user")
 
-        expect(json.first['message']).to eq(message)
-        expect(json.first['verb']).to eq('comment')
-        expect(json.first['actor']).to eq(current_user.id.to_s)
-        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+        activity_slot = activity["slot"]
+        expect(activity_slot).to have_key("id")
+        expect(activity_slot).to have_key("title")
+        expect(activity_slot).to have_key("startDate")
+        expect(activity_slot).to have_key("endDate")
+        expect(activity_slot).to have_key("location")
+        expect(activity_slot).to have_key("creator")
+        expect(activity_slot['creator']).to have_key("username")
+        expect(activity_slot).to have_key("settings")
+        expect(activity_slot['settings']).to have_key("alerts")
+        expect(activity_slot).to have_key("createdAt")
+        expect(activity_slot).to have_key("updatedAt")
+        expect(activity_slot).to have_key("deletedAt")
+        expect(activity_slot).to have_key("notes")
+        expect(activity_slot).to have_key("likes")
+        expect(activity_slot).to have_key("commentsCounter")
+        expect(activity_slot).to have_key("reslotsCounter")
+        expect(activity_slot).to have_key("shareUrl")
+        expect(activity_slot).to have_key("visibility")
+        expect(activity_slot).to have_key("media")
+        expect(activity_slot['media'].length).to eq(slot.media_items.length)
+
+        activity_user = activity['user']
+        expect(activity_user).to have_key("id")
+        expect(activity_user).to have_key("username")
+        expect(activity_user).to have_key("image")
+        expect(activity_user).to have_key("friendsCount")
+        expect(activity_user).to have_key("reslotCount")
+        expect(activity_user).to have_key("slotCount")
+
+        expect(activity['message']).to eq(message)
+        expect(activity['verb']).to eq("comment")
+        expect(activity_user['username']).to eq(actor.username)
+        #expect(activity['actor']).to eq(user.id.to_s)
+        #expect(activity['object']).to eq(slot.comments.last.slot.id.to_s)
       end
     end
   end
 
-  get "/v1/activity/notification", :focus, :vcr, :seed do
+  get "/v1/activity/notification", :activity do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
     describe "Get the users activity feed" do
       include_context "default slot response fields"
 
-      let(:user) { User.find_by(username: 'webview', role: 1) }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: user) }
+      let(:owner) { create(:user, username: 'User 57') }
+      let(:actor) { create(:user, username: 'User 53') }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 23') }
+      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
 
       example "Get activity feed for the current user", document: :v1 do
-        explanation "if a user is authenticated, then some extra" \
-                    "activity fields are included"
+        explanation "some extra activity fields are included"
 
         # Perform an activity
-        StdSlotPublic.find(slot.id).create_comment(current_user, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: current_user.username, title: slot.title)
+        # StdSlotPublic.find(slot.id).create_comment(user, 'This is a test comment.')
+        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
 
         do_request
         expect(response_status).to eq(200)
 
-        pp json
-
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("verb")
-        expect(json.first).to have_key("actor")
-        expect(json.first).to have_key("object")
-        expect(json.first).to have_key("target")
-        expect(json.first).to have_key("message")
-        expect(json.first).to have_key("slot")
+        expect(json.first).to have_key("activities")
+        expect(json.first).to have_key("activity_count")
+        expect(json.first).to have_key("group")
 
-        expect(json.first['slot']).to have_key("id")
-        expect(json.first['slot']).to have_key("title")
-        expect(json.first['slot']).to have_key("startDate")
-        expect(json.first['slot']).to have_key("endDate")
-        expect(json.first['slot']).to have_key("location")
-        expect(json.first['slot']).to have_key("creator")
-        expect(json.first['slot']['creator']).to have_key("username")
-        expect(json.first['slot']).to have_key("settings")
-        expect(json.first['slot']['settings']).to have_key("alerts")
-        expect(json.first['slot']).to have_key("createdAt")
-        expect(json.first['slot']).to have_key("updatedAt")
-        expect(json.first['slot']).to have_key("deletedAt")
-        expect(json.first['slot']).to have_key("notes")
-        expect(json.first['slot']).to have_key("likes")
-        expect(json.first['slot']).to have_key("commentsCounter")
-        expect(json.first['slot']).to have_key("reslotsCounter")
-        expect(json.first['slot']).to have_key("shareUrl")
-        expect(json.first['slot']).to have_key("visibility")
-        expect(json.first['slot']).to have_key("media")
-        expect(json.first['slot']["media"].length).to eq(slot.media_items.length)
+        activity = json.first['activities'].first
+        expect(activity).to have_key("actor")
+        expect(activity).to have_key("object")
+        expect(activity).to have_key("target")
+        expect(activity).to have_key("message")
+        expect(activity).to have_key("slot")
+        expect(activity).to have_key("user")
 
-        expect(json.first['message']).to eq(message)
-        expect(json.first['verb']).to eq('comment')
-        expect(json.first['actor']).to eq(current_user.id.to_s)
-        expect(json.first['object']).to eq(slot.comments.last.id.to_s)
+        activity_slot = activity["slot"]
+        expect(activity_slot).to have_key("id")
+        expect(activity_slot).to have_key("title")
+        expect(activity_slot).to have_key("startDate")
+        expect(activity_slot).to have_key("endDate")
+        expect(activity_slot).to have_key("location")
+        expect(activity_slot).to have_key("creator")
+        expect(activity_slot['creator']).to have_key("username")
+        expect(activity_slot).to have_key("settings")
+        expect(activity_slot['settings']).to have_key("alerts")
+        expect(activity_slot).to have_key("createdAt")
+        expect(activity_slot).to have_key("updatedAt")
+        expect(activity_slot).to have_key("deletedAt")
+        expect(activity_slot).to have_key("notes")
+        expect(activity_slot).to have_key("likes")
+        expect(activity_slot).to have_key("commentsCounter")
+        expect(activity_slot).to have_key("reslotsCounter")
+        expect(activity_slot).to have_key("shareUrl")
+        expect(activity_slot).to have_key("visibility")
+        expect(activity_slot).to have_key("media")
+        expect(activity_slot['media'].length).to eq(slot.media_items.length)
+
+        activity_user = activity['user']
+        expect(activity_user).to have_key("id")
+        expect(activity_user).to have_key("username")
+        expect(activity_user).to have_key("image")
+        expect(activity_user).to have_key("friendsCount")
+        expect(activity_user).to have_key("reslotCount")
+        expect(activity_user).to have_key("slotCount")
+
+        expect(activity['message']).to eq(message)
+        expect(activity['verb']).to eq("comment")
+        expect(activity_user['username']).to eq(actor.username)
+        #expect(activity['actor']).to eq(user.id.to_s)
+        #expect(activity['object']).to eq(slot.comments.last.slot.id.to_s)
       end
     end
   end
