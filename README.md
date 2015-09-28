@@ -133,6 +133,18 @@ ENV['TS_RAILS_BACKEND_CLOUDINARY_API_KEY']
 ENV['TS_RAILS_BACKEND_CLOUDINARY_API_SECRET']
 ```
 
+## GetStream.io
+
+Cloud Service for our Activity Streams, via Heroku Addon, [Docs](https://getstream.io/).
+
+For local testing a free account can be opened and the following vars need to be set:
+```bash
+ENV['STREAM_URL']
+ENV['STREAM_API_KEY']
+ENV['STREAM_API_SECRET']
+```
+Trigger activities are disabled during spec tests and returns results from the stub.
+
 ## Airbrake
 
 for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Github](https://github.com/airbrake/airbrake)
@@ -176,6 +188,7 @@ Flag | Effect
 ```:keep_slots``` | doesn't clean metaslot, baseslot, stdslot, reslot & user table for marked group, cleans after group has run, for read-only specs
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
+```:feed``` | use feed to stub external requests to GetStream.io service
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
