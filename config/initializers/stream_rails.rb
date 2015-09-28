@@ -4,5 +4,5 @@ StreamRails.configure do |config|
   config.api_key     = ENV['STREAM_API_KEY']
   config.api_secret  = ENV['STREAM_API_SECRET']
   config.timeout     = 30
-  config.enabled     = false if Rails.env.test? || Rails.env.development?
+  config.enabled     = false if Rails.env.test? #|| Rails.env.development?
 end

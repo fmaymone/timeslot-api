@@ -1513,7 +1513,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/activity/user", :activity do # :vcr, :seed
+  get "/v1/feed/user", :feed do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -1584,7 +1584,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/activity/news", :activity do # :vcr, :seed
+  get "/v1/feed/news", :feed do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -1662,7 +1662,7 @@ resource "Slots" do
     end
   end
 
-  get "/v1/activity/notification", :activity do # :vcr, :seed
+  get "/v1/feed/notification", :feed do # :vcr, :seed
     header "Accept", "application/json"
     header "Authorization", :auth_header
 

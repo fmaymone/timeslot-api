@@ -145,10 +145,10 @@ Rails.application.routes.draw do
             constraints: { group_id: /\d+/ }
     end
 
-    scope :activity do
-      get 'user', to: 'activity#user_feed'
-      get 'news', to: 'activity#news_feed'
-      get 'notification', to: 'activity#notification_feed'
+    scope :feed do
+      get 'user', to: 'feed#user_feed'
+      get 'news', to: 'feed#news_feed'
+      get 'notification', to: 'feed#notification_feed'
     end
 
     if ENV['ENABLE_IOS_DB_CLEAN']
