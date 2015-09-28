@@ -1,6 +1,5 @@
-#require 'sse'
 module V1
-  class ActivityController < ApplicationController
+  class FeedController < ApplicationController
 
     # GET /v1/users/1/feed
     # The user feed stores all activities for a user.
@@ -8,7 +7,7 @@ module V1
     def user_feed
       authorize :activity
       return head 422 unless has_allowed_params?
-      render json: Activity.user_feed(current_user.id, page_params),
+      render json: Feed.user_feed(current_user.id, page_params),
              status: :ok
     end
 
@@ -20,7 +19,7 @@ module V1
       authorize :activity
       return head 422 unless has_allowed_params?
       style = params[:style].presence || 'aggregated'
-      render json: Activity.news_feed(current_user.id, page_params, style),
+      render json: Feed.news_feed(current_user.id, page_params, style),
              status: :ok
     end
 
@@ -29,7 +28,7 @@ module V1
     def notification_feed
       authorize :activity
       return head 422 unless has_allowed_params?
-      render json: Activity.notification_feed(current_user.id, page_params),
+      render json: Feed.notification_feed(current_user.id, page_params),
              status: :ok
     end
 

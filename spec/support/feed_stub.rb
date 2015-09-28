@@ -1,9 +1,9 @@
 RSpec.configure do |config|
 
-  config.before(:each, :activity) do
+  config.before(:each, :feed) do
 
     # Default User Feed Response
-    allow(Activity).to receive(:user_feed).and_return(
+    allow(Feed).to receive(:user_feed).and_return(
 
          [{"actor"=>"53",
            "foreign_id"=>"54",
@@ -90,85 +90,42 @@ RSpec.configure do |config|
                 "slotCount"=>5,
                 "updatedAt"=>"2015-09-25T21:22:16.257Z",
                 "username"=>"User 53"},
-
            "verb"=>"comment"},
 
           # 2nd activity to test pagination
 
           {"actor"=>"53",
            "foreign_id"=>"54",
-           "id"=>"0cbf7380-65f3-11e5-8080-80006cf73f47",
-           "message"=>"User 53 commented on 'Slot title 22'",
+           "id"=>"aeaa8480-6622-11e5-8080-80001044bbff",
+           "message"=>"User 53 likes your slot",
            "object"=>"19",
            "origin"=>nil,
            "slot"=>
-               {"commentsCounter"=>1,
-                "createdAt"=>"2015-09-28T15:10:26.843Z",
+               {"commentsCounter"=>353,
+                "createdAt"=>"2015-08-30T19:40:39.342Z",
                 "creator"=>
-                    {"createdAt"=>"2015-09-28T15:10:26.684Z",
+                    {"createdAt"=>"2015-08-30T19:40:36.540Z",
                      "deletedAt"=>nil,
                      "id"=>56,
                      "image"=>{"localId"=>nil, "publicId"=>nil},
-                     "updatedAt"=>"2015-09-28T15:10:26.684Z",
+                     "updatedAt"=>"2015-08-30T19:40:36.540Z",
                      "username"=>"User 52"},
                 "deletedAt"=>nil,
-                "endDate"=>"2019-10-22T21:44:02.000Z",
+                "endDate"=>"2019-10-20T16:44:02.000Z",
                 "id"=>19,
-                "likes"=>0,
+                "likes"=>1,
                 "location"=>nil,
-                "media"=>
-                    [{"createdAt"=>"2015-09-28T15:10:26.916Z",
-                      "duration"=>nil,
-                      "localId"=>nil,
-                      "mediaId"=>12,
-                      "mediaType"=>"audio",
-                      "position"=>5,
-                      "publicId"=>"dfhjghjkdisudgfds7iy10",
-                      "title"=>"Title 9"},
-                     {"createdAt"=>"2015-09-28T15:10:26.904Z",
-                      "duration"=>nil,
-                      "localId"=>nil,
-                      "mediaId"=>11,
-                      "mediaType"=>"video",
-                      "position"=>4,
-                      "publicId"=>"dfhjghjkdisudgfds7iy9",
-                      "thumbnail"=>nil},
-                     {"createdAt"=>"2015-09-28T15:10:26.893Z",
-                      "duration"=>nil,
-                      "localId"=>nil,
-                      "mediaId"=>10,
-                      "mediaType"=>"video",
-                      "position"=>3,
-                      "publicId"=>"dfhjghjkdisudgfds7iy8",
-                      "thumbnail"=>nil},
-                     {"createdAt"=>"2015-09-28T15:10:26.881Z",
-                      "localId"=>nil,
-                      "mediaId"=>9,
-                      "mediaType"=>"image",
-                      "position"=>2,
-                      "publicId"=>"dfhjghjkdisudgfds7iy7"},
-                     {"createdAt"=>"2015-09-28T15:10:26.868Z",
-                      "localId"=>nil,
-                      "mediaId"=>8,
-                      "mediaType"=>"image",
-                      "position"=>1,
-                      "publicId"=>"dfhjghjkdisudgfds7iy6"},
-                     {"createdAt"=>"2015-09-28T15:10:26.856Z",
-                      "localId"=>nil,
-                      "mediaId"=>7,
-                      "mediaType"=>"image",
-                      "position"=>0,
-                      "publicId"=>"dfhjghjkdisudgfds7iy5"}],
+                "media"=>[],
                 "notes"=>[],
                 "reslotsCounter"=>0,
                 "settings"=>{"alerts"=>"0000000000"},
                 "shareUrl"=>nil,
-                "startDate"=>"2019-09-22T21:44:02.000Z",
-                "title"=>"Slot title 21",
-                "updatedAt"=>"2015-09-28T15:10:26.843Z",
+                "startDate"=>"2019-09-20T16:44:02.000Z",
+                "title"=>"National Creative Planner Jr.",
+                "updatedAt"=>"2015-08-30T19:40:39.342Z",
                 "visibility"=>"public"},
            "target"=>nil,
-           "time"=>"2015-09-28T15:10:27.000000",
+           "time"=>"2015-09-28T20:51:25.000000",
            "to"=>["aggregated:54", "notification:54"],
            "user"=>
                {"createdAt"=>"2015-09-25T21:22:16.257Z",
@@ -180,12 +137,11 @@ RSpec.configure do |config|
                 "slotCount"=>5,
                 "updatedAt"=>"2015-09-25T21:22:16.257Z",
                 "username"=>"User 53"},
-
-           "verb"=>"comment"}]
+           "verb"=>"like"}]
     )
 
     # Users Aggregation Feed Response
-    allow(Activity).to receive(:news_feed).and_return(
+    allow(Feed).to receive(:news_feed).and_return(
 
          [{"activities"=>
                [{"actor"=>"53",
@@ -284,7 +240,7 @@ RSpec.configure do |config|
      )
 
     # Users Notification Feed Response
-    allow(Activity).to receive(:notification_feed).and_return(
+    allow(Feed).to receive(:notification_feed).and_return(
 
          [{"activities"=>
                [{"actor"=>"53",
