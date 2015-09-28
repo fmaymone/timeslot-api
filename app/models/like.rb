@@ -1,4 +1,4 @@
-class Like < ActiveRecord::Base
+class Like < Activity
   after_commit AuditLog
 
   belongs_to :user
