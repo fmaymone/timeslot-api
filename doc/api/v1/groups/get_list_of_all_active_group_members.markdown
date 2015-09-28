@@ -39,7 +39,7 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=G21ncIDdTau_rD-M2jo8Zxz4fmE
+Authorization: Token token=gpRMu4aI8E0jUSeF34Foah9xLww
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/19/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=G21ncIDdTau_rD-M2jo8Zxz4fmE&quot; \
+	-H &quot;Authorization: Token token=gpRMu4aI8E0jUSeF34Foah9xLww&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,8 +64,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;74c3abf246dcf62d4a5b315e1319350c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0acf9a65-96e3-4acf-b810-9480103c87a7
-X-Runtime: 0.016868
+X-Request-Id: 165b68cf-d2bb-442b-a08c-d0004c8dc625
+X-Runtime: 0.016044
 Vary: Origin
 Content-Length: 515</pre>
 

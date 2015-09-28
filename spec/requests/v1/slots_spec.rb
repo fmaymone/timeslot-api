@@ -467,6 +467,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
+      # TODO: I think this shouln't be possible at all...???
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
         let(:valid_attributes) {
@@ -1421,7 +1422,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/reslot/:id" do
-    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+    let(:parent) { create(:std_slot) }
+    let!(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1433,6 +1435,38 @@ RSpec.describe "V1::Slots", type: :request do
         expect {
           delete "/v1/reslot/#{re_slot.id}", {}, auth_header
         }.not_to change(ReSlot, :count)
+      end
+
+      context "parent attributes" do
+        context "likes" do
+          let(:parent) { create(:std_slot, :with_likes) }
+
+          it "doesn't destroy the likes of the parent slot" do
+            expect {
+              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
+            }.not_to change(parent.likes, :count)
+          end
+        end
+
+        context "comments" do
+          let(:parent) { create(:std_slot, :with_comments) }
+
+          it "doesn't destroy the comments of the parent slot" do
+            expect {
+              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
+            }.not_to change(parent.comments, :count)
+          end
+        end
+
+        context "media" do
+          let(:parent) { create(:std_slot, :with_media) }
+
+          it "doesn't destroy the media of the parent slot" do
+            expect {
+              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
+            }.not_to change(parent.media_items, :count)
+          end
+        end
       end
     end
 
@@ -1725,10 +1759,14 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:std_slot) { create(:std_slot_public) }
     let!(:re_slot) { create(:re_slot) }
 
-    it "gets the latest/newest slots" do
+    it "gets the latest/newest stdslots" do
       get "/v1/slots/demo", {}, auth_header
       expect(response.body).to include std_slot.title
-      #expect(response.body).to include re_slot.title
+    end
+
+    it "dosn't include reslots" do
+      get "/v1/slots/demo", {}, auth_header
+      expect(response.body).not_to include re_slot.title
     end
   end
 end

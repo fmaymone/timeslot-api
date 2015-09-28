@@ -41,7 +41,7 @@ Description : Deletion date of membership
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=6_cYopGjRoSIy_PL0cdMOvR7PoM
+Authorization: Token token=C_QCuVZ8WD-1lbhUP9oNvrlNzIU
 Host: example.org
 Cookie: </pre>
 
@@ -53,7 +53,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/21/related&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=6_cYopGjRoSIy_PL0cdMOvR7PoM&quot; \
+	-H &quot;Authorization: Token token=C_QCuVZ8WD-1lbhUP9oNvrlNzIU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,10 +64,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ea4d463eff9b1bb265e6d8f6e9b2a65e&quot;
+ETag: W/&quot;59905e74b8c1a48da48a3a6e4f01307c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 956403e0-67be-4623-9fd5-85aeecb98a9c
-X-Runtime: 0.025759
+X-Request-Id: 0ba43e11-31df-4264-97a9-fcc14436bb43
+X-Runtime: 0.026785
 Vary: Origin
 Content-Length: 449</pre>
 
@@ -105,17 +105,17 @@ Content-Length: 449</pre>
     {
       "userId" : 130,
       "state" : "invited",
-      "deletedAt" : "2015-09-14T10:32:35.930Z"
+      "deletedAt" : "2015-09-28T10:15:38.714Z"
     },
     {
       "userId" : 131,
       "state" : "invited",
-      "deletedAt" : "2015-09-14T10:32:35.930Z"
+      "deletedAt" : "2015-09-28T10:15:38.714Z"
     },
     {
       "userId" : 132,
       "state" : "invited",
-      "deletedAt" : "2015-09-14T10:32:35.930Z"
+      "deletedAt" : "2015-09-28T10:15:38.714Z"
     }
   ]
 }

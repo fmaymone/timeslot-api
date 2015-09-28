@@ -128,6 +128,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -145,13 +148,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zOGDCV0EcuczKlUUt2MxIenNX58
+Authorization: Token token=tIgUJcrzRpL6KMWAMD6UQhmSLXQ
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/45</pre>
+<pre>PATCH /v1/stdslot/47</pre>
 
 #### Body
 ```javascript
@@ -167,9 +170,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/45&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/47&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zOGDCV0EcuczKlUUt2MxIenNX58&quot; \
+	-H &quot;Authorization: Token token=tIgUJcrzRpL6KMWAMD6UQhmSLXQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,10 +183,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f1f15a4fe99554bb21319c7ac980cd25&quot;
+ETag: W/&quot;30ed3e420eac3996cb40da56958588e8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6d0566d0-8728-4260-abef-8df63c749bf9
-X-Runtime: 0.047308
+X-Request-Id: de7181c6-0312-43e2-9eba-24f512ccffa1
+X-Runtime: 0.041873
 Vary: Origin
 Content-Length: 866</pre>
 
@@ -195,11 +198,11 @@ Content-Length: 866</pre>
 
 ```javascript
 {
-  "id" : 45,
+  "id" : 47,
   "title" : "Slot title 38",
   "startDate" : "2019-09-12T14:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:46.754Z",
-  "updatedAt" : "2015-09-14T10:32:46.754Z",
+  "createdAt" : "2015-09-28T10:15:49.456Z",
+  "updatedAt" : "2015-09-28T10:15:49.456Z",
   "deletedAt" : null,
   "endDate" : "2019-10-12T14:44:02.000Z",
   "location" : {
@@ -222,10 +225,10 @@ Content-Length: 866</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 250,
-    "username" : "User 216",
-    "createdAt" : "2015-09-14T10:32:46.749Z",
-    "updatedAt" : "2015-09-14T10:32:46.749Z",
+    "id" : 253,
+    "username" : "User 217",
+    "createdAt" : "2015-09-28T10:15:49.451Z",
+    "updatedAt" : "2015-09-28T10:15:49.451Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

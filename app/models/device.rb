@@ -41,13 +41,6 @@ class Device < ActiveRecord::Base
     end
   end
 
-  def notify(client, params)
-    case system
-    when 'ios'
-      notify_ios(client, *params)
-    end
-  end
-
   # delete if user deactivates his profile
   def delete
     update(deleted_at: Time.zone.now)
@@ -66,8 +59,8 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  private def notify_ios(client, message:, alert: '', sound: 'receive_message.wav',
-                         badge: 1, extra: {a: 1, b: 2}, slot_id: "")
+  def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
+                      badge: 1, extra: {a: 1, b: 2}, slot_id: "")
 
     payload = {}
     # defaults to true, if ENV variable not set, otherwise examine
@@ -95,7 +88,7 @@ class Device < ActiveRecord::Base
                                    }.to_json)
     end
     push_notification = { message: payload.to_json,
-                          target_arn: endpoint,
+                          target_arn: device['endpoint'],
                           message_structure: 'json' }
 
     begin
@@ -103,8 +96,8 @@ class Device < ActiveRecord::Base
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error exception
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
-      opts[:parameters] = { user_id: user_id,
-                            device_id: id,
+      opts[:parameters] = { user_id: device['user_id'],
+                            device_id: device['id'],
                             aws_params: exception.try(:params) || exception.try(:parameters),
                             aws_operation_name: exception.try(:operation_name),
                             aws_http_request: exception.try(:http_request),
@@ -122,9 +115,24 @@ class Device < ActiveRecord::Base
     Aws::SNS::Client.new
   end
 
-  def self.notify_all(users, params)
+  def self.notify(client, device, params)
+    case device['system']
+      when 'ios'
+        notify_ios(client, device, *params)
+    end
+  end
+
+  def self.notify_all(user_ids, params)
+    notify_queue = []
+
+    User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
+      user.devices.where.not(endpoint: nil).find_in_batches do |devices|
+        notify_queue.concat(devices)
+      end
+    end
+
     # we using worker background processing to start request tasks asynchronously
-    NotifyJob.new.async.perform(users, params)
+    NotifyJob.new.async.perform(notify_queue.as_json, params) unless notify_queue.empty?
   end
 
   def self.update_or_create(user, params)

@@ -136,6 +136,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -153,13 +156,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=6_jT0Tk7RG2Ze458ScpfIHe4QwY
+Authorization: Token token=QUytb1rU7ZuTwA-Cg4aSt9y_ubE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/44</pre>
+<pre>PATCH /v1/stdslot/46</pre>
 
 #### Body
 ```javascript
@@ -183,9 +186,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/44&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/46&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=6_jT0Tk7RG2Ze458ScpfIHe4QwY&quot; \
+	-H &quot;Authorization: Token token=QUytb1rU7ZuTwA-Cg4aSt9y_ubE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -196,10 +199,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4313a7ade55056ad3fda7224d00c0196&quot;
+ETag: W/&quot;f2ca9216a09a147e8af4b350124b6423&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3d592db6-91c4-44da-bf47-544f005d4d2d
-X-Runtime: 0.078006
+X-Request-Id: 5761ab30-1660-451b-86e0-c75220b8fb49
+X-Runtime: 0.045119
 Vary: Origin
 Content-Length: 883</pre>
 
@@ -211,11 +214,11 @@ Content-Length: 883</pre>
 
 ```javascript
 {
-  "id" : 44,
+  "id" : 46,
   "title" : "Slot title 37",
   "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:46.580Z",
-  "updatedAt" : "2015-09-14T10:32:46.580Z",
+  "createdAt" : "2015-09-28T10:15:49.322Z",
+  "updatedAt" : "2015-09-28T10:15:49.322Z",
   "deletedAt" : null,
   "endDate" : "2019-10-11T13:44:02.000Z",
   "location" : {
@@ -238,10 +241,10 @@ Content-Length: 883</pre>
     "privateLocation" : true
   },
   "creator" : {
-    "id" : 248,
-    "username" : "User 214",
-    "createdAt" : "2015-09-14T10:32:46.575Z",
-    "updatedAt" : "2015-09-14T10:32:46.575Z",
+    "id" : 251,
+    "username" : "User 215",
+    "createdAt" : "2015-09-28T10:15:49.317Z",
+    "updatedAt" : "2015-09-28T10:15:49.317Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

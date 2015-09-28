@@ -113,6 +113,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -148,13 +151,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2PeVu0BH2tpF5KxWYcwZB2wzCQ0
+Authorization: Token token=MIbsIjpS8eBL383PEpoKS5pVAEc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/42</pre>
+<pre>PATCH /v1/stdslot/44</pre>
 
 #### Body
 ```javascript
@@ -173,9 +176,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/42&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/44&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2PeVu0BH2tpF5KxWYcwZB2wzCQ0&quot; \
+	-H &quot;Authorization: Token token=MIbsIjpS8eBL383PEpoKS5pVAEc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -186,10 +189,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;63d48da5f978f078a49692ddfd5f63f9&quot;
+ETag: W/&quot;760e492a94e8dec40c19f9d9721072a0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0cab59ce-6093-4985-9905-132650ef53d2
-X-Runtime: 0.064975
+X-Request-Id: 793be5ed-b34a-4489-b388-e55352c9d153
+X-Runtime: 0.039123
 Vary: Origin
 Content-Length: 715</pre>
 
@@ -201,19 +204,19 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 42,
+  "id" : 44,
   "title" : "Slot title 35",
   "startDate" : "2019-09-09T11:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:46.243Z",
-  "updatedAt" : "2015-09-14T10:32:46.243Z",
+  "createdAt" : "2015-09-28T10:15:48.999Z",
+  "updatedAt" : "2015-09-28T10:15:48.999Z",
   "deletedAt" : null,
   "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 241,
-    "username" : "User 207",
-    "createdAt" : "2015-09-14T10:32:46.238Z",
-    "updatedAt" : "2015-09-14T10:32:46.238Z",
+    "id" : 244,
+    "username" : "User 208",
+    "createdAt" : "2015-09-28T10:15:48.994Z",
+    "updatedAt" : "2015-09-28T10:15:48.994Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -228,7 +231,7 @@ Content-Length: 715</pre>
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:46.269Z"
+      "createdAt" : "2015-09-28T10:15:49.017Z"
     }
   ],
   "settings" : {

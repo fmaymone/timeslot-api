@@ -279,19 +279,17 @@ resource "Groups" do
       expect(json).to include({ "id" => group.id,
                                 "slotCount" => slots.length })
       expect(json["slots"].length).to eq slots.length
-      expect(json["slots"].first.except('location'))
-        .to include("id" => slots.first.id,
-                    "title" => slots.first.title,
-                    "startDate" => slots[0].start_date.as_json,
-                    "createdAt" => slots[0].created_at.as_json,
-                    "updatedAt" => slots[0].updated_at.as_json,
-                    "deletedAt" => slots[0].deleted_at.as_json,
-                    "endDate" => slots[0].end_date.as_json,
-                    "settings" => {
-                      'alerts' => current_user.alerts(slots[0]) },
-                    "media" => slots[0].media_items,
-                    "url" => v1_slot_url(slots[0], format: :json)
-                   )
+      expect(json["slots"].first).to have_key("id")
+      expect(json["slots"].first).to have_key("title")
+      expect(json["slots"].first).to have_key("startDate")
+      expect(json["slots"].first).to have_key("endDate")
+      expect(json["slots"].first).to have_key("createdAt")
+      expect(json["slots"].first).to have_key("updatedAt")
+      expect(json["slots"].first).to have_key("deletedAt")
+      expect(json["slots"].first).to have_key("settings")
+      expect(json["slots"].first).to have_key("media")
+      expect(json["slots"].first).to have_key("url")
+      expect(response_body).to include(slots.first.title)
     end
   end
 
@@ -328,12 +326,9 @@ resource "Groups" do
                                 "groupId" => group.id,
                                 "size" => 6
                               })
-      expect(json["members"].first)
-        .to eq({
-                 "userId" => group.members.first.id,
-                 "username" => group.members.first.username,
-                 "userUrl" => v1_user_url(group.members.first, format: :json)
-               })
+      expect(response_body).to include(group.members.first.username)
+      expect(response_body)
+        .to include(v1_user_url(group.members.first, format: :json))
     end
 
     describe "group ID invalid" do
@@ -380,12 +375,11 @@ resource "Groups" do
                                 "groupId" => group.id,
                                 "size" => 7
                               })
-      expect(json["related"].first)
-        .to eq({
-                 "userId" => group.related_users.first.id,
-                 "state" => group.memberships.first.humanize,
-                 "deletedAt" => group.memberships.first.deleted_at
-               })
+      expect(json["related"])
+        .to include("userId" => group.related_users.first.id,
+                    "state" => group.memberships.first.humanize,
+                    "deletedAt" => group.memberships.first.deleted_at
+                                 )
     end
 
     describe "group ID invalid" do

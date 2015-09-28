@@ -2,6 +2,19 @@
 
 ## upcoming
 - pagination for user slots
+- activity feed
+
+
+## v0.7.1 on tsinc-alpha
+- fix for reslot delete, doesn't remove parent attributes anymore
+- sucker punch jobs refactoring
+- better airbrake error messages
+- no reslots in demo endpoint
+- duplicate detection for web-reslots
+- optimizing slots collection for alerts check (should lower db hits)
+- new env vars for:
+  - RACK_TIMEOUT
+  - DEMO_SLOTS_COUNT
 
 
 ## v0.7.0 on tsinc-alpha

@@ -98,6 +98,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -115,13 +118,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=TBkD4UM6SoMwn_B7rwXF1J1fl5k
+Authorization: Token token=PN6CzOmPZedkSR-X99xmIPYjt2M
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/41</pre>
+<pre>PATCH /v1/stdslot/43</pre>
 
 #### Body
 ```javascript
@@ -143,9 +146,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/41&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/43&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=TBkD4UM6SoMwn_B7rwXF1J1fl5k&quot; \
+	-H &quot;Authorization: Token token=PN6CzOmPZedkSR-X99xmIPYjt2M&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -156,10 +159,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;661b0d918db87d0c2a7cd8ade4773592&quot;
+ETag: W/&quot;1dfa9122b5522da406409277722855d9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d6b514d4-84e7-4aaf-a9d6-57a6e96b7487
-X-Runtime: 0.050004
+X-Request-Id: 41dc9b9e-3aec-40ab-93c3-10a94e8c5195
+X-Runtime: 0.043419
 Vary: Origin
 Content-Length: 800</pre>
 
@@ -171,19 +174,19 @@ Content-Length: 800</pre>
 
 ```javascript
 {
-  "id" : 41,
+  "id" : 43,
   "title" : "Slot title 34",
   "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:46.104Z",
-  "updatedAt" : "2015-09-14T10:32:46.104Z",
+  "createdAt" : "2015-09-28T10:15:48.861Z",
+  "updatedAt" : "2015-09-28T10:15:48.861Z",
   "deletedAt" : null,
   "endDate" : "2019-10-08T10:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 239,
-    "username" : "User 205",
-    "createdAt" : "2015-09-14T10:32:46.099Z",
-    "updatedAt" : "2015-09-14T10:32:46.099Z",
+    "id" : 242,
+    "username" : "User 206",
+    "createdAt" : "2015-09-28T10:15:48.856Z",
+    "updatedAt" : "2015-09-28T10:15:48.856Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -196,14 +199,14 @@ Content-Length: 800</pre>
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : null,
-      "createdAt" : "2015-09-14T10:32:46.126Z"
+      "createdAt" : "2015-09-28T10:15:48.883Z"
     },
     {
       "id" : 10,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : "123321",
-      "createdAt" : "2015-09-14T10:32:46.122Z"
+      "createdAt" : "2015-09-28T10:15:48.879Z"
     }
   ],
   "media" : [],

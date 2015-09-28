@@ -63,6 +63,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -80,19 +83,19 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=-QCMrqdCVXNQ8R6E2kXnu7r_Wh0
+Authorization: Token token=7E4Y7CBJB_7Pov6rxpmLxb-0YPg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/70/share</pre>
+<pre>GET /v1/slots/77/share</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/70/share&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/77/share&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=-QCMrqdCVXNQ8R6E2kXnu7r_Wh0&quot; \
+	-H &quot;Authorization: Token token=7E4Y7CBJB_7Pov6rxpmLxb-0YPg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -103,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1e0612e41267a9fc6ab5da0242217bad&quot;
+ETag: W/&quot;89ade20b2a7039f8516e0ac2f38a24a5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7b066fcb-e977-4e48-ade3-061112baa75c
-X-Runtime: 0.047932
+X-Request-Id: 61bc37f0-a22a-4a1e-ad0d-7a6be8b5f13f
+X-Runtime: 0.039608
 Vary: Origin
-Content-Length: 552</pre>
+Content-Length: 571</pre>
 
 #### Status
 
@@ -118,19 +121,19 @@ Content-Length: 552</pre>
 
 ```javascript
 {
-  "id" : 70,
-  "title" : "Slot title 57",
-  "startDate" : "2019-09-04T09:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:58.923Z",
-  "updatedAt" : "2015-09-14T10:32:59.018Z",
+  "id" : 77,
+  "title" : "Slot title 62",
+  "startDate" : "2019-09-09T14:44:02.000Z",
+  "createdAt" : "2015-09-28T10:15:59.195Z",
+  "updatedAt" : "2015-09-28T10:15:59.292Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T09:44:02.000Z",
+  "endDate" : "2019-10-09T14:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 313,
-    "username" : "User 279",
-    "createdAt" : "2015-09-14T10:32:58.912Z",
-    "updatedAt" : "2015-09-14T10:32:58.912Z",
+    "id" : 327,
+    "username" : "User 291",
+    "createdAt" : "2015-09-28T10:15:59.186Z",
+    "updatedAt" : "2015-09-28T10:15:59.186Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -143,8 +146,9 @@ Content-Length: 552</pre>
     "alerts" : "0000000000"
   },
   "visibility" : "public",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/Tx9xgZ7F"
+  "shareUrl" : "http://localhost:3100/3qwpsL3g"
 }
 ```
