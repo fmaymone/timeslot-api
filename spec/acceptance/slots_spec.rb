@@ -1517,6 +1517,12 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    parameter :limit, "Maximum count of items which are included in the result"
+    parameter :offset, "The offset value how many result items should be skipped " \
+                       "before the limits start counting (or use cursor instead)"
+    parameter :cursor, "The ID of the activity to start loading from (not included) " \
+                       "(or use offset instead)"
+
     describe "Get the users activity feed" do
       include_context "default slot response fields"
 
@@ -1589,8 +1595,13 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     parameter :style, "Style of the news activity feed ('flat' or 'aggregated')"
+    parameter :limit, "Maximum count of items which are included in the result"
+    parameter :offset, "The offset value how many result items should be skipped " \
+                       "before the limits start counting (or use cursor instead)"
+    parameter :cursor, "The ID of the activity to start loading from (not included) " \
+                       "(or use offset instead)"
 
-    describe "Get the users activity feed" do
+    describe "Get an aggregated activity feed" do
       include_context "default slot response fields"
 
       let(:owner) { create(:user, username: 'User 57') }
@@ -1666,7 +1677,13 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    describe "Get the users activity feed" do
+    parameter :limit, "Maximum count of items which are included in the result"
+    parameter :offset, "The offset value how many result items should be skipped " \
+                       "before the limits start counting (or use cursor instead)"
+    parameter :cursor, "The ID of the activity to start loading from (not included) " \
+                       "(or use offset instead)"
+
+    describe "Get activity notifications" do
       include_context "default slot response fields"
 
       let(:owner) { create(:user, username: 'User 57') }
