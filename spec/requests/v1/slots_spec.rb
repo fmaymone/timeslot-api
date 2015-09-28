@@ -417,14 +417,13 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/reslot" do
-    let(:group) { create(:group) }
-
     context "with valid params" do
-      context "ReSlot from StdSlot" do
-        let(:pred) { create(:std_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id) }
+      let(:pred) { create(:std_slot) }
+      let(:valid_attributes) {
+        attributes_for(:re_slot, predecessorId: pred.id)
+      }
 
+      context "ReSlot from StdSlot" do
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -443,13 +442,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from ReSlot" do
-        let(:origin) { create(:std_slot) }
-        let!(:pred) {
-          create(:re_slot, predecessor_id: origin.id)
-        }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+        let!(:pred) { create(:re_slot) }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -467,12 +461,10 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
-      # TODO: I think this shouln't be possible at all...???
+      # TODO: @sh: I think this shouln't be possible at all...???
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -487,6 +479,26 @@ RSpec.describe "V1::Slots", type: :request do
         it "returns the ID of the new slot" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+
+      context "duplicate reslot" do
+        let!(:existing_reslot) {
+          # had trouble creating the existing reslot with factory girl,
+          # did always use another parent_slot
+          post "/v1/reslot/", valid_attributes, auth_header
+          json
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_reslot['id'])
         end
       end
     end
