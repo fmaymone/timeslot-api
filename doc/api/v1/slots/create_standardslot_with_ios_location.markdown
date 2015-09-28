@@ -133,6 +133,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -151,7 +154,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=IHRRAq-4_iSDgXa7fIaB9L1bV3U
+Authorization: Token token=nNYsafyvAbG3x5MZieCo43126Kk
 Host: example.org
 Cookie: </pre>
 
@@ -196,7 +199,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=IHRRAq-4_iSDgXa7fIaB9L1bV3U&quot; \
+	-H &quot;Authorization: Token token=nNYsafyvAbG3x5MZieCo43126Kk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -207,12 +210,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;73d1e98178c4d8cc112a37dc3812d359&quot;
+ETag: W/&quot;0b78b5b9e3a915faf6ef35328c12637a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8b00d987-bb4b-4088-909c-8ee0698e9642
-X-Runtime: 0.061170
+X-Request-Id: aa5a3a1e-82e0-4940-a8ad-c704903a03e5
+X-Runtime: 0.076286
 Vary: Origin
-Content-Length: 1130</pre>
+Content-Length: 1149</pre>
 
 #### Status
 
@@ -225,8 +228,8 @@ Content-Length: 1130</pre>
   "id" : 31,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-09-14T10:32:44.410Z",
-  "updatedAt" : "2015-09-14T10:32:44.410Z",
+  "createdAt" : "2015-09-28T10:15:47.118Z",
+  "updatedAt" : "2015-09-28T10:15:47.118Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
@@ -251,8 +254,8 @@ Content-Length: 1130</pre>
   "creator" : {
     "id" : 215,
     "username" : "User 187",
-    "createdAt" : "2015-09-14T10:32:44.383Z",
-    "updatedAt" : "2015-09-14T10:32:44.383Z",
+    "createdAt" : "2015-09-28T10:15:47.094Z",
+    "updatedAt" : "2015-09-28T10:15:47.094Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -265,14 +268,14 @@ Content-Length: 1130</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-09-14T10:32:44.418Z"
+      "createdAt" : "2015-09-28T10:15:47.127Z"
     },
     {
       "id" : 8,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-09-14T10:32:44.415Z"
+      "createdAt" : "2015-09-28T10:15:47.123Z"
     }
   ],
   "media" : [],
@@ -280,6 +283,7 @@ Content-Length: 1130</pre>
     "alerts" : "0101010101"
   },
   "visibility" : "private",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

@@ -27,7 +27,7 @@ Description : name of the location
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=9DbMmt0MVndEB0jK-y5zcrxJUw0
+Authorization: Token token=jLkZpEVPw7oLOMGWdB5nwOasKrA
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/location?query=timeslot+berlin&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9DbMmt0MVndEB0jK-y5zcrxJUw0&quot; \
+	-H &quot;Authorization: Token token=jLkZpEVPw7oLOMGWdB5nwOasKrA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,8 +56,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;9ea17055d0317fd915f10949c831a05c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0eb0be32-7ebb-4405-a067-7cba0009dee3
-X-Runtime: 0.012877
+X-Request-Id: fc8b3dfb-74b5-4fd0-8d5f-9f427e6bf84e
+X-Runtime: 0.013368
 Vary: Origin
 Content-Length: 363</pre>
 

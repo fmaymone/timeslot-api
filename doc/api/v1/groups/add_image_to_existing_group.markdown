@@ -60,7 +60,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=l1bdliJgfWM0bv6DEWUhHLzbgsg
+Authorization: Token token=RrE9owdmffokw8eBbheFGP5TNOg
 Host: example.org
 Cookie: </pre>
 
@@ -83,7 +83,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=l1bdliJgfWM0bv6DEWUhHLzbgsg&quot; \
+	-H &quot;Authorization: Token token=RrE9owdmffokw8eBbheFGP5TNOg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,10 +94,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4b93007cb841aed6308741877955ba25&quot;
+ETag: W/&quot;4f0f4b89fac8ef022924c5bebf2251b2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c1dfe9fc-4833-4657-a027-7bb21c3d4f19
-X-Runtime: 0.034694
+X-Request-Id: 0687fc85-6cba-4588-af9c-839c41b651f1
+X-Runtime: 0.033208
 Vary: Origin
 Content-Length: 481</pre>
 
@@ -113,8 +113,8 @@ Content-Length: 481</pre>
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-09-14T10:32:39.380Z",
-  "updatedAt" : "2015-09-14T10:32:39.380Z",
+  "createdAt" : "2015-09-28T10:15:42.200Z",
+  "updatedAt" : "2015-09-28T10:15:42.200Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
@@ -123,8 +123,8 @@ Content-Length: 481</pre>
   "owner" : {
     "id" : 94,
     "username" : "User 70",
-    "createdAt" : "2015-09-14T10:32:39.376Z",
-    "updatedAt" : "2015-09-14T10:32:39.376Z",
+    "createdAt" : "2015-09-28T10:15:42.180Z",
+    "updatedAt" : "2015-09-28T10:15:42.180Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

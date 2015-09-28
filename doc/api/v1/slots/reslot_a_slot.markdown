@@ -67,6 +67,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -88,7 +91,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=1lDgn5PDe2YyPxmUF0iCyj3xpBI
+Authorization: Token token=FzvehWMhtwVOsahqUD1KlW2i6iY
 Host: example.org
 Cookie: </pre>
 
@@ -109,7 +112,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:35}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=1lDgn5PDe2YyPxmUF0iCyj3xpBI&quot; \
+	-H &quot;Authorization: Token token=FzvehWMhtwVOsahqUD1KlW2i6iY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,10 +123,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;51cf63ea87844719045b46d936470c6a&quot;
+ETag: W/&quot;f0f350728440f1d98fd28e50dda11f0c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5cfe6e46-deca-4999-9190-39d7e6549c94
-X-Runtime: 0.154132
+X-Request-Id: cc75d153-1600-4cf2-abde-7367b912b85e
+X-Runtime: 0.111339
 Vary: Origin
 Content-Length: 560</pre>
 
@@ -138,16 +141,16 @@ Content-Length: 560</pre>
   "id" : 36,
   "title" : "Slot title 30",
   "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:45.149Z",
-  "updatedAt" : "2015-09-14T10:32:45.149Z",
+  "createdAt" : "2015-09-28T10:15:47.814Z",
+  "updatedAt" : "2015-09-28T10:15:47.814Z",
   "deletedAt" : null,
   "endDate" : "2019-10-04T06:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 223,
-    "username" : "User 195",
-    "createdAt" : "2015-09-14T10:32:45.133Z",
-    "updatedAt" : "2015-09-14T10:32:45.133Z",
+    "id" : 221,
+    "username" : "User 193",
+    "createdAt" : "2015-09-28T10:15:47.712Z",
+    "updatedAt" : "2015-09-28T10:15:47.712Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

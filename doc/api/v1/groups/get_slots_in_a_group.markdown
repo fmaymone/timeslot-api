@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=m7M1YXow-0qu7Y55nYD0T8uFd2c
+Authorization: Token token=N8OsNoL6-EfADgJ35SQrI1OREK0
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/18/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=m7M1YXow-0qu7Y55nYD0T8uFd2c&quot; \
+	-H &quot;Authorization: Token token=N8OsNoL6-EfADgJ35SQrI1OREK0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ab429374ced6a00268fc4a4dfe2ee5bd&quot;
+ETag: W/&quot;3df6b9249d04aef219258041e1323bc8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f42701af-8ac6-49f8-b8bb-df7e75fbd5ff
-X-Runtime: 0.142666
+X-Request-Id: 171483ee-1e68-4149-8f4b-cdb021e6a51a
+X-Runtime: 0.125986
 Vary: Origin
 Content-Length: 2287</pre>
 
@@ -112,16 +112,16 @@ Content-Length: 2287</pre>
       "id" : 19,
       "title" : "Slot title 21",
       "startDate" : "2019-09-22T21:44:02.000Z",
-      "createdAt" : "2015-09-14T10:32:39.786Z",
-      "updatedAt" : "2015-09-14T10:32:39.786Z",
+      "createdAt" : "2015-09-28T10:15:42.599Z",
+      "updatedAt" : "2015-09-28T10:15:42.599Z",
       "deletedAt" : null,
       "endDate" : "2019-10-22T21:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 107,
         "username" : "User 83",
-        "createdAt" : "2015-09-14T10:32:39.781Z",
-        "updatedAt" : "2015-09-14T10:32:39.781Z",
+        "createdAt" : "2015-09-28T10:15:42.594Z",
+        "updatedAt" : "2015-09-28T10:15:42.594Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
@@ -145,16 +145,16 @@ Content-Length: 2287</pre>
       "id" : 20,
       "title" : "Slot title 22",
       "startDate" : "2019-09-23T22:44:02.000Z",
-      "createdAt" : "2015-09-14T10:32:39.799Z",
-      "updatedAt" : "2015-09-14T10:32:39.799Z",
+      "createdAt" : "2015-09-28T10:15:42.612Z",
+      "updatedAt" : "2015-09-28T10:15:42.612Z",
       "deletedAt" : null,
       "endDate" : "2019-10-23T22:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 108,
         "username" : "User 84",
-        "createdAt" : "2015-09-14T10:32:39.789Z",
-        "updatedAt" : "2015-09-14T10:32:39.789Z",
+        "createdAt" : "2015-09-28T10:15:42.602Z",
+        "updatedAt" : "2015-09-28T10:15:42.602Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
@@ -178,16 +178,16 @@ Content-Length: 2287</pre>
       "id" : 21,
       "title" : "Slot title 23",
       "startDate" : "2019-09-24T23:44:02.000Z",
-      "createdAt" : "2015-09-14T10:32:39.811Z",
-      "updatedAt" : "2015-09-14T10:32:39.811Z",
+      "createdAt" : "2015-09-28T10:15:42.620Z",
+      "updatedAt" : "2015-09-28T10:15:42.620Z",
       "deletedAt" : null,
       "endDate" : "2019-10-24T23:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 109,
         "username" : "User 85",
-        "createdAt" : "2015-09-14T10:32:39.804Z",
-        "updatedAt" : "2015-09-14T10:32:39.804Z",
+        "createdAt" : "2015-09-28T10:15:42.615Z",
+        "updatedAt" : "2015-09-28T10:15:42.615Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
@@ -211,16 +211,16 @@ Content-Length: 2287</pre>
       "id" : 22,
       "title" : "Slot title 24",
       "startDate" : "2019-09-25T00:44:02.000Z",
-      "createdAt" : "2015-09-14T10:32:39.818Z",
-      "updatedAt" : "2015-09-14T10:32:39.818Z",
+      "createdAt" : "2015-09-28T10:15:42.632Z",
+      "updatedAt" : "2015-09-28T10:15:42.632Z",
       "deletedAt" : null,
       "endDate" : "2019-10-25T00:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 110,
         "username" : "User 86",
-        "createdAt" : "2015-09-14T10:32:39.814Z",
-        "updatedAt" : "2015-09-14T10:32:39.814Z",
+        "createdAt" : "2015-09-28T10:15:42.623Z",
+        "updatedAt" : "2015-09-28T10:15:42.623Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,

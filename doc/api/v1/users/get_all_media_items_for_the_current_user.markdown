@@ -21,18 +21,18 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=kQO7o4sTjKO0ur5h2e5vTHihEbA
+<pre>Authorization: Token token=naSn7G-JwlDjRjpNhG0dxLsq9vU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/348/media</pre>
+<pre>GET /v1/users/362/media</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/348/media&quot; -X GET \
-	-H &quot;Authorization: Token token=kQO7o4sTjKO0ur5h2e5vTHihEbA&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/362/media&quot; -X GET \
+	-H &quot;Authorization: Token token=naSn7G-JwlDjRjpNhG0dxLsq9vU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;61f09a5a3655a1eb1073d831c316c859&quot;
+ETag: W/&quot;8953157adcdaa168aaf575e78af73b7a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9d2e0bb0-6e8a-4a75-8df5-01e8ef15d955
-X-Runtime: 0.019966
+X-Request-Id: 1b3bd2dc-e3ee-4871-8e59-644acdec9017
+X-Runtime: 0.020340
 Vary: Origin
 Content-Length: 1887</pre>
 
@@ -64,7 +64,7 @@ Content-Length: 1887</pre>
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.327Z"
+    "createdAt" : "2015-09-28T10:16:03.652Z"
   },
   {
     "mediaId" : 121,
@@ -72,7 +72,7 @@ Content-Length: 1887</pre>
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.332Z"
+    "createdAt" : "2015-09-28T10:16:03.654Z"
   },
   {
     "mediaId" : 122,
@@ -80,7 +80,7 @@ Content-Length: 1887</pre>
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.335Z"
+    "createdAt" : "2015-09-28T10:16:03.657Z"
   },
   {
     "mediaId" : 123,
@@ -88,7 +88,7 @@ Content-Length: 1887</pre>
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:03.338Z",
+    "createdAt" : "2015-09-28T10:16:03.661Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -98,7 +98,7 @@ Content-Length: 1887</pre>
     "position" : 4,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:03.341Z",
+    "createdAt" : "2015-09-28T10:16:03.670Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -108,7 +108,7 @@ Content-Length: 1887</pre>
     "position" : 5,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-14T10:33:03.344Z",
+    "createdAt" : "2015-09-28T10:16:03.673Z",
     "duration" : null,
     "title" : "Title 110"
   },
@@ -118,7 +118,7 @@ Content-Length: 1887</pre>
     "position" : 6,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.359Z"
+    "createdAt" : "2015-09-28T10:16:03.691Z"
   },
   {
     "mediaId" : 127,
@@ -126,7 +126,7 @@ Content-Length: 1887</pre>
     "position" : 7,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.365Z"
+    "createdAt" : "2015-09-28T10:16:03.694Z"
   },
   {
     "mediaId" : 128,
@@ -134,7 +134,7 @@ Content-Length: 1887</pre>
     "position" : 8,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-14T10:33:03.369Z"
+    "createdAt" : "2015-09-28T10:16:03.696Z"
   },
   {
     "mediaId" : 129,
@@ -142,7 +142,7 @@ Content-Length: 1887</pre>
     "position" : 9,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:03.371Z",
+    "createdAt" : "2015-09-28T10:16:03.699Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -152,7 +152,7 @@ Content-Length: 1887</pre>
     "position" : 10,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-14T10:33:03.374Z",
+    "createdAt" : "2015-09-28T10:16:03.702Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -162,7 +162,7 @@ Content-Length: 1887</pre>
     "position" : 11,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-14T10:33:03.377Z",
+    "createdAt" : "2015-09-28T10:16:03.705Z",
     "duration" : null,
     "title" : "Title 116"
   }

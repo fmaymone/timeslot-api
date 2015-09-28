@@ -71,6 +71,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -91,13 +94,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=rhBEv6O2f4Lz8sezOWXUu4d3xAk
+Authorization: Token token=D70YRBaieD0cqNZmDntqRZIClMg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/68/move</pre>
+<pre>POST /v1/slots/75/move</pre>
 
 #### Body
 ```javascript
@@ -110,9 +113,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/68/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/75/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=rhBEv6O2f4Lz8sezOWXUu4d3xAk&quot; \
+	-H &quot;Authorization: Token token=D70YRBaieD0cqNZmDntqRZIClMg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +126,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1deb217e6ea57e2f29f939e35175afa7&quot;
+ETag: W/&quot;b0fd5243929a2ccccf3f2807f050c916&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0b95e4b2-e005-4cb1-b779-a18ee8ec53be
-X-Runtime: 0.128643
+X-Request-Id: 0bc58f9f-0dd6-42e3-aa96-e11444e91ee9
+X-Runtime: 0.146344
 Vary: Origin
-Content-Length: 1453</pre>
+Content-Length: 1472</pre>
 
 #### Status
 
@@ -138,19 +141,19 @@ Content-Length: 1453</pre>
 
 ```javascript
 {
-  "id" : 69,
-  "title" : "Slot title 56",
-  "startDate" : "2019-09-03T08:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:58.785Z",
-  "updatedAt" : "2015-09-14T10:32:58.785Z",
+  "id" : 76,
+  "title" : "Slot title 61",
+  "startDate" : "2019-09-08T13:44:02.000Z",
+  "createdAt" : "2015-09-28T10:15:59.041Z",
+  "updatedAt" : "2015-09-28T10:15:59.041Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-03T08:44:02.000Z",
+  "endDate" : "2019-10-08T13:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 312,
-    "username" : "User 278",
-    "createdAt" : "2015-09-14T10:32:58.747Z",
-    "updatedAt" : "2015-09-14T10:32:58.747Z",
+    "id" : 326,
+    "username" : "User 290",
+    "createdAt" : "2015-09-28T10:15:59.002Z",
+    "updatedAt" : "2015-09-28T10:15:59.002Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -165,7 +168,7 @@ Content-Length: 1453</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-14T10:32:58.769Z",
+      "createdAt" : "2015-09-28T10:15:59.025Z",
       "duration" : null,
       "title" : "Title 56"
     },
@@ -175,7 +178,7 @@ Content-Length: 1453</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-14T10:32:58.766Z",
+      "createdAt" : "2015-09-28T10:15:59.022Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -185,7 +188,7 @@ Content-Length: 1453</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-14T10:32:58.763Z",
+      "createdAt" : "2015-09-28T10:15:59.018Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -195,7 +198,7 @@ Content-Length: 1453</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:58.760Z"
+      "createdAt" : "2015-09-28T10:15:59.016Z"
     },
     {
       "mediaId" : 66,
@@ -203,7 +206,7 @@ Content-Length: 1453</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:58.758Z"
+      "createdAt" : "2015-09-28T10:15:59.013Z"
     },
     {
       "mediaId" : 65,
@@ -211,13 +214,14 @@ Content-Length: 1453</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-14T10:32:58.755Z"
+      "createdAt" : "2015-09-28T10:15:59.010Z"
     }
   ],
   "settings" : {
     "alerts" : "0000000000"
   },
   "visibility" : "friends",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

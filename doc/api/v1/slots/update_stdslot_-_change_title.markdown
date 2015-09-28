@@ -96,6 +96,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -113,13 +116,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=wub4PZS-LDyjE5Up9bXM7KhUpyA
+Authorization: Token token=yoeU5c2FmAo1wTbAaIjwm6ZWaFo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/39</pre>
+<pre>PATCH /v1/stdslot/41</pre>
 
 #### Body
 ```javascript
@@ -131,9 +134,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/39&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/41&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=wub4PZS-LDyjE5Up9bXM7KhUpyA&quot; \
+	-H &quot;Authorization: Token token=yoeU5c2FmAo1wTbAaIjwm6ZWaFo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,10 +147,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b94372f441c08b718faee57506b28ad1&quot;
+ETag: W/&quot;78817d601ee6d28223a64092e67a9910&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6338ccbd-edf4-42f6-b571-986ef61b9707
-X-Runtime: 0.042270
+X-Request-Id: 68199cee-173f-424f-bacc-0cdc86ba7f99
+X-Runtime: 0.036530
 Vary: Origin
 Content-Length: 532</pre>
 
@@ -159,19 +162,19 @@ Content-Length: 532</pre>
 
 ```javascript
 {
-  "id" : 39,
+  "id" : 41,
   "title" : "New title for a Slot",
   "startDate" : "2019-09-06T08:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:45.839Z",
-  "updatedAt" : "2015-09-14T10:32:45.839Z",
+  "createdAt" : "2015-09-28T10:15:48.601Z",
+  "updatedAt" : "2015-09-28T10:15:48.601Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 235,
-    "username" : "User 201",
-    "createdAt" : "2015-09-14T10:32:45.834Z",
-    "updatedAt" : "2015-09-14T10:32:45.834Z",
+    "id" : 238,
+    "username" : "User 202",
+    "createdAt" : "2015-09-28T10:15:48.596Z",
+    "updatedAt" : "2015-09-28T10:15:48.596Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

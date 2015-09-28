@@ -63,6 +63,9 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -82,19 +85,19 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=NARtsP6lXIFW0UltUTAERpfcQ00
+<pre>Authorization: Token token=YwmyANZvbnXd7bE9WtIZzWUzR-E
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/reslot/51</pre>
+<pre>DELETE /v1/reslot/53</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot/51&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=NARtsP6lXIFW0UltUTAERpfcQ00&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot/53&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=YwmyANZvbnXd7bE9WtIZzWUzR-E&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,10 +109,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f4c09a1762a304d2d0cee335b41a072f&quot;
+ETag: W/&quot;acf4cdbf13350da5d6561e07038c27f1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2ffdab24-241c-4cd0-8f86-b2204d6704ef
-X-Runtime: 0.078840
+X-Request-Id: 3e1486a4-9a77-4c51-b956-3e81a86b3863
+X-Runtime: 0.050320
 Vary: Origin
 Content-Length: 586</pre>
 
@@ -121,19 +124,19 @@ Content-Length: 586</pre>
 
 ```javascript
 {
-  "id" : 51,
+  "id" : 53,
   "title" : "Slot title 44",
   "startDate" : "2019-09-18T20:44:02.000Z",
-  "createdAt" : "2015-09-14T10:32:57.184Z",
-  "updatedAt" : "2015-09-14T10:32:57.232Z",
-  "deletedAt" : "2015-09-14T10:32:57.228Z",
+  "createdAt" : "2015-09-28T10:15:57.401Z",
+  "updatedAt" : "2015-09-28T10:15:57.440Z",
+  "deletedAt" : "2015-09-28T10:15:57.435Z",
   "endDate" : "2019-10-18T20:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 259,
-    "username" : "User 225",
-    "createdAt" : "2015-09-14T10:32:57.170Z",
-    "updatedAt" : "2015-09-14T10:32:57.170Z",
+    "id" : 265,
+    "username" : "User 229",
+    "createdAt" : "2015-09-28T10:15:57.404Z",
+    "updatedAt" : "2015-09-28T10:15:57.404Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -146,10 +149,10 @@ Content-Length: 586</pre>
     "alerts" : "0000000000"
   },
   "slotter" : {
-    "id" : 259
+    "id" : 262
   },
   "parent" : {
-    "id" : 52
+    "id" : 54
   },
   "visibility" : "public",
   "likes" : 0,
