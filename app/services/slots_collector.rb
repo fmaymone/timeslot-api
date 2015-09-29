@@ -2,7 +2,14 @@ class SlotsCollector
   # collects all slots current_user is allowed to see from requested_user
   # including std_slots, reslots and groupslots
   def self.call(current_user: nil, user:, limit: 20, status: 'all',
-                moment: Time.zone.now)
+                moment: Time.zone.now, after: nil)
+
+    # ask for one more than the limit to find out if there are following results
+    extended_limit = limit.to_i + 1
+
+    cursor_slot = BaseSlot.from_paging_cursor after if after
+    #TODO return error if cursor was given but cursor slot couldn't be determined
+
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
 
@@ -19,7 +26,9 @@ class SlotsCollector
       ### execute query
       # get [limit] slots from all collections, not efficient but simple
       # and definitly working, TODO: optimize when need is
-      slots = query.retrieve(status: status, moment: moment).paginate(limit).ordered
+      slots = query.retrieve(status: status,
+                             moment: moment,
+                             cursor: cursor_slot).paginate(extended_limit).ordered
       data.concat(slots)
     end
 
@@ -31,6 +40,6 @@ class SlotsCollector
     # data.first limit
     # data[0, limit]
     # data.take limit
-    data.take limit.to_i
+    data.take extended_limit
   end
 end

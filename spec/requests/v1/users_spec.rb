@@ -535,12 +535,72 @@ RSpec.describe "V1::Users", type: :request do
                                        owner: current_user) }
 
         describe "GET slots for current user" do
+          let(:limit) { 10 }
           let(:query_string) {
-            { status: status, moment: Time.zone.now.as_json, limit: 10 } }
+            { status: status, moment: Time.zone.now.as_json, limit: limit } }
 
           describe "paginate by cursor" do
             context "upcoming" do
+              let(:status) { 'upcoming' }
+              let(:limit) { 2 }
 
+              it "doesn't return 'after' cursor if no more results" do
+                [past_slot, ongoing_slot, upcoming_slot]
+
+                get "/v1/users/#{current_user.id}/slots",
+                    { status: status, limit: 4 },
+                    auth_header
+                expect(response.status).to be(200)
+                expect(json['paging']['after']).to be nil
+              end
+
+              it "paginates through the upcoming slots by 'after' cursor" do
+                [past_slot, ongoing_slot, upcoming_slot, upcoming_reslot,
+                 upcoming_slot_same_startend, ongoing_slots, upcoming_slots]
+
+                # first request without a cursor
+                get "/v1/users/#{current_user.id}/slots", query_string,
+                    auth_header
+                resp = JSON.parse(response.body)
+
+                # receive a cursor for further requests
+                initial_cursor = resp['paging']['after']
+
+                expect(initial_cursor).not_to be nil
+                cursor = initial_cursor
+                previous_result = resp['data']
+
+                while cursor
+                  # paginate through the result
+                  get "/v1/users/#{current_user.id}/slots",
+                      { status: status, after: cursor, limit: limit },
+                      auth_header
+
+                  json = JSON.parse(response.body)
+                  cursor = json['paging']['after']
+                  result = json['data']
+
+                  # make sure the follow up responses return slots
+                  # which are later than the slots from the previous response
+                  expect(result.first['startDate'])
+                    .to be >= previous_result.last['startDate']
+                  if result.first['startDate'] == previous_result.last['startDate']
+                    expect(result.first['endDate'])
+                      .to be >= previous_result.last['endDate']
+                  end
+                  if result.first['endDate'] == previous_result.last['endDate']
+                    expect(result.first['id'])
+                      .to be >= previous_result.last['id']
+                  end
+                  # those should never be in the result
+                  expect(response.body).not_to include past_slot.title
+                  expect(response.body).not_to include ongoing_slot.title
+                  expect(response.body).not_to include not_my_upcoming_slot.title
+
+                  previous_result = result
+                end
+                expect(result.last['title']).to eq 'upcoming slot B'
+              end
             end
           end
 
@@ -548,7 +608,7 @@ RSpec.describe "V1::Users", type: :request do
             let(:status) { 'now' }
 
             it "by startdate, enddate, slotid" do
-              [ongoing_slot, ongoing_slots, upcoming_slot,
+              [past_slot, ongoing_slot, ongoing_slots, upcoming_slot,
                upcoming_slot_same_startend, upcoming_slots, upcoming_reslot]
 
               get "/v1/users/#{current_user.id}/slots",

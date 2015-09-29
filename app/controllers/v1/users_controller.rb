@@ -122,6 +122,7 @@ module V1
       @slots = SlotsCollector.call(current_user: current_user,
                                    user: requested_user,
                                    **slot_paging_params)
+
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
@@ -250,13 +251,14 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
-            .deep_transform_keys(&:underscore)
-            .deep_symbolize_keys
+      params.permit(:email, :phone, :password,
+                    device: [:deviceId, :system, :version, :token])
+        .deep_transform_keys(&:underscore)
+        .deep_symbolize_keys
     end
 
     private def slot_paging_params
-      params.permit(:status, :moment, :limit, :cursor).symbolize_keys
+      params.permit(:status, :moment, :limit, :after).symbolize_keys
     end
   end
 end

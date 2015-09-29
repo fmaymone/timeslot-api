@@ -7,8 +7,9 @@ module SlotQuery
       @relation = relation.includes(:meta_slot).references(:meta_slots).extending(Scopes)
     end
 
-    def retrieve(status: nil, moment: Time.zone.now)
+    def retrieve(status: nil, moment: Time.zone.now, cursor: nil)
       return @relation if status == 'all' || status.nil?
+      return @relation.where(after_cursor(cursor)) if cursor
       @relation.where(send status, moment)
     end
 
@@ -27,6 +28,21 @@ module SlotQuery
 
     private def past(moment = Time.zone.now)
       meta_table[:end_date].lteq(moment)
+    end
+
+    private def after_cursor(cursor)
+      same_startend(cursor).or same_start(cursor).or upcoming(cursor.start_date)
+    end
+
+    private def same_startend(cursor)
+      meta_table[:start_date].eq(cursor.start_date).and(
+        meta_table[:end_date].eq(cursor.end_date)).and(
+        @relation.arel_table[:id].gt(cursor.id))
+    end
+
+    private def same_start(cursor)
+      meta_table[:start_date].eq(cursor.start_date).and(
+        meta_table[:end_date].gt(cursor.end_date))
     end
 
     def meta_table
