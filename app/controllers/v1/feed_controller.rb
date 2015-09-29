@@ -5,7 +5,7 @@ module V1
     # The user feed stores all activities for a user.
     # Think of it as your personal Facebook page.
     def user_feed
-      authorize :activity
+      authorize :feed
       return head 422 unless has_allowed_params?
       render json: Feed.user_feed(current_user.id, page_params),
              status: :ok
@@ -16,7 +16,7 @@ module V1
     # There is both a flat newsfeed (similar to twitter)
     # and an aggregated newsfeed (like facebook).
     def news_feed
-      authorize :activity
+      authorize :feed
       return head 422 unless has_allowed_params?
       style = params[:style].presence || 'aggregated'
       render json: Feed.news_feed(current_user.id, page_params, style),
@@ -26,7 +26,7 @@ module V1
     # GET /v1/users/1/notification
     # This feed can be used to build notification functionality.
     def notification_feed
-      authorize :activity
+      authorize :feed
       return head 422 unless has_allowed_params?
       render json: Feed.notification_feed(current_user.id, page_params),
              status: :ok

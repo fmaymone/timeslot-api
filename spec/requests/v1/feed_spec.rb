@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "V1::Activity", type: :request do
+RSpec.describe "V1::Feed", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) do

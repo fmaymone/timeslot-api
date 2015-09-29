@@ -26,6 +26,19 @@ class Feed
     enricher.enrich_activities(page)
   end
 
+  # Cursor based pagination is a lot faster and supported as well.
+  # To go with cursor based pagination we have to implement exchanging
+  # of page hashes (as cursors) between backend and frontend.
+  def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
+    (cursor ? feed.get(limit: limit,
+                       id_lt: cursor,
+                       mark_seen: true)
+    : feed.get(limit: limit,
+               offset: offset,
+               mark_seen: true)
+    )['results']
+  end
+
   def self.slot_as_json(slot, user)
 
     # basic slot data
@@ -177,18 +190,5 @@ class Feed
     json['friendsCount'] = user.friends.count
 
     json
-  end
-
-  # Cursor based pagination is a lot faster and supported as well.
-  # To go with cursor based pagination we have to implement exchanging
-  # of page hashes (as cursors) between backend and frontend.
-  def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
-    (cursor ? feed.get(limit: limit,
-                       id_lt: cursor,
-                       mark_seen: true)
-            : feed.get(limit: limit,
-                       offset: offset,
-                       mark_seen: true)
-    )['results']
   end
 end
