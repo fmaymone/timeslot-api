@@ -10,4 +10,12 @@ class Comment < Activity
   def delete
     update(deleted_at: Time.zone.now)
   end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    I18n.t('notify_create_comment',
+           name: user.username,
+           title: slot.meta_slot.title)
+  end
 end

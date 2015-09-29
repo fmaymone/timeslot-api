@@ -9,4 +9,10 @@ class Like < Activity
   def delete
     update(deleted_at: Time.zone.now)
   end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{user.username} likes your slot"
+  end
 end

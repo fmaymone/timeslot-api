@@ -8,39 +8,45 @@ class Activity < ActiveRecord::Base
   as_activity
 
   # The user who made the update
-  def activity_actor() user.id.to_s end
+  def activity_actor
+    user.id.to_s
+  end
 
   # An activity tag as a verb
-  def activity_verb() self.class.name.downcase end
+  def activity_verb
+    self.class.name.downcase
+  end
 
   # The object which was updated/created
-  def activity_object() slot.id.to_s end
+  def activity_object
+    slot.id.to_s
+  end
 
   # The object which includes the update as a target
   # We can use this to group/aggregate activities by slots
-  def activity_target() slot.owner.id.to_s end
+  def activity_target
+    slot.owner.id.to_s
+  end
 
   # The foreign id is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
-  def activity_foreign_id() slot.owner.id.to_s end
+  def activity_foreign_id
+    slot.owner.id.to_s
+  end
+
+  # The message is used as a notification message
+  def activity_message
+    raise NotImplementedError,
+          "Subclasses must define method 'activity_message'."
+  end
 
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   def activity_extra_data
-    case self.class.name
-    when 'Comment'
-      message = I18n.t('notify_create_comment',
-                         name: user.username,
-                         title: slot.meta_slot.title)
-    when 'Like'
-      message = "#{user.username} likes your slot"
-    else
-      return {}
-    end
     {
       # The notification message for the activity
-      message: message,
+      message: activity_message,
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
       slot: Feed.slot_as_json(slot, user),
