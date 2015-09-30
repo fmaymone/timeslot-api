@@ -33,9 +33,9 @@ class Feed
     (cursor ? feed.get(limit: limit.to_i,
                        id_lt: cursor,
                        mark_seen: true)
-    : feed.get(limit: limit.to_i,
-               offset: offset,
-               mark_seen: true)
+            : feed.get(limit: limit.to_i,
+                       offset: offset,
+                       mark_seen: true)
     )['results']
   end
 

@@ -33,7 +33,7 @@ module V1
     end
 
     private def page_params
-      params.permit(:limit, :offset, :cursor)
+      params.permit(:limit, :offset, :cursor).symbolize_keys
     end
 
     private def has_allowed_params?
