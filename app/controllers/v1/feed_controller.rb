@@ -1,7 +1,7 @@
 module V1
   class FeedController < ApplicationController
 
-    # GET /v1/users/1/feed
+    # GET /v1/feed/user
     # The user feed stores all activities for a user.
     # Think of it as your personal Facebook page.
     def user_feed
@@ -11,7 +11,7 @@ module V1
              status: :ok
     end
 
-    # GET /v1/users/1/news
+    # GET /v1/feed/news
     # News feeds store activities from the people you follow.
     # There is both a flat newsfeed (similar to twitter)
     # and an aggregated newsfeed (like facebook).
@@ -23,7 +23,7 @@ module V1
              status: :ok
     end
 
-    # GET /v1/users/1/notification
+    # GET /v1/feed/notification
     # This feed can be used to build notification functionality.
     def notification_feed
       authorize :feed
