@@ -30,10 +30,10 @@ class Feed
   # To go with cursor based pagination we have to implement exchanging
   # of page hashes (as cursors) between backend and frontend.
   def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
-    (cursor ? feed.get(limit: limit,
+    (cursor ? feed.get(limit: limit.to_i,
                        id_lt: cursor,
                        mark_seen: true)
-    : feed.get(limit: limit,
+    : feed.get(limit: limit.to_i,
                offset: offset,
                mark_seen: true)
     )['results']
