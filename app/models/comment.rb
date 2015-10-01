@@ -1,4 +1,4 @@
-class Comment < Activity
+class Comment < ActivitySlot
   after_commit AuditLog
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :comments

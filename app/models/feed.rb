@@ -11,7 +11,6 @@ class Feed
   def self.news_feed(user_id, params, style = 'aggregated')
     feed = StreamRails.feed_manager.get_news_feeds(user_id)
     page = paginate(feed[style.to_sym], params)
-
     case style
       when :flat
         enricher.enrich_activities(page)
@@ -39,7 +38,9 @@ class Feed
     )['results']
   end
 
-  def self.slot_as_json(slot, user)
+  def self.slot_as_json(slot)
+
+    user = slot.owner
 
     # basic slot data
     json = slot.slice(:id,
