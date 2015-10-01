@@ -1,6 +1,5 @@
 class Activity < ActiveRecord::Base
 
-  # Mark this class as abstract (do not map relations)
   self.abstract_class = true
 
   # Trigger activities to Activity Stream

@@ -1,11 +1,6 @@
 class ActivityGroup < Activity
 
-  # Mark this class as abstract (do not map relations)
   self.abstract_class = true
-
-  # Trigger activities to Activity Stream
-  include StreamRails::Activity
-  as_activity
 
   # The user who made the update
   def activity_actor

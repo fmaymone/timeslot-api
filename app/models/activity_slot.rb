@@ -1,6 +1,5 @@
 class ActivitySlot < Activity
 
-  # Mark this class as abstract (do not map relations)
   self.abstract_class = true
 
   # The user who made the update
