@@ -3,6 +3,8 @@ require 'documentation_helper'
 resource "Feeds" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
+  let(:owner) { create(:user, username: 'User 54') }
+  let(:actor) { create(:user, username: 'User 53') }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   shared_context "default slot response fields" do
@@ -45,7 +47,7 @@ resource "Feeds" do
     response_field :friendsCount, "Number of friends for this user"
   end
 
-  get "/v1/feed/user", :feed do # :vcr, :seed
+  get "/v1/feed/user", :vcr, :feed do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -59,18 +61,19 @@ resource "Feeds" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:owner) { create(:user, username: 'User 57') }
-      let(:actor) { create(:user, username: 'User 53') }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 21') }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
+                               title: 'Slot title 21', creator: owner) }
+      let(:slot) { create(:std_slot_public, :with_media,
+                          meta_slot: meta_slot) }
+      let(:message) { I18n.t('notify_create_comment',
+                             name: actor.username, title: slot.title) }
 
       example "Get activity feed for the current user", document: :v1 do
         explanation "if a user is authenticated, then some extra" \
-                      "activity fields are included"
+                    "activity fields are included"
 
         # Perform an activity
-        # StdSlotPublic.find(slot.id).create_comment(actor, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
+        slot.create_comment(actor, 'This is a test comment.')
 
         do_request
         expect(response_status).to eq(200)
@@ -91,9 +94,7 @@ resource "Feeds" do
         expect(activity_slot).to have_key("endDate")
         expect(activity_slot).to have_key("location")
         expect(activity_slot).to have_key("creator")
-        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot).to have_key("settings")
-        expect(activity_slot['settings']).to have_key("alerts")
         expect(activity_slot).to have_key("createdAt")
         expect(activity_slot).to have_key("updatedAt")
         expect(activity_slot).to have_key("deletedAt")
@@ -104,7 +105,9 @@ resource "Feeds" do
         expect(activity_slot).to have_key("shareUrl")
         expect(activity_slot).to have_key("visibility")
         expect(activity_slot).to have_key("media")
+        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
+        expect(activity_slot['title']).to eq(slot.title)
 
         activity_user = json.first['user']
         expect(activity_user).to have_key("id")
@@ -113,17 +116,17 @@ resource "Feeds" do
         expect(activity_user).to have_key("friendsCount")
         expect(activity_user).to have_key("reslotCount")
         expect(activity_user).to have_key("slotCount")
+        expect(activity_user['username']).to eq(actor.username)
 
         expect(json.first['message']).to eq(message)
         expect(json.first['verb']).to eq("comment")
-        expect(activity_user['username']).to eq(actor.username)
         #expect(json.first['actor']).to eq(actor.id.to_s)
-        #expect(json.first['object']).to eq(slot.comments.last.slot.id.to_s)
+        expect(json.first['object']).to eq(slot.id.to_s)
       end
     end
   end
 
-  get "/v1/feed/news", :feed do # :vcr, :seed
+  get "/v1/feed/news", :vcr, :feed do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -138,18 +141,18 @@ resource "Feeds" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:owner) { create(:user, username: 'User 57') }
-      let(:actor) { create(:user, username: 'User 53') }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 22') }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
-      let(:style) { 'aggregated' }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
+                               title: 'Slot title 22', creator: current_user) }
+      let(:slot) { create(:std_slot_public, :with_media,
+                          meta_slot: meta_slot) }
+      let(:message) { I18n.t('notify_create_comment',
+                             name: actor.username, title: slot.title) }
 
       example "Get an aggregated activity feed", document: :v1 do
         explanation "some extra activity fields are included"
 
         # Perform an activity
-        # StdSlotPublic.find(slot.id).create_comment(user, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
+        slot.create_comment(current_user, 'This is another test comment.')
 
         do_request
         expect(response_status).to eq(200)
@@ -175,9 +178,7 @@ resource "Feeds" do
         expect(activity_slot).to have_key("endDate")
         expect(activity_slot).to have_key("location")
         expect(activity_slot).to have_key("creator")
-        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot).to have_key("settings")
-        expect(activity_slot['settings']).to have_key("alerts")
         expect(activity_slot).to have_key("createdAt")
         expect(activity_slot).to have_key("updatedAt")
         expect(activity_slot).to have_key("deletedAt")
@@ -188,7 +189,9 @@ resource "Feeds" do
         expect(activity_slot).to have_key("shareUrl")
         expect(activity_slot).to have_key("visibility")
         expect(activity_slot).to have_key("media")
+        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
+        expect(activity_slot['title']).to eq(slot.title)
 
         activity_user = activity['user']
         expect(activity_user).to have_key("id")
@@ -197,17 +200,17 @@ resource "Feeds" do
         expect(activity_user).to have_key("friendsCount")
         expect(activity_user).to have_key("reslotCount")
         expect(activity_user).to have_key("slotCount")
+        expect(activity_user['username']).to eq(actor.username)
 
         expect(activity['message']).to eq(message)
         expect(activity['verb']).to eq("comment")
-        expect(activity_user['username']).to eq(actor.username)
-        #expect(activity['actor']).to eq(user.id.to_s)
-        #expect(activity['object']).to eq(slot.comments.last.slot.id.to_s)
+        #expect(json.first['actor']).to eq(actor.id.to_s)
+        #expect(json.first['object']).to eq(slot.id.to_s)
       end
     end
   end
 
-  get "/v1/feed/notification", :feed do # :vcr, :seed
+  get "/v1/feed/notification", :vcr, :feed do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -221,17 +224,18 @@ resource "Feeds" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:owner) { create(:user, username: 'User 57') }
-      let(:actor) { create(:user, username: 'User 53') }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253, title: 'Slot title 23') }
-      let(:slot) { create(:std_slot_public, :with_media, meta_slot: meta_slot, owner: owner) }
+      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
+                               title: 'Slot title 23', creator: current_user) }
+      let(:slot) { create(:std_slot_public, :with_media,
+                          meta_slot: meta_slot) }
+      let(:message) { I18n.t('notify_create_comment',
+                             name: actor.username, title: slot.title) }
 
       example "Get activity notifications", document: :v1 do
         explanation "some extra activity fields are included"
 
         # Perform an activity
-        # StdSlotPublic.find(slot.id).create_comment(user, 'This is a test comment.')
-        message = I18n.t('notify_create_comment', name: actor.username, title: slot.title)
+        slot.create_comment(current_user, 'This is another test comment.')
 
         do_request
         expect(response_status).to eq(200)
@@ -257,9 +261,7 @@ resource "Feeds" do
         expect(activity_slot).to have_key("endDate")
         expect(activity_slot).to have_key("location")
         expect(activity_slot).to have_key("creator")
-        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot).to have_key("settings")
-        expect(activity_slot['settings']).to have_key("alerts")
         expect(activity_slot).to have_key("createdAt")
         expect(activity_slot).to have_key("updatedAt")
         expect(activity_slot).to have_key("deletedAt")
@@ -270,7 +272,9 @@ resource "Feeds" do
         expect(activity_slot).to have_key("shareUrl")
         expect(activity_slot).to have_key("visibility")
         expect(activity_slot).to have_key("media")
+        expect(activity_slot['creator']).to have_key("username")
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
+        expect(activity_slot['title']).to eq(slot.title)
 
         activity_user = activity['user']
         expect(activity_user).to have_key("id")
@@ -284,7 +288,7 @@ resource "Feeds" do
         expect(activity['verb']).to eq("comment")
         expect(activity_user['username']).to eq(actor.username)
         #expect(activity['actor']).to eq(user.id.to_s)
-        #expect(activity['object']).to eq(slot.comments.last.slot.id.to_s)
+        #expect(activity['object']).to eq(slot.id.to_s)
       end
     end
   end
