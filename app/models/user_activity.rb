@@ -1,4 +1,4 @@
-class ActivityUser < Activity
+class UserActivity < Activity
 
   self.abstract_class = true
 

@@ -1,4 +1,4 @@
-class Like < ActivitySlot
+class Like < SlotActivity
   after_commit AuditLog
 
   belongs_to :user

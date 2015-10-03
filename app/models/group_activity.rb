@@ -1,4 +1,4 @@
-class ActivityGroup < Activity
+class GroupActivity < Activity
 
   self.abstract_class = true
 

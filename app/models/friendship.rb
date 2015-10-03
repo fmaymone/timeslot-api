@@ -1,4 +1,4 @@
-class Friendship < ActivityUser
+class Friendship < UserActivity
   class DuplicateEntry < StandardError; end
 
   after_commit AuditLog
