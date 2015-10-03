@@ -7,7 +7,7 @@ RSpec.describe PresentableSlots, type: :service do
     context 'my slots' do
       it "for herself" do
         expect(
-          described_class.call(relationship: 'himself', user: user)
+          described_class.call(relationship: ME, user: user)
         ).to eq [StdSlot.of(user), user.re_slots]
       end
     end
@@ -27,7 +27,7 @@ RSpec.describe PresentableSlots, type: :service do
 
       it "for a friend" do
         expect(
-          described_class.call(relationship: 'friend', user: user,
+          described_class.call(relationship: FRIEND, user: user,
                                current_user: current_user)
         ).to eq [user.std_slots_public, user.std_slots_friends,
                  user.re_slots, current_user.shared_group_slots(user)]
@@ -36,7 +36,7 @@ RSpec.describe PresentableSlots, type: :service do
 
       it "for a stranger" do
         expect(
-          described_class.call(relationship: 'stranger', user: user,
+          described_class.call(relationship: STRANGER, user: user,
                                current_user: current_user)
         ).to eq [user.std_slots_public, user.re_slots,
                  current_user.shared_group_slots(user)]
@@ -44,7 +44,7 @@ RSpec.describe PresentableSlots, type: :service do
 
       it "for a visitor" do
         expect(
-          described_class.call(relationship: 'stranger', user: user)
+          described_class.call(relationship: STRANGER, user: user)
         ).to eq [user.std_slots_public, user.re_slots, nil]
       end
     end

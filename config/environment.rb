@@ -9,5 +9,10 @@ if Rails.env.test? || Rails.env.development?
   load(app_env_vars) if File.exist?(app_env_vars)
 end
 
+# some timeslot variables, put them here until we need a better place
+STRANGER = 'stranger'
+FRIEND = 'friend'
+ME = 'me'
+
 # Initialize the Rails application.
 Rails.application.initialize!
