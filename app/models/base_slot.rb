@@ -352,7 +352,8 @@ class BaseSlot < ActiveRecord::Base
     rescue ActiveRecord::RecordNotFound
       raise ApplicationController::PaginationError
     else
-      if slot.start_date != cursor.second || slot.end_date != cursor.third
+      if slot.start_date.to_s != cursor.second ||
+         slot.end_date.to_s != cursor.third
         fail ApplicationController::PaginationError
       end
       slot

@@ -107,9 +107,6 @@ module V1
 
     # GET /v1/users/1/slots
     # returns all slots of the requested user visible for the current user
-    # TODO: ordering
-    # TODO: order by start_date, end_date and id
-    # TODO: add support for cursor
     # TODO: around status
     # TODO: add index on start_date and end_date for meta_slots
     # TODO: make sure the index on auth_token is present in structure.sql
@@ -258,7 +255,7 @@ module V1
     end
 
     private def slot_paging_params
-      params.permit(:status, :moment, :limit, :after).symbolize_keys
+      params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
     end
   end
 end
