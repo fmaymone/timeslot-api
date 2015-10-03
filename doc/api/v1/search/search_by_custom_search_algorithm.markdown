@@ -57,7 +57,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=QTm15C48ZsI0SDMeBlpgxeLPpR4
+Authorization: Token token=3igBC3RVGFVMS07IgLDUEOEJHL8
 Host: example.org
 Cookie: </pre>
 
@@ -74,7 +74,7 @@ method: like</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=John+Do&amp;method=like&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=QTm15C48ZsI0SDMeBlpgxeLPpR4&quot; \
+	-H &quot;Authorization: Token token=3igBC3RVGFVMS07IgLDUEOEJHL8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,8 +87,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;bd0a9a4a9ed39749c111159d897f85f6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a685cac6-86f6-4a0e-b6c0-844734c1b70d
-X-Runtime: 0.017587
+X-Request-Id: 302f724d-95cb-4155-89d6-0dbdc62700a0
+X-Runtime: 0.015340
 Vary: Origin
 Content-Length: 219</pre>
 

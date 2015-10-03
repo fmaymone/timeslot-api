@@ -46,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5adcbc807d3e3ed6782e3865e4e0abbe&quot;
+ETag: W/&quot;73ef2a39f003f3f90e8c7cb90648acea&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 559e660d-5fc2-4a5e-97b1-0eecb6fecfbc
-X-Runtime: 0.020747
+X-Request-Id: 62ab7422-8628-4e6e-9d7c-4589a6789a79
+X-Runtime: 0.017858
 Vary: Origin
 Content-Length: 144</pre>
 
@@ -61,9 +61,9 @@ Content-Length: 144</pre>
 
 ```javascript
 {
-  "signature" : "3bcb74c0f276da328180114e7ed62a67c5366e9a",
+  "signature" : "d688afae37dae44a41ed7faa04225871c2914c2f",
   "apiKey" : 255241985667644,
-  "publicId" : "ykddyluuk2jkmlkrysvj",
-  "timestamp" : "20150920184924"
+  "publicId" : "plcwb6dsn69hbocwvtmk",
+  "timestamp" : "20151003223041"
 }
 ```

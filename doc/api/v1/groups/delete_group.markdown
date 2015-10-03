@@ -54,7 +54,7 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=IRLSWUpYDAhE-RAy-w_euqIoRgI
+<pre>Authorization: Token token=hFZKcyxuPKsZYDc4eDxKkA5B9f4
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -66,7 +66,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=IRLSWUpYDAhE-RAy-w_euqIoRgI&quot; \
+	-H &quot;Authorization: Token token=hFZKcyxuPKsZYDc4eDxKkA5B9f4&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -78,10 +78,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ab7080d2271f614fbfc97c2bed96b858&quot;
+ETag: W/&quot;6c042e8afa9a748fe742164a78f011d2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 799fd4ed-f23e-42b2-a03e-9056499b7607
-X-Runtime: 0.093340
+X-Request-Id: 834f602b-8db7-4891-9db8-55df7758e338
+X-Runtime: 0.069645
 Vary: Origin
 Content-Length: 440</pre>
 
@@ -97,9 +97,9 @@ Content-Length: 440</pre>
   "name" : "Testgroup 13",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-09-20T18:49:21.435Z",
-  "updatedAt" : "2015-09-20T18:49:21.541Z",
-  "deletedAt" : "2015-09-20T18:49:21.540Z",
+  "createdAt" : "2015-10-03T22:30:40.176Z",
+  "updatedAt" : "2015-10-03T22:30:40.259Z",
+  "deletedAt" : "2015-10-03T22:30:40.258Z",
   "image" : {
     "publicId" : null,
     "localId" : null
@@ -107,8 +107,8 @@ Content-Length: 440</pre>
   "owner" : {
     "id" : 95,
     "username" : "User 71",
-    "createdAt" : "2015-09-20T18:49:21.431Z",
-    "updatedAt" : "2015-09-20T18:49:21.473Z",
+    "createdAt" : "2015-10-03T22:30:40.173Z",
+    "updatedAt" : "2015-10-03T22:30:40.206Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -148,7 +148,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=VF91VPsawWd-JtlLJzfOn70U7oI
+Authorization: Token token=hkuI_8Wnxb2Gjz6tB5ZE6IEqEIc
 Host: example.org
 Cookie: </pre>
 
@@ -172,7 +172,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/47&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=VF91VPsawWd-JtlLJzfOn70U7oI&quot; \
+	-H &quot;Authorization: Token token=hkuI_8Wnxb2Gjz6tB5ZE6IEqEIc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -183,10 +183,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e6292b3e19514103010ada360c1efda5&quot;
+ETag: W/&quot;2515ac2129d2d4602d40bfaf7b8a267d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f259d1a5-3d1d-4019-8788-e9694cff1a09
-X-Runtime: 0.048159
+X-Request-Id: b54fbca1-e6ea-444f-b95a-0859a9feefa3
+X-Runtime: 0.043580
 Vary: Origin
 Content-Length: 866</pre>
 
@@ -201,8 +201,8 @@ Content-Length: 866</pre>
   "id" : 47,
   "title" : "Slot title 38",
   "startDate" : "2019-09-12T14:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:28.735Z",
-  "updatedAt" : "2015-09-20T18:49:28.735Z",
+  "createdAt" : "2015-10-03T22:30:43.117Z",
+  "updatedAt" : "2015-10-03T22:30:43.117Z",
   "deletedAt" : null,
   "endDate" : "2019-10-12T14:44:02.000Z",
   "location" : {
@@ -227,8 +227,8 @@ Content-Length: 866</pre>
   "creator" : {
     "id" : 253,
     "username" : "User 217",
-    "createdAt" : "2015-09-20T18:49:28.730Z",
-    "updatedAt" : "2015-09-20T18:49:28.730Z",
+    "createdAt" : "2015-10-03T22:30:43.106Z",
+    "updatedAt" : "2015-10-03T22:30:43.106Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -27,7 +27,7 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=rcwwGSsE0Q9WVYmcmgYO0G2WzfY
+Authorization: Token token=I2995sTpfdkepDcCF-UKvvJ20zE
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[145,146,147]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=rcwwGSsE0Q9WVYmcmgYO0G2WzfY&quot; \
+	-H &quot;Authorization: Token token=I2995sTpfdkepDcCF-UKvvJ20zE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,8 +64,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;c538c00a678539ad35a11b8fd44e86ec&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 732016bd-ad47-4f4f-8a1e-b7d423ffd40a
-X-Runtime: 0.053322
+X-Request-Id: b05d46f7-91f1-4c51-a61c-f76df2b387c0
+X-Runtime: 0.039613
 Vary: Origin
 Content-Length: 234</pre>
 

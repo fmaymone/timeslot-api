@@ -80,7 +80,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=aLbCikewfJOE4Kq7Si3GxgQQGhE
+Authorization: Token token=kA5LELh1x3KMJzscq191lyMYL3Q
 Host: example.org
 Cookie: </pre>
 
@@ -92,7 +92,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/457/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=aLbCikewfJOE4Kq7Si3GxgQQGhE&quot; \
+	-H &quot;Authorization: Token token=kA5LELh1x3KMJzscq191lyMYL3Q&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -103,10 +103,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;25b7f9bf8d2484ac844f2177eb60ff9e&quot;
+ETag: W/&quot;d6078844e3d8b2c19f9d42b415d77cf8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 92332b18-09ed-4d6d-b181-78b6307d7f2f
-X-Runtime: 0.077390
+X-Request-Id: 5abe2c02-aa90-452c-9fa1-cd1d9e8931b9
+X-Runtime: 0.057452
 Vary: Origin
 Content-Length: 1195</pre>
 
@@ -122,16 +122,16 @@ Content-Length: 1195</pre>
     "id" : 144,
     "title" : "Slot title 129",
     "startDate" : "2019-09-22T09:44:02.000Z",
-    "createdAt" : "2015-09-20T18:49:46.100Z",
-    "updatedAt" : "2015-09-20T18:49:46.100Z",
+    "createdAt" : "2015-10-03T22:30:47.686Z",
+    "updatedAt" : "2015-10-03T22:30:47.686Z",
     "deletedAt" : null,
     "endDate" : "2019-10-22T09:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 460,
       "username" : "User 419",
-      "createdAt" : "2015-09-20T18:49:46.092Z",
-      "updatedAt" : "2015-09-20T18:49:46.092Z",
+      "createdAt" : "2015-10-03T22:30:47.682Z",
+      "updatedAt" : "2015-10-03T22:30:47.682Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -154,16 +154,16 @@ Content-Length: 1195</pre>
     "id" : 146,
     "title" : "Slot title 131",
     "startDate" : "2019-09-24T11:44:02.000Z",
-    "createdAt" : "2015-09-20T18:49:46.112Z",
-    "updatedAt" : "2015-09-20T18:49:46.139Z",
+    "createdAt" : "2015-10-03T22:30:47.697Z",
+    "updatedAt" : "2015-10-03T22:30:47.714Z",
     "deletedAt" : null,
     "endDate" : "2019-10-24T11:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 463,
       "username" : "User 422",
-      "createdAt" : "2015-09-20T18:49:46.115Z",
-      "updatedAt" : "2015-09-20T18:49:46.115Z",
+      "createdAt" : "2015-10-03T22:30:47.699Z",
+      "updatedAt" : "2015-10-03T22:30:47.699Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,

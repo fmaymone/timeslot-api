@@ -83,7 +83,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=0mqB6SYdBzPRsym5uq76GS8JUUo
+Authorization: Token token=RgQaAWYn2kc1ujaUXOHUi2zISYQ
 Host: example.org
 Cookie: </pre>
 
@@ -95,7 +95,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/27&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=0mqB6SYdBzPRsym5uq76GS8JUUo&quot; \
+	-H &quot;Authorization: Token token=RgQaAWYn2kc1ujaUXOHUi2zISYQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a3853f39567aa3404e168394d5ccba72&quot;
+ETag: W/&quot;4653f681bfbbf48b121bd8b4f32d3e79&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8773fabb-858c-4ae3-ada5-f10a36819719
-X-Runtime: 0.067368
+X-Request-Id: eba43e98-6b8e-4f6f-b5b0-14b7b3222ea6
+X-Runtime: 0.031164
 Vary: Origin
 Content-Length: 2604</pre>
 
@@ -124,16 +124,16 @@ Content-Length: 2604</pre>
   "id" : 27,
   "title" : "Slot title 29",
   "startDate" : "2019-09-03T05:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:25.564Z",
-  "updatedAt" : "2015-09-20T18:49:25.564Z",
+  "createdAt" : "2015-10-03T22:30:41.886Z",
+  "updatedAt" : "2015-10-03T22:30:41.886Z",
   "deletedAt" : null,
   "endDate" : "2019-10-03T05:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 199,
     "username" : "User 171",
-    "createdAt" : "2015-09-20T18:49:25.556Z",
-    "updatedAt" : "2015-09-20T18:49:25.556Z",
+    "createdAt" : "2015-10-03T22:30:41.878Z",
+    "updatedAt" : "2015-10-03T22:30:41.878Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -148,7 +148,7 @@ Content-Length: 2604</pre>
       "position" : 12,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:25.668Z",
+      "createdAt" : "2015-10-03T22:30:41.963Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -158,7 +158,7 @@ Content-Length: 2604</pre>
       "position" : 11,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:25.662Z",
+      "createdAt" : "2015-10-03T22:30:41.958Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -168,7 +168,7 @@ Content-Length: 2604</pre>
       "position" : 10,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-20T18:49:25.657Z",
+      "createdAt" : "2015-10-03T22:30:41.953Z",
       "duration" : null,
       "title" : "Title 33"
     },
@@ -178,7 +178,7 @@ Content-Length: 2604</pre>
       "position" : 9,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-20T18:49:25.646Z",
+      "createdAt" : "2015-10-03T22:30:41.947Z",
       "duration" : null,
       "title" : "Title 32"
     },
@@ -188,7 +188,7 @@ Content-Length: 2604</pre>
       "position" : 8,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.633Z"
+      "createdAt" : "2015-10-03T22:30:41.942Z"
     },
     {
       "mediaId" : 35,
@@ -196,7 +196,7 @@ Content-Length: 2604</pre>
       "position" : 7,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.627Z"
+      "createdAt" : "2015-10-03T22:30:41.936Z"
     },
     {
       "mediaId" : 34,
@@ -204,7 +204,7 @@ Content-Length: 2604</pre>
       "position" : 6,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.621Z"
+      "createdAt" : "2015-10-03T22:30:41.926Z"
     },
     {
       "mediaId" : 33,
@@ -212,7 +212,7 @@ Content-Length: 2604</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-20T18:49:25.582Z",
+      "createdAt" : "2015-10-03T22:30:41.900Z",
       "duration" : null,
       "title" : "Title 28"
     },
@@ -222,7 +222,7 @@ Content-Length: 2604</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:25.579Z",
+      "createdAt" : "2015-10-03T22:30:41.898Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -232,7 +232,7 @@ Content-Length: 2604</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:25.576Z",
+      "createdAt" : "2015-10-03T22:30:41.895Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -242,7 +242,7 @@ Content-Length: 2604</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.573Z"
+      "createdAt" : "2015-10-03T22:30:41.893Z"
     },
     {
       "mediaId" : 29,
@@ -250,7 +250,7 @@ Content-Length: 2604</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.570Z"
+      "createdAt" : "2015-10-03T22:30:41.891Z"
     },
     {
       "mediaId" : 28,
@@ -258,7 +258,7 @@ Content-Length: 2604</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:25.567Z"
+      "createdAt" : "2015-10-03T22:30:41.888Z"
     }
   ],
   "settings" : {

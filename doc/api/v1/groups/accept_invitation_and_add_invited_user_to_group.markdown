@@ -22,7 +22,7 @@ Description : ID of the group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=lQcL3IViPd2kpLfG8Lsx0ajNksA
+Authorization: Token token=zn5-rnt6s0jDdFqEwTzQLOwYoQU
 Host: example.org
 Cookie: </pre>
 
@@ -34,7 +34,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/23/accept&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=lQcL3IViPd2kpLfG8Lsx0ajNksA&quot; \
+	-H &quot;Authorization: Token token=zn5-rnt6s0jDdFqEwTzQLOwYoQU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -46,8 +46,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: c1c22127-cf1a-4d3c-96dc-c975c327b0df
-X-Runtime: 0.014294
+X-Request-Id: a502d2d7-0233-48b4-9d03-09a723a8f3bf
+X-Runtime: 0.008991
 Vary: Origin
 Content-Length: 0</pre>
 

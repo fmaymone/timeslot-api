@@ -85,7 +85,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=roiUZsoasr26DqK3GeXBKdTd1J0
+<pre>Authorization: Token token=16AwTfy-4XqozCtpFcZz5nd1IMM
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -97,7 +97,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/50&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=roiUZsoasr26DqK3GeXBKdTd1J0&quot; \
+	-H &quot;Authorization: Token token=16AwTfy-4XqozCtpFcZz5nd1IMM&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -109,10 +109,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;df7159b957395567b46bf10ecd2a3f1a&quot;
+ETag: W/&quot;535368b837a7411f0372338e1694c43e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2093b9aa-ad0d-458b-be6c-33fbcea90ac3
-X-Runtime: 0.072263
+X-Request-Id: 52981702-617d-41c2-8cde-72e55a6169c8
+X-Runtime: 0.053989
 Vary: Origin
 Content-Length: 542</pre>
 
@@ -127,16 +127,16 @@ Content-Length: 542</pre>
   "id" : 50,
   "title" : "Slot title 41",
   "startDate" : "2019-09-15T17:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:36.383Z",
-  "updatedAt" : "2015-09-20T18:49:36.423Z",
-  "deletedAt" : "2015-09-20T18:49:36.417Z",
+  "createdAt" : "2015-10-03T22:30:43.543Z",
+  "updatedAt" : "2015-10-03T22:30:43.569Z",
+  "deletedAt" : "2015-10-03T22:30:43.566Z",
   "endDate" : "2019-10-15T17:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 259,
     "username" : "User 223",
-    "createdAt" : "2015-09-20T18:49:36.378Z",
-    "updatedAt" : "2015-09-20T18:49:36.378Z",
+    "createdAt" : "2015-10-03T22:30:43.537Z",
+    "updatedAt" : "2015-10-03T22:30:43.537Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

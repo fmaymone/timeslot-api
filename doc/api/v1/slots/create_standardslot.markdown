@@ -112,7 +112,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=qQXh6qb6-k3nDEZuzpgh1cKBBm0
+Authorization: Token token=x6fdhHNUxeg-Y5xx9lQv9kw8pt8
 Host: example.org
 Cookie: </pre>
 
@@ -149,7 +149,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qQXh6qb6-k3nDEZuzpgh1cKBBm0&quot; \
+	-H &quot;Authorization: Token token=x6fdhHNUxeg-Y5xx9lQv9kw8pt8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -160,10 +160,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d8e84934e4041ba4eedf9dca86b6be6d&quot;
+ETag: W/&quot;0af24d710e2fe85342d3db9f9bc0b8ed&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4a2e7c2f-0e45-4733-a3e9-c16a88fa01e4
-X-Runtime: 0.061184
+X-Request-Id: 376cb655-1c17-420f-bb16-5fcf8bcf7e09
+X-Runtime: 0.044700
 Vary: Origin
 Content-Length: 796</pre>
 
@@ -178,16 +178,16 @@ Content-Length: 796</pre>
   "id" : 28,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-09-20T18:49:25.930Z",
-  "updatedAt" : "2015-09-20T18:49:25.930Z",
+  "createdAt" : "2015-10-03T22:30:42.033Z",
+  "updatedAt" : "2015-10-03T22:30:42.033Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
     "id" : 212,
     "username" : "User 184",
-    "createdAt" : "2015-09-20T18:49:25.915Z",
-    "updatedAt" : "2015-09-20T18:49:25.915Z",
+    "createdAt" : "2015-10-03T22:30:42.023Z",
+    "updatedAt" : "2015-10-03T22:30:42.023Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -200,14 +200,14 @@ Content-Length: 796</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-09-20T18:49:25.939Z"
+      "createdAt" : "2015-10-03T22:30:42.041Z"
     },
     {
       "id" : 2,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-09-20T18:49:25.935Z"
+      "createdAt" : "2015-10-03T22:30:42.037Z"
     }
   ],
   "media" : [],

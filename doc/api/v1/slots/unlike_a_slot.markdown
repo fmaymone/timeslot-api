@@ -16,7 +16,7 @@ Description : ID of the Slot to unlike
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4KbZZMMiUOlXC3c-YCrZiV0OR7A
+Authorization: Token token=HSe3arpE-ucfQnl-xnB-9b2sRY4
 Host: example.org
 Cookie: </pre>
 
@@ -28,7 +28,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/59/like&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4KbZZMMiUOlXC3c-YCrZiV0OR7A&quot; \
+	-H &quot;Authorization: Token token=HSe3arpE-ucfQnl-xnB-9b2sRY4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -40,8 +40,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 1a4d262b-4128-4621-881d-054f6e873e8c
-X-Runtime: 0.059621
+X-Request-Id: bc000350-373c-4356-b8c6-eb9ce1a2396a
+X-Runtime: 0.010029
 Vary: Origin
 Content-Length: 0</pre>
 

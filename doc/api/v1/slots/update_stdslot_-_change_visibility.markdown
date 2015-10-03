@@ -116,7 +116,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=hdkm4FMPDlA7JLn_h2KVFYEQuCg
+Authorization: Token token=WJQOXoaPOda5sa3RhDwYWi2D0yI
 Host: example.org
 Cookie: </pre>
 
@@ -136,7 +136,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/42&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=hdkm4FMPDlA7JLn_h2KVFYEQuCg&quot; \
+	-H &quot;Authorization: Token token=WJQOXoaPOda5sa3RhDwYWi2D0yI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -147,10 +147,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f34ce113ab04b75838f73fd60b6de1df&quot;
+ETag: W/&quot;e5d4a2b43ff765a9fa8a341595a4e624&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cf615d80-812b-460c-8ece-cb13ca373a2d
-X-Runtime: 0.043797
+X-Request-Id: 98dd3bd3-9330-46a4-ae83-dc4ba2b06c07
+X-Runtime: 0.027157
 Vary: Origin
 Content-Length: 525</pre>
 
@@ -165,16 +165,16 @@ Content-Length: 525</pre>
   "id" : 42,
   "title" : "Slot title 33",
   "startDate" : "2019-09-07T09:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:27.979Z",
-  "updatedAt" : "2015-09-20T18:49:27.992Z",
+  "createdAt" : "2015-10-03T22:30:42.794Z",
+  "updatedAt" : "2015-10-03T22:30:42.802Z",
   "deletedAt" : null,
   "endDate" : "2019-10-07T09:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 240,
     "username" : "User 204",
-    "createdAt" : "2015-09-20T18:49:27.974Z",
-    "updatedAt" : "2015-09-20T18:49:27.974Z",
+    "createdAt" : "2015-10-03T22:30:42.789Z",
+    "updatedAt" : "2015-10-03T22:30:42.789Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -94,7 +94,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Vl9I1uBUvmYI7t-7iTOhoI27BuU
+Authorization: Token token=my3vjj558WAqTyLPLJH3NUak4U4
 Host: example.org
 Cookie: </pre>
 
@@ -115,7 +115,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/75/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Vl9I1uBUvmYI7t-7iTOhoI27BuU&quot; \
+	-H &quot;Authorization: Token token=my3vjj558WAqTyLPLJH3NUak4U4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,10 +126,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f55b785b3357f256ba4e72e1f788878a&quot;
+ETag: W/&quot;99021f4bf7afe020ce128f7256b07ac8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3bfbbe89-5587-4f48-b300-cb461b564012
-X-Runtime: 0.169380
+X-Request-Id: f862d19d-aac6-4e94-b9f7-202c21ef46e4
+X-Runtime: 0.105266
 Vary: Origin
 Content-Length: 1472</pre>
 
@@ -144,16 +144,16 @@ Content-Length: 1472</pre>
   "id" : 76,
   "title" : "Slot title 61",
   "startDate" : "2019-09-08T13:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:38.475Z",
-  "updatedAt" : "2015-09-20T18:49:38.475Z",
+  "createdAt" : "2015-10-03T22:30:44.508Z",
+  "updatedAt" : "2015-10-03T22:30:44.508Z",
   "deletedAt" : null,
   "endDate" : "2019-10-08T13:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 326,
     "username" : "User 290",
-    "createdAt" : "2015-09-20T18:49:38.438Z",
-    "updatedAt" : "2015-09-20T18:49:38.438Z",
+    "createdAt" : "2015-10-03T22:30:44.469Z",
+    "updatedAt" : "2015-10-03T22:30:44.469Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -168,7 +168,7 @@ Content-Length: 1472</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-09-20T18:49:38.460Z",
+      "createdAt" : "2015-10-03T22:30:44.494Z",
       "duration" : null,
       "title" : "Title 56"
     },
@@ -178,7 +178,7 @@ Content-Length: 1472</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:38.457Z",
+      "createdAt" : "2015-10-03T22:30:44.491Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -188,7 +188,7 @@ Content-Length: 1472</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-09-20T18:49:38.455Z",
+      "createdAt" : "2015-10-03T22:30:44.489Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -198,7 +198,7 @@ Content-Length: 1472</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:38.452Z"
+      "createdAt" : "2015-10-03T22:30:44.486Z"
     },
     {
       "mediaId" : 66,
@@ -206,7 +206,7 @@ Content-Length: 1472</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:38.449Z"
+      "createdAt" : "2015-10-03T22:30:44.482Z"
     },
     {
       "mediaId" : 65,
@@ -214,7 +214,7 @@ Content-Length: 1472</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:38.446Z"
+      "createdAt" : "2015-10-03T22:30:44.480Z"
     }
   ],
   "settings" : {

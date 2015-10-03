@@ -91,7 +91,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=GV1cBJoxtv-aQ3geu9XAyVeTPJo
+Authorization: Token token=-h0dctAJtODA4o6UfNX2TMzZ-v0
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:35}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=GV1cBJoxtv-aQ3geu9XAyVeTPJo&quot; \
+	-H &quot;Authorization: Token token=-h0dctAJtODA4o6UfNX2TMzZ-v0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,10 +123,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;803c1d565779e908feb92cc76c04b77b&quot;
+ETag: W/&quot;0ecf1b2abe5e14d1750f3ac4b38f3561&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 46447196-c402-4662-89f6-a85faff589bb
-X-Runtime: 0.114773
+X-Request-Id: ebabdf21-0982-4180-ad33-5ee306a54102
+X-Runtime: 0.030697
 Vary: Origin
 Content-Length: 560</pre>
 
@@ -141,16 +141,16 @@ Content-Length: 560</pre>
   "id" : 36,
   "title" : "Slot title 30",
   "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:27.108Z",
-  "updatedAt" : "2015-09-20T18:49:27.108Z",
+  "createdAt" : "2015-10-03T22:30:42.486Z",
+  "updatedAt" : "2015-10-03T22:30:42.486Z",
   "deletedAt" : null,
   "endDate" : "2019-10-04T06:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 221,
     "username" : "User 193",
-    "createdAt" : "2015-09-20T18:49:26.934Z",
-    "updatedAt" : "2015-09-20T18:49:26.934Z",
+    "createdAt" : "2015-10-03T22:30:42.464Z",
+    "updatedAt" : "2015-10-03T22:30:42.464Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

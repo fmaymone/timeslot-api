@@ -151,7 +151,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=kwoPK-_1PfSQOFBrqx46dXtmbYE
+Authorization: Token token=60oZQGFCgMu-qaevDWkmoYJFiu8
 Host: example.org
 Cookie: </pre>
 
@@ -178,7 +178,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/44&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=kwoPK-_1PfSQOFBrqx46dXtmbYE&quot; \
+	-H &quot;Authorization: Token token=60oZQGFCgMu-qaevDWkmoYJFiu8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -189,10 +189,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cd6eee4361ded81905314a37a2818514&quot;
+ETag: W/&quot;5996e6d2177ed0d7967e7900bed97c37&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ba17aa7b-c636-40be-ae54-c9e43ce77825
-X-Runtime: 0.045586
+X-Request-Id: 12653034-dd88-4804-bd62-3cfe06d22688
+X-Runtime: 0.032899
 Vary: Origin
 Content-Length: 715</pre>
 
@@ -207,16 +207,16 @@ Content-Length: 715</pre>
   "id" : 44,
   "title" : "Slot title 35",
   "startDate" : "2019-09-09T11:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:28.254Z",
-  "updatedAt" : "2015-09-20T18:49:28.254Z",
+  "createdAt" : "2015-10-03T22:30:42.909Z",
+  "updatedAt" : "2015-10-03T22:30:42.909Z",
   "deletedAt" : null,
   "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 244,
     "username" : "User 208",
-    "createdAt" : "2015-09-20T18:49:28.249Z",
-    "updatedAt" : "2015-09-20T18:49:28.249Z",
+    "createdAt" : "2015-10-03T22:30:42.904Z",
+    "updatedAt" : "2015-10-03T22:30:42.904Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -231,7 +231,7 @@ Content-Length: 715</pre>
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2015-09-20T18:49:28.272Z"
+      "createdAt" : "2015-10-03T22:30:42.922Z"
     }
   ],
   "settings" : {

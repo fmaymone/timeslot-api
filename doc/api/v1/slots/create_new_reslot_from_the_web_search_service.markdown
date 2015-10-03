@@ -112,7 +112,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=tIVDqZdQp11gGvdwgMUep0ZQup8
+Authorization: Token token=8nAS6nmKB2v-2dqb5Vw96CKvxts
 Host: example.org
 Cookie: </pre>
 
@@ -136,7 +136,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/webslot&quot; -d &#39;{&quot;visibility&quot;:&quot;public&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=tIVDqZdQp11gGvdwgMUep0ZQup8&quot; \
+	-H &quot;Authorization: Token token=8nAS6nmKB2v-2dqb5Vw96CKvxts&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -148,8 +148,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 04569088-0b72-483d-9d72-ce33542e59ad
-X-Runtime: 0.023748
+X-Request-Id: 48e61f23-745b-47d3-8121-f72face9b8ed
+X-Runtime: 0.020782
 Vary: Origin
 Content-Length: 0</pre>
 

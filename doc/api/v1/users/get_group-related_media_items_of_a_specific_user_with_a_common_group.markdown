@@ -21,7 +21,7 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=MrQtpVHJcx1YUSvm4uol1NC-dsE
+<pre>Authorization: Token token=lHoUaWO5C5wiVNO0ao7Ivzu9HiQ
 Host: example.org
 Cookie: </pre>
 
@@ -32,7 +32,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/402/media&quot; -X GET \
-	-H &quot;Authorization: Token token=MrQtpVHJcx1YUSvm4uol1NC-dsE&quot; \
+	-H &quot;Authorization: Token token=lHoUaWO5C5wiVNO0ao7Ivzu9HiQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;155d2fc24fb60f8b47063e4c78ef368b&quot;
+ETag: W/&quot;bdd0ebd04a41cb62dbbc01d22693a215&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4cdfd4ca-c5a8-45b0-b94c-b166f1da3a78
-X-Runtime: 0.044472
+X-Request-Id: e9cd141f-4502-4e55-9159-64f47d5e678c
+X-Runtime: 0.019508
 Vary: Origin
 Content-Length: 1897</pre>
 
@@ -64,7 +64,7 @@ Content-Length: 1897</pre>
     "position" : 30,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.424Z"
+    "createdAt" : "2015-10-03T22:30:46.763Z"
   },
   {
     "mediaId" : 295,
@@ -72,7 +72,7 @@ Content-Length: 1897</pre>
     "position" : 31,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.430Z"
+    "createdAt" : "2015-10-03T22:30:46.766Z"
   },
   {
     "mediaId" : 296,
@@ -80,7 +80,7 @@ Content-Length: 1897</pre>
     "position" : 32,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.433Z"
+    "createdAt" : "2015-10-03T22:30:46.769Z"
   },
   {
     "mediaId" : 297,
@@ -88,7 +88,7 @@ Content-Length: 1897</pre>
     "position" : 33,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-20T18:49:44.436Z",
+    "createdAt" : "2015-10-03T22:30:46.771Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -98,7 +98,7 @@ Content-Length: 1897</pre>
     "position" : 34,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-20T18:49:44.439Z",
+    "createdAt" : "2015-10-03T22:30:46.774Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -108,7 +108,7 @@ Content-Length: 1897</pre>
     "position" : 35,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-20T18:49:44.442Z",
+    "createdAt" : "2015-10-03T22:30:46.776Z",
     "duration" : null,
     "title" : "Title 284"
   },
@@ -118,7 +118,7 @@ Content-Length: 1897</pre>
     "position" : 36,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.452Z"
+    "createdAt" : "2015-10-03T22:30:46.786Z"
   },
   {
     "mediaId" : 301,
@@ -126,7 +126,7 @@ Content-Length: 1897</pre>
     "position" : 37,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.468Z"
+    "createdAt" : "2015-10-03T22:30:46.789Z"
   },
   {
     "mediaId" : 302,
@@ -134,7 +134,7 @@ Content-Length: 1897</pre>
     "position" : 38,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-09-20T18:49:44.472Z"
+    "createdAt" : "2015-10-03T22:30:46.792Z"
   },
   {
     "mediaId" : 303,
@@ -142,7 +142,7 @@ Content-Length: 1897</pre>
     "position" : 39,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-20T18:49:44.479Z",
+    "createdAt" : "2015-10-03T22:30:46.794Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -152,7 +152,7 @@ Content-Length: 1897</pre>
     "position" : 40,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-09-20T18:49:44.482Z",
+    "createdAt" : "2015-10-03T22:30:46.797Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -162,7 +162,7 @@ Content-Length: 1897</pre>
     "position" : 41,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-09-20T18:49:44.485Z",
+    "createdAt" : "2015-10-03T22:30:46.800Z",
     "duration" : null,
     "title" : "Title 290"
   }

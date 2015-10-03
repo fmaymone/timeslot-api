@@ -19,7 +19,7 @@ Description : Array of User IDs for whom to refuse/destroy a friendship
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=5OzvAi_qq7gMXtfwq-ncrWPAh3k
+Authorization: Token token=mkKL-sxi0KWvxYp7434VfE29K7E
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/users/remove_friends&quot; -d &#39;{&quot;ids&quot;:[490,491,492,489]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=5OzvAi_qq7gMXtfwq-ncrWPAh3k&quot; \
+	-H &quot;Authorization: Token token=mkKL-sxi0KWvxYp7434VfE29K7E&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -57,8 +57,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 261c98a7-6946-4211-a2bd-2ef7f06738b7
-X-Runtime: 0.047671
+X-Request-Id: 3c1acd29-1a4b-46ea-b720-eb93595a9478
+X-Runtime: 0.032523
 Vary: Origin
 Content-Length: 0</pre>
 

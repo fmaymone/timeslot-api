@@ -31,7 +31,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=IdJgl7c7RSPEjwwKRN-VsP7oln0
+Authorization: Token token=06OO45ttDvcb6qSvlTv9_24YzME
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=IdJgl7c7RSPEjwwKRN-VsP7oln0&quot; \
+	-H &quot;Authorization: Token token=06OO45ttDvcb6qSvlTv9_24YzME&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,8 +56,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;d04cee0bbbe53daa32a8d279c8a24aae&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6d853ea7-0b22-4139-81e5-8aa50376235e
-X-Runtime: 0.063617
+X-Request-Id: c0cf9ca6-19ae-48d5-92ac-e137072a0798
+X-Runtime: 0.047092
 Vary: Origin
 Content-Length: 679</pre>
 

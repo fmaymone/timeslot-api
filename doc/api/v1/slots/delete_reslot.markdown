@@ -85,7 +85,7 @@ Description : ID of the User who did reslot
 
 #### Headers
 
-<pre>Authorization: Token token=tjapnkLzjWXcDJpB1skYJDJCr_M
+<pre>Authorization: Token token=dlPIGW4-2r1tB7C16mqrsOR66fo
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -97,7 +97,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/53&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=tjapnkLzjWXcDJpB1skYJDJCr_M&quot; \
+	-H &quot;Authorization: Token token=dlPIGW4-2r1tB7C16mqrsOR66fo&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -109,10 +109,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;25dc3486184073e84c50e82cf92f8460&quot;
+ETag: W/&quot;b78681ac6d99a2deca98323d101129a4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e081695d-89f1-4a76-a915-b8e2b7811212
-X-Runtime: 0.071087
+X-Request-Id: 975f0451-4dca-4e6b-a164-6068c2a684f6
+X-Runtime: 0.039554
 Vary: Origin
 Content-Length: 586</pre>
 
@@ -127,16 +127,16 @@ Content-Length: 586</pre>
   "id" : 53,
   "title" : "Slot title 44",
   "startDate" : "2019-09-18T20:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:36.665Z",
-  "updatedAt" : "2015-09-20T18:49:36.715Z",
-  "deletedAt" : "2015-09-20T18:49:36.711Z",
+  "createdAt" : "2015-10-03T22:30:43.653Z",
+  "updatedAt" : "2015-10-03T22:30:43.696Z",
+  "deletedAt" : "2015-10-03T22:30:43.692Z",
   "endDate" : "2019-10-18T20:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 265,
     "username" : "User 229",
-    "createdAt" : "2015-09-20T18:49:36.668Z",
-    "updatedAt" : "2015-09-20T18:49:36.668Z",
+    "createdAt" : "2015-10-03T22:30:43.656Z",
+    "updatedAt" : "2015-10-03T22:30:43.656Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

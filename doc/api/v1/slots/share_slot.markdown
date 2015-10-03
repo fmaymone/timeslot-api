@@ -83,7 +83,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=3Qs-FlHpCsaRGLhqIrW6eJpGjNA
+Authorization: Token token=Q64Wzlj6M8KtSaxU6IbVcraUv7I
 Host: example.org
 Cookie: </pre>
 
@@ -95,7 +95,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/77/share&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3Qs-FlHpCsaRGLhqIrW6eJpGjNA&quot; \
+	-H &quot;Authorization: Token token=Q64Wzlj6M8KtSaxU6IbVcraUv7I&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3a3d45cba11628e933e418233a891b81&quot;
+ETag: W/&quot;812699b53be3b03c8dacd110d36260ed&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 26ae2595-1994-49c0-9f2f-0c8f6e7a629d
-X-Runtime: 0.049468
+X-Request-Id: 919758a5-0d6a-41a2-96fa-24029e76f4d3
+X-Runtime: 0.033830
 Vary: Origin
 Content-Length: 571</pre>
 
@@ -124,16 +124,16 @@ Content-Length: 571</pre>
   "id" : 77,
   "title" : "Slot title 62",
   "startDate" : "2019-09-09T14:44:02.000Z",
-  "createdAt" : "2015-09-20T18:49:38.723Z",
-  "updatedAt" : "2015-09-20T18:49:38.819Z",
+  "createdAt" : "2015-10-03T22:30:44.619Z",
+  "updatedAt" : "2015-10-03T22:30:44.640Z",
   "deletedAt" : null,
   "endDate" : "2019-10-09T14:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 327,
     "username" : "User 291",
-    "createdAt" : "2015-09-20T18:49:38.649Z",
-    "updatedAt" : "2015-09-20T18:49:38.649Z",
+    "createdAt" : "2015-10-03T22:30:44.612Z",
+    "updatedAt" : "2015-10-03T22:30:44.612Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -149,6 +149,6 @@ Content-Length: 571</pre>
   "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/XZwvqYuU"
+  "shareUrl" : "http://localhost:3100/6sBCtFpq"
 }
 ```
