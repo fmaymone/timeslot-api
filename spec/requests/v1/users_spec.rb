@@ -493,13 +493,13 @@ RSpec.describe "V1::Users", type: :request do
                                      owner: current_user) }
         let(:upcoming_slot_same_startend) {
           [create(:std_slot_private,
-                  start_date: Time.zone.today.next_week,
-                  end_date: Time.zone.today.next_month,
+                  start_date: Time.zone.today.next_week.end_of_day,
+                  end_date: Time.zone.today.next_week.next_month,
                   title: 'upcoming slot A',
                   owner: current_user),
            create(:std_slot_private,
-                  start_date: Time.zone.today.next_week,
-                  end_date: Time.zone.today.next_month,
+                  start_date: Time.zone.today.next_week.end_of_day,
+                  end_date: Time.zone.today.next_week.next_month,
                   title: 'upcoming slot B',
                   owner: current_user)] }
         let(:upcoming_slots) { create_list(:std_slot_private, 3,
@@ -510,9 +510,10 @@ RSpec.describe "V1::Users", type: :request do
                                     end_date: Time.zone.tomorrow,
                                     title: 'ongoing slot',
                                     owner: current_user) }
-        let(:upcoming_reslot) { create(:re_slot,
-                                       start_date: Time.zone.tomorrow,
-                                       end_date: Time.zone.today.next_week,
+        let(:upcoming_reslot) {
+          create(:re_slot,
+                 start_date: Time.zone.tomorrow.midday,
+                 end_date: Time.zone.tomorrow.next_week.end_of_day,
                                        title: 'upcoming reslot',
                                        slotter: current_user) }
         let(:ongoing_reslot) { create(:re_slot,

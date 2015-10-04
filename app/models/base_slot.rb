@@ -73,7 +73,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def as_paging_cursor
-    Base64.urlsafe_encode64("#{id}%#{start_date}%#{end_date}")
+    # make sure we use the full resolution of datetime
+    startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    enddate = end_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    Base64.urlsafe_encode64("#{id}%#{startdate}%#{enddate}")
   end
 
   # setter
@@ -340,23 +343,34 @@ class BaseSlot < ActiveRecord::Base
 
   # takes an encoded_slot string and returns the matching slot
   # see: BaseSlot.as_paging_cursor
-  # raises PaginationError if invalid cursor_string or slot not matching anymore
+  # raises PaginationError if invalid cursor_string
   def self.from_paging_cursor(encoded_cursor_string)
     decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
   rescue ArgumentError
     raise ApplicationController::PaginationError
   else
+    # check for validity
     begin
-      cursor = decoded_cursor_string.split('%')
-      slot = get(cursor.first)
+      cursor_array = decoded_cursor_string.split('%')
+      cursor = {id: cursor_array.first.to_i,
+                startdate: cursor_array.second,
+                enddate: cursor_array.third}
+      slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
       raise ApplicationController::PaginationError
+    # the following is not really neccessary, might be removed at some point
+    # but for now it gives some useful info about the system
     else
-      if slot.start_date.to_s != cursor.second ||
-         slot.end_date.to_s != cursor.third
-        fail ApplicationController::PaginationError
+      if slot.start_date.to_s != cursor[:startdate] ||
+         slot.end_date.to_s != cursor[:enddate]
+        opts = {}
+        opts[:parameters] = { cursor_id: cursor[:id],
+                              cursor_startdate: cursor[:startdate],
+                              cursor_enddate: cursor[:enddate] }
+        Airbrake.notify(ApplicationController::PaginationError, opts)
+        fail ApplicationController::PaginationError if Rails.env.development?
       end
-      slot
+      cursor
     end
   end
 

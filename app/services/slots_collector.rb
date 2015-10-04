@@ -5,10 +5,8 @@ class SlotsCollector
                 moment: Time.zone.now, after: nil, before: nil)
 
     if after || before
-      cursor = after || before
-      cursor_slot = BaseSlot.from_paging_cursor cursor if cursor
-
-      #TODO return error if cursor was given but cursor slot couldn't be determined
+      encoded_cursor = (after || before)
+      cursor = BaseSlot.from_paging_cursor encoded_cursor if encoded_cursor
       direction = after.nil? ? 'before' : 'after'
     end
 
@@ -30,7 +28,7 @@ class SlotsCollector
       # and definitly working, TODO: optimize when need is
       slots = query.retrieve(status: status,
                              moment: moment,
-                             cursor: cursor_slot).paginate(limit.to_i)
+                             cursor: cursor).paginate(limit.to_i)
 
       data.concat(slots)
     end
@@ -39,7 +37,7 @@ class SlotsCollector
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
     ### and return the first/last [limit] slots from the collection
-    if before || status == 'past'
+    if before || (status == 'past')
       data.last limit.to_i
     else
       data.take limit.to_i

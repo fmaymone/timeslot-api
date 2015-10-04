@@ -58,36 +58,36 @@ module SlotQuery
     end
 
     private def after_cursor(cursor)
-      same_startend(cursor).or same_start(cursor).or upcoming(cursor.start_date)
+      same_startend(cursor).or same_start(cursor).or upcoming(cursor[:startdate])
     end
 
     private def same_startend(cursor)
-      meta_table[:start_date].eq(cursor.start_date).and(
-        meta_table[:end_date].eq(cursor.end_date)).and(
-        @relation.arel_table[:id].gt(cursor.id))
+      meta_table[:start_date].eq(cursor[:startdate]).and(
+        meta_table[:end_date].eq(cursor[:enddate])).and(
+        @relation.arel_table[:id].gt(cursor[:id]))
     end
 
     private def same_start(cursor)
-      meta_table[:start_date].eq(cursor.start_date).and(
-        meta_table[:end_date].gt(cursor.end_date))
+      meta_table[:start_date].eq(cursor[:startdate]).and(
+        meta_table[:end_date].gt(cursor[:enddate]))
     end
 
     private def before_cursor(cursor)
       same_startend_rev(cursor).or(
         same_start_rev(cursor).or(
-        earlier(cursor.start_date))
+        earlier(cursor[:startdate]))
       )
     end
 
     private def same_startend_rev(cursor)
-      meta_table[:start_date].eq(cursor.start_date).and(
-        meta_table[:end_date].eq(cursor.end_date)).and(
-        @relation.arel_table[:id].lt(cursor.id))
+      meta_table[:start_date].eq(cursor[:startdate]).and(
+        meta_table[:end_date].eq(cursor[:enddate])).and(
+        @relation.arel_table[:id].lt(cursor[:id]))
     end
 
     private def same_start_rev(cursor)
-      meta_table[:start_date].eq(cursor.start_date).and(
-        meta_table[:end_date].lt(cursor.end_date))
+      meta_table[:start_date].eq(cursor[:startdate]).and(
+        meta_table[:end_date].lt(cursor[:enddate]))
     end
 
     def meta_table
