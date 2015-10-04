@@ -1,7 +1,8 @@
 class SlotsCollector
   # collects all slots current_user is allowed to see from requested_user
-  # including std_slots, reslots and groupslots
-  def self.call(current_user: nil, user:, limit: 20, status: 'all',
+  # including std_slots, reslots
+  # TODO: add groupslots
+  def self.call(current_user: nil, user:, limit: 40, status: 'upcoming',
                 moment: Time.zone.now, after: nil, before: nil)
 
     if after || before

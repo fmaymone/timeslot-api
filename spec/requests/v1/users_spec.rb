@@ -754,15 +754,16 @@ RSpec.describe "V1::Users", type: :request do
           end
 
           describe "filter by slot status:" do
-            context "all (default)" do
+            context "all" do
               it "returns all slots" do
                 [past_slot, ongoing_slot, upcoming_slot]
 
                 get "/v1/users/#{current_user.id}/slots",
-                    {}, auth_header
+                    { status: 'all' }, auth_header
 
                 expect(response.status).to be(200)
-                expect(json.length).to eq StdSlot.of(current_user.id).length
+                expect(json['data'].length)
+                  .to eq StdSlot.of(current_user.id).length
                 expect(response.body).to include ongoing_slot.title
                 expect(response.body).to include upcoming_slot.title
                 expect(response.body).to include past_slot.title

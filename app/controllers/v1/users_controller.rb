@@ -110,8 +110,6 @@ module V1
     # TODO: around status
     # TODO: add index on start_date and end_date for meta_slots
     # TODO: make sure the index on auth_token is present in structure.sql
-    # we need a maximum for limit
-    # we should change the default for status to 'now' instead of 'all'
     def slots
       authorize :user
       requested_user = User.find(params[:user_id])
@@ -255,7 +253,26 @@ module V1
     end
 
     private def slot_paging_params
-      params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
+      p = params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
+
+      # are there any pagination params?
+      return {} unless p.any?
+
+      # set default limit if not provided
+      p[:limit] = 40 if p[:limit].nil?
+      # set maximum for limit to 100 if higher
+      p[:limit] = 100 if p[:limit].to_i > 100
+
+      # ignore status & moment if a cursor is submitted
+      if p[:before].present? || p[:after].present?
+        p[:status] = nil
+        p[:moment] = nil
+      else
+        # set default status and moment if not provided
+        p[:status] = 'upcoming' if p[:status].nil?
+        p[:moment] = Time.zone.now.to_s if p[:moment].nil?
+      end
+      p
     end
   end
 end

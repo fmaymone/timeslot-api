@@ -1,9 +1,7 @@
 class SlotPaginator < BasePaginator
-  attr_accessor :status, :moment, :cursor, :user, :after, :before
+  attr_accessor :status, :moment, :after, :before
 
-  # def initialize(data:, paging_params:)
-  def initialize(limit: 40, status: 'now', moment: Time.zone.now,
-                 after: nil, before: nil, data:)
+  def initialize(data:, limit:, status: nil, moment: nil, after: nil, before: nil)
     super(limit: limit.to_i)
     @status = status # upcoming, ongoing, past, now, around
     @moment = moment # a timestamp (point-in-time)
