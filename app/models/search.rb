@@ -1,13 +1,12 @@
 class Search
-
   def self.new(table, attr, query, page: 1, limit: 10, method: :metaphone)
     return [] if query.length < 3
     result = paginate(
-        self.method(method.to_sym).call(table, attr, query),
-        attr,
-        query,
-        page.to_i,
-        limit.to_i
+      self.method(method.to_sym).call(table, attr, query),
+      attr,
+      query,
+      page.to_i,
+      limit.to_i
     )
     # meta_slots requires change into BaseSlot model for the view part
     if table == MetaSlot && result.empty? == false
@@ -22,7 +21,7 @@ class Search
   end
 
   def self.like(table, attr, query)
-    table.where(attr + ' ILIKE ?', '%' << query.gsub(' ', '%') << '%')
+    table.where(attr + ' ILIKE ?', '%' << query.tr(' ', '%') << '%')
   end
 
   def self.soundex(table, attr, query)

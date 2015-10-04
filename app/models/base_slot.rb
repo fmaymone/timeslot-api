@@ -83,16 +83,14 @@ class BaseSlot < ActiveRecord::Base
 
   def ios_location=(location)
     if location[:latitude].present? && location[:longitude].present?
-      new_location = IosLocation.where(
-        latitude: location[:latitude], longitude: location[:longitude]).take
+      new_location = IosLocation.find_by(
+        latitude: location[:latitude], longitude: location[:longitude])
     end
 
     new_location ||= IosLocation.create(location.merge(creator: owner))
 
     #update custom label for location (same geo-location can have several names)
-    unless location[:name].blank?
-      new_location[:name] = location[:name]
-    end
+    new_location[:name] = location[:name] unless location[:name].blank?
     meta_slot.update(ios_location: new_location)
   end
 
@@ -142,8 +140,8 @@ class BaseSlot < ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    Device.notify_all([creator_id], [ message: "#{user.username} likes your slot",
-                                      slot_id: self.id ])
+    Device.notify_all([creator_id], [message: "#{user.username} likes your slot",
+                                     slot_id: id])
   end
 
   def destroy_like(user)
@@ -303,7 +301,7 @@ class BaseSlot < ActiveRecord::Base
 
     return slot unless slot.errors.empty?
 
-    if (media || notes || alerts)
+    if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,
                               user: user)
     end
