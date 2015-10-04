@@ -11,7 +11,6 @@ class PresentableSlots
       # reslots and shared group_slots (between user and current_user)
       [user.std_slots_public, user.std_slots_friends,
        user.re_slots, current_user.shared_group_slots(user)]
-
     when STRANGER
       # includes public std_slots, public reslots and shared
       # group_slots (between user and current_user -> if there is one)

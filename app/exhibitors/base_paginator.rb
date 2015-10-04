@@ -4,7 +4,7 @@ class BasePaginator
   attr_accessor :limit, :data
 
   def initialize(limit: 20)
-    self.limit = limit
+    @limit = limit
   end
 
   def call

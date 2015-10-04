@@ -813,7 +813,6 @@ resource "Users" do
           # make a subsequent request based on 'after' cursor
           client.get "/v1/users/#{current_user.id}/slots?after=#{after_cursor}",
                      { }, headers
-                     # { after: after_cursor }, headers
 
           expect(response_status).to eq(200)
           json = JSON.parse(response_body)

@@ -107,9 +107,6 @@ module V1
 
     # GET /v1/users/1/slots
     # returns all slots of the requested user visible for the current user
-    # TODO: around status
-    # TODO: add index on start_date and end_date for meta_slots
-    # TODO: make sure the index on auth_token is present in structure.sql
     def slots
       authorize :user
       requested_user = User.find(params[:user_id])

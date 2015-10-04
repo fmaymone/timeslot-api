@@ -9,7 +9,7 @@ class SlotPaginator < BasePaginator
     @data = data
 
     if @limit == @result_collection_size
-      # db has enough items to fullfil request
+      # db has enough items to fulfill request
       @after = @data.last.as_paging_cursor
       @before = @data.first.as_paging_cursor
     elsif @data.empty?
