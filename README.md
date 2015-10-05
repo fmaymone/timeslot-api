@@ -9,6 +9,11 @@
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
 
+
+# Data Flow Chart Concept
+![Data Flow Chart Concept](doc/backend_concept.png)
+
+
 # Notes
 
 ## No delete & destroy
@@ -24,7 +29,6 @@ On first signup the token is also created so a signed up user is already logged 
 ## Authentication
 
 We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
-
 
 
 # Environment
