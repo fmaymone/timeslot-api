@@ -8,6 +8,8 @@ class Device < ActiveRecord::Base
   validates :system, presence: true
   validates :version, presence: true
 
+  scope :active_sockets, -> { where.not(socket: nil) }
+
   def register_endpoint(token)
     return false if token.nil?
     # check if token already exist on an old device

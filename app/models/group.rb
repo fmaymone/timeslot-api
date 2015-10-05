@@ -3,6 +3,7 @@ class Group < ActiveRecord::Base
   after_create :add_owner_as_member, on: :create
 
   belongs_to :owner, class_name: User, inverse_of: :own_groups
+
   # has_many relation because when image gets updated the old image still exists
   has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
            as: :mediable
@@ -17,6 +18,7 @@ class Group < ActiveRecord::Base
            class_name: Membership
   has_many :members, through: :active_memberships, class_name: User,
            source: :user
+  has_one :channel, class_name: GroupChannel, inverse_of: :group
 
   validates :name, presence: true, length: { maximum: 255 } # screens have max length of 25
   validates :owner, presence: true

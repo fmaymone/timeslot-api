@@ -59,11 +59,19 @@ class User < ActiveRecord::Base
   # device related
   has_many :devices, inverse_of: :user
 
+  # feed channels
+  #has_many :group_channels, class_name: GroupChannel,
+  #         foreign_key: 'follower_id', inverse_of: :follower
+  #has_many :slot_channels, class_name: SlotChannel,
+  #         foreign_key: 'follower_id', inverse_of: :follower
+  #has_one :channel, class_name: UserChannel, inverse_of: :user
+
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
   # has_one :slot_default_location, class_name: Location
   # has_one :slot_default_type, class_name: SlotType
+
 
   ## validations ##
 
