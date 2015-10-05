@@ -95,6 +95,7 @@
 * [Device - Register endpoint to push notifications for a device](users/device_-_register_endpoint_to_push_notifications_for_a_device.markdown)
 * [Device - Unregister device from push notification service](users/device_-_unregister_device_from_push_notification_service.markdown)
 * [Device - Update default device attributes](users/device_-_update_default_device_attributes.markdown)
+* [Get slots for current user - with pagination](users/get_slots_for_current_user_-_with_pagination.markdown)
 * [Get slots for current user](users/get_slots_for_current_user.markdown)
 * [Get slots for befriended user](users/get_slots_for_befriended_user.markdown)
 * [Get slots of unrelated user with common groups](users/get_slots_of_unrelated_user_with_common_groups.markdown)

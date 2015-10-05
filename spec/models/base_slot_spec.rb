@@ -315,7 +315,47 @@ RSpec.describe BaseSlot, type: :model do
     it "returns all comments for the slot" do
       comments = std_slot.comments_with_details
       expect(comments.size).to eq 3
-      expect(comments).to include *std_slot.comments
+      expect(comments).to include(*std_slot.comments)
+    end
+  end
+
+  describe 'paging_cursor' do
+    let(:std_slot) { create(:std_slot_public) }
+    let!(:encoded_slot) { std_slot.as_paging_cursor }
+
+    it "returns the correct pagination data" do
+      result = described_class.from_paging_cursor(encoded_slot)
+      expect(result[:id]).to eq std_slot.id
+      expect(result[:startdate])
+        .to eq std_slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+      expect(result[:enddate])
+        .to eq std_slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    end
+
+    it "notifies airbrake if start_date of slot has changed" do
+      std_slot.update(start_date: std_slot.start_date.yesterday.noon)
+      expect(Airbrake).to receive(:notify)
+      described_class.from_paging_cursor(encoded_slot)
+    end
+
+    it "notifies airbrake if end_date of slot has changed" do
+      std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
+      expect(Airbrake).to receive(:notify)
+      described_class.from_paging_cursor(encoded_slot)
+    end
+
+    it "raises error if cursor string invalid" do
+      std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
+      expect {
+        described_class.from_paging_cursor('something_wrong')
+      }.to raise_error ApplicationController::PaginationError
+    end
+
+    it "raises error if cursor contains invalid slot.id" do
+      std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
+      expect {
+        described_class.from_paging_cursor(encoded_slot.slice(2, 8))
+      }.to raise_error ApplicationController::PaginationError
     end
   end
 end

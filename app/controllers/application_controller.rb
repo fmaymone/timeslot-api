@@ -9,6 +9,14 @@ class ApplicationController < ActionController::API
     end
   end
 
+  # Raised when the pagination cursor is not valid anymore (usually because
+  # slot.start_date or slot.end_date has changed since encoding).
+  class PaginationError < StandardError
+    def initialize
+      super("invalid cursor")
+    end
+  end
+
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
   after_action :set_locale, only: :users
@@ -34,6 +42,10 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ParameterInvalid do |exception|
+    render json: { error: exception.message }, status: :unprocessable_entity
+  end
+
+  rescue_from PaginationError do |exception|
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 

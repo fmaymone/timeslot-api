@@ -11,9 +11,9 @@ class Device < ActiveRecord::Base
   def register_endpoint(token)
     return false if token.nil?
     # check if token already exist on an old device
-    if(device = Device.find_by(token: token)) && device != self
+    if (device = Device.find_by(token: token)) && device != self
       self.token = token
-      self.save
+      save
       device.destroy
     end
     # sets new endpoint if not exist or update if new token was passed
@@ -117,8 +117,8 @@ class Device < ActiveRecord::Base
 
   def self.notify(client, device, params)
     case device['system']
-      when 'ios'
-        notify_ios(client, device, *params)
+    when 'ios'
+      notify_ios(client, device, *params)
     end
   end
 

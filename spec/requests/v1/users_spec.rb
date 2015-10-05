@@ -14,10 +14,10 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
-  describe "User_agent" do 
+  describe "User_agent" do
     context "is an IOS device" do
       let(:auth_header) do
-        { "HTTP_USER_AGENT" => 
+        { "HTTP_USER_AGENT" =>
           "Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7" }
       end
       it "is not forbidden" do
@@ -455,30 +455,404 @@ RSpec.describe "V1::Users", type: :request do
   end
 
   describe "GET /v1/users/:id/slots" do
-    let(:group_member) { create(:membership, user: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group_member.group) }
-    let!(:slots) do
-      slots = []
-      slots.push create(:std_slot_private, owner: current_user)
-      slots.push create(:std_slot_friends, owner: current_user)
-      slots.push create(:std_slot_public, owner: current_user)
-      slots.push(*create_list(:re_slot, 2, slotter: current_user))
-    end
+    context "current_user requesting own slots" do
+      describe "get slots for user, no pagination" do
+        let(:group_member) { create(:membership, user: current_user) }
+        let!(:group_slot) { create(:group_slot, group: group_member.group) }
+        let!(:slots) do
+          slots = []
+          slots.push create(:std_slot_private, owner: current_user)
+          slots.push create(:std_slot_friends, owner: current_user)
+          slots.push create(:std_slot_public, owner: current_user)
+          slots.push(*create_list(:re_slot, 2, slotter: current_user))
+        end
 
-    it "returns success" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      expect(response.status).to be(200)
-    end
+        it "returns success" do
+          get "/v1/users/#{current_user.id}/slots", {}, auth_header
+          expect(response.status).to be(200)
+        end
 
-    it "returns all stdslots & reslots for the current_user" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      slots_count = slots.size
-      expect(json.length).to eq slots_count
-    end
+        it "returns all stdslots & reslots for the current_user" do
+          get "/v1/users/#{current_user.id}/slots", {}, auth_header
+          expect(json.length).to eq slots.size
+        end
 
-    it "excludes groupslots of the current_user" do
-      get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      expect(response.body).not_to include group_slot.title
+        it "excludes groupslots of the current_user" do
+          get "/v1/users/#{current_user.id}/slots", {}, auth_header
+          expect(response.body).not_to include group_slot.title
+        end
+      end
+
+      describe "my Slots, with pagination" do
+        let!(:not_my_upcoming_slot) { create(:std_slot_private,
+                                             start_date: Time.zone.tomorrow,
+                                             title: 'not my upcoming slot') }
+        let(:upcoming_slot) { create(:std_slot_private,
+                                     start_date: Time.zone.tomorrow,
+                                     title: 'upcoming slot',
+                                     owner: current_user) }
+        let(:upcoming_slot_same_startend) {
+          [create(:std_slot_private,
+                  start_date: Time.zone.today.next_week.end_of_day,
+                  end_date: Time.zone.today.next_week.next_month,
+                  title: 'upcoming slot A',
+                  owner: current_user),
+           create(:std_slot_private,
+                  start_date: Time.zone.today.next_week.end_of_day,
+                  end_date: Time.zone.today.next_week.next_month,
+                  title: 'upcoming slot B',
+                  owner: current_user)] }
+        let(:upcoming_slots) { create_list(:std_slot_private, 3,
+                                           start_date: Time.zone.tomorrow,
+                                           owner: current_user) }
+        let(:ongoing_slot) { create(:std_slot_friends,
+                                    start_date: Time.zone.yesterday,
+                                    end_date: Time.zone.tomorrow,
+                                    title: 'ongoing slot',
+                                    owner: current_user) }
+        let(:upcoming_reslot) {
+          create(:re_slot,
+                 start_date: Time.zone.tomorrow.midday,
+                 end_date: Time.zone.tomorrow.next_week.end_of_day,
+                                       title: 'upcoming reslot',
+                                       slotter: current_user) }
+        let(:ongoing_reslot) { create(:re_slot,
+                                      start_date: Time.zone.yesterday,
+                                      end_date: Time.zone.tomorrow,
+                                      title: 'ongoing reslot',
+                                      slotter: current_user) }
+        let(:past_reslot) { create(:re_slot,
+                                   start_date: Time.zone.yesterday.last_month,
+                                   end_date: Time.zone.today.last_month,
+                                   title: 'past reslot',
+                                   slotter: current_user) }
+        let(:ongoing_slots) { create_list(:std_slot_friends, 12,
+                                          start_date: Time.zone.yesterday,
+                                          end_date: Time.zone.tomorrow,
+                                          title: 'ongoing slots',
+                                          owner: current_user) }
+        let(:long_ago_slot) { create(:std_slot_public,
+                                     start_date: Time.zone.yesterday.last_year,
+                                     end_date: Time.zone.today.last_year,
+                                     title: 'long ago slot',
+                                     owner: current_user) }
+        let(:past_slot) { create(:std_slot_public,
+                                 start_date: Time.zone.yesterday.at_midday,
+                                 end_date: Time.zone.yesterday.end_of_day,
+                                 title: 'past slot',
+                                 owner: current_user) }
+        let(:past_slots) { create_list(:std_slot_public, 13,
+                                       start_date: Time.zone.yesterday.at_midday,
+                                       end_date: Time.zone.yesterday.end_of_day,
+                                       title: 'past slots',
+                                       owner: current_user) }
+
+        describe "GET slots for current user" do
+          let(:limit) { 4 }
+          let(:query_string) {
+            { status: status, moment: Time.zone.now.as_json, limit: limit } }
+
+          describe "paginate" do
+            context "via 'after' cursor" do
+              let(:limit) { 3 }
+              let(:status) { 'upcoming' }
+              let!(:db_slots) do
+                [past_slot, ongoing_slot, upcoming_slot,
+                 past_reslot, ongoing_reslot, upcoming_reslot,
+                 upcoming_slot_same_startend, upcoming_slots].flatten
+              end
+
+              it "returns all slots after 'moment'" do
+                # first request without a cursor
+                get "/v1/users/#{current_user.id}/slots", query_string,
+                    auth_header
+
+                expect(response.status).to be(200)
+                resp = JSON.parse(response.body)
+                result_count = resp['data'].size
+
+                # receive a cursor for further requests
+                cursor = resp['paging']['after']
+                expect(cursor).not_to be nil
+                previous_result = resp['data']
+
+                while cursor
+                  # paginate through the result
+                  get "/v1/users/#{current_user.id}/slots",
+                      { status: status, after: cursor, limit: limit },
+                      auth_header
+
+                  expect(response.status).to be(200)
+
+                  json = JSON.parse(response.body)
+                  cursor = json['paging']['after']
+                  result = json['data']
+
+                  if result.empty?
+                    expect(previous_result.first['title'])
+                      .to eq upcoming_slot.title
+                  else
+                    result_count += result.size
+                    # make sure the follow up responses return slots
+                    # which are later than the slots from the previous response
+                    expect(result.first['startDate'])
+                      .to be >= previous_result.last['startDate']
+                    if result.first['startDate'] == previous_result.last['startDate']
+                      expect(result.first['endDate'])
+                        .to be >= previous_result.last['endDate']
+                    end
+                    if result.first['endDate'] == previous_result.last['endDate']
+                      expect(result.first['id'])
+                        .to be >= previous_result.last['id']
+                    end
+                    # those should never be in the result
+                    expect(response.body).not_to include past_slot.title
+                    expect(response.body).not_to include past_reslot.title
+                    expect(response.body).not_to include ongoing_slot.title
+                    expect(response.body).not_to include ongoing_reslot.title
+                    expect(response.body).not_to include not_my_upcoming_slot.title
+                    previous_result = result
+                  end
+                end
+                expect(result.last['title']).to eq 'upcoming slot B'
+                expect(result_count).to eq db_slots.size - 4
+              end
+            end
+
+            context "via 'before' cursor" do
+              let(:limit) { 7 }
+              let(:status) { 'upcoming' }
+              let!(:db_slots) do
+                [past_slot, ongoing_slot, upcoming_slot,
+                 past_reslot, ongoing_reslot, upcoming_reslot,
+                 long_ago_slot, upcoming_slot_same_startend,
+                 past_slots, ongoing_slots, upcoming_slots].flatten
+              end
+
+              it "returns all slots before 'moment'" do
+                # first request without a cursor
+                get "/v1/users/#{current_user.id}/slots", query_string,
+                    auth_header
+
+                expect(response.status).to be(200)
+                resp = JSON.parse(response.body)
+                result_count = resp['data'].size
+
+                # receive a cursor for further requests
+                cursor = resp['paging']['before']
+                expect(cursor).not_to be nil
+                result = []
+                previous_result = resp['data']
+
+                while cursor
+                  # paginate through the result
+                  get "/v1/users/#{current_user.id}/slots",
+                      { status: status, before: cursor, limit: limit },
+                      auth_header
+
+                  expect(response.status).to be(200)
+
+                  json = JSON.parse(response.body)
+                  cursor = json['paging']['before']
+                  result = json['data']
+
+                  if result.empty?
+                    expect(previous_result.first['title'])
+                      .to eq long_ago_slot.title
+                  else
+                    result_count += result.size
+
+                    # check the order once again
+                    result.each_with_index do |slot, index|
+                      break if index == result.size - 1
+                      next_slot = result[index + 1]
+                      expect(slot['startDate']).to be <= next_slot['startDate']
+                      if slot['startDate'] == next_slot['startDate']
+                        expect(slot['endDate']).to be <= next_slot['endDate']
+                      end
+                      if slot['endDate'] == next_slot['endDate']
+                        expect(slot['id']).to be < next_slot['id']
+                      end
+                    end
+
+                    # make sure the follow up responses return slots
+                    # which are earlier than the slots from the previous response
+                    expect(result.last['startDate'])
+                      .to be <= previous_result.first['startDate']
+                    if result.last['startDate'] == previous_result.first['startDate']
+                      expect(result.last['endDate'])
+                        .to be <= previous_result.first['endDate']
+                    end
+                    if result.last['endDate'] == previous_result.first['endDate']
+                      expect(result.last['id'])
+                        .to be <= previous_result.first['id']
+                    end
+                    previous_result = result
+                  end
+                  expect(response.body).not_to include not_my_upcoming_slot.title
+                end
+                expect(result_count).to eq db_slots.size
+              end
+            end
+          end
+
+          describe "filtering" do
+            context "upcoming" do
+              let(:status) { 'upcoming' }
+
+              it "doesn't return 'after' cursor if no more results" do
+                [past_slot, ongoing_slot, upcoming_slot]
+
+                get "/v1/users/#{current_user.id}/slots",
+                    { status: status, limit: 4 },
+                    auth_header
+                expect(response.status).to be(200)
+                expect(json['paging']['after']).to be nil
+              end
+            end
+
+            context "past" do
+              let(:status) { 'past' }
+
+              it "doesn't return 'before' cursor if no more results" do
+                [past_slot, ongoing_slot, upcoming_slot]
+
+                get "/v1/users/#{current_user.id}/slots",
+                    { status: status, limit: 4 },
+                    auth_header
+                expect(response.status).to be(200)
+                expect(json['paging']['before']).to be nil
+              end
+            end
+          end
+
+          describe "ordering" do
+            let(:status) { 'now' }
+
+            it "by startdate, enddate, slotid" do
+              [past_slot, ongoing_slot, ongoing_slots, upcoming_slot,
+               upcoming_slot_same_startend, upcoming_slots, upcoming_reslot]
+
+              get "/v1/users/#{current_user.id}/slots",
+                  query_string, auth_header
+
+              expect(response.status).to be(200)
+              result = json['data']
+
+              result.each_with_index do |slot, index|
+                break if index == result.size - 1
+                next_slot = result[index + 1]
+                expect(slot['startDate']).to be <= next_slot['startDate']
+                if slot['startDate'] == next_slot['startDate']
+                  expect(slot['endDate']).to be <= next_slot['endDate']
+                end
+                if slot['endDate'] == next_slot['endDate']
+                  expect(slot['id']).to be < next_slot['id']
+                end
+              end
+            end
+          end
+
+          describe "filter by slot status:" do
+            context "all" do
+              it "returns all slots" do
+                [past_slot, ongoing_slot, upcoming_slot]
+
+                get "/v1/users/#{current_user.id}/slots",
+                    { status: 'all' }, auth_header
+
+                expect(response.status).to be(200)
+                expect(json['data'].length)
+                  .to eq StdSlot.of(current_user.id).length
+                expect(response.body).to include ongoing_slot.title
+                expect(response.body).to include upcoming_slot.title
+                expect(response.body).to include past_slot.title
+              end
+            end
+
+            context "ongoing" do
+              it "returns only ongoing slots" do
+                [past_slot, ongoing_slot, ongoing_slots, upcoming_slots]
+
+                get "/v1/users/#{current_user.id}/slots?status=ongoing",
+                    {}, auth_header
+
+                expect(response.status).to be(200)
+                expect(json['data'].length).to eq ongoing_slots.length + 1
+                expect(response.body).to include ongoing_slot.title
+                expect(response.body).not_to include upcoming_slot.title
+                expect(response.body).not_to include past_slot.title
+              end
+            end
+
+            context "upcoming" do
+              it "returns only upcoming slots" do
+                [past_slot, ongoing_slot, upcoming_slot, upcoming_slots]
+
+                get "/v1/users/#{current_user.id}/slots?status=upcoming",
+                    {}, auth_header
+                expect(response.status).to be(200)
+                expect(json['data'].length).to eq upcoming_slots.length + 1
+                expect(response.body).to include upcoming_slot.title
+                expect(response.body).not_to include ongoing_slot.title
+                expect(response.body).not_to include past_slot.title
+              end
+            end
+
+            context "past" do
+              it "returns only past slots" do
+                [past_slot, past_slots, ongoing_slot, upcoming_slot]
+
+                get "/v1/users/#{current_user.id}/slots?status=past",
+                    {}, auth_header
+                expect(response.status).to be(200)
+                expect(json['data'].length).to eq past_slots.length + 1
+                expect(response.body).to include past_slot.title
+                expect(response.body).not_to include ongoing_slot.title
+                expect(response.body).not_to include upcoming_slot.title
+              end
+            end
+
+            context "now" do
+              let(:query_string) {
+                { status: 'now', moment: Time.zone.now.as_json } }
+
+              it "returns 20 active and upcoming slots" do
+                [upcoming_slot, ongoing_slot,
+                 ongoing_slots, past_slot, ongoing_reslot]
+
+                get "/v1/users/#{current_user.id}/slots", query_string,
+                    auth_header
+
+                expect(response.status).to be(200)
+                expect(response.body).to include upcoming_slot.title
+                expect(response.body).to include ongoing_slot.title
+                expect(response.body).not_to include past_slot.title
+                expect(response.body).not_to include not_my_upcoming_slot.title
+                expect(response.body).to include ongoing_reslot.title
+                expect(json).to have_key 'paging'
+                expect(json['paging']).to have_key 'moment'
+                expect(json['paging']).to have_key 'limit'
+                expect(json['paging']).to have_key 'before'
+              end
+            end
+          end
+
+          describe "GET slots for befriended user" do
+
+          end
+
+          describe "GET slots for unrelated user" do
+            context "when logged in" do
+
+            end
+
+            context "when visitor" do
+
+            end
+          end
+        end
+      end
     end
   end
 

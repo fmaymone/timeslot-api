@@ -1,9 +1,8 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password, :media_items]
-    skip_after_action :verify_authorized, only: :slots
-    after_action :verify_policy_scoped, only: :slots
+                       only: [:create, :signin, :reset_password,
+                              :media_items, :slots]
 
     # GET /v1/users
     def index
@@ -107,13 +106,27 @@ module V1
     end
 
     # GET /v1/users/1/slots
+    # returns all slots of the requested user visible for the current user
     def slots
-      @slots = policy_scope(:slot)
+      authorize :user
+      requested_user = User.find(params[:user_id])
 
-      render "v1/slots/index"
+      @slots = SlotsCollector.call(current_user: current_user,
+                                   user: requested_user,
+                                   **slot_paging_params)
+
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # GET /v1/users/friendslots
+    # returns all public and friend-visible slots of all friends from
+    # current user
+    # Concerning pundit:
     # This is weird and not nice, pundit scopes seem way to inflexible...
     # the 'resolve' method for SlotPolicy is already used by 'slots' method
     # using another name doesn't trigger 'performed' for the scoped policy
@@ -218,8 +231,8 @@ module V1
     private def device_params(params)
       return nil unless params && params[:deviceId].present?
       params.permit(:deviceId, :system, :version, :token, :endpoint)
-            .transform_keys(&:underscore)
-            .symbolize_keys
+        .transform_keys(&:underscore)
+        .symbolize_keys
     end
 
     private def friends_ids
@@ -230,9 +243,33 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
-            .deep_transform_keys(&:underscore)
-            .deep_symbolize_keys
+      params.permit(:email, :phone, :password,
+                    device: [:deviceId, :system, :version, :token])
+        .deep_transform_keys(&:underscore)
+        .deep_symbolize_keys
+    end
+
+    private def slot_paging_params
+      p = params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
+
+      # are there any pagination params?
+      return {} unless p.any?
+
+      # set default limit if not provided
+      p[:limit] = 40 if p[:limit].nil?
+      # set maximum for limit to 100 if higher
+      p[:limit] = 100 if p[:limit].to_i > 100
+
+      # ignore status & moment if a cursor is submitted
+      if p[:before].present? || p[:after].present?
+        p[:status] = nil
+        p[:moment] = nil
+      else
+        # set default status and moment if not provided
+        p[:status] = 'upcoming' if p[:status].nil?
+        p[:moment] = Time.zone.now.to_s if p[:moment].nil?
+      end
+      p
     end
   end
 end

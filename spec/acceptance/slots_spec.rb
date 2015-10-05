@@ -1076,7 +1076,7 @@ resource "Slots" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Slot to like", required: true
+    parameter :id, "ID of the Slot to unlike", required: true
 
     let(:slot) { create(:std_slot_friends) }
     let!(:like) { create(:like, slot: slot, user: current_user) }
@@ -1088,7 +1088,8 @@ resource "Slots" do
 
       example "Unlike a Slot", document: :v1 do
         explanation "Current user unlikes a slot."
-        expect(slot.likes.count).to eq 1
+        expect(slot.likes).to include like
+        expect(like.deleted_at?).to be false
 
         do_request
 
