@@ -277,6 +277,94 @@ resource "Slots" do
     end
   end
 
+  get "/v1/slots/:id", :focus do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the slot to get", required: true
+
+    describe "Get slot with valid ID" do
+      include_context "default slot response fields"
+
+      let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
+      let(:parent) { create(:std_slot_public, meta_slot: meta_slot) }
+      let!(:reslot) { create(:re_slot, parent: parent) }
+
+
+      let!(:slot_setting) { create(:slot_setting,
+                                   user: current_user,
+                                   meta_slot: reslot.meta_slot,
+                                   alerts: '1110001100') }
+      let!(:medias) {
+        create_list :slot_image, 3, mediable: parent
+        create_list :audio, 2, mediable: parent
+        create_list :video, 2, mediable: parent
+      }
+      let(:id) { reslot.id }
+      let(:deleted_at) { reslot.deleted_at? ? reslot.deleted_at.as_json : nil }
+
+      example "Get Reslot", document: :v1 do
+        explanation "if a user is authenticated the slot settings" \
+                    " (alerts) will be included\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("title")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
+        expect(json).to have_key("location")
+        # expect(json['location']).to have_key("name")
+        expect(json).to have_key("creator")
+        expect(json['creator']).to have_key("username")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("createdAt")
+        expect(json).to have_key("updatedAt")
+        expect(json).to have_key("deletedAt")
+        expect(json).to have_key("notes")
+        expect(json).to have_key("likes")
+        expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("slotter")
+        expect(json).to have_key("parent")
+        expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("shareUrl")
+        expect(json).to have_key("visibility")
+        expect(json).to have_key("media")
+        expect(json.except('media', 'shareUrl'))
+          .to eq("id" => reslot.id,
+                 "title" => reslot.title,
+                 "startDate" => reslot.start_date.as_json,
+                 "endDate" => reslot.end_date.as_json,
+                 "createdAt" => reslot.created_at.as_json,
+                 "updatedAt" => reslot.updated_at.as_json,
+                 "deletedAt" => deleted_at.as_json,
+                 "location" => nil,
+                 "creator" => { "id" => reslot.creator.id,
+                                "username" => reslot.creator.username,
+                                "createdAt" => reslot.creator.created_at.as_json,
+                                "updatedAt" => reslot.creator.updated_at.as_json,
+                                "deletedAt" => nil,
+                                "image" => {
+                                  "publicId" => nil,
+                                  "localId" => nil
+                                } },
+                 "settings" => { 'alerts' => '1110001100' },
+                 "slotter" => { 'id' => reslot.slotter_id },
+                 "visibility" => reslot.parent.visibility,
+                 "notes" => reslot.notes,
+                 "parent" => { 'id' => reslot.parent.id },
+                 "likes" => reslot.likes.count,
+                 "commentsCounter" => reslot.comments.count,
+                 "reslotsCounter" => reslot.reslot_count
+                )
+        expect(json["media"].length).to eq(reslot.media_items.length)
+        expect(response_body).to include reslot.images.first.public_id
+      end
+    end
+  end
+
   post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"

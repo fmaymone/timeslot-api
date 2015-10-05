@@ -36,6 +36,10 @@ class ReSlot < BaseSlot
     predecessors
   end
 
+  def reslot_count
+    ReSlot.unscoped.where(parent_id: parent_id).count
+  end
+
   def related_users
     [slotter]
   end
