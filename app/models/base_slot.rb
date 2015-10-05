@@ -16,7 +16,7 @@ class BaseSlot < ActiveRecord::Base
                  GroupSlotPublic: 5,
                  ReSlotFriends: 6,
                  ReSlotPublic: 7,
-                 # mabye remove the following
+                 # maybe remove the following
                  BaseSlot: 0,
                  StdSlot: 20,
                  GroupSlot: 21,
@@ -72,20 +72,25 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  def as_paging_cursor
+    # make sure we use the full resolution of datetime
+    startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    enddate = end_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    Base64.urlsafe_encode64("#{id}%#{startdate}%#{enddate}")
+  end
+
   # setter
 
   def ios_location=(location)
     if location[:latitude].present? && location[:longitude].present?
-      new_location = IosLocation.where(
-        latitude: location[:latitude], longitude: location[:longitude]).take
+      new_location = IosLocation.find_by(
+        latitude: location[:latitude], longitude: location[:longitude])
     end
 
     new_location ||= IosLocation.create(location.merge(creator: owner))
 
     #update custom label for location (same geo-location can have several names)
-    unless location[:name].blank?
-      new_location[:name] = location[:name]
-    end
+    new_location[:name] = location[:name] unless location[:name].blank?
     meta_slot.update(ios_location: new_location)
   end
 
@@ -135,8 +140,8 @@ class BaseSlot < ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    Device.notify_all([creator_id], [ message: "#{user.username} likes your slot",
-                                      slot_id: self.id ])
+    Device.notify_all([creator_id], [message: "#{user.username} likes your slot",
+                                     slot_id: id])
   end
 
   def destroy_like(user)
@@ -296,7 +301,7 @@ class BaseSlot < ActiveRecord::Base
 
     return slot unless slot.errors.empty?
 
-    if (media || notes || alerts)
+    if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,
                               user: user)
     end
@@ -331,6 +336,39 @@ class BaseSlot < ActiveRecord::Base
       new_slot.notes.create(title: note.title,
                             content: note.content,
                             creator: user) # user => current_user
+    end
+  end
+
+  # takes an encoded_slot string and returns the matching slot
+  # see: BaseSlot.as_paging_cursor
+  # raises PaginationError if invalid cursor_string
+  def self.from_paging_cursor(encoded_cursor_string)
+    decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
+  rescue ArgumentError
+    raise ApplicationController::PaginationError
+  else
+    # check for validity
+    begin
+      cursor_array = decoded_cursor_string.split('%')
+      cursor = {id: cursor_array.first.to_i,
+                startdate: cursor_array.second,
+                enddate: cursor_array.third}
+      slot = get(cursor[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise ApplicationController::PaginationError
+    # the following is not really neccessary, might be removed at some point
+    # but for now it gives some useful info about the system
+    else
+      if slot.start_date.to_s != cursor[:startdate] ||
+         slot.end_date.to_s != cursor[:enddate]
+        opts = {}
+        opts[:parameters] = { cursor_id: cursor[:id],
+                              cursor_startdate: cursor[:startdate],
+                              cursor_enddate: cursor[:enddate] }
+        Airbrake.notify(ApplicationController::PaginationError, opts)
+        fail ApplicationController::PaginationError if Rails.env.development?
+      end
+      cursor
     end
   end
 

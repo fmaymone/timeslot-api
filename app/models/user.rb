@@ -147,8 +147,8 @@ class User < ActiveRecord::Base
   end
 
   def connect_or_merge(identity_params, social_params)
-    identity = Connect.where(social_id: identity_params[:social_id],
-                             provider: identity_params[:provider]).take
+    identity = Connect.find_by(social_id: identity_params[:social_id],
+                               provider: identity_params[:provider])
 
     user = User.find_by email: social_params[:email] if social_params[:email]
 
@@ -166,7 +166,7 @@ class User < ActiveRecord::Base
 
       if identity.errors.any?
         errors.add(:connect, identity.errors)
-      elsif social_params[:email] and email.nil?
+      elsif social_params[:email] && email.nil?
         update(email: social_params[:email])
       end
     end
@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
     ts_soft_delete and return self
   end
 
-  # TODO: add spec
+  # TODO: this is far from being finished, specification missing
   def activate
     slot_settings.each(&:undelete)
   end
@@ -222,7 +222,9 @@ class User < ActiveRecord::Base
         end
         # Get all group related media items:
         # TODO: can visitors also have access to media items of public group slots?
-        group_slots.where('group_slots.group_id IN (?)', current_user.groups.ids).each do |slot|
+        group_slots.where(
+          'group_slots.group_id IN (?)', current_user.groups.ids
+        ).find_each do |slot|
           if current_user.active_member?(slot.group.id)
             medias += slot.media_items
           end
@@ -249,13 +251,13 @@ class User < ActiveRecord::Base
   end
 
   def prepare_for_slot_deletion(slot)
-    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    alert = slot_settings.find_by(meta_slot: slot.meta_slot)
     return if alert.nil?
     alert.delete if active_slots(slot.meta_slot).size <= 1
   end
 
   def update_alerts(slot, alerts)
-    alert = slot_settings.where(meta_slot: slot.meta_slot).first
+    alert = slot_settings.find_by(meta_slot: slot.meta_slot)
     if alert.nil?
       return if default_alert?(slot, alerts)
       SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
@@ -286,12 +288,12 @@ class User < ActiveRecord::Base
   end
 
   def friendship(user_id)
-    initiated_friendships.where("friend_id= ?", user_id).first ||
-      received_friendships.where("user_id= ?", user_id).first
+    initiated_friendships.find_by("friend_id= ?", user_id) ||
+      received_friendships.find_by("user_id= ?", user_id)
   end
 
   def offered_friendship(user_id)
-    received_friendships.open.where("user_id= ?", user_id).first
+    received_friendships.open.find_by("user_id= ?", user_id)
   end
 
   def add_friends(user_ids)
@@ -435,13 +437,14 @@ class User < ActiveRecord::Base
     new_user = create(params)
     return new_user unless new_user.errors.empty?
     Device.update_or_create(new_user, device) if device
-    AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"]) if image
+    AddImage.call(new_user, new_user.id,
+                  image["public_id"], image["local_id"]) if image
     new_user
   end
 
   def self.create_or_signin_via_social(identity_params, social_params, device: nil)
-    identity = Connect.where(social_id: identity_params[:social_id],
-                             provider: identity_params[:provider]).take
+    identity = Connect.find_by(social_id: identity_params[:social_id],
+                               provider: identity_params[:provider])
     if identity
       no_token = identity.user.auth_token.nil?
       identity.user.update(auth_token: generate_auth_token) if no_token

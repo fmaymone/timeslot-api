@@ -3,7 +3,7 @@ require 'rails_helper'
 describe UserPolicy do
   subject { described_class }
 
-  permissions :create?, :signin?, :reset_password? do
+  permissions :create?, :signin?, :reset_password?, :slots? do
     context "for a visitor" do
       let(:user) { nil }
 

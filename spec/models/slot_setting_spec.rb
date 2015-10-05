@@ -35,7 +35,7 @@ RSpec.describe SlotSetting, type: :model do
     it "duplicates can not be saved" do
       expect {
         duplicate_slot_setting.save
-      }.to raise_error
+      }.to raise_error ActiveRecord::RecordNotUnique
     end
   end
 
