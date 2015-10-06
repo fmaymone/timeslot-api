@@ -68,7 +68,7 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "return number of friends via json" do
+    context "json active friends counter" do
       let!(:friendship) { create(:friendship, :established, user: current_user) }
 
       it "return number of established friends for current user" do
@@ -79,35 +79,47 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "return std_slots via json" do
-      let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    context "json std_slots counter" do
+      let(:stranger) { create(:user, :with_public_slot) }
+      let!(:my_slots) do
+        create(:std_slot_private, owner: current_user)
+        create(:std_slot_public, owner: current_user)
+      end
+      let!(:not_my_slot) { create(:std_slot_public) }
 
-      it "return std_slots for current user" do
+      it "return number of all std_slots for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
         expect(json).to have_key('slotCount')
-        expect(json['slotCount']).to be(1)
-        expect(json['slotCount']).to eq(current_user.std_slots.unscoped.length)
+        expect(json['slotCount']).to eq 2
+      end
+
+      it "return number of public std_slots for stranger" do
+        get "/v1/users/#{stranger.id}", {}, auth_header
+        expect(json).to have_key('slotCount')
+        expect(json['slotCount']).to eq 1
       end
     end
 
-    context "return re_slots via json" do
+    context "json reslots counter" do
       let!(:re_slot) { create(:re_slot, slotter: current_user) }
+      let!(:not_my_reslot) { create(:re_slot) }
 
-      it "return re_slots for current user" do
+      it "return number of re_slots for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('reslotCount')
-        expect(json['reslotCount']).to be(1)
-        expect(json['reslotCount']).to eq(current_user.re_slots.length)
+        expect(json).to have_key 'reslotCount'
+        expect(json['reslotCount']).to eq 1
       end
     end
 
     context "return group membership via json" do
-      let(:membership) { create(:membership, :active, user: create(:user)) }
+      let!(:membership) { create(:membership, :active, user: current_user) }
+      let!(:other_membership) { create(:membership, :active) }
 
       it "return group memberships for current user" do
         get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key('memberships')
-        expect(json['memberships'][0]).to eq(membership[0])
+        expect(json).to have_key 'memberships'
+        expect(json['memberships'].size).to eq 1
+        expect(json['memberships'].first['groupId']).to eq membership.group_id
       end
     end
   end
