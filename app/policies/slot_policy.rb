@@ -98,6 +98,10 @@ class SlotPolicy < ApplicationPolicy
     false
   end
 
+  def show_slotters?
+    show_to_current_user?
+  end
+
   # helper
 
   def show_to_current_user?

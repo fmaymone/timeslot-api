@@ -1316,6 +1316,23 @@ resource "Slots" do
         expect(response_body).to include reslots.last.slotter.username
       end
     end
+
+    describe "Get Slotters for Reslots Parent" do
+      let(:id) { reslots.first.id }
+
+      example "Get Slotters for Slot", document: :false do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq 2
+        expect(json.first).to have_key "slotter"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first["slotter"]).to have_key "id"
+        expect(json.first["slotter"]).to have_key "image"
+        expect(response_body).to include reslots.first.slotter.username
+        expect(response_body).to include reslots.last.slotter.username
+      end
+    end
   end
 
   get "/v1/slots/:id/history" do

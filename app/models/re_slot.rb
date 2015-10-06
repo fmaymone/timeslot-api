@@ -6,6 +6,8 @@ class ReSlot < BaseSlot
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
   belongs_to :parent, class_name: BaseSlot
+  # atm parents are always StdSlot but later they might be eg. public groupslots
+  # because of that I used BaseSlot as the associaton type
 
   delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
@@ -36,7 +38,12 @@ class ReSlot < BaseSlot
     predecessors
   end
 
+  def reslots
+    source.reslots
+  end
+
   def reslot_count
+    # source.reslot_count
     ReSlot.unscoped.where(parent_id: parent_id).count
   end
 
