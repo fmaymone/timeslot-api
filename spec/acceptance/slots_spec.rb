@@ -24,21 +24,26 @@ resource "Slots" do
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
-    response_field :reslotsCounter, "Number of reslots for this slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos recordings for the slot"
   end
 
-  shared_context "group slot response fields" do
+  shared_context "stdslot response fields" do
     include_context "default slot response fields"
-    response_field :groupId, "ID of the group the slot belongs to"
+    response_field :reslotsCounter, "Number of reslots for this slot"
   end
 
   shared_context "reslot response fields" do
+    include_context "stdslot response fields"
+    response_field :slotter, "contains ID of the User who did reslot"
+    response_field :parent, "contains ID of the original slot that was reslottet"
+  end
+
+  shared_context "group slot response fields" do
     include_context "default slot response fields"
-    response_field :slotterId, "ID of the User who did reslot"
+    response_field :groupId, "ID of the group the slot belongs to"
   end
 
   shared_context "default slot parameter" do
@@ -191,7 +196,7 @@ resource "Slots" do
     parameter :id, "ID of the slot to get", required: true
 
     describe "Get slot with valid ID" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
@@ -277,14 +282,14 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id", :focus do
+  get "/v1/slots/:id" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to get", required: true
 
-    describe "Get slot with valid ID" do
-      include_context "default slot response fields"
+    describe "Get reslot with valid ID" do
+      include_context "reslot response fields"
 
       let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
       let(:parent) { create(:std_slot_public, meta_slot: meta_slot) }
@@ -315,7 +320,6 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
-        # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
         expect(json).to have_key("settings")
@@ -375,7 +379,7 @@ resource "Slots" do
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -658,7 +662,7 @@ resource "Slots" do
     include_context "default slot parameter"
 
     describe "Create new ReSlot from the Web Search service" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
