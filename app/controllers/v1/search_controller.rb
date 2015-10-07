@@ -14,10 +14,11 @@ module V1
       auth = { http_basic_authentication: [user, pw] }
 
       search_url = ENV['TS_SEARCH_SERVICE_URL']
-      time_now = Time.zone.now.strftime('%Y-%m-%dT%H:%M')
-      query = search_url + "?q=" + params.require(:query) +
-              "&size=" + (page[:limit] || '10') +
-              "&timestamp=" + (page[:datetime] || time_now)
+      time = page[:datetime] || Time.zone.now.strftime('%Y-%m-%dT%H:%M')
+
+      query = "#{search_url}?q=#{params.require(:query)}" \
+              "&size=#{page[:limit] || 10}&timestamp=#{time}"
+
       begin
         result = open(URI.escape(query), auth).read
       rescue => e
