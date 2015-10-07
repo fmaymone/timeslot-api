@@ -43,8 +43,8 @@ gem 'stream_rails'
 gem 'redis'
 
 # WebSockets
-gem 'websocket-rails', '0.1.8'
-gem 'faye-websocket'
+gem 'websocket-rails' #, '0.1.8'
+#gem 'faye-websocket'
 
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'

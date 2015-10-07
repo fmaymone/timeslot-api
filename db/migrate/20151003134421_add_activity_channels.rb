@@ -1,3 +1,5 @@
+class AddActivityChannels < ActiveRecord::Migration
+end
 # class AddActivityChannels < ActiveRecord::Migration
 #   def up
 #     create_table :user_channels do |t|
