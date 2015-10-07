@@ -1,36 +1,51 @@
-class Channel < ActiveRecord::Base
-  after_commit AuditLog
+class Channel
 
-  self.abstract_class = true
+  #self.abstract_class = true
 
-  #has_many :followers, class_name: User, inverse_of: :follower
-
-  #validates :follower, presence: true
-
-  def notify_channel(user_ids)
-    # Stream.send(follower.devices.active_sockets)
-    pp followers.devices.active_sockets
-
-    notify_queue = []
-
-    #followers.devices.where.not(socket: nil).find_each do |user|
-    followers.find_each do |user|
-      #user.devices.where.not(socket: nil).find_in_batches do |devices|
-      user.devices.active_sockets.find_in_batches do |devices|
-        notify_queue.concat(devices)
-      end
-    end
-
-    pp notify_queue
-
-    # we using worker background processing to start request tasks asynchronously
-    #NotifyJob.new.async.perform(notify_queue.as_json, params) unless notify_queue.empty?
+  def initialize(topic)
+    @topic_id = topic.id
   end
 
-  def subscribe(follower)
-    create_or_update(follower: follower)
-    #SlotChannel.find_by(slot: slot, follower: follower) ||
-    #SlotChannel.create(slot: slot, follower: follower)
+  def connect!(device)
+    $redis.sadd(redis_key, device.id)
+  end
+
+  def disconnect!(device)
+    $redis.srem(redis_key, device.id)
+  end
+
+  def is_connected?(device)
+    $redis.sismember(redis_key, device.id)
+  end
+
+  def connections
+    $redis.smembers(redis_key)
+  end
+
+  def connection_count
+    $redis.scard(redis_key)
+  end
+
+  def redis_key
+    raise NotImplementedError,
+          "Subclasses must define the method 'redis_key'."
+  end
+
+  def self.notify(params)
+    # Stream.send(follower.devices.active_sockets)
+
+    # notify_queue = []
+    #
+    # #followers.devices.where.not(socket: nil).find_each do |user|
+    # followers.find_each do |user|
+    #   #user.devices.where.not(socket: nil).find_in_batches do |devices|
+    #   user.devices.active_sockets.find_in_batches do |devices|
+    #     notify_queue.concat(devices)
+    #   end
+    # end
+
+    # we using worker background processing to start request tasks asynchronously
+    StreamJob.new.async.perform(connections, params) #unless connections.empty?
   end
 
   # The user who made the update

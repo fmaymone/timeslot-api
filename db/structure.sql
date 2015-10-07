@@ -175,8 +175,7 @@ CREATE TABLE devices (
     endpoint character varying(128),
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    socket character varying(64)
+    deleted_at timestamp without time zone
 );
 
 
@@ -231,39 +230,6 @@ CREATE SEQUENCE friendships_id_seq
 --
 
 ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
-
-
---
--- Name: group_channels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE group_channels (
-    id bigint NOT NULL,
-    group_id bigint NOT NULL,
-    follower_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: group_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE group_channels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: group_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE group_channels_id_seq OWNED BY group_channels.id;
 
 
 --
@@ -603,39 +569,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: slot_channels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE slot_channels (
-    id bigint NOT NULL,
-    slot_id bigint NOT NULL,
-    follower_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: slot_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE slot_channels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: slot_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE slot_channels_id_seq OWNED BY slot_channels.id;
-
-
---
 -- Name: slot_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -681,39 +614,6 @@ CREATE TABLE std_slots (
     owner_id bigint NOT NULL
 )
 INHERITS (base_slots);
-
-
---
--- Name: user_channels; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE user_channels (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    follower_id bigint NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone
-);
-
-
---
--- Name: user_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE user_channels_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: user_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE user_channels_id_seq OWNED BY user_channels.id;
 
 
 --
@@ -808,13 +708,6 @@ ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_channels ALTER COLUMN id SET DEFAULT nextval('group_channels_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -899,13 +792,6 @@ ALTER TABLE ONLY re_slots ALTER COLUMN share_id SET DEFAULT ''::character varyin
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY slot_channels ALTER COLUMN id SET DEFAULT nextval('slot_channels_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_settings_id_seq'::regclass);
 
 
@@ -921,13 +807,6 @@ ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_se
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY user_channels ALTER COLUMN id SET DEFAULT nextval('user_channels_id_seq'::regclass);
 
 
 --
@@ -975,14 +854,6 @@ ALTER TABLE ONLY devices
 
 ALTER TABLE ONLY friendships
     ADD CONSTRAINT friendships_pkey PRIMARY KEY (id);
-
-
---
--- Name: group_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY group_channels
-    ADD CONSTRAINT group_channels_pkey PRIMARY KEY (id);
 
 
 --
@@ -1050,27 +921,11 @@ ALTER TABLE ONLY providers
 
 
 --
--- Name: slot_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY slot_channels
-    ADD CONSTRAINT slot_channels_pkey PRIMARY KEY (id);
-
-
---
 -- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY slot_settings
     ADD CONSTRAINT slot_settings_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY user_channels
-    ADD CONSTRAINT user_channels_pkey PRIMARY KEY (id);
 
 
 --
@@ -1128,27 +983,6 @@ CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_i
 --
 
 CREATE UNIQUE INDEX index_friendships_on_user_id_and_friend_id ON friendships USING btree (user_id, friend_id);
-
-
---
--- Name: index_group_channels_on_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_group_channels_on_follower_id ON group_channels USING btree (follower_id);
-
-
---
--- Name: index_group_channels_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_group_channels_on_group_id ON group_channels USING btree (group_id);
-
-
---
--- Name: index_group_channels_on_group_id_and_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_group_channels_on_group_id_and_follower_id ON group_channels USING btree (group_id, follower_id);
 
 
 --
@@ -1250,27 +1084,6 @@ CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
 
 
 --
--- Name: index_slot_channels_on_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_slot_channels_on_follower_id ON slot_channels USING btree (follower_id);
-
-
---
--- Name: index_slot_channels_on_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_slot_channels_on_slot_id ON slot_channels USING btree (slot_id);
-
-
---
--- Name: index_slot_channels_on_slot_id_and_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_slot_channels_on_slot_id_and_follower_id ON slot_channels USING btree (slot_id, follower_id);
-
-
---
 -- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1296,27 +1109,6 @@ CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot
 --
 
 CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
-
-
---
--- Name: index_user_channels_on_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_user_channels_on_follower_id ON user_channels USING btree (follower_id);
-
-
---
--- Name: index_user_channels_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_user_channels_on_user_id ON user_channels USING btree (user_id);
-
-
---
--- Name: index_user_channels_on_user_id_and_follower_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_user_channels_on_user_id_and_follower_id ON user_channels USING btree (user_id, follower_id);
 
 
 --
@@ -1517,6 +1309,4 @@ INSERT INTO schema_migrations (version) VALUES ('20150810155024');
 INSERT INTO schema_migrations (version) VALUES ('20150819181058');
 
 INSERT INTO schema_migrations (version) VALUES ('20150825113006');
-
-INSERT INTO schema_migrations (version) VALUES ('20151003134421');
 

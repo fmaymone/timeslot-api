@@ -4,10 +4,14 @@ class GroupChannel < Channel
 
   #has_one :follower, class_name: User
 
-  validates_presence_of :group, :follower
+  # validates_presence_of :group, :follower
+  #
+  # def unsubscribe(follower)
+  #   GroupChannel.where(follower: follower).destroy
+  # end
 
-  def unsubscribe(follower)
-    GroupChannel.where(follower: follower).destroy
+  def redis_key(topic_id)
+    "group:#{topic_id}"
   end
 
   # for Pundit
