@@ -37,8 +37,6 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
            inverse_of: :slot
-  has_many :channels, class_name: SlotChannel, foreign_key: "slot_id",
-           inverse_of: :slot
   belongs_to :meta_slot, inverse_of: :slots, autosave: true
   belongs_to :shared_by, class_name: User
 

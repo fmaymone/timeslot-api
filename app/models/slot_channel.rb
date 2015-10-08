@@ -12,7 +12,7 @@ class SlotChannel < Channel
   # end
 
   def redis_key(topic_id)
-    "slot:#{topic_id}"
+    "channel:slot:#{topic_id}"
   end
 
   # for Pundit

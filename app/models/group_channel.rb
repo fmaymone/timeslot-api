@@ -11,7 +11,7 @@ class GroupChannel < Channel
   # end
 
   def redis_key(topic_id)
-    "group:#{topic_id}"
+    "channel:group:#{topic_id}"
   end
 
   # for Pundit

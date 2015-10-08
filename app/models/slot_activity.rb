@@ -2,6 +2,10 @@ class SlotActivity < Activity
 
   self.abstract_class = true
 
+  #after_touch do |slot|
+    #puts "You have touched an object"
+  #end
+
   # The user who made the update
   def activity_actor
     user.id.to_s

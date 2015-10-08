@@ -18,7 +18,6 @@ class Group < ActiveRecord::Base
            class_name: Membership
   has_many :members, through: :active_memberships, class_name: User,
            source: :user
-  has_one :channel, class_name: GroupChannel, inverse_of: :group
 
   validates :name, presence: true, length: { maximum: 255 } # screens have max length of 25
   validates :owner, presence: true

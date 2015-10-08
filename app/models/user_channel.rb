@@ -8,7 +8,7 @@ class UserChannel < Channel
 
   # helper method to generate redis keys
   def redis_key(topic_id)
-    "user:#{topic_id}"
+    "channel:user:#{topic_id}"
   end
 
   # for Pundit
