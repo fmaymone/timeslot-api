@@ -2,6 +2,8 @@ class Activity < ActiveRecord::Base
 
   self.abstract_class = true
 
+  include JSONView
+
   # Trigger activities to Activity Stream
   include StreamRails::Activity
   as_activity

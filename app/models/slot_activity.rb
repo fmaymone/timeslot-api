@@ -40,8 +40,8 @@ class SlotActivity < Activity
       message: activity_message,
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      slot: Feed.slot_as_json(slot),
-      user: Feed.user_as_json(user)
+      slot: JSONView::slot(slot),
+      user: JSONView::user(user)
     }
   end
 
