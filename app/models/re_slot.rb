@@ -70,14 +70,22 @@ class ReSlot < BaseSlot
 
   def self.create_from_slot(predecessor: nil, slotter: nil)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
+    # TODO:
+    # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
 
     # if same original event was already reslottet by user, use this reslot
-    where(slotter: slotter, parent: original_source).first_or_create(
+    reslot = where(slotter: slotter, parent: original_source).first_or_create(
       slotter: slotter,
       predecessor: predecessor,
       parent: original_source,
       meta_slot: predecessor.meta_slot
     )
+    # if deleted reslot was reslottet again, unset deleted_at & update predecessor
+    if reslot.deleted_at?
+      reslot.update(deleted_at: nil)
+      reslot.update(predecessor: predecessor)
+    end
+    reslot
   end
 
   # for Pundit

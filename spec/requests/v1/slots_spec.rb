@@ -500,6 +500,40 @@ RSpec.describe "V1::Slots", type: :request do
           expect(json['id']).to eq(existing_reslot.id)
         end
       end
+
+      context "reslot peviously deleted reslot" do
+        # a user makes a reslot of an event, then deletes the reslot, then
+        # does a reslot of the same event again
+        let(:reslot) { create(:re_slot, predecessor: pred) }
+        let!(:existing_deleted_reslot) {
+          create(:re_slot, predecessor: reslot, slotter: current_user,
+                 deleted_at: Time.zone.now)
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_deleted_reslot['id'])
+        end
+
+        it "unsets deleted_at on the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.deleted_at).to be nil
+        end
+
+        it "updates the predecessor" do
+          expect(existing_deleted_reslot.predecessor_id).to eq reslot.id
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.predecessor_id).to eq pred.id
+        end
+      end
     end
   end
 

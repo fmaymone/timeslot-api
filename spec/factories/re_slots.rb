@@ -24,8 +24,10 @@ FactoryGirl.define do
         rs.update(end_date: attributes[:end_date])
       end
       rs.update(title: attributes[:title]) if attributes[:title].present?
+      if attributes[:deleted_at].present?
+        rs.update(deleted_at: attributes[:deleted_at])
+      end
       rs
     end
-
   end
 end
