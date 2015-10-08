@@ -46,7 +46,6 @@ RSpec.describe ReSlot, type: :model do
 
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
-    let(:slot_setting) { create(:slot_setting, meta_slot: meta_slot) }
     let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
 
     it "contains title of the meta_slot" do

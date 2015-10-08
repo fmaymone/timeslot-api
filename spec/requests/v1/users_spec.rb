@@ -526,8 +526,8 @@ RSpec.describe "V1::Users", type: :request do
           create(:re_slot,
                  start_date: Time.zone.tomorrow.midday,
                  end_date: Time.zone.tomorrow.next_week.end_of_day,
-                                       title: 'upcoming reslot',
-                                       slotter: current_user) }
+                 title: 'upcoming reslot',
+                 slotter: current_user) }
         let(:ongoing_reslot) { create(:re_slot,
                                       start_date: Time.zone.yesterday,
                                       end_date: Time.zone.tomorrow,

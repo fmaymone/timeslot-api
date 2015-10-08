@@ -418,7 +418,7 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "POST /v1/reslot" do
     context "with valid params" do
-      let(:pred) { create(:std_slot) }
+      let(:pred) { create(:std_slot_public) }
       let(:valid_attributes) {
         attributes_for(:re_slot, predecessorId: pred.id)
       }
@@ -462,6 +462,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       # TODO: @sh: I think this shouln't be possible at all...???
+      # but since we don't know where the product is going we'll just
+      # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
 
@@ -484,10 +486,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate reslot" do
         let!(:existing_reslot) {
-          # had trouble creating the existing reslot with factory girl,
-          # did always use another parent_slot
-          post "/v1/reslot/", valid_attributes, auth_header
-          json
+          create(:re_slot, predecessor: pred, slotter: current_user)
         }
 
         it "doesn't create a new reslot" do
@@ -498,7 +497,7 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "returns the existing reslot" do
           post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(existing_reslot['id'])
+          expect(json['id']).to eq(existing_reslot.id)
         end
       end
     end
@@ -1525,9 +1524,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/like" do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
-
+    let(:parent) { create(:std_slot_public) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
     it "creates a new like" do
       expect {
         post "/v1/slots/#{re_slot.id}/like", {}, auth_header
@@ -1536,7 +1534,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the new like to the parent slot" do
       post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      expect(Like.last.slot.id).to eq std_slot.id
+      expect(Like.last.slot.id).to eq parent.id
       expect(Like.last.slot.id).to eq re_slot.parent.id
     end
   end
@@ -1580,8 +1578,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
+    let(:parent) { create(:std_slot_public) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
     it "creates a new comment" do
@@ -1592,7 +1590,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the new comment to the parent slot" do
       post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
-      expect(Comment.last.slot.id).to eq std_slot.id
+      expect(Comment.last.slot.id).to eq parent.id
       expect(Comment.last.slot.id).to eq re_slot.parent.id
       expect(Comment.last.content).to eq new_comment[:content]
     end
@@ -1778,7 +1776,10 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "dosn't include reslots" do
       get "/v1/slots/demo", {}, auth_header
-      expect(response.body).not_to include re_slot.title
+      # when creating a reslot, a stdslot is created implicitly as its parent
+      # of course, this parent is included in the result so I rather look
+      # for a reslot specific json attribute
+      expect(response.body).not_to include 'parent'
     end
   end
 end

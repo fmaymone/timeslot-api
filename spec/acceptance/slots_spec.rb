@@ -1348,14 +1348,11 @@ resource "Slots" do
                    "Username of the creator of the original slot"
     response_field :parentUserImage, "Image of the creator of the original slot"
 
-    let!(:slot) { create(:std_slot) }
-    let!(:reslot_1) { create(:re_slot, predecessor: slot,
-                             meta_slot: slot.meta_slot, parent: slot) }
-    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1,
-                             meta_slot: slot.meta_slot, parent: slot) }
+    let!(:slot) { create(:std_slot_public) }
+    let!(:reslot_1) { create(:re_slot, predecessor: slot) }
+    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1) }
     let!(:reslot_3) {
-      create(:re_slot, predecessor: reslot_2, slotter: current_user,
-             meta_slot: slot.meta_slot, parent: slot) }
+      create(:re_slot, predecessor: reslot_2, slotter: current_user) }
 
     let(:id) { reslot_3.id }
 
