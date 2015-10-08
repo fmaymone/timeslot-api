@@ -62,6 +62,10 @@ group :development, :test do
 
   gem 'guard-rspec'
 
+  gem 'guard-puma' # to have Guard use the Puma server rather than WEBrick
+
+  gem 'terminal-notifier-guard'
+
   gem 'rb-fsevent'
 
   gem 'bullet'
