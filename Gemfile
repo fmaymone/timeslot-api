@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.1.6'
+ruby '2.2.3'
 
 gem 'rails', '4.2.1'
 
@@ -61,6 +61,10 @@ group :development, :test do
   gem 'spring-commands-rspec'
 
   gem 'guard-rspec'
+
+  gem 'guard-puma' # to have Guard use the Puma server rather than WEBrick
+
+  gem 'terminal-notifier-guard'
 
   gem 'rb-fsevent'
 

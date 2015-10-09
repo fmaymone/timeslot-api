@@ -20,7 +20,7 @@ module TSPreventDeletion
     msg.merge!(caller_0: caller[0])
     msg.merge!(caller_1: caller[1])
     msg.merge!(caller_2: caller[2])
-    Rails.logger.error msg
+    Rails.logger.error { msg }
     fail NotActivated, msg
   end
 
@@ -31,7 +31,7 @@ module TSPreventDeletion
       next if item.deleted_at?
       error_string = "#{item} wasn't deleted (but should) when deleting #{self}"
       msg = { error_message: error_string }
-      Rails.logger.error error_string
+      Rails.logger.error { error_string }
       Airbrake.notify(AssociationNotDeleted, msg)
       fail AssociationNotDeleted, msg if Rails.env.test? || Rails.env.development?
     end

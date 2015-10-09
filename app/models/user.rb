@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
         return_path: "invalid_email_address@timeslot.com"
       )
     rescue Aws::SES::Errors::ServiceError => exception
-      Rails.logger.error exception
+      Rails.logger.error { exception }
       Airbrake.notify(exception)
       raise exception if Rails.env.test? || Rails.env.development?
     end

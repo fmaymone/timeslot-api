@@ -31,7 +31,7 @@ class Device < ActiveRecord::Base
       begin
         Device.create_client.delete_endpoint({ endpoint_arn: endpoint })
       rescue Aws::SNS::Errors::ServiceError => exception
-        Rails.logger.error exception
+        Rails.logger.error { exception }
         Airbrake.notify(exception)
         errors.add(:unregister_endpoint, "could not unregister endpoint")
         raise exception if Rails.env.test? || Rails.env.development?
@@ -52,7 +52,7 @@ class Device < ActiveRecord::Base
       platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
       token: token)[:endpoint_arn]
   rescue Aws::SNS::Errors::ServiceError => exception
-    Rails.logger.error exception
+    Rails.logger.error { exception }
     Airbrake.notify(exception)
     errors.add(:register_endpoint, "could not register endpoint")
     raise exception if Rails.env.test? || Rails.env.development?
@@ -94,7 +94,7 @@ class Device < ActiveRecord::Base
     begin
       client.publish(push_notification)
     rescue Aws::SNS::Errors::ServiceError => exception
-      Rails.logger.error exception
+      Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
       opts[:parameters] = { user_id: device['user_id'],
                             device_id: device['id'],
@@ -103,7 +103,7 @@ class Device < ActiveRecord::Base
                             aws_http_request: exception.try(:http_request),
                             aws_http_response: exception.try(:http_response),
                             aws_sns_error: exception }
-      Rails.logger.error opts
+      Rails.logger.error { opts }
       Airbrake.notify(exception, opts)
       # I'm not sure if we ever evaluate the following line
       errors.add(:client, "could not send push notification to device")
