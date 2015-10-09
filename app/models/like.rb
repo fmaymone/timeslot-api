@@ -13,6 +13,6 @@ class Like < SlotActivity
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    "#{user.username} likes your slot"
+    "#{user.username} likes: #{slot.meta_slot.title}"
   end
 end
