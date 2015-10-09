@@ -22,34 +22,34 @@ module Feed
   def self.aggregate_feed(feed)
     aggregated_feed = []
     usernames = []
-    last_group = ''
+    groups = {}
     index = -1
 
     feed.each do |value|
-      message = value['message']
-      if value['group'].eql?(last_group)
-        unless aggregated_feed[index]['actors'].include?(value['actor'])
+      group = value['group'].to_s
+      message = value['message'].to_s
+      if groups[group].presence
+        unless aggregated_feed[groups[group]]['actors'].include?(value['actor'])
           # Collect actors
-          aggregated_feed[index]['actors'] << value['actor']
+          aggregated_feed[groups[group]]['actors'] << value['actor']
           # Set new id as last id
-          aggregated_feed[index]['id'] = value['id']
+          aggregated_feed[groups[group]]['id'] = value['id']
           # Collect username
           usernames << value['user']['username']
           # Set actor to last actor
-          actors = aggregated_feed[index]['actors']
+          actors = aggregated_feed[groups[group]]['actors']
         end
       else
-        index += 1
-        aggregated_feed[index] = value
-        aggregated_feed[index]['actors'] = [value['actor']]
-        aggregated_feed[index].delete('actor')
-        last_group = value['group']
+        groups[group] = (index += 1)
+        aggregated_feed[groups[group]] = value
+        aggregated_feed[groups[group]]['actors'] = [value['actor']]
+        aggregated_feed[groups[group]].delete('actor')
         usernames = [value['user']['username']]
       end
       if usernames.count > 4
-        aggregated_feed[index]['message'] = usernames[0..2].join(", ") + " and #{actors.count - 2} others " + message.from(message.index(' '))
+        aggregated_feed[groups[group]]['message'] = usernames[0..2].join(", ") + " and #{actors.count - 2} others " + message.from(message.index(' '))
       elsif usernames.count > 1
-        aggregated_feed[index]['message'] = usernames[0..1].join(", ") + " and " + usernames[2].to_s + message.from(message.index(' '))
+        aggregated_feed[groups[group]]['message'] = usernames[0..1].join(", ") + " and " + usernames[2].to_s + message.from(message.index(' '))
       end
     end
     aggregated_feed
