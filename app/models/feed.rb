@@ -34,9 +34,9 @@ module Feed
           # Collect actors
           aggregated_feed[groups[group]]['actors'] << actor
           # Set new id as last id
-          aggregated_feed[groups[group]]['id'] = value['id']
+          #aggregated_feed[groups[group]]['id'] = value['id']
           # Set actor to last actor
-          aggregated_feed[groups[group]]['user'] = value['user']
+          #aggregated_feed[groups[group]]['user'] = value['user']
           # Collect username
           usernames << value['user']['username']
         end
