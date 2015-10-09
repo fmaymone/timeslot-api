@@ -47,9 +47,11 @@ module Feed
         usernames = [value['user']['username']]
       end
       if usernames.count > 4
-        aggregated_feed[groups[group]]['message'] = usernames[0..2].join(", ") + " and #{actors.count - 2} others " + message.from(message.index(' '))
+        aggregated_feed[groups[group]]['message'] = usernames[0..2].join(", ") + " and #{usernames.count - 2} others " + message.from(message.index(' '))
+      elsif usernames.count > 2
+        aggregated_feed[groups[group]]['message'] = usernames[0..1].join(", ") + " and " + usernames[usernames.count - 2].to_s + message.from(message.index(' '))
       elsif usernames.count > 1
-        aggregated_feed[groups[group]]['message'] = usernames[0..1].join(", ") + " and " + usernames[2].to_s + message.from(message.index(' '))
+        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and " + usernames[1].to_s + message.from(message.index(' '))
       end
     end
     aggregated_feed
