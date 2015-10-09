@@ -64,7 +64,7 @@ class SlotActivity < Activity
     user_ids = User.all.collect(&:id)
     # Remove the user who did the actual comment
     user_ids.delete(user.id)
-    user_ids
+    #user_ids
     # Maps the aggregated feed instance for each user
     # user_ids.map{|v| StreamRails.client.feed('aggregated', v.to_s)}.concat(
     #     # Maps also the notification feed instance for each user (optional)

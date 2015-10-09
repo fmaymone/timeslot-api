@@ -5,9 +5,9 @@ class FeedJob
   def perform(params)
     begin
       # Generates activity id
-      id = Digest::SHA1.hexdigest(params.to_json)
+      id = Digest::SHA1.hexdigest(params.to_json).upcase
       # Generates group tag
-      group = params[:target] << params[:activity] << params[:day]
+      group = params[:target] << params[:activity] << now.strftime('%Y%m%d')
       # Stringify json as payload
       payload = params.except(:notify)
                       .merge!(id: id, group: group)

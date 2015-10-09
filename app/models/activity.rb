@@ -5,7 +5,8 @@ class Activity < ActiveRecord::Base
   include JSONView
 
   # Trigger activities to Activity Stream
-  after_save :create_activity
+  after_create :create_activity
+  after_update :update_activity
   after_destroy :remove_activity
 
   private def create_activity
@@ -19,13 +20,14 @@ class Activity < ActiveRecord::Base
       foreign_id: activity_foreign_id,
       extra_data: activity_extra_data,
       notify: activity_notify,
-      date: now.strftime('%Y%m%d%H%M%S'),
-      day: now.strftime('%Y%m%d')
+      date: now.strftime('%Y%m%d%H%M%S')
     })
   end
 
+  private def update_activity
+  end
+
   private def remove_activity
-    Feed::remove_feed(activity_foreign_id)
   end
 
   # The user who made the update
