@@ -26,23 +26,24 @@ module Feed
     index = -1
 
     feed.each do |value|
+      actor = value['actor'].to_i
       group = value['group'].to_s
       message = value['message'].to_s
       if groups[group].presence
-        unless aggregated_feed[groups[group]]['actors'].include?(value['actor'])
+        unless aggregated_feed[groups[group]]['actors'].include?(actor)
           # Collect actors
-          aggregated_feed[groups[group]]['actors'] << value['actor']
+          aggregated_feed[groups[group]]['actors'] << actor
           # Set new id as last id
           aggregated_feed[groups[group]]['id'] = value['id']
+          # Set actor to last actor
+          aggregated_feed[groups[group]]['user'] = value['user']
           # Collect username
           usernames << value['user']['username']
-          # Set actor to last actor
-          actors = aggregated_feed[groups[group]]['actors']
         end
       else
         groups[group] = (index += 1)
         aggregated_feed[groups[group]] = value
-        aggregated_feed[groups[group]]['actors'] = [value['actor']]
+        aggregated_feed[groups[group]]['actors'] = [actor]
         aggregated_feed[groups[group]].delete('actor')
         usernames = [value['user']['username']]
       end
