@@ -51,6 +51,20 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -488,7 +502,7 @@ CREATE TABLE notes (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    creator_id bigint,
+    creator_id bigint NOT NULL,
     local_id character varying(512)
 );
 
@@ -628,7 +642,6 @@ CREATE TABLE users (
     deleted_at timestamp without time zone,
     email character varying,
     password_digest character varying(60),
-    auth_token character varying(27),
     role smallint NOT NULL,
     default_group_alerts bit(10) DEFAULT B'0000000000'::"bit",
     default_private_alerts bit(10) DEFAULT B'0000000000'::"bit",
@@ -640,12 +653,13 @@ CREATE TABLE users (
     phone character varying(35),
     location_id bigint,
     public_url character varying,
-    push boolean DEFAULT true,
     slot_default_location_id bigint,
     slot_default_duration integer,
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
+    auth_token character varying(27),
+    push boolean DEFAULT true,
     lang character varying
 );
 
@@ -1109,13 +1123,6 @@ CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot
 --
 
 CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
-
-
---
--- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
 
 
 --

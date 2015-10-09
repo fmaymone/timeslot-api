@@ -1,6 +1,4 @@
-class Channel
-
-  #self.abstract_class = true
+module Channel
 
   def initialize(topic)
     @topic_id = topic.id
@@ -26,9 +24,8 @@ class Channel
     $redis.scard(redis_key)
   end
 
-  def redis_key
-    raise NotImplementedError,
-          "Subclasses must define the method 'redis_key'."
+  def redis_key(topic_id)
+    "Channel:#{topic_id}"
   end
 
   def self.notify(params)

@@ -7,7 +7,7 @@ module V1
     def user_feed
       authorize :feed
       return head 422 unless has_allowed_params?
-      render json: Feed.user_feed(current_user.id, page_params),
+      render json: Feed::user_feed(current_user.id, page_params),
              status: :ok
     end
 
@@ -18,8 +18,7 @@ module V1
     def news_feed
       authorize :feed
       return head 422 unless has_allowed_params?
-      style = params[:style].presence || 'aggregated'
-      render json: Feed.news_feed(current_user.id, page_params, style),
+      render json: Feed::news_feed(current_user.id, page_params),
              status: :ok
     end
 
@@ -28,7 +27,7 @@ module V1
     def notification_feed
       authorize :feed
       return head 422 unless has_allowed_params?
-      render json: Feed.notification_feed(current_user.id, page_params),
+      render json: Feed::notification_feed(current_user.id, page_params),
              status: :ok
     end
 

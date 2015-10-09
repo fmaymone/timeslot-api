@@ -1,8 +1,8 @@
 module JSONView
 
-  def slot(slot)
+  def self.slot(slot)
 
-    user = slot.owner
+    user = slot.creator
 
     # basic slot data
     json = slot.slice(:id,
@@ -137,7 +137,7 @@ module JSONView
     json
   end
 
-  def user(user)
+  def self.user(user)
     json = user.slice(:id,
                       :username,
                       :created_at,
