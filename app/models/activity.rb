@@ -10,24 +10,28 @@ class Activity < ActiveRecord::Base
   after_destroy :remove_activity
 
   private def create_activity
-    now = Time.zone.now
     FeedJob.new.async.perform({
+      class: activity_class,
       actor: activity_actor,
       activity: activity_verb,
       object: activity_object,
       target: activity_target,
       message: activity_message,
       foreign_id: activity_foreign_id,
-      extra_data: activity_extra_data,
       notify: activity_notify,
-      date: now.strftime('%Y%m%d%H%M%S')
-    })
+      time: Time.zone.now.strftime('%Y%m%d%H%M%S')
+    }.merge!(activity_extra_data))
   end
 
   private def update_activity
   end
 
   private def remove_activity
+  end
+
+  private def activity_class
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_class'."
   end
 
   # The user who made the update

@@ -2,6 +2,10 @@ class UserActivity < Activity
 
   self.abstract_class = true
 
+  private def activity_class
+    'User'
+  end
+
   # The user who made the update
   private def activity_actor
     user.id.to_s

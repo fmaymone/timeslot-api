@@ -2,9 +2,9 @@ class SlotActivity < Activity
 
   self.abstract_class = true
 
-  #after_touch do |slot|
-    #puts "You have touched an object"
-  #end
+  private def activity_class
+    'Slot'
+  end
 
   # The user who made the update
   private def activity_actor
@@ -41,7 +41,7 @@ class SlotActivity < Activity
   private def activity_extra_data
     {
       # The notification message for the activity
-      message: activity_message,
+      #message: activity_message,
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
       slot: JSONView::slot(slot),
@@ -64,7 +64,7 @@ class SlotActivity < Activity
     user_ids = User.all.collect(&:id)
     # Remove the user who did the actual comment
     user_ids.delete(user.id)
-    #user_ids
+    user_ids
     # Maps the aggregated feed instance for each user
     # user_ids.map{|v| StreamRails.client.feed('aggregated', v.to_s)}.concat(
     #     # Maps also the notification feed instance for each user (optional)
