@@ -42,3 +42,6 @@ json.memberships user.memberships.each do |membership|
   json.state membership.humanize
   json.notifications membership.notifications
 end
+
+# overwrite slot_count if query for yourself
+json.slot_count StdSlot.of(user).count

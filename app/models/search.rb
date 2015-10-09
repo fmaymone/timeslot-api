@@ -1,17 +1,23 @@
 class Search
-  def self.new(table, attr, query, page: 1, limit: 10, method: :metaphone)
+  def self.new(table, attr, query, page: 1, limit: 10, method: 'metaphone')
     return [] if query.length < 3
     result = paginate(
-      self.method(method.to_sym).call(table, attr, query),
+      send(method, table, attr, query),
       attr,
       query,
       page.to_i,
       limit.to_i
     )
+
     # meta_slots requires change into BaseSlot model for the view part
-    if table == MetaSlot && result.empty? == false
-      result = result.collect(&:id)
-      result = BaseSlot.where(meta_slot_id: result)
+    # @twi: I changed this bc using baseslots here would mean you can search for
+    # all private slots from other users so I think until we have a system in
+    # place to filter the results we should only send results which are fine no
+    # matter what
+    # btw BaseSlots are not intended to be rendered via json, please see note
+    # in the beginning of the class
+    if (table == MetaSlot) && result
+      result = StdSlotPublic.where(meta_slot_id: result.ids)
     end
     result
   end
@@ -47,9 +53,10 @@ class Search
   # end
 
   def self.paginate(result, attr, query, page, limit)
-    return result if result.empty?
+    return nil unless result.exists?
+
     result.offset((page - 1) * limit)
-          .limit(limit)
-          .order("levenshtein(" + attr + ", '" + query + "') ASC, " + attr)
+      .limit(limit)
+      .order("levenshtein(" + attr + ", '" + query + "') ASC, " + attr)
   end
 end

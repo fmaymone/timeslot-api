@@ -417,14 +417,13 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/reslot" do
-    let(:group) { create(:group) }
-
     context "with valid params" do
-      context "ReSlot from StdSlot" do
-        let(:pred) { create(:std_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id) }
+      let(:pred) { create(:std_slot_public) }
+      let(:valid_attributes) {
+        attributes_for(:re_slot, predecessorId: pred.id)
+      }
 
+      context "ReSlot from StdSlot" do
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -443,13 +442,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from ReSlot" do
-        let(:origin) { create(:std_slot) }
-        let!(:pred) {
-          create(:re_slot, predecessor_id: origin.id)
-        }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+        let!(:pred) { create(:re_slot) }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -467,12 +461,12 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
-      # TODO: I think this shouln't be possible at all...???
+      # TODO: @sh: I think this shouln't be possible at all...???
+      # but since we don't know where the product is going we'll just
+      # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -487,6 +481,57 @@ RSpec.describe "V1::Slots", type: :request do
         it "returns the ID of the new slot" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+
+      context "duplicate reslot" do
+        let!(:existing_reslot) {
+          create(:re_slot, predecessor: pred, slotter: current_user)
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_reslot.id)
+        end
+      end
+
+      context "reslot peviously deleted reslot" do
+        # a user makes a reslot of an event, then deletes the reslot, then
+        # does a reslot of the same event again
+        let(:reslot) { create(:re_slot, predecessor: pred) }
+        let!(:existing_deleted_reslot) {
+          create(:re_slot, predecessor: reslot, slotter: current_user,
+                 deleted_at: Time.zone.now)
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_deleted_reslot['id'])
+        end
+
+        it "unsets deleted_at on the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.deleted_at).to be nil
+        end
+
+        it "updates the predecessor" do
+          expect(existing_deleted_reslot.predecessor_id).to eq reslot.id
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.predecessor_id).to eq pred.id
         end
       end
     end
@@ -1513,9 +1558,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/like" do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
-
+    let(:parent) { create(:std_slot_public) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
     it "creates a new like" do
       expect {
         post "/v1/slots/#{re_slot.id}/like", {}, auth_header
@@ -1524,7 +1568,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the new like to the parent slot" do
       post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      expect(Like.last.slot.id).to eq std_slot.id
+      expect(Like.last.slot.id).to eq parent.id
       expect(Like.last.slot.id).to eq re_slot.parent.id
     end
   end
@@ -1568,8 +1612,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
+    let(:parent) { create(:std_slot_public) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
     it "creates a new comment" do
@@ -1580,7 +1624,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the new comment to the parent slot" do
       post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
-      expect(Comment.last.slot.id).to eq std_slot.id
+      expect(Comment.last.slot.id).to eq parent.id
       expect(Comment.last.slot.id).to eq re_slot.parent.id
       expect(Comment.last.content).to eq new_comment[:content]
     end
@@ -1766,7 +1810,10 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "dosn't include reslots" do
       get "/v1/slots/demo", {}, auth_header
-      expect(response.body).not_to include re_slot.title
+      # when creating a reslot, a stdslot is created implicitly as its parent
+      # of course, this parent is included in the result so I rather look
+      # for a reslot specific json attribute
+      expect(response.body).not_to include 'parent'
     end
   end
 end

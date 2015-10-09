@@ -24,21 +24,26 @@ resource "Slots" do
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
-    response_field :reslotsCounter, "Number of reslots for this slot"
     response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos recordings for the slot"
   end
 
-  shared_context "group slot response fields" do
+  shared_context "stdslot response fields" do
     include_context "default slot response fields"
-    response_field :groupId, "ID of the group the slot belongs to"
+    response_field :reslotsCounter, "Number of reslots for this slot"
   end
 
   shared_context "reslot response fields" do
+    include_context "stdslot response fields"
+    response_field :slotter, "contains ID of the User who did reslot"
+    response_field :parent, "contains ID of the original slot that was reslottet"
+  end
+
+  shared_context "group slot response fields" do
     include_context "default slot response fields"
-    response_field :slotterId, "ID of the User who did reslot"
+    response_field :groupId, "ID of the group the slot belongs to"
   end
 
   shared_context "default slot parameter" do
@@ -191,7 +196,7 @@ resource "Slots" do
     parameter :id, "ID of the slot to get", required: true
 
     describe "Get slot with valid ID" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
@@ -277,6 +282,93 @@ resource "Slots" do
     end
   end
 
+  get "/v1/slots/:id" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the slot to get", required: true
+
+    describe "Get reslot with valid ID" do
+      include_context "reslot response fields"
+
+      let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
+      let(:parent) { create(:std_slot_public, meta_slot: meta_slot) }
+      let!(:reslot) { create(:re_slot, parent: parent) }
+
+
+      let!(:slot_setting) { create(:slot_setting,
+                                   user: current_user,
+                                   meta_slot: reslot.meta_slot,
+                                   alerts: '1110001100') }
+      let!(:medias) {
+        create_list :slot_image, 3, mediable: parent
+        create_list :audio, 2, mediable: parent
+        create_list :video, 2, mediable: parent
+      }
+      let(:id) { reslot.id }
+      let(:deleted_at) { reslot.deleted_at? ? reslot.deleted_at.as_json : nil }
+
+      example "Get Reslot", document: :v1 do
+        explanation "if a user is authenticated the slot settings" \
+                    " (alerts) will be included\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("id")
+        expect(json).to have_key("title")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
+        expect(json).to have_key("location")
+        expect(json).to have_key("creator")
+        expect(json['creator']).to have_key("username")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("createdAt")
+        expect(json).to have_key("updatedAt")
+        expect(json).to have_key("deletedAt")
+        expect(json).to have_key("notes")
+        expect(json).to have_key("likes")
+        expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("slotter")
+        expect(json).to have_key("parent")
+        expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("shareUrl")
+        expect(json).to have_key("visibility")
+        expect(json).to have_key("media")
+        expect(json.except('media', 'shareUrl'))
+          .to eq("id" => reslot.id,
+                 "title" => reslot.title,
+                 "startDate" => reslot.start_date.as_json,
+                 "endDate" => reslot.end_date.as_json,
+                 "createdAt" => reslot.created_at.as_json,
+                 "updatedAt" => reslot.updated_at.as_json,
+                 "deletedAt" => deleted_at.as_json,
+                 "location" => nil,
+                 "creator" => { "id" => reslot.creator.id,
+                                "username" => reslot.creator.username,
+                                "createdAt" => reslot.creator.created_at.as_json,
+                                "updatedAt" => reslot.creator.updated_at.as_json,
+                                "deletedAt" => nil,
+                                "image" => {
+                                  "publicId" => nil,
+                                  "localId" => nil
+                                } },
+                 "settings" => { 'alerts' => '1110001100' },
+                 "slotter" => { 'id' => reslot.slotter_id },
+                 "visibility" => reslot.parent.visibility,
+                 "notes" => reslot.notes,
+                 "parent" => { 'id' => reslot.parent.id },
+                 "likes" => reslot.likes.count,
+                 "commentsCounter" => reslot.comments.count,
+                 "reslotsCounter" => reslot.reslot_count
+                )
+        expect(json["media"].length).to eq(reslot.media_items.length)
+        expect(response_body).to include reslot.images.first.public_id
+      end
+    end
+  end
+
   post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -287,7 +379,7 @@ resource "Slots" do
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -570,7 +662,7 @@ resource "Slots" do
     include_context "default slot parameter"
 
     describe "Create new ReSlot from the Web Search service" do
-      include_context "default slot response fields"
+      include_context "stdslot response fields"
 
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
@@ -1224,6 +1316,23 @@ resource "Slots" do
         expect(response_body).to include reslots.last.slotter.username
       end
     end
+
+    describe "Get Slotters for Reslots Parent" do
+      let(:id) { reslots.first.id }
+
+      example "Get Slotters for Slot", document: :false do
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq 2
+        expect(json.first).to have_key "slotter"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first["slotter"]).to have_key "id"
+        expect(json.first["slotter"]).to have_key "image"
+        expect(response_body).to include reslots.first.slotter.username
+        expect(response_body).to include reslots.last.slotter.username
+      end
+    end
   end
 
   get "/v1/slots/:id/history" do
@@ -1239,14 +1348,11 @@ resource "Slots" do
                    "Username of the creator of the original slot"
     response_field :parentUserImage, "Image of the creator of the original slot"
 
-    let!(:slot) { create(:std_slot) }
-    let!(:reslot_1) { create(:re_slot, predecessor: slot,
-                             meta_slot: slot.meta_slot, parent: slot) }
-    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1,
-                             meta_slot: slot.meta_slot, parent: slot) }
+    let!(:slot) { create(:std_slot_public) }
+    let!(:reslot_1) { create(:re_slot, predecessor: slot) }
+    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1) }
     let!(:reslot_3) {
-      create(:re_slot, predecessor: reslot_2, slotter: current_user,
-             meta_slot: slot.meta_slot, parent: slot) }
+      create(:re_slot, predecessor: reslot_2, slotter: current_user) }
 
     let(:id) { reslot_3.id }
 

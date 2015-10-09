@@ -40,8 +40,4 @@ class StdSlotPolicy < SlotPolicy
     # current_user? && (slot.owner == current_user.id)
     current_user?
   end
-
-  def show_slotters?
-    show_to_current_user?
-  end
 end

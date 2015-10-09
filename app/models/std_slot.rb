@@ -14,13 +14,6 @@ class StdSlot < BaseSlot
 
   validates :owner, presence: true
 
-  def related_users
-    [owner]
-  end
-
-  def prepare_for_deletion
-  end
-
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
     if visibility
@@ -38,6 +31,13 @@ class StdSlot < BaseSlot
 
   def reslot_count
     ReSlot.unscoped.where(parent_id: id).count
+  end
+
+  def related_users
+    [owner]
+  end
+
+  def prepare_for_deletion
   end
 
   # I can throw a User object at this and AR automagically takes the ID - nice
