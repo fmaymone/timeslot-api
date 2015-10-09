@@ -48,11 +48,14 @@ module Feed
         usernames = [value['user']['username']]
       end
       if usernames.count > 1
-        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and #{(usernames.count == 2 ? 'one other' : "#{(usernames.count - 1).to_s} others")}" + message.from(message.index(' '))
+        usernames.reverse!
+        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and #{(usernames.count == 2 ? 'one other ' : "#{(usernames.count - 1).to_s} others ")}" + message
       #if usernames.count > 2
       #  aggregated_feed[groups[group]]['message'] = usernames[0..1].join(", ") + " and " + usernames[2].to_s + message.from(message.index(' '))
       #elsif usernames.count > 1
       #  aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and " + usernames[1].to_s + message.from(message.index(' '))
+      else
+        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + ' ' + aggregated_feed[groups[group]]['message']
       end
     end
     aggregated_feed

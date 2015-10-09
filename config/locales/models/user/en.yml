@@ -21,3 +21,6 @@
 
 en:
   notify_create_comment: "%{name} commented on: %{title}"
+  notify_create_like: "%{name} likes your slot"
+  activity_create_comment: "commented on: %{title}"
+  activity_create_like: "likes: %{title}"
