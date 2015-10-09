@@ -18,7 +18,7 @@ class SlotPaginator < BasePaginator
       @before = nil
     else # elsif @limit > @result_collection_size
       # we don't have enough items in the db to completely fulfill the query
-      if before || status == 'past'
+      if before || (status == 'past')
         # result set is based on backward pagination
         @after = @data.last.as_paging_cursor
         @before = nil

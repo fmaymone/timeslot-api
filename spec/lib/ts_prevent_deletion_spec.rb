@@ -12,13 +12,8 @@ describe TSPreventDeletion do
   end
 
   it "fails if undeleted references to the item to be deleted exists" do
-    expect(Rails.logger).to receive(:error).with(/wasn't deleted \(but should\)/)
-    if Rails.env.test?
-      expect {
-        slot_with_media.ts_soft_delete
-      }.to raise_error(/wasn't deleted \(but should\)/)
-    else
+    expect {
       slot_with_media.ts_soft_delete
-    end
+    }.to raise_error TSPreventDeletion::AssociationNotDeleted
   end
 end
