@@ -19,7 +19,7 @@ class Activity < ActiveRecord::Base
       message: activity_message,
       foreign_id: activity_foreign_id,
       notify: activity_notify,
-      time: Time.zone.now.strftime('%Y%m%d%H%M%S')
+      time: Time.zone.now #Time.zone.now.strftime('%Y%m%d%H%M%S')
     }.merge!(activity_extra_data))
   end
 
