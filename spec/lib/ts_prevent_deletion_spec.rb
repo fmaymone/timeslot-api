@@ -14,6 +14,7 @@ describe TSPreventDeletion do
   it "fails if undeleted references to the item to be deleted exists" do
     expect {
       slot_with_media.ts_soft_delete
-    }.to raise_error TSPreventDeletion::AssociationNotDeleted
+    }.to raise_error(/wasn't deleted \(but should\)/)
+    # }.to raise_error TSPreventDeletion::AssociationNotDeleted
   end
 end
