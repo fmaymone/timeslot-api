@@ -27,10 +27,7 @@ module V1
         @slots = StdSlotPublic.last(slot_count)
         render :index
       else
-        @slots = SlotsCollector::LatestPublicSlots.call(current_user: current_user,
-                                                        user: current_user,
-                                                        **slot_paging_params)
-
+        @slots = SlotsCollector.latest_public_slots(**slot_paging_params)
         @result = SlotPaginator.new(data: @slots, **slot_paging_params)
         render "v1/paginated/slots"
       end

@@ -111,9 +111,9 @@ module V1
       authorize :user
       requested_user = User.find(params[:user_id])
 
-      @slots = SlotsCollector::MySlots.call(current_user: current_user,
-                                            user: requested_user,
-                                            **slot_paging_params)
+      @slots = SlotsCollector.my_slots(current_user: current_user,
+                                       user: requested_user,
+                                       **slot_paging_params)
 
       if slot_paging_params.blank?
         render "v1/slots/index"
