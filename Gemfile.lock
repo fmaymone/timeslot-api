@@ -329,7 +329,7 @@ DEPENDENCIES
   rspec_api_documentation!
   rubocop
   rubocop-rspec
-  shoulda-matchers
+  shoulda-matchers (~> 3.0)
   spring
   spring-commands-rspec
   sucker_punch

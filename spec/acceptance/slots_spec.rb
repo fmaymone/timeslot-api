@@ -295,7 +295,6 @@ resource "Slots" do
       let(:parent) { create(:std_slot_public, meta_slot: meta_slot) }
       let!(:reslot) { create(:re_slot, parent: parent) }
 
-
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: reslot.meta_slot,
