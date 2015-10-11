@@ -1,6 +1,4 @@
-module UserFollow
-
-  include Follow
+module UserFollow extend Follow
 
   # only user has followings
   def following

@@ -40,7 +40,7 @@ gem 'sucker_punch'
 #gem 'stream_rails'
 
 # Redis Data Storage
-gem 'redis'
+gem 'redis', '2.2'
 
 # WebSockets
 #gem 'websocket-rails', '0.1.8'
@@ -97,7 +97,8 @@ group :development, :test, :herokutest do
   # github version contains a monkey patch for pretty printing response body in API docs
   gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
-  gem 'shoulda-matchers', '~> 3.0'
+  #gem 'shoulda-matchers', '~> 3.0'
+  gem 'shoulda-matchers', '2.8.0', require: false
 
   gem 'faker'
 end

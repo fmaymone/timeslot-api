@@ -2,16 +2,14 @@ class Activity < ActiveRecord::Base
 
   self.abstract_class = true
 
-  include JSONView
-
   # Trigger activities to Activity Stream
   after_create :create_activity
-  #after_update :update_activity
-  #after_destroy :remove_activity
+  after_update :update_activity
+  after_destroy :remove_activity
 
   private def create_activity
     FeedJob.new.async.perform({
-      class: activity_class,
+      type: activity_type,
       actor: activity_actor,
       activity: activity_verb,
       object: activity_object,
@@ -29,9 +27,9 @@ class Activity < ActiveRecord::Base
   private def remove_activity
   end
 
-  private def activity_class
+  private def activity_type
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_class'."
+          "Subclasses must define the method 'activity_type'."
   end
 
   # The user who made the update

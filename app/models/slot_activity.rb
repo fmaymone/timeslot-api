@@ -1,8 +1,8 @@
-class SlotActivity < Activity
+class SlotActivity <  Activity
 
   self.abstract_class = true
 
-  private def activity_class
+  private def activity_type
     'Slot'
   end
 
