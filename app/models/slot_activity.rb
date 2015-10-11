@@ -40,8 +40,6 @@ class SlotActivity <  Activity
   # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
     {
-      # The notification message for the activity
-      #message: activity_message,
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
       slot: JSONView::slot(slot),
@@ -60,20 +58,11 @@ class SlotActivity <  Activity
     # user_ids.concat(slot.likes.pluck(:user_id))
     # To simplify we fall back to public notifications:
 
+    # TODO: for now we send activities to all users
     # The limit for the to field is 100
     user_ids = User.all.collect(&:id)
     # Remove the user who did the actual comment
     user_ids.delete(user.id)
     user_ids
-    # Maps the aggregated feed instance for each user
-    # user_ids.map{|v| StreamRails.client.feed('aggregated', v.to_s)}.concat(
-    #     # Maps also the notification feed instance for each user (optional)
-    #     user_ids.map{|v| StreamRails.feed_manager.get_notification_feed(v.to_s)}
-    # )
   end
-
-  # This code lets the current user's flat and aggregated feeds
-  # follow the target_user's personal feed:
-  # StreamRails.feed_manager.follow_user(user_id, target_id)
-  # StreamRails.client.feed('aggregated', owner_id).follow('user', foreign_id)
 end

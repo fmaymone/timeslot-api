@@ -1,5 +1,7 @@
 class Group < ActiveRecord::Base
+  include GroupFollow
   after_commit AuditLog
+
   after_create :add_owner_as_member, on: :create
 
   belongs_to :owner, class_name: User, inverse_of: :own_groups

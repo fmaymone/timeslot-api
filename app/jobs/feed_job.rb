@@ -7,7 +7,7 @@ class FeedJob
       # Generates activity id
       id = Digest::SHA1.hexdigest(params.to_json).upcase #hexdigest([Time.now, rand].join)
       # Generates group tag
-      group = params[:target] + params[:activity] + Time.zone.now.strftime('%Y%m%d')
+      group = "#{params[:target]}#{params[:activity]}#{Time.zone.now.strftime('%Y%m%d')}"
       # Add identifiers to params
       params.merge!(id: id, group: group)
       # Store to own activities
@@ -16,6 +16,8 @@ class FeedJob
       unless params[:notify].empty?
         news_params = news_feed(params)
         notification_params = notification_feed(params)
+        # Divide notification list into smaller chunks to handle mass inserts
+        # to redis through the native bulk wrapper $redis.multi
         params[:notify].each_slice(100) do |chunk|
           $redis.multi do
             chunk.each do |user|
@@ -29,6 +31,7 @@ class FeedJob
       opts = {}
       opts[:parameters] = {
         actor: params[:actor],
+        object: params[:object],
         target: params[:target],
         notify: params[:notify],
         sucker_punch: "save to feed failed" }
@@ -38,15 +41,14 @@ class FeedJob
   end
 
   def user_feed(params)
-    # Stringify json (payload)
-    params.except(:notify) #slice(:actor)
+    params.except(:notify, :slot, :user, :actor)
+          .merge(message: "You #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json
   end
 
   def news_feed(params)
-    # Stringify json (payload)
     params.except(:notify)
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
@@ -54,8 +56,8 @@ class FeedJob
   end
 
   def notification_feed(params)
-    # Stringify json (payload)
-    params.except(:notify)
+    params.except(:notify, :slot, :user)
+          .merge(message: "#{params[:user]['username']} #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json

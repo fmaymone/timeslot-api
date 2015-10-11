@@ -2,12 +2,14 @@ class Activity < ActiveRecord::Base
 
   self.abstract_class = true
 
-  # Trigger activities to Activity Stream
+  # Trigger activities to feeds
   after_create :create_activity
   after_update :update_activity
   after_destroy :remove_activity
 
-  private def create_activity
+  private
+
+  def create_activity
     FeedJob.new.async.perform({
       type: activity_type,
       actor: activity_actor,
@@ -21,49 +23,54 @@ class Activity < ActiveRecord::Base
     }.merge!(activity_extra_data))
   end
 
-  private def update_activity
+  def update_activity
+    # TODO
   end
 
-  private def remove_activity
+  def remove_activity
+    # TODO
   end
 
-  private def activity_type
+  # Indicates on which classname the action was performed (e.g. 'Slot')
+  def activity_type
     raise NotImplementedError,
           "Subclasses must define the method 'activity_type'."
   end
 
   # The user who made the update
-  private def activity_actor
+  def activity_actor
     raise NotImplementedError,
           "Subclasses must define the method 'activity_actor'."
   end
 
   # An activity tag as a verb
-  private def activity_verb
+  def activity_verb
     raise NotImplementedError,
           "Subclasses must define the method 'activity_verb'."
   end
 
   # The object which was updated/created
-  private def activity_object
+  def activity_object
     raise NotImplementedError,
           "Subclasses must define the method 'activity_object'."
   end
 
   # The object which includes the update as a target
   # We can use this to group/aggregate activities by slots
-  private def activity_target
+  def activity_target
     raise NotImplementedError,
           "Subclasses must define the method 'activity_target'."
   end
 
   # The message is used as a notification message
-  private def activity_message
+  def activity_message
     raise NotImplementedError,
           "Subclasses must define the method 'activity_message'."
   end
 
-  private def activity_notify
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_notify
     raise NotImplementedError,
           "Subclasses must define the method 'activity_notify'."
   end

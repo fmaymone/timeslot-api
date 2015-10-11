@@ -1,4 +1,5 @@
 class BaseSlot < ActiveRecord::Base
+  include SlotFollow
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
   # it shares postgres inheritance semantics at the db level with its subtypes

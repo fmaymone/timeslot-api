@@ -13,6 +13,6 @@ class Like < SlotActivity
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    I18n.t('activity_create_like', title: slot.meta_slot.title)
+    "#{I18n.t('activity_create_like', title: slot.meta_slot.title)}"
   end
 end
