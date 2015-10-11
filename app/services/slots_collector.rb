@@ -10,15 +10,14 @@ module SlotsCollector
         direction = after.nil? ? 'before' : 'after'
       end
 
-      ### fetch slots
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: StdSlotPublic.all,
                                       direction: direction)
 
-      ### execute query
+      ### build and execute query
       data = query.retrieve(status: status,
-                             moment: moment,
-                             cursor: cursor).paginate(limit.to_i).to_a
+                            moment: moment,
+                            cursor: cursor).limit(limit.to_i).to_a
 
       ### order retrieved slots by startdate, enddate and id
       data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
@@ -63,7 +62,7 @@ module SlotsCollector
         # and definitly working, TODO: optimize when need is
         slots = query.retrieve(status: status,
                                moment: moment,
-                               cursor: cursor).paginate(limit.to_i)
+                               cursor: cursor).limit(limit.to_i)
 
         data.concat(slots)
       end

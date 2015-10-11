@@ -95,10 +95,6 @@ module SlotQuery
     end
 
     module Scopes
-      def paginate(limit = 20)
-        limit(limit)
-      end
-
       def ordered
         order(MetaSlot.arel_table[:start_date],
               MetaSlot.arel_table[:end_date],

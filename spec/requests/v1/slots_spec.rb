@@ -1855,9 +1855,13 @@ RSpec.describe "V1::Slots", type: :request do
 
         expect(json).to have_key 'data'
         expect(json).to have_key 'paging'
-        expect(json['paging']).to have_key 'moment'
-        expect(json['paging']).to have_key 'limit'
-        expect(json['paging']).to have_key 'before'
+        paging = json['paging']
+        expect(paging).to have_key 'moment'
+        expect(paging).to have_key 'limit'
+        expect(paging).to have_key 'before'
+        expect(paging).to have_key 'after'
+        expect(paging['before']).not_to be nil
+        expect(paging['after']).not_to be nil
       end
 
       # default status: 'latest'
