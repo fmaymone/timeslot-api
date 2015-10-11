@@ -1,4 +1,37 @@
 module SlotsCollector
+  class LatestPublicSlots # demo slots
+    # collects the public standard slots which were added to the db last
+    # def self.call(limit: 40, status: 'upcoming',
+    def self.call(current_user: nil, user:, limit: 40, status: 'upcoming',
+                  moment: Time.zone.now, after: nil, before: nil)
+      if after || before
+        encoded_cursor = (after || before)
+        cursor = BaseSlot.from_paging_cursor encoded_cursor if encoded_cursor
+        direction = after.nil? ? 'before' : 'after'
+      end
+
+      ### fetch slots
+      ### initialize query object
+      query = SlotQuery::OwnSlots.new(relation: StdSlotPublic.all,
+                                      direction: direction)
+
+      ### execute query
+      data = query.retrieve(status: status,
+                             moment: moment,
+                             cursor: cursor).paginate(limit.to_i).to_a
+
+      ### order retrieved slots by startdate, enddate and id
+      data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
+
+      ### and return the first/last [limit] slots from the collection
+      if before || (status == 'past')
+        data.last limit.to_i
+      else
+        data.take limit.to_i
+      end
+    end
+  end
+
   class MySlots
     # collects all slots current_user is allowed to see from requested_user
     # including std_slots, reslots
