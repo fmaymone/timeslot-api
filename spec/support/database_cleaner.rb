@@ -46,10 +46,10 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
-  config.around(:each) do
-    DatabaseCleaner.cleaning do
-      pp "test"
-      $redis.flushall
-    end
-  end
+  # config.around(:each) do
+  #   DatabaseCleaner.cleaning do
+  #     pp "test"
+  #     $redis.flushall
+  #   end
+  # end
 end

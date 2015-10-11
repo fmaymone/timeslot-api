@@ -6,8 +6,8 @@ class Activity < ActiveRecord::Base
 
   # Trigger activities to Activity Stream
   after_create :create_activity
-  after_update :update_activity
-  after_destroy :remove_activity
+  #after_update :update_activity
+  #after_destroy :remove_activity
 
   private def create_activity
     FeedJob.new.async.perform({
