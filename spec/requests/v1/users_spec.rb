@@ -851,10 +851,11 @@ RSpec.describe "V1::Users", type: :request do
           end
 
           describe "GET slots for befriended user" do
-
+            skip 'TODO: paginate slots of friend'
           end
 
           describe "GET slots for unrelated user" do
+            skip 'TODO: paginate slots of stranger'
             context "when logged in" do
 
             end
@@ -995,6 +996,26 @@ RSpec.describe "V1::Users", type: :request do
       get "/v1/users/friendslots", {}, auth_header
       expect(json.first['startDate']).to be >= Time.zone.now
       expect(response.body).not_to include 'bobslot-past'
+    end
+
+    context "pagination" do
+      let(:limit) { 4 }
+      let(:query_string) {
+        { status: status, moment: Time.zone.now.as_json, limit: limit } }
+
+      it "returns success" do
+        get "/v1/users/friendslots", query_string, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns pagination metadata" do
+        skip 'TODO: paginate slots of users friends'
+        get "/v1/users/friendslots", query_string, auth_header
+        expect(json).to have_key 'paging'
+        expect(json['paging']).to have_key 'moment'
+        expect(json['paging']).to have_key 'limit'
+        expect(json['paging']).to have_key 'before'
+      end
     end
   end
 end

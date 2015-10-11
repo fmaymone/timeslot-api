@@ -49,6 +49,30 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
+  private def slot_paging_params
+    p = params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
+
+    # are there any pagination params?
+    return {} unless p.any?
+
+    # set default limit if not provided
+    p[:limit] = 40 if p[:limit].nil?
+    # set maximum for limit to 100 if higher
+    p[:limit] = 100 if p[:limit].to_i > 100
+
+    # ignore status & moment if a cursor is submitted
+    if p[:before].present? || p[:after].present?
+      p[:status] = nil
+      p[:moment] = nil
+    else
+      # set default status and moment if not provided
+      p[:status] = 'upcoming' if p[:status].nil?
+      p[:moment] = Time.zone.now.to_s if p[:moment].nil?
+    end
+    p
+  end
+
+  # for Pundit
   class UserContext
     attr_reader :current_user, :requested_user
 
@@ -67,6 +91,7 @@ class ApplicationController < ActionController::API
     end
   end
 
+  # I18n
   def set_locale
     I18n.locale = (current_user[:lang] || I18n.default_locale)
   end

@@ -111,9 +111,9 @@ module V1
       authorize :user
       requested_user = User.find(params[:user_id])
 
-      @slots = SlotsCollector.call(current_user: current_user,
-                                   user: requested_user,
-                                   **slot_paging_params)
+      @slots = SlotsCollector::MySlots.call(current_user: current_user,
+                                            user: requested_user,
+                                            **slot_paging_params)
 
       if slot_paging_params.blank?
         render "v1/slots/index"
@@ -247,29 +247,6 @@ module V1
                     device: [:deviceId, :system, :version, :token])
         .deep_transform_keys(&:underscore)
         .deep_symbolize_keys
-    end
-
-    private def slot_paging_params
-      p = params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
-
-      # are there any pagination params?
-      return {} unless p.any?
-
-      # set default limit if not provided
-      p[:limit] = 40 if p[:limit].nil?
-      # set maximum for limit to 100 if higher
-      p[:limit] = 100 if p[:limit].to_i > 100
-
-      # ignore status & moment if a cursor is submitted
-      if p[:before].present? || p[:after].present?
-        p[:status] = nil
-        p[:moment] = nil
-      else
-        # set default status and moment if not provided
-        p[:status] = 'upcoming' if p[:status].nil?
-        p[:moment] = Time.zone.now.to_s if p[:moment].nil?
-      end
-      p
     end
   end
 end
