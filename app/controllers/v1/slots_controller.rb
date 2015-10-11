@@ -21,10 +21,19 @@ module V1
     # GET /v1/slots/demo
     def show_last
       authorize :stdSlot
-      slot_count = ENV['DEMO_SLOTS_COUNT'].nil? ? 100 : ENV['DEMO_SLOTS_COUNT'].to_i
-      @slots = StdSlotPublic.last(slot_count)
 
-      render :index
+      if slot_paging_params.blank?
+        slot_count = ENV['DEMO_SLOTS_COUNT'].nil? ? 100 : ENV['DEMO_SLOTS_COUNT'].to_i
+        @slots = StdSlotPublic.last(slot_count)
+        render :index
+      else
+        @slots = SlotsCollector::MySlots.call(current_user: current_user,
+                                              user: current_user,
+                                              **slot_paging_params)
+
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # POST /v1/stdslot

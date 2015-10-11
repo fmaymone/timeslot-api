@@ -1800,20 +1800,100 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/demo" do
-    let!(:std_slot) { create(:std_slot_public) }
-    let!(:re_slot) { create(:re_slot) }
+    context "without pagination" do
+      let!(:std_slot) { create(:std_slot_public) }
+      let!(:re_slot) { create(:re_slot) }
 
-    it "gets the latest/newest stdslots" do
-      get "/v1/slots/demo", {}, auth_header
-      expect(response.body).to include std_slot.title
+      it "returns success" do
+        get "/v1/slots/demo", {}, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "gets the latest/newest stdslots" do
+        get "/v1/slots/demo", {}, auth_header
+        expect(response.body).to include std_slot.title
+      end
+
+      it "dosn't include reslots" do
+        get "/v1/slots/demo", {}, auth_header
+        # when creating a reslot, a stdslot is created implicitly as its parent
+        # of course, this parent is included in the result so I rather look
+        # for a reslot specific json attribute
+        expect(response.body).not_to include 'parent'
+      end
     end
 
-    it "dosn't include reslots" do
-      get "/v1/slots/demo", {}, auth_header
-      # when creating a reslot, a stdslot is created implicitly as its parent
-      # of course, this parent is included in the result so I rather look
-      # for a reslot specific json attribute
-      expect(response.body).not_to include 'parent'
+    context "pagination" do
+      let(:limit) { 4 }
+      let(:query_string) { { limit: limit } }
+
+      let!(:private_upcoming_slot) { create(:std_slot_private,
+                                            start_date: Time.zone.tomorrow,
+                                            title: 'private upcoming slot') }
+      let!(:upcoming_slot) { create(:std_slot_public,
+                                    start_date: Time.zone.tomorrow,
+                                    title: 'public upcoming slot') }
+      let!(:upcoming_slots) { create_list(:std_slot_public, 3,
+                                          start_date: Time.zone.tomorrow,
+                                          owner: current_user) }
+      let!(:my_private_upcoming_slot) { create(:std_slot_private,
+                                               start_date: Time.zone.tomorrow,
+                                               title: 'my private upcoming slot',
+                                               owner: current_user) }
+      let!(:my_upcoming_slot) { create(:std_slot_public,
+                                       start_date: Time.zone.tomorrow,
+                                       title: 'my public upcoming slot',
+                                       owner: current_user) }
+
+      it "returns success" do
+        get "/v1/slots/demo", query_string, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns pagination metadata" do
+        get "/v1/slots/demo", query_string, auth_header
+
+        expect(json).to have_key 'data'
+        expect(json).to have_key 'paging'
+        expect(json['paging']).to have_key 'moment'
+        expect(json['paging']).to have_key 'limit'
+        expect(json['paging']).to have_key 'before'
+      end
+
+      # default status: 'latest'
+      it "returns public stdslots" do
+        latest_slot = StdSlotPublic.last
+        public_slot_count = StdSlotPublic.all.count
+
+        get "/v1/slots/demo",
+            { limit: public_slot_count, status: 'upcoming'},
+            auth_header
+
+        expect(response.body).to include latest_slot.title
+        expect(response.body).to include upcoming_slot.title
+        expect(response.body).to include my_upcoming_slot.title
+        expect(json['data'].size).to eq public_slot_count
+      end
+
+      it "doesn't return private slots" do
+        slot_count = StdSlot.unscoped.all.count
+
+        get "/v1/slots/demo",
+            { limit: slot_count, status: 'upcoming'},
+            auth_header
+
+        expect(response.body).not_to include private_upcoming_slot.title
+        expect(response.body).not_to include my_private_upcoming_slot.title
+      end
+
+      context "filter / status" do
+        it "upcoming" do
+          get "/v1/slots/demo",
+              { limit: limit, status: 'upcoming'},
+              auth_header
+          expect(json).to have_key 'paging'
+        end
+      end
     end
   end
 end
