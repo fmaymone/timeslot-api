@@ -2,9 +2,18 @@ require 'rails_helper'
 
 RSpec.describe "V1::Feed", :focus, type: :request do
   let(:json) { JSON.parse(response.body) }
-  let(:current_user) { create(:user, :with_email, :with_password) }
+  let(:current_user) { create(:user, :with_email, :with_password, :with_feed) }
+  let(:actors) { create_list(:user, 3, :with_feed) }
+  let(:slot) { create(:std_slot_public, owner: current_user) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
+  end
+
+  before(:each) do
+    actors.each do |actor|
+      slot.create_comment(actor, 'This is a test comment.')
+      slot.create_like(actor)
+    end
   end
 
   describe "GET /v1/feed/user" do
@@ -21,43 +30,49 @@ RSpec.describe "V1::Feed", :focus, type: :request do
     end
   end
 
-  describe "GET /v1/feed/news" do
-    let(:params) {{ style: 'foo' }}
-    it "returns 422 if parameters was invalid" do
-      get "/v1/feed/news", params, auth_header
-      expect(response.status).to be(422)
+  context "User feeds", :redis do
+    describe "GET /v1/feed/user" do
+      it "returns array of current user activities" do
+        get "/v1/feed/user", nil, auth_header
+        expect(response.status).to be(200)
+        expect(json.length).to be(4)
+      end
     end
-  end
 
-  describe "GET /v1/feed/news", :feed do
-    let(:params) {{ style: 'flat' }}
-
-    it "returns array of activities" do
-      get "/v1/feed/news", params, auth_header
-      expect(response.status).to be(200)
-      expect(json.length).to be(1)
+    describe "GET /v1/feed/news" do
+      it "returns array of aggregated user activities" do
+        get "/v1/feed/news", nil, auth_header
+        expect(response.status).to be(200)
+        expect(json.length).to be(6)
+      end
     end
-  end
 
-  describe "GET /v1/feed/user", :feed do
-    let(:params) {{ limit: 2, offset: 0 }}
-
-    it "returns paginated array of activities" do
-      get "/v1/feed/user", params, auth_header
-      expect(response.status).to be(200)
-      expect(json.length).to be(2)
-      expect(json.first['message']).to eq("User 53 commented on 'Slot title 21'")
+    describe "GET /v1/feed/notification" do
+      it "returns array of users notifications" do
+        get "/v1/feed/notification", nil, auth_header
+        expect(response.status).to be(200)
+        expect(json.length).to be(6)
+      end
     end
-  end
 
-  describe "GET /v1/feed/user", :feed do
-    let(:params) {{ limit: 2, cursor: "0cbf7380-65f3-11e5-8080-80006cf73f47" }}
+    describe "GET /v1/feed/user" do
+      let(:params) {{ limit: 2, offset: 2 }}
 
-    it "returns cursor-based paginated array of activities" do
-      get "/v1/feed/user", params, auth_header
-      expect(response.status).to be(200)
-      expect(json.length).to be(2)
-      expect(json.second['message']).to eq("User 53 likes your slot")
+      it "returns cursor-based paginated array of activities" do
+        get "/v1/feed/user", params, auth_header
+        expect(response.status).to be(200)
+        expect(json.length).to be(2) # 6 - 2 = 4.limit(2)
+      end
+    end
+
+    describe "GET /v1/feed/user" do
+      let(:params) {{ limit: 2, cursor: "2" }}
+
+      it "returns cursor-based paginated array of activities" do
+        get "/v1/feed/user", params, auth_header
+        expect(response.status).to be(200)
+        expect(json.length).to be(1) # 3 - 2 = 1.limit(2)
+      end
     end
   end
 end
