@@ -44,6 +44,8 @@ ENV['NOTIFICATION_WORKERS'] # number of concurrent SuckerPunch Notification Work
 ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREADS or 10 if both are not set, BUT should be at least MAX_THREADS + NOTIFICATION_WORKERS
 # maximum on heroku free plan is 20
 
+ENV['PG_EXPLAIN'] = 'true' # show output of pg EXPLAIN ANALYZE for all SELECT queries, use carefully
+
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
 ```
@@ -162,12 +164,13 @@ foreman start
 Flag | Effect
 -------------|------------------
 ```:focus``` | let only marked specs run
-```:db``` | print the database interactions of the specific spec to the console
+```:db``` | print the database interactions to the console, does also ```:focus``` the marked spec
+```:explain``` | print postgres EXPLAIN ANALYZE for SELECT queries to console, does also ```:focus``` the marked spec
+```:commit``` | persist data in database, see below
+```:seed``` | load database seeds
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
-```:seed``` | load database seeds
-```:commit``` | persist data in database, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
 
