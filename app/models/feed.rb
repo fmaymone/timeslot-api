@@ -19,43 +19,49 @@ module Feed
     $redis.smembers(feed).reverse.map{|a| JSON.parse(a)}
   end
 
+  # TODO: We can optimize this by aggregating feeds when storing into redis
   def self.aggregate_feed(feed)
+    # Temporary holders to create aggregations during request
     aggregated_feed = []
     usernames = []
     groups = {}
     index = -1
-
-    feed.each do |value|
-      actor = value['actor'].to_i
-      group = value['group'].to_s
-      message = value['message'].to_s
-      if groups[group].presence
-        unless aggregated_feed[groups[group]]['actors'].include?(actor)
-          # Collect actors
-          aggregated_feed[groups[group]]['actors'] << actor
-          # Set new id as last id
-          #aggregated_feed[groups[group]]['id'] = value['id']
-          # Set actor to last actor
-          #aggregated_feed[groups[group]]['user'] = value['user']
+    # Loop through all feeds
+    feed.each do |post|
+      # Set basic requirements
+      actor = post['actor'].to_i
+      group = post['group'].to_s
+      message = post['message'].to_s
+      current = groups[group]
+      # Aggregate feed (indexed by group)
+      if current.presence
+        # Add actor as unique
+        unless aggregated_feed[current]['actors'].include?(actor)
+          # Collect actor
+          aggregated_feed[current]['actors'] << actor
           # Collect username
-          usernames << value['user']['username']
+          usernames << post['user']['username']
         end
       else
-        groups[group] = (index += 1)
-        aggregated_feed[groups[group]] = value
-        aggregated_feed[groups[group]]['actors'] = [actor]
-        aggregated_feed[groups[group]].delete('actor')
-        usernames = [value['user']['username']]
+        # Increment index on each new group (starting from -1)
+        current = (index += 1)
+        # Set the whole activity object on each new group
+        # which takes the last state of all activities
+        aggregated_feed[current] = post
+        # We create a new array-field 'actors' on each
+        # new group and add current actor to it
+        aggregated_feed[current]['actors'] = [actor]
+        # In handy we remove the single field 'actor' on aggregated feeds
+        aggregated_feed[current].delete('actor')
+        # Instantiate a new username array on each
+        # new group and add current actor to it
+        usernames = [post['user']['username']]
       end
       if usernames.count > 1
-        usernames.reverse!
-        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and #{(usernames.count == 2 ? 'one other ' : "#{(usernames.count - 1).to_s} others ")}" + message
-      #if usernames.count > 2
-      #  aggregated_feed[groups[group]]['message'] = usernames[0..1].join(", ") + " and " + usernames[2].to_s + message.from(message.index(' '))
-      #elsif usernames.count > 1
-      #  aggregated_feed[groups[group]]['message'] = usernames[0].to_s + " and " + usernames[1].to_s + message.from(message.index(' '))
+        #usernames.reverse!
+        aggregated_feed[current]['message'] = usernames[0].to_s + " and #{(usernames.count == 2 ? 'one other ' : "#{(usernames.count - 1).to_s} others ")}" + message
       else
-        aggregated_feed[groups[group]]['message'] = usernames[0].to_s + ' ' + aggregated_feed[groups[group]]['message']
+        aggregated_feed[current]['message'] = usernames[0].to_s + ' ' + message
       end
     end
     aggregated_feed
@@ -67,8 +73,8 @@ module Feed
   def self.paginate(feed, style = nil, limit: 20, offset: 0, cursor: nil)
     feed = aggregate_feed(feed) if style == :aggregated
     if cursor
-      feed.each_with_index do |value, index|
-        if value['id'].eql?(cursor)
+      feed.each_with_index do |post, index|
+        if post['id'].eql?(cursor)
           offset = index + 1
           break
         end
