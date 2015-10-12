@@ -782,7 +782,7 @@ resource "Users" do
 
           # first request without a cursor
           expect(response_status).to eq(200)
-          slot_count = StdSlot.of(current_user).count +
+          slot_count = current_user.std_slots.count +
                        current_user.re_slots.count
           expect(json).to have_key 'paging'
           expect(json['paging']).to have_key('after')
@@ -870,7 +870,7 @@ resource "Users" do
           do_request
 
           expect(response_status).to eq(200)
-          slot_count = StdSlot.of(current_user).count +
+          slot_count = current_user.std_slots.count +
                        current_user.re_slots.count
           expect(json.length).to eq slot_count
           expect(json.first).to have_key("id")

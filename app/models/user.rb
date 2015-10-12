@@ -424,7 +424,7 @@ class User < ActiveRecord::Base
 
   private def multiple_representations(slot)
     representations = []
-    representations.push(*StdSlot.of(id).where(meta_slot: slot.meta_slot))
+    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
     representations.push(*re_slots.where(meta_slot: slot.meta_slot))
     representations.push(*group_slots.where(meta_slot: slot.meta_slot))
   end

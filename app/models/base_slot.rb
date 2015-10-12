@@ -29,6 +29,7 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
@@ -260,7 +261,8 @@ class BaseSlot < ActiveRecord::Base
   ## class methods ##
 
   def self.default_scope
-    where(slot_type: SLOT_TYPES[to_s.to_sym]) unless self == BaseSlot
+    # apply default scope only to the 'leaves'
+    where(slot_type: SLOT_TYPES[to_s.to_sym]) if subclasses.empty?
   end
 
   def self.get(slot_id)
@@ -272,11 +274,15 @@ class BaseSlot < ActiveRecord::Base
     slot_ids.collect { |id| get(id) }
   end
 
-  # TODO: add spec, check performance
+  # TODO: add spec
   def self.upcoming
     # BaseSlot.includes(:meta_slot).
       # where('meta_slots.start_date > ?', Time.zone.now).references(:meta_slot)
     joins(:meta_slot).where('meta_slots.start_date > ?', Time.zone.now)
+  end
+
+  def self.past
+    joins(:meta_slot).where('meta_slots.start_date < ?', Time.zone.now)
   end
 
   def self.next

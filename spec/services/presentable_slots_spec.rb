@@ -8,7 +8,7 @@ RSpec.describe PresentableSlots, type: :service do
       it "for herself" do
         expect(
           described_class.call(relationship: ME, user: user)
-        ).to eq [StdSlot.of(user), user.re_slots]
+        ).to eq [user.std_slots, user.re_slots]
       end
     end
 
