@@ -21,7 +21,7 @@ RSpec.configure do |config|
   # to individual examples or groups you care about by tagging them with
   # `:focus` metadata. When nothing is tagged with `:focus`, all examples
   # get run.
-  config.filter_run :focus
+  config.filter_run :focus, :db, :explain
   config.run_all_when_everything_filtered = true
 
   # Many RSpec users commonly either run the entire suite or an individual
@@ -100,6 +100,14 @@ RSpec.configure do |config|
 
   config.before(:each, :async) do
     require 'sucker_punch/testing/inline'
+  end
+
+  config.before(:each, :explain) do
+    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.show_explain
+  end
+
+  config.after(:each, :explain) do
+    ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.hide_explain
   end
 end
 

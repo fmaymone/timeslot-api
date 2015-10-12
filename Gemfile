@@ -62,7 +62,7 @@ group :development, :test do
 
   gem 'guard-rspec'
 
-  gem 'guard-puma' # to have Guard use the Puma server rather than WEBrick
+  gem 'guard-puma'
 
   gem 'terminal-notifier-guard'
 
@@ -87,8 +87,7 @@ group :development, :test, :herokutest do
   # github version contains a monkey patch for pretty printing response body in API docs
   gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
-  gem 'shoulda-matchers', require: false
+  gem 'shoulda-matchers', '~> 3.0'
 
-  # Faker
   gem 'faker'
 end
