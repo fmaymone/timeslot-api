@@ -137,17 +137,13 @@ ENV['TS_RAILS_BACKEND_CLOUDINARY_API_KEY']
 ENV['TS_RAILS_BACKEND_CLOUDINARY_API_SECRET']
 ```
 
-## GetStream.io
+## Redis
 
-Cloud Service for our Activity Streams, via Heroku Addon, [Docs](https://getstream.io/).
-
-For local testing a free account can be opened and the following vars need to be set:
+Redis is to store our Activity Streams via a service like Heroku Redis Addon. The following var need to be set:
 ```bash
-ENV['STREAM_URL']
-ENV['STREAM_API_KEY']
-ENV['STREAM_API_SECRET']
+ENV['REDIS_URL']
 ```
-Trigger activities are disabled during spec tests and returns results from the stub.
+For local testing you need a locally running redis server listening on *localhost:6379*
 
 ## Airbrake
 
@@ -192,7 +188,7 @@ Flag | Effect
 ```:keep_slots``` | doesn't clean metaslot, baseslot, stdslot, reslot & user table for marked group, cleans after group has run, for read-only specs
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
-```:feed``` | use feed to stub external requests to GetStream.io service
+```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
