@@ -2,22 +2,37 @@ RSpec.configure do |config|
 
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.before(:each) do
     DatabaseCleaner.strategy = :transaction
   end
 
-  # :deletion strategy is slightly faster than :truncation
-  # (43sec vs. 47sec for 1129 tests)
   config.before(:each, :commit) do
     DatabaseCleaner.strategy = :deletion
   end
 
+  config.after(:each, :commit) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  # just to be on the safe side
+  config.after(:all, :commit) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
   # whenever we load seed data (via :seed flag) we need to use
-  # the :truncation or :deletion strategy to really empty the database
-  config.before(:each, :seed) do
-    DatabaseCleaner.strategy = :deletion
+  # really empty the database afterwards
+  config.after(:all, :seed) do
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  # keep some tables intact during testruns
+  config.before(:all, :keep_slots) do
+    DatabaseCleaner.strategy = :truncation, {
+      except: %w(meta_slots base_slots std_slots re_slots users) }
+  end
+
+  config.after(:all, :keep_slots) do
+    DatabaseCleaner.clean_with(:truncation)
+    DatabaseCleaner.strategy = :transaction
   end
 
   config.before(:each) do
