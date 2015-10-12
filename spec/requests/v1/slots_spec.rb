@@ -726,17 +726,17 @@ RSpec.describe "V1::Slots", type: :request do
             expect(response).to have_http_status(:ok)
           end
 
-# BUG: this part has a potential lack
-#          it "doesn't unset 'openEnd' if same 'open' end_date is resubmitted" do
-#            expect(std_slot.open_end).to be true
-#            expect {
-#              patch "/v1/stdslot/#{std_slot.id}",
-#                    { endDate: std_slot.end_date }, auth_header
-#            }.not_to change(std_slot, :open_end)
-#            expect(response).to have_http_status(:ok)
-#            #expect(json['openEnd']).to be true
-#            expect(json['endDate']).to be nil
-#          end
+          # BUG: this part has a potential lack
+          #          it "doesn't unset 'openEnd' if same 'open' end_date is resubmitted" do
+          #            expect(std_slot.open_end).to be true
+          #            expect {
+          #              patch "/v1/stdslot/#{std_slot.id}",
+          #                    { endDate: std_slot.end_date }, auth_header
+          #            }.not_to change(std_slot, :open_end)
+          #            expect(response).to have_http_status(:ok)
+          #            #expect(json['openEnd']).to be true
+          #            expect(json['endDate']).to be nil
+          #          end
         end
       end
 
@@ -1823,27 +1823,31 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "pagination" do
+    context "pagination", :keep_slots do
       let(:limit) { 4 }
       let(:query_string) { { limit: limit } }
 
-      let!(:private_upcoming_slot) { create(:std_slot_private,
-                                            start_date: Time.zone.tomorrow,
-                                            title: 'private upcoming slot') }
-      let!(:upcoming_slot) { create(:std_slot_public,
-                                    start_date: Time.zone.tomorrow,
-                                    title: 'public upcoming slot') }
-      let!(:upcoming_slots) { create_list(:std_slot_public, 3,
-                                          start_date: Time.zone.tomorrow,
-                                          owner: current_user) }
-      let!(:my_private_upcoming_slot) { create(:std_slot_private,
-                                               start_date: Time.zone.tomorrow,
-                                               title: 'my private upcoming slot',
-                                               owner: current_user) }
-      let!(:my_upcoming_slot) { create(:std_slot_public,
-                                       start_date: Time.zone.tomorrow,
-                                       title: 'my public upcoming slot',
-                                       owner: current_user) }
+      before(:all) do
+        current_user = create(:user, :with_email, :with_password)
+
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'private upcoming slot')
+        create(:std_slot_public,
+               start_date: Time.zone.tomorrow,
+               title: 'public upcoming slot')
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'my private upcoming slot',
+               owner: current_user)
+        create(:std_slot_public,
+               start_date: Time.zone.tomorrow,
+               title: 'my public upcoming slot',
+               owner: current_user)
+        create_list(:std_slot_public, 3,
+                    start_date: Time.zone.tomorrow,
+                    owner: current_user)
+      end
 
       it "returns success" do
         get "/v1/slots/demo", query_string, auth_header
@@ -1864,8 +1868,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(paging['after']).not_to be nil
       end
 
-      # default status: 'latest'
-      it "returns public stdslots" do
+      it "returns upcoming public stdslots" do
         latest_slot = StdSlotPublic.last
         public_slot_count = StdSlotPublic.all.count
 
@@ -1874,8 +1877,8 @@ RSpec.describe "V1::Slots", type: :request do
             auth_header
 
         expect(response.body).to include latest_slot.title
-        expect(response.body).to include upcoming_slot.title
-        expect(response.body).to include my_upcoming_slot.title
+        expect(response.body).to include 'public upcoming slot'
+        expect(response.body).to include 'my public upcoming slot'
         expect(json['data'].size).to eq public_slot_count
       end
 
@@ -1886,8 +1889,8 @@ RSpec.describe "V1::Slots", type: :request do
             { limit: slot_count, status: 'upcoming'},
             auth_header
 
-        expect(response.body).not_to include private_upcoming_slot.title
-        expect(response.body).not_to include my_private_upcoming_slot.title
+        expect(response.body).not_to include 'private upcoming slot'
+        expect(response.body).not_to include 'my private upcoming slot'
       end
 
       context "filter / status" do
