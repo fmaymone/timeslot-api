@@ -61,9 +61,9 @@ GEM
     aws-sdk-resources (2.1.29)
       aws-sdk-core (= 2.1.29)
     aws_cf_signer (0.1.3)
-    bcrypt (3.1.10-x64-mingw32)
+    bcrypt (3.1.10)
     builder (3.2.2)
-    bullet (4.14.7)
+    bullet (4.14.9)
       activesupport (>= 3.0.0)
       uniform_notifier (~> 1.9.0)
     byebug (5.0.0)
@@ -93,7 +93,7 @@ GEM
       railties (>= 3.0.0)
     faker (1.5.0)
       i18n (~> 0.5)
-    ffi (1.9.10-x64-mingw32)
+    ffi (1.9.10)
     formatador (0.2.5)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
@@ -140,7 +140,7 @@ GEM
     nenv (0.2.0)
     netrc (0.10.3)
     newrelic_rpm (3.13.2.302)
-    nokogiri (1.6.6.2-x64-mingw32)
+    nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     notiffany (0.0.8)
       nenv (~> 0.1)
@@ -149,13 +149,12 @@ GEM
     oj_mimic_json (1.0.1)
     parser (2.2.3.0)
       ast (>= 1.1, < 3.0)
-    pg (0.18.2-x64-mingw32)
+    pg (0.18.2)
     powerpack (0.1.1)
-    pry (0.10.2-x64-mingw32)
+    pry (0.10.2)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-      win32console (~> 1.3)
     pry-byebug (3.2.0)
       byebug (~> 5.0)
       pry (~> 0.10)
@@ -226,8 +225,7 @@ GEM
       ffi (>= 0.5.0)
     redis (2.2.0)
     require_all (1.3.2)
-    rest-client (1.8.0-x64-mingw32)
-      ffi (~> 1.9)
+    rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
@@ -264,8 +262,8 @@ GEM
     safe_yaml (1.0.4)
     sexp_processor (4.6.0)
     shellany (0.0.1)
-    shoulda-matchers (2.8.0)
-      activesupport (>= 3.0.0)
+    shoulda-matchers (3.0.0)
+      activesupport (>= 4.0.0)
     slop (3.6.0)
     spring (1.4.0)
     spring-commands-rspec (1.0.4)
@@ -285,21 +283,18 @@ GEM
       hitimes
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    tzinfo-data (1.2015.7)
-      tzinfo (>= 1.0.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.1-x64-mingw32)
+    unf_ext (0.0.7.1)
     uniform_notifier (1.9.0)
     vcr (2.9.3)
     webmock (1.21.0)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
-    win32console (1.3.2)
     yard (0.8.7.6)
 
 PLATFORMS
-  x64-mingw32
+  ruby
 
 DEPENDENCIES
   airbrake
@@ -336,7 +331,7 @@ DEPENDENCIES
   rspec_api_documentation!
   rubocop
   rubocop-rspec
-  shoulda-matchers (= 2.8.0)
+  shoulda-matchers (~> 3.0)
   spring
   spring-commands-rspec
   sucker_punch
