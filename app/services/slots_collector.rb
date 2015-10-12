@@ -57,7 +57,7 @@ class SlotsCollector
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
     ### and return the first/last [limit] slots from the collection
-    if @before || (@filter == 'past')
+    if @before || (@filter == 'past') || (@filter == 'finished')
       data.last @limit
     else
       data.take @limit

@@ -787,11 +787,66 @@ RSpec.describe "V1::Users", type: :request do
               end
             end
 
-            context "ongoing" do
-              it "returns only ongoing slots" do
+            context "upcoming" do
+              it "returns slots where start_date is after moment" do
 
-                get "/v1/users/#{@current_user.id}/slots?filter=ongoing",
-                    {}, @auth_header
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: 'upcoming'},
+                    @auth_header
+
+                expect(response.status).to be(200)
+                now = Time.zone.now
+                json['data'].each do |slot|
+                  expect(slot['startDate']).to be > now
+                end
+                expect(response.body).to include 'upcoming slot'
+                expect(response.body).not_to include 'ongoing slot'
+                expect(response.body).not_to include 'past slot'
+              end
+            end
+
+            context "past" do
+              it "returns slots where start_date is before moment" do
+
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: 'past' },
+                    @auth_header
+
+                expect(response.status).to be(200)
+                now = Time.zone.now
+                json['data'].each do |slot|
+                  expect(slot['startDate']).to be < now
+                end
+                expect(response.body).to include 'past slot'
+                expect(response.body).to include 'ongoing slot'
+                expect(response.body).not_to include 'upcoming slot'
+              end
+            end
+
+            context "finished" do
+              it "returns slots where start & end is before moment" do
+
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: 'finished' },
+                    @auth_header
+
+                expect(response.status).to be(200)
+                now = Time.zone.now
+                json['data'].each do |slot|
+                  expect(slot['endDate']).to be < now
+                end
+                expect(response.body).to include 'past slot'
+                expect(response.body).not_to include 'ongoing slot'
+                expect(response.body).not_to include 'upcoming slot'
+              end
+            end
+
+            context "ongoing" do
+              it "returns slots where start is before & end is after moment" do
+
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: 'ongoing' },
+                    @auth_header
 
                 expect(response.status).to be(200)
                 now = Time.zone.now
@@ -805,45 +860,11 @@ RSpec.describe "V1::Users", type: :request do
               end
             end
 
-            context "upcoming" do
-              it "returns only upcoming slots" do
-
-                get "/v1/users/#{@current_user.id}/slots?filter=upcoming",
-                    {}, @auth_header
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['startDate']).to be > now
-                end
-                expect(response.body).to include 'upcoming slot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).not_to include 'past slot'
-              end
-            end
-
-            context "past" do
-              it "returns only past slots" do
-
-                get "/v1/users/#{@current_user.id}/slots?filter=past",
-                    {}, @auth_header
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['endDate']).to be < now
-                end
-                expect(response.body).to include 'past slot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).not_to include 'upcoming slot'
-              end
-            end
-
             context "now" do
-              let(:query_string) {
-                { filter: 'now', moment: Time.zone.now.as_json } }
+              it "returns ongoing and upcoming slots" do
 
-              it "returns 20 active and upcoming slots" do
-
-                get "/v1/users/#{@current_user.id}/slots", query_string,
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: 'now', moment: Time.zone.now.as_json },
                     @auth_header
 
                 expect(response.status).to be(200)

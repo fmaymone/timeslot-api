@@ -730,9 +730,15 @@ resource "Users" do
                          "relative to a specific moment. Must be UTC.\n" \
                          "Default is Time.zone.now (server time)."
       parameter :filter, "Query parameter to filter slots relative to a " \
-                         "point-in-time. Must be one of " \
-                         "[past, ongoing, upcoming, now, around, all].\n" \
-                         "Default is 'upcoming'. "
+                         "given **moment**. Must be one of:\n" \
+                         "- **past**: *start* before *moment*\n" \
+                         "- **upcoming**: *start* after *moment*\n" \
+                         "- **ongoing**: *start* before & *end* after *moment*\n" \
+                         "- **finished**: *start* & *end* before *moment*\n" \
+                         "- **now**: *ongoing* & *upcoming* slots\n" \
+                         "- **around**: tba\n" \
+                         "- **all**: no restriction\n" \
+                         "Default is **upcoming**."
       parameter :before, "Pagination cursor to retrieve slots which do happen" \
                          " BEFORE the slot " \
                          "represented by this cursor. If a cursor is " \

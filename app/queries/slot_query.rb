@@ -22,10 +22,11 @@ module SlotQuery
         when nil
         when 'all'
           @relation
-        when 'past'
-          @relation.where(past moment).ordered_rev
+        when 'finished'
+          @relation.where(finished moment).ordered_rev
         # when 'upcoming'
         # when 'ongoing'
+        # when 'past'
         # when 'now'
         else
           # here we send the 'filter' as a message to this SlotQuery:OwnSlots
@@ -49,11 +50,11 @@ module SlotQuery
         meta_table[:end_date].gteq(moment))
     end
 
-    private def past(moment = Time.zone.now)
+    private def finished(moment = Time.zone.now)
       meta_table[:end_date].lteq(moment)
     end
 
-    private def earlier(moment = Time.zone.now)
+    private def past(moment = Time.zone.now)
       meta_table[:start_date].lt(moment)
     end
 
@@ -75,7 +76,7 @@ module SlotQuery
     private def before_cursor(cursor)
       same_startend_rev(cursor).or(
         same_start_rev(cursor).or(
-        earlier(cursor[:startdate]))
+        past(cursor[:startdate]))
       )
     end
 
