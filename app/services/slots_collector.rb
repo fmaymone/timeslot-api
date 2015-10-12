@@ -1,8 +1,8 @@
 class SlotsCollector
-  def initialize(limit: 40, status: 'upcoming', moment: Time.zone.now,
+  def initialize(limit: 40, filter: 'upcoming', moment: Time.zone.now,
                  after: nil, before: nil)
     @limit = limit.to_i
-    @status = status
+    @filter = filter
     @moment = moment
     @before = before
     @after = after
@@ -44,9 +44,9 @@ class SlotsCollector
       ### build and execute query
       # get [limit] slots from all collections, not efficient but simple
       # and definitly working, TODO: optimize when need is
-      slots = query.retrieve(status: @status,
-                     moment: @moment,
-                     cursor: @cursor).limit(@limit)
+      slots = query.retrieve(filter: @filter,
+                             moment: @moment,
+                             cursor: @cursor).limit(@limit)
       data.concat(slots)
     end
     data
@@ -57,7 +57,7 @@ class SlotsCollector
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
     ### and return the first/last [limit] slots from the collection
-    if @before || (@status == 'past')
+    if @before || (@filter == 'past')
       data.last @limit
     else
       data.take @limit

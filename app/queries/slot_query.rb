@@ -9,7 +9,7 @@ module SlotQuery
     end
 
     # I don't like the split in direction and cursor because they belong together
-    def retrieve(status: nil, moment: Time.zone.now, cursor: nil)
+    def retrieve(filter: nil, moment: Time.zone.now, cursor: nil)
       # query with cursor
       case @direction
       when 'before'
@@ -18,7 +18,7 @@ module SlotQuery
         @relation.where(after_cursor(cursor)).ordered
       else
         # query without cursor
-        case status
+        case filter
         when nil
         when 'all'
           @relation
@@ -28,10 +28,10 @@ module SlotQuery
         # when 'ongoing'
         # when 'now'
         else
-          # here we send the 'status' as a message to this SlotQuery:OwnSlots
+          # here we send the 'filter' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
-          # the 'status'
-          @relation.where(send status, moment).ordered
+          # the 'filter'
+          @relation.where(send filter, moment).ordered
         end
       end
     end

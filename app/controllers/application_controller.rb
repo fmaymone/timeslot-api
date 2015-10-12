@@ -50,7 +50,7 @@ class ApplicationController < ActionController::API
   end
 
   private def slot_paging_params
-    p = params.permit(:status, :moment, :limit, :after, :before).symbolize_keys
+    p = params.permit(:filter, :moment, :limit, :after, :before).symbolize_keys
 
     # are there any pagination params?
     return {} unless p.any?
@@ -62,11 +62,11 @@ class ApplicationController < ActionController::API
 
     # ignore status & moment if a cursor is submitted
     if p[:before].present? || p[:after].present?
-      p[:status] = nil
+      p[:filter] = nil
       p[:moment] = nil
     else
       # set default status and moment if not provided
-      p[:status] = 'upcoming' if p[:status].nil?
+      p[:filter] = 'upcoming' if p[:filter].nil?
       p[:moment] = Time.zone.now.to_s if p[:moment].nil?
     end
     p

@@ -41,7 +41,7 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
     it "upcoming" do
       upcoming_slot
       slots = described_class.new(relation: current_user.std_slots.unscoped)
-      result = slots.retrieve(status: 'upcoming', moment: Time.zone.now)
+      result = slots.retrieve(filter: 'upcoming', moment: Time.zone.now)
       expect(result.first.title).to eq upcoming_slot.title
     end
   end

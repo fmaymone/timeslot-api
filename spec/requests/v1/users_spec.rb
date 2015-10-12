@@ -574,7 +574,7 @@ RSpec.describe "V1::Users", type: :request do
           describe "paginate" do
             context "via 'after' cursor" do
               let(:limit) { 3 }
-              let(:status) { 'upcoming' }
+              let(:filter) { 'upcoming' }
 
               it "returns all slots after 'moment'" do
                 # first request without a cursor
@@ -593,7 +593,7 @@ RSpec.describe "V1::Users", type: :request do
                 while cursor
                   # paginate through the result
                   get "/v1/users/#{@current_user.id}/slots",
-                      { status: status, after: cursor, limit: limit },
+                      { filter: filter, after: cursor, limit: limit },
                       @auth_header
 
                   expect(response.status).to be(200)
@@ -639,7 +639,7 @@ RSpec.describe "V1::Users", type: :request do
 
             context "via 'before' cursor" do
               let(:limit) { 7 }
-              let(:status) { 'upcoming' }
+              let(:filter) { 'upcoming' }
 
               it "returns all slots before 'moment'" do
                 # first request without a cursor
@@ -659,7 +659,7 @@ RSpec.describe "V1::Users", type: :request do
                 while cursor
                   # paginate through the result
                   get "/v1/users/#{@current_user.id}/slots",
-                      { status: status, before: cursor, limit: limit },
+                      { filter: filter, before: cursor, limit: limit },
                       @auth_header
 
                   expect(response.status).to be(200)
@@ -717,11 +717,11 @@ RSpec.describe "V1::Users", type: :request do
             let(:limit) { BaseSlot.all.count + 1 }
 
             context "upcoming" do
-              let(:status) { 'upcoming' }
+              let(:filter) { 'upcoming' }
 
               it "doesn't return 'after' cursor if no more results" do
                 get "/v1/users/#{@current_user.id}/slots",
-                    { status: status, limit: limit },
+                    { filter: filter, limit: limit },
                     @auth_header
                 expect(response.status).to be(200)
                 expect(json['paging']['after']).to be nil
@@ -729,12 +729,12 @@ RSpec.describe "V1::Users", type: :request do
             end
 
             context "past" do
-              let(:status) { 'past' }
+              let(:filter) { 'past' }
 
               it "doesn't return 'before' cursor if no more results" do
 
                 get "/v1/users/#{@current_user.id}/slots",
-                    { status: status, limit: limit },
+                    { filter: filter, limit: limit },
                     @auth_header
                 expect(response.status).to be(200)
                 expect(json['paging']['before']).to be nil
@@ -743,7 +743,7 @@ RSpec.describe "V1::Users", type: :request do
           end
 
           describe "ordering" do
-            let(:status) { 'now' }
+            let(:filter) { 'now' }
 
             it "by startdate, enddate, slotid" do
 
@@ -772,7 +772,7 @@ RSpec.describe "V1::Users", type: :request do
               it "returns all slots" do
 
                 get "/v1/users/#{@current_user.id}/slots",
-                    { status: 'all' }, @auth_header
+                    { filter: 'all' }, @auth_header
 
                 expect(response.status).to be(200)
 
@@ -790,7 +790,7 @@ RSpec.describe "V1::Users", type: :request do
             context "ongoing" do
               it "returns only ongoing slots" do
 
-                get "/v1/users/#{@current_user.id}/slots?status=ongoing",
+                get "/v1/users/#{@current_user.id}/slots?filter=ongoing",
                     {}, @auth_header
 
                 expect(response.status).to be(200)
@@ -808,7 +808,7 @@ RSpec.describe "V1::Users", type: :request do
             context "upcoming" do
               it "returns only upcoming slots" do
 
-                get "/v1/users/#{@current_user.id}/slots?status=upcoming",
+                get "/v1/users/#{@current_user.id}/slots?filter=upcoming",
                     {}, @auth_header
                 expect(response.status).to be(200)
                 now = Time.zone.now
@@ -824,7 +824,7 @@ RSpec.describe "V1::Users", type: :request do
             context "past" do
               it "returns only past slots" do
 
-                get "/v1/users/#{@current_user.id}/slots?status=past",
+                get "/v1/users/#{@current_user.id}/slots?filter=past",
                     {}, @auth_header
                 expect(response.status).to be(200)
                 now = Time.zone.now
@@ -839,7 +839,7 @@ RSpec.describe "V1::Users", type: :request do
 
             context "now" do
               let(:query_string) {
-                { status: 'now', moment: Time.zone.now.as_json } }
+                { filter: 'now', moment: Time.zone.now.as_json } }
 
               it "returns 20 active and upcoming slots" do
 
