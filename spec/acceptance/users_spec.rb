@@ -817,8 +817,8 @@ resource "Users" do
           expect(response_body).to include(std_slot_2.title)
 
           # make a subsequent request based on 'after' cursor
-          client.get "/v1/users/#{current_user.id}/slots?after=#{after_cursor}",
-                     { }, headers
+          client.get "/v1/users/#{current_user.id}/slots",
+                     { after: after_cursor }, headers
 
           expect(response_status).to eq(200)
           json = JSON.parse(response_body)
