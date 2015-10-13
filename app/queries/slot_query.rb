@@ -37,12 +37,20 @@ module SlotQuery
       end
     end
 
-    private def now(moment = nil)
-      upcoming(moment).or ongoing(moment)
+    private def upcoming(moment = Time.zone.now)
+      meta_table[:start_date].gteq(moment)
     end
 
-    private def upcoming(moment = Time.zone.now)
+    private def later(moment = Time.zone.now)
       meta_table[:start_date].gt(moment)
+    end
+
+    private def past(moment = Time.zone.now)
+      meta_table[:start_date].lt(moment)
+    end
+
+    private def finished(moment = Time.zone.now)
+      meta_table[:end_date].lteq(moment)
     end
 
     private def ongoing(moment = Time.zone.now)
@@ -50,16 +58,12 @@ module SlotQuery
         meta_table[:end_date].gteq(moment))
     end
 
-    private def finished(moment = Time.zone.now)
-      meta_table[:end_date].lteq(moment)
-    end
-
-    private def past(moment = Time.zone.now)
-      meta_table[:start_date].lt(moment)
+    private def now(moment = nil)
+      upcoming(moment).or ongoing(moment)
     end
 
     private def after_cursor(cursor)
-      same_startend(cursor).or same_start(cursor).or upcoming(cursor[:startdate])
+      same_startend(cursor).or same_start(cursor).or later(cursor[:startdate])
     end
 
     private def same_startend(cursor)

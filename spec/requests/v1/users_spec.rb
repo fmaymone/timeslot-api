@@ -788,7 +788,7 @@ RSpec.describe "V1::Users", type: :request do
             end
 
             context "upcoming" do
-              it "returns slots where start_date is after moment" do
+              it "returns slots where start_date is equal or after moment" do
 
                 get "/v1/users/#{@current_user.id}/slots",
                     { filter: 'upcoming'},
@@ -797,7 +797,7 @@ RSpec.describe "V1::Users", type: :request do
                 expect(response.status).to be(200)
                 now = Time.zone.now
                 json['data'].each do |slot|
-                  expect(slot['startDate']).to be > now
+                  expect(slot['startDate']).to be >= now
                 end
                 expect(response.body).to include 'upcoming slot'
                 expect(response.body).not_to include 'ongoing slot'

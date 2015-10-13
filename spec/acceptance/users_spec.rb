@@ -732,7 +732,7 @@ resource "Users" do
       parameter :filter, "Query parameter to filter slots relative to a " \
                          "given **moment**. Must be one of:\n" \
                          "- **past**: *start* before *moment*\n" \
-                         "- **upcoming**: *start* after *moment*\n" \
+                         "- **upcoming**: *start* after or equal *moment*\n" \
                          "- **ongoing**: *start* before & *end* after *moment*\n" \
                          "- **finished**: *start* & *end* before *moment*\n" \
                          "- **now**: *ongoing* & *upcoming* slots\n" \
