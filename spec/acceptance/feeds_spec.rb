@@ -71,6 +71,8 @@ resource "Feeds", :focus do
         explanation "if a user is authenticated, then some extra" \
                     "activity fields are included"
 
+        # Create a relationship
+        current_user.add_follower(owner)
         # Perform an activity
         slot.create_comment(current_user, 'This is a test comment.')
 
@@ -124,6 +126,8 @@ resource "Feeds", :focus do
       example "Get an aggregated activity feed", document: :v1 do
         explanation "some extra activity fields are included"
 
+        # Create a relationship
+        actor.add_follower(current_user)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 
@@ -211,6 +215,8 @@ resource "Feeds", :focus do
       example "Get activity notifications", document: :v1 do
         explanation "some extra activity fields are included"
 
+        # Create a relationship
+        actor.add_follower(current_user)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 

@@ -7,12 +7,13 @@ RSpec.describe Feed, :focus, type: :model do
   context "User feeds", :redis do
     let(:user) { create(:user, :with_email, :with_password, :with_feed) }
     let(:slot) { create(:std_slot_public, owner: user) }
-    #let(:slot2) { create(:std_slot_public, owner: follower) }
-    #let(:slot3) { create(:std_slot_public, owner: follower2) }
 
     before(:each) do
+      # Create relationships
       user.add_follower(follower)
       user.add_follower(follower2)
+      follower.add_follower(follower2)
+      # Perform activities
       slot.create_comment(user, 'This is a test comment.')
       slot.create_like(user)
       slot.create_comment(follower, 'This is a test comment.')
@@ -23,156 +24,74 @@ RSpec.describe Feed, :focus, type: :model do
 
     describe "User follows another user" do
       it "User is subscribed" do
+
+        # user feeds
         user_feed = Feed.user_feed(user.id).as_json
+        pp user_feed
         expect(user_feed.count).to be(6)
-        #expect(user_feed).to include({object: slot.id.to_s})
 
+        user_feed_follower = Feed.user_feed(follower.id).as_json
+        expect(user_feed_follower.count).to be(2)
+
+        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+        expect(user_feed_follower2.count).to be(2)
+
+        # news feeds
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(4)
-        # expect(news_feed.first['actor']).to eq(follower.id)
-        # expect(news_feed.last['actor']).to eq(follower2.id)
-        # expect(news_feed.first['object']).to eq(slot.id)
-        # expect(news_feed.first['target']).to eq(slot.creator.id)
+        expect(news_feed.count).to be(2)
 
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(2)
+
+        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        expect(news_feed_follower2.count).to be(2)
+
+        # notification feeds
         notification_feed = Feed.news_feed(user.id).as_json
-        expect(notification_feed.count).to be(4)
-        # expect(notification_feed.first['actor'].to_i).to eq(follower.id)
-        # expect(notification_feed.last['actor'].to_i).to eq(follower2.id)
-        # expect(notification_feed.first['object']).to eq(slot.id)
-        # expect(notification_feed.first['target'].to_i).to eq(slot.creator.id)
-      end
+        expect(notification_feed.count).to be(2)
 
-      it "User has followers" do
-        user_feed = Feed.user_feed(follower.id).as_json
-        expect(user_feed.count).to be(2)
-        news_feed = Feed.news_feed(follower.id).as_json
-        expect(news_feed.count).to be(4)
-        notification_feed = Feed.news_feed(follower.id).as_json
-        expect(notification_feed.count).to be(4)
+        notification_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(2)
+
+        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        expect(notification_feed_follower2.count).to be(2)
       end
     end
 
     describe "User unfollows another user" do
       it "User is subscribed" do
-        expect(user.followed_by?(follower)).to be(true)
-        expect(user.followers).to include(follower.id.to_s)
-
         user.remove_follower(follower)
-        expect(user.followed_by?(follower)).to be(false)
-        expect(user.followers).not_to include(user.id.to_s)
-      end
+        user.remove_follower(follower2)
 
-      it "User has followers" do
-        expect(follower.following?(user)).to be(true)
-        expect(follower.following.to_json).to include(user.id.to_s)
-        expect(follower.following_count).to be(1)
+        # user feeds
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(6)
 
-        user.remove_follower(follower)
-        expect(follower.following?(user)).to be(false)
-        expect(follower.following.to_json).not_to include(user.id.to_s)
-        expect(follower.following_count).to be(0)
-      end
-    end
-  end
+        user_feed_follower = Feed.user_feed(follower.id).as_json
+        expect(user_feed_follower.count).to be(2)
 
-  context "Slot feeds", :redis do
-    let(:slot) { create(:std_slot_public) }
+        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+        expect(user_feed_follower2.count).to be(2)
 
-    describe "User follows slot" do
-      it "User is subscribed to slot" do
-        slot.add_follower(follower)
-        slot.add_follower(follower2)
-        expect(slot.followed_by?(follower)).to be(true)
-        expect(slot.followers).to include(follower.id.to_s)
-        expect(slot.followed_by?(follower2)).to be(true)
-        expect(slot.followers).to include(follower2.id.to_s)
-        expect(slot.follower_count).to be(2)
-      end
+        # news feeds
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0)
 
-      it "Slot has followers" do
-        slot.add_follower(follower)
-        slot.add_follower(follower2)
-        expect(follower.following?(slot)).to be(true)
-        expect(follower.following.to_json).to include(slot.id.to_s)
-        expect(follower.following_count).to be(1)
-        expect(follower2.following?(slot)).to be(true)
-        expect(follower2.following.to_json).to include(slot.id.to_s)
-        expect(follower2.following_count).to be(1)
-      end
-    end
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(0)
 
-    describe "User unfollows a slot" do
-      it "User is subscribed to slot" do
-        slot.add_follower(follower)
-        expect(slot.followed_by?(follower)).to be(true)
-        expect(slot.followers).to include(follower.id.to_s)
+        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        expect(news_feed_follower2.count).to be(2)
 
-        slot.remove_follower(follower)
-        expect(slot.followed_by?(follower)).to be(false)
-        expect(slot.followers).not_to include(slot.id.to_s)
-      end
+        # notification feeds
+        notification_feed = Feed.news_feed(user.id).as_json
+        expect(notification_feed.count).to be(0)
 
-      it "Slot has followers" do
-        slot.add_follower(follower)
-        expect(follower.following?(slot)).to be(true)
-        expect(follower.following.to_json).to include(slot.id.to_s)
-        expect(follower.following_count).to be(1)
+        notification_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(0)
 
-        slot.remove_follower(follower)
-        expect(follower.following?(slot)).to be(false)
-        expect(follower.following.to_json).not_to include(slot.id.to_s)
-        expect(follower.following_count).to be(0)
-      end
-    end
-  end
-
-  context "Group feeds", :redis do
-    let(:group) { create(:group) }
-
-    describe "User follows group" do
-      it "User is subscribed to group" do
-        group.add_follower(follower)
-        group.add_follower(follower2)
-        expect(group.followed_by?(follower)).to be(true)
-        expect(group.followers).to include(follower.id.to_s)
-        expect(group.followed_by?(follower2)).to be(true)
-        expect(group.followers).to include(follower2.id.to_s)
-        expect(group.follower_count).to be(2)
-      end
-
-      it "Group has followers" do
-        group.add_follower(follower)
-        group.add_follower(follower2)
-        expect(follower.following?(group)).to be(true)
-        expect(follower.following.to_json).to include(group.id.to_s)
-        expect(follower.following_count).to be(1)
-        expect(follower2.following?(group)).to be(true)
-        expect(follower2.following.to_json).to include(group.id.to_s)
-        expect(follower2.following_count).to be(1)
-      end
-    end
-
-    describe "User unfollows a group" do
-      it "User is subscribed to group" do
-        group.add_follower(follower)
-        expect(group.followed_by?(follower)).to be(true)
-        expect(group.followers).to include(follower.id.to_s)
-
-        group.remove_follower(follower)
-        expect(group.followed_by?(follower)).to be(false)
-        expect(group.followers).not_to include(group.id.to_s)
-      end
-
-      it "Group has followers" do
-        group.add_follower(follower)
-        expect(follower.following?(group)).to be(true)
-        expect(follower.following.to_json).to include(group.id.to_s)
-        expect(follower.following_count).to be(1)
-
-        group.remove_follower(follower)
-        expect(follower.following?(group)).to be(false)
-        expect(follower.following.to_json).not_to include(group.id.to_s)
-        expect(follower.following_count).to be(0)
+        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        expect(notification_feed_follower2.count).to be(2)
       end
     end
   end

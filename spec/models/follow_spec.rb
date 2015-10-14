@@ -4,10 +4,10 @@ RSpec.describe Follow, :focus, type: :model do
   let(:follower) { create(:user) }
   let(:follower2) { create(:user) }
 
-  context "User followings" do
+  context "User followings", :redis do
     let(:user) { create(:user) }
 
-    describe "User follows another user", :redis do
+    describe "User follows another user" do
       it "User is subscribed" do
         user.add_follower(follower)
         user.add_follower(follower2)
@@ -30,7 +30,7 @@ RSpec.describe Follow, :focus, type: :model do
       end
     end
 
-    describe "User unfollows another user", :redis do
+    describe "User unfollows another user" do
       it "User is subscribed" do
         user.add_follower(follower)
         expect(user.followed_by?(follower)).to be(true)
@@ -55,10 +55,10 @@ RSpec.describe Follow, :focus, type: :model do
     end
   end
 
-  context "Slot followings" do
+  context "Slot followings", :redis do
     let(:slot) { create(:std_slot_public) }
 
-    describe "User follows slot", :redis do
+    describe "User follows slot" do
       it "User is subscribed to slot" do
         slot.add_follower(follower)
         slot.add_follower(follower2)
@@ -81,7 +81,7 @@ RSpec.describe Follow, :focus, type: :model do
       end
     end
 
-    describe "User unfollows a slot", :redis do
+    describe "User unfollows a slot" do
       it "User is subscribed to slot" do
         slot.add_follower(follower)
         expect(slot.followed_by?(follower)).to be(true)
@@ -106,10 +106,10 @@ RSpec.describe Follow, :focus, type: :model do
     end
   end
 
-  context "Group followings" do
+  context "Group followings", :redis do
     let(:group) { create(:group) }
 
-    describe "User follows group", :redis do
+    describe "User follows group" do
       it "User is subscribed to group" do
         group.add_follower(follower)
         group.add_follower(follower2)
@@ -132,7 +132,7 @@ RSpec.describe Follow, :focus, type: :model do
       end
     end
 
-    describe "User unfollows a group", :redis do
+    describe "User unfollows a group" do
       it "User is subscribed to group" do
         group.add_follower(follower)
         expect(group.followed_by?(follower)).to be(true)

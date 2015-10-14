@@ -11,6 +11,9 @@ RSpec.describe "V1::Feed", :focus, type: :request do
 
   before(:each) do
     actors.each do |actor|
+      # Create relationships
+      actor.add_follower(current_user)
+      # Perform activities
       slot.create_comment(actor, 'This is a test comment.')
       slot.create_like(actor)
     end
@@ -43,7 +46,7 @@ RSpec.describe "V1::Feed", :focus, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(6)
+        expect(json.length).to be(2)
       end
     end
 
