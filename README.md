@@ -46,6 +46,11 @@ ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREA
 
 ENV['PG_EXPLAIN'] = 'true' # show output of pg EXPLAIN ANALYZE for all SELECT queries, use carefully
 
+# pagination
+ENV['PAGINATION_DEFAULT_FILTER'] = 'upcoming' # if not provided by client
+ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
+ENV['PAGINATION_MAX_LIMIT'] = '100'
+
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
 ```
