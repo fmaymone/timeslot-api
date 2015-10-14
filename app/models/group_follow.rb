@@ -1,4 +1,6 @@
-module GroupFollow include Follow
+module GroupFollow
+
+  include Follow
 
   def feed_type
     'Group'

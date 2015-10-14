@@ -47,7 +47,7 @@ resource "Feeds", :focus do
     response_field :friendsCount, "Number of friends for this user"
   end
 
-  get "/v1/feed/user", :redis do
+  get "/v1/feed/user", :redis, :vcr do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -84,7 +84,7 @@ resource "Feeds", :focus do
         expect(activity).to have_key("activity")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
-        #expect(activity).to have_key("foreign_id")
+        expect(activity).to have_key("foreignId")
         expect(activity).to have_key("message")
         expect(activity).not_to have_key("slot")
         expect(activity).not_to have_key("user")
@@ -92,15 +92,15 @@ resource "Feeds", :focus do
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
-        expect(activity['object'].to_i).to eq(slot.id)
-        #expect(activity['foreign_id']).to eq(slot.creator.id)
-        expect(activity['target'].to_i).to eq(slot.creator.id)
+        expect(activity['object'].to_i).to eq(slot.comments.last.id)
+        expect(activity['target'].to_i).to eq(slot.id)
+        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
   end
 
-  get "/v1/feed/news", :redis do
+  get "/v1/feed/news", :redis, :vcr do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -134,11 +134,11 @@ resource "Feeds", :focus do
         activity = json.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("activity")
-        expect(activity).to have_key("activity_count")
+        expect(activity).to have_key("activityCount")
         expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
-        #expect(activity).to have_key("foreign_id")
+        expect(activity).to have_key("foreignId")
         expect(activity).to have_key("actors")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
@@ -180,15 +180,15 @@ resource "Feeds", :focus do
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
         expect(activity['actors']).to eq([actor.id])
-        expect(activity['object'].to_i).to eq(slot.id)
-        #expect(activity['foreign_id']).to eq(slot.creator.id)
-        expect(activity['target'].to_i).to eq(slot.creator.id)
+        expect(activity['object'].to_i).to eq(slot.comments.last.id)
+        expect(activity['target'].to_i).to eq(slot.id)
+        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
   end
 
-  get "/v1/feed/notification", :redis do
+  get "/v1/feed/notification", :redis, :vcr do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -224,7 +224,7 @@ resource "Feeds", :focus do
         expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
-        #expect(activity).to have_key("foreign_id")
+        expect(activity).to have_key("foreignId")
         expect(activity).to have_key("actor")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
@@ -235,9 +235,9 @@ resource "Feeds", :focus do
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
         expect(activity['actor'].to_i).to eq(actor.id)
-        expect(activity['object'].to_i).to eq(slot.id)
-        #expect(activity['foreign_id']).to eq(slot.creator.id)
-        expect(activity['target'].to_i).to eq(slot.creator.id)
+        expect(activity['object'].to_i).to eq(slot.comments.last.id)
+        expect(activity['target'].to_i).to eq(slot.id)
+        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end

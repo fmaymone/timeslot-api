@@ -1,4 +1,6 @@
-module SlotFollow include Follow
+module SlotFollow
+
+  include Follow
 
   def feed_type
     'Slot'

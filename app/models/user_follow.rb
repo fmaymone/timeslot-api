@@ -1,4 +1,10 @@
-module UserFollow include Follow
+module UserFollow
+
+  include Follow
+
+  def feed_type
+    'User'
+  end
 
   # only user has followings
   def following
@@ -8,9 +14,5 @@ module UserFollow include Follow
   # only user has following_count
   def following_count
     $redis.scard(self.redis_key(:following))
-  end
-
-  def feed_type
-    'User'
   end
 end

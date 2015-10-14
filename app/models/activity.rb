@@ -12,10 +12,10 @@ class Activity < ActiveRecord::Base
   def create_activity
     FeedJob.new.async.perform({
       type: activity_type,
-      actor: activity_actor,
+      actor: activity_actor_id,
+      object: activity_object_id,
+      target: activity_target_id,
       activity: activity_verb,
-      object: activity_object,
-      target: activity_target,
       message: activity_message,
       foreign_id: activity_foreign_id,
       notify: activity_notify,
@@ -38,28 +38,28 @@ class Activity < ActiveRecord::Base
   end
 
   # The user who made the update
-  def activity_actor
+  def activity_actor_id
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_actor'."
+          "Subclasses must define the method 'activity_actor_id'."
+  end
+
+  # The object which was updated/created
+  def activity_object_id
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_object_id'."
+  end
+
+  # The object which includes the update as a target
+  # We can use this to group/aggregate activities by slots
+  def activity_target_id
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_target_id'."
   end
 
   # An activity tag as a verb
   def activity_verb
     raise NotImplementedError,
           "Subclasses must define the method 'activity_verb'."
-  end
-
-  # The object which was updated/created
-  def activity_object
-    raise NotImplementedError,
-          "Subclasses must define the method 'activity_object'."
-  end
-
-  # The object which includes the update as a target
-  # We can use this to group/aggregate activities by slots
-  def activity_target
-    raise NotImplementedError,
-          "Subclasses must define the method 'activity_target'."
   end
 
   # The message is used as a notification message

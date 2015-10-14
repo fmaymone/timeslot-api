@@ -7,23 +7,18 @@ class GroupActivity < Activity
   end
 
   # The user who made the update
-  private def activity_actor
+  private def activity_actor_id
     user.id.to_s
   end
 
-  # An activity tag as a verb
-  private def activity_verb
-    self.class.name.downcase
-  end
-
   # The object which was updated/created
-  private def activity_object
+  private def activity_object_id
     self.id.to_s
   end
 
   # The object which includes the update as a target
   # We can use this to group/aggregate activities by slots
-  private def activity_target
+  private def activity_target_id
     group.id.to_s
   end
 
@@ -32,6 +27,11 @@ class GroupActivity < Activity
   # visiblity, we have to delete activities from stream.
   private def activity_foreign_id
    ""
+  end
+
+  # An activity tag as a verb
+  private def activity_verb
+    self.class.name.downcase
   end
 
   # Add extra data to each activity. The data can be hide

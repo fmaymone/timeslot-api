@@ -24,3 +24,4 @@ de:
   notify_create_like: "%{name} gefällt dein Slot"
   activity_create_comment: "hat kommentiert auf: %{title}"
   activity_create_like: "gefällt dein Slot"
+  activity_create_media: "adds a new %{type}"

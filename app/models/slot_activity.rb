@@ -2,38 +2,41 @@ class SlotActivity <  Activity
 
   self.abstract_class = true
 
+  private def activity_slot
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_slot'."
+  end
+
+  private def activity_user
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_user'."
+  end
+
   private def activity_type
     'Slot'
   end
 
-  # The user who made the update
-  private def activity_actor
-    user.id.to_s
-  end
-
-  # An activity tag as a verb
-  private def activity_verb
-    self.class.name.downcase
-  end
-
   # The object which was updated/created
-  private def activity_object
-    slot.id.to_s
-    #self.id
+  private def activity_object_id
+    self.id
+  end
+
+  # The user who made the update
+  private def activity_actor_id
+    activity_user.id.to_s
   end
 
   # The object which includes the update as a target
   # We can use this to group/aggregate activities by slots
-  private def activity_target
-    slot.creator.id.to_s
-    #slot.id.to_s
+  private def activity_target_id
+    activity_slot.id.to_s
   end
 
   # The foreign id is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   private def activity_foreign_id
-    slot.creator.id.to_s
+    activity_slot.creator.id.to_s
   end
 
   # Add extra data to each activity. The data can be hide
@@ -42,8 +45,8 @@ class SlotActivity <  Activity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      slot: JSONView::slot(slot),
-      user: JSONView::user(user)
+      slot: JSONView::slot(activity_slot),
+      user: JSONView::user(activity_user)
     }
   end
 
@@ -62,7 +65,7 @@ class SlotActivity <  Activity
     # The limit for the to field is 100
     user_ids = User.all.collect(&:id)
     # Remove the user who did the actual comment
-    user_ids.delete(user.id)
+    user_ids.delete(activity_user.id)
     user_ids
   end
 end

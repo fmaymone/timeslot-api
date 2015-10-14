@@ -11,9 +11,25 @@ class Comment < SlotActivity
     update(deleted_at: Time.zone.now)
   end
 
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    slot
+  end
+
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'comment'
+  end
+
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    "#{I18n.t('activity_create_comment', title: slot.meta_slot.title)}"
+    "#{I18n.t('activity_create_comment', title: activity_slot.meta_slot.title)}"
   end
 end

@@ -44,7 +44,7 @@ module Feed
           # Collect username
           usernames << post['user']['username']
           # Update activity count
-          current_feed['activity_count'] += 1
+          current_feed['activityCount'] += 1
         end
       else
         # Increment index on each new group (starting from -1)
@@ -61,13 +61,15 @@ module Feed
         # new group and add current actor to it
         usernames = [post['user']['username']]
         # Init activity counter
-        current_feed['activity_count'] = 1
+        current_feed['activityCount'] = 1
       end
       # Update aggregated activity message
-      if usernames.count > 1
+      if usernames.count == 2
         current_feed['message'] =
-            "#{usernames[0].to_s} and #{(usernames.count == 2 ?
-            'one other' : "#{(usernames.count - 1).to_s} others")} #{message}"
+            "#{usernames[0].to_s} and #{usernames[1].to_s} #{message}"
+      elsif usernames.count > 2
+        current_feed['message'] =
+            "#{usernames[0].to_s} and #{(usernames.count - 1).to_s} others #{message}"
       else
         current_feed['message'] = "#{usernames[0].to_s} #{message}"
       end
