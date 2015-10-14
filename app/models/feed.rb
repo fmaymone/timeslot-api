@@ -40,9 +40,9 @@ module Feed
         # Add actor as unique
         unless current_feed['actors'].include?(actor)
           # Collect actor
-          current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+          current_feed['actors'] << actor
           # Collect username
-          usernames << post['user']['username']
+          usernames[group] << post['user']['username']
           # Update activity count
           current_feed['activityCount'] += 1
         end
@@ -59,19 +59,20 @@ module Feed
         current_feed.delete('actor')
         # Instantiate a new username array on each
         # new group and add current actor to it
-        usernames = [post['user']['username']]
+        usernames[group] = [post['user']['username']]
         # Init activity counter
         current_feed['activityCount'] = 1
       end
       # Update aggregated activity message
-      if usernames.count == 2
+      usernames_feed = usernames[group]
+      if usernames_feed.count == 2
         current_feed['message'] =
-            "#{usernames[0].to_s} and #{usernames[1].to_s} #{message}"
-      elsif usernames.count > 2
+            "#{usernames_feed[0].to_s} and #{usernames_feed[1].to_s} #{message}"
+      elsif usernames_feed.count > 2
         current_feed['message'] =
-            "#{usernames[0].to_s} and #{(usernames.count - 1).to_s} others #{message}"
+            "#{usernames_feed[0].to_s} and #{(usernames_feed.count - 1).to_s} others #{message}"
       else
-        current_feed['message'] = "#{usernames[0].to_s} #{message}"
+        current_feed['message'] = "#{usernames_feed[0].to_s} #{message}"
       end
       # Set current feed index as cursor id
       current_feed['id'] = (count += 1).to_s
