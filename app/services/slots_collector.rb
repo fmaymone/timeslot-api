@@ -1,6 +1,11 @@
 class SlotsCollector
-  def initialize(limit: 40, filter: 'upcoming', moment: Time.zone.now,
-                 after: nil, before: nil)
+  # because the defaults are not set if no pagination parameters are send,
+  # I have to set them here again unfortunately
+  def initialize(limit: PAGINATION_DEFAULT_LIMIT,
+                 filter: PAGINATION_DEFAULT_FILTER,
+                 moment: Time.zone.now,
+                 after: nil,
+                 before: nil)
     @limit = limit.to_i
     @filter = filter
     @moment = moment

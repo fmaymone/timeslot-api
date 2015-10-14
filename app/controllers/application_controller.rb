@@ -56,9 +56,9 @@ class ApplicationController < ActionController::API
     return {} unless p.any?
 
     # set default limit if not provided
-    p[:limit] = 40 if p[:limit].nil?
+    p[:limit] = PAGINATION_DEFAULT_LIMIT if p[:limit].nil?
     # set maximum for limit to 100 if higher
-    p[:limit] = 100 if p[:limit].to_i > 100
+    p[:limit] = PAGINATION_MAX_LIMIT if p[:limit].to_i > PAGINATION_MAX_LIMIT
 
     # ignore status & moment if a cursor is submitted
     if p[:before].present? || p[:after].present?
@@ -66,7 +66,7 @@ class ApplicationController < ActionController::API
       p[:moment] = nil
     else
       # set default status and moment if not provided
-      p[:filter] = 'upcoming' if p[:filter].nil?
+      p[:filter] = PAGINATION_DEFAULT_FILTER if p[:filter].nil?
       p[:moment] = Time.zone.now.to_s if p[:moment].nil?
     end
     p
