@@ -99,3 +99,6 @@ public/ptl.html
 
 doc/api.zip
 db/structure.sql
+
+.vagrant
+Vagrantfile
