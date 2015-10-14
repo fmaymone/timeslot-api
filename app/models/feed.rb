@@ -23,7 +23,7 @@ module Feed
   def self.aggregate_feed(feed)
     # Temporary holders to create aggregations during request
     aggregated_feed = []
-    usernames = []
+    usernames = {}
     groups = {}
     index = -1
     count = 0
