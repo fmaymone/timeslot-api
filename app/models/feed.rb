@@ -5,8 +5,8 @@ module Feed
   end
 
   def self.news_feed(user_id, params = {})
-    feed = get_feed("Feed:#{user_id}:News")
-    paginate(feed, :aggregated, params)
+    feed = aggregate_feed(get_feed("Feed:#{user_id}:News"))
+    paginate(feed, params)
   end
 
   def self.notification_feed(user_id, params = {})
@@ -31,16 +31,16 @@ module Feed
     feed.each do |post|
       # Prepare dictionary shortcuts
       actor = post['actor'].to_i
-      group = post['group'].to_s
-      message = post['message'].to_s
-      current = groups[group]
+      group = post['group']
+      message = post['message']
       # Aggregate feed (indexed by group)
-      if current.presence
+      if groups.has_key?(group)
+        current = groups[group]
         current_feed = aggregated_feed[current]
         # Add actor as unique
         unless current_feed['actors'].include?(actor)
           # Collect actor
-          current_feed['actors'] << actor
+          current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
           # Collect username
           usernames << post['user']['username']
           # Update activity count
@@ -48,7 +48,7 @@ module Feed
         end
       else
         # Increment index on each new group (starting from -1)
-        current = (index += 1)
+        groups[group] = current = (index += 1)
         # Set the whole activity object on each new group
         # which takes the last state of all activities
         current_feed = aggregated_feed[current] = post
@@ -82,8 +82,7 @@ module Feed
   # Cursor based pagination is a lot faster and supported as well.
   # To go with cursor based pagination we have to implement exchanging
   # of page hashes (as cursors) between backend and frontend.
-  def self.paginate(feed, style = nil, limit: 20, offset: 0, cursor: nil)
-    feed = aggregate_feed(feed) if style == :aggregated
+  def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
     if cursor
       offset = cursor.to_i + 1
       # feed.each_with_index do |post, index|
