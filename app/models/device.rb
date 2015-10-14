@@ -1,4 +1,4 @@
-class Device < ActiveRecord::Base
+class Device < Channel
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :devices
