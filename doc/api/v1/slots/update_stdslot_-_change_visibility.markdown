@@ -96,9 +96,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -116,13 +113,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=-PzRwEkdZuMC8aYZOxQp3zwRV7g
+Authorization: Token token=I4mwRtV3bk09c8sjFt1x7iQ8E8U
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/42</pre>
+<pre>PATCH /v1/stdslot/2</pre>
 
 #### Body
 ```javascript
@@ -134,9 +131,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/42&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=-PzRwEkdZuMC8aYZOxQp3zwRV7g&quot; \
+	-H &quot;Authorization: Token token=I4mwRtV3bk09c8sjFt1x7iQ8E8U&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -147,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c0cb0279537f0419a8b5a6b5a1575118&quot;
+ETag: W/&quot;dc26153ff62c887006c4e6f76f7e751e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fa499141-4891-4e07-89ac-3c4c1e4586f5
-X-Runtime: 0.037758
+X-Request-Id: 45ec4626-02c2-40af-b638-b07122edb509
+X-Runtime: 0.043985
 Vary: Origin
-Content-Length: 525</pre>
+Content-Length: 541</pre>
 
 #### Status
 
@@ -162,19 +159,19 @@ Content-Length: 525</pre>
 
 ```javascript
 {
-  "id" : 42,
-  "title" : "Slot title 33",
-  "startDate" : "2019-09-07T09:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:48.732Z",
-  "updatedAt" : "2015-09-28T10:15:48.745Z",
+  "id" : 2,
+  "title" : "Slot title 34",
+  "startDate" : "2019-09-09T11:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:46.766Z",
+  "updatedAt" : "2015-10-14T11:49:46.781Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-07T09:44:02.000Z",
+  "endDate" : "2019-10-09T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 240,
-    "username" : "User 204",
-    "createdAt" : "2015-09-28T10:15:48.727Z",
-    "updatedAt" : "2015-09-28T10:15:48.727Z",
+    "id" : 5,
+    "username" : "User 216",
+    "createdAt" : "2015-10-14T11:49:46.761Z",
+    "updatedAt" : "2015-10-14T11:49:46.761Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -187,6 +184,7 @@ Content-Length: 525</pre>
     "alerts" : "0000000000"
   },
   "visibility" : "friends",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

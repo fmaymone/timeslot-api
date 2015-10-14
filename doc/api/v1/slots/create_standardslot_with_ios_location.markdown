@@ -133,9 +133,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -148,13 +145,16 @@ Description : Audio recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=nNYsafyvAbG3x5MZieCo43126Kk
+Authorization: Token token=uvqf1V6Gi6E9jtVLXn24T1D2lTo
 Host: example.org
 Cookie: </pre>
 
@@ -199,7 +199,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=nNYsafyvAbG3x5MZieCo43126Kk&quot; \
+	-H &quot;Authorization: Token token=uvqf1V6Gi6E9jtVLXn24T1D2lTo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -210,10 +210,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0b78b5b9e3a915faf6ef35328c12637a&quot;
+ETag: W/&quot;499122dcb1be2acf4f74004131148c86&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: aa5a3a1e-82e0-4940-a8ad-c704903a03e5
-X-Runtime: 0.076286
+X-Request-Id: 5eda21bb-8a00-4988-873e-5a71833ceafe
+X-Runtime: 0.069752
 Vary: Origin
 Content-Length: 1149</pre>
 
@@ -225,15 +225,15 @@ Content-Length: 1149</pre>
 
 ```javascript
 {
-  "id" : 31,
+  "id" : 15,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-09-28T10:15:47.118Z",
-  "updatedAt" : "2015-09-28T10:15:47.118Z",
+  "createdAt" : "2015-10-14T11:49:45.240Z",
+  "updatedAt" : "2015-10-14T11:49:45.240Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : 3,
+    "id" : 2,
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -252,10 +252,10 @@ Content-Length: 1149</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 215,
-    "username" : "User 187",
-    "createdAt" : "2015-09-28T10:15:47.094Z",
-    "updatedAt" : "2015-09-28T10:15:47.094Z",
+    "id" : 146,
+    "username" : "User 199",
+    "createdAt" : "2015-10-14T11:49:45.215Z",
+    "updatedAt" : "2015-10-14T11:49:45.215Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -264,18 +264,18 @@ Content-Length: 1149</pre>
   },
   "notes" : [
     {
-      "id" : 9,
+      "id" : 8,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-09-28T10:15:47.127Z"
+      "createdAt" : "2015-10-14T11:49:45.249Z"
     },
     {
-      "id" : 8,
+      "id" : 7,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-09-28T10:15:47.123Z"
+      "createdAt" : "2015-10-14T11:49:45.245Z"
     }
   ],
   "media" : [],
