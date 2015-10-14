@@ -80,7 +80,7 @@ module Feed
     aggregated_feed
   end
 
-  # Cursor based pagination is a lot faster and supported as well.
+  # Cursor based pagination is supported as well.
   # To go with cursor based pagination we have to implement exchanging
   # of page hashes (as cursors) between backend and frontend.
   def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
@@ -93,6 +93,6 @@ module Feed
       #   end
       # end
     end
-    feed[offset.to_i..(offset.to_i + limit.to_i - 1)] #.sort_by{|day| day}
+    feed[offset.to_i..[offset.to_i + limit.to_i - 1, feed.count].min] #.sort_by{|day| day}
   end
 end
