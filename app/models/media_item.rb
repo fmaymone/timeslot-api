@@ -60,6 +60,10 @@ class MediaItem < SlotActivity
 
   private
 
+  def activity_is_valid?
+    belongs_to_slot?
+  end
+
   def activity_slot
     mediable
   end

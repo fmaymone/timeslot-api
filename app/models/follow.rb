@@ -19,15 +19,11 @@ module Follow
     $redis.smembers(self.redis_key(:followers))
   end
 
-  # def friends
-  #   $redis.sinter(self.redis_key(:following), self.redis_key(:followers))
-  # end
-
-  def is_followed_by(target)
+  def followed_by?(target)
     $redis.sismember(self.redis_key(:followers), target.id)
   end
 
-  def is_following(target)
+  def following?(target)
     $redis.sismember(self.redis_key(:following), [ target.feed_type, target.id ].to_json)
   end
 
@@ -38,4 +34,8 @@ module Follow
   def redis_key(str)
     "Follow:#{feed_type}:#{self.id}:#{str}"
   end
+
+  # def follow_each_other
+  #   $redis.sinter(self.redis_key(:following), self.redis_key(:followers))
+  # end
 end
