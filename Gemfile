@@ -40,7 +40,7 @@ gem 'sucker_punch'
 #gem 'stream_rails'
 
 # Redis Data Storage
-gem 'redis', '2.2'
+gem 'redis'
 
 # WebSockets
 #gem 'websocket-rails', '0.1.8'

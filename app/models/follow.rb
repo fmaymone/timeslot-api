@@ -2,7 +2,7 @@ module Follow
   def add_follower(target)
     unless self == target
       $redis.multi do
-        $redis.sadd(target.redis_key(:following), [ feed_type, self.id ])
+        $redis.sadd(target.redis_key(:following), [ feed_type, self.id ].to_json)
         $redis.sadd(self.redis_key(:followers), target.id)
       end
     end
@@ -10,7 +10,7 @@ module Follow
 
   def remove_follower(target)
     $redis.multi do
-      $redis.srem(target.redis_key(:following), [ feed_type, self.id ])
+      $redis.srem(target.redis_key(:following), [ feed_type, self.id ].to_json)
       $redis.srem(self.redis_key(:followers), target.id)
     end
   end
@@ -28,7 +28,7 @@ module Follow
   end
 
   def is_following(target)
-    $redis.sismember(self.redis_key(:following), [ target.feed_type, target.id ])
+    $redis.sismember(self.redis_key(:following), [ target.feed_type, target.id ].to_json)
   end
 
   def follower_count

@@ -72,7 +72,7 @@ module Feed
         current_feed['message'] = "#{usernames[0].to_s} #{message}"
       end
       # Set current feed index as cursor id
-      current_feed['id'] = (count += 1)
+      current_feed['id'] = (count += 1).to_s
     end
     aggregated_feed
   end
