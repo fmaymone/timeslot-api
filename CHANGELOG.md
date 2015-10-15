@@ -1,7 +1,7 @@
 #Changelog
 
 ## upcoming
-- pagination for user slots
+- pagination for user slots and demo slots
 - activity feed
 
 

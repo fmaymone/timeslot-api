@@ -69,5 +69,13 @@ FactoryGirl.define do
         create :std_slot_public, owner: user
       end
     end
+
+    trait :with_feed do
+      after :create do |user|
+        create :std_slot_public, owner: user
+        create_list :comment, 3, user: user
+        create :like, user: user
+      end
+    end
   end
 end

@@ -67,9 +67,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -82,8 +79,14 @@ Description : Audio recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
-Name : slotterId
-Description : ID of the User who did reslot
+Name : reslotsCounter
+Description : Number of reslots for this slot
+
+Name : slotter
+Description : contains ID of the User who did reslot
+
+Name : parent
+Description : contains ID of the original slot that was reslottet
 
 ### Request
 
@@ -91,7 +94,7 @@ Description : ID of the User who did reslot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=FzvehWMhtwVOsahqUD1KlW2i6iY
+Authorization: Token token=Qcr2UpT-SV5Swoiz2LM_Km9qk_c
 Host: example.org
 Cookie: </pre>
 
@@ -102,17 +105,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 35
+  "predecessorId" : 19
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:35}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:19}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=FzvehWMhtwVOsahqUD1KlW2i6iY&quot; \
+	-H &quot;Authorization: Token token=Qcr2UpT-SV5Swoiz2LM_Km9qk_c&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +126,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f0f350728440f1d98fd28e50dda11f0c&quot;
+ETag: W/&quot;63bf534b72dc4855b93a3b83f02cc577&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cc75d153-1600-4cf2-abde-7367b912b85e
-X-Runtime: 0.111339
+X-Request-Id: 2b90c46a-354d-4b6a-a9a1-81900a54e2c9
+X-Runtime: 0.038733
 Vary: Origin
-Content-Length: 560</pre>
+Content-Length: 579</pre>
 
 #### Status
 
@@ -138,19 +141,19 @@ Content-Length: 560</pre>
 
 ```javascript
 {
-  "id" : 36,
-  "title" : "Slot title 30",
-  "startDate" : "2019-09-04T06:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:47.814Z",
-  "updatedAt" : "2015-09-28T10:15:47.814Z",
+  "id" : 20,
+  "title" : "Slot title 31",
+  "startDate" : "2019-09-06T08:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:45.939Z",
+  "updatedAt" : "2015-10-14T11:49:45.939Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T06:44:02.000Z",
+  "endDate" : "2019-10-06T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 221,
-    "username" : "User 193",
-    "createdAt" : "2015-09-28T10:15:47.712Z",
-    "updatedAt" : "2015-09-28T10:15:47.712Z",
+    "id" : 152,
+    "username" : "User 205",
+    "createdAt" : "2015-10-14T11:49:45.835Z",
+    "updatedAt" : "2015-10-14T11:49:45.835Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -162,11 +165,12 @@ Content-Length: 560</pre>
   "settings" : {
     "alerts" : "0000000000"
   },
+  "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 223
+    "id" : 154
   },
   "parent" : {
-    "id" : 35
+    "id" : 19
   },
   "visibility" : null,
   "likes" : 0,

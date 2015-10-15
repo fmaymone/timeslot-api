@@ -36,6 +36,16 @@ gem 'pry-rails'
 # Worker (background processing)
 gem 'sucker_punch'
 
+# GetStream.io
+#gem 'stream_rails'
+
+# Redis Data Storage
+gem 'redis'
+
+# WebSockets
+#gem 'websocket-rails', '0.1.8'
+#gem 'faye-websocket'
+
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
 
@@ -88,6 +98,7 @@ group :development, :test, :herokutest do
   gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
   gem 'shoulda-matchers', '~> 3.0'
+  #gem 'shoulda-matchers', '2.8.0', require: false
 
   gem 'faker'
 end

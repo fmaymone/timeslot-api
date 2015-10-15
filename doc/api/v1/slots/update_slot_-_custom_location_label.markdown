@@ -128,9 +128,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -148,13 +145,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tIgUJcrzRpL6KMWAMD6UQhmSLXQ
+Authorization: Token token=sSevtd1BivOC2JEHfUMZOPyq6RI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/47</pre>
+<pre>PATCH /v1/stdslot/7</pre>
 
 #### Body
 ```javascript
@@ -170,9 +167,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/47&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tIgUJcrzRpL6KMWAMD6UQhmSLXQ&quot; \
+	-H &quot;Authorization: Token token=sSevtd1BivOC2JEHfUMZOPyq6RI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -183,12 +180,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;30ed3e420eac3996cb40da56958588e8&quot;
+ETag: W/&quot;cc89337cf02080610b9c7ca2f49ed791&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: de7181c6-0312-43e2-9eba-24f512ccffa1
-X-Runtime: 0.041873
+X-Request-Id: 40c1165e-d02b-4448-8306-a1e7bbe2c93c
+X-Runtime: 0.050003
 Vary: Origin
-Content-Length: 866</pre>
+Content-Length: 883</pre>
 
 #### Status
 
@@ -198,15 +195,15 @@ Content-Length: 866</pre>
 
 ```javascript
 {
-  "id" : 47,
-  "title" : "Slot title 38",
-  "startDate" : "2019-09-12T14:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:49.456Z",
-  "updatedAt" : "2015-09-28T10:15:49.456Z",
+  "id" : 7,
+  "title" : "Slot title 39",
+  "startDate" : "2019-09-14T16:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:47.535Z",
+  "updatedAt" : "2015-10-14T11:49:47.535Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T14:44:02.000Z",
+  "endDate" : "2019-10-14T16:44:02.000Z",
   "location" : {
-    "id" : 5,
+    "id" : 2,
     "name" : "Soho House Custom",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -225,10 +222,10 @@ Content-Length: 866</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 253,
-    "username" : "User 217",
-    "createdAt" : "2015-09-28T10:15:49.451Z",
-    "updatedAt" : "2015-09-28T10:15:49.451Z",
+    "id" : 18,
+    "username" : "User 229",
+    "createdAt" : "2015-10-14T11:49:47.530Z",
+    "updatedAt" : "2015-10-14T11:49:47.530Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -241,6 +238,7 @@ Content-Length: 866</pre>
     "alerts" : "0000000000"
   },
   "visibility" : "private",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

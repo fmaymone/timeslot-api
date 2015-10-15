@@ -45,6 +45,9 @@ Rails.application.configure do
   # Use custom logging formatter.
   config.log_formatter = Logging::CustomFormatter.new
 
+  # Remove the Rack::Lock middleware
+  #config.middleware.delete Rack::Lock
+
   # print SQL to console
   ActiveRecord::Base.logger = ActiveSupport::Logger.new(STDOUT)
 end

@@ -5,7 +5,7 @@ class PresentableSlots
     case relationship
     when ME
       # include all std_slots and all reslots, but no group_slots
-      [StdSlot.of(user.id), ReSlot.where(slotter: user)]
+      [user.std_slots, user.re_slots]
     when FRIEND
       # includes public and friend-visible std_slots, public and friend-visible
       # reslots and shared group_slots (between user and current_user)

@@ -20,4 +20,8 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 el:
-  notify_create_comment: "The user '%{name}' commented on: '%{title}'"
+  notify_create_comment: "%{name} commented on: %{title}"
+  notify_create_like: "%{name} likes your slot"
+  activity_create_comment: "commented on: %{title}"
+  activity_create_like: "likes: %{title}"
+  activity_create_media: "adds a new %{type}"

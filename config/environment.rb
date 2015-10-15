@@ -13,6 +13,9 @@ end
 STRANGER = 'stranger'
 FRIEND = 'friend'
 ME = 'me'
+PAGINATION_DEFAULT_LIMIT = ENV['PAGINATION_DEFAULT_LIMIT'].try(:to_i) || 40
+PAGINATION_MAX_LIMIT = ENV['PAGINATION_MAX_LIMIT'].try(:to_i) || 100
+PAGINATION_DEFAULT_FILTER = ENV['PAGINATION_DEFAULT_FILTER'] || 'upcoming'
 
 # Initialize the Rails application.
 Rails.application.initialize!
