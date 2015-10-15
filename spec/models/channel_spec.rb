@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Channel, :focus, type: :model do
+RSpec.describe Channel, type: :model do
   let(:user) { create(:user) }
   let(:device) { create(:device, user: user) }
   let(:device2) { create(:device, user: user) }

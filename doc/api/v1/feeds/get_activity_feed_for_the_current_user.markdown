@@ -120,7 +120,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=M6f1YjeSzFwM6c6xsux8EsVf-Ig
+Authorization: Token token=V0LgBS3mQd2dBHTgZAO_yaP7gpU
 Host: example.org
 Cookie: </pre>
 
@@ -132,7 +132,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=M6f1YjeSzFwM6c6xsux8EsVf-Ig&quot; \
+	-H &quot;Authorization: Token token=V0LgBS3mQd2dBHTgZAO_yaP7gpU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -143,12 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aa325a42c8f869f935e414b7beccafb1&quot;
+ETag: W/&quot;30c2c4d345528ee57b1c1e8dc13f8c46&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a266da57-4db1-4aac-ae79-634adefa5ffa
-X-Runtime: 0.012343
+X-Request-Id: c83565fc-4920-474f-891d-2c36b1ff86cd
+X-Runtime: 0.015693
 Vary: Origin
-Content-Length: 2986</pre>
+Content-Length: 234</pre>
 
 #### Status
 
@@ -159,179 +159,15 @@ Content-Length: 2986</pre>
 ```javascript
 [
   {
-    "actor" : "53",
-    "foreign_id" : "54",
-    "id" : "0cbf7380-65f3-11e5-8080-80006cf73f47",
-    "message" : "User 53 commented on 'Slot title 21'",
-    "object" : "19",
-    "origin" : null,
-    "slot" : {
-      "commentsCounter" : 1,
-      "createdAt" : "2015-09-28T15:10:26.843Z",
-      "creator" : {
-        "createdAt" : "2015-09-28T15:10:26.684Z",
-        "deletedAt" : null,
-        "id" : 56,
-        "image" : {
-          "localId" : null,
-          "publicId" : null
-        },
-        "updatedAt" : "2015-09-28T15:10:26.684Z",
-        "username" : "User 52"
-      },
-      "deletedAt" : null,
-      "endDate" : "2019-10-22T21:44:02.000Z",
-      "id" : 19,
-      "likes" : 0,
-      "location" : null,
-      "media" : [
-        {
-          "createdAt" : "2015-09-28T15:10:26.916Z",
-          "duration" : null,
-          "localId" : null,
-          "mediaId" : 12,
-          "mediaType" : "audio",
-          "position" : 5,
-          "publicId" : "dfhjghjkdisudgfds7iy10",
-          "title" : "Title 9"
-        },
-        {
-          "createdAt" : "2015-09-28T15:10:26.904Z",
-          "duration" : null,
-          "localId" : null,
-          "mediaId" : 11,
-          "mediaType" : "video",
-          "position" : 4,
-          "publicId" : "dfhjghjkdisudgfds7iy9",
-          "thumbnail" : null
-        },
-        {
-          "createdAt" : "2015-09-28T15:10:26.893Z",
-          "duration" : null,
-          "localId" : null,
-          "mediaId" : 10,
-          "mediaType" : "video",
-          "position" : 3,
-          "publicId" : "dfhjghjkdisudgfds7iy8",
-          "thumbnail" : null
-        },
-        {
-          "createdAt" : "2015-09-28T15:10:26.881Z",
-          "localId" : null,
-          "mediaId" : 9,
-          "mediaType" : "image",
-          "position" : 2,
-          "publicId" : "dfhjghjkdisudgfds7iy7"
-        },
-        {
-          "createdAt" : "2015-09-28T15:10:26.868Z",
-          "localId" : null,
-          "mediaId" : 8,
-          "mediaType" : "image",
-          "position" : 1,
-          "publicId" : "dfhjghjkdisudgfds7iy6"
-        },
-        {
-          "createdAt" : "2015-09-28T15:10:26.856Z",
-          "localId" : null,
-          "mediaId" : 7,
-          "mediaType" : "image",
-          "position" : 0,
-          "publicId" : "dfhjghjkdisudgfds7iy5"
-        }
-      ],
-      "notes" : [],
-      "reslotsCounter" : 0,
-      "settings" : {
-        "alerts" : "0000000000"
-      },
-      "shareUrl" : null,
-      "startDate" : "2019-09-22T21:44:02.000Z",
-      "title" : "Slot title 21",
-      "updatedAt" : "2015-09-28T15:10:26.843Z",
-      "visibility" : "public"
-    },
-    "target" : null,
-    "time" : "2015-09-28T15:10:27.000000",
-    "to" : [
-      "aggregated:54",
-      "notification:54"
-    ],
-    "user" : {
-      "createdAt" : "2015-09-25T21:22:16.257Z",
-      "deletedAt" : null,
-      "friendsCount" : 0,
-      "id" : 53,
-      "image" : {
-        "localId" : null,
-        "publicId" : null
-      },
-      "reslotCount" : 0,
-      "slotCount" : 5,
-      "updatedAt" : "2015-09-25T21:22:16.257Z",
-      "username" : "User 53"
-    },
-    "verb" : "comment"
-  },
-  {
-    "actor" : "53",
-    "foreign_id" : "54",
-    "id" : "aeaa8480-6622-11e5-8080-80001044bbff",
-    "message" : "User 53 likes your slot",
-    "object" : "19",
-    "origin" : null,
-    "slot" : {
-      "commentsCounter" : 353,
-      "createdAt" : "2015-08-30T19:40:39.342Z",
-      "creator" : {
-        "createdAt" : "2015-08-30T19:40:36.540Z",
-        "deletedAt" : null,
-        "id" : 56,
-        "image" : {
-          "localId" : null,
-          "publicId" : null
-        },
-        "updatedAt" : "2015-08-30T19:40:36.540Z",
-        "username" : "User 52"
-      },
-      "deletedAt" : null,
-      "endDate" : "2019-10-20T16:44:02.000Z",
-      "id" : 19,
-      "likes" : 1,
-      "location" : null,
-      "media" : [],
-      "notes" : [],
-      "reslotsCounter" : 0,
-      "settings" : {
-        "alerts" : "0000000000"
-      },
-      "shareUrl" : null,
-      "startDate" : "2019-09-20T16:44:02.000Z",
-      "title" : "National Creative Planner Jr.",
-      "updatedAt" : "2015-08-30T19:40:39.342Z",
-      "visibility" : "public"
-    },
-    "target" : null,
-    "time" : "2015-09-28T20:51:25.000000",
-    "to" : [
-      "aggregated:54",
-      "notification:54"
-    ],
-    "user" : {
-      "createdAt" : "2015-09-25T21:22:16.257Z",
-      "deletedAt" : null,
-      "friendsCount" : 0,
-      "id" : 53,
-      "image" : {
-        "localId" : null,
-        "publicId" : null
-      },
-      "reslotCount" : 0,
-      "slotCount" : 5,
-      "updatedAt" : "2015-09-25T21:22:16.257Z",
-      "username" : "User 53"
-    },
-    "verb" : "like"
+    "type" : "Slot",
+    "object" : 2,
+    "target" : "18",
+    "activity" : "comment",
+    "message" : "You commented on: Slot title 21",
+    "foreignId" : "82",
+    "time" : "2015-10-14T23:34:25.294Z",
+    "id" : "64A122AA5545A45F95AE7E4BE673D67B6FC7202D",
+    "group" : "18comment20151014"
   }
 ]
 ```

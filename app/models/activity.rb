@@ -4,8 +4,8 @@ class Activity < ActiveRecord::Base
 
   # Trigger activities to feeds:
   after_create :create_activity
-  after_update :update_activity
-  after_destroy :remove_activity
+  #after_update :update_activity
+  #before_destroy :remove_activity
 
   private
 

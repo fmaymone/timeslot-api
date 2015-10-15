@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "V1::Feed", :focus, type: :request do
+RSpec.describe "V1::Feed", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password, :with_feed) }
   let(:actors) { create_list(:user, 3, :with_feed) }
@@ -74,7 +74,7 @@ RSpec.describe "V1::Feed", :focus, type: :request do
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/user", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(1) # 3 - 2 = 1.limit(2)
+        expect(json.length).to be(2) # 3 - 2 = 1.limit(2)
       end
     end
   end

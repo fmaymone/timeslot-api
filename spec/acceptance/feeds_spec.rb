@@ -1,6 +1,6 @@
 require 'documentation_helper'
 
-resource "Feeds", :focus do
+resource "Feeds" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:owner) { create(:user, username: 'User 54') }

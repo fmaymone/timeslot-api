@@ -120,7 +120,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=gDYpQGvLzLnbkEAfugii-fl4UVo
+Authorization: Token token=2mqLsS1zcEj8-z8CTI-tusjb8Es
 Host: example.org
 Cookie: </pre>
 
@@ -132,7 +132,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=gDYpQGvLzLnbkEAfugii-fl4UVo&quot; \
+	-H &quot;Authorization: Token token=2mqLsS1zcEj8-z8CTI-tusjb8Es&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -143,12 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b95dd6da0941cbdccf806832a6af7465&quot;
+ETag: W/&quot;1be014beef60890f490883a9354373c5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1db8e917-5b81-4384-b763-a1a44339809c
-X-Runtime: 0.003210
+X-Request-Id: 00a3e17f-5b39-4f80-96fd-c3e2f90c3e0b
+X-Runtime: 0.003911
 Vary: Origin
-Content-Length: 2216</pre>
+Content-Length: 251</pre>
 
 #### Status
 
@@ -159,132 +159,16 @@ Content-Length: 2216</pre>
 ```javascript
 [
   {
-    "activities" : [
-      {
-        "actor" : "53",
-        "foreign_id" : "65",
-        "id" : "27451d00-65f2-11e5-8080-800044759cad",
-        "message" : "User 53 commented on 'Slot title 23'",
-        "object" : "21",
-        "origin" : null,
-        "slot" : {
-          "commentsCounter" : 1,
-          "createdAt" : "2015-09-28T15:04:02.051Z",
-          "creator" : {
-            "createdAt" : "2015-09-28T15:04:02.035Z",
-            "deletedAt" : null,
-            "id" : 64,
-            "image" : {
-              "localId" : null,
-              "publicId" : null
-            },
-            "updatedAt" : "2015-09-28T15:04:02.035Z",
-            "username" : "User 56"
-          },
-          "deletedAt" : null,
-          "endDate" : "2019-10-24T23:44:02.000Z",
-          "id" : 21,
-          "likes" : 0,
-          "location" : null,
-          "media" : [
-            {
-              "createdAt" : "2015-09-28T15:04:02.075Z",
-              "duration" : null,
-              "localId" : null,
-              "mediaId" : 24,
-              "mediaType" : "audio",
-              "position" : 5,
-              "publicId" : "dfhjghjkdisudgfds7iy22",
-              "title" : "Title 21"
-            },
-            {
-              "createdAt" : "2015-09-28T15:04:02.071Z",
-              "duration" : null,
-              "localId" : null,
-              "mediaId" : 23,
-              "mediaType" : "video",
-              "position" : 4,
-              "publicId" : "dfhjghjkdisudgfds7iy21",
-              "thumbnail" : null
-            },
-            {
-              "createdAt" : "2015-09-28T15:04:02.067Z",
-              "duration" : null,
-              "localId" : null,
-              "mediaId" : 22,
-              "mediaType" : "video",
-              "position" : 3,
-              "publicId" : "dfhjghjkdisudgfds7iy20",
-              "thumbnail" : null
-            },
-            {
-              "createdAt" : "2015-09-28T15:04:02.063Z",
-              "localId" : null,
-              "mediaId" : 21,
-              "mediaType" : "image",
-              "position" : 2,
-              "publicId" : "dfhjghjkdisudgfds7iy19"
-            },
-            {
-              "createdAt" : "2015-09-28T15:04:02.060Z",
-              "localId" : null,
-              "mediaId" : 20,
-              "mediaType" : "image",
-              "position" : 1,
-              "publicId" : "dfhjghjkdisudgfds7iy18"
-            },
-            {
-              "createdAt" : "2015-09-28T15:04:02.055Z",
-              "localId" : null,
-              "mediaId" : 19,
-              "mediaType" : "image",
-              "position" : 0,
-              "publicId" : "dfhjghjkdisudgfds7iy17"
-            }
-          ],
-          "notes" : [],
-          "reslotsCounter" : 0,
-          "settings" : {
-            "alerts" : "0000000000"
-          },
-          "shareUrl" : null,
-          "startDate" : "2019-09-24T23:44:02.000Z",
-          "title" : "Slot title 23",
-          "updatedAt" : "2015-09-28T15:04:02.051Z",
-          "visibility" : "public"
-        },
-        "target" : null,
-        "time" : "2015-09-28T15:04:02.000000",
-        "to" : [
-          "aggregated:65",
-          "notification:65"
-        ],
-        "user" : {
-          "createdAt" : "2015-09-25T21:22:16.257Z",
-          "deletedAt" : null,
-          "friendsCount" : 0,
-          "id" : 53,
-          "image" : {
-            "localId" : null,
-            "publicId" : null
-          },
-          "reslotCount" : 0,
-          "slotCount" : 5,
-          "updatedAt" : "2015-09-25T21:22:16.257Z",
-          "username" : "User 53"
-        },
-        "verb" : "comment"
-      }
-    ],
-    "activity_count" : 1,
-    "actor_count" : 1,
-    "created_at" : "2015-09-28T15:04:02.000000",
-    "group" : "11357_2015-09-28",
-    "id" : "27451d00-65f2-11e5-8dee-0a23828fb133",
-    "is_read" : false,
-    "is_seen" : true,
-    "updated_at" : "2015-09-28T15:04:02.000000",
-    "verb" : "comment"
+    "type" : "Slot",
+    "actor" : "87",
+    "object" : 4,
+    "target" : "20",
+    "activity" : "comment",
+    "message" : "User 53 commented on: Slot title 23",
+    "foreignId" : "88",
+    "time" : "2015-10-14T23:34:26.024Z",
+    "id" : "A33BA2270BAB0247320A0F3211257D8F7F0A0614",
+    "group" : "20comment20151014"
   }
 ]
 ```

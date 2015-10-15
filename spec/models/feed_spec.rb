@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Feed, :focus, type: :model do
+RSpec.describe Feed, type: :model do
   let(:follower) { create(:user) }
   let(:follower2) { create(:user) }
 
@@ -22,76 +22,72 @@ RSpec.describe Feed, :focus, type: :model do
       slot.create_like(follower2)
     end
 
-    describe "User follows another user" do
-      it "User is subscribed" do
+    it "User follows another user" do
 
-        # user feeds
-        user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(6)
+      # user feeds
+      user_feed = Feed.user_feed(user.id).as_json
+      expect(user_feed.count).to be(6)
 
-        user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2)
+      user_feed_follower = Feed.user_feed(follower.id).as_json
+      expect(user_feed_follower.count).to be(2)
 
-        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2)
+      user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+      expect(user_feed_follower2.count).to be(2)
 
-        # news feeds
-        news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0)
+      # news feeds
+      news_feed = Feed.news_feed(user.id).as_json
+      expect(news_feed.count).to be(0)
 
-        news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(2)
+      news_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(news_feed_follower.count).to be(2)
 
-        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2)
+      news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(news_feed_follower2.count).to be(2)
 
-        # notification feeds
-        notification_feed = Feed.news_feed(user.id).as_json
-        expect(notification_feed.count).to be(0)
+      # notification feeds
+      notification_feed = Feed.news_feed(user.id).as_json
+      expect(notification_feed.count).to be(0)
 
-        notification_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(2)
+      notification_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(notification_feed_follower.count).to be(2)
 
-        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(2)
-      end
+      notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(notification_feed_follower2.count).to be(2)
     end
 
-    describe "User unfollows another user" do
-      it "User is subscribed" do
-        user.remove_follower(follower)
-        user.remove_follower(follower2)
+    it "User unfollows another user" do
+      user.remove_follower(follower)
+      user.remove_follower(follower2)
 
-        # user feeds
-        user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(6)
+      # user feeds
+      user_feed = Feed.user_feed(user.id).as_json
+      expect(user_feed.count).to be(6)
 
-        user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2)
+      user_feed_follower = Feed.user_feed(follower.id).as_json
+      expect(user_feed_follower.count).to be(2)
 
-        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2)
+      user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+      expect(user_feed_follower2.count).to be(2)
 
-        # news feeds
-        news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0)
+      # news feeds
+      news_feed = Feed.news_feed(user.id).as_json
+      expect(news_feed.count).to be(0)
 
-        news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(0)
+      news_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(news_feed_follower.count).to be(0)
 
-        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2)
+      news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(news_feed_follower2.count).to be(2)
 
-        # notification feeds
-        notification_feed = Feed.news_feed(user.id).as_json
-        expect(notification_feed.count).to be(0)
+      # notification feeds
+      notification_feed = Feed.news_feed(user.id).as_json
+      expect(notification_feed.count).to be(0)
 
-        notification_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0)
+      notification_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(notification_feed_follower.count).to be(0)
 
-        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(2)
-      end
+      notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(notification_feed_follower2.count).to be(2)
     end
   end
 
@@ -113,76 +109,72 @@ RSpec.describe Feed, :focus, type: :model do
       slot.create_like(follower2)
     end
 
-    describe "User follows a slot" do
-      it "User is subscribed to a slot" do
+    it "User follows a slot" do
 
-        # user feeds
-        user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(6)
+      # user feeds
+      user_feed = Feed.user_feed(user.id).as_json
+      expect(user_feed.count).to be(6)
 
-        user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2)
+      user_feed_follower = Feed.user_feed(follower.id).as_json
+      expect(user_feed_follower.count).to be(2)
 
-        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2)
+      user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+      expect(user_feed_follower2.count).to be(2)
 
-        # news feeds
-        news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0)
+      # news feeds
+      news_feed = Feed.news_feed(user.id).as_json
+      expect(news_feed.count).to be(0)
 
-        news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(2)
+      news_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(news_feed_follower.count).to be(2)
 
-        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2)
+      news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(news_feed_follower2.count).to be(2)
 
-        # notification feeds
-        notification_feed = Feed.news_feed(user.id).as_json
-        expect(notification_feed.count).to be(0)
+      # notification feeds
+      notification_feed = Feed.news_feed(user.id).as_json
+      expect(notification_feed.count).to be(0)
 
-        notification_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(2)
+      notification_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(notification_feed_follower.count).to be(2)
 
-        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(2)
-      end
+      notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(notification_feed_follower2.count).to be(2)
     end
 
-    describe "User unfollows a slot" do
-      it "User is subscribed to a slot" do
-        slot.remove_follower(follower)
-        slot.remove_follower(follower2)
+    it "User unfollows a slot" do
+      slot.remove_follower(follower)
+      slot.remove_follower(follower2)
 
-        # user feeds
-        user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(6)
+      # user feeds
+      user_feed = Feed.user_feed(user.id).as_json
+      expect(user_feed.count).to be(6)
 
-        user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2)
+      user_feed_follower = Feed.user_feed(follower.id).as_json
+      expect(user_feed_follower.count).to be(2)
 
-        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2)
+      user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+      expect(user_feed_follower2.count).to be(2)
 
-        # news feeds
-        news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0)
+      # news feeds
+      news_feed = Feed.news_feed(user.id).as_json
+      expect(news_feed.count).to be(0)
 
-        news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(2)
+      news_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(news_feed_follower.count).to be(2)
 
-        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2)
+      news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(news_feed_follower2.count).to be(2)
 
-        # notification feeds
-        notification_feed = Feed.news_feed(user.id).as_json
-        expect(notification_feed.count).to be(0)
+      # notification feeds
+      notification_feed = Feed.news_feed(user.id).as_json
+      expect(notification_feed.count).to be(0)
 
-        notification_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(2)
+      notification_feed_follower = Feed.news_feed(follower.id).as_json
+      expect(notification_feed_follower.count).to be(2)
 
-        notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(2)
-      end
+      notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
+      expect(notification_feed_follower2.count).to be(2)
     end
   end
 end
