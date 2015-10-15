@@ -103,9 +103,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -123,30 +120,30 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=9Wx9xATU1Ey9r-rUZEnbQMlJ1YM
+Authorization: Token token=p0kCjnfpci8h-DttXgcGnwn-1H0
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/45</pre>
+<pre>PATCH /v1/stdslot/5</pre>
 
 #### Body
 ```javascript
 {
   "media" : [
     {
-      "mediaId" : 42,
+      "mediaId" : 2,
       "mediaType" : "image",
       "position" : 2
     },
     {
-      "mediaId" : 43,
+      "mediaId" : 3,
       "mediaType" : "image",
       "position" : 0
     },
     {
-      "mediaId" : 44,
+      "mediaId" : 4,
       "mediaType" : "image",
       "position" : 1
     }
@@ -157,9 +154,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/45&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:42,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:43,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:44,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=9Wx9xATU1Ey9r-rUZEnbQMlJ1YM&quot; \
+	-H &quot;Authorization: Token token=p0kCjnfpci8h-DttXgcGnwn-1H0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -170,12 +167,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;85cb92f564764a744fa237f307baf25e&quot;
+ETag: W/&quot;b8c29134eec204e7aad3aee9c0a6b24d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 13d2f0e0-ef84-4f94-931d-8605be4818e4
-X-Runtime: 0.057455
+X-Request-Id: 7b82bc9c-71a7-4216-8aaf-8036bd8b6c20
+X-Runtime: 0.059347
 Vary: Origin
-Content-Length: 938</pre>
+Content-Length: 952</pre>
 
 #### Status
 
@@ -185,19 +182,19 @@ Content-Length: 938</pre>
 
 ```javascript
 {
-  "id" : 45,
-  "title" : "Slot title 36",
-  "startDate" : "2019-09-10T12:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:49.136Z",
-  "updatedAt" : "2015-09-28T10:15:49.136Z",
+  "id" : 5,
+  "title" : "Slot title 37",
+  "startDate" : "2019-09-12T14:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:47.200Z",
+  "updatedAt" : "2015-10-14T11:49:47.200Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-10T12:44:02.000Z",
+  "endDate" : "2019-10-12T14:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 246,
-    "username" : "User 210",
-    "createdAt" : "2015-09-28T10:15:49.131Z",
-    "updatedAt" : "2015-09-28T10:15:49.131Z",
+    "id" : 11,
+    "username" : "User 222",
+    "createdAt" : "2015-10-14T11:49:47.195Z",
+    "updatedAt" : "2015-10-14T11:49:47.195Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -207,34 +204,35 @@ Content-Length: 938</pre>
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 44,
-      "publicId" : "dfhjghjkdisudgfds7iy40",
+      "mediaId" : 4,
+      "publicId" : "dfhjghjkdisudgfds7iy47",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-28T10:15:49.154Z"
+      "createdAt" : "2015-10-14T11:49:47.218Z"
     },
     {
-      "mediaId" : 43,
-      "publicId" : "dfhjghjkdisudgfds7iy39",
+      "mediaId" : 3,
+      "publicId" : "dfhjghjkdisudgfds7iy46",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-28T10:15:49.148Z"
+      "createdAt" : "2015-10-14T11:49:47.212Z"
     },
     {
-      "mediaId" : 42,
-      "publicId" : "dfhjghjkdisudgfds7iy38",
+      "mediaId" : 2,
+      "publicId" : "dfhjghjkdisudgfds7iy45",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-09-28T10:15:49.142Z"
+      "createdAt" : "2015-10-14T11:49:47.206Z"
     }
   ],
   "settings" : {
     "alerts" : "0000000000"
   },
   "visibility" : "private",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

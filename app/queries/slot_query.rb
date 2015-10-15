@@ -9,7 +9,7 @@ module SlotQuery
     end
 
     # I don't like the split in direction and cursor because they belong together
-    def retrieve(status: nil, moment: Time.zone.now, cursor: nil)
+    def retrieve(filter: nil, moment: Time.zone.now, cursor: nil)
       # query with cursor
       case @direction
       when 'before'
@@ -18,30 +18,39 @@ module SlotQuery
         @relation.where(after_cursor(cursor)).ordered
       else
         # query without cursor
-        case status
+        case filter
         when nil
         when 'all'
           @relation
-        when 'past'
-          @relation.where(past moment).ordered_rev
+        when 'finished'
+          @relation.where(finished moment).ordered_rev
         # when 'upcoming'
         # when 'ongoing'
+        # when 'past'
         # when 'now'
         else
-          # here we send the 'status' as a message to this SlotQuery:OwnSlots
+          # here we send the 'filter' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
-          # the 'status'
-          @relation.where(send status, moment).ordered
+          # the 'filter'
+          @relation.where(send filter, moment).ordered
         end
       end
     end
 
-    private def now(moment = nil)
-      upcoming(moment).or ongoing(moment)
+    private def upcoming(moment = Time.zone.now)
+      meta_table[:start_date].gteq(moment)
     end
 
-    private def upcoming(moment = Time.zone.now)
+    private def later(moment = Time.zone.now)
       meta_table[:start_date].gt(moment)
+    end
+
+    private def past(moment = Time.zone.now)
+      meta_table[:start_date].lt(moment)
+    end
+
+    private def finished(moment = Time.zone.now)
+      meta_table[:end_date].lteq(moment)
     end
 
     private def ongoing(moment = Time.zone.now)
@@ -49,16 +58,12 @@ module SlotQuery
         meta_table[:end_date].gteq(moment))
     end
 
-    private def past(moment = Time.zone.now)
-      meta_table[:end_date].lteq(moment)
-    end
-
-    private def earlier(moment = Time.zone.now)
-      meta_table[:start_date].lt(moment)
+    private def now(moment = nil)
+      upcoming(moment).or ongoing(moment)
     end
 
     private def after_cursor(cursor)
-      same_startend(cursor).or same_start(cursor).or upcoming(cursor[:startdate])
+      same_startend(cursor).or same_start(cursor).or later(cursor[:startdate])
     end
 
     private def same_startend(cursor)
@@ -75,7 +80,7 @@ module SlotQuery
     private def before_cursor(cursor)
       same_startend_rev(cursor).or(
         same_start_rev(cursor).or(
-        earlier(cursor[:startdate]))
+        past(cursor[:startdate]))
       )
     end
 
@@ -95,10 +100,6 @@ module SlotQuery
     end
 
     module Scopes
-      def paginate(limit = 20)
-        limit(limit)
-      end
-
       def ordered
         order(MetaSlot.arel_table[:start_date],
               MetaSlot.arel_table[:end_date],
