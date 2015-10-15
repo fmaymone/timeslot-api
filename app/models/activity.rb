@@ -3,7 +3,7 @@ class Activity < ActiveRecord::Base
   self.abstract_class = true
 
   # Trigger activities to feeds:
-  after_create :create_activity
+  after_commit :create_activity, on: :create
   #after_update :update_activity
   #before_destroy :remove_activity
 

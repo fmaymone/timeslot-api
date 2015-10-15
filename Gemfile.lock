@@ -326,7 +326,7 @@ DEPENDENCIES
   rails_12factor
   rails_best_practices
   rb-fsevent
-  redis (= 2.2)
+  redis
   rspec-rails
   rspec_api_documentation!
   rubocop

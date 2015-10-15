@@ -47,7 +47,7 @@ resource "Feeds" do
     response_field :friendsCount, "Number of friends for this user"
   end
 
-  get "/v1/feed/user", :redis, :vcr do
+  get "/v1/feed/user", :redis do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -102,7 +102,7 @@ resource "Feeds" do
     end
   end
 
-  get "/v1/feed/news", :redis, :vcr do
+  get "/v1/feed/news", :redis do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -192,7 +192,7 @@ resource "Feeds" do
     end
   end
 
-  get "/v1/feed/notification", :redis, :vcr do
+  get "/v1/feed/notification", :redis do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 

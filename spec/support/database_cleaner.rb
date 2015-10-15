@@ -18,6 +18,15 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with(:truncation)
   end
 
+  config.before(:each, :redis) do
+    DatabaseCleaner.strategy = :deletion
+  end
+
+  config.after(:each, :redis) do
+    DatabaseCleaner.strategy = :transaction
+    $redis.flushall
+  end
+
   # whenever we load seed data (via :seed flag) we need to use
   # really empty the database afterwards
   config.after(:all, :seed) do

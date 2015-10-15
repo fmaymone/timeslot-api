@@ -109,10 +109,6 @@ RSpec.configure do |config|
   config.after(:each, :explain) do
     ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.hide_explain
   end
-
-  config.before(:each, :redis) do
-    $redis.flushall
-  end
 end
 
 def with_std_out_logger

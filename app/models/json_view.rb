@@ -63,11 +63,11 @@ module JSONView
     }
 
     # slot notes
-    notes = []
+    slot_notes = []
 
     slot.notes.each do |note|
 
-      notes << {
+      slot_notes << {
 
           id: note.id,
           title: note.title,
@@ -78,7 +78,7 @@ module JSONView
 
     end
 
-    json['notes'] = notes
+    json['notes'] = slot_notes
 
     # slot media items
     media = []
