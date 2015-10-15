@@ -30,6 +30,25 @@ echo "localhost:5432:*:postgres:JMDF83M2A" >> ~/.pgpass
 chmod 0600 ~/.pgpass
 ```
 
+* install redis
+
+```bash
+sudo apt-get install redis-server
+cd ./redis-2.4.16
+make
+```
+Autostart redis as a service:
+```bash
+sudo make install
+cd utils
+sudo ./install_server.sh
+```
+Configure Redis locally (do not set this on production environment!):
+```bash
+redis-cli 
+CONFIG SET requirepass false
+```
+
 ## Prerequisites OSX
 
 * uninstall rvm if installed:

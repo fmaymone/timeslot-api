@@ -18,6 +18,6 @@ RSpec.describe "I18n" do
   it "Pass parameters to localized string content" do
     I18n.locale = 'de'
     result = I18n.t('notify_create_comment', name: user.username, title: slot.title)
-    expect(result).to eq("#{user.username} hat kommentiert auf '#{slot.title}'")
+    expect(result).to eq("#{user.username} hat kommentiert auf: #{slot.title}")
   end
 end

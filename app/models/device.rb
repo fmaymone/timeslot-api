@@ -1,4 +1,4 @@
-class Device < ActiveRecord::Base
+class Device < Channel
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :devices
@@ -7,6 +7,8 @@ class Device < ActiveRecord::Base
   validates :device_id, presence: true
   validates :system, presence: true
   validates :version, presence: true
+
+  #scope :active_sockets, -> { where.not(socket: nil) }
 
   def register_endpoint(token)
     return false if token.nil?

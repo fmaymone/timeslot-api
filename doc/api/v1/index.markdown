@@ -10,6 +10,12 @@
 * [Sign in with twitter](connects/sign_in_with_twitter.markdown)
 * [Connect twitter account](connects/connect_twitter_account.markdown)
 
+## Feeds
+
+* [Get activity feed for the current user](feeds/get_activity_feed_for_the_current_user.markdown)
+* [Get an aggregated activity feed](feeds/get_an_aggregated_activity_feed.markdown)
+* [Get activity notifications](feeds/get_activity_notifications.markdown)
+
 ## Groups
 
 * [Get all groups where current user is member or owner](groups/get_all_groups_where_current_user_is_member_or_owner.markdown)

@@ -1,4 +1,4 @@
-class MediaItem < ActiveRecord::Base
+class MediaItem < SlotActivity
   after_commit AuditLog
 
   belongs_to :mediable, polymorphic: true
@@ -54,5 +54,32 @@ class MediaItem < ActiveRecord::Base
     no_gaps = arr.size > arr.max
     dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
     dups.nil? && no_gaps
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    belongs_to_slot?
+  end
+
+  def activity_slot
+    mediable
+  end
+
+  # The user who made the update
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    'media'
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{I18n.t('activity_create_media', type: media_type)}"
   end
 end

@@ -9,6 +9,11 @@
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
 
+
+# Data Flow Chart Concept
+![Data Flow Chart Concept](doc/backend_concept.png)
+
+
 # Notes
 
 ## No delete & destroy
@@ -24,7 +29,6 @@ On first signup the token is also created so a signed up user is already logged 
 ## Authentication
 
 We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
-
 
 
 # Environment
@@ -133,6 +137,14 @@ ENV['TS_RAILS_BACKEND_CLOUDINARY_API_KEY']
 ENV['TS_RAILS_BACKEND_CLOUDINARY_API_SECRET']
 ```
 
+## Redis
+
+Redis is to store our Activity Streams via a service like Heroku Redis Addon. The following var need to be set:
+```bash
+ENV['REDIS_URL']
+```
+For local testing you need a locally running redis server listening on *localhost:6379*
+
 ## Airbrake
 
 for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Github](https://github.com/airbrake/airbrake)
@@ -176,6 +188,7 @@ Flag | Effect
 ```:keep_slots``` | doesn't clean metaslot, baseslot, stdslot, reslot & user table for marked group, cleans after group has run, for read-only specs
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
+```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
