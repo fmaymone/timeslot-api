@@ -1,6 +1,8 @@
 # Automatically bulk redis data to backup file every 1 hour
 if Rails.env.production?
-  $redis = Redis.new(url: ENV['REDIS_URL'], save: '3600 1')
+  uri = URI.parse(ENV["REDIS_URL"])
+  $redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+  #$redis = Redis.new(url: ENV['REDIS_URL'], save: '3600 1')
 else
   # $redis = Aws::ElastiCache::Client.new(
   #     region: 'us-west-2a',
