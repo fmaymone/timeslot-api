@@ -1,6 +1,6 @@
-module GroupActivity include Activity
+class GroupActivity < Activity
 
- # self.abstract_class = true
+  self.abstract_class = true
 
   private
 
