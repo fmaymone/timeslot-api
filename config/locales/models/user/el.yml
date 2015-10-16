@@ -26,11 +26,13 @@ el:
   activity_create_comment: "commented on this Slot"
   activity_create_like: "likes this Slot"
   activity_create_media: "adds %{type} to this Slot"
+  activity_create_slot: "%{verb} this Slot"
   activity_add_group: "entered this group"
   activity_add_friend: "has a new friend"
 
   notify_create_comment: "commented on: %{title}"
   notify_create_like: "likes: %{title}"
   notify_create_media: "adds a new %{type}"
+  notify_create_slot: "%{verb}ted: %{title}"
   notify_add_group: "entered the group: %{name}"
   notify_add_friend: "has a friendship with: %{name}"
