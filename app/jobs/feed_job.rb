@@ -35,7 +35,7 @@ class FeedJob
         target: params[:target],
         notify: params[:notify],
         sucker_punch: "save to feed failed" }
-      Rails.logger.error e
+      Rails.logger.error { e }
       Airbrake.notify(e, opts)
     end
   end

@@ -98,7 +98,6 @@ group :development, :test, :herokutest do
   gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
 
   gem 'shoulda-matchers', '~> 3.0'
-  #gem 'shoulda-matchers', '2.8.0', require: false
 
   gem 'faker'
 end
