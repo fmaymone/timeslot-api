@@ -116,6 +116,6 @@ class ReSlot < BaseSlot
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    "#{I18n.t('activity_create_slot', verb: activity_verb, title: meta_slot.title)}"
+    "#{I18n.t('activity_create_reslot', title: meta_slot.title)}"
   end
 end
