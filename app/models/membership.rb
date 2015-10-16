@@ -1,4 +1,4 @@
-class Membership < ActiveRecord::Base #GroupActivity
+class Membership < GroupActivity
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :memberships
@@ -97,5 +97,32 @@ class Membership < ActiveRecord::Base #GroupActivity
     when "000" then "deleted"
     else "undefined"
     end
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    active?
+  end
+
+  def activity_group
+    group
+  end
+
+  # The user who made the update
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'membership'
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{I18n.t('activity_add_group', name: activity_group.name)}"
   end
 end

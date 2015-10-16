@@ -1,4 +1,4 @@
-class BaseSlot < ActiveRecord::Base
+class BaseSlot < SlotActivity #ActiveRecord::Base
   include SlotFollow
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
@@ -142,8 +142,9 @@ class BaseSlot < ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    Device.notify_all([creator_id], [message: "#{user.username} likes your slot",
-                                     slot_id: id])
+    message_content = I18n.t('push_create_like', name: user.username)
+    Device.notify_all([creator_id], [message: message_content,
+                                     slot_id: self.id])
   end
 
   def destroy_like(user)
@@ -163,7 +164,7 @@ class BaseSlot < ActiveRecord::Base
     # remove the user who did the actual comment
     user_ids.delete(user.id)
 
-    message_content = I18n.t('notify_create_comment',
+    message_content = I18n.t('push_create_comment',
                              name: user.username,
                              title: meta_slot.title)
 
@@ -382,5 +383,31 @@ class BaseSlot < ActiveRecord::Base
   # for Pundit
   def self.policy_class
     SlotPolicy
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    self
+  end
+
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    'slot'
+  end
+
+  def activity_foreign_id
+    ''
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{I18n.t('activity_create_slot', verb: activity_verb, title: meta_slot.title)}"
   end
 end

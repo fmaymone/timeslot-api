@@ -92,4 +92,30 @@ class ReSlot < BaseSlot
   def self.policy_class
     ReSlotPolicy
   end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    self
+  end
+
+  def activity_user
+    slotter
+  end
+
+  def activity_verb
+    'reslot'
+  end
+
+  def activity_foreign_id
+    parent.id.to_s
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{I18n.t('activity_create_slot', verb: activity_verb, title: meta_slot.title)}"
+  end
 end

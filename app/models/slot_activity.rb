@@ -1,4 +1,4 @@
-class SlotActivity <  Activity
+class SlotActivity < Activity
 
   self.abstract_class = true
 

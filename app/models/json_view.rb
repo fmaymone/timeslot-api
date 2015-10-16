@@ -109,7 +109,7 @@ module JSONView
     json['media'] = media
 
     # slot settings
-    json['settings'] = { alerts: slot.creator.alerts(slot) }
+    json['settings'] = { alerts: slot.creator.alerts(slot) } unless slot.try(:parent)
     json['visibility'] = slot.visibility if slot.try(:visibility)
 
     # slot additionals

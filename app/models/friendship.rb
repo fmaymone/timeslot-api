@@ -1,4 +1,4 @@
-class Friendship < ActiveRecord::Base #UserActivity
+class Friendship < UserActivity
   class DuplicateEntry < StandardError; end
 
   after_commit AuditLog
@@ -76,5 +76,32 @@ class Friendship < ActiveRecord::Base #UserActivity
     when "01" then "rejected"
     else "undefined"
     end
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    established?
+  end
+
+  def activity_friend
+    friend
+  end
+
+  # The user who made the update
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'friendship'
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message
+    "#{I18n.t('activity_add_friend', name: activity_friend)}"
   end
 end
