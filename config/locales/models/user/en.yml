@@ -25,7 +25,7 @@ en:
 
   activity_create_comment: "commented on this Slot"
   activity_create_like: "likes this Slot"
-  activity_create_media: "adds %{type} to this Slot"
+  activity_create_media: "added %{type} to this Slot"
   activity_create_slot: "added this Slot"
   activity_create_reslot: "reslotted this Slot"
   activity_add_group: "entered this group"
@@ -33,7 +33,7 @@ en:
 
   notify_create_comment: "commented on: %{title}"
   notify_create_like: "likes: %{title}"
-  notify_create_media: "adds a new %{type}"
+  notify_create_media: "added a new %{type}"
   notify_create_slot: "added slot: %{title}"
   notify_create_reslot: "reslotted: %{title}"
   notify_add_group: "entered the group: %{name}"
