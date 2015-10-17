@@ -69,6 +69,8 @@ group :development, :test do
 
   gem 'spring'
 
+  gem 'spring-watcher-listen'
+
   gem 'spring-commands-rspec'
 
   gem 'guard-rspec'
