@@ -38,7 +38,6 @@ class FeedJob
 
   def user_feed(params)
     params.except(:notify, :slot, :user, :actor)
-          .merge(message: "You #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json
@@ -53,7 +52,6 @@ class FeedJob
 
   def notification_feed(params)
     params.except(:notify, :slot, :user)
-          .merge(message: "#{params[:user]['username']} #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json

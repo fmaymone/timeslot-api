@@ -4,7 +4,7 @@ class Activity < ActiveRecord::Base
 
   # Trigger activities to feeds:
   after_commit :create_activity, on: :create
-  #after_update :update_activity
+  after_commit :update_activity, on: :update
   before_destroy :remove_activity
 
   private
@@ -49,13 +49,12 @@ class Activity < ActiveRecord::Base
   end
 
   def remove_activity
-    # TODO
     # Remove activities from target feeds:
     Feed::remove_target_from_feed(self, target)
   end
 
   # This method should be overridden in the subclass
-  # if validation is required
+  # if custom validation is required
   def activity_is_valid?
     true
   end
@@ -97,8 +96,10 @@ class Activity < ActiveRecord::Base
           "Subclasses must define the method 'activity_message'."
   end
 
-  # The message is used as a notification message
-  # for the users activity feed
+  # Returns an array of user which should also be notified
+  # The official documentation of stream_rails gem is incomplete.
+  # A part how to implement aggregations are missing, that's why
+  # we have to fall back to the plain ruby way which is also compatible.
   def activity_notify
     raise NotImplementedError,
           "Subclasses must define the method 'activity_notify'."

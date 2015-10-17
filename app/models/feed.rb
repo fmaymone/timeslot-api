@@ -40,6 +40,8 @@ module Feed
   end
 
   # TODO: We can optimize this by aggregating feeds when storing into redis
+  # NOTE: If we use "live aggregation" we are able to modify
+  # the aggregation logic on the fly
   def self.aggregate_feed(feed, limit: 20, offset: 0, cursor: nil)
     # Temporary holders to create aggregations
     offset = cursor ? cursor.to_i : offset.to_i
@@ -48,7 +50,8 @@ module Feed
     groups = {}
     index = -1
     count = 0
-    # Loop through all feeds
+    # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
+    # Loop through all feeds (has a break statement, offset is optional)
     feed[0, feed.count - offset].each do |post|
       # Prepare dictionary shortcuts
       actor = post['actor'].to_i

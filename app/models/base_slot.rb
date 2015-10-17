@@ -142,7 +142,7 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    message_content = I18n.t('push_create_like', name: user.username)
+    message_content = I18n.t('push_like', name: user.username)
     Device.notify_all([creator_id], [message: message_content,
                                      slot_id: self.id])
   end
@@ -164,7 +164,7 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
     # remove the user who did the actual comment
     user_ids.delete(user.id)
 
-    message_content = I18n.t('push_create_comment',
+    message_content = I18n.t('push_comment',
                              name: user.username,
                              title: meta_slot.title)
 
@@ -408,6 +408,6 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    I18n.t('activity_slot', title: meta_slot.title)
+    I18n.t('activity_slot', name: creator.username, title: meta_slot.title)
   end
 end

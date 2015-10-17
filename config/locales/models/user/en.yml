@@ -22,8 +22,8 @@
 en:
 
   # APNS Push Notification:
-  push_create_comment: "%{name} commented on: %{title}"
-  push_create_like: "%{name} likes your slot"
+  push_comment: "%{name} commented on: %{title}"
+  push_like: "%{name} likes your slot"
 
   # Activity Feed:
   # has no dynamic values, it should be only used as template
@@ -41,13 +41,13 @@ en:
   # Notification Feed:
   # TODO: specify notification messages by Stani
   # maybe we can simplify this
-  notify_comment: "commented on: %{title}"
-  notify_like: "likes: %{title}"
-  notify_slot: "added slot: %{title}"
-  notify_reslot: "reslotted: %{title}"
-  notify_membership: "entered the group: %{name}"
-  notify_friendship: "has a friendship with: %{name}"
-  notify_video: "added video to this Slot"
-  notify_audio: "added audio to this Slot"
-  notify_note: "added note to this Slot"
-  notify_image: "added image to this Slot"
+  notify_comment: "%{name} commented on: %{title}"
+  notify_like: "%{name} likes: %{title}"
+  notify_slot: "%{name} added slot: %{title}"
+  notify_reslot: "%{name} reslotted: %{title}"
+  notify_membership: "%{name} entered the group: %{group}"
+  notify_friendship: "%{name} has a friendship with: %{friend}"
+  notify_video: "%{name} added video to this Slot"
+  notify_audio: "%{name} added audio to this Slot"
+  notify_note: "%{name} added note to this Slot"
+  notify_image: "%{name} added image to this Slot"

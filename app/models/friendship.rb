@@ -102,6 +102,6 @@ class Friendship < UserActivity
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    I18n.t('notify_friendship', name: activity_friend)
+    I18n.t('activity_friendship', name: user.username, friend: friend)
   end
 end
