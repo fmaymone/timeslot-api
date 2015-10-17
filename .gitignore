@@ -96,6 +96,7 @@ spec/logo.jpg
 public/ptl.html
 
 .ackrc
+.simplecov
 
 doc/api.zip
 db/structure.sql
