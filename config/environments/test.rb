@@ -13,7 +13,9 @@ Rails.application.configure do
   config.eager_load = false
 
   # Configure static asset server for tests with Cache-Control for performance.
-  config.serve_static_files  = true
+  # config.serve_static_files = true
+  # simple_cov wants this to be set to false
+  config.serve_static_files = false
   config.static_cache_control = 'public, max-age=3600'
 
   # Show full error reports and disable caching.
