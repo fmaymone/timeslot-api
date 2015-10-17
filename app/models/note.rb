@@ -41,6 +41,6 @@ class Note < SlotActivity
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    "#{I18n.t('activity_create_media', type: activity_verb)}"
+    I18n.t('notify_note', type: activity_verb)
   end
 end

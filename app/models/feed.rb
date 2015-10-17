@@ -5,7 +5,8 @@ module Feed
   end
 
   def self.news_feed(user_id, params = {})
-    aggregate_feed(get_feed("Feed:#{user_id}:News"), params)
+    feed = get_feed("Feed:#{user_id}:News")
+    aggregate_feed(feed, params)
   end
 
   def self.notification_feed(user_id, params = {})
@@ -15,6 +16,27 @@ module Feed
 
   def self.get_feed(feed)
     $redis.smembers(feed).reverse!.map{|a| JSON.parse(a)}
+  end
+
+  def self.remove_user_from_feed(user, actor)
+    remove_from_feed('actor', user.id, actor.id)
+  end
+
+  def self.remove_target_from_feed(user, target)
+    remove_from_feed('target', user.id, target.id)
+  end
+
+  def self.remove_from_feed(target_field, user_id, target_id)
+    ["Feed:#{user_id}:User",
+     "Feed:#{user_id}:News",
+     "Feed:#{user_id}:Notification"].each do |feed_key|
+      feed = Feed::get_feed(feed_key)
+      feed.each do |post|
+        if post[target_field].to_i == target_id #|| post['foreignId'].to_i == actor_id
+          $redis.srem(feed_key, post.to_json)
+        end
+      end
+    end
   end
 
   # TODO: We can optimize this by aggregating feeds when storing into redis
@@ -30,8 +52,8 @@ module Feed
     feed[0, feed.count - offset].each do |post|
       # Prepare dictionary shortcuts
       actor = post['actor'].to_i
-      group = post['group']
-      message = post['message']
+      # Generates group tag (aggregation index)
+      group = post['group'] = "#{post['target']}#{post['activity']}" ##{post['time']}
       # Aggregate feed (indexed by group)
       if groups.has_key?(group)
         current = groups[group]
@@ -62,29 +84,32 @@ module Feed
         # Init activity counter
         current_feed['activityCount'] = 1
         # Set current feed index
-        #current_feed['id'] = count.to_s
+        current_feed['id'] = Digest::SHA1.hexdigest(group) #count.to_s
       else
         break
       end
-      # Update aggregated activity message
-      usernames_feed = usernames[group]
-      if usernames_feed.count == 2
-        current_feed['message'] =
-            "#{usernames_feed[0].to_s} and #{usernames_feed[1].to_s} #{message}"
-      elsif usernames_feed.count > 2
-        current_feed['message'] =
-            "#{usernames_feed[0].to_s} and #{(usernames_feed.count - 1).to_s} others #{message}"
-      else
-        current_feed['message'] = "#{usernames_feed[0].to_s} #{message}"
-      end
+      # # Update aggregated activity message
+      current_feed['message'] = aggregate_message(usernames[group], post['activity'])
       # Set current feed next cursor
       current_feed['cursor'] = ((count += 1) + offset).to_s
     end
     aggregated_feed
   end
 
+  def self.aggregate_message(usernames, activity)
+    template = I18n.t('activity_' + activity) #post['message']
+    # Set message as a template for the aggregation message
+    if usernames.count == 2
+      "#{usernames[0].to_s} and #{usernames[1].to_s} #{template}"
+    elsif usernames.count > 2
+      "#{usernames[0].to_s} and #{(usernames.count - 1).to_s} others #{template}"
+    else
+      "#{usernames[0].to_s} #{template}"
+    end
+  end
+
   def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
-    offset = cursor.to_i if cursor
-    feed[offset.to_i..[offset.to_i + limit.to_i - 1, feed.count].min] #.sort_by{|day| day}
+    offset = cursor ? cursor.to_i : offset.to_i
+    feed[offset..[offset + limit.to_i - 1, feed.count].min] #.sort_by{|day| day}
   end
 end

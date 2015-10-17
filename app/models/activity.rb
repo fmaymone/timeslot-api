@@ -50,6 +50,8 @@ class Activity < ActiveRecord::Base
 
   def remove_activity
     # TODO
+    # Remove activities from target feeds:
+    Feed::remove_target_from_feed(self, target)
   end
 
   # This method should be overridden in the subclass

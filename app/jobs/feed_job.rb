@@ -4,12 +4,8 @@ class FeedJob
 
   def perform(params)
     begin
-      # Generates activity id
-      id = Digest::SHA1.hexdigest(params.to_json).upcase #hexdigest([Time.now, rand].join)
-      # Generates group tag
-      group = "#{params[:target]}#{params[:activity]}#{Time.zone.now.strftime('%Y%m%d')}"
-      # Add identifiers to params
-      params.merge!(id: id, group: group)
+      # Generates and add activity id
+      params.merge!(id: Digest::SHA1.hexdigest(params.to_json).upcase)
       # Store to own activities
       $redis.sadd("Feed:#{params[:actor]}:User", user_feed(params))
       # Send to other users through social relations
@@ -49,7 +45,7 @@ class FeedJob
   end
 
   def news_feed(params)
-    params.except(:notify)
+    params.except(:notify, :message)
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json

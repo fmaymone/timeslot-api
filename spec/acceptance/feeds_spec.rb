@@ -65,7 +65,7 @@ resource "Feeds" do
                                title: 'Slot title 21', creator: owner) }
       let(:slot) { create(:std_slot_public, :with_media,
                           meta_slot: meta_slot) }
-      let(:message) { "You #{I18n.t('activity_create_comment', title: slot.title)}" }
+      let(:message) { "You #{I18n.t('notify_comment', title: slot.title)}" }
 
       example "Get activity feed for the current user", document: :v1 do
         explanation "if a user is authenticated, then some extra" \
@@ -121,7 +121,7 @@ resource "Feeds" do
                                title: 'Slot title 22', creator: current_user) }
       let(:slot) { create(:std_slot_public, :with_media,
                           meta_slot: meta_slot) }
-      let(:message) { "#{actor.username} #{I18n.t('activity_create_comment', title: slot.title)}" }
+      let(:message) { "#{actor.username} #{I18n.t('activity_comment', title: slot.title)}" }
 
       example "Get an aggregated activity feed", document: :v1 do
         explanation "some extra activity fields are included"
@@ -210,7 +210,7 @@ resource "Feeds" do
                                title: 'Slot title 23', creator: current_user) }
       let(:slot) { create(:std_slot_public, :with_media,
                           meta_slot: meta_slot) }
-      let(:message) { "#{actor.username} #{I18n.t('activity_create_comment', title: slot.title)}" }
+      let(:message) { "#{actor.username} #{I18n.t('notify_comment', title: slot.title)}" }
 
       example "Get activity notifications", document: :v1 do
         explanation "some extra activity fields are included"
@@ -227,7 +227,6 @@ resource "Feeds" do
         activity = json.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("activity")
-        expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")

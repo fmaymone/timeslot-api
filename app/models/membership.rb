@@ -123,6 +123,6 @@ class Membership < GroupActivity
   # The message is used as a notification message
   # for the users activity feed
   def activity_message
-    "#{I18n.t('activity_add_group', name: activity_group.name)}"
+    I18n.t('notify_membership', name: activity_group.name)
   end
 end
