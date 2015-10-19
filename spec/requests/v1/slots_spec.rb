@@ -1558,18 +1558,72 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/like" do
-    let(:parent) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
-    it "creates a new like" do
-      expect {
-        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      }.to change(Like, :count).by 1
+    let(:std_slot) { create(:std_slot_public) }
+
+    context "StdSlot" do
+      it "creates a new like" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.to change(Like, :count).by 1
+      end
+
+      it "handles re-liking the same slot gracefully" do
+        create(:like, user: current_user, slot: std_slot)
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to change(Like, :count)
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+      end
+
+      it "re-like slot which was unliked" do
+        like = create(:like, user: current_user, slot: std_slot,
+                      deleted_at: Time.zone.now)
+        expect(like.deleted_at).not_to be nil
+
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to change(Like, :count)
+
+        like.reload
+        expect(like.deleted_at).to be nil
+
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+      end
     end
 
-    it "adds the new like to the parent slot" do
-      post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      expect(Like.last.slot.id).to eq parent.id
-      expect(Like.last.slot.id).to eq re_slot.parent.id
+    context "ReSlot" do
+      let(:parent) { std_slot }
+      let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
+
+      it "creates a new like" do
+        expect {
+          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        }.to change(Like, :count).by 1
+      end
+
+      it "adds the new like to the parent slot" do
+        post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        expect(Like.last.slot.id).to eq parent.id
+        expect(Like.last.slot.id).to eq re_slot.parent.id
+      end
+
+      # test for bug BKD-288
+      it "liking reslot of already liked parent slot (does nothing)" do
+        create(:like, user: current_user, slot: parent)
+        expect(Like.count).to be 1
+
+        expect {
+          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+
+        expect(Like.count).to be 1
+        expect(response).to have_http_status :ok
+      end
     end
   end
 
@@ -1591,6 +1645,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "sets deleted_at on the like" do
         delete "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        expect(response).to have_http_status :ok
         like.reload
         expect(like.deleted_at?).to be true
       end
