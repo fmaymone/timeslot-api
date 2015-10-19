@@ -25,8 +25,8 @@ class Activity < ActiveRecord::Base
       object: activity_object_id,
       target: activity_target_id,
       activity: activity_verb,
-      message: activity_message,
-      foreign_id: activity_foreign_id,
+      message: activity_message_params,
+      foreignId: activity_foreign_id,
       notify: activity_notify,
       time: Time.zone.now
     }.merge!(activity_extra_data))
@@ -91,9 +91,9 @@ class Activity < ActiveRecord::Base
   end
 
   # The message is used as a notification message
-  def activity_message
+  def activity_message_params
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_message'."
+          "Subclasses must define the method 'activity_message_params'."
   end
 
   # Returns an array of user which should also be notified

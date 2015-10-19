@@ -25,10 +25,4 @@ class Like < SlotActivity
   def activity_verb
     'like'
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message
-    I18n.t('activity_like', name: user.username, title: slot.meta_slot.title)
-  end
 end

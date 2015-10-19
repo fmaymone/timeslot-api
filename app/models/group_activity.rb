@@ -45,10 +45,21 @@ class GroupActivity < Activity
   # from the output when the StreamRails::Enrich is not used.
   def activity_extra_data
     {
-        # We store full slot data to the activity stream.
-        # The backend needs no further request on the database.
-        #group: JSONView.group(activity_group),
-        user: JSONView.user(activity_user)
+      # We store full slot data to the activity stream.
+      # The backend needs no further request on the database.
+      #group: JSONView.group(activity_group),
+      user: JSONView.user(activity_user)
+      # TODO:
+      # group: JSONView.group(activity_group)
+    }
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message_params
+    {
+      USER: activity_user.username,
+      GROUP: activity_group.name
     }
   end
 

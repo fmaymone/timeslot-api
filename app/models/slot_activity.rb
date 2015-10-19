@@ -52,6 +52,15 @@ class SlotActivity < Activity
     }
   end
 
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message_params
+    {
+      USER: activity_user.username,
+      TITLE: activity_slot.meta_slot.title
+    }
+  end
+
   # Returns an array of user which should also be notified
   # The official documentation of stream_rails gem is incomplete.
   # A part how to implement aggregations are missing, that's why

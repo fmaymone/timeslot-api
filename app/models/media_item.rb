@@ -76,10 +76,4 @@ class MediaItem < SlotActivity
   def activity_verb
     media_type
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message
-    I18n.t("activity_#{media_type}", name: creator.username, type: media_type)
-  end
 end

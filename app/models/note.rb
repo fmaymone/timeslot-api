@@ -37,10 +37,4 @@ class Note < SlotActivity
   def activity_verb
     'note'
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message
-    I18n.t('activity_note', name: creator.username, type: activity_verb)
-  end
 end

@@ -119,10 +119,4 @@ class Membership < GroupActivity
   def activity_verb
     'membership'
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message
-    I18n.t('activity_membership', name: user.username, group: group.name)
-  end
 end

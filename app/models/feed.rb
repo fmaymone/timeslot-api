@@ -1,17 +1,20 @@
 module Feed
   def self.user_feed(user_id, params = {})
     feed = get_feed("Feed:#{user_id}:User")
-    paginate(feed, params)
-  end
-
-  def self.news_feed(user_id, params = {})
-    feed = get_feed("Feed:#{user_id}:News")
-    aggregate_feed(feed, params)
+    page = paginate(feed, params)
+    enrich_messages(page, 'me')
   end
 
   def self.notification_feed(user_id, params = {})
     feed = get_feed("Feed:#{user_id}:Notification")
-    paginate(feed, params)
+    page = paginate(feed, params)
+    enrich_messages(page, 'notify')
+  end
+
+  def self.news_feed(user_id, params = {})
+    feed = get_feed("Feed:#{user_id}:News")
+    page = aggregate_feed(feed, params)
+    enrich_messages(page, 'activity')
   end
 
   def self.get_feed(feed)
@@ -42,11 +45,10 @@ module Feed
   # TODO: We can optimize this by aggregating feeds when storing into redis
   # NOTE: If we use "live aggregation" we are able to modify
   # the aggregation logic on the fly
-  def self.aggregate_feed(feed, limit: 20, offset: 0, cursor: nil)
+  def self.aggregate_feed(feed, limit: 25, offset: 0, cursor: nil)
     # Temporary holders to create aggregations
     offset = cursor ? cursor.to_i : offset.to_i
     aggregated_feed = []
-    usernames = {}
     groups = {}
     index = -1
     count = 0
@@ -63,10 +65,12 @@ module Feed
         current_feed = aggregated_feed[current]
         # Add actor as unique
         unless current_feed['actors'].include?(actor)
-          # Collect actor
+          # Collect actors
           current_feed['actors'] << actor
-          # Collect username
-          usernames[group] << post['user']['username']
+          # Collect usernames (we need 2 at maximum)
+          current_feed['message']['USER2'] = post['user']['username'] unless current_feed['message'].has_key?('USER2')
+          # Increase Usercount
+          current_feed['message']['USERCOUNT'] += 1
         end
         # Update activity count
         current_feed['activityCount'] += 1
@@ -81,38 +85,38 @@ module Feed
         current_feed['actors'] = [actor]
         # In handy we remove the single field 'actor' on aggregated feeds
         current_feed.delete('actor')
-        # Instantiate a new username array on each
-        # new group and add current actor to it
-        usernames[group] = [post['user']['username']]
+        # Adds the first username + usercount for aggregated messaging
+        current_feed['message'] = { 'USER' => post['user']['username'], 'USERCOUNT' => 1 }
         # Init activity counter
         current_feed['activityCount'] = 1
-        # Set current feed index
+        # Sets a generated feed id
         current_feed['id'] = Digest::SHA1.hexdigest(group) #count.to_s
       else
         break
       end
-      # # Update aggregated activity message
-      current_feed['message'] = aggregate_message(usernames[group], post['activity'])
       # Set current feed next cursor
       current_feed['cursor'] = ((count += 1) + offset).to_s
     end
     aggregated_feed
   end
 
-  def self.aggregate_message(usernames, activity)
-    template = I18n.t('activity_' + activity) #post['message']
-    # Set message as a template for the aggregation message
-    if usernames.count == 2
-      "#{usernames[0].to_s} and #{usernames[1].to_s} #{template}"
-    elsif usernames.count > 2
-      "#{usernames[0].to_s} and #{(usernames.count - 1).to_s} others #{template}"
-    else
-      "#{usernames[0].to_s} #{template}"
+  def self.enrich_messages(aggregated_feed, type)
+    aggregated_feed.each do |feed|
+      actors = feed['actors'] || []
+      # Determine pluralization
+      mode = actors.count > 2 ? 'aggregate' : (actors.count > 1 ? 'plural' : 'singular')
+      # Determine translation key
+      key = "#{feed['type'].downcase}_#{feed['activity']}_#{type}_#{mode}"
+      # Update enriched message
+      feed['message'] = I18n.t(key, feed['message'].symbolize_keys)
     end
+    aggregated_feed
   end
 
   def self.paginate(feed, limit: 20, offset: 0, cursor: nil)
+    # offset in reversed logic (LIFO)
     offset = cursor ? cursor.to_i : offset.to_i
-    feed[offset..[offset + limit.to_i - 1, feed.count].min] #.sort_by{|day| day}
+    # paginate through offset and limit (catch MIN as MAX in reversed order)
+    feed[offset..[offset + limit.to_i - 1, feed.count].min]
   end
 end

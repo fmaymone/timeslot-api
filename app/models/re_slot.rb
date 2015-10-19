@@ -112,10 +112,4 @@ class ReSlot < BaseSlot
   def activity_foreign_id
     parent.id.to_s
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message
-    I18n.t('activity_reslot', name: slotter.username, title: meta_slot.title)
-  end
 end
