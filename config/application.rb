@@ -45,8 +45,17 @@ module TsRailsBackend
 
     Jbuilder.key_format camelize: :lower
 
+    logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+    # should sucker punch run async?
+    if (ENV['INLINE_WORKERS'] == 'true')
+      require 'sucker_punch/testing/inline'
+      logger.tagged('WORKER') { logger.info { 'workers not ASYNC' } }
+    else
+      logger.tagged('WORKER') { logger.info { 'workers are ASYNC' } }
+    end
+
     # logger for worker threads from sucker_punch
-    SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
+    # SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
 
     # Enable CORS
     # https://github.com/cyu/rack-cors
