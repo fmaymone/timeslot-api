@@ -18,10 +18,18 @@ module TsRailsBackend
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
 
+
+    # Always allow 'format' as request parameter, 'controller' and 'action' are
+    # allowed by default.
+    # Note: this will return the hash with string keys, not symbol keys. Rails5 ?
+    # http://eileencodes.com/posts/actioncontroller-parameters-now-returns-an-object-instead-of-a-hash/
+    config.action_controller.always_permitted_parameters = %w( controller action format )
+    # config.always_permitted_parameters = %w( controller action format )
+
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # 'us' is not suppoerted, we have to choose 'en' instead
+    # 'us' is not supported, we have to choose 'en' instead
     config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
     # http://guides.rubyonrails.org/i18n.html
@@ -37,8 +45,17 @@ module TsRailsBackend
 
     Jbuilder.key_format camelize: :lower
 
+    logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
+    # should sucker punch run async?
+    if (ENV['INLINE_WORKERS'] == 'true')
+      require 'sucker_punch/testing/inline'
+      logger.tagged('WORKER') { logger.info { 'workers not ASYNC' } }
+    else
+      logger.tagged('WORKER') { logger.info { 'workers are ASYNC' } }
+    end
+
     # logger for worker threads from sucker_punch
-    SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
+    # SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
 
     # Enable CORS
     # https://github.com/cyu/rack-cors

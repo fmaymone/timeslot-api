@@ -1,5 +1,5 @@
 # Automatically bulk redis data to backup file every 1 hour (3600 seconds)
-if Rails.env.production?
+if Rails.env.production? || Rails.env.herokutest?
   uri = URI.parse(ENV["REDIS_URL"])
   $redis = Redis.new(host: uri.host, port: uri.port, password: uri.password, save: '3600 1')
   # $redis = Aws::ElastiCache::Client.new(

@@ -12,7 +12,7 @@ gem 'pg', '0.18.2'
 gem 'bcrypt'
 
 # Authorization
-gem "pundit", '1.0.1'
+gem 'pundit', '1.0.1'
 
 # JSON
 gem 'jbuilder', '2.3.0'
@@ -21,7 +21,7 @@ gem 'oj_mimic_json', '1.0.1'
 
 # for heroku
 gem 'puma', platforms: :ruby # exclude installation on Windows
-gem "rack-timeout"
+gem 'rack-timeout'
 gem 'rails_12factor', group: :production
 
 # third party services
@@ -36,9 +36,6 @@ gem 'pry-rails'
 # Worker (background processing)
 gem 'sucker_punch'
 
-# GetStream.io
-#gem 'stream_rails'
-
 # Redis Data Storage
 gem 'redis'
 
@@ -50,15 +47,19 @@ gem 'redis'
 gem 'rack-cors', require: 'rack/cors'
 
 group :development do
-  gem "rails-erd"
+  gem 'rails-erd'
 
-  gem "railroady"
+  gem 'railroady'
 
-  gem "rails_best_practices"
+  gem 'rails_best_practices'
 
-  gem "rubocop"
+  gem 'rubocop'
 
-  gem "rubocop-rspec"
+  gem 'rubocop-rspec'
+end
+
+group :test do
+  gem 'simplecov', require: false
 end
 
 group :development, :test do
@@ -67,6 +68,8 @@ group :development, :test do
   gem 'pry-doc'
 
   gem 'spring'
+
+  gem 'spring-watcher-listen'
 
   gem 'spring-commands-rspec'
 
@@ -95,10 +98,9 @@ group :development, :test, :herokutest do
   gem 'database_cleaner'
 
   # github version contains a monkey patch for pretty printing response body in API docs
-  gem 'rspec_api_documentation', git: "https://github.com/ts-silvio/rspec_api_documentation.git"
+  gem 'rspec_api_documentation', git: 'https://github.com/ts-silvio/rspec_api_documentation.git'
 
   gem 'shoulda-matchers', '~> 3.0'
-  #gem 'shoulda-matchers', '2.8.0', require: false
 
   gem 'faker'
 end

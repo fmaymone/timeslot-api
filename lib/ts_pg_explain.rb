@@ -3,6 +3,7 @@
 module TSPgExplain
   # please also see activerecord_extension.rb
 
+  # :nocov:
   def __explain_analyze(sql, command, *args)
     meth = "#{command}_without_explain_analyze".to_sym
     if /\A\s*SELECT/i.match(sql)
@@ -24,4 +25,5 @@ module TSPgExplain
   def exec_query_with_explain_analyze(sql, *args)
     __explain_analyze(sql, :exec_query, *args)
   end
+  # :nocov:
 end

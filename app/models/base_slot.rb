@@ -140,7 +140,17 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
   end
 
   def create_like(user)
-    like = Like.find_by(slot: self, user: user) || likes.create(user: user)
+    if self.class <= ReSlot
+      like = Like.find_by(slot: parent, user: user)
+    else
+      like = Like.find_by(slot: self, user: user)
+    end
+    like ||= likes.create(user: user)
+  rescue ActiveRecord::RecordNotUnique
+    # this is raised when the like is already present, not catching it here
+    # means it would be rescued in application_controller.rb and returns 422
+    # which is not our intention
+  else
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
 
     message_content = I18n.t('slot_like_push_singular',

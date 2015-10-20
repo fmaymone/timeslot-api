@@ -40,13 +40,6 @@ class StdSlot < BaseSlot
   def prepare_for_deletion
   end
 
-  # I can throw a User object at this and AR automagically takes the ID - nice
-  # or dangerous?
-  # btw I made this classmethod to circumvent my default_scope on the slot_type
-  def self.of(user_id)
-    StdSlot.unscoped.where(owner: user_id)
-  end
-
   def self.create_slot(meta_slot:, visibility:, user: nil)
     slot_type = STD_SLOT_TYPES[visibility].to_s.constantize
   rescue NameError

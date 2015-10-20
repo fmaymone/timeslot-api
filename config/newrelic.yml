@@ -12,7 +12,8 @@
 
 common: &default_settings
   # Required license key associated with your New Relic account.
-  license_key: 14525b73a63b2e06a2df860d122e829e34e22d52
+  # license_key: 14525b73a63b2e06a2df860d122e829e34e22d52
+  license_key: <%= ENV["NEW_RELIC_LICENSE_KEY"] %>
 
   # Your application name. Renaming here affects where data displays in New
   # Relic.  For more details, see https://docs.newrelic.com/docs/apm/new-relic-apm/maintenance/renaming-applications
@@ -24,7 +25,6 @@ common: &default_settings
   # Logging level for log/newrelic_agent.log
   log_level: info
 
-
 # Environment-specific settings are in this section.
 # RAILS_ENV or RACK_ENV (as appropriate) is used to determine the environment.
 # If your application has other named environments, configure them here.
@@ -34,7 +34,8 @@ development:
 
   # NOTE: There is substantial overhead when running in developer mode.
   # Do not use for production or load testing.
-  developer_mode: true
+  # developer_mode: true
+  monitor_mode: false
 
 herokutest:
   <<: *default_settings
@@ -49,10 +50,6 @@ test:
   <<: *default_settings
   # It doesn't make sense to report to New Relic from automated test runs.
   monitor_mode: false
-
-staging:
-  <<: *default_settings
-  app_name: Timeslot (Staging)
 
 production:
   <<: *default_settings

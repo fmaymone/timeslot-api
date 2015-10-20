@@ -23,7 +23,7 @@ module V1
       authorize :stdSlot
 
       if slot_paging_params.blank?
-        slot_count = ENV['DEMO_SLOTS_COUNT'].nil? ? 100 : ENV['DEMO_SLOTS_COUNT'].to_i
+        slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
         @slots = StdSlotPublic.last(slot_count)
         render :index
       else

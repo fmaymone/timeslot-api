@@ -107,8 +107,6 @@ class Device < Channel
                             aws_sns_error: exception }
       Rails.logger.error { opts }
       Airbrake.notify(exception, opts)
-      # I'm not sure if we ever evaluate the following line
-      errors.add(:client, "could not send push notification to device")
     end
   end
 
