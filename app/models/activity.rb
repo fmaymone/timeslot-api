@@ -10,6 +10,7 @@ class Activity < ActiveRecord::Base
   private
 
   def create_activity
+    # Trigger "create" as an activity if this should be valid
     if activity_is_valid?
       create_activity_feed
       create_activity_stream
@@ -18,7 +19,7 @@ class Activity < ActiveRecord::Base
     end
   end
 
-  def create_activity_feed
+  def create_activity_feed(activity_time = nil)
     FeedJob.new.async.perform({
       type: activity_type,
       actor: activity_actor_id,
@@ -28,7 +29,7 @@ class Activity < ActiveRecord::Base
       message: activity_message_params,
       foreignId: activity_foreign_id,
       notify: activity_notify,
-      time: Time.zone.now
+      time: (activity_time || self.updated_at)
     }.merge!(activity_extra_data))
   end
 
@@ -51,6 +52,9 @@ class Activity < ActiveRecord::Base
   def remove_activity
     # Remove activities from target feeds:
     Feed::remove_target_from_feed(self, target)
+    # Trigger "delete" as an activity if this should be valid
+    # Pass the current time because this before-callback does not trigger "updated_at"
+    create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   # This method should be overridden in the subclass
