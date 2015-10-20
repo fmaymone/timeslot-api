@@ -4,16 +4,17 @@ RSpec.describe "V1::Feed", type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user, :with_email, :with_password, :with_feed) }
   let(:actors) { create_list(:user, 3, :with_feed) }
-  let(:slot) { create(:std_slot_public, owner: current_user) }
+  let(:meta_slot) { create(:meta_slot, creator: current_user) }
+  let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
   before(:each) do
     actors.each do |actor|
-      # Create relationships
+      # Create relationships:
       actor.add_follower(current_user)
-      # Perform activities
+      # Perform activities:
       slot.create_comment(actor, 'This is a test comment.')
       slot.create_like(actor)
     end
@@ -38,7 +39,7 @@ RSpec.describe "V1::Feed", type: :request do
       it "returns array of current user activities" do
         get "/v1/feed/user", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(4)
+        expect(json.length).to be(5)
       end
     end
 
@@ -64,7 +65,7 @@ RSpec.describe "V1::Feed", type: :request do
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/user", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2) # 6 - 2 = 4.limit(2)
+        expect(json.length).to be(2) # 6 - 2 = 4.limit(2) = 2
       end
     end
 
@@ -74,7 +75,7 @@ RSpec.describe "V1::Feed", type: :request do
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/user", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2) # 3 - 2 = 1.limit(2)
+        expect(json.length).to be(2) # 6 - 4 = 2.limit(2) = 2
       end
     end
   end

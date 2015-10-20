@@ -4,25 +4,22 @@ class FeedJob
 
   def perform(params)
     begin
-      # Generates activity id
-      id = Digest::SHA1.hexdigest(params.to_json).upcase #hexdigest([Time.now, rand].join)
-      # Generates group tag
-      group = "#{params[:target]}#{params[:activity]}#{Time.zone.now.strftime('%Y%m%d')}"
-      # Add identifiers to params
-      params.merge!(id: id, group: group)
-      # Store to own activities
+      # Generates and add activity id
+      params.merge!(id: Digest::SHA1.hexdigest(params.to_json).upcase)
+      # Store to own activity feed (me activities)
       $redis.sadd("Feed:#{params[:actor]}:User", user_feed(params))
+      # Store to own notification feed (related to own content, filter out own activities)
+      $redis.sadd("Feed:#{params[:foreignId]}:Notification", notification_feed(params)) if (params[:foreignId] && !params[:actor].eql?(params[:foreignId]))
       # Send to other users through social relations
       unless params[:notify].empty?
         news_params = news_feed(params)
-        notification_params = notification_feed(params)
         # Divide notification list into smaller chunks to handle mass inserts
         # to redis through the native bulk wrapper $redis.multi
         params[:notify].each_slice(100) do |chunk|
           $redis.multi do
             chunk.each do |user|
+              # Store to others public activity feed
               $redis.sadd("Feed:#{user}:News", news_params)
-              $redis.sadd("Feed:#{user}:Notification", notification_params)
             end
           end
         end
@@ -42,14 +39,13 @@ class FeedJob
 
   def user_feed(params)
     params.except(:notify, :slot, :user, :actor)
-          .merge(message: "You #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json
   end
 
   def news_feed(params)
-    params.except(:notify)
+    params.except(:notify, :message)
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json
@@ -57,7 +53,6 @@ class FeedJob
 
   def notification_feed(params)
     params.except(:notify, :slot, :user)
-          .merge(message: "#{params[:user]['username']} #{params[:message]}")
           .as_json
           .transform_keys {|key| key.camelize(:lower) }
           .to_json

@@ -1,4 +1,4 @@
-class SlotActivity <  Activity
+class SlotActivity < Activity
 
   self.abstract_class = true
 
@@ -49,6 +49,15 @@ class SlotActivity <  Activity
       # The backend needs no further request on the database.
       slot: JSONView.slot(activity_slot),
       user: JSONView.user(activity_user)
+    }
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message_params
+    {
+      USER: activity_user.username,
+      TITLE: activity_slot.meta_slot.title
     }
   end
 

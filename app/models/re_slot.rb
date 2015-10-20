@@ -92,4 +92,24 @@ class ReSlot < BaseSlot
   def self.policy_class
     ReSlotPolicy
   end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    self
+  end
+
+  def activity_user
+    slotter
+  end
+
+  def activity_verb
+    'reslot'
+  end
+
+  def activity_foreign_id
+    parent.id.to_s
+  end
 end
