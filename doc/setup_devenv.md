@@ -66,19 +66,27 @@ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/
 export PATH=/usr/local/bin:$PATH
 ```
 
-* install rbenv and postgresql:
+* Install rbenv and postgresql:
 ```bash
 brew update
 brew install rbenv ruby-build rbenv-gem-rehash
 brew install postgresql
 ```
 
-* add to end of .bash_profile / .zshrc:
+* Add to end of .bash_profile / .zshrc:
 ```bash
 eval "$(rbenv init -)"
 export PATH=bin:$PATH
 ```
 
+* Install redis
+```
+# install
+brew install redis
+
+# test (should return 'PONG')
+redis-cli PING
+```
 
 ## Setup dev env
 
