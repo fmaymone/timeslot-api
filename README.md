@@ -10,6 +10,9 @@
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
 
+# Data Flow Concept
+![Data Flow Concept](doc/backend_concept.png)
+
 # Notes
 
 ## No delete & destroy
