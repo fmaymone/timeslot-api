@@ -6,29 +6,32 @@ namespace :db do
   task :populate => :environment do
 
     # delete db before start
-    #[MediaItem, StdSlot, BaseSlot, MetaSlot, User].each(&:delete_all)
+    [MediaItem, StdSlot, BaseSlot, MetaSlot, User].each(&:delete_all)
 
     # start populate
-    (0..1000).each do
+    (0..10).each do
 
       user = User.create(username: Faker::Name.name
                          #email: Faker::Number.number(5) + Faker::Internet.email
                          #password: Faker::Internet.password
       )
 
-      (0..100).each do
+      (0..10).each do
 
         meta_slot = FactoryGirl.create(:meta_slot,
                                        creator: user,
                                        title: Faker::Name.title + ' ' + Faker::Name.suffix)
 
-        FactoryGirl.create(:std_slot_public,
-                           owner: user,
-                           meta_slot: meta_slot)
+        slot = FactoryGirl.create(:std_slot_public,
+                                  :with_notes,
+                                  :with_likes,
+                                  :with_comments,
+                                  owner: user,
+                                  meta_slot: meta_slot)
 
-        #FactoryGirl.create_list(:slot_image, 5, mediable: slot)
-        #FactoryGirl.create_list(:video, 2, mediable: slot)
-        #FactoryGirl.create(:audio, mediable: slot)
+        FactoryGirl.create_list(:slot_image, 5, mediable: slot)
+        FactoryGirl.create_list(:video, 2, mediable: slot)
+        FactoryGirl.create(:audio, mediable: slot)
       end
     end
   end

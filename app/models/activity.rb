@@ -7,8 +7,6 @@ class Activity < ActiveRecord::Base
   after_commit :update_activity, on: :update
   before_destroy :remove_activity
 
-  private
-
   def create_activity
     # Trigger "create" as an activity if this should be valid
     if activity_is_valid?
@@ -18,6 +16,8 @@ class Activity < ActiveRecord::Base
       create_activity_email
     end
   end
+
+  private
 
   def create_activity_feed(activity_time = nil)
     FeedJob.new.async.perform({
