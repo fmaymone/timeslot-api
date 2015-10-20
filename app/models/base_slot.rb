@@ -1,4 +1,4 @@
-class BaseSlot < ActiveRecord::Base
+class BaseSlot < SlotActivity #ActiveRecord::Base
   include SlotFollow
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
@@ -142,8 +142,13 @@ class BaseSlot < ActiveRecord::Base
   def create_like(user)
     like = Like.find_by(slot: self, user: user) || likes.create(user: user)
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    Device.notify_all([creator_id], [message: "#{user.username} likes your slot",
-                                     slot_id: id])
+
+    message_content = I18n.t('slot_like_push_singular',
+                             USER: user.username,
+                             TITLE: meta_slot.title)
+
+    Device.notify_all([creator_id], [message: message_content,
+                                     slot_id: self.id])
   end
 
   def destroy_like(user)
@@ -163,13 +168,12 @@ class BaseSlot < ActiveRecord::Base
     # remove the user who did the actual comment
     user_ids.delete(user.id)
 
-    message_content = I18n.t('notify_create_comment',
-                             name: user.username,
-                             title: meta_slot.title)
+    message_content = I18n.t('slot_comment_push_singular',
+                             USER: user.username,
+                             TITLE: meta_slot.title)
 
     Device.notify_all(user_ids.uniq, [message: message_content,
                                       slot_id: new_comment.slot_id])
-
     new_comment
   end
 
@@ -382,5 +386,34 @@ class BaseSlot < ActiveRecord::Base
   # for Pundit
   def self.policy_class
     SlotPolicy
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    self
+  end
+
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    'slot'
+  end
+
+  def activity_foreign_id
+    ''
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message_params
+    {
+      USER: creator.username,
+      TITLE: meta_slot.title
+    }
   end
 end

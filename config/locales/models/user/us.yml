@@ -1,27 +1,124 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
+# U.S. English
 
 us:
-  notify_create_comment: "%{name} commented on: %{title}"
-  notify_create_like: "%{name} likes your slot"
-  activity_create_comment: "commented on: %{title}"
-  activity_create_like: "likes: %{title}"
-  activity_create_media: "adds a new %{type}"
+
+  slot_comment_me_singular:	"You commented on the Slot: %{TITLE}"
+  slot_comment_activity_singular:	"%{USER} commented on this Slot"
+  slot_comment_notify_singular:	"%{USER} commented on your Slot: %{TITLE}"
+  slot_comment_push_singular:	"%{USER} commented on the Slot: %{TITLE}"
+  slot_comment_activity_plural:	"%{USER} and %{USER2} commented on this Slot"
+  slot_comment_notify_plural:	"%{USER} and %{USER2} commented on your Slot: %{TITLE}"
+  slot_comment_push_plural:	"%{USER} and %{USER2} commented on the Slot: %{TITLE}"
+  slot_comment_activity_aggregate:	"%{USER} and %{USERCOUNT} others commented on this Slot"
+  slot_comment_notify_aggregate:	"%{USER} and %{USERCOUNT} others commented on your Slot: %{TITLE}"
+  slot_comment_push_aggregate:	"%{USER} and %{USERCOUNT} others commented on the Slot: %{TITLE}"
+
+  slot_like_me_singular:	"You likes the Slot: %{TITLE}"
+  slot_like_activity_singular:	"%{USER} likes this Slot"
+  slot_like_notify_singular:	"%{USER} likes your Slot: %{TITLE}"
+  slot_like_push_singular:	"%{USER} likes the Slot: %{TITLE}"
+  slot_like_activity_plural:	"%{USER} and %{USER2} likes this Slot"
+  slot_like_notify_plural:	"%{USER} and %{USER2} likes your Slot: %{TITLE}"
+  slot_like_push_plural:	"%{USER} and %{USER2} likes the Slot: %{TITLE}"
+  slot_like_activity_aggregate:	"%{USER} and %{USERCOUNT} others likes this Slot"
+  slot_like_notify_aggregate:	"%{USER} and %{USERCOUNT} others likes your Slot: %{TITLE}"
+  slot_like_push_aggregate:	"%{USER} and %{USERCOUNT} others likes the Slot: %{TITLE}"
+
+  slot_create_me_singular:	"You added the Slot: %{TITLE}"
+  slot_create_activity_singular:	"%{USER} added this Slot"
+  slot_create_notify_singular:	"%{USER} added your Slot: %{TITLE}"
+  slot_create_push_singular:	"%{USER} added the Slot: %{TITLE}"
+  slot_create_activity_plural:	"%{USER} and %{USER2} added this Slot"
+  slot_create_notify_plural:	"%{USER} and %{USER2} added your Slot: %{TITLE}"
+  slot_create_push_plural:	"%{USER} and %{USER2} added the Slot: %{TITLE}"
+  slot_create_activity_aggregate:	"%{USER} and %{USERCOUNT} others added this Slot"
+  slot_create_notify_aggregate:	"%{USER} and %{USERCOUNT} others added your Slot: %{TITLE}"
+  slot_create_push_aggregate:	"%{USER} and %{USERCOUNT} others added the Slot: %{TITLE}"
+
+  slot_image_me_singular:	"You added an image to the Slot: %{TITLE}"
+  slot_image_activity_singular:	"%{USER} added an image to this Slot"
+  slot_image_notify_singular:	"%{USER} added an image to your Slot: %{TITLE}"
+  slot_image_push_singular:	"%{USER} added an image to the Slot: %{TITLE}"
+  slot_image_activity_plural:	"%{USER} and %{USER2} added an image to this Slot"
+  slot_image_notify_plural:	"%{USER} and %{USER2} added an image to your Slot: %{TITLE}"
+  slot_image_push_plural:	"%{USER} and %{USER2} added an image to the Slot: %{TITLE}"
+  slot_image_activity_aggregate:	"%{USER} and %{USERCOUNT} others added an image to this Slot"
+  slot_image_notify_aggregate:	"%{USER} and %{USERCOUNT} others added an image to your Slot: %{TITLE}"
+  slot_image_push_aggregate:	"%{USER} and %{USERCOUNT} others added an image to the Slot: %{TITLE}"
+
+  slot_video_me_singular:	"You added a video to the Slot: %{TITLE}"
+  slot_video_activity_singular:	"%{USER} added a video to this Slot"
+  slot_video_notify_singular:	"%{USER} added a video to your Slot: %{TITLE}"
+  slot_video_push_singular:	"%{USER} added a video to the Slot: %{TITLE}"
+  slot_video_activity_plural:	"%{USER} and %{USER2} added a video to this Slot"
+  slot_video_notify_plural:	"%{USER} and %{USER2} added a video to your Slot: %{TITLE}"
+  slot_video_push_plural:	"%{USER} and %{USER2} added a video to the Slot: %{TITLE}"
+  slot_video_activity_aggregate:	"%{USER} and %{USERCOUNT} others added a video to this Slot"
+  slot_video_notify_aggregate:	"%{USER} and %{USERCOUNT} others added a video to your Slot: %{TITLE}"
+  slot_video_push_aggregate:	"%{USER} and %{USERCOUNT} others added a video to the Slot: %{TITLE}"
+
+  slot_audio_me_singular:	"You added an audio to the Slot: %{TITLE}"
+  slot_audio_activity_singular:	"%{USER} added an audio to this Slot"
+  slot_audio_notify_singular:	"%{USER} added an audio to your Slot: %{TITLE}"
+  slot_audio_push_singular:	"%{USER} added an audio to the Slot: %{TITLE}"
+  slot_audio_activity_plural:	"%{USER} and %{USER2} added an audio to this Slot"
+  slot_audio_notify_plural:	"%{USER} and %{USER2} added an audio to your Slot: %{TITLE}"
+  slot_audio_push_plural:	"%{USER} and %{USER2} added an audio to the Slot: %{TITLE}"
+  slot_audio_activity_aggregate:	"%{USER} and %{USERCOUNT} others added an audio to this Slot"
+  slot_audio_notify_aggregate:	"%{USER} and %{USERCOUNT} others added an audio to your Slot: %{TITLE}"
+  slot_audio_push_aggregate:	"%{USER} and %{USERCOUNT} others added an audio to the Slot: %{TITLE}"
+
+  slot_note_me_singular:	"You added a note to the Slot: %{TITLE}"
+  slot_note_activity_singular:	"%{USER} added a note to this Slot"
+  slot_note_notify_singular:	"%{USER} added a note to your Slot: %{TITLE}"
+  slot_note_push_singular:	"%{USER} added a note to the Slot: %{TITLE}"
+  slot_note_activity_plural:	"%{USER} and %{USER2} added a note to this Slot"
+  slot_note_notify_plural:	"%{USER} and %{USER2} added a note to your Slot: %{TITLE}"
+  slot_note_push_plural:	"%{USER} and %{USER2} added a note to the Slot: %{TITLE}"
+  slot_note_activity_aggregate:	"%{USER} and %{USERCOUNT} others added a note to this Slot"
+  slot_note_notify_aggregate:	"%{USER} and %{USERCOUNT} others added a note to your Slot: %{TITLE}"
+  slot_note_push_aggregate:	"%{USER} and %{USERCOUNT} others added a note to the Slot: %{TITLE}"
+
+  slot_media_me_singular:	"You added new medias to the Slot: %{TITLE}"
+  slot_media_activity_singular:	"%{USER} added new medias to this Slot"
+  slot_media_notify_singular:	"%{USER} added new medias to your Slot: %{TITLE}"
+  slot_media_push_singular:	"%{USER} added new medias to the Slot: %{TITLE}"
+  slot_media_activity_plural:	"%{USER} and %{USER2} added new medias to this Slot"
+  slot_media_notify_plural:	"%{USER} and %{USER2} added new medias to your Slot: %{TITLE}"
+  slot_media_push_plural:	"%{USER} and %{USER2} added new medias to the Slot: %{TITLE}"
+  slot_media_activity_aggregate:	"%{USER} and %{USERCOUNT} others added new medias to this Slot"
+  slot_media_notify_aggregate:	"%{USER} and %{USERCOUNT} others added new medias to your Slot: %{TITLE}"
+  slot_media_push_aggregate:	"%{USER} and %{USERCOUNT} others added new medias to the Slot: %{TITLE}"
+
+  slot_reslot_me_singular:	"You reslotted the Slot: %{TITLE}"
+  slot_reslot_activity_singular:	"%{USER} reslotted this Slot"
+  slot_reslot_notify_singular:	"%{USER} reslotted your Slot: %{TITLE}"
+  slot_reslot_push_singular:	"%{USER} reslotted the Slot: %{TITLE}"
+  slot_reslot_activity_plural:	"%{USER} and %{USER2} reslotted this Slot"
+  slot_reslot_notify_plural:	"%{USER} and %{USER2} reslotted your Slot: %{TITLE}"
+  slot_reslot_push_plural:	"%{USER} and %{USER2} reslotted the Slot: %{TITLE}"
+  slot_reslot_activity_aggregate:	"%{USER} and %{USERCOUNT} others reslotted this Slot"
+  slot_reslot_notify_aggregate:	"%{USER} and %{USERCOUNT} others reslotted your Slot: %{TITLE}"
+  slot_reslot_push_aggregate:	"%{USER} and %{USERCOUNT} others reslotted the Slot: %{TITLE}"
+
+  user_friendship_me_singular:	"You and %{USER} are now friends"
+  user_friendship_activity_singular:	"TODO"
+  user_friendship_notify_singular:	"TODO"
+  user_friendship_push_singular:	"TODO"
+  user_friendship_activity_plural:	"TODO"
+  user_friendship_notify_plural:	"TODO"
+  user_friendship_push_plural:	"TODO"
+  user_friendship_activity_aggregate:	"TODO"
+  user_friendship_notify_aggregate:	"TODO"
+  user_friendship_push_aggregate:	"TODO"
+
+  group_membership_me_singular:	"You are now in the group: %{TITLE}"
+  group_membership_activity_singular:	"TODO"
+  group_membership_notify_singular:	"TODO"
+  group_membership_push_singular:	"TODO"
+  group_membership_activity_plural:	"TODO"
+  group_membership_notify_plural:	"TODO"
+  group_membership_push_plural:	"TODO"
+  group_membership_activity_aggregate:	"TODO"
+  group_membership_notify_aggregate:	"TODO"
+  group_membership_push_aggregate:	"TODO"

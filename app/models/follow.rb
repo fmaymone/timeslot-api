@@ -14,15 +14,7 @@ module Follow
       $redis.srem(self.redis_key(:followers), target.id)
     end
     # Remove activities from target feeds:
-    ["Feed:#{target.id}:News",
-     "Feed:#{target.id}:Notification"].each do |feed_key|
-      feed = Feed.get_feed(feed_key)
-      feed.each do |post|
-        if post['actor'].to_i == self.id || post['foreignId'].to_i == self.id
-          $redis.srem(feed_key, post.to_json)
-        end
-      end
-    end
+    Feed::remove_user_from_feed(target, self)
   end
 
   def followers

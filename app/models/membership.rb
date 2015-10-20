@@ -1,4 +1,4 @@
-class Membership < ActiveRecord::Base #GroupActivity
+class Membership < GroupActivity
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :memberships
@@ -97,5 +97,26 @@ class Membership < ActiveRecord::Base #GroupActivity
     when "000" then "deleted"
     else "undefined"
     end
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    active?
+  end
+
+  def activity_group
+    group
+  end
+
+  # The user who made the update
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'membership'
   end
 end

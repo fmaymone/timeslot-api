@@ -4,12 +4,13 @@ class Activity < ActiveRecord::Base
 
   # Trigger activities to feeds:
   after_commit :create_activity, on: :create
-  #after_update :update_activity
-  #before_destroy :remove_activity
+  after_commit :update_activity, on: :update
+  before_destroy :remove_activity
 
   private
 
   def create_activity
+    # Trigger "create" as an activity if this should be valid
     if activity_is_valid?
       create_activity_feed
       create_activity_stream
@@ -18,17 +19,17 @@ class Activity < ActiveRecord::Base
     end
   end
 
-  def create_activity_feed
+  def create_activity_feed(activity_time = nil)
     FeedJob.new.async.perform({
       type: activity_type,
       actor: activity_actor_id,
       object: activity_object_id,
       target: activity_target_id,
       activity: activity_verb,
-      message: activity_message,
-      foreign_id: activity_foreign_id,
+      message: activity_message_params,
+      foreignId: activity_foreign_id,
       notify: activity_notify,
-      time: Time.zone.now
+      time: (activity_time || self.updated_at)
     }.merge!(activity_extra_data))
   end
 
@@ -49,11 +50,15 @@ class Activity < ActiveRecord::Base
   end
 
   def remove_activity
-    # TODO
+    # Remove activities from target feeds:
+    Feed::remove_target_from_feed(self, target)
+    # Trigger "delete" as an activity if this should be valid
+    # Pass the current time because this before-callback does not trigger "updated_at"
+    create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   # This method should be overridden in the subclass
-  # if validation is required
+  # if custom validation is required
   def activity_is_valid?
     true
   end
@@ -90,13 +95,15 @@ class Activity < ActiveRecord::Base
   end
 
   # The message is used as a notification message
-  def activity_message
+  def activity_message_params
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_message'."
+          "Subclasses must define the method 'activity_message_params'."
   end
 
-  # The message is used as a notification message
-  # for the users activity feed
+  # Returns an array of user which should also be notified
+  # The official documentation of stream_rails gem is incomplete.
+  # A part how to implement aggregations are missing, that's why
+  # we have to fall back to the plain ruby way which is also compatible.
   def activity_notify
     raise NotImplementedError,
           "Subclasses must define the method 'activity_notify'."
