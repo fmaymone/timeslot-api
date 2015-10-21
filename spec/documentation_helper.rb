@@ -1,3 +1,6 @@
+# let docu specs run under test env, it's using 'development' otherwise
+ENV["RAILS_ENV"] = 'test'
+
 require 'rails_helper'
 require 'rspec_api_documentation'
 require 'rspec_api_documentation/dsl'

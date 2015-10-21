@@ -1,10 +1,8 @@
 # Feeds API
 
-## Get activity feed for the current user
+## Get the feed of the current users activities
 
 ### GET /v1/feed/user
-
-if a user is authenticated, then some extraactivity fields are included
 
 ### Parameters
 
@@ -120,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=V0LgBS3mQd2dBHTgZAO_yaP7gpU
+Authorization: Token token=zu97X-rINDG2ozyJrtqB7c-EPPk
 Host: example.org
 Cookie: </pre>
 
@@ -132,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=V0LgBS3mQd2dBHTgZAO_yaP7gpU&quot; \
+	-H &quot;Authorization: Token token=zu97X-rINDG2ozyJrtqB7c-EPPk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -143,12 +141,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;30c2c4d345528ee57b1c1e8dc13f8c46&quot;
+ETag: W/&quot;ab63653c7ff62e97b800eba1ae96bcb2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c83565fc-4920-474f-891d-2c36b1ff86cd
-X-Runtime: 0.015693
+X-Request-Id: a05c444a-6216-44a5-8078-ffe4b6698822
+X-Runtime: 0.012747
 Vary: Origin
-Content-Length: 234</pre>
+Content-Length: 213</pre>
 
 #### Status
 
@@ -160,14 +158,13 @@ Content-Length: 234</pre>
 [
   {
     "type" : "Slot",
-    "object" : 2,
-    "target" : "18",
+    "object" : 1,
+    "target" : "1",
     "activity" : "comment",
-    "message" : "You commented on: Slot title 21",
-    "foreignId" : "82",
-    "time" : "2015-10-14T23:34:25.294Z",
-    "id" : "64A122AA5545A45F95AE7E4BE673D67B6FC7202D",
-    "group" : "18comment20151014"
+    "message" : "You commented on the Slot: Slot title 21",
+    "foreignId" : "2",
+    "time" : "2015-10-21T11:48:07.329Z",
+    "id" : "43576A0708E37A5A6C4A223FD35C07F7A70A7CCA"
   }
 ]
 ```

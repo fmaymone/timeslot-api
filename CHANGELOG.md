@@ -1,8 +1,19 @@
 #Changelog
 
 ## upcoming
+
+## v0.8.0
+- upgrade ruby to 2.2.3
 - pagination for user slots and demo slots
-- activity feed
+- activity feed using Redis
+- add simple_cov, a tool for measuring test coverage
+- bug fixes and performance optimizations
+- new env vars for:
+  - PAGINATION_DEFAULT_FILTER
+  - PAGINATION_DEFAULT_LIMIT
+  - PAGINATION_MAX_LIMIT
+  - INLINE_WORKERS
+  - PG_EXPLAIN
 
 
 ## v0.7.1 on tsinc-alpha

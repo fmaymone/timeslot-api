@@ -12,9 +12,9 @@
 
 ## Feeds
 
-* [Get activity feed for the current user](feeds/get_activity_feed_for_the_current_user.markdown)
-* [Get an aggregated activity feed](feeds/get_an_aggregated_activity_feed.markdown)
-* [Get activity notifications](feeds/get_activity_notifications.markdown)
+* [Get the feed of the current users activities](feeds/get_the_feed_of_the_current_users_activities.markdown)
+* [Get the feed of public activities (aggregated)](feeds/get_the_feed_of_public_activities_(aggregated).markdown)
+* [Get the feed of the current user notifications](feeds/get_the_feed_of_the_current_user_notifications.markdown)
 
 ## Groups
 
