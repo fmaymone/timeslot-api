@@ -45,6 +45,7 @@ Setting environment variables can be done e.g. via ```.env``` or with [another a
 ```bash
 ENV['MAX_THREADS'] # number of concurrent Puma Webserver threads, defaults to 5 if not set
 ENV['NOTIFICATION_WORKERS'] # number of concurrent SuckerPunch Notification Workers, defaults to 5 if not set
+ENV['INLINE_WORKERS'] = 'false' # controls if sucker punch jobs run async
 ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREADS or 10 if both are not set, BUT should be at least MAX_THREADS + NOTIFICATION_WORKERS
 # maximum on heroku free plan is 20
 
