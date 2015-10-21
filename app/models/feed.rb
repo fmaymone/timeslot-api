@@ -35,8 +35,8 @@ module Feed
       feed.each_slice(100) do |chunk|
         $redis.multi do
           chunk.each do |post|
-            if post[target_field].to_i == target_id #|| post['foreignId'].to_i == actor_id
-              $redis.srem(feed_key, post.to_json)
+            if ActiveSupport::Gzip.decompress(post)[target_field].to_i == target_id #|| post['foreignId'].to_i == actor_id
+              $redis.srem(feed_key, post) #post.to_json
             end
           end
         end
@@ -50,7 +50,7 @@ module Feed
     # Catch MIN as MAX in reversed order
     min = [offset + limit.to_i - 1, feed.count].min
     # paginate through offset and limit
-    feed[offset..min].reverse!.map{|a| JSON.parse(a)}
+    feed[offset..min].reverse!.map{|a| JSON.parse(ActiveSupport::Gzip.decompress(a))}
   end
 
   def self.enrich_messages(feed, view)
@@ -88,7 +88,7 @@ module Feed
     # Loop through all feeds (has a break statement, offset is optional)
     feed[0..(feed.count - offset)].reverse!.each do |post|
       # Parse JSON from string
-      post = JSON.parse(post)
+      post = JSON.parse(ActiveSupport::Gzip.decompress(post))
       # Prepare dictionary shortcuts
       actor = post['actor'].to_i
       # Generates group tag (aggregation index)

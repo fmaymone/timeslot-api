@@ -5,10 +5,16 @@ namespace :redis do
 
   task :seed => :environment do
 
-    # delete redis storage before start
+    # Deactivate console logging
+    ActiveRecord::Base.logger.level = 1
+
+    # Delete redis storage before start
     $redis.flushall
 
+    # Temporary feed storage
     storage = []
+
+    # Collect Activities #
 
     MediaItem.all.find_each do |media|
       storage << media
@@ -38,8 +44,16 @@ namespace :redis do
       storage << slot
     end
 
-    storage.uniq.sort_by{|a| a[:updated_at]}.each do |item|
-      item.create_activity
+    Friendship.all.find_each do |friend|
+      storage << friend
     end
+
+    Membership.all.find_each do |member|
+      storage << member
+    end
+
+    # Re-Build Activities #
+
+    storage.uniq.sort_by{|a| a[:updated_at]}.each(&:create_activity)
   end
 end

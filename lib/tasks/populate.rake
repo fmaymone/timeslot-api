@@ -1,4 +1,3 @@
-# mass population
 # http://railscasts.com/episodes/126-populating-a-database
 namespace :db do
   desc "Erase and populate database with seed data"
@@ -6,17 +5,17 @@ namespace :db do
   task :populate => :environment do
 
     # delete db before start
-    [MediaItem, StdSlot, BaseSlot, MetaSlot, User].each(&:delete_all)
+    [MediaItem, ReSlot, GroupSlot, StdSlot, BaseSlot, MetaSlot, SlotSetting,
+     User, Note, Like, Comment, Group, Membership, Friendship].each(&:delete_all)
 
     # start populate
-    (0..10).each do
+    (0..5).each do
 
-      user = User.create(username: Faker::Name.name
-                         #email: Faker::Number.number(5) + Faker::Internet.email
-                         #password: Faker::Internet.password
-      )
+      user = FactoryGirl.create(:user, :with_3_groups, :with_feed, username: Faker::Name.name)
+      #email: Faker::Number.number(5) + Faker::Internet.email
+      #password: Faker::Internet.password
 
-      (0..10).each do
+      (0..5).each do
 
         meta_slot = FactoryGirl.create(:meta_slot,
                                        creator: user,
@@ -26,6 +25,7 @@ namespace :db do
                                   :with_notes,
                                   :with_likes,
                                   :with_comments,
+                                  :with_media,
                                   owner: user,
                                   meta_slot: meta_slot)
 
