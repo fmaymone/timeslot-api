@@ -46,7 +46,6 @@ RSpec.describe ReSlot, type: :model do
 
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
-    let(:slot_setting) { create(:slot_setting, meta_slot: meta_slot) }
     let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
 
     it "contains title of the meta_slot" do
@@ -73,6 +72,15 @@ RSpec.describe ReSlot, type: :model do
       expect(re_slot_2.images).to eq std_slot.images
       expect(re_slot_2.audios).to eq std_slot.audios
       expect(re_slot_2.videos).to eq std_slot.videos
+    end
+  end
+
+  describe :reslot_count do
+    let(:parent) { create(:std_slot) }
+    let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
+
+    it "reslot returns the number of reslots of the parent slot" do
+      expect(reslots.first.reslot_count).to eq 3
     end
   end
 

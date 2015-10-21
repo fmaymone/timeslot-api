@@ -9,6 +9,11 @@
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
 
+
+# Data Flow Chart Concept
+![Data Flow Chart Concept](doc/backend_concept.png)
+
+
 # Notes
 
 ## No delete & destroy
@@ -26,7 +31,6 @@ On first signup the token is also created so a signed up user is already logged 
 We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```app/policies/``` folder are all files which contain authentication logic.
 
 
-
 # Environment
 
 We develop on OSX and Ubuntu.
@@ -41,8 +45,16 @@ Setting environment variables can be done e.g. via ```.env``` or with [another a
 ```bash
 ENV['MAX_THREADS'] # number of concurrent Puma Webserver threads, defaults to 5 if not set
 ENV['NOTIFICATION_WORKERS'] # number of concurrent SuckerPunch Notification Workers, defaults to 5 if not set
+ENV['INLINE_WORKERS'] = 'false' # controls if sucker punch jobs run async
 ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREADS or 10 if both are not set, BUT should be at least MAX_THREADS + NOTIFICATION_WORKERS
 # maximum on heroku free plan is 20
+
+ENV['PG_EXPLAIN'] = 'true' # show output of pg EXPLAIN ANALYZE for all SELECT queries, use carefully
+
+# pagination
+ENV['PAGINATION_DEFAULT_FILTER'] = 'upcoming' # if not provided by client
+ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
+ENV['PAGINATION_MAX_LIMIT'] = '100'
 
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
@@ -126,6 +138,14 @@ ENV['TS_RAILS_BACKEND_CLOUDINARY_API_KEY']
 ENV['TS_RAILS_BACKEND_CLOUDINARY_API_SECRET']
 ```
 
+## Redis
+
+Redis is to store our Activity Streams via a service like Heroku Redis Addon. The following var need to be set:
+```bash
+ENV['REDIS_URL']
+```
+For local testing you need a locally running redis server listening on *localhost:6379*
+
 ## Airbrake
 
 for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Github](https://github.com/airbrake/airbrake)
@@ -162,12 +182,15 @@ foreman start
 Flag | Effect
 -------------|------------------
 ```:focus``` | let only marked specs run
-```:db``` | print the database interactions of the specific spec to the console
+```:db``` | print the database interactions to the console, does also ```:focus``` the marked spec
+```:explain``` | print postgres EXPLAIN ANALYZE for SELECT queries to console, does also ```:focus``` the marked spec
+```:commit``` | persist data in database, see below
+```:seed``` | load database seeds
+```:keep_slots``` | doesn't clean metaslot, baseslot, stdslot, reslot & user table for marked group, cleans after group has run, for read-only specs
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
+```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
-```:seed``` | load database seeds
-```:commit``` | persist data in database, see below
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
 

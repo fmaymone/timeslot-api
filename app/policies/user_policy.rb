@@ -39,6 +39,14 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  # seeing slots for a user is allowed for everybody including visitors
+  # depending on the relationship between current_user and requested user
+  # only specific slots may be visible, eg. public slots.
+  # This is determined in the presentable slots service
+  def slots?
+    true
+  end
+
   # true if a user is logged in
   def slots_from_friends?
     current_user?

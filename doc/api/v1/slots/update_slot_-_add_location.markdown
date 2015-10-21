@@ -136,9 +136,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -156,13 +153,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=QUytb1rU7ZuTwA-Cg4aSt9y_ubE
+Authorization: Token token=rWN98-6lECNfYjca2OPQEpqAMlA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/46</pre>
+<pre>PATCH /v1/stdslot/6</pre>
 
 #### Body
 ```javascript
@@ -186,9 +183,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/46&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/6&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=QUytb1rU7ZuTwA-Cg4aSt9y_ubE&quot; \
+	-H &quot;Authorization: Token token=rWN98-6lECNfYjca2OPQEpqAMlA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -199,12 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f2ca9216a09a147e8af4b350124b6423&quot;
+ETag: W/&quot;9130ac67cd43225e9627915ed19f11ec&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5761ab30-1660-451b-86e0-c75220b8fb49
-X-Runtime: 0.045119
+X-Request-Id: 6e2c536f-5698-46ed-9dc0-9db80478ea53
+X-Runtime: 0.064907
 Vary: Origin
-Content-Length: 883</pre>
+Content-Length: 900</pre>
 
 #### Status
 
@@ -214,15 +211,15 @@ Content-Length: 883</pre>
 
 ```javascript
 {
-  "id" : 46,
-  "title" : "Slot title 37",
-  "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:49.322Z",
-  "updatedAt" : "2015-09-28T10:15:49.322Z",
+  "id" : 6,
+  "title" : "Slot title 38",
+  "startDate" : "2019-09-13T15:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:47.376Z",
+  "updatedAt" : "2015-10-14T11:49:47.376Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-11T13:44:02.000Z",
+  "endDate" : "2019-10-13T15:44:02.000Z",
   "location" : {
-    "id" : 4,
+    "id" : 1,
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : "1",
@@ -241,10 +238,10 @@ Content-Length: 883</pre>
     "privateLocation" : true
   },
   "creator" : {
-    "id" : 251,
-    "username" : "User 215",
-    "createdAt" : "2015-09-28T10:15:49.317Z",
-    "updatedAt" : "2015-09-28T10:15:49.317Z",
+    "id" : 16,
+    "username" : "User 227",
+    "createdAt" : "2015-10-14T11:49:47.371Z",
+    "updatedAt" : "2015-10-14T11:49:47.371Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -257,6 +254,7 @@ Content-Length: 883</pre>
     "alerts" : "0000000000"
   },
   "visibility" : "private",
+  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

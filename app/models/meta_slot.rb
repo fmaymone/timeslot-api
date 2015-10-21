@@ -54,8 +54,8 @@ class MetaSlot < ActiveRecord::Base
 
       ios_params = meta_params[:ios_location]
       if ios_params[:latitude].present? && ios_params[:longitude].present?
-        ios_location = IosLocation.where(
-          latitude: ios_params[:latitude], longitude: ios_params[:longitude]).take
+        ios_location = IosLocation.find_by(
+          latitude: ios_params[:latitude], longitude: ios_params[:longitude])
       end
       ios_location ||= IosLocation.create(
         ios_params.merge(creator: meta_params[:creator]))

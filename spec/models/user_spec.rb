@@ -798,7 +798,7 @@ RSpec.describe User, type: :model do
       expect(Rails.logger).to receive(:error)
       expect {
         user.delete
-      }.to raise_error
+      }.to raise_error(/Deletion was prevented/)
       expect(before_count).to eq described_class.all.size
     end
 
@@ -808,7 +808,7 @@ RSpec.describe User, type: :model do
       expect(Rails.logger).to receive(:error)
       expect {
         user.destroy
-      }.to raise_error
+      }.to raise_error(/Deletion was prevented/)
       expect(before_count).to eq described_class.all.size
     end
   end

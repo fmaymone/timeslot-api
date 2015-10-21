@@ -1,3 +1,6 @@
+# let docu specs run under test env, it's using 'development' otherwise
+ENV["RAILS_ENV"] = 'test'
+
 require 'rails_helper'
 require 'rspec_api_documentation'
 require 'rspec_api_documentation/dsl'
@@ -82,4 +85,8 @@ RspecApiDocumentation.configure do |config|
   # Change the embedded style for HTML output. This file will not
   # be processed by RspecApiDocumentation and should be plain CSS.
   config.html_embedded_css_file = nil
+
+  # Removes the DSL method `status`, this is required if you have a
+  # parameter named status
+  config.disable_dsl_status!
 end

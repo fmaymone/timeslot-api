@@ -417,14 +417,13 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/reslot" do
-    let(:group) { create(:group) }
-
     context "with valid params" do
-      context "ReSlot from StdSlot" do
-        let(:pred) { create(:std_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id) }
+      let(:pred) { create(:std_slot_public) }
+      let(:valid_attributes) {
+        attributes_for(:re_slot, predecessorId: pred.id)
+      }
 
+      context "ReSlot from StdSlot" do
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -443,13 +442,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "ReSlot from ReSlot" do
-        let(:origin) { create(:std_slot) }
-        let!(:pred) {
-          create(:re_slot, predecessor_id: origin.id)
-        }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+        let!(:pred) { create(:re_slot) }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -467,12 +461,12 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
-      # TODO: I think this shouln't be possible at all...???
+      # TODO: @sh: I think this shouln't be possible at all...???
+      # but since we don't know where the product is going we'll just
+      # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
         let(:pred) { create(:group_slot) }
-        let(:valid_attributes) {
-          attributes_for(:re_slot, predecessorId: pred.id)
-        }
+
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(response).to have_http_status(:created)
@@ -487,6 +481,57 @@ RSpec.describe "V1::Slots", type: :request do
         it "returns the ID of the new slot" do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(json['id']).to eq(ReSlot.last.id)
+        end
+      end
+
+      context "duplicate reslot" do
+        let!(:existing_reslot) {
+          create(:re_slot, predecessor: pred, slotter: current_user)
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_reslot.id)
+        end
+      end
+
+      context "reslot peviously deleted reslot" do
+        # a user makes a reslot of an event, then deletes the reslot, then
+        # does a reslot of the same event again
+        let(:reslot) { create(:re_slot, predecessor: pred) }
+        let!(:existing_deleted_reslot) {
+          create(:re_slot, predecessor: reslot, slotter: current_user,
+                 deleted_at: Time.zone.now)
+        }
+
+        it "doesn't create a new reslot" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.not_to change(ReSlot, :count)
+        end
+
+        it "returns the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          expect(json['id']).to eq(existing_deleted_reslot['id'])
+        end
+
+        it "unsets deleted_at on the existing reslot" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.deleted_at).to be nil
+        end
+
+        it "updates the predecessor" do
+          expect(existing_deleted_reslot.predecessor_id).to eq reslot.id
+          post "/v1/reslot/", valid_attributes, auth_header
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.predecessor_id).to eq pred.id
         end
       end
     end
@@ -681,17 +726,17 @@ RSpec.describe "V1::Slots", type: :request do
             expect(response).to have_http_status(:ok)
           end
 
-# BUG: this part has a potential lack
-#          it "doesn't unset 'openEnd' if same 'open' end_date is resubmitted" do
-#            expect(std_slot.open_end).to be true
-#            expect {
-#              patch "/v1/stdslot/#{std_slot.id}",
-#                    { endDate: std_slot.end_date }, auth_header
-#            }.not_to change(std_slot, :open_end)
-#            expect(response).to have_http_status(:ok)
-#            #expect(json['openEnd']).to be true
-#            expect(json['endDate']).to be nil
-#          end
+          # BUG: this part has a potential lack
+          #          it "doesn't unset 'openEnd' if same 'open' end_date is resubmitted" do
+          #            expect(std_slot.open_end).to be true
+          #            expect {
+          #              patch "/v1/stdslot/#{std_slot.id}",
+          #                    { endDate: std_slot.end_date }, auth_header
+          #            }.not_to change(std_slot, :open_end)
+          #            expect(response).to have_http_status(:ok)
+          #            #expect(json['openEnd']).to be true
+          #            expect(json['endDate']).to be nil
+          #          end
         end
       end
 
@@ -1514,18 +1559,71 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "POST /v1/slots/:id/like" do
     let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
 
-    it "creates a new like" do
-      expect {
-        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      }.to change(Like, :count).by 1
+    context "StdSlot" do
+      it "creates a new like" do
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.to change(Like, :count).by 1
+      end
+
+      it "handles re-liking the same slot gracefully" do
+        create(:like, user: current_user, slot: std_slot)
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to change(Like, :count)
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+      end
+
+      it "re-like slot which was unliked" do
+        like = create(:like, user: current_user, slot: std_slot,
+                      deleted_at: Time.zone.now)
+        expect(like.deleted_at).not_to be nil
+
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to change(Like, :count)
+
+        like.reload
+        expect(like.deleted_at).to be nil
+
+        expect {
+          post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+      end
     end
 
-    it "adds the new like to the parent slot" do
-      post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-      expect(Like.last.slot.id).to eq std_slot.id
-      expect(Like.last.slot.id).to eq re_slot.parent.id
+    context "ReSlot" do
+      let(:parent) { std_slot }
+      let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
+
+      it "creates a new like" do
+        expect {
+          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        }.to change(Like, :count).by 1
+      end
+
+      it "adds the new like to the parent slot" do
+        post "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        expect(Like.last.slot.id).to eq parent.id
+        expect(Like.last.slot.id).to eq re_slot.parent.id
+      end
+
+      # test for bug BKD-288
+      it "liking reslot of already liked parent slot (does nothing)" do
+        create(:like, user: current_user, slot: parent)
+        expect(Like.count).to be 1
+
+        expect {
+          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        }.not_to raise_error
+
+        expect(Like.count).to be 1
+        expect(response).to have_http_status :ok
+      end
     end
   end
 
@@ -1547,6 +1645,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "sets deleted_at on the like" do
         delete "/v1/slots/#{re_slot.id}/like", {}, auth_header
+        expect(response).to have_http_status :ok
         like.reload
         expect(like.deleted_at?).to be true
       end
@@ -1568,8 +1667,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: std_slot) }
+    let(:parent) { create(:std_slot_public) }
+    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
     it "creates a new comment" do
@@ -1580,7 +1679,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the new comment to the parent slot" do
       post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
-      expect(Comment.last.slot.id).to eq std_slot.id
+      expect(Comment.last.slot.id).to eq parent.id
       expect(Comment.last.slot.id).to eq re_slot.parent.id
       expect(Comment.last.content).to eq new_comment[:content]
     end
@@ -1756,17 +1855,107 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/demo" do
-    let!(:std_slot) { create(:std_slot_public) }
-    let!(:re_slot) { create(:re_slot) }
+    context "without pagination" do
+      let!(:std_slot) { create(:std_slot_public) }
+      let!(:re_slot) { create(:re_slot) }
 
-    it "gets the latest/newest stdslots" do
-      get "/v1/slots/demo", {}, auth_header
-      expect(response.body).to include std_slot.title
+      it "returns success" do
+        get "/v1/slots/demo", {}, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "gets the latest/newest stdslots" do
+        get "/v1/slots/demo", {}, auth_header
+        expect(response.body).to include std_slot.title
+      end
+
+      it "dosn't include reslots" do
+        get "/v1/slots/demo", {}, auth_header
+        # when creating a reslot, a stdslot is created implicitly as its parent
+        # of course, this parent is included in the result so I rather look
+        # for a reslot specific json attribute
+        expect(response.body).not_to include 'parent'
+      end
     end
 
-    it "dosn't include reslots" do
-      get "/v1/slots/demo", {}, auth_header
-      expect(response.body).not_to include re_slot.title
+    context "pagination", :keep_slots do
+      let(:limit) { 4 }
+      let(:query_string) { { limit: limit } }
+
+      before(:all) do
+        current_user = create(:user, :with_email, :with_password)
+
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'private upcoming slot')
+        create(:std_slot_public,
+               start_date: Time.zone.tomorrow,
+               title: 'public upcoming slot')
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'my private upcoming slot',
+               owner: current_user)
+        create(:std_slot_public,
+               start_date: Time.zone.tomorrow,
+               title: 'my public upcoming slot',
+               owner: current_user)
+        create_list(:std_slot_public, 3,
+                    start_date: Time.zone.tomorrow,
+                    owner: current_user)
+      end
+
+      it "returns success" do
+        get "/v1/slots/demo", query_string, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns pagination metadata" do
+        get "/v1/slots/demo", query_string, auth_header
+
+        expect(json).to have_key 'data'
+        expect(json).to have_key 'paging'
+        paging = json['paging']
+        expect(paging).to have_key 'moment'
+        expect(paging).to have_key 'limit'
+        expect(paging).to have_key 'before'
+        expect(paging).to have_key 'after'
+        expect(paging['before']).not_to be nil
+        expect(paging['after']).not_to be nil
+      end
+
+      it "returns upcoming public stdslots" do
+        latest_slot = StdSlotPublic.last
+        public_slot_count = StdSlotPublic.all.count
+
+        get "/v1/slots/demo",
+            { limit: public_slot_count, status: 'upcoming'},
+            auth_header
+
+        expect(response.body).to include latest_slot.title
+        expect(response.body).to include 'public upcoming slot'
+        expect(response.body).to include 'my public upcoming slot'
+        expect(json['data'].size).to eq public_slot_count
+      end
+
+      it "doesn't return private slots" do
+        slot_count = StdSlot.unscoped.all.count
+
+        get "/v1/slots/demo",
+            { limit: slot_count, status: 'upcoming'},
+            auth_header
+
+        expect(response.body).not_to include 'private upcoming slot'
+        expect(response.body).not_to include 'my private upcoming slot'
+      end
+
+      context "filter / status" do
+        it "upcoming" do
+          get "/v1/slots/demo",
+              { limit: limit, status: 'upcoming'},
+              auth_header
+          expect(json).to have_key 'paging'
+        end
+      end
     end
   end
 end

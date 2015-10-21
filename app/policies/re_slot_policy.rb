@@ -1,5 +1,4 @@
 class ReSlotPolicy < SlotPolicy
-
   # true if the user is signed in and
   # the slot is a public slot or
   # the slot is a friendslot from a friend of the current user

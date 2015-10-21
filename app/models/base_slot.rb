@@ -1,4 +1,5 @@
-class BaseSlot < ActiveRecord::Base
+class BaseSlot < SlotActivity #ActiveRecord::Base
+  include SlotFollow
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
   # it shares postgres inheritance semantics at the db level with its subtypes
@@ -16,7 +17,7 @@ class BaseSlot < ActiveRecord::Base
                  GroupSlotPublic: 5,
                  ReSlotFriends: 6,
                  ReSlotPublic: 7,
-                 # mabye remove the following
+                 # maybe remove the following
                  BaseSlot: 0,
                  StdSlot: 20,
                  GroupSlot: 21,
@@ -29,6 +30,7 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
@@ -72,20 +74,25 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  def as_paging_cursor
+    # make sure we use the full resolution of datetime
+    startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    enddate = end_date.strftime('%Y-%m-%d %H:%M:%S.%N')
+    Base64.urlsafe_encode64("#{id}%#{startdate}%#{enddate}")
+  end
+
   # setter
 
   def ios_location=(location)
     if location[:latitude].present? && location[:longitude].present?
-      new_location = IosLocation.where(
-        latitude: location[:latitude], longitude: location[:longitude]).take
+      new_location = IosLocation.find_by(
+        latitude: location[:latitude], longitude: location[:longitude])
     end
 
     new_location ||= IosLocation.create(location.merge(creator: owner))
 
     #update custom label for location (same geo-location can have several names)
-    unless location[:name].blank?
-      new_location[:name] = location[:name]
-    end
+    new_location[:name] = location[:name] unless location[:name].blank?
     meta_slot.update(ios_location: new_location)
   end
 
@@ -133,10 +140,25 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    like = Like.find_by(slot: self, user: user) || likes.create(user: user)
+    if self.class <= ReSlot
+      like = Like.find_by(slot: parent, user: user)
+    else
+      like = Like.find_by(slot: self, user: user)
+    end
+    like ||= likes.create(user: user)
+  rescue ActiveRecord::RecordNotUnique
+    # this is raised when the like is already present, not catching it here
+    # means it would be rescued in application_controller.rb and returns 422
+    # which is not our intention
+  else
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-    Device.notify_all([creator_id], [ message: "#{user.username} likes your slot",
-                                      slot_id: self.id ])
+
+    message_content = I18n.t('slot_like_push_singular',
+                             USER: user.username,
+                             TITLE: meta_slot.title)
+
+    Device.notify_all([creator_id], [message: message_content,
+                                     slot_id: self.id])
   end
 
   def destroy_like(user)
@@ -156,13 +178,12 @@ class BaseSlot < ActiveRecord::Base
     # remove the user who did the actual comment
     user_ids.delete(user.id)
 
-    message_content = I18n.t('notify_create_comment',
-                             name: user.username,
-                             title: meta_slot.title)
+    message_content = I18n.t('slot_comment_push_singular',
+                             USER: user.username,
+                             TITLE: meta_slot.title)
 
     Device.notify_all(user_ids.uniq, [message: message_content,
                                       slot_id: new_comment.slot_id])
-
     new_comment
   end
 
@@ -255,7 +276,8 @@ class BaseSlot < ActiveRecord::Base
   ## class methods ##
 
   def self.default_scope
-    where(slot_type: SLOT_TYPES[to_s.to_sym]) unless self == BaseSlot
+    # apply default scope only to the 'leaves'
+    where(slot_type: SLOT_TYPES[to_s.to_sym]) if subclasses.empty?
   end
 
   def self.get(slot_id)
@@ -267,11 +289,15 @@ class BaseSlot < ActiveRecord::Base
     slot_ids.collect { |id| get(id) }
   end
 
-  # TODO: add spec, check performance
+  # TODO: add spec
   def self.upcoming
     # BaseSlot.includes(:meta_slot).
       # where('meta_slots.start_date > ?', Time.zone.now).references(:meta_slot)
     joins(:meta_slot).where('meta_slots.start_date > ?', Time.zone.now)
+  end
+
+  def self.past
+    joins(:meta_slot).where('meta_slots.start_date < ?', Time.zone.now)
   end
 
   def self.next
@@ -296,7 +322,7 @@ class BaseSlot < ActiveRecord::Base
 
     return slot unless slot.errors.empty?
 
-    if (media || notes || alerts)
+    if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,
                               user: user)
     end
@@ -334,8 +360,70 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
+  # takes an encoded_slot string and returns the matching slot
+  # see: BaseSlot.as_paging_cursor
+  # raises PaginationError if invalid cursor_string
+  def self.from_paging_cursor(encoded_cursor_string)
+    decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
+  rescue ArgumentError
+    raise ApplicationController::PaginationError
+  else
+    # check for validity
+    begin
+      cursor_array = decoded_cursor_string.split('%')
+      cursor = {id: cursor_array.first.to_i,
+                startdate: cursor_array.second,
+                enddate: cursor_array.third}
+      slot = get(cursor[:id])
+    rescue ActiveRecord::RecordNotFound
+      raise ApplicationController::PaginationError
+    # the following is not really neccessary, might be removed at some point
+    # but for now it gives some useful info about the system
+    else
+      if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
+         slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
+        opts = {}
+        opts[:parameters] = { cursor_id: cursor[:id],
+                              cursor_startdate: cursor[:startdate],
+                              cursor_enddate: cursor[:enddate] }
+        Airbrake.notify(ApplicationController::PaginationError, opts)
+        fail ApplicationController::PaginationError if Rails.env.development?
+      end
+      cursor
+    end
+  end
+
   # for Pundit
   def self.policy_class
     SlotPolicy
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    self
+  end
+
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    'slot'
+  end
+
+  def activity_foreign_id
+    ''
+  end
+
+  # The message is used as a notification message
+  # for the users activity feed
+  def activity_message_params
+    {
+      USER: creator.username,
+      TITLE: meta_slot.title
+    }
   end
 end

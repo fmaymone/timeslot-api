@@ -1,4 +1,4 @@
-class Friendship < ActiveRecord::Base
+class Friendship < UserActivity
   class DuplicateEntry < StandardError; end
 
   after_commit AuditLog
@@ -53,7 +53,7 @@ class Friendship < ActiveRecord::Base
     # also prevents friendship with oneself
     if Friendship.where(user_id: friend_id, friend_id: user_id).exists? || (user_id == friend_id)
       msg = "reverse friendship from #{user_id} to #{friend_id} already exists"
-      Rails.logger.error duplicate_friendship: msg
+      Rails.logger.error {{ duplicate_friendship: msg }}
       Airbrake.notify(DuplicateEntry, error_message: msg)
       fail DuplicateEntry, duplicate_friendship: msg
     end
@@ -76,5 +76,26 @@ class Friendship < ActiveRecord::Base
     when "01" then "rejected"
     else "undefined"
     end
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    established?
+  end
+
+  def activity_friend
+    friend
+  end
+
+  # The user who made the update
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'friendship'
   end
 end

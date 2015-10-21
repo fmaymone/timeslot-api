@@ -14,13 +14,6 @@ class StdSlot < BaseSlot
 
   validates :owner, presence: true
 
-  def related_users
-    [owner]
-  end
-
-  def prepare_for_deletion
-  end
-
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
     if visibility
@@ -40,11 +33,11 @@ class StdSlot < BaseSlot
     ReSlot.unscoped.where(parent_id: id).count
   end
 
-  # I can throw a User object at this and AR automagically takes the ID - nice
-  # or dangerous?
-  # btw I made this classmethod to circumvent my default_scope on the slot_type
-  def self.of(user_id)
-    StdSlot.unscoped.where(owner: user_id)
+  def related_users
+    [owner]
+  end
+
+  def prepare_for_deletion
   end
 
   def self.create_slot(meta_slot:, visibility:, user: nil)

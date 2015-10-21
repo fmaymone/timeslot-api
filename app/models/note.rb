@@ -1,4 +1,4 @@
-class Note < ActiveRecord::Base
+class Note < SlotActivity
   after_commit AuditLog
   after_validation :propagate_error, on: [:create, :update],
                    if: proc { |note| note.errors.any? && note.slot }
@@ -19,5 +19,22 @@ class Note < ActiveRecord::Base
   # if belonging slot is deleted
   def delete
     ts_soft_delete
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    slot
+  end
+
+  # The user who made the update
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    'note'
   end
 end

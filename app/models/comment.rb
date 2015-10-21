@@ -1,4 +1,4 @@
-class Comment < ActiveRecord::Base
+class Comment < SlotActivity
   after_commit AuditLog
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :comments
@@ -9,5 +9,21 @@ class Comment < ActiveRecord::Base
 
   def delete
     update(deleted_at: Time.zone.now)
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_slot
+    slot
+  end
+
+  def activity_user
+    user
+  end
+
+  def activity_verb
+    'comment'
   end
 end

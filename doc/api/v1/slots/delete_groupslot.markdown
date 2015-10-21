@@ -63,9 +63,6 @@ Description : Likes for the slot
 Name : commentsCounter
 Description : Number of comments on the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
 
@@ -85,19 +82,19 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=6s4_UdMjJVknEenXjrb3WvsU6hs
+<pre>Authorization: Token token=I6lZXgxV0Dh2bLejGPFxoGhyasI
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groupslot/50</pre>
+<pre>DELETE /v1/groupslot/10</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/50&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=6s4_UdMjJVknEenXjrb3WvsU6hs&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=I6lZXgxV0Dh2bLejGPFxoGhyasI&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -109,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dbb35e2ec7b6984ed5b224107b6806a6&quot;
+ETag: W/&quot;dec8c4e13196220d84cc379b723a3fdd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9997d22b-e6e9-48c6-94e8-5abea347308e
-X-Runtime: 0.069076
+X-Request-Id: 0af67811-ed1a-40eb-adb4-9db6534f2033
+X-Runtime: 0.070483
 Vary: Origin
-Content-Length: 542</pre>
+Content-Length: 540</pre>
 
 #### Status
 
@@ -124,19 +121,19 @@ Content-Length: 542</pre>
 
 ```javascript
 {
-  "id" : 50,
-  "title" : "Slot title 41",
-  "startDate" : "2019-09-15T17:44:02.000Z",
-  "createdAt" : "2015-09-28T10:15:57.129Z",
-  "updatedAt" : "2015-09-28T10:15:57.165Z",
-  "deletedAt" : "2015-09-28T10:15:57.161Z",
-  "endDate" : "2019-10-15T17:44:02.000Z",
+  "id" : 10,
+  "title" : "Slot title 42",
+  "startDate" : "2019-09-17T19:44:02.000Z",
+  "createdAt" : "2015-10-14T11:49:54.426Z",
+  "updatedAt" : "2015-10-14T11:49:54.461Z",
+  "deletedAt" : "2015-10-14T11:49:54.459Z",
+  "endDate" : "2019-10-17T19:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 259,
-    "username" : "User 223",
-    "createdAt" : "2015-09-28T10:15:57.124Z",
-    "updatedAt" : "2015-09-28T10:15:57.124Z",
+    "id" : 24,
+    "username" : "User 235",
+    "createdAt" : "2015-10-14T11:49:54.421Z",
+    "updatedAt" : "2015-10-14T11:49:54.421Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -149,7 +146,7 @@ Content-Length: 542</pre>
     "alerts" : "0000000000"
   },
   "group" : {
-    "id" : 42
+    "id" : 1
   },
   "likes" : 0,
   "commentsCounter" : 0,

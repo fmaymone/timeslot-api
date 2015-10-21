@@ -10,6 +10,12 @@
 * [Sign in with twitter](connects/sign_in_with_twitter.markdown)
 * [Connect twitter account](connects/connect_twitter_account.markdown)
 
+## Feeds
+
+* [Get the feed of the current users activities](feeds/get_the_feed_of_the_current_users_activities.markdown)
+* [Get the feed of public activities (aggregated)](feeds/get_the_feed_of_public_activities_(aggregated).markdown)
+* [Get the feed of the current user notifications](feeds/get_the_feed_of_the_current_user_notifications.markdown)
+
 ## Groups
 
 * [Get all groups where current user is member or owner](groups/get_all_groups_where_current_user_is_member_or_owner.markdown)
@@ -46,6 +52,7 @@
 
 * [Get multiple slots](slots/get_multiple_slots.markdown)
 * [Get slot](slots/get_slot.markdown)
+* [Get Reslot](slots/get_reslot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
@@ -95,6 +102,7 @@
 * [Device - Register endpoint to push notifications for a device](users/device_-_register_endpoint_to_push_notifications_for_a_device.markdown)
 * [Device - Unregister device from push notification service](users/device_-_unregister_device_from_push_notification_service.markdown)
 * [Device - Update default device attributes](users/device_-_update_default_device_attributes.markdown)
+* [Get slots for current user - with pagination](users/get_slots_for_current_user_-_with_pagination.markdown)
 * [Get slots for current user](users/get_slots_for_current_user.markdown)
 * [Get slots for befriended user](users/get_slots_for_befriended_user.markdown)
 * [Get slots of unrelated user with common groups](users/get_slots_of_unrelated_user_with_common_groups.markdown)

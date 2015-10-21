@@ -1,9 +1,8 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password, :media_items]
-    skip_after_action :verify_authorized, only: :slots
-    after_action :verify_policy_scoped, only: :slots
+                       only: [:create, :signin, :reset_password,
+                              :media_items, :slots]
 
     # GET /v1/users
     def index
@@ -107,13 +106,27 @@ module V1
     end
 
     # GET /v1/users/1/slots
+    # returns all slots of the requested user visible for the current user
     def slots
-      @slots = policy_scope(:slot)
+      authorize :user
+      requested_user = User.find(params[:user_id])
 
-      render "v1/slots/index"
+      collector = SlotsCollector.new(**slot_paging_params)
+      @slots = collector.my_slots(current_user: current_user,
+                                  user: requested_user)
+
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # GET /v1/users/friendslots
+    # returns all public and friend-visible slots of all friends from
+    # current user
+    # Concerning pundit:
     # This is weird and not nice, pundit scopes seem way to inflexible...
     # the 'resolve' method for SlotPolicy is already used by 'slots' method
     # using another name doesn't trigger 'performed' for the scoped policy
@@ -218,8 +231,8 @@ module V1
     private def device_params(params)
       return nil unless params && params[:deviceId].present?
       params.permit(:deviceId, :system, :version, :token, :endpoint)
-            .transform_keys(&:underscore)
-            .symbolize_keys
+        .transform_keys(&:underscore)
+        .symbolize_keys
     end
 
     private def friends_ids
@@ -230,9 +243,10 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password, device: [ :deviceId, :system, :version, :token ])
-            .deep_transform_keys(&:underscore)
-            .deep_symbolize_keys
+      params.permit(:email, :phone, :password,
+                    device: [:deviceId, :system, :version, :token])
+        .deep_transform_keys(&:underscore)
+        .deep_symbolize_keys
     end
   end
 end

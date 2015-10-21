@@ -40,16 +40,18 @@ if slot.try(:group)
   json.group do
     json.id slot.group.id
   end
-elsif slot.class == ReSlot
-  json.slotter do
-    json.id slot.slotter_id
-  end
-  json.parent do
-    json.id slot.parent_id
-  end
-  json.visibility slot.parent.try(:visibility)
-elsif slot.class < StdSlot
+else
   json.reslotsCounter slot.reslot_count
+
+  if slot.class == ReSlot
+    json.slotter do
+      json.id slot.slotter_id
+    end
+    json.parent do
+      json.id slot.parent_id
+    end
+    json.visibility slot.parent.try(:visibility)
+  end
 end
 
 json.likes slot.likes.count

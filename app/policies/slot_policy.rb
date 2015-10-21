@@ -3,34 +3,10 @@ class SlotPolicy < ApplicationPolicy
 
   # TODO: add spec for scoped policy BKD-126
   class Scope < Scope
-    attr_reader :current_user, :requested_user
+    attr_reader :current_user
 
     def initialize(user, _scope)
       @current_user = user.current_user
-      @requested_user = user.requested_user
-    end
-
-    # returns all std and reslots if user is current user
-    # returns public and friend-visible stdSlots, all reslots and
-    #  shared groupslots if user is friend of current user
-    # returns public stdSlots, reslots from public slots and groupSlots from
-    # common groups (if any) if user is unrelated to current user
-    def resolve
-      if current_user == requested_user
-        StdSlot.of(current_user) +
-          current_user.re_slots
-      elsif current_user.friend_with? requested_user
-        requested_user.std_slots_friends +
-          requested_user.std_slots_public +
-          requested_user.re_slots +
-          current_user.shared_group_slots(requested_user)
-      else
-        # TODO: only return reslots from public sources BKD-124
-        requested_user.std_slots_public +
-          # requested_user.re_slots.public +
-          requested_user.re_slots +
-          current_user.shared_group_slots(requested_user)
-      end
     end
 
     # TODO: optimize db access / query BKD-121
@@ -120,6 +96,10 @@ class SlotPolicy < ApplicationPolicy
     return true if current_user == slot.try(:owner)
     return true if current_user == slot.try(:slotter)
     false
+  end
+
+  def show_slotters?
+    show_to_current_user?
   end
 
   # helper

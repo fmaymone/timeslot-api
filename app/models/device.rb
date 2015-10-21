@@ -1,4 +1,4 @@
-class Device < ActiveRecord::Base
+class Device < Channel
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :devices
@@ -8,12 +8,14 @@ class Device < ActiveRecord::Base
   validates :system, presence: true
   validates :version, presence: true
 
+  #scope :active_sockets, -> { where.not(socket: nil) }
+
   def register_endpoint(token)
     return false if token.nil?
     # check if token already exist on an old device
-    if(device = Device.find_by(token: token)) && device != self
+    if (device = Device.find_by(token: token)) && device != self
       self.token = token
-      self.save
+      save
       device.destroy
     end
     # sets new endpoint if not exist or update if new token was passed
@@ -31,7 +33,7 @@ class Device < ActiveRecord::Base
       begin
         Device.create_client.delete_endpoint({ endpoint_arn: endpoint })
       rescue Aws::SNS::Errors::ServiceError => exception
-        Rails.logger.error exception
+        Rails.logger.error { exception }
         Airbrake.notify(exception)
         errors.add(:unregister_endpoint, "could not unregister endpoint")
         raise exception if Rails.env.test? || Rails.env.development?
@@ -52,7 +54,7 @@ class Device < ActiveRecord::Base
       platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
       token: token)[:endpoint_arn]
   rescue Aws::SNS::Errors::ServiceError => exception
-    Rails.logger.error exception
+    Rails.logger.error { exception }
     Airbrake.notify(exception)
     errors.add(:register_endpoint, "could not register endpoint")
     raise exception if Rails.env.test? || Rails.env.development?
@@ -94,7 +96,7 @@ class Device < ActiveRecord::Base
     begin
       client.publish(push_notification)
     rescue Aws::SNS::Errors::ServiceError => exception
-      Rails.logger.error exception
+      Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
       opts[:parameters] = { user_id: device['user_id'],
                             device_id: device['id'],
@@ -103,10 +105,8 @@ class Device < ActiveRecord::Base
                             aws_http_request: exception.try(:http_request),
                             aws_http_response: exception.try(:http_response),
                             aws_sns_error: exception }
-      Rails.logger.error opts
+      Rails.logger.error { opts }
       Airbrake.notify(exception, opts)
-      # I'm not sure if we ever evaluate the following line
-      errors.add(:client, "could not send push notification to device")
     end
   end
 
@@ -117,8 +117,8 @@ class Device < ActiveRecord::Base
 
   def self.notify(client, device, params)
     case device['system']
-      when 'ios'
-        notify_ios(client, device, *params)
+    when 'ios'
+      notify_ios(client, device, *params)
     end
   end
 

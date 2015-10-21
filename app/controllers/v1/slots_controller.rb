@@ -21,10 +21,17 @@ module V1
     # GET /v1/slots/demo
     def show_last
       authorize :stdSlot
-      slot_count = ENV['DEMO_SLOTS_COUNT'].nil? ? 100 : ENV['DEMO_SLOTS_COUNT'].to_i
-      @slots = StdSlotPublic.last(slot_count)
 
-      render :index
+      if slot_paging_params.blank?
+        slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
+        @slots = StdSlotPublic.last(slot_count)
+        render :index
+      else
+        collector = SlotsCollector.new(**slot_paging_params)
+        @slots = collector.latest_public_slots
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # POST /v1/stdslot
@@ -131,8 +138,7 @@ module V1
     # PATCH /v1/stdslot/1
     def update_stdslot
       # see policy for thoughts about the different options
-      @slot = StdSlot.of(current_user).find(params[:id])
-      # @slot = StdSlot.unscoped.find(params[:id])
+      @slot = current_user.std_slots.find(params[:id])
       authorize @slot
 
       @slot.update_from_params(meta: meta_params, visibility: visibility,
@@ -179,7 +185,7 @@ module V1
 
     # DELETE /v1/std_slot/1
     def destroy_stdslot
-      @slot = StdSlot.of(current_user).find(params[:id])
+      @slot = current_user.std_slots.find(params[:id])
       authorize @slot
 
       if @slot.delete

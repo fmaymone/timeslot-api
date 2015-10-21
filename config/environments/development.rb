@@ -42,9 +42,13 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Use custom logging formatter.
+  # Use custom logging formatter
   config.log_formatter = Logging::CustomFormatter.new
 
+  # Remove the Rack::Lock middleware
+  # config.middleware.delete Rack::Lock
+
+  # this doesn't seem to be necessary anymore, db logs are displayed already
   # print SQL to console
-  ActiveRecord::Base.logger = ActiveSupport::Logger.new(STDOUT)
+  # ActiveRecord::Base.logger = ActiveSupport::Logger.new(STDOUT)
 end

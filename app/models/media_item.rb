@@ -1,4 +1,4 @@
-class MediaItem < ActiveRecord::Base
+class MediaItem < SlotActivity
   after_commit AuditLog
 
   belongs_to :mediable, polymorphic: true
@@ -34,7 +34,7 @@ class MediaItem < ActiveRecord::Base
     msg = { image: self }
     msg.merge!(cloudinary: "adding tag for destroyed media_item failed.")
     msg.merge!(error: e)
-    Rails.logger.error msg
+    Rails.logger.error { msg }
     Airbrake.notify(e, parameters: msg)
   ensure
     ts_soft_delete
@@ -54,5 +54,26 @@ class MediaItem < ActiveRecord::Base
     no_gaps = arr.size > arr.max
     dups = arr.find { |e| arr.rindex(e) != arr.index(e) }
     dups.nil? && no_gaps
+  end
+
+  ## Activity Methods ##
+
+  private
+
+  def activity_is_valid?
+    belongs_to_slot?
+  end
+
+  def activity_slot
+    mediable
+  end
+
+  # The user who made the update
+  def activity_user
+    creator
+  end
+
+  def activity_verb
+    media_type
   end
 end
