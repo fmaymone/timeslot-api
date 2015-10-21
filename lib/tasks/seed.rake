@@ -53,7 +53,7 @@ namespace :redis do
     end
 
     # Re-Build Activities #
-    # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 300 activities
-    storage.uniq.sort_by{|a| a[:updated_at]}.last(150).each(&:create_activity)
+    # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 100 activities
+    storage.uniq.sort_by{|a| a[:updated_at]}.last(100).each(&:create_activity)
   end
 end
