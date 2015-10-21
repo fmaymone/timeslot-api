@@ -60,7 +60,7 @@ class Activity < ActiveRecord::Base
   # This method should be overridden in the subclass
   # if custom validation is required
   def activity_is_valid?
-    true
+    activity_user ? true : false
   end
 
   # Indicates on which classname the action was performed (e.g. 'Slot')
