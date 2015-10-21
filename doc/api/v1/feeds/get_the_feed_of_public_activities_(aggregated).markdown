@@ -1,12 +1,13 @@
 # Feeds API
 
-## Get activity notifications
+## Get the feed of public activities (aggregated)
 
-### GET /v1/feed/notification
-
-some extra activity fields are included
+### GET /v1/feed/news
 
 ### Parameters
+
+Name : style
+Description : Style of the news activity feed (&#39;flat&#39; or &#39;aggregated&#39;)
 
 Name : limit
 Description : Maximum count of items which are included in the result
@@ -120,19 +121,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=2mqLsS1zcEj8-z8CTI-tusjb8Es
+Authorization: Token token=ltewD-l6g0bZAgj4CcmiPw17k1U
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/feed/notification</pre>
+<pre>GET /v1/feed/news</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2mqLsS1zcEj8-z8CTI-tusjb8Es&quot; \
+	-H &quot;Authorization: Token token=ltewD-l6g0bZAgj4CcmiPw17k1U&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -143,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1be014beef60890f490883a9354373c5&quot;
+ETag: W/&quot;7c0d97cf0f6342bc330b5a32961e8862&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 00a3e17f-5b39-4f80-96fd-c3e2f90c3e0b
-X-Runtime: 0.003911
+X-Request-Id: 5ec46b51-8c19-480b-b61e-dadf04b596ce
+X-Runtime: 0.003135
 Vary: Origin
-Content-Length: 251</pre>
+Content-Length: 1034</pre>
 
 #### Status
 
@@ -160,15 +161,64 @@ Content-Length: 251</pre>
 [
   {
     "type" : "Slot",
-    "actor" : "87",
-    "object" : 4,
-    "target" : "20",
+    "object" : 2,
+    "target" : "2",
     "activity" : "comment",
-    "message" : "User 53 commented on: Slot title 23",
-    "foreignId" : "88",
-    "time" : "2015-10-14T23:34:26.024Z",
-    "id" : "A33BA2270BAB0247320A0F3211257D8F7F0A0614",
-    "group" : "20comment20151014"
+    "foreignId" : "6",
+    "time" : "2015-10-21T11:48:07.647Z",
+    "slot" : {
+      "id" : 2,
+      "title" : "Slot title 22",
+      "startDate" : "2019-09-22T21:44:02.000Z",
+      "createdAt" : "2015-10-21T11:48:07.434Z",
+      "updatedAt" : "2015-10-21T11:48:07.434Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-22T21:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 6,
+        "username" : "User 60",
+        "createdAt" : "2015-10-21T11:48:07.424Z",
+        "updatedAt" : "2015-10-21T11:48:07.424Z",
+        "deletedAt" : null,
+        "image" : {
+          "publicId" : null,
+          "localId" : null
+        }
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "0000000000"
+      },
+      "visibility" : "public",
+      "reslotsCounter" : 0,
+      "likes" : 0,
+      "commentsCounter" : 1,
+      "shareUrl" : null
+    },
+    "user" : {
+      "id" : 4,
+      "username" : "User 53",
+      "createdAt" : "2015-10-21T11:48:07.414Z",
+      "updatedAt" : "2015-10-21T11:48:07.414Z",
+      "deletedAt" : null,
+      "image" : {
+        "publicId" : null,
+        "localId" : null
+      },
+      "slotCount" : 1,
+      "reslotCount" : 0,
+      "friendsCount" : 0
+    },
+    "id" : "3EC61189BD0981E44D4BA1A350A840D82005C396",
+    "group" : "2comment",
+    "actors" : [
+      4
+    ],
+    "message" : "User 53 commented on this Slot.",
+    "activityCount" : 1,
+    "cursor" : "1"
   }
 ]
 ```
