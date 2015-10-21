@@ -72,14 +72,16 @@ class SlotActivity < Activity
     # user_ids.concat(slot.likes.pluck(:user_id))
 
     # TODO: for now we send activities to all users
-    if Rails.env.test?
-      (activity_slot.followers + activity_user.followers).uniq
-    else
-      # The limit for the to field is 100
-      user_ids = User.all.collect(&:id)
-      # Remove the user who did the actual comment
-      user_ids.delete(activity_user.id)
-      user_ids
+    if activity_slot.visibility != 'private'
+      if Rails.env.test?
+        (activity_slot.followers + activity_user.followers).uniq
+      else
+        # The limit for the to field is 100
+        user_ids = User.all.collect(&:id)
+        # Remove the user who did the actual comment
+        user_ids.delete(activity_user.id)
+        user_ids
+      end
     end
   end
 end
