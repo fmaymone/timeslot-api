@@ -82,6 +82,8 @@ class SlotActivity < Activity
         user_ids.delete(activity_user.id)
         user_ids
       end
+    else
+      []
     end
   end
 end
