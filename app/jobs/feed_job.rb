@@ -6,9 +6,13 @@ class FeedJob
     begin
       # Generates and add activity id
       params.merge!(id: Digest::SHA1.hexdigest(params.to_json).upcase)
-      # Store to own activity feed (me activities)
+      # Store target to its own index (shared objects)
+      $redis.set("Target:#{params[:type]}:#{params[:target]}", ActiveSupport::Gzip.compress(params[:data][:target].to_json))
+      # Store actor to its own index (shared objects)
+      $redis.set("Actor:#{params[:actor]}", ActiveSupport::Gzip.compress(params[:data][:actor].to_json))
+      # Store activity to own feed (me activities)
       $redis.sadd("Feed:#{params[:actor]}:User", user_feed(params))
-      # Store to own notification feed (related to own content, filter out own activities)
+      # Store activity to own notification feed (related to own content, filter out own activities)
       $redis.sadd("Feed:#{params[:foreignId]}:Notification", notification_feed(params)) if (params[:foreignId] && !params[:actor].eql?(params[:foreignId]))
       # Send to other users through social relations
       unless params[:notify].empty?
@@ -39,7 +43,7 @@ class FeedJob
 
   def user_feed(params)
     ActiveSupport::Gzip.compress(
-      params.except(:notify, :slot, :user, :actor)
+        params.except(:notify, :data, :actor)
             .as_json
             .transform_keys {|key| key.camelize(:lower) }
             .to_json
@@ -48,7 +52,7 @@ class FeedJob
 
   def news_feed(params)
     ActiveSupport::Gzip.compress(
-      params.except(:notify, :message)
+        params.except(:notify, :data, :message)
             .as_json
             .transform_keys {|key| key.camelize(:lower) }
             .to_json
@@ -57,7 +61,7 @@ class FeedJob
 
   def notification_feed(params)
     ActiveSupport::Gzip.compress(
-      params.except(:notify, :slot, :user)
+        params.except(:notify, :data)
             .as_json
             .transform_keys {|key| key.camelize(:lower) }
             .to_json

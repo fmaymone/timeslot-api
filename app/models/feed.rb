@@ -106,7 +106,7 @@ module Feed
           # Collect further actors
           current_feed['actors'] << actor
           # Collect further usernames (we need 2 at maximum)
-          current_feed['message']['USER2'] = post['user']['username'] unless current_feed['message'].has_key?('USER2')
+          current_feed['message']['USER2'] = JSON.parse(ActiveSupport::Gzip.decompress($redis.get("Actor:#{actor}")))['username'] unless current_feed['message'].has_key?('USER2')
           # Increase user count
           current_feed['message']['USERCOUNT'] += 1
         end
@@ -122,8 +122,17 @@ module Feed
         current_feed['actors'] = [actor]
         # In handy we remove the single field 'actor' on aggregated feeds
         current_feed.delete('actor')
+        # Enrich custom activity data (shared objects)
+        current_feed['data'] = {
+          target: JSON.parse(ActiveSupport::Gzip.decompress(
+              $redis.get("Target:#{post['type']}:#{post['target']}")
+          )),
+          actor: JSON.parse(ActiveSupport::Gzip.decompress(
+              $redis.get("Actor:#{actor}")
+          ))
+        }
         # Adds the first username + usercount for aggregated messaging
-        current_feed['message'] = { 'USER' => post['user']['username'], 'USERCOUNT' => 1 }
+        current_feed['message'] = { 'USER' => current_feed['data'][:actor]['username'], 'USERCOUNT' => 1 }
         # Init activity counter
         current_feed['activityCount'] = 1
         # Sets a generated feed id to prevent id conflicts with other activity views

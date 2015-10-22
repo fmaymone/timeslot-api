@@ -29,8 +29,9 @@ class Activity < ActiveRecord::Base
       message: activity_message_params,
       foreignId: activity_foreign_id,
       notify: activity_notify,
+      data: activity_extra_data,
       time: (activity_time || self.updated_at)
-    }.merge!(activity_extra_data))
+    })
   end
 
   def create_activity_stream

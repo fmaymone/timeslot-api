@@ -86,9 +86,9 @@ resource "Feeds" do
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("slot")
-        expect(activity).not_to have_key("user")
+        expect(activity).not_to have_key("data")
         expect(activity).not_to have_key("actor")
+        expect(activity).not_to have_key("actors")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
@@ -147,10 +147,11 @@ resource "Feeds" do
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).to have_key("slot")
-        expect(activity).to have_key("user")
+        expect(activity).to have_key("data")
+        expect(activity['data']).to have_key("target")
+        expect(activity['data']).to have_key("actor")
 
-        activity_slot = activity["slot"]
+        activity_slot = activity['data']["target"]
         expect(activity_slot).to have_key("id")
         expect(activity_slot).to have_key("title")
         expect(activity_slot).to have_key("startDate")
@@ -172,7 +173,7 @@ resource "Feeds" do
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
         expect(activity_slot['title']).to eq(slot.title)
 
-        activity_user = activity['user']
+        activity_user = activity['data']['actor']
         expect(activity_user).to have_key("id")
         expect(activity_user).to have_key("username")
         expect(activity_user).to have_key("image")
@@ -236,8 +237,8 @@ resource "Feeds" do
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("slot")
-        expect(activity).not_to have_key("user")
+        expect(activity).not_to have_key("data")
+        expect(activity).not_to have_key("actors")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")

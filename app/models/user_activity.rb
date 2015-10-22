@@ -47,8 +47,8 @@ class UserActivity < Activity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      friend: JSONView.user(activity_friend),
-      user: JSONView.user(activity_user)
+      target: JSONView.user(activity_friend),
+      actor: JSONView.user(activity_user)
     }
   end
 
