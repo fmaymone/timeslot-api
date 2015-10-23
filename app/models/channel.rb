@@ -1,6 +1,4 @@
-class Channel < ActiveRecord::Base
-  self.abstract_class = true
-
+module Channel
   def connect
     $redis.sadd(redis_key, self.id)
   end
@@ -25,18 +23,21 @@ class Channel < ActiveRecord::Base
     "Channel:#{self.user.id}"
   end
 
-  def self.notify(params)
-    # we using worker background processing to perform stream tasks asynchronously
-    StreamJob.new.async.perform(connections, params) unless connections.empty?
+  module ClassMethods
+    # TODO: Channel.notify not used at the moment
+    def notify(params)
+      # we using worker background processing to perform stream tasks asynchronously
+      StreamJob.new.async.perform(connections, params) unless connections.empty?
 
-    # Stream.send(follower.devices.active_sockets)
-    # notify_queue = []
-    # #followers.devices.where.not(socket: nil).find_each do |user|
-    # followers.find_each do |user|
-    #   #user.devices.where.not(socket: nil).find_in_batches do |devices|
-    #   user.devices.active_sockets.find_in_batches do |devices|
-    #     notify_queue.concat(devices)
-    #   end
-    # end
+      # Stream.send(follower.devices.active_sockets)
+      # notify_queue = []
+      # #followers.devices.where.not(socket: nil).find_each do |user|
+      # followers.find_each do |user|
+      #   #user.devices.where.not(socket: nil).find_in_batches do |devices|
+      #   user.devices.active_sockets.find_in_batches do |devices|
+      #     notify_queue.concat(devices)
+      #   end
+      # end
+    end
   end
 end
