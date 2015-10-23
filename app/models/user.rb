@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include TS_Role
-  include UserFollow
+  include Follow
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up

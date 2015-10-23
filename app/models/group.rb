@@ -1,5 +1,5 @@
 class Group < ActiveRecord::Base
-  include GroupFollow
+  include Follow
   after_commit AuditLog
 
   after_create :add_owner_as_member, on: :create

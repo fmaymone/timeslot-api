@@ -8,12 +8,6 @@ class SlotActivity < Activity
     'Slot'
   end
 
-  def activity_is_valid?
-    # TODO: this is temporarily set to simulate "public activity"
-    # filter out private slots from it
-    activity_target.visibility != 'private'
-  end
-
   # The foreign id is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.

@@ -15,8 +15,6 @@ module Follow
       $redis.srem(target.redis_key(:following), [ feed_type, self.id ].to_json)
       $redis.srem(self.redis_key(:followers), target.id)
     end
-    # Remove activities from target feeds:
-    Feed::remove_user_from_feed(target, self)
   end
 
   # Get all followers of the target
@@ -43,8 +41,16 @@ module Follow
     $redis.scard(self.redis_key(:followers))
   end
 
+  def followings_count
+    $redis.scard(self.redis_key(:following))
+  end
+
   def redis_key(str)
     "Follow:#{feed_type}:#{self.id}:#{str}"
+  end
+
+  def feed_type
+    self.class.name
   end
 
   # def follows_each_other

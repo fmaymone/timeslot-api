@@ -86,12 +86,13 @@ resource "Feeds" do
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("data")
+        expect(activity).to have_key("data")
+        expect(activity).to have_key("actors")
         expect(activity).not_to have_key("actor")
-        expect(activity).not_to have_key("actors")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
+        expect(activity['actors'].first.to_i).to eq(current_user.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['foreignId'].to_i).to eq(slot.creator.id)
@@ -133,9 +134,9 @@ resource "Feeds" do
 
         do_request
         expect(response_status).to eq(200)
-        expect(json.length).to be(1)
+        expect(json.length).to be(2)
 
-        activity = json.first
+        activity = json.last
         expect(activity).to have_key("id")
         expect(activity).to have_key("activity")
         expect(activity).to have_key("activityCount")
@@ -233,16 +234,16 @@ resource "Feeds" do
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")
-        expect(activity).to have_key("actor")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("data")
-        expect(activity).not_to have_key("actors")
+        expect(activity).to have_key("data")
+        expect(activity).to have_key("actors")
+        expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
-        expect(activity['actor'].to_i).to eq(actor.id)
+        expect(activity['actors'].first.to_i).to eq(actor.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['foreignId'].to_i).to eq(slot.creator.id)

@@ -1,20 +1,36 @@
 require 'sucker_punch/testing/inline'
 
-namespace :redis do
+namespace :feed do
   desc "Seed redis with activities"
 
-  task :seed => :environment do
+  task :build => :environment do
 
     # Deactivate console logging
     ActiveRecord::Base.logger.level = 1
 
-    # Delete redis storage before start
+    # Empty redis storage before start
     $redis.flushall
 
     # Temporary feed storage
     storage = []
 
-    # Collect Activities #
+    ## Re-Build Follower Model ##
+
+    Friendship.all.find_each do |relation|
+      # friends follows each other
+      relation.user.add_follower(relation.friend)
+      relation.friend.add_follower(relation.user)
+    end
+
+    Membership.all.find_each do |relation|
+      relation.group.add_follower(relation.user)
+    end
+
+    ReSlot.all.find_each do |slot|
+      slot.add_follower(slot.slotter)
+    end
+
+    ## Collect Activities ##
 
     MediaItem.all.find_each do |media|
       storage << media
@@ -53,7 +69,7 @@ namespace :redis do
     end
 
     # Re-Build Activities #
-    # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 100 activities
-    storage.uniq.sort_by{|a| a[:updated_at]}.last(100).each(&:create_activity)
+    # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
+    storage.uniq.sort_by{|a| a[:updated_at]}.last(1000).each(&:create_activity)
   end
 end

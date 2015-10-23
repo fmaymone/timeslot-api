@@ -22,11 +22,11 @@ RSpec.describe Follow, type: :model do
         user.add_follower(follower)
         user.add_follower(follower2)
         expect(follower.following?(user)).to be(true)
-        expect(follower.following.to_json).to include(user.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(user.id.to_s)
+        expect(follower.followings_count).to be(1)
         expect(follower2.following?(user)).to be(true)
-        expect(follower2.following.to_json).to include(user.id.to_s)
-        expect(follower2.following_count).to be(1)
+        expect(follower2.followings.to_json).to include(user.id.to_s)
+        expect(follower2.followings_count).to be(1)
       end
     end
 
@@ -44,13 +44,13 @@ RSpec.describe Follow, type: :model do
       it "User has followers" do
         user.add_follower(follower)
         expect(follower.following?(user)).to be(true)
-        expect(follower.following.to_json).to include(user.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(user.id.to_s)
+        expect(follower.followings_count).to be(1)
 
         user.remove_follower(follower)
         expect(follower.following?(user)).to be(false)
-        expect(follower.following.to_json).not_to include(user.id.to_s)
-        expect(follower.following_count).to be(0)
+        expect(follower.followings.to_json).not_to include(user.id.to_s)
+        expect(follower.followings_count).to be(0)
       end
     end
   end
@@ -73,11 +73,11 @@ RSpec.describe Follow, type: :model do
         slot.add_follower(follower)
         slot.add_follower(follower2)
         expect(follower.following?(slot)).to be(true)
-        expect(follower.following.to_json).to include(slot.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings_count).to be(1)
         expect(follower2.following?(slot)).to be(true)
-        expect(follower2.following.to_json).to include(slot.id.to_s)
-        expect(follower2.following_count).to be(1)
+        expect(follower2.followings.to_json).to include(slot.id.to_s)
+        expect(follower2.followings_count).to be(1)
       end
     end
 
@@ -95,13 +95,13 @@ RSpec.describe Follow, type: :model do
       it "Slot has followers" do
         slot.add_follower(follower)
         expect(follower.following?(slot)).to be(true)
-        expect(follower.following.to_json).to include(slot.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings_count).to be(1)
 
         slot.remove_follower(follower)
         expect(follower.following?(slot)).to be(false)
-        expect(follower.following.to_json).not_to include(slot.id.to_s)
-        expect(follower.following_count).to be(0)
+        expect(follower.followings.to_json).not_to include(slot.id.to_s)
+        expect(follower.followings_count).to be(0)
       end
     end
   end
@@ -124,11 +124,11 @@ RSpec.describe Follow, type: :model do
         group.add_follower(follower)
         group.add_follower(follower2)
         expect(follower.following?(group)).to be(true)
-        expect(follower.following.to_json).to include(group.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(group.id.to_s)
+        expect(follower.followings_count).to be(1)
         expect(follower2.following?(group)).to be(true)
-        expect(follower2.following.to_json).to include(group.id.to_s)
-        expect(follower2.following_count).to be(1)
+        expect(follower2.followings.to_json).to include(group.id.to_s)
+        expect(follower2.followings_count).to be(1)
       end
     end
 
@@ -146,13 +146,13 @@ RSpec.describe Follow, type: :model do
       it "Group has followers" do
         group.add_follower(follower)
         expect(follower.following?(group)).to be(true)
-        expect(follower.following.to_json).to include(group.id.to_s)
-        expect(follower.following_count).to be(1)
+        expect(follower.followings.to_json).to include(group.id.to_s)
+        expect(follower.followings_count).to be(1)
 
         group.remove_follower(follower)
         expect(follower.following?(group)).to be(false)
-        expect(follower.following.to_json).not_to include(group.id.to_s)
-        expect(follower.following_count).to be(0)
+        expect(follower.followings.to_json).not_to include(group.id.to_s)
+        expect(follower.followings_count).to be(0)
       end
     end
   end

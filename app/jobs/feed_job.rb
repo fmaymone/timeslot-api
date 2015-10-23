@@ -8,11 +8,9 @@ class FeedJob
   # through social relations and also handle different type of feeds:
   #
   # 1. User Feed (takes all "me activities" where actor is the current user)
-  #
   # 2. Public Feed (activities from friends, groups, reslots, followings),
   #    own activities are not included here as well as activities
   #    related to the current users content
-  #
   # 3. Notification Feed (takes all activities which are related to the users content),
   #    own activities are not included here
 
@@ -21,18 +19,17 @@ class FeedJob
       # Generates and add activity id
       params.merge!(id: Digest::SHA1.hexdigest(params.to_json).upcase)
       # Store target to its own index (shared objects)
-      $redis.set("Target:#{params[:type]}:#{params[:target]}", ActiveSupport::Gzip.compress(params[:data][:target].to_json))
+      $redis.set("Target:#{params[:type]}:#{params[:target]}", gzip_target(params))
       # Store actor to its own index (shared objects)
-      $redis.set("Actor:#{params[:actor]}", ActiveSupport::Gzip.compress(params[:data][:actor].to_json))
+      $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
       # Store activity to own feed (me activities)
-      $redis.sadd("Feed:#{params[:actor]}:User", user_feed(params))
+      $redis.sadd("Feed:#{params[:actor]}:User", gzip_feed(params))
       # Store activity to own notification feed (related to own content, filter out own activities)
-      $redis.sadd("Feed:#{params[:foreignId]}:Notification", notification_feed(params)) if (params[:foreignId] && !params[:actor].eql?(params[:foreignId]))
-      # Store to targets feed ("Write-Opt" Strategy)
-      $redis.sadd("Feed:#{params[:type]}:#{params[:target]}", news_feed(params)) unless params[:notify].empty?
+      $redis.sadd("Feed:#{params[:foreignId]}:Notification", gzip_feed(params)) if params[:foreignId] && (params[:actor] != params[:foreignId])
+      # Store to targets feed (used for "Write-Opt" Strategy)
+      $redis.sadd("Feed:#{params[:feed]}:#{params[:target]}", gzip_feed(params)) #unless params[:notify].empty?
 
-      # This is the "Read-Opt" Strategy:
-      #
+      # NOTE: This part should be exchanged to go with the "Read-Opt" Strategy:
       # Send to other users through social relations
       # unless params[:notify].empty?
       #   news_params = news_feed(params)
@@ -54,37 +51,29 @@ class FeedJob
         actor: params[:actor],
         object: params[:object],
         target: params[:target],
-        notify: params[:notify],
         sucker_punch: "save to feed failed" }
       Rails.logger.error { e }
       Airbrake.notify(e, opts)
     end
   end
 
-  def user_feed(params)
+  def gzip_feed(params)
     ActiveSupport::Gzip.compress(
-        params.except(:notify, :data, :actor)
-            .as_json
-            .transform_keys {|key| key.camelize(:lower) }
+      params.except(:data, :message, :notify, :feed)
+            .values
             .to_json
     )
   end
 
-  def news_feed(params)
+  def gzip_actor(params)
     ActiveSupport::Gzip.compress(
-        params.except(:notify, :data, :message)
-            .as_json
-            .transform_keys {|key| key.camelize(:lower) }
-            .to_json
+      params[:data][:actor].to_json
     )
   end
 
-  def notification_feed(params)
+  def gzip_target(params)
     ActiveSupport::Gzip.compress(
-        params.except(:notify, :data)
-            .as_json
-            .transform_keys {|key| key.camelize(:lower) }
-            .to_json
+      params[:data][:target].to_json
     )
   end
 
