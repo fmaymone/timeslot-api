@@ -97,11 +97,11 @@ class ReSlot < BaseSlot
 
   private
 
-  def activity_slot
+  def activity_target
     self
   end
 
-  def activity_user
+  def activity_actor
     slotter
   end
 
@@ -109,7 +109,7 @@ class ReSlot < BaseSlot
     'reslot'
   end
 
-  def activity_foreign_id
-    parent.id.to_s
+  def activity_foreign
+    parent
   end
 end

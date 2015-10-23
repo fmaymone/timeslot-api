@@ -25,12 +25,12 @@ class Note < SlotActivity
 
   private
 
-  def activity_slot
+  def activity_target
     slot
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     creator
   end
 

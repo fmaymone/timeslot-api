@@ -64,12 +64,12 @@ class MediaItem < SlotActivity
     belongs_to_slot?
   end
 
-  def activity_slot
+  def activity_target
     mediable
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     creator
   end
 

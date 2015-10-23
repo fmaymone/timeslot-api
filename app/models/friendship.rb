@@ -86,12 +86,12 @@ class Friendship < UserActivity
     established?
   end
 
-  def activity_friend
+  def activity_target
     friend
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     user
   end
 

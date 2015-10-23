@@ -10,8 +10,8 @@ RSpec.describe Feed, type: :model do
 
     before(:each) do
       # Create relationships
-      user.add_follower(follower)
-      user.add_follower(follower2)
+      slot.add_follower(follower)
+      slot.add_follower(follower2)
       follower.add_follower(follower2)
       # Perform activities
       slot.create_comment(user, 'This is a test comment.')
@@ -161,7 +161,7 @@ RSpec.describe Feed, type: :model do
       expect(news_feed.count).to be(0)
 
       news_feed_follower = Feed.news_feed(follower.id).as_json
-      expect(news_feed_follower.count).to be(2)
+      expect(news_feed_follower.count).to be(0)
 
       news_feed_follower2 = Feed.news_feed(follower2.id).as_json
       expect(news_feed_follower2.count).to be(2)

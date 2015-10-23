@@ -107,12 +107,12 @@ class Membership < GroupActivity
     active?
   end
 
-  def activity_group
+  def activity_target
     group
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     user
   end
 

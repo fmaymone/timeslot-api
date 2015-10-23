@@ -12,7 +12,12 @@ module Feed
   end
 
   def self.news_feed(user_id, params = {})
-    feed = $redis.smembers("Feed:#{user_id}:News")
+    feed = []
+    # Get followings of the current user through social relations
+    $redis.smembers("Follow:User:#{user_id}:following").each do |target|
+      target = JSON.parse(target)
+      feed.concat($redis.smembers("Feed:#{target[0]}:#{target[1]}") || [])
+    end
     page = aggregate_feed(feed, params)
     enrich_messages(page, 'activity')
   end

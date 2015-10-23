@@ -13,7 +13,7 @@ RSpec.describe "V1::Feed", type: :request do
   before(:each) do
     actors.each do |actor|
       # Create relationships:
-      actor.add_follower(current_user)
+      slot.add_follower(current_user)
       # Perform activities:
       slot.create_comment(actor, 'This is a test comment.')
       slot.create_like(actor)

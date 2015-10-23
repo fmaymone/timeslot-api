@@ -127,7 +127,7 @@ resource "Feeds" do
         #explanation "some extra activity fields are included"
 
         # Create a relationship
-        actor.add_follower(current_user)
+        slot.add_follower(current_user) #actor.add_follower(current_user)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 

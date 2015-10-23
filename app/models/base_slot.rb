@@ -402,11 +402,11 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
 
   private
 
-  def activity_slot
+  def activity_target
     self
   end
 
-  def activity_user
+  def activity_actor
     creator
   end
 
@@ -414,16 +414,7 @@ class BaseSlot < SlotActivity #ActiveRecord::Base
     'slot'
   end
 
-  def activity_foreign_id
-    ''
-  end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  def activity_message_params
-    {
-      USER: creator.username,
-      TITLE: meta_slot.title
-    }
+  def activity_foreign
+    nil
   end
 end
