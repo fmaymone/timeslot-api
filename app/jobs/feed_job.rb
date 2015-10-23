@@ -38,24 +38,30 @@ class FeedJob
   end
 
   def user_feed(params)
-    params.except(:notify, :slot, :user, :actor)
-          .as_json
-          .transform_keys {|key| key.camelize(:lower) }
-          .to_json
+    ActiveSupport::Gzip.compress(
+      params.except(:notify, :slot, :user, :actor)
+            .as_json
+            .transform_keys {|key| key.camelize(:lower) }
+            .to_json
+    )
   end
 
   def news_feed(params)
-    params.except(:notify, :message)
-          .as_json
-          .transform_keys {|key| key.camelize(:lower) }
-          .to_json
+    ActiveSupport::Gzip.compress(
+      params.except(:notify, :message)
+            .as_json
+            .transform_keys {|key| key.camelize(:lower) }
+            .to_json
+    )
   end
 
   def notification_feed(params)
-    params.except(:notify, :slot, :user)
-          .as_json
-          .transform_keys {|key| key.camelize(:lower) }
-          .to_json
+    ActiveSupport::Gzip.compress(
+      params.except(:notify, :slot, :user)
+            .as_json
+            .transform_keys {|key| key.camelize(:lower) }
+            .to_json
+    )
   end
 
   # def perform_later(sec, devices, params)
