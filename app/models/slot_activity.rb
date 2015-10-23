@@ -76,7 +76,6 @@ class SlotActivity < Activity
       if Rails.env.test?
         (activity_slot.followers + activity_user.followers).uniq
       else
-        # The limit for the to field is 100
         user_ids = User.all.collect(&:id)
         # Remove the user who did the actual comment
         user_ids.delete(activity_user.id)
