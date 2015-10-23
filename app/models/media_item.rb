@@ -1,4 +1,6 @@
-class MediaItem < SlotActivity
+class MediaItem < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :mediable, polymorphic: true

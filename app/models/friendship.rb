@@ -1,4 +1,6 @@
-class Friendship < UserActivity
+class Friendship < ActiveRecord::Base
+  include UserActivity
+
   class DuplicateEntry < StandardError; end
 
   after_commit AuditLog

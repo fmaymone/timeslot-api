@@ -1,4 +1,6 @@
-class Note < SlotActivity
+class Note < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
   after_validation :propagate_error, on: [:create, :update],
                    if: proc { |note| note.errors.any? && note.slot }

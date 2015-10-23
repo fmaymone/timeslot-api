@@ -1,4 +1,6 @@
-class Membership < GroupActivity
+class Membership < ActiveRecord::Base
+  include GroupActivity
+
   after_commit AuditLog
 
   belongs_to :user, inverse_of: :memberships

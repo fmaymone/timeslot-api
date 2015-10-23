@@ -1,11 +1,12 @@
-class Activity < ActiveRecord::Base
+module Activity
+  extend ActiveSupport::Concern
 
-  self.abstract_class = true
-
-  # Trigger activities to feeds:
-  after_commit :create_activity, on: :create
-  after_commit :update_activity, on: :update
-  before_destroy :remove_activity
+  included do
+    # Trigger activities to feeds:
+    after_commit :create_activity, on: :create
+    after_commit :update_activity, on: :update
+    before_destroy :remove_activity
+  end
 
   def create_activity
     # Trigger "create" as an activity if this should be valid

@@ -1,6 +1,6 @@
-class SlotActivity < Activity
-
-  self.abstract_class = true
+module SlotActivity
+  extend ActiveSupport::Concern
+  include Activity
 
   private
 

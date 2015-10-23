@@ -1,5 +1,4 @@
 class Channel < ActiveRecord::Base
-
   self.abstract_class = true
 
   def connect

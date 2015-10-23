@@ -1,6 +1,6 @@
-class UserActivity < Activity
-
-  self.abstract_class = true
+module UserActivity
+  extend ActiveSupport::Concern
+  include Activity
 
   private
 

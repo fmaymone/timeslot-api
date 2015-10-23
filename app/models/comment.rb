@@ -1,4 +1,6 @@
-class Comment < SlotActivity
+class Comment < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :comments

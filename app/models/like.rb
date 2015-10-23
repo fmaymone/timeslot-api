@@ -1,4 +1,6 @@
-class Like < SlotActivity
+class Like < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :user
