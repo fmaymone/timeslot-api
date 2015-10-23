@@ -164,17 +164,17 @@ RSpec.describe Feed, type: :model do
       expect(news_feed_follower.count).to be(0)
 
       news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-      expect(news_feed_follower2.count).to be(2)
+      expect(news_feed_follower2.count).to be(0)
 
       # notification feeds
       notification_feed = Feed.news_feed(user.id).as_json
       expect(notification_feed.count).to be(0)
 
       notification_feed_follower = Feed.news_feed(follower.id).as_json
-      expect(notification_feed_follower.count).to be(2)
+      expect(notification_feed_follower.count).to be(0)
 
       notification_feed_follower2 = Feed.news_feed(follower2.id).as_json
-      expect(notification_feed_follower2.count).to be(2)
+      expect(notification_feed_follower2.count).to be(0)
     end
   end
 end
