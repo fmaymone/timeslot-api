@@ -1,7 +1,5 @@
 module JSONView
-
   def self.slot(slot)
-
     user = slot.creator
 
     # basic slot data

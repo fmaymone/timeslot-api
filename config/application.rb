@@ -8,7 +8,9 @@ Bundler.require(*Rails.groups)
 
 module TsRailsBackend
   class Application < Rails::Application
-    config.autoload_paths << Rails.root.join('lib')
+    # http://blog.arkency.com/2014/11/dont-forget-about-eager-load-when-extending-autoload/
+    config.eager_load_paths << Rails.root.join('lib')
+    config.eager_load_paths += Dir[Rails.root.join('app', 'models', 'concerns', '**/')]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
