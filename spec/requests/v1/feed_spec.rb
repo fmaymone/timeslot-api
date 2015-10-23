@@ -11,16 +11,6 @@ RSpec.describe "V1::Feed", :async, type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  before(:each) do
-    actors.each do |actor|
-      # Create relationships:
-      slot.add_follower(current_user)
-      # Perform activities:
-      slot.create_comment(actor, 'This is a test comment.')
-      slot.create_like(actor)
-    end
-  end
-
   describe "GET /v1/feed/user" do
     it "returns 401 if auth token was missing" do
       get "/v1/feed/user", nil, nil
@@ -30,12 +20,35 @@ RSpec.describe "V1::Feed", :async, type: :request do
 
   describe "GET /v1/feed/user" do
     it "returns 401 if auth token was invalid" do
-      get "/v1/feed/user", nil, { 'Authorization' => "Token token=foobar" }
+      get "/v1/feed/user", nil, 'Authorization' => "Token token=foobar"
       expect(response.status).to be(401)
     end
   end
 
+  context "Activity creation", :redis do
+    # test for Bug BKD-294
+    describe "reslot a slot" do
+      it "creates a new activity without an exception" do
+        activities_before = $redis.keys.count
+        expect {
+          post "/v1/reslot/", { predecessorId: slot.id }, auth_header
+        }.not_to raise_error
+        expect($redis.keys.count).to be > activities_before
+      end
+    end
+  end
+
   context "User feeds", :redis do
+    before(:each) do
+      actors.each do |actor|
+        # Create relationships:
+        slot.add_follower(current_user)
+        # Perform activities:
+        slot.create_comment(actor, 'This is a test comment.')
+        slot.create_like(actor)
+      end
+    end
+
     describe "GET /v1/feed/user" do
       it "returns array of current user activities" do
         get "/v1/feed/user", nil, auth_header
