@@ -43,6 +43,8 @@ class SlotsCollector
 
     ### fetch slots
     relations.each do |relation|
+      next unless relation
+
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: relation, direction: @direction)
 
