@@ -29,13 +29,14 @@ module Feed
     ["Feed:#{user_id}:User",
      "Feed:#{user_id}:News",
      "Feed:#{user_id}:Notification"].each do |feed_key|
-      # Fetch target from target activity
+      # Fetch all target activities
       feed = $redis.lrange(feed_key, 0, -1)
       # Loop through all activities of all feeds
       $redis.pipelined do
         feed.each do |post|
           feed_params = post.split(':')
           if feed_params[0] == feed_type && feed_params[1].to_i == target_id #|| post['foreignId'].to_i == actor_id
+            # Remove activity
             $redis.lrem(feed_key, 1, post)
           end
         end
@@ -96,15 +97,9 @@ module Feed
         USERCOUNT: count
       }
       # Get target
-      begin
-        target = JSON.parse(ActiveSupport::Gzip.decompress(
-          $redis.get("Target:#{activity['type']}:#{activity['target']}")
-        ))
-      rescue => e
-        pp ActiveSupport::Gzip.decompress(
-          $redis.get("Target:#{activity['type']}:#{activity['target']}")
-        )
-      end
+      target = JSON.parse(ActiveSupport::Gzip.decompress(
+        $redis.get("Target:#{activity['type']}:#{activity['target']}")
+      ))
       # Enrich with custom activity data (shared objects)
       activity['data'] = {
           target: target,
