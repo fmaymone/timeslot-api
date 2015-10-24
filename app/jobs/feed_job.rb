@@ -24,7 +24,7 @@ class FeedJob
       $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
 
       # Determine target key for redis set
-      target_index = "#{params[:feed]}:#{params[:target]}"
+      target_index = "#{target_types[params[:feed]]}:#{params[:target]}"
       # Store activity to targets feed (used for "Write-Opt" Strategy)
       # Returns the position of added activity (required for asynchronous access)
       feed_length = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
@@ -59,6 +59,12 @@ class FeedJob
     end
   end
 
+  # def perform_later(sec, devices, params)
+  #   after(sec) { perform(devices, params) }
+  # end
+
+  private
+
   def gzip_feed(params)
     ActiveSupport::Gzip.compress(
       params.except(:data, :message, :notify, :feed)
@@ -79,7 +85,17 @@ class FeedJob
     )
   end
 
-  # def perform_later(sec, devices, params)
-  #   after(sec) { perform(devices, params) }
-  # end
+  def target_types
+    {
+      StdSlotPrivate: 1,
+      StdSlotFriends: 2,
+      StdSlotPublic: 3,
+      GroupSlotMembers: 4,
+      GroupSlotPublic: 5,
+      ReSlotFriends: 6,
+      ReSlotPublic: 7,
+      Group: 8,
+      User: 9
+    }
+  end
 end
