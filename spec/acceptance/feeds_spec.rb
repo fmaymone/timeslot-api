@@ -1,6 +1,6 @@
 require 'documentation_helper'
 
-resource "Feeds" do
+resource "Feeds", :async do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:owner) { create(:user, username: 'User 54') }
@@ -70,7 +70,7 @@ resource "Feeds" do
       example "Get the feed of the current users activities", document: :v1 do
 
         # Create a relationship
-        current_user.add_follower(owner)
+        #current_user.add_follower(owner)
         # Perform an activity
         slot.create_comment(current_user, 'This is a test comment.')
 
@@ -134,9 +134,9 @@ resource "Feeds" do
 
         do_request
         expect(response_status).to eq(200)
-        expect(json.length).to be(2)
+        expect(json.length).to be(1)
 
-        activity = json.last
+        activity = json.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("activity")
         expect(activity).to have_key("activityCount")

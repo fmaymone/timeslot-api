@@ -21,7 +21,7 @@ class GroupActivity < Activity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      #target: JSONView.group(activity_group),
+      target: JSONView.group(activity_target),
       actor: JSONView.user(activity_actor)
     }
   end

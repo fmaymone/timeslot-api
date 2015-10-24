@@ -26,12 +26,12 @@ class Activity < ActiveRecord::Base
       object: self.id.to_s,
       target: activity_target.id.to_s,
       activity: activity_verb,
-      feed: activity_target.class.name,
       message: activity_message_params,
       foreignId: (activity_foreign ? activity_foreign.id.to_s : ''),
       notify: activity_notify,
       data: activity_extra_data,
-      time: (activity_time || self.updated_at)
+      time: (activity_time || self.updated_at),
+      feed: activity_target.class.name
     })
   end
 
@@ -52,11 +52,12 @@ class Activity < ActiveRecord::Base
   end
 
   def remove_activity
-    # Remove activities from target feeds:
-    Feed::remove_target_from_feed(self, target)
-    # Trigger "delete" as an activity if this should be valid
-    # Pass the current time because this before-callback does not trigger "updated_at"
-    create_activity_feed(Time.zone.now) if activity_is_valid?
+    # TODO:
+    # # Remove activities from target feeds:
+    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
+    # # Trigger "delete" as an activity if this should be valid
+    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   # This method should be overridden in the subclass
@@ -65,10 +66,27 @@ class Activity < ActiveRecord::Base
     activity_actor && activity_target
   end
 
-  # This method should be overridden in the subclass
-  # if custom validation is required
+  # Returns an array of user which should also be notified
   def activity_notify
-    []
+    # TODO: currently we are sending activities to all users
+    # In "real" situation the feed dispatcher collect the related feed
+    # through social relations (called: followings), these are also mapped in redis
+    # To test the intended logic, we use this temporary switch here
+    # This is only for current simulation of a "public activity feed"
+    # When the iOS has implemented friends and groups, we can remove this switch
+    if Rails.env.test?
+      # Test of feed dispatcher through social relations
+      user_ids = (activity_target.followers + activity_actor.followers).uniq
+    else
+      # Temporary fallback to simulate a "public activity" feed
+      # The limit for the to field is 100
+      user_ids = User.all.collect(&:id).map(&:to_s)
+    end
+    # Remove the user who did the actual comment
+    user_ids.delete(activity_actor.id.to_s)
+    # Remove if foreignId is similar to the actor
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign && (activity_foreign.id == activity_actor.id)
+    user_ids
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
