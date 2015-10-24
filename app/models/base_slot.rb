@@ -1,6 +1,6 @@
 class BaseSlot < ActiveRecord::Base
   include SlotActivity
-  include SlotFollow
+  include Follow
 
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
