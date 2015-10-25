@@ -17,19 +17,21 @@ class FeedJob
   def perform(params)
     begin
       # Generates and add activity id (full params are used here)
-      params.merge!(id: Digest::SHA1.hexdigest(params.to_json).upcase)
+      params[:id] = Digest::SHA1.hexdigest(params.to_json).upcase
+      # Translate class name to enumeration
+      params[:feed] = target_types[params[:feed].to_sym]
+      # Determine target key for redis set
+      target_index = "#{params[:feed]}:#{params[:target]}"
       # Store target to its own index (shared objects)
-      $redis.set("Target:#{params[:type]}:#{params[:target]}", gzip_target(params))
+      $redis.set("Target:#{target_index}", gzip_target(params))
       # Store actor to its own index (shared objects)
       $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
 
-      # Determine target key for redis set
-      target_index = "#{target_types[params[:feed]]}:#{params[:target]}"
       # Store activity to targets feed (used for "Write-Opt" Strategy)
       # Returns the position of added activity (required for asynchronous access)
-      feed_length = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
+      activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
-      target_key = "#{target_index}:#{feed_length}"
+      target_key = "#{target_index}:#{activity_index}"
 
       # Store activity to own feed (me activities)
       $redis.rpush("Feed:#{params[:actor]}:User", target_key)
@@ -67,7 +69,7 @@ class FeedJob
 
   def gzip_feed(params)
     ActiveSupport::Gzip.compress(
-      params.except(:data, :message, :notify, :feed)
+      params.except(:data, :message, :notify)
             .values
             .to_json
     )

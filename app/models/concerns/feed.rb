@@ -71,7 +71,8 @@ module Feed
         activity: target_feed[4],
         foreignId: target_feed[5],
         time: target_feed[6],
-        id: target_feed[7]
+        feed: target_feed[7],
+        id: target_feed[8],
     }.as_json
   end
 
@@ -98,7 +99,7 @@ module Feed
       }
       # Get target
       target = JSON.parse(ActiveSupport::Gzip.decompress(
-        $redis.get("Target:#{activity['type']}:#{activity['target']}")
+        $redis.get("Target:#{activity['feed']}:#{activity['target']}")
       ))
       # Enrich with custom activity data (shared objects)
       activity['data'] = {
