@@ -1,5 +1,5 @@
 module Follow
-  # Add the passed follower to the target
+  # Add the passed follower to the current object
   def add_follower(target)
     unless self == target
       # Start redis transaction
@@ -15,7 +15,7 @@ module Follow
     target.add_follower(self)
   end
 
-  # Remove the passed follower from the target
+  # Remove the passed follower from the current object
   def remove_follower(target)
     unless self == target
       # Start redis transaction
@@ -26,7 +26,7 @@ module Follow
     end
   end
 
-  # Remove all followers from the object
+  # Remove all followers from the current object
   def remove_all_followers
     # TODO: do not fetching users from postgres
     User.where(id: followers).find_each do |follower|
@@ -39,7 +39,7 @@ module Follow
     target.remove_follower(self)
   end
 
-  # Remove all followers from the object
+  # Remove all followers from the current object
   def unfollow_all
     followings.each do |following|
       target = following[0].constantize.where(id: following[1])
@@ -47,12 +47,12 @@ module Follow
     end
   end
 
-  # Get all followers of the object
+  # Get all followers of the current object
   def followers
     $redis.smembers(redis_key(:followers))
   end
 
-  # Get all followings of the object
+  # Get all followings of the current object
   def followings
     $redis.smembers(redis_key(:following))
   end
@@ -64,12 +64,13 @@ module Follow
 
   # Delegate helper method (inverted logic)
   def follows?(target)
-    target.followed_by?(self)
+    following?(target)
   end
 
   # Determine if something is following the passed target
   def following?(target)
-    $redis.sismember(redis_key(:following), [ target.feed_type, target.id ].to_json)
+    target.followed_by?(self)
+    #$redis.sismember(redis_key(:following), [ target.feed_type, target.id ].to_json)
   end
 
   def followers_count
