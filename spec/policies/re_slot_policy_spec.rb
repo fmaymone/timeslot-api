@@ -5,7 +5,7 @@ describe ReSlotPolicy do
 
   let(:slot) { create(:re_slot) }
 
-  permissions :create_reslot?, :update_reslot?, :destroy_reslot? do
+  permissions :update_reslot?, :destroy_reslot? do
     context "for a user" do
       let(:user) { create(:user) }
 

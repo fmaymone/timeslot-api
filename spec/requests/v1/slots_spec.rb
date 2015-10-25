@@ -439,6 +439,21 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(json['id']).to eq(ReSlot.last.id)
         end
+
+        context "ReSlot from private std_slot" do
+          let(:pred) { create(:std_slot_private) }
+
+          it "responds with 422" do
+            post "/v1/reslot/", valid_attributes, auth_header
+            expect(response).to have_http_status :unauthorized
+          end
+
+          it "doesn't add a new entry to the DB" do
+            expect {
+              post "/v1/reslot/", valid_attributes, auth_header
+            }.not_to change(ReSlot, :count)
+          end
+        end
       end
 
       context "ReSlot from ReSlot" do
@@ -459,13 +474,23 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/reslot/", valid_attributes, auth_header
           expect(json['id']).to eq(ReSlot.last.id)
         end
+
+        it "sets the parent of the new reslot to the original parent" do
+          post "/v1/reslot/", valid_attributes, auth_header
+          new_reslot = ReSlot.last
+          expect(new_reslot.parent_id).to eq pred.parent_id
+        end
       end
 
       # TODO: @sh: I think this shouln't be possible at all...???
       # but since we don't know where the product is going we'll just
       # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
-        let(:pred) { create(:group_slot) }
+        let(:pred) do
+          slot = create(:group_slot)
+          create(:membership, :active, group: slot.group, user: current_user)
+          slot
+        end
 
         it "responds with Created (201)" do
           post "/v1/reslot/", valid_attributes, auth_header
