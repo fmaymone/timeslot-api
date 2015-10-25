@@ -56,6 +56,7 @@ class Group < ActiveRecord::Base
   end
 
   def delete
+    remove_all_followers
     owner.touch
     # all other images (if any) should already be "deleted"
     image.delete if images.first

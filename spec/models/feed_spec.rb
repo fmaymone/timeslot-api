@@ -5,10 +5,10 @@ RSpec.describe Feed, :async, type: :model do
   let(:follower2) { create(:user) }
 
   context "User feeds", :redis do
-    # 5 activities will be created on trait :feed
-    let(:user) { create(:user, :with_email, :with_password, :with_feed) }
+    # NOTE: 5 activities will be created by default on trait :with_feed
+    let(:user) { create(:user, :with_feed) }
     let(:meta_slot) { create(:meta_slot, creator: user) }
-    let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
     context "User follows another user" do
       before(:each) do
@@ -42,13 +42,13 @@ RSpec.describe Feed, :async, type: :model do
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no foreign activities
+        expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(3) # +1 foreign activity (from user)
+        expect(news_feed_follower.count).to be(2) # +2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(3) # +1 foreign activity (from user)
+        expect(news_feed_follower2.count).to be(2) # +2 public activities
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
@@ -80,25 +80,25 @@ RSpec.describe Feed, :async, type: :model do
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(5 + 1) # +1 new activity
+        expect(user_feed.count).to be(5 + 1) # +1 own activity
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(1) # +1 new activity
+        expect(user_feed_follower.count).to be(1) # +1 own activity
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(1) # +1 new activity
+        expect(user_feed_follower2.count).to be(1) # +1 own activity
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no foreign activities
+        expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(0) # has no foreign activities
+        expect(news_feed_follower.count).to be(0) # has no followings
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(0) # has no foreign activities
+        expect(news_feed_follower2.count).to be(0) # has no followings
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
@@ -117,10 +117,10 @@ RSpec.describe Feed, :async, type: :model do
   end
 
   context "Slot feeds", :redis do
-    # 5 activities will be created on trait :feed
-    let(:user) { create(:user, :with_email, :with_password, :with_feed) }
+    # NOTE: 5 activities will be created by default on trait :with_feed
+    let(:user) { create(:user, :with_feed) }
     let(:meta_slot) { create(:meta_slot, creator: user) }
-    let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
     context "User follows a slot" do
       before(:each) do
@@ -157,10 +157,10 @@ RSpec.describe Feed, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(2) # +4 foreign activities
+        expect(news_feed_follower.count).to be(2) # +2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2) # +4 foreign activities
+        expect(news_feed_follower2.count).to be(2) # +2 public activities
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
@@ -193,13 +193,13 @@ RSpec.describe Feed, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 1) # +1 new activity
+        expect(user_feed.count).to be(5 + 1) # +1 own activity
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(1) # +1 new activity
+        expect(user_feed_follower.count).to be(1) # +1 own activity
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(1) # +1 new activity
+        expect(user_feed_follower2.count).to be(1) # +1 own activity
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
@@ -220,21 +220,21 @@ RSpec.describe Feed, :async, type: :model do
         expect(notification_feed.count).to be(2) # +2 foreign activities
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # does not change!
+        expect(notification_feed_follower.count).to be(0) # has no own content
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # does not change!
+        expect(notification_feed_follower2.count).to be(0) # has no own content
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end
   end
 
   context "Group feeds", :redis do
-    # 5 activities will be created on trait :feed
-    let(:user) { create(:user, :with_email, :with_password, :with_feed) }
+    # NOTE: 5 activities will be created by default on trait :with_feed
+    let(:user) { create(:user, :with_feed) }
     let(:group_meta_slot) { create(:meta_slot, creator: user) }
     let(:group) { create(:group, owner: user) }
-    let(:group_slot) { create(:group_slot, meta_slot: group_meta_slot, group: group) }
+    let!(:group_slot) { create(:group_slot, meta_slot: group_meta_slot, group: group) }
 
     context "User follows a group" do
       before(:each) do
@@ -256,7 +256,7 @@ RSpec.describe Feed, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2 + 1) # +2 own activities
+        expect(user_feed.count).to be(5 + 2 + 1) # +8 own activities (+1 create groupslot???)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(2) # +2 own activities
@@ -268,14 +268,14 @@ RSpec.describe Feed, :async, type: :model do
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no foreign activities
+        expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(0) # has no followings
+        expect(news_feed_follower.count).to be(2) # +2 public activities (+2 aggregated)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).to eq(news_feed_follower2)
+        expect(news_feed_follower2.count).to be(2) # +2 public activities (+2 aggregated)
+        expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -307,7 +307,7 @@ RSpec.describe Feed, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2) # +1 new activity
+        expect(user_feed.count).to be(5 + 2) # +2 new activity
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(1) # +1 new activity
@@ -334,23 +334,23 @@ RSpec.describe Feed, :async, type: :model do
         expect(notification_feed.count).to be(2) # +2 foreign activities
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # does not change!
+        expect(notification_feed_follower.count).to be(0) # has no own content
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # does not change!
+        expect(notification_feed_follower2.count).to be(0) # has no own content
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end
   end
 
   context "Mixed feeds", :redis do
-    # 5 activities will be created on trait :feed
-    let(:user) { create(:user, :with_email, :with_password, :with_feed) }
+    # NOTE: 5 activities will be created by default on trait :with_feed
+    let(:user) { create(:user, :with_feed) }
     let(:meta_slot) { create(:meta_slot, creator: user) }
-    let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
     let(:group_meta_slot) { create(:meta_slot, creator: user) }
     let(:group) { create(:group, owner: user) }
-    let(:group_slot) { create(:group_slot, meta_slot: group_meta_slot, group: group) }
+    let!(:group_slot) { create(:group_slot, meta_slot: group_meta_slot, group: group) }
 
     context "User follows mixed type of targets" do
       before(:each) do
@@ -381,10 +381,10 @@ RSpec.describe Feed, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2 + 2) # +2 own activities
+        expect(user_feed.count).to be(5 + 2 + 2) # +4 own activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2 + 2) # +2 own activities
+        expect(user_feed_follower.count).to be(4) # +4 own activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
         expect(user_feed_follower2.count).to be(2) # +2 own activities
@@ -393,19 +393,19 @@ RSpec.describe Feed, :async, type: :model do
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no foreign activities
+        expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(5) # has no followings
+        expect(news_feed_follower.count).to be(2) # +2 public activities (+2 aggregated)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(5) # has no followings
+        expect(news_feed_follower2.count).to be(4) # +4 public activities (+2 aggregated)
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(4 + 2) # +4 foreign activities
+        expect(notification_feed.count).to be(6) # +6 foreign activities
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
@@ -442,10 +442,10 @@ RSpec.describe Feed, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2 + 1) # +1 new activity
+        expect(user_feed.count).to be(5 + 3) # +3 new activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2) # +1 new activity
+        expect(user_feed_follower.count).to be(2) # +2 new activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
         expect(user_feed_follower2.count).to be(1) # +1 new activity
@@ -466,13 +466,13 @@ RSpec.describe Feed, :async, type: :model do
 
       it "Notification Feed (activities to own contents)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(3) # +2 foreign activities
+        expect(notification_feed.count).to be(3) # +3 foreign activities
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # does not change!
+        expect(notification_feed_follower.count).to be(0) # has no own content
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # does not change!
+        expect(notification_feed_follower2.count).to be(0) # has no own content
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end

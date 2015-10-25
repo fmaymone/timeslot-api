@@ -25,6 +25,8 @@ class Friendship < ActiveRecord::Base
 
   def accept
     update!(state: "11")
+    user.follow(friend)
+    friend.follow(user)
   end
 
   def established?
@@ -41,6 +43,8 @@ class Friendship < ActiveRecord::Base
 
   # when user deactivates account, need to preserve state
   def inactivate
+    user.unfollow(friend)
+    friend.unfollow(user)
     friend.touch
     ts_soft_delete
   end
@@ -49,6 +53,8 @@ class Friendship < ActiveRecord::Base
     return if friend.deleted_at?
     update!(deleted_at: nil)
     friend.touch
+    user.follow(friend)
+    friend.follow(user)
   end
 
   private def check_duplicate

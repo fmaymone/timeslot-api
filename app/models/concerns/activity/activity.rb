@@ -76,8 +76,15 @@ module Activity
     # This is only for current simulation of a "public activity feed"
     # When the iOS has implemented friends and groups, we can remove this switch
     if Rails.env.test?
-      # Test of feed dispatcher through social relations
-      user_ids = (activity_target.followers + activity_actor.followers).uniq
+      # Test of feed distribution through social relations
+      user_ids = activity_target.followers
+      # When target belongs to a group we do not notify user followers (e.g. friends)
+      if activity_group
+        user_ids += activity_group.followers
+      elsif activity_actor
+        user_ids += activity_actor.followers
+      end
+      user_ids.uniq!
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
@@ -88,6 +95,11 @@ module Activity
     # Remove if foreignId is similar to the actor
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign && (activity_foreign.id == activity_actor.id)
     user_ids
+  end
+
+  # Indicates that the activity target belongs to a group
+  def activity_group
+    activity_target.try(:group)
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')

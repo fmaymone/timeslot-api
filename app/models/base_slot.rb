@@ -201,6 +201,7 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+    remove_all_followers
     prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister

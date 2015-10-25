@@ -13,6 +13,7 @@ class Membership < ActiveRecord::Base
 
   def activate
     update!(state: "111")
+    user.follow(group)
     group.touch
   end
 
@@ -38,6 +39,7 @@ class Membership < ActiveRecord::Base
 
   def kick
     update!(state: "010")
+    group.remove_follower(user)
     group.touch
   end
 
@@ -47,6 +49,7 @@ class Membership < ActiveRecord::Base
 
   def leave
     update!(state: "100")
+    user.unfollow(group)
     group.touch
   end
 
@@ -65,6 +68,7 @@ class Membership < ActiveRecord::Base
   # called if user deactivates his account
   # state needs to be preserved in this case
   def inactivate
+    group.remove_follower(user)
     group.touch
     ts_soft_delete
   end
@@ -79,6 +83,7 @@ class Membership < ActiveRecord::Base
   # and thus don't need the state
   def delete
     update!(state: "000")
+    group.remove_follower(user)
     user.touch
     group.touch unless group.deleted_at?
     ts_soft_delete

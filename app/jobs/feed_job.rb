@@ -19,7 +19,7 @@ class FeedJob
       # Generates and add activity id (full params are used here)
       params[:id] = Digest::SHA1.hexdigest(params.to_json).upcase
       # Translate class name to enumeration
-      params[:feed] = target_types[params[:feed].to_sym]
+      params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
       # Determine target key for redis set
       target_index = "#{params[:feed]}:#{params[:target]}"
       # Store target to its own index (shared objects)
@@ -35,6 +35,8 @@ class FeedJob
 
       # Store activity to own feed (me activities)
       $redis.rpush("Feed:#{params[:actor]}:User", target_key)
+      # Breaks feed distributing at this point if target is private
+      return if params[:feed] == 'StdSlotPrivate'
       # Store activity to own notification feed (related to own content, filter out own activities)
       $redis.rpush("Feed:#{params[:foreignId]}:Notification", target_key) if params[:foreignId] && (params[:actor] != params[:foreignId])
 
@@ -61,10 +63,6 @@ class FeedJob
     end
   end
 
-  # def perform_later(sec, devices, params)
-  #   after(sec) { perform(devices, params) }
-  # end
-
   private
 
   def gzip_feed(params)
@@ -87,17 +85,7 @@ class FeedJob
     )
   end
 
-  def target_types
-    {
-      StdSlotPrivate: 1,
-      StdSlotFriends: 2,
-      StdSlotPublic: 3,
-      GroupSlotMembers: 4,
-      GroupSlotPublic: 5,
-      ReSlotFriends: 6,
-      ReSlotPublic: 7,
-      Group: 8,
-      User: 9
-    }
-  end
+  # def perform_later(sec, devices, params)
+  #   after(sec) { perform(devices, params) }
+  # end
 end

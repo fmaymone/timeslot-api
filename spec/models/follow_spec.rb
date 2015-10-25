@@ -49,8 +49,8 @@ RSpec.describe Follow, type: :model do
         follower2.follow(user)
         # Test
         expect(follower.follows?(user)).to be(true)
-        expect(user.followers).to include(follower.id.to_s)
         expect(follower2.follows?(user)).to be(true)
+        expect(user.followers).to include(follower.id.to_s)
         expect(user.followers).to include(follower2.id.to_s)
         expect(user.followers_count).to be(2)
       end
@@ -217,6 +217,204 @@ RSpec.describe Follow, type: :model do
         expect(follower.following?(group)).to be(false)
         expect(follower.followings.to_json).not_to include(group.id.to_s)
         expect(follower.followings_count).to be(0)
+      end
+    end
+  end
+
+  context "Test auto-following through social relations", :redis do
+    let(:user) { create(:user) }
+
+    describe "Test reslots (as slot follow)" do
+      let(:meta_slot) { create(:meta_slot, creator: user) }
+      let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+      let!(:reslots) {[
+        create(:re_slot, slotter: follower,
+                         predecessor: slot,
+                         meta_slot: meta_slot,
+                         parent: slot),
+        create(:re_slot, slotter: follower2,
+                         predecessor: slot,
+                         meta_slot: meta_slot,
+                         parent: slot)
+      ]}
+
+      it "Slot has follower" do
+        # Default Test
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(slot.followed_by?(follower2)).to be(true)
+        expect(slot.followers).to include(follower.id.to_s)
+        expect(slot.followers).to include(follower2.id.to_s)
+        expect(slot.followers_count).to be(2)
+        # Test bi-directional relations
+        expect(follower.follows?(slot)).to be(true)
+        expect(follower2.follows?(slot)).to be(true)
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(slot.followed_by?(follower2)).to be(true)
+        # Test helpers
+        expect(follower.follows?(slot)).to be(true)
+        expect(follower2.follows?(slot)).to be(true)
+        expect(slot.followers).to include(follower.id.to_s)
+        expect(slot.followers).to include(follower2.id.to_s)
+        expect(slot.followers_count).to be(2)
+        # Test relations outside parents/predecessors scope (e.g. the ReSlot itself)
+        expect(follower.follows?(reslots.first)).to be(false)
+        expect(follower2.follows?(reslots.first)).to be(false)
+        expect(follower.follows?(reslots.second)).to be(false)
+        expect(follower2.follows?(reslots.second)).to be(false)
+        expect(reslots.first.followed_by?(follower2)).to be(false)
+        expect(reslots.first.followed_by?(follower2)).to be(false)
+        expect(reslots.second.followed_by?(follower2)).to be(false)
+        expect(reslots.second.followed_by?(follower2)).to be(false)
+      end
+
+      it "User has followings" do
+        # Default Test
+        expect(follower.following?(slot)).to be(true)
+        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.following?(slot)).to be(true)
+        expect(follower2.followings.to_json).to include(slot.id.to_s)
+        expect(follower2.followings_count).to be(1)
+      end
+
+      it "Unsubscribe from slot if reslot was removed" do
+        # Remove ReSlots
+        reslots.map(&:delete)
+        # Test Follower
+        expect(slot.followed_by?(follower)).to be(false)
+        expect(slot.followers).not_to include(follower.id.to_s)
+        expect(slot.followers).not_to include(follower.id.to_s)
+        expect(follower.follows?(user)).to be(false)
+        expect(follower.following?(slot)).to be(false)
+        expect(follower.followings.to_json).not_to include(slot.id.to_s)
+        expect(follower.followings_count).to be(0)
+        # Test Follower 2
+        expect(slot.followed_by?(follower2)).to be(false)
+        expect(slot.followers).not_to include(follower2.id.to_s)
+        expect(slot.followers).not_to include(follower2.id.to_s)
+        expect(follower2.follows?(slot)).to be(false)
+        expect(follower2.following?(slot)).to be(false)
+        expect(follower2.followings.to_json).not_to include(slot.id.to_s)
+        expect(follower2.followings_count).to be(0)
+      end
+    end
+
+    describe "Test friendships (as user follow" do
+      before(:each) do
+        create(:friendship, :established, user: user, friend: follower)
+        create(:friendship, :established, user: user, friend: follower2)
+      end
+
+      it "User has follower" do
+        # Default Test
+        expect(user.followed_by?(follower)).to be(true)
+        expect(user.followers).to include(follower.id.to_s)
+        expect(user.followed_by?(follower2)).to be(true)
+        expect(user.followers).to include(follower2.id.to_s)
+        expect(user.followers_count).to be(2)
+        # Test bi-directional relations
+        expect(follower.followed_by?(user)).to be(true)
+        expect(follower.followed_by?(follower2)).to be(false)
+        expect(follower2.followed_by?(user)).to be(true)
+        expect(follower2.followed_by?(follower)).to be(false)
+        # Test helpers
+        expect(follower.follows?(user)).to be(true)
+        expect(follower2.follows?(user)).to be(true)
+        expect(user.followers).to include(follower.id.to_s)
+        expect(user.followers).to include(follower2.id.to_s)
+        expect(user.followers_count).to be(2)
+      end
+
+      it "User has followings" do
+        # Default Test
+        expect(follower.following?(user)).to be(true)
+        expect(follower.followings.to_json).to include(user.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.following?(user)).to be(true)
+        expect(follower2.followings.to_json).to include(user.id.to_s)
+        expect(follower2.followings_count).to be(1)
+      end
+
+      it "Unsubscribe from user if active friendship was removed" do
+        # Remove friendships
+        user.remove_friends([follower.id, follower2.id])
+        # Test Follower
+        expect(user.followed_by?(follower)).to be(false)
+        expect(user.followers).not_to include(follower.id.to_s)
+        expect(user.followers).not_to include(follower.id.to_s)
+        expect(follower.follows?(user)).to be(false)
+        expect(follower.following?(user)).to be(false)
+        expect(follower.followings.to_json).not_to include(user.id.to_s)
+        expect(follower.followings_count).to be(0)
+        # Test Follower 2
+        expect(user.followed_by?(follower2)).to be(false)
+        expect(user.followers).not_to include(follower2.id.to_s)
+        expect(user.followers).not_to include(follower2.id.to_s)
+        expect(follower2.follows?(user)).to be(false)
+        expect(follower2.following?(user)).to be(false)
+        expect(follower2.followings.to_json).not_to include(user.id.to_s)
+        expect(follower2.followings_count).to be(0)
+      end
+    end
+
+    describe "Test memberships (as group follow)" do
+      let(:group) { create(:group, owner: user) }
+
+      before(:each) do
+        create(:membership, :active, group: group, user: follower)
+        create(:membership, :active, group: group, user: follower2)
+      end
+
+      it "Group has follower" do
+        # Default Test
+        expect(group.followed_by?(follower)).to be(true)
+        expect(group.followers).to include(follower.id.to_s)
+        expect(group.followed_by?(follower2)).to be(true)
+        expect(group.followers).to include(follower2.id.to_s)
+        expect(group.followers_count).to be(2)
+        # Test bi-directional relations
+        expect(follower.followed_by?(group)).to be(false)
+        expect(follower.followed_by?(follower2)).to be(false)
+        expect(follower2.followed_by?(group)).to be(false)
+        expect(follower2.followed_by?(follower)).to be(false)
+        # Test helpers
+        expect(follower.follows?(group)).to be(true)
+        expect(follower2.follows?(group)).to be(true)
+        expect(group.followers).to include(follower.id.to_s)
+        expect(group.followers).to include(follower2.id.to_s)
+        expect(group.followers_count).to be(2)
+      end
+
+      it "User has followings" do
+        # Default Test
+        expect(follower.following?(group)).to be(true)
+        expect(follower.followings.to_json).to include(group.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.following?(group)).to be(true)
+        expect(follower2.followings.to_json).to include(group.id.to_s)
+        expect(follower2.followings_count).to be(1)
+      end
+
+      it "Unsubscribe from group if active membership was removed" do
+        # Remove membership
+        follower.leave_group(group.id)
+        follower2.leave_group(group.id)
+        # Test Follower
+        expect(group.followed_by?(follower)).to be(false)
+        expect(group.followers).not_to include(follower.id.to_s)
+        expect(group.followers).not_to include(follower.id.to_s)
+        expect(follower.follows?(group)).to be(false)
+        expect(follower.following?(group)).to be(false)
+        expect(follower.followings.to_json).not_to include(group.id.to_s)
+        expect(follower.followings_count).to be(0)
+        # Test Follower 2
+        expect(group.followed_by?(follower2)).to be(false)
+        expect(group.followers).not_to include(follower2.id.to_s)
+        expect(group.followers).not_to include(follower2.id.to_s)
+        expect(follower2.follows?(group)).to be(false)
+        expect(follower2.following?(group)).to be(false)
+        expect(follower2.followings.to_json).not_to include(group.id.to_s)
+        expect(follower2.followings_count).to be(0)
       end
     end
   end

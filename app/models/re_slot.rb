@@ -56,6 +56,8 @@ class ReSlot < BaseSlot
   end
 
   def delete
+    remove_all_followers
+    slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
     prepare_for_deletion
     ts_soft_delete
@@ -81,6 +83,8 @@ class ReSlot < BaseSlot
       reslot.update(deleted_at: nil)
       reslot.update(predecessor: predecessor)
     end
+
+    slotter.follow(predecessor)
 
     reslot || create(slotter: slotter,
                      predecessor: predecessor,
