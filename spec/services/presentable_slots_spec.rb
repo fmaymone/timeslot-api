@@ -45,7 +45,7 @@ RSpec.describe PresentableSlots, type: :service do
       it "for a visitor" do
         expect(
           described_class.call(relationship: STRANGER, user: user)
-        ).to eq [user.std_slots_public, user.re_slots, nil]
+        ).to eq [user.std_slots_public, user.re_slots]
       end
     end
   end

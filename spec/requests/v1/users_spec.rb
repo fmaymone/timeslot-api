@@ -875,17 +875,91 @@ RSpec.describe "V1::Users", type: :request do
           end
 
           describe "GET slots for befriended user" do
-            skip 'TODO: paginate slots of friend'
+            let(:friend) do
+              friend = create(:user)
+              create(:friendship, :established,
+                     user: @current_user, friend: friend)
+              friend
+            end
+
+            it "returns ok" do
+              get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+                  'Authorization' => "Token token=#{friend.auth_token}"
+              expect(response).to have_http_status :ok
+            end
+
+            it "doesn't return private slots of user" do
+              get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+                  'Authorization' => "Token token=#{friend.auth_token}"
+
+              expect(response.body).not_to include 'not my upcoming slot'
+              expect(response.body).not_to include 'upcoming slot'
+              expect(response.body).not_to include 'upcoming slot A'
+              expect(response.body).not_to include 'upcoming slot B'
+            end
+
+            it "returns friend-visible slots of user" do
+              get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+                  'Authorization' => "Token token=#{friend.auth_token}"
+
+              expect(response.body).to include 'ongoing slot'
+              expect(response.body).to include 'ongoing slots'
+            end
+
+            it "returns public slots of user" do
+              get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+                  'Authorization' => "Token token=#{friend.auth_token}"
+
+              expect(response.body).to include 'ongoing reslot'
+              expect(response.body).to include 'upcoming reslot'
+              expect(response.body).to include 'past slot'
+              expect(response.body).to include 'long ago slot'
+            end
+
+            context "group slots" do
+              let(:unshared_group) { create(:group, owner: friend) }
+              let!(:unshared_groupslot) {
+                create(:group_slot, group: unshared_group) }
+
+              let(:shared_group) do
+                group = create(:group, :members_can_post)
+                create(:membership, :active, group: group, user: @current_user)
+                create(:membership, :active, group: group, user: friend)
+                group
+              end
+              let!(:shared_groupslot) {
+                create(:group_slot, group: shared_group) }
+
+              it "returns shared group slots" do
+                get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+                    'Authorization' => "Token token=#{friend.auth_token}"
+
+                expect(response.body).not_to include unshared_groupslot.title
+                expect(response.body).to include shared_groupslot.title
+              end
+            end
           end
 
           describe "GET slots for unrelated user" do
-            skip 'TODO: paginate slots of stranger'
             context "when logged in" do
-
+              skip 'TODO: spec paginate slots of unrelated user'
             end
 
             context "when visitor" do
+              # missing spec -> here comes the bug: BKD-293
+              it "returns ok" do
+                get "/v1/users/#{@current_user.id}/slots", filter: 'now'
+                expect(response).to have_http_status :ok
+              end
 
+              it "only returns public slots" do
+                get "/v1/users/#{@current_user.id}/slots", filter: 'all'
+                expect(response.body).not_to include 'not my upcoming slot'
+                expect(response.body).not_to include 'upcoming slot'
+                expect(response.body).not_to include 'ongoing slot'
+                expect(response.body).to include 'ongoing reslot'
+                expect(response.body).to include 'past slot'
+              end
             end
           end
         end

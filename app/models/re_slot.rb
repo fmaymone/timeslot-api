@@ -56,6 +56,8 @@ class ReSlot < BaseSlot
   end
 
   def delete
+    remove_all_followers
+    slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
     prepare_for_deletion
     ts_soft_delete
@@ -70,22 +72,24 @@ class ReSlot < BaseSlot
 
   def self.create_from_slot(predecessor: nil, slotter: nil)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
-    # TODO:
+    # TODO: use this when having reslot visibilities
     # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
 
     # if same original event was already reslottet by user, use this reslot
-    reslot = where(slotter: slotter, parent: original_source).first_or_create(
-      slotter: slotter,
-      predecessor: predecessor,
-      parent: original_source,
-      meta_slot: predecessor.meta_slot
-    )
+    reslot = where(slotter: slotter, parent: original_source).take
+
     # if deleted reslot was reslottet again, unset deleted_at & update predecessor
-    if reslot.deleted_at?
+    if reslot && reslot.deleted_at?
       reslot.update(deleted_at: nil)
       reslot.update(predecessor: predecessor)
     end
-    reslot
+
+    slotter.follow(predecessor)
+
+    reslot || create(slotter: slotter,
+                     predecessor: predecessor,
+                     parent: original_source,
+                     meta_slot: predecessor.meta_slot)
   end
 
   # for Pundit
@@ -97,11 +101,11 @@ class ReSlot < BaseSlot
 
   private
 
-  def activity_slot
+  def activity_target
     self
   end
 
-  def activity_user
+  def activity_actor
     slotter
   end
 
@@ -109,7 +113,7 @@ class ReSlot < BaseSlot
     'reslot'
   end
 
-  def activity_foreign_id
-    parent.id.to_s
+  def activity_foreign
+    parent
   end
 end

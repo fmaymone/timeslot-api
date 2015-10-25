@@ -1,23 +1,14 @@
 require 'rails_helper'
 
-RSpec.describe "V1::Feed", type: :request do
+RSpec.describe "V1::Feed", :async, type: :request do
   let(:json) { JSON.parse(response.body) }
+  # 5 activities will be created on trait :feed
   let(:current_user) { create(:user, :with_email, :with_password, :with_feed) }
   let(:actors) { create_list(:user, 3, :with_feed) }
   let(:meta_slot) { create(:meta_slot, creator: current_user) }
   let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
-  end
-
-  before(:each) do
-    actors.each do |actor|
-      # Create relationships:
-      actor.add_follower(current_user)
-      # Perform activities:
-      slot.create_comment(actor, 'This is a test comment.')
-      slot.create_like(actor)
-    end
   end
 
   describe "GET /v1/feed/user" do
@@ -29,12 +20,35 @@ RSpec.describe "V1::Feed", type: :request do
 
   describe "GET /v1/feed/user" do
     it "returns 401 if auth token was invalid" do
-      get "/v1/feed/user", nil, { 'Authorization' => "Token token=foobar" }
+      get "/v1/feed/user", nil, 'Authorization' => "Token token=foobar"
       expect(response.status).to be(401)
     end
   end
 
+  context "Activity creation", :redis do
+    # test for Bug BKD-294
+    describe "reslot a slot" do
+      it "creates a new activity without an exception" do
+        activities_before = $redis.keys.count
+        expect {
+          post "/v1/reslot/", { predecessorId: slot.id }, auth_header
+        }.not_to raise_error
+        expect($redis.keys.count).to be > activities_before
+      end
+    end
+  end
+
   context "User feeds", :redis do
+    before(:each) do
+      actors.each do |actor|
+        # Create relationships:
+        slot.add_follower(current_user)
+        # Perform activities:
+        slot.create_comment(actor, 'This is a test comment.')
+        slot.create_like(actor)
+      end
+    end
+
     describe "GET /v1/feed/user" do
       it "returns array of current user activities" do
         get "/v1/feed/user", nil, auth_header
@@ -65,7 +79,7 @@ RSpec.describe "V1::Feed", type: :request do
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/user", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2) # 6 - 2 = 4.limit(2) = 2
+        expect(json.length).to be(3) # 6 - 2 = 4.limit(2) = 2
       end
     end
 
@@ -75,7 +89,7 @@ RSpec.describe "V1::Feed", type: :request do
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/user", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2) # 6 - 4 = 2.limit(2) = 2
+        expect(json.length).to be(3) # 6 - 4 = 2.limit(2) = 2
       end
     end
   end

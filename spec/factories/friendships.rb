@@ -6,6 +6,10 @@ FactoryGirl.define do
 
     trait :established do
       state '11'
+      after :create do |friendship|
+        friendship.user.follow(friendship.friend)
+        friendship.friend.follow(friendship.user)
+      end
     end
 
     trait :rejected do

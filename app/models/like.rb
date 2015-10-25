@@ -1,4 +1,6 @@
-class Like < SlotActivity
+class Like < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :user
@@ -14,11 +16,11 @@ class Like < SlotActivity
 
   private
 
-  def activity_slot
+  def activity_target
     slot
   end
 
-  def activity_user
+  def activity_actor
     user
   end
 
