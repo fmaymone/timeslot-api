@@ -1,83 +1,126 @@
 # Social Activity
 Each activity has a:
-* Target
-* Action
+* Target (where the activity belongs to, e.g. "Slot" if someone likes the slot)
+* Action (the verb of the activity, e.g. "comment" or "like")
+* Object (the activity object itself, e.g. "Comment" or "Like")
 
 The most activities are also connected to an user (isn't required at all), called as:
-* Actor
+* Actor (the user who makes the activity)
 
 These 3 basic relations are the "meta data" of each activity.
 
-## Think depending to the activity target
-To better understand the basic concept of activity model abstraction always keep a "target context" in mind, like:
-* SlotActivity is an activity which target is on a slot (e.g. "like")
-* GroupActivity is an activity which target is on a group (e.g. "creates a group")
-* UserActivity is an activity which target is on a user (e.g. "friendship")
+## Re-Build: Topics, Follower, Followings, Activities, Feeds
 
-The same context should be valid on: feeds/topics/followings/channels.
+Since we are using live aggregation we are able to change logic on the fly. Whenever we have to make changes in the logic of redis feed data we have a build script which can re-build all data with actual logic.
 
-## Activity Distribution Model
-
-![Data Flow Chart Concept](activity_distribution.png)
-
-The "Activity Dispatcher" distribute the activities to the feeds and channels as a background process through an asynchronous worker thread.
-
-#### Distribution Strategy: Read-Opt vs. Write-Opt
-Actual we are using the *Read-Opt*-Strategy.
-
-|| Read-Opt | Write-Opt |
-|----|----|----|
-| Read Access: | 1 | N² |
-| Write Access: | N | 1 |
-
-##### Example: 3 users do an activity + 25 followers get a notification and makes a request to this activity
-
-|| Read-Opt | Write-Opt |
-|----|----|----|
-| Read Access: | 25 | 675 |
-| Write Access: | 75 | 3 |
-
-#### Redis Performance
-
-Redis is a key-value-storage built for extremely fast write and read access. The data is hold in the memory and should be mapped (or backup) onto a persistent storage. 
-
-| Redis Method | Benchmark |
-|----|----|
-| PING: | 200803.22 requests per second |
-| MSET (10 keys): | 78064.01 requests per second |
-| SET: | 198412.69 requests per second |
-| GET: | 198019.80 requests per second |
-| INCR: | 200400.80 requests per second |
-| LPUSH: | 200000.00 requests per second |
-| LPOP: | 198019.80 requests per second |
-| SADD: | 203665.98 requests per second |
-| SPOP: | 200803.22 requests per second |
-| LRANGE (first 100 elements): | 42123.00 requests per second |
-| LRANGE (first 300 elements): | 15015.02 requests per second |
-| LRANGE (first 450 elements): | 10159.50 requests per second |
-| LRANGE (first 600 elements): | 7548.31 requests per second |
-
-You can start this benchmark test with:
+Type in console:
 
 ```bash
-$ numactl -C 6 ./redis-benchmark -q -n 100000 -s /tmp/redis.sock -d 256
+rake feed:build RAILS_ENV=development
 ```
 
-## Live Aggregations
-In handy to make changes on the aggregation logic we are currently no storing aggregation logic into the feed data to save backward compatibility. The feed data includes the default basic data of an activity as an abstraction of it and can be reproduced ("enriched") anytime.
+For Heroku:
 
-## Schema: Activity Feeds & Multi-lingual Message Composing
+```bash
+heroku run rake feed:build -a {APP_NAME}
+```
 
-![Data Flow Chart Concept](activity_feed_concept.png)
+This will perform the following steps:
+1. Flush all redis data
+2. Re-Build: Topics, Follower, Followings
+3. Re-Build: Activities, Feeds
 
+##### Show Redis Info
 
-There is no logic inside the code which can affect the message. This guarantees that each message is translatable to each language. Instead we enrich the message text "on the fly" during the aggregation process.
+```bash
+$> $redis.keys
+$> $redis.info
+```
+
+##### Flush redis data
+
+```bash
+$> $redis.flushall
+```
 
 ## Activity Topic Model
 
-![Data Flow Chart Concept](topic_model.png)
+![Activity Topic Model](topic_model.png)
 
 
 Each target has its own topic channel which a follower can subscribe to. This will often happens automatically, e.g.: if an user reslot a slot, the user also follows this slot. With a follow model we can handle the activity messages outside of the membership relation.
 
 The same topic model is used for subscribing to a stream channel.
+
+### Think depending to the activity target
+To better understand the basic concept of activity model abstraction always keep a "target context" in mind, like:
+* SlotActivity is an activity where the target belongs to a slot (e.g. "like")
+* GroupActivity is an activity where the target belongs to a group (e.g. through "membership")
+* UserActivity is an activity where the target belongs to a user (e.g. through "friendship")
+
+The same context should be valid on: feeds, topics, followers, followings (except channels).
+
+
+## Activity Distribution Model
+
+![Activity Distribution Model](activity_distribution.png)
+
+The "Activity Dispatcher" distribute the activities to the feeds and channels as a background process through an asynchronous worker thread.
+
+#### Distribution Strategy: Read-Opt vs. Write-Opt
+Read-Opt: Activities will be delegated to each users feed.
+Write-Opt: Stores all activities as unique to the target feed.
+
+Actual we are using the *Write-Read-Opt*-Strategy. Each activity will be stored respectively to its target feed index (unique). Furthermore activities will be dispatched through social relations and stores a "pointer" to the target feed index.
+
+A = Actors
+F = Followers (Viewers)
+
+| | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
+|----|----|----|----|
+| Read Access: | F | F * (A + F) | A + F + 1 |
+| Validations: | F | ALL | F + 1 |
+| Write Access: | A * (A + F) | A | A * (A + F) + 1 |
+| Capacity: | A * (A + F) | A | A + 1 |
+
+##### 1. Example
+3 users do an activity + 25 followers get a notification and makes a request to this activity (500.000 Activities already exist through relations of all 28 users)
+
+| | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
+|----|----|----|----|
+| Read Access: | 25 | 700 | 29 |
+| Validations: | 25 | 500.000 | 26 |
+| Write Access: | 84 | 3 | 85 |
+| Capacity: | 84 | 3 | 4 |
+
+##### 2. Example
+25 users do an activity + 3 followers get a notification and makes a request to this activity (500.000 Activities already exist through relations of all 28 users)
+
+| | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
+|----|----|----|----|
+| Read Access: | 3 | 84 | 29 |
+| Validations: | 3 | 500.000 | 4 |
+| Write Access: | 700 | 25 | 701 |
+| Capacity: | 700 | 25 | 26 |
+
+NOTE: "Write-Opt" also has the effect, that all activities will be determine on each new request, there is no extra "activity-snapshot". If a user follows a slot, the user will automatically get all old activities which are stored to this target feed. If the user unfollow the slot, all activities from this slot are also removed. Furthermore the pagination on Write-Opt-Targetings is very ineffective, the whole data has to be fetched and has to be sorted by date (to determine the current/next page) as well as the visibility and policy has to be validated on full data on each request. These are good reasons for why we do not use aggressive Write-Opt-Strategy.
+
+## Live Aggregation
+In handy to make changes on the aggregation logic we are currently no storing aggregation logic into the feed data to save backward compatibility. The feed data includes the default basic data of an activity as an abstraction of it and can be reproduced ("enriched") anytime.
+
+## Activity Feed Schema
+
+![Activity Feed Schema](activity_feed_schema.png)
+
+
+There is no logic inside the code which can affect the message. This guarantees that each message is translatable to each language. Instead we enrich the message text "on the fly" during the aggregation process.
+
+## Multi-lingual Message Composing
+
+![Multi-lingual Message Composing](message_composing.png)
+
+## Activity Feed Dispatcher (Read/Write-Opt)
+
+![Activity Feed Dispatcher](feed_dispatcher.png)
+
+
