@@ -250,12 +250,6 @@ RSpec.describe Follow, type: :model do
         expect(follower2.follows?(slot)).to be(true)
         expect(slot.followed_by?(follower)).to be(true)
         expect(slot.followed_by?(follower2)).to be(true)
-        # Test helpers
-        expect(follower.follows?(slot)).to be(true)
-        expect(follower2.follows?(slot)).to be(true)
-        expect(slot.followers).to include(follower.id.to_s)
-        expect(slot.followers).to include(follower2.id.to_s)
-        expect(slot.followers_count).to be(2)
         # Test relations outside parents/predecessors scope (e.g. the ReSlot itself)
         expect(follower.follows?(reslots.first)).to be(false)
         expect(follower2.follows?(reslots.first)).to be(false)
