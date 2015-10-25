@@ -40,8 +40,11 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # Remove the Rack::Lock middleware
-  #config.middleware.delete Rack::Lock
+  # config.middleware.delete Rack::Lock
 
   # opt-in into new Rails behaviour
   config.active_record.raise_in_transactional_callbacks = true
+
+  # raise exception when hitting deprecation warning
+  ActiveSupport::Deprecation.behavior = :raise
 end
