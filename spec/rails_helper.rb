@@ -2,8 +2,14 @@
 ENV["RAILS_ENV"] ||= 'test'
 
 # measure test coverage
-require 'simplecov'
-SimpleCov.start 'rails'
+# using this in conjunction with spring gives wrong results and makes testruns
+# slower, because of this, coverage is only measured on demand by running:
+# DISABLE_SPRING=true rspec
+if ENV['DISABLE_SPRING']
+  puts 'measuring test coverage'
+  require 'simplecov'
+  SimpleCov.start 'rails'
+end
 
 require 'spec_helper'
 require File.expand_path("../../config/environment", __FILE__)
