@@ -6,8 +6,9 @@ Each activity has a:
 
 The most activities are also connected to an user (isn't required at all), called as:
 * Actor (the user who makes the activity)
+* Foreign (the relationship target who belongs to the activity target, e.g. "Creator")
 
-These 3 basic relations are the "meta data" of each activity.
+These 5 basic relations are the "meta data" of each activity.
 
 ## Re-Build: Topics, Follower, Followings, Activities, Feeds
 
@@ -72,9 +73,9 @@ Write-Opt: Stores all activities as unique to the target feed.
 
 Actual we are using the *Write-Read-Opt*-Strategy. Each activity will be stored respectively to its target feed index (unique). Furthermore activities will be dispatched through social relations and stores a "pointer" to the target feed index.
 
-A = Actors
+A = Actors (Write)
 
-F = Followers (Viewers)
+F = Followers (Read)
 
 | | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
 |----|----|----|----|
@@ -89,7 +90,7 @@ F = Followers (Viewers)
 | | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
 |----|----|----|----|
 | Read Access: | 25 | 700 | 29 |
-| Validations: | 25 | 500.000 | 26 |
+| Validations: | 25 | 500.025 | 26 |
 | Write Access: | 84 | 3 | 85 |
 | Capacity: | 84 | 3 | 4 |
 
@@ -99,7 +100,7 @@ F = Followers (Viewers)
 | | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
 |----|----|----|----|
 | Read Access: | 3 | 84 | 29 |
-| Validations: | 3 | 500.000 | 4 |
+| Validations: | 3 | 500.003 | 4 |
 | Write Access: | 700 | 25 | 701 |
 | Capacity: | 700 | 25 | 26 |
 
