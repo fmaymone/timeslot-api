@@ -42,6 +42,7 @@ module Follow
   # Remove all followers from the current object
   def unfollow_all
     followings.each do |following|
+      following = JSON.parse(following)
       # TODO: do not fetching users from postgres
       target = Object.const_get(following[0]).where(id: following[1]).try(:first)
       unfollow(target) if target
