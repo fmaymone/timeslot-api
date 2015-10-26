@@ -14,6 +14,13 @@ RSpec.describe Device, type: :model do
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to belong_to(:user).inverse_of(:devices) }
 
+  it { is_expected.to respond_to(:connect) }
+  it { is_expected.to respond_to(:disconnect) }
+  it { is_expected.to respond_to(:connections) }
+  it { is_expected.to respond_to(:is_connected?) }
+  it { is_expected.to respond_to(:connection_count) }
+  it { is_expected.to respond_to(:redis_key) }
+
   it { is_expected.to be_valid }
 
   describe "when user is not present" do
