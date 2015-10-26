@@ -21,19 +21,28 @@ module Activity
   private
 
   def create_activity_feed(activity_time = nil)
-    FeedJob.new.async.perform({
-      type: activity_type,
-      actor: activity_actor.id.to_s,
-      object: self.id.to_s,
-      target: activity_target.id.to_s,
-      activity: activity_verb,
-      message: activity_message_params,
-      foreignId: (activity_foreign ? activity_foreign.id.to_s : ''),
-      notify: activity_notify,
-      data: activity_extra_data,
-      time: (activity_time || self.updated_at),
-      feed: activity_target.class.name
-    })
+    begin
+      FeedJob.new.async.perform({
+        type: activity_type,
+        actor: activity_actor.id.to_s,
+        object: self.id.to_s,
+        target: activity_target.id.to_s,
+        activity: activity_verb,
+        message: activity_message_params,
+        foreignId: (activity_foreign ? activity_foreign.id.to_s : ''),
+        notify: activity_notify,
+        data: activity_extra_data,
+        time: (activity_time || self.updated_at),
+        feed: activity_target.class.name
+      })
+    rescue => error
+      opts = {}
+      opts[:parameters] = {
+          activity: "failed: initialize activity as worker job"
+      }
+      Rails.logger.error { error }
+      Airbrake.notify(error, opts)
+    end
   end
 
   def create_activity_stream
