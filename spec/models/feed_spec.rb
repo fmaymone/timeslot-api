@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Feed, :async, type: :model do
+RSpec.describe Feed, :activity, :async, type: :model do
   let(:follower) { create(:user) }
   let(:follower2) { create(:user) }
 

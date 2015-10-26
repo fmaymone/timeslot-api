@@ -38,7 +38,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
     end
   end
 
-  context "User feeds", :redis do
+  context "User feeds", :activity, :redis do
     before(:each) do
       actors.each do |actor|
         # Create relationships:
