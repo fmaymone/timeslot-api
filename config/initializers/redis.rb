@@ -9,5 +9,5 @@ if Rails.env.production? || Rails.env.herokutest?
   #$redis = Redis.new(url: ENV['REDIS_URL'], save: '3600 1')
   #$redis = Redis.new(host: 'activity.et8igu.0001.usw2.cache.amazonaws.com', port: '6379', save: '3600 1')
 else
-  $redis = Redis.new(host: 'localhost', port: 6379, save: '3600 1')
+  $redis = Redis.new(host: 'localhost', port: 6379, password: false)
 end
