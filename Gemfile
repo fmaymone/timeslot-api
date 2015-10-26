@@ -87,16 +87,7 @@ group :development, :test do
 
   gem 'webmock'
 
-  # Windows dependencies
-  if Gem.win_platform?
-    # guard fix for windows
-    gem 'wdm', '>= 0.1.0'
-    # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-    gem 'tzinfo-data'
-    # spring for windows
-    gem 'spork-rails'
-    gem 'rb-readline'
-  end
+  gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw]
 end
 
 group :development, :test, :herokutest do
