@@ -99,7 +99,6 @@ public/ptl.html
 .simplecov
 
 doc/api.zip
-db/structure.sql
 
 .vagrant
 Vagrantfile
