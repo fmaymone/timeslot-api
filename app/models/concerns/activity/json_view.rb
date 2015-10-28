@@ -99,6 +99,7 @@ module JSONView
 
     if slot.try(:group)
       json['group'] = { id: slot.group.id }
+      json['visibility'] = slot.visibility
     elsif slot.class == ReSlot
       json['slotter'] = { id: slot.slotter_id }
       json['parent'] = { id: slot.parent_id }

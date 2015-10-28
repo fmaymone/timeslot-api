@@ -246,15 +246,14 @@ RSpec.describe Follow, type: :model do
         expect(slot.followers).to include(follower2.id.to_s)
         expect(slot.followers_count).to be(2)
         # Test bi-directional relations
-        expect(follower.follows?(slot)).to be(true)
-        expect(follower2.follows?(slot)).to be(true)
-        expect(slot.followed_by?(follower)).to be(true)
-        expect(slot.followed_by?(follower2)).to be(true)
+        expect(slot.follows?(follower)).to be(false)
+        expect(slot.follows?(follower2)).to be(false)
         # Test relations outside parents/predecessors scope (e.g. the ReSlot itself)
         expect(follower.follows?(reslots.first)).to be(false)
         expect(follower2.follows?(reslots.first)).to be(false)
         expect(follower.follows?(reslots.second)).to be(false)
         expect(follower2.follows?(reslots.second)).to be(false)
+        # Test bi-directional relations
         expect(reslots.first.followed_by?(follower2)).to be(false)
         expect(reslots.first.followed_by?(follower2)).to be(false)
         expect(reslots.second.followed_by?(follower2)).to be(false)
@@ -278,7 +277,9 @@ RSpec.describe Follow, type: :model do
         expect(slot.followed_by?(follower)).to be(false)
         expect(slot.followers).not_to include(follower.id.to_s)
         expect(slot.followers).not_to include(follower.id.to_s)
-        expect(follower.follows?(user)).to be(false)
+        expect(slot.followers_count).to be(0)
+        # Test bi-directional relations
+        expect(follower.follows?(slot)).to be(false)
         expect(follower.following?(slot)).to be(false)
         expect(follower.followings.to_json).not_to include(slot.id.to_s)
         expect(follower.followings_count).to be(0)
@@ -286,6 +287,7 @@ RSpec.describe Follow, type: :model do
         expect(slot.followed_by?(follower2)).to be(false)
         expect(slot.followers).not_to include(follower2.id.to_s)
         expect(slot.followers).not_to include(follower2.id.to_s)
+        # Test bi-directional relations
         expect(follower2.follows?(slot)).to be(false)
         expect(follower2.following?(slot)).to be(false)
         expect(follower2.followings.to_json).not_to include(slot.id.to_s)
@@ -302,8 +304,8 @@ RSpec.describe Follow, type: :model do
       it "User has follower" do
         # Default Test
         expect(user.followed_by?(follower)).to be(true)
-        expect(user.followers).to include(follower.id.to_s)
         expect(user.followed_by?(follower2)).to be(true)
+        expect(user.followers).to include(follower.id.to_s)
         expect(user.followers).to include(follower2.id.to_s)
         expect(user.followers_count).to be(2)
         # Test bi-directional relations
@@ -314,9 +316,10 @@ RSpec.describe Follow, type: :model do
         # Test helpers
         expect(follower.follows?(user)).to be(true)
         expect(follower2.follows?(user)).to be(true)
-        expect(user.followers).to include(follower.id.to_s)
-        expect(user.followers).to include(follower2.id.to_s)
-        expect(user.followers_count).to be(2)
+        expect(user.followings.to_json).to include(follower.id.to_s)
+        expect(user.followings.to_json).to include(follower2.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.followings_count).to be(1)
       end
 
       it "User has followings" do
@@ -336,6 +339,7 @@ RSpec.describe Follow, type: :model do
         expect(user.followed_by?(follower)).to be(false)
         expect(user.followers).not_to include(follower.id.to_s)
         expect(user.followers).not_to include(follower.id.to_s)
+        expect(user.followers_count).to be(0)
         expect(follower.follows?(user)).to be(false)
         expect(follower.following?(user)).to be(false)
         expect(follower.followings.to_json).not_to include(user.id.to_s)
@@ -374,9 +378,10 @@ RSpec.describe Follow, type: :model do
         # Test helpers
         expect(follower.follows?(group)).to be(true)
         expect(follower2.follows?(group)).to be(true)
-        expect(group.followers).to include(follower.id.to_s)
-        expect(group.followers).to include(follower2.id.to_s)
-        expect(group.followers_count).to be(2)
+        expect(follower.followings.to_json).to include(group.id.to_s)
+        expect(follower2.followings.to_json).to include(group.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.followings_count).to be(1)
       end
 
       it "User has followings" do

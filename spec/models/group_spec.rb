@@ -26,6 +26,18 @@ RSpec.describe Group, type: :model do
                        .through(:active_memberships)
                        .source(:user) }
 
+  it { is_expected.to respond_to(:followers) }
+  it { is_expected.to respond_to(:followings) }
+  it { is_expected.to respond_to(:follow) }
+  it { is_expected.to respond_to(:unfollow) }
+  it { is_expected.to respond_to(:add_follower) }
+  it { is_expected.to respond_to(:remove_follower) }
+  it { is_expected.to respond_to(:follows?) }
+  it { is_expected.to respond_to(:following?) }
+  it { is_expected.to respond_to(:followed_by?) }
+  it { is_expected.to respond_to(:followers_count) }
+  it { is_expected.to respond_to(:followings_count) }
+
   it { is_expected.to be_valid }
 
   describe "when owner is not present" do

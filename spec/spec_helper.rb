@@ -109,6 +109,39 @@ RSpec.configure do |config|
   config.after(:each, :explain) do
     ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.hide_explain
   end
+
+  # Disable triggering activities through callbacks (can re-activated with flag :activity)
+  #
+  # http://api.rubyonrails.org/classes/ActiveSupport/Callbacks/ClassMethods.html
+  # http://stackoverflow.com/questions/516579/is-there-a-way-to-get-a-collection-of-all-the-models-in-your-rails-app
+  # http://stackoverflow.com/questions/3303347/given-a-class-see-if-instance-has-method-ruby
+
+  config.before(:suite) do
+    ActiveRecord::Base.descendants.each do |model| # ActiveRecord::Base.subclasses.map(&:name)
+      # Disable triggering activities through callbacks
+      if model.include?(Activity)
+        model.skip_callback(:commit, :after, :create_activity)
+      end
+    end
+  end
+
+  config.before(:each, :activity) do
+    # Enable triggering activities through callbacks
+    ActiveRecord::Base.descendants.each do |model|
+      if model.include?(Activity)
+        model.set_callback(:commit, :after, :create_activity, on: :create)
+      end
+    end
+  end
+
+  config.after(:each, :activity) do
+    # Disable triggering activities through callbacks (after it was enabled)
+    ActiveRecord::Base.descendants.each do |model|
+      if model.include?(Activity)
+        model.skip_callback(:commit, :after, :create_activity)
+      end
+    end
+  end
 end
 
 def with_std_out_logger

@@ -1,28 +1,38 @@
 module Feed
   def self.user_feed(user_id, params = {})
-    feed = "Feed:#{user_id}:User"
-    page = paginate(feed, params)
-    enrich_feed(page, 'me')
+    begin
+      feed = "Feed:#{user_id}:User"
+      page = paginate(feed, params)
+      enrich_feed(page, 'me')
+    rescue => error
+      error_handler(error, feed, params)
+    end
   end
 
   def self.notification_feed(user_id, params = {})
-    feed = "Feed:#{user_id}:Notification"
-    page = paginate(feed, params)
-    enrich_feed(page, 'notify')
+    begin
+      feed = "Feed:#{user_id}:Notification"
+      page = paginate(feed, params)
+      enrich_feed(page, 'notify')
+    rescue => error
+      error_handler(error, feed, params)
+    end
   end
 
   def self.news_feed(user_id, params = {})
-    feed = "Feed:#{user_id}:News"
-    page = aggregate_feed(feed, params)
-    enrich_feed(page, 'activity')
+    begin
+      feed = "Feed:#{user_id}:News"
+      page = aggregate_feed(feed, params)
+      enrich_feed(page, 'activity')
+    rescue => error
+      error_handler(error, feed, params)
+    end
   end
 
-  # def self.remove_user_from_feed(user, actor)
-  #   remove_from_feed('actor', user.id, actor.id)
+  # TODO: implement helpers for feed removing during deletion
+  # def self.remove_activity_from_feed(user, activity)
   # end
-  #
   # def self.remove_target_from_feed(user, target)
-  #   remove_from_feed('target', user.id, target.id)
   # end
 
   def self.remove_from_feed(feed_type, target_id)
@@ -31,11 +41,12 @@ module Feed
      "Feed:#{user_id}:Notification"].each do |feed_key|
       # Fetch all target activities
       feed = $redis.lrange(feed_key, 0, -1)
-      # Loop through all activities of all feeds
+      # Loop through all activities through all related feeds
       $redis.pipelined do
         feed.each do |post|
           feed_params = post.split(':')
           if feed_params[0] == feed_type && feed_params[1].to_i == target_id #|| post['foreignId'].to_i == actor_id
+            # TODO: remove multiple activities (redis batch)
             # Remove activity
             $redis.lrem(feed_key, 1, post)
           end
@@ -44,24 +55,24 @@ module Feed
     end
   end
 
+  private
+
   def self.paginate(feed_index, limit: 25, offset: 0, cursor: nil)
     # Get offset in reversed logic (LIFO), supports simple cursor fallback
     offset = cursor ? cursor.to_i : offset.to_i
     # Catch MIN as MAX in reversed order
     min = [offset + limit.to_i, $redis.llen("Feed:#{feed_index}") - 1].min
     # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-    feed = $redis.lrange(feed_index, offset, min)
+    feed = $redis.lrange(feed_index, offset, min).reverse!
     # Enrich target activities
-    feed.reverse!.map{|a| enrich_activity(a)}
+    feed.map{|a| enrich_activity(a)}
   end
 
   def self.enrich_activity(target_key)
     # Split target index into its components
     feed_params = target_key.split(':')
     # Fetch target activity object from index
-    target_feed = $redis.lindex("Feed:#{feed_params[0]}:#{feed_params[1]}", feed_params[2].to_i)
-    # Decompress and parse the data
-    target_feed = JSON.parse(ActiveSupport::Gzip.decompress(target_feed))
+    target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", feed_params[2].to_i)
     # Returns the re-builded dictionary (json)
     {
         type: target_feed[0],
@@ -80,45 +91,33 @@ module Feed
     feed.each do |activity|
       # Set single actors to array to simplify enrichment process
       activity['actors'] ||= [activity['actor']] if activity['actor']
+      count = activity['actors'].count
       # In handy we remove the single field 'actor' on aggregated feeds
       activity.delete('actor')
-      # Determine pluralization
-      count = activity['actors'].count
-      mode = count > 2 ? 'aggregate' : (count > 1 ? 'plural' : 'singular')
-      # Determine translation key
-      key = "#{activity['type'].downcase}_#{activity['activity']}_#{view}_#{mode}"
       # Determine translation params
-      # Get the first actor
-      actor = JSON.parse(ActiveSupport::Gzip.decompress(
-        $redis.get("Actor:#{activity['actors'].first}")
-      ))
-      # Adds the first username and sets usercount as translation params
-      i18_params = {
-        USER: actor['username'],
-        USERCOUNT: count
-      }
-      # Get target
-      target = JSON.parse(ActiveSupport::Gzip.decompress(
-        $redis.get("Target:#{activity['feed']}:#{activity['target']}")
-      ))
+      # Get the first actor (from shared objects)
+      actor = get_shared_object("Actor:#{activity['actors'].first}")
+      # Adds the first username and sets usercount to translation params
+      i18_params = { USER: actor['username'], USERCOUNT: count }
+      # Get target (from shared objects)
+      target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
       # Enrich with custom activity data (shared objects)
-      activity['data'] = {
-          target: target,
-          actor: actor
-      }
+      activity['data'] = { target: target, actor: actor }
       # Add the title to the translation params holder
       i18_params[:TITLE] = target['title'] || target['name'] if target['title'] || target['name']
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if count > 1
-        # Get further actor (second)
-        actor = JSON.parse(ActiveSupport::Gzip.decompress(
-          $redis.get("Actor:#{activity['actors'].second}")
-        ))
+        # Get second actor (from shared objects)
+        actor = get_shared_object("Actor:#{activity['actors'].second}")
         # Add the second username to the translation params holder
         i18_params[:USER2] = actor['username']
       end
+      # Determine pluralization
+      mode = count > 2 ? 'aggregate' : (count > 1 ? 'plural' : 'singular')
+      # Determine translation key
+      i18_key = "#{activity['type'].downcase}_#{activity['activity']}_#{view}_#{mode}"
       # Update message params with enriched message
-      activity['message'] = I18n.t(key, i18_params)
+      activity['message'] = I18n.t(i18_key, i18_params)
     end
     feed
   end
@@ -139,15 +138,14 @@ module Feed
     # Also we use this counter to check on break condition if limit is reached
     count = 0
     # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-    feed = $redis.lrange(feed_index, 0, $redis.llen("Feed:#{feed_index}") - offset - 1)
+    feed = $redis.lrange(feed_index, 0, $redis.llen("Feed:#{feed_index}") - offset - 1).reverse!
     # Loop through all feeds (has a break statement, offset is optional)
-    feed.reverse!.each do |post|
+    feed.each do |post|
       # Enrich target activity
       post = enrich_activity(post)
-      # Prepare dictionary shortcuts
-      actor = post['actor'].to_i
       # Generates group tag (aggregation index)
       group = post['group'] = "#{post['target']}#{post['activity']}" ##{post['time']}
+      actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
         # Determine current aggregation group index
@@ -180,5 +178,29 @@ module Feed
       current_feed['cursor'] = ((count += 1) + offset).to_s
     end
     aggregated_feed
+  end
+
+  def self.get_shared_object(feed_index)
+    JSON.parse(
+      ActiveSupport::Gzip.decompress(
+        $redis.get(feed_index)
+    ))
+  end
+
+  def self.get_feed_from_index(key, index)
+    JSON.parse(
+      ActiveSupport::Gzip.decompress(
+        $redis.lindex(key, index)
+    ))
+  end
+
+  def self.error_handler(error, feed, params)
+    opts = {}
+    opts[:parameters] = {
+        feed: feed,
+        params: params
+    }
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 end

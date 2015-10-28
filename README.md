@@ -190,6 +190,7 @@ Flag | Effect
 ```:aws``` | use aws to mock external requests to AWS service, see below
 ```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
+```:activity``` | used to turn on triggering activities (is off by default)
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
 
