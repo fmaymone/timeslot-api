@@ -1,4 +1,6 @@
-class Comment < SlotActivity
+class Comment < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :comments
@@ -15,11 +17,11 @@ class Comment < SlotActivity
 
   private
 
-  def activity_slot
+  def activity_target
     slot
   end
 
-  def activity_user
+  def activity_actor
     user
   end
 

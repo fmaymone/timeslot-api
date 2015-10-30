@@ -1,4 +1,6 @@
-class MediaItem < SlotActivity
+class MediaItem < ActiveRecord::Base
+  include SlotActivity
+
   after_commit AuditLog
 
   belongs_to :mediable, polymorphic: true
@@ -64,12 +66,12 @@ class MediaItem < SlotActivity
     belongs_to_slot?
   end
 
-  def activity_slot
+  def activity_target
     mediable
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     creator
   end
 

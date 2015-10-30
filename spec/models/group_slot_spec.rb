@@ -19,6 +19,18 @@ RSpec.describe GroupSlot, type: :model do
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:group).inverse_of(:group_slots) }
 
+  it { is_expected.to respond_to(:followers) }
+  it { is_expected.to respond_to(:followings) }
+  it { is_expected.to respond_to(:follow) }
+  it { is_expected.to respond_to(:unfollow) }
+  it { is_expected.to respond_to(:add_follower) }
+  it { is_expected.to respond_to(:remove_follower) }
+  it { is_expected.to respond_to(:follows?) }
+  it { is_expected.to respond_to(:following?) }
+  it { is_expected.to respond_to(:followed_by?) }
+  it { is_expected.to respond_to(:followers_count) }
+  it { is_expected.to respond_to(:followings_count) }
+
   it { is_expected.to be_valid }
 
   describe "when group is not present" do

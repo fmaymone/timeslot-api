@@ -91,7 +91,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=q-N1Bo9HgQDz_9g-TwnQG43U-7o
+Authorization: Token token=ApxT_8MyWQpz9qpk7ziSUX2YZsQ
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=q-N1Bo9HgQDz_9g-TwnQG43U-7o&quot; \
+	-H &quot;Authorization: Token token=ApxT_8MyWQpz9qpk7ziSUX2YZsQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,10 +123,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2d9bce4c6614c6a25f1c4fd1638428fa&quot;
+ETag: W/&quot;1ce349c6ccb2d6bb19440e4d5808d1b7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c05ca3c1-2e27-4412-b063-f69cc365aaff
-X-Runtime: 0.150343
+X-Request-Id: f9cb7d16-2d92-4d8e-802e-12d843fec760
+X-Runtime: 0.105800
 Vary: Origin
 Content-Length: 1471</pre>
 
@@ -140,17 +140,17 @@ Content-Length: 1471</pre>
 {
   "id" : 35,
   "title" : "Slot title 68",
-  "startDate" : "2019-09-16T21:44:02.000Z",
-  "createdAt" : "2015-10-14T11:49:56.536Z",
-  "updatedAt" : "2015-10-14T11:49:56.536Z",
+  "startDate" : "2019-09-19T00:44:02.000Z",
+  "createdAt" : "2015-10-30T15:01:05.842Z",
+  "updatedAt" : "2015-10-30T15:01:05.842Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-16T21:44:02.000Z",
+  "endDate" : "2019-10-19T00:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 97,
-    "username" : "User 312",
-    "createdAt" : "2015-10-14T11:49:56.496Z",
-    "updatedAt" : "2015-10-14T11:49:56.496Z",
+    "username" : "User 319",
+    "createdAt" : "2015-10-30T15:01:05.807Z",
+    "updatedAt" : "2015-10-30T15:01:05.807Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -161,57 +161,57 @@ Content-Length: 1471</pre>
   "media" : [
     {
       "mediaId" : 30,
-      "publicId" : "dfhjghjkdisudgfds7iy67",
+      "publicId" : "dfhjghjkdisudgfds7iy85",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-10-14T11:49:56.518Z",
+      "createdAt" : "2015-10-30T15:01:05.831Z",
       "duration" : null,
-      "title" : "Title 63"
+      "title" : "Title 81"
     },
     {
       "mediaId" : 29,
-      "publicId" : "dfhjghjkdisudgfds7iy66",
+      "publicId" : "dfhjghjkdisudgfds7iy84",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-14T11:49:56.515Z",
+      "createdAt" : "2015-10-30T15:01:05.828Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 28,
-      "publicId" : "dfhjghjkdisudgfds7iy65",
+      "publicId" : "dfhjghjkdisudgfds7iy83",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-14T11:49:56.512Z",
+      "createdAt" : "2015-10-30T15:01:05.826Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 27,
-      "publicId" : "dfhjghjkdisudgfds7iy64",
+      "publicId" : "dfhjghjkdisudgfds7iy82",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-14T11:49:56.510Z"
+      "createdAt" : "2015-10-30T15:01:05.820Z"
     },
     {
       "mediaId" : 26,
-      "publicId" : "dfhjghjkdisudgfds7iy63",
+      "publicId" : "dfhjghjkdisudgfds7iy81",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-14T11:49:56.507Z"
+      "createdAt" : "2015-10-30T15:01:05.818Z"
     },
     {
       "mediaId" : 25,
-      "publicId" : "dfhjghjkdisudgfds7iy62",
+      "publicId" : "dfhjghjkdisudgfds7iy80",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-14T11:49:56.504Z"
+      "createdAt" : "2015-10-30T15:01:05.815Z"
     }
   ],
   "settings" : {

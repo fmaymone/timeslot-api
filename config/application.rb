@@ -8,7 +8,9 @@ Bundler.require(*Rails.groups)
 
 module TsRailsBackend
   class Application < Rails::Application
-    config.autoload_paths << Rails.root.join('lib')
+    # http://blog.arkency.com/2014/11/dont-forget-about-eager-load-when-extending-autoload/
+    config.eager_load_paths << Rails.root.join('lib')
+    config.eager_load_paths += Dir[Rails.root.join('app', 'models', 'concerns', '**/')]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -17,7 +19,6 @@ module TsRailsBackend
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
-
 
     # Always allow 'format' as request parameter, 'controller' and 'action' are
     # allowed by default.
@@ -65,5 +66,8 @@ module TsRailsBackend
         resource '*', :headers => :any, :methods => [:get, :post, :options]
       end
     end
+
+    # Enabling garbage collection instrumentation for NewRelic
+    GC::Profiler.enable
   end
 end

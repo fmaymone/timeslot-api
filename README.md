@@ -6,13 +6,12 @@
 * [App-Specification](https://docs.google.com/a/timeslot.com/document/d/12MZDzthoK6RrKhuJKfERfI6xpvZi_DP6ri0VWbZmnPc/edit?usp=sharing) (google docs), [old app spec](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
+* [Social Activity](doc/social_activity.md)
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
 
-
-# Data Flow Chart Concept
-![Data Flow Chart Concept](doc/backend_concept.png)
-
+# Data Flow Concept
+![Data Flow Concept](doc/backend_concept.png)
 
 # Notes
 
@@ -191,6 +190,7 @@ Flag | Effect
 ```:aws``` | use aws to mock external requests to AWS service, see below
 ```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test
 ```:async``` | use async to mock asynchronously requests through sucker punch workers, see below
+```:activity``` | used to turn on triggering activities (is off by default)
 
 ### [Database Cleaner Gem](https://github.com/DatabaseCleaner/database_cleaner)
 

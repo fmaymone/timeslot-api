@@ -1,7 +1,5 @@
 module JSONView
-
   def self.slot(slot)
-
     user = slot.creator
 
     # basic slot data
@@ -29,7 +27,6 @@ module JSONView
       json['location'] = nil
     else
       json['location'] = {
-
           id: location_data.id,
           name: (location_data.name.blank? ? nil : location_data.name),
           thoroughfare: location_data.thoroughfare,
@@ -47,20 +44,11 @@ module JSONView
           latitude: location_data.latitude,
           longitude: location_data.longitude,
           privateLocation: location_data.private_location,
-
       }
     end
 
     # slot creator
-    json['creator'] = slot.creator.slice(:id,
-                                         :username,
-                                         :created_at,
-                                         :updated_at,
-                                         :deleted_at).as_json.transform_keys { |key| key.camelize(:lower) }
-    json['creator']['image'] = {
-        publicId: (user.image.try(:public_id) ? user.image.public_id : nil),
-        localId: (user.image.try(:local_id) ? user.image.local_id : nil)
-    }
+    json['creator'] = self.user(slot.creator)
 
     # slot notes
     slot_notes = []
@@ -68,7 +56,6 @@ module JSONView
     slot.notes.each do |note|
 
       slot_notes << {
-
           id: note.id,
           title: note.title,
           content: note.content,
@@ -86,7 +73,6 @@ module JSONView
     slot.media_items.each do |item|
 
       media_item = {
-
           mediaId: item.id,
           publicId: item.public_id,
           position: item.position,
@@ -108,21 +94,23 @@ module JSONView
 
     json['media'] = media
 
-    # slot settings
-    json['settings'] = { alerts: slot.creator.alerts(slot) }
-    json['visibility'] = slot.visibility if slot.try(:visibility)
-
     # slot additionals
     json['groupId'] = slot.group.id if slot.class < GroupSlot
 
     if slot.try(:group)
       json['group'] = { id: slot.group.id }
+      json['visibility'] = slot.visibility
     elsif slot.class == ReSlot
       json['slotter'] = { id: slot.slotter_id }
       json['parent'] = { id: slot.parent_id }
       json['visibility'] = slot.parent.try(:visibility)
+      # user must be the current user for alerts
+      json['settings'] = { alerts: slot.slotter.alerts(slot) }
     elsif slot.class < StdSlot
       json['reslotsCounter'] = slot.reslot_count
+      json['visibility'] = slot.visibility
+      # user must be the current user for alerts
+      json['settings'] = { alerts: user.alerts(slot) }
     end
 
     json['likes'] = slot.likes.count
@@ -133,6 +121,25 @@ module JSONView
     else
       json['shareUrl'] = "#{ENV['TS_SLOT_WEBSHARING_URL']}#{slot.share_id}"
     end
+
+    json
+  end
+
+  def self.group(group)
+    json = group.slice(:id,
+                       :name,
+                       :members_can_post,
+                       :members_can_invite,
+                       :created_at,
+                       :updated_at,
+                       :deleted_at).as_json.transform_keys { |key| key.camelize(:lower) }
+    json['image'] = {
+        publicId: (group.image ? group.image.public_id : nil),
+        localId: (group.image.try(:local_id) ? group.image.local_id : nil)
+    }
+
+    json['owner'] = self.user(group.owner)
+    json['membershipState'] = true #current_user.get_membership(group.id).humanize
 
     json
   end

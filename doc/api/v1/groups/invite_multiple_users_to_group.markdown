@@ -27,21 +27,21 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=sdel7axi6ReuIrDwfAVX5BaLVso
+Authorization: Token token=8alBssx0cGD3bWjKCsFGrDDWT4Q
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/25/members</pre>
+<pre>POST /v1/groups/20/members</pre>
 
 #### Body
 ```javascript
 {
   "invitees" : [
-    145,
-    146,
-    147
+    73,
+    74,
+    75
   ]
 }
 ```
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/25/members&quot; -d &#39;{&quot;invitees&quot;:[145,146,147]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/20/members&quot; -d &#39;{&quot;invitees&quot;:[73,74,75]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=sdel7axi6ReuIrDwfAVX5BaLVso&quot; \
+	-H &quot;Authorization: Token token=8alBssx0cGD3bWjKCsFGrDDWT4Q&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,12 +62,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c538c00a678539ad35a11b8fd44e86ec&quot;
+ETag: W/&quot;72d51d2f71ddcb3bc99dfd8c730f331a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2d0302a8-1a17-4c1f-acfc-85241b75ae27
-X-Runtime: 0.051461
+X-Request-Id: 5a35cf7d-66a5-46a7-ab64-db885ae2d7ba
+X-Runtime: 0.034512
 Vary: Origin
-Content-Length: 234</pre>
+Content-Length: 230</pre>
 
 #### Status
 
@@ -77,26 +77,26 @@ Content-Length: 234</pre>
 
 ```javascript
 {
-  "groupId" : 25,
+  "groupId" : 20,
   "size" : 4,
   "related" : [
     {
-      "userId" : 144,
+      "userId" : 72,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 145,
+      "userId" : 73,
       "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 146,
+      "userId" : 74,
       "state" : "invited",
       "deletedAt" : null
     },
     {
-      "userId" : 147,
+      "userId" : 75,
       "state" : "invited",
       "deletedAt" : null
     }

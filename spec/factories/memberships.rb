@@ -20,6 +20,9 @@ FactoryGirl.define do
 
   trait :active do
     state "111"
+    after :create do |membership|
+      membership.user.follow(membership.group)
+    end
   end
 
   trait :inactive do

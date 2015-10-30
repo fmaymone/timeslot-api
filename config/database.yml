@@ -22,7 +22,8 @@ default: &default
   pool: 5
   # Disable prepared statements for now, see if this fixes heroku db bugs
   # https://github.com/rails/rails/pull/17607
-  prepared_statements: false
+  # re-enabling it now, bug was something else...
+  prepared_statements: true
 
 development:
   <<: *default

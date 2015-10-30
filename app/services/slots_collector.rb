@@ -26,7 +26,6 @@ class SlotsCollector
 
   # collects all slots current_user is allowed to see from requested_user
   # including std_slots, reslots
-  # TODO: add groupslots
   def my_slots(current_user: nil, user:)
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
@@ -43,6 +42,8 @@ class SlotsCollector
 
     ### fetch slots
     relations.each do |relation|
+      next unless relation
+
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: relation, direction: @direction)
 

@@ -617,7 +617,7 @@ resource "Slots" do
               "ID of the Slot which was resloted",
               required: true
 
-    let(:pred) { create(:std_slot) }
+    let(:pred) { create(:std_slot_public) }
 
     describe "Reslot a StandardSlot" do
       include_context "reslot response fields"

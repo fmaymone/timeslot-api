@@ -68,8 +68,8 @@ module V1
 
     # POST /v1/reslot
     def create_reslot
-      authorize :reSlot
-      predecessor = BaseSlot.find(re_params)
+      predecessor = BaseSlot.get(re_params)
+      authorize predecessor
 
       @slot = ReSlot.create_from_slot(predecessor: predecessor,
                                       slotter: current_user)

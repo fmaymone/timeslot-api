@@ -14,8 +14,9 @@ class PresentableSlots
     when STRANGER
       # includes public std_slots, public reslots and shared
       # group_slots (between user and current_user -> if there is one)
-      [user.std_slots_public, user.re_slots,
-       current_user.try(:shared_group_slots, user)]
+      showables = [user.std_slots_public, user.re_slots]
+      showables << current_user.shared_group_slots(user) if current_user
+      showables
     end
   end
 end

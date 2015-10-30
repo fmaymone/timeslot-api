@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   include TS_Role
-  include UserFollow
+  include Follow
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
@@ -196,6 +196,9 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
+    #TODO: restore followers/followings when user re-activates
+    remove_all_followers
+    unfollow_all
     slot_settings.each(&:delete)
     image.delete if images.first
     friendships.each(&:inactivate)
@@ -433,12 +436,9 @@ class User < ActiveRecord::Base
 
   private def multiple_representations(slot)
     representations = []
-    begin
-      representations.push(*std_slots.where(meta_slot: slot.meta_slot))
-      representations.push(*re_slots.where(meta_slot: slot.meta_slot))
-      representations.push(*group_slots.where(meta_slot: slot.meta_slot))
-    rescue ActiveRecord::StatementInvalid
-    end
+    representations.push(*std_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*re_slots.where(meta_slot: slot.meta_slot))
+    representations.push(*group_slots.where(meta_slot: slot.meta_slot))
     representations
   end
 

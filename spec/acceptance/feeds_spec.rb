@@ -1,6 +1,6 @@
 require 'documentation_helper'
 
-resource "Feeds" do
+resource "Feeds", :activity, :async do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:owner) { create(:user, username: 'User 54') }
@@ -70,7 +70,7 @@ resource "Feeds" do
       example "Get the feed of the current users activities", document: :v1 do
 
         # Create a relationship
-        current_user.add_follower(owner)
+        #current_user.add_follower(owner)
         # Perform an activity
         slot.create_comment(current_user, 'This is a test comment.')
 
@@ -86,12 +86,13 @@ resource "Feeds" do
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("slot")
-        expect(activity).not_to have_key("user")
+        expect(activity).to have_key("data")
+        expect(activity).to have_key("actors")
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
+        expect(activity['actors'].first.to_i).to eq(current_user.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['foreignId'].to_i).to eq(slot.creator.id)
@@ -127,7 +128,7 @@ resource "Feeds" do
         #explanation "some extra activity fields are included"
 
         # Create a relationship
-        actor.add_follower(current_user)
+        slot.add_follower(current_user) #actor.add_follower(current_user)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 
@@ -147,10 +148,11 @@ resource "Feeds" do
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).to have_key("slot")
-        expect(activity).to have_key("user")
+        expect(activity).to have_key("data")
+        expect(activity['data']).to have_key("target")
+        expect(activity['data']).to have_key("actor")
 
-        activity_slot = activity["slot"]
+        activity_slot = activity['data']["target"]
         expect(activity_slot).to have_key("id")
         expect(activity_slot).to have_key("title")
         expect(activity_slot).to have_key("startDate")
@@ -172,7 +174,7 @@ resource "Feeds" do
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
         expect(activity_slot['title']).to eq(slot.title)
 
-        activity_user = activity['user']
+        activity_user = activity['data']['actor']
         expect(activity_user).to have_key("id")
         expect(activity_user).to have_key("username")
         expect(activity_user).to have_key("image")
@@ -232,16 +234,16 @@ resource "Feeds" do
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("foreignId")
-        expect(activity).to have_key("actor")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).not_to have_key("slot")
-        expect(activity).not_to have_key("user")
+        expect(activity).to have_key("data")
+        expect(activity).to have_key("actors")
+        expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
         expect(activity['activity']).to eq("comment")
-        expect(activity['actor'].to_i).to eq(actor.id)
+        expect(activity['actors'].first.to_i).to eq(actor.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['foreignId'].to_i).to eq(slot.creator.id)

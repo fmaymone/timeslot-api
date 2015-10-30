@@ -121,7 +121,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ltewD-l6g0bZAgj4CcmiPw17k1U
+Authorization: Token token=8qkDPK-g_pMzELebCNEJH5KqAcs
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ltewD-l6g0bZAgj4CcmiPw17k1U&quot; \
+	-H &quot;Authorization: Token token=8qkDPK-g_pMzELebCNEJH5KqAcs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7c0d97cf0f6342bc330b5a32961e8862&quot;
+ETag: W/&quot;2da58301cceddccef586bb0cc81a5b45&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5ec46b51-8c19-480b-b61e-dadf04b596ce
-X-Runtime: 0.003135
+X-Request-Id: 5de54748-89d7-4559-90d1-e1c972c70267
+X-Runtime: 0.003369
 Vary: Origin
-Content-Length: 1034</pre>
+Content-Length: 1104</pre>
 
 #### Status
 
@@ -161,64 +161,70 @@ Content-Length: 1034</pre>
 [
   {
     "type" : "Slot",
-    "object" : 2,
+    "object" : "2",
     "target" : "2",
     "activity" : "comment",
-    "foreignId" : "6",
-    "time" : "2015-10-21T11:48:07.647Z",
-    "slot" : {
-      "id" : 2,
-      "title" : "Slot title 22",
-      "startDate" : "2019-09-22T21:44:02.000Z",
-      "createdAt" : "2015-10-21T11:48:07.434Z",
-      "updatedAt" : "2015-10-21T11:48:07.434Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-22T21:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 6,
-        "username" : "User 60",
-        "createdAt" : "2015-10-21T11:48:07.424Z",
-        "updatedAt" : "2015-10-21T11:48:07.424Z",
+    "foreignId" : "4",
+    "time" : "2015-10-30T15:01:01.322Z",
+    "feed" : 3,
+    "id" : "3EC61189BD0981E44D4BA1A350A840D82005C396",
+    "group" : "2comment",
+    "actors" : [
+      7
+    ],
+    "activityCount" : 1,
+    "cursor" : "1",
+    "data" : {
+      "target" : {
+        "id" : 2,
+        "title" : "Slot title 22",
+        "startDate" : "2019-09-22T21:44:02.000Z",
+        "createdAt" : "2015-10-30T15:01:01.121Z",
+        "updatedAt" : "2015-10-30T15:01:01.121Z",
+        "deletedAt" : null,
+        "endDate" : "2019-10-22T21:44:02.000Z",
+        "location" : null,
+        "creator" : {
+          "id" : 4,
+          "username" : "User 59",
+          "createdAt" : "2015-10-30T15:01:01.110Z",
+          "updatedAt" : "2015-10-30T15:01:01.110Z",
+          "deletedAt" : null,
+          "image" : {
+            "publicId" : null,
+            "localId" : null
+          },
+          "slotCount" : 1,
+          "reslotCount" : 0,
+          "friendsCount" : 0
+        },
+        "notes" : [],
+        "media" : [],
+        "reslotsCounter" : 0,
+        "visibility" : "public",
+        "settings" : {
+          "alerts" : "0000000000"
+        },
+        "likes" : 0,
+        "commentsCounter" : 1,
+        "shareUrl" : null
+      },
+      "actor" : {
+        "id" : 7,
+        "username" : "User 53",
+        "createdAt" : "2015-10-30T15:01:01.319Z",
+        "updatedAt" : "2015-10-30T15:01:01.319Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
           "localId" : null
-        }
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "0000000000"
-      },
-      "visibility" : "public",
-      "reslotsCounter" : 0,
-      "likes" : 0,
-      "commentsCounter" : 1,
-      "shareUrl" : null
+        },
+        "slotCount" : 1,
+        "reslotCount" : 0,
+        "friendsCount" : 0
+      }
     },
-    "user" : {
-      "id" : 4,
-      "username" : "User 53",
-      "createdAt" : "2015-10-21T11:48:07.414Z",
-      "updatedAt" : "2015-10-21T11:48:07.414Z",
-      "deletedAt" : null,
-      "image" : {
-        "publicId" : null,
-        "localId" : null
-      },
-      "slotCount" : 1,
-      "reslotCount" : 0,
-      "friendsCount" : 0
-    },
-    "id" : "3EC61189BD0981E44D4BA1A350A840D82005C396",
-    "group" : "2comment",
-    "actors" : [
-      4
-    ],
-    "message" : "User 53 commented on this Slot.",
-    "activityCount" : 1,
-    "cursor" : "1"
+    "message" : "User 53 commented on this Slot."
   }
 ]
 ```

@@ -39,6 +39,17 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
+  # true if the user is signed in and
+  # the slot which gets resloted is a public slot or
+  # the slot is a friendslot from a friend of the current user or
+  # the slot is in a public group
+  def create_reslot?
+    return false if slot.StdSlotPrivate?
+    # TODO: remove next line when we have ReSlot visibilities
+    return true if slot.ReSlot?
+    show_to_current_user?
+  end
+
   def share_url?
     show?
   end

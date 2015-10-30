@@ -29,5 +29,9 @@ FactoryGirl.define do
       end
       rs
     end
+
+    after :create do |reslot|
+      reslot.slotter.follow(reslot.predecessor)
+    end
   end
 end

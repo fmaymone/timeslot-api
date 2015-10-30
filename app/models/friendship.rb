@@ -1,4 +1,6 @@
-class Friendship < UserActivity
+class Friendship < ActiveRecord::Base
+  include UserActivity
+
   class DuplicateEntry < StandardError; end
 
   after_commit AuditLog
@@ -23,6 +25,8 @@ class Friendship < UserActivity
 
   def accept
     update!(state: "11")
+    user.follow(friend)
+    friend.follow(user)
   end
 
   def established?
@@ -39,6 +43,8 @@ class Friendship < UserActivity
 
   # when user deactivates account, need to preserve state
   def inactivate
+    user.unfollow(friend)
+    friend.unfollow(user)
     friend.touch
     ts_soft_delete
   end
@@ -47,6 +53,8 @@ class Friendship < UserActivity
     return if friend.deleted_at?
     update!(deleted_at: nil)
     friend.touch
+    user.follow(friend)
+    friend.follow(user)
   end
 
   private def check_duplicate
@@ -86,12 +94,12 @@ class Friendship < UserActivity
     established?
   end
 
-  def activity_friend
+  def activity_target
     friend
   end
 
   # The user who made the update
-  def activity_user
+  def activity_actor
     user
   end
 
