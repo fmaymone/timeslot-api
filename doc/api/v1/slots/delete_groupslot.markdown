@@ -82,7 +82,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=I6lZXgxV0Dh2bLejGPFxoGhyasI
+<pre>Authorization: Token token=MU0Nptb2AN4xN41sC8312klKzHk
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -94,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=I6lZXgxV0Dh2bLejGPFxoGhyasI&quot; \
+	-H &quot;Authorization: Token token=MU0Nptb2AN4xN41sC8312klKzHk&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dec8c4e13196220d84cc379b723a3fdd&quot;
+ETag: W/&quot;61636603efd1c984d2dcdb8aa78fe5f2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0af67811-ed1a-40eb-adb4-9db6534f2033
-X-Runtime: 0.070483
+X-Request-Id: 069a057e-a489-4cd5-9a2b-fbfeb47b20bf
+X-Runtime: 0.044239
 Vary: Origin
 Content-Length: 540</pre>
 
@@ -123,17 +123,17 @@ Content-Length: 540</pre>
 {
   "id" : 10,
   "title" : "Slot title 42",
-  "startDate" : "2019-09-17T19:44:02.000Z",
-  "createdAt" : "2015-10-14T11:49:54.426Z",
-  "updatedAt" : "2015-10-14T11:49:54.461Z",
-  "deletedAt" : "2015-10-14T11:49:54.459Z",
-  "endDate" : "2019-10-17T19:44:02.000Z",
+  "startDate" : "2019-09-20T22:44:02.000Z",
+  "createdAt" : "2015-10-30T15:01:05.044Z",
+  "updatedAt" : "2015-10-30T15:01:05.068Z",
+  "deletedAt" : "2015-10-30T15:01:05.065Z",
+  "endDate" : "2019-10-20T22:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 24,
-    "username" : "User 235",
-    "createdAt" : "2015-10-14T11:49:54.421Z",
-    "updatedAt" : "2015-10-14T11:49:54.421Z",
+    "username" : "User 242",
+    "createdAt" : "2015-10-30T15:01:05.040Z",
+    "updatedAt" : "2015-10-30T15:01:05.040Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

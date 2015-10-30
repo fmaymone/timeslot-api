@@ -122,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user82@email.com",
+  "email" : "user87@email.com",
   "password" : "timeslot"
 }
 ```
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user82@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user87@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -143,10 +143,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2a3a251910e4da8276fe3f914d3461af&quot;
+ETag: W/&quot;6b0ba690c78e485ca938d47eac4a75c6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cc0b918d-b469-4e5d-85d5-486457e315ac
-X-Runtime: 0.094700
+X-Request-Id: a23e7750-636c-4611-8c91-121fab265032
+X-Runtime: 0.019830
 Vary: Origin
 Content-Length: 786</pre>
 
@@ -158,10 +158,10 @@ Content-Length: 786</pre>
 
 ```javascript
 {
-  "id" : 337,
-  "username" : "User 299",
-  "createdAt" : "2015-09-28T10:15:59.899Z",
-  "updatedAt" : "2015-09-28T10:15:59.979Z",
+  "id" : 108,
+  "username" : "User 328",
+  "createdAt" : "2015-10-30T15:01:06.146Z",
+  "updatedAt" : "2015-10-30T15:01:06.153Z",
   "deletedAt" : null,
   "location" : null,
   "image" : {
@@ -172,7 +172,7 @@ Content-Length: 786</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user82@email.com",
+  "email" : "user87@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -190,6 +190,6 @@ Content-Length: 786</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "1S8gdnLnZrG5aton9GK5AyLiEcU"
+  "authToken" : "lJzHNSNtIMQ9lhtBKpsjHk4RS4M"
 }
 ```

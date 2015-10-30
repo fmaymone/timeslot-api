@@ -88,7 +88,7 @@ Description : contains ID of the original slot that was reslottet
 
 #### Headers
 
-<pre>Authorization: Token token=kywBxXK57ZUP__haN6bQCqsbIPE
+<pre>Authorization: Token token=4H-ojuNctHuQ5T4UVikoho4tpdQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -100,7 +100,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/13&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=kywBxXK57ZUP__haN6bQCqsbIPE&quot; \
+	-H &quot;Authorization: Token token=4H-ojuNctHuQ5T4UVikoho4tpdQ&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -112,10 +112,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;580912e7b7f877c49ee713256c40a747&quot;
+ETag: W/&quot;2e7b40018e7140b6fbe31f0807ce1964&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 79c62d9f-3aa5-4e2b-aa71-3b6155c129a0
-X-Runtime: 0.054196
+X-Request-Id: fd72270e-8fae-4d4a-991e-d3423a08edde
+X-Runtime: 0.033782
 Vary: Origin
 Content-Length: 603</pre>
 
@@ -129,17 +129,17 @@ Content-Length: 603</pre>
 {
   "id" : 13,
   "title" : "Slot title 44",
-  "startDate" : "2019-09-19T21:44:02.000Z",
-  "createdAt" : "2015-10-14T11:49:54.709Z",
-  "updatedAt" : "2015-10-14T11:49:54.731Z",
-  "deletedAt" : "2015-10-14T11:49:54.725Z",
-  "endDate" : "2019-10-19T21:44:02.000Z",
+  "startDate" : "2019-09-22T00:44:02.000Z",
+  "createdAt" : "2015-10-30T15:01:05.148Z",
+  "updatedAt" : "2015-10-30T15:01:05.165Z",
+  "deletedAt" : "2015-10-30T15:01:05.162Z",
+  "endDate" : "2019-10-22T00:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 28,
-    "username" : "User 239",
-    "createdAt" : "2015-10-14T11:49:54.694Z",
-    "updatedAt" : "2015-10-14T11:49:54.694Z",
+    "username" : "User 246",
+    "createdAt" : "2015-10-30T15:01:05.130Z",
+    "updatedAt" : "2015-10-30T15:01:05.130Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -80,7 +80,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=kZiWLrAIrskygoCifae4s5Tz02I
+Authorization: Token token=BbT-9ZsK8QUgnzPQLDu_FJMTyig
 Host: example.org
 Cookie: </pre>
 
@@ -92,7 +92,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/36/share&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=kZiWLrAIrskygoCifae4s5Tz02I&quot; \
+	-H &quot;Authorization: Token token=BbT-9ZsK8QUgnzPQLDu_FJMTyig&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -103,10 +103,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;64a597d4f2796c17321747f89631ea6a&quot;
+ETag: W/&quot;e4d51c1d62e8454c3012ab1022e36421&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 84eb9c64-77b4-489d-9fb0-c6deb8220832
-X-Runtime: 0.047407
+X-Request-Id: 9709af2c-44b8-4aef-b9ac-6a56770e85b4
+X-Runtime: 0.032491
 Vary: Origin
 Content-Length: 570</pre>
 
@@ -120,17 +120,17 @@ Content-Length: 570</pre>
 {
   "id" : 36,
   "title" : "Slot title 69",
-  "startDate" : "2019-09-17T22:44:02.000Z",
-  "createdAt" : "2015-10-14T11:49:56.693Z",
-  "updatedAt" : "2015-10-14T11:49:56.795Z",
+  "startDate" : "2019-09-20T01:44:02.000Z",
+  "createdAt" : "2015-10-30T15:01:05.960Z",
+  "updatedAt" : "2015-10-30T15:01:05.981Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-17T22:44:02.000Z",
+  "endDate" : "2019-10-20T01:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 98,
-    "username" : "User 313",
-    "createdAt" : "2015-10-14T11:49:56.684Z",
-    "updatedAt" : "2015-10-14T11:49:56.684Z",
+    "username" : "User 320",
+    "createdAt" : "2015-10-30T15:01:05.953Z",
+    "updatedAt" : "2015-10-30T15:01:05.953Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -146,6 +146,6 @@ Content-Length: 570</pre>
   "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/BizqBC1x"
+  "shareUrl" : "http://localhost:3100/19f5GPH2"
 }
 ```

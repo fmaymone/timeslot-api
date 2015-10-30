@@ -53,19 +53,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=c34GjmWZz4D3l1CErkVXe-pLPMQ
+Authorization: Token token=ch1Xv_So0ZlR6urPC-cEQFoi41M
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/12</pre>
+<pre>GET /v1/groups/7</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/12&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/7&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=c34GjmWZz4D3l1CErkVXe-pLPMQ&quot; \
+	-H &quot;Authorization: Token token=ch1Xv_So0ZlR6urPC-cEQFoi41M&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,12 +76,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;23041a167880e1f4a0f10a84240cffdb&quot;
+ETag: W/&quot;89eebd73f65d40c240ff445fa4456801&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 789193b2-ff58-43b5-a692-cf09e4f1d63a
-X-Runtime: 0.020145
+X-Request-Id: 82cb6233-ffa8-4531-8b77-6870d568084f
+X-Runtime: 0.017578
 Vary: Origin
-Content-Length: 417</pre>
+Content-Length: 416</pre>
 
 #### Status
 
@@ -91,22 +91,22 @@ Content-Length: 417</pre>
 
 ```javascript
 {
-  "id" : 12,
+  "id" : 7,
   "name" : "Testgroup 12",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-09-28T10:15:41.797Z",
-  "updatedAt" : "2015-09-28T10:15:41.797Z",
+  "createdAt" : "2015-10-30T15:01:01.760Z",
+  "updatedAt" : "2015-10-30T15:01:01.760Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : null,
     "localId" : null
   },
   "owner" : {
-    "id" : 88,
-    "username" : "User 64",
-    "createdAt" : "2015-09-28T10:15:41.795Z",
-    "updatedAt" : "2015-09-28T10:15:41.795Z",
+    "id" : 16,
+    "username" : "User 69",
+    "createdAt" : "2015-10-30T15:01:01.758Z",
+    "updatedAt" : "2015-10-30T15:01:01.758Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

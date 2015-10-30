@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=S-yK6HftvyGXobHBfMsd6jasjDE
+Authorization: Token token=_lh3wRuAMzkuJIej1TcVAP8_6Z0
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=S-yK6HftvyGXobHBfMsd6jasjDE&quot; \
+	-H &quot;Authorization: Token token=_lh3wRuAMzkuJIej1TcVAP8_6Z0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,12 +141,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6e9baa4a44f0d5fa8a92a613c9354694&quot;
+ETag: W/&quot;c6166f82e551775a41e3bf8766ef3aaf&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c4b8887f-7f45-47f7-ae35-93dd6ba7189d
-X-Runtime: 0.012994
+X-Request-Id: 81052346-0f19-4f48-b9c4-b257100444d7
+X-Runtime: 0.003217
 Vary: Origin
-Content-Length: 230</pre>
+Content-Length: 1070</pre>
 
 #### Status
 
@@ -158,14 +158,67 @@ Content-Length: 230</pre>
 [
   {
     "type" : "Slot",
-    "actor" : "8",
-    "object" : 3,
+    "object" : "3",
     "target" : "3",
     "activity" : "comment",
-    "message" : "User 53 commented on your Slot: Slot title 23",
     "foreignId" : "9",
-    "time" : "2015-10-21T11:48:07.910Z",
-    "id" : "E65E488655670E19C0EB36F5EF8D332629782763"
+    "time" : "2015-10-30T15:01:01.575Z",
+    "feed" : 3,
+    "id" : "051057C24A70A1D4E6AC5170C943FECDCB84B29A",
+    "actors" : [
+      "8"
+    ],
+    "data" : {
+      "target" : {
+        "id" : 3,
+        "title" : "Slot title 23",
+        "startDate" : "2019-09-23T22:44:02.000Z",
+        "createdAt" : "2015-10-30T15:01:01.389Z",
+        "updatedAt" : "2015-10-30T15:01:01.389Z",
+        "deletedAt" : null,
+        "endDate" : "2019-10-23T22:44:02.000Z",
+        "location" : null,
+        "creator" : {
+          "id" : 9,
+          "username" : "User 62",
+          "createdAt" : "2015-10-30T15:01:01.379Z",
+          "updatedAt" : "2015-10-30T15:01:01.379Z",
+          "deletedAt" : null,
+          "image" : {
+            "publicId" : null,
+            "localId" : null
+          },
+          "slotCount" : 1,
+          "reslotCount" : 0,
+          "friendsCount" : 0
+        },
+        "notes" : [],
+        "media" : [],
+        "reslotsCounter" : 0,
+        "visibility" : "public",
+        "settings" : {
+          "alerts" : "0000000000"
+        },
+        "likes" : 0,
+        "commentsCounter" : 1,
+        "shareUrl" : null
+      },
+      "actor" : {
+        "id" : 8,
+        "username" : "User 53",
+        "createdAt" : "2015-10-30T15:01:01.374Z",
+        "updatedAt" : "2015-10-30T15:01:01.374Z",
+        "deletedAt" : null,
+        "image" : {
+          "publicId" : null,
+          "localId" : null
+        },
+        "slotCount" : 1,
+        "reslotCount" : 0,
+        "friendsCount" : 0
+      }
+    },
+    "message" : "User 53 commented on your Slot: Slot title 23"
   }
 ]
 ```

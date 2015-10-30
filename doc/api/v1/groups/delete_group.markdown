@@ -54,19 +54,19 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=Sbn-pnuJJx-J3Ktgu71sKen7gSs
+<pre>Authorization: Token token=oWWd2_MxgWLfUx5qFV-8ngDsBkQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/16</pre>
+<pre>DELETE /v1/groups/11</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/16&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=Sbn-pnuJJx-J3Ktgu71sKen7gSs&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/11&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=oWWd2_MxgWLfUx5qFV-8ngDsBkQ&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -78,10 +78,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1fe8a0b57858d887bafb0b08d9073d34&quot;
+ETag: W/&quot;e86f05ff9cd997a59b8e0a2919a85e82&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 18df1062-783e-4bcf-a71c-d10f8dc0bc76
-X-Runtime: 0.093987
+X-Request-Id: 6b4524e7-5448-4642-b850-af6570e804d4
+X-Runtime: 0.075554
 Vary: Origin
 Content-Length: 440</pre>
 
@@ -93,22 +93,22 @@ Content-Length: 440</pre>
 
 ```javascript
 {
-  "id" : 16,
+  "id" : 11,
   "name" : "Testgroup 13",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-09-28T10:15:42.323Z",
-  "updatedAt" : "2015-09-28T10:15:42.423Z",
-  "deletedAt" : "2015-09-28T10:15:42.423Z",
+  "createdAt" : "2015-10-30T15:01:01.972Z",
+  "updatedAt" : "2015-10-30T15:01:02.062Z",
+  "deletedAt" : "2015-10-30T15:01:02.061Z",
   "image" : {
     "publicId" : null,
     "localId" : null
   },
   "owner" : {
-    "id" : 95,
-    "username" : "User 71",
-    "createdAt" : "2015-09-28T10:15:42.319Z",
-    "updatedAt" : "2015-09-28T10:15:42.360Z",
+    "id" : 23,
+    "username" : "User 76",
+    "createdAt" : "2015-10-30T15:01:01.969Z",
+    "updatedAt" : "2015-10-30T15:01:02.010Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -60,13 +60,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RrE9owdmffokw8eBbheFGP5TNOg
+Authorization: Token token=xlcGT4_HMjyW4xz1ib5yLISrUdc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/15</pre>
+<pre>PATCH /v1/groups/10</pre>
 
 #### Body
 ```javascript
@@ -81,9 +81,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/15&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/10&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RrE9owdmffokw8eBbheFGP5TNOg&quot; \
+	-H &quot;Authorization: Token token=xlcGT4_HMjyW4xz1ib5yLISrUdc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,10 +94,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4f0f4b89fac8ef022924c5bebf2251b2&quot;
+ETag: W/&quot;5c7018f397473e421c3eb39d1244b532&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0687fc85-6cba-4588-af9c-839c41b651f1
-X-Runtime: 0.033208
+X-Request-Id: 5eaad157-0d13-4678-b700-d5ada0d0ca91
+X-Runtime: 0.020278
 Vary: Origin
 Content-Length: 481</pre>
 
@@ -109,22 +109,22 @@ Content-Length: 481</pre>
 
 ```javascript
 {
-  "id" : 15,
+  "id" : 10,
   "name" : "foo",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-09-28T10:15:42.200Z",
-  "updatedAt" : "2015-09-28T10:15:42.200Z",
+  "createdAt" : "2015-10-30T15:01:01.931Z",
+  "updatedAt" : "2015-10-30T15:01:01.931Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
     "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
   },
   "owner" : {
-    "id" : 94,
-    "username" : "User 70",
-    "createdAt" : "2015-09-28T10:15:42.180Z",
-    "updatedAt" : "2015-09-28T10:15:42.180Z",
+    "id" : 22,
+    "username" : "User 75",
+    "createdAt" : "2015-10-30T15:01:01.927Z",
+    "updatedAt" : "2015-10-30T15:01:01.927Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

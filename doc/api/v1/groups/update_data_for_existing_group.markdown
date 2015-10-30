@@ -66,13 +66,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=PWXM3GshJatUWrKzBY5ZwxqkouQ
+Authorization: Token token=bCa_noBEOyX4Ci3Z_Rv5VuWyxEg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/14</pre>
+<pre>PATCH /v1/groups/9</pre>
 
 #### Body
 ```javascript
@@ -86,9 +86,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/14&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/9&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=PWXM3GshJatUWrKzBY5ZwxqkouQ&quot; \
+	-H &quot;Authorization: Token token=bCa_noBEOyX4Ci3Z_Rv5VuWyxEg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -99,12 +99,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1b1c47ce3af2e32561c35dabaab3c26e&quot;
+ETag: W/&quot;8aceb81a725a950e6643035217e40b8b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e7f93ebd-48ed-4516-8d23-7d433963543e
-X-Runtime: 0.018683
+X-Request-Id: cb3dce84-2f2f-49d5-af9e-65cca2c7bc2d
+X-Runtime: 0.015535
 Vary: Origin
-Content-Length: 406</pre>
+Content-Length: 405</pre>
 
 #### Status
 
@@ -114,22 +114,22 @@ Content-Length: 406</pre>
 
 ```javascript
 {
-  "id" : 14,
+  "id" : 9,
   "name" : "bar",
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-09-28T10:15:42.069Z",
-  "updatedAt" : "2015-09-28T10:15:42.083Z",
+  "createdAt" : "2015-10-30T15:01:01.895Z",
+  "updatedAt" : "2015-10-30T15:01:01.906Z",
   "deletedAt" : null,
   "image" : {
     "publicId" : null,
     "localId" : null
   },
   "owner" : {
-    "id" : 93,
-    "username" : "User 69",
-    "createdAt" : "2015-09-28T10:15:42.065Z",
-    "updatedAt" : "2015-09-28T10:15:42.065Z",
+    "id" : 21,
+    "username" : "User 74",
+    "createdAt" : "2015-10-30T15:01:01.892Z",
+    "updatedAt" : "2015-10-30T15:01:01.892Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
