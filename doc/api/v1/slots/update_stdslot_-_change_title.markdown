@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=fSYK89rHM9JZflsj1WlpC1pQpMU
+Authorization: Token token=YJJo2Gu1OHgo-kjh0YyBBEZfWEM
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=fSYK89rHM9JZflsj1WlpC1pQpMU&quot; \
+	-H &quot;Authorization: Token token=YJJo2Gu1OHgo-kjh0YyBBEZfWEM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,10 +144,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b11591df339c1b0c73233a17bdd44f35&quot;
+ETag: W/&quot;5dcaf99062c4acf89f56bd23efb83bdb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 44b11c97-62b7-4146-83bf-f0523a06a5e6
-X-Runtime: 0.042730
+X-Request-Id: 588a7528-5a71-4711-ba54-9f17f98af2d3
+X-Runtime: 0.030932
 Vary: Origin
 Content-Length: 548</pre>
 
@@ -161,17 +161,17 @@ Content-Length: 548</pre>
 {
   "id" : 1,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-08T10:44:02.000Z",
-  "createdAt" : "2015-10-14T11:49:46.630Z",
-  "updatedAt" : "2015-10-14T11:49:46.630Z",
+  "startDate" : "2019-09-11T13:44:02.000Z",
+  "createdAt" : "2015-10-30T15:01:04.313Z",
+  "updatedAt" : "2015-10-30T15:01:04.313Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-08T10:44:02.000Z",
+  "endDate" : "2019-10-11T13:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 3,
-    "username" : "User 214",
-    "createdAt" : "2015-10-14T11:49:46.625Z",
-    "updatedAt" : "2015-10-14T11:49:46.625Z",
+    "username" : "User 221",
+    "createdAt" : "2015-10-30T15:01:04.306Z",
+    "updatedAt" : "2015-10-30T15:01:04.306Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -27,18 +27,18 @@ Description : containing creation date of the ReSlot and details of the user who
 
 #### Headers
 
-<pre>Authorization: Token token=X8cSflmnIIjzVhNzGf-Xsz5gQ8c
+<pre>Authorization: Token token=_3F2uJUrGjAMH6yexj8dfnu_0Rk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/63/slotters</pre>
+<pre>GET /v1/slots/21/slotters</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/63/slotters&quot; -X GET \
-	-H &quot;Authorization: Token token=X8cSflmnIIjzVhNzGf-Xsz5gQ8c&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/21/slotters&quot; -X GET \
+	-H &quot;Authorization: Token token=_3F2uJUrGjAMH6yexj8dfnu_0Rk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -49,12 +49,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0b4adefa3718f5531f4c786d2d20db60&quot;
+ETag: W/&quot;89f75bb774238e973becd015dc63a337&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: da57316f-4913-4634-b372-60b151fc48b8
-X-Runtime: 0.019335
+X-Request-Id: c26ed3fc-ee36-4c3c-baa2-00e64b5d568d
+X-Runtime: 0.012817
 Vary: Origin
-Content-Length: 441</pre>
+Content-Length: 439</pre>
 
 #### Status
 
@@ -65,12 +65,12 @@ Content-Length: 441</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-09-28T10:15:58.449Z",
+    "createdAt" : "2015-10-30T15:01:05.528Z",
     "slotter" : {
-      "id" : 305,
-      "username" : "User 270",
-      "createdAt" : "2015-09-28T10:15:58.437Z",
-      "updatedAt" : "2015-09-28T10:15:58.437Z",
+      "id" : 67,
+      "username" : "User 284",
+      "createdAt" : "2015-10-30T15:01:05.527Z",
+      "updatedAt" : "2015-10-30T15:01:05.527Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -79,12 +79,12 @@ Content-Length: 441</pre>
     }
   },
   {
-    "createdAt" : "2015-09-28T10:15:58.477Z",
+    "createdAt" : "2015-10-30T15:01:05.543Z",
     "slotter" : {
-      "id" : 309,
-      "username" : "User 274",
-      "createdAt" : "2015-09-28T10:15:58.472Z",
-      "updatedAt" : "2015-09-28T10:15:58.472Z",
+      "id" : 70,
+      "username" : "User 288",
+      "createdAt" : "2015-10-30T15:01:05.541Z",
+      "updatedAt" : "2015-10-30T15:01:05.541Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,

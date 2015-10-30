@@ -25,18 +25,18 @@ Description : containing comment content and creation date and details of the us
 
 #### Headers
 
-<pre>Authorization: Token token=EUTy_Q0j9KRFUUuSCtsuiXL_F2M
+<pre>Authorization: Token token=YkgaHGHerLvWzOaq2q6A7q8SuXM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/62/comments</pre>
+<pre>GET /v1/slots/20/comments</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/62/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=EUTy_Q0j9KRFUUuSCtsuiXL_F2M&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/20/comments&quot; -X GET \
+	-H &quot;Authorization: Token token=YkgaHGHerLvWzOaq2q6A7q8SuXM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -47,12 +47,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;068853513100f445dccf45804af3f9ea&quot;
+ETag: W/&quot;879dc3ffd4f4eb509e86dbadeee4412a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 892a715c-c625-49e1-b73a-ea66b90a8c49
-X-Runtime: 0.033797
+X-Request-Id: 7b7521fa-4a47-43a3-94fa-3169653ceb25
+X-Runtime: 0.021584
 Vary: Origin
-Content-Length: 1073</pre>
+Content-Length: 1069</pre>
 
 #### Status
 
@@ -63,13 +63,13 @@ Content-Length: 1073</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-09-28T10:15:58.271Z",
+    "createdAt" : "2015-10-30T15:01:05.449Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 296,
-      "username" : "User 260",
-      "createdAt" : "2015-09-28T10:15:58.268Z",
-      "updatedAt" : "2015-09-28T10:15:58.268Z",
+      "id" : 57,
+      "username" : "User 275",
+      "createdAt" : "2015-10-30T15:01:05.447Z",
+      "updatedAt" : "2015-10-30T15:01:05.447Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -78,13 +78,13 @@ Content-Length: 1073</pre>
     }
   },
   {
-    "createdAt" : "2015-09-28T10:15:58.277Z",
+    "createdAt" : "2015-10-30T15:01:05.454Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 297,
-      "username" : "User 261",
-      "createdAt" : "2015-09-28T10:15:58.274Z",
-      "updatedAt" : "2015-09-28T10:15:58.274Z",
+      "id" : 58,
+      "username" : "User 276",
+      "createdAt" : "2015-10-30T15:01:05.452Z",
+      "updatedAt" : "2015-10-30T15:01:05.452Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -93,13 +93,13 @@ Content-Length: 1073</pre>
     }
   },
   {
-    "createdAt" : "2015-09-28T10:15:58.283Z",
+    "createdAt" : "2015-10-30T15:01:05.459Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 298,
-      "username" : "User 262",
-      "createdAt" : "2015-09-28T10:15:58.280Z",
-      "updatedAt" : "2015-09-28T10:15:58.280Z",
+      "id" : 59,
+      "username" : "User 277",
+      "createdAt" : "2015-10-30T15:01:05.457Z",
+      "updatedAt" : "2015-10-30T15:01:05.457Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -108,16 +108,16 @@ Content-Length: 1073</pre>
     }
   },
   {
-    "createdAt" : "2015-09-28T10:15:58.374Z",
+    "createdAt" : "2015-10-30T15:01:05.479Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 300,
-      "username" : "User 264",
-      "createdAt" : "2015-09-28T10:15:58.365Z",
-      "updatedAt" : "2015-09-28T10:15:58.365Z",
+      "id" : 61,
+      "username" : "User 279",
+      "createdAt" : "2015-10-30T15:01:05.470Z",
+      "updatedAt" : "2015-10-30T15:01:05.470Z",
       "deletedAt" : null,
       "image" : {
-        "publicId" : "dfhjghjkdisudgfds7iy54",
+        "publicId" : "dfhjghjkdisudgfds7iy79",
         "localId" : null
       }
     }

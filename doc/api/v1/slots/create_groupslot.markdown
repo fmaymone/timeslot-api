@@ -114,7 +114,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=BqGx3Zvkpz58zSAtuOfXT6znupI
+Authorization: Token token=6iruVU0LhIyn4uaGwYGNWjJfT08
 Host: example.org
 Cookie: </pre>
 
@@ -141,7 +141,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:34}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BqGx3Zvkpz58zSAtuOfXT6znupI&quot; \
+	-H &quot;Authorization: Token token=6iruVU0LhIyn4uaGwYGNWjJfT08&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -152,10 +152,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a58946d48a9d278c008d25f1fdc8cacb&quot;
+ETag: W/&quot;b5c1238033aa81da0a42714b6e28c2cf&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d0b3a34d-588b-48aa-8023-fe01506202e4
-X-Runtime: 0.051980
+X-Request-Id: da83c460-c264-466f-a48c-b3610085dafc
+X-Runtime: 0.043751
 Vary: Origin
 Content-Length: 545</pre>
 
@@ -167,19 +167,19 @@ Content-Length: 545</pre>
 
 ```javascript
 {
-  "id" : 17,
+  "id" : 20,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-10-14T11:49:45.583Z",
-  "updatedAt" : "2015-10-14T11:49:45.583Z",
+  "createdAt" : "2015-10-30T15:01:03.994Z",
+  "updatedAt" : "2015-10-30T15:01:03.994Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 149,
-    "username" : "User 202",
-    "createdAt" : "2015-10-14T11:49:45.555Z",
-    "updatedAt" : "2015-10-14T11:49:45.555Z",
+    "id" : 159,
+    "username" : "User 209",
+    "createdAt" : "2015-10-30T15:01:03.960Z",
+    "updatedAt" : "2015-10-30T15:01:03.960Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

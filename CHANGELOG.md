@@ -2,6 +2,13 @@
 
 ## upcoming
 
+## v0.8.1
+- many updates for activity stream
+- activity as concern, composition instead of inheritance
+- re-enable postgres prepared statements
+- several Bug fixes (293, 294, disallow reslot of private slot)
+
+
 ## v0.8.0
 - upgrade ruby to 2.2.3
 - pagination for user slots and demo slots

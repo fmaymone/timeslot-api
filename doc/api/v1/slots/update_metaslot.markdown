@@ -33,13 +33,13 @@ Description : Updated Enddate and Time of the Slot (startdate + duration)
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=qgcPDJp_WOTjPmuw7M36dIyvuEM
+Authorization: Token token=E9ib3gro09PudFyhUypA9LR2fPs
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/metaslot/40</pre>
+<pre>PATCH /v1/metaslot/1</pre>
 
 #### Body
 ```javascript
@@ -51,9 +51,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/metaslot/40&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/metaslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=qgcPDJp_WOTjPmuw7M36dIyvuEM&quot; \
+	-H &quot;Authorization: Token token=E9ib3gro09PudFyhUypA9LR2fPs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,8 +64,8 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Cache-Control: no-cache
-X-Request-Id: 78a9cff6-6794-4b89-b558-561aad2d012f
-X-Runtime: 0.012823
+X-Request-Id: 1a932713-c99a-40a3-9c07-ab76d40d086c
+X-Runtime: 0.010172
 Vary: Origin</pre>
 
 #### Status

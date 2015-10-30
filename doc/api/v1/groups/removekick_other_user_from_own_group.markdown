@@ -28,19 +28,19 @@ Description : ID of the user to kick
 
 #### Headers
 
-<pre>Authorization: Token token=_wUynIjhemp46sapUaR0oXRqyy4
+<pre>Authorization: Token token=DlWw8KKDpLxZ-dZVlHVdEBPi4OU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/29/members/154</pre>
+<pre>DELETE /v1/groups/24/members/82</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/29/members/154&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=_wUynIjhemp46sapUaR0oXRqyy4&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/24/members/82&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=DlWw8KKDpLxZ-dZVlHVdEBPi4OU&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -53,8 +53,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 280ad0e5-26e2-4fee-bff1-737ce37d4d40
-X-Runtime: 0.016437
+X-Request-Id: a166faed-b05b-4237-9643-4a13145a058e
+X-Runtime: 0.010885
 Vary: Origin
 Content-Length: 0</pre>
 
