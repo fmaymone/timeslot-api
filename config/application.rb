@@ -20,7 +20,6 @@ module TsRailsBackend
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # config.time_zone = 'Central Time (US & Canada)'
 
-
     # Always allow 'format' as request parameter, 'controller' and 'action' are
     # allowed by default.
     # Note: this will return the hash with string keys, not symbol keys. Rails5 ?
@@ -67,5 +66,8 @@ module TsRailsBackend
         resource '*', :headers => :any, :methods => [:get, :post, :options]
       end
     end
+
+    # Enabling garbage collection instrumentation for NewRelic
+    GC::Profiler.enable
   end
 end
