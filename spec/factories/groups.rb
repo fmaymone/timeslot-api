@@ -16,9 +16,7 @@ FactoryGirl.define do
     end
 
     trait :with_image do
-      after :create do |group|
-        create :mock_image, mediable: group
-      end
+      image "sample"
     end
 
     trait :with_3_members do

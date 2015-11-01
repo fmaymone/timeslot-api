@@ -12,8 +12,6 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
-  it { is_expected.to respond_to(:image) }
-  it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:group_slots).inverse_of(:group) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
@@ -100,44 +98,40 @@ RSpec.describe Group, type: :model do
     end
   end
 
-  describe "create_with_image" do
-    let(:user) { create(:user) }
-    let(:group_params) { attributes_for(:group).merge(owner: user) }
-    let(:image) { { public_id: 'foobar',
-                    local_id: 'B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001' } }
+  describe "create_with_invitees" do
+    let(:owner) { create(:user) }
+    let(:group_params) { attributes_for(:group).merge(owner: owner) }
+    let(:image) { 'http://cloudinary.com/foobar' }
+    let(:invitees) { create_list(:user, 3).collect(&:id) }
 
     context "valid params" do
       it "creates a new group" do
         expect {
-          Group.create_with_image(group_params: group_params,
-                                  image: image,
-                                  user: user)
+          Group.create_with_invitees(group_params: group_params)
         }.to change(Group, :count).by 1
       end
 
       it "sets an image if provided" do
-        expect {
-          Group.create_with_image(group_params: group_params,
-                                  image: image,
-                                  user: user)
-        }.to change(MediaItem, :count).by 1
-        expect(Group.last.image.public_id).to eq image[:public_id]
-        expect(Group.last.image.creator).to eq user
+        group_params.merge!(image: image)
+        Group.create_with_invitees(group_params: group_params)
+        expect(Group.last.image).not_to be nil
+        expect(Group.last.image).to eq image
       end
 
-      it "sets the local_id on the image if provided" do
-        Group.create_with_image(group_params: group_params,
-                                image: image,
-                                user: user)
-        expect(Group.last.image.local_id).to eq image[:local_id]
-        expect(Group.last.image.creator).to eq user
+      it "invites users to the group if provided" do
+        Group.create_with_invitees(group_params: group_params,
+                                   invitees: invitees)
+        expect(Group.last.related_users).not_to be nil
+        expect(Group.last.related_users.count).to eq 4
+        expect(Group.last.members.count).to eq 1
+        expect(Group.last.members).to include owner
       end
     end
 
     context "invalid params" do
       it "doesn't create a new group if groupname is nil" do
         expect {
-          Group.create_with_image(group_params: { name: nil }, user: user)
+          Group.create_with_invitees(group_params: { name: nil })
         }.not_to change(Group, :count)
       end
     end
