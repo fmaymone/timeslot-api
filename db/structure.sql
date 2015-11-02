@@ -647,7 +647,8 @@ CREATE TABLE users (
     slot_default_type_id integer,
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
-    lang character varying(8)
+    lang character varying(8),
+    picture character varying(255) DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -1314,4 +1315,6 @@ INSERT INTO schema_migrations (version) VALUES ('20150825113006');
 INSERT INTO schema_migrations (version) VALUES ('20151028213045');
 
 INSERT INTO schema_migrations (version) VALUES ('20151101102829');
+
+INSERT INTO schema_migrations (version) VALUES ('20151102154547');
 
