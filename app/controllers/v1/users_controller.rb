@@ -183,7 +183,7 @@ module V1
       params.require(:phone) unless params[:email].present?
       params.require(:password)
       params.require(:username)
-      params.permit(:username, :email, :phone, :password)
+      params.permit(:username, :email, :phone, :password, :picture)
     end
 
     private def user_params
@@ -192,6 +192,7 @@ module V1
                         :email,
                         :phone,
                         :password,
+                        :picture,
                         :image,
                         { location:
                             [:name, :thoroughfare, :sub_thoroughfare, :locality,

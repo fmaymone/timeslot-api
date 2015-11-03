@@ -845,6 +845,7 @@ RSpec.describe User, type: :model do
         expect(User.last.webview?).to be false
       end
 
+      # TODO: remove this in step2 of user image migration
       it "sets an image if provided" do
         user_params.merge!(image: { "public_id" => 'foobar' })
         expect {
@@ -852,8 +853,10 @@ RSpec.describe User, type: :model do
         }.to change(MediaItem, :count).by 1
         expect(User.last.image.public_id).to eq "foobar"
         expect(User.last.image.creator_id).to eq User.last.id
+        expect(User.last.picture).to eq "foobar"
       end
 
+      # TODO: remove this in step2 of user image migration
       it "sets the local_id for an image if provided" do
         user_params.merge!(
           image: {"public_id" => 'foobar',
