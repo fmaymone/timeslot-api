@@ -10,14 +10,14 @@ namespace :migrate_image do
       User.find_each.with_index do |user, index|
         default_msg = "#{index + 1}/#{users_count} - #{user.username}"
         unless user.image
-          puts "#{default_msg} has no profile image".cyan
+          puts "#{default_msg} has no profile image"
           next
         end
         user.picture = user.image.public_id
         if user.save
-          puts "#{default_msg} profil picture copied".green
+          puts "#{default_msg} profil picture copied"
         else
-          puts "#{default_msg} - #{user.image.public_id}".red
+          puts "#{default_msg} - #{user.image.public_id}"
         end
       end
     end
