@@ -448,7 +448,7 @@ class User < ActiveRecord::Base
   ## class methods ##
 
   # TODO: change in step2 of user image refactoring
-  def self.create_with_image(params:, image: nil, device: nil)
+  def self.create_with_device(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
     Device.update_or_create(new_user, device) if device
