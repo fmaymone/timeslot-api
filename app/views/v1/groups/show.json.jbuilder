@@ -2,17 +2,13 @@ json.extract!(
   @group,
   :id,
   :name,
+  :image,
   :members_can_post,
   :members_can_invite,
   :created_at,
   :updated_at,
   :deleted_at
 )
-
-json.image do
-  json.public_id @group.image ? @group.image.public_id : nil
-  json.local_id @group.image.try(:local_id) ? @group.image.local_id : nil
-end
 
 json.owner do
   json.partial! 'v1/users/user', user: @group.owner

@@ -23,9 +23,9 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_image(params: user_create_params,
-                                     image: user_image,
-                                     device: device_params(params[:device]))
+      @user = User.create_with_device(params: user_create_params,
+                                      image: user_image,
+                                      device: device_params(params[:device]))
       if @user.errors.empty?
         render :signup, status: :created
       else
@@ -183,7 +183,7 @@ module V1
       params.require(:phone) unless params[:email].present?
       params.require(:password)
       params.require(:username)
-      params.permit(:username, :email, :phone, :password)
+      params.permit(:username, :email, :phone, :password, :picture)
     end
 
     private def user_params
@@ -192,6 +192,7 @@ module V1
                         :email,
                         :phone,
                         :password,
+                        :picture,
                         :image,
                         { location:
                             [:name, :thoroughfare, :sub_thoroughfare, :locality,

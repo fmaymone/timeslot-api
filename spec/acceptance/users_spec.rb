@@ -82,12 +82,13 @@ resource "Users" do
         expect(json).not_to have_key "authToken"
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
-
+        # TODO: change in step2 of user image refactoring
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
                  .except("auth_token", "password_digest", "role",
+                         "picture",
                          "device_token", "location_id")
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json['location']).to eq nil
@@ -119,11 +120,13 @@ resource "Users" do
         expect(json).not_to have_key "authToken"
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
+        # TODO: change in step2 of user image refactoring
         expect(
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
                          'push', 'device_token', 'email', 'email_verified', 'lang',
+                         'picture',
                          'phone', 'phone_verified', 'location_id',
                          'default_private_alerts', 'default_own_friendslot_alerts',
                          'default_own_public_alerts', 'default_friends_friendslot_alerts',
@@ -361,11 +364,13 @@ resource "Users" do
         expect(current_user.username).to eq "bar"
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
+        # TODO: change in step2 of user image refactoring
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
         ).to eq(current_user.attributes.as_json
                  .except('auth_token', 'password_digest', 'role',
+                         'picture',
                          'device_token', 'location_id')
                  .transform_keys { |key| key.camelize(:lower) })
       end
@@ -391,7 +396,8 @@ resource "Users" do
       end
     end
 
-    describe "Set image for User" do
+    # TODO: remove in step2 of user image refactoring
+    describe "Set image for User - old style" do
       parameter :image, "Scope for attributes of new image",
                 required: true
       parameter :publicId, "Cloudinary ID / URL",
@@ -422,6 +428,30 @@ resource "Users" do
         expect(json["image"]).to have_key "localId"
         expect(json["image"]["publicId"]).to eq publicId
         expect(json["image"]["localId"]).to eq localId
+      end
+    end
+
+    describe "Set image for User - new style" do
+      parameter :picture, "Cloudinary ID / URL", required: true
+
+      let(:picture) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
+
+      example "Update current user - set user image", document: :v1 do
+        explanation "First a cloudinary signature needs to be fetched by the" \
+                    " client from the API. After uploading the image to" \
+                    " cloudinary the client updates the group with the image" \
+                    " information.\n\n" \
+                    "returns 200 and the users data if the image was" \
+                    " successfully added or updated"
+        do_request
+
+        current_user.reload
+        expect(current_user.picture).not_to be nil
+        expect(current_user.picture).to eq picture
+        expect(response_status).to eq(200)
+        # expect(json).to have_key("picture")
+        # expect(json).not_to have_key("image")
+        # expect(json["picture"]).to eq picture
       end
     end
 

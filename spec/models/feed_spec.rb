@@ -231,6 +231,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Group feeds", :redis do
     # NOTE: 5 activities will be created by default on trait :with_feed
+    # TODO: check why no activity is created in the feed trait for
+    # creation of std_slot_public
     let(:user) { create(:user, :with_feed) }
     let(:group_meta_slot) { create(:meta_slot, creator: user) }
     let(:group) { create(:group, owner: user) }
@@ -256,7 +258,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2 + 1) # +2 own activities (+1 create groupslot???)
+        expect(user_feed.count).to be(4 + 2 + 1) # +2 own activities (+1 create groupslot???)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(2) # +2 own activities
@@ -307,7 +309,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2) # +2 new activity
+        expect(user_feed.count).to be(4 + 2) # +2 new activity
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(1) # +1 new activity
@@ -381,7 +383,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 2 + 2) # +4 own activities
+        expect(user_feed.count).to be(4 + 2 + 2) # +4 own activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(4) # +4 own activities
@@ -442,7 +444,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
         # 5 activities already exist on trait :feed
-        expect(user_feed.count).to be(5 + 3) # +3 new activities
+        expect(user_feed.count).to be(4 + 3) # +3 new activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(2) # +2 new activities

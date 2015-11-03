@@ -73,7 +73,6 @@ class User < ActiveRecord::Base
   # has_one :slot_default_location, class_name: Location
   # has_one :slot_default_type, class_name: SlotType
 
-
   ## validations ##
 
   validates :username, presence: true, length: { maximum: 50 }
@@ -101,9 +100,13 @@ class User < ActiveRecord::Base
 
   ## user specific ##
 
+  # TODO: remove method in step2 of user image refactoring
   def update_with_image(params: nil, image: nil, user: nil)
     update(params.except("public_id")) if params
-    AddImage.call(self, user.id, image["public_id"], image["local_id"]) if image
+    if image
+      AddImage.call(self, user.id, image["public_id"], image["local_id"])
+      update(picture: image["public_id"]) if image["public_id"]
+    end
     self
   end
 
@@ -444,14 +447,15 @@ class User < ActiveRecord::Base
 
   ## class methods ##
 
-  # technically this is not neccessary bc it's not possible to set an image on
-  # signup, at least in the ios app right now
-  def self.create_with_image(params:, image: nil, device: nil)
+  # TODO: change in step2 of user image refactoring
+  def self.create_with_device(params:, image: nil, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
     Device.update_or_create(new_user, device) if device
-    AddImage.call(new_user, new_user.id,
-                  image["public_id"], image["local_id"]) if image
+    if image
+      AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"])
+      new_user.update(picture: image["public_id"]) if image["public_id"]
+    end
     new_user
   end
 
