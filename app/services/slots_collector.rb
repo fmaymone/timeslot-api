@@ -6,7 +6,7 @@ class SlotsCollector
                  moment: Time.zone.now,
                  after: nil,
                  before: nil)
-    @limit = limit.to_i
+    @limit = filter == 'around' ? limit.to_i / 2 : limit.to_i
     @filter = filter
     @moment = moment
     @before = before
@@ -34,10 +34,21 @@ class SlotsCollector
     showables = PresentableSlots.call(relationship: relationship, user: user,
                                       current_user: current_user)
 
-    sort_result query_data(showables)
+    # the 'around' filter needs special treatmeant because he returns forward
+    # and backward facing data/slots (with regard to the 'moment')
+    # this could probably be done more elegant
+    # TODO: try to improve efficiency
+    if @filter == 'around'
+      slots_a = sort_result query_data(showables, filter: 'upcoming')
+      @before = true # FIXME: hack to switch result sorting
+      slots_b = sort_result query_data(showables, filter: 'past')
+      slots_a + slots_b
+    else
+      sort_result query_data(showables)
+    end
   end
 
-  def query_data(relations)
+  def query_data(relations, filter: @filter)
     data = []
 
     ### fetch slots
@@ -50,7 +61,7 @@ class SlotsCollector
       ### build and execute query
       # get [limit] slots from all collections, not efficient but simple
       # and definitly working, TODO: optimize when need is
-      slots = query.retrieve(filter: @filter,
+      slots = query.retrieve(filter: filter,
                              moment: @moment,
                              cursor: @cursor).limit(@limit)
       data.concat(slots)
