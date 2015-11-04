@@ -24,15 +24,20 @@ module SlotQuery
           @relation
         when 'finished'
           @relation.where(finished moment).ordered_rev
-        # when 'upcoming'
-        # when 'ongoing'
-        # when 'past'
-        # when 'now'
-        else
+        when 'upcoming', 'ongoing', 'past', 'now'
           # here we send the 'filter' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
           # the 'filter'
           @relation.where(send filter, moment).ordered
+        else
+          # TODO: make a helper for enriched airbrake error messages
+          error_string = "unkown pagination filter #{filter}"
+          msg = { error_message: error_string }
+          opts = {}
+          opts[:parameters] = msg
+          Rails.logger.error { error_string }
+          Airbrake.notify(PaginationError, opts)
+          fail PaginationError, msg if Rails.env.test? || Rails.env.development?
         end
       end
     end
