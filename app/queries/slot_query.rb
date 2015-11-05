@@ -1,5 +1,6 @@
 module SlotQuery
   class OwnSlots
+    include TS_Errors
     attr_reader :relation
 
     def initialize(relation: BaseSlot.all, direction: nil)
@@ -38,6 +39,8 @@ module SlotQuery
           Rails.logger.error { error_string }
           Airbrake.notify(PaginationError, opts)
           fail PaginationError, msg if Rails.env.test? || Rails.env.development?
+          # TODO: check if we should call 'new' for custom error classes? Why?
+          # fail PaginationError.new(msg) if Rails.env.test?d || Rails.env.development?
         end
       end
     end
