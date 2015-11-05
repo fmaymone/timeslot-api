@@ -40,7 +40,7 @@ module SlotQuery
           Airbrake.notify(PaginationError, opts)
           fail PaginationError, msg if Rails.env.test? || Rails.env.development?
           # TODO: check if we should call 'new' for custom error classes? Why?
-          # fail PaginationError.new(msg) if Rails.env.test?d || Rails.env.development?
+          # fail PaginationError.new(msg) if Rails.env.test? || Rails.env.development?
         end
       end
     end

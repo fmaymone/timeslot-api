@@ -21,8 +21,7 @@ class SlotsCollector
 
   # demo slots / public standard slots
   def latest_public_slots
-    collection = [StdSlotPublic.all]
-    consider_filter(collection, @filter)
+    consider_filter([StdSlotPublic.all], @filter)
   end
 
   # collects all slots current_user is allowed to see from requested_user
