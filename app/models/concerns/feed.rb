@@ -90,7 +90,7 @@ module Feed
   def self.enrich_feed(feed, view)
     feed.each do |activity|
       # Set single actors to array to simplify enrichment process
-      activity['actors'] ||= [activity['actor']] if activity['actor']
+      activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
       count = activity['actors'].count
       # In handy we remove the single field 'actor' on aggregated feeds
       activity.delete('actor')
