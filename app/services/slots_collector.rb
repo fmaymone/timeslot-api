@@ -21,7 +21,8 @@ class SlotsCollector
 
   # demo slots / public standard slots
   def latest_public_slots
-    sort_result query_data([StdSlotPublic.all])
+    collection = [StdSlotPublic.all]
+    consider_filter(collection, @filter)
   end
 
   # collects all slots current_user is allowed to see from requested_user
@@ -34,21 +35,31 @@ class SlotsCollector
     showables = PresentableSlots.call(relationship: relationship, user: user,
                                       current_user: current_user)
 
-    # the 'around' filter needs special treatmeant because he returns forward
-    # and backward facing data/slots (with regard to the 'moment')
-    # this could probably be done more elegant
-    # TODO: try to improve efficiency
-    if @filter == 'around'
-      slots_a = sort_result query_data(showables, filter: 'upcoming')
-      @before = true # FIXME: hack to switch result sorting
-      slots_b = sort_result query_data(showables, filter: 'past')
-      slots_a + slots_b
+    consider_filter(showables, @filter)
+  end
+
+  private def consider_filter(relations, filter)
+    if filter == 'around'
+      around_filter_query(relations)
     else
-      sort_result query_data(showables)
+      slots = query_data(relations, filter)
+      sort_result(slots, filter)
     end
   end
 
-  def query_data(relations, filter: @filter)
+  # the 'around' filter needs special treatmeant because he returns forward
+  # and backward facing data/slots (with regard to the 'moment')
+  private def around_filter_query(relations)
+    upcomings = query_data(relations, 'upcoming')
+    sorted_upcomings = sort_result(upcomings, 'upcoming')
+
+    pasts = query_data(relations, 'past')
+    sorted_pasts = sort_result(pasts, 'past')
+
+    sorted_upcomings + sorted_pasts
+  end
+
+  private def query_data(relations, filter)
     data = []
 
     ### fetch slots
@@ -69,12 +80,12 @@ class SlotsCollector
     data
   end
 
-  def sort_result(data)
+  private def sort_result(data, filter)
     ### order retrieved slots by startdate, enddate and id
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
     ### and return the first/last [limit] slots from the collection
-    if @before || (@filter == 'past') || (@filter == 'finished')
+    if @before || (filter == 'past') || (filter == 'finished')
       data.last @limit
     else
       data.take @limit
