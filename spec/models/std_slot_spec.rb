@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe StdSlot, type: :model do
-  let(:std_slot) { build(:std_slot) }
+  let(:std_slot) { build(:std_slot_public) }
 
   subject { std_slot }
 

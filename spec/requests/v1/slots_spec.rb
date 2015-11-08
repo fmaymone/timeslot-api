@@ -23,18 +23,6 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "StdSlot, with location" do
-      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
-
-      it "returns the location" do
-        skip "no location database @ data team"
-        get "/v1/slots/#{std_slot.id}"
-        expect(json).to have_key('location')
-        expect(json['location']['id']).to eq 200719253
-      end
-    end
-
     context "StdSlot, with valid ID" do
       it "returns success" do
         get "/v1/slots/#{std_slot.id}"
