@@ -663,6 +663,55 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :common_friend_with?, :keep_data do
+    before(:all) do
+      @john = create(:user, username: "John")
+      @johns_friend = create(:user, username: "Johns Friend")
+      @offa = create(:user, username: "Offa")
+      @noffa = create(:user, username: "Noffa")
+      @mary = create(:user, username: "Mary")
+      @alice = create(:user, username: "Alice")
+      @bob = create(:user, username: "Bob")
+      create(:friendship, :established, user: @john, friend: @johns_friend)
+      create(:friendship, :established, user: @johns_friend, friend: @offa)
+      create(:friendship, :established, user: @johns_friend, friend: @bob)
+      create(:friendship, :established, user: @john, friend: @bob)
+      create(:friendship, :established, user: @john, friend: @mary)
+      create(:friendship, :established, user: @alice, friend: @offa)
+      create(:friendship, :rejected, user: @noffa, friend: @johns_friend)
+    end
+
+    it "returns false if the users are befriended but have no common friend" do
+      expect(@john.common_friend_with? @mary).to be false
+      expect(@mary.common_friend_with? @john).to be false
+    end
+
+    it "returns true if the users are befriended and have a common friend" do
+      expect(@john.common_friend_with? @bob).to be true
+      expect(@bob.common_friend_with? @john).to be true
+    end
+
+    it "returns true if the users aren't befriended but have a common friend" do
+      expect(@offa.common_friend_with? @john).to be true
+      expect(@john.common_friend_with? @offa).to be true
+    end
+
+    it "returns false if the given users have no common friend" do
+      expect(@alice.common_friend_with? @mary).to be false
+      expect(@mary.common_friend_with? @alice).to be false
+    end
+
+    it "returns false if given user has only 3rd grade friends" do
+      expect(@john.common_friend_with? @alice).to be false
+      expect(@alice.common_friend_with? @john).to be false
+    end
+
+    it "returns false if the given 2nd grade friendship was rejected" do
+      expect(@noffa.common_friend_with? @john).to be false
+      expect(@john.common_friend_with? @noffa).to be false
+    end
+  end
+
   describe :offered_friendship do
     let(:john) { create(:user, username: "John") }
     let(:mary) { create(:user, username: "Mary") }

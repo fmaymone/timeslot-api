@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, class_name: Friendship,
-           foreign_key: "user_id", inverse_of: :user
+           inverse_of: :user
   has_many :received_friendships, class_name: Friendship,
            foreign_key: "friend_id", inverse_of: :friend
 
@@ -330,6 +330,40 @@ class User < ActiveRecord::Base
   # TODO: send only user_id as param instead of full object
   def friend_with?(user)
     friendship(user.id).try(:established?)
+  end
+
+  def common_friend_with?(other_id)
+    # Checks if there is an overlapping between the friends of the current user
+    # and the friends of the other user.
+    # Returns false if two users are directly befriended, unless they have one
+    # other friend in common.
+
+    fst = Friendship.arel_table
+    ut = User.arel_table
+    established = fst[:deleted_at].eq(nil).and(fst[:state].eq('11'))
+
+    constraint_a1 = ut.create_on(ut[:id].eq(fst[:user_id]))
+    constraint_a2 = ut.create_on(ut[:id].eq(fst[:friend_id]))
+    constraint_b1 = ut.create_on(ut[:id].eq(fst[:user_id]))
+    constraint_b2 = ut.create_on(ut[:id].eq(fst[:friend_id]))
+
+    join_a1 = ut.create_join(fst, constraint_a1)
+    join_a2 = ut.create_join(fst, constraint_a2)
+    join_b1 = ut.create_join(fst, constraint_b1)
+    join_b2 = ut.create_join(fst, constraint_b2)
+
+    circle_a1 = User.joins(join_a1).where(fst[:friend_id].eq(id).and(established))
+    circle_a2 = User.joins(join_a2).where(fst[:user_id].eq(id).and(established))
+    circle_a_union = circle_a1.union(circle_a2)
+    circle_a = User.from(ut.create_table_alias(circle_a_union, :users))
+
+    circle_b1 = User.joins(join_b1).where(fst[:friend_id].eq(other_id).and(established))
+    circle_b2 = User.joins(join_b2).where(fst[:user_id].eq(other_id).and(established))
+    circle_b_union = circle_b1.union(circle_b2)
+    circle_b = User.from(ut.create_table_alias(circle_b_union, :users))
+
+    scope = circle_a.intersect(circle_b)
+    User.from(ut.create_table_alias(scope, :users)).exists?
   end
 
   ## group related ##
