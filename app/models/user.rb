@@ -390,7 +390,7 @@ class User < ActiveRecord::Base
       default_private_alerts
     when 'StdSlotFriends'
       default_own_friendslot_alerts
-    when 'StdSlotPublic'
+    when 'StdSlotPublic', 'StdSlotFoaf'
       default_own_public_alerts
     # TODO: add friends friendslot
     # TODO: add friends publicslot
@@ -411,8 +411,10 @@ class User < ActiveRecord::Base
     when 'StdSlot'
       default_private_alerts
     else
+      # TODO: ts_notify(msg: "unknown slottype #{slot} for user #{id}")
       # maybe not the best idea, but at least we hear if something goes wrong
-      opts = { error_message: "unknown slottype #{slot} for user #{id}" }
+      msg = "unknown slottype #{slot} for user #{id}"
+      opts = { error_message: msg }
       Airbrake.notify(ActiveRecord::StatementInvalid, opts)
       fail ActiveRecord::StatementInvalid, msg
     end

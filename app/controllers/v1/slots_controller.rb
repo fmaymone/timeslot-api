@@ -333,7 +333,7 @@ module V1
       return nil unless params.key? :visibility
 
       visibility = params[:visibility]
-      valid_values = %w(private friends public)
+      valid_values = %w(private friends foaf public)
 
       unless valid_values.include? visibility
         fail ActionController::ParameterMissing,

@@ -99,9 +99,10 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "POST /v1/stdlot" do
     context "StdSlot with valid params" do
+      let(:visibility) { 'private' }
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: 'private', settings: { alerts: '1110001100' })
+          visibility: visibility, settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -143,6 +144,17 @@ RSpec.describe "V1::Slots", type: :request do
         expect(slot.end_date)
           .to eq slot.start_date.to_datetime.next_day.at_midday
         expect(slot.open_end).to be true
+      end
+
+      context "visibility" do
+        let(:visibility) { 'foaf' }
+
+        it "creates slot with visibility friends-of-friends" do
+          expect {
+            post "/v1/stdslot/", valid_slot, auth_header
+          }.to change(StdSlotFoaf, :count)
+          expect(response).to have_http_status :created
+        end
       end
     end
 
