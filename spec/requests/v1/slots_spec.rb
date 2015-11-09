@@ -10,19 +10,6 @@ RSpec.describe "V1::Slots", type: :request do
   describe "GET /v1/slots/:id" do
     let(:std_slot) { create(:std_slot_public) }
 
-    context "GroupSlot, with valid ID" do
-      let(:group) { create(:group, owner: current_user) }
-      let(:group_slot) { create(:group_slot, group: group) }
-
-      it "returns success" do
-        get "/v1/slots/#{group_slot.id}", {}, auth_header
-        expect(response).to have_http_status(200)
-        expect(json['id']).to eq(group_slot.id)
-        expect(json).to have_key('group')
-        expect(json['group']['id']).to eq(group_slot.group_id)
-      end
-    end
-
     context "StdSlot, with valid ID" do
       it "returns success" do
         get "/v1/slots/#{std_slot.id}"
@@ -93,6 +80,19 @@ RSpec.describe "V1::Slots", type: :request do
         expect(
           json['notes'][1]['title']
         ).to eq(std_slot.notes.second.title)
+      end
+    end
+
+    context "GroupSlot, with valid ID" do
+      let(:group) { create(:group, owner: current_user) }
+      let(:group_slot) { create(:group_slot, group: group) }
+
+      it "returns success" do
+        get "/v1/slots/#{group_slot.id}", {}, auth_header
+        expect(response).to have_http_status(200)
+        expect(json['id']).to eq(group_slot.id)
+        expect(json).to have_key('group')
+        expect(json['group']['id']).to eq(group_slot.group_id)
       end
     end
   end
