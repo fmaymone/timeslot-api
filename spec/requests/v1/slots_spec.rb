@@ -1903,7 +1903,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "pagination", :keep_slots do
+    context "pagination", :keep_data do
       let(:limit) { 4 }
       let(:query_string) { { limit: limit } }
 

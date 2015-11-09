@@ -470,7 +470,7 @@ RSpec.describe "V1::Users", type: :request do
         end
       end
 
-      describe "my Slots, with pagination", :keep_slots do
+      describe "my Slots, with pagination", :keep_data do
         before(:all) do
           @current_user = create(:user, :with_email, :with_password)
           @auth_header = {
