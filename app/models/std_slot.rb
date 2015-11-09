@@ -4,6 +4,7 @@ class StdSlot < BaseSlot
   # mapping the frontend string to the class
   STD_SLOT_TYPES = { 'private' => :StdSlotPrivate,
                      'friends' => :StdSlotFriends,
+                     'foaf' => :StdSlotFoaf,
                      'public' => :StdSlotPublic
                    }
 
