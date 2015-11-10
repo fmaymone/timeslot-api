@@ -53,6 +53,48 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    # this is basically a policy test, not sure if it's a good idea to test
+    # this here
+    describe "StdSlot visibility" do
+      context "friends of friends" do
+        let(:std_slot) { create(:std_slot_foaf) }
+        let(:common_friend) { create(:user) }
+
+        it "is visible to the owner" do
+          get "/v1/slots/#{std_slot.id}", {},
+              { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: std_slot.owner)
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: common_friend)
+          create(:friendship, :established, user: common_friend,
+                 friend: std_slot.owner)
+
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is not visible to unrelated users" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :unauthorized
+        end
+
+        it "is not visible to strangers (not logged in)" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :unauthorized
+        end
+      end
+    end
+
     context "ReSlot, with valid ID" do
       let(:std_slot) {
         create(:std_slot_public, :with_media, :with_notes) }
