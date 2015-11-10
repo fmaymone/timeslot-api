@@ -20,7 +20,8 @@ resource "Slots" do
                    "Only included if it's a slot of the current User " \
                    "(created-/friend-/re-/groupslot),\n\n" \
                    "contains User specific settings for this slot (alerts)"
-    response_field :visibility, "Visibiltiy of the slot"
+    response_field :visibility,
+                   "Visibiltiy of the slot (private/friend/foaf/public)"
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
@@ -373,7 +374,8 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :visibility, "Visibility of the Slot (private/friends/public)",
+    parameter :visibility,
+              "Visibility of the Slot (private/friends/foaf/public)",
               required: true
     include_context "default slot parameter"
 
