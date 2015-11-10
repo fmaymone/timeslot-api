@@ -329,7 +329,8 @@ class User < ActiveRecord::Base
 
   # TODO: send only user_id as param instead of full object
   def friend_with?(user)
-    friendship(user.id).try(:established?)
+    fs = friendship(user.id)
+    fs.nil? ? false : fs.try(:established?)
   end
 
   def common_friend_with?(other_id)

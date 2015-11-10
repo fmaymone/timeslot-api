@@ -652,14 +652,17 @@ RSpec.describe User, type: :model do
 
     it "returns true if the given user has an established friendship" do
       expect(john.friend_with? mary).to be true
+      expect(mary.friend_with? john).to be true
     end
 
     it "returns false if the given user has no established friendship" do
-      expect(alice.friend_with? mary).not_to be true
+      expect(alice.friend_with? mary).to be false
+      expect(mary.friend_with? alice).to be false
     end
 
     it "returns false if the given user has rejected friendship" do
-      expect(alice.friend_with? john).not_to be true
+      expect(alice.friend_with? john).to be false
+      expect(john.friend_with? alice).to be false
     end
   end
 
