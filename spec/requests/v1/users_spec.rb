@@ -442,533 +442,611 @@ RSpec.describe "V1::Users", type: :request do
   end
 
   describe "GET /v1/users/:id/slots" do
-    context "current_user requesting own slots" do
-      describe "get slots for user, no pagination" do
-        let(:group_member) { create(:membership, user: current_user) }
-        let!(:group_slot) { create(:group_slot, group: group_member.group) }
-        let!(:slots) do
-          slots = []
-          slots.push create(:std_slot_private, owner: current_user)
-          slots.push create(:std_slot_friends, owner: current_user)
-          slots.push create(:std_slot_public, owner: current_user)
-          slots.push(*create_list(:re_slot, 2, slotter: current_user))
+    context "no pagination" do
+      let(:group_member) { create(:membership, user: current_user) }
+      let!(:group_slot) { create(:group_slot, group: group_member.group) }
+      let!(:slots) do
+        slots = []
+        slots.push create(:std_slot_private, owner: current_user)
+        slots.push create(:std_slot_friends, owner: current_user)
+        slots.push create(:std_slot_public, owner: current_user)
+        slots.push(*create_list(:re_slot, 2, slotter: current_user))
+      end
+
+      it "returns success" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns all stdslots & reslots for the current_user" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        expect(json.length).to eq slots.size
+      end
+
+      it "excludes groupslots of the current_user" do
+        get "/v1/users/#{current_user.id}/slots", {}, auth_header
+        expect(response.body).not_to include group_slot.title
+      end
+    end
+
+    context "with pagination", :keep_data do
+      before(:all) do
+        @current_user = create(:user, :with_email, :with_password)
+        @auth_header = {
+          'Authorization' => "Token token=#{@current_user.auth_token}" }
+
+        # upcoming slots
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'not my upcoming slot')
+        create(:std_slot_private,
+               start_date: Time.zone.tomorrow,
+               title: 'upcoming slot',
+               owner: @current_user)
+        create(:std_slot_private,
+               start_date: Time.zone.today.next_week.end_of_day,
+               end_date: Time.zone.today.next_week.next_month,
+               title: 'upcoming slot A',
+               owner: @current_user)
+        create(:std_slot_private,
+               start_date: Time.zone.today.next_week.end_of_day,
+               end_date: Time.zone.today.next_week.next_month,
+               title: 'upcoming slot B',
+               owner: @current_user)
+        create_list(:std_slot_private, 3,
+                    start_date: Time.zone.tomorrow,
+                    owner: @current_user)
+        create(:re_slot,
+               start_date: Time.zone.tomorrow.midday,
+               end_date: Time.zone.tomorrow.next_week.end_of_day,
+               title: 'upcoming reslot',
+               slotter: @current_user)
+        # ongoing slots
+        create(:std_slot_friends,
+               start_date: Time.zone.yesterday,
+               end_date: Time.zone.tomorrow,
+               title: 'ongoing slot',
+               owner: @current_user)
+        create_list(:std_slot_friends, 12,
+                    start_date: Time.zone.yesterday,
+                    end_date: Time.zone.tomorrow,
+                    title: 'ongoing slots',
+                    owner: @current_user)
+        create(:re_slot,
+               start_date: Time.zone.yesterday,
+               end_date: Time.zone.tomorrow,
+               title: 'ongoing reslot',
+               slotter: @current_user)
+        # past slots
+        create(:std_slot_public,
+               start_date: Time.zone.yesterday.last_year,
+               end_date: Time.zone.today.last_year,
+               title: 'long ago slot',
+               owner: @current_user)
+        create(:std_slot_foaf,
+               start_date: Time.zone.yesterday.last_year,
+               end_date: Time.zone.today.last_year,
+               title: 'foaf past slot',
+               owner: @current_user)
+        create(:std_slot_public,
+               start_date: Time.zone.yesterday.at_midday,
+               end_date: Time.zone.yesterday.end_of_day,
+               title: 'past slot',
+               owner: @current_user)
+        create_list(:std_slot_public, 13,
+                    start_date: Time.zone.yesterday.at_midday,
+                    end_date: Time.zone.yesterday.end_of_day,
+                    title: 'past slots',
+                    owner: @current_user)
+        create(:re_slot,
+               start_date: Time.zone.yesterday.last_month,
+               end_date: Time.zone.today.last_month,
+               title: 'past reslot',
+               slotter: @current_user)
+      end
+
+      describe "GET slots for current user" do
+        let(:limit) { 4 }
+        let(:query_string) {
+          { status: status, moment: Time.zone.now.as_json, limit: limit } }
+
+        describe "paginate" do
+          context "via 'after' cursor" do
+            let(:limit) { 3 }
+            let(:filter) { 'upcoming' }
+
+            it "returns all slots after 'moment'" do
+              # first request without a cursor
+              get "/v1/users/#{@current_user.id}/slots", query_string,
+                  @auth_header
+
+              expect(response.status).to be(200)
+              resp = JSON.parse(response.body)
+              result_count = resp['data'].size
+
+              # receive a cursor for further requests
+              cursor = resp['paging']['after']
+              expect(cursor).not_to be nil
+              previous_result = resp['data']
+
+              while cursor
+                # paginate through the result
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: filter, after: cursor, limit: limit },
+                    @auth_header
+
+                expect(response.status).to be(200)
+
+                json = JSON.parse(response.body)
+                cursor = json['paging']['after']
+                result = json['data']
+
+                if result.empty?
+                  expect(previous_result.first['title'])
+                    .to eq upcoming_slot.title
+                else
+                  result_count += result.size
+                  # make sure the follow up responses return slots
+                  # which are later than the slots from the previous response
+                  expect(result.first['startDate'])
+                    .to be >= previous_result.last['startDate']
+                  if result.first['startDate'] == previous_result.last['startDate']
+                    expect(result.first['endDate'])
+                      .to be >= previous_result.last['endDate']
+                  end
+                  if result.first['endDate'] == previous_result.last['endDate']
+                    expect(result.first['id'])
+                      .to be >= previous_result.last['id']
+                  end
+                  # those should never be in the result
+                  expect(response.body).not_to include 'past slot'
+                  expect(response.body).not_to include 'past reslot'
+                  expect(response.body).not_to include 'ongoing slot'
+                  expect(response.body).not_to include 'ongoing reslot'
+                  expect(response.body).not_to include 'not my upcoming slot'
+                  previous_result = result
+                end
+              end
+              expect(result.last['title']).to eq 'upcoming slot B'
+
+              stdslot_count = @current_user.std_slots.upcoming.count
+              reslot_count = @current_user.re_slots.upcoming.count
+              slot_count = stdslot_count + reslot_count
+              expect(result_count).to eq slot_count
+            end
+          end
+
+          context "via 'before' cursor" do
+            let(:limit) { 7 }
+            let(:filter) { 'upcoming' }
+
+            it "returns all slots before 'moment'" do
+              # first request without a cursor
+              get "/v1/users/#{@current_user.id}/slots", query_string,
+                  @auth_header
+
+              expect(response.status).to be(200)
+              resp = JSON.parse(response.body)
+              result_count = resp['data'].size
+
+              # receive a cursor for further requests
+              cursor = resp['paging']['before']
+              expect(cursor).not_to be nil
+              result = []
+              previous_result = resp['data']
+
+              while cursor
+                # paginate through the result
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: filter, before: cursor, limit: limit },
+                    @auth_header
+
+                expect(response.status).to be(200)
+
+                json = JSON.parse(response.body)
+                cursor = json['paging']['before']
+                result = json['data']
+
+                if result.empty?
+                  expect(previous_result.first['title'])
+                    .to eq long_ago_slot.title
+                else
+                  result_count += result.size
+
+                  # check the order once again
+                  result.each_with_index do |slot, index|
+                    break if index == result.size - 1
+                    next_slot = result[index + 1]
+                    expect(slot['startDate']).to be <= next_slot['startDate']
+                    if slot['startDate'] == next_slot['startDate']
+                      expect(slot['endDate']).to be <= next_slot['endDate']
+                    end
+                    if slot['endDate'] == next_slot['endDate']
+                      expect(slot['id']).to be < next_slot['id']
+                    end
+                  end
+
+                  # make sure the follow up responses return slots
+                  # which are earlier than the slots from the previous response
+                  expect(result.last['startDate'])
+                    .to be <= previous_result.first['startDate']
+                  if result.last['startDate'] == previous_result.first['startDate']
+                    expect(result.last['endDate'])
+                      .to be <= previous_result.first['endDate']
+                  end
+                  if result.last['endDate'] == previous_result.first['endDate']
+                    expect(result.last['id'])
+                      .to be <= previous_result.first['id']
+                  end
+                  previous_result = result
+                end
+                expect(response.body).not_to include 'not my upcoming slot'
+              end
+
+              stdslot_count = @current_user.std_slots.past.count
+              reslot_count = @current_user.re_slots.past.count
+              # add limit to count because first request is for upcoming
+              slot_count = stdslot_count + reslot_count + limit
+              expect(result_count).to eq slot_count
+            end
+          end
         end
 
-        it "returns success" do
-          get "/v1/users/#{current_user.id}/slots", {}, auth_header
-          expect(response.status).to be(200)
+        describe "ordering" do
+          let(:filter) { 'now' }
+
+          it "by startdate, enddate, slotid" do
+
+            get "/v1/users/#{@current_user.id}/slots",
+                query_string, @auth_header
+
+            expect(response.status).to be(200)
+            result = json['data']
+
+            result.each_with_index do |slot, index|
+              break if index == result.size - 1
+              next_slot = result[index + 1]
+              expect(slot['startDate']).to be <= next_slot['startDate']
+              if slot['startDate'] == next_slot['startDate']
+                expect(slot['endDate']).to be <= next_slot['endDate']
+              end
+              if slot['endDate'] == next_slot['endDate']
+                expect(slot['id']).to be < next_slot['id']
+              end
+            end
+          end
         end
 
-        it "returns all stdslots & reslots for the current_user" do
-          get "/v1/users/#{current_user.id}/slots", {}, auth_header
-          expect(json.length).to eq slots.size
-        end
+        describe "filter by slot status:" do
+          let(:over_limit) { BaseSlot.all.count * 2 }
 
-        it "excludes groupslots of the current_user" do
-          get "/v1/users/#{current_user.id}/slots", {}, auth_header
-          expect(response.body).not_to include group_slot.title
+          context "all" do
+            it "returns all slots" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: 'all' }, @auth_header
+
+              expect(response.status).to be(200)
+
+              user_stdslot_count = @current_user.std_slots.count
+              user_reslot_count = @current_user.re_slots.count
+              user_slot_count = user_stdslot_count + user_reslot_count
+              expect(json['data'].length) .to eq user_slot_count
+
+              expect(response.body).to include 'ongoing slot'
+              expect(response.body).to include 'upcoming slot'
+              expect(response.body).to include 'past slot'
+            end
+          end
+
+          context "upcoming" do
+            let(:filter) { 'upcoming' }
+
+            it "returns slots where start_date is equal or after moment" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter},
+                  @auth_header
+
+              expect(response.status).to be(200)
+              now = Time.zone.now
+              json['data'].each do |slot|
+                expect(slot['startDate']).to be >= now
+              end
+              expect(response.body).to include 'upcoming slot'
+              expect(response.body).not_to include 'ongoing slot'
+              expect(response.body).not_to include 'past slot'
+            end
+
+            it "doesn't return 'after' cursor if no more results" do
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter, limit: over_limit },
+                  @auth_header
+              expect(response.status).to be(200)
+              expect(json['paging']['after']).to be nil
+            end
+          end
+
+          context "past" do
+            let(:filter) { 'past' }
+
+            it "returns slots where start_date is before moment" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter },
+                  @auth_header
+
+              expect(response.status).to be(200)
+              now = Time.zone.now
+              json['data'].each do |slot|
+                expect(slot['startDate']).to be < now
+              end
+              expect(response.body).to include 'past slot'
+              expect(response.body).to include 'ongoing slot'
+              expect(response.body).not_to include 'upcoming slot'
+            end
+
+            it "doesn't return 'before' cursor if no more results" do
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter, limit: over_limit },
+                  @auth_header
+              expect(response.status).to be(200)
+              expect(json['paging']['before']).to be nil
+            end
+          end
+
+          context "finished" do
+            it "returns slots where start & end is before moment" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: 'finished' },
+                  @auth_header
+
+              expect(response.status).to be(200)
+              now = Time.zone.now
+              json['data'].each do |slot|
+                expect(slot['endDate']).to be < now
+              end
+              expect(response.body).to include 'past slot'
+              expect(response.body).not_to include 'ongoing slot'
+              expect(response.body).not_to include 'upcoming slot'
+            end
+          end
+
+          context "ongoing" do
+            it "returns slots where start is before & end is after moment" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: 'ongoing' },
+                  @auth_header
+
+              expect(response.status).to be(200)
+              now = Time.zone.now
+              json['data'].each do |slot|
+                expect(slot['startDate']).to be < now
+                expect(slot['endDate']).to be > now
+              end
+              expect(response.body).to include 'ongoing slot'
+              expect(response.body).not_to include 'upcoming slot'
+              expect(response.body).not_to include 'past slot'
+            end
+          end
+
+          context "now" do
+            it "returns ongoing and upcoming slots" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: 'now', moment: Time.zone.now.as_json },
+                  @auth_header
+
+              expect(response.status).to be(200)
+              expect(response.body).to include 'upcoming slot'
+              expect(response.body).to include 'ongoing slot'
+              expect(response.body).to include 'ongoing reslot'
+              expect(response.body).not_to include 'past slot'
+              expect(response.body).not_to include 'not my upcoming slot'
+              expect(json).to have_key 'paging'
+              expect(json['paging']).to have_key 'moment'
+              expect(json['paging']).to have_key 'limit'
+              expect(json['paging']).to have_key 'before'
+            end
+          end
+
+          context "around" do
+            let(:filter) { 'around' }
+            let(:limit) { 10 }
+            let(:moment) { Time.zone.now }
+
+            it "half of the slots before and half after moment" do
+
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter, limit: limit, moment: moment },
+                  @auth_header
+
+              expect(response.status).to be(200)
+              expect(json['data'].length).to eq limit
+
+              forward = backward = 0
+              json['data'].each do |slot|
+                forward += 1 if slot['startDate'] >= moment
+                backward += 1 if slot['startDate'] < moment
+              end
+              expect(forward).to eq limit / 2
+              expect(backward).to eq limit / 2
+            end
+
+            it "doesn't return cursors if not enough slots" do
+              get "/v1/users/#{@current_user.id}/slots",
+                  { filter: filter, limit: over_limit },
+                  @auth_header
+              expect(response.status).to be(200)
+              expect(json['paging']['after']).to be nil
+              expect(json['paging']['before']).to be nil
+            end
+          end
         end
       end
 
-      describe "my Slots, with pagination", :keep_data do
-        before(:all) do
-          @current_user = create(:user, :with_email, :with_password)
-          @auth_header = {
-            'Authorization' => "Token token=#{@current_user.auth_token}" }
-
-          # upcoming slots
-          create(:std_slot_private,
-                 start_date: Time.zone.tomorrow,
-                 title: 'not my upcoming slot')
-          create(:std_slot_private,
-                 start_date: Time.zone.tomorrow,
-                 title: 'upcoming slot',
-                 owner: @current_user)
-          create(:std_slot_private,
-                 start_date: Time.zone.today.next_week.end_of_day,
-                 end_date: Time.zone.today.next_week.next_month,
-                 title: 'upcoming slot A',
-                 owner: @current_user)
-          create(:std_slot_private,
-                 start_date: Time.zone.today.next_week.end_of_day,
-                 end_date: Time.zone.today.next_week.next_month,
-                 title: 'upcoming slot B',
-                 owner: @current_user)
-          create_list(:std_slot_private, 3,
-                      start_date: Time.zone.tomorrow,
-                      owner: @current_user)
-          create(:re_slot,
-                 start_date: Time.zone.tomorrow.midday,
-                 end_date: Time.zone.tomorrow.next_week.end_of_day,
-                 title: 'upcoming reslot',
-                 slotter: @current_user)
-          # ongoing slots
-          create(:std_slot_friends,
-                 start_date: Time.zone.yesterday,
-                 end_date: Time.zone.tomorrow,
-                 title: 'ongoing slot',
-                 owner: @current_user)
-          create_list(:std_slot_friends, 12,
-                      start_date: Time.zone.yesterday,
-                      end_date: Time.zone.tomorrow,
-                      title: 'ongoing slots',
-                      owner: @current_user)
-          create(:re_slot,
-                 start_date: Time.zone.yesterday,
-                 end_date: Time.zone.tomorrow,
-                 title: 'ongoing reslot',
-                 slotter: @current_user)
-          # past slots
-          create(:std_slot_public,
-                 start_date: Time.zone.yesterday.last_year,
-                 end_date: Time.zone.today.last_year,
-                 title: 'long ago slot',
-                 owner: @current_user)
-          create(:std_slot_public,
-                 start_date: Time.zone.yesterday.at_midday,
-                 end_date: Time.zone.yesterday.end_of_day,
-                 title: 'past slot',
-                 owner: @current_user)
-          create_list(:std_slot_public, 13,
-                      start_date: Time.zone.yesterday.at_midday,
-                      end_date: Time.zone.yesterday.end_of_day,
-                      title: 'past slots',
-                      owner: @current_user)
-          create(:re_slot,
-                 start_date: Time.zone.yesterday.last_month,
-                 end_date: Time.zone.today.last_month,
-                 title: 'past reslot',
-                 slotter: @current_user)
+      describe "GET slots for befriended user" do
+        let(:friend) do
+          friend = create(:user)
+          create(:friendship, :established,
+                 user: @current_user, friend: friend)
+          friend
         end
 
-        describe "GET slots for current user" do
-          let(:limit) { 4 }
-          let(:query_string) {
-            { status: status, moment: Time.zone.now.as_json, limit: limit } }
+        it "returns ok" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+              'Authorization' => "Token token=#{friend.auth_token}"
+          expect(response).to have_http_status :ok
+        end
 
-          describe "paginate" do
-            context "via 'after' cursor" do
-              let(:limit) { 3 }
-              let(:filter) { 'upcoming' }
+        it "doesn't return private slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+              'Authorization' => "Token token=#{friend.auth_token}"
 
-              it "returns all slots after 'moment'" do
-                # first request without a cursor
-                get "/v1/users/#{@current_user.id}/slots", query_string,
-                    @auth_header
+          expect(response.body).not_to include 'not my upcoming slot'
+          expect(response.body).not_to include 'upcoming slot'
+          expect(response.body).not_to include 'upcoming slot A'
+          expect(response.body).not_to include 'upcoming slot B'
+        end
 
-                expect(response.status).to be(200)
-                resp = JSON.parse(response.body)
-                result_count = resp['data'].size
+        it "returns friend-visible slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+              'Authorization' => "Token token=#{friend.auth_token}"
 
-                # receive a cursor for further requests
-                cursor = resp['paging']['after']
-                expect(cursor).not_to be nil
-                previous_result = resp['data']
+          expect(response.body).to include 'ongoing slot'
+          expect(response.body).to include 'ongoing slots'
+        end
 
-                while cursor
-                  # paginate through the result
-                  get "/v1/users/#{@current_user.id}/slots",
-                      { filter: filter, after: cursor, limit: limit },
-                      @auth_header
+        it "returns friend-of-friend visible slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+              'Authorization' => "Token token=#{friend.auth_token}"
 
-                  expect(response.status).to be(200)
+          expect(response.body).to include 'foaf past slot'
+        end
 
-                  json = JSON.parse(response.body)
-                  cursor = json['paging']['after']
-                  result = json['data']
+        it "returns public slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+              'Authorization' => "Token token=#{friend.auth_token}"
 
-                  if result.empty?
-                    expect(previous_result.first['title'])
-                      .to eq upcoming_slot.title
-                  else
-                    result_count += result.size
-                    # make sure the follow up responses return slots
-                    # which are later than the slots from the previous response
-                    expect(result.first['startDate'])
-                      .to be >= previous_result.last['startDate']
-                    if result.first['startDate'] == previous_result.last['startDate']
-                      expect(result.first['endDate'])
-                        .to be >= previous_result.last['endDate']
-                    end
-                    if result.first['endDate'] == previous_result.last['endDate']
-                      expect(result.first['id'])
-                        .to be >= previous_result.last['id']
-                    end
-                    # those should never be in the result
-                    expect(response.body).not_to include 'past slot'
-                    expect(response.body).not_to include 'past reslot'
-                    expect(response.body).not_to include 'ongoing slot'
-                    expect(response.body).not_to include 'ongoing reslot'
-                    expect(response.body).not_to include 'not my upcoming slot'
-                    previous_result = result
-                  end
-                end
-                expect(result.last['title']).to eq 'upcoming slot B'
+          expect(response.body).to include 'ongoing reslot'
+          expect(response.body).to include 'upcoming reslot'
+          expect(response.body).to include 'past slot'
+          expect(response.body).to include 'long ago slot'
+        end
 
-                stdslot_count = @current_user.std_slots.upcoming.count
-                reslot_count = @current_user.re_slots.upcoming.count
-                slot_count = stdslot_count + reslot_count
-                expect(result_count).to eq slot_count
-              end
-            end
+        context "group slots" do
+          let(:unshared_group) { create(:group, owner: friend) }
+          let!(:unshared_groupslot) {
+            create(:group_slot, group: unshared_group) }
 
-            context "via 'before' cursor" do
-              let(:limit) { 7 }
-              let(:filter) { 'upcoming' }
+          let(:shared_group) do
+            group = create(:group, :members_can_post)
+            create(:membership, :active, group: group, user: @current_user)
+            create(:membership, :active, group: group, user: friend)
+            group
+          end
+          let!(:shared_groupslot) {
+            create(:group_slot, group: shared_group) }
 
-              it "returns all slots before 'moment'" do
-                # first request without a cursor
-                get "/v1/users/#{@current_user.id}/slots", query_string,
-                    @auth_header
+          it "returns shared group slots" do
+            get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+                'Authorization' => "Token token=#{friend.auth_token}"
 
-                expect(response.status).to be(200)
-                resp = JSON.parse(response.body)
-                result_count = resp['data'].size
+            expect(response.body).not_to include unshared_groupslot.title
+            expect(response.body).to include shared_groupslot.title
+          end
+        end
+      end
 
-                # receive a cursor for further requests
-                cursor = resp['paging']['before']
-                expect(cursor).not_to be nil
-                result = []
-                previous_result = resp['data']
+      describe "GET slots for friend of a befriended user" do
+        let(:friend) do
+          friend = create(:user)
+          create(:friendship, :established, user: @current_user, friend: friend)
+          friend
+        end
+        let(:offa) do
+          offa = create(:user)
+          create(:friendship, :established, user: offa, friend: friend)
+          offa
+        end
 
-                while cursor
-                  # paginate through the result
-                  get "/v1/users/#{@current_user.id}/slots",
-                      { filter: filter, before: cursor, limit: limit },
-                      @auth_header
+        it "returns ok" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+              'Authorization' => "Token token=#{offa.auth_token}"
+          expect(response).to have_http_status :ok
+        end
 
-                  expect(response.status).to be(200)
+        it "doesn't return private slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+              'Authorization' => "Token token=#{offa.auth_token}"
 
-                  json = JSON.parse(response.body)
-                  cursor = json['paging']['before']
-                  result = json['data']
+          expect(response.body).not_to include 'not my upcoming slot'
+          expect(response.body).not_to include 'upcoming slot'
+          expect(response.body).not_to include 'upcoming slot A'
+          expect(response.body).not_to include 'upcoming slot B'
+        end
 
-                  if result.empty?
-                    expect(previous_result.first['title'])
-                      .to eq long_ago_slot.title
-                  else
-                    result_count += result.size
+        it "returns friend-of-friend visible slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+              'Authorization' => "Token token=#{offa.auth_token}"
 
-                    # check the order once again
-                    result.each_with_index do |slot, index|
-                      break if index == result.size - 1
-                      next_slot = result[index + 1]
-                      expect(slot['startDate']).to be <= next_slot['startDate']
-                      if slot['startDate'] == next_slot['startDate']
-                        expect(slot['endDate']).to be <= next_slot['endDate']
-                      end
-                      if slot['endDate'] == next_slot['endDate']
-                        expect(slot['id']).to be < next_slot['id']
-                      end
-                    end
+          expect(response.body).to include 'foaf past slot'
+        end
 
-                    # make sure the follow up responses return slots
-                    # which are earlier than the slots from the previous response
-                    expect(result.last['startDate'])
-                      .to be <= previous_result.first['startDate']
-                    if result.last['startDate'] == previous_result.first['startDate']
-                      expect(result.last['endDate'])
-                        .to be <= previous_result.first['endDate']
-                    end
-                    if result.last['endDate'] == previous_result.first['endDate']
-                      expect(result.last['id'])
-                        .to be <= previous_result.first['id']
-                    end
-                    previous_result = result
-                  end
-                  expect(response.body).not_to include 'not my upcoming slot'
-                end
+        it "returns public slots of user" do
+          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+              'Authorization' => "Token token=#{offa.auth_token}"
 
-                stdslot_count = @current_user.std_slots.past.count
-                reslot_count = @current_user.re_slots.past.count
-                # add limit to count because first request is for upcoming
-                slot_count = stdslot_count + reslot_count + limit
-                expect(result_count).to eq slot_count
-              end
-            end
+          expect(response.body).to include 'ongoing reslot'
+          expect(response.body).to include 'upcoming reslot'
+          expect(response.body).to include 'long ago slot'
+        end
+
+        context "group slots" do
+          let(:unshared_group) { create(:group, owner: offa) }
+          let!(:unshared_groupslot) {
+            create(:group_slot, group: unshared_group) }
+
+          let(:shared_group) do
+            group = create(:group, :members_can_post)
+            create(:membership, :active, group: group, user: @current_user)
+            create(:membership, :active, group: group, user: offa)
+            group
+          end
+          let!(:shared_groupslot) {
+            create(:group_slot, group: shared_group) }
+
+          it "returns shared group slots" do
+            get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+                'Authorization' => "Token token=#{offa.auth_token}"
+
+            expect(response.body).not_to include unshared_groupslot.title
+            expect(response.body).to include shared_groupslot.title
+          end
+        end
+      end
+
+      describe "GET slots for unrelated user" do
+        context "when logged in" do
+          skip 'TODO: spec paginate slots of unrelated user'
+        end
+
+        context "when visitor" do
+          # missing spec -> here comes the bug: BKD-293
+          it "returns ok" do
+            get "/v1/users/#{@current_user.id}/slots", filter: 'now'
+            expect(response).to have_http_status :ok
           end
 
-          describe "ordering" do
-            let(:filter) { 'now' }
-
-            it "by startdate, enddate, slotid" do
-
-              get "/v1/users/#{@current_user.id}/slots",
-                  query_string, @auth_header
-
-              expect(response.status).to be(200)
-              result = json['data']
-
-              result.each_with_index do |slot, index|
-                break if index == result.size - 1
-                next_slot = result[index + 1]
-                expect(slot['startDate']).to be <= next_slot['startDate']
-                if slot['startDate'] == next_slot['startDate']
-                  expect(slot['endDate']).to be <= next_slot['endDate']
-                end
-                if slot['endDate'] == next_slot['endDate']
-                  expect(slot['id']).to be < next_slot['id']
-                end
-              end
-            end
-          end
-
-          describe "filter by slot status:" do
-            let(:over_limit) { BaseSlot.all.count * 2 }
-
-            context "all" do
-              it "returns all slots" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: 'all' }, @auth_header
-
-                expect(response.status).to be(200)
-
-                user_stdslot_count = @current_user.std_slots.count
-                user_reslot_count = @current_user.re_slots.count
-                user_slot_count = user_stdslot_count + user_reslot_count
-                expect(json['data'].length) .to eq user_slot_count
-
-                expect(response.body).to include 'ongoing slot'
-                expect(response.body).to include 'upcoming slot'
-                expect(response.body).to include 'past slot'
-              end
-            end
-
-            context "upcoming" do
-              let(:filter) { 'upcoming' }
-
-              it "returns slots where start_date is equal or after moment" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter},
-                    @auth_header
-
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['startDate']).to be >= now
-                end
-                expect(response.body).to include 'upcoming slot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).not_to include 'past slot'
-              end
-
-              it "doesn't return 'after' cursor if no more results" do
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter, limit: over_limit },
-                    @auth_header
-                expect(response.status).to be(200)
-                expect(json['paging']['after']).to be nil
-              end
-            end
-
-            context "past" do
-              let(:filter) { 'past' }
-
-              it "returns slots where start_date is before moment" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter },
-                    @auth_header
-
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['startDate']).to be < now
-                end
-                expect(response.body).to include 'past slot'
-                expect(response.body).to include 'ongoing slot'
-                expect(response.body).not_to include 'upcoming slot'
-              end
-
-              it "doesn't return 'before' cursor if no more results" do
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter, limit: over_limit },
-                    @auth_header
-                expect(response.status).to be(200)
-                expect(json['paging']['before']).to be nil
-              end
-            end
-
-            context "finished" do
-              it "returns slots where start & end is before moment" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: 'finished' },
-                    @auth_header
-
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['endDate']).to be < now
-                end
-                expect(response.body).to include 'past slot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).not_to include 'upcoming slot'
-              end
-            end
-
-            context "ongoing" do
-              it "returns slots where start is before & end is after moment" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: 'ongoing' },
-                    @auth_header
-
-                expect(response.status).to be(200)
-                now = Time.zone.now
-                json['data'].each do |slot|
-                  expect(slot['startDate']).to be < now
-                  expect(slot['endDate']).to be > now
-                end
-                expect(response.body).to include 'ongoing slot'
-                expect(response.body).not_to include 'upcoming slot'
-                expect(response.body).not_to include 'past slot'
-              end
-            end
-
-            context "now" do
-              it "returns ongoing and upcoming slots" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: 'now', moment: Time.zone.now.as_json },
-                    @auth_header
-
-                expect(response.status).to be(200)
-                expect(response.body).to include 'upcoming slot'
-                expect(response.body).to include 'ongoing slot'
-                expect(response.body).to include 'ongoing reslot'
-                expect(response.body).not_to include 'past slot'
-                expect(response.body).not_to include 'not my upcoming slot'
-                expect(json).to have_key 'paging'
-                expect(json['paging']).to have_key 'moment'
-                expect(json['paging']).to have_key 'limit'
-                expect(json['paging']).to have_key 'before'
-              end
-            end
-
-            context "around" do
-              let(:filter) { 'around' }
-              let(:limit) { 10 }
-              let(:moment) { Time.zone.now }
-
-              it "half of the slots before and half after moment" do
-
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter, limit: limit, moment: moment },
-                    @auth_header
-
-                expect(response.status).to be(200)
-                expect(json['data'].length).to eq limit
-
-                forward = backward = 0
-                json['data'].each do |slot|
-                  forward += 1 if slot['startDate'] >= moment
-                  backward += 1 if slot['startDate'] < moment
-                end
-                expect(forward).to eq limit / 2
-                expect(backward).to eq limit / 2
-              end
-
-              it "doesn't return cursors if not enough slots" do
-                get "/v1/users/#{@current_user.id}/slots",
-                    { filter: filter, limit: over_limit },
-                    @auth_header
-                expect(response.status).to be(200)
-                expect(json['paging']['after']).to be nil
-                expect(json['paging']['before']).to be nil
-              end
-            end
-          end
-
-          describe "GET slots for befriended user" do
-            let(:friend) do
-              friend = create(:user)
-              create(:friendship, :established,
-                     user: @current_user, friend: friend)
-              friend
-            end
-
-            it "returns ok" do
-              get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
-                  'Authorization' => "Token token=#{friend.auth_token}"
-              expect(response).to have_http_status :ok
-            end
-
-            it "doesn't return private slots of user" do
-              get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
-                  'Authorization' => "Token token=#{friend.auth_token}"
-
-              expect(response.body).not_to include 'not my upcoming slot'
-              expect(response.body).not_to include 'upcoming slot'
-              expect(response.body).not_to include 'upcoming slot A'
-              expect(response.body).not_to include 'upcoming slot B'
-            end
-
-            it "returns friend-visible slots of user" do
-              get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
-                  'Authorization' => "Token token=#{friend.auth_token}"
-
-              expect(response.body).to include 'ongoing slot'
-              expect(response.body).to include 'ongoing slots'
-            end
-
-            it "returns public slots of user" do
-              get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
-                  'Authorization' => "Token token=#{friend.auth_token}"
-
-              expect(response.body).to include 'ongoing reslot'
-              expect(response.body).to include 'upcoming reslot'
-              expect(response.body).to include 'past slot'
-              expect(response.body).to include 'long ago slot'
-            end
-
-            context "group slots" do
-              let(:unshared_group) { create(:group, owner: friend) }
-              let!(:unshared_groupslot) {
-                create(:group_slot, group: unshared_group) }
-
-              let(:shared_group) do
-                group = create(:group, :members_can_post)
-                create(:membership, :active, group: group, user: @current_user)
-                create(:membership, :active, group: group, user: friend)
-                group
-              end
-              let!(:shared_groupslot) {
-                create(:group_slot, group: shared_group) }
-
-              it "returns shared group slots" do
-                get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
-                    'Authorization' => "Token token=#{friend.auth_token}"
-
-                expect(response.body).not_to include unshared_groupslot.title
-                expect(response.body).to include shared_groupslot.title
-              end
-            end
-          end
-
-          describe "GET slots for unrelated user" do
-            context "when logged in" do
-              skip 'TODO: spec paginate slots of unrelated user'
-            end
-
-            context "when visitor" do
-              # missing spec -> here comes the bug: BKD-293
-              it "returns ok" do
-                get "/v1/users/#{@current_user.id}/slots", filter: 'now'
-                expect(response).to have_http_status :ok
-              end
-
-              it "only returns public slots" do
-                get "/v1/users/#{@current_user.id}/slots", filter: 'all'
-                expect(response.body).not_to include 'not my upcoming slot'
-                expect(response.body).not_to include 'upcoming slot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).to include 'ongoing reslot'
-                expect(response.body).to include 'past slot'
-              end
-            end
+          it "only returns public slots" do
+            get "/v1/users/#{@current_user.id}/slots", filter: 'all'
+            expect(response.body).not_to include 'not my upcoming slot'
+            expect(response.body).not_to include 'upcoming slot'
+            expect(response.body).not_to include 'ongoing slot'
+            expect(response.body).to include 'ongoing reslot'
+            expect(response.body).to include 'past slot'
           end
         end
       end

@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
   has_many :std_slots_friends, class_name: StdSlotFriends,
            foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_foaf, class_name: StdSlotFoaf,
+           foreign_key: :owner_id, inverse_of: :owner
   has_many :std_slots_public, class_name: StdSlotPublic,
            foreign_key: :owner_id, inverse_of: :owner
 
