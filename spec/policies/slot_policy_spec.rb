@@ -136,6 +136,35 @@ describe SlotPolicy do
           end
         end
 
+        context "foaf slot if slot owner is friend" do
+          let(:slot) { create(:std_slot_foaf) }
+
+          it "allows access" do
+            create(:friendship, :established, user: user, friend: slot.owner)
+            expect(subject).to permit(user, slot)
+          end
+        end
+
+        context "foaf slot if slot owner has common friends" do
+          let(:slot) { create(:std_slot_foaf) }
+          let(:friend) { create(:user) }
+
+          it "allows access" do
+
+            create(:friendship, :established, user: user, friend: friend)
+            create(:friendship, :established, user: friend, friend: slot.owner)
+            expect(subject).to permit(user, slot)
+          end
+        end
+
+        context "foaf slot if slot owner isn't friend & has no common friends" do
+          let(:slot) { create(:std_slot_foaf) }
+
+          it "denies access" do
+            expect(subject).not_to permit(user, slot)
+          end
+        end
+
         context "friend slot if slot owner is friend" do
           let(:slot) { create(:std_slot_friends) }
 

@@ -121,13 +121,18 @@ class SlotPolicy < ApplicationPolicy
 
     # standard slot
     # true if it's a public slot
-    # true if it is my slot
-    # true if slot is friendslot and from a friend aka I'm a friend of the slot owner
+    # true if it's my slot
+    # true if it's friendslot and current_user is befriended with slot owner
+    # true if it's foafslot & current_user has common friends with slot owner
+    # FYI: foaf = friend-of-a-friend, so it's friends-of-friends visibility
     # if slot.try(:visibility)
     if slot.class < StdSlot
       return true if slot.StdSlotPublic?
       return true if current_user == slot.owner
-      return true if slot.StdSlotFriends? && current_user.friend_with?(slot.owner)
+      if slot.StdSlotFriends? || slot.StdSlotFoaf?
+        return true if current_user.friend_with?(slot.owner)
+      end
+      return true if slot.StdSlotFoaf? && current_user.common_friend_with?(slot.owner)
     end
 
     # re slot
