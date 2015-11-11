@@ -123,6 +123,7 @@ class User < ActiveRecord::Base
     new_password = SecureRandom.urlsafe_base64(6)
     update(password: new_password)
     set_auth_token
+    save
 
     begin
       ses = Aws::SES::Client.new

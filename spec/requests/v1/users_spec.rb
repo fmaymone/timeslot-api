@@ -232,6 +232,13 @@ RSpec.describe "V1::Users", type: :request do
           current_user.reload
         }.to change(current_user, :password_digest)
       end
+
+      it "creates a new auth_token for user" do
+        expect {
+          post "/v1/users/reset", { email: current_user.email }, auth_header
+          current_user.reload
+        }.to change(current_user, :auth_token)
+      end
     end
 
     context "invalid params" do
