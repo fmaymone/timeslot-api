@@ -937,6 +937,7 @@ resource "Users" do
 
         let!(:std_slot_secret) { create(:std_slot_private, owner: joe) }
         let!(:std_slot_friend) { create(:std_slot_friends, owner: joe) }
+        let!(:std_slot_foaf) { create(:std_slot_foaf, owner: joe) }
         let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
         let!(:re_slots) { create(:re_slot, slotter: joe) }
         let(:incommon_groupslot) { create(:group_slot) }
@@ -953,14 +954,15 @@ resource "Users" do
 
           example "Get slots for befriended user", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
-                        " visibility 'friend' or 'public', ReSlots & shared" \
-                        " GroupSlots\n\n" \
+                        " visibility 'friend', 'foaf' (friend-of-friend) or" \
+                        " 'public', ReSlots & shared GroupSlots\n\n" \
                         "If a user is authenticated the slot settings" \
                         " (alerts) will be included."
             do_request
 
             expect(response_status).to eq(200)
             slot_count = joe.std_slots_friends.count +
+                         joe.std_slots_foaf.count +
                          joe.std_slots_public.count +
                          current_user.shared_group_slots(joe).count +
                          joe.re_slots.count
@@ -968,6 +970,46 @@ resource "Users" do
             expect(json.first).to have_key("id")
             expect(response_body).not_to include std_slot_secret.title
             expect(response_body).to include std_slot_friend.title
+            expect(response_body).to include std_slot_foaf.title
+            expect(response_body).to include std_slot_public.title
+            expect(response_body).to include groupslot.title
+            expect(response_body).not_to include incommon_groupslot.title
+          end
+        end
+
+        describe "friend of befriended user" do
+          let!(:friendship) do
+            common_friend = create(:user)
+            create(:friendship, :established, user: joe,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: current_user)
+          end
+          let(:groupslot) { create(:group_slot) }
+          let!(:memberships) {
+            create(:membership, :active, group: groupslot.group, user: current_user)
+            create(:membership, :active, group: groupslot.group, user: joe)
+            create(:membership, :active, group: incommon_groupslot.group, user: joe)
+          }
+
+          example "Get slots for befriended user", document: :v1 do
+            explanation "Returns an array which includes StandardSlots with" \
+                        " visibility 'foaf' (friend-of-friend) or 'public'," \
+                        " ReSlots & shared GroupSlots\n\n" \
+                        "If a user is authenticated the slot settings" \
+                        " (alerts) will be included."
+            do_request
+
+            expect(response_status).to eq(200)
+            slot_count = joe.std_slots_foaf.count +
+                         joe.std_slots_public.count +
+                         current_user.shared_group_slots(joe).count +
+                         joe.re_slots.count
+            expect(json.length).to eq slot_count
+            expect(json.first).to have_key("id")
+            expect(response_body).not_to include std_slot_secret.title
+            expect(response_body).not_to include std_slot_friend.title
+            expect(response_body).to include std_slot_foaf.title
             expect(response_body).to include std_slot_public.title
             expect(response_body).to include groupslot.title
             expect(response_body).not_to include incommon_groupslot.title

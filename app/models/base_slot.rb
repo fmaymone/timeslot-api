@@ -16,15 +16,16 @@ class BaseSlot < ActiveRecord::Base
   SLOT_TYPES = { StdSlotPrivate: 1,
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
-                 GroupSlotMembers: 4,
-                 GroupSlotPublic: 5,
+                 StdSlotFoaf: 4,
                  ReSlotFriends: 6,
                  ReSlotPublic: 7,
-                 # maybe remove the following
+                 GroupSlotMembers: 11,
+                 GroupSlotPublic: 12,
+                 # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
-                 GroupSlot: 21,
-                 ReSlot: 22
+                 ReSlot: 22,
+                 GroupSlot: 21
                }
 
   enum slot_type: SLOT_TYPES

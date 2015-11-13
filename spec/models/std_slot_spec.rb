@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe StdSlot, type: :model do
-  let(:std_slot) { build(:std_slot) }
+  let(:std_slot) { build(:std_slot_public) }
 
   subject { std_slot }
 
@@ -54,6 +54,14 @@ RSpec.describe StdSlot, type: :model do
         described_class.create_slot(meta_slot: meta_slot, visibility: 'friends',
                                     user: user)
       }.to change(StdSlotFriends, :count).by 1
+    end
+
+    it "creates a new StdSlotFoaf (visibility friend-of-a-friend)" do
+      expect {
+        described_class.create_slot(meta_slot: meta_slot,
+                                    visibility: 'foaf',
+                                    user: user)
+      }.to change(StdSlotFoaf, :count).by 1
     end
 
     it "creates a new StdSlotPublic" do

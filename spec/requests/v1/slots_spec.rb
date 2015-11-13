@@ -10,31 +10,6 @@ RSpec.describe "V1::Slots", type: :request do
   describe "GET /v1/slots/:id" do
     let(:std_slot) { create(:std_slot_public) }
 
-    context "GroupSlot, with valid ID" do
-      let(:group) { create(:group, owner: current_user) }
-      let(:group_slot) { create(:group_slot, group: group) }
-
-      it "returns success" do
-        get "/v1/slots/#{group_slot.id}", {}, auth_header
-        expect(response).to have_http_status(200)
-        expect(json['id']).to eq(group_slot.id)
-        expect(json).to have_key('group')
-        expect(json['group']['id']).to eq(group_slot.group_id)
-      end
-    end
-
-    context "StdSlot, with location" do
-      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
-
-      it "returns the location" do
-        skip "no location database @ data team"
-        get "/v1/slots/#{std_slot.id}"
-        expect(json).to have_key('location')
-        expect(json['location']['id']).to eq 200719253
-      end
-    end
-
     context "StdSlot, with valid ID" do
       it "returns success" do
         get "/v1/slots/#{std_slot.id}"
@@ -78,6 +53,48 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    # this is basically a policy test, not sure if it's a good idea to test
+    # this here
+    describe "StdSlot visibility" do
+      context "friends of friends" do
+        let(:std_slot) { create(:std_slot_foaf) }
+        let(:common_friend) { create(:user) }
+
+        it "is visible to the owner" do
+          get "/v1/slots/#{std_slot.id}", {},
+              { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: std_slot.owner)
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: common_friend)
+          create(:friendship, :established, user: common_friend,
+                 friend: std_slot.owner)
+
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is not visible to unrelated users" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :unauthorized
+        end
+
+        it "is not visible to strangers (not logged in)" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :unauthorized
+        end
+      end
+    end
+
     context "ReSlot, with valid ID" do
       let(:std_slot) {
         create(:std_slot_public, :with_media, :with_notes) }
@@ -107,13 +124,27 @@ RSpec.describe "V1::Slots", type: :request do
         ).to eq(std_slot.notes.second.title)
       end
     end
+
+    context "GroupSlot, with valid ID" do
+      let(:group) { create(:group, owner: current_user) }
+      let(:group_slot) { create(:group_slot, group: group) }
+
+      it "returns success" do
+        get "/v1/slots/#{group_slot.id}", {}, auth_header
+        expect(response).to have_http_status(200)
+        expect(json['id']).to eq(group_slot.id)
+        expect(json).to have_key('group')
+        expect(json['group']['id']).to eq(group_slot.group_id)
+      end
+    end
   end
 
   describe "POST /v1/stdlot" do
     context "StdSlot with valid params" do
+      let(:visibility) { 'private' }
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: 'private', settings: { alerts: '1110001100' })
+          visibility: visibility, settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -155,6 +186,17 @@ RSpec.describe "V1::Slots", type: :request do
         expect(slot.end_date)
           .to eq slot.start_date.to_datetime.next_day.at_midday
         expect(slot.open_end).to be true
+      end
+
+      context "visibility" do
+        let(:visibility) { 'foaf' }
+
+        it "creates slot with visibility friends-of-friends" do
+          expect {
+            post "/v1/stdslot/", valid_slot, auth_header
+          }.to change(StdSlotFoaf, :count)
+          expect(response).to have_http_status :created
+        end
       end
     end
 
@@ -1903,7 +1945,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "pagination", :keep_slots do
+    context "pagination", :keep_data do
       let(:limit) { 4 }
       let(:query_string) { { limit: limit } }
 

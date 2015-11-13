@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
   has_many :std_slots_friends, class_name: StdSlotFriends,
            foreign_key: :owner_id, inverse_of: :owner
+  has_many :std_slots_foaf, class_name: StdSlotFoaf,
+           foreign_key: :owner_id, inverse_of: :owner
   has_many :std_slots_public, class_name: StdSlotPublic,
            foreign_key: :owner_id, inverse_of: :owner
 
@@ -41,7 +43,7 @@ class User < ActiveRecord::Base
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, class_name: Friendship,
-           foreign_key: "user_id", inverse_of: :user
+           inverse_of: :user
   has_many :received_friendships, class_name: Friendship,
            foreign_key: "friend_id", inverse_of: :friend
 
@@ -329,7 +331,17 @@ class User < ActiveRecord::Base
 
   # TODO: send only user_id as param instead of full object
   def friend_with?(user)
-    friendship(user.id).try(:established?)
+    fs = friendship(user.id)
+    fs.nil? ? false : fs.try(:established?)
+  end
+
+  def common_friend_with?(other_id)
+    # Checks if there is an overlapping between the friends of the current user
+    # and the friends of the other user.
+    # Returns false if two users are directly befriended, unless they have one
+    # other friend in common.
+    user_relationship_query = UserQuery::Relationship.new(self.id, other_id)
+    user_relationship_query.common_friends.exists?
   end
 
   ## group related ##
@@ -390,7 +402,7 @@ class User < ActiveRecord::Base
       default_private_alerts
     when 'StdSlotFriends'
       default_own_friendslot_alerts
-    when 'StdSlotPublic'
+    when 'StdSlotPublic', 'StdSlotFoaf'
       default_own_public_alerts
     # TODO: add friends friendslot
     # TODO: add friends publicslot
@@ -411,8 +423,10 @@ class User < ActiveRecord::Base
     when 'StdSlot'
       default_private_alerts
     else
+      # TODO: ts_notify(msg: "unknown slottype #{slot} for user #{id}")
       # maybe not the best idea, but at least we hear if something goes wrong
-      opts = { error_message: "unknown slottype #{slot} for user #{id}" }
+      msg = "unknown slottype #{slot} for user #{id}"
+      opts = { error_message: msg }
       Airbrake.notify(ActiveRecord::StatementInvalid, opts)
       fail ActiveRecord::StatementInvalid, msg
     end

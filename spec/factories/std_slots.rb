@@ -9,6 +9,9 @@ FactoryGirl.define do
   factory :std_slot_friends, class: StdSlotFriends, parent: :std_slot do
   end
 
+  factory :std_slot_foaf, class: StdSlotFoaf, parent: :std_slot do
+  end
+
   factory :std_slot_public, class: StdSlotPublic, parent: :std_slot do
   end
 end

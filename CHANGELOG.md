@@ -1,6 +1,8 @@
 #Changelog
 
 ## upcoming
+- friend-of-friend visibility (foaf) for std_slots
+
 
 ## v0.8.1
 - many updates for activity stream

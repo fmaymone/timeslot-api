@@ -34,12 +34,12 @@ RSpec.configure do |config|
   end
 
   # keep some tables intact during testruns
-  config.before(:all, :keep_slots) do
+  config.before(:all, :keep_data) do
     DatabaseCleaner.strategy = :truncation, {
-      except: %w(meta_slots base_slots std_slots re_slots users) }
+      except: %w(meta_slots base_slots std_slots re_slots users friendships) }
   end
 
-  config.after(:all, :keep_slots) do
+  config.after(:all, :keep_data) do
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
   end
