@@ -58,12 +58,10 @@ module V1
     end
 
     # POST /v1/users/reset
-    # resets password to a new random password, should be sent per email
-    # TODO: this is not ready for production, sets a default password until
-    # we have email integration
+    # resets password to a new random password which is sent per email
     def reset_password
       authorize :user
-      @user = User.find_by email: params.require(:email)
+      @user = User.find_by! email: params.require(:email)
       @user.reset_password
 
       head :ok

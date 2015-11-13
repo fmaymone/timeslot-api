@@ -219,6 +219,47 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  describe "POST /v1/users/reset" do
+    context "valid params", :vcr do
+      it "returns ok" do
+        post "/v1/users/reset", { email: current_user.email }, auth_header
+        expect(response).to have_http_status :ok
+      end
+
+      it "resets the password for the user" do
+        expect {
+          post "/v1/users/reset", { email: current_user.email }, auth_header
+          current_user.reload
+        }.to change(current_user, :password_digest)
+      end
+
+      it "creates a new auth_token for user" do
+        expect {
+          post "/v1/users/reset", { email: current_user.email }, auth_header
+          current_user.reload
+        }.to change(current_user, :auth_token)
+      end
+    end
+
+    context "invalid params" do
+      it "doesn't fail for unknown email address" do
+        expect {
+          post "/v1/users/reset", { email: 'blabla@gmail.com' }, auth_header
+        }.not_to raise_error
+      end
+
+      it "returns :not_found for unknown email" do
+        post "/v1/users/reset", { email: 'blabla@gmail.com' }, auth_header
+        expect(response).to have_http_status :not_found
+      end
+
+      it "returns :unprocessable_entity if email missing" do
+        post "/v1/users/reset", {}, auth_header
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+  end
+
   describe "PATCH /v1/users" do
     context "with valid params" do
       context "username" do
