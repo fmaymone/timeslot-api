@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from Pundit::NotAuthorizedError do
-    head :unauthorized
+    head :forbidden
   end
 
   rescue_from ParameterInvalid do |exception|
