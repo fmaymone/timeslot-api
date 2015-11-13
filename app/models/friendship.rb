@@ -17,6 +17,8 @@ class Friendship < ActiveRecord::Base
 
   def offer
     update!(state: 00)
+    # TODO: I think we also need this: (write spec)
+    # update!(deleted_at: nil) if deleted_at?
   end
 
   def offered?

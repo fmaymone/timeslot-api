@@ -1,6 +1,7 @@
 class BaseSlot < ActiveRecord::Base
   include SlotActivity
   include Follow
+  include TS_Errors
 
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
@@ -379,7 +380,7 @@ class BaseSlot < ActiveRecord::Base
                 enddate: cursor_array.third}
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
-      raise ApplicationController::PaginationError
+      raise PaginationError, "invalid pagination cursor"
     # the following is not really neccessary, might be removed at some point
     # but for now it gives some useful info about the system
     else
@@ -390,7 +391,7 @@ class BaseSlot < ActiveRecord::Base
                               cursor_startdate: cursor[:startdate],
                               cursor_enddate: cursor[:enddate] }
         Airbrake.notify(ApplicationController::PaginationError, opts)
-        fail ApplicationController::PaginationError if Rails.env.development?
+        fail PaginationError, "cursor slot changed" if Rails.env.development?
       end
       cursor
     end

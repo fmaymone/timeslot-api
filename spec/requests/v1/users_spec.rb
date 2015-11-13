@@ -714,7 +714,7 @@ RSpec.describe "V1::Users", type: :request do
           end
 
           describe "filter by slot status:" do
-            let(:over_limit) { BaseSlot.all.count + 1 }
+            let(:over_limit) { BaseSlot.all.count * 2 }
 
             context "all" do
               it "returns all slots" do
@@ -845,6 +845,39 @@ RSpec.describe "V1::Users", type: :request do
                 expect(json['paging']).to have_key 'moment'
                 expect(json['paging']).to have_key 'limit'
                 expect(json['paging']).to have_key 'before'
+              end
+            end
+
+            context "around" do
+              let(:filter) { 'around' }
+              let(:limit) { 10 }
+              let(:moment) { Time.zone.now }
+
+              it "half of the slots before and half after moment" do
+
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: filter, limit: limit, moment: moment },
+                    @auth_header
+
+                expect(response.status).to be(200)
+                expect(json['data'].length).to eq limit
+
+                forward = backward = 0
+                json['data'].each do |slot|
+                  forward += 1 if slot['startDate'] >= moment
+                  backward += 1 if slot['startDate'] < moment
+                end
+                expect(forward).to eq limit / 2
+                expect(backward).to eq limit / 2
+              end
+
+              it "doesn't return cursors if not enough slots" do
+                get "/v1/users/#{@current_user.id}/slots",
+                    { filter: filter, limit: over_limit },
+                    @auth_header
+                expect(response.status).to be(200)
+                expect(json['paging']['after']).to be nil
+                expect(json['paging']['before']).to be nil
               end
             end
           end

@@ -1142,7 +1142,7 @@ resource "Users" do
 
     example "Remove Friends - Unfriending / Refuse Friend Requests",
             document: :v1 do
-      explanation "Receives a list of User IDs for which a friendship" \
+      explanation "Receives a list of User IDs for which a friendship " \
                   "with the current user will be refused or deleted.\n\n" \
                   "returns 404 if an User ID is invalid"
 

@@ -1,21 +1,7 @@
 class ApplicationController < ActionController::API
+  include TS_Errors
   include TS_Authenticable
   include Pundit
-
-  # Raised when the value of a parameter is invalid.
-  class ParameterInvalid < StandardError
-    def initialize(param, value)
-      super("#{value} is not a valid value for param: #{param}")
-    end
-  end
-
-  # Raised when the pagination cursor is not valid anymore (usually because
-  # slot.start_date or slot.end_date has changed since encoding).
-  class PaginationError < StandardError
-    def initialize
-      super("invalid cursor")
-    end
-  end
 
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
