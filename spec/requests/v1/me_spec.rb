@@ -92,7 +92,184 @@ RSpec.describe "V1::Me", type: :request do
     end
   end
 
-  describe "GET /v1/users/signout" do
+  describe "PATCH /v1/me" do
+    context "with valid params" do
+      context "username" do
+        it "responds with http OK" do
+          patch "/v1/me", { username: "foo" }, auth_header
+          expect(response).to have_http_status(:ok)
+        end
+
+        it "updates the username of the current user" do
+          patch "/v1/me", { username: "New username" }, auth_header
+          current_user.reload
+          expect(current_user.username).to eq("New username")
+        end
+
+        it "doesn't update the auth_token if new username" do
+          old_token = current_user.auth_token
+          patch "/v1/me", { username: "newname" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new username" do
+          old_digest = current_user.password_digest
+          patch "/v1/me", { username: "newname" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
+      context "email" do
+        it "updates the email address of the current user" do
+          patch "/v1/me", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.email).to eq("newmail@timeslot.com")
+        end
+
+        it "doesn't update the auth_token if new email" do
+          old_token = current_user.auth_token
+          patch "/v1/me", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new email" do
+          old_digest = current_user.password_digest
+          patch "/v1/me", { email: "newmail@timeslot.com" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
+      context "phone" do
+        it "updates the phone of the current user" do
+          patch "/v1/me", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.phone).to eq("1423423134")
+        end
+
+        it "doesn't update the auth_token if new phone" do
+          old_token = current_user.auth_token
+          patch "/v1/me", { phone: "1423423134" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        it "doesn't update the password_digest if new phone" do
+          old_digest = current_user.password_digest
+          patch "/v1/me", { phone: "123123213" }, auth_header
+          current_user.reload
+          expect(current_user.password_digest).to eq old_digest
+        end
+      end
+
+      context "password" do
+        let(:current_user) { create(:user, :with_email, password: 'timeslot') }
+
+        it "updates the password_digest if new password" do
+          old_digest = current_user.password_digest
+          patch "/v1/me", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
+          current_user.reload
+          expect(old_digest.eql? current_user.password_digest).to be false
+        end
+
+        it "allows signin with the new password" do
+          patch "/v1/me", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
+          current_user.reload
+          expect(current_user.try(:authenticate, "newsecret")).to eq current_user
+        end
+
+        it "doesn't update the auth_token if new password" do
+          old_token = current_user.auth_token
+          patch "/v1/me", { old_password: "timeslot",
+                               password: "newsecret" }, auth_header
+          current_user.reload
+          expect(current_user.auth_token).to eq old_token
+        end
+
+        context "invalid data" do
+          it "missing old password returns error" do
+            patch "/v1/me", { password: "newsecret" }, auth_header
+            expect(response).to have_http_status :unprocessable_entity
+            expect(json).to have_key 'error'
+          end
+
+          it "missing old password doesn't change password_digest" do
+            old_digest = current_user.password_digest
+            patch "/v1/me", { password: "newsecret" }, auth_header
+            current_user.reload
+            expect(old_digest.eql? current_user.password_digest).to be true
+          end
+
+          it "incorrect old password" do
+            patch "/v1/me", { old_password: "slimetot",
+                                 password: "newsecret" }, auth_header
+            expect(response).to have_http_status :unauthorized
+          end
+
+          it "incorrect old password doesn't change password_digest" do
+            old_digest = current_user.password_digest
+            patch "/v1/me", { old_password: "slimetot",
+                                 password: "newsecret" }, auth_header
+            current_user.reload
+            expect(old_digest.eql? current_user.password_digest).to be true
+          end
+        end
+      end
+
+      context "other attributes" do
+        it "updates the public URL of the current user" do
+          patch "/v1/me", { publicUrl: 'uffie' }, auth_header
+          current_user.reload
+          expect(current_user.public_url).to eq 'uffie'
+        end
+
+        it "updates the push notification state of the current user" do
+          patch "/v1/me", { push: true }, auth_header
+          current_user.reload
+          expect(current_user.push).to be true
+        end
+
+        it "updates the location of the current user" do
+          patch "/v1/me", { location: { name: 'Bonn' } }, auth_header
+          current_user.reload
+          expect(current_user.location.name).to eq('Bonn')
+        end
+
+        it "updates the slot default location id of the current user" do
+          patch "/v1/me", { slotDefaultLocationId: '323323232' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_location_id).to eq(323323232)
+        end
+
+        it "updates the slot default duration of the current user" do
+          patch "/v1/me", { slotDefaultDuration: 1000000 }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_duration).to eq(1000000)
+        end
+
+        it "updates the default slot type of the current user" do
+          skip 'needs slottype table'
+          patch "/v1/me", { slotDefaultType: 'StdSlotPrivate' }, auth_header
+          current_user.reload
+          expect(current_user.slot_default_type).to eq(StdSlotPrivate)
+        end
+      end
+    end
+
+    context "with invalid params" do
+      it "responds with http status Unprocessable Entity (422)" do
+        patch "/v1/me", { username: "" }, auth_header
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+  end
+
+  describe "GET /v1/me/signout" do
     it "invalidates the auth token" do
       get "/v1/me/signout", {}, auth_header
       current_user.reload

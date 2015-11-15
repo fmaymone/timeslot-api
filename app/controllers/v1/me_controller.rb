@@ -8,6 +8,27 @@ module V1
       render :show
     end
 
+    # PATCH /v1/me
+    def update
+      authorize :user
+
+      # move this into pundit
+      if params[:password].present?
+        password = params.require(:old_password)
+        pw_correct = current_user == current_user.try(:authenticate, password)
+        return head :unauthorized unless pw_correct
+      end
+
+      @user = current_user
+
+      if current_user.update(user_params)
+        render :show
+      else
+        render json: { error: current_user.errors },
+               status: :unprocessable_entity
+      end
+    end
+
     # GET /v1/me/signout
     # invalidates auth token
     def signout
@@ -15,6 +36,42 @@ module V1
       current_user.sign_out
 
       head :ok
+    end
+
+    private def user_params
+      p = params.permit(:username,
+                        :lang,
+                        :email,
+                        :phone,
+                        :password,
+                        :picture,
+                        :image,
+                        { location:
+                            [:name, :thoroughfare, :sub_thoroughfare, :locality,
+                             :sub_locality, :ocean, :administrative_area,
+                             :sub_administrative_area, :postal_code, :country,
+                             :iso_country_code, :in_land_water, :latitude,
+                             :longitude, :private_location, :areas_of_interest]
+                        },
+                        :name,
+                        :publicUrl,
+                        :push,
+                        :slotDefaultDuration,
+                        :slotDefaultLocationId,
+                        :slotDefaultTypeId,
+                        :defaultPrivateAlerts,
+                        :defaultOwnFriendslotAlerts,
+                        :defaultOwnPublicAlerts,
+                        :defaultFriendsFriendslotAlerts,
+                        :defaultFriendsPublicAlerts,
+                        :defaultReslotAlerts,
+                        :defaultGroupAlerts)
+
+      if params[:location].present?
+        p[:location_attributes] = p.delete 'location'
+        p[:location_attributes][:creator] = current_user
+      end
+      p.transform_keys(&:underscore) if p
     end
   end
 end
