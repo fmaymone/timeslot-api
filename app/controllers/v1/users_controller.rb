@@ -5,6 +5,7 @@ module V1
                               :media_items, :slots]
 
     # GET /v1/users
+    # TODO: remove user index method and route
     def index
       authorize :user
       @users = User.all
