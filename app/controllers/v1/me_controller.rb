@@ -7,5 +7,14 @@ module V1
 
       render :show
     end
+
+    # GET /v1/me/signout
+    # invalidates auth token
+    def signout
+      authorize :user
+      current_user.sign_out
+
+      head :ok
+    end
   end
 end
