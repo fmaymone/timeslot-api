@@ -268,6 +268,25 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
   end
+  describe "DELETE /v1/me" do
+    it "returns success" do
+      delete "/v1/me", {}, auth_header
+      expect(response).to be_success
+    end
+
+    it "sets deleted_at for current_user" do
+      delete "/v1/me", {}, auth_header
+      current_user.reload
+      expect(current_user.deleted_at?).to be true
+    end
+
+    it "doesn't delete the current user" do
+      expect(current_user).not_to be nil # make sure he exists
+      expect {
+        delete "/v1/me", {}, auth_header
+      }.not_to change(User, :count)
+    end
+  end
 
   describe "GET /v1/me/signout" do
     it "invalidates the auth token" do

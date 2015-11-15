@@ -20,7 +20,7 @@ RSpec.describe V1::MeController, type: :routing do
 
     it "routes to #destroy" do
       expect(delete: "/v1/me")
-        .to route_to("v1/me#destroy", format: :json)
+        .to route_to("v1/me#inactivate", format: :json)
     end
 
     it "routes to #media" do

@@ -25,6 +25,23 @@ module V1
       end
     end
 
+    # DELETE /v1/me
+    def inactivate
+      authorize :me
+
+      # user inactivate methode not yet fully implemented
+      if current_user.inactivate
+        render :show, locals: { user: current_user }
+      else
+        render json: { error: current_user.errors },
+               status: :unprocessable_entity
+      end
+    end
+
+    # TODO: we need an re-activate method also
+    # def reactivate
+    # end
+
     # GET /v1/me/signout
     # invalidates auth token
     def signout

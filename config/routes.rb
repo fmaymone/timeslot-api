@@ -71,7 +71,7 @@ Rails.application.routes.draw do
     scope :me do
       get '', to: 'me#show', as: 'show_me'
       patch '', to: 'me#update', as: 'update_me'
-      delete '', to: 'me#destroy', as: 'delete_me'
+      delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#slots', as: 'my_slots'
       get 'friendslots', to: 'me#slots_from_friends', as: 'my_friendslots'
       get 'media', to: 'me#media_items', as: 'my_media'
