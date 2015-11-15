@@ -111,8 +111,8 @@ module V1
       requested_user = User.find(params[:user_id])
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.my_slots(current_user: current_user,
-                                  user: requested_user)
+      @slots = collector.user_slots(current_user: current_user,
+                                    user: requested_user)
 
       if slot_paging_params.blank?
         render "v1/slots/index"

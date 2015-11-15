@@ -56,8 +56,7 @@ module V1
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.my_slots(current_user: current_user,
-                                  user: current_user)
+      @slots = collector.my_slots(user: current_user)
 
       if slot_paging_params.blank?
         render "v1/slots/index"

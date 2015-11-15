@@ -24,11 +24,19 @@ class SlotsCollector
     consider_filter([StdSlotPublic.all], @filter)
   end
 
-  # collects all slots current_user is allowed to see from requested_user
-  # including std_slots, reslots
-  def my_slots(current_user: nil, user:)
+  # collects all std_slots and reslots of current_user
+  def my_slots(user:)
+    showables = [user.std_slots, user.re_slots]
+    consider_filter(showables, @filter)
+  end
+
+  # collects all slots current_user or visitor is allowed to see from
+  # requested_user including std_slots, reslots and shared group_slots
+  def user_slots(current_user: nil, user:)
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
+
+    return my_slots(user: current_user) if relationship == ME
 
     # get showable slot collections
     showables = PresentableSlots.call(relationship: relationship, user: user,
