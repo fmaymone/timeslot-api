@@ -50,6 +50,23 @@ module V1
       head :ok
     end
 
+    # GET /v1/me/slots
+    # returns all std_slots and re_slots of the current user
+    def my_slots
+      authorize :me
+
+      collector = SlotsCollector.new(**slot_paging_params)
+      @slots = collector.my_slots(current_user: current_user,
+                                  user: current_user)
+
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
+    end
+
     private def user_params
       p = params.permit(:username,
                         :lang,

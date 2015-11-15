@@ -30,7 +30,7 @@ RSpec.describe V1::MeController, type: :routing do
 
     it "routes to #slots" do
       expect(get: "/v1/me/slots")
-        .to route_to("v1/me#slots", format: :json)
+        .to route_to("v1/me#my_slots", format: :json)
     end
 
     it "routes to #slots_from_friends" do
