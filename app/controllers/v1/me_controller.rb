@@ -3,9 +3,7 @@ module V1
     # GET /v1/me
     def show
       authorize :user
-      @user = current_user
-
-      render :show
+      render :show, locals: { user: current_user }
     end
 
     # PATCH /v1/me
@@ -19,10 +17,8 @@ module V1
         return head :unauthorized unless pw_correct
       end
 
-      @user = current_user
-
       if current_user.update(user_params)
-        render :show
+        render :show, locals: { user: current_user }
       else
         render json: { error: current_user.errors },
                status: :unprocessable_entity
