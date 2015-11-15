@@ -1070,25 +1070,39 @@ RSpec.describe "V1::Users", type: :request do
       end
 
       describe "GET slots for unrelated user" do
-        context "when logged in" do
-          skip 'TODO: spec paginate slots of unrelated user'
+        let(:stranger) { create(:user) }
+
+        it "returns ok" do
+          get "/v1/users/#{@current_user.id}/slots", filter: 'now',
+              'Authorization' => "Token token=#{stranger.auth_token}"
+          expect(response).to have_http_status :ok
         end
 
-        context "when visitor" do
-          # missing spec -> here comes the bug: BKD-293
-          it "returns ok" do
-            get "/v1/users/#{@current_user.id}/slots", filter: 'now'
-            expect(response).to have_http_status :ok
-          end
+        it "only returns public slots" do
+          get "/v1/users/#{@current_user.id}/slots", filter: 'all',
+              'Authorization' => "Token token=#{stranger.auth_token}"
 
-          it "only returns public slots" do
-            get "/v1/users/#{@current_user.id}/slots", filter: 'all'
-            expect(response.body).not_to include 'not my upcoming private slot'
-            expect(response.body).not_to include 'upcoming private slot'
-            expect(response.body).not_to include 'ongoing friendslot'
-            expect(response.body).to include 'ongoing reslot'
-            expect(response.body).to include 'past public slot'
-          end
+          expect(response.body).not_to include 'not my upcoming private slot'
+          expect(response.body).not_to include 'upcoming private slot'
+          expect(response.body).not_to include 'ongoing friendslot'
+          expect(response.body).to include 'ongoing reslot'
+          expect(response.body).to include 'past public slot'
+        end
+      end
+
+      describe "GET slots for user if visitor (not logged-in)" do
+        it "returns ok" do
+          get "/v1/users/#{@current_user.id}/slots", filter: 'now'
+          expect(response).to have_http_status :ok
+        end
+
+        it "only returns public slots" do
+          get "/v1/users/#{@current_user.id}/slots", filter: 'all'
+          expect(response.body).not_to include 'not my upcoming private slot'
+          expect(response.body).not_to include 'upcoming private slot'
+          expect(response.body).not_to include 'ongoing friendslot'
+          expect(response.body).to include 'ongoing reslot'
+          expect(response.body).to include 'past public slot'
         end
       end
     end
