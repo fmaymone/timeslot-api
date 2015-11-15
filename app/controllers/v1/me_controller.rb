@@ -2,7 +2,7 @@ module V1
   class MeController < ApplicationController
     # GET /v1/me
     def show
-      authorize :user
+      authorize :me
       render :show, locals: { user: current_user }
     end
 
@@ -28,9 +28,8 @@ module V1
     # GET /v1/me/signout
     # invalidates auth token
     def signout
-      authorize :user
+      authorize :me
       current_user.sign_out
-
       head :ok
     end
 

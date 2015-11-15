@@ -27,7 +27,7 @@ class ApplicationPolicy
   end
 
   def current_user?
-    return true if current_user
+    return true if @current_user
     false
   end
 
