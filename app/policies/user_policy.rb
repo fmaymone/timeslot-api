@@ -29,11 +29,6 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
-  # true if a user is logged in
-  def signout?
-    current_user?
-  end
-
   # seeing slots for a user is allowed for everybody including visitors
   # depending on the relationship between current_user and requested user
   # only specific slots may be visible, eg. public slots.
@@ -71,11 +66,6 @@ class UserPolicy < ApplicationPolicy
 
   # true if a user is logged in
   def remove_friends?
-    current_user?
-  end
-
-  # true if a user is logged in
-  def destroy?
     current_user?
   end
 end

@@ -8,7 +8,7 @@ module V1
 
     # PATCH /v1/me
     def update
-      authorize :user
+      authorize :me
 
       # move this into pundit
       if params[:password].present?
