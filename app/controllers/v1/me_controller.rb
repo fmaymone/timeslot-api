@@ -66,6 +66,13 @@ module V1
       end
     end
 
+    # GET /v1/me/media
+    def my_media_items
+      authorize :me
+      @media_items = current_user.media_items
+      render "v1/media/index"
+    end
+
     private def user_params
       p = params.permit(:username,
                         :lang,

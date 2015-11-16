@@ -742,4 +742,19 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
   end
+
+  describe "GET /v1/me/media" do
+    let!(:slots) do
+      create(:std_slot_public, :with_media, creator: current_user)
+      create(:std_slot_private, :with_media, creator: current_user)
+    end
+
+    it "Returns array which includes all media items of the current_user" do
+      get "/v1/me/media", {}, auth_header
+
+      expect(response).to have_http_status :ok
+      expect(json.length).to eq(current_user.media_items.count)
+      expect(json.length).to eq(12)
+    end
+  end
 end

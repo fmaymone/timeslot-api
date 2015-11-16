@@ -260,4 +260,41 @@ resource "Me" do
       expect(current_user.auth_token).to be nil
     end
   end
+
+  get "/v1/me/media" do
+    header 'Authorization', :auth_header
+
+    let!(:slot_public) {
+      create(:std_slot_public, :with_media, creator: current_user) }
+    let!(:slot_private) {
+      create(:std_slot_private, :with_media, creator: current_user) }
+    let!(:slot_friend) do
+      friend = create(:user)
+      create(:friendship, :established, user: current_user, friend: friend)
+      create(:std_slot_friends, :with_media, creator: friend)
+    end
+    let!(:slot_group) do
+      member = create(:user)
+      group_slot = create(:group_slot, :with_media, creator: member)
+      create(:membership, :active, group: group_slot.group, user: current_user)
+      create(:membership, :active, group: group_slot.group, user: member)
+      group_slot
+    end
+
+    response_field :array, "containing media items as a list of MediaItem"
+
+    example "Get all media items for the current user" do
+      explanation "Returns an array which includes all media items of " \
+                  "the current user."
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(response_body).to include(slot_public.media_items[0].public_id)
+      expect(response_body).to include(slot_private.media_items[0].public_id)
+      expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+      expect(response_body).not_to include(slot_group.media_items[0].public_id)
+      expect(json.length).to eq(12)
+    end
+  end
 end

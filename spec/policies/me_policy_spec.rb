@@ -4,7 +4,7 @@ describe MePolicy do
   subject { described_class }
 
   permissions :show?, :update?, :inactivate?, :signout?,
-              :my_slots?, :slots_from_friends?, :media_items?,
+              :my_slots?, :slots_from_friends?, :my_media_items?,
               :add_friends?, :remove_friends?, :update_device? do
     context "for a user" do
       let(:user) { create(:user) }

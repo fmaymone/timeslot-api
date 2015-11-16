@@ -25,7 +25,7 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
-  def media_items?
+  def my_media_items?
     current_user?
   end
 

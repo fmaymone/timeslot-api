@@ -569,23 +569,6 @@ resource "Users" do
       end
     end
 
-    context "Get all media items for the current user" do
-      let!(:current_user) { target_user }
-
-      example "Get all media items for the current user" do
-        explanation "Returns an array which includes all media items of the current user."
-
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(response_body).to include(slot_public.media_items[0].public_id)
-        expect(response_body).to include(slot_private.media_items[0].public_id)
-        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
-        expect(response_body).not_to include(slot_group.media_items[0].public_id)
-        expect(json.length).to eq(12)
-      end
-    end
-
     context "Get all public media items of a specific user" do
       example "Get media items of an user", document: :v1 do
         explanation "Returns an array which includes all public media items of a specific user."
