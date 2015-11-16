@@ -275,21 +275,6 @@ resource "Users" do
     end
   end
 
-  get "/v1/users/signout" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    example "User signout", document: :v1 do
-      explanation "returns OK if current user was successfully signed out\n\n" \
-                  "returns 403 if there was no current user"
-      do_request
-
-      expect(response_status).to eq(200)
-      current_user.reload
-      expect(current_user.auth_token).to be nil
-    end
-  end
-
   post "/v1/users/reset", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
