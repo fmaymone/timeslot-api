@@ -75,21 +75,4 @@ RSpec.describe V1::UsersController, type: :controller do
       end
     end
   end
-
-  describe "DELETE destroy" do
-    before(:each) {
-      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
-    }
-    it "doesn't destroy the requested user" do
-      expect {
-        delete :destroy, { }, valid_session
-      }.not_to change(User, :count)
-    end
-
-    it "sets the deleted_at of the user", :commit do
-      delete :destroy, { }, valid_session
-      current_user.reload
-      expect(current_user.deleted_at).not_to eq nil
-    end
-  end
 end

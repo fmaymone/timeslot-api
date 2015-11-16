@@ -98,7 +98,7 @@ Rails.application.routes.draw do
       # TODO: remove depricated routes:
       get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
       patch '', to: 'users#update', as: 'user_update'
-      delete '', to: 'users#destroy', as: 'user_delete'
+      delete '', to: 'me#inactivate', as: 'user_delete'
       get 'signout', to: 'users#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends_old'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends_old'

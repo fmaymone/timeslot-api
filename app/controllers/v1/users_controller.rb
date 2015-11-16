@@ -90,20 +90,6 @@ module V1
       end
     end
 
-    # DELETE /v1/users
-    def destroy
-      authorize :user
-      # user inactivate methode not yet fully implemented
-      @user = current_user.inactivate
-
-      if @user.errors.empty?
-        render :show
-      else
-        render json: { error: @user.errors },
-               status: :unprocessable_entity
-      end
-    end
-
     # GET /v1/users/1/slots
     # returns all slots of the requested user visible for the current user
     def slots

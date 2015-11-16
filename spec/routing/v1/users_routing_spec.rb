@@ -34,7 +34,7 @@ RSpec.describe V1::UsersController, type: :routing do
 
     it "routes to #destroy" do
       expect(delete: "/v1/users")
-        .to route_to("v1/users#destroy", format: :json)
+        .to route_to("v1/me#inactivate", format: :json)
     end
 
     it "routes to #media" do
