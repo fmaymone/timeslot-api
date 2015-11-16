@@ -46,33 +46,4 @@ RSpec.describe V1::UsersController, type: :controller do
       end
     end
   end
-
-  describe "PATCH update" do
-    before(:each) {
-      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
-    }
-    describe "with valid params" do
-      let(:new_attributes) {
-        attributes_for(:user, username: "new name")
-      }
-
-      it "updates the requested user" do
-        patch :update, new_attributes, valid_session
-        current_user.reload
-        expect(current_user.username).to eq "new name"
-      end
-
-      it "assigns the requested user as @user" do
-        patch :update, new_attributes, valid_session
-        expect(assigns(:user)).to eq(current_user)
-      end
-    end
-
-    describe "with invalid params" do
-      it "assigns the user as @user" do
-        patch :update, invalid_attributes, valid_session
-        expect(assigns(:user)).to eq(current_user)
-      end
-    end
-  end
 end

@@ -260,6 +260,7 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
+  # TODO: remove from here when user-image new style and me-controller is used
   describe "PATCH /v1/users" do
     context "with valid params" do
       context "username" do

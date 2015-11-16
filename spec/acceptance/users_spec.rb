@@ -314,6 +314,7 @@ resource "Users" do
     end
   end
 
+  # TODO: remove from here when user-image new style and me-controller is used
   patch "/v1/users" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
