@@ -47,5 +47,10 @@ RSpec.describe V1::MeController, type: :routing do
       expect(post: "/v1/me/remove_friends")
         .to route_to("v1/me#remove_friends", format: :json)
     end
+
+    it "routes to #update_device" do
+      expect(patch: "/v1/me/device")
+        .to route_to("v1/me#update_device", format: :json)
+    end
   end
 end

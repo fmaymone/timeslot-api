@@ -101,7 +101,7 @@ Rails.application.routes.draw do
       get 'signout', to: 'me#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends_old'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends_old'
-      patch 'device', to: 'users#update_device', as: 'update_device_old'
+      patch 'device', to: 'me#update_device', as: 'update_device_old'
     end
 
     scope :groups do

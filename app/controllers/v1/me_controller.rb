@@ -73,6 +73,14 @@ module V1
       render "v1/media/index"
     end
 
+    # PATCH /v1/me/device
+    # updates an existing device or creates a new one with the given attributes
+    def update_device
+      authorize :me
+      Device.update_or_create(current_user, device_params)
+      head :ok
+    end
+
     private def user_params
       p = params.permit(:username,
                         :lang,
@@ -107,6 +115,13 @@ module V1
         p[:location_attributes][:creator] = current_user
       end
       p.transform_keys(&:underscore) if p
+    end
+
+    private def device_params
+      params.require(:deviceId)
+      params.permit(:deviceId, :system, :version, :token, :endpoint)
+        .transform_keys(&:underscore)
+        .symbolize_keys
     end
   end
 end

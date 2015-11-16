@@ -175,20 +175,28 @@ resource "Users" do
     end
 
     context "Signup and create user with a specific device" do
-      parameter :device, "A key-value-paired array which describes the device, " \
-                         "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
-      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
+      parameter :device,
+                "A key-value-paired array which describes the device, " \
+                "e.g. device = { system: 'ios', version: '6.0b'," \
+                " deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :system,
+                "A string shorthand of the current device operating system" \
+                " (max. 10 chars), e.g.: 'ios', 'android' ",
                 scope: :device, required: true
-      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
+      parameter :version,
+                "A string for the version of the current device operating" \
+                " system (max. 10 chars), e.g.: '6.0b' ",
                 scope: :device, required: true
-      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
+      parameter :deviceId,
+                "A unique hardware ID from the current device (max. 128 chars)",
                 scope: :device, required: true
 
       let(:user) { create(:user) }
       let(:id) { user[:id] }
       let(:device) {{ device: attributes_for(:device) }}
 
-      example "User signup - Create user with a specific device", document: :v1 do
+      example "User signup - Create user with a specific device",
+              document: :v1 do
         explanation "Either an email or phone number must be provided\n\n" \
                     "returns 422 if parameters are missing\n\n" \
                     "returns 422 if parameters are invalid"
@@ -621,81 +629,6 @@ resource "Users" do
         expect(response_body).not_to include(slot_public.media_items[0].public_id)
         expect(response_body).not_to include(slot_private.media_items[0].public_id)
         expect(json.length).to eq(12)
-      end
-    end
-  end
-
-  patch "/v1/users/device", :aws do
-    header "Content-Type", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :deviceId, "A unique device ID", required: true
-    parameter :system, "A shorthand of the operating system from the current device"
-    parameter :version, "The version number of the devices operating system"
-    parameter :token, "The device token which is used for device services"
-    parameter :endpoint, "Boolean flag to unregister device from all extern services"
-
-    describe "Update specific device of the current user" do
-      let(:device) { create(:device, user: current_user) }
-      let(:deviceId) { device[:device_id] }
-      let(:token) { 'a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee' }
-
-      example "Device - Register endpoint to push notifications for a device", document: :v1 do
-        explanation "returns OK if endpoint was successfully added\n\n" \
-                    "returns 401 if auth token is invalid\n\n" \
-                    "returns 422 if parameters are missing or invalid"
-
-        expect(current_user.devices.last[:token]).to eq(nil)
-        expect(current_user.devices.last[:endpoint]).to eq(nil)
-
-        do_request
-
-        result = current_user.reload.devices.last
-        expect(response_status).to eq(200)
-        expect(result[:device_id]).to eq(deviceId)
-        expect(result[:token]).to eq(token)
-        expect(result[:endpoint]).to eq('String')
-      end
-
-      context "Unregister device from push notification service" do
-        let(:device) { create(:device, :with_endpoint, user: current_user) }
-        let(:deviceId) { device[:device_id] }
-        let(:token) { device[:token] }
-        let(:endpoint) { false }
-
-        example "Device - Unregister device from push notification service", document: :v1 do
-          explanation "returns OK if endpoint was successfully removed\n\n" \
-                      "returns 401 if auth token is invalid\n\n" \
-                      "returns 422 if parameters are missing or invalid"
-          do_request
-
-          expect(response_status).to eq(200)
-          result = current_user.reload.devices.last
-          expect(result[:device_id]).to eq(deviceId)
-          expect(result[:token]).to eq(token)
-          expect(result[:endpoint]).to eq(nil)
-        end
-      end
-
-      context "Update default device attributes" do
-        let!(:device) { create(:device, user: current_user) }
-        let(:deviceId) { device[:device_id] }
-        let(:system) { 'android' }
-        let(:version) { '5.0b' }
-
-        example "Device - Update default device attributes", document: :v1 do
-          explanation "returns OK if endpoint was successfully removed\n\n" \
-                      "returns 401 if auth token is invalid\n\n" \
-                      "returns 422 if parameters are missing or invalid"
-          expect(current_user.reload.devices.last[:system]).to eq('ios')
-          do_request
-
-          expect(response_status).to eq(200)
-          result = current_user.reload.devices.last
-          expect(result[:device_id]).to eq(deviceId)
-          expect(result[:system]).to eq('android')
-          expect(result[:version]).to eq('5.0b')
-        end
       end
     end
   end

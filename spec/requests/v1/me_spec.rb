@@ -757,4 +757,29 @@ RSpec.describe "V1::Me", type: :request do
       expect(json.length).to eq(12)
     end
   end
+
+  describe "PATCH /v1/me/device" do
+    it "returns success" do
+      patch "/v1/me/device", { deviceId: 'id-34273647263' }, auth_header
+      expect(response.status).to be(200)
+    end
+
+    context "invalid parameters" do
+      it "doesn't update the device if parameters are empty" do
+        patch "/v1/me/device", {}, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "doesn't update the device if deviceId is invalid" do
+        patch "/v1/me/device", { deviceId: nil }, auth_header
+        expect(response.status).to be(422)
+      end
+
+      it "doesn't update the device if token is invalid" do
+        patch "/v1/me/device", { deviceId: 'id-34273647263' },
+              'Authorization' => "Token token=kh34gshg5345hg3g54"
+        expect(response.status).to be(401)
+      end
+    end
+  end
 end

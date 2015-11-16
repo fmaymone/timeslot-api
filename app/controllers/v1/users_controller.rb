@@ -135,16 +135,6 @@ module V1
       head :ok
     end
 
-    # PATCH /v1/users/device
-    # updates a device of the user if one exist
-    # if device not exist creates a new one with the passed attributes
-    def update_device
-      authorize :user
-      Device.update_or_create(current_user, device_params(params)) if params.require(:deviceId)
-
-      head :ok
-    end
-
     private def user_create_params
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
