@@ -7,11 +7,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
-  def index?
-    current_user?
-  end
-
-  # true if a user is logged in
   def show?
     current_user?
   end

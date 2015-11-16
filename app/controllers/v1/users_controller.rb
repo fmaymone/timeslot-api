@@ -4,15 +4,6 @@ module V1
                        only: [:create, :signin, :reset_password,
                               :media_items, :slots]
 
-    # GET /v1/users
-    # TODO: remove user index method and route
-    def index
-      authorize :user
-      @users = User.all
-
-      render :index
-    end
-
     # GET /v1/users/1
     def show
       authorize :user

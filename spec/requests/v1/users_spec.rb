@@ -7,13 +7,6 @@ RSpec.describe "V1::Users", type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  describe "GET /v1/users" do
-    it "returns success" do
-      get "/v1/users", {}, auth_header
-      expect(response.status).to be(200)
-    end
-  end
-
   describe "GET /v1/user/:id" do
     context "with valid ID" do
       it "returns the requested user" do

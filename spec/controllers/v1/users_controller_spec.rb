@@ -9,16 +9,6 @@ RSpec.describe V1::UsersController, type: :controller do
   let(:invalid_attributes) { attributes_for(:user, username: nil) }
   let(:valid_session) { {} }
 
-  describe "GET index" do
-    before(:each) {
-      request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
-    }
-    it "assigns all users as @users" do
-      get :index, {}, valid_session
-      expect(assigns(:users)).to eq([current_user])
-    end
-  end
-
   describe "GET show" do
     before(:each) {
       request.headers['Authorization'] = "Token token=#{current_user.auth_token}"

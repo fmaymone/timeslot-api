@@ -13,7 +13,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :index?, :show?, :update?, :add_friends?,
+  permissions :show?, :update?, :add_friends?,
               :remove_friends?, :destroy?, :signout?,
               :slots_from_friends?, :media_items? do
     context "for a user" do

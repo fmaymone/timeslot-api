@@ -82,7 +82,6 @@ Rails.application.routes.draw do
     end
 
     scope :users do
-      get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
       post '', to: 'users#create', as: 'user_create'
       post 'signin', to: 'users#signin', as: 'signin'
