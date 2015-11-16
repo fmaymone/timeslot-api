@@ -1088,9 +1088,34 @@ RSpec.describe "V1::Users", type: :request do
           expect(response.body).to include 'ongoing reslot'
           expect(response.body).to include 'past public slot'
         end
+
+        context "group slots" do
+          let(:unshared_group) { create(:group, owner: stranger) }
+          let!(:unshared_groupslot) {
+            create(:group_slot, group: unshared_group) }
+
+          let(:shared_group) do
+            group = create(:group, :members_can_post)
+            create(:membership, :active, group: group, user: @current_user)
+            create(:membership, :active, group: group, user: stranger)
+            group
+          end
+          let!(:shared_groupslot) { create(:group_slot, group: shared_group) }
+
+          it "returns shared group slots" do
+            get "/v1/users/#{stranger.id}/slots", { filter: 'all' },
+                'Authorization' => "Token token=#{@current_user.auth_token}"
+
+            expect(response.body).to include shared_groupslot.title
+            expect(response.body).not_to include unshared_groupslot.title
+          end
+        end
       end
 
       describe "GET slots for user if visitor (not logged-in)" do
+        # this looks counter-intuitiv. There is no auth_token submitted and so
+        # there is no current_user, I just use the existing user object for the
+        # request
         it "returns ok" do
           get "/v1/users/#{@current_user.id}/slots", filter: 'now'
           expect(response).to have_http_status :ok
