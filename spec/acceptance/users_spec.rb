@@ -395,7 +395,7 @@ resource "Users" do
       let(:publicId) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
       let(:localId) { "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
 
-      example "Update current user - set user image", document: :v1 do
+      example "Update current user - set user image - old style", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
@@ -422,7 +422,7 @@ resource "Users" do
 
       let(:picture) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
-      example "Update current user - set user image", document: :v1 do
+      example "Update current user - set user image - new style", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
