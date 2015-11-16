@@ -528,23 +528,6 @@ resource "Users" do
     end
   end
 
-  delete "/v1/users" do
-    header "Authorization", :auth_header
-
-    include_context "current user response fields"
-
-    example "Delete current user", document: :v1 do
-      explanation "Sets 'deletedAt' attr for user who is logged in" \
-                  "Doesn't delete anything.\n\n" \
-                  "returns user data"
-      do_request
-
-      current_user.reload
-      expect(current_user.deleted_at).not_to be nil
-      expect(response_status).to eq(200)
-    end
-  end
-
   get "/v1/users/:id/media" do
     header 'Authorization', :auth_header
 
