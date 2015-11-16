@@ -22,9 +22,21 @@ RSpec.describe V1::UsersController, type: :routing do
         .to route_to("v1/users#signin", format: :json)
     end
 
+    it "routes to #media" do
+      expect(get: "/v1/users/1/media")
+        .to route_to("v1/users#media_items", user_id: '1', format: :json)
+    end
+
+    it "routes to #slots" do
+      expect(get: "/v1/users/1/slots")
+        .to route_to("v1/users#slots", user_id: "1", format: :json)
+    end
+
+    # TODO: remove from here when user-image new style and me-controller is used
+
     it "routes to #signout" do
       expect(get: "/v1/users/signout")
-        .to route_to("v1/users#signout", format: :json)
+        .to route_to("v1/me#signout", format: :json)
     end
 
     it "routes to #update" do
@@ -35,16 +47,6 @@ RSpec.describe V1::UsersController, type: :routing do
     it "routes to #destroy" do
       expect(delete: "/v1/users")
         .to route_to("v1/me#inactivate", format: :json)
-    end
-
-    it "routes to #media" do
-      expect(get: "/v1/users/1/media")
-        .to route_to("v1/users#media_items", user_id: '1', format: :json)
-    end
-
-    it "routes to #slots" do
-      expect(get: "/v1/users/1/slots")
-        .to route_to("v1/users#slots", user_id: "1", format: :json)
     end
 
     it "routes to #slots_from_friends" do

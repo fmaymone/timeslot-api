@@ -49,15 +49,6 @@ module V1
       end
     end
 
-    # GET /v1/users/signout
-    # invalidates auth token
-    def signout
-      authorize :user
-      current_user.sign_out
-
-      head :ok
-    end
-
     # POST /v1/users/reset
     # resets password to a new random password which is sent per email
     def reset_password

@@ -211,14 +211,6 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
-  describe "GET /v1/users/signout" do
-    it "invalidates the auth token" do
-      get "/v1/users/signout", {}, auth_header
-      current_user.reload
-      expect(current_user.auth_token).to be nil
-    end
-  end
-
   describe "POST /v1/users/reset" do
     context "valid params", :vcr do
       it "returns ok" do
