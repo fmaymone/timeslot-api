@@ -112,8 +112,12 @@ module V1
     # get all media items of the given user
     def media_items
       authorize :user
-      target_user = User.find_by(id: params.require(:user_id))
-      @media_items = target_user.media_for(current_user)
+
+      target_user = User.find(params[:user_id])
+      collector = MediaCollector.new(current_user: current_user,
+                                     other_user: target_user)
+      @media_items = collector.retrieve
+
       render "v1/media/index"
     end
 
