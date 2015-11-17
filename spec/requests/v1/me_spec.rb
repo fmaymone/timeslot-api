@@ -121,6 +121,24 @@ RSpec.describe "V1::Me", type: :request do
         end
       end
 
+      context "user image / picture" do
+        it "updates the picture of the current user" do
+          patch "/v1/me", { image: "v1234567/xcvjghjkdisudgfds7iyf.jpg" },
+                auth_header
+          current_user.reload
+          expect(current_user.picture).to eq("v1234567/xcvjghjkdisudgfds7iyf.jpg")
+        end
+
+        it "returns the user image url in the json" do
+          patch "/v1/me", { image: "v1234567/xcvjghjkdisudgfds7iyf.jpg" },
+                auth_header
+          current_user.reload
+          expect(response).to have_http_status(:ok)
+          expect(json).to have_key('image')
+          expect(json['image']).to eq("v1234567/xcvjghjkdisudgfds7iyf.jpg")
+        end
+      end
+
       context "email" do
         it "updates the email address of the current user" do
           patch "/v1/me", { email: "newmail@timeslot.com" }, auth_header

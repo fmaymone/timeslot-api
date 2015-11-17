@@ -152,7 +152,7 @@ resource "Me" do
         expect(current_user.picture).to eq image
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
-        # expect(json["image"]).to eq image
+        expect(json["image"]).to eq image
       end
     end
 
