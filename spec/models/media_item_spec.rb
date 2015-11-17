@@ -57,7 +57,7 @@ RSpec.describe MediaItem, type: :model do
   end
 
   describe :delete do
-    let!(:media_item) { create(:slot_image) }
+    let!(:media_item) { create(:real_slot_image) }
 
     it "doesn't remove the media_item from the database" do
       expect { media_item.delete }.not_to change(MediaItem, :count)
@@ -69,9 +69,6 @@ RSpec.describe MediaItem, type: :model do
     end
 
     it "adds a cloudinary tag to the image", :vcr do
-      user = FactoryGirl.create(:user, :with_real_image)
-      media_item = user.image
-
       media_item.delete
 
       tags = Cloudinary::Api.resource(media_item.public_id)["tags"]

@@ -16,7 +16,6 @@ module V1
     def create
       authorize :user
       @user = User.create_with_device(params: user_create_params,
-                                      image: user_image,
                                       device: device_params(params[:device]))
       if @user.errors.empty?
         render :signup, status: :created
@@ -48,29 +47,6 @@ module V1
       @user.reset_password
 
       head :ok
-    end
-
-    # PATCH /v1/users/1
-    # TODO: remove from here when user-image new style and me-controller is used
-    def update
-      authorize :user
-
-      # move this into pundit
-      if params[:password].present?
-        password = params.require(:old_password)
-        pw_correct = current_user == current_user.try(:authenticate, password)
-        return head :unauthorized unless pw_correct
-      end
-
-      @user = current_user.update_with_image(params: user_params,
-                                             image: user_image,
-                                             user: current_user)
-      if @user.errors.empty?
-        render :show
-      else
-        render json: { error: @user.errors },
-               status: :unprocessable_entity
-      end
     end
 
     # GET /v1/users/1/slots
@@ -146,50 +122,6 @@ module V1
       params.require(:password)
       params.require(:username)
       params.permit(:username, :email, :phone, :password, :picture)
-    end
-
-    # TODO: remove from here when user-image new style and me-controller is used
-    private def user_params
-      p = params.permit(:username,
-                        :lang,
-                        :email,
-                        :phone,
-                        :password,
-                        :picture,
-                        :image,
-                        { location:
-                            [:name, :thoroughfare, :sub_thoroughfare, :locality,
-                             :sub_locality, :ocean, :administrative_area,
-                             :sub_administrative_area, :postal_code, :country,
-                             :iso_country_code, :in_land_water, :latitude,
-                             :longitude, :private_location, :areas_of_interest]
-                        },
-                        :name,
-                        :publicUrl,
-                        :push,
-                        :slotDefaultDuration,
-                        :slotDefaultLocationId,
-                        :slotDefaultTypeId,
-                        :defaultPrivateAlerts,
-                        :defaultOwnFriendslotAlerts,
-                        :defaultOwnPublicAlerts,
-                        :defaultFriendsFriendslotAlerts,
-                        :defaultFriendsPublicAlerts,
-                        :defaultReslotAlerts,
-                        :defaultGroupAlerts)
-
-      if params[:location].present?
-        p[:location_attributes] = p.delete 'location'
-        p[:location_attributes][:creator] = current_user
-      end
-      p.transform_keys(&:underscore) if p
-    end
-
-    private def user_image
-      return nil unless params[:image].present?
-      p = params.require(:image).permit(:publicId, :localId)
-      p.transform_keys(&:underscore)
-      p.transform_keys { |key| key.underscore.to_sym }
     end
 
     private def device_params(params)

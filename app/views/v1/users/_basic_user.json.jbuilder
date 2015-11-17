@@ -1,12 +1,4 @@
-json.extract!(user,
-              :id,
-              :username,
-              :created_at,
-              :updated_at,
-              :deleted_at
-             )
-
-json.image user.picture
+json.partial! 'v1/users/user', user: user
 
 json.location do
   if user.location_id.nil?

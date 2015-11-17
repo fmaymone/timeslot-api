@@ -256,10 +256,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
+                                "image" => ""},
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
@@ -350,10 +347,7 @@ resource "Slots" do
                                 "createdAt" => reslot.creator.created_at.as_json,
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
+                                "image" => ""},
                  "settings" => { 'alerts' => '1110001100' },
                  "slotter" => { 'id' => reslot.slotter_id },
                  "visibility" => reslot.parent.visibility,

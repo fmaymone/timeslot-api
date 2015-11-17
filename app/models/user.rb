@@ -9,10 +9,6 @@ class User < ActiveRecord::Base
 
   ## associations ##
 
-  # has_many relation because when image gets updated the old image still exists
-  has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
-           as: :mediable
-
   has_many :media_items, -> { where deleted_at: nil },
            foreign_key: :creator_id, inverse_of: :creator
 
@@ -108,18 +104,9 @@ class User < ActiveRecord::Base
 
   ## user specific ##
 
-  # TODO: remove method in step2 of user image refactoring
-  def update_with_image(params: nil, image: nil, user: nil)
-    update(params.except("public_id")) if params
-    if image
-      AddImage.call(self, user.id, image["public_id"], image["local_id"])
-      update(picture: image["public_id"]) if image["public_id"]
-    end
-    self
-  end
-
+  # TODO: either get rid of this or rename picture to image :(
   def image
-    images.first
+    picture
   end
 
   def sign_out
@@ -212,7 +199,6 @@ class User < ActiveRecord::Base
     remove_all_followers
     unfollow_all
     slot_settings.each(&:delete)
-    image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
     devices.each(&:delete)
@@ -434,15 +420,10 @@ class User < ActiveRecord::Base
 
   ## class methods ##
 
-  # TODO: change in step2 of user image refactoring
-  def self.create_with_device(params:, image: nil, device: nil)
+  def self.create_with_device(params:, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
     Device.update_or_create(new_user, device) if device
-    if image
-      AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"])
-      new_user.update(picture: image["public_id"]) if image["public_id"]
-    end
     new_user
   end
 

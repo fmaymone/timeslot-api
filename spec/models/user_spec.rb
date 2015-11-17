@@ -9,13 +9,13 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:auth_token) }
   it { is_expected.to respond_to(:image) }
+  it { is_expected.to respond_to(:picture) }
   it { is_expected.to respond_to(:created_slots) }
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:re_slots) }
   it { is_expected.to respond_to(:devices) }
-  it { is_expected.to have_many(:images) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
@@ -814,28 +814,6 @@ RSpec.describe User, type: :model do
         expect(User.last.webview?).to be false
       end
 
-      # TODO: remove this in step2 of user image migration
-      it "sets an image if provided" do
-        user_params.merge!(image: { "public_id" => 'foobar' })
-        expect {
-          User.create_with_device(user_params)
-        }.to change(MediaItem, :count).by 1
-        expect(User.last.image.public_id).to eq "foobar"
-        expect(User.last.image.creator_id).to eq User.last.id
-        expect(User.last.picture).to eq "foobar"
-      end
-
-      # TODO: remove this in step2 of user image migration
-      it "sets the local_id for an image if provided" do
-        user_params.merge!(
-          image: {"public_id" => 'foobar',
-                  "local_id" => "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
-        )
-        User.create_with_device(user_params)
-        expect(User.last.image.local_id)
-          .to eq "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
-      end
-
       it "sets a device if provided" do
         user_params.merge!(device: device)
         expect {
@@ -850,20 +828,6 @@ RSpec.describe User, type: :model do
         expect {
           User.create_with_device(user_params)
         }.not_to change(User, :count)
-      end
-
-      it "creates a new user even if media items public_id is nil" do
-        user_params.merge!(image: { "public_id" => nil })
-        expect {
-          User.create_with_device(user_params)
-        }.to change(User, :count).by 1
-      end
-
-      it "doesn't create a new media item if public_id is nil" do
-        user_params.merge!(image: { "public_id" => nil })
-        expect {
-          User.create_with_device(user_params)
-        }.not_to change(MediaItem, :count)
       end
     end
   end
