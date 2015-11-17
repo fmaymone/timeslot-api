@@ -7,6 +7,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
+  # TODO: also allow for visitors?
   def show?
     current_user?
   end
@@ -14,7 +15,7 @@ class UserPolicy < ApplicationPolicy
   # true if a user is logged in
   # also true for visitors
   def media_items?
-    current_user?
+    true
   end
 
   # no prerequisites

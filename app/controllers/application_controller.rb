@@ -68,15 +68,6 @@ class ApplicationController < ActionController::API
     end
   end
 
-  def pundit_user
-    if params[:user_id].present?
-      requested_user = User.find(params[:user_id])
-      UserContext.new(current_user, requested_user)
-    else
-      current_user
-    end
-  end
-
   # I18n
   def set_locale
     I18n.locale = (current_user[:lang] || I18n.default_locale)
