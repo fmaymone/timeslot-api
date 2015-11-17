@@ -88,7 +88,6 @@ module V1
                         :phone,
                         :password,
                         :picture,
-                        :image,
                         { location:
                             [:name, :thoroughfare, :sub_thoroughfare, :locality,
                              :sub_locality, :ocean, :administrative_area,
@@ -109,6 +108,9 @@ module V1
                         :defaultFriendsPublicAlerts,
                         :defaultReslotAlerts,
                         :defaultGroupAlerts)
+
+      # ios prevers to use 'image' instead of 'picture'
+      p[:picture] = params[:image] if params[:image].present?
 
       if params[:location].present?
         p[:location_attributes] = p.delete 'location'

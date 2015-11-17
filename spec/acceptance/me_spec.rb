@@ -133,10 +133,10 @@ resource "Me" do
       end
     end
 
-    describe "Set image for User - new style" do
-      parameter :picture, "Cloudinary ID / URL", required: true
+    describe "Set image for User" do
+      parameter :image, "Cloudinary ID / URL", required: true
 
-      let(:picture) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
+      let(:image) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
       example "Update current user - set user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -149,17 +149,17 @@ resource "Me" do
 
         current_user.reload
         expect(current_user.picture).not_to be nil
-        expect(current_user.picture).to eq picture
+        expect(current_user.picture).to eq image
         expect(response_status).to eq(200)
-        # expect(json).to have_key("picture")
-        # expect(json).not_to have_key("image")
-        # expect(json["picture"]).to eq picture
+        expect(json).to have_key("image")
+        # expect(json["image"]).to eq image
       end
     end
 
     describe "Set location for User" do
       parameter :location, "ID of users home location"
-      parameter :name, "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
+      parameter :name,
+                "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
                 scope: :location
       parameter :thoroughfare, "Street address, Dolziger Str. 9 (255 chars)",
                 scope: :location
@@ -167,7 +167,8 @@ resource "Me" do
                 scope: :location
       parameter :locality, "city, e.g. Berlin (255 chars)",
                 scope: :location
-      parameter :subLocality, "neighborhood, common name, e.g. Mitte (255 chars)",
+      parameter :subLocality,
+                "neighborhood, common name, e.g. Mitte (255 chars)",
                 scope: :location
       parameter :postalCode, "zip code, e.g. 94114 (32 chars)",
                 scope: :location
@@ -218,7 +219,8 @@ resource "Me" do
     describe "Turn on/off push notifications for a user" do
       let(:push) { false }
 
-      example "Update current user - turn on/off push notifications", document: :v1 do
+      example "Update current user - turn on/off push notifications",
+              document: :v1 do
         expect(current_user.push).to be(true)
 
         do_request
