@@ -145,7 +145,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=OQFDXdF2PW0N_J64bqXql14EfFM
+Authorization: Token token=Prv4pwU_kTuzOinNBuXeWkPSvoY
 Host: example.org
 Cookie: </pre>
 
@@ -169,7 +169,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=OQFDXdF2PW0N_J64bqXql14EfFM&quot; \
+	-H &quot;Authorization: Token token=Prv4pwU_kTuzOinNBuXeWkPSvoY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +180,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;53cd48f79cc93805433d35b63123f093&quot;
+ETag: W/&quot;5cf258fbfe1f8f4ee312276a99f2a64c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 33926185-179a-4af8-a02a-e3e789856094
-X-Runtime: 0.028384
+X-Request-Id: a7b49006-12ab-488a-8a01-85924b224654
+X-Runtime: 0.044049
 Vary: Origin
-Content-Length: 883</pre>
+Content-Length: 853</pre>
 
 #### Status
 
@@ -196,12 +196,12 @@ Content-Length: 883</pre>
 ```javascript
 {
   "id" : 7,
-  "title" : "Slot title 44",
-  "startDate" : "2019-09-22T00:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:40.114Z",
-  "updatedAt" : "2015-11-17T12:12:40.114Z",
+  "title" : "Slot title 62",
+  "startDate" : "2019-09-13T18:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:15.290Z",
+  "updatedAt" : "2015-11-17T23:46:15.290Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-22T00:44:02.000Z",
+  "endDate" : "2019-10-13T18:44:02.000Z",
   "location" : {
     "id" : 2,
     "name" : "Soho House Custom",
@@ -223,14 +223,11 @@ Content-Length: 883</pre>
   },
   "creator" : {
     "id" : 18,
-    "username" : "User 260",
-    "createdAt" : "2015-11-17T12:12:40.109Z",
-    "updatedAt" : "2015-11-17T12:12:40.109Z",
+    "username" : "User 295",
+    "createdAt" : "2015-11-17T23:46:15.285Z",
+    "updatedAt" : "2015-11-17T23:46:15.285Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

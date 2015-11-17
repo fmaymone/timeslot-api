@@ -89,19 +89,19 @@ Description : contains ID of the original slot that was reslottet
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=pyIx27979KC14FY_hw0i_H3kfCw
+Authorization: Token token=rzNfr666934LwDwsnOgBeqBPCII
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/18</pre>
+<pre>GET /v1/slots/36</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/18&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/36&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=pyIx27979KC14FY_hw0i_H3kfCw&quot; \
+	-H &quot;Authorization: Token token=rzNfr666934LwDwsnOgBeqBPCII&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5a6ac57f3fb00977bf4bc4afb0192072&quot;
+ETag: W/&quot;e7f7e19966b22a84c8567717a7586208&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 405296ff-7205-4e7a-9ba2-172398ed8c91
-X-Runtime: 0.025449
+X-Request-Id: e9eb2e6b-9bfc-416c-8792-c1a2364d5013
+X-Runtime: 0.023349
 Vary: Origin
-Content-Length: 1679</pre>
+Content-Length: 1649</pre>
 
 #### Status
 
@@ -127,24 +127,21 @@ Content-Length: 1679</pre>
 
 ```javascript
 {
-  "id" : 18,
+  "id" : 36,
   "title" : "Timeslot",
-  "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.033Z",
-  "updatedAt" : "2015-11-17T12:12:39.033Z",
+  "startDate" : "2019-09-02T07:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:14.114Z",
+  "updatedAt" : "2015-11-17T23:46:14.114Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-11T13:44:02.000Z",
+  "endDate" : "2019-10-02T07:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 162,
-    "username" : "User 213",
-    "createdAt" : "2015-11-17T12:12:39.012Z",
-    "updatedAt" : "2015-11-17T12:12:39.012Z",
+    "id" : 204,
+    "username" : "User 248",
+    "createdAt" : "2015-11-17T23:46:14.094Z",
+    "updatedAt" : "2015-11-17T23:46:14.094Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
@@ -154,7 +151,7 @@ Content-Length: 1679</pre>
       "position" : 6,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-17T12:12:39.079Z",
+      "createdAt" : "2015-11-17T23:46:14.164Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -164,7 +161,7 @@ Content-Length: 1679</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-17T12:12:39.074Z",
+      "createdAt" : "2015-11-17T23:46:14.159Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -174,7 +171,7 @@ Content-Length: 1679</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-17T12:12:39.068Z",
+      "createdAt" : "2015-11-17T23:46:14.154Z",
       "duration" : null,
       "title" : "Title 82"
     },
@@ -184,7 +181,7 @@ Content-Length: 1679</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-17T12:12:39.063Z",
+      "createdAt" : "2015-11-17T23:46:14.149Z",
       "duration" : null,
       "title" : "Title 81"
     },
@@ -194,7 +191,7 @@ Content-Length: 1679</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.059Z"
+      "createdAt" : "2015-11-17T23:46:14.144Z"
     },
     {
       "mediaId" : 77,
@@ -202,7 +199,7 @@ Content-Length: 1679</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.054Z"
+      "createdAt" : "2015-11-17T23:46:14.139Z"
     },
     {
       "mediaId" : 76,
@@ -210,7 +207,7 @@ Content-Length: 1679</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.049Z"
+      "createdAt" : "2015-11-17T23:46:14.130Z"
     }
   ],
   "settings" : {
@@ -218,10 +215,10 @@ Content-Length: 1679</pre>
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 166
+    "id" : 208
   },
   "parent" : {
-    "id" : 17
+    "id" : 35
   },
   "visibility" : "public",
   "likes" : 0,

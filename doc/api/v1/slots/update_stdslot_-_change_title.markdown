@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=WidLzymZjYnxszRnUH03aNSEirc
+Authorization: Token token=DfMDk9RWEwDPRajkdp2AlM3xf3I
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=WidLzymZjYnxszRnUH03aNSEirc&quot; \
+	-H &quot;Authorization: Token token=DfMDk9RWEwDPRajkdp2AlM3xf3I&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;479a0258615ab03902f3d8e73d11c045&quot;
+ETag: W/&quot;d661c29645744ac15380ef9f2515d64c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6a1d80f9-d32e-42b8-bcd3-ca0e6560b9d8
-X-Runtime: 0.028982
+X-Request-Id: e1bbb5c6-d346-4d4f-8415-0c336ae4bbbf
+X-Runtime: 0.028969
 Vary: Origin
-Content-Length: 548</pre>
+Content-Length: 518</pre>
 
 #### Status
 
@@ -161,22 +161,19 @@ Content-Length: 548</pre>
 {
   "id" : 1,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-16T18:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.787Z",
-  "updatedAt" : "2015-11-17T12:12:39.787Z",
+  "startDate" : "2019-09-07T12:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:14.949Z",
+  "updatedAt" : "2015-11-17T23:46:14.949Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-16T18:44:02.000Z",
+  "endDate" : "2019-10-07T12:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 3,
-    "username" : "User 245",
-    "createdAt" : "2015-11-17T12:12:39.781Z",
-    "updatedAt" : "2015-11-17T12:12:39.781Z",
+    "username" : "User 280",
+    "createdAt" : "2015-11-17T23:46:14.944Z",
+    "updatedAt" : "2015-11-17T23:46:14.944Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

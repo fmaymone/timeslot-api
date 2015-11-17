@@ -16,7 +16,7 @@ Description : ID of the Slot to like
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=ti7QG5HNDzSH_EeB18SqpeZH9jA
+Authorization: Token token=KsuDT5ATkTWMuD47HQjlUJ9_DOQ
 Host: example.org
 Cookie: </pre>
 
@@ -28,7 +28,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/16/like&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=ti7QG5HNDzSH_EeB18SqpeZH9jA&quot; \
+	-H &quot;Authorization: Token token=KsuDT5ATkTWMuD47HQjlUJ9_DOQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -40,8 +40,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: a0ee71d8-48da-4b8b-b9f5-dc3a194afe29
-X-Runtime: 0.013570
+X-Request-Id: e6ab712b-34bc-4cce-8455-11b096ab7b1a
+X-Runtime: 0.029296
 Vary: Origin
 Content-Length: 0</pre>
 

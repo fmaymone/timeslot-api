@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=nP2lMfr3s6TzhBjU_tsgzrtbAe4
+Authorization: Token token=wRqOCbOma9Y0Iif2zTpQbaQVtzg
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=nP2lMfr3s6TzhBjU_tsgzrtbAe4&quot; \
+	-H &quot;Authorization: Token token=wRqOCbOma9Y0Iif2zTpQbaQVtzg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;47dbe1d23176cecb5f4d91aa8234fce7&quot;
+ETag: W/&quot;df1d853e87f7bd12a8d0f4e371e12057&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f6bf5b64-8e58-416d-bf36-24bb4dbb31f5
-X-Runtime: 0.026422
+X-Request-Id: cb0eac7c-b16a-4a64-90bb-afdf1617cf21
+X-Runtime: 0.031078
 Vary: Origin
-Content-Length: 541</pre>
+Content-Length: 511</pre>
 
 #### Status
 
@@ -160,23 +160,20 @@ Content-Length: 541</pre>
 ```javascript
 {
   "id" : 2,
-  "title" : "Slot title 39",
-  "startDate" : "2019-09-17T19:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.836Z",
-  "updatedAt" : "2015-11-17T12:12:39.843Z",
+  "title" : "Slot title 57",
+  "startDate" : "2019-09-08T13:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:14.997Z",
+  "updatedAt" : "2015-11-17T23:46:15.005Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-17T19:44:02.000Z",
+  "endDate" : "2019-10-08T13:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 5,
-    "username" : "User 247",
-    "createdAt" : "2015-11-17T12:12:39.831Z",
-    "updatedAt" : "2015-11-17T12:12:39.831Z",
+    "username" : "User 282",
+    "createdAt" : "2015-11-17T23:46:14.993Z",
+    "updatedAt" : "2015-11-17T23:46:14.993Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

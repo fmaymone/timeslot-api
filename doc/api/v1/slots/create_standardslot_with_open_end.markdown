@@ -112,7 +112,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Ec7QvcPXlJfDwhfzumNSKbAl91o
+Authorization: Token token=AhvIZtOTlR1wJPtzGwNRJJsLJ44
 Host: example.org
 Cookie: </pre>
 
@@ -149,7 +149,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Ec7QvcPXlJfDwhfzumNSKbAl91o&quot; \
+	-H &quot;Authorization: Token token=AhvIZtOTlR1wJPtzGwNRJJsLJ44&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -160,12 +160,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bd19153a00a30a1b5410003a0d678809&quot;
+ETag: W/&quot;a8ccf6b76855d81da79844f65ad6e14e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5cf5c8d9-0d5b-4d1d-b3c9-a8b98715275b
-X-Runtime: 0.031722
+X-Request-Id: 0dd99449-a473-49ac-85da-a12e17cb7e5c
+X-Runtime: 0.110999
 Vary: Origin
-Content-Length: 759</pre>
+Content-Length: 729</pre>
 
 #### Status
 
@@ -175,23 +175,20 @@ Content-Length: 759</pre>
 
 ```javascript
 {
-  "id" : 21,
+  "id" : 39,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.239Z",
-  "updatedAt" : "2015-11-17T12:12:39.239Z",
+  "createdAt" : "2015-11-17T23:46:14.308Z",
+  "updatedAt" : "2015-11-17T23:46:14.308Z",
   "deletedAt" : null,
   "location" : null,
   "creator" : {
-    "id" : 177,
-    "username" : "User 229",
-    "createdAt" : "2015-11-17T12:12:39.229Z",
-    "updatedAt" : "2015-11-17T12:12:39.229Z",
+    "id" : 219,
+    "username" : "User 264",
+    "createdAt" : "2015-11-17T23:46:14.295Z",
+    "updatedAt" : "2015-11-17T23:46:14.295Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [
     {
@@ -199,14 +196,14 @@ Content-Length: 759</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-11-17T12:12:39.245Z"
+      "createdAt" : "2015-11-17T23:46:14.390Z"
     },
     {
       "id" : 5,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-11-17T12:12:39.242Z"
+      "createdAt" : "2015-11-17T23:46:14.381Z"
     }
   ],
   "media" : [],

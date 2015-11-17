@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=QO8gleMjdodGz-BRObtz05S44rc
+Authorization: Token token=zBBOxPin47DcZChMOQSSy8hFID4
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=QO8gleMjdodGz-BRObtz05S44rc&quot; \
+	-H &quot;Authorization: Token token=zBBOxPin47DcZChMOQSSy8hFID4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,10 +141,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;141878fd9642f44ee69b72499231544e&quot;
+ETag: W/&quot;9bf679fa60c01767f8a2440ca1d0623a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 410e6e2c-e675-4dd7-96fb-56f511cf8334
-X-Runtime: 0.004546
+X-Request-Id: f03feee5-bc3f-4744-aa2c-516d4c95f417
+X-Runtime: 0.003733
 Vary: Origin
 Content-Length: 1068</pre>
 
@@ -162,9 +162,9 @@ Content-Length: 1068</pre>
     "target" : "3",
     "activity" : "comment",
     "foreignId" : "9",
-    "time" : "2015-11-17T12:12:35.945Z",
+    "time" : "2015-11-17T23:46:10.489Z",
     "feed" : 3,
-    "id" : "28610036A6DAEEC68E06E595B4BC2A76AE04B7BE",
+    "id" : "B14861E9B26084D1ED1FA912EA9F23EB91FC6A79",
     "actors" : [
       8
     ],
@@ -173,16 +173,16 @@ Content-Length: 1068</pre>
         "id" : 3,
         "title" : "Slot title 23",
         "startDate" : "2019-09-24T23:44:02.000Z",
-        "createdAt" : "2015-11-17T12:12:35.725Z",
-        "updatedAt" : "2015-11-17T12:12:35.725Z",
+        "createdAt" : "2015-11-17T23:46:10.256Z",
+        "updatedAt" : "2015-11-17T23:46:10.256Z",
         "deletedAt" : null,
         "endDate" : "2019-10-24T23:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 9,
           "username" : "User 64",
-          "createdAt" : "2015-11-17T12:12:35.714Z",
-          "updatedAt" : "2015-11-17T12:12:35.714Z",
+          "createdAt" : "2015-11-17T23:46:10.246Z",
+          "updatedAt" : "2015-11-17T23:46:10.246Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
@@ -206,8 +206,8 @@ Content-Length: 1068</pre>
       "actor" : {
         "id" : 8,
         "username" : "User 53",
-        "createdAt" : "2015-11-17T12:12:35.708Z",
-        "updatedAt" : "2015-11-17T12:12:35.708Z",
+        "createdAt" : "2015-11-17T23:46:10.240Z",
+        "updatedAt" : "2015-11-17T23:46:10.240Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,

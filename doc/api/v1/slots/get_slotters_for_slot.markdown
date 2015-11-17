@@ -27,7 +27,7 @@ Description : containing creation date of the ReSlot and details of the user who
 
 #### Headers
 
-<pre>Authorization: Token token=tZti12Ghfz-j7-f6dvm6bf7BQTM
+<pre>Authorization: Token token=P1wH0wT5KRQmyiXAvLtFbQ33aYI
 Host: example.org
 Cookie: </pre>
 
@@ -38,7 +38,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/21/slotters&quot; -X GET \
-	-H &quot;Authorization: Token token=tZti12Ghfz-j7-f6dvm6bf7BQTM&quot; \
+	-H &quot;Authorization: Token token=P1wH0wT5KRQmyiXAvLtFbQ33aYI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -49,12 +49,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;924f21d24be750f73e997082aef8b8d6&quot;
+ETag: W/&quot;0bf2c72f4fdc8859cded6ca6a819244e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c28cf0f1-4cf6-48a5-8635-d016359e891d
-X-Runtime: 0.027856
+X-Request-Id: 66f9b08f-229f-4590-b3c3-00179e68eadf
+X-Runtime: 0.013515
 Vary: Origin
-Content-Length: 439</pre>
+Content-Length: 379</pre>
 
 #### Status
 
@@ -65,31 +65,25 @@ Content-Length: 439</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-11-17T12:12:41.072Z",
+    "createdAt" : "2015-11-17T23:46:16.525Z",
     "slotter" : {
-      "id" : 67,
-      "username" : "User 308",
-      "createdAt" : "2015-11-17T12:12:41.070Z",
-      "updatedAt" : "2015-11-17T12:12:41.070Z",
+      "id" : 65,
+      "username" : "User 341",
+      "createdAt" : "2015-11-17T23:46:16.523Z",
+      "updatedAt" : "2015-11-17T23:46:16.523Z",
       "deletedAt" : null,
-      "image" : {
-        "publicId" : null,
-        "localId" : null
-      }
+      "image" : ""
     }
   },
   {
-    "createdAt" : "2015-11-17T12:12:41.090Z",
+    "createdAt" : "2015-11-17T23:46:16.539Z",
     "slotter" : {
-      "id" : 70,
-      "username" : "User 312",
-      "createdAt" : "2015-11-17T12:12:41.088Z",
-      "updatedAt" : "2015-11-17T12:12:41.088Z",
+      "id" : 68,
+      "username" : "User 345",
+      "createdAt" : "2015-11-17T23:46:16.537Z",
+      "updatedAt" : "2015-11-17T23:46:16.537Z",
       "deletedAt" : null,
-      "image" : {
-        "publicId" : null,
-        "localId" : null
-      }
+      "image" : ""
     }
   }
 ]

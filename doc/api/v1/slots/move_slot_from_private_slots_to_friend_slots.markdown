@@ -91,7 +91,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=m5kmhUA26Jv9JOoj8v6z3q7ldII
+Authorization: Token token=ecRNKIbgL-cq98KGTPVztWhOtj4
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=m5kmhUA26Jv9JOoj8v6z3q7ldII&quot; \
+	-H &quot;Authorization: Token token=ecRNKIbgL-cq98KGTPVztWhOtj4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +123,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;06587c5d47a13353b37172df1ac77472&quot;
+ETag: W/&quot;9c72c7bdea764775ed0d37a4191ee78f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e2774df7-74db-4e1f-ab0e-5f0676404eb6
-X-Runtime: 0.090295
+X-Request-Id: 687f542d-fe4a-439e-b757-93feb72d31f9
+X-Runtime: 0.100491
 Vary: Origin
-Content-Length: 1478</pre>
+Content-Length: 1448</pre>
 
 #### Status
 
@@ -139,79 +139,76 @@ Content-Length: 1478</pre>
 ```javascript
 {
   "id" : 35,
-  "title" : "Slot title 73",
-  "startDate" : "2019-09-24T05:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:41.467Z",
-  "updatedAt" : "2015-11-17T12:12:41.467Z",
+  "title" : "Slot title 91",
+  "startDate" : "2019-09-15T23:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:16.839Z",
+  "updatedAt" : "2015-11-17T23:46:16.839Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-24T05:44:02.000Z",
+  "endDate" : "2019-10-15T23:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 97,
-    "username" : "User 343",
-    "createdAt" : "2015-11-17T12:12:41.435Z",
-    "updatedAt" : "2015-11-17T12:12:41.435Z",
+    "id" : 95,
+    "username" : "User 376",
+    "createdAt" : "2015-11-17T23:46:16.805Z",
+    "updatedAt" : "2015-11-17T23:46:16.805Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 30,
-      "publicId" : "dfhjghjkdisudgfds7iy109",
+      "mediaId" : 28,
+      "publicId" : "dfhjghjkdisudgfds7iy107",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-17T12:12:41.457Z",
+      "createdAt" : "2015-11-17T23:46:16.827Z",
       "duration" : null,
       "title" : "Title 105"
     },
     {
-      "mediaId" : 29,
-      "publicId" : "dfhjghjkdisudgfds7iy108",
+      "mediaId" : 27,
+      "publicId" : "dfhjghjkdisudgfds7iy106",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-17T12:12:41.454Z",
+      "createdAt" : "2015-11-17T23:46:16.822Z",
       "duration" : null,
       "thumbnail" : null
-    },
-    {
-      "mediaId" : 28,
-      "publicId" : "dfhjghjkdisudgfds7iy107",
-      "position" : 3,
-      "localId" : null,
-      "mediaType" : "video",
-      "createdAt" : "2015-11-17T12:12:41.452Z",
-      "duration" : null,
-      "thumbnail" : null
-    },
-    {
-      "mediaId" : 27,
-      "publicId" : "dfhjghjkdisudgfds7iy106",
-      "position" : 2,
-      "localId" : null,
-      "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:41.447Z"
     },
     {
       "mediaId" : 26,
       "publicId" : "dfhjghjkdisudgfds7iy105",
-      "position" : 1,
+      "position" : 3,
       "localId" : null,
-      "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:41.445Z"
+      "mediaType" : "video",
+      "createdAt" : "2015-11-17T23:46:16.819Z",
+      "duration" : null,
+      "thumbnail" : null
     },
     {
       "mediaId" : 25,
       "publicId" : "dfhjghjkdisudgfds7iy104",
+      "position" : 2,
+      "localId" : null,
+      "mediaType" : "image",
+      "createdAt" : "2015-11-17T23:46:16.817Z"
+    },
+    {
+      "mediaId" : 24,
+      "publicId" : "dfhjghjkdisudgfds7iy103",
+      "position" : 1,
+      "localId" : null,
+      "mediaType" : "image",
+      "createdAt" : "2015-11-17T23:46:16.814Z"
+    },
+    {
+      "mediaId" : 23,
+      "publicId" : "dfhjghjkdisudgfds7iy102",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:41.442Z"
+      "createdAt" : "2015-11-17T23:46:16.811Z"
     }
   ],
   "settings" : {

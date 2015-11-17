@@ -148,7 +148,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Xqg3wtmTV-ZpuBQUv3gMM3vCCFk
+Authorization: Token token=RGcyd5ze4dWNJqYx-NKgicEpMgk
 Host: example.org
 Cookie: </pre>
 
@@ -175,7 +175,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/4&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Xqg3wtmTV-ZpuBQUv3gMM3vCCFk&quot; \
+	-H &quot;Authorization: Token token=RGcyd5ze4dWNJqYx-NKgicEpMgk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -186,12 +186,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;231d5c8de6ac68431a9a138c8adc16b4&quot;
+ETag: W/&quot;ccbfe9ac6c0a2f66f055d3c05d19903b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6f3dd079-4d55-4317-a09e-702dccfc75d6
-X-Runtime: 0.030224
+X-Request-Id: 5b523546-a5ab-401d-a328-bc09381bf83a
+X-Runtime: 0.036162
 Vary: Origin
-Content-Length: 730</pre>
+Content-Length: 700</pre>
 
 #### Status
 
@@ -202,23 +202,20 @@ Content-Length: 730</pre>
 ```javascript
 {
   "id" : 4,
-  "title" : "Slot title 41",
-  "startDate" : "2019-09-19T21:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.935Z",
-  "updatedAt" : "2015-11-17T12:12:39.935Z",
+  "title" : "Slot title 59",
+  "startDate" : "2019-09-10T15:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:15.104Z",
+  "updatedAt" : "2015-11-17T23:46:15.104Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-19T21:44:02.000Z",
+  "endDate" : "2019-10-10T15:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 9,
-    "username" : "User 251",
-    "createdAt" : "2015-11-17T12:12:39.929Z",
-    "updatedAt" : "2015-11-17T12:12:39.929Z",
+    "username" : "User 286",
+    "createdAt" : "2015-11-17T23:46:15.100Z",
+    "updatedAt" : "2015-11-17T23:46:15.100Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
@@ -228,7 +225,7 @@ Content-Length: 730</pre>
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.947Z"
+      "createdAt" : "2015-11-17T23:46:15.118Z"
     }
   ],
   "settings" : {

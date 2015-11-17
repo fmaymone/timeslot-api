@@ -120,7 +120,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=_fUc4mBk6psKdATTM3sV8lKQd4E
+Authorization: Token token=uIl4XC_zAHxyFU38Z2NnX95x_Bg
 Host: example.org
 Cookie: </pre>
 
@@ -156,7 +156,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=_fUc4mBk6psKdATTM3sV8lKQd4E&quot; \
+	-H &quot;Authorization: Token token=uIl4XC_zAHxyFU38Z2NnX95x_Bg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -167,12 +167,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ba9bab06d15252ef97c5a16c22129548&quot;
+ETag: W/&quot;6f9462314852130738d10be5d9d9d25c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fb7c7c62-67a4-46ab-9aee-715144c96aa4
-X-Runtime: 0.037275
+X-Request-Id: 9847f1ca-ffa7-4f8d-a862-ff74b1cef5be
+X-Runtime: 0.039166
 Vary: Origin
-Content-Length: 952</pre>
+Content-Length: 922</pre>
 
 #### Status
 
@@ -183,23 +183,20 @@ Content-Length: 952</pre>
 ```javascript
 {
   "id" : 5,
-  "title" : "Slot title 42",
-  "startDate" : "2019-09-20T22:44:02.000Z",
-  "createdAt" : "2015-11-17T12:12:39.987Z",
-  "updatedAt" : "2015-11-17T12:12:39.987Z",
+  "title" : "Slot title 60",
+  "startDate" : "2019-09-11T16:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:15.166Z",
+  "updatedAt" : "2015-11-17T23:46:15.166Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-20T22:44:02.000Z",
+  "endDate" : "2019-10-11T16:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 11,
-    "username" : "User 253",
-    "createdAt" : "2015-11-17T12:12:39.982Z",
-    "updatedAt" : "2015-11-17T12:12:39.982Z",
+    "username" : "User 288",
+    "createdAt" : "2015-11-17T23:46:15.161Z",
+    "updatedAt" : "2015-11-17T23:46:15.161Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
@@ -209,7 +206,7 @@ Content-Length: 952</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:40.005Z"
+      "createdAt" : "2015-11-17T23:46:15.180Z"
     },
     {
       "mediaId" : 3,
@@ -217,7 +214,7 @@ Content-Length: 952</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.998Z"
+      "createdAt" : "2015-11-17T23:46:15.175Z"
     },
     {
       "mediaId" : 2,
@@ -225,7 +222,7 @@ Content-Length: 952</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-17T12:12:39.993Z"
+      "createdAt" : "2015-11-17T23:46:15.170Z"
     }
   ],
   "settings" : {

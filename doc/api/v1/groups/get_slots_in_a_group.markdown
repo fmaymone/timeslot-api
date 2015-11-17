@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=JohQ0m2bs1hWpqQhQ-UPPs-gS84
+Authorization: Token token=RhJ_ZHzGoo3yxq1YfOu1kLxbmVE
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/13/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=JohQ0m2bs1hWpqQhQ-UPPs-gS84&quot; \
+	-H &quot;Authorization: Token token=RhJ_ZHzGoo3yxq1YfOu1kLxbmVE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,12 +89,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2a03975b3ad13641eb8bf195ffdd5167&quot;
+ETag: W/&quot;5791aa9e7a4e0c6e40de5478f0768b8a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ea3c4c32-5e4a-45d4-840d-f4afb0056757
-X-Runtime: 0.101346
+X-Request-Id: cd33fe3e-c563-4e67-b632-c53988da211e
+X-Runtime: 0.085664
 Vary: Origin
-Content-Length: 2275</pre>
+Content-Length: 2155</pre>
 
 #### Status
 
@@ -112,21 +112,18 @@ Content-Length: 2275</pre>
       "id" : 7,
       "title" : "Slot title 24",
       "startDate" : "2019-09-01T03:44:02.000Z",
-      "createdAt" : "2015-11-17T12:12:36.599Z",
-      "updatedAt" : "2015-11-17T12:12:36.599Z",
+      "createdAt" : "2015-11-17T23:46:11.037Z",
+      "updatedAt" : "2015-11-17T23:46:11.037Z",
       "deletedAt" : null,
       "endDate" : "2019-10-01T03:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 38,
         "username" : "User 93",
-        "createdAt" : "2015-11-17T12:12:36.593Z",
-        "updatedAt" : "2015-11-17T12:12:36.593Z",
+        "createdAt" : "2015-11-17T23:46:11.032Z",
+        "updatedAt" : "2015-11-17T23:46:11.032Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
@@ -145,21 +142,18 @@ Content-Length: 2275</pre>
       "id" : 6,
       "title" : "Slot title 23",
       "startDate" : "2019-09-27T02:44:02.000Z",
-      "createdAt" : "2015-11-17T12:12:36.589Z",
-      "updatedAt" : "2015-11-17T12:12:36.589Z",
+      "createdAt" : "2015-11-17T23:46:11.029Z",
+      "updatedAt" : "2015-11-17T23:46:11.029Z",
       "deletedAt" : null,
       "endDate" : "2019-10-27T02:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 37,
         "username" : "User 92",
-        "createdAt" : "2015-11-17T12:12:36.585Z",
-        "updatedAt" : "2015-11-17T12:12:36.585Z",
+        "createdAt" : "2015-11-17T23:46:11.025Z",
+        "updatedAt" : "2015-11-17T23:46:11.025Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
@@ -178,21 +172,18 @@ Content-Length: 2275</pre>
       "id" : 5,
       "title" : "Slot title 22",
       "startDate" : "2019-09-26T01:44:02.000Z",
-      "createdAt" : "2015-11-17T12:12:36.581Z",
-      "updatedAt" : "2015-11-17T12:12:36.581Z",
+      "createdAt" : "2015-11-17T23:46:11.023Z",
+      "updatedAt" : "2015-11-17T23:46:11.023Z",
       "deletedAt" : null,
       "endDate" : "2019-10-26T01:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 36,
         "username" : "User 91",
-        "createdAt" : "2015-11-17T12:12:36.576Z",
-        "updatedAt" : "2015-11-17T12:12:36.576Z",
+        "createdAt" : "2015-11-17T23:46:11.019Z",
+        "updatedAt" : "2015-11-17T23:46:11.019Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
@@ -211,21 +202,18 @@ Content-Length: 2275</pre>
       "id" : 4,
       "title" : "Slot title 21",
       "startDate" : "2019-09-25T00:44:02.000Z",
-      "createdAt" : "2015-11-17T12:12:36.573Z",
-      "updatedAt" : "2015-11-17T12:12:36.573Z",
+      "createdAt" : "2015-11-17T23:46:11.016Z",
+      "updatedAt" : "2015-11-17T23:46:11.016Z",
       "deletedAt" : null,
       "endDate" : "2019-10-25T00:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 35,
         "username" : "User 90",
-        "createdAt" : "2015-11-17T12:12:36.567Z",
-        "updatedAt" : "2015-11-17T12:12:36.567Z",
+        "createdAt" : "2015-11-17T23:46:11.012Z",
+        "updatedAt" : "2015-11-17T23:46:11.012Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
