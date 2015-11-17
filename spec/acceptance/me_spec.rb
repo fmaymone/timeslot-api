@@ -19,7 +19,6 @@ resource "Me" do
     response_field :friendsCount, "Number of friends for this user"
   end
 
-  # TODO: remove duplication in user acceptance spec
   shared_context "current user response fields" do
     include_context "default user response fields"
 
@@ -57,7 +56,7 @@ resource "Me" do
 
     include_context "current user response fields"
 
-    example "Get User data", document: :v1 do
+    example "Get basic data", document: :v1 do
       explanation "shows all User data."
       do_request
 
@@ -87,6 +86,272 @@ resource "Me" do
                        "device_token", "location_id")
                .transform_keys { |key| key.camelize(:lower) })
       expect(json['location']).to eq nil
+    end
+  end
+
+  get "/v1/me/slots" do
+    header "Authorization", :auth_header
+
+    context 'pagination' do
+      parameter :limit, "Maximum number of slots returned." \
+                        " Default is 40. Maximum is 100."
+      parameter :moment, "A point in time. Query parameter to get slots " \
+                         "relative to a specific moment. Must be UTC.\n" \
+                         "Default is Time.zone.now (server time)."
+      parameter :filter, "Query parameter to filter slots relative to a " \
+                         "given **moment**. Must be one of:\n" \
+                         "- **past**: *start* before *moment*\n" \
+                         "- **upcoming**: *start* after or equal *moment*\n" \
+                         "- **ongoing**: *start* before & *end* after *moment*\n" \
+                         "- **finished**: *start* & *end* before *moment*\n" \
+                         "- **now**: *ongoing* & *upcoming* slots\n" \
+                         "- **around**: tba\n" \
+                         "- **all**: no restriction\n" \
+                         "Default is **upcoming**."
+      parameter :before, "Pagination cursor to retrieve slots which do happen" \
+                         " BEFORE the slot " \
+                         "represented by this cursor. If a cursor is " \
+                         "send, **status** and **moment** are ignored."
+      parameter :after, "Pagination cursor to retrieve slots which do happen" \
+                        " AFTER the slot represented by this cursor. If a " \
+                        "cursor is send, **filter** and **moment** are ignored."
+
+      response_field :paging, "Hash containing relevant paging parameters."
+      response_field :limit, "Maximum number of slots returned."
+      response_field :filter, "Types of slots which were requested."
+      response_field :moment, "Point-in-time which was used for the query."
+      response_field :before, "Cursor that represents the first item in the " \
+                              "response dataset."
+      response_field :after, "Cursor that represents the last item in the " \
+                             "response dataset."
+      response_field :data, "Array containing the result dataset."
+
+      describe "Get slots for current user - with pagination" do
+        let(:filter) { 'upcoming' }
+        let(:moment) { Time.zone.now.as_json }
+        let(:limit) { 3 }
+
+        let!(:std_slot_1) { create(:std_slot_private, owner: current_user,
+                                   start_date: Time.zone.tomorrow.next_week) }
+        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user,
+                                   start_date: Time.zone.today.next_week) }
+        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+        let!(:upcoming_slot) { create(:std_slot_private, owner: current_user,
+                                      start_date: Time.zone.tomorrow) }
+
+        example "Get slots - with pagination", document: :v1 do
+          explanation "Response contains '*paging*' hash & '*data*' array.\n" \
+                      "If there are more than **limit** results, '*paging*' " \
+                      "has **before** and **after** cursors which can be used" \
+                      " for subsequent requests. The first request should " \
+                      "always be made with **filter** '*upcoming*' to make " \
+                      "sure no results are skipped." \
+                      "'*data*' contains an array which includes " \
+                      "StandardSlots & ReSlots the current_user has made" \
+                      " including the slot settings (alerts).\n\n" \
+                      "The slots are ordered by startdate, enddate, id."
+
+          do_request
+
+          # first request without a cursor
+          expect(response_status).to eq(200)
+          slot_count = current_user.std_slots.count +
+                       current_user.re_slots.count
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']['after']).not_to be nil
+          after_cursor = json['paging']['after']
+
+          expect(json).to have_key 'data'
+          response_slot_count = json['data'].length
+          expect(json['data'].first).to have_key("id")
+          expect(json['data'].first).to have_key("title")
+          expect(json['data'].first).to have_key("location")
+          expect(json['data'].first).to have_key("startDate")
+          expect(json['data'].first).to have_key("endDate")
+          expect(json['data'].first).to have_key("settings")
+          expect(json['data'].first).to have_key("createdAt")
+          expect(json['data'].first).to have_key("updatedAt")
+          expect(json['data'].first).to have_key("deletedAt")
+          expect(json['data'].first).to have_key("creator")
+          expect(json['data'].first).to have_key("notes")
+          expect(json['data'].first).to have_key("likes")
+          expect(json['data'].first).to have_key("commentsCounter")
+          expect(json['data'].first).to have_key("visibility")
+          expect(json['data'].first).to have_key("media")
+          expect(json['data'].first).to have_key("url")
+          expect(response_body).to include(std_slot_1.title)
+          expect(response_body).to include(std_slot_2.title)
+
+          # make a subsequent request based on 'after' cursor
+          client.get "/v1/users/#{current_user.id}/slots",
+                     { after: after_cursor }, headers
+
+          expect(response_status).to eq(200)
+          json = JSON.parse(response_body)
+
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('filter')
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']).to have_key('limit')
+          expect(json['paging']['filter']).to be nil
+          expect(json['paging']['after']).to be nil
+          expect(json['paging']['limit']).to eq 40
+          expect(response_body).to include(re_slots.first.title)
+          expect(response_body).to include(re_slots.last.title)
+
+          expect(json).to have_key 'data'
+          response_slot_count += json['data'].length
+          expect(response_slot_count).to eq slot_count
+        end
+      end
+    end
+
+    context 'no pagination' do
+      response_field :id, "ID of the slot"
+      response_field :title, "Title of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
+      response_field :creatorId, "ID of the User who created the slot"
+      response_field :alerts, "Alerts for the slot for the current user"
+      response_field :notes, "A list of all notes on the slot"
+      response_field :likes, "Number of likes for the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
+      response_field :images, "Images for the slot"
+      response_field :audios, "Audio recordings for the slot"
+      response_field :videos, "Videos for the slot"
+      response_field :url, "direct url to fetch the slot"
+      response_field :visibility, "Visibility if it's a StandardSlot"
+      response_field :createdAt, "Creation datetime of the slot"
+      response_field :updatedAt, "Last update of the slot"
+      response_field :deletedAt, "Deletion datetime of the slot"
+
+      describe "Get slots" do
+        let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
+        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
+        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+
+        example "Get slots - no pagination", document: :v1 do
+          explanation "Returns an array which includes all StandardSlots &" \
+                      " ReSlots the current_user has created including" \
+                      " the slot settings (alerts).\n\n" \
+                      "The slots are ordered by startdate, enddate, ID."
+
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = current_user.std_slots.count +
+                       current_user.re_slots.count
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(json.first).to have_key("title")
+          expect(json.first).to have_key("location")
+          expect(json.first).to have_key("startDate")
+          expect(json.first).to have_key("endDate")
+          expect(json.first).to have_key("settings")
+          expect(json.first).to have_key("createdAt")
+          expect(json.first).to have_key("updatedAt")
+          expect(json.first).to have_key("deletedAt")
+          expect(json.first).to have_key("creator")
+          expect(json.first).to have_key("notes")
+          expect(json.first).to have_key("likes")
+          expect(json.first).to have_key("commentsCounter")
+          expect(json.first).to have_key("visibility")
+          expect(json.first).to have_key("media")
+          expect(json.first).to have_key("url")
+          expect(response_body).to include(std_slot_1.title)
+          expect(response_body).to include(std_slot_2.title)
+          expect(response_body).to include(re_slots.first.title)
+        end
+      end
+    end
+  end
+
+  get "/v1/me/friendslots" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :creatorId, "ID of the User who created the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :notes, "A list of all notes on the slot"
+    response_field :likes, "Number of likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :images, "Images for the slot"
+    response_field :audios, "Audio recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :visibility, "Visibility if it's a StandardSlot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
+    let(:bob) { create(:user, :with_private_slot) }
+    let!(:re_slot) { create(:re_slot, slotter: bob) }
+    let!(:friendships) {
+      create(:friendship, :established,
+             user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established,
+             user: current_user,
+             friend: create(:user, :with_public_slot))
+      create(:friendship, :established, user: bob, friend: current_user)
+    }
+
+    example "Get slots from friends", document: :v1 do
+      explanation "Returns an array which includes the public and" \
+                  " friend-visible StandardSlots &" \
+                  " ReSlots of all friends from the current user"
+      do_request
+
+      expect(response_status).to eq(200)
+      slot_count = 0
+      current_user.friends.each do |friend|
+        slot_count += friend.std_slots_friends.count
+        slot_count += friend.std_slots_public.count
+        slot_count += friend.re_slots.count
+      end
+      expect(json.length).to eq slot_count
+    end
+  end
+
+  get "/v1/me/media" do
+    header 'Authorization', :auth_header
+
+    let!(:slot_public) {
+      create(:std_slot_public, :with_media, creator: current_user) }
+    let!(:slot_private) {
+      create(:std_slot_private, :with_media, creator: current_user) }
+    let!(:slot_friend) do
+      friend = create(:user)
+      create(:friendship, :established, user: current_user, friend: friend)
+      create(:std_slot_friends, :with_media, creator: friend)
+    end
+    let!(:slot_group) do
+      member = create(:user)
+      group_slot = create(:group_slot, :with_media, creator: member)
+      create(:membership, :active, group: group_slot.group, user: current_user)
+      create(:membership, :active, group: group_slot.group, user: member)
+      group_slot
+    end
+
+    response_field :array, "containing media items as a list of MediaItem"
+
+    example "Get media items", document: :v1 do
+      explanation "Returns an array which includes all media items of " \
+                  "the current user."
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(response_body).to include(slot_public.media_items[0].public_id)
+      expect(response_body).to include(slot_private.media_items[0].public_id)
+      expect(response_body).not_to include(slot_friend.media_items[0].public_id)
+      expect(response_body).not_to include(slot_group.media_items[0].public_id)
+      expect(json.length).to eq(12)
     end
   end
 
@@ -270,23 +535,6 @@ resource "Me" do
     end
   end
 
-  delete "/v1/me" do
-    header "Authorization", :auth_header
-
-    include_context "current user response fields"
-
-    example "Inactivate User", document: :v1 do
-      explanation "Sets 'deletedAt' attr for user who is logged in" \
-                  "Doesn't delete anything.\n\n" \
-                  "returns user data"
-      do_request
-
-      current_user.reload
-      expect(current_user.deleted_at).not_to be nil
-      expect(response_status).to eq(200)
-    end
-  end
-
   get "/v1/me/signout" do
     header "Authorization", :auth_header
 
@@ -301,92 +549,20 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/friendslots" do
-    header "Accept", "application/json"
+  delete "/v1/me" do
     header "Authorization", :auth_header
 
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :creatorId, "ID of the User who created the slot"
-    response_field :alerts, "Alerts for the slot for the current user"
-    response_field :notes, "A list of all notes on the slot"
-    response_field :likes, "Number of likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos for the slot"
-    response_field :url, "direct url to fetch the slot"
-    response_field :visibility, "Visibility if it's a StandardSlot"
-    response_field :createdAt, "Creation datetime of the slot"
-    response_field :updatedAt, "Last update of the slot"
-    response_field :deletedAt, "Deletion datetime of the slot"
+    include_context "current user response fields"
 
-    let(:bob) { create(:user, :with_private_slot) }
-    let!(:re_slot) { create(:re_slot, slotter: bob) }
-    let!(:friendships) {
-      create(:friendship, :established,
-             user: create(:user, :with_friend_slot),
-             friend: current_user)
-      create(:friendship, :established,
-             user: current_user,
-             friend: create(:user, :with_public_slot))
-      create(:friendship, :established, user: bob, friend: current_user)
-    }
-    let(:id) { current_user.id }
-
-    example "Get slots from friends", document: :v1 do
-      explanation "Returns an array which includes the public and" \
-                  " friend-visible StandardSlots &" \
-                  " ReSlots of all friends from the current user"
+    example "Inactivate User", document: :v1 do
+      explanation "Sets 'deletedAt' attr for user who is logged in" \
+                  "Doesn't delete anything.\n\n" \
+                  "returns user data"
       do_request
 
+      current_user.reload
+      expect(current_user.deleted_at).not_to be nil
       expect(response_status).to eq(200)
-      slot_count = 0
-      current_user.friends.each do |friend|
-        slot_count += friend.std_slots_friends.count
-        slot_count += friend.std_slots_public.count
-        slot_count += friend.re_slots.count
-      end
-      expect(json.length).to eq slot_count
-    end
-  end
-
-  get "/v1/me/media" do
-    header 'Authorization', :auth_header
-
-    let!(:slot_public) {
-      create(:std_slot_public, :with_media, creator: current_user) }
-    let!(:slot_private) {
-      create(:std_slot_private, :with_media, creator: current_user) }
-    let!(:slot_friend) do
-      friend = create(:user)
-      create(:friendship, :established, user: current_user, friend: friend)
-      create(:std_slot_friends, :with_media, creator: friend)
-    end
-    let!(:slot_group) do
-      member = create(:user)
-      group_slot = create(:group_slot, :with_media, creator: member)
-      create(:membership, :active, group: group_slot.group, user: current_user)
-      create(:membership, :active, group: group_slot.group, user: member)
-      group_slot
-    end
-
-    response_field :array, "containing media items as a list of MediaItem"
-
-    example "Get media items" do
-      explanation "Returns an array which includes all media items of " \
-                  "the current user."
-
-      do_request
-
-      expect(response_status).to eq(200)
-      expect(response_body).to include(slot_public.media_items[0].public_id)
-      expect(response_body).to include(slot_private.media_items[0].public_id)
-      expect(response_body).not_to include(slot_friend.media_items[0].public_id)
-      expect(response_body).not_to include(slot_group.media_items[0].public_id)
-      expect(json.length).to eq(12)
     end
   end
 
