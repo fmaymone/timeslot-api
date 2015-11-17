@@ -1,8 +1,12 @@
 # Users API
 
-## Update current user - set default language
+## Update current user - set user image - new style
 
 ### PATCH /v1/users
+
+First a cloudinary signature needs to be fetched by the client from the API. After uploading the image to cloudinary the client updates the group with the image information.
+
+returns 200 and the users data if the image was successfully added or updated
 
 ### Parameters
 
@@ -56,6 +60,9 @@ Description : Default alerts for the reslots of this user
 
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
+Name : picture *- required -*
+Description : Cloudinary ID / URL
 
 
 ### Response Fields
@@ -149,7 +156,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE
+Authorization: Token token=GCewqkrGVqBykWK87U3i58a1jFQ
 Host: example.org
 Cookie: </pre>
 
@@ -160,16 +167,16 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "lang" : "de"
+  "picture" : "v1234567/xcvjghjkdisudgfds7iyf.jpg"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;picture&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE&quot; \
+	-H &quot;Authorization: Token token=GCewqkrGVqBykWK87U3i58a1jFQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +187,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;416ec426e7fa36bd4fa4da7963a25521&quot;
+ETag: W/&quot;15c1d812cd0c7b8aa7cbebc43098e77f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 434f0eb8-b060-45c9-afd5-52bf9dad515f
-X-Runtime: 0.016287
+X-Request-Id: f27ae8c3-4913-4e47-b726-899ec1ed5d18
+X-Runtime: 0.017679
 Vary: Origin
-Content-Length: 715</pre>
+Content-Length: 749</pre>
 
 #### Status
 
@@ -195,18 +202,18 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 361",
-  "createdAt" : "2015-11-17T12:12:42.079Z",
-  "updatedAt" : "2015-11-17T12:12:42.088Z",
+  "id" : 115,
+  "username" : "User 359",
+  "createdAt" : "2015-11-17T12:12:42.017Z",
+  "updatedAt" : "2015-11-17T12:12:42.025Z",
   "deletedAt" : null,
-  "image" : "",
+  "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : "de",
-  "email" : "user107@email.com",
+  "lang" : null,
+  "email" : "user105@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

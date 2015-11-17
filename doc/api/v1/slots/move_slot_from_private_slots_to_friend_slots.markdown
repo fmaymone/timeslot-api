@@ -60,7 +60,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -91,7 +91,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=ApxT_8MyWQpz9qpk7ziSUX2YZsQ
+Authorization: Token token=m5kmhUA26Jv9JOoj8v6z3q7ldII
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=ApxT_8MyWQpz9qpk7ziSUX2YZsQ&quot; \
+	-H &quot;Authorization: Token token=m5kmhUA26Jv9JOoj8v6z3q7ldII&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +123,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1ce349c6ccb2d6bb19440e4d5808d1b7&quot;
+ETag: W/&quot;06587c5d47a13353b37172df1ac77472&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f9cb7d16-2d92-4d8e-802e-12d843fec760
-X-Runtime: 0.105800
+X-Request-Id: e2774df7-74db-4e1f-ab0e-5f0676404eb6
+X-Runtime: 0.090295
 Vary: Origin
-Content-Length: 1471</pre>
+Content-Length: 1478</pre>
 
 #### Status
 
@@ -139,18 +139,18 @@ Content-Length: 1471</pre>
 ```javascript
 {
   "id" : 35,
-  "title" : "Slot title 68",
-  "startDate" : "2019-09-19T00:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:05.842Z",
-  "updatedAt" : "2015-10-30T15:01:05.842Z",
+  "title" : "Slot title 73",
+  "startDate" : "2019-09-24T05:44:02.000Z",
+  "createdAt" : "2015-11-17T12:12:41.467Z",
+  "updatedAt" : "2015-11-17T12:12:41.467Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-19T00:44:02.000Z",
+  "endDate" : "2019-10-24T05:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 97,
-    "username" : "User 319",
-    "createdAt" : "2015-10-30T15:01:05.807Z",
-    "updatedAt" : "2015-10-30T15:01:05.807Z",
+    "username" : "User 343",
+    "createdAt" : "2015-11-17T12:12:41.435Z",
+    "updatedAt" : "2015-11-17T12:12:41.435Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -161,57 +161,57 @@ Content-Length: 1471</pre>
   "media" : [
     {
       "mediaId" : 30,
-      "publicId" : "dfhjghjkdisudgfds7iy85",
+      "publicId" : "dfhjghjkdisudgfds7iy109",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-10-30T15:01:05.831Z",
+      "createdAt" : "2015-11-17T12:12:41.457Z",
       "duration" : null,
-      "title" : "Title 81"
+      "title" : "Title 105"
     },
     {
       "mediaId" : 29,
-      "publicId" : "dfhjghjkdisudgfds7iy84",
+      "publicId" : "dfhjghjkdisudgfds7iy108",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-30T15:01:05.828Z",
+      "createdAt" : "2015-11-17T12:12:41.454Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 28,
-      "publicId" : "dfhjghjkdisudgfds7iy83",
+      "publicId" : "dfhjghjkdisudgfds7iy107",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-30T15:01:05.826Z",
+      "createdAt" : "2015-11-17T12:12:41.452Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 27,
-      "publicId" : "dfhjghjkdisudgfds7iy82",
+      "publicId" : "dfhjghjkdisudgfds7iy106",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:05.820Z"
+      "createdAt" : "2015-11-17T12:12:41.447Z"
     },
     {
       "mediaId" : 26,
-      "publicId" : "dfhjghjkdisudgfds7iy81",
+      "publicId" : "dfhjghjkdisudgfds7iy105",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:05.818Z"
+      "createdAt" : "2015-11-17T12:12:41.445Z"
     },
     {
       "mediaId" : 25,
-      "publicId" : "dfhjghjkdisudgfds7iy80",
+      "publicId" : "dfhjghjkdisudgfds7iy104",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:05.815Z"
+      "createdAt" : "2015-11-17T12:12:41.442Z"
     }
   ],
   "settings" : {

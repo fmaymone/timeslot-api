@@ -39,7 +39,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=sY6W2XA-RzQ8C34dfVmqTwQSyZQ
+Authorization: Token token=uoHVn1VwpBUlJPYcqWd1LLDoDy4
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/group?query=timeslot+developer&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=sY6W2XA-RzQ8C34dfVmqTwQSyZQ&quot; \
+	-H &quot;Authorization: Token token=uoHVn1VwpBUlJPYcqWd1LLDoDy4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,12 +66,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bf4106172692f87877cc791583e073cf&quot;
+ETag: W/&quot;32c7474180e9df77af974ca1aa335478&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ac7b1d72-3f1f-44f5-85a5-3dac85668697
-X-Runtime: 0.009673
+X-Request-Id: dfc4a4d7-b94e-4989-8066-761180596763
+X-Runtime: 0.008578
 Vary: Origin
-Content-Length: 137</pre>
+Content-Length: 135</pre>
 
 #### Status
 
@@ -82,12 +82,12 @@ Content-Length: 137</pre>
 ```javascript
 [
   {
-    "id" : 33,
+    "id" : 34,
     "name" : "Timeslot Developer Group (Berlin)",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
-    "url" : "http://example.org/v1/groups/33"
+    "url" : "http://example.org/v1/groups/34"
   }
 ]
 ```

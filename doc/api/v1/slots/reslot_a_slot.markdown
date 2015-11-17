@@ -56,7 +56,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -94,7 +94,7 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=DZ37Sskq0anZ87lad9j9LQc8MoE
+Authorization: Token token=oiUfy8BrEuaivwUaSZHJC9ZnCW4
 Host: example.org
 Cookie: </pre>
 
@@ -105,17 +105,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 22
+  "predecessorId" : 26
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:22}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:26}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=DZ37Sskq0anZ87lad9j9LQc8MoE&quot; \
+	-H &quot;Authorization: Token token=oiUfy8BrEuaivwUaSZHJC9ZnCW4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,10 +126,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dfd4eaeabd92aa3789b2e85eb06db146&quot;
+ETag: W/&quot;0c933745fdaa8dd1c15c0da79a48b38e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 473a16c6-77d9-4c63-83e9-8242d9da154b
-X-Runtime: 0.026722
+X-Request-Id: b7939a56-7114-4a16-86f2-e5be8223fa0c
+X-Runtime: 0.026712
 Vary: Origin
 Content-Length: 583</pre>
 
@@ -141,19 +141,19 @@ Content-Length: 583</pre>
 
 ```javascript
 {
-  "id" : 23,
-  "title" : "Slot title 31",
-  "startDate" : "2019-09-09T11:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.093Z",
-  "updatedAt" : "2015-10-30T15:01:04.093Z",
+  "id" : 27,
+  "title" : "Slot title 36",
+  "startDate" : "2019-09-14T16:44:02.000Z",
+  "createdAt" : "2015-11-17T12:12:39.539Z",
+  "updatedAt" : "2015-11-17T12:12:39.539Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-09T11:44:02.000Z",
+  "endDate" : "2019-10-14T16:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 162,
-    "username" : "User 212",
-    "createdAt" : "2015-10-30T15:01:04.072Z",
-    "updatedAt" : "2015-10-30T15:01:04.072Z",
+    "id" : 184,
+    "username" : "User 236",
+    "createdAt" : "2015-11-17T12:12:39.517Z",
+    "updatedAt" : "2015-11-17T12:12:39.517Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -167,10 +167,10 @@ Content-Length: 583</pre>
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 164
+    "id" : 186
   },
   "parent" : {
-    "id" : 22
+    "id" : 26
   },
   "visibility" : "public",
   "likes" : 0,

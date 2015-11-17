@@ -1,8 +1,18 @@
-# Users API
+# Me API
 
-## Update current user - set default language
+## Update current user - change username and default alerts
 
-### PATCH /v1/users
+### PATCH /v1/me
+
+E.g, change username and set default alerts
+
+returns user data
+
+returns 404 if ID is invalid
+
+returns 422 if parameters are missing
+
+returns 422 if parameters are invalid
 
 ### Parameters
 
@@ -149,27 +159,28 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE
+Authorization: Token token=Y93xa9Aja91Aasd8e-iFy7vdzGI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/users</pre>
+<pre>PATCH /v1/me</pre>
 
 #### Body
 ```javascript
 {
-  "lang" : "de"
+  "username" : "bar",
+  "defaultPrivateAlerts" : "0111011100"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE&quot; \
+	-H &quot;Authorization: Token token=Y93xa9Aja91Aasd8e-iFy7vdzGI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;416ec426e7fa36bd4fa4da7963a25521&quot;
+ETag: W/&quot;9cc227dc7d05563df96e5789f1863072&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 434f0eb8-b060-45c9-afd5-52bf9dad515f
-X-Runtime: 0.016287
+X-Request-Id: e213a4e4-265a-42df-9aad-443207cbd38f
+X-Runtime: 0.036540
 Vary: Origin
-Content-Length: 715</pre>
+Content-Length: 709</pre>
 
 #### Status
 
@@ -195,18 +206,18 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 361",
-  "createdAt" : "2015-11-17T12:12:42.079Z",
-  "updatedAt" : "2015-11-17T12:12:42.088Z",
+  "id" : 100,
+  "username" : "bar",
+  "createdAt" : "2015-11-17T12:12:37.460Z",
+  "updatedAt" : "2015-11-17T12:12:37.478Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : "de",
-  "email" : "user107@email.com",
+  "lang" : null,
+  "email" : "user34@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -215,7 +226,7 @@ Content-Length: 715</pre>
   "slotDefaultDuration" : null,
   "slotDefaultLocationId" : null,
   "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0000000000",
+  "defaultPrivateAlerts" : "0111011100",
   "defaultOwnFriendslotAlerts" : "0000000000",
   "defaultOwnPublicAlerts" : "0000000000",
   "defaultFriendsFriendslotAlerts" : "0000000000",

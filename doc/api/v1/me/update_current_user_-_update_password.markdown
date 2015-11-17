@@ -1,8 +1,12 @@
-# Users API
+# Me API
 
-## Update current user - set default language
+## Update current user - update password
 
-### PATCH /v1/users
+### PATCH /v1/me
+
+The valid old password needs to be send along
+
+returns 200 and the users data if the password was successfully updated
 
 ### Parameters
 
@@ -56,6 +60,12 @@ Description : Default alerts for the reslots of this user
 
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
+Name : password *- required -*
+Description : new password
+
+Name : old_password *- required -*
+Description : valid old password
 
 
 ### Response Fields
@@ -149,27 +159,28 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE
+Authorization: Token token=TmRQXlgxUk83zGEnpkps59J1NDU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/users</pre>
+<pre>PATCH /v1/me</pre>
 
 #### Body
 ```javascript
 {
-  "lang" : "de"
+  "password" : "slimetot",
+  "old_password" : "timeslot"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;password&quot;:&quot;slimetot&quot;,&quot;old_password&quot;:&quot;timeslot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE&quot; \
+	-H &quot;Authorization: Token token=TmRQXlgxUk83zGEnpkps59J1NDU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;416ec426e7fa36bd4fa4da7963a25521&quot;
+ETag: W/&quot;8c71acb891dd22e3aedf47e020bbc9d8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 434f0eb8-b060-45c9-afd5-52bf9dad515f
-X-Runtime: 0.016287
+X-Request-Id: 0d2cdeba-d615-4d48-9c81-aa13d56bc2dc
+X-Runtime: 0.033439
 Vary: Origin
-Content-Length: 715</pre>
+Content-Length: 714</pre>
 
 #### Status
 
@@ -195,18 +206,18 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 361",
-  "createdAt" : "2015-11-17T12:12:42.079Z",
-  "updatedAt" : "2015-11-17T12:12:42.088Z",
+  "id" : 101,
+  "username" : "User 156",
+  "createdAt" : "2015-11-17T12:12:37.511Z",
+  "updatedAt" : "2015-11-17T12:12:37.525Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : "de",
-  "email" : "user107@email.com",
+  "lang" : null,
+  "email" : "user35@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

@@ -1,8 +1,8 @@
-# Users API
+# Me API
 
 ## Delete current user
 
-### DELETE /v1/users
+### DELETE /v1/me
 
 Sets &#39;deletedAt&#39; attr for user who is logged inDoesn&#39;t delete anything.
 
@@ -98,19 +98,19 @@ Description : all devices from user
 
 #### Headers
 
-<pre>Authorization: Token token=g9NAfDKoZ6eu9QkJIwUp0L_WnhI
+<pre>Authorization: Token token=xVwwUx6IS13eTcu3mazWJ1mvd6I
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/users</pre>
+<pre>DELETE /v1/me</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=g9NAfDKoZ6eu9QkJIwUp0L_WnhI&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=xVwwUx6IS13eTcu3mazWJ1mvd6I&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -122,12 +122,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;264136ea6e119cc3173ef808595c8694&quot;
+ETag: W/&quot;6c5f436b318640c732959e8daf308c79&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ffd267a3-0015-476d-a0c1-ac3d49df908e
-X-Runtime: 0.042192
+X-Request-Id: 3a0798f2-5360-42f0-b075-2eb3f33bbc96
+X-Runtime: 0.049028
 Vary: Origin
-Content-Length: 766</pre>
+Content-Length: 736</pre>
 
 #### Status
 
@@ -137,21 +137,18 @@ Content-Length: 766</pre>
 
 ```javascript
 {
-  "id" : 119,
-  "username" : "User 339",
-  "createdAt" : "2015-10-30T15:01:06.666Z",
-  "updatedAt" : "2015-10-30T15:01:06.686Z",
-  "deletedAt" : "2015-10-30T15:01:06.683Z",
+  "id" : 106,
+  "username" : "User 161",
+  "createdAt" : "2015-11-17T12:12:37.727Z",
+  "updatedAt" : "2015-11-17T12:12:37.753Z",
+  "deletedAt" : "2015-11-17T12:12:37.751Z",
+  "image" : "",
   "location" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user97@email.com",
+  "email" : "user40@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

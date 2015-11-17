@@ -92,7 +92,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -120,7 +120,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=DwGSSr-vJ6DiIdkATdPeFBWZF60
+Authorization: Token token=_fUc4mBk6psKdATTM3sV8lKQd4E
 Host: example.org
 Cookie: </pre>
 
@@ -156,7 +156,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=DwGSSr-vJ6DiIdkATdPeFBWZF60&quot; \
+	-H &quot;Authorization: Token token=_fUc4mBk6psKdATTM3sV8lKQd4E&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -167,10 +167,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;03db9fc064fd6c480e78f0be084e92fa&quot;
+ETag: W/&quot;ba9bab06d15252ef97c5a16c22129548&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4058101a-be75-42e4-a624-21ef587d2b22
-X-Runtime: 0.035627
+X-Request-Id: fb7c7c62-67a4-46ab-9aee-715144c96aa4
+X-Runtime: 0.037275
 Vary: Origin
 Content-Length: 952</pre>
 
@@ -183,18 +183,18 @@ Content-Length: 952</pre>
 ```javascript
 {
   "id" : 5,
-  "title" : "Slot title 37",
-  "startDate" : "2019-09-15T17:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.521Z",
-  "updatedAt" : "2015-10-30T15:01:04.521Z",
+  "title" : "Slot title 42",
+  "startDate" : "2019-09-20T22:44:02.000Z",
+  "createdAt" : "2015-11-17T12:12:39.987Z",
+  "updatedAt" : "2015-11-17T12:12:39.987Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-15T17:44:02.000Z",
+  "endDate" : "2019-10-20T22:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 11,
-    "username" : "User 229",
-    "createdAt" : "2015-10-30T15:01:04.516Z",
-    "updatedAt" : "2015-10-30T15:01:04.516Z",
+    "username" : "User 253",
+    "createdAt" : "2015-11-17T12:12:39.982Z",
+    "updatedAt" : "2015-11-17T12:12:39.982Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
@@ -205,27 +205,27 @@ Content-Length: 952</pre>
   "media" : [
     {
       "mediaId" : 4,
-      "publicId" : "dfhjghjkdisudgfds7iy65",
+      "publicId" : "dfhjghjkdisudgfds7iy89",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.537Z"
+      "createdAt" : "2015-11-17T12:12:40.005Z"
     },
     {
       "mediaId" : 3,
-      "publicId" : "dfhjghjkdisudgfds7iy64",
+      "publicId" : "dfhjghjkdisudgfds7iy88",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.532Z"
+      "createdAt" : "2015-11-17T12:12:39.998Z"
     },
     {
       "mediaId" : 2,
-      "publicId" : "dfhjghjkdisudgfds7iy63",
+      "publicId" : "dfhjghjkdisudgfds7iy87",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.526Z"
+      "createdAt" : "2015-11-17T12:12:39.993Z"
     }
   ],
   "settings" : {

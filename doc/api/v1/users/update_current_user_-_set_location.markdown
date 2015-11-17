@@ -194,7 +194,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tqgohqDAhosmu2pVqgNGAYKb7cI
+Authorization: Token token=7IAg07W4t2NwAcOCecwYuN7D2LI
 Host: example.org
 Cookie: </pre>
 
@@ -216,7 +216,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tqgohqDAhosmu2pVqgNGAYKb7cI&quot; \
+	-H &quot;Authorization: Token token=7IAg07W4t2NwAcOCecwYuN7D2LI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -227,12 +227,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a64dd4f72a422768bf8cc802b65dd4b2&quot;
+ETag: W/&quot;8b3e293b97636e0b13d683281216aecd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bac5cd96-f6f8-4fb5-9c4f-abe97f247537
-X-Runtime: 0.021557
+X-Request-Id: 8eb5db06-1af3-4e03-a0f4-2491a8e58ec5
+X-Runtime: 0.018743
 Vary: Origin
-Content-Length: 1066</pre>
+Content-Length: 1037</pre>
 
 #### Status
 
@@ -243,10 +243,11 @@ Content-Length: 1066</pre>
 ```javascript
 {
   "id" : 116,
-  "username" : "User 336",
-  "createdAt" : "2015-10-30T15:01:06.569Z",
-  "updatedAt" : "2015-10-30T15:01:06.580Z",
+  "username" : "User 360",
+  "createdAt" : "2015-11-17T12:12:42.047Z",
+  "updatedAt" : "2015-11-17T12:12:42.057Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : {
     "id" : 4,
     "name" : "Acapulco",
@@ -266,15 +267,11 @@ Content-Length: 1066</pre>
     "longitude" : null,
     "privateLocation" : false
   },
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user94@email.com",
+  "email" : "user106@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

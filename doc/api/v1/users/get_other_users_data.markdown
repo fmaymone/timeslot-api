@@ -54,7 +54,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=B1yZpm0EfKI4-4tsva3iERxPfsA
+Authorization: Token token=HRiInou6E8_dGkbjjiTuga-Ovzk
 Host: example.org
 Cookie: </pre>
 
@@ -66,7 +66,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/104&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=B1yZpm0EfKI4-4tsva3iERxPfsA&quot; \
+	-H &quot;Authorization: Token token=HRiInou6E8_dGkbjjiTuga-Ovzk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -77,12 +77,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;298855c81325999f8e5dd98db1d17cce&quot;
+ETag: W/&quot;3b9dbcb64119d71967f574c2289fed3f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 135149cb-b53f-4d51-bebc-01de40b58c82
-X-Runtime: 0.012907
+X-Request-Id: d422a137-ba5f-4f85-be3b-ece44d2964ff
+X-Runtime: 0.011186
 Vary: Origin
-Content-Length: 558</pre>
+Content-Length: 528</pre>
 
 #### Status
 
@@ -93,10 +93,11 @@ Content-Length: 558</pre>
 ```javascript
 {
   "id" : 104,
-  "username" : "User 325",
-  "createdAt" : "2015-10-30T15:01:06.065Z",
-  "updatedAt" : "2015-10-30T15:01:06.065Z",
+  "username" : "User 349",
+  "createdAt" : "2015-11-17T12:12:41.675Z",
+  "updatedAt" : "2015-11-17T12:12:41.675Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : {
     "id" : 3,
     "name" : "Acapulco",
@@ -115,10 +116,6 @@ Content-Length: 558</pre>
     "latitude" : 51.234,
     "longitude" : -11.993,
     "privateLocation" : false
-  },
-  "image" : {
-    "publicId" : null,
-    "localId" : null
   },
   "slotCount" : 0,
   "reslotCount" : 0,

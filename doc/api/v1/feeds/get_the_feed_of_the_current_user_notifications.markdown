@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_lh3wRuAMzkuJIej1TcVAP8_6Z0
+Authorization: Token token=QO8gleMjdodGz-BRObtz05S44rc
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_lh3wRuAMzkuJIej1TcVAP8_6Z0&quot; \
+	-H &quot;Authorization: Token token=QO8gleMjdodGz-BRObtz05S44rc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,12 +141,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c6166f82e551775a41e3bf8766ef3aaf&quot;
+ETag: W/&quot;141878fd9642f44ee69b72499231544e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 81052346-0f19-4f48-b9c4-b257100444d7
-X-Runtime: 0.003217
+X-Request-Id: 410e6e2c-e675-4dd7-96fb-56f511cf8334
+X-Runtime: 0.004546
 Vary: Origin
-Content-Length: 1070</pre>
+Content-Length: 1068</pre>
 
 #### Status
 
@@ -162,27 +162,27 @@ Content-Length: 1070</pre>
     "target" : "3",
     "activity" : "comment",
     "foreignId" : "9",
-    "time" : "2015-10-30T15:01:01.575Z",
+    "time" : "2015-11-17T12:12:35.945Z",
     "feed" : 3,
-    "id" : "051057C24A70A1D4E6AC5170C943FECDCB84B29A",
+    "id" : "28610036A6DAEEC68E06E595B4BC2A76AE04B7BE",
     "actors" : [
-      "8"
+      8
     ],
     "data" : {
       "target" : {
         "id" : 3,
         "title" : "Slot title 23",
-        "startDate" : "2019-09-23T22:44:02.000Z",
-        "createdAt" : "2015-10-30T15:01:01.389Z",
-        "updatedAt" : "2015-10-30T15:01:01.389Z",
+        "startDate" : "2019-09-24T23:44:02.000Z",
+        "createdAt" : "2015-11-17T12:12:35.725Z",
+        "updatedAt" : "2015-11-17T12:12:35.725Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-23T22:44:02.000Z",
+        "endDate" : "2019-10-24T23:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 9,
-          "username" : "User 62",
-          "createdAt" : "2015-10-30T15:01:01.379Z",
-          "updatedAt" : "2015-10-30T15:01:01.379Z",
+          "username" : "User 64",
+          "createdAt" : "2015-11-17T12:12:35.714Z",
+          "updatedAt" : "2015-11-17T12:12:35.714Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
@@ -206,8 +206,8 @@ Content-Length: 1070</pre>
       "actor" : {
         "id" : 8,
         "username" : "User 53",
-        "createdAt" : "2015-10-30T15:01:01.374Z",
-        "updatedAt" : "2015-10-30T15:01:01.374Z",
+        "createdAt" : "2015-11-17T12:12:35.708Z",
+        "updatedAt" : "2015-11-17T12:12:35.708Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,

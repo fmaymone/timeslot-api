@@ -1,8 +1,8 @@
-# Users API
+# Me API
 
 ## User signout
 
-### GET /v1/users/signout
+### GET /v1/me/signout
 
 returns OK if current user was successfully signed out
 
@@ -11,20 +11,18 @@ returns 403 if there was no current user
 
 #### Headers
 
-<pre>Accept: application/json
-Authorization: Token token=e8OUiNxbHpwN4ILJ_izWLSr6_5o
+<pre>Authorization: Token token=qxdMflmcZB2DVzYPYkyxaBlpkWE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/signout</pre>
+<pre>GET /v1/me/signout</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signout&quot; -X GET \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=e8OUiNxbHpwN4ILJ_izWLSr6_5o&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/me/signout&quot; -X GET \
+	-H &quot;Authorization: Token token=qxdMflmcZB2DVzYPYkyxaBlpkWE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -36,8 +34,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: f6ecc7b5-4b8f-49df-a6b1-bd7fbed981dc
-X-Runtime: 0.005414
+X-Request-Id: 5e071c97-3c02-4950-aad1-27b88a5799f8
+X-Runtime: 0.006394
 Vary: Origin
 Content-Length: 0</pre>
 

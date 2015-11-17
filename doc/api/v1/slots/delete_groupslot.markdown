@@ -52,7 +52,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -82,7 +82,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=MU0Nptb2AN4xN41sC8312klKzHk
+<pre>Authorization: Token token=Dz_hHTM_8IVKa6xj8lj98wsRKhc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -94,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=MU0Nptb2AN4xN41sC8312klKzHk&quot; \
+	-H &quot;Authorization: Token token=Dz_hHTM_8IVKa6xj8lj98wsRKhc&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;61636603efd1c984d2dcdb8aa78fe5f2&quot;
+ETag: W/&quot;55b3eb7e7f76e1669b8d497b7565e39c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 069a057e-a489-4cd5-9a2b-fbfeb47b20bf
-X-Runtime: 0.044239
+X-Request-Id: 6c776997-d330-4a92-91f1-bdd83db9c634
+X-Runtime: 0.048533
 Vary: Origin
 Content-Length: 540</pre>
 
@@ -122,18 +122,18 @@ Content-Length: 540</pre>
 ```javascript
 {
   "id" : 10,
-  "title" : "Slot title 42",
-  "startDate" : "2019-09-20T22:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:05.044Z",
-  "updatedAt" : "2015-10-30T15:01:05.068Z",
-  "deletedAt" : "2015-10-30T15:01:05.065Z",
-  "endDate" : "2019-10-20T22:44:02.000Z",
+  "title" : "Slot title 47",
+  "startDate" : "2019-09-25T03:44:02.000Z",
+  "createdAt" : "2015-11-17T12:12:40.560Z",
+  "updatedAt" : "2015-11-17T12:12:40.585Z",
+  "deletedAt" : "2015-11-17T12:12:40.582Z",
+  "endDate" : "2019-10-25T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 24,
-    "username" : "User 242",
-    "createdAt" : "2015-10-30T15:01:05.040Z",
-    "updatedAt" : "2015-10-30T15:01:05.040Z",
+    "username" : "User 266",
+    "createdAt" : "2015-11-17T12:12:40.555Z",
+    "updatedAt" : "2015-11-17T12:12:40.555Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,

@@ -1,8 +1,8 @@
-# Users API
+# Me API
 
-## Update current user - set default language
+## Update current user - set location
 
-### PATCH /v1/users
+### PATCH /v1/me
 
 ### Parameters
 
@@ -56,6 +56,51 @@ Description : Default alerts for the reslots of this user
 
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
+Name : location
+Description : ID of users home location
+
+Name : name
+Description : Name of the IOS location, e.g. Timeslot Inc. (255 chars)
+
+Name : thoroughfare
+Description : Street address, Dolziger Str. 9 (255 chars)
+
+Name : subThoroughfare
+Description : house number, e.g. 9 (255 chars)
+
+Name : locality
+Description : city, e.g. Berlin (255 chars)
+
+Name : subLocality
+Description : neighborhood, common name, e.g. Mitte (255 chars)
+
+Name : postalCode
+Description : zip code, e.g. 94114 (32 chars)
+
+Name : country
+Description : country, e.g. Germany (255 chars)
+
+Name : isoCountryCode
+Description : Country Code, e.g. US (8 chars)
+
+Name : inLandWater
+Description : e.g. Lake Tahoe
+
+Name : ocean
+Description : e.g. Pacific Ocean
+
+Name : areasOfInterest
+Description : e.g. Volkspark Friedrichshain
+
+Name : latitude
+Description : Latitude
+
+Name : longitude
+Description : Longitude
+
+Name : private_location
+Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
 
 ### Response Fields
@@ -149,27 +194,29 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE
+Authorization: Token token=ldYdl9qcM-HVMqMCzwgsSEKvHRc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/users</pre>
+<pre>PATCH /v1/me</pre>
 
 #### Body
 ```javascript
 {
-  "lang" : "de"
+  "location" : {
+    "name" : "Acapulco"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE&quot; \
+	-H &quot;Authorization: Token token=ldYdl9qcM-HVMqMCzwgsSEKvHRc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +227,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;416ec426e7fa36bd4fa4da7963a25521&quot;
+ETag: W/&quot;530c57b395a7a7677513eaf6065df129&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 434f0eb8-b060-45c9-afd5-52bf9dad515f
-X-Runtime: 0.016287
+X-Request-Id: 94e61bff-bc14-475e-ae59-9f4e077050b2
+X-Runtime: 0.033674
 Vary: Origin
-Content-Length: 715</pre>
+Content-Length: 1036</pre>
 
 #### Status
 
@@ -195,18 +242,36 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 361",
-  "createdAt" : "2015-11-17T12:12:42.079Z",
-  "updatedAt" : "2015-11-17T12:12:42.088Z",
+  "id" : 103,
+  "username" : "User 158",
+  "createdAt" : "2015-11-17T12:12:37.599Z",
+  "updatedAt" : "2015-11-17T12:12:37.614Z",
   "deletedAt" : null,
   "image" : "",
-  "location" : null,
+  "location" : {
+    "id" : 1,
+    "name" : "Acapulco",
+    "thoroughfare" : null,
+    "subThoroughfare" : null,
+    "locality" : null,
+    "subLocality" : null,
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : null,
+    "country" : null,
+    "isoCountryCode" : null,
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
+    "latitude" : null,
+    "longitude" : null,
+    "privateLocation" : false
+  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : "de",
-  "email" : "user107@email.com",
+  "lang" : null,
+  "email" : "user37@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

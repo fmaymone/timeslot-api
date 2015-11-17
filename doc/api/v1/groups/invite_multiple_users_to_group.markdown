@@ -27,7 +27,7 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=8alBssx0cGD3bWjKCsFGrDDWT4Q
+Authorization: Token token=_p5wXP0KNdqpuNk4ztqKk_7t1Nk
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/20/members&quot; -d &#39;{&quot;invitees&quot;:[73,74,75]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=8alBssx0cGD3bWjKCsFGrDDWT4Q&quot; \
+	-H &quot;Authorization: Token token=_p5wXP0KNdqpuNk4ztqKk_7t1Nk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,10 +62,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;72d51d2f71ddcb3bc99dfd8c730f331a&quot;
+ETag: W/&quot;586f4680cc03be44f25cb6a336061c9c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5a35cf7d-66a5-46a7-ab64-db885ae2d7ba
-X-Runtime: 0.034512
+X-Request-Id: 06d163d1-356e-465f-bc2b-505ebf813c57
+X-Runtime: 0.031102
 Vary: Origin
 Content-Length: 230</pre>
 
@@ -81,12 +81,7 @@ Content-Length: 230</pre>
   "size" : 4,
   "related" : [
     {
-      "userId" : 72,
-      "state" : "active",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 73,
+      "userId" : 75,
       "state" : "invited",
       "deletedAt" : null
     },
@@ -96,8 +91,13 @@ Content-Length: 230</pre>
       "deletedAt" : null
     },
     {
-      "userId" : 75,
+      "userId" : 73,
       "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 72,
+      "state" : "active",
       "deletedAt" : null
     }
   ]

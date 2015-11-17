@@ -37,7 +37,7 @@ Name : version *- required -*
 Description : A string for the version of the current device operating system (max. 10 chars), e.g.: &#39;6.0b&#39; 
 
 Name : deviceId *- required -*
-Description : A unique hardware ID from the current device (max. 128 chars) 
+Description : A unique hardware ID from the current device (max. 128 chars)
 
 
 ### Response Fields
@@ -151,7 +151,7 @@ Cookie: </pre>
   "password" : "secret-thing",
   "device" : {
     "device" : {
-      "device_id" : "sn-4346287341083478676543954",
+      "device_id" : "sn-193462873410834786765439519",
       "system" : "ios",
       "version" : "6.0"
     }
@@ -162,7 +162,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-4346287341083478676543954&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-193462873410834786765439519&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -175,12 +175,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dde13e8477f84843c4491fa38ab63f84&quot;
+ETag: W/&quot;5c37675e208bf4a7b410a24421a8de07&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2b84283f-1c13-4c8b-b95e-1fac0a964d57
-X-Runtime: 0.019548
+X-Request-Id: 4fa9556c-b9db-422e-a7cf-e5d68d6fd71a
+X-Runtime: 0.016918
 Vary: Origin
-Content-Length: 785</pre>
+Content-Length: 755</pre>
 
 #### Status
 
@@ -192,14 +192,11 @@ Content-Length: 785</pre>
 {
   "id" : 107,
   "username" : "foo",
-  "createdAt" : "2015-10-30T15:01:06.121Z",
-  "updatedAt" : "2015-10-30T15:01:06.121Z",
+  "createdAt" : "2015-11-17T12:12:41.730Z",
+  "updatedAt" : "2015-11-17T12:12:41.730Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
@@ -222,6 +219,6 @@ Content-Length: 785</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "iO_Dmj8wCqnPJBsjDF5lMwlY04o"
+  "authToken" : "B9-utADiJRTfozti_K9WBeXj9vE"
 }
 ```

@@ -122,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user87@email.com",
+  "email" : "user99@email.com",
   "password" : "timeslot"
 }
 ```
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user87@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user99@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -143,12 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6b0ba690c78e485ca938d47eac4a75c6&quot;
+ETag: W/&quot;1fd69eb9763cf2afaf18557b50aea828&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a23e7750-636c-4611-8c91-121fab265032
-X-Runtime: 0.019830
+X-Request-Id: 2c46aff5-54bb-4ece-94a7-3c97137561d6
+X-Runtime: 0.019837
 Vary: Origin
-Content-Length: 786</pre>
+Content-Length: 756</pre>
 
 #### Status
 
@@ -159,20 +159,17 @@ Content-Length: 786</pre>
 ```javascript
 {
   "id" : 108,
-  "username" : "User 328",
-  "createdAt" : "2015-10-30T15:01:06.146Z",
-  "updatedAt" : "2015-10-30T15:01:06.153Z",
+  "username" : "User 352",
+  "createdAt" : "2015-11-17T12:12:41.751Z",
+  "updatedAt" : "2015-11-17T12:12:41.759Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user87@email.com",
+  "email" : "user99@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -190,6 +187,6 @@ Content-Length: 786</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "lJzHNSNtIMQ9lhtBKpsjHk4RS4M"
+  "authToken" : "Si5QHqw6sh4ohVytEPOgskK23bw"
 }
 ```

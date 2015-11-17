@@ -1,8 +1,12 @@
 # Users API
 
-## Update current user - set default language
+## Update current user - set user image - old style
 
 ### PATCH /v1/users
+
+First a cloudinary signature needs to be fetched by the client from the API. After uploading the image to cloudinary the client updates the group with the image information.
+
+returns 200 and the users data if the image was successfully added or updated
 
 ### Parameters
 
@@ -56,6 +60,15 @@ Description : Default alerts for the reslots of this user
 
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
+Name : image *- required -*
+Description : Scope for attributes of new image
+
+Name : publicId *- required -*
+Description : Cloudinary ID / URL
+
+Name : localId
+Description : IOS local identifier
 
 
 ### Response Fields
@@ -149,7 +162,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE
+Authorization: Token token=tAq_8QlxnTEeqJmh8oA9QAMr9to
 Host: example.org
 Cookie: </pre>
 
@@ -160,16 +173,19 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "lang" : "de"
+  "image" : {
+    "publicId" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
+    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
+  }
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=AvoV9LghIPqFU7a768s6rgsnNDE&quot; \
+	-H &quot;Authorization: Token token=tAq_8QlxnTEeqJmh8oA9QAMr9to&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;416ec426e7fa36bd4fa4da7963a25521&quot;
+ETag: W/&quot;d6451022b67b10ee80e80c4c06b7b9b7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 434f0eb8-b060-45c9-afd5-52bf9dad515f
-X-Runtime: 0.016287
+X-Request-Id: 9047e85d-6f3f-4dec-a478-c1b5ea8eea90
+X-Runtime: 0.028029
 Vary: Origin
-Content-Length: 715</pre>
+Content-Length: 749</pre>
 
 #### Status
 
@@ -195,18 +211,18 @@ Content-Length: 715</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 361",
-  "createdAt" : "2015-11-17T12:12:42.079Z",
-  "updatedAt" : "2015-11-17T12:12:42.088Z",
+  "id" : 114,
+  "username" : "User 358",
+  "createdAt" : "2015-11-17T12:12:41.959Z",
+  "updatedAt" : "2015-11-17T12:12:41.977Z",
   "deletedAt" : null,
-  "image" : "",
+  "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : "de",
-  "email" : "user107@email.com",
+  "lang" : null,
+  "email" : "user104@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

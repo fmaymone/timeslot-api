@@ -110,12 +110,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b8a8a8346102136dcae36986d2a4ec4e&quot;
+ETag: W/&quot;4b4885db730b04eb5526fe226f0637be&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 30e19bea-efc2-40b8-9c1d-77dc11f11faa
-X-Runtime: 0.018814
+X-Request-Id: 5da7695f-0749-462d-8b19-67b1abab21cb
+X-Runtime: 0.017606
 Vary: Origin
-Content-Length: 770</pre>
+Content-Length: 740</pre>
 
 #### Status
 
@@ -125,16 +125,13 @@ Content-Length: 770</pre>
 
 ```javascript
 {
-  "id" : 56,
-  "username" : "User 51",
-  "createdAt" : "2015-10-30T15:01:00.104Z",
-  "updatedAt" : "2015-10-30T15:01:00.104Z",
+  "id" : 58,
+  "username" : "User 53",
+  "createdAt" : "2015-11-17T12:12:34.138Z",
+  "updatedAt" : "2015-11-17T12:12:34.138Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
@@ -157,6 +154,6 @@ Content-Length: 770</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "KByzP-j2g2KTa7B1w2OM5OOWIZs"
+  "authToken" : "YjnuJOw686xiXDXUoKBsSf56C5U"
 }
 ```

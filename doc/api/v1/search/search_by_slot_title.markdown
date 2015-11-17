@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=9XrCMtA-j-dzkloAmjWeY1kpFlE
+Authorization: Token token=U9eJo7koXqmFGHMw-R0VJewszBk
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9XrCMtA-j-dzkloAmjWeY1kpFlE&quot; \
+	-H &quot;Authorization: Token token=U9eJo7koXqmFGHMw-R0VJewszBk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,12 +75,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8c851d42dd2eff241c6421df3a3d4ab0&quot;
+ETag: W/&quot;9d7f643d7e7f9a78191b7685fdb564e3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6be88ac6-be3d-44dc-adc3-8e8e6d38d4eb
-X-Runtime: 0.025257
+X-Request-Id: 4d89be36-ae4f-493c-8cfb-179f9911d530
+X-Runtime: 0.029812
 Vary: Origin
-Content-Length: 595</pre>
+Content-Length: 597</pre>
 
 #### Status
 
@@ -91,19 +91,19 @@ Content-Length: 595</pre>
 ```javascript
 [
   {
-    "id" : 8,
+    "id" : 12,
     "title" : "Timeslot Party Berlin 2015",
-    "startDate" : "2019-09-01T03:44:02.000Z",
-    "createdAt" : "2015-10-30T15:01:03.208Z",
-    "updatedAt" : "2015-10-30T15:01:03.208Z",
+    "startDate" : "2019-09-06T08:44:02.000Z",
+    "createdAt" : "2015-11-17T12:12:38.585Z",
+    "updatedAt" : "2015-11-17T12:12:38.585Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-01T03:44:02.000Z",
+    "endDate" : "2019-10-06T08:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 107,
-      "username" : "User 156",
-      "createdAt" : "2015-10-30T15:01:03.198Z",
-      "updatedAt" : "2015-10-30T15:01:03.198Z",
+      "id" : 129,
+      "username" : "User 180",
+      "createdAt" : "2015-11-17T12:12:38.570Z",
+      "updatedAt" : "2015-11-17T12:12:38.570Z",
       "deletedAt" : null,
       "image" : {
         "publicId" : null,
@@ -120,7 +120,7 @@ Content-Length: 595</pre>
     "likes" : 0,
     "commentsCounter" : 0,
     "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/8"
+    "url" : "http://example.org/v1/slots/12"
   }
 ]
 ```

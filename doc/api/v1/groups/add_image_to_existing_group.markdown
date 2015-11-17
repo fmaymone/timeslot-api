@@ -14,13 +14,7 @@ Name : group_id *- required -*
 Description : ID of the group to update
 
 Name : image *- required -*
-Description : Scope for attributes of new image
-
-Name : publicId *- required -*
 Description : Cloudinary ID / URL
-
-Name : localId
-Description : IOS local identifier
 
 
 ### Response Fields
@@ -60,7 +54,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=xlcGT4_HMjyW4xz1ib5yLISrUdc
+Authorization: Token token=eEIxHncJSlu9s7X3dh27iCKdWoI
 Host: example.org
 Cookie: </pre>
 
@@ -71,19 +65,16 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "image" : {
-    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
-  }
+  "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/10&quot; -d &#39;{&quot;image&quot;:{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/10&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=xlcGT4_HMjyW4xz1ib5yLISrUdc&quot; \
+	-H &quot;Authorization: Token token=eEIxHncJSlu9s7X3dh27iCKdWoI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -94,12 +85,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5c7018f397473e421c3eb39d1244b532&quot;
+ETag: W/&quot;6c8747b642f8880eaeda1f205214dfcf&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5eaad157-0d13-4678-b700-d5ada0d0ca91
-X-Runtime: 0.020278
+X-Request-Id: 4ed35b8b-c293-4590-9ae2-200b7d18b40b
+X-Runtime: 0.014978
 Vary: Origin
-Content-Length: 481</pre>
+Content-Length: 412</pre>
 
 #### Status
 
@@ -111,20 +102,17 @@ Content-Length: 481</pre>
 {
   "id" : 10,
   "name" : "foo",
+  "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-10-30T15:01:01.931Z",
-  "updatedAt" : "2015-10-30T15:01:01.931Z",
+  "createdAt" : "2015-11-17T12:12:36.353Z",
+  "updatedAt" : "2015-11-17T12:12:36.369Z",
   "deletedAt" : null,
-  "image" : {
-    "publicId" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
-    "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001"
-  },
   "owner" : {
     "id" : 22,
-    "username" : "User 75",
-    "createdAt" : "2015-10-30T15:01:01.927Z",
-    "updatedAt" : "2015-10-30T15:01:01.927Z",
+    "username" : "User 77",
+    "createdAt" : "2015-11-17T12:12:36.347Z",
+    "updatedAt" : "2015-11-17T12:12:36.347Z",
     "deletedAt" : null,
     "image" : {
       "publicId" : null,
