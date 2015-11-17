@@ -67,24 +67,6 @@ module V1
       end
     end
 
-    # GET /v1/users/friendslots
-    # returns all public and friend-visible slots of all friends from
-    # current user
-    # Concerning pundit:
-    # This is weird and not nice, pundit scopes seem way to inflexible...
-    # the 'resolve' method for SlotPolicy is already used by 'slots' method
-    # using another name doesn't trigger 'performed' for the scoped policy
-    # while the business logic is now in the policy instead of the model,
-    # the instantiation of the policy is ugly as shit
-    def slots_from_friends
-      authorize :user
-
-      ctx = UserContext.new(current_user, nil)
-      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
-
-      render "v1/slots/index"
-    end
-
     # GET /v1/users/1/media
     # get all media items of the given user
     def media_items

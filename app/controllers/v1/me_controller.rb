@@ -66,6 +66,24 @@ module V1
       end
     end
 
+    # GET /v1/me/friendslots
+    # returns all public and friend-visible slots of all friends from
+    # current user
+    # Concerning pundit:
+    # This is weird and not nice, pundit scopes seem way to inflexible...
+    # the 'resolve' method for SlotPolicy is already used by 'slots' method
+    # using another name doesn't trigger 'performed' for the scoped policy
+    # while the business logic is now in the policy instead of the model,
+    # the instantiation of the policy is ugly as shit
+    def slots_from_friends
+      authorize :me
+
+      ctx = UserContext.new(current_user, nil)
+      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+
+      render "v1/slots/index"
+    end
+
     # GET /v1/me/media
     def my_media_items
       authorize :me
@@ -109,7 +127,7 @@ module V1
                         :defaultReslotAlerts,
                         :defaultGroupAlerts)
 
-      # ios prevers to use 'image' instead of 'picture'
+      # ios prefers to use 'image' instead of 'picture'
       p[:picture] = params[:image] if params[:image].present?
 
       if params[:location].present?

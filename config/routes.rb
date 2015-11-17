@@ -95,7 +95,6 @@ Rails.application.routes.draw do
           as: 'user_media',
           constraints: { id: /\d+/ }
       # TODO: remove depricated routes:
-      get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends_old'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends_old'
     end

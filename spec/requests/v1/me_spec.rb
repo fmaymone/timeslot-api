@@ -761,6 +761,70 @@ RSpec.describe "V1::Me", type: :request do
     end
   end
 
+  describe "GET /v1/me/friendslots" do
+    let(:bob) { create(:user, :with_private_slot) }
+    let!(:bob_slots) do
+      create(:re_slot, slotter: bob)
+      create(:std_slot_friends, owner: bob, title: 'bobslot')
+      create(:std_slot_friends, owner: bob, title: 'bobslot-past',
+             start_date: Time.zone.yesterday)
+    end
+
+    let!(:friendships) {
+      create(:friendship, :established,
+             user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established,
+             user: current_user,
+             friend: create(:user, :with_public_slot))
+      create(:friendship, :established, user: bob, friend: current_user)
+    }
+
+    it "returns success" do
+      get "/v1/me/friendslots", {}, auth_header
+      expect(response.status).to be(200)
+    end
+
+    it "includes all the right slots" do
+      get "/v1/me/friendslots", {}, auth_header
+      expect(response.body).to include 'bobslot'
+      expect(json.size).to be 4
+    end
+
+    it "orders the slots by startdate" do
+      get "/v1/me/friendslots", {}, auth_header
+      expect(json.first['startDate']).to be <= json.second['startDate']
+      expect(json.second['startDate']).to be <= json.third['startDate']
+      expect(json.third['startDate']).to be <= json.last['startDate']
+    end
+
+    it "only includes upcoming slots" do
+      get "/v1/me/friendslots", {}, auth_header
+      expect(json.first['startDate']).to be >= Time.zone.now
+      expect(response.body).not_to include 'bobslot-past'
+    end
+
+    context "pagination" do
+      let(:limit) { 4 }
+      let(:query_string) {
+        { status: status, moment: Time.zone.now.as_json, limit: limit } }
+
+      it "returns success" do
+        get "/v1/me/friendslots", query_string, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns pagination metadata" do
+        skip 'TODO: paginate slots of users friends'
+        get "/v1/me/friendslots", query_string, auth_header
+        expect(json).to have_key 'paging'
+        expect(json['paging']).to have_key 'moment'
+        expect(json['paging']).to have_key 'limit'
+        expect(json['paging']).to have_key 'before'
+      end
+    end
+  end
+
   describe "GET /v1/me/media" do
     let!(:slots) do
       create(:std_slot_public, :with_media, creator: current_user)

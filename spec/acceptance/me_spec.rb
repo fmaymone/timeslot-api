@@ -263,6 +263,58 @@ resource "Me" do
     end
   end
 
+  get "/v1/me/friendslots" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :creatorId, "ID of the User who created the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :notes, "A list of all notes on the slot"
+    response_field :likes, "Number of likes for the slot"
+    response_field :commentsCounter, "Number of comments on the slot"
+    response_field :images, "Images for the slot"
+    response_field :audios, "Audio recordings for the slot"
+    response_field :videos, "Videos for the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :visibility, "Visibility if it's a StandardSlot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
+    let(:bob) { create(:user, :with_private_slot) }
+    let!(:re_slot) { create(:re_slot, slotter: bob) }
+    let!(:friendships) {
+      create(:friendship, :established,
+             user: create(:user, :with_friend_slot),
+             friend: current_user)
+      create(:friendship, :established,
+             user: current_user,
+             friend: create(:user, :with_public_slot))
+      create(:friendship, :established, user: bob, friend: current_user)
+    }
+    let(:id) { current_user.id }
+
+    example "Get slots of current users friends", document: :v1 do
+      explanation "Returns an array which includes the public and" \
+                  " friend-visible StandardSlots &" \
+                  " ReSlots of all friends from the current user"
+      do_request
+
+      expect(response_status).to eq(200)
+      slot_count = 0
+      current_user.friends.each do |friend|
+        slot_count += friend.std_slots_friends.count
+        slot_count += friend.std_slots_public.count
+        slot_count += friend.re_slots.count
+      end
+      expect(json.length).to eq slot_count
+    end
+  end
+
   get "/v1/me/media" do
     header 'Authorization', :auth_header
 
