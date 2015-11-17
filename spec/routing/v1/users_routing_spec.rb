@@ -30,21 +30,6 @@ RSpec.describe V1::UsersController, type: :routing do
 
     # TODO: remove from here when user-image new style and me-controller is used
 
-    it "routes to #signout" do
-      expect(get: "/v1/users/signout")
-        .to route_to("v1/me#signout", format: :json)
-    end
-
-    it "routes to #update" do
-      expect(patch: "/v1/users")
-        .to route_to("v1/users#update", format: :json)
-    end
-
-    it "routes to #destroy" do
-      expect(delete: "/v1/users")
-        .to route_to("v1/me#inactivate", format: :json)
-    end
-
     it "routes to #slots_from_friends" do
       expect(get: "/v1/users/friendslots")
         .to route_to("v1/users#slots_from_friends", format: :json)

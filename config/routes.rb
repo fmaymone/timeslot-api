@@ -96,12 +96,8 @@ Rails.application.routes.draw do
           constraints: { id: /\d+/ }
       # TODO: remove depricated routes:
       get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
-      patch '', to: 'users#update', as: 'user_update'
-      delete '', to: 'me#inactivate', as: 'user_delete'
-      get 'signout', to: 'me#signout', as: 'signout'
       post 'add_friends', to: 'users#add_friends', as: 'add_friends_old'
       post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends_old'
-      patch 'device', to: 'me#update_device', as: 'update_device_old'
     end
 
     scope :groups do
