@@ -51,6 +51,7 @@ module V1
     end
 
     # PATCH /v1/users/1
+    # TODO: remove from here when user-image new style and me-controller is used
     def update
       authorize :user
 
@@ -147,6 +148,7 @@ module V1
       params.permit(:username, :email, :phone, :password, :picture)
     end
 
+    # TODO: remove from here when user-image new style and me-controller is used
     private def user_params
       p = params.permit(:username,
                         :lang,

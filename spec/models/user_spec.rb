@@ -19,7 +19,9 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
+  it { is_expected.to have_many(:active_memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
+  it { is_expected.to have_many(:active_groups).through(:active_memberships) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_private).inverse_of(:owner) }
@@ -27,7 +29,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:std_slots_foaf).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_public).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
-  it { is_expected.to have_many(:group_slots).through(:groups) }
+  it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
   it { is_expected.to have_many(:devices).inverse_of(:user) }
@@ -174,7 +176,8 @@ RSpec.describe User, type: :model do
 
     context "user has group_slot with the specified meta_slot" do
       let(:group) { create(:group) }
-      let!(:membership) { create(:membership, user: user, group: group) }
+      let!(:membership) {
+        create(:membership, :active, user: user, group: group) }
       let!(:group_slot) {
         create(:group_slot, meta_slot: meta_slot, group: group)
       }
@@ -236,7 +239,7 @@ RSpec.describe User, type: :model do
         }.to change(SlotSetting, :count).by 1
       end
 
-      it "doesn't create a new slot_setting if alerts eq users default alerts" do
+      it "doesn't create new slot_setting if alerts eq users default alerts" do
         user.update(default_own_friendslot_alerts: '1110011110')
         expect {
           user.update_alerts(slot, '1110011110')
@@ -249,7 +252,7 @@ RSpec.describe User, type: :model do
                                    user: user, default_alerts: '1110011110') }
         before { user.update(default_group_alerts: '0000000010') }
 
-        it "doesn't create a new slot_setting if alerts eq group default alerts" do
+        it "doesn't create slot_setting if alerts eq group default alerts" do
           expect {
             user.update_alerts(slot, '1110011110')
           }.not_to change(SlotSetting, :count)
@@ -386,6 +389,7 @@ RSpec.describe User, type: :model do
 
   describe :groups do
     let(:user) { create(:user, :with_3_groups) }
+
     it "returns the groups where user is a member" do
       expect(user.groups.size).to eq 3
     end

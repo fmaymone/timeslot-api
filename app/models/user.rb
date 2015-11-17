@@ -34,11 +34,17 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :group_slots, through: :groups
+  has_many :group_slots, through: :active_groups
 
+  # group related
   has_many :own_groups, class_name: Group,
            foreign_key: "owner_id", inverse_of: :owner
+
   has_many :memberships, inverse_of: :user
+  has_many :active_memberships, -> { where state: '111' },
+           class_name: Membership, inverse_of: :user
+
+  has_many :active_groups, through: :active_memberships, source: :group
   has_many :groups, through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
@@ -231,7 +237,7 @@ class User < ActiveRecord::Base
   end
 
   def shared_group_slots(user)
-    group_slots.merge(groups.where('groups.id IN (?)', user.groups.ids))
+    group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
   end
 
   def prepare_for_slot_deletion(slot)
@@ -243,7 +249,7 @@ class User < ActiveRecord::Base
   def update_alerts(slot, alerts)
     alert = slot_settings.find_by(meta_slot: slot.meta_slot)
     if alert.nil?
-      return if default_alert?(slot, alerts)
+      return true if default_alert?(slot, alerts)
       SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
     else
       alert.update(alerts: alerts)
