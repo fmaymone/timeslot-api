@@ -80,24 +80,6 @@ module V1
       render "v1/media/index"
     end
 
-    # POST /v1/users/add_friends
-    # creates friend request or accepts friend request if one exists
-    def add_friends
-      authorize :user
-      current_user.add_friends friends_ids
-
-      head :ok
-    end
-
-    # POST /v1/users/remove_friends
-    # deny friend request and unfriending
-    def remove_friends
-      authorize :user
-      current_user.remove_friends friends_ids
-
-      head :ok
-    end
-
     private def user_create_params
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
@@ -111,10 +93,6 @@ module V1
       params.permit(:deviceId, :system, :version, :token, :endpoint)
         .transform_keys(&:underscore)
         .symbolize_keys
-    end
-
-    private def friends_ids
-      params.require(:ids)
     end
 
     private def credentials

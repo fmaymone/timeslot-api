@@ -94,9 +94,6 @@ Rails.application.routes.draw do
           to: 'users#media_items',
           as: 'user_media',
           constraints: { id: /\d+/ }
-      # TODO: remove depricated routes:
-      post 'add_friends', to: 'users#add_friends', as: 'add_friends_old'
-      post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends_old'
     end
 
     scope :groups do

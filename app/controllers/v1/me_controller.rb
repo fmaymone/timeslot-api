@@ -99,6 +99,24 @@ module V1
       head :ok
     end
 
+    # POST /v1/me/add_friends
+    # creates friend request or accepts friend request if one exists
+    def add_friends
+      authorize :me
+      current_user.add_friends friends_ids
+
+      head :ok
+    end
+
+    # POST /v1/me/remove_friends
+    # deny friend request and unfriending
+    def remove_friends
+      authorize :me
+      current_user.remove_friends friends_ids
+
+      head :ok
+    end
+
     private def user_params
       p = params.permit(:username,
                         :lang,
@@ -142,6 +160,10 @@ module V1
       params.permit(:deviceId, :system, :version, :token, :endpoint)
         .transform_keys(&:underscore)
         .symbolize_keys
+    end
+
+    private def friends_ids
+      params.require(:ids)
     end
   end
 end
