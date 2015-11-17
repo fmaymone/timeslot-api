@@ -1,8 +1,21 @@
 #Changelog
 
 ## upcoming
+- upgrade to Rails 4.2.5
 - friend-of-friend visibility (foaf) for std_slots
-
+- user and group image now directly in the table instead of media_items
+- me-controller which has
+  - show
+  - update
+  - inactivate
+  - signout
+  - my_slots
+  - my_media
+  - update_device
+  - TODO: add_friends / remove_friends / slot_from_friends
+- return 403 forbidden if pundit check fails
+- FIX for invalid email on password reset
+- FIX for some policies valid but current_user didn't exist
 
 ## v0.8.1
 - many updates for activity stream
