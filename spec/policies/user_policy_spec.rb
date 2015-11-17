@@ -13,8 +13,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :show?, :update?, :add_friends?,
-              :remove_friends? do
+  permissions :show?, :add_friends?, :remove_friends? do
     context "for a user" do
       let(:user) { create(:user) }
 

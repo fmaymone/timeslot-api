@@ -46,11 +46,6 @@ class UserPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
-  def update?
-    current_user?
-  end
-
-  # true if a user is logged in
   def add_friends?
     current_user?
   end

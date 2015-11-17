@@ -51,6 +51,45 @@ resource "Me" do
     response_field :devices, "all devices from user"
   end
 
+  get "/v1/me" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    include_context "current user response fields"
+
+    example "Get User data", document: :v1 do
+      explanation "shows all User data."
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key "id"
+      expect(json).to have_key "username"
+      expect(json).to have_key "image"
+      expect(json).to have_key "location"
+      expect(json).to have_key "push"
+      expect(json).to have_key "createdAt"
+      expect(json).to have_key "updatedAt"
+      expect(json).to have_key "deletedAt"
+      expect(json).to have_key "slotCount"
+      expect(json).to have_key "reslotCount"
+      expect(json).to have_key "friendsCount"
+      expect(json).to have_key "defaultPrivateAlerts"
+      expect(json).to have_key "slotDefaultDuration"
+      expect(json).not_to have_key "authToken"
+      expect(json).not_to have_key "passwordDigest"
+      expect(json).not_to have_key "role"
+      expect(
+        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
+                    'slotCount', 'memberships', 'location')
+      ).to eq(current_user.attributes.as_json
+               .except("auth_token", "password_digest", "role",
+                       "picture",
+                       "device_token", "location_id")
+               .transform_keys { |key| key.camelize(:lower) })
+      expect(json['location']).to eq nil
+    end
+  end
+
   patch "/v1/me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
@@ -88,7 +127,7 @@ resource "Me" do
       let(:username) { "bar" }
       let(:defaultPrivateAlerts) { '0111011100' }
 
-      example "Update current user - change username and default alerts",
+      example "Update - username and default alerts",
               document: :v1 do
         explanation "E.g, change username and set default alerts\n\n" \
                     "returns user data\n\n" \
@@ -101,7 +140,6 @@ resource "Me" do
         expect(current_user.username).to eq "bar"
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
-        # TODO: change in step2 of user image refactoring
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
                       'slotCount', 'memberships', 'location')
@@ -113,14 +151,14 @@ resource "Me" do
       end
     end
 
-    describe "Update password for User" do
+    describe "Update password" do
       parameter :password, "new password", required: true
       parameter :old_password, "valid old password", required: true
 
       let(:password) { "slimetot" }
       let(:old_password) { "timeslot" }
 
-      example "Update current user - update password", document: :v1 do
+      example "Update - password", document: :v1 do
         explanation "The valid old password needs to be send along\n\n" \
                     "returns 200 and the users data if the password was" \
                     " successfully updated"
@@ -133,12 +171,12 @@ resource "Me" do
       end
     end
 
-    describe "Set image for User" do
+    describe "Set/Update user image" do
       parameter :image, "Cloudinary ID / URL", required: true
 
       let(:image) { "v1234567/xcvjghjkdisudgfds7iyf.jpg" }
 
-      example "Update current user - set user image", document: :v1 do
+      example "Update - user image", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
                     " client from the API. After uploading the image to" \
                     " cloudinary the client updates the group with the image" \
@@ -156,7 +194,7 @@ resource "Me" do
       end
     end
 
-    describe "Set location for User" do
+    describe "Set location" do
       parameter :location, "ID of users home location"
       parameter :name,
                 "Name of the IOS location, e.g. Timeslot Inc. (255 chars)",
@@ -189,7 +227,7 @@ resource "Me" do
 
       let(:name) { "Acapulco" }
 
-      example "Update current user - set location", document: :v1 do
+      example "Update - location", document: :v1 do
         do_request
 
         expect(response_status).to eq(200)
@@ -205,7 +243,7 @@ resource "Me" do
     describe "Set default language for a user" do
       let(:lang) { 'de' }
 
-      example "Update current user - set default language", document: :v1 do
+      example "Update - default language", document: :v1 do
         expect(current_user[:lang]).to be(nil)
 
         do_request
@@ -219,7 +257,7 @@ resource "Me" do
     describe "Turn on/off push notifications for a user" do
       let(:push) { false }
 
-      example "Update current user - turn on/off push notifications",
+      example "Update - turn on/off push notifications",
               document: :v1 do
         expect(current_user.push).to be(true)
 
@@ -237,7 +275,7 @@ resource "Me" do
 
     include_context "current user response fields"
 
-    example "Delete current user", document: :v1 do
+    example "Inactivate User", document: :v1 do
       explanation "Sets 'deletedAt' attr for user who is logged in" \
                   "Doesn't delete anything.\n\n" \
                   "returns user data"
@@ -252,7 +290,7 @@ resource "Me" do
   get "/v1/me/signout" do
     header "Authorization", :auth_header
 
-    example "User signout", document: :v1 do
+    example "Sign-out User", document: :v1 do
       explanation "returns OK if current user was successfully signed out\n\n" \
                   "returns 403 if there was no current user"
       do_request
@@ -298,7 +336,7 @@ resource "Me" do
     }
     let(:id) { current_user.id }
 
-    example "Get slots of current users friends", document: :v1 do
+    example "Get slots from friends", document: :v1 do
       explanation "Returns an array which includes the public and" \
                   " friend-visible StandardSlots &" \
                   " ReSlots of all friends from the current user"
@@ -337,7 +375,7 @@ resource "Me" do
 
     response_field :array, "containing media items as a list of MediaItem"
 
-    example "Get all media items for the current user" do
+    example "Get media items" do
       explanation "Returns an array which includes all media items of " \
                   "the current user."
 

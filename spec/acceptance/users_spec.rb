@@ -56,45 +56,6 @@ resource "Users" do
 
     parameter :id, "ID of the user to get", required: true
 
-    context "own data" do
-      include_context "current user response fields"
-
-      let(:id) { current_user.id }
-
-      example "Get own user data", document: :v1 do
-        explanation "returns 404 if ID is invalid\n\n"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json).to have_key "id"
-        expect(json).to have_key "username"
-        expect(json).to have_key "image"
-        expect(json).to have_key "location"
-        expect(json).to have_key "push"
-        expect(json).to have_key "createdAt"
-        expect(json).to have_key "updatedAt"
-        expect(json).to have_key "deletedAt"
-        expect(json).to have_key "slotCount"
-        expect(json).to have_key "reslotCount"
-        expect(json).to have_key "friendsCount"
-        expect(json).to have_key "defaultPrivateAlerts"
-        expect(json).to have_key "slotDefaultDuration"
-        expect(json).not_to have_key "authToken"
-        expect(json).not_to have_key "passwordDigest"
-        expect(json).not_to have_key "role"
-        # TODO: change in step2 of user image refactoring
-        expect(
-          json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships', 'location')
-        ).to eq(current_user.attributes.as_json
-                 .except("auth_token", "password_digest", "role",
-                         "picture",
-                         "device_token", "location_id")
-                 .transform_keys { |key| key.camelize(:lower) })
-        expect(json['location']).to eq nil
-      end
-    end
-
     context "other user" do
       include_context "default user response fields"
 
@@ -120,7 +81,6 @@ resource "Users" do
         expect(json).not_to have_key "authToken"
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
-        # TODO: change in step2 of user image refactoring
         expect(
           json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
         ).to eq(user.attributes.as_json
