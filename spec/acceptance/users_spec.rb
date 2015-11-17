@@ -50,56 +50,6 @@ resource "Users" do
     response_field :devices, "all devices from user"
   end
 
-  get "/v1/users/:id" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the user to get", required: true
-
-    context "other user" do
-      include_context "default user response fields"
-
-      let(:user) { create(:user, :with_location) }
-      let(:id) { user.id }
-
-      example "Get other users data", document: :v1 do
-        explanation "returns 404 if ID is invalid\n\n"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json).to have_key "id"
-        expect(json).to have_key "username"
-        expect(json).to have_key "image"
-        expect(json).to have_key "location"
-        # expect(json).to have_key "notifications"
-        expect(json).to have_key "createdAt"
-        expect(json).to have_key "updatedAt"
-        expect(json).to have_key "deletedAt"
-        expect(json).to have_key "slotCount"
-        expect(json).to have_key "reslotCount"
-        expect(json).to have_key "friendsCount"
-        expect(json).not_to have_key "authToken"
-        expect(json).not_to have_key "passwordDigest"
-        expect(json).not_to have_key "role"
-        expect(
-          json.except('image', 'friendsCount', 'reslotCount', 'slotCount', 'location')
-        ).to eq(user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'device_token', 'email', 'email_verified', 'lang',
-                         'picture',
-                         'phone', 'phone_verified', 'location_id',
-                         'default_private_alerts', 'default_own_friendslot_alerts',
-                         'default_own_public_alerts', 'default_friends_friendslot_alerts',
-                         'default_friends_public_alerts', 'default_reslot_alerts',
-                         'default_group_alerts', 'slot_default_duration',
-                         'slot_default_type_id', 'slot_default_location_id'
-                        )
-                 .transform_keys { |key| key.camelize(:lower) })
-        expect(json['location']['name']).to eq "Acapulco"
-      end
-    end
-  end
-
   post "/v1/users" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -120,7 +70,7 @@ resource "Users" do
     let(:password) { "secret-thing" }
     let(:lang) { "de" }
 
-    example "User signup - Create user", document: :v1 do
+    example "Signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
                   "returns 422 if parameters are missing\n\n" \
                   "returns 422 if parameters are invalid"
@@ -155,7 +105,7 @@ resource "Users" do
       let(:id) { user[:id] }
       let(:device) {{ device: attributes_for(:device) }}
 
-      example "User signup - Create user with a specific device",
+      example "Signup - Create user with a specific device",
               document: :v1 do
         explanation "Either an email or phone number must be provided\n\n" \
                     "returns 422 if parameters are missing\n\n" \
@@ -187,7 +137,7 @@ resource "Users" do
     let(:email) { user.email }
     let(:password) { "timeslot" }
 
-    example "User signin", document: :v1 do
+    example "Signin", document: :v1 do
       explanation "returns OK and an AuthToken if credentials match\n\n" \
                   "returns 401 if credentials invalid"
       do_request
@@ -198,19 +148,30 @@ resource "Users" do
       expect(json['authToken']).to eq user.auth_token
     end
 
-    context "User signin with new device" do
-      parameter :device, "A key-value-paired array which describes the device, " \
-                         "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
-      parameter :system, "A string shorthand of the current device operating system (max. 10 chars), e.g.: 'ios', 'android' ",
-                scope: :device, required: true
-      parameter :version, "A string for the version of the current device operating system (max. 10 chars), e.g.: '6.0b' ",
-                scope: :device, required: true
-      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
-                scope: :device, required: true
+    context "Signin with new device" do
+      parameter :device,
+                "A key-value-paired array which describes the device," \
+                " e.g. device = { system: 'ios', version: '6.0b'," \
+                " deviceId: 'xxx-xxxx-xxx' }",
+                required: true
+      parameter :system,
+                "A string shorthand of the current device operating" \
+                " system (max. 10 chars), e.g.: 'ios', 'android' ",
+                scope: :device,
+                required: true
+      parameter :version,
+                "A string for the version of the current device operating" \
+                " system (max. 10 chars), e.g.: '6.0b' ",
+                scope: :device,
+                required: true
+      parameter :deviceId,
+                "A unique hardware ID from the current device (max. 128 chars)",
+                scope: :device,
+                required: true
 
-      let(:device) {{ device: attributes_for(:device) }}
+      let(:device) { { device: attributes_for(:device)}}
 
-      example "User signin with new device", document: :v1 do
+      example "Signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
@@ -223,14 +184,18 @@ resource "Users" do
     end
 
     context "User signin with an existing device" do
-      parameter :device, "A key-value-paired array which describes the device, " \
-                         "e.g. device = { system: 'ios', version: '6.0b', deviceId: 'xxx-xxxx-xxx' }", required: true
-      parameter :deviceId, "A unique hardware ID from the current device (max. 128 chars) ",
-                scope: :device, required: true
+      parameter :device,
+                "A key-value-paired array which describes the device, " \
+                "e.g. device = { system: 'ios', version: '6.0b'," \
+                " deviceId: 'xxx-xxxx-xxx' }", required: true
+      parameter :deviceId,
+                "A unique hardware ID from the current device (max. 128 chars)",
+                scope: :device,
+                required: true
 
-      let(:device) {{ device: attributes_for(:device) }}
+      let(:device) { { device: attributes_for(:device) } }
 
-      example "User signin with an existing device", document: :v1 do
+      example "Signin with existing device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \
                     "returns 401 if credentials invalid"
         do_request
@@ -243,70 +208,176 @@ resource "Users" do
     end
   end
 
-  post "/v1/users/reset", :vcr do
-    header "Content-Type", "application/json"
+  get "/v1/users/:id" do
     header "Accept", "application/json"
+    header "Authorization", :auth_header
 
-    parameter :email, "Email of the user for whom to reset password",
-              required: true
+    parameter :id, "ID of the user to get", required: true
 
-    let(:user) do
-      create(:user,
-             email: 'success@simulator.amazonses.com',
-             password: "nottimeslot")
-    end
-    let(:email) { user.email }
+    context "other user" do
+      include_context "default user response fields"
 
-    example "Reset password", document: :v1 do
-      explanation "Resets password and sends it to user via email\n\n" \
-                  "returns OK if valid email\n\n" \
-                  "returns 403 if invalid email"
-      do_request
+      let(:user) { create(:user, :with_location) }
+      let(:id) { user.id }
 
-      expect(response_status).to eq(200)
+      example "Get basic data for User", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key "id"
+        expect(json).to have_key "username"
+        expect(json).to have_key "image"
+        expect(json).to have_key "location"
+        # expect(json).to have_key "notifications"
+        expect(json).to have_key "createdAt"
+        expect(json).to have_key "updatedAt"
+        expect(json).to have_key "deletedAt"
+        expect(json).to have_key "slotCount"
+        expect(json).to have_key "reslotCount"
+        expect(json).to have_key "friendsCount"
+        expect(json).not_to have_key "authToken"
+        expect(json).not_to have_key "passwordDigest"
+        expect(json).not_to have_key "role"
+        expect(
+          json.except('image', 'friendsCount', 'reslotCount',
+                      'slotCount', 'location')
+        ).to eq(user.attributes.as_json
+                 .except("auth_token", "password_digest", "role", 'public_url',
+                         'push', 'device_token', 'email', 'email_verified',
+                         'lang', 'picture', 'phone', 'phone_verified',
+                         'location_id', 'default_private_alerts',
+                         'default_own_friendslot_alerts',
+                         'default_own_public_alerts',
+                         'default_friends_friendslot_alerts',
+                         'default_friends_public_alerts',
+                         'default_reslot_alerts',
+                         'default_group_alerts', 'slot_default_duration',
+                         'slot_default_type_id', 'slot_default_location_id'
+                        )
+                 .transform_keys { |key| key.camelize(:lower) })
+        expect(json['location']['name']).to eq "Acapulco"
+      end
     end
   end
 
   get "/v1/users/:id/media" do
     header 'Authorization', :auth_header
 
-    let!(:target_user) { create(:user) }
-    let!(:friend) { create(:user) }
-    let!(:member) { create(:user) }
-    let!(:slot_public) { create(:std_slot_public, :with_media,
-                                owner: target_user, creator: target_user) }
-    let!(:slot_private) { create(:std_slot_private, :with_media,
-                                 owner: target_user, creator: target_user) }
-    let!(:slot_friend) { create(:std_slot_friends, :with_media,
-                                owner: friend, creator: friend) }
-    let!(:slot_friend_public) { create(:std_slot_public, :with_media,
-                                       owner: friend, creator: friend) }
-    let!(:slot_friend_private) { create(:std_slot_private, :with_media,
-                                        owner: friend, creator: friend) }
-    let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
-    let!(:slot_group_public) { create(:std_slot_public, :with_media,
-                                      owner: member, creator: member) }
-    let!(:slot_group_private) { create(:std_slot_private, :with_media,
-                                       owner: member, creator: member) }
-    let!(:friendship) { create(:friendship, :established,
-                               user: current_user, friend: friend) }
-    let!(:memberships) {
-      create(:membership, :active, group: slot_group.group, user: current_user)
-      create(:membership, :active, group: slot_group.group, user: member)
-    }
-    let!(:id) { target_user[:id] }
-    let!(:auth_header) { "Token token=#{current_user.auth_token}" }
-
     parameter :id, "ID of the User to get the MediaItems for", required: true
     response_field :array, "containing media items as a list of MediaItem"
 
-    context "Get media items as a visitor" do
-      let!(:visitor) { create(:user) }
-      let!(:current_user) { visitor }
+    let(:user) { create(:user) }
+    let(:id) { user.id }
+
+    let!(:slot_public) {
+      create(:std_slot_public, :with_media, owner: user, creator: user) }
+    let!(:slot_foaf) {
+      create(:std_slot_foaf, :with_media, owner: user, creator: user) }
+    let!(:slot_friend) {
+      create(:std_slot_friends, :with_media, owner: user, creator: user) }
+    let!(:slot_private) {
+      create(:std_slot_private, :with_media, owner: user, creator: user) }
+    let!(:shared_group) do
+      gs = create(:group_slot, :with_media, creator: user)
+      create(:membership, :active, group: gs.group, user: current_user)
+      create(:membership, :active, group: gs.group, user: user)
+      gs
+    end
+    let!(:unshared_group) do
+      gs = create(:group_slot, :with_media, creator: user)
+      create(:membership, :active, group: gs.group, user: user)
+      gs
+    end
+
+    context "friend" do
+      let!(:friendship) {
+        create(:friendship, :established, user: current_user, friend: user)
+      }
+
+      example "Get media items for Friend", document: :v1 do
+        explanation "Returns an array which includes all media items of" \
+                    " the friend which are public-, friend- or foaf-visible" \
+                    " and if users have shared groups also the media items" \
+                    " which the friend has added to this group."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).to include(slot_foaf.media_items[0].public_id)
+        expect(response_body).to include(slot_friend.media_items[0].public_id)
+        expect(response_body).to include(shared_group.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_private.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(unshared_group.media_items[0].public_id)
+        expect(json.length).to eq(24)
+      end
+    end
+
+    context "foaf" do
+      let!(:friendship) {
+        friend = create(:user)
+        create(:friendship, :established, user: current_user, friend: friend)
+        create(:friendship, :established, user: friend, friend: user)
+      }
+
+      example "Get media items for Friend-of-Friend", document: :v1 do
+        explanation "Returns an array which includes all media items of" \
+                    " the friend which are public- or foaf-visible" \
+                    " and if users have shared groups also the media items" \
+                    " which the friend has added to this group."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).to include(slot_foaf.media_items[0].public_id)
+        expect(response_body).to include(shared_group.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_private.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_friend.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(unshared_group.media_items[0].public_id)
+        expect(json.length).to eq(18)
+      end
+    end
+
+    context "stranger" do
+      example "Get media items for Stranger", document: :v1 do
+        explanation "Returns an array which includes all public media items" \
+                    " of a specific user and media items this user has added" \
+                    " to common groups."
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).to include(slot_public.media_items[0].public_id)
+        expect(response_body).to include(shared_group.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_private.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_friend.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(unshared_group.media_items[0].public_id)
+        expect(json.length).to eq(12)
+      end
+    end
+
+    context "visitor" do
       let(:auth_header) { nil }
 
-      example "As a visitor get all public media items of a specific user" do
-        explanation "Returns an array which includes all public media items " \
+      example "Get media items as Visitor",
+              document: :v1 do
+        explanation "Visitor means there is no current user.\n\n" \
+                    "Returns an array which includes all public media items " \
                     "of the specific user."
 
         header 'Authorization', :auth_header
@@ -315,65 +386,19 @@ resource "Users" do
 
         expect(response_status).to eq(200)
         expect(response_body).to include(slot_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_private.media_items[0].public_id)
-        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
-        expect(response_body).not_to include(slot_group.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_private.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(slot_friend.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(unshared_group.media_items[0].public_id)
+        expect(
+          response_body
+        ).not_to include(shared_group.media_items[0].public_id)
         expect(json.length).to eq(6)
-      end
-    end
-
-    context "Get all public media items of a specific user" do
-      example "Get media items of an user", document: :v1 do
-        explanation "Returns an array which includes all public media items of a specific user."
-
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(response_body).to include(slot_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_private.media_items[0].public_id)
-        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
-        expect(response_body).not_to include(slot_group.media_items[0].public_id)
-        expect(json.length).to eq(6)
-      end
-    end
-
-    context "Get all friend-visible media items of a user" do
-      let(:id) { friend[:id] }
-
-      example "Get all friend-visible media items of a user" do
-        explanation "Returns an array which includes all media items of this user " \
-                    "which are public or friend-visible."
-
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(response_body).to include(slot_friend.media_items[0].public_id)
-        expect(response_body).to include(slot_friend_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_friend_private.media_items[0].public_id)
-        expect(response_body).not_to include(slot_group.media_items[0].public_id)
-        expect(response_body).not_to include(slot_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_private.media_items[0].public_id)
-        expect(json.length).to eq(12)
-      end
-    end
-
-    context "Get group-related media items of a specific user" do
-      let(:id) { member[:id] }
-
-      example "Get group-related media items of a specific user with a common group" do
-        explanation "Returns an array which includes all media " \
-                    "items of a specific user with a common group."
-
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(response_body).to include(slot_group.media_items[0].public_id)
-        expect(response_body).to include(slot_group_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_group_private.media_items[0].public_id)
-        expect(response_body).not_to include(slot_friend.media_items[0].public_id)
-        expect(response_body).not_to include(slot_public.media_items[0].public_id)
-        expect(response_body).not_to include(slot_private.media_items[0].public_id)
-        expect(json.length).to eq(12)
       end
     end
   end
@@ -417,22 +442,33 @@ resource "Users" do
                              "response dataset."
       response_field :data, "Array containing the result dataset."
 
-      describe "Get slots for current user - with pagination" do
-        let(:id) { current_user.id }
+      describe "Get slots for Friend - with pagination" do
+        let(:friend) do
+          friend = create(:user)
+          create(:friendship, :established, user: current_user, friend: friend)
+          friend
+        end
+        let(:id) { friend.id }
         let(:filter) { 'upcoming' }
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
 
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user,
-                                   start_date: Time.zone.tomorrow.next_week) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user,
-                                   start_date: Time.zone.today.next_week) }
-        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
-        let!(:upcoming_slot) { create(:std_slot_private, owner: current_user,
-                                      start_date: Time.zone.tomorrow) }
+        let!(:std_slot_private) {
+          create(:std_slot_private, owner: friend,
+                 start_date: Time.zone.tomorrow.next_week) }
+        let!(:std_slot_friend) {
+          create(:std_slot_friends, owner: friend,
+                 start_date: Time.zone.today.next_week) }
+        let!(:std_slot_foaf) {
+          create(:std_slot_friends, owner: friend,
+                 start_date: Time.zone.today.next_week) }
+        let!(:std_slot_public) {
+          create(:std_slot_public, owner: friend,
+                 start_date: Time.zone.tomorrow) }
+        let!(:re_slots) { create_list(:re_slot, 2, slotter: friend) }
 
-        example "Get slots for current user - with pagination", document: :v1 do
-          explanation "Response contains a '*paging*' hash and a '*data*' array.\n" \
+        example "Get slots for Friend - with pagination", document: :v1 do
+          explanation "Response contains '*paging*' hash & '*data*' array.\n" \
                       "If there are more than **limit** results, '*paging*' " \
                       "has **before** and **after** cursors which can be used" \
                       " for subsequent requests. The first request should " \
@@ -448,8 +484,9 @@ resource "Users" do
 
           # first request without a cursor
           expect(response_status).to eq(200)
-          slot_count = current_user.std_slots.count +
-                       current_user.re_slots.count
+          slot_count = friend.std_slots.count -
+                       friend.std_slots_private.count +
+                       friend.re_slots.count
           expect(json).to have_key 'paging'
           expect(json['paging']).to have_key('after')
           expect(json['paging']['after']).not_to be nil
@@ -473,11 +510,13 @@ resource "Users" do
           expect(json['data'].first).to have_key("visibility")
           expect(json['data'].first).to have_key("media")
           expect(json['data'].first).to have_key("url")
-          expect(response_body).to include(std_slot_1.title)
-          expect(response_body).to include(std_slot_2.title)
+          expect(response_body).to include(std_slot_public.title)
+          expect(response_body).to include(std_slot_friend.title)
+          expect(response_body).to include(std_slot_foaf.title)
+          expect(response_body).not_to include(std_slot_private.title)
 
           # make a subsequent request based on 'after' cursor
-          client.get "/v1/users/#{current_user.id}/slots",
+          client.get "/v1/users/#{friend.id}/slots",
                      { after: after_cursor }, headers
 
           expect(response_status).to eq(200)
@@ -519,48 +558,6 @@ resource "Users" do
       response_field :updatedAt, "Last update of the slot"
       response_field :deletedAt, "Deletion datetime of the slot"
 
-      describe "Get slots for current user" do
-        let(:id) { current_user.id }
-
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
-        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
-
-        example "Get slots for current user", document: :v1 do
-          explanation "Returns an array which includes StandardSlots &" \
-                      " ReSlots\n\n" \
-                      "If a user is authenticated the slot settings" \
-                      " (alerts) will be included.\n\n" \
-                      "The returned slots are ordered by startdate, enddate, id."
-
-          do_request
-
-          expect(response_status).to eq(200)
-          slot_count = current_user.std_slots.count +
-                       current_user.re_slots.count
-          expect(json.length).to eq slot_count
-          expect(json.first).to have_key("id")
-          expect(json.first).to have_key("title")
-          expect(json.first).to have_key("location")
-          expect(json.first).to have_key("startDate")
-          expect(json.first).to have_key("endDate")
-          expect(json.first).to have_key("settings")
-          expect(json.first).to have_key("createdAt")
-          expect(json.first).to have_key("updatedAt")
-          expect(json.first).to have_key("deletedAt")
-          expect(json.first).to have_key("creator")
-          expect(json.first).to have_key("notes")
-          expect(json.first).to have_key("likes")
-          expect(json.first).to have_key("commentsCounter")
-          expect(json.first).to have_key("visibility")
-          expect(json.first).to have_key("media")
-          expect(json.first).to have_key("url")
-          expect(response_body).to include(std_slot_1.title)
-          expect(response_body).to include(std_slot_2.title)
-          expect(response_body).to include(re_slots.first.title)
-        end
-      end
-
       describe "Get slots for other user" do
         let(:joe) { create(:user, username: "Joe") }
         let(:id) { joe.id }
@@ -577,12 +574,14 @@ resource "Users" do
             create(:friendship, :established, user: joe, friend: current_user) }
           let(:groupslot) { create(:group_slot) }
           let!(:memberships) {
-            create(:membership, :active, group: groupslot.group, user: current_user)
+            create(:membership, :active, group: groupslot.group,
+                   user: current_user)
             create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group, user: joe)
+            create(:membership, :active, group: incommon_groupslot.group,
+                   user: joe)
           }
 
-          example "Get slots for befriended user", document: :v1 do
+          example "Get slots for Friend", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
                         " visibility 'friend', 'foaf' (friend-of-friend) or" \
                         " 'public', ReSlots & shared GroupSlots\n\n" \
@@ -617,12 +616,14 @@ resource "Users" do
           end
           let(:groupslot) { create(:group_slot) }
           let!(:memberships) {
-            create(:membership, :active, group: groupslot.group, user: current_user)
+            create(:membership, :active, group: groupslot.group,
+                   user: current_user)
             create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group, user: joe)
+            create(:membership, :active, group: incommon_groupslot.group,
+                   user: joe)
           }
 
-          example "Get slots for befriended user", document: :v1 do
+          example "Get slots for Friend-of-Friend", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
                         " visibility 'foaf' (friend-of-friend) or 'public'," \
                         " ReSlots & shared GroupSlots\n\n" \
@@ -649,12 +650,14 @@ resource "Users" do
         describe "unrelated user with common groups" do
           let(:groupslot) { create(:group_slot) }
           let!(:memberships) {
-            create(:membership, :active, group: groupslot.group, user: current_user)
+            create(:membership, :active, group: groupslot.group,
+                   user: current_user)
             create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group, user: joe)
+            create(:membership, :active, group: incommon_groupslot.group,
+                   user: joe)
           }
 
-          example "Get slots of unrelated user with common groups",
+          example "Get slots for Stranger with common groups",
                   document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
                         " visibility 'public', 'public'-ReSlots & shared" \
@@ -678,7 +681,7 @@ resource "Users" do
         end
 
         describe "unrelated user" do
-          example "Get slots of unrelated user", document: :v1 do
+          example "Get slots for Stranger", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
                         " visibility 'public' and 'public'-ReSlots\n\n" \
                         "If a user is authenticated the slot settings" \
@@ -695,6 +698,30 @@ resource "Users" do
           end
         end
       end
+    end
+  end
+
+  post "/v1/users/reset", :vcr do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+
+    parameter :email, "Email of the user for whom to reset password",
+              required: true
+
+    let(:user) do
+      create(:user,
+             email: 'success@simulator.amazonses.com',
+             password: "nottimeslot")
+    end
+    let(:email) { user.email }
+
+    example "Reset password", document: :v1 do
+      explanation "Resets password and sends it to user via email\n\n" \
+                  "returns OK if valid email\n\n" \
+                  "returns 403 if invalid email"
+      do_request
+
+      expect(response_status).to eq(200)
     end
   end
 
