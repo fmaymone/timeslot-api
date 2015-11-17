@@ -1198,7 +1198,7 @@ resource "Slots" do
     let(:slot) { create(:group_slot, :with_likes) }
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
-    let!(:like) { create(:like, user: create(:user, :with_image), slot: slot) }
+    let!(:like) { create(:like, user: create(:user), slot: slot) }
 
     describe "Get Likes for Slot" do
       let(:id) { slot.id }
@@ -1257,7 +1257,7 @@ resource "Slots" do
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
     let!(:comment) {
-      create(:comment, user: create(:user, :with_image), slot: slot) }
+      create(:comment, user: create(:user), slot: slot) }
 
     describe "Get Comments for Slot" do
       let(:id) { slot.id }
