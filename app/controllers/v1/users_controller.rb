@@ -85,7 +85,7 @@ module V1
       params.require(:phone) unless params[:email].present?
       params.require(:password)
       params.require(:username)
-      params.permit(:username, :email, :phone, :password, :picture)
+      params.permit(:username, :email, :phone, :password, :lang)
     end
 
     private def device_params(params)

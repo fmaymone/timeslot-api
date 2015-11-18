@@ -195,7 +195,7 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
-    #TODO: restore followers/followings when user re-activates
+    # TODO: restore followers/followings when user re-activates
     remove_all_followers
     unfollow_all
     slot_settings.each(&:delete)

@@ -13,20 +13,6 @@ FactoryGirl.define do
     title
   end
 
-  factory :mock_image, class: "MediaItem" do
-    association :mediable, factory: :user
-    media_type "image"
-    public_id
-    creator
-  end
-
-  factory :real_image, class: "MediaItem" do
-    association :mediable, factory: :user
-    media_type "image"
-    public_id "sample"
-    creator
-  end
-
   factory :real_slot_image, class: "MediaItem" do
     association :mediable, factory: :slot
     media_type "image"

@@ -79,9 +79,13 @@ resource "Users" do
       expect(response_status).to eq(201)
       expect(json).to have_key 'id'
       expect(json).to have_key 'username'
+      expect(json['username']).to eq 'foo'
       expect(json).to have_key 'email'
+      expect(json['email']).to eq 'someone@timeslot.com'
       expect(json).to have_key 'lang'
+      expect(json['lang']).to eq 'de'
       expect(json).to have_key 'authToken'
+      expect(json['authToken']).not_to be nil
     end
 
     context "Signup and create user with a specific device" do
