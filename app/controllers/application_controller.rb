@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::API
-  include TS_Errors
   include TS_Authenticable
   include Pundit
 
@@ -45,6 +44,11 @@ class ApplicationController < ActionController::API
 
   rescue_from PaginationError do |exception|
     render json: { error: exception.message }, status: :unprocessable_entity
+  end
+
+  rescue_from MissingCurrentUserError do
+    # headers['Authorization'] = 'Token token="auth_token"'
+    render json: 'Invalid or missing auth_token', status: :unauthorized
   end
 
   private def slot_paging_params

@@ -19,7 +19,7 @@ RSpec.describe "V1::Me", type: :request do
       it "returns unauthorized" do
         get "/v1/me"
         expect(response).to have_http_status :unauthorized
-        expect(response.body).to include "Bad credentials"
+        expect(response.body).to include "missing auth_token"
       end
     end
 

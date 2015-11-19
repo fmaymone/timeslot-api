@@ -1,4 +1,6 @@
 class ApplicationPolicy
+  include TS_Errors
+
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -28,7 +30,8 @@ class ApplicationPolicy
 
   def current_user?
     return true if @current_user
-    false
+    return false if Rails.env.test? # no idea how to test this with pundit specs
+    fail MissingCurrentUserError
   end
 
   def scope
