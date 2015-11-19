@@ -222,7 +222,7 @@ resource "Groups" do
     describe "current user not group owner" do
       let(:group) { create(:group, owner: create(:user)) }
 
-      example "returns forbidden", document: false do
+      example "returns Forbidden", document: false do
         do_request
         expect(response_status).to eq 403
       end

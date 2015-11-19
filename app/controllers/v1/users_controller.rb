@@ -1,8 +1,6 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_action :authenticate_user_from_token!,
-                       only: [:create, :signin, :reset_password,
-                              :media_items, :slots]
+    skip_before_action :authenticate_user_from_token!, except: :show
 
     # GET /v1/users/1
     def show
