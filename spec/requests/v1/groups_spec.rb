@@ -462,7 +462,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :left, user: current_user, group: group)
       end
 
-      it "returns Not Authorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
