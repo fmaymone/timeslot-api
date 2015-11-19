@@ -222,9 +222,9 @@ resource "Groups" do
     describe "current user not group owner" do
       let(:group) { create(:group, owner: create(:user)) }
 
-      example "returns unauthorized", document: false do
+      example "returns forbidden", document: false do
         do_request
-        expect(response_status).to eq(401)
+        expect(response_status).to eq 403
       end
     end
   end
@@ -488,8 +488,8 @@ resource "Groups" do
 
       example "Leave group", document: :v1 do
         explanation "returns 200 if membership successfully invalidated\n\n" \
-                    "returns 401 if current user not active group member\n\n" \
-                    "returns 401 if current user has no membership for this" \
+                    "returns 403 if current user not active group member\n\n" \
+                    "returns 403 if current user has no membership for this" \
                     " group at all\n\n" \
                     "returns 404 if group ID is invalid\n\n" \
                     "returns 422 if parameters are missing"
@@ -507,16 +507,16 @@ resource "Groups" do
         create(:membership, :inactive, user: member, group: group)
       end
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 
     describe "no membership" do
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
   end
@@ -647,18 +647,18 @@ resource "Groups" do
                notifications: true)
       end
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 
     describe "no membership" do
       let(:membership) {}
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 

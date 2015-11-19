@@ -114,9 +114,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "user not group owner" do
       let(:group) { create(:group, name: "foo") }
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         patch "/v1/groups/#{group.id}", new_params, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't change group name" do
@@ -321,9 +321,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:group, owner: create(:user), members_can_invite: false)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't create membership" do
@@ -365,9 +365,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :inactive, user: current_user, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/accept", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -380,9 +380,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "no membership" do
       let(:membership) {}
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/accept", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -414,9 +414,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :inactive, user: current_user, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/refuse", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -429,9 +429,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "no membership" do
       let(:membership) {}
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/refuse", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -464,7 +464,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "returns Not Authorized" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -475,9 +475,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "no membership" do
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -546,9 +546,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :active, user: member, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -597,9 +597,9 @@ RSpec.describe "V1::Groups", type: :request do
                  notifications: true)
         end
 
-        it "returns Unauthorized" do
+        it "returns Forbidden" do
           patch "/v1/groups/#{group.id}/members", params, auth_header
-          expect(response).to have_http_status :unauthorized
+          expect(response).to have_http_status :forbidden
         end
 
         it "doesn't change notifications state" do
@@ -611,9 +611,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "current user not group member" do
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         patch "/v1/groups/#{group.id}/members", params, auth_header
-        expect(response).to have_http_status :unauthorized
+        expect(response).to have_http_status :forbidden
       end
     end
   end
