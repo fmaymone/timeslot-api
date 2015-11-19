@@ -52,7 +52,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -79,7 +79,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=kElr0-cRnZdPKgJoKHp7XWo_WUo
+<pre>Authorization: Token token=bGTdFUN-vE9Hv0Hy1jA5OjM74oU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/8&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=kElr0-cRnZdPKgJoKHp7XWo_WUo&quot; \
+	-H &quot;Authorization: Token token=bGTdFUN-vE9Hv0Hy1jA5OjM74oU&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,12 +103,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1d30288554e0d41fe564173031c5bb6a&quot;
+ETag: W/&quot;90a54e6fbd1246016f097d340d55f6f1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 167e72fb-af66-4a48-8dbf-91e9ff266435
-X-Runtime: 0.277826
+X-Request-Id: 0fee0ec3-5851-4e0a-b088-8e55cb754222
+X-Runtime: 0.278780
 Vary: Origin
-Content-Length: 1487</pre>
+Content-Length: 1457</pre>
 
 #### Status
 
@@ -119,79 +119,76 @@ Content-Length: 1487</pre>
 ```javascript
 {
   "id" : 8,
-  "title" : "Slot title 40",
-  "startDate" : "2019-09-18T20:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.686Z",
-  "updatedAt" : "2015-10-30T15:01:04.948Z",
-  "deletedAt" : "2015-10-30T15:01:04.945Z",
-  "endDate" : "2019-10-18T20:44:02.000Z",
+  "title" : "Slot title 63",
+  "startDate" : "2019-09-14T19:44:02.000Z",
+  "createdAt" : "2015-11-17T23:46:15.363Z",
+  "updatedAt" : "2015-11-17T23:46:15.633Z",
+  "deletedAt" : "2015-11-17T23:46:15.631Z",
+  "endDate" : "2019-10-14T19:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 20,
-    "username" : "User 238",
-    "createdAt" : "2015-10-30T15:01:04.682Z",
-    "updatedAt" : "2015-10-30T15:01:04.682Z",
+    "username" : "User 297",
+    "createdAt" : "2015-11-17T23:46:15.356Z",
+    "updatedAt" : "2015-11-17T23:46:15.356Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
     {
       "mediaId" : 10,
-      "publicId" : "dfhjghjkdisudgfds7iy71",
+      "publicId" : "dfhjghjkdisudgfds7iy95",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-10-30T15:01:04.700Z",
+      "createdAt" : "2015-11-17T23:46:15.381Z",
       "duration" : null,
-      "title" : "Title 69"
+      "title" : "Title 93"
     },
     {
       "mediaId" : 9,
-      "publicId" : "dfhjghjkdisudgfds7iy70",
+      "publicId" : "dfhjghjkdisudgfds7iy94",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-30T15:01:04.698Z",
+      "createdAt" : "2015-11-17T23:46:15.377Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 8,
-      "publicId" : "dfhjghjkdisudgfds7iy69",
+      "publicId" : "dfhjghjkdisudgfds7iy93",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-10-30T15:01:04.695Z",
+      "createdAt" : "2015-11-17T23:46:15.375Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 7,
-      "publicId" : "dfhjghjkdisudgfds7iy68",
+      "publicId" : "dfhjghjkdisudgfds7iy92",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.693Z"
+      "createdAt" : "2015-11-17T23:46:15.372Z"
     },
     {
       "mediaId" : 6,
-      "publicId" : "dfhjghjkdisudgfds7iy67",
+      "publicId" : "dfhjghjkdisudgfds7iy91",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.691Z"
+      "createdAt" : "2015-11-17T23:46:15.369Z"
     },
     {
       "mediaId" : 5,
-      "publicId" : "dfhjghjkdisudgfds7iy66",
+      "publicId" : "dfhjghjkdisudgfds7iy90",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.688Z"
+      "createdAt" : "2015-11-17T23:46:15.366Z"
     }
   ],
   "settings" : {

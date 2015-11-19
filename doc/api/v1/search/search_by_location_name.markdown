@@ -27,7 +27,7 @@ Description : name of the location
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=qNUrZZovmtglTetNVFWwYeaZzJQ
+Authorization: Token token=GflQgWAdlurgyhIxfwXjT1BsFlU
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/location?query=timeslot+berlin&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qNUrZZovmtglTetNVFWwYeaZzJQ&quot; \
+	-H &quot;Authorization: Token token=GflQgWAdlurgyhIxfwXjT1BsFlU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -54,10 +54,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;95cb7dba22a48e77b6bea29664e97793&quot;
+ETag: W/&quot;9ea17055d0317fd915f10949c831a05c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a968037-4fc3-476d-a726-72d22a060666
-X-Runtime: 0.008448
+X-Request-Id: 1ed1b6b5-f602-406e-aab0-47706378e8e1
+X-Runtime: 0.007805
 Vary: Origin
 Content-Length: 363</pre>
 
@@ -70,7 +70,7 @@ Content-Length: 363</pre>
 ```javascript
 [
   {
-    "id" : 1,
+    "id" : 2,
     "name" : "Timeslot Friedrichstraße 110 (Berlin)",
     "thoroughfare" : null,
     "subThoroughfare" : null,

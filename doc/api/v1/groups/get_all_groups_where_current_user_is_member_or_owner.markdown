@@ -31,7 +31,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=UuVu570rPtTV4yUPK1R418C1qUE
+Authorization: Token token=f_sp0LzoRhIO0b2Z8X0vCYR5KKY
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=UuVu570rPtTV4yUPK1R418C1qUE&quot; \
+	-H &quot;Authorization: Token token=f_sp0LzoRhIO0b2Z8X0vCYR5KKY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -54,12 +54,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;05849b00ebf0574cf34b667251ef55da&quot;
+ETag: W/&quot;8a413339ae4c83a142ac19f123dc3454&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ecd7e4d6-8fce-4446-8eda-7ed854fc36fb
-X-Runtime: 0.067848
+X-Request-Id: 50e451cd-7666-4588-8041-71a37739f875
+X-Runtime: 0.048543
 Vary: Origin
-Content-Length: 675</pre>
+Content-Length: 663</pre>
 
 #### Status
 
@@ -72,49 +72,49 @@ Content-Length: 675</pre>
   {
     "id" : 1,
     "name" : "Testgroup 6",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/1"
   },
   {
     "id" : 2,
     "name" : "Testgroup 7",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/2"
   },
   {
     "id" : 3,
     "name" : "Testgroup 8",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/3"
   },
   {
     "id" : 4,
     "name" : "Testgroup 9",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/4"
   },
   {
     "id" : 5,
     "name" : "Testgroup 10",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/5"
   },
   {
     "id" : 6,
     "name" : "Testgroup 11",
+    "image" : "",
     "upcomingCount" : 0,
     "next" : null,
-    "image" : null,
     "url" : "http://example.org/v1/groups/6"
   }
 ]

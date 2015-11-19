@@ -66,7 +66,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=bCa_noBEOyX4Ci3Z_Rv5VuWyxEg
+Authorization: Token token=gXGybJZ7N5TUb5oy3MZaYRokVS0
 Host: example.org
 Cookie: </pre>
 
@@ -88,7 +88,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/9&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=bCa_noBEOyX4Ci3Z_Rv5VuWyxEg&quot; \
+	-H &quot;Authorization: Token token=gXGybJZ7N5TUb5oy3MZaYRokVS0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -99,12 +99,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8aceb81a725a950e6643035217e40b8b&quot;
+ETag: W/&quot;578cd40f666031151e856d898ea4aa2f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cb3dce84-2f2f-49d5-af9e-65cca2c7bc2d
-X-Runtime: 0.015535
+X-Request-Id: f9e460b2-1d38-403a-bf86-10b194064feb
+X-Runtime: 0.012002
 Vary: Origin
-Content-Length: 405</pre>
+Content-Length: 345</pre>
 
 #### Status
 
@@ -116,25 +116,19 @@ Content-Length: 405</pre>
 {
   "id" : 9,
   "name" : "bar",
+  "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-10-30T15:01:01.895Z",
-  "updatedAt" : "2015-10-30T15:01:01.906Z",
+  "createdAt" : "2015-11-17T23:46:10.778Z",
+  "updatedAt" : "2015-11-17T23:46:10.789Z",
   "deletedAt" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "owner" : {
     "id" : 21,
-    "username" : "User 74",
-    "createdAt" : "2015-10-30T15:01:01.892Z",
-    "updatedAt" : "2015-10-30T15:01:01.892Z",
+    "username" : "User 76",
+    "createdAt" : "2015-11-17T23:46:10.774Z",
+    "updatedAt" : "2015-11-17T23:46:10.774Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "membershipState" : "active"
 }

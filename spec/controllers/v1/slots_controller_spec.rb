@@ -232,7 +232,7 @@ RSpec.describe V1::SlotsController, type: :controller do
         context "by users group_slot" do
           let(:group) { create(:group) }
           let!(:memberships) {
-            create(:membership, group: group, user: current_user)
+            create(:membership, :active, group: group, user: current_user)
           }
           let!(:group_slot) {
             create(:group_slot, group: group, meta_slot: reslot.meta_slot)

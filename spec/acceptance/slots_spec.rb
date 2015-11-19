@@ -256,10 +256,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
+                                "image" => ""},
                  "settings" => { 'alerts' => '1110001100' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
@@ -350,10 +347,7 @@ resource "Slots" do
                                 "createdAt" => reslot.creator.created_at.as_json,
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
+                                "image" => ""},
                  "settings" => { 'alerts' => '1110001100' },
                  "slotter" => { 'id' => reslot.slotter_id },
                  "visibility" => reslot.parent.visibility,
@@ -1204,7 +1198,7 @@ resource "Slots" do
     let(:slot) { create(:group_slot, :with_likes) }
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
-    let!(:like) { create(:like, user: create(:user, :with_image), slot: slot) }
+    let!(:like) { create(:like, user: create(:user), slot: slot) }
 
     describe "Get Likes for Slot" do
       let(:id) { slot.id }
@@ -1263,7 +1257,7 @@ resource "Slots" do
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
     let!(:comment) {
-      create(:comment, user: create(:user, :with_image), slot: slot) }
+      create(:comment, user: create(:user), slot: slot) }
 
     describe "Get Comments for Slot" do
       let(:id) { slot.id }

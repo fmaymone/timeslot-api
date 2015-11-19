@@ -68,9 +68,24 @@ Rails.application.routes.draw do
 
     get 'media-signature', to: 'media#create_signature'
 
+    scope :me do
+      get '', to: 'me#show', as: 'show_me'
+      patch '', to: 'me#update', as: 'update_me'
+      delete '', to: 'me#inactivate', as: 'inactivate_me'
+      get 'slots', to: 'me#my_slots', as: 'my_slots'
+      get 'friendslots', to: 'me#slots_from_friends', as: 'my_friendslots'
+      get 'media', to: 'me#my_media_items', as: 'my_media'
+      get 'signout', to: 'me#signout', as: 'sign_me_out'
+      post 'add_friends', to: 'me#add_friends', as: 'add_friends'
+      post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
+      patch 'device', to: 'me#update_device', as: 'update_device'
+    end
+
     scope :users do
-      get '', to: 'users#index'
       get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+      post '', to: 'users#create', as: 'user_create'
+      post 'signin', to: 'users#signin', as: 'signin'
+      post 'reset', to: 'users#reset_password', as: 'reset_password'
       get ':user_id/slots',
           to: 'users#slots',
           as: 'user_slots',
@@ -79,16 +94,6 @@ Rails.application.routes.draw do
           to: 'users#media_items',
           as: 'user_media',
           constraints: { id: /\d+/ }
-      get 'friendslots', to: 'users#slots_from_friends', as: 'user_friendslots'
-      post '', to: 'users#create', as: 'user_create'
-      patch '', to: 'users#update', as: 'user_update'
-      delete '', to: 'users#destroy', as: 'user_delete'
-      post 'signin', to: 'users#signin', as: 'signin'
-      get 'signout', to: 'users#signout', as: 'signout'
-      post 'reset', to: 'users#reset_password', as: 'reset_password'
-      post 'add_friends', to: 'users#add_friends', as: 'add_friends'
-      post 'remove_friends', to: 'users#remove_friends', as: 'remove_friends'
-      patch 'device', to: 'users#update_device', as: 'update_device'
     end
 
     scope :groups do

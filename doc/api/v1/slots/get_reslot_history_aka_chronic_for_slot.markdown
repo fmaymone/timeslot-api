@@ -34,7 +34,7 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=ZOZcQp-QVluydgt39x9zvvYOWTg
+<pre>Authorization: Token token=788TXFG7QTwScM7WBM-nuI6ORq4
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/30/history&quot; -X GET \
-	-H &quot;Authorization: Token token=ZOZcQp-QVluydgt39x9zvvYOWTg&quot; \
+	-H &quot;Authorization: Token token=788TXFG7QTwScM7WBM-nuI6ORq4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,12 +56,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8376010270a074487a50bf3f25fa7572&quot;
+ETag: W/&quot;1c754d20d86a340f9f0c5fda501cd1a0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 34ed73d9-81ad-4fea-93b4-de035dfdec03
-X-Runtime: 0.017751
+X-Request-Id: 2b04d284-403f-44e2-a3e1-f5f63a41e137
+X-Runtime: 0.014186
 Vary: Origin
-Content-Length: 375</pre>
+Content-Length: 341</pre>
 
 #### Status
 
@@ -73,28 +73,25 @@ Content-Length: 375</pre>
 {
   "predecessors" : [
     {
-      "id" : 86,
-      "username" : "User 308",
-      "userImage" : null,
-      "timestamp" : "2015-10-30T15:01:05.664Z"
+      "id" : 84,
+      "username" : "User 365",
+      "userImage" : "",
+      "timestamp" : "2015-11-17T23:46:16.661Z"
     },
     {
-      "id" : 84,
-      "username" : "User 306",
-      "userImage" : null,
-      "timestamp" : "2015-10-30T15:01:05.651Z"
+      "id" : 82,
+      "username" : "User 363",
+      "userImage" : "",
+      "timestamp" : "2015-11-17T23:46:16.649Z"
     }
   ],
   "parentUser" : {
-    "id" : 82,
-    "username" : "User 304",
-    "createdAt" : "2015-10-30T15:01:05.638Z",
-    "updatedAt" : "2015-10-30T15:01:05.638Z",
+    "id" : 80,
+    "username" : "User 361",
+    "createdAt" : "2015-11-17T23:46:16.637Z",
+    "updatedAt" : "2015-11-17T23:46:16.637Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   }
 }
 ```

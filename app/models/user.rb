@@ -9,10 +9,6 @@ class User < ActiveRecord::Base
 
   ## associations ##
 
-  # has_many relation because when image gets updated the old image still exists
-  has_many :images, -> { where deleted_at: nil }, class_name: MediaItem,
-           as: :mediable
-
   has_many :media_items, -> { where deleted_at: nil },
            foreign_key: :creator_id, inverse_of: :creator
 
@@ -34,11 +30,17 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :group_slots, through: :groups
+  has_many :group_slots, through: :active_groups
 
+  # group related
   has_many :own_groups, class_name: Group,
            foreign_key: "owner_id", inverse_of: :owner
+
   has_many :memberships, inverse_of: :user
+  has_many :active_memberships, -> { where state: '111' },
+           class_name: Membership, inverse_of: :user
+
+  has_many :active_groups, through: :active_memberships, source: :group
   has_many :groups, through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
@@ -102,18 +104,9 @@ class User < ActiveRecord::Base
 
   ## user specific ##
 
-  # TODO: remove method in step2 of user image refactoring
-  def update_with_image(params: nil, image: nil, user: nil)
-    update(params.except("public_id")) if params
-    if image
-      AddImage.call(self, user.id, image["public_id"], image["local_id"])
-      update(picture: image["public_id"]) if image["public_id"]
-    end
-    self
-  end
-
+  # TODO: either get rid of this or rename picture to image :(
   def image
-    images.first
+    picture
   end
 
   def sign_out
@@ -202,11 +195,10 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
-    #TODO: restore followers/followings when user re-activates
+    # TODO: restore followers/followings when user re-activates
     remove_all_followers
     unfollow_all
     slot_settings.each(&:delete)
-    image.delete if images.first
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
     devices.each(&:delete)
@@ -216,40 +208,6 @@ class User < ActiveRecord::Base
   # TODO: this is far from being finished, specification missing
   def activate
     slot_settings.each(&:undelete)
-  end
-
-  ## media related ##
-
-  def media_for(current_user)
-    medias = []
-    if self == current_user
-      # Get all media items of current user:
-      medias = media_items
-    else
-      # Get all public media items of specific user (also for visitors):
-      std_slots_public.each do |slot|
-        medias += slot.media_items
-      end
-      # Get items for authorized users
-      unless current_user.nil?
-        # Get all friendship related media items:
-        if self.friend_with?(current_user)
-          std_slots_friends.each do |slot|
-            medias += slot.media_items
-          end
-        end
-        # Get all group related media items:
-        # TODO: can visitors also have access to media items of public group slots?
-        group_slots.where(
-          'group_slots.group_id IN (?)', current_user.groups.ids
-        ).find_each do |slot|
-          if current_user.active_member?(slot.group.id)
-            medias += slot.media_items
-          end
-        end
-      end
-    end
-    medias.sort_by(&:created_at)
   end
 
   ## slot related ##
@@ -265,7 +223,7 @@ class User < ActiveRecord::Base
   end
 
   def shared_group_slots(user)
-    group_slots.merge(groups.where('groups.id IN (?)', user.groups.ids))
+    group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
   end
 
   def prepare_for_slot_deletion(slot)
@@ -277,7 +235,7 @@ class User < ActiveRecord::Base
   def update_alerts(slot, alerts)
     alert = slot_settings.find_by(meta_slot: slot.meta_slot)
     if alert.nil?
-      return if default_alert?(slot, alerts)
+      return true if default_alert?(slot, alerts)
       SlotSetting.create(user: self, meta_slot: slot.meta_slot, alerts: alerts)
     else
       alert.update(alerts: alerts)
@@ -462,15 +420,10 @@ class User < ActiveRecord::Base
 
   ## class methods ##
 
-  # TODO: change in step2 of user image refactoring
-  def self.create_with_device(params:, image: nil, device: nil)
+  def self.create_with_device(params:, device: nil)
     new_user = create(params)
     return new_user unless new_user.errors.empty?
     Device.update_or_create(new_user, device) if device
-    if image
-      AddImage.call(new_user, new_user.id, image["public_id"], image["local_id"])
-      new_user.update(picture: image["public_id"]) if image["public_id"]
-    end
     new_user
   end
 

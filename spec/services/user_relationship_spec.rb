@@ -36,16 +36,16 @@ RSpec.describe UserRelationship, type: :service do
       expect(described_class.call(user.id, stranger.id)).to eq STRANGER
     end
 
-    it "returns 'stranger' if no user_a" do
-      expect(described_class.call(nil, user.id)).to eq STRANGER
+    it "returns 'visitor' if no user_a" do
+      expect(described_class.call(nil, user.id)).to eq VISITOR
     end
 
-    it "returns 'stranger' if no user_a" do
-      expect(described_class.call(nil, user.id)).to eq STRANGER
+    it "returns 'visitor' if no user_a" do
+      expect(described_class.call(nil, user.id)).to eq VISITOR
     end
 
-    it "returns 'stranger' if both users are nil" do
-      expect(described_class.call(nil, nil)).to eq STRANGER
+    it "raises error if both users are nil" do
+      expect { described_class.call(nil, nil) }.to raise_error ArgumentError
     end
   end
 end

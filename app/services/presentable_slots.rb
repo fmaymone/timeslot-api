@@ -3,9 +3,6 @@ class PresentableSlots
   # user depending on their specific relationship
   def self.call(relationship:, user:, current_user: nil)
     case relationship
-    when ME
-      # include all std_slots and all reslots, but no group_slots
-      [user.std_slots, user.re_slots]
     when FRIEND
       # includes public, friend-visible and friend-of-friend (foaf) visible
       # std_slots, public, friend-visible and foaf-visible
@@ -20,10 +17,12 @@ class PresentableSlots
        user.re_slots, current_user.shared_group_slots(user)]
     when STRANGER
       # includes public std_slots, public reslots and shared
-      # group_slots (between user and current_user -> if there is one)
-      showables = [user.std_slots_public, user.re_slots]
-      showables << current_user.shared_group_slots(user) if current_user
-      showables
+      # group_slots between user and current_user
+      [user.std_slots_public, user.re_slots,
+       current_user.shared_group_slots(user)]
+    when VISITOR
+      # includes public std_slots and public reslots
+      [user.std_slots_public, user.re_slots]
     end
   end
 end

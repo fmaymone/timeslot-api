@@ -15,7 +15,7 @@ returns 422 if required parameters are missing
 ### Parameters
 
 Name : visibility *- required -*
-Description : Visibility of the Slot (private/friends/public)
+Description : Visibility of the Slot (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -122,7 +122,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -154,7 +154,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=2Gp1pXNzSFB-AOhbSO9krGLcVs8
+Authorization: Token token=tRbe1ONBNmagT6ggmoKeXF5gvx4
 Host: example.org
 Cookie: </pre>
 
@@ -199,7 +199,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2Gp1pXNzSFB-AOhbSO9krGLcVs8&quot; \
+	-H &quot;Authorization: Token token=tRbe1ONBNmagT6ggmoKeXF5gvx4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -210,12 +210,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4ad6c6fa58d4d44b6f796b060c0f9a96&quot;
+ETag: W/&quot;d7bde692b1c45782e5e7320edd775af5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6b76ad49-d679-4d36-86bb-96d073e49c18
-X-Runtime: 0.041500
+X-Request-Id: 59ddb653-1c86-464d-9e5e-df0065d49821
+X-Runtime: 0.044893
 Vary: Origin
-Content-Length: 1149</pre>
+Content-Length: 1119</pre>
 
 #### Status
 
@@ -225,15 +225,15 @@ Content-Length: 1149</pre>
 
 ```javascript
 {
-  "id" : 18,
+  "id" : 40,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-10-30T15:01:03.885Z",
-  "updatedAt" : "2015-10-30T15:01:03.885Z",
+  "createdAt" : "2015-11-17T23:46:14.438Z",
+  "updatedAt" : "2015-11-17T23:46:14.438Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : 2,
+    "id" : 3,
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -252,15 +252,12 @@ Content-Length: 1149</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 156,
-    "username" : "User 206",
-    "createdAt" : "2015-10-30T15:01:03.867Z",
-    "updatedAt" : "2015-10-30T15:01:03.867Z",
+    "id" : 220,
+    "username" : "User 265",
+    "createdAt" : "2015-11-17T23:46:14.420Z",
+    "updatedAt" : "2015-11-17T23:46:14.420Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [
     {
@@ -268,14 +265,14 @@ Content-Length: 1149</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-10-30T15:01:03.892Z"
+      "createdAt" : "2015-11-17T23:46:14.446Z"
     },
     {
       "id" : 7,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-10-30T15:01:03.889Z"
+      "createdAt" : "2015-11-17T23:46:14.442Z"
     }
   ],
   "media" : [],
