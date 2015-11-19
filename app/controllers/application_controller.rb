@@ -23,8 +23,20 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
-  rescue_from Pundit::NotAuthorizedError do
-    head :forbidden
+  rescue_from Pundit::NotAuthorizedError do |e|
+    # abuse Airbrake to learn more about the system
+    notify_airbrake(e)
+
+    # pp e.record.class
+    # pp e.policy.class
+    # pp e.query
+
+    # TODO: this is work-in-progress (BKD-328)
+    if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
+      head :forbidden
+    else
+      head :not_found # obscure the fact that the resource actually exists
+    end
   end
 
   rescue_from ParameterInvalid do |exception|

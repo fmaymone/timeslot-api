@@ -85,12 +85,12 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "is not visible to unrelated users" do
           get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :forbidden
+          expect(response).to have_http_status :not_found
         end
 
         it "is not visible to strangers (not logged in)" do
           get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :forbidden
+          expect(response).to have_http_status :not_found
         end
       end
     end
@@ -487,7 +487,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "responds with 403" do
             post "/v1/reslot/", valid_attributes, auth_header
-            expect(response).to have_http_status :forbidden
+            expect(response).to have_http_status :not_found
           end
 
           it "doesn't add a new entry to the DB" do
