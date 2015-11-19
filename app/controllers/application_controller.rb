@@ -9,16 +9,16 @@ class ApplicationController < ActionController::API
   # Enforces access right checks for collections
   # after_action :verify_policy_scoped, only: :index
 
+  rescue_from ParameterInvalid, with: :unprocessable_entity
+  rescue_from PaginationError, with: :unprocessable_entity
+  rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
+
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
     notify_airbrake(exception)
-    render json: { error: exception.message }, status: :unprocessable_entity
-  end
-
-  rescue_from ActionController::ParameterMissing do |exception|
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
@@ -38,17 +38,13 @@ class ApplicationController < ActionController::API
     end
   end
 
-  rescue_from ParameterInvalid do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
-  end
-
-  rescue_from PaginationError do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
-  end
-
   rescue_from MissingCurrentUserError do
     # headers['Authorization'] = 'Token token="auth_token"'
     render json: 'Invalid or missing auth_token', status: :unauthorized
+  end
+
+  private def unprocessable_entity(exception)
+    render json: { error: exception.message }, status: :unprocessable_entity
   end
 
   private def slot_paging_params
