@@ -97,6 +97,7 @@ module Activity
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
+      return [] if activity_actor.email.eql?('info@timeslot.com')
       user_ids = User.all.collect(&:id).map(&:to_s)
     end
     # Remove the user who did the actual comment
