@@ -30,7 +30,6 @@ class ApplicationPolicy
 
   def current_user?
     return true if @current_user
-    return false if Rails.env.test? # no idea how to test this with pundit specs
     fail MissingCurrentUserError
   end
 

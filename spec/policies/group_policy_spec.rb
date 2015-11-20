@@ -12,14 +12,6 @@ describe GroupPolicy do
       it "allows access" do
         expect(subject).to permit(user, group)
       end
-
-      context "for a visitor" do
-        let(:user) { nil }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, group)
-        end
-      end
     end
   end
 
@@ -35,14 +27,6 @@ describe GroupPolicy do
     end
 
     context "current_user not group owner" do
-      it "denies access" do
-        expect(subject).not_to permit(user, group)
-      end
-    end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
@@ -65,14 +49,6 @@ describe GroupPolicy do
       let!(:membership) {
         create(:membership, :refused, group: group, user: user)
       }
-      it "denies access" do
-        expect(subject).not_to permit(user, group)
-      end
-    end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
@@ -107,18 +83,9 @@ describe GroupPolicy do
     end
 
     context "group members can't invite" do
-      let(:group) { create(:group) }
       let!(:membership) {
         create(:membership, :active, group: group, user: user)
       }
-      it "denies access" do
-        expect(subject).not_to permit(user, group)
-      end
-    end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
       it "denies access" do
         expect(subject).not_to permit(user, group)
       end
@@ -160,14 +127,6 @@ describe GroupPolicy do
         expect(subject).not_to permit(user, group)
       end
     end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, group)
-      end
-    end
   end
 
   permissions :show?, :leave?, :slots?, :members?, :member_settings? do
@@ -190,12 +149,23 @@ describe GroupPolicy do
         expect(subject).not_to permit(user, group)
       end
     end
+  end
 
-    context "for a visitor" do
-      let(:user) { nil }
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [
+        :show?, :leave?, :slots?, :members?, :member_settings?,
+        :index?, :create?, :update?, :destroy?, :related?,
+        :invite?, :kick?, :accept_invite?, :refuse_invite?
+      ]
+    }
+    let(:user) { nil }
 
-      it "denies access" do
-        expect(subject).not_to permit(user, group)
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, group).public_send(permission)
+        }.to raise_error TS_Errors::MissingCurrentUserError
       end
     end
   end

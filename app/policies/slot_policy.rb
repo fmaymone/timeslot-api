@@ -43,6 +43,8 @@ class SlotPolicy < ApplicationPolicy
   # the slot which gets resloted is a public slot or
   # the slot is a friendslot from a friend of the current user or
   # the slot is in a public group
+  # in other words: allowed if the user is allowed to see the slot
+  # which he wants to reslot
   def create_reslot?
     return false if slot.StdSlotPrivate?
     # TODO: remove next line when we have ReSlot visibilities

@@ -22,11 +22,13 @@ describe UserPolicy do
       end
     end
 
-    context "for a visitor" do
+    context 'for a visitor / invalid or missing auth_token' do
       let(:user) { nil }
 
-      it "denies access" do
-        expect(subject).not_to permit(user, User)
+      it "raises MissingCurrentUserError" do
+        expect {
+          subject.new(user, User).public_send(:show?)
+        }.to raise_error TS_Errors::MissingCurrentUserError
       end
     end
   end
