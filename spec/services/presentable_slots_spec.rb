@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe PresentableSlots, type: :service do
   describe "returns collections of slots the current_user is allowed to see" do

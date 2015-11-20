@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe UserRelationship, type: :service do
   describe "determines relationship between 2 users" do

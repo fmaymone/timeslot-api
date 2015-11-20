@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe MediaCollector, type: :service do
   describe "collect all media_items the current_user is allowed to see" do

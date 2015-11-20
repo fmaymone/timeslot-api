@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe SlotsCollector, type: :service do
   describe "collects all slots the current_user is allowed to see" do
