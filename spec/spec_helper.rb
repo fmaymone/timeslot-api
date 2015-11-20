@@ -79,6 +79,11 @@ RSpec.configure do |config|
                  file_path: %r{/spec\/services/}
                 )
 
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :query,
+                 file_path: %r{/spec\/queries/}
+                )
+
   if defined?(Bullet) && Bullet.enable?
     config.before(:each) do
       Bullet.start_request
