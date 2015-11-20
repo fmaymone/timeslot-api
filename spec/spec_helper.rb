@@ -74,6 +74,11 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :services,
+                 file_path: %r{/spec\/services/}
+                )
+
   if defined?(Bullet) && Bullet.enable?
     config.before(:each) do
       Bullet.start_request

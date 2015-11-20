@@ -2,17 +2,17 @@ require 'spec_helper'
 
 RSpec.describe PresentableSlots, type: :service do
   describe "returns collections of slots the current_user is allowed to see" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:current_user) { FactoryGirl.create(:user) }
-    let(:groupslot) { FactoryGirl.create(:group_slot) }
-    let(:incommon_groupslot) { FactoryGirl.create(:group_slot) }
+    let(:user) { create(:user) }
+    let(:current_user) { create(:user) }
+    let(:groupslot) { create(:group_slot) }
+    let(:incommon_groupslot) { create(:group_slot) }
     let!(:memberships) {
-      FactoryGirl.create(:membership, :active, group: groupslot.group,
-                         user: current_user)
-      FactoryGirl.create(:membership, :active, group: groupslot.group,
-                         user: user)
-      FactoryGirl.create(:membership, :active,
-                         group: incommon_groupslot.group, user: user)
+      create(:membership, :active, group: groupslot.group,
+             user: current_user)
+      create(:membership, :active, group: groupslot.group,
+             user: user)
+      create(:membership, :active,
+             group: incommon_groupslot.group, user: user)
     }
 
     it "for a friend" do

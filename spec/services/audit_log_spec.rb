@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe AuditLog do
-  let!(:user) { FactoryGirl.create(:user) }
+  let!(:user) { create(:user) }
 
   describe :after_commit, :commit do
     it "logs instance changes" do
