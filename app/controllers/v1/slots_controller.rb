@@ -347,13 +347,8 @@ module V1
     end
 
     private def meta_params
-      if params[:locationId].present? && params[:iosLocation].present?
-        msg = "LocationId and IosLocation can not both be submitted"
-        fail ActionController::ParameterMissing, msg
-      end
-
       # Check validity of date format
-      p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
+      p = params.permit(:title, :startDate, :endDate, :metaSlotId,
                         location:
                           [:name, :thoroughfare, :subThoroughfare,
                            :locality, :subLocality, :administrativeArea,
@@ -371,7 +366,8 @@ module V1
           enddate = (params[:endDate])
           valid_date = Time.zone.parse(enddate)
           fail ParameterInvalid.new(:end_date, enddate) unless valid_date
-          p[:open_end] = false unless valid_date == @slot.try(:end_date) #TODO: add spec
+          # TODO: add spec for open_end
+          p[:open_end] = false unless valid_date == @slot.try(:end_date)
         end
       end
 

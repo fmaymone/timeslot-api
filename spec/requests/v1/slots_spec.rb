@@ -286,14 +286,6 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
         end
-
-        it "if locationId and IosLocation are submitted both" do
-          invalid_attributes[:iosLocation] = { name: 'foo' }
-          invalid_attributes[:locationId] = 1
-          post "/v1/stdslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'error'
-        end
       end
     end
   end
