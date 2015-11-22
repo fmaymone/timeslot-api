@@ -5,7 +5,7 @@ class ReSlot < BaseSlot
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
-  belongs_to :parent, class_name: BaseSlot
+  belongs_to :parent, class_name: BaseSlot, counter_cache: :reslots_count
   # atm parents are always StdSlot but later they might be eg. public groupslots
   # because of that I used BaseSlot as the associaton type
 
