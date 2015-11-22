@@ -16,34 +16,35 @@ class Friendship < ActiveRecord::Base
   validates :state, presence: true
 
   def offer
-    update!(state: 00)
     # TODO: I think we also need this: (write spec)
     # update!(deleted_at: nil) if deleted_at?
+    update!(state: OFFERED)
   end
 
   def offered?
-    state == "00" && !deleted_at?
+    state == OFFERED && !deleted_at?
   end
 
   def accept
-    update!(state: "11")
+    update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
   end
 
   def established?
-    state == "11" && !deleted_at?
+    state == ESTABLISHED && !deleted_at?
   end
 
   def reject
-    update!(state: "01")
+    update!(state: REJECTED)
   end
 
   def rejected?
-    state == "01" && !deleted_at?
+    state == REJECTED && !deleted_at?
   end
 
   # when user deactivates account, need to preserve state
+  # also called when friendships end
   def inactivate
     user.unfollow(friend)
     friend.unfollow(user)
@@ -71,11 +72,13 @@ class Friendship < ActiveRecord::Base
 
   class << self
     def open
-      where(deleted_at: nil).where(state: '00')
+      # where(deleted_at: nil).where(state: '00')
+      where(deleted_at: nil, state: OFFERED)
     end
 
     def established
-      where(deleted_at: nil).where(state: '11')
+      # where(deleted_at: nil).where(state: '11')
+      where(deleted_at: nil, state: ESTABLISHED)
     end
   end
 

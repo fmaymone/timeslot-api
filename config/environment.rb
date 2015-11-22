@@ -10,11 +10,18 @@ if Rails.env.test? || Rails.env.development?
 end
 
 # some timeslot variables, put them here until we need a better place
+# user relations
 VISITOR = 'visitor' # no user is logged-in
 STRANGER = 'stranger' # a logged-in but unrelated user
 FRIEND = 'friend' # a user with an active friendship with current_user
 FOAF = 'foaf' # friend-of-a-friend -> shared friend(s) with current_user
 ME = 'me'
+
+# friendships
+OFFERED = '00'
+ESTABLISHED = '11'
+REJECTED = '01'
+
 PAGINATION_DEFAULT_LIMIT = ENV['PAGINATION_DEFAULT_LIMIT'].try(:to_i) || 40
 PAGINATION_MAX_LIMIT = ENV['PAGINATION_MAX_LIMIT'].try(:to_i) || 100
 PAGINATION_DEFAULT_FILTER = ENV['PAGINATION_DEFAULT_FILTER'] || 'upcoming'
