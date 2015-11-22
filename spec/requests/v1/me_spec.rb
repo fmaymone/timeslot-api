@@ -875,7 +875,7 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
 
-    context "existing offer" do
+    context "existing open offer from friend" do
       let!(:friendship) {
         create(:friendship, user: john, friend: current_user)
       }
@@ -884,6 +884,18 @@ RSpec.describe "V1::Me", type: :request do
         post "/v1/me/add_friends", { ids: [john.id] }, auth_header
         friendship.reload
         expect(friendship.established?).to be true
+      end
+    end
+
+    context "previously rejected friendship" do
+      let!(:friendship) {
+        create(:friendship, :rejected, user: john, friend: current_user)
+      }
+      it "re-offers a friend request" do
+        expect(friendship.established?).to be false
+        post "/v1/me/add_friends", { ids: [john.id] }, auth_header
+        friendship.reload
+        expect(friendship.offered?).to be true
       end
     end
   end

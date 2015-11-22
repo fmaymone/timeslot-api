@@ -16,9 +16,8 @@ class Friendship < ActiveRecord::Base
   validates :state, presence: true
 
   def offer
-    # TODO: I think we also need this: (write spec)
-    # update!(deleted_at: nil) if deleted_at?
     update!(state: OFFERED)
+    update!(deleted_at: nil) if deleted_at?
   end
 
   def offered?

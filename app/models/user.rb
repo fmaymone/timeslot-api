@@ -274,10 +274,17 @@ class User < ActiveRecord::Base
 
   def add_friends(user_ids)
     user_ids.each do |id|
-      if offered_friendship(id).try(:accept)
-        next
-      elsif friendship(id).nil?
+      if fs = friendship(id)
+        if fs.established?
+          next
+        elsif fs.offered?
+          fs.accept
+        else
+          fs.offer
+        end
+      else
         requested_friends << User.find(id)
+        save
       end
     end
   end
