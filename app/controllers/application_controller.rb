@@ -26,10 +26,6 @@ class ApplicationController < ActionController::API
     # abuse Airbrake to learn more about the system
     notify_airbrake(e)
 
-    # pp e.record.class
-    # pp e.policy.class
-    # pp e.query
-    # TODO: this is work-in-progress (BKD-328)
     if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
       head :forbidden
     else

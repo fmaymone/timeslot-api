@@ -137,7 +137,6 @@ module V1
 
     # PATCH /v1/stdslot/1
     def update_stdslot
-      # see policy for thoughts about the different options
       @slot = current_user.std_slots.find(params[:id])
       authorize @slot
 
@@ -173,7 +172,9 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
       authorize @slot
 
-      @slot.parent.update_from_params(media: media_params, notes: note_param, user: current_user)
+      # TODO: this should only be allowed for tagged users
+      @slot.parent.update_from_params(media: media_params, notes: note_param,
+                                      user: current_user)
       @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
@@ -347,7 +348,12 @@ module V1
     end
 
     private def meta_params
+      # only the slot creator can update the meta params
+      # TODO: groupslots need special treatment
+      return {} if @slot && current_user != @slot.creator
+
       # Check validity of date format
+      # metaSlotId is (IMHO only) requiered for copy slot
       p = params.permit(:title, :startDate, :endDate, :metaSlotId,
                         location:
                           [:name, :thoroughfare, :subThoroughfare,

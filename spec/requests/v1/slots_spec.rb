@@ -713,7 +713,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) {
+      create(:std_slot_private, owner: current_user, creator: current_user) }
 
     describe "handling non-media params" do
       context "valid params" do
@@ -771,6 +772,7 @@ RSpec.describe "V1::Slots", type: :request do
           let!(:std_slot) do
             create(:std_slot_private,
                    owner: current_user,
+                   creator: current_user,
                    start_date: "2014-09-08 13:31:02",
                    end_date: "")
           end
@@ -1281,7 +1283,7 @@ RSpec.describe "V1::Slots", type: :request do
         describe "slot with ios_location" do
           let(:std_slot) do
             create(:std_slot_public, :with_ios_location, owner: current_user,
-                   title: 'whoa')
+                   creator: current_user, title: 'whoa')
           end
 
           it "updates iosLocation" do
@@ -1308,8 +1310,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, locality: "Berlin", name: "Berlin Custom", country: "Germany",
-                 longitude: 13.4113999, latitude: 52.5234051)
+          create(:ios_location, locality: "Berlin", name: "Berlin Custom",
+                 country: "Germany", longitude: 13.4113999, latitude: 52.5234051)
         end
 
         it "doesn't create a new iosLocation" do
@@ -1343,8 +1345,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         describe "slot with ios_location" do
           let(:std_slot) {
-            create(:std_slot_public, :with_ios_location, owner: current_user)
-          }
+            create(:std_slot_public, :with_ios_location, owner: current_user,
+                   creator: current_user) }
 
           it "updates iosLocation" do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
@@ -1373,7 +1375,8 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "PATCH /v1/groupslot/:id" do
     let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
+    let!(:group_slot) {
+      create(:group_slot, group: group, creator: current_user) }
 
     context "with valid non-media params" do
       it "responds with 200" do

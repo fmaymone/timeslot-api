@@ -29,5 +29,4 @@ class StdSlotPolicy < SlotPolicy
     return true if current_user == slot.owner
     false
   end
-  end
 end
