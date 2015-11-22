@@ -29,10 +29,10 @@ class SlotPolicy < ApplicationPolicy
   # true if slot is public
   # true if the current user is allowed to see this slot
   def show?
-        return true if slot.StdSlotPublic?
-        return true if slot.ReSlotPublic?
-        return true if slot.GroupSlotPublic?
-        show_to_current_user?
+    return true if slot.StdSlotPublic?
+    return true if slot.ReSlotPublic?
+    return true if slot.GroupSlotPublic?
+    show_to_current_user?
   end
 
   def show_many?
