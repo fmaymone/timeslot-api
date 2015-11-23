@@ -25,6 +25,7 @@ class Friendship < ActiveRecord::Base
   end
 
   def accept
+    create_activity
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)

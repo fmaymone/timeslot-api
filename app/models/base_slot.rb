@@ -129,6 +129,7 @@ class BaseSlot < ActiveRecord::Base
 
     media_items << new_media
     new_media.save
+    new_media.create_activity
   end
 
   def update_notes(new_notes, creator_id)
@@ -139,6 +140,7 @@ class BaseSlot < ActiveRecord::Base
       else
         notes.create(note.permit(:title, :content, :local_id)
                          .merge!(creator_id: creator_id))
+                         .create_activity
       end
     end
   end
@@ -149,20 +151,25 @@ class BaseSlot < ActiveRecord::Base
     else
       like = Like.find_by(slot: self, user: user)
     end
-    like ||= likes.create(user: user)
+
+    unless like
+      like = likes.create(user: user)
+      like.create_activity
+
+      message_content = I18n.t('slot_like_push_singular',
+                               USER: user.username,
+                               TITLE: meta_slot.title)
+
+      Device.notify_all([creator_id], [message: message_content,
+                                       slot_id: self.id])
+    end
+    like
   rescue ActiveRecord::RecordNotUnique
     # this is raised when the like is already present, not catching it here
     # means it would be rescued in application_controller.rb and returns 422
     # which is not our intention
   else
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-
-    message_content = I18n.t('slot_like_push_singular',
-                             USER: user.username,
-                             TITLE: meta_slot.title)
-
-    Device.notify_all([creator_id], [message: message_content,
-                                     slot_id: self.id])
   end
 
   def destroy_like(user)
@@ -172,22 +179,27 @@ class BaseSlot < ActiveRecord::Base
 
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
-    errors.add(:comment, new_comment.errors) unless new_comment.valid?
 
-    # Is the creator really what we want?
-    # For std_slots we want the owner. For Groupslots?
-    user_ids = [creator_id]
-    user_ids += comments.pluck(:user_id)
-    user_ids += likes.pluck(:user_id)
-    # remove the user who did the actual comment
-    user_ids.delete(user.id)
+    if new_comment.valid?
+      new_comment.create_activity
 
-    message_content = I18n.t('slot_comment_push_singular',
-                             USER: user.username,
-                             TITLE: meta_slot.title)
+      # Is the creator really what we want?
+      # For std_slots we want the owner. For Groupslots?
+      user_ids = [creator_id]
+      user_ids += comments.pluck(:user_id)
+      user_ids += likes.pluck(:user_id)
+      # remove the user who did the actual comment
+      user_ids.delete(user.id)
 
-    Device.notify_all(user_ids.uniq, [message: message_content,
-                                      slot_id: new_comment.slot_id])
+      message_content = I18n.t('slot_comment_push_singular',
+                               USER: user.username,
+                               TITLE: meta_slot.title)
+
+      Device.notify_all(user_ids.uniq, [message: message_content,
+                                        slot_id: new_comment.slot_id])
+    else
+      errors.add(:comment, new_comment.errors)
+    end
     new_comment
   end
 
@@ -196,13 +208,21 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
+    likes.each(&:remove_activity)
+    comments.each(&:remove_activity)
+    notes.each(&:remove_activity)
+    media_items.each(&:remove_activity)
+
     likes.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
+
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+
+    remove_activity
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete
@@ -332,6 +352,7 @@ class BaseSlot < ActiveRecord::Base
                               user: user)
     end
 
+    slot.create_activity
     slot
   end
 

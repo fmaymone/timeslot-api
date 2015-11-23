@@ -11,7 +11,7 @@ namespace :db do
     # start populate
     (0..5).each do
 
-      user = FactoryGirl.create(:user, :with_3_groups, :with_feed, username: Faker::Name.name)
+      user = FactoryGirl.create(:user, :with_3_groups, username: Faker::Name.name)
       #email: Faker::Number.number(5) + Faker::Internet.email
       #password: Faker::Internet.password
 

@@ -39,6 +39,7 @@ class MediaItem < ActiveRecord::Base
     Rails.logger.error { msg }
     Airbrake.notify(e, parameters: msg)
   ensure
+    remove_activity
     ts_soft_delete
   end
 

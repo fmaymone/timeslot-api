@@ -1,5 +1,4 @@
 module UserActivity
-  extend ActiveSupport::Concern
   include Activity
 
   private

@@ -56,6 +56,7 @@ class ReSlot < BaseSlot
   end
 
   def delete
+    remove_activity
     remove_all_followers
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
@@ -86,10 +87,15 @@ class ReSlot < BaseSlot
 
     slotter.follow(predecessor)
 
-    reslot || create(slotter: slotter,
-                     predecessor: predecessor,
-                     parent: original_source,
-                     meta_slot: predecessor.meta_slot)
+    unless reslot
+      reslot = create(slotter: slotter,
+                      predecessor: predecessor,
+                      parent: original_source,
+                      meta_slot: predecessor.meta_slot)
+      reslot.create_activity
+    end
+
+    reslot
   end
 
   # for Pundit
