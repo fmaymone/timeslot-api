@@ -208,11 +208,6 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
-    likes.each(&:remove_activity)
-    comments.each(&:remove_activity)
-    notes.each(&:remove_activity)
-    media_items.each(&:remove_activity)
-
     likes.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
@@ -353,7 +348,6 @@ class BaseSlot < ActiveRecord::Base
     end
 
     slot.create_activity
-    slot
   end
 
   def self.duplicate_slot(source, target, current_user)

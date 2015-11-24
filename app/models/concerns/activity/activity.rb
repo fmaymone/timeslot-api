@@ -8,6 +8,7 @@ module Activity
       create_activity_push
       create_activity_email
     end
+    self
   end
 
   def update_activity
