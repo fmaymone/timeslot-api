@@ -1,5 +1,4 @@
 class ApplicationController < ActionController::API
-  include TS_Errors
   include TS_Authenticable
   include Pundit
 
@@ -10,6 +9,10 @@ class ApplicationController < ActionController::API
   # Enforces access right checks for collections
   # after_action :verify_policy_scoped, only: :index
 
+  rescue_from ParameterInvalid, with: :unprocessable_entity
+  rescue_from PaginationError, with: :unprocessable_entity
+  rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
+
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
   end
@@ -19,19 +22,23 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
-  rescue_from ActionController::ParameterMissing do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
+  rescue_from Pundit::NotAuthorizedError do |e|
+    # abuse Airbrake to learn more about the system
+    notify_airbrake(e)
+
+    if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
+      head :forbidden
+    else
+      head :not_found # obscure the fact that the resource actually exists
+    end
   end
 
-  rescue_from Pundit::NotAuthorizedError do
-    head :forbidden
+  rescue_from MissingCurrentUserError do
+    # headers['Authorization'] = 'Token token="auth_token"'
+    render json: 'Invalid or missing auth_token', status: :unauthorized
   end
 
-  rescue_from ParameterInvalid do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
-  end
-
-  rescue_from PaginationError do |exception|
+  private def unprocessable_entity(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 

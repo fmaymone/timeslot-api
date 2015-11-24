@@ -13,9 +13,12 @@
   - my_media
   - update_device
   - TODO: add_friends / remove_friends / slot_from_friends
-- return 403 forbidden if pundit check fails
+- only slot creator can update slot metadata
+- return 404 Not Found if pundit check fails
+- return 401 also when policies fail because of missing current user
 - FIX for invalid email on password reset
 - FIX for some policies valid but current_user didn't exist
+
 
 ## v0.8.1
 - many updates for activity stream

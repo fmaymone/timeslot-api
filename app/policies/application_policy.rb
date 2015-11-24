@@ -1,4 +1,6 @@
 class ApplicationPolicy
+  include TS_Errors
+
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -28,7 +30,7 @@ class ApplicationPolicy
 
   def current_user?
     return true if @current_user
-    false
+    fail MissingCurrentUserError
   end
 
   def scope

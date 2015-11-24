@@ -1,25 +1,25 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe MediaCollector, type: :service do
   describe "collect all media_items the current_user is allowed to see" do
     let(:collector) do
       described_class.new(current_user: current_user, other_user: target_user)
     end
-    let(:current_user) { FactoryGirl.create(:user) }
-    let(:target_user) { FactoryGirl.create(:user) }
+    let(:current_user) { create(:user) }
+    let(:target_user) { create(:user) }
 
     let!(:slot_public) {
-      FactoryGirl.create(:std_slot_public, :with_media,
-                         owner: target_user, creator: target_user) }
+      create(:std_slot_public, :with_media,
+             owner: target_user, creator: target_user) }
     let!(:slot_foaf) {
-      FactoryGirl.create(:std_slot_foaf, :with_media,
-                         owner: target_user, creator: target_user) }
+      create(:std_slot_foaf, :with_media,
+             owner: target_user, creator: target_user) }
     let!(:slot_friend) {
-      FactoryGirl.create(:std_slot_friends, :with_media,
-                         owner: target_user, creator: target_user) }
+      create(:std_slot_friends, :with_media,
+             owner: target_user, creator: target_user) }
     let!(:slot_private) {
-      FactoryGirl.create(:std_slot_private, :with_media,
-                         owner: target_user, creator: target_user) }
+      create(:std_slot_private, :with_media,
+             owner: target_user, creator: target_user) }
 
     context "for ME" do
       let(:target_user) { current_user }
@@ -36,8 +36,8 @@ RSpec.describe MediaCollector, type: :service do
 
     context "for FRIEND" do
       let!(:friend) do
-        FactoryGirl.create(:friendship, :established,
-                           user: current_user, friend: target_user)
+        create(:friendship, :established,
+               user: current_user, friend: target_user)
         target_user
       end
 
@@ -82,12 +82,10 @@ RSpec.describe MediaCollector, type: :service do
     end
 
     context "for FOAF" do
-      let(:friend) { FactoryGirl.create(:user) }
+      let(:friend) { create(:user) }
       let!(:foaf) do
-        FactoryGirl.create(:friendship, :established,
-                           user: current_user, friend: friend)
-        FactoryGirl.create(:friendship, :established,
-                           user: target_user, friend: friend)
+        create(:friendship, :established, user: current_user, friend: friend)
+        create(:friendship, :established, user: target_user, friend: friend)
       end
 
       it "returns all foaf- and public-visible media items of foaf" do
@@ -128,14 +126,14 @@ RSpec.describe MediaCollector, type: :service do
 
     context "common/shared group" do
       let!(:group_slot) {
-        FactoryGirl.create(:group_slot, :with_media, creator: target_user) }
+        create(:group_slot, :with_media, creator: target_user) }
       let!(:group_slot_from_third) {
-        FactoryGirl.create(:group_slot, :with_media, group: group_slot.group) }
+        create(:group_slot, :with_media, group: group_slot.group) }
       let!(:memberships) do
-        [FactoryGirl.create(:membership, :active,
-                            group: group_slot.group, user: current_user),
-         FactoryGirl.create(:membership, :active,
-                            group: group_slot.group, user: target_user)]
+        [create(:membership, :active,
+                group: group_slot.group, user: current_user),
+         create(:membership, :active,
+                group: group_slot.group, user: target_user)]
       end
 
       it "returns all media items which the other user has added to" \

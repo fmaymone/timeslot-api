@@ -85,12 +85,12 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "is not visible to unrelated users" do
           get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :forbidden
+          expect(response).to have_http_status :not_found
         end
 
         it "is not visible to strangers (not logged in)" do
           get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :forbidden
+          expect(response).to have_http_status :not_found
         end
       end
     end
@@ -282,14 +282,6 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "if visibility has to much characters" do
           invalid_attributes[:visibility] = "101"
-          post "/v1/stdslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'error'
-        end
-
-        it "if locationId and IosLocation are submitted both" do
-          invalid_attributes[:iosLocation] = { name: 'foo' }
-          invalid_attributes[:locationId] = 1
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
@@ -487,7 +479,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "responds with 403" do
             post "/v1/reslot/", valid_attributes, auth_header
-            expect(response).to have_http_status :forbidden
+            expect(response).to have_http_status :not_found
           end
 
           it "doesn't add a new entry to the DB" do
@@ -721,7 +713,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) {
+      create(:std_slot_private, owner: current_user, creator: current_user) }
 
     describe "handling non-media params" do
       context "valid params" do
@@ -779,6 +772,7 @@ RSpec.describe "V1::Slots", type: :request do
           let!(:std_slot) do
             create(:std_slot_private,
                    owner: current_user,
+                   creator: current_user,
                    start_date: "2014-09-08 13:31:02",
                    end_date: "")
           end
@@ -1289,7 +1283,7 @@ RSpec.describe "V1::Slots", type: :request do
         describe "slot with ios_location" do
           let(:std_slot) do
             create(:std_slot_public, :with_ios_location, owner: current_user,
-                   title: 'whoa')
+                   creator: current_user, title: 'whoa')
           end
 
           it "updates iosLocation" do
@@ -1316,8 +1310,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, locality: "Berlin", name: "Berlin Custom", country: "Germany",
-                 longitude: 13.4113999, latitude: 52.5234051)
+          create(:ios_location, locality: "Berlin", name: "Berlin Custom",
+                 country: "Germany", longitude: 13.4113999, latitude: 52.5234051)
         end
 
         it "doesn't create a new iosLocation" do
@@ -1351,8 +1345,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         describe "slot with ios_location" do
           let(:std_slot) {
-            create(:std_slot_public, :with_ios_location, owner: current_user)
-          }
+            create(:std_slot_public, :with_ios_location, owner: current_user,
+                   creator: current_user) }
 
           it "updates iosLocation" do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
@@ -1381,7 +1375,8 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "PATCH /v1/groupslot/:id" do
     let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
+    let!(:group_slot) {
+      create(:group_slot, group: group, creator: current_user) }
 
     context "with valid non-media params" do
       it "responds with 200" do

@@ -671,7 +671,6 @@ resource "Me" do
                   # "returns a list of all User IDs for which a friendship was" \
                   # " created (requested or fully established)\n\n." \
                   "returns 404 if an User ID is invalid"
-
       do_request
 
       expect(response_status).to be 200

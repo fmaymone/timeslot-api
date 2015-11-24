@@ -13,4 +13,6 @@ module TS_Errors
       super("#{value} is not a valid value for param: #{param}")
     end
   end
+
+  class MissingCurrentUserError < Pundit::NotAuthorizedError; end
 end

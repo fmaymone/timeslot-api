@@ -13,14 +13,6 @@ describe ReSlotPolicy do
         expect(subject).to permit(user, slot)
       end
     end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
   end
 
   permissions :destroy_reslot? do
@@ -41,12 +33,21 @@ describe ReSlotPolicy do
         end
       end
     end
+  end
 
-    context "for a visitor" do
-      let(:user) { nil }
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [
+        :update_reslot?, :destroy_reslot?
+      ]
+    }
+    let(:user) { nil }
 
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, slot).public_send(permission)
+        }.to raise_error TS_Errors::MissingCurrentUserError
       end
     end
   end

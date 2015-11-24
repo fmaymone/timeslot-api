@@ -632,6 +632,98 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :add_friends do
+    let(:john) { create(:user, username: "John") }
+
+    describe "no previous connection between users" do
+      it "creates new friend request for other user" do
+        expect {
+          user.add_friends([john.id])
+        }.to change(Friendship, :count).by 1
+      end
+
+      it "friend request has state 'offered'" do
+        user.add_friends([john.id])
+        expect(Friendship.last.state).to eq OFFERED
+        expect(Friendship.last.deleted_at?).to be false
+      end
+    end
+
+    describe "existing rejected friendship request" do
+      let!(:friendship) {
+        create(:friendship, :rejected, user: john, friend: user) }
+
+      it "doesn't create a new friendship" do
+        expect {
+          user.add_friends([john.id])
+        }.not_to change(Friendship, :count)
+      end
+
+      it "updates friend request state to 'offered'" do
+        expect(Friendship.last.state).to eq REJECTED
+        user.add_friends([john.id])
+        expect(Friendship.last.state).to eq OFFERED
+        expect(Friendship.last.deleted_at?).to be false
+      end
+    end
+
+    describe "broken friendship, initiated by user" do
+      let!(:friendship) {
+        create(:friendship, :inactive, user: user, friend: john) }
+
+      it "doesn't create a new friendship" do
+        expect {
+          user.add_friends([john.id])
+        }.not_to change(Friendship, :count)
+      end
+
+      it "updates friend request state to 'offered'" do
+        expect(Friendship.last.deleted_at?).to be true
+        user.add_friends([john.id])
+        friendship.reload
+        expect(friendship.state).to eq OFFERED
+        expect(friendship.deleted_at?).to be false
+      end
+    end
+
+    describe "broken friendship, initiated by friend" do
+      let!(:friendship) {
+        create(:friendship, :inactive, user: john, friend: user) }
+
+      it "doesn't create a new friendship" do
+        expect {
+          user.add_friends([john.id])
+        }.not_to change(Friendship, :count)
+      end
+
+      it "updates friend request state to 'offered'" do
+        expect(Friendship.last.deleted_at?).to be true
+        user.add_friends([john.id])
+        friendship.reload
+        expect(friendship.state).to eq OFFERED
+        expect(friendship.deleted_at?).to be false
+      end
+    end
+
+    describe "existing established friendship" do
+      let!(:friendship) {
+        create(:friendship, :established, user: john, friend: user) }
+
+      it "doesn't create a new friendship" do
+        expect {
+          user.add_friends([john.id])
+        }.not_to change(Friendship, :count)
+      end
+
+      it "doesn't change friendship state" do
+        expect {
+          user.add_friends([john.id])
+        }.not_to change(friendship, :state)
+        expect(Friendship.last.deleted_at?).to be false
+      end
+    end
+  end
+
   describe :offered_friendship do
     let(:john) { create(:user, username: "John") }
     let(:mary) { create(:user, username: "Mary") }

@@ -13,10 +13,23 @@ describe MePolicy do
         expect(subject).to permit(user, :me)
       end
     end
+  end
 
-    context "for a visitor" do
-      it "denies access" do
-        expect(subject).not_to permit(nil, :me)
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [
+        :show?, :update?, :inactivate?, :signout?,
+        :my_slots?, :slots_from_friends?, :my_media_items?,
+        :add_friends?, :remove_friends?, :update_device?
+      ]
+    }
+    let(:user) { nil }
+
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, :me).public_send(permission)
+        }.to raise_error TS_Errors::MissingCurrentUserError
       end
     end
   end

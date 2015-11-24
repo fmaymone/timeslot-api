@@ -270,6 +270,49 @@ resource "Slots" do
       end
     end
 
+    describe "Get private slot of other user" do
+      let(:id) { create(:std_slot_private).id }
+
+      example "Get private slot of other user returns not found",
+              document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+
+    describe "Get foaf slot with invalid auth_token" do
+      let(:id) { create(:std_slot_foaf).id }
+      let(:auth_header) { "Token token=foobar" }
+
+      example "Get foaf slot with invalid auth_token returns Unauthorized",
+              document: false do
+        do_request
+        expect(response_status).to eq(401)
+      end
+    end
+
+    describe "Get public slot with invalid auth_token" do
+      let(:id) { create(:std_slot_public).id }
+      let(:auth_header) { "Token token=foobar" }
+
+      example "Get public slot of other user with invalid auth_token returns OK",
+              document: false do
+        do_request
+        expect(response_status).to eq 200
+      end
+    end
+
+    describe "Get public slot without auth_token" do
+      let(:id) { create(:std_slot_public).id }
+      let(:auth_header) { nil }
+
+      example "Get public slot of other user without auth_token returns OK",
+              document: false do
+        do_request
+        expect(response_status).to eq 200
+      end
+    end
+
     describe "Get slot with invalid ID" do
       let(:id) { 1 }
 
@@ -777,19 +820,20 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
     parameter :visibility, "Visibility of the Slot to update " \
-                           "(private/friends/public)"
+                           "(private/friends/foaf/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user,
+                             creator: current_user) }
     let(:id) { std_slot.id }
 
-    describe "Update an existing StdSlot" do
+    describe "Update an existing StdSlot by creator" do
       let(:title) { "New title for a Slot" }
 
       example "Update StdSlot - change title", document: :v1 do
         explanation "Update content of StdSlot.\n\n" \
-                    "User must be owner of StdSlot.\n\n" \
+                    "User must be creator of StdSlot.\n\n" \
                     "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
