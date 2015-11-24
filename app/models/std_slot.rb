@@ -30,10 +30,6 @@ class StdSlot < BaseSlot
     ReSlot.where parent_id: id
   end
 
-  def reslot_count
-    ReSlot.unscoped.where(parent_id: id).count
-  end
-
   def related_users
     [owner]
   end

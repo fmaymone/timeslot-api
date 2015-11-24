@@ -258,7 +258,6 @@ resource "Me" do
           expect(json.first).to have_key("commentsCounter")
           expect(json.first).to have_key("visibility")
           expect(json.first).to have_key("media")
-          expect(json.first).to have_key("url")
           expect(response_body).to include(std_slot_1.title)
           expect(response_body).to include(std_slot_2.title)
           expect(response_body).to include(re_slots.first.title)

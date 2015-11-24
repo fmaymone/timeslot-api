@@ -346,7 +346,7 @@ RSpec.describe "V1::Me", type: :request do
     context "with pagination", :keep_data do
       let(:limit) { 4 }
       let(:query_string) {
-        { status: status, moment: Time.zone.now.as_json, limit: limit } }
+        { filter: filter, moment: Time.zone.now.as_json, limit: limit } }
 
       before(:all) do
         @current_user = create(:user, :with_email, :with_password)
@@ -436,6 +436,7 @@ RSpec.describe "V1::Me", type: :request do
             expect(response.status).to be(200)
             resp = JSON.parse(response.body)
             result_count = resp['data'].size
+            expect(resp['paging']['filter']).to eq filter
 
             # receive a cursor for further requests
             cursor = resp['paging']['after']
@@ -453,32 +454,27 @@ RSpec.describe "V1::Me", type: :request do
               json = JSON.parse(response.body)
               cursor = json['paging']['after']
               result = json['data']
+              result_count += result.size
 
-              if result.empty?
-                expect(previous_result.first['title'])
-                  .to eq upcoming_slot.title
-              else
-                result_count += result.size
-                # make sure the follow up responses return slots
-                # which are later than the slots from the previous response
-                expect(result.first['startDate'])
-                  .to be >= previous_result.last['startDate']
-                if result.first['startDate'] == previous_result.last['startDate']
-                  expect(result.first['endDate'])
-                    .to be >= previous_result.last['endDate']
-                end
-                if result.first['endDate'] == previous_result.last['endDate']
-                  expect(result.first['id'])
-                    .to be >= previous_result.last['id']
-                end
-                # those should never be in the result
-                expect(response.body).not_to include 'past slot'
-                expect(response.body).not_to include 'past reslot'
-                expect(response.body).not_to include 'ongoing slot'
-                expect(response.body).not_to include 'ongoing reslot'
-                expect(response.body).not_to include 'not my upcoming slot'
-                previous_result = result
+              # make sure the follow up responses return slots
+              # which are later than the slots from the previous response
+              expect(result.first['startDate'])
+                .to be >= previous_result.last['startDate']
+              if result.first['startDate'] == previous_result.last['startDate']
+                expect(result.first['endDate'])
+                  .to be >= previous_result.last['endDate']
               end
+              if result.first['endDate'] == previous_result.last['endDate']
+                expect(result.first['id'])
+                  .to be >= previous_result.last['id']
+              end
+              # those should never be in the result
+              expect(response.body).not_to include 'past slot'
+              expect(response.body).not_to include 'past reslot'
+              expect(response.body).not_to include 'ongoing slot'
+              expect(response.body).not_to include 'ongoing reslot'
+              expect(response.body).not_to include 'not my upcoming slot'
+              previous_result = result
             end
             expect(result.last['title']).to eq 'upcoming slot B'
 
@@ -501,6 +497,7 @@ RSpec.describe "V1::Me", type: :request do
             expect(response.status).to be(200)
             resp = JSON.parse(response.body)
             result_count = resp['data'].size
+            expect(resp['paging']['filter']).to eq filter
 
             # receive a cursor for further requests
             cursor = resp['paging']['before']
@@ -519,40 +516,35 @@ RSpec.describe "V1::Me", type: :request do
               json = JSON.parse(response.body)
               cursor = json['paging']['before']
               result = json['data']
+              result_count += result.size
 
-              if result.empty?
-                expect(previous_result.first['title'])
-                  .to eq long_ago_slot.title
-              else
-                result_count += result.size
-
-                # check the order once again
-                result.each_with_index do |slot, index|
-                  break if index == result.size - 1
-                  next_slot = result[index + 1]
-                  expect(slot['startDate']).to be <= next_slot['startDate']
-                  if slot['startDate'] == next_slot['startDate']
-                    expect(slot['endDate']).to be <= next_slot['endDate']
-                  end
-                  if slot['endDate'] == next_slot['endDate']
-                    expect(slot['id']).to be < next_slot['id']
-                  end
+              # check the order once again
+              result.each_with_index do |slot, index|
+                break if index == result.size - 1
+                next_slot = result[index + 1]
+                expect(slot['startDate']).to be <= next_slot['startDate']
+                if slot['startDate'] == next_slot['startDate']
+                  expect(slot['endDate']).to be <= next_slot['endDate']
                 end
-
-                # make sure the follow up responses return slots
-                # which are earlier than the slots from the previous response
-                expect(result.last['startDate'])
-                  .to be <= previous_result.first['startDate']
-                if result.last['startDate'] == previous_result.first['startDate']
-                  expect(result.last['endDate'])
-                    .to be <= previous_result.first['endDate']
+                if slot['endDate'] == next_slot['endDate']
+                  expect(slot['id']).to be < next_slot['id']
                 end
-                if result.last['endDate'] == previous_result.first['endDate']
-                  expect(result.last['id'])
-                    .to be <= previous_result.first['id']
-                end
-                previous_result = result
               end
+
+              # make sure the follow up responses return slots
+              # which are earlier than the slots from the previous response
+              expect(result.last['startDate'])
+                .to be <= previous_result.first['startDate']
+              if result.last['startDate'] == previous_result.first['startDate']
+                expect(result.last['endDate'])
+                  .to be <= previous_result.first['endDate']
+              end
+              if result.last['endDate'] == previous_result.first['endDate']
+                expect(result.last['id'])
+                  .to be <= previous_result.first['id']
+              end
+              previous_result = result
+
               expect(response.body).not_to include 'not my upcoming slot'
             end
 
@@ -592,6 +584,18 @@ RSpec.describe "V1::Me", type: :request do
 
       describe "filter by slot status:" do
         let(:over_limit) { BaseSlot.all.count * 2 }
+
+        context "default filter" do
+          let(:filter) { 'past' }
+
+          it "doesn't use default filter if explicitly send" do
+
+            get "/v1/me/slots", { filter: filter }, @auth_header
+
+            expect(response.status).to be(200)
+            expect(json['paging']['filter']).to eq filter
+          end
+        end
 
         context "all" do
           it "returns all slots" do

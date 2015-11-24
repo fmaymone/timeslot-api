@@ -37,12 +37,15 @@ class BaseSlot < ActiveRecord::Base
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
+  # only god knows why, but this must be first, otherwise ActiveRecord screws up
+  belongs_to :meta_slot, inverse_of: :slots, autosave: true
+
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
-  has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
+  has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  belongs_to :meta_slot, inverse_of: :slots, autosave: true
+  has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_id,
@@ -420,21 +423,19 @@ class BaseSlot < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_target
+  private def activity_target
     self
   end
 
-  def activity_actor
+  private def activity_actor
     creator
   end
 
-  def activity_verb
+  private def activity_verb
     'slot'
   end
 
-  def activity_foreign
+  private def activity_foreign
     nil
   end
 end

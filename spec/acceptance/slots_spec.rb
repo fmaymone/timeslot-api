@@ -257,12 +257,13 @@ resource "Slots" do
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
                                 "image" => ""},
-                 "settings" => { 'alerts' => '1110001100' },
+                 # "settings" => { 'alerts' => '1110001100' },
+                 "settings" => { 'alerts' => 'omitted' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 "reslotsCounter" => slot.reslot_count
+                 "reslotsCounter" => slot.re_slots_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
@@ -391,14 +392,15 @@ resource "Slots" do
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
                                 "image" => ""},
-                 "settings" => { 'alerts' => '1110001100' },
+                 # "settings" => { 'alerts' => '1110001100' },
+                 "settings" => { 'alerts' => 'omitted' },
                  "slotter" => { 'id' => reslot.slotter_id },
                  "visibility" => reslot.parent.visibility,
                  "notes" => reslot.notes,
                  "parent" => { 'id' => reslot.parent.id },
                  "likes" => reslot.likes.count,
                  "commentsCounter" => reslot.comments.count,
-                 "reslotsCounter" => reslot.reslot_count
+                 "reslotsCounter" => reslot.re_slots_count
                 )
         reslot.reload
         expect(json["media"].length).to eq(reslot.media_items.length)
@@ -1199,7 +1201,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
         expect(slot.likes.count).to eq 1
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1228,6 +1232,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         like.reload
         expect(like.deleted_at?).to be true
+        slot.reload
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1286,6 +1292,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
+        expect(slot.comments.count).to eq slot.comments_count
       end
     end
   end
