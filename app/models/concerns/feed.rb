@@ -143,8 +143,8 @@ module Feed
     feed.each do |post|
       # Enrich target activity
       post = enrich_activity(post)
-      # Generates group tag (aggregation index)
-      group = post['group'] = "#{post['target']}#{post['activity']}" ##{post['time']}
+      # Generates group tag (acts as the aggregation index)
+      group = post['group'] = "#{post['target']}}" ##{post['activity']#{post['time']}
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
