@@ -64,7 +64,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=mTveUqJ8cHP5hbzwTCl4rX1u_Jc
+Authorization: Token token=mkZa7OhWDqLcDV6hXMyh0rmzYxE
 Host: example.org
 Cookie: </pre>
 
@@ -76,7 +76,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=mTveUqJ8cHP5hbzwTCl4rX1u_Jc&quot; \
+	-H &quot;Authorization: Token token=mkZa7OhWDqLcDV6hXMyh0rmzYxE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,12 +87,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ed7e95793152b69b03a05df06f1e5c87&quot;
+ETag: W/&quot;a8e31540aa184209757ccb9adc880ad8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e792e0f4-ffbc-4531-bc34-0615fa7908f5
-X-Runtime: 0.072568
+X-Request-Id: 1ee3e2fe-d473-419f-86f6-27277f8de531
+X-Runtime: 0.042981
 Vary: Origin
-Content-Length: 1701</pre>
+Content-Length: 1575</pre>
 
 #### Status
 
@@ -106,23 +106,23 @@ Content-Length: 1701</pre>
     "id" : 23,
     "title" : "Slot title 39",
     "startDate" : "2019-09-16T18:44:02.000Z",
-    "createdAt" : "2015-11-17T23:46:12.378Z",
-    "updatedAt" : "2015-11-17T23:46:12.378Z",
+    "createdAt" : "2015-11-24T23:47:30.707Z",
+    "updatedAt" : "2015-11-24T23:47:30.707Z",
     "deletedAt" : null,
     "endDate" : "2019-10-16T18:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 122,
-      "username" : "User 177",
-      "createdAt" : "2015-11-17T23:46:12.360Z",
-      "updatedAt" : "2015-11-17T23:46:12.360Z",
+      "username" : "User 173",
+      "createdAt" : "2015-11-24T23:47:30.694Z",
+      "updatedAt" : "2015-11-24T23:47:30.694Z",
       "deletedAt" : null,
       "image" : ""
     },
     "notes" : [],
     "media" : [],
     "settings" : {
-      "alerts" : "0000000000"
+      "alerts" : "omitted"
     },
     "reslotsCounter" : 1,
     "slotter" : {
@@ -134,66 +134,63 @@ Content-Length: 1701</pre>
     "visibility" : "public",
     "likes" : 0,
     "commentsCounter" : 0,
-    "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/23"
+    "shareUrl" : null
   },
   {
     "id" : 24,
     "title" : "Slot title 41",
     "startDate" : "2019-09-18T20:44:02.000Z",
-    "createdAt" : "2015-11-17T23:46:12.397Z",
-    "updatedAt" : "2015-11-17T23:46:12.397Z",
+    "createdAt" : "2015-11-24T23:47:30.749Z",
+    "updatedAt" : "2015-11-24T23:47:30.749Z",
     "deletedAt" : null,
     "endDate" : "2019-10-18T20:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 126,
-      "username" : "User 181",
-      "createdAt" : "2015-11-17T23:46:12.388Z",
-      "updatedAt" : "2015-11-17T23:46:12.388Z",
+      "username" : "User 177",
+      "createdAt" : "2015-11-24T23:47:30.742Z",
+      "updatedAt" : "2015-11-24T23:47:30.742Z",
       "deletedAt" : null,
       "image" : ""
     },
     "notes" : [],
     "media" : [],
     "settings" : {
-      "alerts" : "0000000000"
+      "alerts" : "omitted"
     },
     "visibility" : "friends",
     "reslotsCounter" : 0,
     "likes" : 0,
     "commentsCounter" : 0,
-    "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/24"
+    "shareUrl" : null
   },
   {
     "id" : 25,
     "title" : "Slot title 42",
     "startDate" : "2019-09-19T21:44:02.000Z",
-    "createdAt" : "2015-11-17T23:46:12.419Z",
-    "updatedAt" : "2015-11-17T23:46:12.419Z",
+    "createdAt" : "2015-11-24T23:47:30.770Z",
+    "updatedAt" : "2015-11-24T23:47:30.770Z",
     "deletedAt" : null,
     "endDate" : "2019-10-19T21:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 129,
-      "username" : "User 184",
-      "createdAt" : "2015-11-17T23:46:12.415Z",
-      "updatedAt" : "2015-11-17T23:46:12.415Z",
+      "username" : "User 180",
+      "createdAt" : "2015-11-24T23:47:30.766Z",
+      "updatedAt" : "2015-11-24T23:47:30.766Z",
       "deletedAt" : null,
       "image" : ""
     },
     "notes" : [],
     "media" : [],
     "settings" : {
-      "alerts" : "0000000000"
+      "alerts" : "omitted"
     },
     "visibility" : "public",
     "reslotsCounter" : 0,
     "likes" : 0,
     "commentsCounter" : 0,
-    "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/25"
+    "shareUrl" : null
   }
 ]
 ```

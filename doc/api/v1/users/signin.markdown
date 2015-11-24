@@ -122,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user103@email.com",
+  "email" : "user104@email.com",
   "password" : "timeslot"
 }
 ```
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user103@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user104@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -143,10 +143,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;46c7fd757611b15aa542ec5ab16bf397&quot;
+ETag: W/&quot;6906ecacaabc0616ff0133eb56d1bec3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 90e07207-a980-4c1e-b963-1c0284680e28
-X-Runtime: 0.019643
+X-Request-Id: 4621c703-6e17-43cb-9677-1d42a1eabd9b
+X-Runtime: 0.025135
 Vary: Origin
 Content-Length: 757</pre>
 
@@ -159,9 +159,9 @@ Content-Length: 757</pre>
 ```javascript
 {
   "id" : 102,
-  "username" : "User 381",
-  "createdAt" : "2015-11-17T23:46:17.073Z",
-  "updatedAt" : "2015-11-17T23:46:17.084Z",
+  "username" : "User 386",
+  "createdAt" : "2015-11-24T23:47:35.424Z",
+  "updatedAt" : "2015-11-24T23:47:35.432Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -169,7 +169,7 @@ Content-Length: 757</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user103@email.com",
+  "email" : "user104@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -187,6 +187,6 @@ Content-Length: 757</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "7y7RK-k4b4epJaobbwzB6ze4Bjo"
+  "authToken" : "zYv7FgjCHF2nBFyWexI-M4At29A"
 }
 ```

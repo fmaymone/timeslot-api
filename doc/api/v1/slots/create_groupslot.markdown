@@ -114,7 +114,7 @@ Description : ID of the group the slot belongs to
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=JMcgQAQpaLu9fLECpeSwyK1tClg
+Authorization: Token token=dfMpPB1kVDkm_N7U0Ile_wvkLmY
 Host: example.org
 Cookie: </pre>
 
@@ -141,7 +141,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:35}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=JMcgQAQpaLu9fLECpeSwyK1tClg&quot; \
+	-H &quot;Authorization: Token token=dfMpPB1kVDkm_N7U0Ile_wvkLmY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -152,12 +152,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c90164b37cbe1656b723d37d7af32b7c&quot;
+ETag: W/&quot;61020ca449a4b4ab17feb19f23a3f4fe&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0405d56c-f660-4717-a198-4e20cf9a2f64
-X-Runtime: 0.026721
+X-Request-Id: 8b6dda13-bd3e-47a7-8e6b-aa2797b536c9
+X-Runtime: 0.049959
 Vary: Origin
-Content-Length: 515</pre>
+Content-Length: 512</pre>
 
 #### Status
 
@@ -167,26 +167,26 @@ Content-Length: 515</pre>
 
 ```javascript
 {
-  "id" : 42,
+  "id" : 46,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-11-17T23:46:14.538Z",
-  "updatedAt" : "2015-11-17T23:46:14.538Z",
+  "createdAt" : "2015-11-24T23:47:32.930Z",
+  "updatedAt" : "2015-11-24T23:47:32.930Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 223,
-    "username" : "User 268",
-    "createdAt" : "2015-11-17T23:46:14.514Z",
-    "updatedAt" : "2015-11-17T23:46:14.514Z",
+    "id" : 232,
+    "username" : "User 273",
+    "createdAt" : "2015-11-24T23:47:32.897Z",
+    "updatedAt" : "2015-11-24T23:47:32.897Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0101010101"
+    "alerts" : "omitted"
   },
   "visibility" : "members",
   "group" : {

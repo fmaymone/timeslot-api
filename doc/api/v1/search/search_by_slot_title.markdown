@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=2TsGK1xqQzlmBghLZH-AbkvOqwE
+Authorization: Token token=iNQLDYq1JXjdCpHdJja7yyEADGc
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2TsGK1xqQzlmBghLZH-AbkvOqwE&quot; \
+	-H &quot;Authorization: Token token=iNQLDYq1JXjdCpHdJja7yyEADGc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,12 +75,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2b8ad04440fb483bcae5830fc886522d&quot;
+ETag: W/&quot;203bd529314520eb0719e0084774f071&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3bfce235-f832-431d-b548-412c8d567838
-X-Runtime: 0.033334
+X-Request-Id: b0179659-c05f-4ede-b32e-200672592dac
+X-Runtime: 0.013223
 Vary: Origin
-Content-Length: 567</pre>
+Content-Length: 525</pre>
 
 #### Status
 
@@ -94,30 +94,29 @@ Content-Length: 567</pre>
     "id" : 30,
     "title" : "Timeslot Party Berlin 2015",
     "startDate" : "2019-09-24T02:44:02.000Z",
-    "createdAt" : "2015-11-17T23:46:13.644Z",
-    "updatedAt" : "2015-11-17T23:46:13.644Z",
+    "createdAt" : "2015-11-24T23:47:31.975Z",
+    "updatedAt" : "2015-11-24T23:47:31.975Z",
     "deletedAt" : null,
     "endDate" : "2019-10-24T02:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 171,
-      "username" : "User 215",
-      "createdAt" : "2015-11-17T23:46:13.629Z",
-      "updatedAt" : "2015-11-17T23:46:13.629Z",
+      "username" : "User 211",
+      "createdAt" : "2015-11-24T23:47:31.958Z",
+      "updatedAt" : "2015-11-24T23:47:31.958Z",
       "deletedAt" : null,
       "image" : ""
     },
     "notes" : [],
     "media" : [],
     "settings" : {
-      "alerts" : "0000000000"
+      "alerts" : "omitted"
     },
     "visibility" : "public",
     "reslotsCounter" : 0,
     "likes" : 0,
     "commentsCounter" : 0,
-    "shareUrl" : null,
-    "url" : "http://example.org/v1/slots/30"
+    "shareUrl" : null
   }
 ]
 ```
