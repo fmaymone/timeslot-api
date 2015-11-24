@@ -144,7 +144,7 @@ module Feed
       # Enrich target activity
       post = enrich_activity(post)
       # Generates group tag (acts as the aggregation index)
-      group = post['group'] = "#{feed_index}#{post['target']}}" ##{post['activity']#{post['time']}
+      group = post['group'] = "#{post['target']}}" ##{post['activity']#{post['time']}
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
@@ -154,8 +154,10 @@ module Feed
         current_feed = aggregated_feed[current]
         # Update activity count
         current_feed['activityCount'] += 1
-        # Collect actors as unique
-        current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+        # Collect actors as unique:
+        #current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+        # Collect always last actor:
+        current_feed['actors'] = [actor]
       # If group does not exist, creates a new group for aggregations
       elsif count < limit.to_i
         # Increment index on each new group (starting from -1)
