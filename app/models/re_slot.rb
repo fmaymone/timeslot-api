@@ -10,6 +10,7 @@ class ReSlot < BaseSlot
   # because of that I used BaseSlot as the associaton type
 
   delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
+           :reslots_count,
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
@@ -42,11 +43,6 @@ class ReSlot < BaseSlot
     source.reslots
   end
 
-  def reslot_count
-    # source.reslot_count
-    ReSlot.unscoped.where(parent_id: parent_id).count
-  end
-
   def related_users
     [slotter]
   end
@@ -61,6 +57,7 @@ class ReSlot < BaseSlot
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
     prepare_for_deletion
+    BaseSlot.decrement_counter(:reslots_count, parent_id)
     ts_soft_delete
   end
 
