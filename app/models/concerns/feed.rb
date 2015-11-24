@@ -148,16 +148,15 @@ module Feed
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
+        next
         # Determine current aggregation group index
-        current = groups[group]
+        #current = groups[group]
         # Get current aggregation group feed
-        current_feed = aggregated_feed[current]
+        #current_feed = aggregated_feed[current]
         # Update activity count
-        current_feed['activityCount'] += 1
-        # Collect actors as unique:
+        #current_feed['activityCount'] += 1
+        # Collect actors as unique
         #current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
-        # Collect always last actor:
-        current_feed['actors'] = [actor]
       # If group does not exist, creates a new group for aggregations
       elsif count < limit.to_i
         # Increment index on each new group (starting from -1)
