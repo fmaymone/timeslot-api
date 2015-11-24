@@ -26,7 +26,12 @@ class SlotsCollector
 
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
-    showables = [user.std_slots, user.re_slots]
+    showables = [
+      user.std_slots.includes(:notes, :media_items,
+                              meta_slot: [:ios_location, :creator]),
+      user.re_slots.includes(parent: [:notes, :media_items],
+                             meta_slot: [:ios_location, :creator])
+    ]
     consider_filter(showables, @filter)
   end
 

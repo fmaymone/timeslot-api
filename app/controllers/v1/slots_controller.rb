@@ -24,7 +24,10 @@ module V1
 
       if slot_paging_params.blank?
         slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
-        @slots = StdSlotPublic.last(slot_count)
+        @slots = StdSlotPublic
+                 .includes(:notes, :media_items,
+                           meta_slot: [:ios_location, :creator])
+                 .last(slot_count)
         render :index
       else
         collector = SlotsCollector.new(**slot_paging_params)
