@@ -1,5 +1,4 @@
 module SlotActivity
-  extend ActiveSupport::Concern
   include Activity
 
   private

@@ -10,6 +10,7 @@ class Comment < ActiveRecord::Base
   validates :content, length: { maximum: 5000 }
 
   def delete
+    remove_activity
     update(deleted_at: Time.zone.now)
   end
 

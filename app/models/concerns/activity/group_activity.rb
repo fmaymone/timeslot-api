@@ -1,5 +1,4 @@
 module GroupActivity
-  extend ActiveSupport::Concern
   include Activity
 
   private

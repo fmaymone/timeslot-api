@@ -1,12 +1,4 @@
 module Activity
-  extend ActiveSupport::Concern
-
-  included do
-    # Trigger activities to feeds:
-    after_commit :create_activity, on: :create
-    after_commit :update_activity, on: :update
-    before_destroy :remove_activity
-  end
 
   def create_activity
     # Trigger "create" as an activity if this should be valid
@@ -16,6 +8,20 @@ module Activity
       create_activity_push
       create_activity_email
     end
+    self
+  end
+
+  def update_activity
+    # TODO
+  end
+
+  def remove_activity
+    # TODO:
+    # # Remove activities from target feeds:
+    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
+    # # Trigger "delete" as an activity if this should be valid
+    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   private
@@ -55,19 +61,6 @@ module Activity
 
   def create_activity_email
     # TODO
-  end
-
-  def update_activity
-    # TODO
-  end
-
-  def remove_activity
-    # TODO:
-    # # Remove activities from target feeds:
-    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
-    # # Trigger "delete" as an activity if this should be valid
-    # # Pass the current time because this before-callback does not trigger "updated_at"
-    # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   # This method should be overridden in the subclass

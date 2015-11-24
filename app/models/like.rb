@@ -9,6 +9,7 @@ class Like < ActiveRecord::Base
   validates_presence_of :user, :slot
 
   def delete
+    remove_activity
     update(deleted_at: Time.zone.now)
   end
 

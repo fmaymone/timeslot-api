@@ -20,6 +20,7 @@ class Note < ActiveRecord::Base
 
   # if belonging slot is deleted
   def delete
+    remove_activity
     ts_soft_delete
   end
 

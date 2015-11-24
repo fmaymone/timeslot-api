@@ -400,6 +400,7 @@ resource "Slots" do
                  "commentsCounter" => reslot.comments.count,
                  "reslotsCounter" => reslot.reslot_count
                 )
+        reslot.reload
         expect(json["media"].length).to eq(reslot.media_items.length)
         expect(response_body).to include reslot.images.first.public_id
       end
