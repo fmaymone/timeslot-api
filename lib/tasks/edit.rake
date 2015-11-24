@@ -3,6 +3,8 @@ namespace :db do
 
   task :edit => :environment do
 
+    return if Rails.env == 'production'
+
     User.all.each do |user|
 
       (0..10).each do

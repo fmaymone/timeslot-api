@@ -79,7 +79,7 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   def activity_is_valid?
-    activity_actor && activity_target
+    activity_actor && activity_target && activity_actor.deleted_at.nil? && activity_target.deleted_at.nil?
   end
 
   # Returns an array of user which should also be notified

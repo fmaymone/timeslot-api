@@ -101,6 +101,8 @@ module Feed
       i18_params = { USER: actor['username'], USERCOUNT: count }
       # Get target (from shared objects)
       target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
+      # Filter out private targets from feed
+      feed.delete(activity) && next if target['visibility'] == 'private'
       # Enrich with custom activity data (shared objects)
       activity['data'] = { target: target, actor: actor }
       # Add the title to the translation params holder
