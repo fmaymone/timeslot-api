@@ -24,6 +24,19 @@ module Activity
     # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
+  def update_activity
+    # TODO
+  end
+
+  def remove_activity
+    # TODO:
+    # # Remove activities from target feeds:
+    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
+    # # Trigger "delete" as an activity if this should be valid
+    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # create_activity_feed(Time.zone.now) if activity_is_valid?
+  end
+
   private
 
   def create_activity_feed(activity_time = nil)

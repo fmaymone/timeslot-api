@@ -60,7 +60,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2)
+        expect(json.length).to be(1)
       end
     end
 
