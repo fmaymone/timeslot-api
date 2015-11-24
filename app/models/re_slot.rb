@@ -5,12 +5,12 @@ class ReSlot < BaseSlot
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
-  belongs_to :parent, class_name: BaseSlot, counter_cache: :reslots_count
+  belongs_to :parent, class_name: BaseSlot, counter_cache: :re_slots_count
   # atm parents are always StdSlot but later they might be eg. public groupslots
   # because of that I used BaseSlot as the associaton type
 
   delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
-           :reslots_count,
+           :re_slots_count,
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
@@ -57,7 +57,7 @@ class ReSlot < BaseSlot
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
     prepare_for_deletion
-    BaseSlot.decrement_counter(:reslots_count, parent_id)
+    BaseSlot.decrement_counter(:re_slots_count, parent_id)
     ts_soft_delete
   end
 

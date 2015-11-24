@@ -41,7 +41,7 @@ if slot.try(:group)
     json.id slot.group.id
   end
 else
-  json.reslotsCounter slot.reslots_count
+  json.reslotsCounter slot.re_slots_count
 
   if slot.class == ReSlot
     json.slotter do

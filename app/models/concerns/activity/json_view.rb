@@ -107,7 +107,7 @@ module JSONView
       # user must be the current user for alerts
       json['settings'] = { alerts: slot.slotter.alerts(slot) }
     elsif slot.class < StdSlot
-      json['reslotsCounter'] = slot.reslots_count
+      json['reslotsCounter'] = slot.re_slots_count
       json['visibility'] = slot.visibility
       # user must be the current user for alerts
       json['settings'] = { alerts: user.alerts(slot) }

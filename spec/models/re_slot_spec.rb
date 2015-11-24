@@ -87,12 +87,12 @@ RSpec.describe ReSlot, type: :model do
     end
   end
 
-  describe :reslots_count do
+  describe :re_slots_count do
     let(:parent) { create(:std_slot) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "reslot returns the number of reslots of the parent slot" do
-      expect(reslots.first.reslots_count).to eq 3
+      expect(reslots.first.re_slots_count).to eq 3
     end
   end
 

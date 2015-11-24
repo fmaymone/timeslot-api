@@ -86,7 +86,7 @@ CREATE TABLE base_slots (
     slot_type integer NOT NULL,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    reslots_count integer DEFAULT 0
+    re_slots_count integer DEFAULT 0
 );
 
 
@@ -752,10 +752,10 @@ ALTER TABLE ONLY group_slots ALTER COLUMN comments_count SET DEFAULT 0;
 
 
 --
--- Name: reslots_count; Type: DEFAULT; Schema: public; Owner: -
+-- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_slots ALTER COLUMN reslots_count SET DEFAULT 0;
+ALTER TABLE ONLY group_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
 
 
 --
@@ -843,10 +843,10 @@ ALTER TABLE ONLY re_slots ALTER COLUMN comments_count SET DEFAULT 0;
 
 
 --
--- Name: reslots_count; Type: DEFAULT; Schema: public; Owner: -
+-- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN reslots_count SET DEFAULT 0;
+ALTER TABLE ONLY re_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
 
 
 --
@@ -885,10 +885,10 @@ ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
 
 
 --
--- Name: reslots_count; Type: DEFAULT; Schema: public; Owner: -
+-- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY std_slots ALTER COLUMN reslots_count SET DEFAULT 0;
+ALTER TABLE ONLY std_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
 
 
 --
