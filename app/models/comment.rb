@@ -12,7 +12,8 @@ class Comment < ActiveRecord::Base
 
   def delete
     remove_activity
-    update(deleted_at: Time.zone.now)
+    BaseSlot.decrement_counter(:comments_count, slot_id)
+    ts_soft_delete
   end
 
   ## Activity Methods ##

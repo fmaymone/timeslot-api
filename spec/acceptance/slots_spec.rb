@@ -1201,7 +1201,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
         expect(slot.likes.count).to eq 1
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1230,6 +1232,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         like.reload
         expect(like.deleted_at?).to be true
+        slot.reload
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1288,6 +1292,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
+        expect(slot.comments.count).to eq slot.comments_count
       end
     end
   end

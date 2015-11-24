@@ -113,8 +113,8 @@ module JSONView
       json['settings'] = { alerts: user.alerts(slot) }
     end
 
-    json['likes'] = slot.likes.count
-    json['commentsCounter'] = slot.comments.count
+    json['likes'] = slot.likes_count
+    json['commentsCounter'] = slot.comments_count
 
     if slot.share_id.empty?
       json['shareUrl'] = nil
