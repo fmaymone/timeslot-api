@@ -1,6 +1,4 @@
 class SlotsCollector
-  # include Arel::Nodes
-
   # because the defaults are not set if no pagination parameters are send,
   # I have to set them here again unfortunately
   def initialize(limit: PAGINATION_DEFAULT_LIMIT,
@@ -28,37 +26,6 @@ class SlotsCollector
 
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
-    # showables = [user.std_slots.includes(:notes, :media_items),
-                 # user.re_slots.includes(parent: [:notes, :media_items])]
-
-    aa = StdSlot
-         .joins(
-           StdSlot.arel_table.join(Note.arel_table, Arel::Nodes::OuterJoin)
-           .on(Note.arel_table[:base_slot_id].eq(StdSlot.arel_table[:id])
-                .and(Note.arel_table[:deleted_at].eq(nil)))
-           .join_sources
-         )
-         .where(StdSlot.arel_table[:owner_id].eq(user.id))
-
-         # .joins(
-         #   ReSlot.arel_table.join(BaseSlot.arel_table, Arel::Nodes::OuterJoin)
-         #   .on(BaseSlot.arel_table[:id].eq(ReSlot.arel_table[:slotter_id]))
-         #   .join_sources
-         # )
-    bb = ReSlot
-         .joins(
-           ReSlot.arel_table.join(Note.arel_table, Arel::Nodes::OuterJoin)
-           .on(ReSlot.arel_table[:parent_id].eq(Note.arel_table[:base_slot_id])
-                .and(Note.arel_table[:deleted_at].eq(nil)))
-           .join_sources
-         )
-         .where(ReSlot.arel_table[:slotter_id].eq(user.id))
-
-    # showables = [aa, user.re_slots]
-    # showables = [user.std_slots.includes(:notes, :media_items), user.re_slots]
-
-    # showables = [aa, user.re_slots.includes(parent: [:notes])]
-    # showables = [aa, bb]
     showables = [user.std_slots, user.re_slots]
     consider_filter(showables, @filter)
   end
