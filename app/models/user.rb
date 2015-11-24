@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
 
   # group related
   has_many :own_groups, class_name: Group,
-           foreign_key: "owner_id", inverse_of: :owner
+           foreign_key: :owner_id, inverse_of: :owner
 
   has_many :memberships, inverse_of: :user
   has_many :active_memberships, -> { where state: '111' },
@@ -47,7 +47,7 @@ class User < ActiveRecord::Base
   has_many :initiated_friendships, class_name: Friendship,
            inverse_of: :user
   has_many :received_friendships, class_name: Friendship,
-           foreign_key: "friend_id", inverse_of: :friend
+           foreign_key: :friend_id, inverse_of: :friend
 
   # friends
   has_many :friends_by_request, -> { merge(Friendship.established) },
