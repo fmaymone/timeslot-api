@@ -4,6 +4,8 @@ namespace :db do
 
   task :populate => :environment do
 
+    return if Rails.env == 'production'
+
     # delete db before start
     [MediaItem, ReSlot, GroupSlot, StdSlot, BaseSlot, MetaSlot, SlotSetting,
      User, Note, Like, Comment, Group, Membership, Friendship].each(&:delete_all)
