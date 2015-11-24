@@ -263,7 +263,7 @@ resource "Slots" do
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 "reslotsCounter" => slot.reslot_count
+                 "reslotsCounter" => slot.reslots_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
@@ -357,7 +357,7 @@ resource "Slots" do
                  "parent" => { 'id' => reslot.parent.id },
                  "likes" => reslot.likes.count,
                  "commentsCounter" => reslot.comments.count,
-                 "reslotsCounter" => reslot.reslot_count
+                 "reslotsCounter" => reslot.reslots_count
                 )
         expect(json["media"].length).to eq(reslot.media_items.length)
         expect(response_body).to include reslot.images.first.public_id
