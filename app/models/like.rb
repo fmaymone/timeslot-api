@@ -10,7 +10,8 @@ class Like < ActiveRecord::Base
   validates_presence_of :user, :slot
 
   def delete
-    update(deleted_at: Time.zone.now)
+    BaseSlot.decrement_counter(:likes_count, base_slot_id)
+    ts_soft_delete
   end
 
   ## Activity Methods ##

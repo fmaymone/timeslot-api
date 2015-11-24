@@ -11,7 +11,8 @@ class Comment < ActiveRecord::Base
   validates :content, length: { maximum: 5000 }
 
   def delete
-    update(deleted_at: Time.zone.now)
+    BaseSlot.decrement_counter(:comments_count, slot_id)
+    ts_soft_delete
   end
 
   ## Activity Methods ##
