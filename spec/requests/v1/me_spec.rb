@@ -436,6 +436,7 @@ RSpec.describe "V1::Me", type: :request do
             expect(response.status).to be(200)
             resp = JSON.parse(response.body)
             result_count = resp['data'].size
+            expect(resp['paging']['filter']).to eq filter
 
             # receive a cursor for further requests
             cursor = resp['paging']['after']
