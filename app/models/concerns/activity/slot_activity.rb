@@ -14,6 +14,10 @@ module SlotActivity
     activity_target.creator
   end
 
+  def activity_is_valid?
+    super && (activity_target.visibility != 'private')
+  end
+
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   def activity_extra_data
