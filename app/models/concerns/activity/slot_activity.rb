@@ -15,6 +15,12 @@ module SlotActivity
     activity_target.creator
   end
 
+  # This method should be overridden in the subclass
+  # if custom validation is required
+  def activity_is_valid?
+    super ? (activity_target.visibility != 'private') : false
+  end
+
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   def activity_extra_data
