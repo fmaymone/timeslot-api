@@ -2,9 +2,8 @@ require 'rails_helper'
 
 RSpec.describe "V1::Feed", :async, type: :request do
   let(:json) { JSON.parse(response.body) }
-  # 5 activities will be created on trait :feed
-  let(:current_user) { create(:user, :with_email, :with_password, :with_feed) }
-  let(:actors) { create_list(:user, 3, :with_feed) }
+  let(:current_user) { create(:user, :with_email, :with_password) }
+  let(:actors) { create_list(:user, 3) }
   let(:meta_slot) { create(:meta_slot, creator: current_user) }
   let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
   let(:auth_header) do
@@ -53,7 +52,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of current user activities" do
         get "/v1/feed/user", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(5)
+        expect(json.length).to be(0)
       end
     end
 
@@ -61,7 +60,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(2)
+        expect(json.length).to be(1)
       end
     end
 
@@ -73,23 +72,23 @@ RSpec.describe "V1::Feed", :async, type: :request do
       end
     end
 
-    describe "GET /v1/feed/user" do
+    describe "GET /v1/feed/notification" do
       let(:params) {{ limit: 2, offset: 2 }}
 
       it "returns cursor-based paginated array of activities" do
-        get "/v1/feed/user", params, auth_header
+        get "/v1/feed/notification", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(3) # 6 - 2 = 4.limit(2) = 2
+        expect(json.length).to be(4) # 6 - 2 = 4.limit(2) = 2
       end
     end
 
-    describe "GET /v1/feed/user" do
+    describe "GET /v1/feed/notification" do
       let(:params) {{ limit: 2, cursor: "2" }}
 
       it "returns cursor-based paginated array of activities" do
-        get "/v1/feed/user", params, auth_header
+        get "/v1/feed/notification", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(3) # 6 - 4 = 2.limit(2) = 2
+        expect(json.length).to be(4) # 6 - 4 = 2.limit(2) = 2
       end
     end
   end

@@ -24,9 +24,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     it "adds an group image" do
-      post "/v1/groups", new_params.merge(image: { publicId: 'foobar' }),
+      post "/v1/groups", new_params.merge(image: 'foobar'),
            auth_header
-      expect(json["image"]["publicId"]).to eq "foobar"
+      expect(json["image"]).to eq "foobar"
     end
 
     context "invite multiple members on group creation" do
@@ -63,8 +63,7 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       describe "add image" do
-        let(:public_id) { attributes_for(:real_image)[:public_id] }
-        let(:img_params) { { image: { publicId: public_id } } }
+        let(:img_params) { { image: 'foobar' } }
 
         describe "new" do
           it "returns OK" do
@@ -74,23 +73,29 @@ RSpec.describe "V1::Groups", type: :request do
 
           it "sets group image" do
             patch "/v1/groups/#{group.id}", img_params, auth_header
-            expect(group.image.public_id).to eq public_id
+            group.reload
+            expect(group.image).to eq 'foobar'
           end
         end
 
         describe "overwrite existing" do
-          let(:group) {
-            create(:group, :with_image, owner: current_user, name: "foo")
-          }
-          it "returns OK" do
+          let(:group) { create(:group, :with_image, owner: current_user) }
+
+          it "sets the new image" do
+            expect(group.image).to eq 'sample'
+
             patch "/v1/groups/#{group.id}", img_params, auth_header
+
+            group.reload
             expect(response.status).to be(200)
-            expect(group.image.public_id).to eq public_id
+            expect(group.image).to eq 'foobar'
           end
         end
 
         describe "invalid" do
-          let(:img_params) { { image: { public_id: nil } } }
+          let(:img_params) { { image: nil } }
+          # it's 422 because the database doesn't allow nil values for image
+          # consider checking for nil on application level
 
           it "returns 422" do
             patch "/v1/groups/#{group.id}", img_params, auth_header
@@ -109,9 +114,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "user not group owner" do
       let(:group) { create(:group, name: "foo") }
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         patch "/v1/groups/#{group.id}", new_params, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't change group name" do
@@ -130,18 +135,6 @@ RSpec.describe "V1::Groups", type: :request do
       delete "/v1/groups/#{group.id}", {}, auth_header
       group.reload
       expect(group.deleted_at?).to be true
-    end
-
-    context "group image" do
-      let(:group) {
-        create(:group, :with_image, owner: current_user) }
-
-      it "deletes group image" do
-        group_image = group.image
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        group_image.reload
-        expect(group_image.deleted_at?).to be true
-      end
     end
 
     context "memberships" do
@@ -328,9 +321,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:group, owner: create(:user), members_can_invite: false)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't create membership" do
@@ -372,9 +365,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :inactive, user: current_user, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/accept", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -387,9 +380,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "no membership" do
       let(:membership) {}
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/accept", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -421,9 +414,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :inactive, user: current_user, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/refuse", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -436,9 +429,9 @@ RSpec.describe "V1::Groups", type: :request do
     describe "no membership" do
       let(:membership) {}
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         post "/v1/groups/#{group.id}/refuse", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -469,9 +462,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :left, user: current_user, group: group)
       end
 
-      it "returns Not Authorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
-        expect(response.status).to be 401
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -482,9 +475,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "no membership" do
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members", {}, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
     end
   end
@@ -553,9 +546,9 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :active, user: member, group: group)
       end
 
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
-        expect(response.status).to be(401)
+        expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
@@ -604,9 +597,9 @@ RSpec.describe "V1::Groups", type: :request do
                  notifications: true)
         end
 
-        it "returns Unauthorized" do
+        it "returns Forbidden" do
           patch "/v1/groups/#{group.id}/members", params, auth_header
-          expect(response).to have_http_status :unauthorized
+          expect(response).to have_http_status :forbidden
         end
 
         it "doesn't change notifications state" do
@@ -618,9 +611,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "current user not group member" do
-      it "returns Unauthorized" do
+      it "returns Forbidden" do
         patch "/v1/groups/#{group.id}/members", params, auth_header
-        expect(response).to have_http_status :unauthorized
+        expect(response).to have_http_status :forbidden
       end
     end
   end

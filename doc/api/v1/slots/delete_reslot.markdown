@@ -52,7 +52,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -88,7 +88,7 @@ Description : contains ID of the original slot that was reslottet
 
 #### Headers
 
-<pre>Authorization: Token token=4H-ojuNctHuQ5T4UVikoho4tpdQ
+<pre>Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -100,7 +100,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/13&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=4H-ojuNctHuQ5T4UVikoho4tpdQ&quot; \
+	-H &quot;Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2e7b40018e7140b6fbe31f0807ce1964&quot;
+ETag: W/&quot;b3647e56493b0b7ff01679e9680ef8cb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fd72270e-8fae-4d4a-991e-d3423a08edde
-X-Runtime: 0.033782
+X-Request-Id: e8842749-9386-42a4-9fe3-34e87257d61c
+X-Runtime: 0.024207
 Vary: Origin
-Content-Length: 603</pre>
+Content-Length: 570</pre>
 
 #### Status
 
@@ -128,30 +128,27 @@ Content-Length: 603</pre>
 ```javascript
 {
   "id" : 13,
-  "title" : "Slot title 44",
-  "startDate" : "2019-09-22T00:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:05.148Z",
-  "updatedAt" : "2015-10-30T15:01:05.165Z",
-  "deletedAt" : "2015-10-30T15:01:05.162Z",
-  "endDate" : "2019-10-22T00:44:02.000Z",
+  "title" : "Slot title 71",
+  "startDate" : "2019-09-22T03:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:34.192Z",
+  "updatedAt" : "2015-11-24T23:47:34.239Z",
+  "deletedAt" : "2015-11-24T23:47:34.235Z",
+  "endDate" : "2019-10-22T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 28,
-    "username" : "User 246",
-    "createdAt" : "2015-10-30T15:01:05.130Z",
-    "updatedAt" : "2015-10-30T15:01:05.130Z",
+    "username" : "User 310",
+    "createdAt" : "2015-11-24T23:47:34.176Z",
+    "updatedAt" : "2015-11-24T23:47:34.176Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
-  "reslotsCounter" : 1,
+  "reslotsCounter" : 0,
   "slotter" : {
     "id" : 27
   },

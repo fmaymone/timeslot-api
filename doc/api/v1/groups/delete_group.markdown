@@ -54,7 +54,7 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=oWWd2_MxgWLfUx5qFV-8ngDsBkQ
+<pre>Authorization: Token token=Y1DfFqoA6Y5Q6myFcUxlKCrl4NU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -66,7 +66,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/11&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=oWWd2_MxgWLfUx5qFV-8ngDsBkQ&quot; \
+	-H &quot;Authorization: Token token=Y1DfFqoA6Y5Q6myFcUxlKCrl4NU&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -78,12 +78,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e86f05ff9cd997a59b8e0a2919a85e82&quot;
+ETag: W/&quot;67c753843a127d9eea668a4ec68538f0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6b4524e7-5448-4642-b850-af6570e804d4
-X-Runtime: 0.075554
+X-Request-Id: 4e35237e-f5f2-405d-a231-796855d17f68
+X-Runtime: 0.072967
 Vary: Origin
-Content-Length: 440</pre>
+Content-Length: 380</pre>
 
 #### Status
 
@@ -95,25 +95,19 @@ Content-Length: 440</pre>
 {
   "id" : 11,
   "name" : "Testgroup 13",
+  "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-10-30T15:01:01.972Z",
-  "updatedAt" : "2015-10-30T15:01:02.062Z",
-  "deletedAt" : "2015-10-30T15:01:02.061Z",
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
+  "createdAt" : "2015-11-24T23:47:29.315Z",
+  "updatedAt" : "2015-11-24T23:47:29.409Z",
+  "deletedAt" : "2015-11-24T23:47:29.409Z",
   "owner" : {
     "id" : 23,
-    "username" : "User 76",
-    "createdAt" : "2015-10-30T15:01:01.969Z",
-    "updatedAt" : "2015-10-30T15:01:02.010Z",
+    "username" : "User 74",
+    "createdAt" : "2015-11-24T23:47:29.312Z",
+    "updatedAt" : "2015-11-24T23:47:29.360Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "membershipState" : "deleted"
 }

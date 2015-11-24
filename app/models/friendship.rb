@@ -16,32 +16,35 @@ class Friendship < ActiveRecord::Base
   validates :state, presence: true
 
   def offer
-    update!(state: 00)
+    update!(state: OFFERED)
+    update!(deleted_at: nil) if deleted_at?
   end
 
   def offered?
-    state == "00" && !deleted_at?
+    state == OFFERED && !deleted_at?
   end
 
   def accept
-    update!(state: "11")
+    create_activity
+    update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
   end
 
   def established?
-    state == "11" && !deleted_at?
+    state == ESTABLISHED && !deleted_at?
   end
 
   def reject
-    update!(state: "01")
+    update!(state: REJECTED)
   end
 
   def rejected?
-    state == "01" && !deleted_at?
+    state == REJECTED && !deleted_at?
   end
 
   # when user deactivates account, need to preserve state
+  # also called when friendships end
   def inactivate
     user.unfollow(friend)
     friend.unfollow(user)
@@ -67,13 +70,16 @@ class Friendship < ActiveRecord::Base
     end
   end
 
+  # must use this style here
   class << self
     def open
-      where(deleted_at: nil).where(state: '00')
+      # where(deleted_at: nil).where(state: '00')
+      where(deleted_at: nil, state: OFFERED)
     end
 
     def established
-      where(deleted_at: nil).where(state: '11')
+      # where(deleted_at: nil).where(state: '11')
+      where(deleted_at: nil, state: ESTABLISHED)
     end
   end
 
@@ -88,22 +94,20 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
+  private def activity_is_valid?
     established?
   end
 
-  def activity_target
+  private def activity_target
     friend
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     user
   end
 
-  def activity_verb
+  private def activity_verb
     'friendship'
   end
 end

@@ -1,6 +1,7 @@
 class BaseSlot < ActiveRecord::Base
   include SlotActivity
   include Follow
+  include TS_Errors
 
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
@@ -15,15 +16,16 @@ class BaseSlot < ActiveRecord::Base
   SLOT_TYPES = { StdSlotPrivate: 1,
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
-                 GroupSlotMembers: 4,
-                 GroupSlotPublic: 5,
+                 StdSlotFoaf: 4,
                  ReSlotFriends: 6,
                  ReSlotPublic: 7,
-                 # maybe remove the following
+                 GroupSlotMembers: 11,
+                 GroupSlotPublic: 12,
+                 # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
-                 GroupSlot: 21,
-                 ReSlot: 22
+                 ReSlot: 22,
+                 GroupSlot: 21
                }
 
   enum slot_type: SLOT_TYPES
@@ -35,12 +37,15 @@ class BaseSlot < ActiveRecord::Base
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
+  # only god knows why, but this must be first, otherwise ActiveRecord screws up
+  belongs_to :meta_slot, inverse_of: :slots, autosave: true
+
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
-  has_many :comments, -> { where deleted_at: nil }, foreign_key: "slot_id",
+  has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  belongs_to :meta_slot, inverse_of: :slots, autosave: true
+  has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_id,
@@ -127,6 +132,7 @@ class BaseSlot < ActiveRecord::Base
 
     media_items << new_media
     new_media.save
+    new_media.create_activity
   end
 
   def update_notes(new_notes, creator_id)
@@ -137,6 +143,7 @@ class BaseSlot < ActiveRecord::Base
       else
         notes.create(note.permit(:title, :content, :local_id)
                          .merge!(creator_id: creator_id))
+                         .create_activity
       end
     end
   end
@@ -147,20 +154,25 @@ class BaseSlot < ActiveRecord::Base
     else
       like = Like.find_by(slot: self, user: user)
     end
-    like ||= likes.create(user: user)
+
+    unless like
+      like = likes.create(user: user)
+      like.create_activity
+
+      message_content = I18n.t('slot_like_push_singular',
+                               USER: user.username,
+                               TITLE: meta_slot.title)
+
+      Device.notify_all([creator_id], [message: message_content,
+                                       slot_id: self.id])
+    end
+    like
   rescue ActiveRecord::RecordNotUnique
     # this is raised when the like is already present, not catching it here
     # means it would be rescued in application_controller.rb and returns 422
     # which is not our intention
   else
     like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
-
-    message_content = I18n.t('slot_like_push_singular',
-                             USER: user.username,
-                             TITLE: meta_slot.title)
-
-    Device.notify_all([creator_id], [message: message_content,
-                                     slot_id: self.id])
   end
 
   def destroy_like(user)
@@ -170,22 +182,27 @@ class BaseSlot < ActiveRecord::Base
 
   def create_comment(user, content)
     new_comment = comments.create(user: user, content: content)
-    errors.add(:comment, new_comment.errors) unless new_comment.valid?
 
-    # Is the creator really what we want?
-    # For std_slots we want the owner. For Groupslots?
-    user_ids = [creator_id]
-    user_ids += comments.pluck(:user_id)
-    user_ids += likes.pluck(:user_id)
-    # remove the user who did the actual comment
-    user_ids.delete(user.id)
+    if new_comment.valid?
+      new_comment.create_activity
 
-    message_content = I18n.t('slot_comment_push_singular',
-                             USER: user.username,
-                             TITLE: meta_slot.title)
+      # Is the creator really what we want?
+      # For std_slots we want the owner. For Groupslots?
+      user_ids = [creator_id]
+      user_ids += comments.pluck(:user_id)
+      user_ids += likes.pluck(:user_id)
+      # remove the user who did the actual comment
+      user_ids.delete(user.id)
 
-    Device.notify_all(user_ids.uniq, [message: message_content,
-                                      slot_id: new_comment.slot_id])
+      message_content = I18n.t('slot_comment_push_singular',
+                               USER: user.username,
+                               TITLE: meta_slot.title)
+
+      Device.notify_all(user_ids.uniq, [message: message_content,
+                                        slot_id: new_comment.slot_id])
+    else
+      errors.add(:comment, new_comment.errors)
+    end
     new_comment
   end
 
@@ -198,9 +215,12 @@ class BaseSlot < ActiveRecord::Base
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
+
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+
+    remove_activity
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete
@@ -330,7 +350,7 @@ class BaseSlot < ActiveRecord::Base
                               user: user)
     end
 
-    slot
+    slot.create_activity
   end
 
   def self.duplicate_slot(source, target, current_user)
@@ -379,7 +399,7 @@ class BaseSlot < ActiveRecord::Base
                 enddate: cursor_array.third}
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
-      raise ApplicationController::PaginationError
+      raise PaginationError, "invalid pagination cursor"
     # the following is not really neccessary, might be removed at some point
     # but for now it gives some useful info about the system
     else
@@ -390,7 +410,7 @@ class BaseSlot < ActiveRecord::Base
                               cursor_startdate: cursor[:startdate],
                               cursor_enddate: cursor[:enddate] }
         Airbrake.notify(ApplicationController::PaginationError, opts)
-        fail ApplicationController::PaginationError if Rails.env.development?
+        fail PaginationError, "cursor slot changed" if Rails.env.development?
       end
       cursor
     end
@@ -403,21 +423,19 @@ class BaseSlot < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_target
+  private def activity_target
     self
   end
 
-  def activity_actor
+  private def activity_actor
     creator
   end
 
-  def activity_verb
+  private def activity_verb
     'slot'
   end
 
-  def activity_foreign
+  private def activity_foreign
     nil
   end
 end

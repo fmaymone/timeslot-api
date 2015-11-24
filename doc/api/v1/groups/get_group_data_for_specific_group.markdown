@@ -53,7 +53,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ch1Xv_So0ZlR6urPC-cEQFoi41M
+Authorization: Token token=UgKW2RGhPjFqRz2ZXDovYtErNhs
 Host: example.org
 Cookie: </pre>
 
@@ -65,7 +65,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/7&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ch1Xv_So0ZlR6urPC-cEQFoi41M&quot; \
+	-H &quot;Authorization: Token token=UgKW2RGhPjFqRz2ZXDovYtErNhs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,12 +76,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;89eebd73f65d40c240ff445fa4456801&quot;
+ETag: W/&quot;44652b0bf6093ec3b8330684b860a16d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 82cb6233-ffa8-4531-8b77-6870d568084f
-X-Runtime: 0.017578
+X-Request-Id: ad9d9f75-2aa8-4d24-9391-a483e7f9de15
+X-Runtime: 0.009955
 Vary: Origin
-Content-Length: 416</pre>
+Content-Length: 356</pre>
 
 #### Status
 
@@ -93,25 +93,19 @@ Content-Length: 416</pre>
 {
   "id" : 7,
   "name" : "Testgroup 12",
+  "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-10-30T15:01:01.760Z",
-  "updatedAt" : "2015-10-30T15:01:01.760Z",
+  "createdAt" : "2015-11-24T23:47:29.153Z",
+  "updatedAt" : "2015-11-24T23:47:29.153Z",
   "deletedAt" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "owner" : {
     "id" : 16,
-    "username" : "User 69",
-    "createdAt" : "2015-10-30T15:01:01.758Z",
-    "updatedAt" : "2015-10-30T15:01:01.758Z",
+    "username" : "User 67",
+    "createdAt" : "2015-11-24T23:47:29.152Z",
+    "updatedAt" : "2015-11-24T23:47:29.152Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "membershipState" : "active"
 }

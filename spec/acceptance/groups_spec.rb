@@ -73,7 +73,7 @@ resource "Groups" do
       expect(response_status).to eq(200)
       group.reload
       expect(
-        json.except('image', 'membershipState', 'owner')
+        json.except('membershipState', 'owner')
       ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
@@ -153,7 +153,7 @@ resource "Groups" do
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
         expect(
-          json.except('image', 'membershipState', 'owner')
+          json.except('membershipState', 'owner')
         ).to eq(group.attributes.as_json.except('owner_id')
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json).to have_key "owner"
@@ -162,16 +162,9 @@ resource "Groups" do
     end
 
     describe "Add image to group" do
-      parameter :image, "Scope for attributes of new image",
-                required: true
-      parameter :publicId, "Cloudinary ID / URL",
-                required: true,
-                scope: :image
-      parameter :localId, "IOS local identifier",
-                scope: :image
+      parameter :image, "Cloudinary ID / URL", required: true
 
-      let(:publicId) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
-      let(:localId) { "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001" }
+      let(:image) { "v1234567/dfhjghjkdisudgfds7iyf.jpg" }
 
       example "Add image to existing group", document: :v1 do
         explanation "First a cloudinary signature needs to be fetched by the" \
@@ -184,14 +177,10 @@ resource "Groups" do
 
         group.reload
         expect(group.image).not_to be nil
-        expect(group.image.public_id).to eq publicId
-        expect(group.image.local_id).to eq localId
+        expect(group.image).to eq image
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
-        expect(json["image"]).to have_key "publicId"
-        expect(json["image"]).to have_key "localId"
-        expect(json["image"]["publicId"]).to eq publicId
-        expect(json["image"]["localId"]).to eq localId
+        expect(json["image"]).to eq image
       end
     end
   end
@@ -223,7 +212,7 @@ resource "Groups" do
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
       expect(
-        json.except('image', 'membershipState', 'owner')
+        json.except('membershipState', 'owner')
       ).to eq(group.attributes.as_json.except('owner_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
@@ -233,9 +222,9 @@ resource "Groups" do
     describe "current user not group owner" do
       let(:group) { create(:group, owner: create(:user)) }
 
-      example "returns unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq(401)
+        expect(response_status).to eq 403
       end
     end
   end
@@ -288,7 +277,6 @@ resource "Groups" do
       expect(json["slots"].first).to have_key("deletedAt")
       expect(json["slots"].first).to have_key("settings")
       expect(json["slots"].first).to have_key("media")
-      expect(json["slots"].first).to have_key("url")
       expect(response_body).to include(slots.first.title)
     end
   end
@@ -499,8 +487,8 @@ resource "Groups" do
 
       example "Leave group", document: :v1 do
         explanation "returns 200 if membership successfully invalidated\n\n" \
-                    "returns 401 if current user not active group member\n\n" \
-                    "returns 401 if current user has no membership for this" \
+                    "returns 403 if current user not active group member\n\n" \
+                    "returns 403 if current user has no membership for this" \
                     " group at all\n\n" \
                     "returns 404 if group ID is invalid\n\n" \
                     "returns 422 if parameters are missing"
@@ -518,16 +506,16 @@ resource "Groups" do
         create(:membership, :inactive, user: member, group: group)
       end
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 
     describe "no membership" do
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
   end
@@ -658,18 +646,18 @@ resource "Groups" do
                notifications: true)
       end
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 
     describe "no membership" do
       let(:membership) {}
 
-      example "returns Unauthorized", document: false do
+      example "returns Forbidden", document: false do
         do_request
-        expect(response_status).to eq 401
+        expect(response_status).to eq 403
       end
     end
 

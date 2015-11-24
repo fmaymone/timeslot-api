@@ -1,6 +1,6 @@
 json.predecessors @slot.chronic do |slot|
   json.extract! slot.slotter, :id, :username
-  json.user_image slot.slotter.image ? slot.slotter.image.public_id : nil
+  json.user_image slot.slotter.picture
   json.timestamp slot.created_at
 end
 

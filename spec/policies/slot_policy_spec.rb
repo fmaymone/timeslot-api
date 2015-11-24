@@ -23,14 +23,6 @@ describe SlotPolicy do
         expect(subject).not_to permit(user, slot)
       end
     end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
   end
 
   permissions :unlike? do
@@ -46,14 +38,6 @@ describe SlotPolicy do
     end
 
     context "for a user" do
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-
-    context "for a visitor" do
-      let(:user) { nil }
-
       it "denies access" do
         expect(subject).not_to permit(user, slot)
       end
@@ -107,20 +91,6 @@ describe SlotPolicy do
     end
   end
 
-  permissions :add_comment?, :copy?, :reslot_history?, :create_reslot? do
-    context "for a visitor" do
-      let(:user) { nil }
-
-      context "public slot" do
-        let(:slot) { create(:std_slot_public) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-    end
-  end
-
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
               :reslot_history?, :add_like?, :add_comment?, :copy?,
               :create_reslot? do
@@ -133,6 +103,35 @@ describe SlotPolicy do
 
           it "allows access" do
             expect(subject).to permit(user, slot)
+          end
+        end
+
+        context "foaf slot if slot owner is friend" do
+          let(:slot) { create(:std_slot_foaf) }
+
+          it "allows access" do
+            create(:friendship, :established, user: user, friend: slot.owner)
+            expect(subject).to permit(user, slot)
+          end
+        end
+
+        context "foaf slot if slot owner has common friends" do
+          let(:slot) { create(:std_slot_foaf) }
+          let(:friend) { create(:user) }
+
+          it "allows access" do
+
+            create(:friendship, :established, user: user, friend: friend)
+            create(:friendship, :established, user: friend, friend: slot.owner)
+            expect(subject).to permit(user, slot)
+          end
+        end
+
+        context "foaf slot if slot owner isn't friend & has no common friends" do
+          let(:slot) { create(:std_slot_foaf) }
+
+          it "denies access" do
+            expect(subject).not_to permit(user, slot)
           end
         end
 
@@ -159,24 +158,6 @@ describe SlotPolicy do
           end
         end
       end
-
-      context "for a visitor" do
-        let(:user) { nil }
-
-        context "friend slot" do
-          let(:slot) { create(:std_slot_friends) }
-
-          it "denies access" do
-            expect(subject).not_to permit(user, slot)
-          end
-        end
-
-        context "private slot" do
-          it "denies access" do
-            expect(subject).not_to permit(user, slot)
-          end
-        end
-      end
     end
 
     context "group_slot" do
@@ -194,12 +175,18 @@ describe SlotPolicy do
           expect(subject).not_to permit(user, slot)
         end
       end
+    end
+  end
 
-      context "for a visitor" do
-        let(:user) { nil }
+  permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url? do
+    context "for a visitor" do
+      let(:user) { nil }
 
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
+      context "public slot" do
+        let(:slot) { create(:std_slot_public) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
         end
       end
     end
@@ -258,22 +245,81 @@ describe SlotPolicy do
           expect(subject).not_to permit(user, slot)
         end
       end
+    end
+  end
 
-      context "for a visitor" do
-        let(:user) { nil }
+  describe 'public std_slot for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [:reslot_history?, :add_like?, :add_comment?, :copy?,
+       :create_reslot?, :move?, :share_data?, :unlike?]
+    }
+    let(:user) { nil }
+    let(:slot) { create(:std_slot_public) }
 
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, slot).public_send(permission)
+        }.to raise_error TS_Errors::MissingCurrentUserError
+      end
+    end
+  end
+
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [
+        :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
+        :reslot_history?, :add_like?, :add_comment?, :copy?, :move?,
+        :create_reslot?, :share_data?, :unlike?
+      ]
+    }
+    let(:user) { nil }
+
+    context "std_slot_foaf" do
+      let(:slot) { create(:std_slot_foaf) }
+
+      it "raises MissingCurrentUserError" do
+        permissions.each do |permission|
+          expect {
+            subject.new(user, slot).public_send(permission)
+          }.to raise_error TS_Errors::MissingCurrentUserError
         end
       end
     end
 
-    context "for a visitor" do
-      let(:slot) { create(:std_slot_public) }
-      let(:user) { nil }
+    context "friend slot" do
+      let(:slot) { create(:std_slot_friends) }
 
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
+      it "raises MissingCurrentUserError" do
+        permissions.each do |permission|
+          expect {
+            subject.new(user, slot).public_send(permission)
+          }.to raise_error TS_Errors::MissingCurrentUserError
+        end
+      end
+    end
+
+    context "private slot" do
+      let(:slot) { create(:std_slot_friends) }
+
+      it "raises MissingCurrentUserError" do
+        permissions.each do |permission|
+          expect {
+            subject.new(user, slot).public_send(permission)
+          }.to raise_error TS_Errors::MissingCurrentUserError
+        end
+      end
+    end
+
+    context "group_public" do
+      let(:slot) { create(:group_slot) }
+
+      it "raises MissingCurrentUserError" do
+        permissions.each do |permission|
+          expect {
+            subject.new(user, slot).public_send(permission)
+          }.to raise_error TS_Errors::MissingCurrentUserError
+        end
       end
     end
   end

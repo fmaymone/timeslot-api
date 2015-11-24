@@ -18,7 +18,7 @@ Name : id *- required -*
 Description : ID of the slot to update
 
 Name : visibility
-Description : Visibility of the Slot to update (private/friends/public)
+Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -92,7 +92,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -120,7 +120,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=DwGSSr-vJ6DiIdkATdPeFBWZF60
+Authorization: Token token=L1S2KXPCm_mT86qeFbW-DeyYo0g
 Host: example.org
 Cookie: </pre>
 
@@ -156,7 +156,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=DwGSSr-vJ6DiIdkATdPeFBWZF60&quot; \
+	-H &quot;Authorization: Token token=L1S2KXPCm_mT86qeFbW-DeyYo0g&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -167,12 +167,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;03db9fc064fd6c480e78f0be084e92fa&quot;
+ETag: W/&quot;0fa7d0b0a7f37adb502e55b5d9262d06&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4058101a-be75-42e4-a624-21ef587d2b22
-X-Runtime: 0.035627
+X-Request-Id: e06017fc-a0d7-4e77-bc3e-055500f90d23
+X-Runtime: 0.032700
 Vary: Origin
-Content-Length: 952</pre>
+Content-Length: 919</pre>
 
 #### Status
 
@@ -183,53 +183,50 @@ Content-Length: 952</pre>
 ```javascript
 {
   "id" : 5,
-  "title" : "Slot title 37",
-  "startDate" : "2019-09-15T17:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.521Z",
-  "updatedAt" : "2015-10-30T15:01:04.521Z",
+  "title" : "Slot title 64",
+  "startDate" : "2019-09-15T20:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.596Z",
+  "updatedAt" : "2015-11-24T23:47:33.596Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-15T17:44:02.000Z",
+  "endDate" : "2019-10-15T20:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 11,
-    "username" : "User 229",
-    "createdAt" : "2015-10-30T15:01:04.516Z",
-    "updatedAt" : "2015-10-30T15:01:04.516Z",
+    "id" : 10,
+    "username" : "User 292",
+    "createdAt" : "2015-11-24T23:47:33.588Z",
+    "updatedAt" : "2015-11-24T23:47:33.588Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [
     {
       "mediaId" : 4,
-      "publicId" : "dfhjghjkdisudgfds7iy65",
+      "publicId" : "dfhjghjkdisudgfds7iy88",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.537Z"
+      "createdAt" : "2015-11-24T23:47:33.611Z"
     },
     {
       "mediaId" : 3,
-      "publicId" : "dfhjghjkdisudgfds7iy64",
+      "publicId" : "dfhjghjkdisudgfds7iy87",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.532Z"
+      "createdAt" : "2015-11-24T23:47:33.606Z"
     },
     {
       "mediaId" : 2,
-      "publicId" : "dfhjghjkdisudgfds7iy63",
+      "publicId" : "dfhjghjkdisudgfds7iy86",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-10-30T15:01:04.526Z"
+      "createdAt" : "2015-11-24T23:47:33.601Z"
     }
   ],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

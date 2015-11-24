@@ -185,7 +185,7 @@ Flag | Effect
 ```:explain``` | print postgres EXPLAIN ANALYZE for SELECT queries to console, does also ```:focus``` the marked spec
 ```:commit``` | persist data in database, see below
 ```:seed``` | load database seeds
-```:keep_slots``` | doesn't clean metaslot, baseslot, stdslot, reslot & user table for marked group, cleans after group has run, for read-only specs
+```:keep_data``` | doesn't clean metaslot, baseslot, stdslot, reslot, friendship & user table for marked group, cleans after group has run, for read-only specs
 ```:vcr``` | use vcr to mock external requests, see below
 ```:aws``` | use aws to mock external requests to AWS service, see below
 ```:redis``` | use redis to indicates that data is stored into redis which has to be cleaned after each test

@@ -12,6 +12,7 @@ class Membership < ActiveRecord::Base
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
   def activate
+    create_activity
     update!(state: "111")
     user.follow(group)
     group.touch
@@ -82,6 +83,7 @@ class Membership < ActiveRecord::Base
   # group can't come back so we can't use this membership object again
   # and thus don't need the state
   def delete
+    remove_activity
     update!(state: "000")
     group.remove_follower(user)
     user.touch
@@ -108,22 +110,20 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
+  private def activity_is_valid?
     active?
   end
 
-  def activity_target
+  private def activity_target
     group
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     user
   end
 
-  def activity_verb
+  private def activity_verb
     'membership'
   end
 end

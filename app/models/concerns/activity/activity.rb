@@ -1,12 +1,4 @@
 module Activity
-  extend ActiveSupport::Concern
-
-  included do
-    # Trigger activities to feeds:
-    after_commit :create_activity, on: :create
-    after_commit :update_activity, on: :update
-    before_destroy :remove_activity
-  end
 
   def create_activity
     # Trigger "create" as an activity if this should be valid
@@ -16,6 +8,33 @@ module Activity
       create_activity_push
       create_activity_email
     end
+    self
+  end
+
+  def update_activity
+    # TODO
+  end
+
+  def remove_activity
+    # TODO:
+    # # Remove activities from target feeds:
+    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
+    # # Trigger "delete" as an activity if this should be valid
+    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # create_activity_feed(Time.zone.now) if activity_is_valid?
+  end
+
+  def update_activity
+    # TODO
+  end
+
+  def remove_activity
+    # TODO:
+    # # Remove activities from target feeds:
+    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
+    # # Trigger "delete" as an activity if this should be valid
+    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
   private
@@ -57,23 +76,10 @@ module Activity
     # TODO
   end
 
-  def update_activity
-    # TODO
-  end
-
-  def remove_activity
-    # TODO:
-    # # Remove activities from target feeds:
-    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
-    # # Trigger "delete" as an activity if this should be valid
-    # # Pass the current time because this before-callback does not trigger "updated_at"
-    # create_activity_feed(Time.zone.now) if activity_is_valid?
-  end
-
   # This method should be overridden in the subclass
   # if custom validation is required
   def activity_is_valid?
-    activity_actor && activity_target
+    activity_actor && activity_target && activity_actor.deleted_at.nil? && activity_target.deleted_at.nil?
   end
 
   # Returns an array of user which should also be notified
@@ -97,6 +103,7 @@ module Activity
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
+      return [] if activity_actor.email.eql?('info@timeslot.com')
       user_ids = User.all.collect(&:id).map(&:to_s)
     end
     # Remove the user who did the actual comment

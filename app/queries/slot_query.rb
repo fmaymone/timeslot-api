@@ -1,11 +1,15 @@
 module SlotQuery
   class OwnSlots
+    include TS_Errors
     attr_reader :relation
 
     def initialize(relation: BaseSlot.all, direction: nil)
       @direction = direction
-      # @relation = relation.joins(:meta_slot).extending(Scopes)
-      @relation = relation.includes(:meta_slot).references(:meta_slots).extending(Scopes)
+      @relation = relation.joins(:meta_slot).extending(Scopes)
+      # @relation = relation
+      #             .includes(meta_slot: [:creator, :ios_location])
+      #             .references(:meta_slot)
+      #             .extending(Scopes)
     end
 
     # I don't like the split in direction and cursor because they belong together
@@ -24,15 +28,22 @@ module SlotQuery
           @relation
         when 'finished'
           @relation.where(finished moment).ordered_rev
-        # when 'upcoming'
-        # when 'ongoing'
-        # when 'past'
-        # when 'now'
-        else
+        when 'upcoming', 'ongoing', 'past', 'now'
           # here we send the 'filter' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
           # the 'filter'
           @relation.where(send filter, moment).ordered
+        else
+          # TODO: make a helper for enriched airbrake error messages
+          error_string = "unkown pagination filter #{filter}"
+          msg = { error_message: error_string }
+          opts = {}
+          opts[:parameters] = msg
+          Rails.logger.error { error_string }
+          Airbrake.notify(PaginationError, opts)
+          fail PaginationError, msg if Rails.env.test? || Rails.env.development?
+          # TODO: check if we should call 'new' for custom error classes? Why?
+          # fail PaginationError.new(msg) if Rails.env.test? || Rails.env.development?
         end
       end
     end

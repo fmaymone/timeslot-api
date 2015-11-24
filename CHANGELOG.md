@@ -2,6 +2,32 @@
 
 ## upcoming
 
+
+## v0.8.1
+- upgrade to Rails 4.2.5
+- friend-of-friend visibility (foaf) for std_slots
+- user and group image now directly in the table instead of media_items
+- me-controller which has
+  - show
+  - update
+  - inactivate
+  - signout
+  - my_slots
+  - my_media
+  - update_device
+  - TODO: add_friends / remove_friends / slot_from_friends
+- only slot creator can update slot metadata
+- return 404 Not Found if pundit check fails
+- return 401 also when policies fail because of missing current user
+- FIX for invalid email on password reset
+- FIX for some policies valid but current_user didn't exist
+- FIX for sending out activities of NOW private slots
+- Improve Performance of DB queries for me/slots and slots/demo
+- disable alerts in json (was expensive and unused)
+- add counter cache columns for likes, comments, re_slots
+- new activity aggregation policies
+
+
 ## v0.8.1
 - many updates for activity stream
 - activity as concern, composition instead of inheritance

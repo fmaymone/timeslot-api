@@ -10,31 +10,6 @@ RSpec.describe "V1::Slots", type: :request do
   describe "GET /v1/slots/:id" do
     let(:std_slot) { create(:std_slot_public) }
 
-    context "GroupSlot, with valid ID" do
-      let(:group) { create(:group, owner: current_user) }
-      let(:group_slot) { create(:group_slot, group: group) }
-
-      it "returns success" do
-        get "/v1/slots/#{group_slot.id}", {}, auth_header
-        expect(response).to have_http_status(200)
-        expect(json['id']).to eq(group_slot.id)
-        expect(json).to have_key('group')
-        expect(json['group']['id']).to eq(group_slot.group_id)
-      end
-    end
-
-    context "StdSlot, with location" do
-      let(:meta_slot) { create(:meta_slot, location_id: 200719253) }
-      let(:std_slot) { create(:std_slot_public, meta_slot: meta_slot) }
-
-      it "returns the location" do
-        skip "no location database @ data team"
-        get "/v1/slots/#{std_slot.id}"
-        expect(json).to have_key('location')
-        expect(json['location']['id']).to eq 200719253
-      end
-    end
-
     context "StdSlot, with valid ID" do
       it "returns success" do
         get "/v1/slots/#{std_slot.id}"
@@ -78,6 +53,48 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    # this is basically a policy test, not sure if it's a good idea to test
+    # this here
+    describe "StdSlot visibility" do
+      context "friends of friends" do
+        let(:std_slot) { create(:std_slot_foaf) }
+        let(:common_friend) { create(:user) }
+
+        it "is visible to the owner" do
+          get "/v1/slots/#{std_slot.id}", {},
+              { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: std_slot.owner)
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is visible to friends of friends of owner" do
+          create(:friendship, :established, user: current_user,
+                 friend: common_friend)
+          create(:friendship, :established, user: common_friend,
+                 friend: std_slot.owner)
+
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :ok
+        end
+
+        it "is not visible to unrelated users" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :not_found
+        end
+
+        it "is not visible to strangers (not logged in)" do
+          get "/v1/slots/#{std_slot.id}", {}, auth_header
+          expect(response).to have_http_status :not_found
+        end
+      end
+    end
+
     context "ReSlot, with valid ID" do
       let(:std_slot) {
         create(:std_slot_public, :with_media, :with_notes) }
@@ -107,13 +124,27 @@ RSpec.describe "V1::Slots", type: :request do
         ).to eq(std_slot.notes.second.title)
       end
     end
+
+    context "GroupSlot, with valid ID" do
+      let(:group) { create(:group, owner: current_user) }
+      let(:group_slot) { create(:group_slot, group: group) }
+
+      it "returns success" do
+        get "/v1/slots/#{group_slot.id}", {}, auth_header
+        expect(response).to have_http_status(200)
+        expect(json['id']).to eq(group_slot.id)
+        expect(json).to have_key('group')
+        expect(json['group']['id']).to eq(group_slot.group_id)
+      end
+    end
   end
 
   describe "POST /v1/stdlot" do
     context "StdSlot with valid params" do
+      let(:visibility) { 'private' }
       let(:valid_slot) {
         attr = attributes_for(:meta_slot).merge(
-          visibility: 'private', settings: { alerts: '1110001100' })
+          visibility: visibility, settings: { alerts: '1110001100' })
         attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
@@ -155,6 +186,17 @@ RSpec.describe "V1::Slots", type: :request do
         expect(slot.end_date)
           .to eq slot.start_date.to_datetime.next_day.at_midday
         expect(slot.open_end).to be true
+      end
+
+      context "visibility" do
+        let(:visibility) { 'foaf' }
+
+        it "creates slot with visibility friends-of-friends" do
+          expect {
+            post "/v1/stdslot/", valid_slot, auth_header
+          }.to change(StdSlotFoaf, :count)
+          expect(response).to have_http_status :created
+        end
       end
     end
 
@@ -240,14 +282,6 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "if visibility has to much characters" do
           invalid_attributes[:visibility] = "101"
-          post "/v1/stdslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include 'error'
-        end
-
-        it "if locationId and IosLocation are submitted both" do
-          invalid_attributes[:iosLocation] = { name: 'foo' }
-          invalid_attributes[:locationId] = 1
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
@@ -443,9 +477,9 @@ RSpec.describe "V1::Slots", type: :request do
         context "ReSlot from private std_slot" do
           let(:pred) { create(:std_slot_private) }
 
-          it "responds with 422" do
+          it "responds with 403" do
             post "/v1/reslot/", valid_attributes, auth_header
-            expect(response).to have_http_status :unauthorized
+            expect(response).to have_http_status :not_found
           end
 
           it "doesn't add a new entry to the DB" do
@@ -679,7 +713,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "PATCH /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) {
+      create(:std_slot_private, owner: current_user, creator: current_user) }
 
     describe "handling non-media params" do
       context "valid params" do
@@ -737,6 +772,7 @@ RSpec.describe "V1::Slots", type: :request do
           let!(:std_slot) do
             create(:std_slot_private,
                    owner: current_user,
+                   creator: current_user,
                    start_date: "2014-09-08 13:31:02",
                    end_date: "")
           end
@@ -1247,7 +1283,7 @@ RSpec.describe "V1::Slots", type: :request do
         describe "slot with ios_location" do
           let(:std_slot) do
             create(:std_slot_public, :with_ios_location, owner: current_user,
-                   title: 'whoa')
+                   creator: current_user, title: 'whoa')
           end
 
           it "updates iosLocation" do
@@ -1274,8 +1310,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "duplicate ios_location" do
         let!(:existing_location) do
-          create(:ios_location, locality: "Berlin", name: "Berlin Custom", country: "Germany",
-                 longitude: 13.4113999, latitude: 52.5234051)
+          create(:ios_location, locality: "Berlin", name: "Berlin Custom",
+                 country: "Germany", longitude: 13.4113999, latitude: 52.5234051)
         end
 
         it "doesn't create a new iosLocation" do
@@ -1309,8 +1345,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         describe "slot with ios_location" do
           let(:std_slot) {
-            create(:std_slot_public, :with_ios_location, owner: current_user)
-          }
+            create(:std_slot_public, :with_ios_location, owner: current_user,
+                   creator: current_user) }
 
           it "updates iosLocation" do
             patch "/v1/stdslot/#{std_slot.id}", new_params, auth_header
@@ -1339,7 +1375,8 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "PATCH /v1/groupslot/:id" do
     let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
+    let!(:group_slot) {
+      create(:group_slot, group: group, creator: current_user) }
 
     context "with valid non-media params" do
       it "responds with 200" do
@@ -1903,7 +1940,7 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "pagination", :keep_slots do
+    context "pagination", :keep_data do
       let(:limit) { 4 }
       let(:query_string) { { limit: limit } }
 

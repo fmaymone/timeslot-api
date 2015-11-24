@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=jvNFLgeDfgCW-eiMkb2rhx_llJY
+Authorization: Token token=6H5WlsYe7CmO6OWTUxktqkxNAOU
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/13/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=jvNFLgeDfgCW-eiMkb2rhx_llJY&quot; \
+	-H &quot;Authorization: Token token=6H5WlsYe7CmO6OWTUxktqkxNAOU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,12 +89,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;65d8afa7d81952cdb346078b06047103&quot;
+ETag: W/&quot;c67eb311c15ed819216bfb68c94ac0d4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 18f2fefa-36f2-469e-8e6c-2c272d2b998d
-X-Runtime: 0.087929
+X-Request-Id: 6c4c0423-090a-4877-83d3-23387301b3db
+X-Runtime: 0.040034
 Vary: Origin
-Content-Length: 2275</pre>
+Content-Length: 1991</pre>
 
 #### Status
 
@@ -110,135 +110,119 @@ Content-Length: 2275</pre>
   "slots" : [
     {
       "id" : 4,
-      "title" : "Slot title 20",
-      "startDate" : "2019-09-24T23:44:02.000Z",
-      "createdAt" : "2015-10-30T15:01:02.141Z",
-      "updatedAt" : "2015-10-30T15:01:02.141Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-24T23:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 35,
-        "username" : "User 88",
-        "createdAt" : "2015-10-30T15:01:02.137Z",
-        "updatedAt" : "2015-10-30T15:01:02.137Z",
-        "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "0000000000"
-      },
-      "group" : {
-        "id" : 13
-      },
-      "likes" : 0,
-      "commentsCounter" : 0,
-      "shareUrl" : null,
-      "url" : "http://example.org/v1/slots/4"
-    },
-    {
-      "id" : 5,
       "title" : "Slot title 21",
       "startDate" : "2019-09-25T00:44:02.000Z",
-      "createdAt" : "2015-10-30T15:01:02.149Z",
-      "updatedAt" : "2015-10-30T15:01:02.149Z",
+      "createdAt" : "2015-11-24T23:47:29.488Z",
+      "updatedAt" : "2015-11-24T23:47:29.488Z",
       "deletedAt" : null,
       "endDate" : "2019-10-25T00:44:02.000Z",
       "location" : null,
       "creator" : {
-        "id" : 36,
-        "username" : "User 89",
-        "createdAt" : "2015-10-30T15:01:02.144Z",
-        "updatedAt" : "2015-10-30T15:01:02.144Z",
+        "id" : 35,
+        "username" : "User 86",
+        "createdAt" : "2015-11-24T23:47:29.483Z",
+        "updatedAt" : "2015-11-24T23:47:29.483Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
       "settings" : {
-        "alerts" : "0000000000"
+        "alerts" : "omitted"
       },
       "group" : {
         "id" : 13
       },
       "likes" : 0,
       "commentsCounter" : 0,
-      "shareUrl" : null,
-      "url" : "http://example.org/v1/slots/5"
+      "shareUrl" : null
     },
     {
-      "id" : 6,
+      "id" : 5,
       "title" : "Slot title 22",
       "startDate" : "2019-09-26T01:44:02.000Z",
-      "createdAt" : "2015-10-30T15:01:02.156Z",
-      "updatedAt" : "2015-10-30T15:01:02.156Z",
+      "createdAt" : "2015-11-24T23:47:29.495Z",
+      "updatedAt" : "2015-11-24T23:47:29.495Z",
       "deletedAt" : null,
       "endDate" : "2019-10-26T01:44:02.000Z",
       "location" : null,
       "creator" : {
-        "id" : 37,
-        "username" : "User 90",
-        "createdAt" : "2015-10-30T15:01:02.151Z",
-        "updatedAt" : "2015-10-30T15:01:02.151Z",
+        "id" : 36,
+        "username" : "User 87",
+        "createdAt" : "2015-11-24T23:47:29.491Z",
+        "updatedAt" : "2015-11-24T23:47:29.491Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
       "settings" : {
-        "alerts" : "0000000000"
+        "alerts" : "omitted"
       },
       "group" : {
         "id" : 13
       },
       "likes" : 0,
       "commentsCounter" : 0,
-      "shareUrl" : null,
-      "url" : "http://example.org/v1/slots/6"
+      "shareUrl" : null
     },
     {
-      "id" : 7,
+      "id" : 6,
       "title" : "Slot title 23",
       "startDate" : "2019-09-27T02:44:02.000Z",
-      "createdAt" : "2015-10-30T15:01:02.166Z",
-      "updatedAt" : "2015-10-30T15:01:02.166Z",
+      "createdAt" : "2015-11-24T23:47:29.502Z",
+      "updatedAt" : "2015-11-24T23:47:29.502Z",
       "deletedAt" : null,
       "endDate" : "2019-10-27T02:44:02.000Z",
       "location" : null,
       "creator" : {
-        "id" : 38,
-        "username" : "User 91",
-        "createdAt" : "2015-10-30T15:01:02.159Z",
-        "updatedAt" : "2015-10-30T15:01:02.159Z",
+        "id" : 37,
+        "username" : "User 88",
+        "createdAt" : "2015-11-24T23:47:29.498Z",
+        "updatedAt" : "2015-11-24T23:47:29.498Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        }
+        "image" : ""
       },
       "notes" : [],
       "media" : [],
       "settings" : {
-        "alerts" : "0000000000"
+        "alerts" : "omitted"
       },
       "group" : {
         "id" : 13
       },
       "likes" : 0,
       "commentsCounter" : 0,
-      "shareUrl" : null,
-      "url" : "http://example.org/v1/slots/7"
+      "shareUrl" : null
+    },
+    {
+      "id" : 7,
+      "title" : "Slot title 24",
+      "startDate" : "2019-09-01T03:44:02.000Z",
+      "createdAt" : "2015-11-24T23:47:29.512Z",
+      "updatedAt" : "2015-11-24T23:47:29.512Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-01T03:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 38,
+        "username" : "User 89",
+        "createdAt" : "2015-11-24T23:47:29.505Z",
+        "updatedAt" : "2015-11-24T23:47:29.505Z",
+        "deletedAt" : null,
+        "image" : ""
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "omitted"
+      },
+      "group" : {
+        "id" : 13
+      },
+      "likes" : 0,
+      "commentsCounter" : 0,
+      "shareUrl" : null
     }
   ]
 }

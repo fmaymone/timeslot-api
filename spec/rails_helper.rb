@@ -52,7 +52,17 @@ RSpec.configure do |config|
   #
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
-  config.infer_spec_type_from_file_location!
+  # config.infer_spec_type_from_file_location!
+
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :services,
+                 file_path: %r{/spec\/services/}
+  )
+
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :query,
+                 file_path: %r{/spec\/queries/}
+  )
 
   # to be able to use route helpers in specs
   config.include Rails.application.routes.url_helpers

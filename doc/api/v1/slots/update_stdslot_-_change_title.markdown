@@ -6,7 +6,7 @@
 
 Update content of StdSlot.
 
-User must be owner of StdSlot.
+User must be creator of StdSlot.
 
 returns 200 and slot data if update succeded 
 
@@ -20,7 +20,7 @@ Name : id *- required -*
 Description : ID of the slot to update
 
 Name : visibility
-Description : Visibility of the Slot to update (private/friends/public)
+Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -85,7 +85,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=YJJo2Gu1OHgo-kjh0YyBBEZfWEM
+Authorization: Token token=hbS5tftVHUGnbZhDT9l2JLWIXKQ
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=YJJo2Gu1OHgo-kjh0YyBBEZfWEM&quot; \
+	-H &quot;Authorization: Token token=hbS5tftVHUGnbZhDT9l2JLWIXKQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5dcaf99062c4acf89f56bd23efb83bdb&quot;
+ETag: W/&quot;455541d91462f15661919e08f102a71e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 588a7528-5a71-4711-ba54-9f17f98af2d3
-X-Runtime: 0.030932
+X-Request-Id: 3ee65839-0c86-4509-b3f4-0ee485bd34e7
+X-Runtime: 0.022814
 Vary: Origin
-Content-Length: 548</pre>
+Content-Length: 515</pre>
 
 #### Status
 
@@ -161,27 +161,24 @@ Content-Length: 548</pre>
 {
   "id" : 1,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-11T13:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.313Z",
-  "updatedAt" : "2015-10-30T15:01:04.313Z",
+  "startDate" : "2019-09-11T16:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.378Z",
+  "updatedAt" : "2015-11-24T23:47:33.378Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-11T13:44:02.000Z",
+  "endDate" : "2019-10-11T16:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 3,
-    "username" : "User 221",
-    "createdAt" : "2015-10-30T15:01:04.306Z",
-    "updatedAt" : "2015-10-30T15:01:04.306Z",
+    "id" : 2,
+    "username" : "User 284",
+    "createdAt" : "2015-11-24T23:47:33.369Z",
+    "updatedAt" : "2015-11-24T23:47:33.369Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

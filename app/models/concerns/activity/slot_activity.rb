@@ -1,5 +1,4 @@
 module SlotActivity
-  extend ActiveSupport::Concern
   include Activity
 
   private
@@ -13,6 +12,10 @@ module SlotActivity
   # visiblity, we have to delete activities from stream.
   def activity_foreign
     activity_target.creator
+  end
+
+  def activity_is_valid?
+    super && (activity_target.visibility != 'private')
   end
 
   # Add extra data to each activity. The data can be hide

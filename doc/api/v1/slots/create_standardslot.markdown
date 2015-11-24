@@ -15,7 +15,7 @@ returns 422 if required parameters are missing
 ### Parameters
 
 Name : visibility *- required -*
-Description : Visibility of the Slot (private/friends/public)
+Description : Visibility of the Slot (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -80,7 +80,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -112,7 +112,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Y2IZ071ArE75T8VzHPJqkLFx74Y
+Authorization: Token token=EvTlGiglfgfV-lpC48wB5FbXFE4
 Host: example.org
 Cookie: </pre>
 
@@ -149,7 +149,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Y2IZ071ArE75T8VzHPJqkLFx74Y&quot; \
+	-H &quot;Authorization: Token token=EvTlGiglfgfV-lpC48wB5FbXFE4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -160,12 +160,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d7541693e450394e4ab24ec0077e0d24&quot;
+ETag: W/&quot;646c82b5251eb8729f5f2d407a3de899&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6428308a-9190-47f8-a4da-67eed358944c
-X-Runtime: 0.036831
+X-Request-Id: 5b0d27d0-0b98-4281-abd9-93854fc94057
+X-Runtime: 0.031783
 Vary: Origin
-Content-Length: 796</pre>
+Content-Length: 763</pre>
 
 #### Status
 
@@ -175,24 +175,21 @@ Content-Length: 796</pre>
 
 ```javascript
 {
-  "id" : 15,
+  "id" : 41,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-10-30T15:01:03.741Z",
-  "updatedAt" : "2015-10-30T15:01:03.741Z",
+  "createdAt" : "2015-11-24T23:47:32.655Z",
+  "updatedAt" : "2015-11-24T23:47:32.655Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 153,
-    "username" : "User 203",
-    "createdAt" : "2015-10-30T15:01:03.730Z",
-    "updatedAt" : "2015-10-30T15:01:03.730Z",
+    "id" : 226,
+    "username" : "User 267",
+    "createdAt" : "2015-11-24T23:47:32.643Z",
+    "updatedAt" : "2015-11-24T23:47:32.643Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [
     {
@@ -200,19 +197,19 @@ Content-Length: 796</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-10-30T15:01:03.748Z"
+      "createdAt" : "2015-11-24T23:47:32.663Z"
     },
     {
       "id" : 1,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-10-30T15:01:03.745Z"
+      "createdAt" : "2015-11-24T23:47:32.659Z"
     }
   ],
   "media" : [],
   "settings" : {
-    "alerts" : "0101010101"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

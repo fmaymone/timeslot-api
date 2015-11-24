@@ -20,7 +20,8 @@ resource "Slots" do
                    "Only included if it's a slot of the current User " \
                    "(created-/friend-/re-/groupslot),\n\n" \
                    "contains User specific settings for this slot (alerts)"
-    response_field :visibility, "Visibiltiy of the slot"
+    response_field :visibility,
+                   "Visibiltiy of the slot (private/friend/foaf/public)"
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
     response_field :commentsCounter, "Number of comments on the slot"
@@ -255,20 +256,61 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
-                 "settings" => { 'alerts' => '1110001100' },
+                                "image" => ""},
+                 # "settings" => { 'alerts' => '1110001100' },
+                 "settings" => { 'alerts' => 'omitted' },
                  "visibility" => slot.visibility,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 "reslotsCounter" => slot.reslot_count
+                 "reslotsCounter" => slot.re_slots_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
         expect(json["shareUrl"]).to include slot.share_id
+      end
+    end
+
+    describe "Get private slot of other user" do
+      let(:id) { create(:std_slot_private).id }
+
+      example "Get private slot of other user returns not found",
+              document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+
+    describe "Get foaf slot with invalid auth_token" do
+      let(:id) { create(:std_slot_foaf).id }
+      let(:auth_header) { "Token token=foobar" }
+
+      example "Get foaf slot with invalid auth_token returns Unauthorized",
+              document: false do
+        do_request
+        expect(response_status).to eq(401)
+      end
+    end
+
+    describe "Get public slot with invalid auth_token" do
+      let(:id) { create(:std_slot_public).id }
+      let(:auth_header) { "Token token=foobar" }
+
+      example "Get public slot of other user with invalid auth_token returns OK",
+              document: false do
+        do_request
+        expect(response_status).to eq 200
+      end
+    end
+
+    describe "Get public slot without auth_token" do
+      let(:id) { create(:std_slot_public).id }
+      let(:auth_header) { nil }
+
+      example "Get public slot of other user without auth_token returns OK",
+              document: false do
+        do_request
+        expect(response_status).to eq 200
       end
     end
 
@@ -349,19 +391,18 @@ resource "Slots" do
                                 "createdAt" => reslot.creator.created_at.as_json,
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => {
-                                  "publicId" => nil,
-                                  "localId" => nil
-                                } },
-                 "settings" => { 'alerts' => '1110001100' },
+                                "image" => ""},
+                 # "settings" => { 'alerts' => '1110001100' },
+                 "settings" => { 'alerts' => 'omitted' },
                  "slotter" => { 'id' => reslot.slotter_id },
                  "visibility" => reslot.parent.visibility,
                  "notes" => reslot.notes,
                  "parent" => { 'id' => reslot.parent.id },
                  "likes" => reslot.likes.count,
                  "commentsCounter" => reslot.comments.count,
-                 "reslotsCounter" => reslot.reslot_count
+                 "reslotsCounter" => reslot.re_slots_count
                 )
+        reslot.reload
         expect(json["media"].length).to eq(reslot.media_items.length)
         expect(response_body).to include reslot.images.first.public_id
       end
@@ -373,7 +414,8 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :visibility, "Visibility of the Slot (private/friends/public)",
+    parameter :visibility,
+              "Visibility of the Slot (private/friends/foaf/public)",
               required: true
     include_context "default slot parameter"
 
@@ -781,19 +823,20 @@ resource "Slots" do
 
     parameter :id, "ID of the slot to update", required: true
     parameter :visibility, "Visibility of the Slot to update " \
-                           "(private/friends/public)"
+                           "(private/friends/foaf/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user,
+                             creator: current_user) }
     let(:id) { std_slot.id }
 
-    describe "Update an existing StdSlot" do
+    describe "Update an existing StdSlot by creator" do
       let(:title) { "New title for a Slot" }
 
       example "Update StdSlot - change title", document: :v1 do
         explanation "Update content of StdSlot.\n\n" \
-                    "User must be owner of StdSlot.\n\n" \
+                    "User must be creator of StdSlot.\n\n" \
                     "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
@@ -1158,7 +1201,9 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
         expect(slot.likes.count).to eq 1
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1187,6 +1232,8 @@ resource "Slots" do
         expect(response_status).to eq(200)
         like.reload
         expect(like.deleted_at?).to be true
+        slot.reload
+        expect(slot.likes.count).to eq slot.likes_count
       end
     end
   end
@@ -1202,7 +1249,7 @@ resource "Slots" do
     let(:slot) { create(:group_slot, :with_likes) }
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
-    let!(:like) { create(:like, user: create(:user, :with_image), slot: slot) }
+    let!(:like) { create(:like, user: create(:user), slot: slot) }
 
     describe "Get Likes for Slot" do
       let(:id) { slot.id }
@@ -1245,6 +1292,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
+        slot.reload
+        expect(slot.comments.count).to eq slot.comments_count
       end
     end
   end
@@ -1261,7 +1310,7 @@ resource "Slots" do
     let!(:membership) {
       create(:membership, :active, group: slot.group, user: current_user) }
     let!(:comment) {
-      create(:comment, user: create(:user, :with_image), slot: slot) }
+      create(:comment, user: create(:user), slot: slot) }
 
     describe "Get Comments for Slot" do
       let(:id) { slot.id }

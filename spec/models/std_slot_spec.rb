@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe StdSlot, type: :model do
-  let(:std_slot) { build(:std_slot) }
+  let(:std_slot) { build(:std_slot_public) }
 
   subject { std_slot }
 
@@ -54,6 +54,14 @@ RSpec.describe StdSlot, type: :model do
         described_class.create_slot(meta_slot: meta_slot, visibility: 'friends',
                                     user: user)
       }.to change(StdSlotFriends, :count).by 1
+    end
+
+    it "creates a new StdSlotFoaf (visibility friend-of-a-friend)" do
+      expect {
+        described_class.create_slot(meta_slot: meta_slot,
+                                    visibility: 'foaf',
+                                    user: user)
+      }.to change(StdSlotFoaf, :count).by 1
     end
 
     it "creates a new StdSlotPublic" do
@@ -156,12 +164,18 @@ RSpec.describe StdSlot, type: :model do
     end
   end
 
-  describe :reslot_count do
+  describe :re_slots_count do
     let(:parent) { create(:std_slot) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "returns the number of reslots for this slot" do
-      expect(parent.reslot_count).to eq 3
+      expect(parent.re_slots_count).to eq 3
+    end
+
+    it "ignores deleted reslots" do
+      ReSlot.last.delete
+      parent.reload
+      expect(parent.re_slots_count).to eq 2
     end
   end
 end

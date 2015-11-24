@@ -72,12 +72,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;82ea6ff5e3d2974698155ec7dff6a079&quot;
+ETag: W/&quot;24ec78312adc163c64a8d3f17e86151d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8ee85d51-58e8-4393-a3c2-06e93280fb6c
-X-Runtime: 0.033068
+X-Request-Id: 33c5acb7-edec-4bae-b4aa-c5cbd549bbe8
+X-Runtime: 0.026548
 Vary: Origin
-Content-Length: 775</pre>
+Content-Length: 745</pre>
 
 #### Status
 
@@ -89,14 +89,11 @@ Content-Length: 775</pre>
 {
   "id" : 3,
   "username" : "alexandrospar",
-  "createdAt" : "2015-10-30T15:01:00.557Z",
-  "updatedAt" : "2015-10-30T15:01:00.557Z",
+  "createdAt" : "2015-11-24T23:47:28.512Z",
+  "updatedAt" : "2015-11-24T23:47:28.512Z",
   "deletedAt" : null,
+  "image" : "",
   "location" : null,
-  "image" : {
-    "publicId" : null,
-    "localId" : null
-  },
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
@@ -119,6 +116,6 @@ Content-Length: 775</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "k3Zr1RU-q2V34TXlmb88eDmeXik"
+  "authToken" : "ZX7u24CF55rJmKQOXFYWQkS8nY8"
 }
 ```

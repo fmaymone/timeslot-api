@@ -28,18 +28,6 @@ FactoryGirl.define do
       end
     end
 
-    trait :with_image do
-      after :create do |user|
-        create :mock_image, mediable: user
-      end
-    end
-
-    trait :with_real_image do
-      after :create do |user|
-        create :real_image, mediable: user
-      end
-    end
-
     trait :with_3_own_groups do
       after :create do |user|
         create_list :group, 3, owner: user
@@ -67,14 +55,6 @@ FactoryGirl.define do
     trait :with_public_slot do
       after :create do |user|
         create :std_slot_public, owner: user
-      end
-    end
-
-    trait :with_feed do
-      after :create do |user|
-        create :std_slot_public, owner: user # +1 activity
-        create_list :comment, 3, user: user  # +3 activities
-        create :like, user: user             # +1 activity
       end
     end
   end

@@ -20,23 +20,22 @@ class Note < ActiveRecord::Base
 
   # if belonging slot is deleted
   def delete
+    remove_activity
     ts_soft_delete
   end
 
   ## Activity Methods ##
 
-  private
-
-  def activity_target
+  private def activity_target
     slot
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     creator
   end
 
-  def activity_verb
+  private def activity_verb
     'note'
   end
 end

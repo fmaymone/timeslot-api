@@ -107,14 +107,14 @@ module JSONView
       # user must be the current user for alerts
       json['settings'] = { alerts: slot.slotter.alerts(slot) }
     elsif slot.class < StdSlot
-      json['reslotsCounter'] = slot.reslot_count
+      json['reslotsCounter'] = slot.re_slots_count
       json['visibility'] = slot.visibility
       # user must be the current user for alerts
       json['settings'] = { alerts: user.alerts(slot) }
     end
 
-    json['likes'] = slot.likes.count
-    json['commentsCounter'] = slot.comments.count
+    json['likes'] = slot.likes_count
+    json['commentsCounter'] = slot.comments_count
 
     if slot.share_id.empty?
       json['shareUrl'] = nil

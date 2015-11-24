@@ -10,7 +10,7 @@ Name : id *- required -*
 Description : ID of the slot to update
 
 Name : visibility
-Description : Visibility of the Slot to update (private/friends/public)
+Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -87,7 +87,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -115,7 +115,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=kMZ3svCvnygZTYWbcE_U5-PkLkk
+Authorization: Token token=iToI_X1T6f-GcLPCx4q0dvRZ3dk
 Host: example.org
 Cookie: </pre>
 
@@ -145,7 +145,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/3&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=kMZ3svCvnygZTYWbcE_U5-PkLkk&quot; \
+	-H &quot;Authorization: Token token=iToI_X1T6f-GcLPCx4q0dvRZ3dk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -156,12 +156,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a0ed658671098c2e998d173e27ade5e8&quot;
+ETag: W/&quot;fe5aa930b5f7016db60b471012fff0fe&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d8e5878b-b996-414a-9bb4-a36533e50e3e
-X-Runtime: 0.039415
+X-Request-Id: 55a91d6d-0915-4de4-85bc-67b10401d1f2
+X-Runtime: 0.020620
 Vary: Origin
-Content-Length: 814</pre>
+Content-Length: 781</pre>
 
 #### Status
 
@@ -172,23 +172,20 @@ Content-Length: 814</pre>
 ```javascript
 {
   "id" : 3,
-  "title" : "Slot title 35",
-  "startDate" : "2019-09-13T15:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.412Z",
-  "updatedAt" : "2015-10-30T15:01:04.412Z",
+  "title" : "Slot title 62",
+  "startDate" : "2019-09-13T18:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.484Z",
+  "updatedAt" : "2015-11-24T23:47:33.484Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-13T15:44:02.000Z",
+  "endDate" : "2019-10-13T18:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 7,
-    "username" : "User 225",
-    "createdAt" : "2015-10-30T15:01:04.407Z",
-    "updatedAt" : "2015-10-30T15:01:04.407Z",
+    "id" : 6,
+    "username" : "User 288",
+    "createdAt" : "2015-11-24T23:47:33.477Z",
+    "updatedAt" : "2015-11-24T23:47:33.477Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [
     {
@@ -196,19 +193,19 @@ Content-Length: 814</pre>
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : null,
-      "createdAt" : "2015-10-30T15:01:04.431Z"
+      "createdAt" : "2015-11-24T23:47:33.501Z"
     },
     {
       "id" : 1,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : "123321",
-      "createdAt" : "2015-10-30T15:01:04.427Z"
+      "createdAt" : "2015-11-24T23:47:33.497Z"
     }
   ],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

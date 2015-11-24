@@ -2,27 +2,16 @@ class ApplicationController < ActionController::API
   include TS_Authenticable
   include Pundit
 
-  # Raised when the value of a parameter is invalid.
-  class ParameterInvalid < StandardError
-    def initialize(param, value)
-      super("#{value} is not a valid value for param: #{param}")
-    end
-  end
-
-  # Raised when the pagination cursor is not valid anymore (usually because
-  # slot.start_date or slot.end_date has changed since encoding).
-  class PaginationError < StandardError
-    def initialize
-      super("invalid cursor")
-    end
-  end
-
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
   after_action :set_locale, only: :users
 
   # Enforces access right checks for collections
   # after_action :verify_policy_scoped, only: :index
+
+  rescue_from ParameterInvalid, with: :unprocessable_entity
+  rescue_from PaginationError, with: :unprocessable_entity
+  rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
 
   rescue_from ActiveRecord::RecordNotFound do
     head :not_found
@@ -33,19 +22,23 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
-  rescue_from ActionController::ParameterMissing do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
+  rescue_from Pundit::NotAuthorizedError do |e|
+    # abuse Airbrake to learn more about the system
+    notify_airbrake(e)
+
+    if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
+      head :forbidden
+    else
+      head :not_found # obscure the fact that the resource actually exists
+    end
   end
 
-  rescue_from Pundit::NotAuthorizedError do
-    head :unauthorized
+  rescue_from MissingCurrentUserError do
+    # headers['Authorization'] = 'Token token="auth_token"'
+    render json: 'Invalid or missing auth_token', status: :unauthorized
   end
 
-  rescue_from ParameterInvalid do |exception|
-    render json: { error: exception.message }, status: :unprocessable_entity
-  end
-
-  rescue_from PaginationError do |exception|
+  private def unprocessable_entity(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
@@ -60,12 +53,12 @@ class ApplicationController < ActionController::API
     # set maximum for limit to 100 if higher
     p[:limit] = PAGINATION_MAX_LIMIT if p[:limit].to_i > PAGINATION_MAX_LIMIT
 
-    # ignore status & moment if a cursor is submitted
+    # ignore filter & moment if a cursor is submitted
     if p[:before].present? || p[:after].present?
       p[:filter] = nil
       p[:moment] = nil
     else
-      # set default status and moment if not provided
+      # set default filter and moment if not provided
       p[:filter] = PAGINATION_DEFAULT_FILTER if p[:filter].nil?
       p[:moment] = Time.zone.now.to_s if p[:moment].nil?
     end
@@ -79,15 +72,6 @@ class ApplicationController < ActionController::API
     def initialize(current_user, requested_user = nil)
       @current_user = current_user
       @requested_user = requested_user
-    end
-  end
-
-  def pundit_user
-    if params[:user_id].present?
-      requested_user = User.find(params[:user_id])
-      UserContext.new(current_user, requested_user)
-    else
-      current_user
     end
   end
 

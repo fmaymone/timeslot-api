@@ -4,6 +4,7 @@ class StdSlot < BaseSlot
   # mapping the frontend string to the class
   STD_SLOT_TYPES = { 'private' => :StdSlotPrivate,
                      'friends' => :StdSlotFriends,
+                     'foaf' => :StdSlotFoaf,
                      'public' => :StdSlotPublic
                    }
 
@@ -27,10 +28,6 @@ class StdSlot < BaseSlot
     # this should not include private reslots
     # TODO: change it when we have reslots with different visibilities
     ReSlot.where parent_id: id
-  end
-
-  def reslot_count
-    ReSlot.unscoped.where(parent_id: id).count
   end
 
   def related_users

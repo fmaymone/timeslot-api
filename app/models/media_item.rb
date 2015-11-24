@@ -39,6 +39,7 @@ class MediaItem < ActiveRecord::Base
     Rails.logger.error { msg }
     Airbrake.notify(e, parameters: msg)
   ensure
+    remove_activity
     ts_soft_delete
   end
 
@@ -60,22 +61,20 @@ class MediaItem < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
+  private def activity_is_valid?
     belongs_to_slot?
   end
 
-  def activity_target
+  private def activity_target
     mediable
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     creator
   end
 
-  def activity_verb
+  private def activity_verb
     media_type
   end
 end

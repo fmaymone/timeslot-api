@@ -56,7 +56,7 @@ Description : Only included if it&#39;s a slot of the current User (created-/fri
 contains User specific settings for this slot (alerts)
 
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -94,7 +94,7 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=DZ37Sskq0anZ87lad9j9LQc8MoE
+Authorization: Token token=aRWQBKtC_mc3esTu2echZbGGZ04
 Host: example.org
 Cookie: </pre>
 
@@ -105,17 +105,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 22
+  "predecessorId" : 48
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:22}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:48}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=DZ37Sskq0anZ87lad9j9LQc8MoE&quot; \
+	-H &quot;Authorization: Token token=aRWQBKtC_mc3esTu2echZbGGZ04&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,12 +126,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;dfd4eaeabd92aa3789b2e85eb06db146&quot;
+ETag: W/&quot;37f97edb2c55e999e129c2019a54ef85&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 473a16c6-77d9-4c63-83e9-8242d9da154b
-X-Runtime: 0.026722
+X-Request-Id: c4256cb5-0bd8-45f4-ba59-96e0b53401e9
+X-Runtime: 0.047523
 Vary: Origin
-Content-Length: 583</pre>
+Content-Length: 550</pre>
 
 #### Status
 
@@ -141,36 +141,33 @@ Content-Length: 583</pre>
 
 ```javascript
 {
-  "id" : 23,
-  "title" : "Slot title 31",
-  "startDate" : "2019-09-09T11:44:02.000Z",
-  "createdAt" : "2015-10-30T15:01:04.093Z",
-  "updatedAt" : "2015-10-30T15:01:04.093Z",
+  "id" : 49,
+  "title" : "Slot title 58",
+  "startDate" : "2019-09-09T14:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.060Z",
+  "updatedAt" : "2015-11-24T23:47:33.060Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-09T11:44:02.000Z",
+  "endDate" : "2019-10-09T14:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 162,
-    "username" : "User 212",
-    "createdAt" : "2015-10-30T15:01:04.072Z",
-    "updatedAt" : "2015-10-30T15:01:04.072Z",
+    "id" : 235,
+    "username" : "User 276",
+    "createdAt" : "2015-11-24T23:47:33.036Z",
+    "updatedAt" : "2015-11-24T23:47:33.036Z",
     "deletedAt" : null,
-    "image" : {
-      "publicId" : null,
-      "localId" : null
-    }
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 164
+    "id" : 237
   },
   "parent" : {
-    "id" : 22
+    "id" : 48
   },
   "visibility" : "public",
   "likes" : 0,

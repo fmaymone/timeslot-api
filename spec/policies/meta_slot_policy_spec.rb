@@ -31,13 +31,15 @@ describe MetaSlotPolicy do
         expect(subject).not_to permit(user, slot)
       end
     end
+  end
 
-    context "for a visitor" do
-      let(:user) { nil }
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:user) { nil }
 
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
+    it "raises MissingCurrentUserError" do
+      expect {
+        subject.new(user, slot).public_send(:update_metaslot?)
+      }.to raise_error TS_Errors::MissingCurrentUserError
     end
   end
 end

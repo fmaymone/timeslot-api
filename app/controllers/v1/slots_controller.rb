@@ -24,7 +24,10 @@ module V1
 
       if slot_paging_params.blank?
         slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
-        @slots = StdSlotPublic.last(slot_count)
+        @slots = StdSlotPublic
+                 .includes(:notes, :media_items,
+                           meta_slot: [:ios_location, :creator])
+                 .last(slot_count)
         render :index
       else
         collector = SlotsCollector.new(**slot_paging_params)
@@ -137,7 +140,6 @@ module V1
 
     # PATCH /v1/stdslot/1
     def update_stdslot
-      # see policy for thoughts about the different options
       @slot = current_user.std_slots.find(params[:id])
       authorize @slot
 
@@ -173,7 +175,9 @@ module V1
       @slot = current_user.re_slots.find(params[:id])
       authorize @slot
 
-      @slot.parent.update_from_params(media: media_params, notes: note_param, user: current_user)
+      # TODO: this should only be allowed for tagged users
+      @slot.parent.update_from_params(media: media_params, notes: note_param,
+                                      user: current_user)
       @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
@@ -333,7 +337,7 @@ module V1
       return nil unless params.key? :visibility
 
       visibility = params[:visibility]
-      valid_values = %w(private friends public)
+      valid_values = %w(private friends foaf public)
 
       unless valid_values.include? visibility
         fail ActionController::ParameterMissing,
@@ -347,13 +351,13 @@ module V1
     end
 
     private def meta_params
-      if params[:locationId].present? && params[:iosLocation].present?
-        msg = "LocationId and IosLocation can not both be submitted"
-        fail ActionController::ParameterMissing, msg
-      end
+      # only the slot creator can update the meta params
+      # TODO: groupslots need special treatment
+      return {} if @slot && current_user != @slot.creator
 
       # Check validity of date format
-      p = params.permit(:title, :startDate, :endDate, :locationId, :metaSlotId,
+      # metaSlotId is (IMHO only) requiered for copy slot
+      p = params.permit(:title, :startDate, :endDate, :metaSlotId,
                         location:
                           [:name, :thoroughfare, :subThoroughfare,
                            :locality, :subLocality, :administrativeArea,
@@ -371,7 +375,8 @@ module V1
           enddate = (params[:endDate])
           valid_date = Time.zone.parse(enddate)
           fail ParameterInvalid.new(:end_date, enddate) unless valid_date
-          p[:open_end] = false unless valid_date == @slot.try(:end_date) #TODO: add spec
+          # TODO: add spec for open_end
+          p[:open_end] = false unless valid_date == @slot.try(:end_date)
         end
       end
 

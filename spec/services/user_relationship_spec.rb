@@ -1,17 +1,30 @@
-require 'spec_helper'
+require 'rails_helper'
 
 RSpec.describe UserRelationship, type: :service do
   describe "determines relationship between 2 users" do
-    let(:user) { FactoryGirl.create(:user) }
-    let(:friend) { FactoryGirl.create(:user) }
-    let(:stranger) { FactoryGirl.create(:user) }
+    let(:user) { create(:user) }
+    let(:friend) { create(:user) }
+    let(:stranger) { create(:user) }
+    let(:foaf) { create(:user) }
 
     context 'friends' do
-      let!(:friendship) { FactoryGirl.create(:friendship, :established,
-                                             user: user, friend: friend)
+      let!(:friendship) { create(:friendship, :established,
+                                 user: user, friend: friend)
       }
       it "returns 'friend' if users are friends" do
         expect(described_class.call(user.id, friend.id)).to eq FRIEND
+      end
+    end
+
+    context 'friend-of-a-friend' do
+      let!(:friendships) {
+        create(:friendship, :established,
+               user: user, friend: friend)
+        create(:friendship, :established,
+               user: foaf, friend: friend)
+      }
+      it "returns 'foaf' if users have common friends" do
+        expect(described_class.call(user.id, foaf.id)).to eq FOAF
       end
     end
 
@@ -23,16 +36,16 @@ RSpec.describe UserRelationship, type: :service do
       expect(described_class.call(user.id, stranger.id)).to eq STRANGER
     end
 
-    it "returns 'stranger' if no user_a" do
-      expect(described_class.call(nil, user.id)).to eq STRANGER
+    it "returns 'visitor' if no user_a" do
+      expect(described_class.call(nil, user.id)).to eq VISITOR
     end
 
-    it "returns 'stranger' if no user_a" do
-      expect(described_class.call(nil, user.id)).to eq STRANGER
+    it "returns 'visitor' if no user_a" do
+      expect(described_class.call(nil, user.id)).to eq VISITOR
     end
 
-    it "returns 'stranger' if both users are nil" do
-      expect(described_class.call(nil, nil)).to eq STRANGER
+    it "raises error if both users are nil" do
+      expect { described_class.call(nil, nil) }.to raise_error ArgumentError
     end
   end
 end
