@@ -277,7 +277,6 @@ resource "Groups" do
       expect(json["slots"].first).to have_key("deletedAt")
       expect(json["slots"].first).to have_key("settings")
       expect(json["slots"].first).to have_key("media")
-      expect(json["slots"].first).to have_key("url")
       expect(response_body).to include(slots.first.title)
     end
   end
