@@ -15,8 +15,6 @@ module SlotActivity
     activity_target.creator
   end
 
-  # This method should be overridden in the subclass
-  # if custom validation is required
   def activity_is_valid?
     super ? (activity_target.visibility != 'private') : false
   end
