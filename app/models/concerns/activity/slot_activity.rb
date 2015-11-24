@@ -16,7 +16,7 @@ module SlotActivity
   end
 
   def activity_is_valid?
-    super ? (activity_target.visibility != 'private') : false
+    super && (activity_target.visibility != 'private')
   end
 
   # Add extra data to each activity. The data can be hide
