@@ -4,5 +4,5 @@ json.array!(slots) do |slot|
     json.url v1_slot_url(slot, format: :json)
   }
   # pp "slot with ID #{slot.id} took #{timespent.to_s.strip} time"
-  Rails.logger.warn { "slot with ID #{slot.id} took #{timespent.to_s.strip} time."}
+  # Rails.logger.warn { "slot with ID #{slot.id} took #{timespent.to_s.strip} time."}
 end
