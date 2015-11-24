@@ -156,10 +156,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;03ce9d9c37a425f500734464adf71cf9&quot;
+ETag: W/&quot;61c6389eb971dba459e44001d9b82d2d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 95026b17-72c7-4feb-bfbb-474f9ec110c0
-X-Runtime: 0.021390
+X-Request-Id: c6da5f80-4ca5-43ee-8aeb-dac7e614ee0b
+X-Runtime: 0.020202
 Vary: Origin
 Content-Length: 755</pre>
 
@@ -173,15 +173,15 @@ Content-Length: 755</pre>
 {
   "id" : 100,
   "username" : "foo",
-  "createdAt" : "2015-11-17T23:46:17.009Z",
-  "updatedAt" : "2015-11-17T23:46:17.009Z",
+  "createdAt" : "2015-11-24T23:47:35.373Z",
+  "updatedAt" : "2015-11-24T23:47:35.373Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "lang" : null,
+  "lang" : "de",
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
   "phone" : null,
@@ -200,6 +200,6 @@ Content-Length: 755</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "jMkBso8MUWTa6_4Q-9C0OZSNimc"
+  "authToken" : "5pEbTct3KXMb-9VnvMenkSc2uGI"
 }
 ```

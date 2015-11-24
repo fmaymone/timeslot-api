@@ -18,7 +18,7 @@ Name : id *- required -*
 Description : ID of the slot to update
 
 Name : visibility
-Description : Visibility of the Slot to update (private/friends/public)
+Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -153,7 +153,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zj4QtT-yjiUDfJbddaBFTK6g7u8
+Authorization: Token token=FRN6Wyo8p1ty--IRqV1SJJtgSss
 Host: example.org
 Cookie: </pre>
 
@@ -185,7 +185,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/6&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zj4QtT-yjiUDfJbddaBFTK6g7u8&quot; \
+	-H &quot;Authorization: Token token=FRN6Wyo8p1ty--IRqV1SJJtgSss&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -196,12 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0ed56e65b22dc1f300d88dbf840105ba&quot;
+ETag: W/&quot;455e7227d3cd11342b5b5b8a2584e538&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 35c6449b-9bc6-46a6-8115-acc7e27b4f23
-X-Runtime: 0.028327
+X-Request-Id: e65c7c4c-0af5-4028-b586-2283bcbfab5d
+X-Runtime: 0.017637
 Vary: Origin
-Content-Length: 870</pre>
+Content-Length: 867</pre>
 
 #### Status
 
@@ -212,12 +212,12 @@ Content-Length: 870</pre>
 ```javascript
 {
   "id" : 6,
-  "title" : "Slot title 61",
-  "startDate" : "2019-09-12T17:44:02.000Z",
-  "createdAt" : "2015-11-17T23:46:15.239Z",
-  "updatedAt" : "2015-11-17T23:46:15.239Z",
+  "title" : "Slot title 65",
+  "startDate" : "2019-09-16T21:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.663Z",
+  "updatedAt" : "2015-11-24T23:47:33.663Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T17:44:02.000Z",
+  "endDate" : "2019-10-16T21:44:02.000Z",
   "location" : {
     "id" : 1,
     "name" : "Soho House",
@@ -238,17 +238,17 @@ Content-Length: 870</pre>
     "privateLocation" : true
   },
   "creator" : {
-    "id" : 16,
-    "username" : "User 293",
-    "createdAt" : "2015-11-17T23:46:15.235Z",
-    "updatedAt" : "2015-11-17T23:46:15.235Z",
+    "id" : 15,
+    "username" : "User 297",
+    "createdAt" : "2015-11-24T23:47:33.656Z",
+    "updatedAt" : "2015-11-24T23:47:33.656Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

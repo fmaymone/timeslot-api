@@ -82,7 +82,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=cJeNRtICH2pXRX71jktHPTG3Lsc
+<pre>Authorization: Token token=lcJGIb_FYAK-ZdinRGldK5M7_mg
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -94,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=cJeNRtICH2pXRX71jktHPTG3Lsc&quot; \
+	-H &quot;Authorization: Token token=lcJGIb_FYAK-ZdinRGldK5M7_mg&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aad664a566f46bdaea9de63123af5279&quot;
+ETag: W/&quot;fa230b065726e50749257908efbcf1ce&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d0604c30-e79f-403e-8412-18914077b4ee
-X-Runtime: 0.089689
+X-Request-Id: 3de1cde2-6dc4-4474-8f68-05acbd4f96b0
+X-Runtime: 0.042544
 Vary: Origin
-Content-Length: 510</pre>
+Content-Length: 507</pre>
 
 #### Status
 
@@ -122,25 +122,25 @@ Content-Length: 510</pre>
 ```javascript
 {
   "id" : 10,
-  "title" : "Slot title 65",
-  "startDate" : "2019-09-16T21:44:02.000Z",
-  "createdAt" : "2015-11-17T23:46:15.726Z",
-  "updatedAt" : "2015-11-17T23:46:15.761Z",
-  "deletedAt" : "2015-11-17T23:46:15.756Z",
-  "endDate" : "2019-10-16T21:44:02.000Z",
+  "title" : "Slot title 69",
+  "startDate" : "2019-09-20T01:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:34.091Z",
+  "updatedAt" : "2015-11-24T23:47:34.114Z",
+  "deletedAt" : "2015-11-24T23:47:34.112Z",
+  "endDate" : "2019-10-20T01:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 24,
-    "username" : "User 301",
-    "createdAt" : "2015-11-17T23:46:15.722Z",
-    "updatedAt" : "2015-11-17T23:46:15.722Z",
+    "username" : "User 306",
+    "createdAt" : "2015-11-24T23:47:34.086Z",
+    "updatedAt" : "2015-11-24T23:47:34.086Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "group" : {
     "id" : 1
