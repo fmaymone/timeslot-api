@@ -6,7 +6,10 @@ module SlotQuery
     def initialize(relation: BaseSlot.all, direction: nil)
       @direction = direction
       # @relation = relation.joins(:meta_slot).extending(Scopes)
-      @relation = relation.includes(:meta_slot).references(:meta_slots).extending(Scopes)
+      @relation = relation
+                  .includes(meta_slot: [:creator, :ios_location])
+                  .references(:meta_slot)
+                  .extending(Scopes)
     end
 
     # I don't like the split in direction and cursor because they belong together
