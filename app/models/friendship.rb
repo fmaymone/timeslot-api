@@ -70,6 +70,7 @@ class Friendship < ActiveRecord::Base
     end
   end
 
+  # must use this style here
   class << self
     def open
       # where(deleted_at: nil).where(state: '00')
@@ -93,22 +94,20 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
+  private def activity_is_valid?
     established?
   end
 
-  def activity_target
+  private def activity_target
     friend
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     user
   end
 
-  def activity_verb
+  private def activity_verb
     'friendship'
   end
 end

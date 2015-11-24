@@ -18,17 +18,15 @@ class Comment < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_target
+  private def activity_target
     slot
   end
 
-  def activity_actor
+  private def activity_actor
     user
   end
 
-  def activity_verb
+  private def activity_verb
     'comment'
   end
 end
