@@ -74,16 +74,6 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  config.include(FactoryGirl::Syntax::Methods,
-                 type: :services,
-                 file_path: %r{/spec\/services/}
-                )
-
-  config.include(FactoryGirl::Syntax::Methods,
-                 type: :query,
-                 file_path: %r{/spec\/queries/}
-                )
-
   if defined?(Bullet) && Bullet.enable?
     config.before(:each) do
       Bullet.start_request
@@ -118,6 +108,21 @@ RSpec.configure do |config|
 
   config.after(:each, :explain) do
     ActiveRecord::ConnectionAdapters::PostgreSQLAdapter.hide_explain
+  end
+
+  config.before(:each) do
+    # Disable triggering activities by default
+    allow_any_instance_of(FeedJob).to receive(:perform).and_return(nil)
+  end
+
+  config.before(:each, :activity) do
+    # Enable triggering activities
+    allow_any_instance_of(FeedJob).to receive(:perform).and_call_original
+  end
+
+  config.after(:each, :activity) do
+    # Disable triggering activities after it was enabled
+    allow_any_instance_of(FeedJob).to receive(:perform).and_return(nil)
   end
 end
 

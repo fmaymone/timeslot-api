@@ -54,20 +54,15 @@ RSpec.configure do |config|
   # https://relishapp.com/rspec/rspec-rails/docs
   # config.infer_spec_type_from_file_location!
 
-  config.before(:each) do
-    # Disable triggering activities by default
-    allow_any_instance_of(FeedJob).to receive(:perform).and_return(nil)
-  end
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :services,
+                 file_path: %r{/spec\/services/}
+  )
 
-  config.before(:each, :activity) do
-    # Enable triggering activities
-    allow_any_instance_of(FeedJob).to receive(:perform).and_call_original
-  end
-
-  config.after(:each, :activity) do
-    # Disable triggering activities after it was enabled
-    allow_any_instance_of(FeedJob).to receive(:perform).and_return(nil)
-  end
+  config.include(FactoryGirl::Syntax::Methods,
+                 type: :query,
+                 file_path: %r{/spec\/queries/}
+  )
 
   # to be able to use route helpers in specs
   config.include Rails.application.routes.url_helpers
