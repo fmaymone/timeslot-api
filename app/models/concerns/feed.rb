@@ -44,9 +44,8 @@ module Feed
           # Enrich target activity
           target_feed = enrich_activity(post)
           # Remove activity
-          if (target_feed['object'] == target_id) && (target_feed['activity'] == feed_type.downcase)
+          if (target_feed['object'] == target_id) and (target_feed['class'] == feed_type)
             $redis.lrem(feed_key, 1, post)
-            break
           end
         end
       end
@@ -81,7 +80,8 @@ module Feed
         foreignId: target_feed[5],
         time: target_feed[6],
         feed: target_feed[7],
-        id: target_feed[8],
+        class: target_feed[8],
+        id: target_feed[9],
     }.as_json
   end
 

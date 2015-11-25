@@ -40,7 +40,8 @@ module Activity
         notify: activity_notify,
         data: activity_extra_data,
         time: (activity_time || self.updated_at),
-        feed: activity_target.class.name
+        feed: activity_target.class.name,
+        class: self.class.name
       })
     rescue => error
       opts = {}
