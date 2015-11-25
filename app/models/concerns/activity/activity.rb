@@ -16,24 +16,10 @@ module Activity
   end
 
   def remove_activity
-    # TODO:
-    # # Remove activities from target feeds:
-    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
-    # # Trigger "delete" as an activity if this should be valid
-    # # Pass the current time because this before-callback does not trigger "updated_at"
-    # create_activity_feed(Time.zone.now) if activity_is_valid?
-  end
-
-  def update_activity
-    # TODO
-  end
-
-  def remove_activity
-    # TODO:
-    # # Remove activities from target feeds:
-    # Feed::remove_from_feed(activity_target.class.name, activity_target.id)
-    # # Trigger "delete" as an activity if this should be valid
-    # # Pass the current time because this before-callback does not trigger "updated_at"
+    # Remove activities from target feeds:
+    Feed::remove_from_feed(self.class.name, self.id.to_s, activity_notify)
+    # Trigger "delete" as an activity
+    # Pass the current time because this before-callback does not trigger "updated_at"
     # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
@@ -79,7 +65,11 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   def activity_is_valid?
-    activity_actor && activity_target && activity_actor.deleted_at.nil? && activity_target.deleted_at.nil?
+    activity_actor &&
+    activity_target &&
+    self.deleted_at.nil? &&
+    activity_actor.deleted_at.nil? &&
+    activity_target.deleted_at.nil?
   end
 
   # Returns an array of user which should also be notified

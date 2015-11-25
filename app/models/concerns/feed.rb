@@ -29,26 +29,24 @@ module Feed
     end
   end
 
-  # TODO: implement helpers for feed removing during deletion
-  # def self.remove_activity_from_feed(user, activity)
-  # end
-  # def self.remove_target_from_feed(user, target)
-  # end
-
-  def self.remove_from_feed(feed_type, target_id)
-    ["Feed:#{user_id}:User",
-     "Feed:#{user_id}:News",
-     "Feed:#{user_id}:Notification"].each do |feed_key|
-      # Fetch all target activities
-      feed = $redis.lrange(feed_key, 0, -1)
-      # Loop through all activities through all related feeds
-      $redis.pipelined do
+  # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
+  # Each call of the models delete method starts triggering activity deletion.
+  def self.remove_from_feed(feed_type, target_id, notify)
+    # Loop through all related feeds
+    notify.each do |user_id|
+      ["Feed:#{user_id}:User",
+       "Feed:#{user_id}:News",
+       "Feed:#{user_id}:Notification"].each do |feed_key|
+        # Fetch all target activities
+        feed = $redis.lrange(feed_key, 0, -1)
+        # Loop through all activities
         feed.each do |post|
-          feed_params = post.split(':')
-          if feed_params[0] == feed_type && feed_params[1].to_i == target_id #|| post['foreignId'].to_i == actor_id
-            # TODO: remove multiple activities (redis batch)
-            # Remove activity
+          # Enrich target activity
+          target_feed = enrich_activity(post)
+          # Remove activity
+          if (target_feed['object'] == target_id) && (target_feed['activity'] == feed_type.downcase)
             $redis.lrem(feed_key, 1, post)
+            break
           end
         end
       end
