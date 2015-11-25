@@ -16,6 +16,8 @@ module Activity
   end
 
   def remove_activity
+    # Add current user to the notification array
+    activity_notify << activity_actor.id
     # Remove activities from target feeds:
     Feed::remove_from_feed(self.class.name, self.id.to_s, activity_notify)
     # Trigger "delete" as an activity
