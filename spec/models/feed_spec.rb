@@ -469,7 +469,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
   end
 
-  context "Delete Activities", :focus, :redis do
+  context "Delete Activities", :redis do
     let(:user) { create(:user) }
     let(:meta_slot) { create(:meta_slot, creator: user) }
     let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
