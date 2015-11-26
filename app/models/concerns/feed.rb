@@ -64,7 +64,7 @@ module Feed
     # Enrich target activities
     feed.map do |a|
       # Remove special fields are not used by frontend
-      enrich_activity(a).except!(:parent, :class, :object, :foreign, :feed)
+      remove_fields(enrich_activity(a))
     end
   end
 
@@ -153,7 +153,7 @@ module Feed
       # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
       group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
       # Remove special fields are not used by frontend
-      post.except!(:parent, :class, :object, :foreign, :feed)
+      post = remove_fields(post)
       # Get activity actor
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
@@ -204,6 +204,13 @@ module Feed
       ActiveSupport::Gzip.decompress(
         $redis.lindex(key, index)
     ))
+  end
+
+  def self.remove_fields(feed)
+    %w(parent class object foreign).each do |field|
+      feed.delete(field)
+    end
+    feed
   end
 
   def self.error_handler(error, feed, params)
