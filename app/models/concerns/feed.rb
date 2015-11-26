@@ -62,7 +62,10 @@ module Feed
     # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
     feed = $redis.lrange(feed_index, offset, min).reverse!
     # Enrich target activities
-    feed.map{|a| enrich_activity(a)}
+    feed.map do |a|
+      # Remove special fields are not used by frontend
+      enrich_activity(a).except!(:parent, :class, :object, :foreign, :feed)
+    end
   end
 
   def self.enrich_activity(target_key)
@@ -149,6 +152,9 @@ module Feed
       # Generates group tag (acts as the aggregation index)
       # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
       group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
+      # Remove special fields are not used by frontend
+      post.except!(:parent, :class, :object, :foreign, :feed)
+      # Get activity actor
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
