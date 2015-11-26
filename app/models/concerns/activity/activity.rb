@@ -118,13 +118,13 @@ module Activity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   def activity_foreign
-    nil
+    ''
   end
 
   # The parent object is required to merge activities for
   # same parent objects.
   def activity_parent
-    nil
+    ''
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')

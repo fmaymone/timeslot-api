@@ -61,20 +61,22 @@ class MediaItem < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    belongs_to_slot?
+  private
+
+  def activity_is_valid?
+    super and belongs_to_slot?
   end
 
-  private def activity_target
+  def activity_target
     mediable
   end
 
   # The user who made the update
-  private def activity_actor
+  def activity_actor
     creator
   end
 
-  private def activity_verb
+  def activity_verb
     media_type
   end
 end

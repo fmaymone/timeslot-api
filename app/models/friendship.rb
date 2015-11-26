@@ -94,20 +94,22 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    established?
+  private
+
+  def activity_is_valid?
+    super and established?
   end
 
-  private def activity_target
+  def activity_target
     friend
   end
 
   # The user who made the update
-  private def activity_actor
+  def activity_actor
     user
   end
 
-  private def activity_verb
+  def activity_verb
     'friendship'
   end
 end

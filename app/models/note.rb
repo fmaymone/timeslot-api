@@ -26,16 +26,18 @@ class Note < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_target
+  private
+
+  def activity_target
     slot
   end
 
   # The user who made the update
-  private def activity_actor
+  def activity_actor
     creator
   end
 
-  private def activity_verb
+  def activity_verb
     'note'
   end
 end
