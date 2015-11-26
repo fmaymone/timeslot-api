@@ -62,10 +62,7 @@ module Feed
     # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
     feed = $redis.lrange(feed_index, offset, min).reverse!
     # Enrich target activities
-    feed.map do |a|
-      # Remove special fields are not used by frontend
-      remove_fields(enrich_activity(a))
-    end
+    feed.map{ |a| enrich_activity(a) }
   end
 
   def self.enrich_activity(target_key)
@@ -123,6 +120,8 @@ module Feed
       i18_key = "#{activity['type'].downcase}_#{activity['activity']}_#{view}_#{mode}"
       # Update message params with enriched message
       activity['message'] = I18n.t(i18_key, i18_params)
+      # Remove special fields are not used by frontend
+      remove_fields_from_activity(activity)
     end
     # Filter out private targets from feed (removed targets from preparation)
     feed.delete_if { |activity| activity['target'].nil? }
@@ -152,8 +151,6 @@ module Feed
       # Generates group tag (acts as the aggregation index)
       # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
       group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
-      # Remove special fields are not used by frontend
-      post = remove_fields(post)
       # Get activity actor
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
@@ -206,11 +203,11 @@ module Feed
     ))
   end
 
-  def self.remove_fields(feed)
-    %w(parent class object foreign).each do |field|
-      feed.delete(field)
+  def self.remove_fields_from_activity(activity)
+    %w(parent class object foreign feed).each do |field|
+      activity.delete(field)
     end
-    feed
+    activity
   end
 
   def self.error_handler(error, feed, params)
