@@ -36,10 +36,8 @@ class FeedJob
 
       # Store activity to own feed (me activities)
       $redis.rpush("Feed:#{params[:actor]}:User", target_key)
-      # Breaks feed distributing at this point if target is private
-      #return if params[:feed] == 'StdSlotPrivate'
       # Store activity to own notification feed (related to own content, filter out own activities)
-      $redis.rpush("Feed:#{params[:foreignId]}:Notification", target_key) if params[:foreignId] && (params[:actor] != params[:foreignId])
+      $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
 
       # Send to other users through social relations ("Read-Opt" Strategy)
       unless params[:notify].empty?

@@ -7,13 +7,6 @@ module UserActivity
     'User'
   end
 
-  # The foreign id is required to find activities for
-  # changing we need the user here. If users changes their
-  # visiblity, we have to delete activities from stream.
-  def activity_foreign
-    nil
-  end
-
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   def activity_extra_data

@@ -388,10 +388,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 public activities (+2 aggregated)
+        expect(news_feed_follower.count).to be(1) # +1 public activities (+1 aggregated)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(2) # +2 public activities (+2 aggregated)
+        expect(news_feed_follower2.count).to be(1) # +1 public activities (+1 aggregated)
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 

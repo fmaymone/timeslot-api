@@ -84,7 +84,7 @@ resource "Feeds", :activity, :async do
         expect(activity).to have_key("activity")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
+        expect(activity).to have_key("foreign")
         expect(activity).to have_key("message")
         expect(activity).to have_key("data")
         expect(activity).to have_key("actors")
@@ -95,7 +95,7 @@ resource "Feeds", :activity, :async do
         expect(activity['actors'].first.to_i).to eq(current_user.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
+        expect(activity['foreign'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
@@ -143,7 +143,7 @@ resource "Feeds", :activity, :async do
         expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
+        expect(activity).to have_key("foreign")
         expect(activity).to have_key("actors")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
@@ -188,7 +188,7 @@ resource "Feeds", :activity, :async do
         expect(activity['actors']).to eq([actor.id])
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
+        expect(activity['foreign'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
@@ -233,7 +233,7 @@ resource "Feeds", :activity, :async do
         expect(activity).to have_key("activity")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
+        expect(activity).to have_key("foreign")
         expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
@@ -246,7 +246,7 @@ resource "Feeds", :activity, :async do
         expect(activity['actors'].first.to_i).to eq(actor.id)
         expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
+        expect(activity['foreign'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end

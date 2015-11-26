@@ -77,11 +77,13 @@ module Feed
         object: target_feed[2],
         target: target_feed[3],
         activity: target_feed[4],
-        foreignId: target_feed[5],
-        time: target_feed[6],
-        feed: target_feed[7],
-        class: target_feed[8],
-        id: target_feed[9],
+        foreign: target_feed[5],
+        parent: target_feed[6],
+        time: target_feed[7],
+        feed: target_feed[8],
+        class: target_feed[9],
+        id: target_feed[10]
+
     }.as_json
   end
 
@@ -104,7 +106,7 @@ module Feed
       # Enrich with custom activity data (shared objects)
       activity['data'] = { target: target, actor: actor }
       # Add the title to the translation params holder
-      i18_params[:TITLE] = target['title'] || target['name'] if target['title'] || target['name']
+      i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if count > 1
         # Get second actor (from shared objects)
@@ -145,10 +147,12 @@ module Feed
       # Enrich target activity
       post = enrich_activity(post)
       # Generates group tag (acts as the aggregation index)
-      group = post['group'] = "#{post['target']}}" ##{post['activity']#{post['time']}
+      # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
+      group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
+        # NOTE: Currently we aggregate only to the last of all activities of the same target.
         next
         # Determine current aggregation group index
         #current = groups[group]

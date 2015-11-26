@@ -2,6 +2,7 @@ module Activity
 
   def create_activity
     # Trigger "create" as an activity if this should be valid
+
     if activity_is_valid?
       create_activity_feed
       create_activity_stream
@@ -36,10 +37,11 @@ module Activity
         target: activity_target.id.to_s,
         activity: activity_verb,
         message: activity_message_params,
-        foreignId: (activity_foreign ? activity_foreign.id.to_s : ''),
+        foreign: activity_foreign.try(:id).to_s,
+        parent: activity_parent.try(:id).to_s,
         notify: activity_notify,
         data: activity_extra_data,
-        time: (activity_time || self.updated_at),
+        time: activity_time || self.updated_at,
         feed: activity_target.class.name,
         class: self.class.name
       })
@@ -68,9 +70,10 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   def activity_is_valid?
+    self.deleted_at.nil? &&
     activity_actor &&
     activity_target &&
-    self.deleted_at.nil? &&
+    activity_actor.role != 1 &&
     activity_actor.deleted_at.nil? &&
     activity_target.deleted_at.nil?
   end
@@ -101,7 +104,7 @@ module Activity
     end
     # Remove the user who did the actual comment
     user_ids.delete(activity_actor.id.to_s)
-    # Remove if foreignId is similar to the actor
+    # Remove if foreign is similar to the actor
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign && (activity_foreign.id == activity_actor.id)
     user_ids
   end
@@ -109,6 +112,19 @@ module Activity
   # Indicates that the activity target belongs to a group
   def activity_group
     activity_target.try(:group)
+  end
+
+  # The foreign id is required to find activities for
+  # changing we need the user here. If users changes their
+  # visiblity, we have to delete activities from stream.
+  def activity_foreign
+    nil
+  end
+
+  # The parent object is required to merge activities for
+  # same parent objects.
+  def activity_parent
+    nil
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')

@@ -7,7 +7,7 @@ module SlotActivity
     'Slot'
   end
 
-  # The foreign id is required to find activities for
+  # The foreign user is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   def activity_foreign

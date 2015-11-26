@@ -102,19 +102,25 @@ class ReSlot < BaseSlot
 
   ## Activity Methods ##
 
-  private def activity_target
+  private
+
+  def activity_target
     self
   end
 
-  private def activity_actor
+  def activity_actor
     slotter
   end
 
-  private def activity_verb
+  def activity_verb
     'reslot'
   end
 
-  private def activity_foreign
+  def activity_foreign
+    predecessor.creator
+  end
+
+  def activity_parent
     parent
   end
 end

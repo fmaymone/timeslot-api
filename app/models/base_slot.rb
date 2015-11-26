@@ -423,19 +423,17 @@ class BaseSlot < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_target
+  private
+
+  def activity_target
     self
   end
 
-  private def activity_actor
+  def activity_actor
     creator
   end
 
-  private def activity_verb
+  def activity_verb
     'slot'
-  end
-
-  private def activity_foreign
-    nil
   end
 end
