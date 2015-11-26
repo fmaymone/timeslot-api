@@ -73,7 +73,7 @@ module Activity
     self.deleted_at.nil? &&
     activity_actor &&
     activity_target &&
-    activity_actor.role != 1 &&
+    activity_actor.try(:role) != 1 &&
     activity_actor.deleted_at.nil? &&
     activity_target.deleted_at.nil?
   end
