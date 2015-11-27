@@ -198,7 +198,7 @@ module Feed
       # Generates group tag (acts as the aggregation index)
       # NOTE: Currently we aggregate only to the last of all activities of the same target
       # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
-      group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
+      group = post['group'] = "#{post['target']}}" ##{post['activity']#{post['time']} #(post['parent'] || post['target'])
       # Get activity actor
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
