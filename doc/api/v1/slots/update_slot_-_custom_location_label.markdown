@@ -10,7 +10,7 @@ Name : id *- required -*
 Description : ID of the slot to update
 
 Name : visibility
-Description : Visibility of the Slot to update (private/friends/public)
+Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -145,7 +145,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Prv4pwU_kTuzOinNBuXeWkPSvoY
+Authorization: Token token=PyA7fvt16GttQ94EhFefhMIoQDc
 Host: example.org
 Cookie: </pre>
 
@@ -169,7 +169,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Prv4pwU_kTuzOinNBuXeWkPSvoY&quot; \
+	-H &quot;Authorization: Token token=PyA7fvt16GttQ94EhFefhMIoQDc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +180,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5cf258fbfe1f8f4ee312276a99f2a64c&quot;
+ETag: W/&quot;6057577b33a7c90a1a7c9a41003cb1f5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a7b49006-12ab-488a-8a01-85924b224654
-X-Runtime: 0.044049
+X-Request-Id: 5b4bf823-aa77-48a1-b098-3d5482bf9505
+X-Runtime: 0.016530
 Vary: Origin
-Content-Length: 853</pre>
+Content-Length: 850</pre>
 
 #### Status
 
@@ -196,12 +196,12 @@ Content-Length: 853</pre>
 ```javascript
 {
   "id" : 7,
-  "title" : "Slot title 62",
-  "startDate" : "2019-09-13T18:44:02.000Z",
-  "createdAt" : "2015-11-17T23:46:15.290Z",
-  "updatedAt" : "2015-11-17T23:46:15.290Z",
+  "title" : "Slot title 66",
+  "startDate" : "2019-09-17T22:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:33.708Z",
+  "updatedAt" : "2015-11-24T23:47:33.708Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-13T18:44:02.000Z",
+  "endDate" : "2019-10-17T22:44:02.000Z",
   "location" : {
     "id" : 2,
     "name" : "Soho House Custom",
@@ -222,17 +222,17 @@ Content-Length: 853</pre>
     "privateLocation" : false
   },
   "creator" : {
-    "id" : 18,
-    "username" : "User 295",
-    "createdAt" : "2015-11-17T23:46:15.285Z",
-    "updatedAt" : "2015-11-17T23:46:15.285Z",
+    "id" : 17,
+    "username" : "User 299",
+    "createdAt" : "2015-11-24T23:47:33.694Z",
+    "updatedAt" : "2015-11-24T23:47:33.694Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "private",
   "reslotsCounter" : 0,

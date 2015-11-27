@@ -70,7 +70,7 @@ Description : Email of the user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=44CnKG7T0qCpBsZ1bXzoqUt25rk
+Authorization: Token token=N0ty4UrQrnvb4H3BalWlAZIRPUI
 Host: example.org
 Cookie: </pre>
 
@@ -102,7 +102,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=44CnKG7T0qCpBsZ1bXzoqUt25rk&quot; \
+	-H &quot;Authorization: Token token=N0ty4UrQrnvb4H3BalWlAZIRPUI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -113,10 +113,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4828cd287fb5f6ec475af0d30dfd5a3b&quot;
+ETag: W/&quot;53a0e02b9036f204f7b3200c93885d67&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 364c8000-cda1-424f-810d-cf83bb27b3da
-X-Runtime: 0.023738
+X-Request-Id: 700ba35a-3a25-42fb-ae78-4142d77cc604
+X-Runtime: 0.022034
 Vary: Origin
 Content-Length: 711</pre>
 
@@ -128,10 +128,10 @@ Content-Length: 711</pre>
 
 ```javascript
 {
-  "id" : 60,
-  "username" : "User 54",
-  "createdAt" : "2015-11-17T23:46:08.746Z",
-  "updatedAt" : "2015-11-17T23:46:08.746Z",
+  "id" : 56,
+  "username" : "User 50",
+  "createdAt" : "2015-11-24T23:47:28.371Z",
+  "updatedAt" : "2015-11-24T23:47:28.371Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,

@@ -128,7 +128,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user105@email.com",
+  "email" : "user106@email.com",
   "password" : "timeslot",
   "device" : {
     "device" : {
@@ -143,7 +143,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user105@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-253462873410834786765439525&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user106@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-253462873410834786765439525&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -156,10 +156,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b22f099a7eb8e86d49259b54e6987beb&quot;
+ETag: W/&quot;697203b8f2e3d2d1f498dbde0c40a339&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a4b14ef2-7dae-4a5c-bd32-b8d70f03f3ef
-X-Runtime: 0.023552
+X-Request-Id: fd340219-562d-4a95-9f71-cead27744fad
+X-Runtime: 0.029688
 Vary: Origin
 Content-Length: 757</pre>
 
@@ -172,9 +172,9 @@ Content-Length: 757</pre>
 ```javascript
 {
   "id" : 104,
-  "username" : "User 383",
-  "createdAt" : "2015-11-17T23:46:17.145Z",
-  "updatedAt" : "2015-11-17T23:46:17.153Z",
+  "username" : "User 388",
+  "createdAt" : "2015-11-24T23:47:35.498Z",
+  "updatedAt" : "2015-11-24T23:47:35.511Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -182,7 +182,7 @@ Content-Length: 757</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user105@email.com",
+  "email" : "user106@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -200,6 +200,6 @@ Content-Length: 757</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "mKrLDvAkiE9rLAFBbsGEMkNYvAk"
+  "authToken" : "u1fBQk6gufbyrgk4dXH1NvKuC-g"
 }
 ```

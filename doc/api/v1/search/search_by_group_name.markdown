@@ -39,7 +39,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ATuODTjTBsdjhm4kM5P7TLIEkfU
+Authorization: Token token=YZOJPuksZn43Oj6NxvVlLpnikWc
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/group?query=timeslot+developer&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ATuODTjTBsdjhm4kM5P7TLIEkfU&quot; \
+	-H &quot;Authorization: Token token=YZOJPuksZn43Oj6NxvVlLpnikWc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -68,8 +68,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 ETag: W/&quot;32c7474180e9df77af974ca1aa335478&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a8a28f87-0f0a-4468-9e15-11f812a670a5
-X-Runtime: 0.008423
+X-Request-Id: 7bc52d73-423c-4466-9dfc-f70991379d04
+X-Runtime: 0.008543
 Vary: Origin
 Content-Length: 135</pre>
 

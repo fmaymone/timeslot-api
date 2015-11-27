@@ -88,7 +88,7 @@ Description : contains ID of the original slot that was reslottet
 
 #### Headers
 
-<pre>Authorization: Token token=XTlVjU55pYj_Kg3gGxyxG0zXDq0
+<pre>Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -100,7 +100,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/13&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=XTlVjU55pYj_Kg3gGxyxG0zXDq0&quot; \
+	-H &quot;Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d70dc8a571a83ead8346fb57ff2a9bae&quot;
+ETag: W/&quot;b3647e56493b0b7ff01679e9680ef8cb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8f7a6bb0-c540-451b-a430-847319ac2303
-X-Runtime: 0.038115
+X-Request-Id: e8842749-9386-42a4-9fe3-34e87257d61c
+X-Runtime: 0.024207
 Vary: Origin
-Content-Length: 573</pre>
+Content-Length: 570</pre>
 
 #### Status
 
@@ -128,27 +128,27 @@ Content-Length: 573</pre>
 ```javascript
 {
   "id" : 13,
-  "title" : "Slot title 67",
-  "startDate" : "2019-09-18T23:44:02.000Z",
-  "createdAt" : "2015-11-17T23:46:15.892Z",
-  "updatedAt" : "2015-11-17T23:46:15.911Z",
-  "deletedAt" : "2015-11-17T23:46:15.908Z",
-  "endDate" : "2019-10-18T23:44:02.000Z",
+  "title" : "Slot title 71",
+  "startDate" : "2019-09-22T03:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:34.192Z",
+  "updatedAt" : "2015-11-24T23:47:34.239Z",
+  "deletedAt" : "2015-11-24T23:47:34.235Z",
+  "endDate" : "2019-10-22T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 28,
-    "username" : "User 305",
-    "createdAt" : "2015-11-17T23:46:15.871Z",
-    "updatedAt" : "2015-11-17T23:46:15.871Z",
+    "username" : "User 310",
+    "createdAt" : "2015-11-24T23:47:34.176Z",
+    "updatedAt" : "2015-11-24T23:47:34.176Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
-  "reslotsCounter" : 1,
+  "reslotsCounter" : 0,
   "slotter" : {
     "id" : 27
   },

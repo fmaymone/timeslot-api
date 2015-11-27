@@ -97,7 +97,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=77cDkdWZMlS_ts4I-vK2LYaq9ts
+Authorization: Token token=HaMrcAsuIUmCJQ8gguq33AjD6Ps
 Host: example.org
 Cookie: </pre>
 
@@ -109,7 +109,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=77cDkdWZMlS_ts4I-vK2LYaq9ts&quot; \
+	-H &quot;Authorization: Token token=HaMrcAsuIUmCJQ8gguq33AjD6Ps&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -120,10 +120,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;57b034dd3cf5a4da9bbb6c8a0ebf4815&quot;
+ETag: W/&quot;a622ad9cf555e3bbcf733aa408136dfc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e7b36996-9a0b-4f1c-9c7d-0069da90262c
-X-Runtime: 0.032326
+X-Request-Id: 0c7f73eb-5327-40e4-905b-ba0fa2a6956d
+X-Runtime: 0.034628
 Vary: Origin
 Content-Length: 714</pre>
 
@@ -136,9 +136,9 @@ Content-Length: 714</pre>
 ```javascript
 {
   "id" : 100,
-  "username" : "User 155",
-  "createdAt" : "2015-11-17T23:46:11.925Z",
-  "updatedAt" : "2015-11-17T23:46:11.925Z",
+  "username" : "User 151",
+  "createdAt" : "2015-11-24T23:47:30.291Z",
+  "updatedAt" : "2015-11-24T23:47:30.291Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
