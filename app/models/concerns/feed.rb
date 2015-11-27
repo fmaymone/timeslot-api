@@ -196,22 +196,21 @@ module Feed
       # Enrich target activity
       post = enrich_activity(post)
       # Generates group tag (acts as the aggregation index)
+      # NOTE: Currently we aggregate only to the last of all activities of the same target
       # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
       group = post['group'] = "#{(post['parent'] || post['target'])}}" ##{post['activity']#{post['time']}
       # Get activity actor
       actor = post['actor'].to_i
       # If group exist on this page then aggregate to this group
       if groups.has_key?(group)
-        # NOTE: Currently we aggregate only to the last of all activities of the same target.
-        next
         # Determine current aggregation group index
-        #current = groups[group]
+        current = groups[group]
         # Get current aggregation group feed
-        #current_feed = aggregated_feed[current]
+        current_feed = aggregated_feed[current]
         # Update activity count
-        #current_feed['activityCount'] += 1
+        current_feed['activityCount'] += 1
         # Collect actors as unique
-        #current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+        current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
       # If group does not exist, creates a new group for aggregations
       elsif count < limit.to_i
         # Increment index on each new group (starting from -1)

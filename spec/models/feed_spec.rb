@@ -410,15 +410,25 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
         expect(news_feed_follower.count).to be(1) # +1 public activities (+1 aggregated)
+        expect(news_feed_follower.last['actors']).to include(follower2.id) # include last actor?
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +1 public activities (+1 aggregated)
+        expect(news_feed_follower2.last['actors']).to include(follower.id) # include last actor?
         expect(news_feed_follower).not_to eq(news_feed_follower2)
+
+        # Test whats happened if last actor is current user (do action on own slot)
+        reslot_1.create_like(follower)
+        reslot_1.create_comment(follower, 'This is a test comment.')
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 public activities (+1 aggregated)
+        expect(news_feed_follower.last['actors']).to include(follower2.id) # include last actor?
       end
 
       it "Notification Feed (activities to own contents)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(12) # +12 foreign activities to own content
+        expect(notification_feed.last['actors']).to include(follower.id) # include last actor?
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
