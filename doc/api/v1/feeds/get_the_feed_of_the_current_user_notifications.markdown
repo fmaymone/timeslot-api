@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=zBBOxPin47DcZChMOQSSy8hFID4
+Authorization: Token token=tO5_YPkFeR1I6yGJGePkkNAtwUM
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zBBOxPin47DcZChMOQSSy8hFID4&quot; \
+	-H &quot;Authorization: Token token=tO5_YPkFeR1I6yGJGePkkNAtwUM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,12 +141,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9bf679fa60c01767f8a2440ca1d0623a&quot;
+ETag: W/&quot;8fe486eca91c472afa08a87c7253e3bb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f03feee5-bc3f-4744-aa2c-516d4c95f417
-X-Runtime: 0.003733
+X-Request-Id: 1cbd9218-1d8b-49b1-aafa-bdca553ee517
+X-Runtime: 0.004426
 Vary: Origin
-Content-Length: 1068</pre>
+Content-Length: 1996</pre>
 
 #### Status
 
@@ -162,9 +162,9 @@ Content-Length: 1068</pre>
     "target" : "3",
     "activity" : "comment",
     "foreignId" : "9",
-    "time" : "2015-11-17T23:46:10.489Z",
+    "time" : "2015-11-27T15:44:20.030Z",
     "feed" : 3,
-    "id" : "B14861E9B26084D1ED1FA912EA9F23EB91FC6A79",
+    "id" : "462FE0BDD911F941D72AAA6C3318B76B5DD80139",
     "actors" : [
       8
     ],
@@ -173,16 +173,16 @@ Content-Length: 1068</pre>
         "id" : 3,
         "title" : "Slot title 23",
         "startDate" : "2019-09-24T23:44:02.000Z",
-        "createdAt" : "2015-11-17T23:46:10.256Z",
-        "updatedAt" : "2015-11-17T23:46:10.256Z",
+        "createdAt" : "2015-11-27T15:44:20.002Z",
+        "updatedAt" : "2015-11-27T15:44:20.002Z",
         "deletedAt" : null,
         "endDate" : "2019-10-24T23:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 9,
-          "username" : "User 64",
-          "createdAt" : "2015-11-17T23:46:10.246Z",
-          "updatedAt" : "2015-11-17T23:46:10.246Z",
+          "username" : "User 60",
+          "createdAt" : "2015-11-27T15:44:19.988Z",
+          "updatedAt" : "2015-11-27T15:44:19.988Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
@@ -193,7 +193,62 @@ Content-Length: 1068</pre>
           "friendsCount" : 0
         },
         "notes" : [],
-        "media" : [],
+        "media" : [
+          {
+            "mediaId" : 18,
+            "publicId" : "dfhjghjkdisudgfds7iy21",
+            "position" : 5,
+            "localId" : null,
+            "mediaType" : "audio",
+            "createdAt" : "2015-11-27T15:44:20.026Z",
+            "duration" : null,
+            "title" : "Title 21"
+          },
+          {
+            "mediaId" : 17,
+            "publicId" : "dfhjghjkdisudgfds7iy20",
+            "position" : 4,
+            "localId" : null,
+            "mediaType" : "video",
+            "createdAt" : "2015-11-27T15:44:20.022Z",
+            "duration" : null,
+            "thumbnail" : null
+          },
+          {
+            "mediaId" : 16,
+            "publicId" : "dfhjghjkdisudgfds7iy19",
+            "position" : 3,
+            "localId" : null,
+            "mediaType" : "video",
+            "createdAt" : "2015-11-27T15:44:20.018Z",
+            "duration" : null,
+            "thumbnail" : null
+          },
+          {
+            "mediaId" : 15,
+            "publicId" : "dfhjghjkdisudgfds7iy18",
+            "position" : 2,
+            "localId" : null,
+            "mediaType" : "image",
+            "createdAt" : "2015-11-27T15:44:20.014Z"
+          },
+          {
+            "mediaId" : 14,
+            "publicId" : "dfhjghjkdisudgfds7iy17",
+            "position" : 1,
+            "localId" : null,
+            "mediaType" : "image",
+            "createdAt" : "2015-11-27T15:44:20.010Z"
+          },
+          {
+            "mediaId" : 13,
+            "publicId" : "dfhjghjkdisudgfds7iy16",
+            "position" : 0,
+            "localId" : null,
+            "mediaType" : "image",
+            "createdAt" : "2015-11-27T15:44:20.006Z"
+          }
+        ],
         "reslotsCounter" : 0,
         "visibility" : "public",
         "settings" : {
@@ -206,8 +261,8 @@ Content-Length: 1068</pre>
       "actor" : {
         "id" : 8,
         "username" : "User 53",
-        "createdAt" : "2015-11-17T23:46:10.240Z",
-        "updatedAt" : "2015-11-17T23:46:10.240Z",
+        "createdAt" : "2015-11-27T15:44:19.981Z",
+        "updatedAt" : "2015-11-27T15:44:19.981Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
