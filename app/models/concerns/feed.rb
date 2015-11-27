@@ -52,6 +52,53 @@ module Feed
     end
   end
 
+  # Feed Dispatcher
+  #
+  # The activities will be distributed to the related feeds
+  # through social relations and also handle different type of feeds:
+  #
+  # 1. User Feed (takes all "me activities" where actor is the current user)
+  # 2. Public Feed (activities from friends, groups, reslots, followings),
+  #    own activities are not included here as well as activities
+  #    related to the current users content
+  # 3. Notification Feed (takes all activities which are related to the users content),
+  #    own activities are not included here
+
+  def self.dispatch(params)
+    # Generates and add activity id (full params are used here)
+    params[:id] = Digest::SHA1.hexdigest(params.to_json).upcase
+    # Translate class name to enumeration
+    params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
+
+    # Determine target key for redis set
+    target_index = "#{params[:feed]}:#{params[:target]}"
+    # Store target to its own index (shared objects)
+    $redis.set("Target:#{target_index}", gzip_target(params))
+    # Store actor to its own index (shared objects)
+    $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
+
+    # Store activity to targets feed (used for "Write-Opt" Strategy)
+    # Returns the position of added activity (required for asynchronous access)
+    activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
+    # Determine target index for hybrid "Write-Read-Opt"
+    target_key = "#{target_index}:#{activity_index}"
+
+    # Store activity to own feed (me activities)
+    $redis.rpush("Feed:#{params[:actor]}:User", target_key)
+    # Store activity to own notification feed (related to own content, filter out own activities)
+    $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
+
+    # Send to other users through social relations ("Read-Opt" Strategy)
+    unless params[:notify].empty?
+      $redis.pipelined do
+        params[:notify].each do |user|
+          # Store to others public activity feed
+          $redis.rpush("Feed:#{user}:News", target_key)
+        end
+      end
+    end
+  end
+
   private
 
   def self.paginate(feed_index, limit: 25, offset: 0, cursor: nil)
@@ -189,6 +236,13 @@ module Feed
     aggregated_feed
   end
 
+  def self.remove_fields_from_activity(activity)
+    %w(parent class object foreign feed).each do |field|
+      activity.delete(field)
+    end
+    activity
+  end
+
   def self.get_shared_object(feed_index)
     JSON.parse(
       ActiveSupport::Gzip.decompress(
@@ -203,11 +257,22 @@ module Feed
     ))
   end
 
-  def self.remove_fields_from_activity(activity)
-    %w(parent class object foreign feed).each do |field|
-      activity.delete(field)
-    end
-    activity
+  def self.gzip_feed(params)
+    ActiveSupport::Gzip.compress(
+        params.except(:data, :message, :notify).values.to_json
+    )
+  end
+
+  def self.gzip_actor(params)
+    ActiveSupport::Gzip.compress(
+        params[:data][:actor].to_json
+    )
+  end
+
+  def self.gzip_target(params)
+    ActiveSupport::Gzip.compress(
+        params[:data][:target].to_json
+    )
   end
 
   def self.error_handler(error, feed, params)
