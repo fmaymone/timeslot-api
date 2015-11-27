@@ -66,7 +66,7 @@ module Feed
 
   def self.dispatch(params)
     # Generates and add activity id (full params are used here)
-    params[:id] = Digest::SHA1.hexdigest(params.to_json).upcase
+    params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :message).to_json).upcase
     # Translate class name to enumeration
     params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
 
