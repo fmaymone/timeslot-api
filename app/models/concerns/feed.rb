@@ -101,8 +101,8 @@ module Feed
       i18_params = { USER: actor['username'], USERCOUNT: count }
       # Get target (from shared objects)
       target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
-      # Filter out private targets from feed
-      feed.delete(activity) && next if target['visibility'] == 'private'
+      # Prepare filtering out private targets from feed + skip
+      activity.delete('target') and next if target['visibility'] == 'private'
       # Enrich with custom activity data (shared objects)
       activity['data'] = { target: target, actor: actor }
       # Add the title to the translation params holder
@@ -121,7 +121,8 @@ module Feed
       # Update message params with enriched message
       activity['message'] = I18n.t(i18_key, i18_params)
     end
-    feed
+    # Filter out private targets from feed (removed targets from preparation)
+    feed.delete_if { |activity| activity['target'].nil? }
   end
 
   # TODO: We can optimize this by aggregating feeds when storing into redis
