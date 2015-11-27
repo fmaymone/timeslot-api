@@ -220,11 +220,17 @@ class BaseSlot < ActiveRecord::Base
       user.prepare_for_slot_deletion self
     end
 
+    # NOTE: Actually we remove all reslots if one
+    # of the parent/predecessor slot was removed
+    reslots.each(&:delete) if self.try(:reslots)
+
     remove_activity
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete
-    meta_slot.unregister
+
+    # Delete meta slot if it has no parent assigned (skips on reslots)
+    meta_slot.unregister unless self.try(:parent)
   end
 
   def copy_to(targets, user)
