@@ -211,6 +211,8 @@ module Feed
         current_feed['activityCount'] += 1
         # Collect actors as unique
         current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+        # Skip counting for cursor and limits
+        next
       # If group does not exist, creates a new group for aggregations
       elsif count < limit.to_i
         # Increment index on each new group (starting from -1)
