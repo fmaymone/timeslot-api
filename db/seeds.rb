@@ -10,8 +10,22 @@ Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
 
 # Pseudo-User for the webview
-User.create(username: 'webview', role: 1)
+User.create(username: 'webview',
+            role: 1,
+            email: 'webview@timeslot.com')
 # TS_SLOT_WEBSHARING needs the auth_token of this 'webview' user as env variable
 
-# Pseudo-User for the crawler data/slots
-User.create(username: 'Timeslot Official', role: 1, email: 'info@timeslot.com')
+# Pseudo-User for the crawler data/slots aka sources
+User.create(username: 'Timeslot Official',
+            role: 1,
+            email: 'info@timeslot.com')
+User.create(username: 'dfb.de',
+            role: 2,
+            email: 'dfb.crawler@timeslot.com',
+            public_url: "http://dfb.de",
+            picture: "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png")
+User.create(username: 'moviepilot.de',
+            role: 2,
+            email: 'moviepilot.crawler@timeslot.com',
+            public_url: "http://moviepilot.de",
+            picture: "http://www.goldenerwesten.net/neu/wp-content/uploads/2011/04/moviepilot_logo.jpg")
