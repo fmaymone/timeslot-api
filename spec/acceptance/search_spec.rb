@@ -37,8 +37,7 @@ resource "Search" do
         expect(json.first).to have_key "id"
         expect(json.first).to have_key "username"
         expect(json.first).to have_key "image"
-        #expect(json.first).to have_key "url"
-        #expect(json.first).to have_key "friendshipState"
+        expect(json.first).to have_key "friendshipState"
         expect(json.first['id']).to eq(user.id)
       end
     end
@@ -59,8 +58,7 @@ resource "Search" do
         expect(json.first).to have_key "id"
         expect(json.first).to have_key "username"
         expect(json.first).to have_key "image"
-        #expect(json.first).to have_key "url"
-        #expect(json.first).to have_key "friendshipState"
+        expect(json.first).to have_key "friendshipState"
         expect(json.first['id']).to eq(user.id)
       end
     end
@@ -82,8 +80,7 @@ resource "Search" do
         expect(json.first).to have_key "id"
         expect(json.first).to have_key "username"
         expect(json.first).to have_key "image"
-        #expect(json.first).to have_key "url"
-        #expect(json.first).to have_key "friendshipState"
+        expect(json.first).to have_key "friendshipState"
         expect(json.first['id']).to eq(user1.id)
         expect(json.last['id']).to eq(user2.id)
       end
