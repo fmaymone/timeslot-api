@@ -57,7 +57,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ipm14J5z8KBvxY8h5gTbp0MXTEM
+Authorization: Token token=MB4hH5Zw6F94qjTSwZ--MvPLBAc
 Host: example.org
 Cookie: </pre>
 
@@ -74,7 +74,7 @@ method: like</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=John+Do&amp;method=like&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ipm14J5z8KBvxY8h5gTbp0MXTEM&quot; \
+	-H &quot;Authorization: Token token=MB4hH5Zw6F94qjTSwZ--MvPLBAc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -85,12 +85,12 @@ method: like</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e4f748691cf1fb92d6f08df65b37a7bb&quot;
+ETag: W/&quot;1a7558ee973fa10029bcfc111e3d1659&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 281e6ba1-234f-49cf-9b9c-e4e69aaa616c
-X-Runtime: 0.011096
+X-Request-Id: 78efc3d8-626d-4d51-a535-75a60a868369
+X-Runtime: 0.021513
 Vary: Origin
-Content-Length: 215</pre>
+Content-Length: 405</pre>
 
 #### Status
 
@@ -103,16 +103,26 @@ Content-Length: 215</pre>
   {
     "id" : 168,
     "username" : "John Doe",
+    "createdAt" : "2015-11-27T15:44:23.519Z",
+    "updatedAt" : "2015-11-27T15:44:23.519Z",
+    "deletedAt" : null,
     "image" : "",
-    "friendshipState" : null,
-    "url" : "http://example.org/v1/users/168"
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   {
     "id" : 169,
     "username" : "John Doh",
+    "createdAt" : "2015-11-27T15:44:23.523Z",
+    "updatedAt" : "2015-11-27T15:44:23.523Z",
+    "deletedAt" : null,
     "image" : "",
-    "friendshipState" : null,
-    "url" : "http://example.org/v1/users/169"
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   }
 ]
 ```

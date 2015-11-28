@@ -33,7 +33,7 @@ Description : API Key
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ZabSh5uGsZeWqom4oaEEWb80lRc
+Authorization: Token token=4HKevFKBuUoMEfl5yI2m8ngbr2o
 Host: example.org
 Cookie: </pre>
 
@@ -49,7 +49,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/media?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ZabSh5uGsZeWqom4oaEEWb80lRc&quot; \
+	-H &quot;Authorization: Token token=4HKevFKBuUoMEfl5yI2m8ngbr2o&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -60,10 +60,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e0ceaf6e34fd8d0a80498387102846e9&quot;
+ETag: W/&quot;185058340c3840039c01469b0b68a6f2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a3224587-f9e6-4b49-bb53-25b847134845
-X-Runtime: 0.006178
+X-Request-Id: 5f5faa4e-84d7-4f71-bb28-947cf54e4e28
+X-Runtime: 0.006995
 Vary: Origin
 Content-Length: 172</pre>
 
@@ -77,11 +77,11 @@ Content-Length: 172</pre>
 [
   {
     "mediaId" : 43,
-    "publicId" : "dfhjghjkdisudgfds7iy47",
+    "publicId" : "dfhjghjkdisudgfds7iy46",
     "position" : 0,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-11-17T23:46:13.716Z",
+    "createdAt" : "2015-11-27T15:44:23.624Z",
     "duration" : null,
     "thumbnail" : null
   }
