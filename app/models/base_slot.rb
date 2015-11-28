@@ -21,6 +21,7 @@ class BaseSlot < ActiveRecord::Base
                  ReSlotPublic: 7,
                  GroupSlotMembers: 11,
                  GroupSlotPublic: 12,
+                 GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,

@@ -236,6 +236,30 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 
 
 --
+-- Name: global_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE global_slots (
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
+    slot_type integer,
+    share_id character varying(8) DEFAULT ''::character varying,
+    shared_by_id bigint,
+    likes_count integer DEFAULT 0,
+    comments_count integer DEFAULT 0,
+    re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    crawler_id bigint NOT NULL,
+    cuid uuid NOT NULL,
+    duid uuid NOT NULL,
+    url character varying DEFAULT ''::character varying NOT NULL
+)
+INHERITS (base_slots);
+
+
+--
 -- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1387,4 +1411,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151101102829');
 INSERT INTO schema_migrations (version) VALUES ('20151102154547');
 
 INSERT INTO schema_migrations (version) VALUES ('20151122175133');
+
+INSERT INTO schema_migrations (version) VALUES ('20151126144402');
 
