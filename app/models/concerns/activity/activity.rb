@@ -17,12 +17,15 @@ module Activity
   end
 
   def remove_activity
-    # Add current user to the notification array
-    activity_notify << activity_actor.id
     # Remove activities from target feeds:
-    Feed::remove_from_feed(self.class.name, self.id.to_s, activity_notify)
-    # Trigger "delete" as an activity
-    # Pass the current time because this before-callback does not trigger "updated_at"
+    Feed::remove_from_feed(
+        self, # as activity object
+        activity_target,
+        activity_actor,
+        activity_notify
+    )
+    # TODO: Trigger "delete" as an activity
+    # Pass the current time if it is useful
     # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
@@ -102,7 +105,7 @@ module Activity
       return [] if activity_actor.email.eql?('info@timeslot.com')
       user_ids = User.all.collect(&:id).map(&:to_s)
     end
-    # Remove the user who did the actual comment
+    # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove if foreign is similar to the actor
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign && (activity_foreign.id == activity_actor.id)

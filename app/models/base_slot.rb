@@ -172,7 +172,11 @@ class BaseSlot < ActiveRecord::Base
     # means it would be rescued in application_controller.rb and returns 422
     # which is not our intention
   else
-    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    if like.deleted_at? # relike after unlike
+      like.update(deleted_at: nil)
+      like.create_activity
+    end
+    like
   end
 
   def destroy_like(user)

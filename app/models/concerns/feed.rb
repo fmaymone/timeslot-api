@@ -31,9 +31,14 @@ module Feed
 
   # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
   # Each call of the models delete method starts triggering activity deletion.
-  def self.remove_from_feed(feed_type, target_id, notify)
+  def self.remove_from_feed(object, target, actor, notify)
+    # Prepare local vars
+    target_id = target.id.to_s
+    object_id = object.id.to_s
+    object_class = object.class.name
     # Loop through all related feeds
-    notify.each do |user_id|
+    # Add current user to the notification array
+    (notify.as_json << actor.id.to_s).each do |user_id|
       ["Feed:#{user_id}:User",
        "Feed:#{user_id}:News",
        "Feed:#{user_id}:Notification"].each do |feed_key|
@@ -44,8 +49,8 @@ module Feed
           # Enrich target activity
           target_feed = enrich_activity(post)
           # Remove activity
-          if (target_feed['object'] == target_id) and (target_feed['class'] == feed_type)
-            $redis.lrem(feed_key, 1, post)
+          if (target_feed['target'] == target_id) or ((target_feed['object'] == object_id) and (target_feed['class'] == object_class))
+            $redis.lrem(feed_key, 0, post)
           end
         end
       end
@@ -130,7 +135,6 @@ module Feed
         feed: target_feed[8],
         class: target_feed[9],
         id: target_feed[10]
-
     }.as_json
   end
 
@@ -148,7 +152,7 @@ module Feed
       i18_params = { USER: actor['username'], USERCOUNT: count }
       # Get target (from shared objects)
       target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
-      # Prepare filtering out private targets from feed + skip
+      # Prepare filtering out private targets from feed + skip (this is an extra check)
       activity.delete('target') and next if target['visibility'] == 'private'
       # Enrich with custom activity data (shared objects)
       activity['data'] = { target: target, actor: actor }
@@ -172,6 +176,7 @@ module Feed
     end
     # Filter out private targets from feed (removed targets from preparation)
     feed.delete_if { |activity| activity['target'].nil? }
+    feed
   end
 
   # TODO: We can optimize this by aggregating feeds when storing into redis
