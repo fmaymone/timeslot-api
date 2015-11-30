@@ -18,6 +18,10 @@ module Activity
 
   def remove_activity
     begin
+      # Array to dispatch removing activities
+      notify = activity_notify || []
+      notify << activity_actor.id.to_s
+      notify << activity_foreign.id.to_s if activity_foreign
       # Remove activities from target feeds:
       FeedJob.new.async.remove({
         object: self.id.to_s, # as activity object
