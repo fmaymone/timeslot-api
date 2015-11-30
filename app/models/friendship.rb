@@ -95,7 +95,7 @@ class Friendship < ActiveRecord::Base
   ## Activity Methods ##
 
   private def activity_is_valid?
-    established?
+    super and established?
   end
 
   private def activity_target

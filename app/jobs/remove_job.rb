@@ -1,17 +1,16 @@
-class FeedJob
+class RemoveJob
   include SuckerPunch::Job
   workers ENV['NOTIFICATION_WORKERS'] || 5
 
   def perform(params)
     begin
-      Feed.dispatch(params)
+      Feed.remove_from_feed(params)
     rescue => e
       opts = {}
       opts[:parameters] = {
-        actor: params[:actor],
-        object: params[:object],
-        target: params[:target],
-        sucker_punch: "save to feed failed"
+          object: params[:object],
+          target: params[:target],
+          sucker_punch: "remove from feed failed"
       }
       Rails.logger.error { e }
       Airbrake.notify(e, opts)
