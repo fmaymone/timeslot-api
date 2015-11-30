@@ -23,7 +23,7 @@ module Activity
         object: self.id.to_s, # as activity object
         model: self.class.name,
         target: activity_target.id.to_s,
-        notify: (activity_notify << activity_actor.id.to_s).uniq! # activity_foreign.id.to_s
+        notify: (activity_notify << activity_actor.id.to_s).uniq # activity_foreign.id.to_s
       })
       # TODO: Trigger "delete" as an activity
       # Pass the current time if it is useful
@@ -105,7 +105,7 @@ module Activity
       elsif activity_actor
         user_ids += activity_actor.followers
       end
-      user_ids.uniq!
+      user_ids.uniq
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
