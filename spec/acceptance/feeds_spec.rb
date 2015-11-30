@@ -136,7 +136,6 @@ resource "Feeds", :activity, :async do
         expect(activity).to have_key("id")
         expect(activity).to have_key("activity")
         expect(activity).to have_key("activityCount")
-        expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("actors")

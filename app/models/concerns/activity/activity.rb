@@ -106,7 +106,7 @@ module Activity
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove if foreign is similar to the actor
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign && (activity_foreign.id == activity_actor.id)
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign #&& (activity_foreign.id == activity_actor.id)
     user_ids
   end
 

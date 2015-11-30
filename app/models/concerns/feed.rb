@@ -247,7 +247,7 @@ module Feed
     end
 
     private def remove_fields_from_activity(activity)
-      %w(parent class object foreign feed).each do |field|
+      %w(parent class group object foreign feed).each do |field|
         activity.delete(field)
       end
       activity
