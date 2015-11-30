@@ -121,7 +121,6 @@ module Feed
       # Split target index into its components
       feed_params = target_key.split(':')
       # Fetch target activity object from index
-      pp target_key
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", feed_params[2].to_i)
       # Returns the re-builded dictionary (json)
       {
