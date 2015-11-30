@@ -66,6 +66,10 @@ Rails.application.routes.draw do
          as: 'slot_move',
          constraints: { id: /\d+/ }
 
+    scope :globalslots do
+      get 'search', to: 'global_slots#search'
+    end
+
     get 'media-signature', to: 'media#create_signature'
 
     scope :me do

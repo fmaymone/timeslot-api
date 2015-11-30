@@ -16,6 +16,11 @@
 * [Get the feed of public activities (aggregated)](feeds/get_the_feed_of_public_activities_(aggregated).markdown)
 * [Get the feed of the current user notifications](feeds/get_the_feed_of_the_current_user_notifications.markdown)
 
+## GlobalSlots
+
+* [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
+* [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
+
 ## Groups
 
 * [Get all groups where current user is member or owner](groups/get_all_groups_where_current_user_is_member_or_owner.markdown)
