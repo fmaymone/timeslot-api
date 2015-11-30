@@ -232,9 +232,7 @@ class BaseSlot < ActiveRecord::Base
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete
-
-    # Delete meta slot if it has no parent assigned (skips on reslots)
-    meta_slot.unregister unless self.try(:parent)
+    meta_slot.unregister
   end
 
   def copy_to(targets, user)
