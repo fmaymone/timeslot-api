@@ -29,9 +29,7 @@ module Activity
     # create_activity_feed(Time.zone.now) if activity_is_valid?
   end
 
-  private
-
-  def create_activity_feed(activity_time = nil)
+  private def create_activity_feed(activity_time = nil)
     begin
       FeedJob.new.async.perform({
         type: activity_type,
@@ -58,21 +56,21 @@ module Activity
     end
   end
 
-  def create_activity_stream
+  private def create_activity_stream
     # TODO
   end
 
-  def create_activity_push
+  private def create_activity_push
     # TODO
   end
 
-  def create_activity_email
+  private def create_activity_email
     # TODO
   end
 
   # This method should be overridden in the subclass
   # if custom validation is required
-  def activity_is_valid?
+  private def activity_is_valid?
     deleted_at.nil? &&
     activity_actor &&
     activity_target &&
@@ -82,7 +80,7 @@ module Activity
   end
 
   # Returns an array of user which should also be notified
-  def activity_notify
+  private def activity_notify
     # TODO: currently we are sending activities to all users
     # In "real" situation the feed dispatcher collect the related feed
     # through social relations (called: followings), these are also mapped in redis
@@ -113,50 +111,50 @@ module Activity
   end
 
   # Indicates that the activity target belongs to a group
-  def activity_group
+  private def activity_group
     activity_target.try(:group)
   end
 
   # The foreign id is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
-  def activity_foreign
+  private def activity_foreign
     ''
   end
 
   # The parent object is required to merge activities for
   # same parent objects.
-  def activity_parent
+  private def activity_parent
     ''
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
-  def activity_type
+  private def activity_type
       raise NotImplementedError,
             "Subclasses must define the method 'activity_type'."
   end
 
   # The user who made the update
-  def activity_actor
+  private def activity_actor
     raise NotImplementedError,
           "Subclasses must define the method 'activity_actor'."
   end
 
   # The object which includes the update as a target
   # We can use this to group/aggregate activities by slots
-  def activity_target
+  private def activity_target
     raise NotImplementedError,
           "Subclasses must define the method 'activity_target'."
   end
 
   # An activity tag as a verb
-  def activity_verb
+  private def activity_verb
     raise NotImplementedError,
           "Subclasses must define the method 'activity_verb'."
   end
 
   # The message is used as a notification message
-  def activity_message_params
+  private def activity_message_params
     raise NotImplementedError,
           "Subclasses must define the method 'activity_message_params'."
   end
