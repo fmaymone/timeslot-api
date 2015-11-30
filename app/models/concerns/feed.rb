@@ -33,14 +33,10 @@ module Feed
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts triggering activity deletion.
-    def remove_from_feed(object, target, actor, notify)
-      # Prepare local vars
-      target_id = target.id.to_s
-      object_id = object.id.to_s
-      object_class = object.class.name
+    def remove_from_feed(object:, model:, target:, notify:)
       # Loop through all related feeds
       # Add current user to the notification array
-      (notify << actor.id.to_s).each do |user_id|
+      notify.each do |user_id|
         ["Feed:#{user_id}:User",
          "Feed:#{user_id}:News",
          "Feed:#{user_id}:Notification"].each do |feed_key|
@@ -51,7 +47,7 @@ module Feed
             # Enrich target activity
             target_feed = enrich_activity(post)
             # Remove activity
-            if (target_feed['target'] == target_id) or ((target_feed['object'] == object_id) and (target_feed['class'] == object_class))
+            if (target_feed['target'] == target) or ((target_feed['object'] == object) and (target_feed['class'] == model))
               $redis.lrem(feed_key, 0, post)
             end
           end

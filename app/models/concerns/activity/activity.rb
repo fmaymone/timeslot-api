@@ -17,16 +17,25 @@ module Activity
   end
 
   def remove_activity
-    # Remove activities from target feeds:
-    Feed::remove_from_feed(
-        self, # as activity object
-        activity_target,
-        activity_actor,
-        activity_notify
-    )
-    # TODO: Trigger "delete" as an activity
-    # Pass the current time if it is useful
-    # create_activity_feed(Time.zone.now) if activity_is_valid?
+    begin
+      # Remove activities from target feeds:
+      FeedJob.new.async.remove({
+        object: self.id.to_s, # as activity object
+        model: self.class.name,
+        target: activity_target.id.to_s,
+        notify: activity_notify.concat([ activity_actor.id.to_s, activity_foreign.try(:id).to_s ]).uniq!
+      })
+      # TODO: Trigger "delete" as an activity
+      # Pass the current time if it is useful
+      # create_activity_feed(Time.zone.now) if activity_is_valid?
+    rescue => error
+      opts = {}
+      opts[:parameters] = {
+        activity: "failed: remove activity as worker job"
+      }
+      Rails.logger.error { error }
+      Airbrake.notify(error, opts)
+    end
   end
 
   private def create_activity_feed(activity_time = nil)

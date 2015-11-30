@@ -581,7 +581,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         # Delete Target (Activity Target)
         slot.delete
-        slot.reload
       end
 
       it "User Feed (me activities)" do
