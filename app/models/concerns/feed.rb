@@ -33,7 +33,7 @@ module Feed
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts triggering activity deletion.
-    def remove_from_feed(object:, model:, target:, notify: [])
+    def remove_from_feed(object:, model:, target:, notify:)
       # Loop through all related feeds
       # Add current user to the notification array
       notify.each do |user_id|

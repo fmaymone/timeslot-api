@@ -23,7 +23,7 @@ module Activity
         object: self.id.to_s, # as activity object
         model: self.class.name,
         target: activity_target.id.to_s,
-        notify: activity_notify.concat([ activity_actor.id.to_s, activity_foreign.try(:id).to_s ]).uniq!
+        notify: (activity_notify << activity_actor.id.to_s).uniq! # activity_foreign.id.to_s
       })
       # TODO: Trigger "delete" as an activity
       # Pass the current time if it is useful
