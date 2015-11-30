@@ -54,7 +54,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=3gK9dtsG52NJMkagmGESxcNHKDE
+Authorization: Token token=ah6md5Fs1zgP053sggtt24mQYZc
 Host: example.org
 Cookie: </pre>
 
@@ -70,7 +70,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+doe&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3gK9dtsG52NJMkagmGESxcNHKDE&quot; \
+	-H &quot;Authorization: Token token=ah6md5Fs1zgP053sggtt24mQYZc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -81,12 +81,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9eae78a5d35eef5cf13debaa94b276f0&quot;
+ETag: W/&quot;2d4065279981980f8b788795a44ca2b3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f370bade-020f-4d99-88af-10ae85e3845c
-X-Runtime: 0.168693
+X-Request-Id: 3d198bfb-7ee9-4f0e-b927-a8a3b2ba98b8
+X-Runtime: 0.124489
 Vary: Origin
-Content-Length: 203</pre>
+Content-Length: 108</pre>
 
 #### Status
 
@@ -99,14 +99,9 @@ Content-Length: 203</pre>
   {
     "id" : 164,
     "username" : "John Doe",
-    "createdAt" : "2015-11-27T15:44:23.303Z",
-    "updatedAt" : "2015-11-27T15:44:23.303Z",
-    "deletedAt" : null,
     "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "friendshipState" : null,
+    "url" : "http://example.org/v1/users/164"
   }
 ]
 ```

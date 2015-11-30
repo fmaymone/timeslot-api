@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=GmTF4qrTcCQbxdk4uotUB0FRYrk
+Authorization: Token token=iNQLDYq1JXjdCpHdJja7yyEADGc
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=GmTF4qrTcCQbxdk4uotUB0FRYrk&quot; \
+	-H &quot;Authorization: Token token=iNQLDYq1JXjdCpHdJja7yyEADGc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,10 +75,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1f04958d4b5780640e45fe977c485059&quot;
+ETag: W/&quot;203bd529314520eb0719e0084774f071&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1d39587c-2f8d-468a-a9c0-89304f0ff4b6
-X-Runtime: 0.017162
+X-Request-Id: b0179659-c05f-4ede-b32e-200672592dac
+X-Runtime: 0.013223
 Vary: Origin
 Content-Length: 525</pre>
 
@@ -94,16 +94,16 @@ Content-Length: 525</pre>
     "id" : 30,
     "title" : "Timeslot Party Berlin 2015",
     "startDate" : "2019-09-24T02:44:02.000Z",
-    "createdAt" : "2015-11-27T15:44:23.576Z",
-    "updatedAt" : "2015-11-27T15:44:23.576Z",
+    "createdAt" : "2015-11-24T23:47:31.975Z",
+    "updatedAt" : "2015-11-24T23:47:31.975Z",
     "deletedAt" : null,
     "endDate" : "2019-10-24T02:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 171,
       "username" : "User 211",
-      "createdAt" : "2015-11-27T15:44:23.563Z",
-      "updatedAt" : "2015-11-27T15:44:23.563Z",
+      "createdAt" : "2015-11-24T23:47:31.958Z",
+      "updatedAt" : "2015-11-24T23:47:31.958Z",
       "deletedAt" : null,
       "image" : ""
     },

@@ -80,7 +80,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=bF-R0M8_q9jJHDghOXCMKyMKnpA
+Authorization: Token token=ok68z7T8lnGf3fsRwUDMI-oJZug
 Host: example.org
 Cookie: </pre>
 
@@ -92,7 +92,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/36/share&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=bF-R0M8_q9jJHDghOXCMKyMKnpA&quot; \
+	-H &quot;Authorization: Token token=ok68z7T8lnGf3fsRwUDMI-oJZug&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -103,12 +103,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;57c44b8c3150a3391c8aceae26110e9a&quot;
+ETag: W/&quot;6a5b142c82eddd3baf5aa8b024d1a672&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fb0444f0-c2c0-4814-8e9d-de6a85e6f269
-X-Runtime: 0.029735
+X-Request-Id: 7ff8ffc1-bb07-466e-bcea-2eb8d72c290e
+X-Runtime: 0.019438
 Vary: Origin
-Content-Length: 540</pre>
+Content-Length: 537</pre>
 
 #### Status
 
@@ -119,30 +119,30 @@ Content-Length: 540</pre>
 ```javascript
 {
   "id" : 36,
-  "title" : "Slot title 92",
-  "startDate" : "2019-09-16T00:44:02.000Z",
-  "createdAt" : "2015-11-17T23:46:16.947Z",
-  "updatedAt" : "2015-11-17T23:46:16.968Z",
+  "title" : "Slot title 96",
+  "startDate" : "2019-09-20T04:44:02.000Z",
+  "createdAt" : "2015-11-24T23:47:35.320Z",
+  "updatedAt" : "2015-11-24T23:47:35.340Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-16T00:44:02.000Z",
+  "endDate" : "2019-10-20T04:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 96,
-    "username" : "User 377",
-    "createdAt" : "2015-11-17T23:46:16.940Z",
-    "updatedAt" : "2015-11-17T23:46:16.940Z",
+    "username" : "User 382",
+    "createdAt" : "2015-11-24T23:47:35.313Z",
+    "updatedAt" : "2015-11-24T23:47:35.313Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
-    "alerts" : "0000000000"
+    "alerts" : "omitted"
   },
   "visibility" : "public",
   "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/oxx77xwR"
+  "shareUrl" : "http://localhost:3100/QVa1XFud"
 }
 ```
