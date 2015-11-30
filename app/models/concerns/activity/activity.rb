@@ -101,7 +101,7 @@ module Activity
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
       return [] if activity_actor.email.eql?('info@timeslot.com')
-      user_ids = User.all.collect(&:id).map(&:to_s)
+      user_ids = User.all.collect(&:id).map(&:to_s).as_json
     end
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)

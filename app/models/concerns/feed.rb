@@ -40,7 +40,7 @@ module Feed
       object_class = object.class.name
       # Loop through all related feeds
       # Add current user to the notification array
-      (notify.as_json << actor.id.to_s).each do |user_id|
+      (notify << actor.id.to_s).each do |user_id|
         ["Feed:#{user_id}:User",
          "Feed:#{user_id}:News",
          "Feed:#{user_id}:Notification"].each do |feed_key|
@@ -121,6 +121,7 @@ module Feed
       # Split target index into its components
       feed_params = target_key.split(':')
       # Fetch target activity object from index
+      pp target_key
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", feed_params[2].to_i)
       # Returns the re-builded dictionary (json)
       {
