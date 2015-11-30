@@ -20,7 +20,7 @@ class FeedJob
 
   def remove(params)
     begin
-      Feed.remove_from_feed(params) unless params[:notify].nil?
+      Feed.remove_from_feed(params)
     rescue => e
       opts = {}
       opts[:parameters] = {
