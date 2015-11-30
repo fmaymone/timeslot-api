@@ -23,7 +23,7 @@ module Activity
       notify << activity_actor.id.to_s
       notify << activity_foreign.id.to_s if activity_foreign
       # Remove activities from target feeds:
-      FeedJob.new.async.remove({
+      RemoveJob.new.async.perform({
         object: self.id.to_s, # as activity object
         model: self.class.name,
         target: activity_target.id.to_s,
