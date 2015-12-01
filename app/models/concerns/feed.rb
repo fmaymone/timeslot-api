@@ -33,7 +33,7 @@ module Feed
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts triggering activity deletion.
-    def remove_from_feed(object:, model:, target:, notify:)
+    def remove_from_feed(object, model, target, notify)
       # Loop through all related feeds
       # Add current user to the notification array
       notify.each do |user_id|
@@ -91,6 +91,8 @@ module Feed
       # Store activity to own notification feed (related to own content, filter out own activities)
       $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
 
+      # Remove predecessor creator from news feed
+      params[:notify].delete(params[:foreign]) if params[:foreign].present?
       # Send to other users through social relations ("Read-Opt" Strategy)
       unless params[:notify].empty?
         $redis.pipelined do
