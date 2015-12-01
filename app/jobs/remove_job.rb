@@ -4,7 +4,12 @@ class RemoveJob
 
   def perform(params)
     begin
-      Feed.remove_from_feed(params)
+      Feed.remove_from_feed(
+          params[:object],
+          params[:model],
+          params[:target],
+          params[:notify]
+      )
     rescue => e
       opts = {}
       opts[:parameters] = {

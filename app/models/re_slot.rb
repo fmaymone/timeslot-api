@@ -76,13 +76,14 @@ class ReSlot < BaseSlot
     # if same original event was already reslottet by user, use this reslot
     reslot = where(slotter: slotter, parent: original_source).take
 
+    slotter.follow(predecessor)
+
     # if deleted reslot was reslottet again, unset deleted_at & update predecessor
     if reslot && reslot.deleted_at?
       reslot.update(deleted_at: nil)
       reslot.update(predecessor: predecessor)
+      reslot.create_activity
     end
-
-    slotter.follow(predecessor)
 
     unless reslot
       reslot = create(slotter: slotter,

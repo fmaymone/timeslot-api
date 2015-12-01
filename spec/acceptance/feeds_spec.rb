@@ -151,7 +151,6 @@ resource "Feeds", :activity, :async do
         expect(activity_slot).to have_key("endDate")
         expect(activity_slot).to have_key("location")
         expect(activity_slot).to have_key("creator")
-        expect(activity_slot).to have_key("settings")
         expect(activity_slot).to have_key("createdAt")
         expect(activity_slot).to have_key("updatedAt")
         expect(activity_slot).to have_key("deletedAt")

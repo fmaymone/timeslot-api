@@ -13,36 +13,18 @@ module Activity
   end
 
   def update_activity
-    # TODO
+    # TODO: [TML-77]
   end
 
   def remove_activity
-    begin
-      # Array to dispatch removing activities
-      notify = activity_notify || []
-      notify << activity_actor.id.to_s
-      notify << activity_foreign.id.to_s if activity_foreign
-      # Remove activities from target feeds:
-      RemoveJob.new.async.perform({
-        object: self.id.to_s, # as activity object
-        model: self.class.name,
-        target: activity_target.id.to_s,
-        notify: (activity_notify << activity_actor.id.to_s).uniq # activity_foreign.id.to_s
-      })
-      # TODO: Trigger "delete" as an activity
-      # Pass the current time if it is useful
-      # create_activity_feed(Time.zone.now) if activity_is_valid?
-    rescue => error
-      opts = {}
-      opts[:parameters] = {
-        activity: "failed: remove activity as worker job"
-      }
-      Rails.logger.error { error }
-      Airbrake.notify(error, opts)
-    end
+    remove_activity_feed
+    remove_activity_push
   end
 
   private def create_activity_feed(activity_time = nil)
+    # Reload last modified data
+    activity_target.save
+    activity_actor.save
     begin
       FeedJob.new.async.perform({
         type: activity_type,
@@ -74,17 +56,47 @@ module Activity
   end
 
   private def create_activity_push
-    # TODO
+    # TODO: [TML-109], [TML-108]
   end
 
   private def create_activity_email
     # TODO
   end
 
+  private def remove_activity_feed
+    begin
+      # Add actor and foreign user to the activity removal dispatcher
+      notify = activity_notify || []
+      notify << activity_actor.id.to_s
+      notify << activity_foreign.id.to_s if activity_foreign.present?
+      # Remove activities from target feeds:
+      RemoveJob.new.async.perform({
+          object: self.id.to_s,
+          model: self.class.name,
+          target: activity_target.id.to_s,
+          notify: notify.uniq
+      })
+      # TODO: Dispatch "delete" action as an activity
+      # Pass the current time if it is useful
+      # create_activity_feed(Time.zone.now) if activity_is_valid?
+    rescue => error
+      opts = {}
+      opts[:parameters] = {
+          activity: "failed: remove activity as worker job"
+      }
+      Rails.logger.error { error }
+      Airbrake.notify(error, opts)
+    end
+  end
+
+  private def remove_activity_push
+    # TODO: [TML-71]
+  end
+
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
-    deleted_at.nil? &&
+    self.deleted_at.nil? &&
     activity_actor &&
     activity_target &&
     activity_actor.role != 1 &&
