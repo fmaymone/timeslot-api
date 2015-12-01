@@ -23,7 +23,7 @@ RSpec.describe "V1::Search", type: :request do
   end
 
   describe "GET /v1/search/user" do
-    let(:query) {{ query: 'Us' }}
+    let(:query) {{ query: 'xyz' }}
 
     it "returns empty array if query was too short" do
       get "/v1/search/user", query, auth_header
@@ -85,7 +85,7 @@ RSpec.describe "V1::Search", type: :request do
   end
 
   describe "GET /v1/search/user" do
-    let(:query) {{ query: 'jon doe' }}
+    let(:query) {{ query: 'joh do' }}
     let!(:users) {[ create(:user, :with_email, username: 'Foo Bar'), # not included
                     create(:user, :with_email, username: 'John Doe'), # optimum result
                     create(:user, :with_email, username: 'John Dolce'),
@@ -100,7 +100,7 @@ RSpec.describe "V1::Search", type: :request do
     it "returns sorted search results of users" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
-      expect(json.length).to eq 7
+      expect(json.length).to eq 5
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
       expect(json.first['username']).to eq('John Doe')
