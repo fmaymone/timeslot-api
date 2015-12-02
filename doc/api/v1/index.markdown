@@ -53,6 +53,8 @@
 * [Device - Unregister device from push notification service](me/device_-_unregister_device_from_push_notification_service.markdown)
 * [Device - Update default device attributes](me/device_-_update_default_device_attributes.markdown)
 * [Add Friends - Request Friendship / Accept Friend Request](me/add_friends_-_request_friendship__accept_friend_request.markdown)
+* [Create or Accept Friend Requests](me/create_or_accept_friend_requests.markdown)
+* [Unfriending / Cancel or Refuse Friend Requests](me/unfriending__cancel_or_refuse_friend_requests.markdown)
 * [Remove Friends - Unfriending / Refuse Friend Requests](me/remove_friends_-_unfriending__refuse_friend_requests.markdown)
 
 ## Media
