@@ -879,7 +879,7 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
 
-    context "requesting frienship twice" do
+    context "requesting friendship twice" do
       it "is still pending (there was a BUG)" do
         post "/v1/me/add_friends", { ids: [john.id] }, auth_header
         expect(john.friendship(current_user.id)).not_to be nil
