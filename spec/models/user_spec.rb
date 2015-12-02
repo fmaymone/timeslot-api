@@ -724,33 +724,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :offered_friendship do
-    let(:john) { create(:user, username: "John") }
-    let(:mary) { create(:user, username: "Mary") }
-    let(:alice) { create(:user, username: "Alice") }
-    let(:bob) { create(:user, username: "Bob") }
-    let!(:friendship_1) {
-      create(:friendship, user: user, friend: mary) }
-    let!(:friendship_2) {
-      create(:friendship, user: john, friend: user) }
-    let!(:friendship_3) {
-      create(:friendship, :established, user: alice, friend: user) }
-    let!(:friendship_4) {
-      create(:friendship, :established, user: user, friend: bob) }
-
-    it "returns the friendship object if a friendship was offered" \
-       " to the current user by to other user" do
-      expect(user.offered_friendship(john)).to eq friendship_2
-    end
-
-    it "returns nil if no friendship was offered" \
-       " to the current user by to other user" do
-      expect(user.offered_friendship(mary)).to be nil
-      expect(user.offered_friendship(alice)).to be nil
-      expect(user.offered_friendship(bob)).to be nil
-    end
-  end
-
   describe "friendship associations" do
     let(:john) { create(:user, username: "John") }
     let(:mary) { create(:user, username: "Mary") }

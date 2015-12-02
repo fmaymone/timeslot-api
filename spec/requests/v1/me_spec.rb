@@ -875,7 +875,7 @@ RSpec.describe "V1::Me", type: :request do
     context "no offer" do
       it "creates a friend request" do
         post "/v1/me/add_friends", { ids: [john.id] }, auth_header
-        expect(john.offered_friendship(current_user.id)).not_to be nil
+        expect(john.friendship(current_user.id)).not_to be nil
       end
     end
 

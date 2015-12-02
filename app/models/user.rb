@@ -268,10 +268,6 @@ class User < ActiveRecord::Base
       received_friendships.find_by("user_id= ?", user_id)
   end
 
-  def offered_friendship(user_id)
-    received_friendships.open.find_by("user_id= ?", user_id)
-  end
-
   def add_friends(user_ids)
     user_ids.each do |id|
       if fs = friendship(id)
