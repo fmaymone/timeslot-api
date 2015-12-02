@@ -669,7 +669,7 @@ RSpec.describe User, type: :model do
 
     describe "broken friendship, initiated by user" do
       let!(:friendship) {
-        create(:friendship, :inactive, user: user, friend: john) }
+        create(:friendship, :rejected, user: user, friend: john) }
 
       it "doesn't create a new friendship" do
         expect {
@@ -678,7 +678,6 @@ RSpec.describe User, type: :model do
       end
 
       it "updates friend request state to 'offered'" do
-        expect(Friendship.last.deleted_at?).to be true
         user.add_friends([john.id])
         friendship.reload
         expect(friendship.state).to eq OFFERED
@@ -688,7 +687,7 @@ RSpec.describe User, type: :model do
 
     describe "broken friendship, initiated by friend" do
       let!(:friendship) {
-        create(:friendship, :inactive, user: john, friend: user) }
+        create(:friendship, :rejected, user: john, friend: user) }
 
       it "doesn't create a new friendship" do
         expect {
@@ -697,7 +696,7 @@ RSpec.describe User, type: :model do
       end
 
       it "updates friend request state to 'offered'" do
-        expect(Friendship.last.deleted_at?).to be true
+        expect(Friendship.last.deleted_at?).to be false
         user.add_friends([john.id])
         friendship.reload
         expect(friendship.state).to eq OFFERED

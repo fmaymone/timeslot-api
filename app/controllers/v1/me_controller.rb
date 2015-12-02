@@ -100,7 +100,7 @@ module V1
     end
 
     # POST /v1/me/add_friends
-    # creates friend request or accepts friend request if one exists
+    # creates friend requests or accepts friend requests if they exist
     def add_friends
       authorize :me
       current_user.add_friends friends_ids

@@ -287,7 +287,7 @@ class User < ActiveRecord::Base
 
   def remove_friends(user_ids)
     user_ids.each do |id|
-      friendship(id).try(:inactivate)
+      friendship(id).try(:reject)
     end
   end
 

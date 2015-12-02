@@ -16,8 +16,7 @@ class Friendship < ActiveRecord::Base
   validates :state, presence: true
 
   def offer
-    update!(state: OFFERED)
-    update!(deleted_at: nil) if deleted_at?
+    update!(state: OFFERED) unless deleted_at?
   end
 
   def offered?
@@ -35,8 +34,16 @@ class Friendship < ActiveRecord::Base
     state == ESTABLISHED && !deleted_at?
   end
 
+  # reject can be 3 things:
+  # - cancel established friendship
+  # - cancel open friend request (from me to someone else)
+  # - refuse open friend request (from someone else to me)
   def reject
-    update!(state: REJECTED)
+    if established?
+      user.unfollow(friend)
+      friend.unfollow(user)
+    end
+    update!(state: REJECTED) unless deleted_at?
   end
 
   def rejected?
@@ -45,6 +52,10 @@ class Friendship < ActiveRecord::Base
 
   # when user deactivates account, need to preserve state
   # also called when friendships end
+  # -> not anymore. This wasn't a good idea, inactivate should ONLY be called
+  # if a user inactivates his account, because otherwise all
+  # canceled friendships would be re-enabled when the user
+  # reactivates his profile.
   def inactivate
     user.unfollow(friend)
     friend.unfollow(user)
