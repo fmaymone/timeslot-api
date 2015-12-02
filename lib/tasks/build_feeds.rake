@@ -5,6 +5,8 @@ namespace :feed do
 
   task :build => :environment do
 
+    allow_any_instance_of(Activity).to receive(:create_activity_push).and_return(nil)
+
     # Deactivate console logging
     ActiveRecord::Base.logger.level = 1
 
@@ -71,5 +73,7 @@ namespace :feed do
     # Re-Build Activities #
     # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
     storage.uniq.sort_by{|a| a[:updated_at]}.last(1000).each(&:create_activity)
+
+    allow_any_instance_of(Activity).to receive(:create_activity_push).and_call_original
   end
 end
