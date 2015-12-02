@@ -83,23 +83,39 @@ module Feed
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts triggering activity deletion.
     def remove_from_feed(object, model, target, feed, notify)
-      # Loop through all related feeds
-      # Add current user to the notification array
-      notify.each do |user_id|
-        ["Feed:#{user_id}:User",
-         "Feed:#{user_id}:News",
-         "Feed:#{user_id}:Notification"].each do |feed_key|
-          # Fetch all target activities
-          activities = $redis.lrange(feed_key, 0, -1)
-          # Loop through all activities
-          activities.each do |post|
-            # Enrich target activity
-            target_feed = enrich_activity(post)
+
+      # We using backtracking to improve performance by removing activities through all feeds
+      # To backtrack activities from its corresponding target feed it is required to find the index which
+      # points to the target feed index, where the related activity is stored
+      recursive_index = -1
+
+      # NOTE: Actually all targets are from type BaseSlot to simplify generics
+      # Translate class name to enumeration
+      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+      # Fetch all activities from target feed (shared feed)
+      target_feed_length = $redis.llen("Feed:#{target_key}") - 1
+
+      # Loop through all shared activities to find backtracking index
+      # NOTE: This loop may can be skipped if using redis pointers
+      (0..target_feed_length).each do |index|
+        # Enrich target activity
+        activity = enrich_activity(target_key, index)
+        # Identify activity
+        if ((activity['target'] == target) and (activity['feed'] == feed)) \
+        or ((activity['object'] == object) and (activity['model'] == model))
+          recursive_index = index
+          break
+        end
+      end
+
+      if recursive_index > -1
+        # Loop through all related user feeds through social relations
+        notify.each do |user_id|
+          %W(Feed:#{user_id}:User
+             Feed:#{user_id}:News
+             Feed:#{user_id}:Notification).each do |feed_key|
             # Remove activity
-            if ((target_feed['target'] == target) and (target_feed['feed'] == feed)) \
-            or ((target_feed['object'] == object) and (target_feed['model'] == model))
-              $redis.lrem(feed_key, 0, post)
-            end
+            $redis.lrem(feed_key, 0, "#{target_key}:#{recursive_index}")
           end
         end
       end
@@ -116,11 +132,11 @@ module Feed
       feed.map{ |a| enrich_activity(a) }
     end
 
-    private def enrich_activity(target_key)
+    private def enrich_activity(target_key, index = nil)
       # Split target index into its components
       feed_params = target_key.split(':')
       # Fetch target activity object from index
-      target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", feed_params[2].to_i)
+      target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index.nil? ? feed_params[2].to_i : index)
       # Returns the re-builded dictionary (json)
       {
           type: target_feed[0],
@@ -146,15 +162,15 @@ module Feed
         activity.delete('actor')
         # Determine translation params
         # Get the first actor (from shared objects)
-        # actor = get_shared_object("Actor:#{activity['actors'].first}")
-        # NOTE: This is temporary solution for syncing issues on iOS
-        actor = JSONView.user(User.find(activity['actors'].first))
+        actor = get_shared_object("Actor:#{activity['actors'].first}")
+        # FIX: This is temporary solution for syncing issues on iOS
+        # actor = JSONView.user(User.find(activity['actors'].first))
         # Adds the first username and sets usercount to translation params
         i18_params = { USER: actor['username'], USERCOUNT: count }
         # Get target (from shared objects)
-        # target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
-        # NOTE: This is temporary solution for syncing issues on iOS
-        target = JSONView.slot(BaseSlot.get(activity['target']))
+        target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
+        # FIX: This is temporary solution for syncing issues on iOS
+        # target = JSONView.slot(BaseSlot.get(activity['target']))
         # Prepare filtering out private targets from feed + skip (this is an extra check)
         activity.delete('target') and next if target['visibility'] == 'private'
         # Enrich with custom activity data (shared objects)

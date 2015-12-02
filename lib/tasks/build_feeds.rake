@@ -76,7 +76,8 @@ namespace :feed do
       # Re-Build Activities #
       # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
       storage.uniq.sort_by{|a| a[:updated_at]}.last(1000).each(&:create_activity)
-
+    rescue
+      #handle the error here
     ensure
       # Turn on push notifications
       Rails.application.config.SKIP_PUSH_NOTIFICATION = false
