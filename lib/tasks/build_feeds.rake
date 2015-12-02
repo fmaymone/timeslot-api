@@ -1,9 +1,12 @@
 require 'sucker_punch/testing/inline'
+require 'rspec/mocks'
 
 namespace :feed do
   desc "Seed redis with activities"
 
   task :build => :environment do
+
+    RSpec::Mocks::setup
 
     # allow_any_instance_of(Activity).to receive(:create_activity_push).and_return(nil)
     Activity.should_receive(:create_activity_push).and_return(nil)
