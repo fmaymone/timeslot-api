@@ -879,6 +879,19 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
 
+    context "requesting frienship twice" do
+      it "is still pending (there was a BUG)" do
+        post "/v1/me/add_friends", { ids: [john.id] }, auth_header
+        expect(john.friendship(current_user.id)).not_to be nil
+        friendship = Friendship.last
+        expect(friendship.state).to eq OFFERED
+
+        post "/v1/me/add_friends", { ids: [john.id] }, auth_header
+        friendship.reload
+        expect(friendship.state).to eq OFFERED
+      end
+    end
+
     context "existing open offer from friend" do
       let!(:friendship) {
         create(:friendship, user: john, friend: current_user)
