@@ -687,9 +687,24 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :user_id, "ID of the User for whom the friendship/request" \
-                        "should be invalidated.",
+    parameter :user_id,
+              "ID of the User for whom the friendship/request should be" \
+              " invalidated.",
               required: true
+
+    response_field :id, "ID of the other user"
+    response_field :username, "Username of the other user"
+    response_field :image, "URL of the other users image"
+    response_field :location, "Home location of other user"
+    # response_field :push, "Send push Notifications (true/false)"
+    response_field :createdAt, "Creation of user"
+    response_field :updatedAt, "Latest update of user in db"
+    response_field :deletedAt, "Deletion of user"
+    response_field :slotCount, "Number of slots for other user"
+    response_field :reslotCount, "Number of reslots for other user"
+    response_field :friendsCount, "Number of friends for other user"
+    response_field :friendshipState, "[pending active, pending passive, " \
+                                     "friend, stranger]"
 
     let(:john) { create(:user, username: "John") }
     let(:user_id) { john.id }
@@ -720,9 +735,24 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :user_id, "ID of the User for whom the friendship/request" \
-                        "should be invalidated.",
+    parameter :user_id,
+              "ID of the User for whom the friendship/request " \
+              "should be invalidated.",
               required: true
+
+    response_field :id, "ID of the other user"
+    response_field :username, "Username of the other user"
+    response_field :image, "URL of the other users image"
+    response_field :location, "Home location of other user"
+    # response_field :push, "Send push Notifications (true/false)"
+    response_field :createdAt, "Creation of user"
+    response_field :updatedAt, "Latest update of user in db"
+    response_field :deletedAt, "Deletion of user"
+    response_field :slotCount, "Number of slots for other user"
+    response_field :reslotCount, "Number of reslots for other user"
+    response_field :friendsCount, "Number of friends for other user"
+    response_field :friendshipState, "[pending active, pending passive, " \
+                                     "friend, stranger]"
 
     let(:john) { create(:user, username: "John") }
     let!(:friendship) {
