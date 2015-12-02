@@ -82,6 +82,7 @@ class ReSlot < BaseSlot
     if reslot && reslot.deleted_at?
       reslot.update(deleted_at: nil)
       reslot.update(predecessor: predecessor)
+      BaseSlot.increment_counter(:re_slots_count, reslot.parent_id)
       reslot.create_activity
     end
 

@@ -174,6 +174,7 @@ class BaseSlot < ActiveRecord::Base
   else
     if like.deleted_at? # relike after unlike
       like.update(deleted_at: nil)
+      BaseSlot.increment_counter(:likes_count, id)
       like.create_activity
     end
     like

@@ -565,8 +565,11 @@ RSpec.describe "V1::Slots", type: :request do
         # does a reslot of the same event again
         let(:reslot) { create(:re_slot, predecessor: pred) }
         let!(:existing_deleted_reslot) {
-          create(:re_slot, predecessor: reslot, slotter: current_user,
-                 deleted_at: Time.zone.now)
+          rs = create(:re_slot, predecessor: reslot, slotter: current_user,
+                      deleted_at: Time.zone.now)
+          # must manually decrement here
+          BaseSlot.decrement_counter(:re_slots_count, rs.parent_id)
+          rs
         }
 
         it "doesn't create a new reslot" do
@@ -584,6 +587,9 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/reslot/", valid_attributes, auth_header
           existing_deleted_reslot.reload
           expect(existing_deleted_reslot.deleted_at).to be nil
+          existing_deleted_reslot.reload
+          expect(existing_deleted_reslot.reslots.count)
+            .to eq existing_deleted_reslot.re_slots_count
         end
 
         it "updates the predecessor" do
@@ -1634,15 +1640,22 @@ RSpec.describe "V1::Slots", type: :request do
         expect {
           post "/v1/slots/#{std_slot.id}/like", {}, auth_header
         }.not_to change(Like, :count)
+        expect(std_slot.likes.count).to eq std_slot.likes_count
         expect {
           post "/v1/slots/#{std_slot.id}/like", {}, auth_header
         }.not_to raise_error
+        expect(std_slot.likes.count).to eq std_slot.likes_count
       end
 
       it "re-like slot which was unliked" do
         like = create(:like, user: current_user, slot: std_slot,
                       deleted_at: Time.zone.now)
+        # must manually decrement here
+        BaseSlot.decrement_counter(:likes_count, std_slot.id)
+
         expect(like.deleted_at).not_to be nil
+        std_slot.reload
+        expect(std_slot.likes.count).to eq std_slot.likes_count
 
         expect {
           post "/v1/slots/#{std_slot.id}/like", {}, auth_header
@@ -1650,10 +1663,13 @@ RSpec.describe "V1::Slots", type: :request do
 
         like.reload
         expect(like.deleted_at).to be nil
+        std_slot.reload
+        expect(std_slot.likes.count).to eq std_slot.likes_count
 
         expect {
           post "/v1/slots/#{std_slot.id}/like", {}, auth_header
         }.not_to raise_error
+        expect(std_slot.likes.count).to eq std_slot.likes_count
       end
     end
 
