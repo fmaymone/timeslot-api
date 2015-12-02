@@ -682,6 +682,41 @@ resource "Me" do
     end
   end
 
+  delete "/v1/me/friendship/:user_id" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :user_id, "ID of the User for whom the friendship/request" \
+                        "should be invalidated.",
+              required: true
+
+    let(:john) { create(:user, username: "John") }
+    let!(:friendship) {
+      create(:friendship, :established, user: john, friend: current_user) }
+    let(:user_id) { john.id }
+
+    example "Unfriending / Cancel or Refuse Friend Requests",
+            document: :v1 do
+      explanation "Deletes the friendship if both Users are friends.\n\n" \
+                  "Refuses an open friend request from other User to " \
+                  "current user.\n\n" \
+                  "Cancels an open friend request from current user to " \
+                  "other User.\n\n" \
+                  "Returns OK and the data of the given User." \
+                  "Returns 404 if the given User ID does not exist or the " \
+                  "User has his account deactivated."
+      do_request
+
+      expect(response_status).to be 200
+      current_user.reload
+      expect(current_user.friends).not_to include john
+      expect(response_body).to include john.username
+      expect(json).to have_key('friendshipState')
+      friendship.reload
+      expect(json['friendshipState']).to eq friendship.humanize
+    end
+  end
+
   post "/v1/me/remove_friends" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"

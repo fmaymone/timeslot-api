@@ -285,10 +285,18 @@ class User < ActiveRecord::Base
     end
   end
 
+  # TODO: can probably be removed
   def remove_friends(user_ids)
     user_ids.each do |id|
       friendship(id).try(:reject)
     end
+  end
+
+  def invalidate_friendship(user_id)
+    if existing_friendship = friendship(user_id)
+      existing_friendship.reject
+    end
+    existing_friendship
   end
 
   # TODO: send only user_id as param instead of full object

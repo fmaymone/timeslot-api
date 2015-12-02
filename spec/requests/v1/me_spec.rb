@@ -903,4 +903,54 @@ RSpec.describe "V1::Me", type: :request do
       end
     end
   end
+
+  describe "DELETE /v1/me/friendship/:user_id" do
+    let(:john) { create(:user, username: "John") }
+
+    context "no offer" do
+      it "does nothing, maybe return error here?" do
+        expect {
+          delete "/v1/me/friendship/#{john.id}", {}, auth_header
+        }.not_to change(john.friendships, :count)
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "existing open offer from friend" do
+      let!(:friendship) {
+        create(:friendship, user: john, friend: current_user)
+      }
+      it "rejects a friend request" do
+        expect(friendship.established?).to be false
+        delete "/v1/me/friendship/#{john.id}", {}, auth_header
+        friendship.reload
+        expect(friendship.rejected?).to be true
+      end
+    end
+
+    context "existing open offer from current user" do
+      let!(:friendship) {
+        create(:friendship, user: current_user, friend: john)
+      }
+      it "rejects a friend request" do
+        expect(friendship.established?).to be false
+        delete "/v1/me/friendship/#{john.id}", {}, auth_header
+        friendship.reload
+        expect(friendship.rejected?).to be true
+      end
+    end
+
+    context "previously rejected friendship" do
+      let!(:friendship) {
+        create(:friendship, :rejected, user: john, friend: current_user)
+      }
+      it "does nothing, returns ok (idempotence)" do
+        expect(friendship.rejected?).to be true
+        delete "/v1/me/friendship/#{john.id}", {}, auth_header
+        expect(response).to have_http_status :ok
+        friendship.reload
+        expect(friendship.rejected?).to be true
+      end
+    end
+  end
 end
