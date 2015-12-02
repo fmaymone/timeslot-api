@@ -73,23 +73,20 @@ class Friendship < ActiveRecord::Base
   # must use this style here
   class << self
     def open
-      # where(deleted_at: nil).where(state: '00')
       where(deleted_at: nil, state: OFFERED)
     end
 
     def established
-      # where(deleted_at: nil).where(state: '11')
       where(deleted_at: nil, state: ESTABLISHED)
     end
   end
 
   def humanize
     case state
-    when "00" then "offered"
-    when "11" then "established"
-    when "01" then "rejected"
-    else "undefined"
+    when OFFERED then "pending"
+    when ESTABLISHED then "friend"
     end
+    # returns nil otherwise
   end
 
   ## Activity Methods ##

@@ -74,11 +74,12 @@ RSpec.describe Friendship, type: :model do
   end
 
   describe :humanize do
-    let(:friendship) { create(:friendship, :established, friend: create(:user)) }
-    let(:resultValues) { [ {'00' => 'offered'}, {'11' => 'established'},
-        {'01' => 'rejected'} ] }
+    let(:friendship) {
+      create(:friendship, :established, friend: create(:user)) }
+    let(:resultValues) {
+      [{'00' => 'pending'}, {'11' => 'friend'}, {'01' => nil}] }
 
-    it "return friendship state as a string" do
+    it "maps friendship state to string or nil" do
       resultValues.each do |res|
         friendship.state = res.keys[0]
         expect(friendship.humanize).to eq res.values[0]
