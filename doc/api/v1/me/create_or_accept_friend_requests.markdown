@@ -13,14 +13,50 @@ Returns OK and the data of the given User.Returns 404 if the given User ID does 
 ### Parameters
 
 Name : user_id *- required -*
-Description : ID of the User for whom the friendship/requestshould be invalidated.
+Description : ID of the User for whom the friendship/request should be invalidated.
+
+
+### Response Fields
+
+Name : id
+Description : ID of the other user
+
+Name : username
+Description : Username of the other user
+
+Name : image
+Description : URL of the other users image
+
+Name : location
+Description : Home location of other user
+
+Name : createdAt
+Description : Creation of user
+
+Name : updatedAt
+Description : Latest update of user in db
+
+Name : deletedAt
+Description : Deletion of user
+
+Name : slotCount
+Description : Number of slots for other user
+
+Name : reslotCount
+Description : Number of reslots for other user
+
+Name : friendsCount
+Description : Number of friends for other user
+
+Name : friendshipState
+Description : [pending active, pending passive, friend, stranger]
 
 ### Request
 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=pnV3-npsO6G0_2099kgvFzp74ns
+Authorization: Token token=R0CBAROpzPASnoXmg0hkZmCp0sA
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -33,7 +69,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friendship/159&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=pnV3-npsO6G0_2099kgvFzp74ns&quot; \
+	-H &quot;Authorization: Token token=R0CBAROpzPASnoXmg0hkZmCp0sA&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -45,12 +81,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5256756e11b539926a164ee8499cbfff&quot;
+ETag: W/&quot;ea2d1a2ba93aaee7f497180077815e13&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 149b67a4-084f-41dc-83fe-3f7fedf14edf
-X-Runtime: 0.020257
+X-Request-Id: 213095a3-b0f2-4f65-9df4-92c435a92b77
+X-Runtime: 0.022674
 Vary: Origin
-Content-Length: 225</pre>
+Content-Length: 232</pre>
 
 #### Status
 
@@ -62,14 +98,14 @@ Content-Length: 225</pre>
 {
   "id" : 159,
   "username" : "John",
-  "createdAt" : "2015-12-02T02:27:13.829Z",
-  "updatedAt" : "2015-12-02T02:27:13.829Z",
+  "createdAt" : "2015-12-02T22:50:54.337Z",
+  "updatedAt" : "2015-12-02T22:50:54.337Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "friendshipState" : "pending"
+  "friendshipState" : "pending active"
 }
 ```

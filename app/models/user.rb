@@ -270,7 +270,7 @@ class User < ActiveRecord::Base
 
   def add_friends(user_ids)
     user_ids.each do |id|
-      initiate_friendship(id)
+      initiate_friendship(id.to_i)
     end
   end
 
@@ -282,13 +282,22 @@ class User < ActiveRecord::Base
   end
 
   def initiate_friendship(user_id)
+    # gibt es schon was zw uns beiden
     if fs = friendship(user_id)
-      if fs.offered?
-        fs.accept
+      # ja
+      if fs.established?
+        # alles tuti
+        return fs
+      # sind wir gescheitert zuvor?
       elsif fs.rejected?
+        # versuchen wir es noch mal
         fs.offer
+      # geht es um eine vorliegende Freundschaftsanfrage AN mich?
+      elsif fs.offered? && (user_id == fs.user_id)
+        fs.accept
       end
     else
+      # nein
       requested_friends << User.find(user_id)
       save
     end

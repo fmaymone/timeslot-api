@@ -15,14 +15,50 @@ Returns OK and the data of the given User.Returns 404 if the given User ID does 
 ### Parameters
 
 Name : user_id *- required -*
-Description : ID of the User for whom the friendship/requestshould be invalidated.
+Description : ID of the User for whom the friendship/request should be invalidated.
+
+
+### Response Fields
+
+Name : id
+Description : ID of the other user
+
+Name : username
+Description : Username of the other user
+
+Name : image
+Description : URL of the other users image
+
+Name : location
+Description : Home location of other user
+
+Name : createdAt
+Description : Creation of user
+
+Name : updatedAt
+Description : Latest update of user in db
+
+Name : deletedAt
+Description : Deletion of user
+
+Name : slotCount
+Description : Number of slots for other user
+
+Name : reslotCount
+Description : Number of reslots for other user
+
+Name : friendsCount
+Description : Number of friends for other user
+
+Name : friendshipState
+Description : [pending active, pending passive, friend, stranger]
 
 ### Request
 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=GNgisacbRpJ9U6FJeefJYb8eBrk
+Authorization: Token token=hp7PQ3x1je6-VSy74FOHq8cPW6Q
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -35,7 +71,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friendship/161&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=GNgisacbRpJ9U6FJeefJYb8eBrk&quot; \
+	-H &quot;Authorization: Token token=hp7PQ3x1je6-VSy74FOHq8cPW6Q&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -47,12 +83,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1381580e0456d3a237cf111a1e0a9c7a&quot;
+ETag: W/&quot;b3d9dd05bb652627b1d8a5fb69d8ce6b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 184147c7-312b-43d0-8896-a121be364a1c
-X-Runtime: 0.015200
+X-Request-Id: 597a822a-69d0-4977-90a9-a9bd917ab1e7
+X-Runtime: 0.025330
 Vary: Origin
-Content-Length: 220</pre>
+Content-Length: 226</pre>
 
 #### Status
 
@@ -64,14 +100,14 @@ Content-Length: 220</pre>
 {
   "id" : 161,
   "username" : "John",
-  "createdAt" : "2015-12-02T02:27:13.872Z",
-  "updatedAt" : "2015-12-02T02:27:13.872Z",
+  "createdAt" : "2015-12-02T22:50:54.384Z",
+  "updatedAt" : "2015-12-02T22:50:54.384Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "reslotCount" : 0,
   "friendsCount" : 0,
-  "friendshipState" : null
+  "friendshipState" : "stranger"
 }
 ```

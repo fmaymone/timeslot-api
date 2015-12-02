@@ -92,12 +92,18 @@ class Friendship < ActiveRecord::Base
     end
   end
 
-  def humanize
-    case state
-    when OFFERED then "pending"
-    when ESTABLISHED then "friend"
+  def humanize(concerned_user = nil)
+    if state == OFFERED
+      case concerned_user
+      when friend then "pending passive"
+      when user then "pending active"
+      when nil then "pending"
+      end
+    elsif state == ESTABLISHED
+      "friend"
+    else
+      "stranger"
     end
-    # returns nil otherwise
   end
 
   ## Activity Methods ##
