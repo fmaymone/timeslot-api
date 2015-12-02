@@ -103,7 +103,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 5
       expect(json.first).to have_key('username')
       expect(json.first).to have_key('id')
-      expect(json.first['username']).to eq('John Doe')
+      expect(json.first['username']).to eq('Joh Do')
       expect(json.last['username']).to eq('Johny Doehetry')
     end
   end
