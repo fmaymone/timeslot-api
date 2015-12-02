@@ -6,8 +6,9 @@ module V1
     def show
       authorize :user
       @user = User.find(params[:id])
+      friendship = @user.friendship(current_user)
 
-      render :show, locals: { user: @user }
+      render :show, locals: { user: @user, friendship: friendship }
     end
 
     # POST /v1/users

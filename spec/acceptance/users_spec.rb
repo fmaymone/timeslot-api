@@ -240,12 +240,13 @@ resource "Users" do
         expect(json).to have_key "slotCount"
         expect(json).to have_key "reslotCount"
         expect(json).to have_key "friendsCount"
+        expect(json).to have_key "friendshipState"
         expect(json).not_to have_key "authToken"
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
         expect(
           json.except('image', 'friendsCount', 'reslotCount',
-                      'slotCount', 'location')
+                      'slotCount', 'location', 'friendshipState')
         ).to eq(user.attributes.as_json
                  .except("auth_token", "password_digest", "role", 'public_url',
                          'push', 'device_token', 'email', 'email_verified',

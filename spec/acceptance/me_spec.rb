@@ -712,7 +712,7 @@ resource "Me" do
       expect(response_body).to include john.username
       expect(json).to have_key('friendshipState')
       friendship = Friendship.last
-      expect(json['friendshipState']).to eq friendship.humanize
+      expect(json['friendshipState']).to eq friendship.humanize(current_user)
     end
   end
 
