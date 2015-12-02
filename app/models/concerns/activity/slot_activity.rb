@@ -17,7 +17,7 @@ module SlotActivity
   end
 
   private def push_is_valid?
-    true
+    !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
   # Add extra data to each activity. The data can be hide
