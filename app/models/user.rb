@@ -270,18 +270,7 @@ class User < ActiveRecord::Base
 
   def add_friends(user_ids)
     user_ids.each do |id|
-      if fs = friendship(id)
-        if fs.established?
-          next
-        elsif fs.offered?
-          fs.accept
-        else
-          fs.offer
-        end
-      else
-        requested_friends << User.find(id)
-        save
-      end
+      initiate_friendship(id)
     end
   end
 
@@ -290,6 +279,20 @@ class User < ActiveRecord::Base
     user_ids.each do |id|
       friendship(id).try(:reject)
     end
+  end
+
+  def initiate_friendship(user_id)
+    if fs = friendship(user_id)
+      if fs.offered?
+        fs.accept
+      elsif fs.rejected?
+        fs.offer
+      end
+    else
+      requested_friends << User.find(user_id)
+      save
+    end
+    fs || friendship(user_id)
   end
 
   def invalidate_friendship(user_id)

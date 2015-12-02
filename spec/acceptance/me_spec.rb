@@ -673,12 +673,46 @@ resource "Me" do
       do_request
 
       expect(response_status).to be 200
+      current_user.reload
       expect(current_user.friends).to include john
       expect(current_user.friends).to include mary
       expect(current_user.requested_friends).to include alice
       expect(current_user.requested_friends).not_to include john
       expect(current_user.requested_friends).not_to include mary
       expect(current_user.requested_friends.size).to eq 4
+    end
+  end
+
+  post "/v1/me/friendship/:user_id" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :user_id, "ID of the User for whom the friendship/request" \
+                        "should be invalidated.",
+              required: true
+
+    let(:john) { create(:user, username: "John") }
+    let(:user_id) { john.id }
+
+    example "Create or Accept Friend Requests",
+            document: :v1 do
+      explanation "Accepts an open friend request from other User to " \
+                  "current user if one exists.\n\n" \
+                  "Creates an open friend request from current user to " \
+                  "other User if none exists yet.\n\n" \
+                  "Returns OK and the data of the given User." \
+                  "Returns 404 if the given User ID does not exist or the " \
+                  "User has his account deactivated."
+      do_request
+
+      expect(response_status).to be 200
+      current_user.reload
+      expect(current_user.friends).not_to include john
+      expect(current_user.requested_friends).to include john
+      expect(response_body).to include john.username
+      expect(json).to have_key('friendshipState')
+      friendship = Friendship.last
+      expect(json['friendshipState']).to eq friendship.humanize
     end
   end
 
