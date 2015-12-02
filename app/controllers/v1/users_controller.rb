@@ -7,7 +7,7 @@ module V1
       authorize :user
       @user = User.find(params[:id])
 
-      render :show
+      render :show, locals: { user: @user }
     end
 
     # POST /v1/users
