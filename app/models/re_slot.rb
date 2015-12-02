@@ -115,8 +115,4 @@ class ReSlot < BaseSlot
   private def activity_verb
     'reslot'
   end
-
-  private def activity_foreign
-    predecessor.creator
-  end
 end

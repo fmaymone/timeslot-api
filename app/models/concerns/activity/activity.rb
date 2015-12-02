@@ -6,7 +6,7 @@ module Activity
     if activity_is_valid?
       create_activity_feed
       create_activity_stream
-      create_activity_push
+      create_activity_push if push_is_valid?
       create_activity_email
     end
     self
@@ -56,7 +56,12 @@ module Activity
   end
 
   private def create_activity_push
-    # TODO: [TML-109], [TML-108]
+    message_content = I18n.t("slot_#{activity_verb}_push_singular",
+                             USER: activity_actor.username,
+                             TITLE: activity_target.title)
+
+    Device.notify_all(push_notify, [ message: message_content,
+                                     slot_id: activity_target.id ])
   end
 
   private def create_activity_email
@@ -105,6 +110,12 @@ module Activity
     activity_target.deleted_at.nil?
   end
 
+  # This method should be overridden in the subclass
+  # if custom validation is required
+  private def push_is_valid?
+    false
+  end
+
   # Returns an array of user which should also be notified
   private def activity_notify
     # TODO: currently we are sending activities to all users
@@ -113,8 +124,8 @@ module Activity
     # To test the intended logic, we use this temporary switch here
     # This is only for current simulation of a "public activity feed"
     # When the iOS has implemented friends and groups, we can remove this switch
-    if Rails.env.test?
-      # Test of feed distribution through social relations
+    unless Rails.env.production?
+      # Feed distribution through social relations:
       user_ids = activity_target.followers
       # When target belongs to a group we do not notify user followers (e.g. friends)
       if activity_group
@@ -122,7 +133,7 @@ module Activity
       elsif activity_actor
         user_ids += activity_actor.followers
       end
-      user_ids.uniq
+      user_ids
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
@@ -134,6 +145,11 @@ module Activity
     # Remove if foreign is similar to the actor
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign #&& (activity_foreign.id == activity_actor.id)
     user_ids
+  end
+
+  # Returns an array of user which should be via push notification (AWS SNS)
+  private def push_notify
+    []
   end
 
   # Indicates that the activity target belongs to a group

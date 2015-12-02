@@ -29,4 +29,15 @@ class Comment < ActiveRecord::Base
   private def activity_verb
     'comment'
   end
+
+  private def push_notify
+    # Is the creator really what we want?
+    # For std_slots we want the owner. For Groupslots?
+    user_ids = super
+    user_ids += activity_target.comments.pluck(:user_id)
+    user_ids += activity_target.likes.pluck(:user_id)
+    # Remove the user who did the actual activity
+    user_ids.delete(activity_actor.id)
+    user_ids.uniq
+  end
 end
