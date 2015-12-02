@@ -382,11 +382,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
   end
 
   context "Mixed feeds & Aggregation", :redis do
-    let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
+    let!(:user) { create(:user) }
+    let!(:meta_slot) { create(:meta_slot, creator: user) }
     let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
-    let(:group_meta_slot) { create(:meta_slot, creator: user) }
-    let(:group) { create(:group, owner: user) }
+    let!(:group_meta_slot) { create(:meta_slot, creator: user) }
+    let!(:group) { create(:group, owner: user) }
     let!(:group_slot) { create(:group_slot, meta_slot: group_meta_slot, group: group) }
     let!(:reslot_1) { create(:re_slot, predecessor: slot, parent: slot, slotter: follower) }
     let!(:reslot_2) { create(:re_slot, predecessor: reslot_1, parent: slot, slotter: follower2) }
@@ -492,11 +492,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_follower[5]['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(user_feed_follower[5]['data']['target']['reslotsCounter']).to be(slot.reslots.count)
         expect(user_feed_follower[5]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[6]['data']['target']['id']).to be(reslot_1.id)
-        # TODO: The last reslot contains no likes, comments?
-        # expect(user_feed_follower[6]['data']['target']['likes']).to be(slot.likes.count)
-        # expect(user_feed_follower[6]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[6]['data']['target']['reslotsCounter']).to be(reslot_1.reslots.count)
+        expect(user_feed_follower[6]['data']['target']['id']).to be(slot.id)
+        expect(user_feed_follower[6]['data']['target']['likes']).to be(slot.likes.count)
+        expect(user_feed_follower[6]['data']['target']['commentsCounter']).to be(slot.comments.count)
+        expect(user_feed_follower[6]['data']['target']['reslotsCounter']).to be(slot.reslots.count)
         expect(user_feed_follower[6]['data']['actor']['id']).to be(follower.id)
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
@@ -521,11 +520,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_follower2[3]['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(user_feed_follower2[3]['data']['target']['reslotsCounter']).to be(slot.reslots.count)
         expect(user_feed_follower2[3]['data']['actor']['id']).to be(follower2.id)
-        expect(user_feed_follower2[4]['data']['target']['id']).to be(reslot_2.id)
-        # TODO: The last reslot contains no likes, comments?
-        # expect(user_feed_follower2[4]['data']['target']['likes']).to be(reslot_2.likes.count)
-        # expect(user_feed_follower2[4]['data']['target']['commentsCounter']).to be(reslot_2.comments.count)
-        # expect(user_feed_follower2[4]['data']['target']['reslotsCounter']).to be(reslot_2.reslots.count)
+        expect(user_feed_follower2[4]['data']['target']['id']).to be(slot.id)
+        expect(user_feed_follower2[4]['data']['target']['likes']).to be(slot.likes.count)
+        expect(user_feed_follower2[4]['data']['target']['commentsCounter']).to be(slot.comments.count)
+        expect(user_feed_follower2[4]['data']['target']['reslotsCounter']).to be(slot.reslots.count)
         expect(user_feed_follower2[4]['data']['actor']['id']).to be(follower2.id)
 
         expect(user_feed_follower).not_to eq(user_feed_follower2)
@@ -589,11 +587,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed[9]['data']['actor']['id']).to be(follower.id)
         expect(notification_feed[10]['data']['actor']['id']).to be(follower2.id)
         expect(notification_feed[11]['data']['actor']['id']).to be(follower.id)
-        expect(notification_feed[11]['data']['target']['id']).to be(reslot_1.id)
-        # TODO: The last reslot contains no likes, comments?
-        # expect(notification_feed[11]['data']['target']['likes']).to be(reslot_1.likes.count)
-        # expect(notification_feed[11]['data']['target']['commentsCounter']).to be(reslot_1.comments.count)
-        # expect(notification_feed[11]['data']['target']['reslotsCounter']).to be(reslot_1.reslots.count)
+        expect(notification_feed[11]['data']['target']['id']).to be(slot.id)
+        expect(notification_feed[11]['data']['target']['likes']).to be(slot.likes.count)
+        expect(notification_feed[11]['data']['target']['commentsCounter']).to be(slot.comments.count)
+        expect(notification_feed[11]['data']['target']['reslotsCounter']).to be(slot.reslots.count)
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
@@ -613,9 +610,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Unfollow (removes Slot-related relationship)
         follower.unfollow(slot)
         follower2.unfollow(slot)
-        # Unfollow (removes Group-related relationship)
-        follower.unfollow(group)
-        follower2.unfollow(group)
+        # Unfollow (removes Reslot-related relationship)
+        follower.unfollow(slot)
+        follower2.unfollow(reslot_1)
+        user.unfollow(reslot_2)
         # Unfollow (removes Group-related relationship)
         follower.unfollow(group)
         follower2.unfollow(group)
@@ -644,11 +642,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(0) # has no followings
+        expect(news_feed_follower.count).to be(1) # +1 public activity (reslot)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).to eq(news_feed_follower2)
+        expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do

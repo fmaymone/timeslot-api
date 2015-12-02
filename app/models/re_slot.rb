@@ -105,7 +105,7 @@ class ReSlot < BaseSlot
   ## Activity Methods ##
 
   private def activity_target
-    self
+    predecessor
   end
 
   private def activity_actor
@@ -118,9 +118,5 @@ class ReSlot < BaseSlot
 
   private def activity_foreign
     predecessor.creator
-  end
-
-  private def activity_parent
-    parent
   end
 end

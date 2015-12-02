@@ -30,16 +30,16 @@ module Activity
         type: activity_type,
         actor: activity_actor.id.to_s,
         object: self.id.to_s,
+        model: self.class.name,
         target: activity_target.id.to_s,
         activity: activity_verb,
         message: activity_message_params,
         foreign: activity_foreign.try(:id).to_s,
-        parent: activity_parent.try(:id).to_s,
+        #parent: activity_parent.try(:id).to_s,
         notify: activity_notify,
         data: activity_extra_data,
         time: activity_time || self.updated_at,
-        feed: activity_target.class.name,
-        class: self.class.name
+        feed: activity_target.class.name
       })
     rescue => error
       opts = {}
@@ -74,6 +74,7 @@ module Activity
           object: self.id.to_s,
           model: self.class.name,
           target: activity_target.id.to_s,
+          feed: activity_target.class.name,
           notify: notify.uniq
       })
       # TODO: Dispatch "delete" action as an activity
@@ -149,9 +150,9 @@ module Activity
 
   # The parent object is required to merge activities for
   # same parent objects.
-  private def activity_parent
-    ''
-  end
+  # private def activity_parent
+  #   ''
+  # end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
   private def activity_type

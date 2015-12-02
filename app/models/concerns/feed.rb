@@ -31,30 +31,6 @@ module Feed
       end
     end
 
-    # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
-    # Each call of the models delete method starts triggering activity deletion.
-    def remove_from_feed(object, model, target, notify)
-      # Loop through all related feeds
-      # Add current user to the notification array
-      notify.each do |user_id|
-        ["Feed:#{user_id}:User",
-         "Feed:#{user_id}:News",
-         "Feed:#{user_id}:Notification"].each do |feed_key|
-          # Fetch all target activities
-          feed = $redis.lrange(feed_key, 0, -1)
-          # Loop through all activities
-          feed.each do |post|
-            # Enrich target activity
-            target_feed = enrich_activity(post)
-            # Remove activity
-            if (target_feed['target'] == target) or ((target_feed['object'] == object) and (target_feed['class'] == model))
-              $redis.lrem(feed_key, 0, post)
-            end
-          end
-        end
-      end
-    end
-
     # Feed Dispatcher
     #
     # The activities will be distributed to the related feeds
@@ -104,6 +80,31 @@ module Feed
       end
     end
 
+    # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
+    # Each call of the models delete method starts triggering activity deletion.
+    def remove_from_feed(object, model, target, feed, notify)
+      # Loop through all related feeds
+      # Add current user to the notification array
+      notify.each do |user_id|
+        ["Feed:#{user_id}:User",
+         "Feed:#{user_id}:News",
+         "Feed:#{user_id}:Notification"].each do |feed_key|
+          # Fetch all target activities
+          activities = $redis.lrange(feed_key, 0, -1)
+          # Loop through all activities
+          activities.each do |post|
+            # Enrich target activity
+            target_feed = enrich_activity(post)
+            # Remove activity
+            if ((target_feed['target'] == target) and (target_feed['feed'] == feed)) \
+            or ((target_feed['object'] == object) and (target_feed['model'] == model))
+              $redis.lrem(feed_key, 0, post)
+            end
+          end
+        end
+      end
+    end
+
     private def paginate(feed_index, limit: 25, offset: 0, cursor: nil)
       # Get offset in reversed logic (LIFO), supports simple cursor fallback
       offset = cursor ? cursor.to_i : offset.to_i
@@ -125,14 +126,14 @@ module Feed
           type: target_feed[0],
           actor: target_feed[1],
           object: target_feed[2],
-          target: target_feed[3],
-          activity: target_feed[4],
-          foreign: target_feed[5],
-          parent: target_feed[6],
+          model: target_feed[3],
+          target: target_feed[4],
+          activity: target_feed[5],
+          foreign: target_feed[6],
+          #parent: target_feed[7],
           time: target_feed[7],
           feed: target_feed[8],
-          class: target_feed[9],
-          id: target_feed[10]
+          id: target_feed[9]
       }.as_json
     end
 
@@ -244,8 +245,10 @@ module Feed
       aggregated_feed
     end
 
+    ## Helpers ##
+
     private def remove_fields_from_activity(activity)
-      %w(parent class group object foreign feed).each do |field|
+      %w(parent group object foreign feed model).each do |field|
         activity.delete(field)
       end
       activity
