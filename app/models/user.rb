@@ -268,31 +268,38 @@ class User < ActiveRecord::Base
       received_friendships.find_by("user_id= ?", user_id)
   end
 
-  def offered_friendship(user_id)
-    received_friendships.open.find_by("user_id= ?", user_id)
-  end
-
   def add_friends(user_ids)
     user_ids.each do |id|
-      if fs = friendship(id)
-        if fs.established?
-          next
-        elsif fs.offered?
-          fs.accept
-        else
-          fs.offer
-        end
-      else
-        requested_friends << User.find(id)
-        save
-      end
+      initiate_friendship(id)
     end
   end
 
+  # TODO: can probably be removed
   def remove_friends(user_ids)
     user_ids.each do |id|
-      friendship(id).try(:inactivate)
+      friendship(id).try(:reject)
     end
+  end
+
+  def initiate_friendship(user_id)
+    if fs = friendship(user_id)
+      if fs.offered?
+        fs.accept
+      elsif fs.rejected?
+        fs.offer
+      end
+    else
+      requested_friends << User.find(user_id)
+      save
+    end
+    fs || friendship(user_id)
+  end
+
+  def invalidate_friendship(user_id)
+    if existing_friendship = friendship(user_id)
+      existing_friendship.reject
+    end
+    existing_friendship
   end
 
   # TODO: send only user_id as param instead of full object

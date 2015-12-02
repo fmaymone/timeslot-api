@@ -17,7 +17,7 @@ module UserQuery
       ut = User.arel_table
       fst = Friendship.arel_table
 
-      established = fst[:deleted_at].eq(nil).and(fst[:state].eq('11'))
+      established = fst[:deleted_at].eq(nil).and(fst[:state].eq(ESTABLISHED))
 
       # prepare join statements
       constraint_user = ut.create_on(ut[:id].eq(fst[:user_id]))

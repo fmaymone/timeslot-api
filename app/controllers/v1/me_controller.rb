@@ -99,8 +99,33 @@ module V1
       head :ok
     end
 
+    # POST /v1/me/friendship/1
+    # creates a friend request to given user or accepts existing friend request
+    def befriend
+      authorize :me
+      new_friend = User.find params[:user_id]
+
+      friendship = current_user.initiate_friendship new_friend.id
+
+      render "v1/users/friend", locals: { user: new_friend,
+                                          friendship: friendship }
+    end
+
+    # DELETE /v1/me/friendship/1
+    # cancels existing friendship, rejects offered friendship,
+    # deletes open friend request
+    def unfriend
+      authorize :me
+      no_friend = User.find params[:user_id]
+
+      friendship = current_user.invalidate_friendship no_friend.id
+
+      render "v1/users/friend", locals: { user: no_friend,
+                                          friendship: friendship }
+    end
+
     # POST /v1/me/add_friends
-    # creates friend request or accepts friend request if one exists
+    # creates friend requests or accepts friend requests if they exist
     def add_friends
       authorize :me
       current_user.add_friends friends_ids
