@@ -16,10 +16,6 @@ module SlotActivity
     super && (activity_target.try(:visibility) != 'private')
   end
 
-  private def push_is_valid?
-    !Rails.application.config.SKIP_PUSH_NOTIFICATION
-  end
-
   private def push_notify
     [activity_foreign.id]
   end

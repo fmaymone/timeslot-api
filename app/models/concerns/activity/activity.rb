@@ -1,13 +1,9 @@
 module Activity
 
   def create_activity
-    # Trigger "create" as an activity if this should be valid
-
     if activity_is_valid?
       create_activity_feed
-      create_activity_stream
       create_activity_push if push_is_valid?
-      create_activity_email
     end
     self
   end
@@ -16,13 +12,13 @@ module Activity
     # TODO: [TML-77]
   end
 
-  def remove_activity
-    remove_activity_feed
-    remove_activity_push
+  def remove_activity(action = 'delete')
+    remove_activity_feed(action)
+    remove_activity_push(action)
   end
 
-  private def create_activity_feed(activity_time = nil)
-    # Reload last modified data
+  private def create_activity_feed(action = nil, activity_time = nil)
+    # FIX: Reload last modified data
     activity_target.save
     activity_actor.save
     begin
@@ -32,10 +28,9 @@ module Activity
         object: self.id.to_s,
         model: self.class.name,
         target: activity_target.id.to_s,
-        activity: activity_verb,
+        action: action || activity_action,
         message: activity_message_params,
         foreign: activity_foreign.try(:id).to_s,
-        #parent: activity_parent.try(:id).to_s,
         notify: activity_notify,
         data: activity_extra_data,
         time: activity_time || self.updated_at,
@@ -51,29 +46,24 @@ module Activity
     end
   end
 
-  private def create_activity_stream
-    # TODO
-  end
-
-  private def create_activity_push(verb = nil)
+  private def create_activity_push(action = nil)
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
 
-    return if push_notify.nil? #|| push_notify.length == 0
-
-    message_content = I18n.t("slot_#{verb || activity_verb}_push_singular",
-                             USER: activity_actor.username,
-                             TITLE: activity_target.title)
-
-    Device.notify_all(push_notify, [ message: message_content,
-                                     slot_id: activity_target.id ])
+    unless push_notify.nil?
+      # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
+      message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
+                               USER: activity_actor.username,
+                               TITLE: activity_target.try(:title))
+      # Skip sending if no message exist
+      if message_content
+        Device.notify_all(push_notify, [ message: message_content,
+                                         slot_id: activity_target.id ])
+      end
+    end
   end
 
-  private def create_activity_email
-    # TODO
-  end
-
-  private def remove_activity_feed
+  private def remove_activity_feed(action)
     begin
       # Add actor and foreign user to the activity removal dispatcher
       notify = activity_notify || []
@@ -87,9 +77,8 @@ module Activity
           feed: activity_target.class.name,
           notify: notify.uniq
       })
-      # TODO: Dispatch "delete" action as an activity
-      # Pass the current time if it is useful
-      # create_activity_feed(Time.zone.now) if activity_is_valid?
+      # Forward "delete" action as an activity to the dispatcher
+      #create_activity_feed(action) #Time.zone.now
     rescue => error
       opts = {}
       opts[:parameters] = {
@@ -100,9 +89,9 @@ module Activity
     end
   end
 
-  private def remove_activity_push
+  private def remove_activity_push(action)
     # TODO: [TML-71]
-    create_activity_push('delete') if push_is_valid? && activity_verb == 'reslot'
+    create_activity_push(action) if push_is_valid?
   end
 
   # This method should be overridden in the subclass
@@ -119,7 +108,7 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   private def push_is_valid?
-    false
+    !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
   # Returns an array of user which should also be notified
@@ -149,7 +138,7 @@ module Activity
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove if foreign is similar to the actor
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign #&& (activity_foreign.id == activity_actor.id)
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present? #&& (activity_foreign.id == activity_actor.id)
     user_ids
   end
 
@@ -170,11 +159,10 @@ module Activity
     ''
   end
 
-  # The parent object is required to merge activities for
-  # same parent objects.
-  # private def activity_parent
-  #   ''
-  # end
+  # An activity tag as a action related to removing or deleting an activity
+  private def activity_deletion
+    'delete'
+  end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
   private def activity_type
@@ -195,10 +183,10 @@ module Activity
           "Subclasses must define the method 'activity_target'."
   end
 
-  # An activity tag as a verb
-  private def activity_verb
+  # An activity tag as a action
+  private def activity_action
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_verb'."
+          "Subclasses must define the method 'activity_action'."
   end
 
   # The message is used as a notification message

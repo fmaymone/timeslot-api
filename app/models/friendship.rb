@@ -17,6 +17,7 @@ class Friendship < ActiveRecord::Base
 
   def offer
     update!(state: OFFERED) unless deleted_at?
+    create_activity
   end
 
   def offered?
@@ -24,10 +25,10 @@ class Friendship < ActiveRecord::Base
   end
 
   def accept
-    create_activity
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
+    create_activity
   end
 
   def established?
@@ -69,6 +70,7 @@ class Friendship < ActiveRecord::Base
     friend.touch
     user.follow(friend)
     friend.follow(user)
+    create_activity
   end
 
   private def check_duplicate
@@ -108,10 +110,6 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    super and established?
-  end
-
   private def activity_target
     friend
   end
@@ -121,7 +119,11 @@ class Friendship < ActiveRecord::Base
     user
   end
 
-  private def activity_verb
-    'friendship'
+  private def activity_action
+    established? ? 'friendship' : (offered? ? 'request' : 't')
+  end
+
+  private def activity_deletion
+    'unfriend'
   end
 end

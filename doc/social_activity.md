@@ -1,8 +1,8 @@
 # Social Activity
 Each activity has a:
 * Target (where the activity belongs to, e.g. "Slot" if someone likes the slot)
-* Action (the verb of the activity, e.g. "comment" or "like")
-* Object (the activity object itself, e.g. "Comment" or "Like")
+* Action (the action of the activity, e.g. "comment" or "like")
+* Object (the activity objects model name, e.g. "Comment" or "Like")
 
 The most activities are also connected to an user (isn't required at all), called as:
 * Actor (the user who makes the activity)

@@ -96,7 +96,7 @@ module Feed
       target_feed_length = $redis.llen("Feed:#{target_key}") - 1
 
       # Loop through all shared activities to find backtracking index
-      # NOTE: This loop may can be skipped if using redis pointers
+      # NOTE: This loop may can be skipped by using redis pointers
       (0..target_feed_length).each do |index|
         # Enrich target activity
         activity = enrich_activity(target_key, index)
@@ -144,9 +144,8 @@ module Feed
           object: target_feed[2],
           model: target_feed[3],
           target: target_feed[4],
-          activity: target_feed[5],
+          action: target_feed[5],
           foreign: target_feed[6],
-          #parent: target_feed[7],
           time: target_feed[7],
           feed: target_feed[8],
           id: target_feed[9]
@@ -187,7 +186,7 @@ module Feed
         # Determine pluralization
         mode = count > 2 ? 'aggregate' : (count > 1 ? 'plural' : 'singular')
         # Determine translation key
-        i18_key = "#{activity['type'].downcase}_#{activity['activity']}_#{view}_#{mode}"
+        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
         # Update message params with enriched message
         activity['message'] = I18n.t(i18_key, i18_params)
         # Remove special fields are not used by frontend

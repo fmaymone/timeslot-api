@@ -125,7 +125,7 @@ class Membership < ActiveRecord::Base
     user
   end
 
-  def activity_verb
+  def activity_action
     'membership'
   end
 end
