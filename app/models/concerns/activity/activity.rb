@@ -1,9 +1,9 @@
 module Activity
 
-  def create_activity
+  def create_activity(action = nil)
     if activity_is_valid?
-      create_activity_feed
-      create_activity_push if push_is_valid?
+      create_activity_feed(action)
+      create_activity_push(action) if push_is_valid?
     end
     self
   end
@@ -17,7 +17,7 @@ module Activity
     remove_activity_push(action)
   end
 
-  private def create_activity_feed(action = nil, activity_time = nil)
+  private def create_activity_feed(action, activity_time = nil)
     # FIX: Reload last modified data
     activity_target.save
     activity_actor.save
@@ -46,7 +46,7 @@ module Activity
     end
   end
 
-  private def create_activity_push(action = nil)
+  private def create_activity_push(action)
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
 

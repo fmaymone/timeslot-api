@@ -26,7 +26,7 @@ class StdSlot < BaseSlot
         likes.each(&:remove_activity)
         reslots.each(&:remove_activity)
         remove_activity
-        create_activity_feed('private')
+        create_activity('private')
         remove_all_followers
       end
     end
