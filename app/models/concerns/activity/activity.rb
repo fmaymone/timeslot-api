@@ -55,13 +55,13 @@ module Activity
     # TODO
   end
 
-  private def create_activity_push
+  private def create_activity_push(verb = nil)
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
 
     return if push_notify.nil? #|| push_notify.length == 0
 
-    message_content = I18n.t("slot_#{activity_verb}_push_singular",
+    message_content = I18n.t("slot_#{verb || activity_verb}_push_singular",
                              USER: activity_actor.username,
                              TITLE: activity_target.title)
 
@@ -102,7 +102,7 @@ module Activity
 
   private def remove_activity_push
     # TODO: [TML-71]
-    # create_activity_push if push_is_valid? && activity_verb == 'reslot'
+    create_activity_push('delete') if push_is_valid? && activity_verb == 'reslot'
   end
 
   # This method should be overridden in the subclass
