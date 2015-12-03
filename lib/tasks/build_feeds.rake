@@ -5,9 +5,10 @@ namespace :feed do
 
   task :build => :environment do
 
+    # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
     MAX_ACTIVITIES = 1000
 
-    # Turn off push notifications
+    # Turn off push notifications globally
     Rails.application.config.SKIP_PUSH_NOTIFICATION = true
 
     begin
@@ -21,73 +22,47 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      # Temporary feed storage
-      storage = []
-
       ## Re-Build Follower Model ##
 
-      Friendship.all.find_each do |relation|
+      Friendship.includes(:user, :friend).all.find_each do |relation|
         # friends follows each other
         relation.user.add_follower(relation.friend)
         relation.friend.add_follower(relation.user)
       end
 
-      Membership.all.find_each do |relation|
+      Membership.includes(:group, :user).all.find_each do |relation|
         relation.group.add_follower(relation.user)
       end
 
-      ReSlot.all.find_each do |slot|
+      ReSlot.includes(:slotter).all.find_each do |slot|
         slot.add_follower(slot.slotter)
       end
 
       ## Collect Activities ##
 
-      MediaItem.all.find_each do |media|
-        storage << media
-      end
+      storage = MediaItem.all +
+                Note.all +
+                Like.all +
+                Comment.all +
+                StdSlot.all +
+                GroupSlot.all +
+                ReSlot.all +
+                Friendship.all +
+                Membership.all
 
-      Note.all.find_each do |note|
-        storage << note
-      end
+      ## Re-Build Activities ##
 
-      Like.all.find_each do |like|
-        storage << like
-      end
+      storage.uniq.sort_by!{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
 
-      Comment.all.find_each do |comment|
-        storage << comment
-      end
-
-      StdSlot.all.find_each do |slot|
-        storage << slot
-      end
-
-      GroupSlot.all.find_each do |slot|
-        storage << slot
-      end
-
-      ReSlot.all.find_each do |slot|
-        storage << slot
-      end
-
-      Friendship.all.find_each do |friend|
-        storage << friend
-      end
-
-      Membership.all.find_each do |member|
-        storage << member
-      end
-
-      # Re-Build Activities #
-      # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
-      storage.uniq.sort_by{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
+      puts "All feeds was build successfully."
+      puts "ACTIVITY COUNT: #{(User.all.count * storage.count)}"
     rescue
       #handle the error here
+      puts "An error has occurred during the rebuilding process."
     ensure
-      # Turn on push notifications
+      # Turn on push notifications globally
       Rails.application.config.SKIP_PUSH_NOTIFICATION = false
       puts "DISABLE PUSH: #{Rails.application.config.SKIP_PUSH_NOTIFICATION}"
-      puts "All feeds was builded successfully."
     end
   end
 end
