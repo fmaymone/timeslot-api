@@ -20,6 +20,10 @@ module SlotActivity
     !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
+  private def push_notify
+    [activity_foreign.id]
+  end
+
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
@@ -38,9 +42,5 @@ module SlotActivity
       USER: activity_actor.username,
       TITLE: activity_target.meta_slot.title
     }
-  end
-
-  private def push_notify
-    [activity_foreign.id]
   end
 end
