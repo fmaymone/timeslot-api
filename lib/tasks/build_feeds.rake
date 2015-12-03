@@ -5,10 +5,15 @@ namespace :feed do
 
   task :build => :environment do
 
+    MAX_ACTIVITIES = 1000
+
     # Turn off push notifications
     Rails.application.config.SKIP_PUSH_NOTIFICATION = true
 
     begin
+
+      puts "Rebuilding feeds with a maximum of #{MAX_ACTIVITIES} activities."
+      puts "DISABLE PUSH: #{Rails.application.config.SKIP_PUSH_NOTIFICATION}"
 
       # Deactivate console logging
       ActiveRecord::Base.logger.level = 1
@@ -75,12 +80,14 @@ namespace :feed do
 
       # Re-Build Activities #
       # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
-      storage.uniq.sort_by{|a| a[:updated_at]}.last(1000).each(&:create_activity)
+      storage.uniq.sort_by{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
     rescue
       #handle the error here
     ensure
       # Turn on push notifications
       Rails.application.config.SKIP_PUSH_NOTIFICATION = false
+      puts "DISABLE PUSH: #{Rails.application.config.SKIP_PUSH_NOTIFICATION}"
+      puts "All feeds was builded successfully."
     end
   end
 end
