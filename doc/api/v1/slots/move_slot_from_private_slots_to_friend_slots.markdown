@@ -91,7 +91,7 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=M4UwC5Q4oDZBnN5ylby91wdYgAA
+Authorization: Token token=yy5V-6SXQ41wHLFRa1fSwj5VCL4
 Host: example.org
 Cookie: </pre>
 
@@ -112,7 +112,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=M4UwC5Q4oDZBnN5ylby91wdYgAA&quot; \
+	-H &quot;Authorization: Token token=yy5V-6SXQ41wHLFRa1fSwj5VCL4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +123,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8e20a8cdf4fe0ce063c16f72c7064893&quot;
+ETag: W/&quot;92a8d2b0e459c92ec9374cbe940a6782&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 936d0040-4136-4bb2-9a5b-78b0858a9a17
-X-Runtime: 0.100217
+X-Request-Id: 2b844041-ae64-4518-a797-ce9611116743
+X-Runtime: 0.147628
 Vary: Origin
-Content-Length: 1445</pre>
+Content-Length: 1508</pre>
 
 #### Status
 
@@ -141,18 +141,22 @@ Content-Length: 1445</pre>
   "id" : 35,
   "title" : "Slot title 95",
   "startDate" : "2019-09-19T03:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:35.211Z",
-  "updatedAt" : "2015-11-24T23:47:35.211Z",
+  "createdAt" : "2015-12-04T16:56:53.845Z",
+  "updatedAt" : "2015-12-04T16:56:53.845Z",
   "deletedAt" : null,
   "endDate" : "2019-10-19T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 95,
-    "username" : "User 381",
-    "createdAt" : "2015-11-24T23:47:35.182Z",
-    "updatedAt" : "2015-11-24T23:47:35.182Z",
+    "username" : "User 383",
+    "createdAt" : "2015-12-04T16:56:53.817Z",
+    "updatedAt" : "2015-12-04T16:56:53.817Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [
@@ -162,7 +166,7 @@ Content-Length: 1445</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:35.188Z"
+      "createdAt" : "2015-12-04T16:56:53.824Z"
     },
     {
       "mediaId" : 24,
@@ -170,7 +174,7 @@ Content-Length: 1445</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:35.191Z"
+      "createdAt" : "2015-12-04T16:56:53.826Z"
     },
     {
       "mediaId" : 25,
@@ -178,7 +182,7 @@ Content-Length: 1445</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:35.193Z"
+      "createdAt" : "2015-12-04T16:56:53.829Z"
     },
     {
       "mediaId" : 26,
@@ -186,7 +190,7 @@ Content-Length: 1445</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-24T23:47:35.196Z",
+      "createdAt" : "2015-12-04T16:56:53.831Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -196,7 +200,7 @@ Content-Length: 1445</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-24T23:47:35.198Z",
+      "createdAt" : "2015-12-04T16:56:53.833Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -206,7 +210,7 @@ Content-Length: 1445</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-24T23:47:35.201Z",
+      "createdAt" : "2015-12-04T16:56:53.836Z",
       "duration" : null,
       "title" : "Title 105"
     }

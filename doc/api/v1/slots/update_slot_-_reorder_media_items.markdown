@@ -120,7 +120,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=L1S2KXPCm_mT86qeFbW-DeyYo0g
+Authorization: Token token=RDkneAYUpxErKhpw0K4MUpGBps4
 Host: example.org
 Cookie: </pre>
 
@@ -156,7 +156,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=L1S2KXPCm_mT86qeFbW-DeyYo0g&quot; \
+	-H &quot;Authorization: Token token=RDkneAYUpxErKhpw0K4MUpGBps4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -167,12 +167,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0fa7d0b0a7f37adb502e55b5d9262d06&quot;
+ETag: W/&quot;951bb928ba3272869925abc77bed4f1a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e06017fc-a0d7-4e77-bc3e-055500f90d23
-X-Runtime: 0.032700
+X-Request-Id: 81b4b636-d2da-4b44-ab23-da7c35fcf76b
+X-Runtime: 0.036758
 Vary: Origin
-Content-Length: 919</pre>
+Content-Length: 982</pre>
 
 #### Status
 
@@ -185,18 +185,22 @@ Content-Length: 919</pre>
   "id" : 5,
   "title" : "Slot title 64",
   "startDate" : "2019-09-15T20:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:33.596Z",
-  "updatedAt" : "2015-11-24T23:47:33.596Z",
+  "createdAt" : "2015-12-04T16:56:52.142Z",
+  "updatedAt" : "2015-12-04T16:56:52.142Z",
   "deletedAt" : null,
   "endDate" : "2019-10-15T20:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 10,
-    "username" : "User 292",
-    "createdAt" : "2015-11-24T23:47:33.588Z",
-    "updatedAt" : "2015-11-24T23:47:33.588Z",
+    "username" : "User 294",
+    "createdAt" : "2015-12-04T16:56:52.130Z",
+    "updatedAt" : "2015-12-04T16:56:52.130Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [
@@ -206,7 +210,7 @@ Content-Length: 919</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:33.611Z"
+      "createdAt" : "2015-12-04T16:56:52.158Z"
     },
     {
       "mediaId" : 3,
@@ -214,7 +218,7 @@ Content-Length: 919</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:33.606Z"
+      "createdAt" : "2015-12-04T16:56:52.153Z"
     },
     {
       "mediaId" : 2,
@@ -222,7 +226,7 @@ Content-Length: 919</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:33.601Z"
+      "createdAt" : "2015-12-04T16:56:52.148Z"
     }
   ],
   "settings" : {

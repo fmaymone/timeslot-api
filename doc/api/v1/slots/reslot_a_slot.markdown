@@ -94,7 +94,7 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=aRWQBKtC_mc3esTu2echZbGGZ04
+Authorization: Token token=oaMGt2PLArRsfotPSIULKEMlLqU
 Host: example.org
 Cookie: </pre>
 
@@ -115,7 +115,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:48}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=aRWQBKtC_mc3esTu2echZbGGZ04&quot; \
+	-H &quot;Authorization: Token token=oaMGt2PLArRsfotPSIULKEMlLqU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,12 +126,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;37f97edb2c55e999e129c2019a54ef85&quot;
+ETag: W/&quot;60dc55b6e2592dfc96bf170127fb3fad&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c4256cb5-0bd8-45f4-ba59-96e0b53401e9
-X-Runtime: 0.047523
+X-Request-Id: 6b002eec-b4d2-4946-ae2c-647bd315fe13
+X-Runtime: 0.045188
 Vary: Origin
-Content-Length: 550</pre>
+Content-Length: 613</pre>
 
 #### Status
 
@@ -144,18 +144,22 @@ Content-Length: 550</pre>
   "id" : 49,
   "title" : "Slot title 58",
   "startDate" : "2019-09-09T14:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:33.060Z",
-  "updatedAt" : "2015-11-24T23:47:33.060Z",
+  "createdAt" : "2015-12-04T16:56:51.654Z",
+  "updatedAt" : "2015-12-04T16:56:51.654Z",
   "deletedAt" : null,
   "endDate" : "2019-10-09T14:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 235,
-    "username" : "User 276",
-    "createdAt" : "2015-11-24T23:47:33.036Z",
-    "updatedAt" : "2015-11-24T23:47:33.036Z",
+    "id" : 239,
+    "username" : "User 278",
+    "createdAt" : "2015-12-04T16:56:51.633Z",
+    "updatedAt" : "2015-12-04T16:56:51.633Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],
@@ -164,7 +168,7 @@ Content-Length: 550</pre>
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 237
+    "id" : 241
   },
   "parent" : {
     "id" : 48

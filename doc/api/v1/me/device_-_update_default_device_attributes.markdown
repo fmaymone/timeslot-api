@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=dw5OFPDrAvNXN7BmEnnJy_Z-trI
+Authorization: Token token=26rN49xhE9jlf5DasC4X7EzByN0
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-203462873410834786765439520&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=dw5OFPDrAvNXN7BmEnnJy_Z-trI&quot; \
+	-H &quot;Authorization: Token token=26rN49xhE9jlf5DasC4X7EzByN0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -67,8 +67,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: eb286cc7-922e-4f6a-889a-d2f78108ad12
-X-Runtime: 0.006634
+X-Request-Id: dd3357d7-cd70-43bf-b8e6-0bee18e8fe92
+X-Runtime: 0.006661
 Vary: Origin
 Content-Length: 0</pre>
 

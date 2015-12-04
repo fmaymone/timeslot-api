@@ -153,7 +153,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=FRN6Wyo8p1ty--IRqV1SJJtgSss
+Authorization: Token token=xCEsEamlyF_W12I-398PleVkb5c
 Host: example.org
 Cookie: </pre>
 
@@ -185,7 +185,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/6&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=FRN6Wyo8p1ty--IRqV1SJJtgSss&quot; \
+	-H &quot;Authorization: Token token=xCEsEamlyF_W12I-398PleVkb5c&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -196,12 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;455e7227d3cd11342b5b5b8a2584e538&quot;
+ETag: W/&quot;22b4cecfc2dc758b97d524995cf8ca98&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e65c7c4c-0af5-4028-b586-2283bcbfab5d
-X-Runtime: 0.017637
+X-Request-Id: 4b52cd9f-ad1d-4bdc-aa29-8e39c7945d9d
+X-Runtime: 0.024915
 Vary: Origin
-Content-Length: 867</pre>
+Content-Length: 930</pre>
 
 #### Status
 
@@ -214,8 +214,8 @@ Content-Length: 867</pre>
   "id" : 6,
   "title" : "Slot title 65",
   "startDate" : "2019-09-16T21:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:33.663Z",
-  "updatedAt" : "2015-11-24T23:47:33.663Z",
+  "createdAt" : "2015-12-04T16:56:52.215Z",
+  "updatedAt" : "2015-12-04T16:56:52.215Z",
   "deletedAt" : null,
   "endDate" : "2019-10-16T21:44:02.000Z",
   "location" : {
@@ -239,11 +239,15 @@ Content-Length: 867</pre>
   },
   "creator" : {
     "id" : 15,
-    "username" : "User 297",
-    "createdAt" : "2015-11-24T23:47:33.656Z",
-    "updatedAt" : "2015-11-24T23:47:33.656Z",
+    "username" : "User 299",
+    "createdAt" : "2015-12-04T16:56:52.207Z",
+    "updatedAt" : "2015-12-04T16:56:52.207Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],

@@ -89,7 +89,7 @@ Description : contains ID of the original slot that was reslottet
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=EQPECA6hFCQisqFy05qVeEErkS0
+Authorization: Token token=UB9Km6pYV_RdSHk3N9sb0iYWxNA
 Host: example.org
 Cookie: </pre>
 
@@ -101,7 +101,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/40&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=EQPECA6hFCQisqFy05qVeEErkS0&quot; \
+	-H &quot;Authorization: Token token=UB9Km6pYV_RdSHk3N9sb0iYWxNA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5d9fdb18b187e135702a7f1633f49486&quot;
+ETag: W/&quot;1443e98a50b357d7cba77d7c872c02b7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dbc84251-18a7-4494-9bfc-94ee646302df
-X-Runtime: 0.020128
+X-Request-Id: c413a798-981f-4fb7-a888-c15e1d47f078
+X-Runtime: 0.039836
 Vary: Origin
-Content-Length: 1646</pre>
+Content-Length: 1709</pre>
 
 #### Status
 
@@ -130,18 +130,22 @@ Content-Length: 1646</pre>
   "id" : 40,
   "title" : "Timeslot",
   "startDate" : "2019-09-06T11:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:32.527Z",
-  "updatedAt" : "2015-11-24T23:47:32.527Z",
+  "createdAt" : "2015-12-04T16:56:51.117Z",
+  "updatedAt" : "2015-12-04T16:56:51.117Z",
   "deletedAt" : null,
   "endDate" : "2019-10-06T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 213,
-    "username" : "User 253",
-    "createdAt" : "2015-11-24T23:47:32.506Z",
-    "updatedAt" : "2015-11-24T23:47:32.506Z",
+    "id" : 217,
+    "username" : "User 255",
+    "createdAt" : "2015-12-04T16:56:51.097Z",
+    "updatedAt" : "2015-12-04T16:56:51.097Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [
@@ -151,7 +155,7 @@ Content-Length: 1646</pre>
       "position" : 6,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-24T23:47:32.603Z",
+      "createdAt" : "2015-12-04T16:56:51.187Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -161,7 +165,7 @@ Content-Length: 1646</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-11-24T23:47:32.598Z",
+      "createdAt" : "2015-12-04T16:56:51.183Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -171,7 +175,7 @@ Content-Length: 1646</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-24T23:47:32.593Z",
+      "createdAt" : "2015-12-04T16:56:51.178Z",
       "duration" : null,
       "title" : "Title 82"
     },
@@ -181,7 +185,7 @@ Content-Length: 1646</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-11-24T23:47:32.588Z",
+      "createdAt" : "2015-12-04T16:56:51.173Z",
       "duration" : null,
       "title" : "Title 81"
     },
@@ -191,7 +195,7 @@ Content-Length: 1646</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:32.583Z"
+      "createdAt" : "2015-12-04T16:56:51.169Z"
     },
     {
       "mediaId" : 77,
@@ -199,7 +203,7 @@ Content-Length: 1646</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:32.578Z"
+      "createdAt" : "2015-12-04T16:56:51.164Z"
     },
     {
       "mediaId" : 76,
@@ -207,7 +211,7 @@ Content-Length: 1646</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-11-24T23:47:32.573Z"
+      "createdAt" : "2015-12-04T16:56:51.158Z"
     }
   ],
   "settings" : {
@@ -215,7 +219,7 @@ Content-Length: 1646</pre>
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 217
+    "id" : 221
   },
   "parent" : {
     "id" : 39

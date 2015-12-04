@@ -80,7 +80,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ok68z7T8lnGf3fsRwUDMI-oJZug
+Authorization: Token token=kL5LlMZtGP9wp7wSKvPYsCjVhIw
 Host: example.org
 Cookie: </pre>
 
@@ -92,7 +92,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/slots/36/share&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ok68z7T8lnGf3fsRwUDMI-oJZug&quot; \
+	-H &quot;Authorization: Token token=kL5LlMZtGP9wp7wSKvPYsCjVhIw&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -103,12 +103,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6a5b142c82eddd3baf5aa8b024d1a672&quot;
+ETag: W/&quot;86b46006e91320a25afe7f0173309bb7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7ff8ffc1-bb07-466e-bcea-2eb8d72c290e
-X-Runtime: 0.019438
+X-Request-Id: 8b348979-67be-4568-88d6-278360ae6f57
+X-Runtime: 0.028885
 Vary: Origin
-Content-Length: 537</pre>
+Content-Length: 600</pre>
 
 #### Status
 
@@ -121,18 +121,22 @@ Content-Length: 537</pre>
   "id" : 36,
   "title" : "Slot title 96",
   "startDate" : "2019-09-20T04:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:35.320Z",
-  "updatedAt" : "2015-11-24T23:47:35.340Z",
+  "createdAt" : "2015-12-04T16:56:54.002Z",
+  "updatedAt" : "2015-12-04T16:56:54.023Z",
   "deletedAt" : null,
   "endDate" : "2019-10-20T04:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 96,
-    "username" : "User 382",
-    "createdAt" : "2015-11-24T23:47:35.313Z",
-    "updatedAt" : "2015-11-24T23:47:35.313Z",
+    "username" : "User 384",
+    "createdAt" : "2015-12-04T16:56:53.995Z",
+    "updatedAt" : "2015-12-04T16:56:53.995Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],
@@ -143,6 +147,6 @@ Content-Length: 537</pre>
   "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/QVa1XFud"
+  "shareUrl" : "http://localhost:3100/KBuktUuU"
 }
 ```
