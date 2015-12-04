@@ -39,10 +39,10 @@ RSpec.describe "V1::Feed", :async, type: :request do
 
   context "User feeds", :activity, :redis do
     before(:each) do
+      # Create relationships:
+      slot.add_follower(current_user)
+      # Perform activities:
       actors.each do |actor|
-        # Create relationships:
-        slot.add_follower(current_user)
-        # Perform activities:
         slot.create_comment(actor, 'This is a test comment.')
         slot.create_like(actor)
       end
@@ -60,7 +60,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(1)
+        expect(json.length).to be(0)
       end
     end
 

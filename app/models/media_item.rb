@@ -62,7 +62,7 @@ class MediaItem < ActiveRecord::Base
   ## Activity Methods ##
 
   private def activity_is_valid?
-    belongs_to_slot?
+    super and belongs_to_slot?
   end
 
   private def activity_target
@@ -74,7 +74,7 @@ class MediaItem < ActiveRecord::Base
     creator
   end
 
-  private def activity_verb
+  private def activity_action
     media_type
   end
 end

@@ -40,4 +40,17 @@ class MePolicy < ApplicationPolicy
   def remove_friends?
     current_user?
   end
+
+  # we could handle something like: don't allow befriending/unfriending
+  # with users with a public profile, when we have them (one can instead
+  # follow those Users)
+  def befriend?
+    current_user?
+  end
+
+  # should be idempotent, so can be called if the User exists, which
+  # should be true if we got till here
+  def unfriend?
+    current_user?
+  end
 end

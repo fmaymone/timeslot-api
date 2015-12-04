@@ -36,7 +36,7 @@ module V1
       return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'username', query, page)
 
-      render "v1/users/index"
+      render "v1/users/list"
     end
 
     # GET /v1/search/email
@@ -45,7 +45,7 @@ module V1
       return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'email', query, page)
 
-      render "v1/users/index"
+      render "v1/users/list"
     end
 
     # GET /v1/search/media

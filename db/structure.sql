@@ -51,20 +51,6 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -254,11 +240,11 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE group_slots (
+    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    group_id bigint NOT NULL
+    deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
 
@@ -566,11 +552,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL
 )
@@ -1391,6 +1377,8 @@ INSERT INTO schema_migrations (version) VALUES ('20150810155024');
 INSERT INTO schema_migrations (version) VALUES ('20150819181058');
 
 INSERT INTO schema_migrations (version) VALUES ('20150825113006');
+
+INSERT INTO schema_migrations (version) VALUES ('20151003134421');
 
 INSERT INTO schema_migrations (version) VALUES ('20151028213045');
 

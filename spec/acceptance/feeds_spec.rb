@@ -81,21 +81,17 @@ resource "Feeds", :activity, :async do
         activity = json.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("type")
-        expect(activity).to have_key("activity")
-        expect(activity).to have_key("object")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
         expect(activity).to have_key("message")
         expect(activity).to have_key("data")
         expect(activity).to have_key("actors")
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors'].first.to_i).to eq(current_user.id)
-        expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
@@ -138,15 +134,11 @@ resource "Feeds", :activity, :async do
 
         activity = json.first
         expect(activity).to have_key("id")
-        expect(activity).to have_key("activity")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("activityCount")
-        expect(activity).to have_key("group")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
         expect(activity).to have_key("actors")
-        expect(activity).to have_key("object")
-        expect(activity).to have_key("target")
         expect(activity).to have_key("message")
         expect(activity).to have_key("data")
         expect(activity['data']).to have_key("target")
@@ -159,7 +151,6 @@ resource "Feeds", :activity, :async do
         expect(activity_slot).to have_key("endDate")
         expect(activity_slot).to have_key("location")
         expect(activity_slot).to have_key("creator")
-        expect(activity_slot).to have_key("settings")
         expect(activity_slot).to have_key("createdAt")
         expect(activity_slot).to have_key("updatedAt")
         expect(activity_slot).to have_key("deletedAt")
@@ -184,11 +175,9 @@ resource "Feeds", :activity, :async do
         expect(activity_user['username']).to eq(actor.username)
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors']).to eq([actor.id])
-        expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end
@@ -230,11 +219,8 @@ resource "Feeds", :activity, :async do
 
         activity = json.first
         expect(activity).to have_key("id")
-        expect(activity).to have_key("activity")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("type")
-        expect(activity).to have_key("target")
-        expect(activity).to have_key("foreignId")
-        expect(activity).to have_key("object")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
         expect(activity).to have_key("data")
@@ -242,11 +228,9 @@ resource "Feeds", :activity, :async do
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors'].first.to_i).to eq(actor.id)
-        expect(activity['object'].to_i).to eq(slot.comments.last.id)
         expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['foreignId'].to_i).to eq(slot.creator.id)
         expect(activity['type']).to eq("Slot")
       end
     end

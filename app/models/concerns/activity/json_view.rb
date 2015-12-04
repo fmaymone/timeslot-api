@@ -1,6 +1,7 @@
 module JSONView
   def self.slot(slot)
-    user = slot.creator
+
+    return nil unless slot.present?
 
     # basic slot data
     json = slot.slice(:id,
@@ -105,12 +106,12 @@ module JSONView
       json['parent'] = { id: slot.parent_id }
       json['visibility'] = slot.parent.try(:visibility)
       # user must be the current user for alerts
-      json['settings'] = { alerts: slot.slotter.alerts(slot) }
+      # json['settings'] = { alerts: slot.slotter.alerts(slot) }
     elsif slot.class < StdSlot
       json['reslotsCounter'] = slot.re_slots_count
       json['visibility'] = slot.visibility
       # user must be the current user for alerts
-      json['settings'] = { alerts: user.alerts(slot) }
+      # json['settings'] = { alerts: user.alerts(slot) }
     end
 
     json['likes'] = slot.likes_count

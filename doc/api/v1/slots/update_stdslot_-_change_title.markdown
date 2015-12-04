@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=hbS5tftVHUGnbZhDT9l2JLWIXKQ
+Authorization: Token token=fOc2-WaN9gFxiNcpteeI5HW7bxM
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=hbS5tftVHUGnbZhDT9l2JLWIXKQ&quot; \
+	-H &quot;Authorization: Token token=fOc2-WaN9gFxiNcpteeI5HW7bxM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;455541d91462f15661919e08f102a71e&quot;
+ETag: W/&quot;f7626b15d974e1b32260f20d06190ae9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3ee65839-0c86-4509-b3f4-0ee485bd34e7
-X-Runtime: 0.022814
+X-Request-Id: 3c869577-e0d9-4f8e-9ec7-1073f38c0d61
+X-Runtime: 0.027690
 Vary: Origin
-Content-Length: 515</pre>
+Content-Length: 578</pre>
 
 #### Status
 
@@ -162,18 +162,22 @@ Content-Length: 515</pre>
   "id" : 1,
   "title" : "New title for a Slot",
   "startDate" : "2019-09-11T16:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:33.378Z",
-  "updatedAt" : "2015-11-24T23:47:33.378Z",
+  "createdAt" : "2015-12-04T16:56:51.950Z",
+  "updatedAt" : "2015-12-04T16:56:51.950Z",
   "deletedAt" : null,
   "endDate" : "2019-10-11T16:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 2,
-    "username" : "User 284",
-    "createdAt" : "2015-11-24T23:47:33.369Z",
-    "updatedAt" : "2015-11-24T23:47:33.369Z",
+    "username" : "User 286",
+    "createdAt" : "2015-12-04T16:56:51.943Z",
+    "updatedAt" : "2015-12-04T16:56:51.943Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],

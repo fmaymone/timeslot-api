@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=ATn8ZHzCVF4O8kJP23_jeY-ONEY
+Authorization: Token token=-nYRRymMTpR5TVlFixqXZ4BUtiQ
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=ATn8ZHzCVF4O8kJP23_jeY-ONEY&quot; \
+	-H &quot;Authorization: Token token=-nYRRymMTpR5TVlFixqXZ4BUtiQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a05ac5f2d364f76ea88b2ca3bd01ddbb&quot;
+ETag: W/&quot;93df7f2b7f0d11667c3780687f8793f7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 25c4f545-3022-4c91-a818-dcd3fb3d16f5
-X-Runtime: 0.044338
+X-Request-Id: 80f39abf-03d6-4b43-b50f-86432005726d
+X-Runtime: 0.020425
 Vary: Origin
-Content-Length: 508</pre>
+Content-Length: 571</pre>
 
 #### Status
 
@@ -162,18 +162,22 @@ Content-Length: 508</pre>
   "id" : 2,
   "title" : "Slot title 61",
   "startDate" : "2019-09-12T17:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:33.422Z",
-  "updatedAt" : "2015-11-24T23:47:33.456Z",
+  "createdAt" : "2015-12-04T16:56:51.996Z",
+  "updatedAt" : "2015-12-04T16:56:52.005Z",
   "deletedAt" : null,
   "endDate" : "2019-10-12T17:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 4,
-    "username" : "User 286",
-    "createdAt" : "2015-11-24T23:47:33.413Z",
-    "updatedAt" : "2015-11-24T23:47:33.413Z",
+    "username" : "User 288",
+    "createdAt" : "2015-12-04T16:56:51.989Z",
+    "updatedAt" : "2015-12-04T16:56:51.989Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],

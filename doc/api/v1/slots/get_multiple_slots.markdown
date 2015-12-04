@@ -81,7 +81,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=rGVnNyPG8FJAVQHckWl2k_ohMA4
+Authorization: Token token=c1LAqCy2u3OWGNOaitynwWuDKk0
 Host: example.org
 Cookie: </pre>
 
@@ -105,7 +105,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[33,32]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=rGVnNyPG8FJAVQHckWl2k_ohMA4&quot; \
+	-H &quot;Authorization: Token token=c1LAqCy2u3OWGNOaitynwWuDKk0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -116,10 +116,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3ad59f6753323bd64ea24797a5814892&quot;
+ETag: W/&quot;04b595eb6136376f5cd88da2d5a36a14&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9da460c5-71d8-464c-8ac1-fb56301dd6e0
-X-Runtime: 0.049830
+X-Request-Id: bc457f06-6978-469c-b572-df45133cabe2
+X-Runtime: 0.048668
 Vary: Origin
 Content-Length: 3992</pre>
 
@@ -135,16 +135,16 @@ Content-Length: 3992</pre>
     "id" : 33,
     "title" : "Slot title 50",
     "startDate" : "2019-09-27T05:44:02.000Z",
-    "createdAt" : "2015-11-24T23:47:32.169Z",
-    "updatedAt" : "2015-11-24T23:47:32.169Z",
+    "createdAt" : "2015-12-04T16:56:50.771Z",
+    "updatedAt" : "2015-12-04T16:56:50.771Z",
     "deletedAt" : null,
     "endDate" : "2019-10-27T05:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 189,
-      "username" : "User 229",
-      "createdAt" : "2015-11-24T23:47:32.165Z",
-      "updatedAt" : "2015-11-24T23:47:32.165Z",
+      "id" : 193,
+      "username" : "User 231",
+      "createdAt" : "2015-12-04T16:56:50.767Z",
+      "updatedAt" : "2015-12-04T16:56:50.767Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -156,7 +156,7 @@ Content-Length: 3992</pre>
         "position" : 18,
         "localId" : null,
         "mediaType" : "audio",
-        "createdAt" : "2015-11-24T23:47:32.184Z",
+        "createdAt" : "2015-12-04T16:56:50.786Z",
         "duration" : null,
         "title" : "Title 64"
       },
@@ -166,7 +166,7 @@ Content-Length: 3992</pre>
         "position" : 17,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.182Z",
+        "createdAt" : "2015-12-04T16:56:50.784Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -176,7 +176,7 @@ Content-Length: 3992</pre>
         "position" : 16,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.180Z",
+        "createdAt" : "2015-12-04T16:56:50.781Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -186,7 +186,7 @@ Content-Length: 3992</pre>
         "position" : 15,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.177Z"
+        "createdAt" : "2015-12-04T16:56:50.779Z"
       },
       {
         "mediaId" : 58,
@@ -194,7 +194,7 @@ Content-Length: 3992</pre>
         "position" : 14,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.175Z"
+        "createdAt" : "2015-12-04T16:56:50.776Z"
       },
       {
         "mediaId" : 57,
@@ -202,7 +202,7 @@ Content-Length: 3992</pre>
         "position" : 13,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.172Z"
+        "createdAt" : "2015-12-04T16:56:50.773Z"
       }
     ],
     "settings" : {
@@ -218,16 +218,16 @@ Content-Length: 3992</pre>
     "id" : 32,
     "title" : "Slot title 49",
     "startDate" : "2019-09-26T04:44:02.000Z",
-    "createdAt" : "2015-11-24T23:47:32.103Z",
-    "updatedAt" : "2015-11-24T23:47:32.103Z",
+    "createdAt" : "2015-12-04T16:56:50.706Z",
+    "updatedAt" : "2015-12-04T16:56:50.706Z",
     "deletedAt" : null,
     "endDate" : "2019-10-26T04:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 181,
-      "username" : "User 221",
-      "createdAt" : "2015-11-24T23:47:32.097Z",
-      "updatedAt" : "2015-11-24T23:47:32.097Z",
+      "id" : 185,
+      "username" : "User 223",
+      "createdAt" : "2015-12-04T16:56:50.700Z",
+      "updatedAt" : "2015-12-04T16:56:50.700Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -239,7 +239,7 @@ Content-Length: 3992</pre>
         "position" : 12,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.162Z",
+        "createdAt" : "2015-12-04T16:56:50.764Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -249,7 +249,7 @@ Content-Length: 3992</pre>
         "position" : 11,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.157Z",
+        "createdAt" : "2015-12-04T16:56:50.759Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -259,7 +259,7 @@ Content-Length: 3992</pre>
         "position" : 10,
         "localId" : null,
         "mediaType" : "audio",
-        "createdAt" : "2015-11-24T23:47:32.152Z",
+        "createdAt" : "2015-12-04T16:56:50.754Z",
         "duration" : null,
         "title" : "Title 56"
       },
@@ -269,7 +269,7 @@ Content-Length: 3992</pre>
         "position" : 9,
         "localId" : null,
         "mediaType" : "audio",
-        "createdAt" : "2015-11-24T23:47:32.147Z",
+        "createdAt" : "2015-12-04T16:56:50.749Z",
         "duration" : null,
         "title" : "Title 55"
       },
@@ -279,7 +279,7 @@ Content-Length: 3992</pre>
         "position" : 8,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.142Z"
+        "createdAt" : "2015-12-04T16:56:50.745Z"
       },
       {
         "mediaId" : 51,
@@ -287,7 +287,7 @@ Content-Length: 3992</pre>
         "position" : 7,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.138Z"
+        "createdAt" : "2015-12-04T16:56:50.736Z"
       },
       {
         "mediaId" : 50,
@@ -295,7 +295,7 @@ Content-Length: 3992</pre>
         "position" : 6,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.133Z"
+        "createdAt" : "2015-12-04T16:56:50.729Z"
       },
       {
         "mediaId" : 49,
@@ -303,7 +303,7 @@ Content-Length: 3992</pre>
         "position" : 5,
         "localId" : null,
         "mediaType" : "audio",
-        "createdAt" : "2015-11-24T23:47:32.125Z",
+        "createdAt" : "2015-12-04T16:56:50.721Z",
         "duration" : null,
         "title" : "Title 51"
       },
@@ -313,7 +313,7 @@ Content-Length: 3992</pre>
         "position" : 4,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.123Z",
+        "createdAt" : "2015-12-04T16:56:50.718Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -323,7 +323,7 @@ Content-Length: 3992</pre>
         "position" : 3,
         "localId" : null,
         "mediaType" : "video",
-        "createdAt" : "2015-11-24T23:47:32.120Z",
+        "createdAt" : "2015-12-04T16:56:50.716Z",
         "duration" : null,
         "thumbnail" : null
       },
@@ -333,7 +333,7 @@ Content-Length: 3992</pre>
         "position" : 2,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.118Z"
+        "createdAt" : "2015-12-04T16:56:50.713Z"
       },
       {
         "mediaId" : 45,
@@ -341,7 +341,7 @@ Content-Length: 3992</pre>
         "position" : 1,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.111Z"
+        "createdAt" : "2015-12-04T16:56:50.711Z"
       },
       {
         "mediaId" : 44,
@@ -349,7 +349,7 @@ Content-Length: 3992</pre>
         "position" : 0,
         "localId" : null,
         "mediaType" : "image",
-        "createdAt" : "2015-11-24T23:47:32.107Z"
+        "createdAt" : "2015-12-04T16:56:50.708Z"
       }
     ],
     "settings" : {

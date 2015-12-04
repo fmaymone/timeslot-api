@@ -632,18 +632,18 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :add_friends do
+  describe :initiate_friendship do
     let(:john) { create(:user, username: "John") }
 
     describe "no previous connection between users" do
       it "creates new friend request for other user" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.to change(Friendship, :count).by 1
       end
 
       it "friend request has state 'offered'" do
-        user.add_friends([john.id])
+        user.initiate_friendship(john.id)
         expect(Friendship.last.state).to eq OFFERED
         expect(Friendship.last.deleted_at?).to be false
       end
@@ -655,13 +655,13 @@ RSpec.describe User, type: :model do
 
       it "doesn't create a new friendship" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.not_to change(Friendship, :count)
       end
 
       it "updates friend request state to 'offered'" do
         expect(Friendship.last.state).to eq REJECTED
-        user.add_friends([john.id])
+        user.initiate_friendship(john.id)
         expect(Friendship.last.state).to eq OFFERED
         expect(Friendship.last.deleted_at?).to be false
       end
@@ -669,17 +669,16 @@ RSpec.describe User, type: :model do
 
     describe "broken friendship, initiated by user" do
       let!(:friendship) {
-        create(:friendship, :inactive, user: user, friend: john) }
+        create(:friendship, :rejected, user: user, friend: john) }
 
       it "doesn't create a new friendship" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.not_to change(Friendship, :count)
       end
 
       it "updates friend request state to 'offered'" do
-        expect(Friendship.last.deleted_at?).to be true
-        user.add_friends([john.id])
+        user.initiate_friendship(john.id)
         friendship.reload
         expect(friendship.state).to eq OFFERED
         expect(friendship.deleted_at?).to be false
@@ -688,17 +687,17 @@ RSpec.describe User, type: :model do
 
     describe "broken friendship, initiated by friend" do
       let!(:friendship) {
-        create(:friendship, :inactive, user: john, friend: user) }
+        create(:friendship, :rejected, user: john, friend: user) }
 
       it "doesn't create a new friendship" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.not_to change(Friendship, :count)
       end
 
       it "updates friend request state to 'offered'" do
-        expect(Friendship.last.deleted_at?).to be true
-        user.add_friends([john.id])
+        expect(Friendship.last.deleted_at?).to be false
+        user.initiate_friendship(john.id)
         friendship.reload
         expect(friendship.state).to eq OFFERED
         expect(friendship.deleted_at?).to be false
@@ -711,43 +710,16 @@ RSpec.describe User, type: :model do
 
       it "doesn't create a new friendship" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.not_to change(Friendship, :count)
       end
 
       it "doesn't change friendship state" do
         expect {
-          user.add_friends([john.id])
+          user.initiate_friendship(john.id)
         }.not_to change(friendship, :state)
         expect(Friendship.last.deleted_at?).to be false
       end
-    end
-  end
-
-  describe :offered_friendship do
-    let(:john) { create(:user, username: "John") }
-    let(:mary) { create(:user, username: "Mary") }
-    let(:alice) { create(:user, username: "Alice") }
-    let(:bob) { create(:user, username: "Bob") }
-    let!(:friendship_1) {
-      create(:friendship, user: user, friend: mary) }
-    let!(:friendship_2) {
-      create(:friendship, user: john, friend: user) }
-    let!(:friendship_3) {
-      create(:friendship, :established, user: alice, friend: user) }
-    let!(:friendship_4) {
-      create(:friendship, :established, user: user, friend: bob) }
-
-    it "returns the friendship object if a friendship was offered" \
-       " to the current user by to other user" do
-      expect(user.offered_friendship(john)).to eq friendship_2
-    end
-
-    it "returns nil if no friendship was offered" \
-       " to the current user by to other user" do
-      expect(user.offered_friendship(mary)).to be nil
-      expect(user.offered_friendship(alice)).to be nil
-      expect(user.offered_friendship(bob)).to be nil
     end
   end
 

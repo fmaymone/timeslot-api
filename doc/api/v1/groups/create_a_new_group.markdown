@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=zuft3jpsaPD2ud_8AN2oF4liLhE
+Authorization: Token token=_BObKtMwmsGEuMXt1o5QY9useXs
 Host: example.org
 Cookie: </pre>
 
@@ -91,7 +91,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[17,18,19]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zuft3jpsaPD2ud_8AN2oF4liLhE&quot; \
+	-H &quot;Authorization: Token token=_BObKtMwmsGEuMXt1o5QY9useXs&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,10 +102,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a1b164094f83f1eb04e822a01b581169&quot;
+ETag: W/&quot;87a3d06fb6b9701d11e89f44e67b9a9d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f168906b-8024-4dab-9f52-eba0b123b865
-X-Runtime: 0.038256
+X-Request-Id: 34168ba6-1e28-40af-97df-7f8315cd4363
+X-Runtime: 0.034898
 Vary: Origin
 Content-Length: 346</pre>
 
@@ -122,14 +122,14 @@ Content-Length: 346</pre>
   "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-11-24T23:47:29.196Z",
-  "updatedAt" : "2015-11-24T23:47:29.196Z",
+  "createdAt" : "2015-12-04T16:56:47.364Z",
+  "updatedAt" : "2015-12-04T16:56:47.364Z",
   "deletedAt" : null,
   "owner" : {
     "id" : 20,
     "username" : "User 71",
-    "createdAt" : "2015-11-24T23:47:29.191Z",
-    "updatedAt" : "2015-11-24T23:47:29.191Z",
+    "createdAt" : "2015-12-04T16:56:47.359Z",
+    "updatedAt" : "2015-12-04T16:56:47.359Z",
     "deletedAt" : null,
     "image" : ""
   },

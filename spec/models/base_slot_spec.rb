@@ -316,7 +316,6 @@ RSpec.describe BaseSlot, type: :model do
         end
       end
     end
-
   end
 
   describe :comments_with_details do

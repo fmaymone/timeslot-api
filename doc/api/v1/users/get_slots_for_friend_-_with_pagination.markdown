@@ -68,24 +68,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=ABK5_CqRSDv3WoY6jBkBZWNB1Ws
+<pre>Authorization: Token token=GnctjJ92mc2a7IrN7b8DljmtDlg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/149/slots?limit=3&amp;moment=2015-11-24T23%3A47%3A36.611Z&amp;filter=upcoming</pre>
+<pre>GET /v1/users/149/slots?limit=3&amp;moment=2015-12-04T16%3A56%3A55.242Z&amp;filter=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2015-11-24T23:47:36.611Z
+moment: 2015-12-04T16:56:55.242Z
 filter: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/149/slots?limit=3&amp;moment=2015-11-24T23%3A47%3A36.611Z&amp;filter=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=ABK5_CqRSDv3WoY6jBkBZWNB1Ws&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/149/slots?limit=3&amp;moment=2015-12-04T16%3A56%3A55.242Z&amp;filter=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=GnctjJ92mc2a7IrN7b8DljmtDlg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -96,10 +96,10 @@ filter: upcoming</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aad0467aac38582deb49a5218cdfd9c2&quot;
+ETag: W/&quot;e2d26610282be97f3aa04623f7ec6dbc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 81f56e18-369a-41b7-8715-116ce23ac90f
-X-Runtime: 0.039200
+X-Request-Id: c791ada0-69ed-44a8-a3d8-70a2f9fc3240
+X-Runtime: 0.039629
 Vary: Origin
 Content-Length: 1933</pre>
 
@@ -114,25 +114,25 @@ Content-Length: 1933</pre>
   "paging" : {
     "limit" : 3,
     "filter" : "upcoming",
-    "moment" : "2015-11-24T23:47:36.611Z",
-    "before" : "NjQlMjAxNS0xMS0yNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMSAwODo0NDowMi4wMDAwMDAwMDA=",
-    "after" : "NjMlMjAxNS0xMS0zMCAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMCAwNzo0NDowMi4wMDAwMDAwMDA="
+    "moment" : "2015-12-04T16:56:55.242Z",
+    "before" : "NjQlMjAxNS0xMi0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMSAwODo0NDowMi4wMDAwMDAwMDA=",
+    "after" : "NjMlMjAxNS0xMi0wNyAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMCAwNzo0NDowMi4wMDAwMDAwMDA="
   },
   "data" : [
     {
       "id" : 64,
       "title" : "Slot title 124",
-      "startDate" : "2015-11-25T00:00:00.000Z",
-      "createdAt" : "2015-11-24T23:47:36.529Z",
-      "updatedAt" : "2015-11-24T23:47:36.529Z",
+      "startDate" : "2015-12-05T00:00:00.000Z",
+      "createdAt" : "2015-12-04T16:56:55.162Z",
+      "updatedAt" : "2015-12-04T16:56:55.162Z",
       "deletedAt" : null,
       "endDate" : "2019-10-21T08:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 154,
-        "username" : "User 438",
-        "createdAt" : "2015-11-24T23:47:36.524Z",
-        "updatedAt" : "2015-11-24T23:47:36.524Z",
+        "username" : "User 440",
+        "createdAt" : "2015-12-04T16:56:55.157Z",
+        "updatedAt" : "2015-12-04T16:56:55.157Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -151,17 +151,17 @@ Content-Length: 1933</pre>
     {
       "id" : 62,
       "title" : "Slot title 122",
-      "startDate" : "2015-11-30T00:00:00.000Z",
-      "createdAt" : "2015-11-24T23:47:36.514Z",
-      "updatedAt" : "2015-11-24T23:47:36.514Z",
+      "startDate" : "2015-12-07T00:00:00.000Z",
+      "createdAt" : "2015-12-04T16:56:55.147Z",
+      "updatedAt" : "2015-12-04T16:56:55.147Z",
       "deletedAt" : null,
       "endDate" : "2019-10-19T06:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 152,
-        "username" : "User 436",
-        "createdAt" : "2015-11-24T23:47:36.510Z",
-        "updatedAt" : "2015-11-24T23:47:36.510Z",
+        "username" : "User 438",
+        "createdAt" : "2015-12-04T16:56:55.143Z",
+        "updatedAt" : "2015-12-04T16:56:55.143Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -180,17 +180,17 @@ Content-Length: 1933</pre>
     {
       "id" : 63,
       "title" : "Slot title 123",
-      "startDate" : "2015-11-30T00:00:00.000Z",
-      "createdAt" : "2015-11-24T23:47:36.521Z",
-      "updatedAt" : "2015-11-24T23:47:36.521Z",
+      "startDate" : "2015-12-07T00:00:00.000Z",
+      "createdAt" : "2015-12-04T16:56:55.154Z",
+      "updatedAt" : "2015-12-04T16:56:55.154Z",
       "deletedAt" : null,
       "endDate" : "2019-10-20T07:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 153,
-        "username" : "User 437",
-        "createdAt" : "2015-11-24T23:47:36.516Z",
-        "updatedAt" : "2015-11-24T23:47:36.516Z",
+        "username" : "User 439",
+        "createdAt" : "2015-12-04T16:56:55.149Z",
+        "updatedAt" : "2015-12-04T16:56:55.149Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -213,7 +213,7 @@ Content-Length: 1933</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=ABK5_CqRSDv3WoY6jBkBZWNB1Ws
+<pre>Authorization: Token token=GnctjJ92mc2a7IrN7b8DljmtDlg
 Host: example.org
 Cookie: </pre>
 
@@ -223,12 +223,12 @@ Cookie: </pre>
 
 #### Query Parameters
 
-<pre>after: NjMlMjAxNS0xMS0zMCAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMCAwNzo0NDowMi4wMDAwMDAwMDA=</pre>
+<pre>after: NjMlMjAxNS0xMi0wNyAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0yMCAwNzo0NDowMi4wMDAwMDAwMDA=</pre>
 
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/149/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=ABK5_CqRSDv3WoY6jBkBZWNB1Ws&quot; \
+	-H &quot;Authorization: Token token=GnctjJ92mc2a7IrN7b8DljmtDlg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -239,10 +239,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;678980e8e0805c8ae042a59682153474&quot;
+ETag: W/&quot;0218795b4a6416442bf9505e2bad0d66&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c09d5638-b7ed-4919-95dc-f8dc16eebc46
-X-Runtime: 0.036351
+X-Request-Id: 44eff15e-eb2a-4a8b-9861-28b86bf6515b
+X-Runtime: 0.035839
 Vary: Origin
 Content-Length: 1351</pre>
 
@@ -266,16 +266,16 @@ Content-Length: 1351</pre>
       "id" : 66,
       "title" : "Slot title 125",
       "startDate" : "2019-09-22T09:44:02.000Z",
-      "createdAt" : "2015-11-24T23:47:36.552Z",
-      "updatedAt" : "2015-11-24T23:47:36.552Z",
+      "createdAt" : "2015-12-04T16:56:55.182Z",
+      "updatedAt" : "2015-12-04T16:56:55.182Z",
       "deletedAt" : null,
       "endDate" : "2019-10-22T09:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 155,
-        "username" : "User 439",
-        "createdAt" : "2015-11-24T23:47:36.532Z",
-        "updatedAt" : "2015-11-24T23:47:36.532Z",
+        "username" : "User 441",
+        "createdAt" : "2015-12-04T16:56:55.164Z",
+        "updatedAt" : "2015-12-04T16:56:55.164Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -301,16 +301,16 @@ Content-Length: 1351</pre>
       "id" : 68,
       "title" : "Slot title 127",
       "startDate" : "2019-09-24T11:44:02.000Z",
-      "createdAt" : "2015-11-24T23:47:36.591Z",
-      "updatedAt" : "2015-11-24T23:47:36.591Z",
+      "createdAt" : "2015-12-04T16:56:55.221Z",
+      "updatedAt" : "2015-12-04T16:56:55.221Z",
       "deletedAt" : null,
       "endDate" : "2019-10-24T11:44:02.000Z",
       "location" : null,
       "creator" : {
         "id" : 158,
-        "username" : "User 442",
-        "createdAt" : "2015-11-24T23:47:36.578Z",
-        "updatedAt" : "2015-11-24T23:47:36.578Z",
+        "username" : "User 444",
+        "createdAt" : "2015-12-04T16:56:55.207Z",
+        "updatedAt" : "2015-12-04T16:56:55.207Z",
         "deletedAt" : null,
         "image" : ""
       },

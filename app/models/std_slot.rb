@@ -20,6 +20,15 @@ class StdSlot < BaseSlot
     if visibility
       slot_type = STD_SLOT_TYPES[visibility]
       update(slot_type: SLOT_TYPES[slot_type])
+      # Update Follower + Feeds status if visibility change
+      if visibility == 'private'
+        comments.each(&:remove_activity)
+        likes.each(&:remove_activity)
+        reslots.each(&:remove_activity)
+        remove_activity
+        create_activity('private')
+        remove_all_followers
+      end
     end
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end

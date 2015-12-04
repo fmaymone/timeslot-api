@@ -158,13 +158,6 @@ class BaseSlot < ActiveRecord::Base
     unless like
       like = likes.create(user: user)
       like.create_activity
-
-      message_content = I18n.t('slot_like_push_singular',
-                               USER: user.username,
-                               TITLE: meta_slot.title)
-
-      Device.notify_all([creator_id], [message: message_content,
-                                       slot_id: self.id])
     end
     like
   rescue ActiveRecord::RecordNotUnique
@@ -172,7 +165,12 @@ class BaseSlot < ActiveRecord::Base
     # means it would be rescued in application_controller.rb and returns 422
     # which is not our intention
   else
-    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    if like.deleted_at? # relike after unlike
+      like.update(deleted_at: nil)
+      BaseSlot.increment_counter(:likes_count, id)
+      like.create_activity
+    end
+    like
   end
 
   def destroy_like(user)
@@ -185,21 +183,6 @@ class BaseSlot < ActiveRecord::Base
 
     if new_comment.valid?
       new_comment.create_activity
-
-      # Is the creator really what we want?
-      # For std_slots we want the owner. For Groupslots?
-      user_ids = [creator_id]
-      user_ids += comments.pluck(:user_id)
-      user_ids += likes.pluck(:user_id)
-      # remove the user who did the actual comment
-      user_ids.delete(user.id)
-
-      message_content = I18n.t('slot_comment_push_singular',
-                               USER: user.username,
-                               TITLE: meta_slot.title)
-
-      Device.notify_all(user_ids.uniq, [message: message_content,
-                                        slot_id: new_comment.slot_id])
     else
       errors.add(:comment, new_comment.errors)
     end
@@ -219,6 +202,10 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+
+    # NOTE: Actually we remove all reslots if one
+    # of the parent/predecessor slot was removed
+    reslots.each(&:delete) if self.try(:reslots)
 
     remove_activity
     remove_all_followers
@@ -431,11 +418,7 @@ class BaseSlot < ActiveRecord::Base
     creator
   end
 
-  private def activity_verb
+  private def activity_action
     'slot'
-  end
-
-  private def activity_foreign
-    nil
   end
 end

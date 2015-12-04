@@ -57,24 +57,24 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=qnaSwWb5D7fxTYxmyN1-4ytfbVQ
+Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/search/user?query=John+Do&amp;method=like</pre>
+<pre>GET /v1/search/user?query=jon+do&amp;method=metaphone</pre>
 
 #### Query Parameters
 
-<pre>query: John Do
-method: like</pre>
+<pre>query: jon do
+method: metaphone</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=John+Do&amp;method=like&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qnaSwWb5D7fxTYxmyN1-4ytfbVQ&quot; \
+	-H &quot;Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -85,12 +85,12 @@ method: like</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e4f748691cf1fb92d6f08df65b37a7bb&quot;
+ETag: W/&quot;6b4bd02d687bd0a5daf12120869dc422&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 77dd7b83-223f-4bd9-8df4-f6e2dae12960
-X-Runtime: 0.011698
+X-Request-Id: 8b5db5a2-a39a-4576-bbf1-bd3f70d1aa69
+X-Runtime: 0.020534
 Vary: Origin
-Content-Length: 215</pre>
+Content-Length: 463</pre>
 
 #### Status
 
@@ -101,18 +101,30 @@ Content-Length: 215</pre>
 ```javascript
 [
   {
-    "id" : 168,
+    "id" : 172,
     "username" : "John Doe",
+    "createdAt" : "2015-12-04T16:56:50.516Z",
+    "updatedAt" : "2015-12-04T16:56:50.516Z",
+    "deletedAt" : null,
     "image" : "",
-    "friendshipState" : null,
-    "url" : "http://example.org/v1/users/168"
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0,
+    "friendshipState" : "stranger"
   },
   {
-    "id" : 169,
+    "id" : 173,
     "username" : "John Doh",
+    "createdAt" : "2015-12-04T16:56:50.540Z",
+    "updatedAt" : "2015-12-04T16:56:50.540Z",
+    "deletedAt" : null,
     "image" : "",
-    "friendshipState" : null,
-    "url" : "http://example.org/v1/users/169"
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0,
+    "friendshipState" : "stranger"
   }
 ]
 ```

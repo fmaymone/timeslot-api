@@ -21,7 +21,7 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=6RyBKUE1o_y69qKIvh2Gzs8WjFw
+<pre>Authorization: Token token=aLHFIehdaF32WRWRb1OOA0hm4Tc
 Host: example.org
 Cookie: </pre>
 
@@ -32,7 +32,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/129/media&quot; -X GET \
-	-H &quot;Authorization: Token token=6RyBKUE1o_y69qKIvh2Gzs8WjFw&quot; \
+	-H &quot;Authorization: Token token=aLHFIehdaF32WRWRb1OOA0hm4Tc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c1d26d5f6042710898c86415edeea6e6&quot;
+ETag: W/&quot;ce32f2170b74764f29543a4bb4741115&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2f594dd4-7e85-4e53-b3cb-ebdb432364b2
-X-Runtime: 0.022714
+X-Request-Id: 3185a896-7828-4407-86aa-ece7995340b0
+X-Runtime: 0.022290
 Vary: Origin
 Content-Length: 1891</pre>
 
@@ -64,7 +64,7 @@ Content-Length: 1891</pre>
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.102Z"
+    "createdAt" : "2015-12-04T16:56:54.739Z"
   },
   {
     "mediaId" : 102,
@@ -72,7 +72,7 @@ Content-Length: 1891</pre>
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.104Z"
+    "createdAt" : "2015-12-04T16:56:54.741Z"
   },
   {
     "mediaId" : 103,
@@ -80,7 +80,7 @@ Content-Length: 1891</pre>
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.107Z"
+    "createdAt" : "2015-12-04T16:56:54.744Z"
   },
   {
     "mediaId" : 104,
@@ -88,7 +88,7 @@ Content-Length: 1891</pre>
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-11-24T23:47:36.109Z",
+    "createdAt" : "2015-12-04T16:56:54.746Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -98,7 +98,7 @@ Content-Length: 1891</pre>
     "position" : 4,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-11-24T23:47:36.111Z",
+    "createdAt" : "2015-12-04T16:56:54.749Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -108,7 +108,7 @@ Content-Length: 1891</pre>
     "position" : 5,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-11-24T23:47:36.114Z",
+    "createdAt" : "2015-12-04T16:56:54.751Z",
     "duration" : null,
     "title" : "Title 183"
   },
@@ -118,7 +118,7 @@ Content-Length: 1891</pre>
     "position" : 24,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.204Z"
+    "createdAt" : "2015-12-04T16:56:54.839Z"
   },
   {
     "mediaId" : 126,
@@ -126,7 +126,7 @@ Content-Length: 1891</pre>
     "position" : 25,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.206Z"
+    "createdAt" : "2015-12-04T16:56:54.842Z"
   },
   {
     "mediaId" : 127,
@@ -134,7 +134,7 @@ Content-Length: 1891</pre>
     "position" : 26,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-11-24T23:47:36.209Z"
+    "createdAt" : "2015-12-04T16:56:54.844Z"
   },
   {
     "mediaId" : 128,
@@ -142,7 +142,7 @@ Content-Length: 1891</pre>
     "position" : 27,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-11-24T23:47:36.211Z",
+    "createdAt" : "2015-12-04T16:56:54.846Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -152,7 +152,7 @@ Content-Length: 1891</pre>
     "position" : 28,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-11-24T23:47:36.214Z",
+    "createdAt" : "2015-12-04T16:56:54.849Z",
     "duration" : null,
     "thumbnail" : null
   },
@@ -162,7 +162,7 @@ Content-Length: 1891</pre>
     "position" : 29,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-11-24T23:47:36.216Z",
+    "createdAt" : "2015-12-04T16:56:54.851Z",
     "duration" : null,
     "title" : "Title 207"
   }

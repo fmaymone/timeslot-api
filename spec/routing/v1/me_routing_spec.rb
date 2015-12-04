@@ -48,6 +48,16 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#remove_friends", format: :json)
     end
 
+    it "routes to #befriend" do
+      expect(post: "/v1/me/friendship/1")
+        .to route_to("v1/me#befriend", user_id: "1", format: :json)
+    end
+
+    it "routes to #unfriend" do
+      expect(delete: "/v1/me/friendship/1")
+        .to route_to("v1/me#unfriend", user_id: "1", format: :json)
+    end
+
     it "routes to #update_device" do
       expect(patch: "/v1/me/device")
         .to route_to("v1/me#update_device", format: :json)

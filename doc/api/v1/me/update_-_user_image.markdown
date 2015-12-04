@@ -156,7 +156,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=b33Bdt1xa-P6rrdt274aK7nd3Xo
+Authorization: Token token=dk_3EJWdfFgTELetRvWKTie-sg4
 Host: example.org
 Cookie: </pre>
 
@@ -176,7 +176,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=b33Bdt1xa-P6rrdt274aK7nd3Xo&quot; \
+	-H &quot;Authorization: Token token=dk_3EJWdfFgTELetRvWKTie-sg4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -187,10 +187,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1481bf255850bfc4db0888e52bd561e3&quot;
+ETag: W/&quot;7c677e1fae5fb147090a68be87b505e5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0aa925a1-c785-48a9-94b8-3c09e1438c4e
-X-Runtime: 0.016724
+X-Request-Id: 491728c1-fd40-42a0-8ee0-bda18faef22d
+X-Runtime: 0.017184
 Vary: Origin
 Content-Length: 748</pre>
 
@@ -204,8 +204,8 @@ Content-Length: 748</pre>
 {
   "id" : 143,
   "username" : "User 194",
-  "createdAt" : "2015-11-24T23:47:31.068Z",
-  "updatedAt" : "2015-11-24T23:47:31.077Z",
+  "createdAt" : "2015-12-04T16:56:49.384Z",
+  "updatedAt" : "2015-12-04T16:56:49.392Z",
   "deletedAt" : null,
   "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
   "location" : null,

@@ -52,7 +52,7 @@ class ReSlot < BaseSlot
   end
 
   def delete
-    remove_activity
+    remove_activity('unslot')
     remove_all_followers
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
@@ -76,13 +76,15 @@ class ReSlot < BaseSlot
     # if same original event was already reslottet by user, use this reslot
     reslot = where(slotter: slotter, parent: original_source).take
 
+    slotter.follow(predecessor)
+
     # if deleted reslot was reslottet again, unset deleted_at & update predecessor
     if reslot && reslot.deleted_at?
       reslot.update(deleted_at: nil)
       reslot.update(predecessor: predecessor)
+      BaseSlot.increment_counter(:re_slots_count, reslot.parent_id)
+      reslot.create_activity
     end
-
-    slotter.follow(predecessor)
 
     unless reslot
       reslot = create(slotter: slotter,
@@ -103,18 +105,18 @@ class ReSlot < BaseSlot
   ## Activity Methods ##
 
   private def activity_target
-    self
+    predecessor
   end
 
   private def activity_actor
     slotter
   end
 
-  private def activity_verb
+  private def activity_action
     'reslot'
   end
 
-  private def activity_foreign
-    parent
+  private def activity_deletion
+    'unslot'
   end
 end
