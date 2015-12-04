@@ -5,6 +5,10 @@ module UserActivity
     'User'
   end
 
+  private def push_notify
+    [activity_target.id]
+  end
+
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data

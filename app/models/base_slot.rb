@@ -158,13 +158,6 @@ class BaseSlot < ActiveRecord::Base
     unless like
       like = likes.create(user: user)
       like.create_activity
-
-      message_content = I18n.t('slot_like_push_singular',
-                               USER: user.username,
-                               TITLE: meta_slot.title)
-
-      Device.notify_all([creator_id], [message: message_content,
-                                       slot_id: self.id])
     end
     like
   rescue ActiveRecord::RecordNotUnique
@@ -190,21 +183,6 @@ class BaseSlot < ActiveRecord::Base
 
     if new_comment.valid?
       new_comment.create_activity
-
-      # Is the creator really what we want?
-      # For std_slots we want the owner. For Groupslots?
-      user_ids = [creator_id]
-      user_ids += comments.pluck(:user_id)
-      user_ids += likes.pluck(:user_id)
-      # remove the user who did the actual comment
-      user_ids.delete(user.id)
-
-      message_content = I18n.t('slot_comment_push_singular',
-                               USER: user.username,
-                               TITLE: meta_slot.title)
-
-      Device.notify_all(user_ids.uniq, [message: message_content,
-                                        slot_id: new_comment.slot_id])
     else
       errors.add(:comment, new_comment.errors)
     end
@@ -440,7 +418,7 @@ class BaseSlot < ActiveRecord::Base
     creator
   end
 
-  private def activity_verb
+  private def activity_action
     'slot'
   end
 end
