@@ -1,18 +1,19 @@
 module Follow
   # Add the passed follower to the current object
-  def add_follower(target)
-    unless self == target
+  def add_follower(follower)
+    # Skip self and private targets
+    if (self != follower) and (self.try(:visibility) != 'private')
       # Start redis transaction
       $redis.multi do
-        $redis.sadd(target.redis_key(:following), [ feed_type, self.id ].to_json)
-        $redis.sadd(redis_key(:followers), target.id)
+        $redis.sadd(follower.redis_key(:following), [ feed_type, self.id ].to_json)
+        $redis.sadd(redis_key(:followers), follower.id)
       end
     end
   end
 
   # Delegate helper method (inverted logic)
   def follow(target)
-    target.add_follower(self)
+    target.add_follower(self) # self => follower
   end
 
   # Remove the passed follower from the current object

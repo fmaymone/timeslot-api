@@ -16,8 +16,7 @@ class Friendship < ActiveRecord::Base
   validates :state, presence: true
 
   def offer
-    update!(state: OFFERED)
-    update!(deleted_at: nil) if deleted_at?
+    update!(state: OFFERED) unless deleted_at?
   end
 
   def offered?
@@ -35,8 +34,16 @@ class Friendship < ActiveRecord::Base
     state == ESTABLISHED && !deleted_at?
   end
 
+  # reject can be 3 things:
+  # - cancel established friendship
+  # - cancel open friend request (from me to someone else)
+  # - refuse open friend request (from someone else to me)
   def reject
-    update!(state: REJECTED)
+    if established?
+      user.unfollow(friend)
+      friend.unfollow(user)
+    end
+    update!(state: REJECTED) unless deleted_at?
   end
 
   def rejected?
@@ -45,6 +52,10 @@ class Friendship < ActiveRecord::Base
 
   # when user deactivates account, need to preserve state
   # also called when friendships end
+  # -> not anymore. This wasn't a good idea, inactivate should ONLY be called
+  # if a user inactivates his account, because otherwise all
+  # canceled friendships would be re-enabled when the user
+  # reactivates his profile.
   def inactivate
     user.unfollow(friend)
     friend.unfollow(user)
@@ -73,29 +84,32 @@ class Friendship < ActiveRecord::Base
   # must use this style here
   class << self
     def open
-      # where(deleted_at: nil).where(state: '00')
       where(deleted_at: nil, state: OFFERED)
     end
 
     def established
-      # where(deleted_at: nil).where(state: '11')
       where(deleted_at: nil, state: ESTABLISHED)
     end
   end
 
-  def humanize
-    case state
-    when "00" then "offered"
-    when "11" then "established"
-    when "01" then "rejected"
-    else "undefined"
+  def humanize(concerned_user = nil)
+    if state == OFFERED
+      case concerned_user
+      when friend then "pending passive"
+      when user then "pending active"
+      when nil then "pending"
+      end
+    elsif state == ESTABLISHED
+      "friend"
+    else
+      "stranger"
     end
   end
 
   ## Activity Methods ##
 
   private def activity_is_valid?
-    established?
+    super and established?
   end
 
   private def activity_target

@@ -78,6 +78,14 @@ Rails.application.routes.draw do
       get 'signout', to: 'me#signout', as: 'sign_me_out'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
+      post 'friendship/:user_id',
+           to: 'me#befriend',
+           as: 'befriend',
+           constraints: { id: /\d+/ }
+      delete 'friendship/:user_id',
+             to: 'me#unfriend',
+             as: 'unfriend',
+             constraints: { id: /\d+/ }
       patch 'device', to: 'me#update_device', as: 'update_device'
     end
 

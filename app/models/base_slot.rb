@@ -172,7 +172,12 @@ class BaseSlot < ActiveRecord::Base
     # means it would be rescued in application_controller.rb and returns 422
     # which is not our intention
   else
-    like.update(deleted_at: nil) if like.deleted_at? # relike after unlike
+    if like.deleted_at? # relike after unlike
+      like.update(deleted_at: nil)
+      BaseSlot.increment_counter(:likes_count, id)
+      like.create_activity
+    end
+    like
   end
 
   def destroy_like(user)
@@ -219,6 +224,10 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
+
+    # NOTE: Actually we remove all reslots if one
+    # of the parent/predecessor slot was removed
+    reslots.each(&:delete) if self.try(:reslots)
 
     remove_activity
     remove_all_followers
@@ -433,9 +442,5 @@ class BaseSlot < ActiveRecord::Base
 
   private def activity_verb
     'slot'
-  end
-
-  private def activity_foreign
-    nil
   end
 end

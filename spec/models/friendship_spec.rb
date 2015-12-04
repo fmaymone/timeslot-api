@@ -74,14 +74,32 @@ RSpec.describe Friendship, type: :model do
   end
 
   describe :humanize do
-    let(:friendship) { create(:friendship, :established, friend: create(:user)) }
-    let(:resultValues) { [ {'00' => 'offered'}, {'11' => 'established'},
-        {'01' => 'rejected'} ] }
+    let(:friendship) {
+      create(:friendship, :established, friend: create(:user)) }
+    let(:resultValues) {
+      [{'00' => 'pending'}, {'11' => 'friend'}, {'01' => 'stranger'}] }
 
-    it "return friendship state as a string" do
+    it "maps friendship state to string or nil" do
       resultValues.each do |res|
         friendship.state = res.keys[0]
         expect(friendship.humanize).to eq res.values[0]
+      end
+    end
+
+    context "pending" do
+      let(:initiator) { create(:user, username: "Initiator") }
+      let(:receiver) { create(:user, username: "Receiver") }
+      let(:friendship) {
+        create(:friendship, user: initiator, friend: receiver) }
+
+      it "returns pending active' for the initiator" do
+        expect(friendship.state).to eq OFFERED
+        expect(friendship.humanize(initiator)).to eq 'pending active'
+      end
+
+      it "returns pending passive' for the receiver" do
+        expect(friendship.state).to eq OFFERED
+        expect(friendship.humanize(receiver)).to eq 'pending passive'
       end
     end
   end

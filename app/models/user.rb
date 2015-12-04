@@ -268,31 +268,47 @@ class User < ActiveRecord::Base
       received_friendships.find_by("user_id= ?", user_id)
   end
 
-  def offered_friendship(user_id)
-    received_friendships.open.find_by("user_id= ?", user_id)
-  end
-
   def add_friends(user_ids)
     user_ids.each do |id|
-      if fs = friendship(id)
-        if fs.established?
-          next
-        elsif fs.offered?
-          fs.accept
-        else
-          fs.offer
-        end
-      else
-        requested_friends << User.find(id)
-        save
-      end
+      initiate_friendship(id.to_i)
     end
   end
 
+  # TODO: can probably be removed
   def remove_friends(user_ids)
     user_ids.each do |id|
-      friendship(id).try(:inactivate)
+      friendship(id).try(:reject)
     end
+  end
+
+  def initiate_friendship(user_id)
+    # gibt es schon was zw uns beiden
+    if fs = friendship(user_id)
+      # ja
+      if fs.established?
+        # alles tuti
+        return fs
+      # sind wir gescheitert zuvor?
+      elsif fs.rejected?
+        # versuchen wir es noch mal
+        fs.offer
+      # geht es um eine vorliegende Freundschaftsanfrage AN mich?
+      elsif fs.offered? && (user_id == fs.user_id)
+        fs.accept
+      end
+    else
+      # nein
+      requested_friends << User.find(user_id)
+      save
+    end
+    fs || friendship(user_id)
+  end
+
+  def invalidate_friendship(user_id)
+    if existing_friendship = friendship(user_id)
+      existing_friendship.reject
+    end
+    existing_friendship
   end
 
   # TODO: send only user_id as param instead of full object
@@ -480,7 +496,8 @@ class User < ActiveRecord::Base
     end
     current_user = user.try(:authenticate, password)
     if current_user
-      current_user.update(auth_token: generate_auth_token)
+      # FIXME: temporary disable token update bc ios doesn't renew token on 401
+      # current_user.update(auth_token: generate_auth_token)
       Device.update_or_create(current_user, device) if device
     end
     current_user

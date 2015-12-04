@@ -1,6 +1,9 @@
 class Search
-  def self.new(table, attr, query, page: 1, limit: 10, method: 'metaphone')
-    return [] if query.length < 3
+  def self.new(table, attr, query, page: 1, limit: 10, method: 'like')
+    # NOTE: Actually we skip the minimum length check of the users query string
+    # We should re-enable this later to prevent from performance issues,
+    # or we can use the users from the activity feeds shared object to speed up user search
+    return [] if query.blank?
     result = paginate(
       send(method, table, attr, query),
       attr,
