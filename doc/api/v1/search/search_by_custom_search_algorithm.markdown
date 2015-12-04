@@ -57,7 +57,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=TNa6aSIKXOBMvjWy9KBk6Xgz5Ik
+Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8
 Host: example.org
 Cookie: </pre>
 
@@ -74,7 +74,7 @@ method: metaphone</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=TNa6aSIKXOBMvjWy9KBk6Xgz5Ik&quot; \
+	-H &quot;Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -85,10 +85,10 @@ method: metaphone</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0e1623e5f2ba9b25aeefd52d23ac6418&quot;
+ETag: W/&quot;6b4bd02d687bd0a5daf12120869dc422&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 79880147-42b7-44e3-be84-6cd02f00ba35
-X-Runtime: 0.139738
+X-Request-Id: 8b5db5a2-a39a-4576-bbf1-bd3f70d1aa69
+X-Runtime: 0.020534
 Vary: Origin
 Content-Length: 463</pre>
 
@@ -103,8 +103,8 @@ Content-Length: 463</pre>
   {
     "id" : 172,
     "username" : "John Doe",
-    "createdAt" : "2015-12-03T22:10:06.936Z",
-    "updatedAt" : "2015-12-03T22:10:06.936Z",
+    "createdAt" : "2015-12-04T16:56:50.516Z",
+    "updatedAt" : "2015-12-04T16:56:50.516Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -116,8 +116,8 @@ Content-Length: 463</pre>
   {
     "id" : 173,
     "username" : "John Doh",
-    "createdAt" : "2015-12-03T22:10:06.952Z",
-    "updatedAt" : "2015-12-03T22:10:06.952Z",
+    "createdAt" : "2015-12-04T16:56:50.540Z",
+    "updatedAt" : "2015-12-04T16:56:50.540Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,

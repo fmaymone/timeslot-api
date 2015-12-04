@@ -53,7 +53,7 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=UgKW2RGhPjFqRz2ZXDovYtErNhs
+Authorization: Token token=LfmdlYrFz9v8P7UQvjYUVhUIO0k
 Host: example.org
 Cookie: </pre>
 
@@ -65,7 +65,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/7&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=UgKW2RGhPjFqRz2ZXDovYtErNhs&quot; \
+	-H &quot;Authorization: Token token=LfmdlYrFz9v8P7UQvjYUVhUIO0k&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,10 +76,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;44652b0bf6093ec3b8330684b860a16d&quot;
+ETag: W/&quot;8f80984626c2cf7110bb55726fea0fd4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ad9d9f75-2aa8-4d24-9391-a483e7f9de15
-X-Runtime: 0.009955
+X-Request-Id: 445f4c8a-c53b-49c5-ae9c-5fdbc90c078e
+X-Runtime: 0.010299
 Vary: Origin
 Content-Length: 356</pre>
 
@@ -96,14 +96,14 @@ Content-Length: 356</pre>
   "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-11-24T23:47:29.153Z",
-  "updatedAt" : "2015-11-24T23:47:29.153Z",
+  "createdAt" : "2015-12-04T16:56:47.320Z",
+  "updatedAt" : "2015-12-04T16:56:47.320Z",
   "deletedAt" : null,
   "owner" : {
     "id" : 16,
     "username" : "User 67",
-    "createdAt" : "2015-11-24T23:47:29.152Z",
-    "updatedAt" : "2015-11-24T23:47:29.152Z",
+    "createdAt" : "2015-12-04T16:56:47.318Z",
+    "updatedAt" : "2015-12-04T16:56:47.318Z",
     "deletedAt" : null,
     "image" : ""
   },

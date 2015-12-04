@@ -3,7 +3,16 @@
 ## upcoming
 
 
-## v0.8.1
+## v0.8.3
+- [TML-137/138/109] Forward Predecessors + Push Integration into Activity Workflow and Improve Activity Removal #151
+- [TML-116] FIX activity feed distributing and removals + specs #149
+- several customisations for befriending (new routes which accept only one user)
+- don't renew auth_token on signin
+- more json changes for ios
+
+
+
+## v0.8.2
 - upgrade to Rails 4.2.5
 - friend-of-friend visibility (foaf) for std_slots
 - user and group image now directly in the table instead of media_items

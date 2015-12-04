@@ -88,7 +88,7 @@ Description : contains ID of the original slot that was reslottet
 
 #### Headers
 
-<pre>Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ
+<pre>Authorization: Token token=Q6iPVnp1KHQA4IehkJAMm0T1HuY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -100,7 +100,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/13&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=Unbf5oFhEZfW6Tmito3aXHaIDIQ&quot; \
+	-H &quot;Authorization: Token token=Q6iPVnp1KHQA4IehkJAMm0T1HuY&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b3647e56493b0b7ff01679e9680ef8cb&quot;
+ETag: W/&quot;d534f39abc902b31cc59008f414fa438&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e8842749-9386-42a4-9fe3-34e87257d61c
-X-Runtime: 0.024207
+X-Request-Id: 10b0c057-8b48-40bf-aa35-3a3a8c3c1969
+X-Runtime: 0.033418
 Vary: Origin
-Content-Length: 570</pre>
+Content-Length: 633</pre>
 
 #### Status
 
@@ -130,18 +130,22 @@ Content-Length: 570</pre>
   "id" : 13,
   "title" : "Slot title 71",
   "startDate" : "2019-09-22T03:44:02.000Z",
-  "createdAt" : "2015-11-24T23:47:34.192Z",
-  "updatedAt" : "2015-11-24T23:47:34.239Z",
-  "deletedAt" : "2015-11-24T23:47:34.235Z",
+  "createdAt" : "2015-12-04T16:56:52.830Z",
+  "updatedAt" : "2015-12-04T16:56:52.880Z",
+  "deletedAt" : "2015-12-04T16:56:52.877Z",
   "endDate" : "2019-10-22T03:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 28,
-    "username" : "User 310",
-    "createdAt" : "2015-11-24T23:47:34.176Z",
-    "updatedAt" : "2015-11-24T23:47:34.176Z",
+    "username" : "User 312",
+    "createdAt" : "2015-12-04T16:56:52.815Z",
+    "updatedAt" : "2015-12-04T16:56:52.815Z",
     "deletedAt" : null,
-    "image" : ""
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "notes" : [],
   "media" : [],
