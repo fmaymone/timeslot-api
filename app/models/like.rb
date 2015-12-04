@@ -25,7 +25,7 @@ class Like < ActiveRecord::Base
     user
   end
 
-  private def activity_verb
+  private def activity_action
     'like'
   end
 end

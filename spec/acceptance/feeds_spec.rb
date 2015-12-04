@@ -81,7 +81,7 @@ resource "Feeds", :activity, :async do
         activity = json.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("type")
-        expect(activity).to have_key("activity")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
         expect(activity).to have_key("data")
@@ -89,7 +89,7 @@ resource "Feeds", :activity, :async do
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors'].first.to_i).to eq(current_user.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['type']).to eq("Slot")
@@ -134,7 +134,7 @@ resource "Feeds", :activity, :async do
 
         activity = json.first
         expect(activity).to have_key("id")
-        expect(activity).to have_key("activity")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("activityCount")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
@@ -175,7 +175,7 @@ resource "Feeds", :activity, :async do
         expect(activity_user['username']).to eq(actor.username)
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors']).to eq([actor.id])
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['type']).to eq("Slot")
@@ -219,7 +219,7 @@ resource "Feeds", :activity, :async do
 
         activity = json.first
         expect(activity).to have_key("id")
-        expect(activity).to have_key("activity")
+        expect(activity).to have_key("action")
         expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
@@ -228,7 +228,7 @@ resource "Feeds", :activity, :async do
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
-        expect(activity['activity']).to eq("comment")
+        expect(activity['action']).to eq("comment")
         expect(activity['actors'].first.to_i).to eq(actor.id)
         expect(activity['target'].to_i).to eq(slot.id)
         expect(activity['type']).to eq("Slot")

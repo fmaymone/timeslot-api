@@ -1,13 +1,9 @@
 module Activity
 
-  def create_activity
-    # Trigger "create" as an activity if this should be valid
-
+  def create_activity(action = nil)
     if activity_is_valid?
-      create_activity_feed
-      create_activity_stream
-      create_activity_push
-      create_activity_email
+      create_activity_feed(action)
+      create_activity_push(action) if push_is_valid?
     end
     self
   end
@@ -16,13 +12,13 @@ module Activity
     # TODO: [TML-77]
   end
 
-  def remove_activity
-    remove_activity_feed
-    remove_activity_push
+  def remove_activity(action = 'delete')
+    remove_activity_feed(action)
+    remove_activity_push(action)
   end
 
-  private def create_activity_feed(activity_time = nil)
-    # Reload last modified data
+  private def create_activity_feed(action, activity_time = nil)
+    # FIX: Reload last modified data
     activity_target.save
     activity_actor.save
     begin
@@ -30,16 +26,15 @@ module Activity
         type: activity_type,
         actor: activity_actor.id.to_s,
         object: self.id.to_s,
+        model: self.class.name,
         target: activity_target.id.to_s,
-        activity: activity_verb,
+        action: action || activity_action,
         message: activity_message_params,
         foreign: activity_foreign.try(:id).to_s,
-        parent: activity_parent.try(:id).to_s,
         notify: activity_notify,
         data: activity_extra_data,
         time: activity_time || self.updated_at,
-        feed: activity_target.class.name,
-        class: self.class.name
+        feed: activity_target.class.name
       })
     rescue => error
       opts = {}
@@ -51,19 +46,24 @@ module Activity
     end
   end
 
-  private def create_activity_stream
-    # TODO
+  private def create_activity_push(action)
+    # Remove creator from the push notification list
+    push_notify.delete(activity_actor.id)
+
+    unless push_notify.nil?
+      # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
+      message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
+                               USER: activity_actor.username,
+                               TITLE: activity_target.try(:title))
+      # Skip sending if no message exist
+      if message_content
+        Device.notify_all(push_notify, [ message: message_content,
+                                         slot_id: activity_target.id ])
+      end
+    end
   end
 
-  private def create_activity_push
-    # TODO: [TML-109], [TML-108]
-  end
-
-  private def create_activity_email
-    # TODO
-  end
-
-  private def remove_activity_feed
+  private def remove_activity_feed(action)
     begin
       # Add actor and foreign user to the activity removal dispatcher
       notify = activity_notify || []
@@ -74,11 +74,11 @@ module Activity
           object: self.id.to_s,
           model: self.class.name,
           target: activity_target.id.to_s,
+          feed: activity_target.class.name,
           notify: notify.uniq
       })
-      # TODO: Dispatch "delete" action as an activity
-      # Pass the current time if it is useful
-      # create_activity_feed(Time.zone.now) if activity_is_valid?
+      # Forward "delete" action as an activity to the dispatcher
+      #create_activity_feed(action) #Time.zone.now
     rescue => error
       opts = {}
       opts[:parameters] = {
@@ -89,8 +89,9 @@ module Activity
     end
   end
 
-  private def remove_activity_push
+  private def remove_activity_push(action)
     # TODO: [TML-71]
+    create_activity_push(action) if push_is_valid?
   end
 
   # This method should be overridden in the subclass
@@ -104,6 +105,12 @@ module Activity
     activity_target.deleted_at.nil?
   end
 
+  # This method should be overridden in the subclass
+  # if custom validation is required
+  private def push_is_valid?
+    !Rails.application.config.SKIP_PUSH_NOTIFICATION
+  end
+
   # Returns an array of user which should also be notified
   private def activity_notify
     # TODO: currently we are sending activities to all users
@@ -112,8 +119,8 @@ module Activity
     # To test the intended logic, we use this temporary switch here
     # This is only for current simulation of a "public activity feed"
     # When the iOS has implemented friends and groups, we can remove this switch
-    if Rails.env.test?
-      # Test of feed distribution through social relations
+    unless Rails.env.production?
+      # Feed distribution through social relations:
       user_ids = activity_target.followers
       # When target belongs to a group we do not notify user followers (e.g. friends)
       if activity_group
@@ -121,7 +128,7 @@ module Activity
       elsif activity_actor
         user_ids += activity_actor.followers
       end
-      user_ids.uniq
+      user_ids
     else
       # Temporary fallback to simulate a "public activity" feed
       # The limit for the to field is 100
@@ -131,8 +138,13 @@ module Activity
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove if foreign is similar to the actor
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign #&& (activity_foreign.id == activity_actor.id)
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present? #&& (activity_foreign.id == activity_actor.id)
     user_ids
+  end
+
+  # Returns an array of user which should be via push notification (AWS SNS)
+  private def push_notify
+    []
   end
 
   # Indicates that the activity target belongs to a group
@@ -147,10 +159,9 @@ module Activity
     ''
   end
 
-  # The parent object is required to merge activities for
-  # same parent objects.
-  private def activity_parent
-    ''
+  # An activity tag as a action related to removing or deleting an activity
+  private def activity_deletion
+    'delete'
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
@@ -172,10 +183,10 @@ module Activity
           "Subclasses must define the method 'activity_target'."
   end
 
-  # An activity tag as a verb
-  private def activity_verb
+  # An activity tag as a action
+  private def activity_action
     raise NotImplementedError,
-          "Subclasses must define the method 'activity_verb'."
+          "Subclasses must define the method 'activity_action'."
   end
 
   # The message is used as a notification message

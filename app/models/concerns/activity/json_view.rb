@@ -1,6 +1,7 @@
 module JSONView
   def self.slot(slot)
-    user = slot.creator
+
+    return nil unless slot.present?
 
     # basic slot data
     json = slot.slice(:id,

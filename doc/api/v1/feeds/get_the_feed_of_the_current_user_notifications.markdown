@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ZO_nORmFJoZDVScTHvFOmzS6wVk
+Authorization: Token token=03UHUG8K5gZWPeKXcgXQOehfDUM
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ZO_nORmFJoZDVScTHvFOmzS6wVk&quot; \
+	-H &quot;Authorization: Token token=03UHUG8K5gZWPeKXcgXQOehfDUM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,12 +141,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2089dd83a8b5994df511c52a7d0e82d6&quot;
+ETag: W/&quot;e186b481b6d16b6f0d9eec374a02f9a7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b0545b5c-5cfd-429a-904e-69ec77e6fe9d
-X-Runtime: 0.003617
+X-Request-Id: 3f5e3ccc-4c4a-489d-ad96-3671616694ff
+X-Runtime: 0.021054
 Vary: Origin
-Content-Length: 1996</pre>
+Content-Length: 1921</pre>
 
 #### Status
 
@@ -158,13 +158,10 @@ Content-Length: 1996</pre>
 [
   {
     "type" : "Slot",
-    "object" : "3",
     "target" : "3",
-    "activity" : "comment",
-    "foreignId" : "9",
-    "time" : "2015-11-24T23:47:28.961Z",
-    "feed" : 3,
-    "id" : "150D4B3805701047EC942B0A6478F12591113F18",
+    "action" : "comment",
+    "time" : "2015-12-03T22:09:47.546Z",
+    "id" : "508598A12C9880F27F561CC3223991F3236AD6C0",
     "actors" : [
       8
     ],
@@ -173,16 +170,16 @@ Content-Length: 1996</pre>
         "id" : 3,
         "title" : "Slot title 23",
         "startDate" : "2019-09-24T23:44:02.000Z",
-        "createdAt" : "2015-11-24T23:47:28.939Z",
-        "updatedAt" : "2015-11-24T23:47:28.939Z",
+        "createdAt" : "2015-12-03T22:09:47.414Z",
+        "updatedAt" : "2015-12-03T22:09:47.569Z",
         "deletedAt" : null,
         "endDate" : "2019-10-24T23:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 9,
           "username" : "User 60",
-          "createdAt" : "2015-11-24T23:47:28.929Z",
-          "updatedAt" : "2015-11-24T23:47:28.929Z",
+          "createdAt" : "2015-12-03T22:09:47.359Z",
+          "updatedAt" : "2015-12-03T22:09:47.359Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
@@ -200,7 +197,7 @@ Content-Length: 1996</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2015-11-24T23:47:28.957Z",
+            "createdAt" : "2015-12-03T22:09:47.526Z",
             "duration" : null,
             "title" : "Title 21"
           },
@@ -210,7 +207,7 @@ Content-Length: 1996</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-11-24T23:47:28.953Z",
+            "createdAt" : "2015-12-03T22:09:47.505Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -220,7 +217,7 @@ Content-Length: 1996</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-11-24T23:47:28.950Z",
+            "createdAt" : "2015-12-03T22:09:47.487Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -230,7 +227,7 @@ Content-Length: 1996</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-11-24T23:47:28.948Z"
+            "createdAt" : "2015-12-03T22:09:47.470Z"
           },
           {
             "mediaId" : 14,
@@ -238,7 +235,7 @@ Content-Length: 1996</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-11-24T23:47:28.945Z"
+            "createdAt" : "2015-12-03T22:09:47.452Z"
           },
           {
             "mediaId" : 13,
@@ -246,14 +243,11 @@ Content-Length: 1996</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-11-24T23:47:28.942Z"
+            "createdAt" : "2015-12-03T22:09:47.434Z"
           }
         ],
         "reslotsCounter" : 0,
         "visibility" : "public",
-        "settings" : {
-          "alerts" : "0000000000"
-        },
         "likes" : 0,
         "commentsCounter" : 1,
         "shareUrl" : null
@@ -261,8 +255,8 @@ Content-Length: 1996</pre>
       "actor" : {
         "id" : 8,
         "username" : "User 53",
-        "createdAt" : "2015-11-24T23:47:28.923Z",
-        "updatedAt" : "2015-11-24T23:47:28.923Z",
+        "createdAt" : "2015-12-03T22:09:47.326Z",
+        "updatedAt" : "2015-12-03T22:09:47.326Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,

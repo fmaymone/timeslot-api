@@ -8,6 +8,7 @@ class RemoveJob
           params[:object],
           params[:model],
           params[:target],
+          params[:feed],
           params[:notify]
       )
     rescue => e

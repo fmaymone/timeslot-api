@@ -301,7 +301,13 @@ class User < ActiveRecord::Base
       requested_friends << User.find(user_id)
       save
     end
-    fs || friendship(user_id)
+    fs ||= friendship(user_id)
+    if fs.established?
+      fs.user.follow(fs.friend)
+      fs.friend.follow(fs.user)
+    end
+    fs.create_activity
+    fs
   end
 
   def invalidate_friendship(user_id)
