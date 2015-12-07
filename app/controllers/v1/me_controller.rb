@@ -74,7 +74,12 @@ module V1
       collector = SlotsCollector.new(**slot_paging_params)
       @slots = collector.slots_from_friends(user: current_user)
 
-      render "v1/slots/index"
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # GET /v1/me/media
