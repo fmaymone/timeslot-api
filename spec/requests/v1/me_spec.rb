@@ -769,9 +769,14 @@ RSpec.describe "V1::Me", type: :request do
     let(:bob) { create(:user, :with_private_slot) }
     let!(:bob_slots) do
       create(:re_slot, slotter: bob)
-      create(:std_slot_friends, owner: bob, title: 'bobslot')
-      create(:std_slot_friends, owner: bob, title: 'bobslot-past',
-             start_date: Time.zone.yesterday)
+      create(:std_slot_private, owner: bob, title: 'private slot')
+      create(:std_slot_friends, owner: bob, title: 'friendslot-upcoming',
+             start_date: Time.zone.tomorrow.next_day)
+      create(:std_slot_friends, owner: bob, title: 'friendslot-ongoing',
+             start_date: Time.zone.yesterday, end_date: Time.zone.tomorrow)
+      create(:std_slot_friends, owner: bob, title: 'friendslot-past',
+             start_date: Time.zone.yesterday.last_week,
+             end_date: Time.zone.yesterday)
     end
 
     let!(:friendships) {
@@ -789,10 +794,9 @@ RSpec.describe "V1::Me", type: :request do
       expect(response.status).to be(200)
     end
 
-    it "includes all the right slots" do
+    it "doesn't include private slots from friends" do
       get "/v1/me/friendslots", {}, auth_header
-      expect(response.body).to include 'bobslot'
-      expect(json.size).to be 4
+      expect(response.body).not_to include 'private slot'
     end
 
     it "orders the slots by startdate" do
@@ -802,10 +806,11 @@ RSpec.describe "V1::Me", type: :request do
       expect(json.third['startDate']).to be <= json.last['startDate']
     end
 
-    it "only includes upcoming slots" do
+    it "includes past, ungoing and upcoming slots" do
       get "/v1/me/friendslots", {}, auth_header
-      expect(json.first['startDate']).to be >= Time.zone.now
-      expect(response.body).not_to include 'bobslot-past'
+      expect(response.body).to include 'friendslot-upcoming'
+      expect(response.body).to include 'friendslot-ongoing'
+      expect(response.body).to include 'friendslot-past'
     end
 
     context "pagination" do
