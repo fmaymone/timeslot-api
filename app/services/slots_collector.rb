@@ -52,16 +52,22 @@ class SlotsCollector
 
   # collects all non-private slots from all friends of the current_user
   def slots_from_friends(current_user:)
-    friends = UserQuery::Relationship.new(current_user.id).my_friends
-    # ALTERNATIVE: to decompose into 2 queries:
-    # friends = UserQuery::Relationship.new(current_user.id).my_friends.to_a
+    # ALTERNATIVE: to join on the db level:
+    # friends = UserQuery::Relationship.new(current_user.id).my_friends
+    friends = UserQuery::Relationship.new(current_user.id).my_friends.to_a
 
-    slots = []
-    slots.push(*StdSlot.unprivate.where(owner: friends))
-    slots.push(*ReSlot.where(slotter: friends))
-    # slots.push(*ReSlot.unprivate.where(slotter: friends))
-
-    slots.sort { |x, y| x.start_date <=> y.start_date }
+    showables = [StdSlot
+                  .includes(:notes, :media_items,
+                            meta_slot: [:ios_location, :creator])
+                  .where(owner: friends)
+                  .unprivate,
+                 ReSlot
+                   .includes(parent: [:notes, :media_items],
+                             meta_slot: [:ios_location, :creator])
+                   .where(slotter: friends)
+                   # .unprivate
+                ]
+    consider_filter(showables, @filter)
   end
 
   private def consider_filter(relations, filter)

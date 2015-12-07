@@ -18,17 +18,19 @@ RSpec.describe SlotsCollector, type: :service do
       create(:std_slot_friends, owner: friends.second)
       create(:std_slot_foaf, owner: friends.third)
       create(:std_slot_public, owner: friends.last)
+
+      create(:re_slot, slotter: friends.last)
       friends
     end
 
-    it "returns slots from friends" do
-      collector = SlotsCollector.new
-      slots = collector.slots_from_friends(current_user: user)
+    it "returns all non-private slots & reslots from friends" do
+      slots = SlotsCollector.new.slots_from_friends(current_user: user)
 
       expect(slots).not_to include friends.first.std_slots.take
       expect(slots).to include friends.second.std_slots.take
       expect(slots).to include friends.third.std_slots.take
       expect(slots).to include friends.last.std_slots.take
+      expect(slots).to include friends.last.re_slots.take
     end
   end
 end
