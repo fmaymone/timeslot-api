@@ -78,6 +78,8 @@ module Activity
           feed: activity_target.class.name,
           notify: notify.uniq
       })
+      # Remove actor
+      notify.delete(activity_actor.id.to_s)
       # Forward "delete" action as an activity to the dispatcher
       create_activity_feed(action, notify) #Time.zone.now
     rescue => error

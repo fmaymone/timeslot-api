@@ -75,14 +75,16 @@ module Feed
       $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
 
       # Remove foreign user + actor from forwarding to notifications
-      params[:forward].delete(params[:foreign]) if params[:foreign].present?
-      params[:forward].delete(params[:actor])
-      # Send to other users through custom forwarding ("Read-Opt" Strategy)
-      unless params[:forward].empty?
-        $redis.pipelined do
-          params[:forward].each do |user|
-            # Store to others private notification feed
-            $redis.rpush("Feed:#{user}:Notification", target_key)
+      if params[:forward]
+        params[:forward].delete(params[:foreign]) if params[:foreign].present?
+        params[:forward].delete(params[:actor])
+        # Send to other users through custom forwarding ("Read-Opt" Strategy)
+        unless params[:forward].empty?
+          $redis.pipelined do
+            params[:forward].each do |user|
+              # Store to others private notification feed
+              $redis.rpush("Feed:#{user}:Notification", target_key)
+            end
           end
         end
       end
