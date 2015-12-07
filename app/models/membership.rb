@@ -120,9 +120,17 @@ class Membership < ActiveRecord::Base
     group
   end
 
+  private def activity_foreign
+    group.owner
+  end
+
   # The user who made the update
   def activity_actor
     user
+  end
+
+  private def activity_notify
+    []
   end
 
   def activity_action
