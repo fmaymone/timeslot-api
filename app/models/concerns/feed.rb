@@ -45,14 +45,21 @@ module Feed
 
     def dispatch(params)
       # Generates and add activity id (full params are used here)
-      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :message).to_json).upcase
+      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
       # Translate class name to enumeration
       params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
 
       # Determine target key for redis set
       target_index = "#{params[:feed]}:#{params[:target]}"
-      # Store target to its own index (shared objects)
-      $redis.set("Target:#{target_index}", gzip_target(params))
+      # TODO: Instead of using "Actor" or "Target" as key index it is better to use
+      # more qualified namings like: "Slot", "User" or "Group"
+      if params[:type] == 'User'
+        # If target is from type user --> forward target to the shared objects
+        $redis.set("Actor:#{params[:object]}", gzip_target(params))
+      else
+        # Store target to its own index (shared objects)
+        $redis.set("Target:#{target_index}", gzip_target(params))
+      end
       # Store actor to its own index (shared objects)
       $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
 
@@ -285,7 +292,7 @@ module Feed
 
     private def gzip_feed(params)
       ActiveSupport::Gzip.compress(
-          params.except(:data, :message, :notify).values.to_json
+          params.except(:data, :message, :notify, :forward).values.to_json
       )
     end
 

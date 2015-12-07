@@ -17,7 +17,7 @@ module Activity
     remove_activity_push(action)
   end
 
-  private def create_activity_feed(action, activity_time = nil)
+  private def create_activity_feed(action, forward = nil, activity_time = nil)
     # FIX: Reload last modified data
     activity_target.save
     activity_actor.save
@@ -31,7 +31,8 @@ module Activity
         action: action || activity_action,
         message: activity_message_params,
         foreign: activity_foreign.try(:id).to_s,
-        notify: activity_notify,
+        notify: forward ? [] : activity_notify,
+        forward: forward,
         data: activity_extra_data,
         time: activity_time || self.updated_at,
         feed: activity_target.class.name
@@ -78,7 +79,7 @@ module Activity
           notify: notify.uniq
       })
       # Forward "delete" action as an activity to the dispatcher
-      #create_activity_feed(action) #Time.zone.now
+      create_activity_feed(action, notify) #Time.zone.now
     rescue => error
       opts = {}
       opts[:parameters] = {
@@ -119,7 +120,7 @@ module Activity
     # To test the intended logic, we use this temporary switch here
     # This is only for current simulation of a "public activity feed"
     # When the iOS has implemented friends and groups, we can remove this switch
-    unless Rails.env.production?
+    if true #unless Rails.env.production?
       # Feed distribution through social relations:
       user_ids = activity_target.followers
       # When target belongs to a group we do not notify user followers (e.g. friends)
