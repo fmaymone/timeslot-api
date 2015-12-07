@@ -254,8 +254,10 @@ class User < ActiveRecord::Base
 
   ## friendship related ##
 
-  # OPTIMIZATION: get friends with one query
   def friends
+    # OPTIMIZATION: get friends with one query
+    # but it seems 2 queries are faster at the moment
+    # UserQuery::Relationship.new(id).my_friends.to_a
     friends_by_request + friends_by_offer
   end
 
