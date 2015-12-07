@@ -26,12 +26,16 @@ namespace :feed do
 
       Friendship.includes(:user, :friend).all.find_each do |relation|
         # friends follows each other
-        relation.user.add_follower(relation.friend)
-        relation.friend.add_follower(relation.user)
+        if relation.established? || relation.offered?
+          relation.user.add_follower(relation.friend)
+          relation.friend.add_follower(relation.user)
+        end
       end
 
       Membership.includes(:group, :user).all.find_each do |relation|
-        relation.group.add_follower(relation.user)
+        if relation.active? || relation.invited?
+          relation.group.add_follower(relation.user)
+        end
       end
 
       ReSlot.includes(:slotter).all.find_each do |slot|

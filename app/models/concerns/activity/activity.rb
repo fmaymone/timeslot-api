@@ -105,7 +105,8 @@ module Activity
     activity_target &&
     activity_actor.role != 1 &&
     activity_actor.deleted_at.nil? &&
-    activity_target.deleted_at.nil?
+    activity_target.deleted_at.nil? &&
+    activity_action.present?
   end
 
   # This method should be overridden in the subclass
