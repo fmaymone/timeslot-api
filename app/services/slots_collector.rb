@@ -50,6 +50,18 @@ class SlotsCollector
     consider_filter(showables, @filter)
   end
 
+  # collects all public, foaf and friend-visible slots from all friends of
+  # the current_user
+  def slots_from_friends(current_user:)
+    slots = []
+    current_user.friends.each do |friend|
+      slots.push(*friend.std_slots_friends.upcoming)
+      slots.push(*friend.std_slots_public.upcoming)
+      slots.push(*friend.re_slots.upcoming)
+    end
+    slots.sort { |x, y| x.start_date <=> y.start_date }
+  end
+
   private def consider_filter(relations, filter)
     if filter == 'around'
       around_filter_query(relations)

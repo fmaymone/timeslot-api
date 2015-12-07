@@ -78,8 +78,11 @@ module V1
     def slots_from_friends
       authorize :me
 
-      ctx = UserContext.new(current_user, nil)
-      @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+      # ctx = UserContext.new(current_user, nil)
+      # @slots = SlotPolicy::Scope.new(ctx, BaseSlot).friend_slots
+
+      collector = SlotsCollector.new(**slot_paging_params)
+      @slots = collector.slots_from_friends(current_user: current_user)
 
       render "v1/slots/index"
     end
