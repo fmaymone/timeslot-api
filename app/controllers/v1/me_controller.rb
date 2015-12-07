@@ -75,7 +75,7 @@ module V1
     # using another name doesn't trigger 'performed' for the scoped policy
     # while the business logic is now in the policy instead of the model,
     # the instantiation of the policy is ugly as shit
-    def slots_from_friends
+    def slots_of_my_friends
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
