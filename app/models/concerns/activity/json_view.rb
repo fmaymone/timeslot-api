@@ -156,7 +156,7 @@ module JSONView
         localId: (user.image.try(:local_id) ? user.image.local_id : nil)
     }
 
-    json['slotCount'] = user.std_slots.unscoped.count
+    json['slotCount'] = user.std_slots_public.count
     json['reslotCount'] = user.re_slots.count
     json['friendsCount'] = user.friends.count
 
