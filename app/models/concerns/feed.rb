@@ -74,6 +74,19 @@ module Feed
       # Store activity to own notification feed (related to own content, filter out own activities)
       $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
 
+      # Remove foreign user + actor from forwarding to notifications
+      params[:forward].delete(params[:foreign]) if params[:foreign].present?
+      params[:forward].delete(params[:actor])
+      # Send to other users through custom forwarding ("Read-Opt" Strategy)
+      unless params[:forward].empty?
+        $redis.pipelined do
+          params[:forward].each do |user|
+            # Store to others private notification feed
+            $redis.rpush("Feed:#{user}:Notification", target_key)
+          end
+        end
+      end
+
       # Remove predecessor creator from news feed
       params[:notify].delete(params[:foreign]) if params[:foreign].present?
       # Send to other users through social relations ("Read-Opt" Strategy)
@@ -166,6 +179,7 @@ module Feed
         count = activity['actors'].count
         # In handy we remove the single field 'actor' on aggregated feeds
         activity.delete('actor')
+
         # Determine translation params
         # Get the first actor (from shared objects)
         actor = get_shared_object("Actor:#{activity['actors'].first}")
@@ -174,7 +188,12 @@ module Feed
         # Adds the first username and sets usercount to translation params
         i18_params = { USER: actor['username'], USERCOUNT: count }
         # Get target (from shared objects)
-        target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
+        if activity['type'] == 'User'
+          # If target is from type user --> load shared object from actor storage
+          target = get_shared_object("Actor:#{activity['object']}")
+        else
+          target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
+        end
         # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
         # Prepare filtering out private targets from feed + skip (this is an extra check)
