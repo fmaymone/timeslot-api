@@ -50,15 +50,17 @@ class SlotsCollector
     consider_filter(showables, @filter)
   end
 
-  # collects all public, foaf and friend-visible slots from all friends of
-  # the current_user
+  # collects all non-private slots from all friends of the current_user
   def slots_from_friends(current_user:)
+    friends = UserQuery::Relationship.new(current_user.id).my_friends
+    # ALTERNATIVE: to decompose into 2 queries:
+    # friends = UserQuery::Relationship.new(current_user.id).my_friends.to_a
+
     slots = []
-    current_user.friends.each do |friend|
-      slots.push(*friend.std_slots_friends)
-      slots.push(*friend.std_slots_public)
-      slots.push(*friend.re_slots)
-    end
+    slots.push(*StdSlot.unprivate.where(owner: friends))
+    slots.push(*ReSlot.where(slotter: friends))
+    # slots.push(*ReSlot.unprivate.where(slotter: friends))
+
     slots.sort { |x, y| x.start_date <=> y.start_date }
   end
 
