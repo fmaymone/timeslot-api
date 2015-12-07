@@ -24,7 +24,7 @@ RSpec.describe SlotsCollector, type: :service do
     end
 
     it "returns all non-private slots & reslots from friends" do
-      slots = SlotsCollector.new.slots_from_friends(current_user: user)
+      slots = SlotsCollector.new.slots_from_friends(user: user)
 
       expect(slots).not_to include friends.first.std_slots.take
       expect(slots).to include friends.second.std_slots.take

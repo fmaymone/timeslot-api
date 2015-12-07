@@ -51,10 +51,10 @@ class SlotsCollector
   end
 
   # collects all non-private slots from all friends of the current_user
-  def slots_from_friends(current_user:)
+  def slots_from_friends(user:)
     # ALTERNATIVE: to join on the db level:
     # friends = UserQuery::Relationship.new(current_user.id).my_friends
-    friends = UserQuery::Relationship.new(current_user.id).my_friends.to_a
+    friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
     showables = [StdSlot
                   .includes(:notes, :media_items,

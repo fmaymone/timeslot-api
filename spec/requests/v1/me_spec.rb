@@ -766,7 +766,7 @@ RSpec.describe "V1::Me", type: :request do
   end
 
   describe "GET /v1/me/friendslots" do
-    let(:bob) { create(:user, :with_private_slot) }
+    let(:bob) { create(:user, username: 'bob') }
     let!(:bob_slots) do
       create(:re_slot, slotter: bob)
       create(:std_slot_private, owner: bob, title: 'private slot')

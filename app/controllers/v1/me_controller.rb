@@ -67,19 +67,12 @@ module V1
     end
 
     # GET /v1/me/friendslots
-    # returns all public and friend-visible slots of all friends from
-    # current user
-    # Concerning pundit:
-    # This is weird and not nice, pundit scopes seem way to inflexible...
-    # the 'resolve' method for SlotPolicy is already used by 'slots' method
-    # using another name doesn't trigger 'performed' for the scoped policy
-    # while the business logic is now in the policy instead of the model,
-    # the instantiation of the policy is ugly as shit
+    # returns all non-private slots of all friends from current user
     def slots_of_my_friends
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.slots_from_friends(current_user: current_user)
+      @slots = collector.slots_from_friends(user: current_user)
 
       render "v1/slots/index"
     end
