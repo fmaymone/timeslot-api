@@ -291,7 +291,7 @@ class User < ActiveRecord::Base
       # sind wir gescheitert zuvor?
       elsif fs.rejected?
         # versuchen wir es noch mal
-        fs.offer
+        fs.offer(self)
       # geht es um eine vorliegende Freundschaftsanfrage AN mich?
       elsif fs.offered? && (user_id == fs.user_id)
         fs.accept

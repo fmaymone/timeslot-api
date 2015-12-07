@@ -914,6 +914,14 @@ RSpec.describe "V1::Me", type: :request do
         friendship.reload
         expect(friendship.offered?).to be true
       end
+
+      it "has state 'pending active' for requester" do
+        expect(friendship.established?).to be false
+        post "/v1/me/add_friends", { ids: [john.id] }, auth_header
+        friendship.reload
+        expect(friendship.humanize(current_user)).to eq 'pending active'
+        expect(friendship.humanize(john)).to eq 'pending passive'
+      end
     end
   end
 
