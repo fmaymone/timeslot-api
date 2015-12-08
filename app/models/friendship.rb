@@ -34,6 +34,7 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
+    remove_activity('request')
     create_activity
   end
 
