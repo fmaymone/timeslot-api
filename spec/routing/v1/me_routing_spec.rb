@@ -28,9 +28,9 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#my_slots", format: :json)
     end
 
-    it "routes to #slots_from_friends" do
+    it "routes to #slots_of_my_friends" do
       expect(get: "/v1/me/friendslots")
-        .to route_to("v1/me#slots_from_friends", format: :json)
+        .to route_to("v1/me#slots_of_my_friends", format: :json)
     end
 
     it "routes to #media" do

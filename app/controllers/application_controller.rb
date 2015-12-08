@@ -6,9 +6,6 @@ class ApplicationController < ActionController::API
   after_action :verify_authorized
   after_action :set_locale, only: :users
 
-  # Enforces access right checks for collections
-  # after_action :verify_policy_scoped, only: :index
-
   rescue_from ParameterInvalid, with: :unprocessable_entity
   rescue_from PaginationError, with: :unprocessable_entity
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
@@ -63,16 +60,6 @@ class ApplicationController < ActionController::API
       p[:moment] = Time.zone.now.to_s if p[:moment].nil?
     end
     p
-  end
-
-  # for Pundit
-  class UserContext
-    attr_reader :current_user, :requested_user
-
-    def initialize(current_user, requested_user = nil)
-      @current_user = current_user
-      @requested_user = requested_user
-    end
   end
 
   # I18n

@@ -42,7 +42,7 @@ class Friendship < ActiveRecord::Base
   end
 
   # reject can be 3 things:
-  # - cancel established friendship
+  # - break established friendship
   # - cancel open friend request (from me to someone else)
   # - refuse open friend request (from someone else to me)
   def reject

@@ -8,6 +8,8 @@ class StdSlot < BaseSlot
                      'public' => :StdSlotPublic
                    }
 
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
+
   belongs_to :owner, class_name: User, inverse_of: :std_slots
   # for some strange reason the association is not found even tough it
   # works for meta_slot just the same

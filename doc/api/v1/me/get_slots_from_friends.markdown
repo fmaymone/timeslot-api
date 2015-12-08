@@ -4,7 +4,9 @@
 
 ### GET /v1/me/friendslots
 
-Returns an array which includes the public and friend-visible StandardSlots &amp; ReSlots of all friends from the current user
+Returns an array which includes all non-private StandardSlots &amp; ReSlots from all friends of the current user.
+
+This endpoint supports pagination in the same style as the &#39;/me/slots&#39; route.
 
 ### Response Fields
 
@@ -64,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=4DCd5QRMzCy9q5cdAuQTl2ZaTYs
+Authorization: Token token=zB0FSa_zJaZz_vhBFrYvX7x1x24
 Host: example.org
 Cookie: </pre>
 
@@ -76,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=4DCd5QRMzCy9q5cdAuQTl2ZaTYs&quot; \
+	-H &quot;Authorization: Token token=zB0FSa_zJaZz_vhBFrYvX7x1x24&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -87,12 +89,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1ec2f6ff3a8e2168996e2bf5cf621a3c&quot;
+ETag: W/&quot;316f3b309324ec13451688122a995c98&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 87ab8c98-4f10-49b2-857b-34b81ec126b9
-X-Runtime: 0.049493
+X-Request-Id: a7027b23-9095-4e12-94c1-3bb4d8d66d9d
+X-Runtime: 0.040531
 Vary: Origin
-Content-Length: 1575</pre>
+Content-Length: 2598</pre>
 
 #### Status
 
@@ -103,53 +105,19 @@ Content-Length: 1575</pre>
 ```javascript
 [
   {
-    "id" : 23,
+    "id" : 22,
     "title" : "Slot title 39",
     "startDate" : "2019-09-16T18:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:48.991Z",
-    "updatedAt" : "2015-12-04T16:56:48.991Z",
+    "createdAt" : "2015-12-07T23:17:56.632Z",
+    "updatedAt" : "2015-12-07T23:17:56.632Z",
     "deletedAt" : null,
     "endDate" : "2019-10-16T18:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 122,
       "username" : "User 173",
-      "createdAt" : "2015-12-04T16:56:48.974Z",
-      "updatedAt" : "2015-12-04T16:56:48.974Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "reslotsCounter" : 1,
-    "slotter" : {
-      "id" : 120
-    },
-    "parent" : {
-      "id" : 22
-    },
-    "visibility" : "public",
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 24,
-    "title" : "Slot title 41",
-    "startDate" : "2019-09-18T20:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:49.037Z",
-    "updatedAt" : "2015-12-04T16:56:49.037Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-18T20:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 126,
-      "username" : "User 177",
-      "createdAt" : "2015-12-04T16:56:49.032Z",
-      "updatedAt" : "2015-12-04T16:56:49.032Z",
+      "createdAt" : "2015-12-07T23:17:56.628Z",
+      "updatedAt" : "2015-12-07T23:17:56.628Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -165,19 +133,109 @@ Content-Length: 1575</pre>
     "shareUrl" : null
   },
   {
-    "id" : 25,
-    "title" : "Slot title 42",
-    "startDate" : "2019-09-19T21:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:49.062Z",
-    "updatedAt" : "2015-12-04T16:56:49.062Z",
+    "id" : 23,
+    "title" : "Slot title 40",
+    "startDate" : "2019-09-17T19:44:02.000Z",
+    "createdAt" : "2015-12-07T23:17:56.641Z",
+    "updatedAt" : "2015-12-07T23:17:56.641Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-19T21:44:02.000Z",
+    "endDate" : "2019-10-17T19:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 129,
-      "username" : "User 180",
-      "createdAt" : "2015-12-04T16:56:49.058Z",
-      "updatedAt" : "2015-12-04T16:56:49.058Z",
+      "id" : 123,
+      "username" : "User 174",
+      "createdAt" : "2015-12-07T23:17:56.635Z",
+      "updatedAt" : "2015-12-07T23:17:56.635Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "notes" : [],
+    "media" : [],
+    "settings" : {
+      "alerts" : "omitted"
+    },
+    "visibility" : "public",
+    "reslotsCounter" : 0,
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null
+  },
+  {
+    "id" : 25,
+    "title" : "Slot title 41",
+    "startDate" : "2019-09-18T20:44:02.000Z",
+    "createdAt" : "2015-12-07T23:17:56.665Z",
+    "updatedAt" : "2015-12-07T23:17:56.665Z",
+    "deletedAt" : null,
+    "endDate" : "2019-10-18T20:44:02.000Z",
+    "location" : null,
+    "creator" : {
+      "id" : 124,
+      "username" : "User 175",
+      "createdAt" : "2015-12-07T23:17:56.644Z",
+      "updatedAt" : "2015-12-07T23:17:56.644Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "notes" : [],
+    "media" : [],
+    "settings" : {
+      "alerts" : "omitted"
+    },
+    "reslotsCounter" : 1,
+    "slotter" : {
+      "id" : 120
+    },
+    "parent" : {
+      "id" : 24
+    },
+    "visibility" : "public",
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null
+  },
+  {
+    "id" : 26,
+    "title" : "Slot title 43",
+    "startDate" : "2019-09-20T22:44:02.000Z",
+    "createdAt" : "2015-12-07T23:17:56.710Z",
+    "updatedAt" : "2015-12-07T23:17:56.710Z",
+    "deletedAt" : null,
+    "endDate" : "2019-10-20T22:44:02.000Z",
+    "location" : null,
+    "creator" : {
+      "id" : 128,
+      "username" : "User 179",
+      "createdAt" : "2015-12-07T23:17:56.705Z",
+      "updatedAt" : "2015-12-07T23:17:56.705Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "notes" : [],
+    "media" : [],
+    "settings" : {
+      "alerts" : "omitted"
+    },
+    "visibility" : "friends",
+    "reslotsCounter" : 0,
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null
+  },
+  {
+    "id" : 27,
+    "title" : "Slot title 44",
+    "startDate" : "2019-09-21T23:44:02.000Z",
+    "createdAt" : "2015-12-07T23:17:56.734Z",
+    "updatedAt" : "2015-12-07T23:17:56.734Z",
+    "deletedAt" : null,
+    "endDate" : "2019-10-21T23:44:02.000Z",
+    "location" : null,
+    "creator" : {
+      "id" : 131,
+      "username" : "User 182",
+      "createdAt" : "2015-12-07T23:17:56.729Z",
+      "updatedAt" : "2015-12-07T23:17:56.729Z",
       "deletedAt" : null,
       "image" : ""
     },

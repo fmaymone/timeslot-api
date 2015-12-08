@@ -288,7 +288,8 @@ resource "Me" do
     response_field :updatedAt, "Last update of the slot"
     response_field :deletedAt, "Deletion datetime of the slot"
 
-    let(:bob) { create(:user, :with_private_slot) }
+    let(:bob) { create(:user, :with_private_slot,
+                       :with_friend_slot, :with_public_slot) }
     let!(:re_slot) { create(:re_slot, slotter: bob) }
     let!(:friendships) {
       create(:friendship, :established,
@@ -301,9 +302,11 @@ resource "Me" do
     }
 
     example "Get slots from friends", document: :v1 do
-      explanation "Returns an array which includes the public and" \
-                  " friend-visible StandardSlots &" \
-                  " ReSlots of all friends from the current user"
+      explanation "Returns an array which includes all non-private " \
+                  "StandardSlots &" \
+                  " ReSlots from all friends of the current user.\n\n" \
+                  "This endpoint supports pagination in the same style " \
+                  "as the '/me/slots' route."
       do_request
 
       expect(response_status).to eq(200)

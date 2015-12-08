@@ -1,11 +1,16 @@
 module UserQuery
   class Relationship
-    def initialize(user_id, other_id)
+    def initialize(user_id, other_id = nil)
       @user_id = user_id
       @other_id = other_id
     end
 
-    # prepares a db query to fetch their common friends
+    # prepares a db query to fetch all friends of user
+    def my_friends
+      make_union(@user_id)
+    end
+
+    # prepares a db query to fetch all common friends of user and other
     def common_friends
       circle_a = make_union(@user_id)
       circle_b = make_union(@other_id)

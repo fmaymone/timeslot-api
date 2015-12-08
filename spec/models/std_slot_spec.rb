@@ -38,6 +38,23 @@ RSpec.describe StdSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "unprivate scope" do
+    let(:user) { create(:user) }
+    let!(:privat_slot) { create(:std_slot_private, owner: user) }
+    let!(:friend_slot) { create(:std_slot_friends, owner: user) }
+    let!(:foaf_slot) { create(:std_slot_foaf, owner: user) }
+    let!(:public_slot) { create(:std_slot_public, owner: user) }
+
+    it "returns all non-private slots" do
+      result = user.std_slots.unprivate.ids
+
+      expect(result).to include public_slot.id
+      expect(result).to include friend_slot.id
+      expect(result).to include foaf_slot.id
+      expect(result).not_to include privat_slot.id
+    end
+  end
+
   describe "create_slot" do
     let!(:meta_slot) { create(:meta_slot) }
     let(:user) { create(:user) }

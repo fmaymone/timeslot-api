@@ -7,7 +7,7 @@ class PresentableSlots
       # includes public, friend-visible and friend-of-friend (foaf) visible
       # std_slots, public, friend-visible and foaf-visible
       # reslots and shared group_slots (between user and current_user)
-      [user.std_slots_public, user.std_slots_friends, user.std_slots_foaf,
+      [user.std_slots.unprivate,
        user.re_slots, current_user.shared_group_slots(user)]
     when FOAF
       # includes public and friend-of-friend (foaf) visible std_slots,
