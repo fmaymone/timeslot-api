@@ -221,7 +221,7 @@ module Feed
         end
         # iOs requires the friendshipstate (we use the type of action to determine state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-        actor['friendshipState'] = (activity['action'] == 'request' ? 'pendingPassive' : (activity['action'] == 'friendship' ? 'friend' : 'stranger'))
+        actor['friendshipState'] = (activity['action'] == 'request' ? 'pending passive' : (activity['action'] == 'friendship' ? 'friend' : 'stranger'))
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Add the title to the translation params holder
