@@ -748,15 +748,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(0) # +2-2 own activities
-
-        # TODO: test activity notifications for delete actions
-        # expect(user_feed[0]['activity']).to be('delete')
-        # expect(user_feed[0]['data']['target']['id']).to be(slot.id)
-        # expect(user_feed_follower[0]['activity']).to be('delete')
-        # expect(user_feed_follower[0]['data']['target']['id']).to be(slot.id)
-        # expect(user_feed_follower2[0]['activity']).to be('delete')
-        # expect(user_feed_follower2[0]['data']['target']['id']).to be(slot.id)
+        expect(user_feed.count).to be(1) # +2-2 own activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(0) # +2-2 own activities

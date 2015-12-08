@@ -90,7 +90,9 @@ module Activity
         notify: notify.uniq
     })
 
-    if action == 'delete'
+    # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
+    # BUT this should not trigger a new activity like an "unlike"
+    if action == 'delete' and (activity_action == 'slot' or activity_action == 'reslot')
       # Remove actor
       notify.delete(activity_actor.id.to_s)
       # Forward "delete" action as an activity to the dispatcher
