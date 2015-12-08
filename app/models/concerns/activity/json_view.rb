@@ -145,7 +145,7 @@ module JSONView
     json
   end
 
-  def self.user(user)
+  def self.user(user, friend = nil)
     json = user.slice(:id,
                       :username,
                       :created_at,
@@ -159,6 +159,11 @@ module JSONView
     json['slotCount'] = user.std_slots_public.count
     json['reslotCount'] = user.re_slots.count
     json['friendsCount'] = user.friends.count
+
+    if friend
+      friendship = friend.friendship(user)
+      json['friendshipState'] = friendship.nil? ? 'stranger' : friendship.humanize(friend)
+    end
 
     json
   end

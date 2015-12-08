@@ -15,8 +15,8 @@ module UserActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.user(activity_target),
-      actor: JSONView.user(activity_actor)
+      target: JSONView.user(activity_target, activity_actor),
+      actor: JSONView.user(activity_actor, activity_target)
     }
   end
 

@@ -31,6 +31,7 @@ module Activity
         action: action || activity_action,
         message: activity_message_params,
         foreign: activity_foreign.try(:id).to_s,
+        # TODO: this is ugly ...
         notify: forward ? [] : activity_notify,
         forward: forward,
         data: activity_extra_data,
@@ -81,7 +82,7 @@ module Activity
       # Remove actor
       notify.delete(activity_actor.id.to_s)
       # Forward "delete" action as an activity to the dispatcher
-      create_activity_feed(action, activity_target.followers) #Time.zone.now
+      create_activity_feed(action, { Notification: activity_target.followers }) #Time.zone.now
     rescue => error
       opts = {}
       opts[:parameters] = {

@@ -42,19 +42,30 @@ module Feed
     #    related to the current users content
     # 3. Notification Feed (takes all activities which are related to the users content),
     #    own activities are not included here
+    #
+    # There are two different types of distributable lists:
+    #
+    # 1. Notify (includes all users which will be notified through social relations)
+    # 2. Forward (includes additional forwarding of special activities)
 
+    # TODO: Simplify dispatcher
     def dispatch(params)
-      # Generates and add activity id (full params are used here)
+      # Generates and add activity id
       params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
       # Translate class name to enumeration
       params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
 
+      ## Store Shared Objects ##
+
       # Determine target key for redis set
       target_index = "#{params[:feed]}:#{params[:target]}"
       # TODO: Instead of using "Actor" or "Target" as key index it is better to use
-      # more qualified namings like: "Slot", "User" or "Group"
+      # more qualified namings like: "Slot", "User" or "Group", this will also solve other todos
       if params[:type] == 'User'
-        # If target is from type user --> forward target to the shared objects
+        # iOs requires the friendshipstate (we use the type of action for it)
+        #friendship_state = params[:action] == 'request' ? 'pendingPassive' : params[:action] == 'friendship' ? 'friends' : 'stranger'
+        # If target is from type user --> forward target to user shared objects
+        # .merge({ friendshipState: friendship_state })
         $redis.set("Actor:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
@@ -69,25 +80,12 @@ module Feed
       # Determine target index for hybrid "Write-Read-Opt"
       target_key = "#{target_index}:#{activity_index}"
 
+      ## Store Activities ##
+
       # Store activity to own feed (me activities)
       $redis.rpush("Feed:#{params[:actor]}:User", target_key)
       # Store activity to own notification feed (related to own content, filter out own activities)
       $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
-
-      # Remove foreign user + actor from forwarding to notifications
-      if params[:forward]
-        params[:forward].delete(params[:foreign]) if params[:foreign].present?
-        params[:forward].delete(params[:actor])
-        # Send to other users through custom forwarding ("Read-Opt" Strategy)
-        unless params[:forward].empty?
-          $redis.pipelined do
-            params[:forward].each do |user|
-              # Store to others private notification feed
-              $redis.rpush("Feed:#{user}:Notification", target_key)
-            end
-          end
-        end
-      end
 
       # Remove predecessor creator from news feed
       params[:notify].delete(params[:foreign]) if params[:foreign].present?
@@ -97,6 +95,26 @@ module Feed
           params[:notify].each do |user|
             # Store to others public activity feed
             $redis.rpush("Feed:#{user}:News", target_key)
+          end
+        end
+      end
+
+      # TODO: this custom dispatcher can be unified with the basic dispatcher from above
+      # Dispatch custom forwardings (e.g. friend requests, deletions, etc.)
+      if params[:forward]
+        params[:forward].each do |feed, users|
+          # Remove foreign user + actor from forwarding to notifications
+          # TODO: do not remove here, remove before call
+          users.delete(params[:foreign]) if params[:foreign].present?
+          users.delete(params[:actor])
+          # Send to other users through custom forwardings ("Read-Opt" Strategy)
+          unless users.empty?
+            $redis.pipelined do
+              users.each do |user|
+                # Store to custom notification feeds
+                $redis.rpush("Feed:#{user}:#{feed}", target_key)
+              end
+            end
           end
         end
       end
@@ -111,7 +129,8 @@ module Feed
       # points to the target feed index, where the related activity is stored
       recursive_index = -1
 
-      # NOTE: Actually all targets are from type BaseSlot to simplify generics
+      # NOTE: Actually all targets are from type Slot to simplify generics
+      # TODO: Remove activities where target is not from type Slot (e.g. friend request)
       # Translate class name to enumeration
       target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
       # Fetch all activities from target feed (shared feed)
