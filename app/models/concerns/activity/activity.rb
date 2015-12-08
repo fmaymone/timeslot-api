@@ -5,53 +5,57 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-    self
+  ensure
+    return self
   end
 
   def update_activity
     # TODO: [TML-77]
+  ensure
+    return self
   end
 
   def remove_activity(action = 'delete')
     remove_activity_feed(action)
     remove_activity_push(action)
+  ensure
+    return self
   end
 
   private def create_activity_feed(action, forward = nil, activity_time = nil)
     # FIX: Reload last modified data
     activity_target.save
     activity_actor.save
-    begin
-      FeedJob.new.async.perform({
-        type: activity_type,
-        actor: activity_actor.id.to_s,
-        object: self.id.to_s,
-        model: self.class.name,
-        target: activity_target.id.to_s,
-        action: action || activity_action,
-        message: activity_message_params,
-        foreign: activity_foreign.try(:id).to_s,
-        # TODO: this is ugly ...
-        notify: forward ? [] : activity_notify,
-        forward: forward,
-        data: activity_extra_data,
-        time: activity_time || self.updated_at,
-        feed: activity_target.class.name
-      })
-    rescue => error
-      opts = {}
-      opts[:parameters] = {
-          activity: "failed: initialize activity as worker job"
-      }
-      Rails.logger.error { error }
-      Airbrake.notify(error, opts)
-    end
+    # Initialize job worker
+    FeedJob.new.async.perform({
+      type: activity_type,
+      actor: activity_actor.id.to_s,
+      object: self.id.to_s,
+      model: self.class.name,
+      target: activity_target.id.to_s,
+      action: action || activity_action,
+      message: activity_message_params,
+      foreign: activity_foreign.try(:id).to_s,
+      # TODO: this is ugly ...
+      notify: forward ? [] : activity_notify,
+      forward: forward,
+      data: activity_extra_data,
+      time: activity_time || self.updated_at,
+      feed: activity_target.class.name
+    })
+  rescue => error
+    opts = {}
+    opts[:parameters] = {
+        activity: "failed: initialize activity as worker job"
+    }
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 
   private def create_activity_push(action)
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
-
+    # NOTE: do not chain "delete" methods!
     unless push_notify.nil?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
@@ -66,31 +70,29 @@ module Activity
   end
 
   private def remove_activity_feed(action)
-    begin
-      # Add actor and foreign user to the activity removal dispatcher
-      notify = activity_notify || []
-      notify << activity_actor.id.to_s
-      notify << activity_foreign.id.to_s if activity_foreign.present?
-      # Remove activities from target feeds:
-      RemoveJob.new.async.perform({
-          object: self.id.to_s,
-          model: self.class.name,
-          target: activity_target.id.to_s,
-          feed: activity_target.class.name,
-          notify: notify.uniq
-      })
-      # Remove actor
-      notify.delete(activity_actor.id.to_s)
-      # Forward "delete" action as an activity to the dispatcher
-      create_activity_feed(action, { Notification: activity_target.followers }) #Time.zone.now
-    rescue => error
-      opts = {}
-      opts[:parameters] = {
-          activity: "failed: remove activity as worker job"
-      }
-      Rails.logger.error { error }
-      Airbrake.notify(error, opts)
-    end
+    # Add actor and foreign user to the activity removal dispatcher
+    notify = activity_notify || []
+    notify << activity_actor.id.to_s
+    notify << activity_foreign.id.to_s if activity_foreign.present?
+    # Remove activities from target feeds:
+    RemoveJob.new.async.perform({
+        object: self.id.to_s,
+        model: self.class.name,
+        target: activity_target.id.to_s,
+        feed: activity_target.class.name,
+        notify: notify.uniq
+    })
+    # Remove actor
+    notify.delete(activity_actor.id.to_s)
+    # Forward "delete" action as an activity to the dispatcher
+    create_activity_feed(action, { Notification: activity_target.followers }) #Time.zone.now
+  rescue => error
+    opts = {}
+    opts[:parameters] = {
+        activity: "failed: remove activity as worker job"
+    }
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 
   private def remove_activity_push(action)
@@ -171,8 +173,8 @@ module Activity
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
   private def activity_type
-      raise NotImplementedError,
-            "Subclasses must define the method 'activity_type'."
+    raise NotImplementedError,
+          "Subclasses must define the method 'activity_type'."
   end
 
   # The user who made the update

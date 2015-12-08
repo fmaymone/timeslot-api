@@ -62,10 +62,7 @@ module Feed
       # TODO: Instead of using "Actor" or "Target" as key index it is better to use
       # more qualified namings like: "Slot", "User" or "Group", this will also solve other todos
       if params[:type] == 'User'
-        # iOs requires the friendshipstate (we use the type of action for it)
-        #friendship_state = params[:action] == 'request' ? 'pendingPassive' : params[:action] == 'friendship' ? 'friends' : 'stranger'
         # If target is from type user --> forward target to user shared objects
-        # .merge({ friendshipState: friendship_state })
         $redis.set("Actor:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
@@ -236,10 +233,14 @@ module Feed
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
         # Update message params with enriched message
         activity['message'] = I18n.t(i18_key, i18_params)
+        # iOs requires the friendshipstate (we use the type of action to determine state)
+        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+        activity['friendshipState'] = (activity['action'] == 'request' ? 'pendingPassive' : (activity['action'] == 'friendship' ? 'friends' : 'stranger'))
         # Remove special fields are not used by frontend
         remove_fields_from_activity(activity)
       end
       # Filter out private targets from feed (removed targets from preparation)
+      # TODO: check why this line is here and remove it:
       feed.delete_if { |activity| activity['target'].nil? }
       feed
     end
