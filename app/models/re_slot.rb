@@ -116,8 +116,4 @@ class ReSlot < BaseSlot
   private def activity_action
     'reslot'
   end
-
-  # private def activity_deletion
-  #   'unslot'
-  # end
 end

@@ -118,10 +118,10 @@ module Activity
     self.deleted_at.nil? &&
     activity_actor &&
     activity_target &&
-    activity_actor.role != 1 &&
+    activity_actor.role != 1 && # FIX: only activities from "real users" are valid
     activity_actor.deleted_at.nil? &&
     activity_target.deleted_at.nil? &&
-    activity_action.present?
+    activity_action.present? # FIX: skip if no action is set
   end
 
   # This method should be overridden in the subclass
@@ -130,26 +130,64 @@ module Activity
     !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
-  # Returns an array of user which should also be notified
+  # Returns an array of user which should be notified
   private def activity_notify
-    # Feed distribution through social relations:
-    user_ids = activity_target.followers
-    # When target belongs to a group we do not notify user followers (e.g. friends)
+
+    # FIX: get parent visibility if predecessor has no visibility
+    visibility = activity_target.try(:visibility) || activity_target.try(:parent).try(:visibility)
+
+    # Additional check (only for security reasons)
+    return [] if visibility == 'private'
+
+    # Feed distribution through social relations
+    # We differentiate 5 types of activities in dynamic social context:
+    #
+    # 1. Target related context
+    # 2. Actor related context
+    # 3. Friend related context (is handled same as User.followers actually)
+    # 4. Group related context
+    # 5. Foreign related context
+
+    user_ids = []
+
+    # NOTE: Actually when the target belongs to a group we do not follow any user followers (e.g. friends)
     if activity_group
+      # 4. Group related context:
       user_ids += activity_group.followers
-    elsif activity_actor
-      user_ids += activity_actor.followers
+    else
+      # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
+      # 1. Target related context:
+      user_ids += activity_target.followers if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
+      # 2. Actor related context:
+      user_ids += activity_actor.followers if visibility == 'foaf' or visibility == 'public'
+
+      # NOTE: Instead of distributing unrelated public slots we try to extend the social context
+      if visibility == 'public'
+        # 5. Foreign related context:
+        user_ids += activity_foreign.followers if activity_foreign.present?
+        # 3. Friend related context:
+        %W(#{activity_target}
+           #{activity_actor}
+           #{activity_foreign}).each do |context|
+            # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
+            # NOTE: we can loop through followers here, but this has an additional fetching users from DB
+            # This can also be solved by adding friends of friends as a relation directly into the follower model
+            unless context.try(:friends).nil?
+              context.friends.each do |friend|
+                # Here we can fetch followers, change this into friends if further chaining is required
+                user_ids += friend.followers #friend.friends.collect(&:id)
+              end
+            end
+        end
+      end
     end
 
     # Temporary fallback to simulate a "public activity" feed
-    # if Rails.env.production?
-    # return [] if activity_actor.email.eql?('info@timeslot.com')
-    # user_ids = User.all.collect(&:id).map(&:to_s).as_json
+    # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.production?
 
-    user_ids
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
-    # Remove if foreign is similar to the actor
+    # Remove the foreign user
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present?
     user_ids
   end
