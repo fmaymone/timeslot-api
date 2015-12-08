@@ -215,7 +215,13 @@ module Feed
         # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
         # Prepare filtering out private targets from feed + skip (this is an extra check)
-        activity.delete('target') and next if target['visibility'] == 'private'
+        if target['visibility'] == 'private'
+          activity['target'] = nil
+          next
+        end
+        # iOs requires the friendshipstate (we use the type of action to determine state)
+        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+        actor['friendshipState'] = (activity['action'] == 'request' ? 'pendingPassive' : (activity['action'] == 'friendship' ? 'friends' : 'stranger'))
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Add the title to the translation params holder
@@ -233,9 +239,6 @@ module Feed
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
         # Update message params with enriched message
         activity['message'] = I18n.t(i18_key, i18_params)
-        # iOs requires the friendshipstate (we use the type of action to determine state)
-        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-        activity['friendshipState'] = (activity['action'] == 'request' ? 'pendingPassive' : (activity['action'] == 'friendship' ? 'friends' : 'stranger'))
         # Remove special fields are not used by frontend
         remove_fields_from_activity(activity)
       end
@@ -245,9 +248,8 @@ module Feed
       feed
     end
 
-    # TODO: We can optimize this by aggregating feeds when storing into redis
-    # NOTE: If we use "live aggregation" we are able to modify
-    # the aggregation logic on the fly
+    # NOTE: We can optimize this by aggregating feeds when storing into redis
+    # NOTE: Actually we use "live aggregation" instead, so we are able to modify the aggregation logic on the fly
     private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil)
       # Get offset from cursor in reversed logic (LIFO), supports simple offset fallback
       offset = cursor ? cursor.to_i : offset.to_i
@@ -255,6 +257,8 @@ module Feed
       aggregated_feed = []
       # The aggregation group index table
       groups = {}
+      # The aggregation targets index table (used for collect activities from same type as the last activity)
+      targets = {}
       # The index of the group index table
       index = -1
       # To determine the paging cursor we use a counter
@@ -267,9 +271,9 @@ module Feed
         # Enrich target activity
         post = enrich_activity(post)
         # Generates group tag (acts as the aggregation index)
-        # NOTE: Currently we aggregate only to the last of all activities of the same target
-        # NOTE: Activities vom ReSlots will be aggregated to its corresponding parent Slot
-        group = post['group'] = post['target'].to_s ##{post['activity']#{post['time']} #(post['parent'] || post['target'])
+        # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
+        # NOTE: Activities vom Reslots cannot be aggregated to its corresponding parent Slot! (this would be result in a merged virtual slot, that not really exist)
+        group = post['group'] = "#{post['target']}:#{post['activity']}" ##{post['activity']#{post['time']} #(post['parent'] || post['target'])
         # Get activity actor
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
@@ -286,6 +290,10 @@ module Feed
           next
         # If group does not exist, creates a new group for aggregations
         elsif count < limit.to_i
+          # Skip if activity is not from type of the last activity which is related to this target
+          next if targets.has_key?(post['target'])
+          # Set switch in targets map
+          targets[post['target']] = true
           # Increment index on each new group (starting from -1)
           current = groups[group] = (index += 1)
           # Set the whole activity object on each new group
