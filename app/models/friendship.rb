@@ -138,7 +138,7 @@ class Friendship < ActiveRecord::Base
     []
   end
 
-  private def activity_deletion
-    'unfriend'
-  end
+  # private def activity_deletion
+  #   'unfriend'
+  # end
 end

@@ -112,11 +112,12 @@ class ReSlot < BaseSlot
     slotter
   end
 
+  # TODO: maybe the action can always be passed like: create_activity(action), this will also improve code readings
   private def activity_action
     'reslot'
   end
 
-  private def activity_deletion
-    'unslot'
-  end
+  # private def activity_deletion
+  #   'unslot'
+  # end
 end

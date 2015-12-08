@@ -74,8 +74,13 @@ module Activity
     notify = activity_notify || []
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign.present?
+
+    # TODO: replace with update_activity
     # TMP: Add forward users
     notify += activity_target.followers
+    notify += activity_actor.followers
+    notify += activity_foreign.followers
+
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
         object: self.id.to_s,
@@ -162,9 +167,9 @@ module Activity
   end
 
   # An activity tag as a action related to removing or deleting an activity
-  private def activity_deletion
-    'delete'
-  end
+  # private def activity_deletion
+  #   'delete'
+  # end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
   private def activity_type
