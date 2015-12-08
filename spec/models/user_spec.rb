@@ -225,6 +225,37 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :visible_slots_counter do
+    let!(:current_user) { create(:user) }
+    let(:friend) do
+      friend = create(:user, :with_private_slot, :with_friend_slot,
+                      :with_foaf_slot, :with_public_slot)
+      create(:friendship, :established, user: current_user, friend: friend)
+      friend
+    end
+    let(:foaf) do
+      friend = create(:user)
+      foaf = create(:user, :with_private_slot, :with_friend_slot,
+                    :with_foaf_slot, :with_public_slot)
+      create(:friendship, :established, user: current_user, friend: friend)
+      create(:friendship, :established, user: foaf, friend: friend)
+      foaf
+    end
+    let!(:stranger) do
+      stranger = create(:user, :with_private_slot, :with_friend_slot,
+                        :with_foaf_slot, :with_public_slot)
+      create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
+      create(:re_slot, slotter: stranger)
+      stranger
+    end
+
+    it "returns the number of slots visible for current_user from other user" do
+      expect(friend.visible_slots_counter(current_user)).to eq 3
+      expect(foaf.visible_slots_counter(current_user)).to eq 2
+      expect(stranger.visible_slots_counter(current_user)).to eq 1
+    end
+  end
+
   describe :update_alerts do
     let(:slot) { create(:std_slot_friends, owner: user) }
 
