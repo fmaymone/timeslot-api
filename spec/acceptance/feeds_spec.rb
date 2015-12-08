@@ -2,9 +2,9 @@ require 'documentation_helper'
 
 resource "Feeds", :activity, :async do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user, :with_email, :with_password) }
-  let(:owner) { create(:user, username: 'User 54') }
-  let(:actor) { create(:user, username: 'User 53') }
+  let(:current_user) { create(:user) }
+  let(:owner) { create(:user) }
+  let(:actor) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   shared_context "default slot response fields" do
