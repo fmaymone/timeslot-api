@@ -75,7 +75,7 @@ module Activity
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign.present?
     # TMP: Add forward users
-    notify.concat(activity_target.followers)
+    notify += activity_target.followers
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
         object: self.id.to_s,
