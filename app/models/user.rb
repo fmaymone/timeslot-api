@@ -309,6 +309,7 @@ class User < ActiveRecord::Base
       fs.user.follow(fs.friend)
       fs.friend.follow(fs.user)
       fs.remove_activity('request')
+      fs.remove_activity('friendship')
     end
     fs.create_activity
     fs
