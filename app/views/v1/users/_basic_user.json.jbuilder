@@ -13,6 +13,6 @@ end
 # for friends the count would include friend-visible slots, for strangers
 # it would only count public slots -> sounds like an exhibitor is neccessary
 # however, should check back with stani before implementing
-json.slot_count user.std_slots_public.count
-json.reslot_count user.re_slots.count
+json.slot_count user.std_slots_public.active.count
+json.reslot_count user.re_slots.active.count
 json.friends_count user.friends.count

@@ -44,4 +44,4 @@ json.memberships user.memberships.each do |membership|
 end
 
 # overwrite slot_count if query for yourself
-json.slot_count user.std_slots.count
+json.slot_count user.std_slots.active.count
