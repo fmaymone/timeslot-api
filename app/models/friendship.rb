@@ -15,8 +15,14 @@ class Friendship < ActiveRecord::Base
   validates :friend, presence: true
   validates :state, presence: true
 
-  def offer
+  def offer(active_user = nil)
     update!(state: OFFERED) unless deleted_at?
+    # temporary fix:
+    # not the most elegant solution but because the first user is considered
+    # the one who initiated the friendship (active) we need to switch users
+    # if the second user is (re-) initiating a broken friendship again
+    # TODO: I wan't to do a major upgrade on the friendships (TML-152)
+    update!(friend: user, user: active_user) if active_user == friend
     create_activity
   end
 
