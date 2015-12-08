@@ -1,4 +1,4 @@
-json.partial! 'v1/users/basic_user', user: user
+json.partial! 'v1/users/full_user', user: user
 
 json.extract!(user,
               :lang,

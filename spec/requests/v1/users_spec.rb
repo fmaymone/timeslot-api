@@ -36,7 +36,7 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "json active friends counter", :focus do
+    context "json active friends counter" do
       let!(:friendships) do
         create_list(:friendship, 4, :established, user: current_user)
         create(:friendship, :established, user: current_user,
@@ -53,7 +53,7 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "json std_slots counter", :focus do
+    context "json std_slots counter" do
       let!(:not_my_slot) { create(:std_slot_public) }
 
       context "current_user" do
