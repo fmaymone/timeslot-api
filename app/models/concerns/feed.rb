@@ -243,7 +243,6 @@ module Feed
         remove_fields_from_activity(activity)
       end
       # Filter out private targets from feed (removed targets from preparation)
-      # TODO: check why this line is here and remove it:
       feed.delete_if { |activity| activity['target'].nil? }
       feed
     end
@@ -292,7 +291,7 @@ module Feed
         elsif count < limit.to_i
           # Skip if activity is not from type of the last activity which is related to this target
           next if targets.has_key?(post['target'])
-          # Set switch in targets map
+          # Set a switch to the target map, so we can check if an activity of these target was already aggregated
           targets[post['target']] = true
           # Increment index on each new group (starting from -1)
           current = groups[group] = (index += 1)
