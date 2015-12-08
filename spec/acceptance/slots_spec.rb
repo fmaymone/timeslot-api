@@ -256,11 +256,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => "",
-                                "location" => slot.creator.location,
-                                "slotCount" => slot.creator.std_slots_public.count,
-                                "reslotCount" => slot.creator.re_slots.count,
-                                "friendsCount" => slot.creator.friends.count
+                                "image" => ""
                               },
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
@@ -396,11 +392,7 @@ resource "Slots" do
                                 "createdAt" => reslot.creator.created_at.as_json,
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => "",
-                                "location" => reslot.creator.location,
-                                "slotCount" => reslot.creator.std_slots_public.count,
-                                "reslotCount" => reslot.creator.re_slots.count,
-                                "friendsCount" => reslot.creator.friends.count
+                                "image" => ""
                               },
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
@@ -1168,15 +1160,26 @@ resource "Slots" do
         re_slot.reload
         expect(re_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to include("id" => re_slot.id,
-                                "title" => re_slot.title,
-                                "slotter" => {
-                                  "id" => re_slot.slotter.id
-                                },
-                                "createdAt" => re_slot.created_at.as_json,
-                                "updatedAt" => re_slot.updated_at.as_json,
-                                "deletedAt" => re_slot.deleted_at.as_json,
-                                "notes" => re_slot.notes)
+        re_slot.slotter.reload
+        expect(json).to include(
+                          "id" => re_slot.id,
+                          "title" => re_slot.title,
+                          "slotter" => {
+                            "id" => re_slot.slotter.id,
+                            "username" => re_slot.slotter.username,
+                            "createdAt" => re_slot.slotter.created_at.as_json,
+                            "updatedAt" => re_slot.slotter.updated_at.as_json,
+                            "deletedAt" => re_slot.slotter.deleted_at.as_json,
+                            "image" => re_slot.slotter.picture,
+                            "location" => re_slot.slotter.location,
+                            "slotCount" => re_slot.slotter.std_slots.active.count,
+                            "reslotCount" => re_slot.slotter.re_slots.active.count,
+                            "friendsCount" => re_slot.slotter.friends.count
+                          },
+                          "createdAt" => re_slot.created_at.as_json,
+                          "updatedAt" => re_slot.updated_at.as_json,
+                          "deletedAt" => re_slot.deleted_at.as_json,
+                          "notes" => re_slot.notes)
       end
     end
 
