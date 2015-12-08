@@ -36,7 +36,7 @@ module Activity
       action: action || activity_action,
       message: activity_message_params,
       foreign: activity_foreign.try(:id).to_s,
-      # TODO: this is ugly ...
+      # TODO: this is ugly ... this can be solved automatically by the dispatcher improvement (see TODO)
       notify: forward ? [] : activity_notify,
       forward: forward,
       data: activity_extra_data,
@@ -55,7 +55,7 @@ module Activity
   private def create_activity_push(action)
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
-    # NOTE: do not chain "delete" methods!
+    # NOTE: do not chain "delete" methods, it returns nil if the item was not found!
     unless push_notify.nil?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
@@ -120,32 +120,25 @@ module Activity
 
   # Returns an array of user which should also be notified
   private def activity_notify
-    # TODO: currently we are sending activities to all users
-    # In "real" situation the feed dispatcher collect the related feed
-    # through social relations (called: followings), these are also mapped in redis
-    # To test the intended logic, we use this temporary switch here
-    # This is only for current simulation of a "public activity feed"
-    # When the iOS has implemented friends and groups, we can remove this switch
-    if true #unless Rails.env.production?
-      # Feed distribution through social relations:
-      user_ids = activity_target.followers
-      # When target belongs to a group we do not notify user followers (e.g. friends)
-      if activity_group
-        user_ids += activity_group.followers
-      elsif activity_actor
-        user_ids += activity_actor.followers
-      end
-      user_ids
-    else
-      # Temporary fallback to simulate a "public activity" feed
-      # The limit for the to field is 100
-      return [] if activity_actor.email.eql?('info@timeslot.com')
-      user_ids = User.all.collect(&:id).map(&:to_s).as_json
+    # Feed distribution through social relations:
+    user_ids = activity_target.followers
+    # When target belongs to a group we do not notify user followers (e.g. friends)
+    if activity_group
+      user_ids += activity_group.followers
+    elsif activity_actor
+      user_ids += activity_actor.followers
     end
+
+    # Temporary fallback to simulate a "public activity" feed
+    # if Rails.env.production?
+    # return [] if activity_actor.email.eql?('info@timeslot.com')
+    # user_ids = User.all.collect(&:id).map(&:to_s).as_json
+
+    user_ids
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove if foreign is similar to the actor
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present? #&& (activity_foreign.id == activity_actor.id)
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present?
     user_ids
   end
 
