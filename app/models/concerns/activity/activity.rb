@@ -77,9 +77,9 @@ module Activity
 
     # TODO: replace with update_activity
     # TMP: Add forward users
-    notify += activity_target.followers
-    notify += activity_actor.followers
-    notify += activity_foreign.followers
+    notify += activity_target.followers.map(&:to_s)
+    notify += activity_actor.followers.map(&:to_s)
+    notify += activity_foreign.followers.map(&:to_s) if activity_foreign.present?
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
