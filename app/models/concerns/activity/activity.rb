@@ -77,9 +77,9 @@ module Activity
 
     # TODO: replace with update_activity
     # TMP: Add forward users
-    notify += activity_target.followers.map(&:to_s)
-    notify += activity_actor.followers.map(&:to_s)
-    notify += activity_foreign.followers.map(&:to_s) if activity_foreign.present?
+    # notify += activity_target.followers.map(&:to_s)
+    # notify += activity_actor.followers.map(&:to_s)
+    # notify += activity_foreign.followers.map(&:to_s) if activity_foreign.present?
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
@@ -92,11 +92,13 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if action == 'delete' and (activity_action == 'slot' or activity_action == 'reslot')
-      # Remove actor
-      notify.delete(activity_actor.id.to_s)
+    if action == 'private' or action == 'unslot' or (action == 'delete' and activity_action == 'slot')
       # Forward "delete" action as an activity to the dispatcher
-      create_activity_feed(action, { Notification: activity_target.followers }) #Time.zone.now
+      create_activity_feed(action, {
+          User: activity_actor.id.to_s,
+          News: activity_target.followers,
+          Notification: activity_target.followers
+      }) #Time.zone.now
     end
   rescue => error
     opts = {}
@@ -208,11 +210,6 @@ module Activity
   private def activity_foreign
     ''
   end
-
-  # An activity tag as a action related to removing or deleting an activity
-  # private def activity_deletion
-  #   'delete'
-  # end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')
   private def activity_type

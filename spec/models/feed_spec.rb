@@ -748,7 +748,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(1) # +2-2 own activities
+        expect(user_feed.count).to be(1) # +2-2+1 own activities
+        expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(0) # +2-2 own activities
@@ -807,7 +809,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         # Change Visibility
         slot.update_from_params(visibility: 'private')
-        #slot.reload
+        slot.reload
       end
 
       it "User Feed (me activities)" do
@@ -873,18 +875,18 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         # Change Visibility
         slot.update_from_params(visibility: 'private')
-        #slot.reload
+        slot.reload
       end
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(0) # +2-2 own activities
+        expect(user_feed.count).to be(1) # +2-2 own activities +1 delete activity
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(1) # +2-2 own activities
+        expect(user_feed_follower.count).to be(0) # +2-2 own activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(1) # +2-2 own activities
+        expect(user_feed_follower2.count).to be(0) # +2-2 own activities
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
@@ -893,16 +895,17 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(0) # +2-2 public activities
+        expect(news_feed_follower.count).to be(1) # +2-2 public activities + 1 delete activity
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(0) # +2-2 public activities
+        expect(news_feed_follower2.count).to be(1) # +2-2 public activities + 1 delete activity
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(2) # +4-4 foreign activities to own content
+        pp notification_feed
+        expect(notification_feed.count).to be(0) # +6-6 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
