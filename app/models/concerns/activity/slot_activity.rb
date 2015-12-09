@@ -12,8 +12,12 @@ module SlotActivity
     activity_target.creator
   end
 
+  # This method should be overridden in the subclass
+  # if custom validation is required
   private def activity_is_valid?
-    super && (activity_target.try(:visibility) != 'private')
+    visibility = activity_target.try(:visibility)
+    friendship = activity_actor.friendship(activity_foreign) if activity_foreign.present?
+    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || self.updated_at >= friendship.updated_at)))
   end
 
   private def push_notify

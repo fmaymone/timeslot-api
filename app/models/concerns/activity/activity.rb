@@ -56,15 +56,19 @@ module Activity
     # Remove creator from the push notification list
     push_notify.delete(activity_actor.id)
     # NOTE: do not chain "delete" methods, it returns nil if the item was not found!
-    unless push_notify.nil?
+    unless push_notify.empty?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
                                USER: activity_actor.username,
+                               USER2: activity_target.try(:username),
                                TITLE: activity_target.try(:title))
+
       # Skip sending if no message exist
-      if message_content
-        Device.notify_all(push_notify, [ message: message_content,
-                                         slot_id: activity_target.id ])
+      if message_content.present?
+        payload = [ message: message_content ]
+        payload[0].merge!(slot_id: activity_target.id) if activity_type == 'Slot'
+        payload[0].merge!(user_id: activity_target.id) if activity_type == 'User'
+        Device.notify_all(push_notify, payload)
       end
     end
   end

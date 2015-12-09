@@ -26,14 +26,14 @@ namespace :feed do
 
       Friendship.includes(:user, :friend).all.find_each do |relation|
         # friends follows each other
-        if relation.established? || relation.offered?
+        if relation.established?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
       Membership.includes(:group, :user).all.find_each do |relation|
-        if relation.active? || relation.invited?
+        if relation.active?
           relation.group.add_follower(relation.user)
         end
       end

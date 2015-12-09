@@ -308,10 +308,12 @@ class User < ActiveRecord::Base
     if fs.established?
       fs.user.follow(fs.friend)
       fs.friend.follow(fs.user)
-      fs.remove_activity('request')
-      fs.remove_activity('friendship')
+      fs.remove_activity
+      fs.create_activity('friendship')
+    elsif fs.offered?
+      fs.remove_activity
+      fs.create_activity('request')
     end
-    fs.create_activity
     fs
   end
 
