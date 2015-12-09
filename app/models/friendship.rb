@@ -24,7 +24,7 @@ class Friendship < ActiveRecord::Base
     # TODO: I wan't to do a major upgrade on the friendships (TML-152)
     update!(friend: user, user: active_user) if active_user == friend
     remove_activity
-    create_activity('request')
+    create_activity
   end
 
   def offered?
@@ -36,7 +36,7 @@ class Friendship < ActiveRecord::Base
     user.follow(friend)
     friend.follow(user)
     remove_activity
-    create_activity('friendship')
+    create_activity
   end
 
   def established?
@@ -48,11 +48,11 @@ class Friendship < ActiveRecord::Base
   # - cancel open friend request (from me to someone else)
   # - refuse open friend request (from someone else to me)
   def reject
-    remove_activity
+    remove_activity('unfriend')
     if established?
       user.unfollow(friend)
       friend.unfollow(user)
-      create_activity('unfriend')
+      create_activity
     end
     update!(state: REJECTED) unless deleted_at?
   end
