@@ -213,11 +213,8 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def active_slots(meta_slot)
-    # TODO
-    # std_slots.active + re_slots.active + group_slots.active
     slots = []
-    slots.push(*std_slots_private.active.where(meta_slot: meta_slot))
-    # slots.push(*StdSlot.active.of(self).where(meta_slot: meta_slot))
+    slots.push(*std_slots.active.where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end

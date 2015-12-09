@@ -158,11 +158,14 @@ RSpec.describe User, type: :model do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
 
     context "user has std_slot with the specified meta_slot" do
-      let!(:std_slot) {
+      let!(:std_slot_private) {
         create(:std_slot_private, meta_slot: meta_slot, owner: user) }
+      let!(:std_slot_public) {
+        create(:std_slot_public, meta_slot: meta_slot, owner: user) }
 
       it "returns std_slot" do
-        expect(user.active_slots(meta_slot)).to include std_slot
+        expect(user.active_slots(meta_slot)).to include std_slot_private
+        expect(user.active_slots(meta_slot)).to include std_slot_public
       end
     end
 
