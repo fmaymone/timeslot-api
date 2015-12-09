@@ -10,7 +10,7 @@ class ReSlot < BaseSlot
   # because of that I used BaseSlot as the associaton type
 
   delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
-           :re_slots_count,
+           :comments_count, :likes_count, :re_slots_count,
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 

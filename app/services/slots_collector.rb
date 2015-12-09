@@ -70,6 +70,18 @@ class SlotsCollector
     consider_filter(showables, @filter)
   end
 
+  # collects only active std_slots current_user or visitor is allowed to
+  # see from requested_user, currently this is only used for counting, so
+  # I skip the pagination functionality
+  def active_stdslots_count(current_user: nil, user:)
+    rs = UserRelationship.call(current_user.try(:id), user.id)
+    showables = PresentableSlots.std_slots(relationship: rs, user: user)
+
+    counter = 0
+    showables.each { |relation| counter += relation.active.count }
+    counter
+  end
+
   private def consider_filter(relations, filter)
     if filter == 'around'
       around_filter_query(relations)

@@ -52,6 +52,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_foaf_slot do
+      after :create do |user|
+        create :std_slot_foaf, owner: user
+      end
+    end
+
     trait :with_public_slot do
       after :create do |user|
         create :std_slot_public, owner: user

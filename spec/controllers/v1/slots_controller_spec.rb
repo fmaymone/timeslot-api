@@ -41,7 +41,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "renders the create template" do
         post :create_stdslot, valid_attributes
-        expect(response).to render_template("show")
+        expect(response).to render_template("create")
       end
 
       it "creates a new MetaSlot" do
@@ -122,7 +122,7 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "renders the show template" do
         post :create_reslot, valid_attributes
-        expect(response).to render_template("show")
+        expect(response).to render_template("create")
       end
 
       it "creates a new ReSlot" do

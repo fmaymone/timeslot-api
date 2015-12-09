@@ -46,7 +46,7 @@ module V1
                                    alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
-        render :show, status: :created, locals: { slot: @slot }
+        render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -77,7 +77,7 @@ module V1
       @slot = ReSlot.create_from_slot(predecessor: predecessor,
                                       slotter: current_user)
       if @slot.save
-        render :show, status: :created, locals: { slot: @slot }
+        render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -193,7 +193,7 @@ module V1
       authorize @slot
 
       if @slot.delete
-        render :show, locals: { slot: @slot }
+        render :create, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -219,7 +219,7 @@ module V1
       authorize @slot
 
       if @slot.delete
-        render :show, locals: { slot: @slot }
+        render :create, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
