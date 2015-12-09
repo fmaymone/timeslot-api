@@ -64,39 +64,38 @@ class Device < ActiveRecord::Base
 
   # push notification to APNS (apple push notification service)
   def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
-                      badge: 1, extra: {a: 1, b: 2}, slot_id: "")
+                      badge: 1, extra: {a: 1, b: 2}, slot_id: "", user_id: "")
+    Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     payload = {}
+    aps = {
+        alert: message,
+        sound: sound,
+        badge: badge
+    }
+
+    aps.merge!(slot_id: slot_id) if slot_id.present?
+    aps.merge!(user_id: user_id) if user_id.present?
+
     # defaults to true, if ENV variable not set, otherwise examine
-    if ENV['PUSH_DEFAULT'].nil? ? true : ENV['PUSH_DEFAULT'] == 'true'
+    if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
       payload.merge!(default: { message: message })
     end
 
-    if ENV['PUSH_APNS'].nil? ? true : ENV['PUSH_APNS'] == 'true'
-      payload.merge!(APNS: { aps: {
-                               alert: message,
-                               sound: sound,
-                               badge: badge,
-                               slot_id: slot_id
-                             }
-                           }.to_json)
+    if ENV['PUSH_APNS'].nil? || ENV['PUSH_APNS'] == 'true'
+      payload.merge!(APNS: { aps: aps }.to_json)
     end
 
-    if ENV['PUSH_APNS_SANDBOX'].nil? ? true : ENV['PUSH_APNS_SANDBOX'] == 'true'
-      payload.merge!(APNS_SANDBOX: { aps: {
-                                       alert: message,
-                                       sound: sound,
-                                       badge: badge,
-                                       slot_id: slot_id
-                                     }
-                                   }.to_json)
+    if ENV['PUSH_APNS_SANDBOX'].nil? || ENV['PUSH_APNS_SANDBOX'] == 'true'
+      payload.merge!(APNS_SANDBOX: { aps: aps }.to_json)
     end
-    push_notification = { message: payload.to_json,
-                          target_arn: device['endpoint'],
-                          message_structure: 'json' }
 
     begin
-      client.publish(push_notification)
+      client.publish({
+        message: payload.to_json,
+        target_arn: device['endpoint'],
+        message_structure: 'json'
+      })
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
