@@ -305,16 +305,6 @@ class User < ActiveRecord::Base
       save
     end
     fs || friendship(user_id)
-    # if fs.established?
-    #   fs.user.follow(fs.friend)
-    #   fs.friend.follow(fs.user)
-    #   fs.remove_activity('unfriend')
-    #   fs.create_activity
-    # elsif fs.offered?
-    #   fs.remove_activity
-    #   fs.create_activity
-    # end
-    # fs
   end
 
   def invalidate_friendship(user_id)

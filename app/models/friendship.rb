@@ -23,7 +23,6 @@ class Friendship < ActiveRecord::Base
     # if the second user is (re-) initiating a broken friendship again
     # TODO: I wan't to do a major upgrade on the friendships (TML-152)
     update!(friend: user, user: active_user) if active_user == friend
-    remove_activity
     create_activity
   end
 
@@ -35,7 +34,6 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    remove_activity
     create_activity
   end
 
@@ -48,11 +46,10 @@ class Friendship < ActiveRecord::Base
   # - cancel open friend request (from me to someone else)
   # - refuse open friend request (from someone else to me)
   def reject
-    remove_activity('unfriend')
     if established?
+      remove_activity('unfriend')
       user.unfollow(friend)
       friend.unfollow(user)
-      create_activity
     end
     update!(state: REJECTED) unless deleted_at?
   end
@@ -68,7 +65,7 @@ class Friendship < ActiveRecord::Base
   # canceled friendships would be re-enabled when the user
   # reactivates his profile.
   def inactivate
-    remove_activity
+    remove_activity('unfriend')
     user.unfollow(friend)
     friend.unfollow(user)
     friend.touch
@@ -141,8 +138,4 @@ class Friendship < ActiveRecord::Base
   private def activity_notify
     []
   end
-
-  # private def activity_deletion
-  #   'unfriend'
-  # end
 end
