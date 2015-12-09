@@ -7,6 +7,13 @@ class ReSlot < BaseSlot
 
   class ReslotHistroyError < StandardError; end
 
+  # mapping the frontend string to the class
+  RE_SLOT_TYPES = { 'private' => :ReSlotPrivate,
+                    'friends' => :ReSlotFriends,
+                    'foaf' => :ReSlotFoaf,
+                    'public' => :ReSlotPublic
+                  }
+
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
   belongs_to :parent, class_name: BaseSlot, counter_cache: true
@@ -72,10 +79,8 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor:, slotter:)
-    original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
-    # TODO: use this when having reslot visibilities
-    # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
+  def self.create_from_slot(predecessor:, slotter:, visibility: 'public')
+    original_source = predecessor.class <= ReSlot ? predecessor.parent : predecessor
 
     # if same original event was already reslottet by user, use this reslot
     reslot = where(slotter: slotter, parent: original_source).take
@@ -91,10 +96,11 @@ class ReSlot < BaseSlot
     end
 
     unless reslot
-      reslot = create(slotter: slotter,
-                      predecessor: predecessor,
-                      parent: original_source,
-                      meta_slot: predecessor.meta_slot)
+      slot_type = RE_SLOT_TYPES[visibility].to_s.constantize
+      reslot = slot_type.create(slotter: slotter,
+                                predecessor: predecessor,
+                                parent: original_source,
+                                meta_slot: predecessor.meta_slot)
       reslot.create_activity
     end
 

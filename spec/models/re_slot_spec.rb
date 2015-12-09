@@ -15,6 +15,7 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
+  it { is_expected.to respond_to(:visibility) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:predecessor) }
   it { is_expected.to belong_to(:slotter) }
@@ -54,6 +55,43 @@ RSpec.describe ReSlot, type: :model do
   describe "when meta_slot is not present" do
     before { re_slot.meta_slot = nil }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "create_from_slot" do
+    let(:pred) { create(:std_slot_public) }
+    let(:user) { create(:user) }
+
+    it "creates a new ReSlotPrivate" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'private')
+      }.to change(ReSlotPrivate, :count).by 1
+    end
+
+    it "creates a new ReSlotFriends" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'friends')
+      }.to change(ReSlotFriends, :count).by 1
+    end
+
+    it "creates a new ReSlotFoaf" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'foaf')
+      }.to change(ReSlotFoaf, :count).by 1
+    end
+
+    it "creates a new RelotPublic" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'public')
+      }.to change(ReSlotPublic, :count).by 1
+    end
   end
 
   describe "meta_slot attributes" do

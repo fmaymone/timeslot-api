@@ -17,15 +17,17 @@ class BaseSlot < ActiveRecord::Base
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
                  StdSlotFoaf: 4,
+                 ReSlotPrivate: 5,
                  ReSlotFriends: 6,
-                 ReSlotPublic: 7,
+                 ReSlotFoaf: 7,
+                 ReSlotPublic: 22, # maintain backwards compatibility
                  GroupSlotMembers: 11,
                  GroupSlotPublic: 12,
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
-                 ReSlot: 22,
+                 ReSlot: 23,
                  GroupSlot: 21
                }
 
