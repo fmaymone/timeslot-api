@@ -1,6 +1,8 @@
 RSpec::Matchers.define :include_slot do |slot|
   match do |collection|
-    collection.include? slot.becomes(slot.class.superclass)
+    super_slot = slot.class.superclass.find slot.id
+    collection.include? super_slot
+    # collection.include? slot.becomes(slot.class.superclass)
   end
 
   # Optional failure messages

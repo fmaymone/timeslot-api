@@ -27,8 +27,6 @@ class SlotPolicy < ApplicationPolicy
   # which he wants to reslot
   def create_reslot?
     return false if slot.StdSlotPrivate?
-    # TODO: remove next line when we have ReSlot visibilities
-    return true if slot.ReSlot?
     show_to_current_user?
   end
 

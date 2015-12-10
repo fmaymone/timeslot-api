@@ -27,7 +27,7 @@ class BaseSlot < ActiveRecord::Base
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
-                 ReSlot: 23,
+                 # ReSlot: 23,
                  GroupSlot: 21
                }
 
