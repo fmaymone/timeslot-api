@@ -9,7 +9,7 @@ module SlotActivity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   private def activity_foreign
-    activity_target.creator
+    activity_target.creator || activity_target.owner
   end
 
   # This method should be overridden in the subclass

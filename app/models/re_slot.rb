@@ -68,7 +68,7 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor: nil, slotter: nil)
+  def self.create_from_slot(predecessor:, slotter:)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
     # TODO: use this when having reslot visibilities
     # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor

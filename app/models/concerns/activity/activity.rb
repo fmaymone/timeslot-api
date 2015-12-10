@@ -28,9 +28,9 @@ module Activity
   end
 
   private def create_activity_feed(action, forward = nil, activity_time = nil)
-    # FIX: Reload last modified data
-    activity_target.save
-    activity_actor.save
+    # FIX: Reload last modified data (throw exceptions)
+    activity_target.save!
+    activity_actor.save!
     # Initialize job worker
     FeedJob.new.async.perform({
       type: activity_type,
@@ -152,34 +152,35 @@ module Activity
     !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
-  # Returns an array of user which should be notified
+  # Feed distribution through social relations
+  # We differentiate 5 types of activities in dynamic social context:
+  #
+  # 1. Target related context
+  # 2. Actor related context
+  # 3. Friend related context (is handled same as User.followers actually)
+  # 4. Group related context
+  # 5. Foreign related context
+
   private def activity_notify
 
-    # FIX: get parent visibility if predecessor has no visibility
-    visibility = activity_target.try(:visibility) || activity_target.try(:parent).try(:visibility)
+    # FIX: try to get parent visibility if predecessor has no visibility
+    visibility = activity_target.try(:visibility) ||
+                 activity_target.try(:parent).try(:visibility)
 
-    # Additional check (only for security reasons)
+    # Additional check (only for security reason)
     return [] if visibility == 'private'
 
-    # Feed distribution through social relations
-    # We differentiate 5 types of activities in dynamic social context:
-    #
-    # 1. Target related context
-    # 2. Actor related context
-    # 3. Friend related context (is handled same as User.followers actually)
-    # 4. Group related context
-    # 5. Foreign related context
-
+    # Returns the array of users which should be notified through the distribution process
     user_ids = []
 
-    # NOTE: Actually when the target belongs to a group we do not follow any user followers (e.g. friends)
+    # When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
     if activity_group
       # 4. Group related context:
       user_ids += activity_group.followers
     else
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
       # 1. Target related context (by default):
-      user_ids += activity_target.followers #if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
+      user_ids += activity_target.followers # if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
       # 2. Actor related context:
       user_ids += activity_actor.followers if visibility == 'foaf' or visibility == 'public'
 

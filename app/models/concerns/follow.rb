@@ -27,7 +27,7 @@ module Follow
     end
   end
 
-  # Remove all followers from the current object
+  # Remove all followers from the current object (self)
   def remove_all_followers
     # TODO: do not fetching users from postgres
     User.where(id: followers).find_each do |follower|
@@ -40,7 +40,7 @@ module Follow
     target.remove_follower(self)
   end
 
-  # Remove all followers from the current object
+  # Remove all followings from the current object (self)
   def unfollow_all
     followings.each do |following|
       following = JSON.parse(following)
@@ -92,7 +92,20 @@ module Follow
     self.class.name
   end
 
-  # def follows_each_other
-  #   $redis.sinter(self.redis_key(:following), self.redis_key(:followers))
-  # end
+  ## Helpers (Social Context) ##
+
+  # Returns an array which includes all users which follow each other
+  def follows_each_other
+    $redis.sinter(redis_key(:following), redis_key(:followers))
+  end
+
+  # Get intersection of 2 groups of followers
+  def followers_intersect(target)
+    $redis.sinter(redis_key(:followers), target.redis_key(:followers))
+  end
+
+  # Get subtraction of 2 groups of followers
+  def followers_subtract(target)
+    $redis.sdiff(redis_key(:followers), target.redis_key(:followers))
+  end
 end
