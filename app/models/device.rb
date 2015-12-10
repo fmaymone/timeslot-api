@@ -90,12 +90,13 @@ class Device < ActiveRecord::Base
       payload.merge!(APNS_SANDBOX: { aps: aps }.to_json)
     end
 
+    # Send push notification
     begin
-      client.publish({
-        message: payload.to_json,
-        target_arn: device['endpoint'],
-        message_structure: 'json'
-      })
+      client.publish(
+          message: payload.to_json,
+          target_arn: device['endpoint'],
+          message_structure: 'json'
+      )
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
