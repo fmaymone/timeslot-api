@@ -2,33 +2,33 @@ module Feed
   class << self
 
     def user_feed(user_id, params = {})
-      begin
+      #begin
         feed = "Feed:#{user_id}:User"
         page = paginate(feed, params)
         enrich_feed(page, 'me')
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      #rescue => error
+      #  error_handler(error, feed, params)
+      #end
     end
 
     def notification_feed(user_id, params = {})
-      begin
+      #begin
         feed = "Feed:#{user_id}:Notification"
         page = paginate(feed, params)
         enrich_feed(page, 'notify')
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      #rescue => error
+      #  error_handler(error, feed, params)
+      #end
     end
 
     def news_feed(user_id, params = {})
-      begin
+      #begin
         feed = "Feed:#{user_id}:News"
         page = aggregate_feed(feed, params)
         enrich_feed(page, 'activity')
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      #rescue => error
+      #  error_handler(error, feed, params)
+      #end
     end
 
     # Feed Dispatcher
@@ -48,14 +48,16 @@ module Feed
     # 1. Notify (includes all users which will be notified through social relations)
     # 2. Forward (includes additional forwarding of special activities)
 
-    # TODO: Simplify dispatcher
     def dispatch(params)
+
+      ## -- Prepare Dispatcher -- ##
+
       # Generates and add activity id
       params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
       # Translate class name to enumeration
       params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
 
-      ## Store Shared Objects ##
+      ## -- Store Shared Objects (Write-Opt) -- ##
 
       # Determine target key for redis set
       target_index = "#{params[:feed]}:#{params[:target]}"
@@ -71,50 +73,31 @@ module Feed
       # Store actor to its own index (shared objects)
       $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
 
-      # Store activity to targets feed (used for "Write-Opt" Strategy)
+      ## -- Store Current Activity (Write-Opt) -- ##
+
       # Returns the position of added activity (required for asynchronous access)
       activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
       target_key = "#{target_index}:#{activity_index}"
 
-      ## Store Activities ##
+      ## -- Collect Activity Distribution -- ##
 
-      # Store activity to own feed (me activities)
-      $redis.rpush("Feed:#{params[:actor]}:User", target_key)
-      # Store activity to own notification feed (related to own content, filter out own activities)
-      $redis.rpush("Feed:#{params[:foreign]}:Notification", target_key) if params[:foreign] && (params[:actor] != params[:foreign])
-
+      distributor = { User: [], News: [], Notification: [] }
       # Remove predecessor creator from news feed
       params[:notify].delete(params[:foreign]) if params[:foreign].present?
+      # Store activity to own feed (me activities)
+      distributor[:User] << params[:actor]
       # Send to other users through social relations ("Read-Opt" Strategy)
-      unless params[:notify].empty?
-        $redis.pipelined do
-          params[:notify].each do |user|
-            # Store to others public activity feed
-            $redis.rpush("Feed:#{user}:News", target_key)
-          end
-        end
-      end
+      distributor[:News] += params[:notify]
+      # Store activity to own notification feed (related to own content, filter out own activities)
+      distributor[:Notification] << params[:foreign] if params[:foreign] && (params[:actor] != params[:foreign])
+      # Add all custom forwardings
+      params[:forward].each{ |feed, users| distributor[feed] += users }
 
-      # TODO: this custom dispatcher can be unified with the basic dispatcher from above
-      # Dispatch custom forwardings (e.g. friend requests, deletions, etc.)
-      if params[:forward]
-        params[:forward].each do |feed, users|
-          # Remove foreign user + actor from forwarding to notifications
-          # TODO: do not remove here, remove before call
-          users.delete(params[:foreign]) if params[:foreign].present?
-          users.delete(params[:actor])
-          # Send to other users through custom forwardings ("Read-Opt" Strategy)
-          unless users.empty?
-            $redis.pipelined do
-              users.each do |user|
-                # Store to custom notification feeds
-                $redis.rpush("Feed:#{user}:#{feed}", target_key)
-              end
-            end
-          end
-        end
-      end
+
+      ## -- Distribute Activities (Read-Opt) -- ##
+
+      distribute(target_key, distributor)
     end
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
@@ -159,12 +142,35 @@ module Feed
       end
     end
 
-    private def remove_target_from_feed(target, feed, notify)
+    def remove_target_from_feed(target, feed, notify)
       # TODO: remove by target (removes multiple activities)
     end
 
-    private def remove_actor_from_feed(actor, notify)
+    def remove_actor_from_feed(actor, notify)
       # TODO: remove by actor (removes multiple activities)
+    end
+
+    private def distribute(target_key, distributor)
+      # The timestamp is used to validate the feed cache
+      current_time = Time.zone.now
+      # Distribute to all user feeds (including custom forwardings like friend requests, deletions, etc.)
+      distributor.each do |feed, users|
+        # Remove foreign user + actor from forwarding to notifications
+        # TODO: do not remove here, remove before call
+        # users.delete(params[:foreign]) if params[:foreign].present?
+        # users.delete(params[:actor])
+        # Send to other users ("Read-Opt" Strategy)
+        if users.any?
+          $redis.pipelined do
+            users.uniq.each do |user|
+              # Delegate activity to a feed
+              $redis.rpush("Feed:#{user}:#{feed}", target_key)
+              # Store the feeds update time to revalidate the cache
+              $redis.set("Cache:#{user}:#{feed}", current_time)
+            end
+          end
+        end
+      end
     end
 
     private def paginate(feed_index, limit: 25, offset: 0, cursor: nil)

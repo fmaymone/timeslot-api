@@ -5,8 +5,17 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-  ensure
-    return self
+  #ensure
+    #return self
+  end
+
+  def forward_activity(action = nil, feed_fwd: [], push_fwd: [])
+    if activity_is_valid?
+      create_activity_feed(action, notify: [], forward: feed_fwd)
+      create_activity_push(action, notify: [], forward: push_fwd) if push_is_valid?
+    end
+  #ensure
+    #return self
   end
 
   def update_activity(action = nil)
@@ -14,8 +23,8 @@ module Activity
       update_activity_feed(action)
       update_activity_push(action) if push_is_valid?
     end
-  ensure
-    return self
+  #ensure
+    #return self
   end
 
   def remove_activity(action = 'delete')
@@ -23,12 +32,12 @@ module Activity
       remove_activity_feed(action)
       remove_activity_push(action) if push_is_valid?
     end
-  ensure
-    return self
+  #ensure
+    #return self
   end
 
-  private def create_activity_feed(action, forward = nil, activity_time = nil)
-    # FIX: Reload last modified data (throw exceptions)
+  private def create_activity_feed(action, notify: nil, forward: [], time: nil)
+    # FIX: Reload last modified data (strict mode throws exceptions)
     activity_target.save!
     activity_actor.save!
     # Initialize job worker
@@ -40,28 +49,28 @@ module Activity
       target: activity_target.id.to_s,
       action: action || activity_action,
       message: activity_message_params,
-      foreign: activity_foreign.try(:id).to_s,
-      # TODO: this is ugly ... this can be solved automatically by the dispatcher improvement (see TODO)
-      notify: forward ? [] : activity_notify,
+      foreign: activity_foreign.try(:id).try(:to_s),
+      notify: notify || activity_notify,
       forward: forward,
       data: activity_extra_data,
-      time: activity_time || self.updated_at,
+      time: time || self.updated_at,
       feed: activity_target.class.name
     })
-  rescue => error
-    opts = {}
-    opts[:parameters] = {
-        activity: "failed: initialize activity as worker job"
-    }
-    Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+  # rescue => error
+  #   opts = {}
+  #   opts[:parameters] = {
+  #       activity: "failed: initialize activity as worker job"
+  #   }
+  #   Rails.logger.error { error }
+  #   Airbrake.notify(error, opts)
   end
 
-  private def create_activity_push(action)
+  private def create_activity_push(action, notify: nil, forward: nil)
+    notify = forward || notify || push_notify
     # Remove creator from the push notification list
-    push_notify.delete(activity_actor.id)
+    notify.delete(activity_actor.id)
     # NOTE: do not chain "delete" methods, it returns nil if the item was not found!
-    unless push_notify.empty?
+    unless notify.empty?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
                                USER: activity_actor.username,
@@ -73,7 +82,7 @@ module Activity
         payload = [ message: message_content ]
         payload[0].merge!(slot_id: activity_target.id) if activity_type == 'Slot'
         payload[0].merge!(user_id: activity_target.id) if activity_type == 'User'
-        Device.notify_all(push_notify, payload)
+        Device.notify_all(notify, payload)
       end
     end
   end
@@ -91,13 +100,13 @@ module Activity
     # Add actor and foreign user to the activity removal dispatcher
     notify = activity_notify || []
     notify << activity_actor.id.to_s
-    notify << activity_foreign.id.to_s if activity_foreign.present?
+    notify << activity_foreign.id.to_s if activity_foreign
 
     # TODO: replace with update_activity
     # TMP: Add forward users
     # notify += activity_target.followers.map(&:to_s)
     # notify += activity_actor.followers.map(&:to_s)
-    # notify += activity_foreign.followers.map(&:to_s) if activity_foreign.present?
+    # notify += activity_foreign.followers.map(&:to_s) if activity_foreign
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
@@ -112,19 +121,24 @@ module Activity
     # BUT this should not trigger a new activity like an "unlike"
     if action == 'private' or action == 'unslot' or (action == 'delete' and activity_action == 'slot')
       # Forward "delete" action as an activity to the dispatcher
-      create_activity_feed(action, {
-          User: activity_actor.id.to_s,
-          News: activity_target.followers,
-          Notification: activity_target.followers
-      }) #Time.zone.now
+      create_activity_feed(
+          action,
+          forward: {
+              User: [activity_actor.id.to_s],
+              News: activity_target.followers,
+              Notification: activity_target.followers
+          }
+          # push: []
+          # time: Time.zone.now
+      )
     end
-  rescue => error
-    opts = {}
-    opts[:parameters] = {
-        activity: "failed: remove activity as worker job"
-    }
-    Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+  # rescue => error
+  #   opts = {}
+  #   opts[:parameters] = {
+  #       activity: "failed: remove activity as worker job"
+  #   }
+  #   Rails.logger.error { error }
+  #   Airbrake.notify(error, opts)
   end
 
   private def remove_activity_push(action)
@@ -187,7 +201,7 @@ module Activity
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
       if visibility == 'public'
         # 5. Foreign related context:
-        user_ids += activity_foreign.followers if activity_foreign.present?
+        user_ids += activity_foreign.followers if activity_foreign
         # 3. Friend related context:
         %W(#{activity_target}
            #{activity_actor}
@@ -211,7 +225,7 @@ module Activity
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
     # Remove the foreign user
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign.present?
+    user_ids.delete(activity_foreign.id.to_s) if activity_foreign
     user_ids
   end
 
@@ -229,7 +243,7 @@ module Activity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   private def activity_foreign
-    ''
+    nil
   end
 
   # Indicates on which activity main category the action was performed (e.g. 'Slot')

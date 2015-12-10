@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Follow, type: :model do
+RSpec.describe Follow, :focus, type: :model do
   let(:follower) { create(:user) }
   let(:follower2) { create(:user) }
 

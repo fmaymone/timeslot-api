@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Feed, :activity, :async, type: :model do
+RSpec.describe Feed, :focus, :activity, :async, type: :model do
   let(:follower) { create(:user) }
   let(:follower2) { create(:user) }
 
@@ -765,6 +765,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
+        pp news_feed_follower
         expect(news_feed_follower.count).to be(0) # +2-2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
@@ -833,6 +834,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
+        pp news_feed_follower
         expect(news_feed_follower.count).to be(0) # +2-2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
@@ -891,6 +893,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
+        pp user_feed_follower
         expect(user_feed_follower.count).to be(0) # +2-2 own activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
@@ -906,8 +909,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower.count).to be(1) # +2-2 public activities + 1 delete activity
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        pp news_feed_follower2
         expect(news_feed_follower2.count).to be(1) # +2-2 public activities + 1 delete activity
-        expect(news_feed_follower).to eq(news_feed_follower2)
+        expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
