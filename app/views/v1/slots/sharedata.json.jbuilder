@@ -24,11 +24,11 @@ json.creator do
   json.partial! 'v1/users/user', user: slot.creator
 end
 
-if slot.class == StdSlot
+if slot.class <= StdSlot
   json.visibility slot.visibility
-elsif slot.class == GroupSlot
+elsif slot.class <= GroupSlot
   json.group_id slot.group.id
-elsif slot.class == ReSlot
+elsif slot.class <= ReSlot
   json.slotter_id slot.slotter.id
 end
 

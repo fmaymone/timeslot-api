@@ -111,8 +111,7 @@ class SlotPolicy < ApplicationPolicy
     return false unless current_user?
     return true if slot.class == GlobalSlot
     return show_std_slot? if slot.class < StdSlot
-    return show_re_slot? if slot.try(:slotter)
-    # if slot.class < ReSlot or slot.class == ReSlot
+    return show_re_slot? if slot.class <= ReSlot
     return show_group_slot? if slot.try(:group)
     false
   end

@@ -96,12 +96,12 @@ module JSONView
     json['media'] = media
 
     # slot additionals
-    json['groupId'] = slot.group.id if slot.class < GroupSlot
+    json['groupId'] = slot.group.id if slot.class <= GroupSlot
 
     if slot.try(:group)
       json['group'] = { id: slot.group.id }
       json['visibility'] = slot.visibility
-    elsif slot.class == ReSlot
+    elsif slot.class <= ReSlot
       json['slotter'] = { id: slot.slotter_id }
       json['parent'] = { id: slot.parent_id }
       json['visibility'] = slot.parent.try(:visibility)
