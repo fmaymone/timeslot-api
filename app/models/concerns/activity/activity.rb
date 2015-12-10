@@ -5,8 +5,8 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-  #ensure
-    #return self
+  ensure
+    return self
   end
 
   def forward_activity(action = nil, feed_fwd: [], push_fwd: [])
@@ -14,17 +14,19 @@ module Activity
       create_activity_feed(action, notify: [], forward: feed_fwd)
       create_activity_push(action, notify: [], forward: push_fwd) if push_is_valid?
     end
-  #ensure
-    #return self
+  ensure
+    return self
   end
 
   def update_activity(action = nil)
-    if activity_is_valid?
-      update_activity_feed(action)
-      update_activity_push(action) if push_is_valid?
-    end
-  #ensure
-    #return self
+    remove_activity(action)
+    create_activity(action)
+    # if activity_is_valid?
+    #   update_activity_feed(action)
+    #   update_activity_push(action) if push_is_valid?
+    # end
+  ensure
+    return self
   end
 
   def remove_activity(action = 'delete')
@@ -32,8 +34,8 @@ module Activity
       remove_activity_feed(action)
       remove_activity_push(action) if push_is_valid?
     end
-  #ensure
-    #return self
+  ensure
+    return self
   end
 
   private def create_activity_feed(action, notify: nil, forward: [], time: nil)
@@ -56,21 +58,22 @@ module Activity
       time: time || self.updated_at,
       feed: activity_target.class.name
     })
-  # rescue => error
-  #   opts = {}
-  #   opts[:parameters] = {
-  #       activity: "failed: initialize activity as worker job"
-  #   }
-  #   Rails.logger.error { error }
-  #   Airbrake.notify(error, opts)
+  rescue => error
+    opts = {}
+    opts[:parameters] = {
+        activity: "failed: initialize activity as worker job"
+    }
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 
   private def create_activity_push(action, notify: nil, forward: nil)
     notify = forward || notify || push_notify
+
     # Remove creator from the push notification list
     notify.delete(activity_actor.id)
-    # NOTE: do not chain "delete" methods, it returns nil if the item was not found!
-    unless notify.empty?
+
+    if push_notify.any?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
                                USER: activity_actor.username,
@@ -132,13 +135,13 @@ module Activity
           # time: Time.zone.now
       )
     end
-  # rescue => error
-  #   opts = {}
-  #   opts[:parameters] = {
-  #       activity: "failed: remove activity as worker job"
-  #   }
-  #   Rails.logger.error { error }
-  #   Airbrake.notify(error, opts)
+  rescue => error
+    opts = {}
+    opts[:parameters] = {
+        activity: "failed: remove activity as worker job"
+    }
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 
   private def remove_activity_push(action)

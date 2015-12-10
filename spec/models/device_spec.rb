@@ -128,7 +128,7 @@ RSpec.describe Device, type: :model do
 
   describe :notify do
     let(:client) { double("client") }
-    let(:params) { [{ message: 'hola' }] }
+    let(:params) {{ message: 'hola' }}
 
     it "sends a push notification message to the client" do
       expect(client).to receive(:publish).with(hash_including(message: /hola/))
@@ -141,8 +141,7 @@ RSpec.describe Device, type: :model do
     let(:user2) { create(:user) }
     let!(:device1) { create(:device, :with_endpoint, user: user1) }
     let!(:device2) { create(:device, :with_endpoint, user: user2) }
-    let(:params) {[ message: "#{user1.username} likes your slot",
-                    slot_id: 1 ]}
+    let(:params) {{ message: "#{user1.username} likes your slot", slot_id: 1 }}
 
     it "sends a push notification message to a collection of users" do
       Device.notify_all([user1, user2], params)

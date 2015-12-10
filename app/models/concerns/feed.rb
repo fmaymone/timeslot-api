@@ -2,33 +2,33 @@ module Feed
   class << self
 
     def user_feed(user_id, params = {})
-      #begin
+      begin
         feed = "Feed:#{user_id}:User"
         page = paginate(feed, params)
         enrich_feed(page, 'me')
-      #rescue => error
-      #  error_handler(error, feed, params)
-      #end
+      rescue => error
+        error_handler(error, feed, params)
+      end
     end
 
     def notification_feed(user_id, params = {})
-      #begin
+      begin
         feed = "Feed:#{user_id}:Notification"
         page = paginate(feed, params)
         enrich_feed(page, 'notify')
-      #rescue => error
-      #  error_handler(error, feed, params)
-      #end
+      rescue => error
+        error_handler(error, feed, params)
+      end
     end
 
     def news_feed(user_id, params = {})
-      #begin
+      begin
         feed = "Feed:#{user_id}:News"
         page = aggregate_feed(feed, params)
         enrich_feed(page, 'activity')
-      #rescue => error
-      #  error_handler(error, feed, params)
-      #end
+      rescue => error
+        error_handler(error, feed, params)
+      end
     end
 
     # Feed Dispatcher
@@ -83,8 +83,6 @@ module Feed
       ## -- Collect Activity Distribution -- ##
 
       distributor = { User: [], News: [], Notification: [] }
-      # Remove predecessor creator from news feed
-      params[:notify].delete(params[:foreign]) if params[:foreign].present?
       # Store activity to own feed (me activities)
       distributor[:User] << params[:actor]
       # Send to other users through social relations ("Read-Opt" Strategy)
@@ -93,7 +91,6 @@ module Feed
       distributor[:Notification] << params[:foreign] if params[:foreign] && (params[:actor] != params[:foreign])
       # Add all custom forwardings
       params[:forward].each{ |feed, users| distributor[feed] += users }
-
 
       ## -- Distribute Activities (Read-Opt) -- ##
 

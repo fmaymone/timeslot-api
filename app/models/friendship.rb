@@ -34,7 +34,7 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    create_activity
+    update_activity
   end
 
   def established?
@@ -131,6 +131,7 @@ class Friendship < ActiveRecord::Base
   end
 
   private def activity_action
+            pp established? ? 'friendship' : (offered? ? 'request' : '')
     established? ? 'friendship' : (offered? ? 'request' : '')
   end
 

@@ -157,7 +157,7 @@ en:
   user_request_push_aggregate:	"TODO"
 
   slot_private_me_singular:	"You unshared the Slot: %{TITLE}"
-  slot_private_activity_singular:	"TODO"
+  slot_private_activity_singular:	"%{USER} unshared the Slot: %{TITLE}"
   slot_private_notify_singular:	"%{USER} unshared the Slot: %{TITLE}"
   slot_private_push_singular:	"%{USER} unshared the Slot: %{TITLE}"
   slot_private_activity_plural:	"TODO"

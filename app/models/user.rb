@@ -303,8 +303,10 @@ class User < ActiveRecord::Base
       # nein
       requested_friends << User.find(user_id)
       save
+      fs = friendship(user_id)
+      fs.update_activity
     end
-    fs || friendship(user_id)
+    fs
   end
 
   def invalidate_friendship(user_id)

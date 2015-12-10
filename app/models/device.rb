@@ -118,21 +118,21 @@ class Device < ActiveRecord::Base
   def self.notify(client, device, params)
     case device['system']
     when 'ios'
-      notify_ios(client, device, *params)
+      notify_ios(client, device, params)
     end
   end
 
   def self.notify_all(user_ids, params)
-    notify_queue = []
+    queue = []
 
     User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
-        notify_queue.concat(devices)
+        queue.concat(devices)
       end
     end
 
-    # we using worker background processing to start request tasks asynchronously
-    NotifyJob.new.async.perform(notify_queue.as_json, params) unless notify_queue.empty?
+    # Start worker job asynchronously
+    NotifyJob.new.async.perform(queue.as_json, params) if queue.any?
   end
 
   def self.update_or_create(user, params)
