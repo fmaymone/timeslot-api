@@ -814,7 +814,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(0) # +2-2 own activities
+        expect(user_feed.count).to be(1) # +2-2 own activities + 1 delete activity
+        expect(user_feed.first['target']).to eq(slot.id.to_s)
+        expect(user_feed.first['action']).to eq('private')
+        expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(0) # +2-2 own activities
@@ -1054,8 +1058,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
     context "Forward friend requests" do
       before(:each) do
-        # Perform activity (request friendship)
-        user.initiate_friendship(friend.id)
+        # Perform activity: request friendship
+        friend.initiate_friendship(user.id)
       end
 
       it "User Feed (me activities)" do
@@ -1095,9 +1099,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
     context "Forward accepted friend requests" do
       before(:each) do
-        # Perform activity (request friendship)
-        fs = user.initiate_friendship(friend.id)
-        # Perform activity (accept requested friendship)
+        # Perform activity: request friendship
+        fs = friend.initiate_friendship(user.id)
+        # Perform activity: accept requested friendship
         fs.accept
       end
 

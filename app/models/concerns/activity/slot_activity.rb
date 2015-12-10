@@ -16,8 +16,8 @@ module SlotActivity
   # if custom validation is required
   private def activity_is_valid?
     visibility = activity_target.try(:visibility)
-    friendship = activity_actor.friendship(activity_foreign) if activity_foreign.present?
-    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || self.updated_at >= friendship.updated_at)))
+    friendship = activity_foreign.present? ? activity_actor.friendship(activity_foreign) : nil
+    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Date.parse(self.updated_at) >= Date.parse(friendship.updated_at))))
   end
 
   private def push_notify

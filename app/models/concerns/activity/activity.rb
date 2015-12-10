@@ -9,15 +9,20 @@ module Activity
     return self
   end
 
-  def update_activity
-    # TODO: [TML-77]
+  def update_activity(action = nil)
+    if activity_is_valid?
+      update_activity_feed(action)
+      update_activity_push(action) if push_is_valid?
+    end
   ensure
     return self
   end
 
   def remove_activity(action = 'delete')
-    remove_activity_feed(action)
-    remove_activity_push(action)
+    if activity_is_valid?
+      remove_activity_feed(action)
+      remove_activity_push(action) if push_is_valid?
+    end
   ensure
     return self
   end
@@ -73,6 +78,15 @@ module Activity
     end
   end
 
+  private def update_activity_feed(action)
+    # TODO: [TML-77]
+  end
+
+  private def update_activity_push(action)
+    # TODO: [TML-77]
+    # TODO: [TML-71]
+  end
+
   private def remove_activity_feed(action)
     # Add actor and foreign user to the activity removal dispatcher
     notify = activity_notify || []
@@ -115,7 +129,7 @@ module Activity
 
   private def remove_activity_push(action)
     # TODO: [TML-71]
-    create_activity_push(action) if push_is_valid?
+    # create_activity_push(action) if push_is_valid?
   end
 
   # This method should be overridden in the subclass
@@ -124,10 +138,12 @@ module Activity
     self.deleted_at.nil? &&
     activity_actor &&
     activity_target &&
-    activity_actor.role != 1 && # FIX: only activities from "real users" are valid
+    # FIX: only activities from "real users" are valid:
+    activity_actor.role != 1 &&
     activity_actor.deleted_at.nil? &&
     activity_target.deleted_at.nil? &&
-    activity_action.present? # FIX: skip if no action is set
+    # FIX: skip if an activity has no action:
+    activity_action.present?
   end
 
   # This method should be overridden in the subclass
@@ -162,8 +178,8 @@ module Activity
       user_ids += activity_group.followers
     else
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
-      # 1. Target related context:
-      user_ids += activity_target.followers if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
+      # 1. Target related context (by default):
+      user_ids += activity_target.followers #if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
       # 2. Actor related context:
       user_ids += activity_actor.followers if visibility == 'foaf' or visibility == 'public'
 

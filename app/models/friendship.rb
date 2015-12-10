@@ -122,17 +122,16 @@ class Friendship < ActiveRecord::Base
     friend
   end
 
-  private def activity_foreign
-    friend
-  end
-
-  # The user who made the update
   private def activity_actor
     user
   end
 
+  private def activity_foreign
+    friend
+  end
+
   private def activity_action
-    established? ? 'friendship' : (offered? ? 'request' : 'stranger')
+    established? ? 'friendship' : (offered? ? 'request' : '')
   end
 
   private def activity_notify

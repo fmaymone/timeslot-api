@@ -152,11 +152,19 @@ module Feed
           %W(Feed:#{user_id}:User
              Feed:#{user_id}:News
              Feed:#{user_id}:Notification).each do |feed_key|
-            # Remove activity
+            # Remove activity by object (removes a single activity)
             $redis.lrem(feed_key, 0, "#{target_key}:#{recursive_index}")
           end
         end
       end
+    end
+
+    private def remove_target_from_feed(target, feed, notify)
+      # TODO: remove by target (removes multiple activities)
+    end
+
+    private def remove_actor_from_feed(actor, notify)
+      # TODO: remove by actor (removes multiple activities)
     end
 
     private def paginate(feed_index, limit: 25, offset: 0, cursor: nil)
@@ -176,17 +184,16 @@ module Feed
       # Fetch target activity object from index
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index.nil? ? feed_params[2].to_i : index)
       # Returns the re-builded dictionary (json)
-      {
-          type: target_feed[0],
-          actor: target_feed[1],
-          object: target_feed[2],
-          model: target_feed[3],
-          target: target_feed[4],
-          action: target_feed[5],
-          foreign: target_feed[6],
-          time: target_feed[7],
-          feed: target_feed[8],
-          id: target_feed[9]
+      { type: target_feed[0],
+        actor: target_feed[1],
+        object: target_feed[2],
+        model: target_feed[3],
+        target: target_feed[4],
+        action: target_feed[5],
+        foreign: target_feed[6],
+        time: target_feed[7],
+        feed: target_feed[8],
+        id: target_feed[9]
       }.as_json
     end
 

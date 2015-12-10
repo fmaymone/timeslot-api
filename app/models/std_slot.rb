@@ -20,16 +20,31 @@ class StdSlot < BaseSlot
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
     if visibility
-      slot_type = STD_SLOT_TYPES[visibility]
-      update(slot_type: SLOT_TYPES[slot_type])
-      # Update Follower + Feeds status if visibility change
+      # Update Follower + Feeds status if visibility change to private
+      # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
+        # TODO: remove_target_from_feed
         comments.each(&:remove_activity)
         likes.each(&:remove_activity)
-        reslots.each(&:remove_activity)
+        notes.each(&:remove_activity) if notes
+        media_items.each(&:remove_activity)
+        # TODO: Reslots has to be cleaned up recursively elsewhere in the code
+        # Another option is to disable Reslot history of predecessors
+        reslots.each do |reslot|
+          reslot.comments.each(&:remove_activity)
+          reslot.likes.each(&:remove_activity)
+          reslot.notes.each(&:remove_activity)
+          reslot.media_items.each(&:remove_activity)
+          reslot.reslots.each(&:remove_activity)
+          reslot.reslots.each(&:remove_all_followers)
+          reslot.remove_activity
+          reslot.remove_all_followers
+        end
         remove_activity('private')
         remove_all_followers
       end
+      slot_type = STD_SLOT_TYPES[visibility]
+      update(slot_type: SLOT_TYPES[slot_type])
     end
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
