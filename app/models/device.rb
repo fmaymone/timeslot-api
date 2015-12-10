@@ -74,8 +74,8 @@ class Device < ActiveRecord::Base
         badge: badge
     }
 
-    aps.merge!(slot_id: slot_id) if slot_id.present?
-    aps.merge!(user_id: user_id) if user_id.present?
+    aps.merge!(slot_id: slot_id) unless slot_id.blank?
+    aps.merge!(user_id: user_id) unless user_id.blank?
 
     # defaults to true, if ENV variable not set, otherwise examine
     if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
@@ -90,13 +90,11 @@ class Device < ActiveRecord::Base
       payload.merge!(APNS_SANDBOX: { aps: aps }.to_json)
     end
 
-    # Send push notification
+    push_notification = { message: payload.to_json,
+                          target_arn: device['endpoint'],
+                          message_structure: 'json' }
     begin
-      client.publish(
-          message: payload.to_json,
-          target_arn: device['endpoint'],
-          message_structure: 'json'
-      )
+      client.publish(push_notification)
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }

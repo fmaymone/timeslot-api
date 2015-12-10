@@ -79,10 +79,10 @@ module Activity
 
       # Skip sending if no message exist
       if message_content.present?
-        payload = [ message: message_content ]
-        payload[0].merge!(slot_id: activity_target.id) if activity_type == 'Slot'
-        payload[0].merge!(user_id: activity_target.id) if activity_type == 'User'
-        Device.notify_all(notify, payload)
+        params = { message: message_content }
+        params.merge!(slot_id: activity_target.id) if activity_type == 'Slot'
+        params.merge!(user_id: activity_target.id) if activity_type == 'User'
+        Device.notify_all(notify, params)
       end
     end
   end
