@@ -92,6 +92,20 @@ RSpec.describe ReSlot, type: :model do
                                          visibility: 'public')
       }.to change(ReSlotPublic, :count).by 1
     end
+
+    context "existing reslot" do
+      let!(:reslot) { create(:re_slot, slotter: user, predecessor: pred) }
+
+      it "updates the visibility" do
+        expect(reslot.visibility).to eq "public"
+
+        described_class.create_from_slot(predecessor: pred,
+                                           slotter: user,
+                                           visibility: 'friends')
+        reslot.reload
+        expect(reslot.visibility).to eq "friends"
+      end
+    end
   end
 
   describe "meta_slot attributes" do

@@ -79,28 +79,33 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor:, slotter:, visibility: 'public')
-    original_source = predecessor.class <= ReSlot ? predecessor.parent : predecessor
+  def reuse_existing(predecessor, slottype)
+    # update visibility if different than the original reslot
+    update(slot_type: SLOT_TYPES[slottype.to_sym]) unless slot_type == slottype
 
-    # if same original event was already reslottet by user, use this reslot
-    reslot = where(slotter: slotter, parent: original_source).take
+    return unless deleted_at?
+
+    update(deleted_at: nil, predecessor: predecessor)
+    BaseSlot.increment_counter(:re_slots_count, parent_id)
+    create_activity
+  end
+
+  def self.create_from_slot(predecessor: , slotter: , visibility: nil)
+    parent = predecessor.class <= ReSlot ? predecessor.parent : predecessor
+    # use visibility of parent if not given or 'public' for group/global slots
+    visibility ||= parent.visibility || 'public'
+    slot_type = RE_SLOT_TYPES[visibility].to_s
 
     slotter.follow(predecessor)
 
-    # if deleted reslot was reslottet again, unset deleted_at & update predecessor
-    if reslot && reslot.deleted_at?
-      reslot.update(deleted_at: nil)
-      reslot.update(predecessor: predecessor)
-      BaseSlot.increment_counter(:re_slots_count, reslot.parent_id)
-      reslot.create_activity
-    end
-
-    unless reslot
-      slot_type = RE_SLOT_TYPES[visibility].to_s.constantize
-      reslot = slot_type.create(slotter: slotter,
-                                predecessor: predecessor,
-                                parent: original_source,
-                                meta_slot: predecessor.meta_slot)
+    if reslot = where(slotter: slotter, parent: parent).take
+      reslot.reuse_existing(predecessor, slot_type)
+    else
+      slot_class = slot_type.constantize
+      reslot = slot_class.create(slotter: slotter,
+                                 predecessor: predecessor,
+                                 parent: parent,
+                                 meta_slot: parent.meta_slot)
       reslot.create_activity
     end
 
