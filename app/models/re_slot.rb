@@ -52,7 +52,7 @@ class ReSlot < BaseSlot
   end
 
   def delete
-    remove_activity('unslot')
+    remove_all_activities(target: self) # 'unslot'
     remove_all_followers
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self

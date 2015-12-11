@@ -207,7 +207,7 @@ class BaseSlot < ActiveRecord::Base
     # of the parent/predecessor slot was removed
     reslots.each(&:delete) if self.try(:reslots)
 
-    remove_activity
+    remove_all_activities(target: self)
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete

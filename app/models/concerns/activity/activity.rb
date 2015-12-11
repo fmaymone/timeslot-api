@@ -5,6 +5,8 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
+  rescue => error
+    error_handler(error, "failed: create '#{action}' activity as worker job")
   ensure
     return self
   end
@@ -14,6 +16,8 @@ module Activity
       create_activity_feed(action, notify: nil, forward: feed_fwd)
       create_activity_push(action, notify: nil, forward: push_fwd) if push_is_valid?
     end
+  rescue => error
+    error_handler(error, "failed: forward '#{action}' activity as worker job")
   ensure
     return self
   end
@@ -23,6 +27,8 @@ module Activity
       update_activity_feed(action)
       update_activity_push(action) if push_is_valid?
     end
+  rescue => error
+    error_handler(error, "failed: update '#{action}' activity as worker job")
   ensure
     return self
   end
@@ -32,6 +38,19 @@ module Activity
       remove_activity_feed(action)
       remove_activity_push(action) if push_is_valid?
     end
+  rescue => error
+    error_handler(error, "failed: remove '#{action}' activity as worker job")
+  ensure
+    return self
+  end
+
+  def remove_all_activities(action = 'delete', target: nil, user: nil)
+    if activity_is_valid?
+      remove_activity_feed(action, target: target, user: user)
+      remove_activity_push(action, target: target, user: user) if push_is_valid?
+    end
+  rescue => error
+    error_handler(error, "failed: remove all activities as worker job")
   ensure
     return self
   end
@@ -57,12 +76,7 @@ module Activity
       feed: activity_target.class.name
     })
   rescue => error
-    opts = {}
-    opts[:parameters] = {
-        activity: "failed: initialize activity as worker job"
-    }
-    Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+    error_handler(error, "failed: initialize activity as worker job")
   end
 
   private def create_activity_push(action, notify: nil, forward: nil)
@@ -79,7 +93,7 @@ module Activity
                                TITLE: activity_target.try(:title))
 
       # Skip sending if no message exist
-      if message_content.present?
+      unless message_content.nil? || message_content.blank?
         params = { message: message_content }
         if activity_type == 'Slot'
           params.merge!(slot_id: activity_target.id)
@@ -108,17 +122,11 @@ module Activity
     # TODO: [TML-71]
   end
 
-  private def remove_activity_feed(action)
+  private def remove_activity_feed(action, target: nil, user: nil)
     # Add actor and foreign user to the activity removal dispatcher
     notify = activity_notify || []
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
-
-    # TMP: Add forward users
-    # notify += self.followers.map(&:to_s) if self.try(:followers)
-    # notify += activity_target.followers.map(&:to_s)
-    # notify += activity_actor.followers.map(&:to_s)
-    # notify += activity_foreign.followers.map(&:to_s) if activity_foreign
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
@@ -127,11 +135,14 @@ module Activity
         target: activity_target.id.to_s,
         feed: activity_target.class.name,
         notify: notify.uniq
-    })
+      },
+      target: target,
+      user: user
+    )
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if action == 'private' || action == 'unslot' || (action == 'delete' && activity_action == 'slot')
+    if action == 'private' || (action == 'delete' && activity_action == 'slot') # || action == 'unslot'
       # Forward "delete" action as an activity to the dispatcher
       forward_activity(
           action,
@@ -144,15 +155,10 @@ module Activity
       )
     end
   rescue => error
-    opts = {}
-    opts[:parameters] = {
-        activity: "failed: remove activity as worker job"
-    }
-    Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+    error_handler(error, "failed: remove activity as worker job")
   end
 
-  private def remove_activity_push(action)
+  private def remove_activity_push(action, target: nil, user: nil)
     # TODO: [TML-71]
     # create_activity_push(action) if push_is_valid?
   end
@@ -286,5 +292,13 @@ module Activity
   private def activity_message_params
     raise NotImplementedError,
           "Subclasses must define the method 'activity_message_params'."
+  end
+
+  private def error_handler(error, activity, params = nil)
+    opts = {}
+    opts[:parameters] = { activity: activity }
+    opts[:parameters][:params] = params if params
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 end

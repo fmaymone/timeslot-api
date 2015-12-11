@@ -881,7 +881,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
     let!(:reslot_1) { create(:re_slot, predecessor: slot, parent: slot, slotter: follower) }
     # NOTE: reslots from 2nd generation will break currently,
     # because there is no resursively removing handler in the code!
-    let!(:reslot_2) { create(:re_slot, predecessor: slot, parent: slot, slotter: follower2) }
+    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1, parent: slot, slotter: follower2) }
 
     context "User change visibility of a slot" do
       before(:each) do
@@ -901,7 +901,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         # Change Visibility
         slot.update_from_params(visibility: 'private')
-        #slot.reload
       end
 
       it "User Feed (me activities)" do
@@ -913,12 +912,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        pp user_feed_follower
         expect(user_feed_follower.count).to be(0) # +2-2 own activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
         expect(user_feed_follower2.count).to be(0) # +2-2 own activities
-        expect(user_feed_follower).not_to eq(user_feed_follower2)
+        expect(user_feed_follower).to eq(user_feed_follower2)
       end
 
       it "News Feed (aggregated public activities)" do
@@ -939,19 +937,27 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower2.first['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower2.first['data']['actor']['id']).to be(user.id)
 
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        pp notification_feed
         expect(notification_feed.count).to be(0) # +6-6 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed_follower.count).to be(1) # has no own content
+        expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower.first['action']).to eq('private')
+        expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # has no own content
+        expect(notification_feed_follower2.count).to be(1) # has no own content
+        expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower2.first['action']).to eq('private')
+        expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
+
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end

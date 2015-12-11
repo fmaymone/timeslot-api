@@ -23,28 +23,13 @@ class StdSlot < BaseSlot
       # Update Follower + Feeds status if visibility change to private
       # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        # TODO: remove_target_from_feed
-        comments.each(&:remove_activity)
-        likes.each(&:remove_activity)
-        notes.each(&:remove_activity) if notes
-        media_items.each(&:remove_activity)
-        # TODO: Reslots has to be cleaned up recursively elsewhere in the code
-        # Another option is to disable Reslot history of predecessors
         if self.try(:reslots)
-          reslots.each do |reslot|
-            reslot.comments.each(&:remove_activity)
-            reslot.likes.each(&:remove_activity)
-            reslot.notes.each(&:remove_activity)
-            reslot.media_items.each(&:remove_activity)
-            if reslot.try(:reslots)
-              reslot.reslots.each(&:remove_activity)
-              reslot.reslots.each(&:remove_all_followers)
-            end
-            reslot.remove_activity
-            reslot.remove_all_followers
-          end
+          reslots.each{ |slot|
+            slot.remove_all_activities(target: self)
+            slot.remove_all_followers
+          }
         end
-        remove_activity('private')
+        remove_all_activities('private', target: self)
         remove_all_followers
       end
       slot_type = STD_SLOT_TYPES[visibility]

@@ -71,17 +71,16 @@ module Feed
 
       # Determine target key for redis set
       target_index = "#{params[:feed]}:#{params[:target]}"
-      # TODO: Instead of using "Actor" or "Target" as key index it is better to use
-      # more qualified namings like: "Slot", "User" or "Group", this will also solve other todos
-      if params[:type] == 'User'
+      # The target can have different types (e.g. Slot, User, Group)
+      if params[:type] == 'User' || params[:type] == 'Group'
         # If target is from type user --> forward target to user shared objects
-        $redis.set("Actor:#{params[:object]}", gzip_target(params))
+        $redis.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
-        $redis.set("Target:#{target_index}", gzip_target(params))
+        $redis.set("#{params[:type]}:#{target_index}", gzip_target(params))
       end
       # Store actor to its own index (shared objects)
-      $redis.set("Actor:#{params[:actor]}", gzip_actor(params))
+      $redis.set("User:#{params[:actor]}", gzip_actor(params))
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
@@ -108,59 +107,81 @@ module Feed
     end
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
-    # Each call of the models delete method starts triggering activity deletion.
-    def remove_from_feed(object, model, target, feed, notify)
+    # Each call of the models delete method starts calling its corresponding activity deletion.
+    def remove_item_from_feed(object:, model:, target:, feed:, notify:)
+      # Translate class name to enumeration
+      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+      # Fetch all activities from target feed (shared feed)
+      target_feed = $redis.lrange("Feed:#{target_key}", 0, -1)
+      # The timestamp is used to validate the feed cache
+      current = Time.now.to_f
 
       # We using backtracking to improve performance by removing activities through all feeds
       # To backtrack activities from its corresponding target feed it is required to find the index which
       # points to the target feed index, where the related activity is stored
       recursive_index = -1
 
-      # NOTE: Actually all targets are from type Slot to simplify generics
-      # TODO: Remove activities where target is not from type Slot (e.g. friend request)
-
-      # Translate class name to enumeration
-      #feed = BaseSlot.slot_types[feed.to_sym]
-      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
-      # Fetch all activities from target feed (shared feed)
-      target_feed_length = $redis.llen("Feed:#{target_key}") - 1
-
       # Loop through all shared activities to find backtracking index
-      # NOTE: This loop may can be skipped by using redis pointers
-      (0..target_feed_length).each do |index|
+      # NOTE: This loop may can be skipped by using real redis pointers
+      target_feed.each_with_index do |activity, index|
         # Enrich target activity
-        activity = enrich_activity(target_key, index)
-        # Identify activity
-        if ((activity['target'] == target) && (activity['feed'] == feed)) \
-        || ((activity['object'] == object) && (activity['model'] == model))
+        activity = rebuild_feed_struct(unzip_json(activity))
+        # Identify single activity
+        if (activity['object'] == object) && (activity['model'] == model)
           recursive_index = index
           break
         end
       end
 
       if recursive_index > -1
-        # The timestamp is used to validate the feed cache
-        current_time = Time.now.to_f
         # Loop through all related user feeds through social relations
-        notify.each do |user_id|
-          %W(Feed:#{user_id}:User
-             Feed:#{user_id}:News
-             Feed:#{user_id}:Notification).each do |feed_index|
-            # Remove activity by object (removes a single activity)
-            $redis.lrem(feed_index, 0, "#{target_key}:#{recursive_index}")
-            # Store the feeds update time to force re-validation of the cache
-            $redis.set("Update:#{feed_index}", current_time)
-          end
-        end
+        remove_activity_from_feed("#{target_key}:#{recursive_index}", current, notify)
       end
     end
 
-    def remove_target_from_feed(target, feed, notify)
-      # TODO: remove by target (removes multiple activities)
+    def remove_target_from_feed(target:, feed:, notify:)
+      # Translate class name to enumeration
+      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+      # Fetch all activities from target feed (shared feed)
+      target_feed_length = $redis.llen("Feed:#{target_key}") - 1
+      # The timestamp is used to validate the feed cache
+      current = Time.now.to_f
+      # Loop through all target activities via backtracking
+      (0..target_feed_length).each do |index|
+        # We do not delete the activity source, instead we remove the pointers to
+        # this activity which was distributed to the users feeds
+        remove_activity_from_feed("#{target_key}:#{index}", current, notify)
+      end
     end
 
-    def remove_actor_from_feed(actor, notify)
-      # TODO: remove by actor (removes multiple activities)
+    def remove_user_from_feed(user:, notify:)
+      targets = user.std_slots +
+                user.re_slots +
+                user.group_slots +
+                user.friendships +
+                user.memberships
+      targets.each do |target|
+        # Try to expand social context for each target
+        context = target.try(:followers)
+        context.merge!(notify) if context
+        remove_target_from_feed(target: target.id,
+                                feed: target.class.name,
+                                notify: context || notify)
+      end
+    end
+
+    private def remove_activity_from_feed(feed_key, time, notify)
+      # Loop through all related user feeds through social relations
+      notify.each do |user_id|
+        %W(Feed:#{user_id}:User
+           Feed:#{user_id}:News
+           Feed:#{user_id}:Notification).each do |feed_index|
+          # Remove activity by object (removes a single pointer to an activity)
+          $redis.lrem(feed_index, 0, feed_key)
+          # Store the feeds update time to force re-validation of the cache
+          $redis.set("Update:#{feed_index}", time)
+        end
+      end
     end
 
     private def distribute(target_key, distributor)
@@ -202,18 +223,22 @@ module Feed
       # Split target index into its components
       feed_params = target_key.split(':')
       # Fetch target activity object from index
-      target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index.nil? ? feed_params[2].to_i : index)
+      target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index || feed_params[2].to_i)
       # Returns the re-builded dictionary (json)
-      { type: target_feed[0],
-        actor: target_feed[1],
-        object: target_feed[2],
-        model: target_feed[3],
-        target: target_feed[4],
-        action: target_feed[5],
-        foreign: target_feed[6],
-        time: target_feed[7],
-        feed: target_feed[8],
-        id: target_feed[9]
+      rebuild_feed_struct(target_feed)
+    end
+
+    private def rebuild_feed_struct(feed)
+      { type: feed[0],
+        actor: feed[1],
+        object: feed[2],
+        model: feed[3],
+        target: feed[4],
+        action: feed[5],
+        foreign: feed[6],
+        time: feed[7],
+        feed: feed[8],
+        id: feed[9]
       }.as_json
     end
 
@@ -227,17 +252,17 @@ module Feed
 
         # Determine translation params
         # Get the first actor (from shared objects)
-        actor = get_shared_object("Actor:#{activity['actors'].first}")
+        actor = get_shared_object("User:#{activity['actors'].first}")
         # FIX: This is temporary solution for syncing issues on iOS
         # actor = JSONView.user(User.find(activity['actors'].first))
         # Adds the first username and sets usercount to translation params
         i18_params = { USER: actor['username'], USERCOUNT: actor_count }
-        # Get target (from shared objects)
+        # Get target (from shared object)
         if activity['type'] == 'User'
-          # If target is from type user --> load shared object from actor storage
-          target = get_shared_object("Actor:#{activity['object']}")
+          # If target is from type user --> load shared object from user storage
+          target = get_shared_object("#{activity['type']}:#{activity['object']}")
         else
-          target = get_shared_object("Target:#{activity['feed']}:#{activity['target']}")
+          target = get_shared_object("#{activity['type']}:#{activity['feed']}:#{activity['target']}")
         end
         # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
@@ -249,12 +274,12 @@ module Feed
         # iOs requires the friendshipstate (we use the type of action to determine state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
         case activity['action']
-          when 'request'
-            actor['friendshipState'] = 'pending passive'
-          when 'friendship'
-            actor['friendshipState'] = 'friend'
-          when 'unfriend'
-            actor['friendshipState'] = 'stranger'
+        when 'request'
+          actor['friendshipState'] = 'pending passive'
+        when 'friendship'
+          actor['friendshipState'] = 'friend'
+        when 'unfriend'
+          actor['friendshipState'] = 'stranger'
         end
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
@@ -263,7 +288,7 @@ module Feed
         # Collect further usernames for aggregated messages (actual we need 2 at maximum)
         if actor_count > 1
           # Get second actor (from shared objects)
-          actor = get_shared_object("Actor:#{activity['actors'].second}")
+          actor = get_shared_object("User:#{activity['actors'].second}")
           # Add the second username to the translation params holder
           i18_params[:USER2] = actor['username']
         end
@@ -450,6 +475,10 @@ module Feed
       )
     end
 
+    private def unzip_json(json)
+      JSON.parse(ActiveSupport::Gzip.decompress(json))
+    end
+
     private def error_handler(error, feed, params)
       opts = {}
       opts[:parameters] = {
@@ -458,7 +487,6 @@ module Feed
       }
       Rails.logger.error { error }
       Airbrake.notify(error, opts)
-      puts error unless Rails.env.production?
     end
   end
 end
