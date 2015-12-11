@@ -1,9 +1,9 @@
 module Feed
   class << self
 
-    def user_feed(user_id, params = {})
+    def user_feed(user, params = {})
       begin
-        feed = "Feed:#{user_id}:User"
+        feed = "Feed:#{user}:User"
         cache = get_from_cache(feed, params)
         return cache if cache
         page = paginate(feed, params)
@@ -14,9 +14,9 @@ module Feed
       end
     end
 
-    def notification_feed(user_id, params = {})
+    def notification_feed(user, params = {})
       begin
-        feed = "Feed:#{user_id}:Notification"
+        feed = "Feed:#{user}:Notification"
         cache = get_from_cache(feed, params)
         return cache if cache
         page = paginate(feed, params)
@@ -27,9 +27,10 @@ module Feed
       end
     end
 
-    def news_feed(user_id, params = {})
+    def news_feed(user, params = {}, context = nil)
       begin
-        feed = "Feed:#{user_id}:News"
+        feed = "Feed:#{user}:News"
+        params.merge!(context: context) if context
         cache = get_from_cache(feed, params)
         return cache if cache
         page = aggregate_feed(feed, params)
@@ -282,7 +283,7 @@ module Feed
 
     # NOTE: We can optimize this by aggregating feeds when storing into redis
     # NOTE: Actually we use "live aggregation" instead, so we are able to modify the aggregation logic on the fly
-    private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil)
+    private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil, context: nil)
       # Get offset from cursor in reversed logic (LIFO), supports simple offset fallback
       offset = cursor ? cursor.to_i : offset.to_i
       # Temporary holder to store the aggregation feed
@@ -318,6 +319,8 @@ module Feed
           current_feed['activityCount'] += 1
           # Collect actors as unique
           current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+          # Get intersection of actors and the users social context
+          current_feed['actors'] &= context if context
           # Skip counting for cursor and limits
           next
         # If group does not exist, creates a new group for aggregations

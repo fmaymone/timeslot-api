@@ -107,8 +107,8 @@ module Activity
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
 
-    # TODO: replace with update_activity
     # TMP: Add forward users
+    # notify += self.followers.map(&:to_s) if self.try(:followers)
     # notify += activity_target.followers.map(&:to_s)
     # notify += activity_actor.followers.map(&:to_s)
     # notify += activity_foreign.followers.map(&:to_s) if activity_foreign
