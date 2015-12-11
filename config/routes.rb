@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
+    # TODO: rename connect routes
+    # scope :connect do
+    #   post 'facebook', to: 'connects#facebook_connect'
+    #   post 'twitter', to: 'connects#twitter_connect'
+    # end
     post 'fb-connect', to: 'connects#facebook_connect'
     post 'tw-connect', to: 'connects#twitter_connect'
 
@@ -68,6 +73,7 @@ Rails.application.routes.draw do
 
     scope :globalslots do
       get 'search', to: 'global_slots#search'
+      post 'reslot', to: 'global_slots#create_reslot', as: 'reslot_global_slot'
     end
 
     get 'media-signature', to: 'media#create_signature'
