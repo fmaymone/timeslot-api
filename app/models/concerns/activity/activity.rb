@@ -81,8 +81,15 @@ module Activity
       # Skip sending if no message exist
       if message_content.present?
         params = { message: message_content }
-        params.merge!(slot_id: activity_target.id) if activity_type == 'Slot'
-        params.merge!(user_id: activity_target.id) if activity_type == 'User'
+        if activity_type == 'Slot'
+          params.merge!(slot_id: activity_target.id)
+        elsif activity_type == 'User'
+          if action == 'request'
+            params.merge!(user_id: activity_target.id)
+          elsif action == 'friendship'
+            params.merge!(friend_id: activity_target.id)
+          end
+        end
         Device.notify_all(notify, params)
       end
     end

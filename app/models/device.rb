@@ -64,7 +64,7 @@ class Device < ActiveRecord::Base
 
   # push notification to APNS (apple push notification service)
   def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
-                      badge: 1, extra: {a: 1, b: 2}, slot_id: "", user_id: "")
+                      badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     payload = {}
@@ -74,8 +74,9 @@ class Device < ActiveRecord::Base
         badge: badge
     }
 
-    aps.merge!(slot_id: slot_id) unless slot_id.blank?
-    aps.merge!(user_id: user_id) unless user_id.blank?
+    aps.merge!(slot_id: slot_id) if slot_id
+    aps.merge!(user_id: user_id) if user_id
+    aps.merge!(friend_id: friend_id) if friend_id
 
     # defaults to true, if ENV variable not set, otherwise examine
     if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
