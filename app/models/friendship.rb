@@ -131,7 +131,6 @@ class Friendship < ActiveRecord::Base
   end
 
   private def activity_action
-            pp established? ? 'friendship' : (offered? ? 'request' : '')
     established? ? 'friendship' : (offered? ? 'request' : '')
   end
 

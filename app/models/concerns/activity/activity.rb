@@ -11,20 +11,18 @@ module Activity
 
   def forward_activity(action = nil, feed_fwd: [], push_fwd: [])
     if activity_is_valid?
-      create_activity_feed(action, notify: [], forward: feed_fwd)
-      create_activity_push(action, notify: [], forward: push_fwd) if push_is_valid?
+      create_activity_feed(action, notify: nil, forward: feed_fwd)
+      create_activity_push(action, notify: nil, forward: push_fwd) if push_is_valid?
     end
   ensure
     return self
   end
 
   def update_activity(action = nil)
-    remove_activity(action)
-    create_activity(action)
-    # if activity_is_valid?
-    #   update_activity_feed(action)
-    #   update_activity_push(action) if push_is_valid?
-    # end
+    if activity_is_valid?
+      update_activity_feed(action)
+      update_activity_push(action) if push_is_valid?
+    end
   ensure
     return self
   end
@@ -91,6 +89,10 @@ module Activity
   end
 
   private def update_activity_feed(action)
+    # Actually we made updates simple in handy with a tiny performance impact
+    remove_activity(action)
+    create_activity(action)
+    # NOTE: this could be improved by a real update implementation (when it is required):
     # TODO: [TML-77]
   end
 
@@ -122,17 +124,16 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if action == 'private' or action == 'unslot' or (action == 'delete' and activity_action == 'slot')
+    if action == 'private' || action == 'unslot' || (action == 'delete' && activity_action == 'slot')
       # Forward "delete" action as an activity to the dispatcher
-      create_activity_feed(
+      forward_activity(
           action,
-          forward: {
-              User: [activity_actor.id.to_s],
+          feed_fwd: {
+              User: [ activity_actor.id.to_s ],
               News: activity_target.followers,
               Notification: activity_target.followers
           }
-          # push: []
-          # time: Time.zone.now
+          # push_fwd: {}
       )
     end
   rescue => error
@@ -153,8 +154,8 @@ module Activity
   # if custom validation is required
   private def activity_is_valid?
     self.deleted_at.nil? &&
-    activity_actor &&
-    activity_target &&
+    activity_actor.present? &&
+    activity_target.present? &&
     # FIX: only activities from "real users" are valid:
     activity_actor.role != 1 &&
     activity_actor.deleted_at.nil? &&
@@ -199,7 +200,7 @@ module Activity
       # 1. Target related context (by default):
       user_ids += activity_target.followers # if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
       # 2. Actor related context:
-      user_ids += activity_actor.followers if visibility == 'foaf' or visibility == 'public'
+      user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
       if visibility == 'public'

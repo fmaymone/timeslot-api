@@ -4,8 +4,11 @@ module Feed
     def user_feed(user_id, params = {})
       begin
         feed = "Feed:#{user_id}:User"
+        cache = get_from_cache(feed, params)
+        return cache if cache
         page = paginate(feed, params)
-        enrich_feed(page, 'me')
+        result = enrich_feed(page, 'me')
+        set_to_cache(feed, params, result)
       rescue => error
         error_handler(error, feed, params)
       end
@@ -14,8 +17,11 @@ module Feed
     def notification_feed(user_id, params = {})
       begin
         feed = "Feed:#{user_id}:Notification"
+        cache = get_from_cache(feed, params)
+        return cache if cache
         page = paginate(feed, params)
-        enrich_feed(page, 'notify')
+        result = enrich_feed(page, 'notify')
+        set_to_cache(feed, params, result)
       rescue => error
         error_handler(error, feed, params)
       end
@@ -24,8 +30,11 @@ module Feed
     def news_feed(user_id, params = {})
       begin
         feed = "Feed:#{user_id}:News"
+        cache = get_from_cache(feed, params)
+        return cache if cache
         page = aggregate_feed(feed, params)
-        enrich_feed(page, 'activity')
+        result = enrich_feed(page, 'activity')
+        set_to_cache(feed, params, result)
       rescue => error
         error_handler(error, feed, params)
       end
@@ -82,19 +91,19 @@ module Feed
 
       ## -- Collect Activity Distribution -- ##
 
-      distributor = { User: [], News: [], Notification: [] }
+      feed_register = { User: [], News: [], Notification: [] }
       # Store activity to own feed (me activities)
-      distributor[:User] << params[:actor]
+      feed_register[:User] << params[:actor]
       # Send to other users through social relations ("Read-Opt" Strategy)
-      distributor[:News] += params[:notify]
+      feed_register[:News] += params[:notify]
       # Store activity to own notification feed (related to own content, filter out own activities)
-      distributor[:Notification] << params[:foreign] if params[:foreign] && (params[:actor] != params[:foreign])
+      feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
       # Add all custom forwardings
-      params[:forward].each{ |feed, users| distributor[feed] += users }
+      params[:forward].each{ |index, users| feed_register[index] += users }
 
       ## -- Distribute Activities (Read-Opt) -- ##
 
-      distribute(target_key, distributor)
+      distribute(target_key, feed_register)
     end
 
     # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
@@ -108,7 +117,9 @@ module Feed
 
       # NOTE: Actually all targets are from type Slot to simplify generics
       # TODO: Remove activities where target is not from type Slot (e.g. friend request)
+
       # Translate class name to enumeration
+      #feed = BaseSlot.slot_types[feed.to_sym]
       target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed_length = $redis.llen("Feed:#{target_key}") - 1
@@ -119,21 +130,25 @@ module Feed
         # Enrich target activity
         activity = enrich_activity(target_key, index)
         # Identify activity
-        if ((activity['target'] == target) and (activity['feed'] == feed)) \
-        or ((activity['object'] == object) and (activity['model'] == model))
+        if ((activity['target'] == target) && (activity['feed'] == feed)) \
+        || ((activity['object'] == object) && (activity['model'] == model))
           recursive_index = index
           break
         end
       end
 
       if recursive_index > -1
+        # The timestamp is used to validate the feed cache
+        current_time = Time.now.to_f
         # Loop through all related user feeds through social relations
         notify.each do |user_id|
           %W(Feed:#{user_id}:User
              Feed:#{user_id}:News
-             Feed:#{user_id}:Notification).each do |feed_key|
+             Feed:#{user_id}:Notification).each do |feed_index|
             # Remove activity by object (removes a single activity)
-            $redis.lrem(feed_key, 0, "#{target_key}:#{recursive_index}")
+            $redis.lrem(feed_index, 0, "#{target_key}:#{recursive_index}")
+            # Store the feeds update time to force re-validation of the cache
+            $redis.set("Update:#{feed_index}", current_time)
           end
         end
       end
@@ -149,9 +164,9 @@ module Feed
 
     private def distribute(target_key, distributor)
       # The timestamp is used to validate the feed cache
-      current_time = Time.zone.now
+      current_time = Time.now.to_f
       # Distribute to all user feeds (including custom forwardings like friend requests, deletions, etc.)
-      distributor.each do |feed, users|
+      distributor.each do |index, users|
         # Remove foreign user + actor from forwarding to notifications
         # TODO: do not remove here, remove before call
         # users.delete(params[:foreign]) if params[:foreign].present?
@@ -160,10 +175,11 @@ module Feed
         if users.any?
           $redis.pipelined do
             users.uniq.each do |user|
+              feed_index = "Feed:#{user}:#{index}"
               # Delegate activity to a feed
-              $redis.rpush("Feed:#{user}:#{feed}", target_key)
-              # Store the feeds update time to revalidate the cache
-              $redis.set("Cache:#{user}:#{feed}", current_time)
+              $redis.rpush(feed_index, target_key)
+              # Store the feeds update time to force re-validation of the cache
+              $redis.set("Update:#{feed_index}", current_time)
             end
           end
         end
@@ -204,7 +220,7 @@ module Feed
       feed.each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
-        count = activity['actors'].count
+        actor_count = activity['actors'].count
         # In handy we remove the single field 'actor' on aggregated feeds
         activity.delete('actor')
 
@@ -214,7 +230,7 @@ module Feed
         # FIX: This is temporary solution for syncing issues on iOS
         # actor = JSONView.user(User.find(activity['actors'].first))
         # Adds the first username and sets usercount to translation params
-        i18_params = { USER: actor['username'], USERCOUNT: count }
+        i18_params = { USER: actor['username'], USERCOUNT: actor_count }
         # Get target (from shared objects)
         if activity['type'] == 'User'
           # If target is from type user --> load shared object from actor storage
@@ -244,14 +260,14 @@ module Feed
         # Add the title to the translation params holder
         i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
         # Collect further usernames for aggregated messages (actual we need 2 at maximum)
-        if count > 1
+        if actor_count > 1
           # Get second actor (from shared objects)
           actor = get_shared_object("Actor:#{activity['actors'].second}")
           # Add the second username to the translation params holder
           i18_params[:USER2] = actor['username']
         end
         # Determine pluralization
-        mode = count > 2 ? 'aggregate' : (count > 1 ? 'plural' : 'singular')
+        mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
         # Determine translation key
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
         # Update message params with enriched message
@@ -279,7 +295,7 @@ module Feed
       index = -1
       # To determine the paging cursor we use a counter
       # Also we use this counter to check on break condition if limit is reached
-      count = 0
+      feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
       feed = $redis.lrange(feed_index, 0, $redis.llen("Feed:#{feed_index}") - offset - 1).reverse!
       # Loop through all feeds (has a break statement, offset is optional)
@@ -305,7 +321,7 @@ module Feed
           # Skip counting for cursor and limits
           next
         # If group does not exist, creates a new group for aggregations
-        elsif count < limit.to_i
+        elsif feed_count < limit.to_i
           # Skip if activity is not from type of the last activity which is related to this target
           next if targets.has_key?(post['target'])
           # Set a switch to the target map, so we can check if an activity of these target was already aggregated
@@ -327,9 +343,52 @@ module Feed
           break
         end
         # Set or update current feed next cursor (if the limit isn't reached)
-        current_feed['cursor'] = ((count += 1) + offset).to_s
+        current_feed['cursor'] = ((feed_count += 1) + offset).to_s
       end
       aggregated_feed
+    end
+
+    ## Cache Helpers ##
+
+    private def get_from_cache(feed, params)
+      # Determine when the last feed update was happened
+      last_update = $redis.get("Update:#{feed}")
+      # Get the current cache state
+      last_state = $redis.get("Status:#{feed}")
+      # Validated the cache state
+      if validate_cache(last_update, last_state)
+        last_cache = get_cached_feed(feed)
+        cache_index = create_cache_index(params)
+        last_cache[cache_index] if last_cache
+      else
+        nil
+      end
+    end
+
+    private def set_to_cache(feed, params, result)
+      # Determine when the last feed update was happened
+      last_update = $redis.get("Update:#{feed}")
+      # Set initially timer if there are no actions
+      if last_update.nil?
+        last_update = Time.now.to_f
+        $redis.set("Update:#{feed}", last_update)
+      end
+      # Set the current cache state
+      $redis.set("Status:#{feed}", last_update)
+      # Update cache
+      last_cache = get_cached_feed(feed) || {}
+      cache_index = create_cache_index(params)
+      last_cache[cache_index] = result
+      $redis.set("Cache:#{feed}", gzip_cache(last_cache))
+      result
+    end
+
+    private def validate_cache(last_update, last_state)
+      # NOTE: Force refresh when last update is too close to the current request
+      last_update.present? &&
+      last_state.present? &&
+      last_update == last_state &&
+      Time.now.to_f - last_update.to_f >= 1 # time in seconds (float)
     end
 
     ## Helpers ##
@@ -353,6 +412,21 @@ module Feed
         ActiveSupport::Gzip.decompress(
           $redis.lindex(key, index)
       ))
+    end
+
+    private def create_cache_index(params)
+      Digest::MD5.hexdigest(params.to_json).upcase
+    end
+
+    private def get_cached_feed(feed_index)
+      cache = $redis.get("Cache:#{feed_index}")
+      cache ? JSON.parse(ActiveSupport::Gzip.decompress(cache)) : nil
+    end
+
+    private def gzip_cache(cache)
+      ActiveSupport::Gzip.compress(
+          cache.to_json
+      )
     end
 
     private def gzip_feed(params)
@@ -381,6 +455,7 @@ module Feed
       }
       Rails.logger.error { error }
       Airbrake.notify(error, opts)
+      puts error unless Rails.env.production?
     end
   end
 end
