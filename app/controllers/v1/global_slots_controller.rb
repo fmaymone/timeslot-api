@@ -1,41 +1,53 @@
 module V1
-  require 'open-uri'
-
   class GlobalSlotsController < ApplicationController
-    skip_before_action :authenticate_user_from_token!
-    skip_after_action :verify_authorized
+    skip_before_action :authenticate_user_from_token!, only: :search
+    skip_after_action :verify_authorized, only: :search
 
     # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
     def search
-      # TODO: data team should remove redundant 'search_'
-      uri = URI.parse("http://search.timeslot.rocks:56000/api/search_")
-      # uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
-      uri.path += category_param
-      uri.query = URI.encode_www_form(search_params)
-
-      user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
-      pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
-      auth = { http_basic_authentication: [user, pw] }
-
-      begin
-        # Never pass unchecked URI to 'open'
-        # http://sakurity.com/blog/2015/02/28/openuri.html
-        raw_result = open(uri, auth).read
-      rescue => e
-        Airbrake.notify(e)
-        return render json: { error: "GlobalSlot Search Service Error: #{e}" },
-                      status: :service_unavailable
-      end
-
-      result = Oj.load(raw_result)
-      crawler_slots = result['search-slots']
-      slots = []
-      crawler_slots.each { |slot| slots << CrawlerSlot.new(slot) }
-
+      slots = GlobalSlotConsumer.new.search(category_param, search_params)
+    rescue => e
+      Airbrake.notify(e)
+      return render json: { error: "GlobalSlot Search Service Error: #{e}" },
+                    status: :service_unavailable
+    else
       render :index, locals: { slots: slots }
     end
 
+    # POST /v1/globalslots/reslot
+    def create_reslot
+      authorize GlobalSlot.new
+
+      # check if slot already exists in local db
+      cuid = params.require(:predecessor)
+      global_slot = GlobalSlot.find_by(cuid: cuid)
+
+      global_slot ||= begin
+                        # if no: fetch global slot from megastore by cuid
+                        globalslot_attributes = GlobalSlotConsumer.new.fetch(cuid)
+
+                      rescue => e
+                        Airbrake.notify(e)
+                        return render json: { error: "DATA MALL Fetch Error: #{e}" },
+                                      status: :service_unavailable
+                      else
+                        #   create metaslot and globalslot
+                        GlobalSlot.create_slot(globalslot_attributes)
+                      end
+      # create reslot for current user
+      reslot = ReSlot.create_from_slot(predecessor: global_slot,
+                                       slotter: current_user)
+                                       # visibility: params[:visibility])
+
+      if reslot.save
+        render "v1/slots/create", status: :created, locals: { slot: reslot }
+      else
+        render json: { error: reslot.errors }, status: :unprocessable_entity
+      end
+    end
+
     private def category_param
+      # this could also be an ENV var
       valid_categories = %w(cinema football)
       category = params.require(:category)
 
