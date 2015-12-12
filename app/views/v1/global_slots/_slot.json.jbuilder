@@ -1,5 +1,5 @@
-# coding: utf-8
 json.extract!(slot,
+              :uuid,
               :title,
               :start_date,
               :end_date
@@ -20,32 +20,16 @@ end
 
 json.notes [
   {
-    'title' => "crawler ID",
-    "content" => slot.crawler_id
-  },
-  {
     "title" => "description",
     "content" => slot.description
   },
   {
-    "title" => "tags",
-    "content" => slot.tags
-  },
-  {
     "title" => "url",
     "content" => slot.url
-  },
-  {
-    "title" => "cuid",
-    "content" => slot.cuid
-  },
-  {
-    "title" => "duid",
-    "content" => slot.duid
   }
 ]
 
 json.media do
-  json.public_id slot.images
+  json.public_id slot.image
   json.mediaType "image"
 end
