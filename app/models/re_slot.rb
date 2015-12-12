@@ -90,7 +90,7 @@ class ReSlot < BaseSlot
     create_activity
   end
 
-  def self.create_from_slot(predecessor: , slotter: , visibility: nil)
+  def self.create_from_slot(predecessor:, slotter:, visibility: nil)
     parent = predecessor.class <= ReSlot ? predecessor.parent : predecessor
     # use visibility of parent if not given or 'public' for group/global slots
     visibility ||= parent.visibility || 'public'

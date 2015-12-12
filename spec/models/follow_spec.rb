@@ -336,7 +336,6 @@ RSpec.describe Follow, type: :model do
       end
 
       it "Unsubscribe from a reslot if parent slot was removed" do
-        skip "TODO: figure out why this doesn't work anymore"
         # Pre Testing
         expect(slot.followed_by?(follower)).to be(true)
         expect(reslot_1.followed_by?(follower2)).to be(true)

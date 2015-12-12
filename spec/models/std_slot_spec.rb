@@ -177,7 +177,7 @@ RSpec.describe StdSlot, type: :model do
     it "returns an array of the reslots of this slot" do
       res = parent.reslots
       expect(res.size).to be 3
-      expect(res).to include_slot reslots.first
+      expect(res).to include reslots.first
     end
   end
 

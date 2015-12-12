@@ -98,7 +98,14 @@ class BaseSlot < ActiveRecord::Base
   def reslots
     # this should not include private reslots
     # TODO: change it when we have reslots with different visibilities
-    ReSlot.where parent_id: id
+    # this is a quickfix to return the correct ReSlot class (eg ReSlotPublic)
+    # instead of just 'ReSlot', needs improvement
+    ids = ReSlot.where(parent_id: id).pluck(:id)
+    reslots = []
+    ids.each do |id|
+      reslots << BaseSlot.get(id)
+    end
+    reslots
   end
 
   def as_paging_cursor
