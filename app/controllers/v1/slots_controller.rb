@@ -91,7 +91,7 @@ module V1
       # TODO: we need an unique identifier from each crawler slot to re-identify
       # exist reslots
       # Check if Slot already exist
-      user_reslots = current_user.re_slots.unscoped.joins(:meta_slot)
+      user_reslots = current_user.re_slots.joins(:meta_slot)
       same_reslot = user_reslots.where(
         'meta_slots.start_date = ? AND meta_slots.title = ?',
         params.require(:startDate), params.require(:title)

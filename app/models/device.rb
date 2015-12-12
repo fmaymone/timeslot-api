@@ -64,37 +64,36 @@ class Device < ActiveRecord::Base
 
   # push notification to APNS (apple push notification service)
   def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
-                      badge: 1, extra: {a: 1, b: 2}, slot_id: "")
+                      badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
+    Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     payload = {}
+    aps = {
+        alert: message,
+        sound: sound,
+        badge: badge
+    }
+
+    aps.merge!(slot_id: slot_id) if slot_id
+    aps.merge!(user_id: user_id) if user_id
+    aps.merge!(friend_id: friend_id) if friend_id
+
     # defaults to true, if ENV variable not set, otherwise examine
-    if ENV['PUSH_DEFAULT'].nil? ? true : ENV['PUSH_DEFAULT'] == 'true'
+    if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
       payload.merge!(default: { message: message })
     end
 
-    if ENV['PUSH_APNS'].nil? ? true : ENV['PUSH_APNS'] == 'true'
-      payload.merge!(APNS: { aps: {
-                               alert: message,
-                               sound: sound,
-                               badge: badge,
-                               slot_id: slot_id
-                             }
-                           }.to_json)
+    if ENV['PUSH_APNS'].nil? || ENV['PUSH_APNS'] == 'true'
+      payload.merge!(APNS: { aps: aps }.to_json)
     end
 
-    if ENV['PUSH_APNS_SANDBOX'].nil? ? true : ENV['PUSH_APNS_SANDBOX'] == 'true'
-      payload.merge!(APNS_SANDBOX: { aps: {
-                                       alert: message,
-                                       sound: sound,
-                                       badge: badge,
-                                       slot_id: slot_id
-                                     }
-                                   }.to_json)
+    if ENV['PUSH_APNS_SANDBOX'].nil? || ENV['PUSH_APNS_SANDBOX'] == 'true'
+      payload.merge!(APNS_SANDBOX: { aps: aps }.to_json)
     end
+
     push_notification = { message: payload.to_json,
                           target_arn: device['endpoint'],
                           message_structure: 'json' }
-
     begin
       client.publish(push_notification)
     rescue Aws::SNS::Errors::ServiceError => exception
@@ -120,21 +119,21 @@ class Device < ActiveRecord::Base
   def self.notify(client, device, params)
     case device['system']
     when 'ios'
-      notify_ios(client, device, *params)
+      notify_ios(client, device, params)
     end
   end
 
   def self.notify_all(user_ids, params)
-    notify_queue = []
+    queue = []
 
     User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
-        notify_queue.concat(devices)
+        queue.concat(devices)
       end
     end
 
-    # we using worker background processing to start request tasks asynchronously
-    NotifyJob.new.async.perform(notify_queue.as_json, params) unless notify_queue.empty?
+    # Start worker job asynchronously
+    NotifyJob.new.async.perform(queue.as_json, params) if queue.any?
   end
 
   def self.update_or_create(user, params)

@@ -52,7 +52,7 @@ class ReSlot < BaseSlot
   end
 
   def delete
-    remove_activity('unslot')
+    remove_all_activities(target: self) # 'unslot'
     remove_all_followers
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
@@ -68,7 +68,7 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor: nil, slotter: nil)
+  def self.create_from_slot(predecessor:, slotter:)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
     # TODO: use this when having reslot visibilities
     # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
@@ -112,11 +112,8 @@ class ReSlot < BaseSlot
     slotter
   end
 
+  # TODO: maybe the action can always be passed like: create_activity(action), this will also improve code readings
   private def activity_action
     'reslot'
-  end
-
-  private def activity_deletion
-    'unslot'
   end
 end

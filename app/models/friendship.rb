@@ -34,7 +34,7 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    create_activity
+    update_activity
   end
 
   def established?
@@ -47,6 +47,7 @@ class Friendship < ActiveRecord::Base
   # - refuse open friend request (from someone else to me)
   def reject
     if established?
+      remove_activity('unfriend')
       user.unfollow(friend)
       friend.unfollow(user)
     end
@@ -64,6 +65,7 @@ class Friendship < ActiveRecord::Base
   # canceled friendships would be re-enabled when the user
   # reactivates his profile.
   def inactivate
+    remove_activity('unfriend')
     user.unfollow(friend)
     friend.unfollow(user)
     friend.touch
@@ -120,16 +122,19 @@ class Friendship < ActiveRecord::Base
     friend
   end
 
-  # The user who made the update
   private def activity_actor
     user
   end
 
-  private def activity_action
-    established? ? 'friendship' : (offered? ? 'request' : 't')
+  private def activity_foreign
+    friend
   end
 
-  private def activity_deletion
-    'unfriend'
+  private def activity_action
+    established? ? 'friendship' : (offered? ? 'request' : '')
+  end
+
+  private def activity_notify
+    []
   end
 end

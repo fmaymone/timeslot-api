@@ -195,9 +195,12 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
+    # NOTE: User do not include Activity, but we can call feed methods directly:
+    Feed.remove_user_from_feed(user: self, notify: self.followers)
     # TODO: restore followers/followings when user re-activates
     remove_all_followers
     unfollow_all
+
     slot_settings.each(&:delete)
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
@@ -303,13 +306,10 @@ class User < ActiveRecord::Base
       # nein
       requested_friends << User.find(user_id)
       save
+      fs = friendship(user_id)
+      # A new friendship object was created -> send/update activity
+      fs.update_activity
     end
-    fs ||= friendship(user_id)
-    if fs.established?
-      fs.user.follow(fs.friend)
-      fs.friend.follow(fs.user)
-    end
-    fs.create_activity
     fs
   end
 
