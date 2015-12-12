@@ -57,6 +57,24 @@ RSpec.describe ReSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "unprivate scope" do
+    let(:user) { create(:user) }
+    let!(:privat_slot) { create(:re_slot_private, slotter: user) }
+    let!(:friend_slot) { create(:re_slot_friends, slotter: user) }
+    let!(:foaf_slot) { create(:re_slot_foaf, slotter: user) }
+    # let!(:public_slot) { create(:re_slot_public, owner: user) }
+    let!(:public_slot) { create(:re_slot, slotter: user) }
+
+    it "returns all non-private slots" do
+      result = user.re_slots.unprivate.ids
+
+      expect(result).to include public_slot.id
+      expect(result).to include friend_slot.id
+      expect(result).to include foaf_slot.id
+      expect(result).not_to include privat_slot.id
+    end
+  end
+
   describe "create_from_slot" do
     let(:pred) { create(:std_slot_public) }
     let(:user) { create(:user) }

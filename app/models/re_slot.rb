@@ -14,6 +14,8 @@ class ReSlot < BaseSlot
                     'public' => :ReSlotPublic
                   }
 
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:ReSlotPrivate]) }
+
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
   belongs_to :parent, class_name: BaseSlot, counter_cache: true
