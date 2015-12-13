@@ -52,7 +52,39 @@ RSpec.describe GlobalSlot, type: :model do
         }.to change(GlobalSlot, :count).by 1
         expect(GlobalSlot.last.creator).to eq user
       end
+    end
 
+    context "additional information" do
+      let(:url) { 'http://irgendwas.com' }
+      let(:image) {
+        {
+          public_id: "http://assets.dfb.de/public/uploads/c46d542ef57d003",
+          media_type: 'image'
+        }}
+      let(:description) {{ title: 'Description',
+                           content: "Champions League, 2015/2016, Gruppe A" }}
+
+      it "creates a new GlobalSlot with url and a note with the description" do
+        global_slot = described_class.create_slot(meta: meta_params,
+                                                  muid: muid,
+                                                  url: url,
+                                                  media: [image],
+                                                  notes: [description],
+                                                  user: user)
+        expect(GlobalSlot.count).to eq 1
+        expect(global_slot.url).to eq url
+        # description as note
+        expect(global_slot.notes).not_to be_empty
+        note = global_slot.notes.first
+        expect(note.title).to eq 'Description'
+        expect(note.content).to eq description[:content]
+        expect(note.creator).to eq user
+        # image
+        expect(global_slot.images).not_to be_empty
+        image = global_slot.images.first
+        expect(image.public_id).to eq image[:public_id]
+        expect(image.creator).to eq user
+      end
     end
   end
 end
