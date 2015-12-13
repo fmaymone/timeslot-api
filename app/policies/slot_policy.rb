@@ -101,6 +101,7 @@ class SlotPolicy < ApplicationPolicy
   private def show_to_current_user?
     # current user must exist
     return false unless current_user?
+    return true if slot.class == GlobalSlot
     return show_std_slot? if slot.class < StdSlot
     return show_re_slot? if slot.try(:slotter)
     # if slot.class < ReSlot or slot.class == ReSlot
