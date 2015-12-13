@@ -26,12 +26,13 @@ resource "GlobalSlots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(json).to have_key("results")
+        expect(json).to have_key("result")
 
-        results = json['results']
-        expect(results.length).to eq limit
+        result = json['result']
+        expect(result.length).to eq limit
 
-        first = results.first
+        first = result.first
+        expect(first).to have_key("muid")
         expect(first).to have_key("title")
         expect(first).to have_key("startDate")
         expect(first).to have_key("endDate")
@@ -73,12 +74,13 @@ resource "GlobalSlots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(json).to have_key("results")
+        expect(json).to have_key("result")
 
-        results = json['results']
-        expect(results.length).to eq limit
+        result = json['result']
+        expect(result.length).to eq limit
 
-        first = results.first
+        first = result.first
+        expect(first).to have_key("muid")
         expect(first).to have_key("title")
         expect(first).to have_key("startDate")
         expect(first).to have_key("endDate")

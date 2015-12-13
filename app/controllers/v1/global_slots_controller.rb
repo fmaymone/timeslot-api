@@ -6,6 +6,10 @@ module V1
     # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
     def search
       slots = GlobalSlotConsumer.new.search(category_param, search_params)
+    rescue ParameterInvalid => e
+      # TODO: refactor this. need that shit so I can return a 422,
+      # otherwise the next rescue block is used.
+      raise e
     rescue => e
       Airbrake.notify(e)
       return render json: { error: "GlobalSlot Search Service Error: #{e}" },
@@ -31,7 +35,7 @@ module V1
                         return render json: { error: "DATA MALL Fetch Error: #{e}" },
                                       status: :service_unavailable
                       else
-                        #   create metaslot and globalslot
+                        # create metaslot and globalslot
                         GlobalSlot.create_slot(globalslot_attributes)
                       end
       # create reslot for current user
