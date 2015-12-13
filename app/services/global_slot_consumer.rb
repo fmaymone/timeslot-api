@@ -5,8 +5,7 @@ class GlobalSlotConsumer
 
   # gets a global slot from the TS_DATA_MALL based on a muid
   def fetch(uuid)
-    uri = URI.parse("http://37.187.174.91:50100/api/v0/slots/")
-    # uri = URI.parse(ENV['TS_DATA_MALL_URL'])
+    uri = URI.parse(ENV['TS_DATA_MALL_URL'])
     uri.path += uuid
 
     user = ENV['TS_DATA_MALL_USERNAME']
@@ -24,9 +23,7 @@ class GlobalSlotConsumer
 
   def search(category, query)
     # TODO: data team should remove redundant 'search_'
-    # uri = URI.parse("http://search.timeslot.rocks:56000/api/search_")
-    uri = URI.parse("http://es.timeslot.rocks:56000/api/search_")
-    # uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
+    uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
     uri.path += category
     uri.query = URI.encode_www_form(query)
 

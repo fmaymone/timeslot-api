@@ -67,9 +67,18 @@ ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
 The Data Team provides an elasticSearch - Slot Search Interface for it's crawler data.
 
 ```bash
-ENV['TS_SEARCH_SERVICE_NAME'] # username
-ENV['TS_SEARCH_SERVICE_PASSWORD'] # password
-ENV['TS_SEARCH_SERVICE_URL'] # elastic search url
+ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL']) # elastic search url
+ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME'] # username
+ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
+
+```
+## Global Slot Retrieval Service
+
+Allows to get a Global Slot by its **muid**.
+```
+ENV['TS_DATA_MALL_URL'])
+ENV['TS_DATA_MALL_USERNAME'] || "tsgatekeeper"
+ENV['TS_DATA_MALL_PASSWORD'] || "***REMOVED***"
 ```
 
 ## Location DB
