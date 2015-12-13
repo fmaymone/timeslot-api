@@ -53,9 +53,9 @@ class GlobalSlotConsumer
       meta: {
         title: result['title'],
         start_date: result['start_timestamp'],
-        end_date: result['stop_timestamp'],
-        creator: User.find_by(role: 2, username: result['domain'])
+        end_date: result['stop_timestamp']
       },
+      user: User.find_by(role: 2, username: result['domain']),
 
       # location: result['location'],
       # loc_name: result['address'].split(',').first
@@ -64,13 +64,22 @@ class GlobalSlotConsumer
       # latitude: result['latitude'],
       # longitude: result['longitude']
 
-      image: result['images'],
-      cuid: result['cuid'],
-      duid: result['duid'],
+      muid: result['muid'] || result['duid'] || result['cuid'],
       url: result['url'],
       tags: result['tags'],
-      description: result['description'],
-      crawler_id: result['id']
+      media: [
+        {
+          public_id: result['images'],
+          position: 1,
+          media_type: "image"
+        }
+      ],
+      notes: [
+        {
+          title: 'description',
+          content: result['description']
+        }
+      ]
     }
   end
 end

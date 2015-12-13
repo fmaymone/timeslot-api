@@ -5,22 +5,21 @@ RSpec.describe GlobalSlot, type: :model do
 
   subject { global_slot }
 
+  it { is_expected.to respond_to(:slot_type) }
   it { is_expected.to respond_to(:visibility) }
-  it { is_expected.to respond_to(:notes) }
-  it { is_expected.to respond_to(:created_at) }
-  it { is_expected.to respond_to(:updated_at) }
-  it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:open_end) }
-  it { is_expected.to respond_to(:meta_slot) }
-  it { is_expected.to respond_to(:slot_type) }
-  it { is_expected.to respond_to(:cuid) }
-  it { is_expected.to respond_to(:duid) }
+  it { is_expected.to respond_to(:muid) }
   it { is_expected.to respond_to(:url) }
-  it { is_expected.to respond_to(:crawler_id) }
+  it { is_expected.to respond_to(:notes) }
+  it { is_expected.to respond_to(:images) }
+  it { is_expected.to respond_to(:created_at) }
+  it { is_expected.to respond_to(:updated_at) }
+  it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:meta_slot) }
+  it { is_expected.to have_many(:media_items) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -41,15 +40,19 @@ RSpec.describe GlobalSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "create_slot" do
-    let!(:meta_slot) { create(:meta_slot) }
-    let(:user) { create(:user) }
+  describe "create_slot", :seed do
+    let(:user) { User.find_by(role: 2, username: 'dfb.de') }
+    let(:meta_params) { attributes_for(:meta_slot) }
+    let(:muid) { "e8fa3c76-75ac-852b-c81d-9c02b5f27c05" }
 
-    it "creates a new GlobalSlot" do
-      skip 'no global slot create method yet'
-      expect {
-        described_class.create_slot(cuid: cuid, creator: user)
-      }.to change(GlobalSlot, :count).by 1
+    context "mandatory fields" do
+      it "creates a new GlobalSlot" do
+        expect {
+          described_class.create_slot(meta: meta_params, muid: muid, user: user)
+        }.to change(GlobalSlot, :count).by 1
+        expect(GlobalSlot.last.creator).to eq user
+      end
+
     end
   end
 end
