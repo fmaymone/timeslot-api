@@ -64,9 +64,10 @@ class GlobalSlotConsumer
       # latitude: result['latitude'],
       # longitude: result['longitude']
 
-      muid: result['muid'] || result['duid'] || result['cuid'],
+      # crawler is sending 'none' for 'muid'...
+      muid: (result['muid'].nil? || result['muid'] == 'None') ? (result['duid'] || result['cuid']) : result['muid'],
       url: result['url'],
-      tags: result['tags'],
+      # tags: result['tags'], # currently unused
       media: [
         {
           public_id: result['images'],
