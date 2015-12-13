@@ -43,6 +43,10 @@ class ReSlot < BaseSlot
     source.reslots
   end
 
+  def muid
+    source.try(:muid)
+  end
+
   def related_users
     [slotter]
   end

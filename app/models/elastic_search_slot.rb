@@ -1,7 +1,7 @@
 # maps the elastic search result to the backend slot attributes
 class ElasticSearchSlot
   attr_reader :creator
-  attr_accessor :uuid,
+  attr_accessor :muid,
                 :start_date,
                 :end_date,
                 :title,
@@ -17,7 +17,7 @@ class ElasticSearchSlot
                 :url
 
   def initialize(crawler_slot)
-    @uuid = crawler_slot['muid'] || crawler_slot['duid'] || crawler_slot['cuid']
+    @muid = crawler_slot['muid'] || crawler_slot['duid'] || crawler_slot['cuid']
     @title = crawler_slot['title']
     @start_date = crawler_slot['start_timestamp']
     @end_date = crawler_slot['stop_timestamp']

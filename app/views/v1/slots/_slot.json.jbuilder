@@ -55,6 +55,9 @@ else
   end
 end
 
+# if we have a crawler slot/reslot, return the muid
+json.muid slot.muid if slot.try(:muid)
+
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count
 

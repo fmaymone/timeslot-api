@@ -1,5 +1,5 @@
 json.extract!(slot,
-              :uuid,
+              :muid,
               :title,
               :start_date,
               :end_date
