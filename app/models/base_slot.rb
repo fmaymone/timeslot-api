@@ -143,9 +143,7 @@ class BaseSlot < ActiveRecord::Base
         notes.find(note[:id]).update(note.permit(:title, :content)
                          .merge!(creator_id: creator_id))
       else
-        notes.create(note.permit(:title, :content, :local_id)
-                         .merge!(creator_id: creator_id))
-                         .create_activity
+        notes.create(note.merge!(creator_id: creator_id)).create_activity
       end
     end
   end
