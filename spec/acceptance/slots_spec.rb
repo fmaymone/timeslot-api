@@ -108,18 +108,18 @@ resource "Slots" do
 
       let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
       let(:slot1) {
-        create(:std_slot_private, :with_media, owner: current_user) }
+        create(:std_slot_private, owner: current_user) }
       let(:slot2) {
-        create(:std_slot_private, :with_media, meta_slot: meta_slot,
+        create(:std_slot_private, meta_slot: meta_slot,
                owner: current_user) }
-      let!(:slot_setting) { create(:slot_setting,
-                                   user: current_user,
-                                   meta_slot: slot2.meta_slot,
-                                   alerts: '1110001100') }
+      let!(:slot_setting) { build_stubbed(:slot_setting,
+                                          user: current_user,
+                                          meta_slot: slot2.meta_slot,
+                                          alerts: '1110001100') }
       let!(:medias) {
-        create_list :slot_image, 3, mediable: slot2
-        create_list :audio, 2, mediable: slot2
-        create_list :video, 2, mediable: slot2
+        build_stubbed_list :slot_image, 3, mediable: slot2
+        build_stubbed_list :audio, 2, mediable: slot2
+        build_stubbed_list :video, 2, mediable: slot2
       }
       let(:ids) { [slot1.id, slot2.id] }
 
@@ -208,9 +208,9 @@ resource "Slots" do
                                    meta_slot: slot.meta_slot,
                                    alerts: '1110001100') }
       let!(:medias) {
-        create_list :slot_image, 3, mediable: slot
-        create_list :audio, 2, mediable: slot
-        create_list :video, 2, mediable: slot
+        build_stubbed_list :slot_image, 3, mediable: slot
+        build_stubbed_list :audio, 2, mediable: slot
+        build_stubbed_list :video, 2, mediable: slot
       }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
@@ -344,8 +344,8 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: parent
-        create_list :audio, 2, mediable: parent
-        create_list :video, 2, mediable: parent
+        build_stubbed_list :audio, 2, mediable: parent
+        build_stubbed_list :video, 2, mediable: parent
       }
       let(:id) { reslot.id }
       let(:deleted_at) { reslot.deleted_at? ? reslot.deleted_at.as_json : nil }
@@ -1052,7 +1052,7 @@ resource "Slots" do
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:std_slot) {
-      create(:std_slot_private, :with_media, owner: current_user)
+      create(:std_slot_private, owner: current_user)
     }
     describe "Delete Standard Slot" do
       include_context "default slot response fields"
@@ -1497,7 +1497,7 @@ resource "Slots" do
 
     include_context "group slot response fields"
 
-    let(:slot) { create(:std_slot_private, :with_media, owner: current_user) }
+    let(:slot) { create(:std_slot_private, owner: current_user) }
 
     describe "Move Slot from private to friends" do
       let(:id) { slot.id }
