@@ -1,100 +1,10 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
-
-  shared_context "default slot response fields" do
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag"
-    response_field :createdAt, "Creation of slot"
-    response_field :updatedAt, "Last update of slot"
-    response_field :deletedAt, "Delete date of slot or nil"
-    response_field :location, "Location data for the slot"
-    response_field :creator, "User who created the slot"
-    response_field :settings,
-                   "Only included if it's a slot of the current User " \
-                   "(created-/friend-/re-/groupslot),\n\n" \
-                   "contains User specific settings for this slot (alerts)"
-    response_field :visibility,
-                   "Visibiltiy of the slot (private/friend/foaf/public)"
-    response_field :notes, "Notes on the slot"
-    response_field :likes, "Likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos recordings for the slot"
-  end
-
-  shared_context "stdslot response fields" do
-    include_context "default slot response fields"
-    response_field :reslotsCounter, "Number of reslots for this slot"
-  end
-
-  shared_context "reslot response fields" do
-    include_context "stdslot response fields"
-    response_field :slotter, "contains ID of the User who did reslot"
-    response_field :parent, "contains ID of the original slot that was reslottet"
-  end
-
-  shared_context "group slot response fields" do
-    include_context "default slot response fields"
-    response_field :groupId, "ID of the group the slot belongs to"
-  end
-
-  shared_context "default slot parameter" do
-    parameter :title, "Title of slot (max. 60 characters)",
-              required: true
-    parameter :startDate,
-              "Startdate and Time of the Slot",
-              required: true
-    parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration).",
-              required: true
-    #parameter :openEnd,
-    #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
-    #          required: true
-    parameter :location, "Location associated with this slot (see example)"
-    parameter :media, "Media items (image/audio/video) of to the Slot " \
-                      "(see example)"
-    parameter :notes, "Notes for to the Slot (see example)"
-    parameter :settings, "User specific settings for the slot (alerts)"
-    parameter :alerts, "Alerts for the Slot", scope: :settings
-  end
-
-  shared_context "ios location params" do
-    parameter :name, "Name of the location, eg. Timeslot Inc. (255 chars)",
-              scope: :location
-    parameter :thoroughfare, "Street address, eg. Dolziger Str. 9 (255 ch.)",
-              scope: :location
-    parameter :subThoroughfare, "house number, eg. 9 (255 chars)",
-              scope: :location
-    parameter :locality, "city, e.g. Berlin (255 chars)",
-              scope: :location
-    parameter :subLocality, "neighborhood, common name, eg. Mitte (255 ch.)",
-              scope: :location
-    parameter :postalCode, "zip code, eg. 94114 (32 chars)",
-              scope: :location
-    parameter :country, "country, eg. Germany (255 chars)",
-              scope: :location
-    parameter :isoCountryCode, "Country Code, eg. US (8 chars)",
-              scope: :location
-    parameter :inLandWater, "eg. Lake Tahoe", scope: :location
-    parameter :ocean, "eg. Pacific Ocean", scope: :location
-    parameter :areasOfInterest, "eg. Volkspark Friedrichshain",
-              scope: :location
-    parameter :latitude, "Latitude", scope: :location
-    parameter :longitude, "Longitude", scope: :location
-    parameter :privateLocation,
-              "private location for this user (true/false) [not yet " \
-              "sure what it will mean technically] -> default: false",
-              scope: :location
-  end
 
   post "/v1/slots" do
     header "Content-Type", "application/json"

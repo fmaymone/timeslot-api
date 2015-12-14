@@ -1,4 +1,5 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Feeds", :activity, :async do
   let(:json) { JSON.parse(response_body) }
@@ -6,41 +7,6 @@ resource "Feeds", :activity, :async do
   let(:owner) { create(:user) }
   let(:actor) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
-
-  shared_context "default slot response fields" do
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag"
-    response_field :createdAt, "Creation of slot"
-    response_field :updatedAt, "Last update of slot"
-    response_field :deletedAt, "Delete date of slot or nil"
-    response_field :location, "Location data for the slot"
-    response_field :creator, "User who created the slot"
-    response_field :visibility, "Visibiltiy of the slot"
-    response_field :notes, "Notes on the slot"
-    response_field :likes, "Likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :reslotsCounter, "Number of reslots for this slot"
-    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos recordings for the slot"
-  end
-
-  shared_context "default user response fields" do
-    response_field :id, "ID of the user"
-    response_field :username, "Username of the user"
-    response_field :image, "URL of the user image"
-    response_field :location, "Home location of user"
-    response_field :createdAt, "Creation of user"
-    response_field :updatedAt, "Latest update of user in db"
-    response_field :deletedAt, "Deletion of user"
-    response_field :slotCount, "Number of slots for this user"
-    response_field :reslotCount, "Number of reslots for this user"
-    response_field :friendsCount, "Number of friends for this user"
-  end
 
   get "/v1/feed/user", :redis do
     header "Accept", "application/json"
