@@ -2,10 +2,34 @@ require 'documentation_helper'
 
 resource "GlobalSlots" do
   let(:json) { JSON.parse(response_body) }
+  let(:current_user) { create(:user, :with_email, :with_password, :with_device) }
+  let(:auth_header) { "Token token=#{current_user.auth_token}" }
+
+  post "/v1/globalslots/reslot", :vcr, :seed do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :predecessor, "'muid' of the global slot", required: true
+
+    let(:predecessor) { '238a69a4-271c-f5cb-e60e-48952d805859' }
+
+    example "Reslot global slot", document: :v1 do
+      explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \
+                  "Backend retrieves slot data from data team.\n\n" \
+                  "at the moment returns 503 if global slot can not be found."
+      do_request
+
+      expect(response_status).to eq 201
+      expect(json).to have_key("muid")
+      expect(json['muid']).to eq predecessor
+      expect(json).to have_key("slotter")
+      expect(json['slotter']['id']).to eq current_user.id
+      expect(json['slotter']).to have_key("reslotCount")
+      expect(json['slotter']['reslotCount']).to eq 1
+    end
+  end
 
   get "/v1/globalslots/search", :vcr, :seed do
-    header "Accept", "application/json"
-
     parameter :category,
               "Basic slot category to search in. Valid categories: " \
               "[cinema, football] ", required: true
