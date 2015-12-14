@@ -37,8 +37,13 @@ class Friendship < ActiveRecord::Base
     update_activity
     forward_activity(
         feed_fwd: {
-            Notification: activity_actor.id.to_s
-        }
+            Notification: [
+                activity_target.id.to_s
+            ]
+        },
+        push_fwd: [
+            activity_actor.id.to_s
+        ]
     )
   end
 
