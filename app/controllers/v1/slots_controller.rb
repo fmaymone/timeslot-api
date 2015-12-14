@@ -364,6 +364,7 @@ module V1
                            :subAdministrativeArea, :postalCode, :country,
                            :isoCountryCode, :inLandWater, :ocean, :latitude,
                            :longitude, :privateLocation, :areasOfInterest])
+      # sets iosLocation to the content of params['location']
       p[:iosLocation] = p.delete(:location) if params[:location].present?
 
       if params.key? :endDate

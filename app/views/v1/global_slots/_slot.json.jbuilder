@@ -2,7 +2,12 @@ json.extract!(slot,
               :muid,
               :title,
               :start_date,
-              :end_date
+              :end_date,
+              :image,
+              :url,
+              :description,
+              # in the future, GlobalSlots can have multiple sources
+              :sources
              )
 
 json.location do
@@ -12,24 +17,4 @@ json.location do
   json.country slot.country
   json.latitude slot.latitude
   json.longitude slot.longitude
-end
-
-json.creator do
-  json.partial! 'v1/users/user', user: slot.creator
-end
-
-json.notes [
-  {
-    "title" => "description",
-    "content" => slot.description
-  },
-  {
-    "title" => "url",
-    "content" => slot.url
-  }
-]
-
-json.media do
-  json.public_id slot.image
-  json.mediaType "image"
 end
