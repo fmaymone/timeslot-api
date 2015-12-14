@@ -18,6 +18,7 @@
 
 ## GlobalSlots
 
+* [Reslot global slot](globalslots/reslot_global_slot.markdown)
 * [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
 * [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
