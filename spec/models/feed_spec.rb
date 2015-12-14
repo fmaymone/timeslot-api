@@ -671,8 +671,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User delete the account" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -710,7 +710,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +2-1 public activities (from user)
-        expect(news_feed_follower).to eq(news_feed_follower2)
+        expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -729,8 +729,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User delete a slot" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -767,19 +767,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +2-2 public activities + 1 deletion activity
-        expect(news_feed_follower.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower.first['action']).to eq('delete')
-        expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(news_feed_follower.count).to be(0) # +2-2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(1) # +2-2 public activities + 1 deletion activity
-        expect(news_feed_follower2.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower2.first['action']).to eq('delete')
-        expect(news_feed_follower2.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower2.first['data']['actor']['id']).to be(user.id)
-
+        expect(news_feed_follower2.count).to be(0) # +2-2 public activities
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
@@ -788,10 +779,19 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.count).to be(0) # +4-4 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed_follower.count).to be(1) # + 1 deletion activity
+        expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower.first['action']).to eq('delete')
+        expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # has no own content
+        expect(notification_feed_follower2.count).to be(1) # + 1 deletion activity
+        expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower2.first['action']).to eq('delete')
+        expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
+
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end
@@ -805,8 +805,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User change visibility of a slot" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -820,7 +820,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         # Change Visibility
         slot.update_from_params(visibility: 'private')
-        slot.reload
       end
 
       it "User Feed (me activities)" do
@@ -844,19 +843,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +2-2 public activities + 1 unshare activity
-        expect(news_feed_follower.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower.first['action']).to eq('private')
-        expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(news_feed_follower.count).to be(0) # +2-2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(1) # +2-2 public activities + 1 unshare activity
-        expect(news_feed_follower2.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower2.first['action']).to eq('private')
-        expect(news_feed_follower2.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower2.first['data']['actor']['id']).to be(user.id)
-
+        expect(news_feed_follower2.count).to be(0) # +2-2 public activities
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
@@ -865,10 +855,19 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.count).to be(0) # +4-4 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed_follower.count).to be(1) # + 1 unshare activity
+        expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower.first['action']).to eq('private')
+        expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(0) # has no own content
+        expect(notification_feed_follower2.count).to be(1) # + 1 unshare activity
+        expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower2.first['action']).to eq('private')
+        expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
+
         expect(notification_feed_follower).to eq(notification_feed_follower2)
       end
     end
@@ -886,8 +885,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User change visibility of a slot" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -924,19 +923,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +2-2 public activities + 1 unshare activity
-        expect(news_feed_follower.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower.first['action']).to eq('private')
-        expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(news_feed_follower.count).to be(0) # +2-2 public activities
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
-        expect(news_feed_follower2.count).to be(1) # +2-2 public activities + 1 unshare activity
-        expect(news_feed_follower2.first['target']).to eq(slot.id.to_s)
-        expect(news_feed_follower2.first['action']).to eq('private')
-        expect(news_feed_follower2.first['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower2.first['data']['actor']['id']).to be(user.id)
-
+        expect(news_feed_follower2.count).to be(0) # +2-2 public activities
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
@@ -945,14 +935,14 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.count).to be(0) # +6-6 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(1) # has no own content
+        expect(notification_feed_follower.count).to be(1) # + 1 unshare activity
         expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower.first['action']).to eq('private')
         expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
         expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
-        expect(notification_feed_follower2.count).to be(1) # has no own content
+        expect(notification_feed_follower2.count).to be(1) # + 1 unshare activity
         expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower2.first['action']).to eq('private')
         expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
@@ -971,8 +961,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User delete an activity" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -1037,8 +1027,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User delete an activity" do
       before(:each) do
         # Create relationships
-        follower.follow(user)
-        follower2.follow(user)
+        follower.follow(slot)
+        follower2.follow(slot)
 
         # Perform activities
         slot.create_like(user)
@@ -1046,9 +1036,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         slot.create_like(follower2)
 
         # Remove Activities
-        slot.destroy_like(user)
-        slot.destroy_like(follower)
-        slot.destroy_like(follower2)
+        #slot.destroy_like(user)
+        #slot.destroy_like(follower)
+        #slot.destroy_like(follower2)
 
         # Re-Perform activities
         slot.create_like(user)
@@ -1077,7 +1067,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +2-1 public activities
-        expect(news_feed_follower).to eq(news_feed_follower2)
+        expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -1183,7 +1173,12 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.first['data']['actor']['friendshipState']).to eq('friend')
 
         notification_feed_friend = Feed.notification_feed(friend.id).as_json
-        expect(notification_feed_friend.count).to be(0) # has no related activities
+        expect(notification_feed_friend.count).to be(1) # has no related activities
+        expect(notification_feed_friend.first['type']).to eq('User')
+        expect(notification_feed_friend.first['data']['target']['id']).to be(user.id)
+        expect(notification_feed_friend.first['data']['target']['friendshipState']).to be(nil)
+        expect(notification_feed_friend.first['data']['actor']['id']).to be(friend.id)
+        expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('friend')
       end
     end
   end

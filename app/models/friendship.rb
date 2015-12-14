@@ -38,7 +38,7 @@ class Friendship < ActiveRecord::Base
     forward_activity(
         feed_fwd: {
             Notification: [
-                activity_target.id.to_s
+                activity_actor.id.to_s
             ]
         },
         push_fwd: [
@@ -60,6 +60,7 @@ class Friendship < ActiveRecord::Base
       remove_activity('unfriend')
       user.unfollow(friend)
       friend.unfollow(user)
+      remove_activity
     end
     update!(state: REJECTED) unless deleted_at?
   end

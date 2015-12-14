@@ -199,6 +199,8 @@ class BaseSlot < ActiveRecord::Base
     notes.each(&:delete)
     media_items.each(&:delete)
 
+    remove_all_activities(target: self)
+
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
@@ -207,7 +209,6 @@ class BaseSlot < ActiveRecord::Base
     # of the parent/predecessor slot was removed
     reslots.each(&:delete) if self.try(:reslots)
 
-    remove_all_activities(target: self)
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete

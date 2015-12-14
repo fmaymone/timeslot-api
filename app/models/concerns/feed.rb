@@ -92,12 +92,15 @@ module Feed
       ## -- Collect Activity Distribution -- ##
 
       feed_register = { User: [], News: [], Notification: [] }
-      # Store activity to own feed (me activities)
-      feed_register[:User] << params[:actor]
-      # Send to other users through social relations ("Read-Opt" Strategy)
-      feed_register[:News] += params[:notify]
-      # Store activity to own notification feed (related to own content, filter out own activities)
-      feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
+      # Skip default distribution if fowardings was passed
+      unless params[:forward].any?
+        # Store activity to own feed (me activities)
+        feed_register[:User] << params[:actor]
+        # Send to other users through social relations ("Read-Opt" Strategy)
+        feed_register[:News] += params[:notify]
+        # Store activity to own notification feed (related to own content, filter out own activities)
+        feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
+      end
       # Add all custom forwardings
       params[:forward].each{ |index, users| feed_register[index] += users }
 

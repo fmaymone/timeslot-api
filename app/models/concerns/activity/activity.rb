@@ -156,7 +156,6 @@ module Activity
           action,
           feed_fwd: {
               User: [ activity_actor.id.to_s ],
-              #News: activity_target.followers,
               Notification: activity_target.followers
           },
           push_fwd: activity_target.followers
