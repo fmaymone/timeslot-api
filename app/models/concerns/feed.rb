@@ -106,7 +106,7 @@ module Feed
       distribute(target_key, feed_register)
     end
 
-    # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
+      # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts calling its corresponding activity deletion.
     def remove_item_from_feed(object:, model:, target:, feed:, notify:)
       # Translate class name to enumeration

@@ -33,6 +33,14 @@ module Activity
     return self
   end
 
+  def update_shared_object(obj)
+    # TODO:
+  rescue => error
+    error_handler(error, "failed: update shared object as worker job")
+  ensure
+    return self
+  end
+
   def remove_activity(action = 'delete')
     if activity_is_valid?
       remove_activity_feed(action)
@@ -57,8 +65,8 @@ module Activity
 
   private def create_activity_feed(action, notify: nil, forward: [], time: nil)
     # FIX: Reload last modified data (strict mode throws exceptions)
-    activity_target.save!
-    activity_actor.save!
+    activity_target.save! if activity_target.changed?
+    activity_actor.save! if activity_actor.changed?
     # Initialize job worker
     FeedJob.new.async.perform({
       type: activity_type,
@@ -216,24 +224,26 @@ module Activity
       user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
-      if visibility == 'public'
-        # 5. Foreign related context:
-        user_ids += activity_foreign.followers if activity_foreign
-        # 3. Friend related context:
-        %W(#{activity_target}
-           #{activity_actor}
-           #{activity_foreign}).each do |context|
-            # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
-            # NOTE: we can loop through followers here, but this has an additional fetching users from DB
-            # This can also be solved by adding friends of friends as a relation directly into the follower model
-            unless context.try(:friends).nil?
-              context.friends.each do |friend|
-                # Here we can fetch followers, change this into friends if further chaining is required
-                user_ids += friend.followers #friend.friends.collect(&:id)
-              end
-            end
-        end
-      end
+      # if visibility == 'public'
+      #   # 5. Foreign related context:
+      #   user_ids += activity_foreign.followers if activity_foreign
+      #   # 3. Friend related context:
+      #   %W(#{activity_target}
+      #      #{activity_actor}
+      #      #{activity_foreign}).each do |context|
+      #       # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
+      #       # NOTE: we can loop through followers here, but this has an additional fetching users from DB
+      #       # This can also be solved by adding friends of friends as a relation directly into the follower model
+      #       unless context.try(:friends).nil?
+      #         context.friends.each do |friend|
+      #           # Here we can fetch followers, change this into friends if further chaining is required
+      #           user_ids += friend.followers #friend.friends.collect(&:id)
+      #         end
+      #       end
+      #   end
+      # end
+
+      user_ids
     end
 
     # Temporary fallback to simulate a "public activity" feed

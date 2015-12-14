@@ -9,16 +9,16 @@ module SlotActivity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   private def activity_foreign
-    activity_target.creator.presence ||
-    activity_target.owner.presence
+    activity_target.try(:creator) ||
+    activity_target.try(:owner)
   end
 
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
-    visibility = activity_target.visibility.presence
+    visibility = activity_target.try(:visibility)
     friendship = activity_foreign.present? ? activity_actor.friendship(activity_foreign) : nil
-    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Date.parse(self.updated_at) >= Date.parse(friendship.updated_at))))
+    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at) >= Time.zone.parse(friendship.updated_at))))
   end
 
   private def push_notify
