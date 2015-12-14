@@ -136,6 +136,29 @@ module Activity
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
 
+    # if user
+    #   targets = user.std_slots +
+    #             user.re_slots +
+    #             user.group_slots +
+    #             user.friendships +
+    #             user.memberships
+    #
+    #   targets.map{ |target| [ target.id, target.class.name ]}
+    # else
+    #   targets = nil
+    # end
+
+    # TODO: make this also async
+    if target
+      Feed.remove_target_from_feed(target: target.id,
+                                   feed: target.class.name,
+                                   notify: notify.uniq)
+    end
+    if user
+      Feed.remove_user_from_feed(user: user,
+                                 notify: notify.uniq)
+    end
+
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
         object: self.id.to_s,
@@ -143,9 +166,9 @@ module Activity
         target: activity_target.id.to_s,
         feed: activity_target.class.name,
         notify: notify.uniq
-      },
-      target: target,
-      user: user
+      }
+      #target: target.as_json,
+      #user: targets
     )
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,

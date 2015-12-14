@@ -5,15 +5,15 @@ class RemoveJob
   def perform(params, target: nil, user: nil)
     begin
       Feed.remove_item_from_feed(params)
-      if target
-        Feed.remove_target_from_feed(target: target.id,
-                                     feed: params[:feed],
-                                     notify: params[:notify])
-      end
-      if user
-        Feed.remove_user_from_feed(user: user,
-                                   notify: params[:notify])
-      end
+      # if target
+      #   Feed.remove_target_from_feed(target: target[:id],
+      #                                feed: params[:feed],
+      #                                notify: params[:notify])
+      # end
+      # if user
+      #   Feed.remove_user_from_feed(user: user,
+      #                              notify: params[:notify])
+      # end
     rescue => e
       opts = {}
       opts[:parameters] = {
