@@ -35,6 +35,11 @@ class Friendship < ActiveRecord::Base
     user.follow(friend)
     friend.follow(user)
     update_activity
+    forward_activity(
+        feed_fwd: {
+            Notification: activity_actor.id.to_s
+        }
+    )
   end
 
   def established?

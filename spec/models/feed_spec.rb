@@ -70,7 +70,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower.first['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower.first['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(news_feed_follower.first['data']['target']['reslotsCounter']).to be(slot.reslots.count)
-        expect(news_feed_follower.first['data']['actor']['id']).to be(follower2.id)
+        expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +1 public activities
@@ -78,9 +78,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower2.first['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower2.first['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(news_feed_follower2.first['data']['target']['reslotsCounter']).to be(slot.reslots.count)
-        expect(news_feed_follower2.first['data']['actor']['id']).to be(follower.id)
+        expect(news_feed_follower2.first['data']['actor']['id']).to be(user.id)
 
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -710,7 +710,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +2-1 public activities (from user)
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -1077,7 +1077,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(1) # +2-1 public activities
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
