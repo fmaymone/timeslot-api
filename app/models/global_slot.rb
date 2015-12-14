@@ -18,4 +18,8 @@ class GlobalSlot < BaseSlot
 
     slot
   end
+
+  def self.visibility
+    'public'
+  end
 end

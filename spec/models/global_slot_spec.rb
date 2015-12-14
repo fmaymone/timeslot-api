@@ -40,6 +40,10 @@ RSpec.describe GlobalSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  it "has public visibility" do
+    expect(described_class.visibility).to eq 'public'
+  end
+
   describe "create_slot", :seed do
     let(:user) { User.find_by(role: 2, username: 'dfb.de') }
     let(:meta_params) { attributes_for(:meta_slot) }

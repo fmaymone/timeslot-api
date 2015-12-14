@@ -22,6 +22,8 @@ resource "GlobalSlots" do
       expect(response_status).to eq 201
       expect(json).to have_key("muid")
       expect(json['muid']).to eq predecessor
+      expect(json).to have_key("visibility")
+      expect(json['visibility']).to eq 'public'
       expect(json).to have_key("slotter")
       expect(json['slotter']['id']).to eq current_user.id
       expect(json['slotter']).to have_key("reslotCount")
