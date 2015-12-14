@@ -219,8 +219,8 @@ module Activity
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
       # 1. Target related context (by default):
       user_ids += activity_target.followers # if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
-      # 2. Actor related context:
-      user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
+      # 2. Actor related context (by default):
+      user_ids += activity_actor.followers #if visibility == 'foaf' || visibility == 'public' || visibility == 'friend'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
       # if visibility == 'public'
