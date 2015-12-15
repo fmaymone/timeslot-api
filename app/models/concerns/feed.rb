@@ -277,6 +277,9 @@ module Feed
         actor['friendshipState'] = 'pending passive'
       when 'friendship'
         actor['friendshipState'] = 'friend'
+        # FIX: delegate second user if friendship was accepted
+        activity['actors'] << activity['target'].to_i
+        actor_count += 1
       when 'unfriend'
         actor['friendshipState'] = 'stranger'
       end
