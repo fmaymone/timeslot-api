@@ -27,8 +27,8 @@ module V1
       global_slot = GlobalSlot.find_by(muid: muid)
 
       global_slot ||= begin
-                        # if no: fetch global slot from megastore by cuid
-                        globalslot_attributes = GlobalSlotConsumer.new.fetch(muid)
+                        # if no: fetch global slot from megastore by muid
+                        globalslot_attributes = GlobalSlotConsumer.new.slot(muid)
 
                       rescue => e
                         Airbrake.notify(e)

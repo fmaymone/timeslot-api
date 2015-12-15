@@ -4,7 +4,7 @@ class GlobalSlotConsumer
   # this guy interacts with the data team
 
   # gets a global slot from the TS_DATA_MALL based on a muid
-  def fetch(muid)
+  def slot(muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
     uri.path += "slots/#{muid}"
 
