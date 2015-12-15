@@ -5,7 +5,7 @@ module UserActivity
     'User'
   end
 
-  private def push_notify
+  private def activity_push
     [ activity_target.id ]
   end
 

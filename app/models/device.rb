@@ -17,7 +17,7 @@ class Device < ActiveRecord::Base
     # check if token already exist on an old device
     if (device = Device.find_by(token: token)) && device != self
       self.token = token
-      save
+      save!
       device.destroy
     end
     # sets new endpoint if not exist or update if new token was passed
@@ -74,9 +74,9 @@ class Device < ActiveRecord::Base
         badge: badge
     }
 
-    aps.merge!(slot_id: slot_id) if slot_id
-    aps.merge!(user_id: user_id) if user_id
-    aps.merge!(friend_id: friend_id) if friend_id
+    aps[:slot_id] = slot_id if slot_id
+    aps[:user_id] = user_id if user_id
+    aps[:friend_id] = friend_id if friend_id
 
     # defaults to true, if ENV variable not set, otherwise examine
     if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'

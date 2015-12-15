@@ -30,7 +30,7 @@ class Comment < ActiveRecord::Base
     'comment'
   end
 
-  private def push_notify
+  private def activity_push
     # Is the creator really what we want?
     # For std_slots we want the owner. For Groupslots?
     user_ids = super

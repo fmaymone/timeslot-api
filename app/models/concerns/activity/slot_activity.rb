@@ -21,8 +21,8 @@ module SlotActivity
     super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at) >= Time.zone.parse(friendship.updated_at))))
   end
 
-  private def push_notify
-    [activity_foreign.id]
+  private def activity_push
+    [ activity_foreign.id ]
   end
 
   # Add extra data to each activity. The data can be hide
@@ -38,10 +38,11 @@ module SlotActivity
 
   # The message is used as a notification message
   # for the users activity feed
-  private def activity_message_params
+  private def activity_message_params(action = nil)
     {
       USER: activity_actor.username,
-      TITLE: activity_target.meta_slot.title
+      TITLE: activity_target.meta_slot.title,
+      FIELD: action || activity_action
     }
   end
 end

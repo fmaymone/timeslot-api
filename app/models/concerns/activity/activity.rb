@@ -87,28 +87,29 @@ module Activity
   end
 
   private def create_activity_push(action, notify: nil, forward: nil)
-    notify = forward || notify || push_notify
+    notify = forward || notify || activity_push
+    action = action || activity_action
 
     # Remove creator from the push notification list
     notify.delete(activity_actor.id)
 
-    if push_notify.any?
+    if notify.any?
       # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
-      message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
+      message_content = I18n.t("#{activity_type.downcase}_#{action}_push_singular",
                                USER: activity_actor.username,
                                USER2: activity_target.try(:username),
                                TITLE: activity_target.try(:title))
 
       # Skip sending if no message exist
-      unless message_content.nil? || message_content.blank?
+      if message_content.present?
         params = { message: message_content }
         if activity_type == 'Slot'
-          params.merge!(slot_id: activity_target.id)
+          params[:slot_id] = activity_target.id
         elsif activity_type == 'User'
           if action == 'request'
-            params.merge!(user_id: activity_target.id)
+            params[:user_id] = activity_target.id
           elsif action == 'friendship'
-            params.merge!(friend_id: activity_target.id)
+            params[:friend_id] = activity_target.id
           end
         end
         Device.notify_all(notify, params)
@@ -242,8 +243,8 @@ module Activity
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
       # 1. Target related context (by default):
       user_ids += activity_target.followers # if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
-      # 2. Actor related context (by default):
-      user_ids += activity_actor.followers #if visibility == 'foaf' || visibility == 'public' || visibility == 'friend'
+      # 2. Actor related context:
+      user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
       # if visibility == 'public'
@@ -279,7 +280,7 @@ module Activity
   end
 
   # Returns an array of user which should be via push notification (AWS SNS)
-  private def push_notify
+  private def activity_push
     []
   end
 
