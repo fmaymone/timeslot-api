@@ -1,15 +1,13 @@
 require 'open-uri'
 
+# this guy interacts with the data team
 class GlobalSlotConsumer
-  # this guy interacts with the data team
+  include TSErrors
 
   # gets a global slot from the TS_DATA_MALL based on a muid
   def slot(muid)
     uri_path = "slots/#{muid}"
     raw_result = fetch(uri_path)
-  rescue => e
-    raise e
-  else
     convert_mall_slot(raw_result)
   end
 
@@ -17,14 +15,10 @@ class GlobalSlotConsumer
   def location(muid)
     uri_path = "locations/#{muid}"
     raw_result = fetch(uri_path)
-  rescue => e
-    raise e
-  else
     convert_mall_location(raw_result)
   end
 
   def search(category, query)
-    # TODO: data team should remove redundant 'search_'
     uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
     uri.path += category
     uri.query = URI.encode_www_form(query)
@@ -37,7 +31,7 @@ class GlobalSlotConsumer
     # http://sakurity.com/blog/2015/02/28/openuri.html
     raw_result = open(uri, auth).read
   rescue => e
-    raise e
+    raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
   else
     result = Oj.load(raw_result)
     crawler_slots = result['search-slots']
@@ -57,6 +51,8 @@ class GlobalSlotConsumer
     # Never pass unchecked URI to 'open'
     # http://sakurity.com/blog/2015/02/28/openuri.html
     open(uri, auth).read
+  rescue => e
+    raise DataTeamServiceError.new('DATA_MALL', e)
   end
 
   private def convert_mall_location(raw_result)
