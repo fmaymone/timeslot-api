@@ -2,6 +2,7 @@ module Feed
   class << self
 
     def user_feed(user, params = {})
+      result = []
       begin
         feed = "Feed:#{user}:User"
         cache = get_from_cache(feed, params)
@@ -12,9 +13,11 @@ module Feed
       rescue => error
         error_handler(error, feed, params)
       end
+      result
     end
 
     def notification_feed(user, params = {})
+      result = []
       begin
         feed = "Feed:#{user}:Notification"
         cache = get_from_cache(feed, params)
@@ -25,9 +28,11 @@ module Feed
       rescue => error
         error_handler(error, feed, params)
       end
+      result
     end
 
     def news_feed(user, params = {}, context = nil)
+      result = []
       begin
         feed = "Feed:#{user}:News"
         params.merge!(context: context) if context
@@ -39,6 +44,7 @@ module Feed
       rescue => error
         error_handler(error, feed, params)
       end
+      result
     end
 
     # Feed Dispatcher
@@ -56,7 +62,7 @@ module Feed
     # There are two different types of distributable lists:
     #
     # 1. Notify (includes all users which will be notified through social relations)
-    # 2. Forward (includes additional forwarding of special activities)
+    # 2. Forward (includes additional forwardings to specific user feeds)
 
     def dispatch(params)
 

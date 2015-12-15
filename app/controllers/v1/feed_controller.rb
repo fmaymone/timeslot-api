@@ -6,9 +6,10 @@ module V1
     # Think of it as your personal Facebook page.
     def user_feed
       authorize :feed
-      #return head 422 unless has_allowed_params?
-      render json: Feed::user_feed(current_user.id, page_params),
-             status: :ok
+      return head 422 unless has_allowed_params?
+      feed = Feed::user_feed(current_user.id, page_params)
+      return head 500 if feed == true
+      render json: feed, status: :ok
     end
 
     # GET /v1/feed/news
@@ -17,26 +18,28 @@ module V1
     # and an aggregated newsfeed (like facebook).
     def news_feed
       authorize :feed
-      #return head 422 unless has_allowed_params?
-      render json: Feed::news_feed(current_user.id, page_params),
-             status: :ok
+      return head 422 unless has_allowed_params?
+      feed = Feed::news_feed(current_user.id, page_params)
+      return head 500 if feed == true
+      render json: feed, status: :ok
     end
 
     # GET /v1/feed/notification
     # This feed can be used to build notification functionality.
     def notification_feed
       authorize :feed
-      #return head 422 unless has_allowed_params?
-      render json: Feed::notification_feed(current_user.id, page_params),
-             status: :ok
+      return head 422 unless has_allowed_params?
+      feed = Feed::notification_feed(current_user.id, page_params)
+      return head 500 if feed == true
+      render json: feed, status: :ok
     end
 
     private def page_params
-      params.permit(:limit, :offset, :cursor).symbolize_keys
+      params.permit(:limit, :offset, :cursor, :style).symbolize_keys
     end
 
-    # private def has_allowed_params?
-    #   params[:style].nil? || params[:style].in?(%w(flat aggregated))
-    # end
+    private def has_allowed_params?
+      params[:style].nil? || params[:style].in?(%w(raw flat aggregated))
+    end
   end
 end
