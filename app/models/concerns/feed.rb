@@ -113,7 +113,7 @@ module Feed
       # NOTE: This loop may can be skipped by using real redis pointers
       target_feed.each_with_index do |activity, index|
         # Enrich target activity (to access original activity data)
-        activity = enrich_feed_struct(unzip_json(activity))
+        activity = enrich_activity_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
           # Loop through all related user feeds through social relations
@@ -213,10 +213,10 @@ module Feed
       # Fetch target activity object from index
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index || feed_params[2].to_i)
       # Returns the enriched activity as a dictionary (json)
-      enrich_feed_struct(target_feed)
+      enrich_activity_struct(target_feed)
     end
 
-    private def enrich_feed_struct(feed)
+    private def enrich_activity_struct(feed)
       { type: feed[0],
         actor: feed[1],
         object: feed[2],
