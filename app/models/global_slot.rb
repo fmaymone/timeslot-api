@@ -19,6 +19,14 @@ class GlobalSlot < BaseSlot
     slot
   end
 
+  def self.find_or_create(muid)
+    global_slot = find_by(muid: muid)
+    return global_slot if global_slot
+
+    attributes = GlobalSlotConsumer.new.slot(muid)
+    create_slot(attributes)
+  end
+
   def self.visibility
     'public'
   end

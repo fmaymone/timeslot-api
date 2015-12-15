@@ -91,4 +91,54 @@ RSpec.describe GlobalSlot, type: :model do
       end
     end
   end
+
+  describe "find_or_create", :seed do
+    context "existing global slot" do
+      let!(:global_slot) { create(:global_slot) }
+
+      it "doesn't create a new global slot" do
+        expect {
+          described_class.find_or_create(global_slot.muid)
+        }.not_to change(GlobalSlot, :count)
+      end
+
+      it "returns the global slot" do
+        result = described_class.find_or_create(global_slot.muid)
+        expect(result).to be_an_instance_of GlobalSlot
+      end
+    end
+
+    context "missing global slot, valid 'muid'" do
+      let(:muid) { attributes_for(:global_slot)[:muid] }
+
+      it "creates a new global slot" do
+        expect {
+          described_class.find_or_create(muid)
+        }.to change(GlobalSlot, :count).by 1
+      end
+
+      it "returns the global slot" do
+        result = described_class.find_or_create(muid)
+        expect(result).to be_an_instance_of GlobalSlot
+      end
+    end
+
+    context "missing global slot, invalid 'muid'" do
+      let(:muid) { 'foo-bar-muid' }
+
+      it "raises error if uuid format is invalid" do
+        expect {
+          described_class.find_or_create(muid)
+        }.to raise_error TSErrors::DataTeamServiceError
+      end
+
+      it "raises error if uuid format is invalid" do
+        let(:muid) { '238a69a4-271c-f5cb-e60e-48952d805859a' }
+
+        expect {
+          described_class.find_or_create(muid)
+        }.to raise_error TSErrors::DataTeamServiceError
+      end
+    end
+  end
 end
