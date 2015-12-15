@@ -2,43 +2,37 @@ module Feed
   class << self
 
     def user_feed(user, params = {})
-      begin
-        feed = "Feed:#{user}:User"
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = paginate(feed, params)
-        result = enrich_feed(page, 'me')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:User"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'me')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     def notification_feed(user, params = {})
-      begin
-        feed = "Feed:#{user}:Notification"
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = paginate(feed, params)
-        result = enrich_feed(page, 'notify')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:Notification"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'notify')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     def news_feed(user, params = {}, context = nil)
-      begin
-        feed = "Feed:#{user}:News"
-        params.merge!(context: context) if context
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = aggregate_feed(feed, params)
-        result = enrich_feed(page, 'activity')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:News"
+      params.merge!(context: context) if context
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = aggregate_feed(feed, params)
+      result = enrich_feed(page, 'activity')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     # Feed Dispatcher
