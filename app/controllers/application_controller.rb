@@ -36,6 +36,11 @@ class ApplicationController < ActionController::API
            status: :unauthorized
   end
 
+  rescue_from DataTeamServiceError do |exception|
+    notify_airbrake(exception)
+    render json: { error: exception.message }, status: :service_unavailable
+  end
+
   private def unprocessable_entity(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
