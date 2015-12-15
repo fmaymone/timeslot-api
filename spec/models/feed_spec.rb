@@ -1312,4 +1312,44 @@ RSpec.describe Feed, :activity, :async, type: :model do
       end
     end
   end
+
+  context "Update Shared Objects", :redis do
+    let(:user) { create(:user) }
+    let(:meta_slot) { create(:meta_slot, creator: user) }
+    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+
+    context "User follows a slot" do
+      before(:each) do
+        # Create relationships
+        follower.follow(slot)
+        # Perform activities (User)
+        slot.create_like(user)
+        # Modify shared object
+        slot.update_from_params(meta: { title: 'New Title' })
+      end
+
+      it "Feeds retrieved updates from shared objects" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(1) # +1 public activities
+        expect(user_feed.first['type']).to eq('Slot')
+        expect(user_feed.first['action']).to eq('like')
+        expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['actor']['id']).to be(user.id)
+        expect(user_feed.first['data']['target']['title']).to eq('New Title')
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 public activities
+        expect(news_feed_follower.first['type']).to eq('Slot')
+        expect(news_feed_follower.first['action']).to eq('like')
+        expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(news_feed_follower.first['data']['target']['title']).to eq('New Title')
+
+        expect(Feed.news_feed(user.id).as_json.count).to be(0)
+        expect(Feed.notification_feed(user.id).as_json.count).to be(0)
+        expect(Feed.user_feed(follower.id).as_json.count).to be(0)
+        expect(Feed.notification_feed(follower.id).as_json.count).to be(0)
+      end
+    end
+  end
 end

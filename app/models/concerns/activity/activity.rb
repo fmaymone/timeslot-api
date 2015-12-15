@@ -33,8 +33,10 @@ module Activity
     return self
   end
 
-  def update_shared_object(obj)
-    # TODO:
+  def update_activity_objects
+    if activity_is_valid?
+      create_activity_feed('update', notify: [], forward: [])
+    end
   rescue => error
     error_handler(error, "failed: update shared object as worker job")
   ensure
@@ -63,7 +65,7 @@ module Activity
     return self
   end
 
-  private def create_activity_feed(action, notify: nil, forward: [], time: nil)
+  private def create_activity_feed(action, notify: nil, forward: nil, time: nil)
     # FIX: Reload last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?

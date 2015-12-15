@@ -109,6 +109,7 @@ class BaseSlot < ActiveRecord::Base
     update_media(media, user.id) if media
     update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
+    update_activity_objects
   end
 
   def add_media(item, creator_id)

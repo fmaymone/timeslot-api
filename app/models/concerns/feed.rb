@@ -54,12 +54,8 @@ module Feed
 
     def dispatch(params)
 
-      ## -- Prepare Dispatcher -- ##
-
       # Generates and add activity id
       params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
-      # Determine target key for redis set
-      target_index = "#{params[:type]}:#{params[:target]}"
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
@@ -69,13 +65,15 @@ module Feed
         $redis.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
-        $redis.set("#{target_index}", gzip_target(params))
+        $redis.set("#{params[:type]}:#{params[:target]}", gzip_target(params))
       end
       # Store actor to its own index (shared objects)
       $redis.set("User:#{params[:actor]}", gzip_actor(params))
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
+      # Determine target key for redis set
+      target_index = "#{params[:type]}:#{params[:target]}"
       # Returns the position of added activity (required for asynchronous access)
       activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
@@ -84,17 +82,19 @@ module Feed
       ## -- Collect Activity Distribution -- ##
 
       feed_register = { User: [], News: [], Notification: [] }
+
       # Skip default distribution if fowardings was passed
-      unless params[:forward].any?
+      if params[:forward].nil?
         # Store activity to own feed (me activities)
         feed_register[:User] << params[:actor]
         # Send to other users through social relations ("Read-Opt" Strategy)
         feed_register[:News] += params[:notify]
         # Store activity to own notification feed (related to own content, filter out own activities)
         feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
+      else
+        # Add all custom forwardings
+        params[:forward].each{ |index, users| feed_register[index] += users }
       end
-      # Add all custom forwardings
-      params[:forward].each{ |index, users| feed_register[index] += users }
 
       ## -- Distribute Activities (Read-Opt) -- ##
 
