@@ -103,10 +103,10 @@ en:
 
   user_friendship_me_singular:	"You and %{USER} are now friends"
   user_friendship_activity_singular:	""
-  user_friendship_notify_singular:	"{USER} and {USER2} are now friends"
+  user_friendship_notify_singular:	"%{USER} and %{USER2} are now friends"
   user_friendship_push_singular:	"%{USER} has accepted your friend request"
   user_friendship_activity_plural:	"TODO-Plural-Activity-1"
-  user_friendship_notify_plural:	"TODO-Plural-Notify-1"
+  user_friendship_notify_plural:	"%{USER} and %{USER2} are now friends"
   user_friendship_push_plural:	"TODO-Plural-Push-1"
   user_friendship_activity_aggregate:	"TODO-Aggregate-Activity-1"
   user_friendship_notify_aggregate:	"TODO-Aggregate-Notify-1"
