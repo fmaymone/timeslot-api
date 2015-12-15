@@ -124,20 +124,19 @@ RSpec.describe GlobalSlot, type: :model do
     end
 
     context "missing global slot, invalid 'muid'" do
-      let(:muid) { 'foo-bar-muid' }
+      let(:invalid_muid) { 'foo-bar-muid' }
+      let(:unknown_muid) { '238a69a4-271c-f5cb-e60e-48952d805855' }
 
       it "raises error if uuid format is invalid" do
         expect {
-          described_class.find_or_create(muid)
+          described_class.find_or_create(invalid_muid)
         }.to raise_error TSErrors::DataTeamServiceError
       end
 
       it "raises error if uuid format is invalid" do
-        let(:muid) { '238a69a4-271c-f5cb-e60e-48952d805859a' }
-
-        expect {
-          described_class.find_or_create(muid)
-        }.to raise_error TSErrors::DataTeamServiceError
+        skip 'want to get a 404 if nothing is found for a muid'
+        res = described_class.find_or_create(unknown_muid)
+        expect(res).to eq 1
       end
     end
   end
