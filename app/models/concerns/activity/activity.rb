@@ -109,7 +109,7 @@ module Activity
           if action == 'request'
             params[:user_id] = activity_target.id
           elsif action == 'friendship'
-            params[:friend_id] = activity_target.id
+            params[:friend_id] = activity_actor.id
           end
         end
         Device.notify_all(notify, params)
