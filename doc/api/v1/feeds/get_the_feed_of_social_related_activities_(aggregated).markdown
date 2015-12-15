@@ -1,10 +1,13 @@
 # Feeds API
 
-## Get the feed of the current user notifications
+## Get the feed of social related activities (aggregated)
 
-### GET /v1/feed/notification
+### GET /v1/feed/news
 
 ### Parameters
+
+Name : style
+Description : Style of the news activity feed (&#39;flat&#39; or &#39;aggregated&#39;)
 
 Name : limit
 Description : Maximum count of items which are included in the result
@@ -110,19 +113,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=jdi9KnTaOW7hNiQChR-o5Fk1CuE
+Authorization: Token token=JCzckd81Pg8bx-Ikhw0eAtXchS4
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/feed/notification</pre>
+<pre>GET /v1/feed/news</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=jdi9KnTaOW7hNiQChR-o5Fk1CuE&quot; \
+	-H &quot;Authorization: Token token=JCzckd81Pg8bx-Ikhw0eAtXchS4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -133,12 +136,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f2ec3486ca65eb98f6ccfc6090d85d8a&quot;
+ETag: W/&quot;6f9afa96796df8be8e2c757dfeeb4a2e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 15822551-85b0-40b0-a054-d19ca80fc11f
-X-Runtime: 0.005959
+X-Request-Id: ef4116e9-b66e-4df6-a0c7-89d0c573294b
+X-Runtime: 0.005263
 Vary: Origin
-Content-Length: 1923</pre>
+Content-Length: 1935</pre>
 
 #### Status
 
@@ -150,29 +153,31 @@ Content-Length: 1923</pre>
 [
   {
     "type" : "Slot",
-    "target" : "3",
+    "target" : "2",
     "action" : "comment",
-    "time" : "2015-12-15T22:42:03.264Z",
-    "id" : "503B725D9BC366B49650772C31C860D34ED65AF5",
+    "time" : "2015-12-15T22:42:03.143Z",
+    "id" : "EC416B7F4D48B034E67D60FFE129AA267BD4924E",
     "actors" : [
-      10
+      7
     ],
-    "message" : "User 64 commented on your Slot: Slot title 23",
+    "activityCount" : 1,
+    "cursor" : "1",
+    "message" : "User 61 commented on this Slot.",
     "data" : {
       "target" : {
-        "id" : 3,
-        "title" : "Slot title 23",
-        "startDate" : "2019-09-24T23:44:02.000Z",
-        "createdAt" : "2015-12-15T22:42:03.228Z",
-        "updatedAt" : "2015-12-15T22:42:03.274Z",
+        "id" : 2,
+        "title" : "Slot title 22",
+        "startDate" : "2019-09-23T22:44:02.000Z",
+        "createdAt" : "2015-12-15T22:42:03.105Z",
+        "updatedAt" : "2015-12-15T22:42:03.152Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-24T23:44:02.000Z",
+        "endDate" : "2019-10-23T22:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 8,
-          "username" : "User 62",
-          "createdAt" : "2015-12-15T22:42:03.215Z",
-          "updatedAt" : "2015-12-15T22:42:03.215Z",
+          "id" : 5,
+          "username" : "User 59",
+          "createdAt" : "2015-12-15T22:42:03.090Z",
+          "updatedAt" : "2015-12-15T22:42:03.090Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
@@ -185,58 +190,58 @@ Content-Length: 1923</pre>
         "notes" : [],
         "media" : [
           {
-            "mediaId" : 18,
-            "publicId" : "dfhjghjkdisudgfds7iy21",
+            "mediaId" : 12,
+            "publicId" : "dfhjghjkdisudgfds7iy15",
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2015-12-15T22:42:03.253Z",
+            "createdAt" : "2015-12-15T22:42:03.133Z",
             "duration" : null,
-            "title" : "Title 21"
+            "title" : "Title 15"
           },
           {
-            "mediaId" : 17,
-            "publicId" : "dfhjghjkdisudgfds7iy20",
+            "mediaId" : 11,
+            "publicId" : "dfhjghjkdisudgfds7iy14",
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-15T22:42:03.249Z",
+            "createdAt" : "2015-12-15T22:42:03.128Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 16,
-            "publicId" : "dfhjghjkdisudgfds7iy19",
+            "mediaId" : 10,
+            "publicId" : "dfhjghjkdisudgfds7iy13",
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-15T22:42:03.244Z",
+            "createdAt" : "2015-12-15T22:42:03.124Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 15,
-            "publicId" : "dfhjghjkdisudgfds7iy18",
+            "mediaId" : 9,
+            "publicId" : "dfhjghjkdisudgfds7iy12",
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-15T22:42:03.239Z"
+            "createdAt" : "2015-12-15T22:42:03.119Z"
           },
           {
-            "mediaId" : 14,
-            "publicId" : "dfhjghjkdisudgfds7iy17",
+            "mediaId" : 8,
+            "publicId" : "dfhjghjkdisudgfds7iy11",
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-15T22:42:03.236Z"
+            "createdAt" : "2015-12-15T22:42:03.115Z"
           },
           {
-            "mediaId" : 13,
-            "publicId" : "dfhjghjkdisudgfds7iy16",
+            "mediaId" : 7,
+            "publicId" : "dfhjghjkdisudgfds7iy10",
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-15T22:42:03.232Z"
+            "createdAt" : "2015-12-15T22:42:03.110Z"
           }
         ],
         "reslotsCounter" : 0,
@@ -246,10 +251,10 @@ Content-Length: 1923</pre>
         "shareUrl" : null
       },
       "actor" : {
-        "id" : 10,
-        "username" : "User 64",
-        "createdAt" : "2015-12-15T22:42:03.258Z",
-        "updatedAt" : "2015-12-15T22:42:03.258Z",
+        "id" : 7,
+        "username" : "User 61",
+        "createdAt" : "2015-12-15T22:42:03.137Z",
+        "updatedAt" : "2015-12-15T22:42:03.137Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
