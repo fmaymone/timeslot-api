@@ -172,13 +172,14 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if action == 'private' || (action == 'delete' && activity_action == 'slot') # || action == 'unslot'
+    if activity_action == 'slot' && (action == 'private' || action == 'delete') # || action == 'unslot'
       # Forward "delete" action as an activity to the dispatcher
       forward_activity(
           action,
           feed_fwd: {
               User: [ activity_actor.id.to_s ],
-              Notification: activity_target.followers
+              Notification: activity_target.followers +
+                            activity_actor.followers
           },
           push_fwd: activity_target.followers
       )

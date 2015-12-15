@@ -6,7 +6,7 @@ module UserActivity
   end
 
   private def push_notify
-    [activity_target.id]
+    [ activity_target.id ]
   end
 
   # Add extra data to each activity. The data can be hide
@@ -25,7 +25,7 @@ module UserActivity
   private def activity_message_params
     {
       USER: activity_target.username,
-      FRIEND: activity_actor.username
+      USER2: activity_actor.username
     }
   end
 end

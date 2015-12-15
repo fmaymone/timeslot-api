@@ -1232,6 +1232,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         user_feed_friend = Feed.user_feed(friend.id).as_json
         expect(user_feed_friend.count).to be(1) # +1 friendship offered
         expect(user_feed_friend.first['type']).to eq('User')
+        expect(user_feed_friend.first['action']).to eq('request')
         expect(user_feed_friend.first['data']['target']['id']).to be(user.id)
         expect(user_feed_friend.first['data']['target']['friendshipState']).to be(nil)
         expect(user_feed_friend.first['data']['actor']['id']).to be(friend.id)
@@ -1250,6 +1251,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(1) # +1 friendship offered
         expect(notification_feed.first['type']).to eq('User')
+        expect(notification_feed.first['action']).to eq('request')
         expect(notification_feed.first['data']['target']['id']).to be(user.id)
         expect(notification_feed.first['data']['target']['friendshipState']).to be(nil)
         expect(notification_feed.first['data']['actor']['id']).to be(friend.id)
@@ -1269,7 +1271,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
       end
 
       after(:each) do
-        # FIX: Remove friendship state for further testings
+        # FIX: Remove friendship state to prevent affecting other tests
         user.friendship(friend.id).reject
       end
 
@@ -1293,17 +1295,19 @@ RSpec.describe Feed, :activity, :async, type: :model do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(1) # +1 friendship established
         expect(notification_feed.first['type']).to eq('User')
-        expect(notification_feed.first['data']['target']['id']).to be(user.id)
+        expect(notification_feed.first['action']).to eq('friendship')
+        expect(notification_feed.first['data']['target']['id']).to be(friend.id)
         expect(notification_feed.first['data']['target']['friendshipState']).to be(nil)
-        expect(notification_feed.first['data']['actor']['id']).to be(friend.id)
+        expect(notification_feed.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed.first['data']['actor']['friendshipState']).to eq('friend')
 
         notification_feed_friend = Feed.notification_feed(friend.id).as_json
         expect(notification_feed_friend.count).to be(1) # has no related activities
         expect(notification_feed_friend.first['type']).to eq('User')
-        expect(notification_feed_friend.first['data']['target']['id']).to be(user.id)
+        expect(notification_feed_friend.first['action']).to eq('friendship')
+        expect(notification_feed_friend.first['data']['target']['id']).to be(friend.id)
         expect(notification_feed_friend.first['data']['target']['friendshipState']).to be(nil)
-        expect(notification_feed_friend.first['data']['actor']['id']).to be(friend.id)
+        expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('friend')
       end
     end
