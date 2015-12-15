@@ -4,9 +4,9 @@ class GlobalSlotConsumer
   # this guy interacts with the data team
 
   # gets a global slot from the TS_DATA_MALL based on a muid
-  def fetch(uuid)
+  def fetch(muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
-    uri.path += uuid
+    uri.path += "slots/#{muid}"
 
     user = ENV['TS_DATA_MALL_USERNAME']
     pw = ENV['TS_DATA_MALL_PASSWORD']
@@ -18,7 +18,25 @@ class GlobalSlotConsumer
   rescue => e
     raise e
   else
-    convert_mall_to_backend(raw_result)
+    convert_mall_slot(raw_result)
+  end
+
+  # gets a global slot location from TS_DATA_MALL, based on muid
+  def location(muid)
+    uri = URI.parse(ENV['TS_DATA_MALL_URL'])
+    uri.path += "locations/#{muid}"
+
+    user = ENV['TS_DATA_MALL_USERNAME']
+    pw = ENV['TS_DATA_MALL_PASSWORD']
+    auth = { http_basic_authentication: [user, pw] }
+
+    # Never pass unchecked URI to 'open'
+    # http://sakurity.com/blog/2015/02/28/openuri.html
+    raw_result = open(uri, auth).read
+  rescue => e
+    raise e
+  else
+    convert_mall_location(raw_result)
   end
 
   def search(category, query)
@@ -44,7 +62,29 @@ class GlobalSlotConsumer
     slots
   end
 
-  private def convert_mall_to_backend(raw_result)
+  private def convert_mall_location(raw_result)
+    result = Oj.load(raw_result)['locations'].first
+    {
+      luid: result['muid'],
+      name: result['title'],
+      # thoroughfare: result['street'],
+      # sub_thoroughfare: result[''],
+      locality: result['city'],
+      # sub_locality: result[''],
+      administrative_area: result['region'],
+      # sub_administrative_area: result[''],
+      postal_code: result['postcode'],
+      country: result['country'],
+      # iso_country_code: result[''],
+      # in_land_water: result[''],
+      # ocean: result[''],
+      # areas_of_interest: result[''],
+      latitude: result['latitude'],
+      longitude: result['longitude']
+    }
+  end
+
+  private def convert_mall_slot(raw_result)
     result = Oj.load(raw_result)['slots'].first
     {
       meta: {
