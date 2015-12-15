@@ -5,16 +5,8 @@ class GlobalSlotConsumer
 
   # gets a global slot from the TS_DATA_MALL based on a muid
   def slot(muid)
-    uri = URI.parse(ENV['TS_DATA_MALL_URL'])
-    uri.path += "slots/#{muid}"
-
-    user = ENV['TS_DATA_MALL_USERNAME']
-    pw = ENV['TS_DATA_MALL_PASSWORD']
-    auth = { http_basic_authentication: [user, pw] }
-
-    # Never pass unchecked URI to 'open'
-    # http://sakurity.com/blog/2015/02/28/openuri.html
-    raw_result = open(uri, auth).read
+    uri_path = "slots/#{muid}"
+    raw_result = fetch(uri_path)
   rescue => e
     raise e
   else
@@ -23,16 +15,8 @@ class GlobalSlotConsumer
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    uri = URI.parse(ENV['TS_DATA_MALL_URL'])
-    uri.path += "locations/#{muid}"
-
-    user = ENV['TS_DATA_MALL_USERNAME']
-    pw = ENV['TS_DATA_MALL_PASSWORD']
-    auth = { http_basic_authentication: [user, pw] }
-
-    # Never pass unchecked URI to 'open'
-    # http://sakurity.com/blog/2015/02/28/openuri.html
-    raw_result = open(uri, auth).read
+    uri_path = "locations/#{muid}"
+    raw_result = fetch(uri_path)
   rescue => e
     raise e
   else
@@ -60,6 +44,19 @@ class GlobalSlotConsumer
     slots = []
     crawler_slots.each { |slot| slots << ElasticSearchSlot.new(slot) }
     slots
+  end
+
+  private def fetch(uri_path)
+    uri = URI.parse(ENV['TS_DATA_MALL_URL'])
+    uri.path += uri_path
+
+    user = ENV['TS_DATA_MALL_USERNAME']
+    pw = ENV['TS_DATA_MALL_PASSWORD']
+    auth = { http_basic_authentication: [user, pw] }
+
+    # Never pass unchecked URI to 'open'
+    # http://sakurity.com/blog/2015/02/28/openuri.html
+    open(uri, auth).read
   end
 
   private def convert_mall_location(raw_result)
