@@ -43,7 +43,7 @@ class Friendship < ActiveRecord::Base
             ]
         },
         push_fwd: [
-            activity_target.id.to_s
+            activity_actor.id.to_s
         ]
     )
   end
