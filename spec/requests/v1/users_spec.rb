@@ -19,7 +19,7 @@ RSpec.describe "V1::Users", type: :request do
       it "returns unauthorized" do
         get "/v1/users/#{current_user.id}"
         expect(response).to have_http_status :unauthorized
-        expect(response.body).to include "missing auth_token"
+        expect(response.body).to include "auth_token invalid or missing"
       end
     end
 

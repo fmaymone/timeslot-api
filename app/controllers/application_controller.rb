@@ -32,7 +32,8 @@ class ApplicationController < ActionController::API
 
   rescue_from MissingCurrentUserError do
     # headers['Authorization'] = 'Token token="auth_token"'
-    render json: 'Invalid or missing auth_token', status: :unauthorized
+    render json: { error: 'auth_token invalid or missing' },
+           status: :unauthorized
   end
 
   private def unprocessable_entity(exception)
