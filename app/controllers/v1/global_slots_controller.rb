@@ -22,27 +22,11 @@ module V1
     def create_reslot
       authorize GlobalSlot.new
 
-      # check if slot already exists in local db
       muid = params.require(:predecessor)
-      global_slot = GlobalSlot.find_by(muid: muid)
-
-      global_slot ||= begin
-                        # if no: fetch global slot from megastore by muid
-                        globalslot_attributes = GlobalSlotConsumer.new.slot(muid)
-
-                      rescue => e
-                        Airbrake.notify(e)
-                        return render json: { error: "DATA MALL Fetch Error: #{e}" },
-                                      status: :service_unavailable
-                      else
-                        # create metaslot and globalslot
-                        GlobalSlot.create_slot(globalslot_attributes)
-                      end
-      # create reslot for current user
+      global_slot = GlobalSlot.find_or_create(muid)
       reslot = ReSlot.create_from_slot(predecessor: global_slot,
                                        slotter: current_user)
                                        # visibility: params[:visibility])
-
       if reslot.save
         render "v1/slots/create", status: :created, locals: { slot: reslot }
       else
@@ -51,14 +35,11 @@ module V1
     end
 
     private def category_param
-      # this could also be an ENV var
-      valid_categories = %w(cinema football)
       category = params.require(:category)
+      valid_categories = %w(cinema football) # this could also be an ENV var
+      return category if valid_categories.include? category
 
-      unless valid_categories.include? category
-        fail ParameterInvalid, "category must be one of #{valid_categories}"
-      end
-      category
+      fail ParameterInvalid, "category must be one of #{valid_categories}"
     end
 
     private def search_params
