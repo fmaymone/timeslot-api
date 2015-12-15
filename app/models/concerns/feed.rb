@@ -101,38 +101,29 @@ module Feed
       distribute(target_key, feed_register)
     end
 
-    # Each call of the models delete method starts calling its corresponding activity deletion.
+    # We using backtracking to improve performance by removing activities through all feeds
+    # To backtrack activities from its corresponding target feed it is required to find the index which
+    # points to the target feed index, where the related activity is stored
+
     def remove_item_from_feed(object:, model:, target:, type:, notify:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = $redis.lrange("Feed:#{target_key}", 0, -1)
-      # The timestamp is used to validate the feed cache
-      current = Time.now.to_f
-
-      # We using backtracking to improve performance by removing activities through all feeds
-      # To backtrack activities from its corresponding target feed it is required to find the index which
-      # points to the target feed index, where the related activity is stored
-      recursive_index = -1
-
       # Loop through all shared activities to find backtracking index
       # NOTE: This loop may can be skipped by using real redis pointers
       target_feed.each_with_index do |activity, index|
-        # Enrich target activity
-        activity = rebuild_feed_struct(unzip_json(activity))
+        # Enrich target activity (to access original activity data)
+        activity = enrich_feed_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
-          recursive_index = index
+          # Loop through all related user feeds through social relations
+          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, notify)
           break
         end
       end
-
-      if recursive_index > -1
-        # Loop through all related user feeds through social relations
-        remove_activity_from_feed("#{target_key}:#{recursive_index}", current, notify)
-      end
     end
 
-    def remove_target_from_feed(target:, type:, notify:)
+    def remove_target_from_feeds(target:, type:, notify:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed_length = $redis.llen("Feed:#{target_key}") - 1
@@ -146,20 +137,27 @@ module Feed
       end
     end
 
-    def remove_user_from_feed(user:, notify:)
+    def remove_user_from_feeds(user:, notify:)
+      # NOTE: For this step we need to fetch all objects related to target feeds
       targets = user.std_slots +
                 user.re_slots +
                 user.group_slots
                 #user.friendships +
                 #user.memberships
+
+      # We collect job data here and pass this into the removal job worker
+      job_data = []
+
       targets.each do |target|
         # Try to expand social context for each target
         context = target.try(:followers)
-        context.merge!(notify) if context
-        remove_target_from_feed(target: target.id,
-                                type: target.activity_type,
-                                notify: context || notify)
+        context.merge!(notify).uniq if context
+        # Collect job data (remove by target)
+        job_data << { target: target.id,
+                      type: target.activity_type,
+                      notify: context || notify }
       end
+      job_data
     end
 
     private def remove_activity_from_feed(feed_key, time, notify)
@@ -214,11 +212,11 @@ module Feed
       feed_params = target_key.split(':')
       # Fetch target activity object from index
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index || feed_params[2].to_i)
-      # Returns the re-builded dictionary (json)
-      rebuild_feed_struct(target_feed)
+      # Returns the enriched activity as a dictionary (json)
+      enrich_feed_struct(target_feed)
     end
 
-    private def rebuild_feed_struct(feed)
+    private def enrich_feed_struct(feed)
       { type: feed[0],
         actor: feed[1],
         object: feed[2],
@@ -255,7 +253,22 @@ module Feed
           activity['target'] = nil
           next
         end
-        enrich_message(activity, actor, target, view)
+
+        # iOs requires the friendshipstate (we use the type of action to determine state)
+        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+        case activity['action']
+          when 'request'
+            actor['friendshipState'] = 'pending passive'
+          when 'friendship'
+            actor['friendshipState'] = 'friend'
+            # FIX: delegate second user if friendship was accepted
+            activity['actors'] << activity['target'].to_i
+          when 'unfriend'
+            actor['friendshipState'] = 'stranger'
+        end
+
+        # Update message params with enriched message
+        activity['message'] = enrich_message(activity, actor, target, view)
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Remove special fields are not used by frontend
@@ -270,19 +283,6 @@ module Feed
       actor_count = activity['actors'].count
       # Adds the first username and sets usercount to translation params
       i18_params = { USER: actor['username'], USERCOUNT: actor_count }
-      # iOs requires the friendshipstate (we use the type of action to determine state)
-      # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-      case activity['action']
-      when 'request'
-        actor['friendshipState'] = 'pending passive'
-      when 'friendship'
-        actor['friendshipState'] = 'friend'
-        # FIX: delegate second user if friendship was accepted
-        activity['actors'] << activity['target'].to_i
-        actor_count += 1
-      when 'unfriend'
-        actor['friendshipState'] = 'stranger'
-      end
       # Add the title to the translation params holder
       i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
@@ -296,8 +296,8 @@ module Feed
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
       # Determine translation key
       i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
-      # Update message params with enriched message
-      activity['message'] = I18n.t(i18_key, i18_params)
+      # Returns the message from translation index
+      I18n.t(i18_key, i18_params)
     end
 
     # NOTE: We can optimize this by aggregating feeds when storing into redis
@@ -410,7 +410,7 @@ module Feed
       last_state.present? &&
       last_update == last_state &&
       # FIX: Force refresh when last update is too close to the current request
-      Time.now.to_f - last_update.to_f >= 1 # time in seconds (float)
+      Time.now.to_f - last_update.to_f >= 1.0 # time in seconds (float)
     end
 
     ## Helpers ##
@@ -473,7 +473,7 @@ module Feed
     private def error_handler(error, feed, params)
       opts = {}
       opts[:parameters] = {
-          feed: feed,
+          type: type,
           params: params
       }
       Rails.logger.error { error }

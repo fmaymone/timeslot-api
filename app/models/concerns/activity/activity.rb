@@ -94,7 +94,6 @@ module Activity
     notify.delete(activity_actor.id)
 
     if notify.any?
-      # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
       message_content = I18n.t("#{activity_type.downcase}_#{action}_push_singular",
                                USER: activity_actor.username,
                                USER2: activity_target.try(:username),
@@ -135,29 +134,10 @@ module Activity
     notify = activity_notify || []
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
+    notify.uniq
 
-    # if user
-    #   targets = user.std_slots +
-    #             user.re_slots +
-    #             user.group_slots +
-    #             user.friendships +
-    #             user.memberships
-    #
-    #   targets.map{ |target| [ target.id, target.class.name ]}
-    # else
-    #   targets = nil
-    # end
-
-    # TODO: make this also async
-    if target
-      Feed.remove_target_from_feed(target: target.id,
-                                   type: activity_type,
-                                   notify: notify.uniq)
-    end
-    if user
-      Feed.remove_user_from_feed(user: user,
-                                 notify: notify.uniq)
-    end
+    target = target.as_json if target
+    user_targets = user ? Feed.remove_user_from_feeds(user: user, notify: notify) : nil
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
@@ -165,10 +145,10 @@ module Activity
         model: self.class.name,
         target: activity_target.id.to_s,
         type: activity_type,
-        notify: notify.uniq
-      }
-      #target: target.as_json,
-      #user: targets
+        notify: notify
+      },
+      target: target,
+      user_targets: user_targets
     )
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
@@ -176,13 +156,13 @@ module Activity
     if activity_action == 'slot' && (action == 'private' || action == 'delete') # || action == 'unslot'
       # Forward "delete" action as an activity to the dispatcher
       forward_activity(
-          action,
-          feed_fwd: {
-              User: [ activity_actor.id.to_s ],
-              Notification: activity_target.followers +
-                            activity_actor.followers
-          },
-          push_fwd: activity_target.followers
+        action,
+        feed_fwd: {
+            User: [ activity_actor.id.to_s ],
+            Notification: activity_target.followers +
+                activity_actor.followers
+        },
+        push_fwd: activity_target.followers
       )
     end
   rescue => error
