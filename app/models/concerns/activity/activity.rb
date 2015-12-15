@@ -80,8 +80,7 @@ module Activity
       notify: notify || activity_notify,
       forward: forward,
       data: activity_extra_data,
-      time: time || self.updated_at,
-      feed: activity_target.class.name
+      time: time || self.updated_at
     })
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
@@ -151,7 +150,7 @@ module Activity
     # TODO: make this also async
     if target
       Feed.remove_target_from_feed(target: target.id,
-                                   feed: target.class.name,
+                                   type: activity_type,
                                    notify: notify.uniq)
     end
     if user
@@ -164,7 +163,7 @@ module Activity
         object: self.id.to_s,
         model: self.class.name,
         target: activity_target.id.to_s,
-        feed: activity_target.class.name,
+        type: activity_type,
         notify: notify.uniq
       }
       #target: target.as_json,

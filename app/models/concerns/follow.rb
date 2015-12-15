@@ -88,8 +88,9 @@ module Follow
     "Follow:#{feed_type}:#{self.id}:#{str}"
   end
 
+  # Try to return the supertype of each subclasses (e.g. 'Slot' instead of 'StdSlotPublic')
   def feed_type
-    self.class.name
+    self.try(:activity_type) || self.class.name
   end
 
   ## Helpers (Social Context) ##

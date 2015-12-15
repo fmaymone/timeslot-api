@@ -34,11 +34,12 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    update_activity
+    remove_activity
     forward_activity(
         feed_fwd: {
             Notification: [
-                activity_actor.id.to_s
+                activity_actor.id.to_s,
+                activity_target.id.to_s
             ]
         },
         push_fwd: [
@@ -58,8 +59,10 @@ class Friendship < ActiveRecord::Base
   def reject
     if established?
       remove_activity('unfriend')
+      remove_activity
       user.unfollow(friend)
       friend.unfollow(user)
+    else
       remove_activity
     end
     update!(state: REJECTED) unless deleted_at?

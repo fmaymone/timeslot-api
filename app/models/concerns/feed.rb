@@ -64,20 +64,18 @@ module Feed
 
       # Generates and add activity id
       params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
-      # Translate class name to enumeration
-      params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
+      # Determine target key for redis set
+      target_index = "#{params[:type]}:#{params[:target]}"
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # Determine target key for redis set
-      target_index = "#{params[:feed]}:#{params[:target]}"
       # The target can have different types (e.g. Slot, User, Group)
       if params[:type] == 'User' || params[:type] == 'Group'
         # If target is from type user --> forward target to user shared objects
         $redis.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
-        $redis.set("#{params[:type]}:#{target_index}", gzip_target(params))
+        $redis.set("#{target_index}", gzip_target(params))
       end
       # Store actor to its own index (shared objects)
       $redis.set("User:#{params[:actor]}", gzip_actor(params))
@@ -109,11 +107,9 @@ module Feed
       distribute(target_key, feed_register)
     end
 
-      # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
     # Each call of the models delete method starts calling its corresponding activity deletion.
-    def remove_item_from_feed(object:, model:, target:, feed:, notify:)
-      # Translate class name to enumeration
-      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+    def remove_item_from_feed(object:, model:, target:, type:, notify:)
+      target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = $redis.lrange("Feed:#{target_key}", 0, -1)
       # The timestamp is used to validate the feed cache
@@ -142,9 +138,8 @@ module Feed
       end
     end
 
-    def remove_target_from_feed(target:, feed:, notify:)
-      # Translate class name to enumeration
-      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+    def remove_target_from_feed(target:, type:, notify:)
+      target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed_length = $redis.llen("Feed:#{target_key}") - 1
       # The timestamp is used to validate the feed cache
@@ -160,15 +155,15 @@ module Feed
     def remove_user_from_feed(user:, notify:)
       targets = user.std_slots +
                 user.re_slots +
-                user.group_slots +
-                user.friendships +
-                user.memberships
+                user.group_slots
+                #user.friendships +
+                #user.memberships
       targets.each do |target|
         # Try to expand social context for each target
         context = target.try(:followers)
         context.merge!(notify) if context
         remove_target_from_feed(target: target.id,
-                                feed: target.class.name,
+                                type: target.activity_type,
                                 notify: context || notify)
       end
     end
@@ -238,8 +233,7 @@ module Feed
         action: feed[5],
         foreign: feed[6],
         time: feed[7],
-        feed: feed[8],
-        id: feed[9]
+        id: feed[8]
       }.as_json
     end
 
@@ -254,11 +248,11 @@ module Feed
         # FIX: This is temporary solution for syncing issues on iOS
         # actor = JSONView.user(User.find(activity['actors'].first))
         # Get target (from shared object)
-        if activity['type'] == 'User'
+        if activity['type'] == 'User' || activity['type'] == 'Group'
           # If target is from type user --> load shared object from user storage
           target = get_shared_object("#{activity['type']}:#{activity['object']}")
         else
-          target = get_shared_object("#{activity['type']}:#{activity['feed']}:#{activity['target']}")
+          target = get_shared_object("#{activity['type']}:#{activity['target']}")
         end
         # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
@@ -425,7 +419,7 @@ module Feed
     ## Helpers ##
 
     private def remove_fields_from_activity(activity)
-      %w(group object foreign feed).each do |field|
+      %w(group object foreign model).each do |field|
         activity.delete(field)
       end
       activity
