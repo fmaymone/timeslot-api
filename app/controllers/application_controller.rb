@@ -2,9 +2,6 @@ class ApplicationController < ActionController::API
   include TS_Authenticable
   include Pundit
 
-  # Set users locale for translations
-  before_action :set_locale
-
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
   after_action :set_locale, only: :users
@@ -67,6 +64,6 @@ class ApplicationController < ActionController::API
 
   # I18n
   private def set_locale
-    I18n.locale = (current_user.lang || I18n.default_locale) if current_user
+    I18n.locale = current_user ? current_user.lang : I18n.default_locale
   end
 end

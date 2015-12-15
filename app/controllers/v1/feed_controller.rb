@@ -1,6 +1,9 @@
 module V1
   class FeedController < ApplicationController
 
+    # Set users locale for translations
+    before_action :set_locale
+
     # GET /v1/feed/user
     # The user feed stores all activities for a user.
     # Think of it as your personal Facebook page.
