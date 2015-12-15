@@ -1,6 +1,6 @@
 module SlotQuery
   class OwnSlots
-    include TS_Errors
+    include TSErrors
     attr_reader :relation
 
     def initialize(relation: BaseSlot.all, direction: nil)

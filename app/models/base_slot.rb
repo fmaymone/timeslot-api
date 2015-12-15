@@ -1,7 +1,7 @@
 class BaseSlot < ActiveRecord::Base
   include SlotActivity
   include Follow
-  include TS_Errors
+  include TSErrors
 
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations

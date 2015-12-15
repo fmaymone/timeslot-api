@@ -39,7 +39,7 @@ describe MetaSlotPolicy do
     it "raises MissingCurrentUserError" do
       expect {
         subject.new(user, slot).public_send(:update_metaslot?)
-      }.to raise_error TS_Errors::MissingCurrentUserError
+      }.to raise_error TSErrors::MissingCurrentUserError
     end
   end
 end

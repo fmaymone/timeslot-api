@@ -1,4 +1,4 @@
-module TS_Errors
+module TSErrors
   # Raised when the pagination cursor is not valid anymore (usually because
   # slot.start_date or slot.end_date has changed since encoding).
   class PaginationError < StandardError

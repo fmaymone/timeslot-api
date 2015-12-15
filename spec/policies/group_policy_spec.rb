@@ -165,7 +165,7 @@ describe GroupPolicy do
       permissions.each do |permission|
         expect {
           subject.new(user, group).public_send(permission)
-        }.to raise_error TS_Errors::MissingCurrentUserError
+        }.to raise_error TSErrors::MissingCurrentUserError
       end
     end
   end
