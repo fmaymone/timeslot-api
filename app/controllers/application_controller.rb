@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  include TS_Authenticable
+  include TSAuthenticable
   include Pundit
 
   # Enforces access right checks for individuals resources

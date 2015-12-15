@@ -1,4 +1,4 @@
-module TS_Authenticable
+module TSAuthenticable
   include TSErrors
 
   def self.included(base)
