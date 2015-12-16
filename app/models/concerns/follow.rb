@@ -9,6 +9,8 @@ module Follow
         $redis.sadd(self.redis_key(:followers), follower.id)
       end
     end
+  rescue => error
+    error_handler(error, "failed: add follower '#{follower.id}' to target '#{self.id}' as worker job")
   end
 
   # Delegate helper method (inverted logic)
@@ -25,6 +27,8 @@ module Follow
         $redis.srem(self.redis_key(:followers), target.id)
       end
     end
+  rescue => error
+    error_handler(error, "failed: remove follower '#{self.id}' from target '#{target.id}' as worker job")
   end
 
   # Remove all followers from the current object (self)
@@ -34,6 +38,8 @@ module Follow
       $redis.srem("Follow:User:#{follower}:following", self.id)
     end
     $redis.del(redis_key(:followers))
+  rescue => error
+    error_handler(error, "failed: user '#{self.id}' remove all followers as worker job")
   end
 
   # Delegate helper method (inverted logic)
@@ -50,6 +56,8 @@ module Follow
       end
     end
     $redis.del("Follow:User:#{self.id}:following")
+  rescue => error
+    error_handler(error, "failed: user '#{self.id}' unfollow all targets as worker job")
   end
 
   # Get all followers of the current object
@@ -109,5 +117,13 @@ module Follow
   # Get subtraction of 2 groups of followers
   def followers_subtract(target)
     $redis.sdiff(redis_key(:followers), target.redis_key(:followers))
+  end
+
+  private def error_handler(error, message, params = nil)
+    opts = {}
+    opts[:parameters] = { message: message }
+    opts[:parameters][:params] = params if params
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 end
