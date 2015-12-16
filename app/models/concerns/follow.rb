@@ -5,8 +5,8 @@ module Follow
     if (self != follower) and (self.try(:visibility) != 'private')
       # Start redis transaction
       $redis.multi do
-        $redis.sadd(follower.redis_key(:following), [ feed_type, self.id ].to_json)
-        $redis.sadd(redis_key(:followers), follower.id)
+        $redis.sadd(follower.redis_key(:following), self.id)
+        $redis.sadd(self.redis_key(:followers), follower.id)
       end
     end
   end
@@ -21,18 +21,19 @@ module Follow
     unless self == target
       # Start redis transaction
       $redis.multi do
-        $redis.srem(target.redis_key(:following), [ feed_type, self.id ].to_json)
-        $redis.srem(redis_key(:followers), target.id)
+        $redis.srem(target.redis_key(:following), self.id)
+        $redis.srem(self.redis_key(:followers), target.id)
       end
     end
   end
 
   # Remove all followers from the current object (self)
   def remove_all_followers
-    # TODO: do not fetching users from postgres
-    User.where(id: followers).find_each do |follower|
-      remove_follower(follower)
+    followers = $redis.smembers(redis_key(:followers))
+    followers.each do |follower|
+      $redis.srem("Follow:User:#{follower}:following", self.id)
     end
+    $redis.del(redis_key(:followers))
   end
 
   # Delegate helper method (inverted logic)
@@ -42,12 +43,13 @@ module Follow
 
   # Remove all followings from the current object (self)
   def unfollow_all
-    followings.each do |following|
-      following = JSON.parse(following)
-      # TODO: do not fetching users from postgres
-      target = Object.const_get(following[0]).where(id: following[1]).try(:first)
-      unfollow(target) if target
+    followings = $redis.smembers("Follow:User:#{self.id}:following")
+    %w(User Slot Group).each do |context|
+      followings.each do |following|
+        $redis.srem("Follow:#{context}:#{following}:followers", self.id)
+      end
     end
+    $redis.del("Follow:User:#{self.id}:following")
   end
 
   # Get all followers of the current object
@@ -73,7 +75,6 @@ module Follow
   # Determine if something is following the passed target
   def following?(target)
     target.followed_by?(self)
-    #$redis.sismember(redis_key(:following), [ target.feed_type, target.id ].to_json)
   end
 
   def followers_count
