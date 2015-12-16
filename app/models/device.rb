@@ -141,7 +141,7 @@ class Device < ActiveRecord::Base
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
         device_queue.concat(devices)
       end
-      user_queue << { lang: user.lang || 'en', queue: device_queue }.as_json if device_queue.any?
+      user_queue << { lang: user.lang || 'en', queue: device_queue.as_json } if device_queue.any?
     end
 
     # Start worker job asynchronously
