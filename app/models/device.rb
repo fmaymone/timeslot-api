@@ -67,14 +67,16 @@ class Device < ActiveRecord::Base
                       badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
-    I18n.locale = lang if lang != I18n.default_locale
+    has_custom_language = lang.present? && lang != I18n.default_locale
+
+    I18n.locale = lang if has_custom_language
     message = I18n.t(message['KEY'], message) if message['KEY'].present?
-    I18n.locale = I18n.default_locale if lang != I18n.default_locale
-    # Default language fallback
+    I18n.locale = I18n.default_locale if has_custom_language
+    # Default language fallback if custom language fails
     message = I18n.t(message['KEY'], message) if message['KEY'].present? && message.nil?
 
     # Skip sending if no message exist
-    return unless message.present?
+    return if message.nil? || message.blank?
 
     payload = {}
     aps = {
