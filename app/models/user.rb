@@ -506,7 +506,7 @@ class User < ActiveRecord::Base
     current_user = user.try(:authenticate, password)
     if current_user
       # FIXME: temporary disable token update bc ios doesn't renew token on 401
-      # current_user.update(auth_token: generate_auth_token)
+      current_user.update(auth_token: generate_auth_token) if current_user.auth_token.nil?
       Device.update_or_create(current_user, device) if device
     end
     current_user
