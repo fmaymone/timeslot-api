@@ -63,9 +63,18 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
+  def self.notify_ios(client, device, lang, message:, alert: '', sound: 'receive_message.wav',
                       badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
+
+    I18n.locale = lang if lang != I18n.default_locale
+    message = I18n.t(message['KEY'], message) if message['KEY'].present?
+    I18n.locale = I18n.default_locale if lang != I18n.default_locale
+    # Default language fallback
+    message = I18n.t(message['KEY'], message) if message['KEY'].present? && message.nil?
+
+    # Skip sending if no message exist
+    return unless message.present?
 
     payload = {}
     aps = {
@@ -73,7 +82,6 @@ class Device < ActiveRecord::Base
         sound: sound,
         badge: badge
     }
-
     aps[:slot_id] = slot_id if slot_id
     aps[:user_id] = user_id if user_id
     aps[:friend_id] = friend_id if friend_id
@@ -116,24 +124,26 @@ class Device < ActiveRecord::Base
     Aws::SNS::Client.new
   end
 
-  def self.notify(client, device, params)
+  def self.notify(client, device, lang, params)
     case device['system']
     when 'ios'
-      notify_ios(client, device, params)
+      notify_ios(client, device, lang, params)
     end
   end
 
   def self.notify_all(user_ids, params)
-    queue = []
+    user_queue = []
 
     User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
+      device_queue = []
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
-        queue.concat(devices)
+        device_queue.concat(devices)
       end
+      user_queue << { lang: user.lang || 'en', queue: device_queue }.as_json if device_queue.any?
     end
 
     # Start worker job asynchronously
-    NotifyJob.new.async.perform(queue.as_json, params) if queue.any?
+    NotifyJob.new.async.perform(user_queue, params) if user_queue.any?
   end
 
   def self.update_or_create(user, params)

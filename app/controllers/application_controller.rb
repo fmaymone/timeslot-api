@@ -64,6 +64,6 @@ class ApplicationController < ActionController::API
 
   # I18n
   private def set_locale
-    I18n.locale = current_user ? current_user.lang : I18n.default_locale
+    I18n.locale = current_user ? current_user.lang || 'en' : I18n.default_locale
   end
 end

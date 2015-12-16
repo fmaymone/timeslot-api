@@ -96,25 +96,23 @@ module Activity
     notify.delete(activity_actor.id)
 
     if notify.any?
-      message_content = I18n.t("#{activity_type.downcase}_#{action}_push_singular",
-                               USER: activity_actor.username,
-                               USER2: activity_target.try(:username),
-                               TITLE: activity_target.try(:title))
-
-      # Skip sending if no message exist
-      if message_content.present?
-        params = { message: message_content }
-        if activity_type == 'Slot'
-          params[:slot_id] = activity_target.id
-        elsif activity_type == 'User'
-          if action == 'request'
-            params[:user_id] = activity_target.id
-          elsif action == 'friendship'
-            params[:friend_id] = activity_actor.id
-          end
+      message_params = {
+        KEY: "#{activity_type.downcase}_#{action}_push_singular",
+        USER: activity_actor.username,
+        USER2: activity_target.try(:username),
+        TITLE: activity_target.try(:title)
+      }
+      params = { message: message_params }
+      if activity_type == 'Slot'
+        params[:slot_id] = activity_target.id
+      elsif activity_type == 'User'
+        if action == 'request'
+          params[:user_id] = activity_target.id
+        elsif action == 'friendship'
+          params[:friend_id] = activity_actor.id
         end
-        Device.notify_all(notify, params)
       end
+      Device.notify_all(notify, params)
     end
   end
 
