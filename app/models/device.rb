@@ -69,11 +69,13 @@ class Device < ActiveRecord::Base
 
     has_custom_language = lang.present? && lang != I18n.default_locale
 
-    I18n.locale = lang if has_custom_language
-    message = I18n.t(message['KEY'], message) if message['KEY'].present?
-    I18n.locale = I18n.default_locale if has_custom_language
-    # Default language fallback if custom language fails
-    message = I18n.t(message['KEY'], message) if message['KEY'].present? && message.nil?
+    if message[:KEY].present?
+      I18n.locale = lang if has_custom_language
+      message = I18n.t(message[:KEY], message.except(:KEY))
+      I18n.locale = I18n.default_locale if has_custom_language
+      # Default language fallback if custom language fails
+      message = I18n.t(message[:KEY], message.except(:KEY)) if has_custom_language && message.nil?
+    end
 
     # Skip sending if no message exist
     return if message.nil? || message.blank?
@@ -141,9 +143,8 @@ class Device < ActiveRecord::Base
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
         device_queue.concat(devices)
       end
-      user_queue << { lang: user.lang || 'en', queue: device_queue.as_json } if device_queue.any?
+      user_queue << { lang: user.lang || 'en', queue: device_queue }.as_json if device_queue.any?
     end
-
     # Start worker job asynchronously
     NotifyJob.new.async.perform(user_queue, params) if user_queue.any?
   end

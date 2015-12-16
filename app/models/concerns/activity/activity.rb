@@ -5,8 +5,8 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-  rescue => error
-    error_handler(error, "failed: create '#{action}' activity as worker job")
+   rescue => error
+     error_handler(error, "failed: create '#{action}' activity as worker job")
   ensure
     return self
   end
