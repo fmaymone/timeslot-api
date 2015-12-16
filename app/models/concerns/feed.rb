@@ -268,14 +268,14 @@ module Feed
         end
 
         # Update message params with enriched message
-        activity['message'] = enrich_message(activity, actor, target, view)
+        activity['message'] = enrich_message(activity, actor, target, view) || ''
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Remove special fields are not used by frontend
         remove_fields_from_activity(activity)
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed.delete_if { |activity| activity['target'].nil? }
+      feed.delete_if { |activity| activity['target'].nil? || activity['message'].blank? }
       feed
     end
 
