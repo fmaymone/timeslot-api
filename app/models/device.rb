@@ -69,7 +69,7 @@ class Device < ActiveRecord::Base
 
     has_custom_language = lang.present? && lang != I18n.default_locale
 
-    if message[:KEY].present?
+    if message.try(:KEY).present?
       I18n.locale = lang if has_custom_language
       message = I18n.t(message[:KEY], message.except(:KEY))
       I18n.locale = I18n.default_locale if has_custom_language
