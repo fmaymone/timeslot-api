@@ -2,43 +2,37 @@ module Feed
   class << self
 
     def user_feed(user, params = {})
-      begin
-        feed = "Feed:#{user}:User"
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = paginate(feed, params)
-        result = enrich_feed(page, 'me')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:User"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'me')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     def notification_feed(user, params = {})
-      begin
-        feed = "Feed:#{user}:Notification"
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = paginate(feed, params)
-        result = enrich_feed(page, 'notify')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:Notification"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'notify')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     def news_feed(user, params = {}, context = nil)
-      begin
-        feed = "Feed:#{user}:News"
-        params.merge!(context: context) if context
-        cache = get_from_cache(feed, params)
-        return cache if cache
-        page = aggregate_feed(feed, params)
-        result = enrich_feed(page, 'activity')
-        set_to_cache(feed, params, result)
-      rescue => error
-        error_handler(error, feed, params)
-      end
+      feed = "Feed:#{user}:News"
+      params.merge!(context: context) if context
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = aggregate_feed(feed, params)
+      result = enrich_feed(page, 'activity')
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
     end
 
     # Feed Dispatcher
@@ -56,34 +50,30 @@ module Feed
     # There are two different types of distributable lists:
     #
     # 1. Notify (includes all users which will be notified through social relations)
-    # 2. Forward (includes additional forwarding of special activities)
+    # 2. Forward (includes additional forwardings to specific user feeds)
 
     def dispatch(params)
 
-      ## -- Prepare Dispatcher -- ##
-
       # Generates and add activity id
       params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
-      # Translate class name to enumeration
-      params[:feed] = BaseSlot.slot_types[params[:feed].to_sym]
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # Determine target key for redis set
-      target_index = "#{params[:feed]}:#{params[:target]}"
       # The target can have different types (e.g. Slot, User, Group)
       if params[:type] == 'User' || params[:type] == 'Group'
         # If target is from type user --> forward target to user shared objects
         $redis.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
       else
         # Store target to its own index (shared objects)
-        $redis.set("#{params[:type]}:#{target_index}", gzip_target(params))
+        $redis.set("#{params[:type]}:#{params[:target]}", gzip_target(params))
       end
       # Store actor to its own index (shared objects)
       $redis.set("User:#{params[:actor]}", gzip_actor(params))
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
+      # Determine target key for redis set
+      target_index = "#{params[:type]}:#{params[:target]}"
       # Returns the position of added activity (required for asynchronous access)
       activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
@@ -92,56 +82,49 @@ module Feed
       ## -- Collect Activity Distribution -- ##
 
       feed_register = { User: [], News: [], Notification: [] }
-      # Store activity to own feed (me activities)
-      feed_register[:User] << params[:actor]
-      # Send to other users through social relations ("Read-Opt" Strategy)
-      feed_register[:News] += params[:notify]
-      # Store activity to own notification feed (related to own content, filter out own activities)
-      feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
-      # Add all custom forwardings
-      params[:forward].each{ |index, users| feed_register[index] += users }
+
+      # Skip default distribution if fowardings was passed
+      if params[:forward].nil?
+        # Store activity to own feed (me activities)
+        feed_register[:User] << params[:actor]
+        # Send to other users through social relations ("Read-Opt" Strategy)
+        feed_register[:News] += params[:notify]
+        # Store activity to own notification feed (related to own content, filter out own activities)
+        feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
+      else
+        # Add all custom forwardings
+        params[:forward].each{ |index, users| feed_register[index] += users }
+      end
 
       ## -- Distribute Activities (Read-Opt) -- ##
 
       distribute(target_key, feed_register)
     end
 
-    # NOTE: the logic for activity deletion is managed by the corresponding model deletion state.
-    # Each call of the models delete method starts calling its corresponding activity deletion.
-    def remove_item_from_feed(object:, model:, target:, feed:, notify:)
-      # Translate class name to enumeration
-      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+    # We using backtracking to improve performance by removing activities through all feeds
+    # To backtrack activities from its corresponding target feed it is required to find the index which
+    # points to the target feed index, where the related activity is stored
+
+    def remove_item_from_feed(object:, model:, target:, type:, notify:)
+      target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = $redis.lrange("Feed:#{target_key}", 0, -1)
-      # The timestamp is used to validate the feed cache
-      current = Time.now.to_f
-
-      # We using backtracking to improve performance by removing activities through all feeds
-      # To backtrack activities from its corresponding target feed it is required to find the index which
-      # points to the target feed index, where the related activity is stored
-      recursive_index = -1
-
       # Loop through all shared activities to find backtracking index
       # NOTE: This loop may can be skipped by using real redis pointers
       target_feed.each_with_index do |activity, index|
-        # Enrich target activity
-        activity = rebuild_feed_struct(unzip_json(activity))
+        # Enrich target activity (to access original activity data)
+        activity = enrich_activity_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
-          recursive_index = index
+          # Loop through all related user feeds through social relations
+          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, notify)
           break
         end
       end
-
-      if recursive_index > -1
-        # Loop through all related user feeds through social relations
-        remove_activity_from_feed("#{target_key}:#{recursive_index}", current, notify)
-      end
     end
 
-    def remove_target_from_feed(target:, feed:, notify:)
-      # Translate class name to enumeration
-      target_key = "#{BaseSlot.slot_types[feed.to_sym]}:#{target}"
+    def remove_target_from_feeds(target:, type:, notify:)
+      target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed_length = $redis.llen("Feed:#{target_key}") - 1
       # The timestamp is used to validate the feed cache
@@ -154,32 +137,41 @@ module Feed
       end
     end
 
-    def remove_user_from_feed(user:, notify:)
+    def remove_user_from_feeds(user:, notify:)
+      # NOTE: For this step we need to fetch all objects related to target feeds
       targets = user.std_slots +
                 user.re_slots +
-                user.group_slots +
-                user.friendships +
-                user.memberships
+                user.group_slots
+                #user.friendships +
+                #user.memberships
+
+      # We collect job data here and pass this into the removal job worker
+      job_data = []
+
       targets.each do |target|
         # Try to expand social context for each target
         context = target.try(:followers)
-        context.merge!(notify) if context
-        remove_target_from_feed(target: target.id,
-                                feed: target.class.name,
-                                notify: context || notify)
+        context.merge!(notify).uniq if context
+        # Collect job data (remove by target)
+        job_data << { target: target.id,
+                      type: target.activity_type,
+                      notify: context || notify }
       end
+      job_data
     end
 
     private def remove_activity_from_feed(feed_key, time, notify)
-      # Loop through all related user feeds through social relations
-      notify.each do |user_id|
-        %W(Feed:#{user_id}:User
-           Feed:#{user_id}:News
-           Feed:#{user_id}:Notification).each do |feed_index|
-          # Remove activity by object (removes a single pointer to an activity)
-          $redis.lrem(feed_index, 0, feed_key)
-          # Store the feeds update time to force re-validation of the cache
-          $redis.set("Update:#{feed_index}", time)
+      $redis.pipelined do
+        # Loop through all related user feeds through social relations
+        notify.each do |user_id|
+          %W(Feed:#{user_id}:User
+             Feed:#{user_id}:News
+             Feed:#{user_id}:Notification).each do |feed_index|
+            # Remove activity by object (removes a single pointer to an activity)
+            $redis.lrem(feed_index, 0, feed_key)
+            # Store the feeds update time to force re-validation of the cache
+            $redis.set("Update:#{feed_index}", time)
+          end
         end
       end
     end
@@ -189,10 +181,6 @@ module Feed
       current_time = Time.now.to_f
       # Distribute to all user feeds (including custom forwardings like friend requests, deletions, etc.)
       distributor.each do |index, users|
-        # Remove foreign user + actor from forwarding to notifications
-        # TODO: do not remove here, remove before call
-        # users.delete(params[:foreign]) if params[:foreign].present?
-        # users.delete(params[:actor])
         # Send to other users ("Read-Opt" Strategy)
         if users.any?
           $redis.pipelined do
@@ -224,11 +212,11 @@ module Feed
       feed_params = target_key.split(':')
       # Fetch target activity object from index
       target_feed = get_feed_from_index("Feed:#{feed_params[0]}:#{feed_params[1]}", index || feed_params[2].to_i)
-      # Returns the re-builded dictionary (json)
-      rebuild_feed_struct(target_feed)
+      # Returns the enriched activity as a dictionary (json)
+      enrich_activity_struct(target_feed)
     end
 
-    private def rebuild_feed_struct(feed)
+    private def enrich_activity_struct(feed)
       { type: feed[0],
         actor: feed[1],
         object: feed[2],
@@ -237,8 +225,7 @@ module Feed
         action: feed[5],
         foreign: feed[6],
         time: feed[7],
-        feed: feed[8],
-        id: feed[9]
+        id: feed[8]
       }.as_json
     end
 
@@ -246,23 +233,18 @@ module Feed
       feed.each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
-        actor_count = activity['actors'].count
         # In handy we remove the single field 'actor' on aggregated feeds
         activity.delete('actor')
-
-        # Determine translation params
         # Get the first actor (from shared objects)
         actor = get_shared_object("User:#{activity['actors'].first}")
         # FIX: This is temporary solution for syncing issues on iOS
         # actor = JSONView.user(User.find(activity['actors'].first))
-        # Adds the first username and sets usercount to translation params
-        i18_params = { USER: actor['username'], USERCOUNT: actor_count }
         # Get target (from shared object)
-        if activity['type'] == 'User'
+        if activity['type'] == 'User' || activity['type'] == 'Group'
           # If target is from type user --> load shared object from user storage
           target = get_shared_object("#{activity['type']}:#{activity['object']}")
         else
-          target = get_shared_object("#{activity['type']}:#{activity['feed']}:#{activity['target']}")
+          target = get_shared_object("#{activity['type']}:#{activity['target']}")
         end
         # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
@@ -271,39 +253,51 @@ module Feed
           activity['target'] = nil
           next
         end
+
         # iOs requires the friendshipstate (we use the type of action to determine state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
         case activity['action']
-        when 'request'
-          actor['friendshipState'] = 'pending passive'
-        when 'friendship'
-          actor['friendshipState'] = 'friend'
-        when 'unfriend'
-          actor['friendshipState'] = 'stranger'
+          when 'request'
+            actor['friendshipState'] = 'pending passive'
+          when 'friendship'
+            actor['friendshipState'] = 'friend'
+            # FIX: delegate second user if friendship was accepted
+            activity['actors'] << activity['target'].to_i
+          when 'unfriend'
+            actor['friendshipState'] = 'stranger'
         end
+
+        # Update message params with enriched message
+        activity['message'] = enrich_message(activity, actor, target, view) || ''
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
-        # Add the title to the translation params holder
-        i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
-        # Collect further usernames for aggregated messages (actual we need 2 at maximum)
-        if actor_count > 1
-          # Get second actor (from shared objects)
-          actor = get_shared_object("User:#{activity['actors'].second}")
-          # Add the second username to the translation params holder
-          i18_params[:USER2] = actor['username']
-        end
-        # Determine pluralization
-        mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
-        # Determine translation key
-        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
-        # Update message params with enriched message
-        activity['message'] = I18n.t(i18_key, i18_params)
         # Remove special fields are not used by frontend
         remove_fields_from_activity(activity)
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed.delete_if { |activity| activity['target'].nil? }
+      feed.delete_if { |activity| activity['target'].nil? || activity['message'].blank? }
       feed
+    end
+
+    private def enrich_message(activity, actor, target, view)
+      actor_count = activity['actors'].count
+      # Adds the first username and sets usercount to translation params
+      i18_params = { USER: actor['username'], USERCOUNT: actor_count }
+      # Add the title to the translation params holder
+      i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
+      # Collect further usernames for aggregated messages (actual we need 2 at maximum)
+      if actor_count > 1
+        # Get second actor (from shared objects)
+        actor = get_shared_object("User:#{activity['actors'].second}")
+        # Add the second username to the translation params holder
+        i18_params[:USER2] = actor['username']
+      end
+      # Determine pluralization
+      mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
+      # Determine translation key
+      i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
+      # Returns the message from translation index
+      I18n.t(i18_key, i18_params)
     end
 
     # NOTE: We can optimize this by aggregating feeds when storing into redis
@@ -412,34 +406,28 @@ module Feed
     end
 
     private def validate_cache(last_update, last_state)
-      # NOTE: Force refresh when last update is too close to the current request
       last_update.present? &&
       last_state.present? &&
       last_update == last_state &&
-      Time.now.to_f - last_update.to_f >= 1 # time in seconds (float)
+      # FIX: Force refresh when last update is too close to the current request
+      Time.now.to_f - last_update.to_f >= 1.0 # time in seconds (float)
     end
 
     ## Helpers ##
 
     private def remove_fields_from_activity(activity)
-      %w(group object foreign feed).each do |field|
+      %w(group object foreign model).each do |field|
         activity.delete(field)
       end
       activity
     end
 
     private def get_shared_object(feed_index)
-      JSON.parse(
-        ActiveSupport::Gzip.decompress(
-          $redis.get(feed_index)
-      ))
+      unzip_json($redis.get(feed_index))
     end
 
     private def get_feed_from_index(key, index)
-      JSON.parse(
-        ActiveSupport::Gzip.decompress(
-          $redis.lindex(key, index)
-      ))
+      unzip_json($redis.lindex(key, index))
     end
 
     private def create_cache_index(params)
@@ -448,7 +436,7 @@ module Feed
 
     private def get_cached_feed(feed_index)
       cache = $redis.get("Cache:#{feed_index}")
-      cache ? JSON.parse(ActiveSupport::Gzip.decompress(cache)) : nil
+      cache ? unzip_json(cache) : nil
     end
 
     private def gzip_cache(cache)
@@ -476,13 +464,16 @@ module Feed
     end
 
     private def unzip_json(json)
-      JSON.parse(ActiveSupport::Gzip.decompress(json))
+      JSON.parse(
+        ActiveSupport::Gzip.decompress(
+          json
+      ))
     end
 
     private def error_handler(error, feed, params)
       opts = {}
       opts[:parameters] = {
-          feed: feed,
+          type: type,
           params: params
       }
       Rails.logger.error { error }

@@ -17,7 +17,7 @@ class Device < ActiveRecord::Base
     # check if token already exist on an old device
     if (device = Device.find_by(token: token)) && device != self
       self.token = token
-      save
+      save!
       device.destroy
     end
     # sets new endpoint if not exist or update if new token was passed
@@ -63,9 +63,22 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  def self.notify_ios(client, device, message:, alert: '', sound: 'receive_message.wav',
+  def self.notify_ios(client, device, lang, message:, alert: '', sound: 'receive_message.wav',
                       badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
+
+    has_custom_language = lang.present? && lang != I18n.default_locale
+
+    if message.try(:KEY).present?
+      I18n.locale = lang if has_custom_language
+      message = I18n.t(message[:KEY], message.except(:KEY))
+      I18n.locale = I18n.default_locale if has_custom_language
+      # Default language fallback if custom language fails
+      message = I18n.t(message[:KEY], message.except(:KEY)) if has_custom_language && message.nil?
+    end
+
+    # Skip sending if no message exist
+    return if message.nil? || message.blank?
 
     payload = {}
     aps = {
@@ -73,10 +86,9 @@ class Device < ActiveRecord::Base
         sound: sound,
         badge: badge
     }
-
-    aps.merge!(slot_id: slot_id) if slot_id
-    aps.merge!(user_id: user_id) if user_id
-    aps.merge!(friend_id: friend_id) if friend_id
+    aps[:slot_id] = slot_id if slot_id
+    aps[:user_id] = user_id if user_id
+    aps[:friend_id] = friend_id if friend_id
 
     # defaults to true, if ENV variable not set, otherwise examine
     if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
@@ -116,24 +128,25 @@ class Device < ActiveRecord::Base
     Aws::SNS::Client.new
   end
 
-  def self.notify(client, device, params)
+  def self.notify(client, device, lang, params)
     case device['system']
     when 'ios'
-      notify_ios(client, device, params)
+      notify_ios(client, device, lang, params)
     end
   end
 
   def self.notify_all(user_ids, params)
-    queue = []
+    user_queue = []
 
     User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
+      device_queue = []
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
-        queue.concat(devices)
+        device_queue.concat(devices)
       end
+      user_queue << { lang: user.lang || 'en', queue: device_queue }.as_json if device_queue.any?
     end
-
     # Start worker job asynchronously
-    NotifyJob.new.async.perform(queue.as_json, params) if queue.any?
+    NotifyJob.new.async.perform(user_queue, params) if user_queue.any?
   end
 
   def self.update_or_create(user, params)

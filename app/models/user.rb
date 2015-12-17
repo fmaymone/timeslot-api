@@ -196,8 +196,11 @@ class User < ActiveRecord::Base
     # ReSlots
 
     # NOTE: User do not include Activity, but we can call feed methods directly:
-    Feed.remove_user_from_feed(user: self, notify: self.followers)
-    # TODO: restore followers/followings when user re-activates
+    user_targets = Feed.remove_user_from_feeds(user: self, notify: self.followers)
+    user_targets.each do |target|
+      Feed.remove_target_from_feeds(target)
+    end
+    # TODO: restore followers/followings when user re-activates?
     remove_all_followers
     unfollow_all
 

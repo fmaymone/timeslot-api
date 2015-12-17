@@ -5,8 +5,8 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-  rescue => error
-    error_handler(error, "failed: create '#{action}' activity as worker job")
+   rescue => error
+     error_handler(error, "failed: create '#{action}' activity as worker job")
   ensure
     return self
   end
@@ -33,6 +33,16 @@ module Activity
     return self
   end
 
+  def update_activity_objects
+    if activity_is_valid?
+      create_activity_feed('update', notify: [], forward: [])
+    end
+  rescue => error
+    error_handler(error, "failed: update shared object as worker job")
+  ensure
+    return self
+  end
+
   def remove_activity(action = 'delete')
     if activity_is_valid?
       remove_activity_feed(action)
@@ -55,10 +65,10 @@ module Activity
     return self
   end
 
-  private def create_activity_feed(action, notify: nil, forward: [], time: nil)
+  private def create_activity_feed(action, notify: nil, forward: nil, time: nil)
     # FIX: Reload last modified data (strict mode throws exceptions)
-    activity_target.save!
-    activity_actor.save!
+    activity_target.save! if activity_target.changed?
+    activity_actor.save! if activity_actor.changed?
     # Initialize job worker
     FeedJob.new.async.perform({
       type: activity_type,
@@ -72,40 +82,37 @@ module Activity
       notify: notify || activity_notify,
       forward: forward,
       data: activity_extra_data,
-      time: time || self.updated_at,
-      feed: activity_target.class.name
+      time: time || self.updated_at
     })
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
   end
 
   private def create_activity_push(action, notify: nil, forward: nil)
-    notify = forward || notify || push_notify
+    notify = forward || notify || activity_push
+    action = action || activity_action
 
     # Remove creator from the push notification list
     notify.delete(activity_actor.id)
 
-    if push_notify.any?
-      # TODO: Move the message composing part into feed helper method --> Feed::enrich_feed
-      message_content = I18n.t("#{activity_type.downcase}_#{action || activity_action}_push_singular",
-                               USER: activity_actor.username,
-                               USER2: activity_target.try(:username),
-                               TITLE: activity_target.try(:title))
-
-      # Skip sending if no message exist
-      unless message_content.nil? || message_content.blank?
-        params = { message: message_content }
-        if activity_type == 'Slot'
-          params.merge!(slot_id: activity_target.id)
-        elsif activity_type == 'User'
-          if action == 'request'
-            params.merge!(user_id: activity_target.id)
-          elsif action == 'friendship'
-            params.merge!(friend_id: activity_target.id)
-          end
+    if notify.any?
+      message_params = {
+        KEY: "#{activity_type.downcase}_#{action}_push_singular",
+        USER: activity_actor.username,
+        USER2: activity_target.try(:username),
+        TITLE: activity_target.try(:title)
+      }
+      params = { message: message_params }
+      if activity_type == 'Slot'
+        params[:slot_id] = activity_target.id
+      elsif activity_type == 'User'
+        if action == 'request'
+          params[:user_id] = activity_target.id
+        elsif action == 'friendship'
+          params[:friend_id] = activity_actor.id
         end
-        Device.notify_all(notify, params)
       end
+      Device.notify_all(notify, params)
     end
   end
 
@@ -127,31 +134,35 @@ module Activity
     notify = activity_notify || []
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
+    notify.uniq
+
+    target = target.as_json if target
+    user_targets = user ? Feed.remove_user_from_feeds(user: user, notify: notify) : nil
 
     # Remove activities from target feeds:
     RemoveJob.new.async.perform({
         object: self.id.to_s,
         model: self.class.name,
         target: activity_target.id.to_s,
-        feed: activity_target.class.name,
-        notify: notify.uniq
+        type: activity_type,
+        notify: notify
       },
       target: target,
-      user: user
+      user_targets: user_targets
     )
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if action == 'private' || (action == 'delete' && activity_action == 'slot') # || action == 'unslot'
+    if activity_action == 'slot' && (action == 'private' || action == 'delete') # || action == 'unslot'
       # Forward "delete" action as an activity to the dispatcher
       forward_activity(
-          action,
-          feed_fwd: {
-              User: [ activity_actor.id.to_s ],
-              News: activity_target.followers,
-              Notification: activity_target.followers
-          }
-          # push_fwd: {}
+        action,
+        feed_fwd: {
+            User: [ activity_actor.id.to_s ],
+            Notification: activity_target.followers +
+                activity_actor.followers
+        },
+        push_fwd: activity_target.followers
       )
     end
   rescue => error
@@ -216,24 +227,26 @@ module Activity
       user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
-      if visibility == 'public'
-        # 5. Foreign related context:
-        user_ids += activity_foreign.followers if activity_foreign
-        # 3. Friend related context:
-        %W(#{activity_target}
-           #{activity_actor}
-           #{activity_foreign}).each do |context|
-            # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
-            # NOTE: we can loop through followers here, but this has an additional fetching users from DB
-            # This can also be solved by adding friends of friends as a relation directly into the follower model
-            unless context.try(:friends).nil?
-              context.friends.each do |friend|
-                # Here we can fetch followers, change this into friends if further chaining is required
-                user_ids += friend.followers #friend.friends.collect(&:id)
-              end
-            end
-        end
-      end
+      # if visibility == 'public'
+      #   # 5. Foreign related context:
+      #   user_ids += activity_foreign.followers if activity_foreign
+      #   # 3. Friend related context:
+      #   %W(#{activity_target}
+      #      #{activity_actor}
+      #      #{activity_foreign}).each do |context|
+      #       # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
+      #       # NOTE: we can loop through followers here, but this has an additional fetching users from DB
+      #       # This can also be solved by adding friends of friends as a relation directly into the follower model
+      #       unless context.try(:friends).nil?
+      #         context.friends.each do |friend|
+      #           # Here we can fetch followers, change this into friends if further chaining is required
+      #           user_ids += friend.followers #friend.friends.collect(&:id)
+      #         end
+      #       end
+      #   end
+      # end
+
+      user_ids
     end
 
     # Temporary fallback to simulate a "public activity" feed
@@ -247,7 +260,7 @@ module Activity
   end
 
   # Returns an array of user which should be via push notification (AWS SNS)
-  private def push_notify
+  private def activity_push
     []
   end
 

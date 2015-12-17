@@ -129,10 +129,11 @@ RSpec.describe Device, type: :model do
   describe :notify do
     let(:client) { double("client") }
     let(:params) {{ message: 'hola' }}
+    let(:lang) { 'en' }
 
     it "sends a push notification message to the client" do
       expect(client).to receive(:publish).with(hash_including(message: /hola/))
-      Device.notify(client, device, params)
+      Device.notify(client, device, lang, params)
     end
   end
 

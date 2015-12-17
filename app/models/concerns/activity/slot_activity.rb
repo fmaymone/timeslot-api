@@ -9,20 +9,20 @@ module SlotActivity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   private def activity_foreign
-    activity_target.creator.presence ||
-    activity_target.owner.presence
+    activity_target.try(:creator) ||
+    activity_target.try(:owner)
   end
 
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
-    visibility = activity_target.visibility.presence
+    visibility = activity_target.try(:visibility)
     friendship = activity_foreign.present? ? activity_actor.friendship(activity_foreign) : nil
-    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Date.parse(self.updated_at) >= Date.parse(friendship.updated_at))))
+    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
   end
 
-  private def push_notify
-    [activity_foreign.id]
+  private def activity_push
+    [ activity_foreign.id ]
   end
 
   # Add extra data to each activity. The data can be hide
@@ -38,10 +38,11 @@ module SlotActivity
 
   # The message is used as a notification message
   # for the users activity feed
-  private def activity_message_params
+  private def activity_message_params(action = nil)
     {
       USER: activity_actor.username,
-      TITLE: activity_target.meta_slot.title
+      TITLE: activity_target.meta_slot.title,
+      FIELD: action || activity_action
     }
   end
 end

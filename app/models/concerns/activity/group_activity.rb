@@ -28,7 +28,7 @@ module GroupActivity
   private def activity_message_params
     {
       USER: activity_actor.username,
-      GROUP: activity_target.name
+      TITLE: activity_target.name
     }
   end
 end

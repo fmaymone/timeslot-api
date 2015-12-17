@@ -5,10 +5,12 @@ module Follow
     if (self != follower) and (self.try(:visibility) != 'private')
       # Start redis transaction
       $redis.multi do
-        $redis.sadd(follower.redis_key(:following), [ feed_type, self.id ].to_json)
-        $redis.sadd(redis_key(:followers), follower.id)
+        $redis.sadd(follower.redis_key(:following), self.id)
+        $redis.sadd(self.redis_key(:followers), follower.id)
       end
     end
+  rescue => error
+    error_handler(error, "failed: add follower '#{follower.id}' to target '#{self.id}' as worker job")
   end
 
   # Delegate helper method (inverted logic)
@@ -21,18 +23,23 @@ module Follow
     unless self == target
       # Start redis transaction
       $redis.multi do
-        $redis.srem(target.redis_key(:following), [ feed_type, self.id ].to_json)
-        $redis.srem(redis_key(:followers), target.id)
+        $redis.srem(target.redis_key(:following), self.id)
+        $redis.srem(self.redis_key(:followers), target.id)
       end
     end
+  rescue => error
+    error_handler(error, "failed: remove follower '#{self.id}' from target '#{target.id}' as worker job")
   end
 
   # Remove all followers from the current object (self)
   def remove_all_followers
-    # TODO: do not fetching users from postgres
-    User.where(id: followers).find_each do |follower|
-      remove_follower(follower)
+    followers = $redis.smembers(redis_key(:followers))
+    followers.each do |follower|
+      $redis.srem("Follow:User:#{follower}:following", self.id)
     end
+    $redis.del(redis_key(:followers))
+  rescue => error
+    error_handler(error, "failed: user '#{self.id}' remove all followers as worker job")
   end
 
   # Delegate helper method (inverted logic)
@@ -42,12 +49,15 @@ module Follow
 
   # Remove all followings from the current object (self)
   def unfollow_all
-    followings.each do |following|
-      following = JSON.parse(following)
-      # TODO: do not fetching users from postgres
-      target = Object.const_get(following[0]).where(id: following[1]).try(:first)
-      unfollow(target) if target
+    followings = $redis.smembers("Follow:User:#{self.id}:following")
+    %w(User Slot Group).each do |context|
+      followings.each do |following|
+        $redis.srem("Follow:#{context}:#{following}:followers", self.id)
+      end
     end
+    $redis.del("Follow:User:#{self.id}:following")
+  rescue => error
+    error_handler(error, "failed: user '#{self.id}' unfollow all targets as worker job")
   end
 
   # Get all followers of the current object
@@ -73,7 +83,6 @@ module Follow
   # Determine if something is following the passed target
   def following?(target)
     target.followed_by?(self)
-    #$redis.sismember(redis_key(:following), [ target.feed_type, target.id ].to_json)
   end
 
   def followers_count
@@ -88,8 +97,9 @@ module Follow
     "Follow:#{feed_type}:#{self.id}:#{str}"
   end
 
+  # Try to return the supertype of each subclasses (e.g. 'Slot' instead of 'StdSlotPublic')
   def feed_type
-    self.class.name
+    self.try(:activity_type) || self.class.name
   end
 
   ## Helpers (Social Context) ##
@@ -107,5 +117,13 @@ module Follow
   # Get subtraction of 2 groups of followers
   def followers_subtract(target)
     $redis.sdiff(redis_key(:followers), target.redis_key(:followers))
+  end
+
+  private def error_handler(error, message, params = nil)
+    opts = {}
+    opts[:parameters] = { message: message }
+    opts[:parameters][:params] = params if params
+    Rails.logger.error { error }
+    Airbrake.notify(error, opts)
   end
 end

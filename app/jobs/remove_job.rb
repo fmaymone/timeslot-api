@@ -2,28 +2,27 @@ class RemoveJob
   include SuckerPunch::Job
   workers ENV['NOTIFICATION_WORKERS'] || 5
 
-  def perform(params, target: nil, user: nil)
-    begin
-      Feed.remove_item_from_feed(params)
-      if target
-        Feed.remove_target_from_feed(target: target.id,
-                                     feed: params[:feed],
-                                     notify: params[:notify])
-      end
-      if user
-        Feed.remove_user_from_feed(user: user,
-                                   notify: params[:notify])
-      end
-    rescue => e
-      opts = {}
-      opts[:parameters] = {
-          object: params[:object],
-          target: params[:target],
-          sucker_punch: "remove from feed failed"
-      }
-      Rails.logger.error { e }
-      Airbrake.notify(e, opts)
+  def perform(params, target: nil, user_targets: nil)
+    Feed.remove_item_from_feed(params)
+    if target
+      Feed.remove_target_from_feeds(target: target['id'],
+                                    type: params[:type],
+                                    notify: params[:notify])
     end
+    if user_targets
+      user_targets.each do |target|
+        Feed.remove_target_from_feeds(target)
+      end
+    end
+  rescue => e
+    opts = {}
+    opts[:parameters] = {
+        object: params[:object],
+        target: params[:target],
+        sucker_punch: "remove from feed failed"
+    }
+    Rails.logger.error { e }
+    Airbrake.notify(e, opts)
   end
 
   # def perform_later(sec, devices, params)
