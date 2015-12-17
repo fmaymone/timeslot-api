@@ -1,4 +1,7 @@
 module Feed
+
+  @storage = RedisStorage
+
   class << self
 
     def user_feed(user, params = {})
@@ -59,18 +62,23 @@ module Feed
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # Store target to its own index (shared objects)
-      # NOTE: Targets are generic and can have different types (e.g. Slot, User, Group)
-      $redis.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
+      # The target can have different types (e.g. Slot, User, Group)
+      if params[:type] == 'User' || params[:type] == 'Group'
+        # If target is from type user --> forward target to user shared objects
+        @storage.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
+      else
+        # Store target to its own index (shared objects)
+        @storage.set("#{params[:type]}:#{params[:target]}", gzip_target(params))
+      end
       # Store actor to its own index (shared objects)
-      $redis.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
+      @storage.set("User:#{params[:actor]}", gzip_actor(params))
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
       # Determine target key for redis set
       target_index = "#{params[:type]}:#{params[:target]}"
       # Returns the position of added activity (required for asynchronous access)
-      activity_index = $redis.rpush("Feed:#{target_index}", gzip_feed(params)) - 1
+      activity_index = @storage.push("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
       target_key = "#{target_index}:#{activity_index}"
 
@@ -103,7 +111,7 @@ module Feed
     def remove_item_from_feed(object:, model:, target:, type:, notify:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
-      target_feed = $redis.lrange("Feed:#{target_key}", 0, -1)
+      target_feed = @storage.range("Feed:#{target_key}", 0, -1)
       # Loop through all shared activities to find backtracking index
       # NOTE: This loop may can be skipped by using real redis pointers
       target_feed.each_with_index do |activity, index|
@@ -121,7 +129,7 @@ module Feed
     def remove_target_from_feeds(target:, type:, notify:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
-      target_feed_length = $redis.llen("Feed:#{target_key}") - 1
+      target_feed_length = @storage.length("Feed:#{target_key}") - 1
       # The timestamp is used to validate the feed cache
       current = Time.now.to_f
       # Loop through all target activities via backtracking
@@ -156,16 +164,16 @@ module Feed
     end
 
     private def remove_activity_from_feed(feed_key, time, notify)
-      $redis.pipelined do
+      @storage.pipe do
         # Loop through all related user feeds through social relations
         notify.each do |user_id|
           %W(Feed:#{user_id}:User
              Feed:#{user_id}:News
              Feed:#{user_id}:Notification).each do |feed_index|
             # Remove activity by object (removes a single pointer to an activity)
-            $redis.lrem(feed_index, 0, feed_key)
+            @storage.remove_all(feed_index, feed_key)
             # Store the feeds update time to force re-validation of the cache
-            $redis.set("Update:#{feed_index}", time)
+            @storage.set("Update:#{feed_index}", time)
           end
         end
       end
@@ -178,13 +186,13 @@ module Feed
       distributor.each do |index, users|
         # Send to other users ("Read-Opt" Strategy)
         if users.any?
-          $redis.pipelined do
+          @storage.pipe do
             users.uniq.each do |user|
               feed_index = "Feed:#{user}:#{index}"
               # Delegate activity to a feed
-              $redis.rpush(feed_index, target_key)
+              @storage.push(feed_index, target_key)
               # Store the feeds update time to force re-validation of the cache
-              $redis.set("Update:#{feed_index}", current_time)
+              @storage.set("Update:#{feed_index}", current_time)
             end
           end
         end
@@ -195,9 +203,9 @@ module Feed
       # Get offset in reversed logic (LIFO), supports simple cursor fallback
       offset = cursor ? cursor.to_i : offset.to_i
       # Catch MIN as MAX in reversed order
-      min = [offset + limit.to_i, $redis.llen("Feed:#{feed_index}") - 1].min
+      min = [offset + limit.to_i, @storage.length("Feed:#{feed_index}") - 1].min
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = $redis.lrange(feed_index, offset, min).reverse!
+      feed = @storage.range(feed_index, offset, min).reverse!
       # Enrich target activities
       feed.map{ |a| enrich_activity(a) }
     end
@@ -313,7 +321,7 @@ module Feed
       # Also we use this counter to check on break condition if limit is reached
       feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = $redis.lrange(feed_index, 0, $redis.llen("Feed:#{feed_index}") - offset - 1).reverse!
+      feed = @storage.range(feed_index, 0, @storage.length("Feed:#{feed_index}") - offset - 1).reverse!
       # Loop through all feeds (has a break statement, offset is optional)
       feed.each do |post|
         # Enrich target activity
@@ -370,13 +378,13 @@ module Feed
 
     private def get_from_cache(feed, params)
       # Determine when the last feed update was happened
-      last_update = $redis.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed}")
       # Get the current cache state
-      last_state = $redis.get("Status:#{feed}")
+      last_state = @storage.get("Status:#{feed}")
       # Validated the cache state
       if validate_cache(last_update, last_state)
         last_cache = get_cached_feed(feed)
-        cache_index = create_cache_index(params)
+        cache_index = generate_index(params)
         last_cache[cache_index] if last_cache
       else
         nil
@@ -385,19 +393,19 @@ module Feed
 
     private def set_to_cache(feed, params, result)
       # Determine when the last feed update was happened
-      last_update = $redis.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed}")
       # Set initially timer if there are no actions
       if last_update.nil?
         last_update = Time.now.to_f
-        $redis.set("Update:#{feed}", last_update)
+        @storage.set("Update:#{feed}", last_update)
       end
       # Set the current cache state
-      $redis.set("Status:#{feed}", last_update)
+      @storage.set("Status:#{feed}", last_update)
       # Update cache
       last_cache = get_cached_feed(feed) || {}
-      cache_index = create_cache_index(params)
+      cache_index = generate_index(params)
       last_cache[cache_index] = result
-      $redis.set("Cache:#{feed}", gzip_cache(last_cache))
+      @storage.set("Cache:#{feed}", gzip_cache(last_cache))
       result
     end
 
@@ -419,20 +427,20 @@ module Feed
     end
 
     private def get_shared_object(feed_index)
-      obj = $redis.get(feed_index)
+      obj = @storage.get(feed_index)
       obj ? unzip_json(obj) : nil
     end
 
     private def get_feed_from_index(key, index)
-      unzip_json($redis.lindex(key, index))
+      unzip_json(@storage.index(key, index))
     end
 
-    private def create_cache_index(params)
+    private def generate_index(params)
       Digest::MD5.hexdigest(params.to_json).upcase
     end
 
     private def get_cached_feed(feed_index)
-      cache = $redis.get("Cache:#{feed_index}")
+      cache = @storage.get("Cache:#{feed_index}")
       cache ? unzip_json(cache) : nil
     end
 
