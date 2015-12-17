@@ -82,6 +82,12 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  def reslots
+    # this should not include private reslots
+    # TODO: change it when we have reslots with different visibilities
+    ReSlot.where parent_id: id
+  end
+
   def as_paging_cursor
     # make sure we use the full resolution of datetime
     startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
