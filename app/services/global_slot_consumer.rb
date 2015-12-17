@@ -84,16 +84,10 @@ class GlobalSlotConsumer
       meta: {
         title: result['title'],
         start_date: result['start_timestamp'],
-        end_date: result['stop_timestamp']
+        end_date: result['stop_timestamp'],
+        location_uid: result['location_muid']
       },
       user: User.find_by(role: 2, username: result['domain']),
-
-      # location: result['location'],
-      # loc_name: result['address'].split(',').first
-      # locality: result['city'],
-      # country: result['country'],
-      # latitude: result['latitude'],
-      # longitude: result['longitude']
 
       # crawler is sending 'none' for 'muid'...
       muid: (result['muid'].nil? || result['muid'] == 'None') ? (result['duid'] || result['cuid']) : result['muid'],

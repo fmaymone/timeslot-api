@@ -73,6 +73,7 @@ RSpec.describe GlobalSlot, type: :model do
     end
 
     context "additional information" do
+      let(:meta_params) { attributes_for(:meta_slot, :with_candy_location) }
       let(:url) { 'http://irgendwas.com' }
       let(:image) {
         {
@@ -82,22 +83,33 @@ RSpec.describe GlobalSlot, type: :model do
       let(:description) {{ title: 'Description',
                            content: "Champions League, 2015/2016, Gruppe A" }}
 
-      it "creates a new GlobalSlot with url and a note with the description" do
+      it "creates a new GlobalSlot with url and location_muid" do
         global_slot = described_class.create_slot(meta: meta_params,
                                                   muid: muid,
                                                   url: url,
-                                                  media: [image],
-                                                  notes: [description],
                                                   user: user)
         expect(GlobalSlot.count).to eq 1
         expect(global_slot.url).to eq url
-        # description as note
+        expect(global_slot.location_uid).not_to be nil
+      end
+
+      it "creates a new GlobalSlot with a note with the description" do
+        global_slot = described_class.create_slot(meta: meta_params,
+                                                  muid: muid,
+                                                  notes: [description],
+                                                  user: user)
         expect(global_slot.notes).not_to be_empty
         note = global_slot.notes.first
         expect(note.title).to eq 'Description'
         expect(note.content).to eq description[:content]
         expect(note.creator).to eq user
-        # image
+      end
+
+      it "creates a new GlobalSlot with an imag" do
+        global_slot = described_class.create_slot(meta: meta_params,
+                                                  muid: muid,
+                                                  media: [image],
+                                                  user: user)
         expect(global_slot.images).not_to be_empty
         image = global_slot.images.first
         expect(image.public_id).to eq image[:public_id]
