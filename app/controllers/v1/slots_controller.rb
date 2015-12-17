@@ -281,6 +281,24 @@ module V1
       head :ok
     end
 
+    # POST /v1/slots/1/user_tags
+    def update_user_tags
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.update_user_tags(params[:user_tags])
+
+      head :ok
+    end
+
+    # GET /v1/slots/1/user_tags
+    def get_user_tags
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @users = @slot.user_tags.any? ? User.find(@slot.user_tags) : []
+
+      render "v1/users/list"
+    end
+
     # GET /v1/slots/1/comments
     def show_comments
       @slot = BaseSlot.get(params[:id])

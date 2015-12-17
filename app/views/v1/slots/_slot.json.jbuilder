@@ -4,7 +4,8 @@ json.extract!(slot,
               :start_date,
               :created_at,
               :updated_at,
-              :deleted_at
+              :deleted_at,
+              :user_tags
              )
 
 if slot.open_end == false
