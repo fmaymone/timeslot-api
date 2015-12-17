@@ -6,15 +6,13 @@ class GlobalSlotConsumer
 
   # gets a global slot from the TS_DATA_MALL based on a muid
   def slot(muid)
-    uri_path = "slots/#{muid}"
-    raw_result = fetch(uri_path)
+    raw_result = fetch('slots', muid)
     convert_mall_slot(raw_result)
   end
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    uri_path = "locations/#{muid}"
-    raw_result = fetch(uri_path)
+    raw_result = fetch('locations', muid)
     convert_mall_location(raw_result)
   end
 
@@ -40,23 +38,27 @@ class GlobalSlotConsumer
     slots
   end
 
-  private def fetch(uri_path)
+  private def fetch(resource_type, muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
-    uri.path += uri_path
-
+    uri.path += "#{resource_type}/#{muid}"
     user = ENV['TS_DATA_MALL_USERNAME']
     pw = ENV['TS_DATA_MALL_PASSWORD']
     auth = { http_basic_authentication: [user, pw] }
 
     # Never pass unchecked URI to 'open'
     # http://sakurity.com/blog/2015/02/28/openuri.html
-    open(uri, auth).read
+    raw_result = open(uri, auth).read
   rescue => e
     raise DataTeamServiceError.new('DATA_MALL', e)
+  else
+    # I could also pass open(uri, auth) directly to Oj.load, it would then call
+    # 'read' on it itself
+    result = Oj.load(raw_result)[resource_type]
+    fail ActiveRecord::RecordNotFound if result.empty?
+    result.first
   end
 
-  private def convert_mall_location(raw_result)
-    result = Oj.load(raw_result)['locations'].first
+  private def convert_mall_location(result)
     {
       luid: result['muid'],
       name: result['title'],
@@ -77,8 +79,7 @@ class GlobalSlotConsumer
     }
   end
 
-  private def convert_mall_slot(raw_result)
-    result = Oj.load(raw_result)['slots'].first
+  private def convert_mall_slot(result)
     {
       meta: {
         title: result['title'],
@@ -107,7 +108,7 @@ class GlobalSlotConsumer
       ],
       notes: [
         {
-          title: 'description',
+          title: 'Description',
           content: result['description']
         }
       ]

@@ -6,15 +6,6 @@ module V1
     # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
     def search
       slots = GlobalSlotConsumer.new.search(category_param, search_params)
-    rescue ParameterInvalid => e
-      # TODO: refactor this. need that shit so I can return a 422,
-      # otherwise the next rescue block is used.
-      raise e
-    rescue => e
-      Airbrake.notify(e)
-      return render json: { error: "GlobalSlot Search Service Error: #{e}" },
-                    status: :service_unavailable
-    else
       render :index, locals: { slots: slots }
     end
 
@@ -39,7 +30,7 @@ module V1
       valid_categories = %w(cinema football) # this could also be an ENV var
       return category if valid_categories.include? category
 
-      fail ParameterInvalid, "category must be one of #{valid_categories}"
+      fail ParameterInvalid.new(:category, category)
     end
 
     private def search_params

@@ -108,7 +108,7 @@ RSpec.describe GlobalSlot, type: :model do
       end
     end
 
-    context "missing global slot, valid 'muid'" do
+    context "missing global slot, valid 'muid'", :vcr do
       let(:muid) { attributes_for(:global_slot)[:muid] }
 
       it "creates a new global slot" do
