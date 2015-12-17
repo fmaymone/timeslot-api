@@ -32,9 +32,11 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
+      let(:muid) { attributes_for(:global_slot).muid }
+
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: 'e8fa3c76-75ac-852b-c81d-9c02b5f27c05' },
+             { predecessor: muid },
              auth_header
         expect(response).to have_http_status :created
       end

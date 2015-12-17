@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :global_slot, class: GlobalSlot, parent: :slot do
-    muid "e8fa3c76-75ac-852b-c81d-9c02b5f27c05"
+    muid "9155334a-9448-8857-216c-6985def83186"
 
     trait :with_details do
       url "http://www.dfb.de/europa-league/saisonplan?spieledb_path=matches32"

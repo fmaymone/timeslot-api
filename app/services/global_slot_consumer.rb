@@ -87,15 +87,15 @@ class GlobalSlotConsumer
         end_date: result['stop_timestamp'],
         location_uid: result['location_muid']
       },
-      user: User.find_by(role: 2, username: result['domain']),
+      user: User.find_by(role: 2, username: result['domains'].try(:first)),
 
       # crawler is sending 'none' for 'muid'...
       muid: (result['muid'].nil? || result['muid'] == 'None') ? (result['duid'] || result['cuid']) : result['muid'],
-      url: result['url'],
+      url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
       media: [
         {
-          public_id: result['images'],
+          public_id: result['images'].try(:first),
           position: 1,
           media_type: "image"
         }
