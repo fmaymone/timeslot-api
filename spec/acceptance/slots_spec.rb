@@ -29,6 +29,7 @@ resource "Slots" do
     response_field :images, "Images for the slot"
     response_field :audios, "Audio recordings for the slot"
     response_field :videos, "Videos recordings for the slot"
+    response_field :user_tags, "Tagged users for this slot"
   end
 
   shared_context "stdslot response fields" do
@@ -250,6 +251,7 @@ resource "Slots" do
                  "endDate" => slot.end_date.as_json,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
+                 "userTags" => [],
                  "deletedAt" => deleted_at.as_json,
                  "location" => nil,
                  "creator" => { "id" => slot.creator.id,
@@ -386,6 +388,7 @@ resource "Slots" do
                  "endDate" => reslot.end_date.as_json,
                  "createdAt" => reslot.created_at.as_json,
                  "updatedAt" => reslot.updated_at.as_json,
+                 "userTags" => [],
                  "deletedAt" => deleted_at.as_json,
                  "location" => nil,
                  "creator" => { "id" => reslot.creator.id,
@@ -1429,6 +1432,64 @@ resource "Slots" do
       expect(json['predecessors'].size).to eq 2
       expect(json).to have_key("parentUser")
       expect(json["parentUser"]["id"]).to eq slot.owner.id
+    end
+  end
+
+  post "/v1/slots/:id/user_tags" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot where the user should be tagged", required: true
+    parameter :user_tags, "Array of users ids which should be tagged for this slot", required: true
+
+    let!(:slot) { create(:std_slot_public, owner: current_user) }
+    let!(:reslot) { create(:re_slot, predecessor: slot, slotter: current_user) }
+    let(:user_tags) {[
+        create(:user).id,
+        create(:user).id,
+        create(:user).id
+    ]}
+    let(:id) { slot.id }
+
+    example "Tagging users to a slot", document: :v1 do
+      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+                  "returns 404 if ID is invalid.\n\n" \
+                  "returns 422 if parameters are invalid\n\n" \
+                  "returns 422 if required parameters are missing"
+
+      expect(slot.user_tags).to eq([])
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(slot.reload.user_tags).to eq(user_tags)
+    end
+  end
+
+  get "/v1/slots/:id/user_tags" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the user tags for", required: true
+    response_field :array, "containing a list of users"
+    let(:user_tags) {[
+        create(:user).id,
+        create(:user).id,
+        create(:user).id
+    ]}
+    let!(:slot) { create(:std_slot_public, user_tags: user_tags) }
+    let(:id) { slot.id }
+
+    example "Get all tagged users of a slot", document: :v1 do
+      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json.size).to eq(3)
+      (0..2).each do |i|
+        expect(json[i]['id']).to eq(user_tags[i])
+      end
     end
   end
 
