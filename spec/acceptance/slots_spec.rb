@@ -106,11 +106,11 @@ resource "Slots" do
     describe "Get several slots at once" do
       include_context "default slot response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:meta_slot) { create(:meta_slot) }
       let(:slot1) {
         create(:std_slot_private, owner: current_user) }
       let(:slot2) {
-        create(:std_slot_private, meta_slot: meta_slot,
+        create(:std_slot_private, :with_ios_location, meta_slot: meta_slot,
                owner: current_user) }
       let!(:slot_setting) { build_stubbed(:slot_setting,
                                           user: current_user,
@@ -199,9 +199,10 @@ resource "Slots" do
     describe "Get slot with valid ID" do
       include_context "stdslot response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:meta_slot) { create(:meta_slot) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          meta_slot: meta_slot, share_id: 'abcd1234') }
+                          :with_ios_location, meta_slot: meta_slot,
+                          share_id: 'abcd1234') }
 
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,

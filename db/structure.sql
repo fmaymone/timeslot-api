@@ -491,9 +491,9 @@ CREATE TABLE meta_slots (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    location_id bigint,
     ios_location_id bigint,
-    open_end boolean DEFAULT false NOT NULL
+    open_end boolean DEFAULT false NOT NULL,
+    location_uid uuid
 );
 
 
@@ -1425,4 +1425,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151122175133');
 INSERT INTO schema_migrations (version) VALUES ('20151126144402');
 
 INSERT INTO schema_migrations (version) VALUES ('20151213004813');
+
+INSERT INTO schema_migrations (version) VALUES ('20151216084727');
 

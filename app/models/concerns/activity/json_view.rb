@@ -16,9 +16,9 @@ module JSONView
     end
 
     # slot location
-    if slot.location_id.nil? && slot.ios_location_id.nil?
+    if slot.location_uid.nil? && slot.ios_location_id.nil?
       location_data = nil
-    elsif slot.location_id.nil?
+    elsif slot.location_uid.nil?
       location_data = slot.ios_location
     else
       location_data = slot.location

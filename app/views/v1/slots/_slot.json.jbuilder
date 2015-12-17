@@ -12,9 +12,9 @@ if slot.open_end == false
 end
 
 json.location do
-  if slot.location_id.nil? && slot.ios_location_id.nil?
+  if slot.location_uid.nil? && slot.ios_location_id.nil?
     json.nil!
-  elsif slot.location_id.nil?
+  elsif slot.location_uid.nil?
     json.partial! 'v1/locations/show', location_data: slot.ios_location
   else
     json.partial! 'v1/locations/show', location_data: slot.location

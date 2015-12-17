@@ -10,7 +10,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:creator) }
-  it { is_expected.to respond_to(:location_id) }
+  it { is_expected.to respond_to(:location_uid) }
   it { is_expected.to respond_to(:ios_location_id) }
   it { is_expected.to respond_to(:location) }
   it { is_expected.to respond_to(:deleted_at) }
