@@ -70,6 +70,14 @@ Rails.application.routes.draw do
          to: 'slots#move',
          as: 'slot_move',
          constraints: { id: /\d+/ }
+    get 'slots/:id/user_tags',
+        to: 'slots#get_user_tags',
+        as: 'slot_get_user_tags',
+        constraints: { id: /\d+/ }
+    post 'slots/:id/user_tags',
+         to: 'slots#update_user_tags',
+         as: 'user_tags',
+         constraints: { id: /\d+/ }
 
     scope :globalslots do
       get 'search', to: 'global_slots#search'
