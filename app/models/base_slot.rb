@@ -322,6 +322,7 @@ class BaseSlot < ActiveRecord::Base
     fail unless visibility || group
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
+    # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
     if visibility
@@ -331,6 +332,7 @@ class BaseSlot < ActiveRecord::Base
       slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
     end
 
+    # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
     if media || notes || alerts
