@@ -31,19 +31,17 @@ RSpec.describe GlobalSlotConsumer, type: :service do
     it "returns a location from TS_DATA_MALL" do
       location = GlobalSlotConsumer.new.location(loc_muid)
 
-      expect(location).to have_key :luid
-      expect(location).to have_key :name
-      expect(location).to have_key :locality
-      expect(location).to have_key :administrative_area
-      expect(location).to have_key :postal_code
-      expect(location).to have_key :country
-      expect(location).to have_key :latitude
-      expect(location).to have_key :longitude
-      expect(location[:luid]).to eq loc_muid
-      expect(location[:locality]).not_to be_nil
-      expect(location[:country]).not_to be_nil
-      expect(location[:latitude]).not_to be_nil
-      expect(location[:longitude]).not_to be_nil
+      expect(location).to respond_to :name
+      expect(location).to respond_to :locality
+      expect(location).to respond_to :administrative_area
+      expect(location).to respond_to :postal_code
+      expect(location).to respond_to :country
+      expect(location).to respond_to :latitude
+      expect(location).to respond_to :longitude
+      expect(location.locality).not_to be_nil
+      expect(location.country).not_to be_nil
+      expect(location.latitude).not_to be_nil
+      expect(location.longitude).not_to be_nil
     end
   end
 

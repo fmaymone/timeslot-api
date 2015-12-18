@@ -13,7 +13,7 @@ class GlobalSlotConsumer
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
     raw_result = fetch('locations', muid)
-    convert_mall_location(raw_result)
+    CandyLocation.new(raw_result)
   end
 
   def search(category, query)
@@ -56,27 +56,6 @@ class GlobalSlotConsumer
     result = Oj.load(raw_result)[resource_type]
     fail ActiveRecord::RecordNotFound if result.empty?
     result.first
-  end
-
-  private def convert_mall_location(result)
-    {
-      luid: result['muid'],
-      name: result['title'],
-      # thoroughfare: result['street'],
-      # sub_thoroughfare: result[''],
-      locality: result['city'],
-      # sub_locality: result[''],
-      administrative_area: result['region'],
-      # sub_administrative_area: result[''],
-      postal_code: result['postcode'],
-      country: result['country'],
-      # iso_country_code: result[''],
-      # in_land_water: result[''],
-      # ocean: result[''],
-      # areas_of_interest: result[''],
-      latitude: result['latitude'],
-      longitude: result['longitude']
-    }
   end
 
   private def convert_mall_slot(result)
