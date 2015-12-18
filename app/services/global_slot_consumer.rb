@@ -49,12 +49,15 @@ class GlobalSlotConsumer
     # http://sakurity.com/blog/2015/02/28/openuri.html
     raw_result = open(uri, auth).read
   rescue => e
-    raise DataTeamServiceError.new('DATA_MALL', e)
+    if e.io.status.first == '404'
+      raise ActiveRecord::RecordNotFound
+    else
+      raise DataTeamServiceError.new('DATA_MALL', e)
+    end
   else
     # I could also pass open(uri, auth) directly to Oj.load, it would then call
     # 'read' on it itself
     result = Oj.load(raw_result)[resource_type]
-    fail ActiveRecord::RecordNotFound if result.empty?
     result.first
   end
 

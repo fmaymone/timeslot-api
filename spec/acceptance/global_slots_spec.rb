@@ -92,7 +92,7 @@ resource "GlobalSlots" do
       let(:category) { 'football' }
       let(:q) { 'Borussia' }
       let(:moment) { '2015-07-05'}
-      let(:limit) { 15 }
+      let(:limit) { 10 }
 
       example "Football - Find global slots", document: :v1 do
         explanation "Forwards a search request to the Elastic Search Service " \
