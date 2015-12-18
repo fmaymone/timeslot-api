@@ -17,7 +17,7 @@ json.location do
   elsif slot.location_uid.nil?
     json.partial! 'v1/locations/show', location_data: slot.ios_location
   else
-    json.partial! 'v1/locations/show', location_data: slot.location
+    json.partial! 'v1/locations/candy_location', location_data: slot.location
   end
 end
 

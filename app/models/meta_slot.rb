@@ -26,7 +26,7 @@ class MetaSlot < ActiveRecord::Base
   validate :enddate_is_after_startdate
 
   def location
-    Location.find(location_uid)
+    GlobalSlotConsumer.new.location(location_uid)
   rescue => e
     Airbrake.notify(e)
     nil

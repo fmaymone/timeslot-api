@@ -32,7 +32,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
-      let(:muid) { attributes_for(:global_slot).muid }
+      let(:muid) { attributes_for(:global_slot)[:muid] }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
@@ -43,7 +43,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     end
 
     context "global slot already in backend db" do
-      let(:global_slot) { create(:global_slot) }
+      let(:global_slot) { create(:global_slot, :with_candy_location) }
 
       it "returns 201" do
         post "/v1/globalslots/reslot",
@@ -65,6 +65,20 @@ RSpec.describe "V1::GlobalSlots", type: :request do
         expect(json).to have_key('visibility')
         expect(json).to have_key('createdAt')
         expect(json).to have_key('updatedAt')
+      end
+
+      it "returns the candy store location", :vcr do
+        post "/v1/globalslots/reslot",
+             { predecessor: global_slot.muid },
+             auth_header
+
+        expect(json).to have_key 'location'
+        expect(json['location']).not_to be_nil
+        location = json['location']
+        expect(location).to have_key 'latitude'
+        expect(location).to have_key 'longitude'
+        expect(location['latitude']).not_to be nil
+        expect(location['longitude']).not_to be nil
       end
     end
 
