@@ -112,6 +112,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
              { predecessor: 'I-thought-I-was-an-alien' },
              auth_header
         expect(response).to have_http_status :service_unavailable
+        expect(response.body).to include "Invalid input parameter 'muid'"
       end
     end
   end

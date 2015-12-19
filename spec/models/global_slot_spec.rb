@@ -80,8 +80,10 @@ RSpec.describe GlobalSlot, type: :model do
           public_id: "http://assets.dfb.de/public/uploads/c46d542ef57d003",
           media_type: 'image'
         }}
-      let(:description) {{ title: 'Description',
-                           content: "Champions League, 2015/2016, Gruppe A" }}
+      let(:description) {
+        { title: 'Description',
+          content: "Champions League, 2015/2016, Gruppe A" }
+      }
 
       it "creates a new GlobalSlot with url and location_muid" do
         global_slot = described_class.create_slot(meta: meta_params,
@@ -149,7 +151,7 @@ RSpec.describe GlobalSlot, type: :model do
       end
     end
 
-    context "missing global slot, invalid 'muid'" do
+    context "missing global slot, invalid data" do
       let(:invalid_muid) { 'foo-bar-muid' }
       let(:unknown_muid) { '238a69a4-271c-f5cb-e60e-48952d805855' }
 
@@ -159,10 +161,10 @@ RSpec.describe GlobalSlot, type: :model do
         }.to raise_error TSErrors::DataTeamServiceError
       end
 
-      it "raises error if uuid format is invalid" do
-        skip 'want to get a 404 if nothing is found for a muid'
-        res = described_class.find_or_create(unknown_muid)
-        expect(res).to eq 1
+      it "raises error if uuid is not found" do
+        expect {
+          described_class.find_or_create(unknown_muid)
+        }.to raise_error TSErrors::DataTeamServiceError
       end
     end
   end

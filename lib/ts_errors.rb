@@ -11,7 +11,7 @@ module TSErrors
   # a useful result.
   class DataTeamServiceError < StandardError
     def initialize(service, e)
-      if e.class == OpenURI
+      if e.class == OpenURI::HTTPError
         data_team_msg = e.io.meta_setup_encoding if e.try(:io)
         super("#{service}: #{data_team_msg} - [#{e.class}] #{e.message}")
       else

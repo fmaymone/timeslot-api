@@ -55,7 +55,7 @@ class GlobalSlotConsumer
     # http://sakurity.com/blog/2015/02/28/openuri.html
     raw_result = open(uri, auth).read
   rescue => e
-    if e.io.status.first == '404'
+    if e.class == OpenURI::HTTPError && e.io.status.first == '404'
       raise ActiveRecord::RecordNotFound
     else
       raise DataTeamServiceError.new('DATA_MALL', e)
