@@ -50,9 +50,12 @@ module V1
       end
       es_search_params[:timestamp] = valid_date.as_json || Time.zone.now.as_json
 
-      limit = params[:limit]
-      size = limit.to_i > 100 ? 100 : limit.to_i if params[:limit].present?
-      es_search_params[:size] = size || 20
+      if params[:limit].present?
+        limit = params[:limit]
+        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+      else
+        es_search_params[:limit] = 20
+      end
       es_search_params
     end
   end
