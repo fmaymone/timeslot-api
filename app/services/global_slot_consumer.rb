@@ -87,8 +87,7 @@ class GlobalSlotConsumer
         end_date: result['stop_timestamp'],
         location_uid: result['location_muid']
       },
-      # crawler is sending 'none' for 'muid'...
-      muid: (result['muid'].nil? || result['muid'] == 'None') ? (result['duid'] || result['cuid']) : result['muid'],
+      muid: result['muid'] || result['duid'] || result['cuid'],
       url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
       media: [
