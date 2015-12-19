@@ -767,7 +767,12 @@ RSpec.describe "V1::Me", type: :request do
 
   describe "GET /v1/me/friendslots" do
     context "no pagination" do
-      let(:bob) { create(:user, username: 'bob') }
+      let(:bob) do
+        bob = create(:user, username: 'bob')
+        create(:friendship, :established, user: bob, friend: current_user)
+        bob
+      end
+
       let!(:bob_slots) do
         create(:re_slot, slotter: bob)
         create(:std_slot_private, owner: bob, title: 'private slot')
@@ -779,16 +784,6 @@ RSpec.describe "V1::Me", type: :request do
                start_date: Time.zone.yesterday.last_week,
                end_date: Time.zone.yesterday)
       end
-
-      let!(:friendships) {
-        create(:friendship, :established,
-               user: create(:user, :with_friend_slot),
-               friend: current_user)
-        create(:friendship, :established,
-               user: current_user,
-               friend: create(:user, :with_public_slot))
-        create(:friendship, :established, user: bob, friend: current_user)
-      }
 
       it "returns success" do
         get "/v1/me/friendslots", {}, auth_header
