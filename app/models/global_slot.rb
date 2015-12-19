@@ -1,6 +1,8 @@
 class GlobalSlot < BaseSlot
   self.table_name = model_name.plural
 
+  after_commit AuditLog
+
   validates :muid, presence: true
 
   def self.create_slot(meta:, user:, muid:, url: nil, media: nil, notes: nil,
