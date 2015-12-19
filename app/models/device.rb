@@ -121,6 +121,7 @@ class Device < ActiveRecord::Base
       Rails.logger.error { opts }
       Airbrake.notify(exception, opts)
     end
+    Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} done." }
   end
 
   def self.create_client
