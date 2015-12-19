@@ -62,15 +62,25 @@ class GlobalSlotConsumer
   end
 
   private def convert_mall_slot(result)
+    slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
+  rescue ActiveRecord::RecordNotFound
+    msg = "Couldn't find User for given Domain. Seed data loaded?"
+    opts = {}
+    opts[:parameters] = {
+      domain: result['domain'],
+      muid: result['muid'],
+      global_slot: msg }
+    Airbrake.notify(ActionController::ParameterMissing, opts)
+    raise ActionController::ParameterMissing, msg
+  else
     {
+      user: slot_source,
       meta: {
         title: result['title'],
         start_date: result['start_timestamp'],
         end_date: result['stop_timestamp'],
         location_uid: result['location_muid']
       },
-      user: User.find_by(role: 2, username: result['domains'].try(:first)),
-
       # crawler is sending 'none' for 'muid'...
       muid: (result['muid'].nil? || result['muid'] == 'None') ? (result['duid'] || result['cuid']) : result['muid'],
       url: result['urls'].try(:first),
