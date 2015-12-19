@@ -28,7 +28,7 @@ module JSONView
       json['location'] = nil
     else
       json['location'] = {
-          id: location_data.id,
+          # id: location_data.id,
           name: (location_data.name.blank? ? nil : location_data.name),
           thoroughfare: location_data.thoroughfare,
           subThoroughfare: location_data.sub_thoroughfare,
@@ -44,7 +44,7 @@ module JSONView
           areasOfInterest: location_data.areas_of_interest,
           latitude: location_data.latitude,
           longitude: location_data.longitude,
-          privateLocation: location_data.private_location,
+          # privateLocation: location_data.private_location,
       }
     end
 
