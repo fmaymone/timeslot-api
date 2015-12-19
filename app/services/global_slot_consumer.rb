@@ -47,7 +47,7 @@ class GlobalSlotConsumer
   private def fetch(resource_type, muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
     uri.path += "#{resource_type}/#{muid}"
-    user = ENV['TS_DATA_MALL_USERNAME']
+    user = ENV['TS_DATA_MALL_NAME']
     pw = ENV['TS_DATA_MALL_PASSWORD']
     auth = { http_basic_authentication: [user, pw] }
 

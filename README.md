@@ -77,7 +77,7 @@ ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
 Allows to get a Global Slot by its **muid**.
 ```
 ENV['TS_DATA_MALL_URL'])
-ENV['TS_DATA_MALL_USERNAME'] || "tsgatekeeper"
+ENV['TS_DATA_MALL_NAME'] || "tsgatekeeper"
 ENV['TS_DATA_MALL_PASSWORD'] || "***REMOVED***"
 ```
 
