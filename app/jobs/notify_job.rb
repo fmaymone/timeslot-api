@@ -3,6 +3,9 @@ class NotifyJob
   workers ENV['NOTIFICATION_WORKERS'] || 5
 
   def perform(user_queue, params)
+    Rails.logger.warn {
+      "SUCKER_PUNCH NotifyJob started. Notifying #{user_queue.length} users..."
+    }
     client = Device.create_client
     # currently it is not possible to bulk multiple notifications into one
     # request to AWS SNS
@@ -26,6 +29,9 @@ class NotifyJob
           Airbrake.notify(e, opts)
         end
       end
+      Rails.logger.warn {
+        "SUCKER_PUNCH NotifyJob done. (#{user_queue.length} users notifyed)"
+      }
     end
   end
 
