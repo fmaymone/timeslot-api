@@ -56,9 +56,9 @@ resource "Feeds", :activity, :async do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
+      let(:meta_slot) { create(:meta_slot,
                                title: 'Slot title 21', creator: owner) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_me_singular', TITLE: slot.title) }
 
@@ -105,9 +105,9 @@ resource "Feeds", :activity, :async do
       include_context "default user response fields"
 
       let(:user) { create(:user) }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
-                               title: 'Slot title 22', creator: user) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:meta_slot) {
+        create(:meta_slot, title: 'Slot title 22', creator: user) }
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_activity_singular',
                              USER: actor.username, TITLE: slot.title) }
@@ -188,9 +188,9 @@ resource "Feeds", :activity, :async do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
-                               title: 'Slot title 23', creator: current_user) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:meta_slot) {
+        create(:meta_slot, title: 'Slot title 23', creator: current_user) }
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_notify_singular',
                              USER: actor.username, TITLE: slot.title) }

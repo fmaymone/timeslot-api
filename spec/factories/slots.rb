@@ -3,8 +3,8 @@ FactoryGirl.define do
     association :meta_slot, strategy: :build
   end
 
-  trait :with_location do
-    location_id 200_719_253
+  trait :with_candy_location do
+    location_uid '19f95a00-2f9c-3578-7bdb-10b6276e08a8'
   end
 
   trait :with_ios_location do

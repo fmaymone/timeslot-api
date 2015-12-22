@@ -28,7 +28,7 @@ describe UserPolicy do
       it "raises MissingCurrentUserError" do
         expect {
           subject.new(user, User).public_send(:show?)
-        }.to raise_error TS_Errors::MissingCurrentUserError
+        }.to raise_error TSErrors::MissingCurrentUserError
       end
     end
   end

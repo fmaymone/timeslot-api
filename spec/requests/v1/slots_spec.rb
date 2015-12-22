@@ -1612,7 +1612,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:uid/slotdata" do
-    let!(:slot) { create(:std_slot_private, :with_notes, :with_location,
+    let!(:slot) { create(:std_slot_private, :with_notes, :with_ios_location,
                          :with_real_image, share_id: '12345xyz',
                          shared_by: create(:user)) }
     before { current_user.webview! }

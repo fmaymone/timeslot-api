@@ -38,12 +38,6 @@ class StdSlot < BaseSlot
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
 
-  def reslots
-    # this should not include private reslots
-    # TODO: change it when we have reslots with different visibilities
-    ReSlot.where parent_id: id
-  end
-
   def related_users
     [owner]
   end
