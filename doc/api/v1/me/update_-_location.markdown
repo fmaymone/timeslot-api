@@ -194,7 +194,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=NfHF23hwFyeX3OxHv5zUhG6wqzw
+Authorization: Token token=aOD6cfvL5Polb6jNb43IuYnF9Io
 Host: example.org
 Cookie: </pre>
 
@@ -216,7 +216,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=NfHF23hwFyeX3OxHv5zUhG6wqzw&quot; \
+	-H &quot;Authorization: Token token=aOD6cfvL5Polb6jNb43IuYnF9Io&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -227,10 +227,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;27eb92a122dc84cf75806563ced19f14&quot;
+ETag: W/&quot;51c0b575a6e0374e51ed83d217401630&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8b84ed27-4e60-48d9-87be-13b4045df1c1
-X-Runtime: 0.035699
+X-Request-Id: 5e879a32-f394-42e7-9f3f-e863871a5005
+X-Runtime: 0.027466
 Vary: Origin
 Content-Length: 1036</pre>
 
@@ -242,10 +242,10 @@ Content-Length: 1036</pre>
 
 ```javascript
 {
-  "id" : 144,
-  "username" : "User 195",
-  "createdAt" : "2015-12-04T16:56:49.414Z",
-  "updatedAt" : "2015-12-04T16:56:49.429Z",
+  "id" : 136,
+  "username" : "User 202",
+  "createdAt" : "2015-12-23T11:18:32.355Z",
+  "updatedAt" : "2015-12-23T11:18:32.369Z",
   "deletedAt" : null,
   "image" : "",
   "location" : {
@@ -271,7 +271,7 @@ Content-Length: 1036</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user42@email.com",
+  "email" : "user40@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,

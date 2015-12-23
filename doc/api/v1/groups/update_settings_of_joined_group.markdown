@@ -30,7 +30,7 @@ Description : set default alerts for slots in this group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2MliHpKnLbDz8PrfU7zsjT6tH_c
+Authorization: Token token=H1yVOjpLlURONBZtohz2oax5Dvc
 Host: example.org
 Cookie: </pre>
 
@@ -53,7 +53,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groups/27/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2MliHpKnLbDz8PrfU7zsjT6tH_c&quot; \
+	-H &quot;Authorization: Token token=H1yVOjpLlURONBZtohz2oax5Dvc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -65,8 +65,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 728df7b7-bc96-48e1-ab77-e644d4da0c57
-X-Runtime: 0.007805
+X-Request-Id: 69bac3dd-9041-4949-ad22-f7469326cad9
+X-Runtime: 0.008182
 Vary: Origin
 Content-Length: 0</pre>
 

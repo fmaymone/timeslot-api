@@ -1,0 +1,55 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://:***REMOVED***@hector.timeslot.rocks:50100/api/v0/slots/9155334a-9448-8857-216c-6985def83186
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Length:
+      - '777'
+      Www-Authenticate:
+      - Basic realm="private"
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Wed, 23 Dec 2015 11:01:48 GMT
+      Server:
+      - ns375179.ip-37-187-174.eu
+    body:
+      encoding: UTF-8
+      string: |2
+
+            <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+            <html>
+                <head>
+                    <title>Error: 401 Unauthorized</title>
+                    <style type="text/css">
+                      html {background-color: #eee; font-family: sans;}
+                      body {background-color: #fff; border: 1px solid #ddd;
+                            padding: 15px; margin: 15px;}
+                      pre {background-color: #eee; border: 1px solid #ddd; padding: 5px;}
+                    </style>
+                </head>
+                <body>
+                    <h1>Error: 401 Unauthorized</h1>
+                    <p>Sorry, the requested URL <tt>&#039;http://hector.timeslot.rocks:50100/api/v0/slots/9155334a-9448-8857-216c-6985def83186&#039;</tt>
+                       caused an error:</p>
+                    <pre>Access denied</pre>
+                </body>
+            </html>
+    http_version: 
+  recorded_at: Wed, 23 Dec 2015 10:58:32 GMT
+recorded_with: VCR 3.0.1

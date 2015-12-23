@@ -66,7 +66,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=zB0FSa_zJaZz_vhBFrYvX7x1x24
+Authorization: Token token=PETdJnhx7o2Rd0VyBtZFTcfOmEY
 Host: example.org
 Cookie: </pre>
 
@@ -78,7 +78,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zB0FSa_zJaZz_vhBFrYvX7x1x24&quot; \
+	-H &quot;Authorization: Token token=PETdJnhx7o2Rd0VyBtZFTcfOmEY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -89,10 +89,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;316f3b309324ec13451688122a995c98&quot;
+ETag: W/&quot;317572f7b2eb2392d333faa26d6c93d9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a7027b23-9095-4e12-94c1-3bb4d8d66d9d
-X-Runtime: 0.040531
+X-Request-Id: 1f53201e-60d2-456d-b3ec-637ac97bb9c4
+X-Runtime: 0.034495
 Vary: Origin
 Content-Length: 2598</pre>
 
@@ -105,19 +105,19 @@ Content-Length: 2598</pre>
 ```javascript
 [
   {
-    "id" : 22,
-    "title" : "Slot title 39",
-    "startDate" : "2019-09-16T18:44:02.000Z",
-    "createdAt" : "2015-12-07T23:17:56.632Z",
-    "updatedAt" : "2015-12-07T23:17:56.632Z",
+    "id" : 19,
+    "title" : "Slot title 40",
+    "startDate" : "2019-09-17T19:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:31.946Z",
+    "updatedAt" : "2015-12-23T11:18:31.946Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-16T18:44:02.000Z",
+    "endDate" : "2019-10-17T19:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 122,
-      "username" : "User 173",
-      "createdAt" : "2015-12-07T23:17:56.628Z",
-      "updatedAt" : "2015-12-07T23:17:56.628Z",
+      "id" : 112,
+      "username" : "User 178",
+      "createdAt" : "2015-12-23T11:18:31.942Z",
+      "updatedAt" : "2015-12-23T11:18:31.942Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -133,19 +133,19 @@ Content-Length: 2598</pre>
     "shareUrl" : null
   },
   {
-    "id" : 23,
-    "title" : "Slot title 40",
-    "startDate" : "2019-09-17T19:44:02.000Z",
-    "createdAt" : "2015-12-07T23:17:56.641Z",
-    "updatedAt" : "2015-12-07T23:17:56.641Z",
+    "id" : 20,
+    "title" : "Slot title 41",
+    "startDate" : "2019-09-18T20:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:31.953Z",
+    "updatedAt" : "2015-12-23T11:18:31.953Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-17T19:44:02.000Z",
+    "endDate" : "2019-10-18T20:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 123,
-      "username" : "User 174",
-      "createdAt" : "2015-12-07T23:17:56.635Z",
-      "updatedAt" : "2015-12-07T23:17:56.635Z",
+      "id" : 113,
+      "username" : "User 179",
+      "createdAt" : "2015-12-23T11:18:31.949Z",
+      "updatedAt" : "2015-12-23T11:18:31.949Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -161,19 +161,19 @@ Content-Length: 2598</pre>
     "shareUrl" : null
   },
   {
-    "id" : 25,
-    "title" : "Slot title 41",
-    "startDate" : "2019-09-18T20:44:02.000Z",
-    "createdAt" : "2015-12-07T23:17:56.665Z",
-    "updatedAt" : "2015-12-07T23:17:56.665Z",
+    "id" : 22,
+    "title" : "Slot title 42",
+    "startDate" : "2019-09-19T21:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:31.971Z",
+    "updatedAt" : "2015-12-23T11:18:31.971Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-18T20:44:02.000Z",
+    "endDate" : "2019-10-19T21:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 124,
-      "username" : "User 175",
-      "createdAt" : "2015-12-07T23:17:56.644Z",
-      "updatedAt" : "2015-12-07T23:17:56.644Z",
+      "id" : 114,
+      "username" : "User 180",
+      "createdAt" : "2015-12-23T11:18:31.956Z",
+      "updatedAt" : "2015-12-23T11:18:31.956Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -184,10 +184,10 @@ Content-Length: 2598</pre>
     },
     "reslotsCounter" : 1,
     "slotter" : {
-      "id" : 120
+      "id" : 110
     },
     "parent" : {
-      "id" : 24
+      "id" : 21
     },
     "visibility" : "public",
     "likes" : 0,
@@ -195,19 +195,19 @@ Content-Length: 2598</pre>
     "shareUrl" : null
   },
   {
-    "id" : 26,
-    "title" : "Slot title 43",
-    "startDate" : "2019-09-20T22:44:02.000Z",
-    "createdAt" : "2015-12-07T23:17:56.710Z",
-    "updatedAt" : "2015-12-07T23:17:56.710Z",
+    "id" : 23,
+    "title" : "Slot title 44",
+    "startDate" : "2019-09-21T23:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:32.009Z",
+    "updatedAt" : "2015-12-23T11:18:32.009Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-20T22:44:02.000Z",
+    "endDate" : "2019-10-21T23:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 128,
-      "username" : "User 179",
-      "createdAt" : "2015-12-07T23:17:56.705Z",
-      "updatedAt" : "2015-12-07T23:17:56.705Z",
+      "id" : 118,
+      "username" : "User 184",
+      "createdAt" : "2015-12-23T11:18:32.005Z",
+      "updatedAt" : "2015-12-23T11:18:32.005Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -223,19 +223,19 @@ Content-Length: 2598</pre>
     "shareUrl" : null
   },
   {
-    "id" : 27,
-    "title" : "Slot title 44",
-    "startDate" : "2019-09-21T23:44:02.000Z",
-    "createdAt" : "2015-12-07T23:17:56.734Z",
-    "updatedAt" : "2015-12-07T23:17:56.734Z",
+    "id" : 24,
+    "title" : "Slot title 45",
+    "startDate" : "2019-09-22T00:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:32.041Z",
+    "updatedAt" : "2015-12-23T11:18:32.041Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-21T23:44:02.000Z",
+    "endDate" : "2019-10-22T00:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 131,
-      "username" : "User 182",
-      "createdAt" : "2015-12-07T23:17:56.729Z",
-      "updatedAt" : "2015-12-07T23:17:56.729Z",
+      "id" : 121,
+      "username" : "User 187",
+      "createdAt" : "2015-12-23T11:18:32.037Z",
+      "updatedAt" : "2015-12-23T11:18:32.037Z",
       "deletedAt" : null,
       "image" : ""
     },

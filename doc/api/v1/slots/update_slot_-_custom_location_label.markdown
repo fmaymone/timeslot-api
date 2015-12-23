@@ -145,7 +145,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=_-XcdT3J4wrX310--7frgMYvLHw
+Authorization: Token token=1YuNY_PSrgve5wBtpC2Cbzn8HXc
 Host: example.org
 Cookie: </pre>
 
@@ -169,7 +169,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=_-XcdT3J4wrX310--7frgMYvLHw&quot; \
+	-H &quot;Authorization: Token token=1YuNY_PSrgve5wBtpC2Cbzn8HXc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,12 +180,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6e4f35ea0eb67e1dada5d5f7064636c3&quot;
+ETag: W/&quot;131080a796e704bca2552ec43271c21a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 05b47802-1649-44a9-8171-c2991559a823
-X-Runtime: 0.024124
+X-Request-Id: cd3b18b8-e702-41fd-b60d-31b56cc06e5d
+X-Runtime: 0.019255
 Vary: Origin
-Content-Length: 913</pre>
+Content-Length: 850</pre>
 
 #### Status
 
@@ -196,12 +196,12 @@ Content-Length: 913</pre>
 ```javascript
 {
   "id" : 7,
-  "title" : "Slot title 66",
-  "startDate" : "2019-09-17T22:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:52.264Z",
-  "updatedAt" : "2015-12-04T16:56:52.264Z",
+  "title" : "Slot title 69",
+  "startDate" : "2019-09-20T01:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.985Z",
+  "updatedAt" : "2015-12-23T11:18:34.985Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-17T22:44:02.000Z",
+  "endDate" : "2019-10-20T01:44:02.000Z",
   "location" : {
     "id" : 2,
     "name" : "Soho House Custom",
@@ -223,15 +223,11 @@ Content-Length: 913</pre>
   },
   "creator" : {
     "id" : 17,
-    "username" : "User 301",
-    "createdAt" : "2015-12-04T16:56:52.252Z",
-    "updatedAt" : "2015-12-04T16:56:52.252Z",
+    "username" : "User 308",
+    "createdAt" : "2015-12-23T11:18:34.978Z",
+    "updatedAt" : "2015-12-23T11:18:34.978Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

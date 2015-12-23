@@ -82,7 +82,7 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Authorization: Token token=zriBy38sJxlTnamR1thZ9vgzC74
+<pre>Authorization: Token token=_5wl0sel5rEo-ts-jxTnDp-sswE
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -94,7 +94,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=zriBy38sJxlTnamR1thZ9vgzC74&quot; \
+	-H &quot;Authorization: Token token=_5wl0sel5rEo-ts-jxTnDp-sswE&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -106,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;046a4d0efef00e00f6e4bdc4d299cbcb&quot;
+ETag: W/&quot;2111af87c167b58bac0b9448f37911be&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 971cb653-2d0b-448f-88e1-5c77b84064c7
-X-Runtime: 0.065558
+X-Request-Id: 823af068-a3b3-43d7-8086-c1a9f569ea96
+X-Runtime: 0.055113
 Vary: Origin
-Content-Length: 570</pre>
+Content-Length: 507</pre>
 
 #### Status
 
@@ -122,24 +122,20 @@ Content-Length: 570</pre>
 ```javascript
 {
   "id" : 10,
-  "title" : "Slot title 69",
-  "startDate" : "2019-09-20T01:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:52.708Z",
-  "updatedAt" : "2015-12-04T16:56:52.752Z",
-  "deletedAt" : "2015-12-04T16:56:52.751Z",
-  "endDate" : "2019-10-20T01:44:02.000Z",
+  "title" : "Slot title 72",
+  "startDate" : "2019-09-23T04:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:35.120Z",
+  "updatedAt" : "2015-12-23T11:18:35.164Z",
+  "deletedAt" : "2015-12-23T11:18:35.163Z",
+  "endDate" : "2019-10-23T04:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 24,
-    "username" : "User 308",
-    "createdAt" : "2015-12-04T16:56:52.700Z",
-    "updatedAt" : "2015-12-04T16:56:52.700Z",
+    "username" : "User 315",
+    "createdAt" : "2015-12-23T11:18:35.115Z",
+    "updatedAt" : "2015-12-23T11:18:35.115Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
