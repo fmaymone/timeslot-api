@@ -26,7 +26,7 @@ gem 'rails_12factor', group: :production
 
 # third party services
 gem 'cloudinary'
-gem 'airbrake'
+gem 'airbrake', '4.3.1'
 gem 'aws-sdk'
 gem 'newrelic_rpm'
 
