@@ -1,0 +1,847 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://es-user:A2es-indexW%21ssl@failover.es.timeslot.rocks:56000/api/v0/cinema?limit=20&q=Frei&timestamp=2015-12-18T00:00:00.000Z
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET,POST,PUT,OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin,Accept,Content-Type,X-Requested-With,X-CSRF-Token
+      Content-Length:
+      - '66902'
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Wed, 23 Dec 2015 10:58:01 GMT
+      Server:
+      - ip-172-31-3-183
+    body:
+      encoding: UTF-8
+      string: '{"search-slots": [{"domain": "moviepilot.de", "description": "Das legend\u00e4rste
+        Weltraumm\u00e4rchen unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30
+        Jahre nach dem Sieg \u00fcber Darth Vader und das Imperium steht die Galaxie
+        vor einer neuen Bedrohung. Handlung von Star Wars: Episode VII \u2013 Das
+        Erwachen der Macht Die Handlung setzt ca. 30 Jahre nach den Ereignissen von
+        Die R\u00fcckkehr der Jedi-Ritter ein und konzentriert sich auf den Wiederaufbau
+        der Republik nach dem Fall des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen
+        auch die Schauspieler der Krieg-der-Sterne-Filme in ihren entsprechend gealterten
+        Rollen wieder auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als
+        Han Solo und Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO
+        (Anthony Daniels) und R2-D2 werden von ihren alten Schauspielern gespielt.
+        Kylo Ren (Adam Driver) bedroht den galaktischen Frieden und will das Erbe
+        Darth Vaders antreten. Ihm stellen sich der Deserteur Finn (John Boyega),
+        die widerspenstige Pl\u00fcnderin Rey (Daisy Ridley) und der tollk\u00fchne
+        Pilot Poe Dameron (Oscar Isaac) entgegen, um den m\u00e4chtigsten Krieger
+        der Galaxie zu finden. Hintergrund & Infos zu Star Wars: Episode VII \u2013
+        Das Erwachen der Macht Nachdem George Lucas (unter anderem auch Autor von
+        Indiana Jones und der letzte Kreuzzug) mit Krieg der Sterne nicht nur einen
+        bahnbrechenden Science-Fiction-Film inszenierte, sondern gleichzeitig auch
+        das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte geschaffen hatte,
+        folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck sowie Die R\u00fcckkehr
+        der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013 teils sehr zum Missfallen
+        der Fans \u2013 die Prequel-Trilogie (Star Wars: Episode I \u2013 Die dunkle
+        Bedrohung, Star Wars: Episode II \u2013 Angriff der Klonkrieger & Star Wars:
+        Episode III \u2013 Die Rache der Sith). Zu den bekannten Stars aus Krieg der
+        Sterne sto\u00dfen noch weitere neue Gesichter: Neben Max von Sydow und dem
+        Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen wir uns auf John Boyega
+        (Attack the Block), Daisy Ridley, Adam Driver (Girls), Oscar Isaac (Inside
+        Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen. Kurz nach dem Aufkauf
+        von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend angek\u00fcndigt,
+        mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen. Au\u00dferdem
+        hat George Lucas bereits bekannt gegeben, dass er sich komplett von der Inszenierung
+        zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber einen geeigneten
+        Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams (Star Trek) gefunden
+        wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich als kreativer
+        Berater in Aktion treten. (ST)", "duid": "5c5c90f1-9d60-be86-93c8-9ff2be1b1457",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/schwarzheide/2015/12/23",
+        "location_geo": [13.847665, 51.48092], "start_timestamp": "2015-12-23T12:00:00",
+        "location": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "address": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T13:30:00", "muid": "5c5c90f1-9d60-be86-93c8-9ff2be1b1457", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "In Disneys Animationsfilm
+        Alles steht Kopf entwickeln die Emotionen eines jungen M\u00e4dchens in ihrem
+        Kopf ein ungew\u00f6hnliches Eigenleben. Handlung von Alles steht Kopf Die
+        11-j\u00e4hrige Riley ist eigentlich ein ganz normales kleines M\u00e4dchen.
+        Sie lebt gl\u00fccklich in einer l\u00e4ndlichen Gegend von Minnesota. Eines
+        Tages muss sie ihre geliebte Heimat allerdings verlassen und zieht mit ihren
+        Eltern nach San Francisco. Riley ist \u00fcber ihren Umzug so ungl\u00fccklich,
+        dass sie ihre Emotionen nicht mehr kontrollieren kann. Sie entwickeln in ihr
+        ein Eigenleben, sehr zum Erstaunen ihrer Eltern. Fortan versuchen Wut (im
+        Original gesprochen von Lewis Black ), Ekel ( Mindy Kaling ), Angst ( Bill
+        Hader ), Traurigkeit ( Phyllis Smith ) und Freude ( Amy Poehler ) gemeinsam,
+        das Leben von Riley wieder ins Gleichgewicht zu bringen, damit sie auch in
+        ihrer neuen Heimat endlich Freunde finden kann. Hintergrund & Infos zu Alles
+        steht Kopf Die Idee kam Regisseur Pete Docter , als er sich mal wieder dar\u00fcber
+        wunderte, warum einem manche Songs den ganzen Tag innerlich begleiten, oder
+        warum man manchmal lachen muss, ohne dass Au\u00dfenstehende erkennen k\u00f6nnen,
+        warum. Daraus entwickelte er eine Story, die uns zeigt, was uns sonst verborgen
+        bleibt: Was geschieht eigentlich im Inneren eines Bewusstseins? In Alles steht
+        Kopf (OT: Inside Out) sehen wir daher die Emotionen eines M\u00e4dchens als
+        lebendige Wesen, die im Kopf ihre Konflikte austragen, ohne dass ihre Eltern
+        verstehen k\u00f6nnen, was mit ihrer Tochter gerade passiert. Deshalb erz\u00e4hlt
+        der Film zwei Geschichten auf einmal: die \u00e4u\u00dfere und die innere.
+        Hierzu wurden die Emotionen als einzelne Figuren aus Energie entworfen, deren
+        Aussehen zu ihrem Charakter passt. Auch das Drehbuch stammt von Peter Docter.
+        Fans von Animationsfilmen ist er vor allem bekannt als der Autor und Regisseur
+        einiger der gr\u00f6\u00dften Hits des Animationsfilmstudios Pixar, das inzwischen
+        zu Walt Disney geh\u00f6rt. Zu seinen bisherigen Hits geh\u00f6ren die modernen
+        Animationsfilmklassiker Oben , Die Monster AG sowie die Storys von Toy Story
+        und Wall-E \u2013 Der Letzte r\u00e4umt die Erde auf . F\u00fcr seine Arbeit
+        als Drehbuchautor und Regisseur war er bereits f\u00fcr sechs Oscars nominiert.
+        F\u00fcr Oben gewann er schlie\u00dflich den Oscar f\u00fcr den Besten Animationsfilm.
+        Als Vorfilm zu Alles Steht Kopf wurde der animierte Kurzfilm Lava gezeigt.
+        (ST)", "duid": "c8eb8992-85a6-7583-1716-6655e7724a68", "tags": "cinema,movies",
+        "url": "http://www.moviepilot.de/kino/kinoprogramm/schwarzheide/2015/12/23",
+        "location_geo": [13.847665, 51.48092], "start_timestamp": "2015-12-23T12:00:00",
+        "location": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "address": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/fc3cb47cb8a64ed7187f11ec55e0e4d373bb10ecd3030adf22fc8862ebdf/Alles_steht_Kopf00001.jpg",
+        "title": "Alles steht Kopf", "stop_timestamp": "2015-12-23T13:30:00", "muid":
+        "c8eb8992-85a6-7583-1716-6655e7724a68", "uuid": null}, {"domain": "moviepilot.de",
+        "description": "Das legend\u00e4rste Weltraumm\u00e4rchen unserer Zeit wird
+        mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg \u00fcber Darth Vader
+        und das Imperium steht die Galaxie vor einer neuen Bedrohung. Handlung von
+        Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung setzt ca.
+        30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter ein und
+        konzentriert sich auf den Wiederaufbau der Republik nach dem Fall des Imperiums.
+        Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler der Krieg-der-Sterne-Filme
+        in ihren entsprechend gealterten Rollen wieder auftreten: Mark Hamill als
+        Luke Skywalker, Harrison Ford als Han Solo und Carrie Fisher als Leia. Auch
+        Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels) und R2-D2 werden von ihren
+        alten Schauspielern gespielt. Kylo Ren (Adam Driver) bedroht den galaktischen
+        Frieden und will das Erbe Darth Vaders antreten. Ihm stellen sich der Deserteur
+        Finn (John Boyega), die widerspenstige Pl\u00fcnderin Rey (Daisy Ridley) und
+        der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac) entgegen, um den m\u00e4chtigsten
+        Krieger der Galaxie zu finden. Hintergrund & Infos zu Star Wars: Episode VII
+        \u2013 Das Erwachen der Macht Nachdem George Lucas (unter anderem auch Autor
+        von Indiana Jones und der letzte Kreuzzug) mit Krieg der Sterne nicht nur
+        einen bahnbrechenden Science-Fiction-Film inszenierte, sondern gleichzeitig
+        auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte geschaffen
+        hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck sowie Die
+        R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013 teils
+        sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars: Episode
+        I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff der Klonkrieger
+        & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den bekannten Stars
+        aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter: Neben Max von
+        Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen wir uns
+        auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls), Oscar
+        Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen. Kurz
+        nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "1698b893-ad09-f021-e0e5-5941469bb3ad",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/muenchen/2015/12/23",
+        "location_geo": [11.58677, 48.161183], "start_timestamp": "2015-12-23T14:00:00",
+        "location": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "address": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T15:30:00", "muid": "1698b893-ad09-f021-e0e5-5941469bb3ad", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "203480c0-ae02-f7a5-170d-84a9f004a24a",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T14:00:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T15:30:00", "muid": "203480c0-ae02-f7a5-170d-84a9f004a24a", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "In Bora Dagtekins Fortsetzung
+        Fack ju G\u00f6hte 2 m\u00fcssen Elyas M\u2019Barek und Karoline Herfurth
+        auf einer internationalen Klassenfahrt feststellen, dass sie noch l\u00e4ngst
+        nicht alle T\u00fccken des Schulalltags gemeistert haben. Handlung von Fack
+        ju G\u00f6hte 2 Gerade haben der prollige Zeki M\u00fcller ( Elyas M\u2019Barek
+        ) und die wenig durchsetzungsf\u00e4hige Lisi Schnabelstedt ( Karoline Herfurth
+        ) ihre Sch\u00fcler in Fack ju G\u00f6hte mit M\u00fch und Not unter Kontrolle
+        gebracht und dabei auch noch entdeckt, dass sie einander entgegen ihrer eigenen
+        Erwartungen m\u00f6gen, da steht f\u00fcr die beiden Lehrer schon wieder die
+        n\u00e4chste H\u00fcrde an: eine Klassenfahrt \u2013 noch dazu ins Ausland.
+        Mit dem Trip nach Thailand will Direktorin Gerster ( Katja Riemann ) dem elit\u00e4ren
+        Schillergymnasium Konkurrenz machen. Das w\u00e4re eine einmalige Gelegenheit,
+        den Ruf der Goehte-Gesamtschule zu verbessern, und nat\u00fcrliche werden
+        Herr M\u00fcller und Frau Schnabelstedt auserkoren, die Sch\u00fcler rund
+        um Chantal ( Jella Haase ), Danger ( Max von der Groeben ) und Zeynep ( Gizem
+        Emre ) in den thail\u00e4ndischen K\u00fcstenort zu begleiten. Dort setzen
+        es sich die Schiller-Sch\u00fcler und ihr Lehrer Hauke W\u00f6lki ( Volker
+        Bruch ) allerdings in den Kopf, Zekis Bildungslaufbahn und seinen ungew\u00f6hnlichen
+        Unterrichtsmethoden den Garaus zu machen. Hintergrund & Infos zu Fack ju G\u00f6hte
+        2 W\u00e4hrend die Fortsetzung zu Fack ju G\u00f6hte letztendlich tats\u00e4chlich
+        den Titel Fack ju G\u00f6hte 2 erhielt, wurde im Vorfeld mit dem Gedanken
+        gespielt, dem Sequel erneut einen vollt\u00f6nenden, einpr\u00e4gsamen Titel
+        zu verpassen. Im Oktober lie\u00dfen sich die Filmemacher deshalb gleich drei
+        m\u00f6gliche Filmtitel sch\u00fctzen, n\u00e4mlich Fresse, Hesse , Leck mich,
+        Schiller und Fack Ju Tu . Wie nach dem Erfolg von Teil 1 nicht verwunderlich,
+        nahmen Elyas M\u2019Barek ( Who Am I \u2013 Kein System ist sicher ), Karoline
+        Herfurth ( Vincent will meer ) und Katja Riemann ( Die abhandene Welt ) ihre
+        bereits im Originalfilm verk\u00f6rperten Rollen in der Fortsetzung Fack ju
+        G\u00f6hte 2 erneut mit Freuden auf. Neu zum Cast stie\u00dfen unter anderem
+        Alwara H\u00f6fels ( Frau M\u00fcller muss weg ) und Volker Bruch ( Tann\u00f6d
+        ). Die Dreharbeiten zu Fack ju G\u00f6hte 2 begannen im September 2014 und
+        waren deutlich umfangreicher als die des Vorg\u00e4ngerfilms, weil die Handlung
+        des Sequels unter anderem im Ausland stattfindet und auch dort gedreht wurde.
+        (ES)", "duid": "b99dbecd-5bb7-c1ee-84fa-9c74d8b08f7b", "tags": "cinema,movies",
+        "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T14:00:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/d05510daff5c0b51d948f25e6402e9e06daf7e340eebb9071af3cdaa7279/fack-ju-goehte-2-poster-01.jpg",
+        "title": "Fack ju G\u00f6hte 2", "stop_timestamp": "2015-12-23T15:30:00",
+        "muid": "b99dbecd-5bb7-c1ee-84fa-9c74d8b08f7b", "uuid": null}, {"domain":
+        "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "ca1760bf-7f62-0e8e-15a6-6775e70c92e4",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiberg/2015/12/23",
+        "location_geo": [13.31788, 50.90783], "start_timestamp": "2015-12-23T14:00:00",
+        "location": "Kinopolis,Chemnitzer Stra\u00dfe 133,09599,Freiberg", "address":
+        "Kinopolis,Chemnitzer Stra\u00dfe 133,09599,Freiberg", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T15:30:00", "muid": "ca1760bf-7f62-0e8e-15a6-6775e70c92e4", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "4935053f-8fcf-f8bd-4db0-626abdc3cf33",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/schwarzheide/2015/12/23",
+        "location_geo": [13.847665, 51.48092], "start_timestamp": "2015-12-23T14:15:00",
+        "location": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "address": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T15:45:00", "muid": "4935053f-8fcf-f8bd-4db0-626abdc3cf33", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "778ac9e4-d80f-ed7f-a6bc-8bd87ee1d573",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/schwarzheide/2015/12/23",
+        "location_geo": [13.847665, 51.48092], "start_timestamp": "2015-12-23T14:30:00",
+        "location": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "address": "Extra-Kinowelt im Freizeitpark Wandelhof,Ruhlanderstra\u00dfe
+        37,01987,Schwarzheide", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T16:00:00", "muid": "778ac9e4-d80f-ed7f-a6bc-8bd87ee1d573", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "3b48e09c-1ea6-9ae2-7575-c95bacae9077",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T15:15:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T16:45:00", "muid": "3b48e09c-1ea6-9ae2-7575-c95bacae9077", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "40571eba-4aa9-af37-ca04-017df8fd86be",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T16:00:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T17:30:00", "muid": "40571eba-4aa9-af37-ca04-017df8fd86be", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Sein Name ist Bond, James
+        Bond: Daniel Craig kehrt nach Casino Royale, Ein Quantum Trost und Skyfall
+        mit Spectre ein viertes Mal als Agent im Geheimdienst ihrer Majest\u00e4t
+        in die Kinos zur\u00fcck. Handlung von James Bond 007 \u2013 Spectre James
+        Bond ( Daniel Craig ) wird mit einer kryptischen Nachricht aus seiner eigenen
+        Vergangenheit konfrontiert. Bei der Suche nach der Quelle der Nachricht st\u00f6\u00dft
+        Bond auf eine d\u00fcstere Organisation namens Spectre. In der Zwischenzeit
+        muss M ( Ralph Fiennes ) den Secret Service gegen\u00fcber der britischen
+        Regierung verteidigen, die \u00fcberlegt, den MI6-Betrieb einzustellen. Im
+        weiteren Verlauf st\u00f6\u00dft Bond auf eine Verschw\u00f6rung verheerenden
+        Ausma\u00dfes. Hintergrund & Infos zu James Bond 007 \u2013 Spectre Bereits
+        drei Mal war Daniel Craig ( Verblendung ) f\u00fcr den MI6 im Geheimdienst
+        ihrer Majest\u00e4t in t\u00f6dlicher Mission unterwegs: James Bond 007 \u2013
+        Casino Royale , James Bond 007 \u2013 Ein Quantum Trost und James Bond 007
+        \u2013 Skyfall . Nun kehrt er als britischer Geheimagent James Bond wieder
+        auf die gro\u00dfe Leinwand zur\u00fcck. Skyfall-Regisseur Sam Mendes ( American
+        Beauty ) h\u00e4lt erneut die inszenatorischen Z\u00fcgel in der Hand. F\u00fcr
+        die Kameraf\u00fchrung zeichnet dieses Mal Hoyte Van Hoytema ( Dame K\u00f6nig
+        As Spion ) verantwortlich. Der Soundtrack stammt aus der Feder von Thomas
+        Newman ( Road to Perdition ), der schon den musikalischen Unterbau von Skyfall
+        komponierte. Zum Cast geh\u00f6ren neben Daniel Craig als James Bond erneut
+        Ralph Fiennes ( Grand Budapest Hotel ) als M, Naomie Harris ( Pirates of the
+        Caribbean \u2013 Fluch der Karibik 2 ) als Eve Moneypenny, Rory Kinnear (
+        The Imitation Game \u2013 Ein streng geheimes Leben ) als Tanner und Ben Whishaw
+        ( Cloud Atlas \u2013 Alles ist verbunden ) als Q. Neu dazugesto\u00dfen sind
+        Christoph Waltz ( Inglourious Basterds ) als Oberhauser, Andrew Scott ( Sherlock
+        ) als Denbigh und Dave Bautista ( Guardians of the Galaxy ) als Mr. Hinx.
+        Als Bond-Girls fungieren in James Bond 007 \u2013 Spectre L\u00e9a Seydoux
+        ( Blau ist eine warme Farbe ) als Madeleine Swann und Monica Bellucci ( Shoot
+        \u2019Em Up ) als Lucia Sciarra. Ger\u00fcchten zufolge sollte auch Pen\u00e9lope
+        Cruz ( Vicky Cristina Barcelona ) einem Part im 24. James Bond-Film einnehmen.
+        Als Sony jedoch am 4. Dezember 2014 den offiziellen Titel enth\u00fcllte und
+        die Angaben zum Main Cast bekannt gab, tauchte der Name der spanischen Schauspielerin
+        nicht mehr auf. Ende M\u00e4rz 2014 erschien ein Teaser Trailer zu Bond 24,
+        der f\u00fcr den angeblichen Titel James Bond 007 \u2013 Come and Dive warb.
+        Das Video stellte sich jedoch schnell als Fake Trailer heraus und Sony gab
+        bekannt, dass es sich dabei nicht um offizielles Material handelte. Die Ver\u00f6ffentlichung
+        des Fake Trailers zu Bond 24 war als Marketing-Gag der S\u00e4ngerin Benedict
+        gedacht, die durch eine Weiterleitung auf ihre Facebook-Seite auf sich aufmerksam
+        machen wollte. (MH)", "duid": "7c546020-84d6-78f4-5bce-d3b71bc53e18", "tags":
+        "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/muenchen/2015/12/23",
+        "location_geo": [11.58677, 48.161183], "start_timestamp": "2015-12-23T16:15:00",
+        "location": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "address": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/56889ce361e97c25f1e8d428af2c222c95df8d37698f97616cde95bf9974/spectre-teaser-poster.jpg",
+        "title": "James Bond 007 - Spectre", "stop_timestamp": "2015-12-23T17:45:00",
+        "muid": "7c546020-84d6-78f4-5bce-d3b71bc53e18", "uuid": null}, {"domain":
+        "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "31623809-c120-0b26-d55d-0b0d6890acbd",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.85099, 47.99391], "start_timestamp": "2015-12-23T16:15:00",
+        "location": "Harmonie,Gr\u00fcnw\u00e4lderstra\u00dfe 16-18,79098,Freiburg
+        im Breisgau", "address": "Harmonie,Gr\u00fcnw\u00e4lderstra\u00dfe 16-18,79098,Freiburg
+        im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T17:45:00", "muid": "31623809-c120-0b26-d55d-0b0d6890acbd", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "c64beaf6-c679-71c0-0d53-80e764de4679",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/muenchen/2015/12/23",
+        "location_geo": [11.58677, 48.161183], "start_timestamp": "2015-12-23T16:30:00",
+        "location": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "address": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T18:00:00", "muid": "c64beaf6-c679-71c0-0d53-80e764de4679", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Die biografische Dokumentation
+        Awake \u2013 Das Leben des Yogananda erz\u00e4hlt die Geschichte des Mannes,
+        der mit seiner Autobiographie eines Yogi die indische Spiritualit\u00e4t in
+        Europa popul\u00e4r machte. Handlung von Awake \u2013 Das Leben des Yogananda
+        Awake \u2013 Das Leben des Yogananda zeichnet die Lebensgeschichte und Geisteshaltung
+        des Hindu-Meisters Paramahansa Yogananda nach. Er verfasste 1946 seine Autobiography
+        of a Yogi (Autobiografie eines Yogi), sorgte jedoch auch schon seit den 1920er
+        Jahren daf\u00fcr, dass die spirituelle Lehre der Meditation und des Yogas
+        ihren Weg von Indien nach Europa und Amerika fand. Das Buch sollte sp\u00e4ter
+        so unterschiedliche Menschen wie Beatles-Mitglied George Harrison und Technik-Guru
+        Steve Jobs beeinflussen. In ihrer Doku Awake \u2013 Das Leben des Yogananda
+        erforschen Paola di Florio und Lisa Leeman, wie die uralten Weisheiten von
+        Yogananda f\u00fcr moderne Anh\u00e4nger aufbereitet wurden, um ihre Spiritualit\u00e4t
+        zu finden und sich im komplexen Netz von Glaube und Wissenschaft zurechtzufinden.
+        Daf\u00fcr kombinieren sie Spielszenen mit Interviews, ergr\u00fcnden die
+        Besonderheiten des Kriya Yoga und streben wie der indische Lehrmeister nach
+        einem inneren Einklang und Selbstverwirklichung. (ES)", "duid": "377c3193-cb67-06cd-6149-a9b056ddee03",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.847768, 47.994714], "start_timestamp": "2015-12-23T16:30:00",
+        "location": "Friedrichsbau-Apollo,Kaiser-Josef-Stra\u00dfe 270,79098,Freiburg
+        im Breisgau", "address": "Friedrichsbau-Apollo,Kaiser-Josef-Stra\u00dfe 270,79098,Freiburg
+        im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/1de5245988235eeab85bdf84cf5d2530befa46909ac9af796d92a94361c2/awake-poster-01.jpg",
+        "title": "Awake - Das Leben des Yogananda", "stop_timestamp": "2015-12-23T18:00:00",
+        "muid": "377c3193-cb67-06cd-6149-a9b056ddee03", "uuid": null}, {"domain":
+        "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "f5e9ed42-9e60-da03-7062-b9dcdd6ee9c5",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiberg/2015/12/23",
+        "location_geo": [13.31788, 50.90783], "start_timestamp": "2015-12-23T16:30:00",
+        "location": "Kinopolis,Chemnitzer Stra\u00dfe 133,09599,Freiberg", "address":
+        "Kinopolis,Chemnitzer Stra\u00dfe 133,09599,Freiberg", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T18:00:00", "muid": "f5e9ed42-9e60-da03-7062-b9dcdd6ee9c5", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Sein Name ist Bond, James
+        Bond: Daniel Craig kehrt nach Casino Royale, Ein Quantum Trost und Skyfall
+        mit Spectre ein viertes Mal als Agent im Geheimdienst ihrer Majest\u00e4t
+        in die Kinos zur\u00fcck. Handlung von James Bond 007 \u2013 Spectre James
+        Bond ( Daniel Craig ) wird mit einer kryptischen Nachricht aus seiner eigenen
+        Vergangenheit konfrontiert. Bei der Suche nach der Quelle der Nachricht st\u00f6\u00dft
+        Bond auf eine d\u00fcstere Organisation namens Spectre. In der Zwischenzeit
+        muss M ( Ralph Fiennes ) den Secret Service gegen\u00fcber der britischen
+        Regierung verteidigen, die \u00fcberlegt, den MI6-Betrieb einzustellen. Im
+        weiteren Verlauf st\u00f6\u00dft Bond auf eine Verschw\u00f6rung verheerenden
+        Ausma\u00dfes. Hintergrund & Infos zu James Bond 007 \u2013 Spectre Bereits
+        drei Mal war Daniel Craig ( Verblendung ) f\u00fcr den MI6 im Geheimdienst
+        ihrer Majest\u00e4t in t\u00f6dlicher Mission unterwegs: James Bond 007 \u2013
+        Casino Royale , James Bond 007 \u2013 Ein Quantum Trost und James Bond 007
+        \u2013 Skyfall . Nun kehrt er als britischer Geheimagent James Bond wieder
+        auf die gro\u00dfe Leinwand zur\u00fcck. Skyfall-Regisseur Sam Mendes ( American
+        Beauty ) h\u00e4lt erneut die inszenatorischen Z\u00fcgel in der Hand. F\u00fcr
+        die Kameraf\u00fchrung zeichnet dieses Mal Hoyte Van Hoytema ( Dame K\u00f6nig
+        As Spion ) verantwortlich. Der Soundtrack stammt aus der Feder von Thomas
+        Newman ( Road to Perdition ), der schon den musikalischen Unterbau von Skyfall
+        komponierte. Zum Cast geh\u00f6ren neben Daniel Craig als James Bond erneut
+        Ralph Fiennes ( Grand Budapest Hotel ) als M, Naomie Harris ( Pirates of the
+        Caribbean \u2013 Fluch der Karibik 2 ) als Eve Moneypenny, Rory Kinnear (
+        The Imitation Game \u2013 Ein streng geheimes Leben ) als Tanner und Ben Whishaw
+        ( Cloud Atlas \u2013 Alles ist verbunden ) als Q. Neu dazugesto\u00dfen sind
+        Christoph Waltz ( Inglourious Basterds ) als Oberhauser, Andrew Scott ( Sherlock
+        ) als Denbigh und Dave Bautista ( Guardians of the Galaxy ) als Mr. Hinx.
+        Als Bond-Girls fungieren in James Bond 007 \u2013 Spectre L\u00e9a Seydoux
+        ( Blau ist eine warme Farbe ) als Madeleine Swann und Monica Bellucci ( Shoot
+        \u2019Em Up ) als Lucia Sciarra. Ger\u00fcchten zufolge sollte auch Pen\u00e9lope
+        Cruz ( Vicky Cristina Barcelona ) einem Part im 24. James Bond-Film einnehmen.
+        Als Sony jedoch am 4. Dezember 2014 den offiziellen Titel enth\u00fcllte und
+        die Angaben zum Main Cast bekannt gab, tauchte der Name der spanischen Schauspielerin
+        nicht mehr auf. Ende M\u00e4rz 2014 erschien ein Teaser Trailer zu Bond 24,
+        der f\u00fcr den angeblichen Titel James Bond 007 \u2013 Come and Dive warb.
+        Das Video stellte sich jedoch schnell als Fake Trailer heraus und Sony gab
+        bekannt, dass es sich dabei nicht um offizielles Material handelte. Die Ver\u00f6ffentlichung
+        des Fake Trailers zu Bond 24 war als Marketing-Gag der S\u00e4ngerin Benedict
+        gedacht, die durch eine Weiterleitung auf ihre Facebook-Seite auf sich aufmerksam
+        machen wollte. (MH)", "duid": "4b718df5-013b-12ae-f3ef-aeceb71a7cef", "tags":
+        "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T16:40:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/56889ce361e97c25f1e8d428af2c222c95df8d37698f97616cde95bf9974/spectre-teaser-poster.jpg",
+        "title": "James Bond 007 - Spectre", "stop_timestamp": "2015-12-23T18:10:00",
+        "muid": "4b718df5-013b-12ae-f3ef-aeceb71a7cef", "uuid": null}, {"domain":
+        "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "0913c29d-7b8a-2d11-9750-a867e777072e",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/muenchen/2015/12/23",
+        "location_geo": [11.58677, 48.161183], "start_timestamp": "2015-12-23T16:45:00",
+        "location": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "address": "M\u00fcnchner Freiheit,Leopoldstra\u00dfe 82,80802,M\u00fcnchen",
+        "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T18:15:00", "muid": "0913c29d-7b8a-2d11-9750-a867e777072e", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Im Drama Der Staat gegen
+        Fritz Bauer von Lars Kraume macht sich Burghart Klau\u00dfner als Generalstaatsanwalt
+        zusammen mit Ronald Zehrfeld f\u00fcr die Bestrafung von Nazi-Verbrechern
+        stark. Handlung von Der Staat gegen Fritz Bauer 1957 liegt der Nationalsozialismus
+        hinter Deutschland, doch all jene, die unter Hitler furchbare Verbrechen begingen,
+        sind noch l\u00e4ngst nicht gefasst. Der hessische Generalstaatsanwalt Fritz
+        Bauer ( Burghart Klau\u00dfner ) besch\u00e4ftigt sich mit der Aufkl\u00e4rung
+        der damaligen Schreckenstaten. Nachdem der Krieg zw\u00f6lf Jahre vor\u00fcber
+        ist, erh\u00e4lt der Anwalt einen wertvollen Hinweis zum Verbleib des SS-Obersturmbannf\u00fchrers
+        Adolf Eichmann ( Michael Schenk ). Zusammen mit Staatsanwalt Karl Angermann
+        ( Ronald Zehrfeld ) setzt sich Bauer auf dessen Spur. Doch den Beh\u00f6rden
+        ist offensichtlich nicht sehr viel daran gelegen, dass der fl\u00fcchtige
+        Eichmann gefunden wird. Akten verschwinden und Oberstaatsanwalt Ulrich Kreidler
+        ( Sebastian Blomberg ) und BKA-Mitarbeiter Paul Gebhardt ( J\u00f6rg Sch\u00fcttauf
+        ) scheinen die Ermittlungen sogar bewusst zu manipulieren. Bauer und Angermann
+        beginnen erbittert, f\u00fcr Gerechtigkeit zu k\u00e4mpfen, doch der Feind
+        bleibt unsichtbar und wirkt \u00fcberm\u00e4chtig. Hintergrund & Infos zu
+        Der Staat gegen Fritz Bauer Das Justizdrama Der Staat gegen Fritz Bauer von
+        Lars Kraume erhielt im August 2015 auf dem 68. Internationalen Filmfestival
+        von Locarno den Publikumspreis. (ES)", "duid": "a01c00f4-0f8b-a802-9458-84271b1c7e7d",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.847768, 47.994714], "start_timestamp": "2015-12-23T16:50:00",
+        "location": "Friedrichsbau-Apollo,Kaiser-Josef-Stra\u00dfe 270,79098,Freiburg
+        im Breisgau", "address": "Friedrichsbau-Apollo,Kaiser-Josef-Stra\u00dfe 270,79098,Freiburg
+        im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/168/240/e6bad72a62dc14059799b75ccf2ae086e8752f5071ea3871624a96a8b601/der-staat-gegen-fritz-bauer-02.jpg",
+        "title": "Der Staat gegen Fritz Bauer", "stop_timestamp": "2015-12-23T18:20:00",
+        "muid": "a01c00f4-0f8b-a802-9458-84271b1c7e7d", "uuid": null}, {"domain":
+        "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "4ac42bcf-a927-a86f-8506-0dfbd0ebc287",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/freiburg-im-breisgau/2015/12/23",
+        "location_geo": [7.843989, 47.995727], "start_timestamp": "2015-12-23T17:00:00",
+        "location": "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "address":
+        "CinemaxX,Bertoldstra\u00dfe 50,79098,Freiburg im Breisgau", "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T18:30:00", "muid": "4ac42bcf-a927-a86f-8506-0dfbd0ebc287", "uuid":
+        null}, {"domain": "moviepilot.de", "description": "Das legend\u00e4rste Weltraumm\u00e4rchen
+        unserer Zeit wird mit Star Wars 7 fortgesetzt, denn 30 Jahre nach dem Sieg
+        \u00fcber Darth Vader und das Imperium steht die Galaxie vor einer neuen Bedrohung.
+        Handlung von Star Wars: Episode VII \u2013 Das Erwachen der Macht Die Handlung
+        setzt ca. 30 Jahre nach den Ereignissen von Die R\u00fcckkehr der Jedi-Ritter
+        ein und konzentriert sich auf den Wiederaufbau der Republik nach dem Fall
+        des Imperiums. Durch den zeitlichen Abstand k\u00f6nnen auch die Schauspieler
+        der Krieg-der-Sterne-Filme in ihren entsprechend gealterten Rollen wieder
+        auftreten: Mark Hamill als Luke Skywalker, Harrison Ford als Han Solo und
+        Carrie Fisher als Leia. Auch Chewbacca (Peter Mayhew), C-3PO (Anthony Daniels)
+        und R2-D2 werden von ihren alten Schauspielern gespielt. Kylo Ren (Adam Driver)
+        bedroht den galaktischen Frieden und will das Erbe Darth Vaders antreten.
+        Ihm stellen sich der Deserteur Finn (John Boyega), die widerspenstige Pl\u00fcnderin
+        Rey (Daisy Ridley) und der tollk\u00fchne Pilot Poe Dameron (Oscar Isaac)
+        entgegen, um den m\u00e4chtigsten Krieger der Galaxie zu finden. Hintergrund
+        & Infos zu Star Wars: Episode VII \u2013 Das Erwachen der Macht Nachdem George
+        Lucas (unter anderem auch Autor von Indiana Jones und der letzte Kreuzzug)
+        mit Krieg der Sterne nicht nur einen bahnbrechenden Science-Fiction-Film inszenierte,
+        sondern gleichzeitig auch das gr\u00f6\u00dfte Weltraumm\u00e4rchen der Filmgeschichte
+        geschaffen hatte, folgten die Sequels Das Imperium schl\u00e4gt zur\u00fcck
+        sowie Die R\u00fcckkehr der Jedi-Ritter. Jahrzehnte sp\u00e4ter folgte \u2013
+        teils sehr zum Missfallen der Fans \u2013 die Prequel-Trilogie (Star Wars:
+        Episode I \u2013 Die dunkle Bedrohung, Star Wars: Episode II \u2013 Angriff
+        der Klonkrieger & Star Wars: Episode III \u2013 Die Rache der Sith). Zu den
+        bekannten Stars aus Krieg der Sterne sto\u00dfen noch weitere neue Gesichter:
+        Neben Max von Sydow und dem Motion-Capture-Universalgenie Andy Serkis k\u00f6nnen
+        wir uns auf John Boyega (Attack the Block), Daisy Ridley, Adam Driver (Girls),
+        Oscar Isaac (Inside Llewyn Davis) und Domhnall Gleeson (Six Shooter) freuen.
+        Kurz nach dem Aufkauf von Lucasfilm durch die Walt Disney Company wurde \u00fcberraschend
+        angek\u00fcndigt, mit einer weiteren Trilogie den Star-Wars-Mythos fortzusetzen.
+        Au\u00dferdem hat George Lucas bereits bekannt gegeben, dass er sich komplett
+        von der Inszenierung zur\u00fcckziehen werde, was wilde Spekulationen \u00fcber
+        einen geeigneten Regisseur ausl\u00f6ste, der schlie\u00dflich in J.J. Abrams
+        (Star Trek) gefunden wurde. George Lucas wird f\u00fcr Star Wars 7 ausschlie\u00dflich
+        als kreativer Berater in Aktion treten. (ST)", "duid": "d761ef88-114f-73c5-8463-80916934d396",
+        "tags": "cinema,movies", "url": "http://www.moviepilot.de/kino/kinoprogramm/marienberg/2015/12/23",
+        "location_geo": [13.165522, 50.651642], "start_timestamp": "2015-12-23T17:00:00",
+        "location": "Kinocenter Movie,Freiberger Stra\u00dfe 14,09496,Marienberg",
+        "address": "Kinocenter Movie,Freiberger Stra\u00dfe 14,09496,Marienberg",
+        "images": "http://assets.cdn.moviepilot.de/assets/store/fill/200/200/7f4ad7388ced0b965c57044321cfbfc9aa24b9060fdbe7c6515975f5119b/star-wars-das-erwachen-der-macht-poster.jpg",
+        "title": "Star Wars: Episode VII - Das Erwachen der Macht", "stop_timestamp":
+        "2015-12-23T18:30:00", "muid": "d761ef88-114f-73c5-8463-80916934d396", "uuid":
+        null}], "analyzed": {"geo_location": null, "title": "Frei"}}'
+    http_version: 
+  recorded_at: Wed, 23 Dec 2015 10:57:56 GMT
+recorded_with: VCR 3.0.1

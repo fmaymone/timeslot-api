@@ -3,6 +3,16 @@
 ## upcoming
 
 
+## v0.9.0
+- this release needs MIGRATION, SEED, new ENV_VARs
+- Improvements for Activities (Remove, MultiLanguage)
+- Search and Reslots Globalslots
+- update User AuthToken on signup if it was null
+- freeze Airbrake Gem Version
+- add logging for job monitoring
+- FIX some issues with counters
+
+
 ## v0.8.3
 - [TML-137/138/109] Forward Predecessors + Push Integration into Activity Workflow and Improve Activity Removal #151
 - [TML-116] FIX activity feed distributing and removals + specs #149

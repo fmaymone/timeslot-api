@@ -54,7 +54,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Dbh02dJA-6YYkUQPjn0cgmrNoi4
+Authorization: Token token=sbBrIIMBi73wv6SV1vsw44Iy7ZM
 Host: example.org
 Cookie: </pre>
 
@@ -66,7 +66,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/106&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Dbh02dJA-6YYkUQPjn0cgmrNoi4&quot; \
+	-H &quot;Authorization: Token token=sbBrIIMBi73wv6SV1vsw44Iy7ZM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -77,10 +77,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cb6663a439b472244ebf46184d364e78&quot;
+ETag: W/&quot;ecbe52a4cdb3723dd5099412ae057056&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 64aebc3f-d8f3-4497-87d1-2e5197b8ff36
-X-Runtime: 0.017298
+X-Request-Id: e9cc952c-f870-47d3-bf67-6aae7e86146a
+X-Runtime: 0.020610
 Vary: Origin
 Content-Length: 557</pre>
 
@@ -93,9 +93,9 @@ Content-Length: 557</pre>
 ```javascript
 {
   "id" : 106,
-  "username" : "User 391",
-  "createdAt" : "2015-12-04T16:56:54.208Z",
-  "updatedAt" : "2015-12-04T16:56:54.208Z",
+  "username" : "User 398",
+  "createdAt" : "2015-12-23T11:18:36.525Z",
+  "updatedAt" : "2015-12-23T11:18:36.525Z",
   "deletedAt" : null,
   "image" : "",
   "location" : {

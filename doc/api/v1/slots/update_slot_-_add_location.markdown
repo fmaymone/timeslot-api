@@ -153,7 +153,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=xCEsEamlyF_W12I-398PleVkb5c
+Authorization: Token token=cLQYbU9ZdEPnVr-VG8_oawvlLS4
 Host: example.org
 Cookie: </pre>
 
@@ -185,7 +185,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/6&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=xCEsEamlyF_W12I-398PleVkb5c&quot; \
+	-H &quot;Authorization: Token token=cLQYbU9ZdEPnVr-VG8_oawvlLS4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -196,12 +196,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;22b4cecfc2dc758b97d524995cf8ca98&quot;
+ETag: W/&quot;f57e98dfb2d6f2618c39e1c9e4b223dd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4b52cd9f-ad1d-4bdc-aa29-8e39c7945d9d
-X-Runtime: 0.024915
+X-Request-Id: c3417ba0-c952-42ae-a308-1462b6087e6e
+X-Runtime: 0.038628
 Vary: Origin
-Content-Length: 930</pre>
+Content-Length: 867</pre>
 
 #### Status
 
@@ -212,12 +212,12 @@ Content-Length: 930</pre>
 ```javascript
 {
   "id" : 6,
-  "title" : "Slot title 65",
-  "startDate" : "2019-09-16T21:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:52.215Z",
-  "updatedAt" : "2015-12-04T16:56:52.215Z",
+  "title" : "Slot title 68",
+  "startDate" : "2019-09-19T00:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.927Z",
+  "updatedAt" : "2015-12-23T11:18:34.927Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-16T21:44:02.000Z",
+  "endDate" : "2019-10-19T00:44:02.000Z",
   "location" : {
     "id" : 1,
     "name" : "Soho House",
@@ -239,15 +239,11 @@ Content-Length: 930</pre>
   },
   "creator" : {
     "id" : 15,
-    "username" : "User 299",
-    "createdAt" : "2015-12-04T16:56:52.207Z",
-    "updatedAt" : "2015-12-04T16:56:52.207Z",
+    "username" : "User 306",
+    "createdAt" : "2015-12-23T11:18:34.919Z",
+    "updatedAt" : "2015-12-23T11:18:34.919Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

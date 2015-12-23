@@ -115,7 +115,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tw-Q0B0JD5WLzl8RiQ7tLnk7p3A
+Authorization: Token token=GfbpDqbDiyqO4VJKJQxyVCdC65s
 Host: example.org
 Cookie: </pre>
 
@@ -145,7 +145,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/3&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tw-Q0B0JD5WLzl8RiQ7tLnk7p3A&quot; \
+	-H &quot;Authorization: Token token=GfbpDqbDiyqO4VJKJQxyVCdC65s&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -156,12 +156,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2a2da1b57fda43a7f4a2e93fe7b20760&quot;
+ETag: W/&quot;7cb00d316608b689a85cee067ed69441&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fd90a5c3-82b7-45b2-8987-4b81ea4f2daa
-X-Runtime: 0.031110
+X-Request-Id: 1307f3ad-f45b-411c-a1f3-aa7146a7f15e
+X-Runtime: 0.027474
 Vary: Origin
-Content-Length: 844</pre>
+Content-Length: 781</pre>
 
 #### Status
 
@@ -172,24 +172,20 @@ Content-Length: 844</pre>
 ```javascript
 {
   "id" : 3,
-  "title" : "Slot title 62",
-  "startDate" : "2019-09-13T18:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:52.036Z",
-  "updatedAt" : "2015-12-04T16:56:52.036Z",
+  "title" : "Slot title 65",
+  "startDate" : "2019-09-16T21:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.751Z",
+  "updatedAt" : "2015-12-23T11:18:34.751Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-13T18:44:02.000Z",
+  "endDate" : "2019-10-16T21:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 6,
-    "username" : "User 290",
-    "createdAt" : "2015-12-04T16:56:52.027Z",
-    "updatedAt" : "2015-12-04T16:56:52.027Z",
+    "username" : "User 297",
+    "createdAt" : "2015-12-23T11:18:34.743Z",
+    "updatedAt" : "2015-12-23T11:18:34.743Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [
     {
@@ -197,14 +193,14 @@ Content-Length: 844</pre>
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : null,
-      "createdAt" : "2015-12-04T16:56:52.056Z"
+      "createdAt" : "2015-12-23T11:18:34.769Z"
     },
     {
       "id" : 1,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : "123321",
-      "createdAt" : "2015-12-04T16:56:52.052Z"
+      "createdAt" : "2015-12-23T11:18:34.763Z"
     }
   ],
   "media" : [],

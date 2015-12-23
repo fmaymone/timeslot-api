@@ -21,7 +21,7 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=aLHFIehdaF32WRWRb1OOA0hm4Tc
+<pre>Authorization: Token token=izGl42cFCOO2jde4ZJjZRZY7Y_Q
 Host: example.org
 Cookie: </pre>
 
@@ -32,7 +32,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/129/media&quot; -X GET \
-	-H &quot;Authorization: Token token=aLHFIehdaF32WRWRb1OOA0hm4Tc&quot; \
+	-H &quot;Authorization: Token token=izGl42cFCOO2jde4ZJjZRZY7Y_Q&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,12 +43,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ce32f2170b74764f29543a4bb4741115&quot;
+ETag: W/&quot;587b04a3e45dec7552e3521d75fa26a1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3185a896-7828-4407-86aa-ece7995340b0
-X-Runtime: 0.022290
+X-Request-Id: fd173730-6375-49e1-9724-e0bc6f5251ce
+X-Runtime: 0.022410
 Vary: Origin
-Content-Length: 1891</pre>
+Content-Length: 1885</pre>
 
 #### Status
 
@@ -59,112 +59,112 @@ Content-Length: 1891</pre>
 ```javascript
 [
   {
-    "mediaId" : 101,
-    "publicId" : "dfhjghjkdisudgfds7iy179",
+    "mediaId" : 77,
+    "publicId" : "dfhjghjkdisudgfds7iy149",
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.739Z"
+    "createdAt" : "2015-12-23T11:18:37.039Z"
   },
   {
-    "mediaId" : 102,
-    "publicId" : "dfhjghjkdisudgfds7iy180",
+    "mediaId" : 78,
+    "publicId" : "dfhjghjkdisudgfds7iy150",
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.741Z"
+    "createdAt" : "2015-12-23T11:18:37.041Z"
   },
   {
-    "mediaId" : 103,
-    "publicId" : "dfhjghjkdisudgfds7iy181",
+    "mediaId" : 79,
+    "publicId" : "dfhjghjkdisudgfds7iy151",
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.744Z"
+    "createdAt" : "2015-12-23T11:18:37.043Z"
   },
   {
-    "mediaId" : 104,
-    "publicId" : "dfhjghjkdisudgfds7iy182",
+    "mediaId" : 80,
+    "publicId" : "dfhjghjkdisudgfds7iy152",
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-12-04T16:56:54.746Z",
+    "createdAt" : "2015-12-23T11:18:37.046Z",
+    "duration" : null,
+    "thumbnail" : null
+  },
+  {
+    "mediaId" : 81,
+    "publicId" : "dfhjghjkdisudgfds7iy153",
+    "position" : 4,
+    "localId" : null,
+    "mediaType" : "video",
+    "createdAt" : "2015-12-23T11:18:37.048Z",
+    "duration" : null,
+    "thumbnail" : null
+  },
+  {
+    "mediaId" : 82,
+    "publicId" : "dfhjghjkdisudgfds7iy154",
+    "position" : 5,
+    "localId" : null,
+    "mediaType" : "audio",
+    "createdAt" : "2015-12-23T11:18:37.051Z",
+    "duration" : null,
+    "title" : "Title 153"
+  },
+  {
+    "mediaId" : 101,
+    "publicId" : "dfhjghjkdisudgfds7iy173",
+    "position" : 24,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:37.141Z"
+  },
+  {
+    "mediaId" : 102,
+    "publicId" : "dfhjghjkdisudgfds7iy174",
+    "position" : 25,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:37.144Z"
+  },
+  {
+    "mediaId" : 103,
+    "publicId" : "dfhjghjkdisudgfds7iy175",
+    "position" : 26,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:37.146Z"
+  },
+  {
+    "mediaId" : 104,
+    "publicId" : "dfhjghjkdisudgfds7iy176",
+    "position" : 27,
+    "localId" : null,
+    "mediaType" : "video",
+    "createdAt" : "2015-12-23T11:18:37.149Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
     "mediaId" : 105,
-    "publicId" : "dfhjghjkdisudgfds7iy183",
-    "position" : 4,
+    "publicId" : "dfhjghjkdisudgfds7iy177",
+    "position" : 28,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2015-12-04T16:56:54.749Z",
+    "createdAt" : "2015-12-23T11:18:37.151Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
     "mediaId" : 106,
-    "publicId" : "dfhjghjkdisudgfds7iy184",
-    "position" : 5,
-    "localId" : null,
-    "mediaType" : "audio",
-    "createdAt" : "2015-12-04T16:56:54.751Z",
-    "duration" : null,
-    "title" : "Title 183"
-  },
-  {
-    "mediaId" : 125,
-    "publicId" : "dfhjghjkdisudgfds7iy203",
-    "position" : 24,
-    "localId" : null,
-    "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.839Z"
-  },
-  {
-    "mediaId" : 126,
-    "publicId" : "dfhjghjkdisudgfds7iy204",
-    "position" : 25,
-    "localId" : null,
-    "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.842Z"
-  },
-  {
-    "mediaId" : 127,
-    "publicId" : "dfhjghjkdisudgfds7iy205",
-    "position" : 26,
-    "localId" : null,
-    "mediaType" : "image",
-    "createdAt" : "2015-12-04T16:56:54.844Z"
-  },
-  {
-    "mediaId" : 128,
-    "publicId" : "dfhjghjkdisudgfds7iy206",
-    "position" : 27,
-    "localId" : null,
-    "mediaType" : "video",
-    "createdAt" : "2015-12-04T16:56:54.846Z",
-    "duration" : null,
-    "thumbnail" : null
-  },
-  {
-    "mediaId" : 129,
-    "publicId" : "dfhjghjkdisudgfds7iy207",
-    "position" : 28,
-    "localId" : null,
-    "mediaType" : "video",
-    "createdAt" : "2015-12-04T16:56:54.849Z",
-    "duration" : null,
-    "thumbnail" : null
-  },
-  {
-    "mediaId" : 130,
-    "publicId" : "dfhjghjkdisudgfds7iy208",
+    "publicId" : "dfhjghjkdisudgfds7iy178",
     "position" : 29,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2015-12-04T16:56:54.851Z",
+    "createdAt" : "2015-12-23T11:18:37.154Z",
     "duration" : null,
-    "title" : "Title 207"
+    "title" : "Title 177"
   }
 ]
 ```

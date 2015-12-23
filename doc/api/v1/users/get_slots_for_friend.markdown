@@ -71,7 +71,7 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=YZo774jYM87dxqcQU6-G101juuE
+<pre>Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0
 Host: example.org
 Cookie: </pre>
 
@@ -82,7 +82,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/users/161/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=YZo774jYM87dxqcQU6-G101juuE&quot; \
+	-H &quot;Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -93,10 +93,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c5feff3da7c0b49c0735077f1020b4dc&quot;
+ETag: W/&quot;00691717f6745dee463a4d2f3595d660&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bf81304a-767a-4fba-b5bc-4a22482dbb80
-X-Runtime: 0.045233
+X-Request-Id: 1f7262f9-bf6d-4c94-98ec-1d5176bc250a
+X-Runtime: 0.042688
 Vary: Origin
 Content-Length: 2577</pre>
 
@@ -109,19 +109,47 @@ Content-Length: 2577</pre>
 ```javascript
 [
   {
-    "id" : 71,
-    "title" : "Slot title 131",
-    "startDate" : "2019-09-01T15:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:55.352Z",
-    "updatedAt" : "2015-12-04T16:56:55.352Z",
+    "id" : 70,
+    "title" : "Slot title 133",
+    "startDate" : "2019-09-03T17:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:37.670Z",
+    "updatedAt" : "2015-12-23T11:18:37.670Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-01T15:44:02.000Z",
+    "endDate" : "2019-10-03T17:44:02.000Z",
+    "location" : null,
+    "creator" : {
+      "id" : 163,
+      "username" : "User 455",
+      "createdAt" : "2015-12-23T11:18:37.666Z",
+      "updatedAt" : "2015-12-23T11:18:37.666Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "notes" : [],
+    "media" : [],
+    "settings" : {
+      "alerts" : "omitted"
+    },
+    "visibility" : "friends",
+    "reslotsCounter" : 0,
+    "likes" : 0,
+    "commentsCounter" : 0,
+    "shareUrl" : null
+  },
+  {
+    "id" : 71,
+    "title" : "Slot title 134",
+    "startDate" : "2019-09-04T18:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:37.677Z",
+    "updatedAt" : "2015-12-23T11:18:37.677Z",
+    "deletedAt" : null,
+    "endDate" : "2019-10-04T18:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 164,
-      "username" : "User 449",
-      "createdAt" : "2015-12-04T16:56:55.348Z",
-      "updatedAt" : "2015-12-04T16:56:55.348Z",
+      "username" : "User 456",
+      "createdAt" : "2015-12-23T11:18:37.673Z",
+      "updatedAt" : "2015-12-23T11:18:37.673Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -138,18 +166,18 @@ Content-Length: 2577</pre>
   },
   {
     "id" : 72,
-    "title" : "Slot title 132",
-    "startDate" : "2019-09-02T16:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:55.358Z",
-    "updatedAt" : "2015-12-04T16:56:55.358Z",
+    "title" : "Slot title 135",
+    "startDate" : "2019-09-05T19:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:37.683Z",
+    "updatedAt" : "2015-12-23T11:18:37.683Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-02T16:44:02.000Z",
+    "endDate" : "2019-10-05T19:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 165,
-      "username" : "User 450",
-      "createdAt" : "2015-12-04T16:56:55.354Z",
-      "updatedAt" : "2015-12-04T16:56:55.354Z",
+      "username" : "User 457",
+      "createdAt" : "2015-12-23T11:18:37.679Z",
+      "updatedAt" : "2015-12-23T11:18:37.679Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -166,18 +194,18 @@ Content-Length: 2577</pre>
   },
   {
     "id" : 74,
-    "title" : "Slot title 133",
-    "startDate" : "2019-09-03T17:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:55.375Z",
-    "updatedAt" : "2015-12-04T16:56:55.375Z",
+    "title" : "Slot title 136",
+    "startDate" : "2019-09-06T20:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:37.701Z",
+    "updatedAt" : "2015-12-23T11:18:37.701Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-03T17:44:02.000Z",
+    "endDate" : "2019-10-06T20:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 166,
-      "username" : "User 451",
-      "createdAt" : "2015-12-04T16:56:55.361Z",
-      "updatedAt" : "2015-12-04T16:56:55.361Z",
+      "username" : "User 458",
+      "createdAt" : "2015-12-23T11:18:37.686Z",
+      "updatedAt" : "2015-12-23T11:18:37.686Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -200,18 +228,18 @@ Content-Length: 2577</pre>
   },
   {
     "id" : 75,
-    "title" : "Slot title 135",
-    "startDate" : "2019-09-05T19:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:55.432Z",
-    "updatedAt" : "2015-12-04T16:56:55.432Z",
+    "title" : "Slot title 138",
+    "startDate" : "2019-09-08T22:44:02.000Z",
+    "createdAt" : "2015-12-23T11:18:37.758Z",
+    "updatedAt" : "2015-12-23T11:18:37.758Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-05T19:44:02.000Z",
+    "endDate" : "2019-10-08T22:44:02.000Z",
     "location" : null,
     "creator" : {
       "id" : 170,
-      "username" : "User 455",
-      "createdAt" : "2015-12-04T16:56:55.419Z",
-      "updatedAt" : "2015-12-04T16:56:55.419Z",
+      "username" : "User 462",
+      "createdAt" : "2015-12-23T11:18:37.748Z",
+      "updatedAt" : "2015-12-23T11:18:37.748Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -223,34 +251,6 @@ Content-Length: 2577</pre>
     "group" : {
       "id" : 14
     },
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 70,
-    "title" : "Slot title 130",
-    "startDate" : "2019-09-27T14:44:02.000Z",
-    "createdAt" : "2015-12-04T16:56:55.345Z",
-    "updatedAt" : "2015-12-04T16:56:55.345Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-27T14:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 163,
-      "username" : "User 448",
-      "createdAt" : "2015-12-04T16:56:55.341Z",
-      "updatedAt" : "2015-12-04T16:56:55.341Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "visibility" : "friends",
-    "reslotsCounter" : 0,
     "likes" : 0,
     "commentsCounter" : 0,
     "shareUrl" : null

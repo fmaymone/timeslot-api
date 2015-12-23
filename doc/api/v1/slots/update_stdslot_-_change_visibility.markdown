@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=-nYRRymMTpR5TVlFixqXZ4BUtiQ
+Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=-nYRRymMTpR5TVlFixqXZ4BUtiQ&quot; \
+	-H &quot;Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;93df7f2b7f0d11667c3780687f8793f7&quot;
+ETag: W/&quot;a3ac8b0522cd9deb49e7942a412be261&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 80f39abf-03d6-4b43-b50f-86432005726d
-X-Runtime: 0.020425
+X-Request-Id: 502c7638-fb3a-4698-b281-34040f2b8f97
+X-Runtime: 0.029337
 Vary: Origin
-Content-Length: 571</pre>
+Content-Length: 508</pre>
 
 #### Status
 
@@ -160,24 +160,20 @@ Content-Length: 571</pre>
 ```javascript
 {
   "id" : 2,
-  "title" : "Slot title 61",
-  "startDate" : "2019-09-12T17:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:51.996Z",
-  "updatedAt" : "2015-12-04T16:56:52.005Z",
+  "title" : "Slot title 64",
+  "startDate" : "2019-09-15T20:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.698Z",
+  "updatedAt" : "2015-12-23T11:18:34.706Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T17:44:02.000Z",
+  "endDate" : "2019-10-15T20:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 4,
-    "username" : "User 288",
-    "createdAt" : "2015-12-04T16:56:51.989Z",
-    "updatedAt" : "2015-12-04T16:56:51.989Z",
+    "username" : "User 295",
+    "createdAt" : "2015-12-23T11:18:34.690Z",
+    "updatedAt" : "2015-12-23T11:18:34.690Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],

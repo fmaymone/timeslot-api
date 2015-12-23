@@ -94,7 +94,7 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=oaMGt2PLArRsfotPSIULKEMlLqU
+Authorization: Token token=7V9bFue7ICMggbPFhryLhtgc-SY
 Host: example.org
 Cookie: </pre>
 
@@ -105,17 +105,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 48
+  "predecessorId" : 47
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:48}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:47}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=oaMGt2PLArRsfotPSIULKEMlLqU&quot; \
+	-H &quot;Authorization: Token token=7V9bFue7ICMggbPFhryLhtgc-SY&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,12 +126,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;60dc55b6e2592dfc96bf170127fb3fad&quot;
+ETag: W/&quot;04795a82cbeb93897510cd260022a79f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6b002eec-b4d2-4946-ae2c-647bd315fe13
-X-Runtime: 0.045188
+X-Request-Id: 5495d3b7-0d1c-4125-afc2-7ae64e5d8c38
+X-Runtime: 0.051712
 Vary: Origin
-Content-Length: 613</pre>
+Content-Length: 741</pre>
 
 #### Status
 
@@ -141,25 +141,21 @@ Content-Length: 613</pre>
 
 ```javascript
 {
-  "id" : 49,
-  "title" : "Slot title 58",
-  "startDate" : "2019-09-09T14:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:51.654Z",
-  "updatedAt" : "2015-12-04T16:56:51.654Z",
+  "id" : 48,
+  "title" : "Slot title 61",
+  "startDate" : "2019-09-12T17:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.318Z",
+  "updatedAt" : "2015-12-23T11:18:34.318Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-09T14:44:02.000Z",
+  "endDate" : "2019-10-12T17:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 239,
-    "username" : "User 278",
-    "createdAt" : "2015-12-04T16:56:51.633Z",
-    "updatedAt" : "2015-12-04T16:56:51.633Z",
+    "id" : 213,
+    "username" : "User 285",
+    "createdAt" : "2015-12-23T11:18:34.297Z",
+    "updatedAt" : "2015-12-23T11:18:34.297Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
@@ -168,10 +164,19 @@ Content-Length: 613</pre>
   },
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 241
+    "id" : 215,
+    "username" : "User 287",
+    "createdAt" : "2015-12-23T11:18:34.308Z",
+    "updatedAt" : "2015-12-23T11:18:34.308Z",
+    "deletedAt" : null,
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 1,
+    "friendsCount" : 0
   },
   "parent" : {
-    "id" : 48
+    "id" : 47
   },
   "visibility" : "public",
   "likes" : 0,
