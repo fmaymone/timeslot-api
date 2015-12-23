@@ -1,0 +1,135 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://es.timeslot.rocks:56000/api/search_football?limit=6&q=Dortmund&timestamp=2015-07-05T00:00:00.000Z
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Content-Length:
+      - '809'
+      Www-Authenticate:
+      - Basic realm="private"
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Wed, 23 Dec 2015 10:55:40 GMT
+      Server:
+      - ip-172-31-20-175
+    body:
+      encoding: UTF-8
+      string: |2
+
+            <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+            <html>
+                <head>
+                    <title>Error: 401 Unauthorized</title>
+                    <style type="text/css">
+                      html {background-color: #eee; font-family: sans;}
+                      body {background-color: #fff; border: 1px solid #ddd;
+                            padding: 15px; margin: 15px;}
+                      pre {background-color: #eee; border: 1px solid #ddd; padding: 5px;}
+                    </style>
+                </head>
+                <body>
+                    <h1>Error: 401 Unauthorized</h1>
+                    <p>Sorry, the requested URL <tt>&#039;http://es.timeslot.rocks:56000/api/search_football?q=Dortmund&amp;timestamp=2015-07-05T00%3A00%3A00.000Z&amp;limit=6&#039;</tt>
+                       caused an error:</p>
+                    <pre>Access denied</pre>
+                </body>
+            </html>
+    http_version: 
+  recorded_at: Wed, 23 Dec 2015 10:55:02 GMT
+- request:
+    method: get
+    uri: http://es-user:A2es-indexW%21ssl@es.timeslot.rocks:56000/api/search_football?limit=6&q=Dortmund&timestamp=2015-07-05T00:00:00.000Z
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, PUT, OPTIONS
+      Access-Control-Allow-Headers:
+      - Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token
+      Content-Length:
+      - '4159'
+      Content-Type:
+      - text/html; charset=UTF-8
+      Date:
+      - Wed, 23 Dec 2015 10:59:39 GMT
+      Server:
+      - ip-172-31-20-175
+    body:
+      encoding: UTF-8
+      string: '{"search-slots": [{"city": "Dortmund", "domain": "dfb.de", "duration_secs":
+        7200, "description": "Bundesliga, 2015/2016, 19. Spieltag", "duid": "3ecc7d80-d953-cc62-2c6e-4f160cf9a9bc",
+        "tags": "bundesliga,soccer,football,fussball,fu\u00dfball", "url": "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222608",
+        "country": "Deutschland", "location_geo": [7.45179986953735, 51.4940605163574],
+        "start_timestamp": "2016-01-30T15:30:00", "location": "Signal Iduna Park,
+        Dortmund, Deutschland", "cuid": "0dbb2716-2431-45ba-aab9-a9db80edc53b", "images":
+        "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+        "title": "Borussia Dortmund vs. FC Ingolstadt", "id": 8066995, "address":
+        "Signal Iduna Park, Dortmund, Deutschland", "stop_timestamp": "2016-01-30T17:30:00"},
+        {"city": "Dortmund", "domain": "dfb.de", "duration_secs": 7200, "description":
+        "Bundesliga, 2015/2016, 34. Spieltag", "duid": "0f2bddbb-c75c-a994-1af9-5ce7ea36c397",
+        "tags": "bundesliga,soccer,football,fussball,fu\u00dfball", "url": "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222900",
+        "country": "Deutschland", "location_geo": [7.45179986953735, 51.4940605163574],
+        "start_timestamp": "2016-05-14T15:30:00", "location": "Signal Iduna Park,
+        Dortmund, Deutschland", "cuid": "60621f6d-26be-4e52-810a-0ba9fc3425d3", "images":
+        "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+        "title": "Borussia Dortmund vs. 1. FC K\u00f6ln", "id": 8007786, "address":
+        "Signal Iduna Park, Dortmund, Deutschland", "stop_timestamp": "2016-05-14T17:30:00"},
+        {"city": "M\u00f6nchengladbach", "domain": "dfb.de", "duration_secs": 7200,
+        "description": "Bundesliga, 2015/2016, 18. Spieltag", "duid": "238a69a4-271c-f5cb-e60e-48952d805859",
+        "tags": "bundesliga,soccer,football,fussball,fu\u00dfball", "url": "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222606",
+        "country": "Deutschland", "location_geo": [6.385442, 51.171221], "start_timestamp":
+        "2016-01-23T18:30:00", "location": "Borussia-Park, M\u00f6nchengladbach, Deutschland",
+        "cuid": "0f63dc6c-5f80-4954-b69f-61dc6c5a8a06", "images": "http://assets.dfb.de/public/uploads/960fc3c7c442e24cc34b237dfb62780c3393af69685dd506e97184247fe4",
+        "title": "Borussia M\u00f6nchengladbach vs. Borussia Dortmund", "id": 8066989,
+        "address": "Borussia-Park, M\u00f6nchengladbach, Deutschland", "stop_timestamp":
+        "2016-01-23T20:30:00"}, {"city": "Berlin", "domain": "dfb.de", "duration_secs":
+        7200, "description": "Bundesliga, 2015/2016, 20. Spieltag", "duid": "99048c80-0503-fa6c-2a0d-8484be4db8af",
+        "tags": "bundesliga,soccer,football,fussball,fu\u00dfball", "url": "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222665",
+        "country": "Deutschland", "location_geo": [13.2428102493286, 52.5149993896484],
+        "start_timestamp": "2016-02-06T15:30:00", "location": "Olympiastadion, Berlin,
+        Deutschland", "cuid": "3d2714ea-cd8c-4752-ad56-bf1acffb7758", "images": "http://assets.dfb.de/public/uploads/896f2c263b9d3e4d852d551dab27dbe3137f6599b473d962348b90ad6edd",
+        "title": "Hertha BSC vs. Borussia Dortmund", "id": 8066986, "address": "Olympiastadion,
+        Berlin, Deutschland", "stop_timestamp": "2016-02-06T17:30:00"}, {"city": "Frankfurt
+        am Main", "domain": "dfb.de", "duration_secs": 7200, "description": "Bundesliga,
+        2015/2016, 33. Spieltag", "duid": "7ec32216-ffee-af00-cdc2-72fe84c1f176",
+        "tags": "bundesliga,soccer,football,fussball,fu\u00dfball", "url": "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222880",
+        "country": "Deutschland", "location_geo": [8.65192031860352, 50.0728416442871],
+        "start_timestamp": "2016-05-07T15:30:00", "location": "Commerzbank-Arena,
+        Frankfurt am Main, Deutschland", "cuid": "51e4e2df-8121-409a-b232-0d49ca24b17f",
+        "images": "http://assets.dfb.de/public/uploads/a23b2f3d4a08965ecb1d02991a10be9ef678314e438ebb9c0ec6e7bc6abf",
+        "title": "Eintracht Frankfurt vs. Borussia Dortmund", "id": 8007778, "address":
+        "Commerzbank-Arena, Frankfurt am Main, Deutschland", "stop_timestamp": "2016-05-07T17:30:00"}],
+        "analyzed": {"geo_location": null, "title": "Dortmund"}}'
+    http_version: 
+  recorded_at: Wed, 23 Dec 2015 10:59:01 GMT
+recorded_with: VCR 3.0.1

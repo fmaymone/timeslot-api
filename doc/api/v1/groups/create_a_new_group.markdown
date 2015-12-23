@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=_BObKtMwmsGEuMXt1o5QY9useXs
+Authorization: Token token=pAc1lmBR15lvGAOS9CUsYpya7oQ
 Host: example.org
 Cookie: </pre>
 
@@ -78,9 +78,9 @@ Cookie: </pre>
 {
   "name" : "foo",
   "invitees" : [
-    17,
-    18,
-    19
+    7,
+    8,
+    9
   ]
 }
 ```
@@ -88,10 +88,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[17,18,19]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[7,8,9]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_BObKtMwmsGEuMXt1o5QY9useXs&quot; \
+	-H &quot;Authorization: Token token=pAc1lmBR15lvGAOS9CUsYpya7oQ&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,10 +102,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;87a3d06fb6b9701d11e89f44e67b9a9d&quot;
+ETag: W/&quot;fa29357a5f7fd5ca73d15c00e084e1d2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 34168ba6-1e28-40af-97df-7f8315cd4363
-X-Runtime: 0.034898
+X-Request-Id: e0f7b1fb-18c3-4f44-87ce-bcf68c44f7d5
+X-Runtime: 0.033924
 Vary: Origin
 Content-Length: 346</pre>
 
@@ -122,14 +122,14 @@ Content-Length: 346</pre>
   "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-12-04T16:56:47.364Z",
-  "updatedAt" : "2015-12-04T16:56:47.364Z",
+  "createdAt" : "2015-12-23T11:18:30.439Z",
+  "updatedAt" : "2015-12-23T11:18:30.439Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 20,
-    "username" : "User 71",
-    "createdAt" : "2015-12-04T16:56:47.359Z",
-    "updatedAt" : "2015-12-04T16:56:47.359Z",
+    "id" : 10,
+    "username" : "User 76",
+    "createdAt" : "2015-12-23T11:18:30.428Z",
+    "updatedAt" : "2015-12-23T11:18:30.428Z",
     "deletedAt" : null,
     "image" : ""
   },

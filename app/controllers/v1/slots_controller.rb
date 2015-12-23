@@ -46,7 +46,7 @@ module V1
                                    alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
-        render :show, status: :created, locals: { slot: @slot }
+        render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -77,7 +77,7 @@ module V1
       @slot = ReSlot.create_from_slot(predecessor: predecessor,
                                       slotter: current_user)
       if @slot.save
-        render :show, status: :created, locals: { slot: @slot }
+        render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -91,7 +91,7 @@ module V1
       # TODO: we need an unique identifier from each crawler slot to re-identify
       # exist reslots
       # Check if Slot already exist
-      user_reslots = current_user.re_slots.unscoped.joins(:meta_slot)
+      user_reslots = current_user.re_slots.joins(:meta_slot)
       same_reslot = user_reslots.where(
         'meta_slots.start_date = ? AND meta_slots.title = ?',
         params.require(:startDate), params.require(:title)
@@ -193,7 +193,7 @@ module V1
       authorize @slot
 
       if @slot.delete
-        render :show, locals: { slot: @slot }
+        render :create, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -219,7 +219,7 @@ module V1
       authorize @slot
 
       if @slot.delete
-        render :show, locals: { slot: @slot }
+        render :create, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -364,6 +364,7 @@ module V1
                            :subAdministrativeArea, :postalCode, :country,
                            :isoCountryCode, :inLandWater, :ocean, :latitude,
                            :longitude, :privateLocation, :areasOfInterest])
+      # sets iosLocation to the content of params['location']
       p[:iosLocation] = p.delete(:location) if params[:location].present?
 
       if params.key? :endDate

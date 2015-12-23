@@ -15,8 +15,14 @@ class Friendship < ActiveRecord::Base
   validates :friend, presence: true
   validates :state, presence: true
 
-  def offer
+  def offer(active_user = nil)
     update!(state: OFFERED) unless deleted_at?
+    # temporary fix:
+    # not the most elegant solution but because the first user is considered
+    # the one who initiated the friendship (active) we need to switch users
+    # if the second user is (re-) initiating a broken friendship again
+    # TODO: I wan't to do a major upgrade on the friendships (TML-152)
+    update!(friend: user, user: active_user) if active_user == friend
     create_activity
   end
 
@@ -25,10 +31,21 @@ class Friendship < ActiveRecord::Base
   end
 
   def accept
+    remove_activity
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    create_activity
+    forward_activity(
+        feed_fwd: {
+            Notification: [
+                activity_actor.id.to_s,
+                activity_target.id.to_s
+            ]
+        },
+        push_fwd: [
+            activity_target.id
+        ]
+    )
   end
 
   def established?
@@ -36,13 +53,17 @@ class Friendship < ActiveRecord::Base
   end
 
   # reject can be 3 things:
-  # - cancel established friendship
+  # - break established friendship
   # - cancel open friend request (from me to someone else)
   # - refuse open friend request (from someone else to me)
   def reject
     if established?
+      remove_activity('unfriend')
+      remove_activity
       user.unfollow(friend)
       friend.unfollow(user)
+    else
+      remove_activity
     end
     update!(state: REJECTED) unless deleted_at?
   end
@@ -58,6 +79,7 @@ class Friendship < ActiveRecord::Base
   # canceled friendships would be re-enabled when the user
   # reactivates his profile.
   def inactivate
+    remove_activity('unfriend')
     user.unfollow(friend)
     friend.unfollow(user)
     friend.touch
@@ -111,19 +133,22 @@ class Friendship < ActiveRecord::Base
   ## Activity Methods ##
 
   private def activity_target
-    friend
+    established? ? user : friend
   end
 
-  # The user who made the update
   private def activity_actor
-    user
+    established? ? friend : user
+  end
+
+  private def activity_foreign
+    activity_target
   end
 
   private def activity_action
-    established? ? 'friendship' : (offered? ? 'request' : 't')
+    established? ? 'friendship' : (offered? ? 'request' : '')
   end
 
-  private def activity_deletion
-    'unfriend'
+  private def activity_notify
+    []
   end
 end

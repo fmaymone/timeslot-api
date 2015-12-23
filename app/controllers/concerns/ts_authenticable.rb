@@ -1,5 +1,5 @@
-module TS_Authenticable
-  include TS_Errors
+module TSAuthenticable
+  include TSErrors
 
   def self.included(base)
     base.include ActionController::HttpAuthentication::Token::ControllerMethods

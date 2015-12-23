@@ -1,26 +1,6 @@
 class SlotPolicy < ApplicationPolicy
   attr_reader :current_user, :slot
 
-  # TODO: add spec for scoped policy BKD-126
-  class Scope < Scope
-    attr_reader :current_user
-
-    def initialize(user, _scope)
-      @current_user = user.current_user
-    end
-
-    # TODO: optimize db access / query BKD-121
-    def friend_slots
-      slots = []
-      current_user.friends.each do |friend|
-        slots.push(*friend.std_slots_friends.upcoming)
-        slots.push(*friend.std_slots_public.upcoming)
-        slots.push(*friend.re_slots.upcoming)
-      end
-      slots.sort { |x, y| x.start_date <=> y.start_date }
-    end
-  end
-
   def initialize(user, slot)
     @current_user = user
     @slot = slot
@@ -121,6 +101,7 @@ class SlotPolicy < ApplicationPolicy
   private def show_to_current_user?
     # current user must exist
     return false unless current_user?
+    return true if slot.class == GlobalSlot
     return show_std_slot? if slot.class < StdSlot
     return show_re_slot? if slot.try(:slotter)
     # if slot.class < ReSlot or slot.class == ReSlot

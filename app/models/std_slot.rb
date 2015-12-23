@@ -8,6 +8,8 @@ class StdSlot < BaseSlot
                      'public' => :StdSlotPublic
                    }
 
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
+
   belongs_to :owner, class_name: User, inverse_of: :std_slots
   # for some strange reason the association is not found even tough it
   # works for meta_slot just the same
@@ -18,25 +20,22 @@ class StdSlot < BaseSlot
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
     if visibility
-      slot_type = STD_SLOT_TYPES[visibility]
-      update(slot_type: SLOT_TYPES[slot_type])
-      # Update Follower + Feeds status if visibility change
+      # Update Follower + Feeds status if visibility change to private
+      # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        comments.each(&:remove_activity)
-        likes.each(&:remove_activity)
-        reslots.each(&:remove_activity)
-        remove_activity
-        create_activity('private')
+        if self.try(:reslots)
+          reslots.each{ |slot|
+            slot.remove_all_activities(target: self)
+            slot.remove_all_followers
+          }
+        end
+        remove_all_activities('private', target: self)
         remove_all_followers
       end
+      slot_type = STD_SLOT_TYPES[visibility]
+      update(slot_type: SLOT_TYPES[slot_type])
     end
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
-  end
-
-  def reslots
-    # this should not include private reslots
-    # TODO: change it when we have reslots with different visibilities
-    ReSlot.where parent_id: id
   end
 
   def related_users

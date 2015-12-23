@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://email.us-west-2.amazonaws.com/
+    body:
+      encoding: UTF-8
+      string: Action=SendEmail&Destination.ToAddresses.member.1=success%40simulator.amazonses.com&Message.Body.Html.Data=%3Ch3%3EYour%20new%20timeslot%20password%3C%2Fh3%3E%3Cp%3E1OSRlEwP%3C%2Fp%3E&Message.Body.Text.Data=Your%20new%20timeslot%20password%3A%201OSRlEwP&Message.Subject.Data=Your%20new%20Password%20for%20Timeslot&ReplyToAddresses.member.1=passwords%40timeslot.com&ReturnPath=invalid_email_address%40timeslot.com&Source=support%40timeslot.com&Version=2010-12-01
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded; charset=utf-8
+      Accept-Encoding:
+      - ''
+      User-Agent:
+      - aws-sdk-ruby2/2.0.43 ruby/2.1.6 x86_64-darwin14.0
+      X-Amz-Date:
+      - 20150626T144002Z
+      Host:
+      - email.us-west-2.amazonaws.com
+      X-Amz-Content-Sha256:
+      - 98596f8cebd68674dd1f3abf771b4419ef33a9ba02c6da5fd30a165b50100adc
+      Authorization:
+      - AWS4-HMAC-SHA256 Credential=AKIAIN2CTRQN4HEM2BRA/20150626/us-west-2/ses/aws4_request,
+        SignedHeaders=content-type;host;user-agent;x-amz-content-sha256;x-amz-date,
+        Signature=1a47eff6dbc7e805fb6d2aba40f6891e4ef6a46a7458d5e0424073cb687d3610
+      Content-Length:
+      - '461'
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Amzn-Requestid:
+      - 3ac440e6-1c11-11e5-b62e-7982f415db3d
+      Content-Type:
+      - text/xml
+      Content-Length:
+      - '326'
+      Date:
+      - Fri, 26 Jun 2015 14:40:02 GMT
+    body:
+      encoding: UTF-8
+      string: |
+        <SendEmailResponse xmlns="http://ses.amazonaws.com/doc/2010-12-01/">
+          <SendEmailResult>
+            <MessageId>0000014e304fa602-679ef725-2f2b-4ce2-82e7-1115c489170c-000000</MessageId>
+          </SendEmailResult>
+          <ResponseMetadata>
+            <RequestId>3ac440e6-1c11-11e5-b62e-7982f415db3d</RequestId>
+          </ResponseMetadata>
+        </SendEmailResponse>
+    http_version: 
+  recorded_at: Fri, 26 Jun 2015 14:40:03 GMT
+recorded_with: VCR 2.9.3

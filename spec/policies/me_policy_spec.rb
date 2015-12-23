@@ -4,7 +4,7 @@ describe MePolicy do
   subject { described_class }
 
   permissions :show?, :update?, :inactivate?, :signout?,
-              :my_slots?, :slots_from_friends?, :my_media_items?,
+              :my_slots?, :slots_of_my_friends?, :my_media_items?,
               :add_friends?, :remove_friends?, :update_device? do
     context "for a user" do
       let(:user) { create(:user) }
@@ -19,7 +19,7 @@ describe MePolicy do
     let(:permissions) {
       [
         :show?, :update?, :inactivate?, :signout?,
-        :my_slots?, :slots_from_friends?, :my_media_items?,
+        :my_slots?, :slots_of_my_friends?, :my_media_items?,
         :add_friends?, :remove_friends?, :update_device?
       ]
     }
@@ -29,7 +29,7 @@ describe MePolicy do
       permissions.each do |permission|
         expect {
           subject.new(user, :me).public_send(permission)
-        }.to raise_error TS_Errors::MissingCurrentUserError
+        }.to raise_error TSErrors::MissingCurrentUserError
       end
     end
   end

@@ -1,7 +1,7 @@
 class BaseSlot < ActiveRecord::Base
   include SlotActivity
   include Follow
-  include TS_Errors
+  include TSErrors
 
   # this class is not intended to be used directly
   # but rather as an uniform interface for the specific slot representations
@@ -21,6 +21,7 @@ class BaseSlot < ActiveRecord::Base
                  ReSlotPublic: 7,
                  GroupSlotMembers: 11,
                  GroupSlotPublic: 12,
+                 GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
@@ -48,9 +49,9 @@ class BaseSlot < ActiveRecord::Base
   has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
   belongs_to :shared_by, class_name: User
 
-  delegate :title, :start_date, :end_date, :creator_id, :creator, :location_id,
+  delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
-           :title=, :start_date=, :end_date=, :creator=, :location_id=, :open_end=,
+           :title=, :start_date=, :end_date=, :creator=, :location_uid=, :open_end=,
            to: :meta_slot
 
   validates :meta_slot, presence: true
@@ -81,6 +82,12 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  def reslots
+    # this should not include private reslots
+    # TODO: change it when we have reslots with different visibilities
+    ReSlot.where parent_id: id
+  end
+
   def as_paging_cursor
     # make sure we use the full resolution of datetime
     startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
@@ -109,6 +116,7 @@ class BaseSlot < ActiveRecord::Base
     update_media(media, user.id) if media
     update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
+    update_activity_objects
   end
 
   def add_media(item, creator_id)
@@ -141,9 +149,7 @@ class BaseSlot < ActiveRecord::Base
         notes.find(note[:id]).update(note.permit(:title, :content)
                          .merge!(creator_id: creator_id))
       else
-        notes.create(note.permit(:title, :content, :local_id)
-                         .merge!(creator_id: creator_id))
-                         .create_activity
+        notes.create(note.merge!(creator_id: creator_id)).create_activity
       end
     end
   end
@@ -199,6 +205,8 @@ class BaseSlot < ActiveRecord::Base
     notes.each(&:delete)
     media_items.each(&:delete)
 
+    remove_all_activities(target: self)
+
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
@@ -207,7 +215,6 @@ class BaseSlot < ActiveRecord::Base
     # of the parent/predecessor slot was removed
     reslots.each(&:delete) if self.try(:reslots)
 
-    remove_activity
     remove_all_followers
     prepare_for_deletion
     ts_soft_delete
@@ -321,6 +328,7 @@ class BaseSlot < ActiveRecord::Base
     fail unless visibility || group
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
+    # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
     if visibility
@@ -330,6 +338,7 @@ class BaseSlot < ActiveRecord::Base
       slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
     end
 
+    # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
     if media || notes || alerts

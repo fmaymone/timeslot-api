@@ -112,7 +112,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=iuFjFA1PXSnbd3lPMqUb82vMycw
+Authorization: Token token=RcB9_xOu8NsZKXGKhup3i9NZsw0
 Host: example.org
 Cookie: </pre>
 
@@ -136,7 +136,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/webslot&quot; -d &#39;{&quot;visibility&quot;:&quot;public&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=iuFjFA1PXSnbd3lPMqUb82vMycw&quot; \
+	-H &quot;Authorization: Token token=RcB9_xOu8NsZKXGKhup3i9NZsw0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -148,8 +148,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 62bc1fea-d28d-49fd-878c-7a5b720fc98e
-X-Runtime: 0.059642
+X-Request-Id: 4b990936-fc54-406f-b9e2-dd494bfd8d77
+X-Runtime: 0.059296
 Vary: Origin
 Content-Length: 0</pre>
 

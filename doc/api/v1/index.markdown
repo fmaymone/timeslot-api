@@ -13,8 +13,14 @@
 ## Feeds
 
 * [Get the feed of the current users activities](feeds/get_the_feed_of_the_current_users_activities.markdown)
-* [Get the feed of public activities (aggregated)](feeds/get_the_feed_of_public_activities_(aggregated).markdown)
+* [Get the feed of social related activities (aggregated)](feeds/get_the_feed_of_social_related_activities_(aggregated).markdown)
 * [Get the feed of the current user notifications](feeds/get_the_feed_of_the_current_user_notifications.markdown)
+
+## GlobalSlots
+
+* [Reslot global slot](globalslots/reslot_global_slot.markdown)
+* [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
+* [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
 ## Groups
 

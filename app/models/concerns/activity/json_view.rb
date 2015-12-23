@@ -16,9 +16,9 @@ module JSONView
     end
 
     # slot location
-    if slot.location_id.nil? && slot.ios_location_id.nil?
+    if slot.location_uid.nil? && slot.ios_location_id.nil?
       location_data = nil
-    elsif slot.location_id.nil?
+    elsif slot.location_uid.nil?
       location_data = slot.ios_location
     else
       location_data = slot.location
@@ -28,7 +28,7 @@ module JSONView
       json['location'] = nil
     else
       json['location'] = {
-          id: location_data.id,
+          # id: location_data.id,
           name: (location_data.name.blank? ? nil : location_data.name),
           thoroughfare: location_data.thoroughfare,
           subThoroughfare: location_data.sub_thoroughfare,
@@ -44,7 +44,7 @@ module JSONView
           areasOfInterest: location_data.areas_of_interest,
           latitude: location_data.latitude,
           longitude: location_data.longitude,
-          privateLocation: location_data.private_location,
+          # privateLocation: location_data.private_location,
       }
     end
 
@@ -145,7 +145,7 @@ module JSONView
     json
   end
 
-  def self.user(user)
+  def self.user(user, friend = nil)
     json = user.slice(:id,
                       :username,
                       :created_at,
@@ -156,9 +156,14 @@ module JSONView
         localId: (user.image.try(:local_id) ? user.image.local_id : nil)
     }
 
-    json['slotCount'] = user.std_slots.unscoped.count
+    json['slotCount'] = user.std_slots_public.count
     json['reslotCount'] = user.re_slots.count
     json['friendsCount'] = user.friends.count
+
+    if friend
+      friendship = friend.friendship(user)
+      json['friendshipState'] = friendship.nil? ? 'stranger' : friendship.humanize(friend)
+    end
 
     json
   end

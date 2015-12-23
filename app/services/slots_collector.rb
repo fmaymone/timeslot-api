@@ -50,6 +50,38 @@ class SlotsCollector
     consider_filter(showables, @filter)
   end
 
+  # collects all non-private slots from all friends of the current_user
+  def slots_from_friends(user:)
+    # ALTERNATIVE: to join on the db level:
+    # friends = UserQuery::Relationship.new(current_user.id).my_friends
+    friends = UserQuery::Relationship.new(user.id).my_friends.to_a
+
+    showables = [StdSlot
+                  .includes(:notes, :media_items,
+                            meta_slot: [:ios_location, :creator])
+                  .where(owner: friends)
+                  .unprivate,
+                 ReSlot
+                   .includes(parent: [:notes, :media_items],
+                             meta_slot: [:ios_location, :creator])
+                   .where(slotter: friends)
+                   # .unprivate
+                ]
+    consider_filter(showables, @filter)
+  end
+
+  # collects only active std_slots current_user or visitor is allowed to
+  # see from requested_user, currently this is only used for counting, so
+  # I skip the pagination functionality
+  def active_stdslots_count(current_user: nil, user:)
+    rs = UserRelationship.call(current_user.try(:id), user.id)
+    showables = PresentableSlots.std_slots(relationship: rs, user: user)
+
+    counter = 0
+    showables.each { |relation| counter += relation.active.count }
+    counter
+  end
+
   private def consider_filter(relations, filter)
     if filter == 'around'
       around_filter_query(relations)

@@ -1,5 +1,5 @@
 class ApplicationPolicy
-  include TS_Errors
+  include TSErrors
 
   attr_reader :user, :record
 

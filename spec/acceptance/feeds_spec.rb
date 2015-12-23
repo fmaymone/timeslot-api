@@ -2,9 +2,9 @@ require 'documentation_helper'
 
 resource "Feeds", :activity, :async do
   let(:json) { JSON.parse(response_body) }
-  let(:current_user) { create(:user, :with_email, :with_password) }
-  let(:owner) { create(:user, username: 'User 54') }
-  let(:actor) { create(:user, username: 'User 53') }
+  let(:current_user) { create(:user) }
+  let(:owner) { create(:user) }
+  let(:actor) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
   shared_context "default slot response fields" do
@@ -18,10 +18,6 @@ resource "Feeds", :activity, :async do
     response_field :deletedAt, "Delete date of slot or nil"
     response_field :location, "Location data for the slot"
     response_field :creator, "User who created the slot"
-    response_field :settings,
-                   "Only included if it's a slot of the current User " \
-                   "(created-/friend-/re-/groupslot),\n\n" \
-                   "contains User specific settings for this slot (alerts)"
     response_field :visibility, "Visibiltiy of the slot"
     response_field :notes, "Notes on the slot"
     response_field :likes, "Likes for the slot"
@@ -38,7 +34,6 @@ resource "Feeds", :activity, :async do
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
     response_field :location, "Home location of user"
-    response_field :push, "Send push Notifications (true/false)"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
@@ -61,16 +56,13 @@ resource "Feeds", :activity, :async do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
+      let(:meta_slot) { create(:meta_slot,
                                title: 'Slot title 21', creator: owner) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_me_singular', TITLE: slot.title) }
 
       example "Get the feed of the current users activities", document: :v1 do
-
-        # Create a relationship
-        #current_user.add_follower(owner)
         # Perform an activity
         slot.create_comment(current_user, 'This is a test comment.')
 
@@ -113,18 +105,16 @@ resource "Feeds", :activity, :async do
       include_context "default user response fields"
 
       let(:user) { create(:user) }
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
-                               title: 'Slot title 22', creator: user) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:meta_slot) {
+        create(:meta_slot, title: 'Slot title 22', creator: user) }
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_activity_singular',
                              USER: actor.username, TITLE: slot.title) }
 
-      example "Get the feed of public activities (aggregated)", document: :v1 do
-        #explanation "some extra activity fields are included"
-
+      example "Get the feed of social related activities (aggregated)", document: :v1 do
         # Create a relationship
-        slot.add_follower(current_user) #actor.add_follower(current_user)
+        current_user.follow(slot)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 
@@ -198,18 +188,14 @@ resource "Feeds", :activity, :async do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253,
-                               title: 'Slot title 23', creator: current_user) }
-      let(:slot) { create(:std_slot_public, :with_media,
+      let(:meta_slot) {
+        create(:meta_slot, title: 'Slot title 23', creator: current_user) }
+      let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_notify_singular',
                              USER: actor.username, TITLE: slot.title) }
 
       example "Get the feed of the current user notifications", document: :v1 do
-        #explanation "some extra activity fields are included"
-
-        # Create a relationship
-        actor.add_follower(current_user)
         # Perform an activity
         slot.create_comment(actor, 'This is another test comment.')
 

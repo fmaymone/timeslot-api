@@ -48,11 +48,6 @@ Description : Location data for the slot
 Name : creator
 Description : User who created the slot
 
-Name : settings
-Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
-
-contains User specific settings for this slot (alerts)
-
 Name : visibility
 Description : Visibiltiy of the slot
 
@@ -92,9 +87,6 @@ Description : URL of the user image
 Name : location
 Description : Home location of user
 
-Name : push
-Description : Send push Notifications (true/false)
-
 Name : createdAt
 Description : Creation of user
 
@@ -118,7 +110,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Ju3WfOZIu6qL0Xg2QfU8SUc3nf0
+Authorization: Token token=2THoLgHrHs5-ycTBkcuW-CL4EtA
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +122,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Ju3WfOZIu6qL0Xg2QfU8SUc3nf0&quot; \
+	-H &quot;Authorization: Token token=2THoLgHrHs5-ycTBkcuW-CL4EtA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -141,12 +133,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2de5984ff6b0a444a95dd3aeea6640c8&quot;
+ETag: W/&quot;ac71a02aae7fe1260f2eee6cafaf6dc7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9d4db573-2d15-4e3b-8194-c3817e58b91b
-X-Runtime: 0.003570
+X-Request-Id: 733aae97-f343-4b74-b2a8-ca91da448016
+X-Runtime: 0.004565
 Vary: Origin
-Content-Length: 1921</pre>
+Content-Length: 1923</pre>
 
 #### Status
 
@@ -160,32 +152,33 @@ Content-Length: 1921</pre>
     "type" : "Slot",
     "target" : "3",
     "action" : "comment",
-    "time" : "2015-12-04T16:56:47.128Z",
-    "id" : "E9F9C3766F1B53781E5204691FB310F1D93EE8EF",
+    "time" : "2015-12-23T11:18:29.766Z",
+    "id" : "F5C03D30D8CB8B99555FA6507269B0E4B17BEEC2",
     "actors" : [
-      8
+      10
     ],
+    "message" : "User 65 commented on your Slot: Slot title 23",
     "data" : {
       "target" : {
         "id" : 3,
         "title" : "Slot title 23",
-        "startDate" : "2019-09-24T23:44:02.000Z",
-        "createdAt" : "2015-12-04T16:56:47.105Z",
-        "updatedAt" : "2015-12-04T16:56:47.133Z",
+        "startDate" : "2019-09-25T00:44:02.000Z",
+        "createdAt" : "2015-12-23T11:18:29.720Z",
+        "updatedAt" : "2015-12-23T11:18:29.774Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-24T23:44:02.000Z",
+        "endDate" : "2019-10-25T00:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 9,
-          "username" : "User 60",
-          "createdAt" : "2015-12-04T16:56:47.095Z",
-          "updatedAt" : "2015-12-04T16:56:47.095Z",
+          "id" : 8,
+          "username" : "User 63",
+          "createdAt" : "2015-12-23T11:18:29.712Z",
+          "updatedAt" : "2015-12-23T11:18:29.712Z",
           "deletedAt" : null,
           "image" : {
             "publicId" : null,
             "localId" : null
           },
-          "slotCount" : 1,
+          "slotCount" : 0,
           "reslotCount" : 0,
           "friendsCount" : 0
         },
@@ -197,7 +190,7 @@ Content-Length: 1921</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2015-12-04T16:56:47.124Z",
+            "createdAt" : "2015-12-23T11:18:29.756Z",
             "duration" : null,
             "title" : "Title 21"
           },
@@ -207,7 +200,7 @@ Content-Length: 1921</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-04T16:56:47.121Z",
+            "createdAt" : "2015-12-23T11:18:29.753Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -217,7 +210,7 @@ Content-Length: 1921</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-04T16:56:47.118Z",
+            "createdAt" : "2015-12-23T11:18:29.749Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -227,7 +220,7 @@ Content-Length: 1921</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-04T16:56:47.114Z"
+            "createdAt" : "2015-12-23T11:18:29.745Z"
           },
           {
             "mediaId" : 14,
@@ -235,7 +228,7 @@ Content-Length: 1921</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-04T16:56:47.112Z"
+            "createdAt" : "2015-12-23T11:18:29.726Z"
           },
           {
             "mediaId" : 13,
@@ -243,7 +236,7 @@ Content-Length: 1921</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-04T16:56:47.109Z"
+            "createdAt" : "2015-12-23T11:18:29.724Z"
           }
         ],
         "reslotsCounter" : 0,
@@ -253,21 +246,20 @@ Content-Length: 1921</pre>
         "shareUrl" : null
       },
       "actor" : {
-        "id" : 8,
-        "username" : "User 53",
-        "createdAt" : "2015-12-04T16:56:47.090Z",
-        "updatedAt" : "2015-12-04T16:56:47.090Z",
+        "id" : 10,
+        "username" : "User 65",
+        "createdAt" : "2015-12-23T11:18:29.759Z",
+        "updatedAt" : "2015-12-23T11:18:29.759Z",
         "deletedAt" : null,
         "image" : {
           "publicId" : null,
           "localId" : null
         },
-        "slotCount" : 1,
+        "slotCount" : 0,
         "reslotCount" : 0,
         "friendsCount" : 0
       }
-    },
-    "message" : "User 53 commented on your Slot: Slot title 23"
+    }
   }
 ]
 ```

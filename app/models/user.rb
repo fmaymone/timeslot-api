@@ -195,9 +195,15 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
-    # TODO: restore followers/followings when user re-activates
+    # NOTE: User do not include Activity, but we can call feed methods directly:
+    user_targets = Feed.remove_user_from_feeds(user: self, notify: self.followers)
+    user_targets.each do |target|
+      Feed.remove_target_from_feeds(target)
+    end
+    # TODO: restore followers/followings when user re-activates?
     remove_all_followers
     unfollow_all
+
     slot_settings.each(&:delete)
     friendships.each(&:inactivate)
     memberships.each(&:inactivate)
@@ -213,17 +219,18 @@ class User < ActiveRecord::Base
   ## slot related ##
 
   def active_slots(meta_slot)
-    # TODO
-    # std_slots.active + re_slots.active + group_slots.active
     slots = []
-    slots.push(*std_slots_private.active.where(meta_slot: meta_slot))
-    # slots.push(*StdSlot.active.of(self).where(meta_slot: meta_slot))
+    slots.push(*std_slots.active.where(meta_slot: meta_slot))
     slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end
 
   def shared_group_slots(user)
     group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
+  end
+
+  def visible_slots_counter(user)
+    SlotsCollector.new.active_stdslots_count(current_user: user, user: self)
   end
 
   def prepare_for_slot_deletion(slot)
@@ -254,8 +261,10 @@ class User < ActiveRecord::Base
 
   ## friendship related ##
 
-  # OPTIMIZATION: get friends with one query
   def friends
+    # OPTIMIZATION: get friends with one query
+    # but it seems 2 queries are faster at the moment
+    # UserQuery::Relationship.new(id).my_friends.to_a
     friends_by_request + friends_by_offer
   end
 
@@ -291,7 +300,7 @@ class User < ActiveRecord::Base
       # sind wir gescheitert zuvor?
       elsif fs.rejected?
         # versuchen wir es noch mal
-        fs.offer
+        fs.offer(self)
       # geht es um eine vorliegende Freundschaftsanfrage AN mich?
       elsif fs.offered? && (user_id == fs.user_id)
         fs.accept
@@ -300,13 +309,10 @@ class User < ActiveRecord::Base
       # nein
       requested_friends << User.find(user_id)
       save
+      fs = friendship(user_id)
+      # A new friendship object was created -> send/update activity
+      fs.update_activity
     end
-    fs ||= friendship(user_id)
-    if fs.established?
-      fs.user.follow(fs.friend)
-      fs.friend.follow(fs.user)
-    end
-    fs.create_activity
     fs
   end
 
@@ -503,7 +509,7 @@ class User < ActiveRecord::Base
     current_user = user.try(:authenticate, password)
     if current_user
       # FIXME: temporary disable token update bc ios doesn't renew token on 401
-      # current_user.update(auth_token: generate_auth_token)
+      current_user.update(auth_token: generate_auth_token) if current_user.auth_token.nil?
       Device.update_or_create(current_user, device) if device
     end
     current_user

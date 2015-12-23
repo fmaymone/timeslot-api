@@ -57,7 +57,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8
+Authorization: Token token=l1Jf4G6194jS7zHhuST-rq-QWSk
 Host: example.org
 Cookie: </pre>
 
@@ -74,7 +74,7 @@ method: metaphone</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=O_FQbwd446HUkh_51wvxUDIrzQ8&quot; \
+	-H &quot;Authorization: Token token=l1Jf4G6194jS7zHhuST-rq-QWSk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -85,12 +85,12 @@ method: metaphone</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6b4bd02d687bd0a5daf12120869dc422&quot;
+ETag: W/&quot;e82f256e98dafa7435a8b10f7d438f0f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8b5db5a2-a39a-4576-bbf1-bd3f70d1aa69
-X-Runtime: 0.020534
+X-Request-Id: fd3de30e-41f1-493d-9cab-7c4f058e14eb
+X-Runtime: 0.012029
 Vary: Origin
-Content-Length: 463</pre>
+Content-Length: 337</pre>
 
 #### Status
 
@@ -101,29 +101,21 @@ Content-Length: 463</pre>
 ```javascript
 [
   {
-    "id" : 172,
+    "id" : 164,
     "username" : "John Doe",
-    "createdAt" : "2015-12-04T16:56:50.516Z",
-    "updatedAt" : "2015-12-04T16:56:50.516Z",
+    "createdAt" : "2015-12-23T11:18:33.334Z",
+    "updatedAt" : "2015-12-23T11:18:33.334Z",
     "deletedAt" : null,
     "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0,
     "friendshipState" : "stranger"
   },
   {
-    "id" : 173,
+    "id" : 165,
     "username" : "John Doh",
-    "createdAt" : "2015-12-04T16:56:50.540Z",
-    "updatedAt" : "2015-12-04T16:56:50.540Z",
+    "createdAt" : "2015-12-23T11:18:33.337Z",
+    "updatedAt" : "2015-12-23T11:18:33.337Z",
     "deletedAt" : null,
     "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0,
     "friendshipState" : "stranger"
   }
 ]

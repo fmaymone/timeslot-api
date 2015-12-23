@@ -1,13 +1,10 @@
 class ApplicationController < ActionController::API
-  include TS_Authenticable
+  include TSAuthenticable
   include Pundit
 
   # Enforces access right checks for individuals resources
   after_action :verify_authorized
   after_action :set_locale, only: :users
-
-  # Enforces access right checks for collections
-  # after_action :verify_policy_scoped, only: :index
 
   rescue_from ParameterInvalid, with: :unprocessable_entity
   rescue_from PaginationError, with: :unprocessable_entity
@@ -35,7 +32,13 @@ class ApplicationController < ActionController::API
 
   rescue_from MissingCurrentUserError do
     # headers['Authorization'] = 'Token token="auth_token"'
-    render json: 'Invalid or missing auth_token', status: :unauthorized
+    render json: { error: 'auth_token invalid or missing' },
+           status: :unauthorized
+  end
+
+  rescue_from DataTeamServiceError do |exception|
+    notify_airbrake(exception)
+    render json: { error: exception.message }, status: :service_unavailable
   end
 
   private def unprocessable_entity(exception)
@@ -65,18 +68,8 @@ class ApplicationController < ActionController::API
     p
   end
 
-  # for Pundit
-  class UserContext
-    attr_reader :current_user, :requested_user
-
-    def initialize(current_user, requested_user = nil)
-      @current_user = current_user
-      @requested_user = requested_user
-    end
-  end
-
   # I18n
-  def set_locale
-    I18n.locale = (current_user[:lang] || I18n.default_locale)
+  private def set_locale
+    I18n.locale = current_user ? current_user.lang || 'en' : I18n.default_locale
   end
 end

@@ -48,8 +48,7 @@ RSpec.describe BaseSlot, type: :model do
   describe "create_slot" do
     let(:meta_param) { attributes_for(:meta_slot) }
     let(:group) { create(:group) }
-    let(:note_param) {
-      [ActionController::Parameters.new(attributes_for(:note))] }
+    let(:note_param) {{ title: 'Lee Hazlewood', content: 'The Girls in Paris' }}
     let(:alert_param) { attributes_for(:slot_setting)[:alerts] }
     let(:user) { create(:user) }
 
@@ -77,7 +76,7 @@ RSpec.describe BaseSlot, type: :model do
     it "creates a new Note" do
       expect {
         described_class.create_slot(meta: meta_param, visibility: 'public',
-                                    notes: note_param, user: user)
+                                    notes: [note_param], user: user)
       }.to change(Note, :count).by 1
     end
 

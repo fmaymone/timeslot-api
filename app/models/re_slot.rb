@@ -10,7 +10,7 @@ class ReSlot < BaseSlot
   # because of that I used BaseSlot as the associaton type
 
   delegate :media_items, :notes, :likes, :comments, :images, :audios, :videos,
-           :re_slots_count,
+           :reslots, :comments_count, :likes_count, :re_slots_count,
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
@@ -39,8 +39,8 @@ class ReSlot < BaseSlot
     predecessors
   end
 
-  def reslots
-    source.reslots
+  def muid
+    source.try(:muid)
   end
 
   def related_users
@@ -52,7 +52,7 @@ class ReSlot < BaseSlot
   end
 
   def delete
-    remove_activity('unslot')
+    remove_all_activities(target: self) # 'unslot'
     remove_all_followers
     slotter.unfollow(predecessor)
     slotter.prepare_for_slot_deletion self
@@ -68,7 +68,7 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor: nil, slotter: nil)
+  def self.create_from_slot(predecessor:, slotter:)
     original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
     # TODO: use this when having reslot visibilities
     # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
@@ -112,11 +112,8 @@ class ReSlot < BaseSlot
     slotter
   end
 
+  # TODO: maybe the action can always be passed like: create_activity(action), this will also improve code readings
   private def activity_action
     'reslot'
-  end
-
-  private def activity_deletion
-    'unslot'
   end
 end

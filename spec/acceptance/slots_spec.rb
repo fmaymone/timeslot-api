@@ -106,20 +106,20 @@ resource "Slots" do
     describe "Get several slots at once" do
       include_context "default slot response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:meta_slot) { create(:meta_slot) }
       let(:slot1) {
-        create(:std_slot_private, :with_media, owner: current_user) }
+        create(:std_slot_private, owner: current_user) }
       let(:slot2) {
-        create(:std_slot_private, :with_media, meta_slot: meta_slot,
+        create(:std_slot_private, :with_ios_location, meta_slot: meta_slot,
                owner: current_user) }
-      let!(:slot_setting) { create(:slot_setting,
-                                   user: current_user,
-                                   meta_slot: slot2.meta_slot,
-                                   alerts: '1110001100') }
+      let!(:slot_setting) { build_stubbed(:slot_setting,
+                                          user: current_user,
+                                          meta_slot: slot2.meta_slot,
+                                          alerts: '1110001100') }
       let!(:medias) {
-        create_list :slot_image, 3, mediable: slot2
-        create_list :audio, 2, mediable: slot2
-        create_list :video, 2, mediable: slot2
+        build_stubbed_list :slot_image, 3, mediable: slot2
+        build_stubbed_list :audio, 2, mediable: slot2
+        build_stubbed_list :video, 2, mediable: slot2
       }
       let(:ids) { [slot1.id, slot2.id] }
 
@@ -199,18 +199,19 @@ resource "Slots" do
     describe "Get slot with valid ID" do
       include_context "stdslot response fields"
 
-      let(:meta_slot) { create(:meta_slot, location_id: 200_719_253) }
+      let(:meta_slot) { create(:meta_slot) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          meta_slot: meta_slot, share_id: 'abcd1234') }
+                          :with_ios_location, meta_slot: meta_slot,
+                          share_id: 'abcd1234') }
 
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
                                    meta_slot: slot.meta_slot,
                                    alerts: '1110001100') }
       let!(:medias) {
-        create_list :slot_image, 3, mediable: slot
-        create_list :audio, 2, mediable: slot
-        create_list :video, 2, mediable: slot
+        build_stubbed_list :slot_image, 3, mediable: slot
+        build_stubbed_list :audio, 2, mediable: slot
+        build_stubbed_list :video, 2, mediable: slot
       }
       let(:id) { slot.id }
       let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
@@ -256,11 +257,7 @@ resource "Slots" do
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => "",
-                                "location" => slot.creator.location,
-                                "slotCount" => slot.creator.std_slots_public.count,
-                                "reslotCount" => slot.creator.re_slots.count,
-                                "friendsCount" => slot.creator.friends.count
+                                "image" => ""
                               },
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
@@ -348,8 +345,8 @@ resource "Slots" do
                                    alerts: '1110001100') }
       let!(:medias) {
         create_list :slot_image, 3, mediable: parent
-        create_list :audio, 2, mediable: parent
-        create_list :video, 2, mediable: parent
+        build_stubbed_list :audio, 2, mediable: parent
+        build_stubbed_list :video, 2, mediable: parent
       }
       let(:id) { reslot.id }
       let(:deleted_at) { reslot.deleted_at? ? reslot.deleted_at.as_json : nil }
@@ -396,11 +393,7 @@ resource "Slots" do
                                 "createdAt" => reslot.creator.created_at.as_json,
                                 "updatedAt" => reslot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
-                                "image" => "",
-                                "location" => reslot.creator.location,
-                                "slotCount" => reslot.creator.std_slots_public.count,
-                                "reslotCount" => reslot.creator.re_slots.count,
-                                "friendsCount" => reslot.creator.friends.count
+                                "image" => ""
                               },
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
@@ -1060,7 +1053,7 @@ resource "Slots" do
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:std_slot) {
-      create(:std_slot_private, :with_media, owner: current_user)
+      create(:std_slot_private, owner: current_user)
     }
     describe "Delete Standard Slot" do
       include_context "default slot response fields"
@@ -1168,15 +1161,26 @@ resource "Slots" do
         re_slot.reload
         expect(re_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to include("id" => re_slot.id,
-                                "title" => re_slot.title,
-                                "slotter" => {
-                                  "id" => re_slot.slotter.id
-                                },
-                                "createdAt" => re_slot.created_at.as_json,
-                                "updatedAt" => re_slot.updated_at.as_json,
-                                "deletedAt" => re_slot.deleted_at.as_json,
-                                "notes" => re_slot.notes)
+        re_slot.slotter.reload
+        expect(json).to include(
+                          "id" => re_slot.id,
+                          "title" => re_slot.title,
+                          "slotter" => {
+                            "id" => re_slot.slotter.id,
+                            "username" => re_slot.slotter.username,
+                            "createdAt" => re_slot.slotter.created_at.as_json,
+                            "updatedAt" => re_slot.slotter.updated_at.as_json,
+                            "deletedAt" => re_slot.slotter.deleted_at.as_json,
+                            "image" => re_slot.slotter.picture,
+                            "location" => re_slot.slotter.location,
+                            "slotCount" => re_slot.slotter.std_slots.active.count,
+                            "reslotCount" => re_slot.slotter.re_slots.active.count,
+                            "friendsCount" => re_slot.slotter.friends.count
+                          },
+                          "createdAt" => re_slot.created_at.as_json,
+                          "updatedAt" => re_slot.updated_at.as_json,
+                          "deletedAt" => re_slot.deleted_at.as_json,
+                          "notes" => re_slot.notes)
       end
     end
 
@@ -1494,7 +1498,7 @@ resource "Slots" do
 
     include_context "group slot response fields"
 
-    let(:slot) { create(:std_slot_private, :with_media, owner: current_user) }
+    let(:slot) { create(:std_slot_private, owner: current_user) }
 
     describe "Move Slot from private to friends" do
       let(:id) { slot.id }

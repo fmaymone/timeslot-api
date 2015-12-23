@@ -1612,7 +1612,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "GET /v1/slots/:uid/slotdata" do
-    let!(:slot) { create(:std_slot_private, :with_notes, :with_location,
+    let!(:slot) { create(:std_slot_private, :with_notes, :with_ios_location,
                          :with_real_image, share_id: '12345xyz',
                          shared_by: create(:user)) }
     before { current_user.webview! }
@@ -1711,9 +1711,17 @@ RSpec.describe "V1::Slots", type: :request do
       let!(:like) { create(:like, user: current_user, slot: std_slot) }
 
       it "sets deleted_at on the like" do
+        expect(std_slot.likes.count).to eq 1
+        expect(std_slot.likes_count).to eq 1
+
         delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
+
+        expect(response).to have_http_status :ok
         like.reload
         expect(like.deleted_at?).to be true
+        std_slot.reload
+        expect(std_slot.likes.count).to eq 0
+        expect(std_slot.likes_count).to eq 0
       end
     end
 
@@ -1722,8 +1730,19 @@ RSpec.describe "V1::Slots", type: :request do
       let!(:like) { create(:like, user: current_user, slot: re_slot.parent) }
 
       it "sets deleted_at on the like" do
+        expect(re_slot.likes.count).to eq 1
+        expect(re_slot.likes_count).to eq 1
+        expect(re_slot.parent.likes.count).to eq 1
+        expect(re_slot.parent.likes_count).to eq 1
+
         delete "/v1/slots/#{re_slot.id}/like", {}, auth_header
+
         expect(response).to have_http_status :ok
+        re_slot.reload
+        expect(re_slot.likes.count).to eq 0
+        expect(re_slot.likes_count).to eq 0
+        expect(re_slot.parent.likes.count).to eq 0
+        expect(re_slot.parent.likes_count).to eq 0
         like.reload
         expect(like.deleted_at?).to be true
       end

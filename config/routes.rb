@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
   namespace :v1, defaults: { format: :json } do
+    # TODO: rename connect routes
+    # scope :connect do
+    #   post 'facebook', to: 'connects#facebook_connect'
+    #   post 'twitter', to: 'connects#twitter_connect'
+    # end
     post 'fb-connect', to: 'connects#facebook_connect'
     post 'tw-connect', to: 'connects#twitter_connect'
 
@@ -66,6 +71,11 @@ Rails.application.routes.draw do
          as: 'slot_move',
          constraints: { id: /\d+/ }
 
+    scope :globalslots do
+      get 'search', to: 'global_slots#search'
+      post 'reslot', to: 'global_slots#create_reslot', as: 'reslot_global_slot'
+    end
+
     get 'media-signature', to: 'media#create_signature'
 
     scope :me do
@@ -73,7 +83,7 @@ Rails.application.routes.draw do
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
-      get 'friendslots', to: 'me#slots_from_friends', as: 'my_friendslots'
+      get 'friendslots', to: 'me#slots_of_my_friends'
       get 'media', to: 'me#my_media_items', as: 'my_media'
       get 'signout', to: 'me#signout', as: 'sign_me_out'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'

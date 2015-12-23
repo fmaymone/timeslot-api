@@ -88,7 +88,7 @@ Description : contains ID of the original slot that was reslottet
 
 #### Headers
 
-<pre>Authorization: Token token=Q6iPVnp1KHQA4IehkJAMm0T1HuY
+<pre>Authorization: Token token=abA1F-egbZth1LaJu4Z3inoBHFU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -100,7 +100,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/reslot/13&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=Q6iPVnp1KHQA4IehkJAMm0T1HuY&quot; \
+	-H &quot;Authorization: Token token=abA1F-egbZth1LaJu4Z3inoBHFU&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -112,12 +112,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d534f39abc902b31cc59008f414fa438&quot;
+ETag: W/&quot;1ce6b69ab598a0e5c2e614f7dd3371bc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 10b0c057-8b48-40bf-aa35-3a3a8c3c1969
-X-Runtime: 0.033418
+X-Request-Id: 4442ec8d-63f5-4eb3-857e-295a3704143d
+X-Runtime: 0.034013
 Vary: Origin
-Content-Length: 633</pre>
+Content-Length: 761</pre>
 
 #### Status
 
@@ -128,33 +128,38 @@ Content-Length: 633</pre>
 ```javascript
 {
   "id" : 13,
-  "title" : "Slot title 71",
-  "startDate" : "2019-09-22T03:44:02.000Z",
-  "createdAt" : "2015-12-04T16:56:52.830Z",
-  "updatedAt" : "2015-12-04T16:56:52.880Z",
-  "deletedAt" : "2015-12-04T16:56:52.877Z",
-  "endDate" : "2019-10-22T03:44:02.000Z",
+  "title" : "Slot title 74",
+  "startDate" : "2019-09-25T06:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:35.239Z",
+  "updatedAt" : "2015-12-23T11:18:35.285Z",
+  "deletedAt" : "2015-12-23T11:18:35.282Z",
+  "endDate" : "2019-10-25T06:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 28,
-    "username" : "User 312",
-    "createdAt" : "2015-12-04T16:56:52.815Z",
-    "updatedAt" : "2015-12-04T16:56:52.815Z",
+    "username" : "User 319",
+    "createdAt" : "2015-12-23T11:18:35.217Z",
+    "updatedAt" : "2015-12-23T11:18:35.217Z",
     "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 0,
-    "friendsCount" : 0
+    "image" : ""
   },
   "notes" : [],
   "media" : [],
   "settings" : {
     "alerts" : "omitted"
   },
-  "reslotsCounter" : 0,
+  "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 27
+    "id" : 27,
+    "username" : "User 318",
+    "createdAt" : "2015-12-23T11:18:35.214Z",
+    "updatedAt" : "2015-12-23T11:18:35.214Z",
+    "deletedAt" : null,
+    "image" : "",
+    "location" : null,
+    "slotCount" : 0,
+    "reslotCount" : 0,
+    "friendsCount" : 0
   },
   "parent" : {
     "id" : 12
