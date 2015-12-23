@@ -137,34 +137,39 @@ RSpec.describe GlobalSlot, type: :model do
     end
 
     context "missing global slot, valid 'muid'", :vcr do
-      let(:muid) { attributes_for(:global_slot)[:muid] }
+      context "valid 'muid'" do
+        let(:muid) { attributes_for(:global_slot)[:muid] }
 
-      it "creates a new global slot" do
-        expect {
-          described_class.find_or_create(muid)
-        }.to change(GlobalSlot, :count).by 1
+        it "creates a new global slot" do
+          expect {
+            described_class.find_or_create(muid)
+          }.to change(GlobalSlot, :count).by 1
+        end
+
+        it "returns the global slot" do
+          result = described_class.find_or_create(muid)
+          expect(result).to be_an_instance_of GlobalSlot
+        end
       end
 
-      it "returns the global slot" do
-        result = described_class.find_or_create(muid)
-        expect(result).to be_an_instance_of GlobalSlot
-      end
-    end
+      context "unknown muid" do
+        let(:unknown_muid) { '238a69a4-271c-f5cb-e60e-48952d805855' }
 
-    context "missing global slot, invalid data" do
-      let(:invalid_muid) { 'foo-bar-muid' }
-      let(:unknown_muid) { '238a69a4-271c-f5cb-e60e-48952d805855' }
-
-      it "raises error if uuid format is invalid" do
-        expect {
-          described_class.find_or_create(invalid_muid)
-        }.to raise_error TSErrors::DataTeamServiceError
+        it "raises NotFound error if uuid is not found" do
+          expect {
+            described_class.find_or_create(unknown_muid)
+          }.to raise_error ActiveRecord::RecordNotFound
+        end
       end
 
-      it "raises error if uuid is not found" do
-        expect {
-          described_class.find_or_create(unknown_muid)
-        }.to raise_error TSErrors::DataTeamServiceError
+      context "invalid muid" do
+        let(:invalid_muid) { 'foo-bar-muid' }
+
+        it "raises error if uuid format is invalid" do
+          expect {
+            described_class.find_or_create(invalid_muid)
+          }.to raise_error TSErrors::DataTeamServiceError
+        end
       end
     end
   end
