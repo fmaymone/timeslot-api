@@ -87,7 +87,7 @@ class GlobalSlotConsumer
         end_date: result['stop_timestamp'],
         location_uid: result['location_muid']
       },
-      muid: result['muid'] || result['duid'] || result['cuid'],
+      muid: result['muid'],
       url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
       media: [
