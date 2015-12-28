@@ -473,7 +473,7 @@ module Feed
     private def error_handler(error, feed, params)
       opts = {}
       opts[:parameters] = {
-          type: type,
+          feed: feed,
           params: params
       }
       Rails.logger.error { error }

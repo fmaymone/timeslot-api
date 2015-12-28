@@ -33,7 +33,6 @@ module Follow
 
   # Remove all followers from the current object (self)
   def remove_all_followers
-    followers = $redis.smembers(redis_key(:followers))
     followers.each do |follower|
       $redis.srem("Follow:User:#{follower}:following", self.id)
     end
@@ -49,13 +48,12 @@ module Follow
 
   # Remove all followings from the current object (self)
   def unfollow_all
-    followings = $redis.smembers("Follow:User:#{self.id}:following")
-    %w(User Slot Group).each do |context|
-      followings.each do |following|
+    followings.each do |following|
+      %w(User Slot Group).each do |context|
         $redis.srem("Follow:#{context}:#{following}:followers", self.id)
       end
     end
-    $redis.del("Follow:User:#{self.id}:following")
+    $redis.del(redis_key(:following))
   rescue => error
     error_handler(error, "failed: user '#{self.id}' unfollow all targets as worker job")
   end
@@ -94,12 +92,7 @@ module Follow
   end
 
   def redis_key(str)
-    "Follow:#{feed_type}:#{self.id}:#{str}"
-  end
-
-  # Try to return the supertype of each subclasses (e.g. 'Slot' instead of 'StdSlotPublic')
-  def feed_type
-    self.try(:activity_type) || self.class.name
+    "Follow:#{defined?(activity_type) ? activity_type : self.class.name}:#{self.id}:#{str}"
   end
 
   ## Helpers (Social Context) ##
