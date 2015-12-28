@@ -12,6 +12,9 @@ class Device < ActiveRecord::Base
 
   #scope :active_sockets, -> { where.not(socket: nil) }
 
+  # Mobile token management with Amazon SNS:
+  # http://mobile.awsblog.com/post/Tx223MJB0XKV9RU/Mobile-token-management-with-Amazon-SNS
+
   def register_endpoint(token)
     return if token.nil?
 
