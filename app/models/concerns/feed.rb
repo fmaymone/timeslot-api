@@ -144,7 +144,7 @@ module Feed
       job_data = []
 
       targets.each do |target|
-        # Try to expand social context for each target
+        # Try to extend social context for each target
         context = target.try(:followers)
         context.merge!(notify).uniq if context
         # Collect job data (remove by target)
@@ -282,8 +282,7 @@ module Feed
         actor = get_shared_object("User:#{activity['actors'].second}")
         # Add the second username to the translation params holder
         i18_params[:USER2] = actor['username']
-      end
-      if activity['foreign'].present?
+      elsif activity['foreign'].present?
         # Get second actor (from shared objects)
         actor = get_shared_object("User:#{activity['foreign']}")
         # Add the second username to the translation params holder
