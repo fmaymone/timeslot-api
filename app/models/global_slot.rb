@@ -18,7 +18,7 @@ class GlobalSlot < BaseSlot
       slot.update_from_params(media: media, notes: notes, user: user)
     end
 
-    slot
+    slot.create_activity
   end
 
   def self.find_or_create(muid)

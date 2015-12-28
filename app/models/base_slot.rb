@@ -341,12 +341,14 @@ class BaseSlot < ActiveRecord::Base
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
+    #slot.create_activity
+
     if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,
                               user: user)
     end
 
-    slot.create_activity
+    slot
   end
 
   def self.duplicate_slot(source, target, current_user)

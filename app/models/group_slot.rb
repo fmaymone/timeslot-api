@@ -21,7 +21,8 @@ class GroupSlot < BaseSlot
       slot_type = GroupSlotMembers
     end
 
-    slot_type.create(group: group, meta_slot: meta_slot)
+    slot = slot_type.create(group: group, meta_slot: meta_slot)
+    slot.create_activity
   end
 
   # for Pundit

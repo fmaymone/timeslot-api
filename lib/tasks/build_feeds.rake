@@ -54,6 +54,10 @@ namespace :feed do
                 Friendship.all +
                 Membership.all
 
+      # TODO: handle friendship date during re-build task
+      # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil
+      # (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
+
       ## Re-Build Activities ##
 
       storage.uniq.sort_by!{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)

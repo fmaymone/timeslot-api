@@ -53,7 +53,8 @@ class StdSlot < BaseSlot
     msg = "invalid value for visibility: #{visibility}"
     Airbrake.notify(NameError, error_message: msg)
   else
-    slot_type.create(meta_slot: meta_slot, owner: user)
+    slot = slot_type.create(meta_slot: meta_slot, owner: user)
+    slot.create_activity
   end
 
   # for Pundit
