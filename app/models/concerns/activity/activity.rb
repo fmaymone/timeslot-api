@@ -224,9 +224,9 @@ module Activity
       # 1. Target related context (by default):
       user_ids += activity_target.followers
       # 5. Foreign related context (by default):
-      user_ids += activity_foreign.followers
+      user_ids += activity_foreign.followers if activity_foreign
       # 2. Actor related context:
-      user_ids += activity_actor.followers if activity_foreign && (visibility == 'foaf' || visibility == 'public')
+      user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
       # 3. Friend related context:
