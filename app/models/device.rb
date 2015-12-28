@@ -118,6 +118,9 @@ class Device < ActiveRecord::Base
                           message_structure: 'json' }
     begin
       client.publish(push_notification)
+    rescue Aws::SNS::Errors::InvalidParameter => exception
+      Rails.logger.warn { "Target ARN: No endpoint found. Endpoint was removed from users device." }
+      device = Device.find(device['id']).unregister_endpoint
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
