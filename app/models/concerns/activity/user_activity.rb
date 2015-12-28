@@ -5,8 +5,12 @@ module UserActivity
     'User'
   end
 
+  private def activity_foreign
+    activity_target
+  end
+
   private def activity_push
-    [ activity_target.id ]
+    [activity_target.id]
   end
 
   # Add extra data to each activity. The data can be hide

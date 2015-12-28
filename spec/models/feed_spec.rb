@@ -1237,6 +1237,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_friend.first['data']['target']['friendshipState']).to be(nil)
         expect(user_feed_friend.first['data']['actor']['id']).to be(friend.id)
         expect(user_feed_friend.first['data']['actor']['friendshipState']).to eq('pending passive')
+        expect(user_feed_friend.first['message']).to eq(I18n.t('user_request_me_singular',
+                                                               {USER: friend.username,
+                                                                USER2: user.username}))
       end
 
       it "News Feed (aggregated public activities)" do
@@ -1256,6 +1259,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.first['data']['target']['friendshipState']).to be(nil)
         expect(notification_feed.first['data']['actor']['id']).to be(friend.id)
         expect(notification_feed.first['data']['actor']['friendshipState']).to eq('pending passive')
+        expect(notification_feed.first['message']).to eq(I18n.t('user_request_notify_singular',
+                                                               {USER: friend.username,
+                                                                USER2: user.username}))
 
         notification_feed_friend = Feed.notification_feed(friend.id).as_json
         expect(notification_feed_friend.count).to be(0) # has no related activities

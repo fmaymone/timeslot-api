@@ -101,7 +101,7 @@ en:
   slot_reslot_notify_aggregate:	"%{USER} and %{USERCOUNT} others reslotted your Slot: %{TITLE}"
   slot_reslot_push_aggregate:	"%{USER} and %{USERCOUNT} others reslotted the Slot: %{TITLE}"
 
-  user_friendship_me_singular:	"You and %{USER} are now friends"
+  user_friendship_me_singular:	"You and %{USER2} are now friends"
   user_friendship_activity_singular:	""
   user_friendship_notify_singular:	"%{USER} and %{USER2} are now friends"
   user_friendship_push_singular:	"%{USER} has accepted your friend request"
@@ -145,7 +145,7 @@ en:
   slot_unslot_notify_aggregate:	"TODO-Aggregate-Notify-4"
   slot_unslot_push_aggregate:	"TODO-Aggregate-Push-4"
 
-  user_request_me_singular:	"You sent a friend request to %{USER}"
+  user_request_me_singular:	"You sent a friend request to %{USER2}"
   user_request_activity_singular:	""
   user_request_notify_singular:	"%{USER} sent a friend request to you"
   user_request_push_singular:	"%{USER} sent a friend request to you"

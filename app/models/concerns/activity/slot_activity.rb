@@ -21,7 +21,7 @@ module SlotActivity
   end
 
   private def activity_push
-    [ activity_foreign.id ]
+    [activity_foreign.id]
   end
 
   # Add extra data to each activity. The data can be hide

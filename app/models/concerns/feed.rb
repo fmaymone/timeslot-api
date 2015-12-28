@@ -59,16 +59,11 @@ module Feed
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # The target can have different types (e.g. Slot, User, Group)
-      if params[:type] == 'User' || params[:type] == 'Group'
-        # If target is from type user --> forward target to user shared objects
-        $redis.set("#{params[:type]}:#{params[:object]}", gzip_target(params))
-      else
-        # Store target to its own index (shared objects)
-        $redis.set("#{params[:type]}:#{params[:target]}", gzip_target(params))
-      end
+      # Store target to its own index (shared objects)
+      # NOTE: Targets are generic and can have different types (e.g. Slot, User, Group)
+      $redis.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
       # Store actor to its own index (shared objects)
-      $redis.set("User:#{params[:actor]}", gzip_actor(params))
+      $redis.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
@@ -237,19 +232,15 @@ module Feed
         activity.delete('actor')
         # Get the first actor (from shared objects)
         actor = get_shared_object("User:#{activity['actors'].first}")
+        # Get target (from shared object)
+        target = get_shared_object("#{activity['type']}:#{activity['target']}")
+
         # FIX: This is temporary solution for syncing issues on iOS
         # actor = JSONView.user(User.find(activity['actors'].first))
-        # Get target (from shared object)
-        if activity['type'] == 'User' || activity['type'] == 'Group'
-          # If target is from type user --> load shared object from user storage
-          target = get_shared_object("#{activity['type']}:#{activity['object']}")
-        else
-          target = get_shared_object("#{activity['type']}:#{activity['target']}")
-        end
-        # FIX: This is temporary solution for syncing issues on iOS
         # target = JSONView.slot(BaseSlot.get(activity['target']))
+
         # Prepare filtering out private targets from feed + skip (this is an extra check)
-        if target['visibility'] == 'private'
+        if target.try(:visibility) == 'private'
           activity['target'] = nil
           next
         end
@@ -291,6 +282,12 @@ module Feed
         actor = get_shared_object("User:#{activity['actors'].second}")
         # Add the second username to the translation params holder
         i18_params[:USER2] = actor['username']
+      end
+      if activity['foreign'].present?
+        # Get second actor (from shared objects)
+        actor = get_shared_object("User:#{activity['foreign']}")
+        # Add the second username to the translation params holder
+        i18_params[:USER2] = actor['username'].presence if actor
       end
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
@@ -423,7 +420,8 @@ module Feed
     end
 
     private def get_shared_object(feed_index)
-      unzip_json($redis.get(feed_index))
+      obj = $redis.get(feed_index)
+      obj ? unzip_json(obj) : nil
     end
 
     private def get_feed_from_index(key, index)
@@ -451,15 +449,9 @@ module Feed
       )
     end
 
-    private def gzip_actor(params)
+    private def gzip_data_field(params, field)
       ActiveSupport::Gzip.compress(
-          params[:data][:actor].to_json
-      )
-    end
-
-    private def gzip_target(params)
-      ActiveSupport::Gzip.compress(
-          params[:data][:target].to_json
+          params[:data][field].to_json
       )
     end
 
