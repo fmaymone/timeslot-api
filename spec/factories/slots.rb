@@ -1,7 +1,6 @@
 FactoryGirl.define do
   factory :slot, class: BaseSlot do
     association :meta_slot, strategy: :build
-    user_tags []
   end
 
   trait :with_candy_location do

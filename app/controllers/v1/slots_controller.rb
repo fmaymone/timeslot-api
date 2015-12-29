@@ -285,7 +285,7 @@ module V1
     def update_user_tags
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @slot.update_user_tags(params[:user_tags])
+      @slot.update_user_tags(current_user, params[:user_tags])
 
       head :ok
     end
@@ -294,7 +294,8 @@ module V1
     def get_user_tags
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @users = @slot.user_tags.any? ? User.find(@slot.user_tags) : []
+      tagged_reslots = @slot.reslots.where('re_slots.tagged_from = ?', current_user.id)
+      @users = tagged_reslots.any? ? User.find(tagged_reslots.pluck(:slotter_id)) : []
 
       render "v1/users/list"
     end
