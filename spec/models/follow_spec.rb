@@ -18,7 +18,6 @@ RSpec.describe Follow, type: :model do
   it { is_expected.to respond_to(:followers_count) }
   it { is_expected.to respond_to(:followings_count) }
   it { is_expected.to respond_to(:redis_key) }
-  it { is_expected.to respond_to(:feed_type) }
 
   it { is_expected.to be_valid }
 

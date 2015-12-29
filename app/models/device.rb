@@ -12,14 +12,19 @@ class Device < ActiveRecord::Base
 
   #scope :active_sockets, -> { where.not(socket: nil) }
 
+  # Mobile token management with Amazon SNS:
+  # http://mobile.awsblog.com/post/Tx223MJB0XKV9RU/Mobile-token-management-with-Amazon-SNS
+
   def register_endpoint(token)
-    return false if token.nil?
+    return if token.nil?
+
     # check if token already exist on an old device
     if (device = Device.find_by(token: token)) && device != self
       self.token = token
       save!
       device.destroy
     end
+
     # sets new endpoint if not exist or update if new token was passed
     case system
     when 'ios'
@@ -27,7 +32,13 @@ class Device < ActiveRecord::Base
     else
       endpoint_arn = nil
     end
-    update(token: token, endpoint: endpoint_arn) if endpoint_arn
+
+    # unregister endpoint if it was disabled
+    if endpoint_arn
+      update(token: token, endpoint: endpoint_arn)
+    else
+      unregister_endpoint
+    end
   end
 
   def unregister_endpoint
@@ -63,37 +74,39 @@ class Device < ActiveRecord::Base
   end
 
   # push notification to APNS (apple push notification service)
-  def self.notify_ios(client, device, lang, message:, alert: '', sound: 'receive_message.wav',
-                      badge: 1, extra: {a: 1, b: 2}, slot_id: nil, user_id: nil, friend_id: nil)
+  def self.notify_ios(client, device, lang, message:, sound: 'receive_message.wav',
+                      badge: 1, extra: {}, slot_id: nil, user_id: nil, friend_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     has_custom_language = lang.present? && lang != I18n.default_locale
 
-    if message.try(:KEY).present?
+    unless message[:KEY].nil?
       I18n.locale = lang if has_custom_language
-      message = I18n.t(message[:KEY], message.except(:KEY))
-      I18n.locale = I18n.default_locale if has_custom_language
-      # Default language fallback if custom language fails
-      message = I18n.t(message[:KEY], message.except(:KEY)) if has_custom_language && message.nil?
+      message_push = I18n.t(message[:KEY], message.except(:KEY))
+      if has_custom_language
+        I18n.locale = I18n.default_locale
+        # Default language fallback if custom language fails
+        message_push ||= I18n.t(message[:KEY], message.except(:KEY))
+      end
+    else
+      message_push = nil
     end
 
     # Skip sending if no message exist
-    return if message.nil? || message.blank?
+    return if message_push.nil? || message_push.blank?
 
-    payload = {}
     aps = {
-        alert: message,
+        alert: message_push,
         sound: sound,
-        badge: badge
+        badge: badge,
+        extra: extra
     }
     aps[:slot_id] = slot_id if slot_id
     aps[:user_id] = user_id if user_id
     aps[:friend_id] = friend_id if friend_id
 
-    # defaults to true, if ENV variable not set, otherwise examine
-    if ENV['PUSH_DEFAULT'].nil? || ENV['PUSH_DEFAULT'] == 'true'
-      payload.merge!(default: { message: message })
-    end
+    # Always includes the default message
+    payload = {default: { message: message_push }}
 
     if ENV['PUSH_APNS'].nil? || ENV['PUSH_APNS'] == 'true'
       payload.merge!(APNS: { aps: aps }.to_json)
@@ -108,6 +121,9 @@ class Device < ActiveRecord::Base
                           message_structure: 'json' }
     begin
       client.publish(push_notification)
+    rescue Aws::SNS::Errors::InvalidParameter => exception
+      Rails.logger.warn { "Target ARN: No endpoint found. Endpoint was removed from users device." }
+      device = Device.find(device['id']).unregister_endpoint
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }

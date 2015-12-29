@@ -17,12 +17,11 @@ module SlotActivity
   # if custom validation is required
   private def activity_is_valid?
     visibility = activity_target.try(:visibility)
-    friendship = activity_foreign.present? ? activity_actor.friendship(activity_foreign) : nil
-    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
+    super && (visibility.nil? || (visibility != 'private'))
   end
 
   private def activity_push
-    [ activity_foreign.id ]
+    [activity_foreign.id]
   end
 
   # Add extra data to each activity. The data can be hide

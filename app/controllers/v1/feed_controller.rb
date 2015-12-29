@@ -11,8 +11,7 @@ module V1
       authorize :feed
       return head 422 unless has_allowed_params?
       feed = Feed::user_feed(current_user.id, page_params)
-      return head 500 if feed == true # FIX: if redis is down
-      render json: feed, status: :ok
+      render_feed(feed)
     end
 
     # GET /v1/feed/news
@@ -23,8 +22,7 @@ module V1
       authorize :feed
       return head 422 unless has_allowed_params?
       feed = Feed::news_feed(current_user.id, page_params)
-      return head 500 if feed == true # FIX: if redis is down
-      render json: feed, status: :ok
+      render_feed(feed)
     end
 
     # GET /v1/feed/notification
@@ -33,8 +31,16 @@ module V1
       authorize :feed
       return head 422 unless has_allowed_params?
       feed = Feed::notification_feed(current_user.id, page_params)
-      return head 500 if feed == true # FIX: if redis is down
-      render json: feed, status: :ok
+      render_feed(feed)
+    end
+
+    private def render_feed(feed)
+      if feed == true # if redis is down
+        render json: { error: "No access to the redis server." },
+               status: :service_unavailable
+      else
+        render json: feed, status: :ok
+      end
     end
 
     private def page_params

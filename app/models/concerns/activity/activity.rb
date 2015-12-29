@@ -221,16 +221,17 @@ module Activity
       user_ids += activity_group.followers
     else
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
+      # NOTE: Actually we simplify activities on own contents and foreign related content
       # 1. Target related context (by default):
-      user_ids += activity_target.followers # if visibility == 'friend' or visibility == 'foaf' or visibility == 'public'
+      user_ids += activity_target.followers
+      # 5. Foreign related context (by default):
+      user_ids += activity_foreign.followers if activity_foreign
       # 2. Actor related context:
       user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
 
       # NOTE: Instead of distributing unrelated public slots we try to extend the social context
+      # 3. Friend related context:
       # if visibility == 'public'
-      #   # 5. Foreign related context:
-      #   user_ids += activity_foreign.followers if activity_foreign
-      #   # 3. Friend related context:
       #   %W(#{activity_target}
       #      #{activity_actor}
       #      #{activity_foreign}).each do |context|
