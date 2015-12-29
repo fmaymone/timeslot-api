@@ -281,6 +281,25 @@ module V1
       head :ok
     end
 
+    # POST /v1/slots/1/user_tags
+    def update_user_tags
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.update_user_tags(current_user, params[:user_tags])
+
+      head :ok
+    end
+
+    # GET /v1/slots/1/user_tags
+    def get_user_tags
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      tagged_reslots = @slot.reslots.where('re_slots.tagged_from = ?', current_user.id)
+      @users = tagged_reslots.any? ? User.find(tagged_reslots.pluck(:slotter_id)) : []
+
+      render "v1/users/list"
+    end
+
     # GET /v1/slots/1/comments
     def show_comments
       @slot = BaseSlot.get(params[:id])

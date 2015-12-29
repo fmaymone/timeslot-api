@@ -27,6 +27,9 @@ FactoryGirl.define do
       if attributes[:deleted_at].present?
         rs.update(deleted_at: attributes[:deleted_at])
       end
+      if attributes[:tagged_from].present?
+        rs.update(tagged_from: attributes[:tagged_from])
+      end
       rs
     end
 

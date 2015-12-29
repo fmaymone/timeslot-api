@@ -95,6 +95,14 @@ class SlotPolicy < ApplicationPolicy
     show_to_current_user?
   end
 
+  def update_user_tags?
+    current_user?
+  end
+
+  def get_user_tags?
+    show_to_current_user?
+  end
+
   # helper
 
   # checks if current_user has read access

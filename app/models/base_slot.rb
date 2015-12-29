@@ -199,6 +199,16 @@ class BaseSlot < ActiveRecord::Base
     self.share_id? || create_share_id(user)
   end
 
+  def update_user_tags(current_user, user_tags)
+    unless user_tags.nil?
+      reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
+      User.find(user_tags - reslotters).each do |user|
+        reslot = ReSlot.create_from_slot(predecessor: self, slotter: user)
+        reslot.update(tagged_from: current_user.id)
+      end
+    end
+  end
+
   def delete
     likes.each(&:delete)
     comments.each(&:delete)
