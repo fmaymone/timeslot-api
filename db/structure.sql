@@ -51,20 +51,6 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -250,15 +236,37 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 
 
 --
+-- Name: global_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE global_slots (
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
+    slot_type integer,
+    share_id character varying(8) DEFAULT ''::character varying,
+    shared_by_id bigint,
+    likes_count integer DEFAULT 0,
+    comments_count integer DEFAULT 0,
+    re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    url character varying DEFAULT ''::character varying,
+    muid uuid NOT NULL
+)
+INHERITS (base_slots);
+
+
+--
 -- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE group_slots (
+    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    group_id bigint NOT NULL
+    deleted_at timestamp without time zone
 )
 INHERITS (base_slots);
 
@@ -469,9 +477,9 @@ CREATE TABLE meta_slots (
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
-    location_id bigint,
     ios_location_id bigint,
-    open_end boolean DEFAULT false NOT NULL
+    open_end boolean DEFAULT false NOT NULL,
+    location_uid uuid
 );
 
 
@@ -566,13 +574,14 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
-    parent_id bigint NOT NULL
+    parent_id bigint NOT NULL,
+    tagged_from bigint
 )
 INHERITS (base_slots);
 
@@ -1399,4 +1408,12 @@ INSERT INTO schema_migrations (version) VALUES ('20151101102829');
 INSERT INTO schema_migrations (version) VALUES ('20151102154547');
 
 INSERT INTO schema_migrations (version) VALUES ('20151122175133');
+
+INSERT INTO schema_migrations (version) VALUES ('20151126144402');
+
+INSERT INTO schema_migrations (version) VALUES ('20151213004813');
+
+INSERT INTO schema_migrations (version) VALUES ('20151216084727');
+
+INSERT INTO schema_migrations (version) VALUES ('20151217144020');
 
