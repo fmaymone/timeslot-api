@@ -19,8 +19,6 @@
 ## GlobalSlots
 
 * [Reslot global slot](globalslots/reslot_global_slot.markdown)
-* [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
-* [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
 ## Groups
 
@@ -105,6 +103,8 @@
 * [Get Comments for Slot](slots/get_comments_for_slot.markdown)
 * [Get Slotters for Slot](slots/get_slotters_for_slot.markdown)
 * [Get Reslot History aka Chronic for Slot](slots/get_reslot_history_aka_chronic_for_slot.markdown)
+* [Tagging users to a slot](slots/tagging_users_to_a_slot.markdown)
+* [Get all tagged users of a slot](slots/get_all_tagged_users_of_a_slot.markdown)
 * [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
 * [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)
 * [Share slot](slots/share_slot.markdown)
