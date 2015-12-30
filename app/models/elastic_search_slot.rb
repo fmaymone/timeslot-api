@@ -23,7 +23,7 @@ class ElasticSearchSlot
     @end_date = crawler_slot['stop_timestamp']
 
     # @address_raw = crawler_slot['address_raw']
-    @loc_name = crawler_slot['address_raw'].split(',').first
+    @loc_name = crawler_slot['location_title']
     @locality = crawler_slot['locality']
     @country = crawler_slot['country']
     @longitude, @latitude = crawler_slot['location_geo']
