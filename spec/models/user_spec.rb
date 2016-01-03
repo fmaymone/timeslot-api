@@ -59,46 +59,73 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe "when email is not present" do
-    before { user.email = nil }
-    it { is_expected.to be_valid }
-  end
+  describe "email" do
+    context "when email is not present" do
+      before { user.email = nil }
+      it { is_expected.to be_valid }
+    end
 
-  describe "when email is too long" do
-    before { user.email = "user@".concat("a" * 254).concat(".com")  }
-    it { should_not be_valid }
-  end
+    context "when email is too long" do
+      before { user.email = "user@".concat("a" * 254).concat(".com")  }
+      it { should_not be_valid }
+    end
 
-  describe "when email format is valid" do
-    it "will be valid" do
-      addresses = %w([user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn])
-      addresses.each do |valid_address|
-        user.email = valid_address
-        expect(user).to be_valid
+    context "when email format is valid" do
+      it "will be valid" do
+        addresses = %w([user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn])
+        addresses.each do |valid_address|
+          user.email = valid_address
+          expect(user).to be_valid
+        end
       end
     end
-  end
 
-  describe "when email format is invalid" do
-    it "will be invalid" do
-      addresses = %w([user@foo,com user_at_foo.org example.user@foo.
+    context "when email format is invalid" do
+      it "will be invalid" do
+        addresses = %w([user@foo,com user_at_foo.org example.user@foo.
                      @barbaz.com foo@.com])
-      addresses.each do |invalid_address|
-        user.email = invalid_address
-        expect(user).not_to be_valid
+        addresses.each do |invalid_address|
+          user.email = invalid_address
+          expect(user).not_to be_valid
+        end
       end
     end
-  end
 
-  describe "when email address is already taken" do
-    before { user.email = 'kw@ts.com' }
-    it "won't be valid" do
-      user.save
-      user_with_same_email = user.dup
-      user_with_same_email.email = user.email.upcase
-      user_with_same_email.save
+    context "existing email address" do
+      before { user.email = 'kw@ts.com' }
 
-      expect(user_with_same_email).not_to be_valid
+      it "won't be valid" do
+        user.save
+        user_with_same_email = user.dup
+        user_with_same_email.save
+        expect(user_with_same_email).not_to be_valid
+      end
+
+      it "won't be valid even when upcase" do
+        user.save
+        user_with_same_email = user.dup
+        user_with_same_email.email = user.email.upcase
+        user_with_same_email.save
+        expect(user_with_same_email).not_to be_valid
+      end
+
+      it "won't be accepted by the db even when upcase" do
+        user.save
+        user_with_same_email = user.dup
+        user_with_same_email.email = user.email.upcase
+        expect {
+          user_with_same_email.save!(validate: false)
+        }.to raise_error ActiveRecord::RecordNotUnique
+      end
+    end
+
+    context "when email has mixed case" do
+      before { user.email = 'DreXcyia@submerGe.com' }
+      it "will preserve lower/upper case letters" do
+        expect(user.email).not_to eq user.email.downcase
+        expect(user.email).not_to eq user.email.upcase
+        expect(user.email).to eq user.email
+      end
     end
   end
 
