@@ -15,14 +15,14 @@ resource "Search" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
-    response_field :location, "Home location of user"
-    response_field :push, "Send push Notifications (true/false)"
+    # response_field :location, "Home location of user"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
-    response_field :slotCount, "Number of slots for this user"
-    response_field :reslotCount, "Number of reslots for this user"
-    response_field :friendsCount, "Number of friends for this user"
+    # response_field :slotCount, "Number of slots for this user"
+    # response_field :reslotCount, "Number of reslots for this user"
+    # response_field :friendsCount, "Number of friends for this user"
+    response_field :friendshipState, "The friendship relation to the current user"
 
     context "search by username" do
       let!(:user) { create(:user, username: 'John Doe') }
@@ -83,6 +83,44 @@ resource "Search" do
         expect(json.first).to have_key "friendshipState"
         expect(json.first['id']).to eq(user1.id)
         expect(json.last['id']).to eq(user2.id)
+      end
+    end
+  end
+
+  # search friends
+  get "/v1/search/friend" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :query, "The query of the search", required: true
+
+    response_field :id, "ID of the user"
+    response_field :username, "Username of the user"
+    response_field :image, "URL of the user image"
+    response_field :createdAt, "Creation of user"
+    response_field :updatedAt, "Latest update of user in db"
+    response_field :deletedAt, "Deletion of user"
+    response_field :friendshipState, "The friendship relation to the current user"
+
+    context "search friend by username" do
+      let!(:user) { create(:user, username: 'Johnny Doehl') }
+      let!(:friend) { create(:user, username: 'John Doe') }
+      let!(:friendship) { create(:friendship, :established,
+                                friend: friend, user: current_user)}
+      let(:query) { 'john' }
+
+      example "Search friend by username", document: :v1 do
+        explanation "returns 404 if query is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to be(1)
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("username")
+        expect(json.first).to have_key("image")
+        expect(json.first).to have_key("friendshipState")
+        expect(json.first['friendshipState']).to eq('friend')
+        expect(json.first['id']).to eq(friend.id)
       end
     end
   end
