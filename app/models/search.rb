@@ -15,7 +15,7 @@ class Search
     # matter what
     # btw BaseSlots are not intended to be rendered via json, please see note
     # in the beginning of the class
-    result = StdSlotPublic.where(meta_slot_id: result.ids) if result.any? && table == MetaSlot
+    result = StdSlotPublic.where(meta_slot_id: result.ids) if result.try(:any?) && table == MetaSlot
     result
   end
 
