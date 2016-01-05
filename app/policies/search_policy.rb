@@ -17,6 +17,11 @@ class SearchPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
+  def friend?
+    current_user?
+  end
+
+  # true if a user is logged in
   def email?
     current_user?
   end
