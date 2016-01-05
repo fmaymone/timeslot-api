@@ -1,16 +1,12 @@
 class Search
-  def self.new(table, attr, query, page: 1, limit: 10, method: 'like')
+  def self.new(table, attr, query, page: 1, limit: 10, method: 'like', include: nil, exclude: nil)
     # NOTE: Actually we skip the minimum length check of the users query string
     # We should re-enable this later to prevent from performance issues,
     # or we can use the users from the activity feeds shared object to speed up user search
     return [] if query.blank?
-    result = paginate(
-      send(method, table, attr, query),
-      attr,
-      query,
-      page.to_i,
-      limit.to_i
-    )
+
+    result = send(method, table, attr, query)
+    result = paginate(result, attr, query, page.to_i, limit.to_i)
 
     # meta_slots requires change into BaseSlot model for the view part
     # @twi: I changed this bc using baseslots here would mean you can search for
@@ -19,9 +15,7 @@ class Search
     # matter what
     # btw BaseSlots are not intended to be rendered via json, please see note
     # in the beginning of the class
-    if (table == MetaSlot) && result
-      result = StdSlotPublic.where(meta_slot_id: result.ids)
-    end
+    result = StdSlotPublic.where(meta_slot_id: result.ids) if result.any? && table == MetaSlot
     result
   end
 
@@ -50,7 +44,7 @@ class Search
   end
 
   # requires: postgres extension "pg_trgm"
-  # this algorithm is very slow but is often favourized by the community
+  # this algorithm is very slow but it is often favoured by the community
   # def self.similiar(table, attr, query)
   #   table.where('similarity(' + attr + ', ?) < 5', query)
   # end
