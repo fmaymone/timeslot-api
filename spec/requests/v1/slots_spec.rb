@@ -521,7 +521,7 @@ RSpec.describe "V1::Slots", type: :request do
       # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
         let(:pred) do
-          slot = create(:group_slot)
+          slot = create(:group_slot_public)
           create(:membership, :active, group: slot.group, user: current_user)
           slot
         end
@@ -1535,7 +1535,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/reslot/:id" do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_public) }
     let!(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
 
     context "with a valid ID" do
@@ -1552,7 +1552,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "parent attributes" do
         context "likes" do
-          let(:parent) { create(:std_slot, :with_likes) }
+          let(:parent) { create(:std_slot_foaf, :with_likes) }
 
           it "doesn't destroy the likes of the parent slot" do
             expect {
@@ -1562,7 +1562,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "comments" do
-          let(:parent) { create(:std_slot, :with_comments) }
+          let(:parent) { create(:std_slot_friends, :with_comments) }
 
           it "doesn't destroy the comments of the parent slot" do
             expect {
@@ -1572,7 +1572,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "media" do
-          let(:parent) { create(:std_slot, :with_media) }
+          let(:parent) { create(:std_slot_friends, :with_media) }
 
           it "doesn't destroy the media of the parent slot" do
             expect {

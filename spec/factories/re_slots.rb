@@ -2,7 +2,10 @@ FactoryGirl.define do
   factory :re_slot, class: ReSlotPublic, parent: :slot do
     association :slotter, factory: :user, strategy: :build
     association :predecessor, factory: :std_slot_public, strategy: :build
-    visibility 'public'
+
+    factory :re_slot_public, class: ReSlotPublic do
+      visibility 'public'
+    end
 
     factory :re_slot_foaf, class: ReSlotFoaf do
       visibility 'foaf'
@@ -19,19 +22,20 @@ FactoryGirl.define do
     initialize_with do
       # I think it's not possible to create(:re_slot) with parent & predecessor
       # shouldn't be neccessary anyway
+      visi = (respond_to? :visibility) ? visibility : nil
       if attributes[:parent].present?
         attributes[:predecessor] = attributes[:parent]
         attributes[:meta_slot] = attributes[:parent][:meta_slot]
         rs = ReSlot.create_from_slot(predecessor: attributes[:parent],
                                      slotter: slotter,
-                                     visibility: visibility)
+                                     visibility: visi)
       else
         # need to overwrite the meta_slot from the slots factory with the
         # meta_slot of the predecessor, otherwise we get wrong meta_slot id
         predecessor.meta_slot = meta_slot
         rs = ReSlot.create_from_slot(predecessor: predecessor,
                                      slotter: slotter,
-                                     visibility: visibility)
+                                     visibility: visi)
       end
       if attributes[:start_date].present?
         rs.update(start_date: attributes[:start_date])

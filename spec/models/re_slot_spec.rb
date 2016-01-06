@@ -57,6 +57,11 @@ RSpec.describe ReSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when visibility exceeds visibility of parent" do
+    before { re_slot.parent = create(:std_slot_friends) }
+    it { is_expected.to_not be_valid }
+  end
+
   describe "unprivate scope" do
     let(:user) { create(:user) }
     let!(:privat_slot) { create(:re_slot_private, slotter: user) }
@@ -158,7 +163,7 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe :re_slots_count do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_public) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "reslot returns the number of reslots of the parent slot" do
@@ -167,7 +172,7 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe :delete do
-    let(:group_slot) { create(:group_slot) }
+    let(:group_slot) { create(:group_slot_public) }
     let(:re_slot_1) { create(:re_slot, predecessor: group_slot,
                              meta_slot: group_slot.meta_slot) }
     let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,

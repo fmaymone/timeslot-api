@@ -27,6 +27,7 @@ class ReSlot < BaseSlot
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
+  validate :parent_visibility_not_exceeded
   validates :slotter, presence: true
   validates :predecessor, presence: true
   validates :parent, presence: true
@@ -78,6 +79,15 @@ class ReSlot < BaseSlot
     successors = ReSlot.where(predecessor: self)
     successors.each do |slot|
       slot.update(predecessor: predecessor)
+    end
+  end
+
+  private def parent_visibility_not_exceeded
+    return unless parent
+    if (parent.visibility != 'public' && visibility == 'public') ||
+       (parent.visibility == 'friends' && visibility == 'foaf')
+      errors.add(:visibility,
+                 "can't exceed parent visibility ('#{parent.visibility}')")
     end
   end
 

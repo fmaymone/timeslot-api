@@ -181,7 +181,7 @@ RSpec.describe V1::SlotsController, type: :controller do
   end
 
   describe "DELETE destroy_reslot" do
-    let(:pred) { create(:std_slot) }
+    let(:pred) { create(:std_slot_friends) }
     let!(:reslot) { create(:re_slot, slotter: current_user, predecessor: pred) }
 
     describe "without custom alert" do
