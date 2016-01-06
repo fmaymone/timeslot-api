@@ -320,8 +320,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def self.get(slot_id)
-    bs = BaseSlot.find(slot_id)
-    bs.slot_type.constantize.find(slot_id)
+    # reloading necessary to get attributes from MTI tables
+    BaseSlot.find(slot_id).reload
   end
 
   def self.get_many(slot_ids)
