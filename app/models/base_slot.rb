@@ -96,16 +96,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def reslots
-    # this should not include private reslots
-    # TODO: change it when we have reslots with different visibilities
-    # this is a quickfix to return the correct ReSlot class (eg ReSlotPublic)
-    # instead of just 'ReSlot', needs improvement
-    ids = ReSlot.where(parent_id: id).pluck(:id)
-    reslots = []
-    ids.each do |id|
-      reslots << BaseSlot.get(id)
-    end
-    reslots
+    # TODO: I think in some cases this should not include private reslots
+    ReSlot.where(parent_id: id)
   end
 
   def as_paging_cursor
@@ -428,7 +420,7 @@ class BaseSlot < ActiveRecord::Base
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
       raise PaginationError, "invalid pagination cursor"
-    # the following is not really neccessary, might be removed at some point
+    # the following is not really necessary, might be removed at some point
     # but for now it gives some useful info about the system
     else
       if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
