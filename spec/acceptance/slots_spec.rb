@@ -1347,30 +1347,39 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Slot where the user should be tagged", required: true
-    parameter :user_tags, "Array of users ids which should be tagged for this slot", required: true
+    parameter :id, "ID of the Slot where the user should be tagged",
+              required: true
+    parameter :user_tags,
+              "Array of users ids which should be tagged for this slot",
+              required: true
 
     let!(:slot) { create(:std_slot_public, owner: current_user) }
-    let(:user_tags) {[
-        create(:user).id,
-        create(:user).id,
-        create(:user).id
-    ]}
+    let(:user_tags) do
+      [create(:user).id,
+       create(:user).id,
+       create(:user).id]
+    end
     let(:id) { slot.id }
 
     example "Tagging users to a slot", document: :v1 do
-      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+      explanation "Creates ReSlots of the given slot for the users given " \
+                  "as User IDs in the POST parameters. Returns a list of " \
+                  "all user IDs tagged to this slot.\n\n" \
                   "returns 404 if ID is invalid.\n\n" \
                   "returns 422 if parameters are invalid\n\n" \
                   "returns 422 if required parameters are missing"
 
-      slot_user_tags = slot.reload.reslots.where('re_slots.tagged_from = ?', current_user.id).pluck(:slotter_id)
+      slot_user_tags = slot.reload.reslots
+                       .where('re_slots.tagged_from = ?', current_user.id)
+                       .pluck(:slotter_id)
       expect(slot_user_tags).to eq([])
 
       do_request
       expect(response_status).to eq(200)
 
-      slot_user_tags = slot.reload.reslots.where('re_slots.tagged_from = ?', current_user.id).pluck(:slotter_id)
+      slot_user_tags = slot.reload.reslots
+                       .where('re_slots.tagged_from = ?', current_user.id)
+                       .pluck(:slotter_id)
       expect(slot_user_tags).to eq(user_tags)
     end
   end
@@ -1383,21 +1392,21 @@ resource "Slots" do
     response_field :array, "containing a list of users"
 
     let!(:slot) { create(:std_slot_public) }
-    let!(:reslots) {[
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id),
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id),
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id)
-    ]}
+    let!(:reslots) do
+      [create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id),
+       create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id),
+       create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id)]
+    end
     let(:id) { slot.id }
 
     example "Get all tagged users of a slot", document: :v1 do
-      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+      explanation "returns a list of user ids which are tagged to this slot.\n\n" \
                   "returns 404 if ID is invalid"
       do_request
 
