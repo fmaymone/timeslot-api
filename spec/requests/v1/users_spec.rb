@@ -176,6 +176,12 @@ RSpec.describe "V1::Users", type: :request do
           post "/v1/users/signin", valid_attributes
           expect(json).to have_key('authToken')
         end
+
+        it "works when email has different case (upcase/lowercase)" do
+          post "/v1/users/signin",
+               { email: user.email.upcase, password: 'timeslot' }
+          expect(response).to have_http_status(:ok)
+        end
       end
 
       context "phone" do
@@ -228,23 +234,29 @@ RSpec.describe "V1::Users", type: :request do
   describe "POST /v1/users/reset" do
     context "valid params", :vcr do
       it "returns ok" do
-        post "/v1/users/reset", { email: current_user.email }, auth_header
+        post "/v1/users/reset", { email: current_user.email }
         expect(response).to have_http_status :ok
       end
 
       it "resets the password for the user" do
         expect {
-          post "/v1/users/reset", { email: current_user.email }, auth_header
+          post "/v1/users/reset", { email: current_user.email }
           current_user.reload
         }.to change(current_user, :password_digest)
       end
 
       it "creates a new auth_token for user" do
         expect {
-          post "/v1/users/reset", { email: current_user.email }, auth_header
+          post "/v1/users/reset", { email: current_user.email }
           current_user.reload
         }.to change(current_user, :auth_token)
       end
+
+      it "works when email has different case (upcase/lowercase)" do
+        post "/v1/users/reset", { email: current_user.email.upcase }
+        expect(response).to have_http_status(:ok)
+      end
+
     end
 
     context "invalid params" do

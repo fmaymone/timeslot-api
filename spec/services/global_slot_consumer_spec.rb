@@ -63,10 +63,6 @@ RSpec.describe GlobalSlotConsumer, type: :service do
       { "q" => search_term, "timestamp" => timestamp, "limit" => limit }
     }
     context 'football' do
-      # TODO: remove when football search is running on the updated ES instance
-      let(:query) {
-        { "q" => search_term, "timestamp" => timestamp, "size" => limit }
-      }
       it "returns array of elastic-search slots matching the search criteria" do
         result = described_class.new.search('football', query)
         expect(result.length).to eq limit

@@ -17,13 +17,7 @@ class GlobalSlotConsumer
   end
 
   def search(category, query)
-    if category == 'football'
-      # TMP FIX: football search is not working on the new ES endpoint,
-      # use the old one for now
-      uri = URI.parse('http://es.timeslot.rocks:56000/api/search_')
-    else
-      uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
-    end
+    uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
     uri.path += category
     uri.query = URI.encode_www_form(query)
 
@@ -47,6 +41,7 @@ class GlobalSlotConsumer
   private def fetch(resource_type, muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
     uri.path += "#{resource_type}/#{muid}"
+
     user = ENV['TS_DATA_MALL_NAME']
     pw = ENV['TS_DATA_MALL_PASSWORD']
     auth = { http_basic_authentication: [user, pw] }
