@@ -36,13 +36,6 @@ class BaseSlot < ActiveRecord::Base
   after_commit AuditLog
   after_initialize :set_slot_type, if: :new_record?
 
-  # TODO: remove this when reslot_visibility is merged
-  before_save :set_type
-
-  private def set_type
-    self.type = slot_type == 'ReSlot' ? 'ReSlotPublic' : slot_type
-  end
-
   scope :active, -> { where deleted_at: nil }
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
