@@ -1,10 +1,6 @@
 class ReSlot < BaseSlot
   self.table_name = model_name.plural
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   class ReslotHistroyError < StandardError; end
 
   # mapping the frontend string to the class

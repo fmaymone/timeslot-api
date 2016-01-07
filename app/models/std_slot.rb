@@ -1,10 +1,6 @@
 class StdSlot < BaseSlot
   self.table_name = model_name.plural
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   # mapping the frontend string to the class
   STD_SLOT_TYPES = { 'private' => :StdSlotPrivate,
                      'friends' => :StdSlotFriends,

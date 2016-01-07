@@ -33,10 +33,6 @@ class BaseSlot < ActiveRecord::Base
 
   enum slot_type: SLOT_TYPES
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   after_commit AuditLog
   after_initialize :set_slot_type, if: :new_record?
 
