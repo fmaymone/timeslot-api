@@ -29,6 +29,10 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:std_slots_foaf).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_public).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_private).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_friends).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_foaf).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_public).inverse_of(:slotter) }
   it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }

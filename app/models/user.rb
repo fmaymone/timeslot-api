@@ -30,6 +30,16 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
+
+  has_many :re_slots_private, class_name: ReSlotPrivate,
+           foreign_key: :slotter_id, inverse_of: :slotter
+  has_many :re_slots_friends, class_name: ReSlotFriends,
+           foreign_key: :slotter_id, inverse_of: :slotter
+  has_many :re_slots_foaf, class_name: ReSlotFoaf,
+           foreign_key: :slotter_id, inverse_of: :slotter
+  has_many :re_slots_public, class_name: ReSlotPublic,
+           foreign_key: :slotter_id, inverse_of: :slotter
+
   has_many :group_slots, through: :active_groups
 
   # group related
