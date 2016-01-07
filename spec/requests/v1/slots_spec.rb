@@ -599,6 +599,53 @@ RSpec.describe "V1::Slots", type: :request do
           expect(existing_deleted_reslot.predecessor_id).to eq pred.id
         end
       end
+
+      context "custom reslot visibility" do
+        let(:valid_attributes) do
+          { predecessorId: pred.id,
+            visibility: 'foaf' }
+        end
+
+        it "creates reslot with visibility friends-of-friends" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.to change(ReSlot, :count)
+          expect(response).to have_http_status :created
+          expect(ReSlot.last.visibility).to eq 'foaf'
+        end
+
+        context 'global slots' do
+          let!(:global_slot) { create(:global_slot) }
+
+          it "creates reslot from globalslot with visibility friends" do
+            expect {
+              post "/v1/globalslots/reslot/",
+                   { predecessor: global_slot.muid,
+                     visibility: 'friends' },
+                   auth_header
+            }.to change(ReSlot, :count)
+            expect(response).to have_http_status :created
+            expect(ReSlot.last.visibility).to eq 'friends'
+          end
+        end
+
+        context 'invalid parameter' do
+          let!(:friend_slot) do
+            uwe = build(:user)
+            create(:friendship, :established, user: current_user, friend: uwe)
+            create(:std_slot_friends, owner: uwe)
+          end
+
+          it "returns 422 if reslot visibility exceeds parent visibility" do
+            post "/v1/reslot/",
+                 { predecessorId: friend_slot.id,
+                   visibility: 'foaf' },
+                 auth_header
+            expect(response).to have_http_status :unprocessable_entity
+            expect(response.body).to include 'exceed'
+          end
+        end
+      end
     end
   end
 

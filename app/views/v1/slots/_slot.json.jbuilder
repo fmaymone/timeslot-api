@@ -50,8 +50,6 @@ else
     json.parent do
       json.id slot.parent_id
     end
-    # overwriting visibility on purpose
-    json.visibility slot.parent.try(:visibility)
   end
 end
 

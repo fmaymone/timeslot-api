@@ -571,19 +571,24 @@ resource "Slots" do
     parameter :predecessorId,
               "ID of the Slot which was resloted",
               required: true
+    parameter :visibility,
+              "Visibility of the ReSlot (private/friends/foaf/public)." \
+              "If not given it defaults to the visibility of the " \
+              "slot that was resloted (predecessor, which by now is always " \
+              "also the parent). The visibility can not exceed the " \
+              "visibility of the original Slot (Parent)."
+
+    include_context "reslot response fields"
 
     let(:pred) { create(:std_slot_public) }
+    let(:predecessorId) { pred.id }
 
     describe "Reslot a StandardSlot" do
-      include_context "reslot response fields"
-
-      let(:predecessorId) { pred.id }
-      let(:note) { "re-revolutionizing the calendar" }
-
-      example "Reslot a slot",
-              document: :v1 do
+      example "Reslot a slot", document: :v1 do
         explanation "Returns data of new ReSlot.\n\n" \
                     "returns 404 if Predecessor Slot doesn't exist\n\n" \
+                    "returns 422 if given visibility exceeds visibility of " \
+                    "the parent\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
         do_request
@@ -602,6 +607,28 @@ resource "Slots" do
         expect(json["endDate"]).to eq pred.end_date.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["visibility"]).to eq pred.visibility
+      end
+    end
+
+    describe "Reslot with explicit visibility" do
+      let(:visibility) { 'private' }
+
+      example "Reslot a public StandardSlot as private", document: :v1 do
+        explanation "Returns data of new ReSlot.\n\n" \
+                    "returns 404 if Predecessor Slot doesn't exist\n\n" \
+                    "returns 422 if given visibility exceeds visibility of " \
+                    "the parent\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json["slotter"]["id"]).to eq current_user.id
+        expect(json["title"]).to eq pred.title
+        expect(json["startDate"]).to eq pred.start_date.as_json
+        expect(json["endDate"]).to eq pred.end_date.as_json
+        expect(json["creator"]["id"]).to eq pred.creator.id
+        expect(json["visibility"]).to eq visibility
       end
     end
   end
