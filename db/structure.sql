@@ -86,7 +86,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: base_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: base_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE base_slots (
@@ -101,7 +101,7 @@ CREATE TABLE base_slots (
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     re_slots_count integer DEFAULT 0,
-    type text
+    type text NOT NULL
 );
 
 
@@ -125,7 +125,7 @@ ALTER SEQUENCE base_slots_id_seq OWNED BY base_slots.id;
 
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE comments (
@@ -159,7 +159,7 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
--- Name: connects; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: connects; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE connects (
@@ -194,7 +194,7 @@ ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 
 --
--- Name: devices; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: devices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE devices (
@@ -231,7 +231,7 @@ ALTER SEQUENCE devices_id_seq OWNED BY devices.id;
 
 
 --
--- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: friendships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE friendships (
@@ -265,21 +265,21 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 
 
 --
--- Name: global_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: global_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE global_slots (
-    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    slot_type integer,
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
     share_id character varying(8) DEFAULT ''::character varying,
     shared_by_id bigint,
+    slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     re_slots_count integer DEFAULT 0,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -287,21 +287,21 @@ INHERITS (base_slots);
 
 
 --
--- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE group_slots (
-    group_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    deleted_at timestamp without time zone
+    group_id bigint NOT NULL
 )
 INHERITS (base_slots);
 
 
 --
--- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE groups (
@@ -337,7 +337,7 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 
 --
--- Name: ios_locations; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: ios_locations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE ios_locations (
@@ -384,7 +384,7 @@ ALTER SEQUENCE ios_locations_id_seq OWNED BY ios_locations.id;
 
 
 --
--- Name: likes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: likes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE likes (
@@ -417,7 +417,7 @@ ALTER SEQUENCE likes_id_seq OWNED BY likes.id;
 
 
 --
--- Name: media_items; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: media_items; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE media_items (
@@ -458,7 +458,7 @@ ALTER SEQUENCE media_items_id_seq OWNED BY media_items.id;
 
 
 --
--- Name: memberships; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: memberships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE memberships (
@@ -494,7 +494,7 @@ ALTER SEQUENCE memberships_id_seq OWNED BY memberships.id;
 
 
 --
--- Name: meta_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: meta_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE meta_slots (
@@ -532,7 +532,7 @@ ALTER SEQUENCE meta_slots_id_seq OWNED BY meta_slots.id;
 
 
 --
--- Name: notes; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: notes; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE notes (
@@ -568,7 +568,7 @@ ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
 
 
 --
--- Name: providers; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: providers; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE providers (
@@ -599,15 +599,15 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 
 
 --
--- Name: re_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: re_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL,
     tagged_from bigint
@@ -616,7 +616,7 @@ INHERITS (base_slots);
 
 
 --
--- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE schema_migrations (
@@ -625,7 +625,7 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: slot_settings; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: slot_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE slot_settings (
@@ -659,7 +659,7 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 
 --
--- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE std_slots (
@@ -673,7 +673,7 @@ INHERITS (base_slots);
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace:
+-- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE TABLE users (
@@ -937,7 +937,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 
 --
--- Name: base_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: base_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY base_slots
@@ -945,7 +945,7 @@ ALTER TABLE ONLY base_slots
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY comments
@@ -953,7 +953,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY connects
@@ -961,7 +961,7 @@ ALTER TABLE ONLY connects
 
 
 --
--- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY devices
@@ -969,7 +969,7 @@ ALTER TABLE ONLY devices
 
 
 --
--- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY friendships
@@ -977,7 +977,7 @@ ALTER TABLE ONLY friendships
 
 
 --
--- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY groups
@@ -985,7 +985,7 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: ios_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: ios_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY ios_locations
@@ -993,7 +993,7 @@ ALTER TABLE ONLY ios_locations
 
 
 --
--- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY likes
@@ -1001,7 +1001,7 @@ ALTER TABLE ONLY likes
 
 
 --
--- Name: media_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: media_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY media_items
@@ -1009,7 +1009,7 @@ ALTER TABLE ONLY media_items
 
 
 --
--- Name: memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY memberships
@@ -1017,7 +1017,7 @@ ALTER TABLE ONLY memberships
 
 
 --
--- Name: meta_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: meta_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY meta_slots
@@ -1025,7 +1025,7 @@ ALTER TABLE ONLY meta_slots
 
 
 --
--- Name: notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY notes
@@ -1033,7 +1033,7 @@ ALTER TABLE ONLY notes
 
 
 --
--- Name: providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY providers
@@ -1041,7 +1041,7 @@ ALTER TABLE ONLY providers
 
 
 --
--- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY slot_settings
@@ -1049,7 +1049,7 @@ ALTER TABLE ONLY slot_settings
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace:
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
 ALTER TABLE ONLY users
@@ -1057,196 +1057,196 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: index_comments_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_comments_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_comments_on_user_id_and_slot_id ON comments USING btree (user_id, slot_id);
 
 
 --
--- Name: index_connects_on_social_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_connects_on_social_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_connects_on_social_id ON connects USING btree (social_id);
 
 
 --
--- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_connects_on_social_id_and_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_connects_on_social_id_and_user_id ON connects USING btree (social_id, user_id);
 
 
 --
--- Name: index_connects_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_connects_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
 
 
 --
--- Name: index_devices_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_devices_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_devices_on_user_id ON devices USING btree (user_id);
 
 
 --
--- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_friendships_on_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_id);
 
 
 --
--- Name: index_friendships_on_user_id_and_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_friendships_on_user_id_and_friend_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_friendships_on_user_id_and_friend_id ON friendships USING btree (user_id, friend_id);
 
 
 --
--- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_group_slots_on_group_id ON group_slots USING btree (group_id);
 
 
 --
--- Name: index_group_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_group_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_slot_id);
 
 
 --
--- Name: index_groups_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_groups_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
 
 
 --
--- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON ios_locations USING btree (name, latitude, longitude);
 
 
 --
--- Name: index_likes_on_user_id_and_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_likes_on_user_id_and_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_likes_on_user_id_and_base_slot_id ON likes USING btree (user_id, base_slot_id);
 
 
 --
--- Name: index_media_items_on_mediable_type_and_mediable_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_media_items_on_mediable_type_and_mediable_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_media_items_on_mediable_type_and_mediable_id ON media_items USING btree (mediable_type, mediable_id);
 
 
 --
--- Name: index_memberships_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_memberships_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_memberships_on_group_id ON memberships USING btree (group_id);
 
 
 --
--- Name: index_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_memberships_on_user_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_memberships_on_user_id ON memberships USING btree (user_id);
 
 
 --
--- Name: index_memberships_on_user_id_and_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_memberships_on_user_id_and_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_memberships_on_user_id_and_group_id ON memberships USING btree (user_id, group_id);
 
 
 --
--- Name: index_meta_slots_on_creator_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_meta_slots_on_creator_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_id);
 
 
 --
--- Name: index_notes_on_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_notes_on_base_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_notes_on_base_slot_id ON notes USING btree (base_slot_id);
 
 
 --
--- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_re_slots_on_meta_slot_id ON re_slots USING btree (meta_slot_id);
 
 
 --
--- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_re_slots_on_predecessor_id ON re_slots USING btree (predecessor_id);
 
 
 --
--- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
 
 
 --
--- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_slot_settings_on_meta_slot_id ON slot_settings USING btree (meta_slot_id);
 
 
 --
--- Name: index_slot_settings_on_user_id_and_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_slot_settings_on_user_id_and_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_slot_settings_on_user_id_and_meta_slot_id ON slot_settings USING btree (user_id, meta_slot_id);
 
 
 --
--- Name: index_std_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_std_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_std_slots_on_meta_slot_id ON std_slots USING btree (meta_slot_id);
 
 
 --
--- Name: index_std_slots_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_std_slots_on_owner_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE INDEX index_std_slots_on_owner_id ON std_slots USING btree (owner_id);
 
 
 --
--- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_auth_token; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 
 
 --
--- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace:
+-- Name: unique_schema_migrations; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
@@ -1449,3 +1449,6 @@ INSERT INTO schema_migrations (version) VALUES ('20151217144020');
 INSERT INTO schema_migrations (version) VALUES ('20160102223742');
 
 INSERT INTO schema_migrations (version) VALUES ('20160104012453');
+
+INSERT INTO schema_migrations (version) VALUES ('20160107230953');
+
