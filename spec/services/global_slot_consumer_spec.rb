@@ -36,7 +36,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
   end
 
   describe 'location', :vcr do
-    let(:loc_muid) { "19f95a00-2f9c-3578-7bdb-10b6276e08a8" }
+    let(:loc_muid) { "24809a65-9e21-9376-1ba8-745795be17dd" }
 
     it "returns a location from TS_DATA_MALL" do
       location = described_class.new.location(loc_muid)
@@ -49,7 +49,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
       expect(location).to respond_to :latitude
       expect(location).to respond_to :longitude
       expect(location.locality).not_to be_nil
-      expect(location.country).not_to be_nil
+      expect(location.iso_country_code).not_to be_nil
       expect(location.latitude).not_to be_nil
       expect(location.longitude).not_to be_nil
     end
