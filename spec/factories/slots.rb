@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :slot, class: BaseSlot do
     association :meta_slot, strategy: :build
+    after(:build) { |slot| slot.type = slot.class }
   end
 
   trait :with_candy_location do
