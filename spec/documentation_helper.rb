@@ -89,4 +89,8 @@ RspecApiDocumentation.configure do |config|
   # Removes the DSL method `status`, this is required if you have a
   # parameter named status
   config.disable_dsl_status!
+
+  # Removes the DSL method `method`, this is required if you have a
+  # parameter named method
+  # config.disable_dsl_method!
 end
