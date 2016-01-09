@@ -34,13 +34,17 @@ class CandyLocation
   # fax text
   # email text
   # opening_hours text
-  # url
+  # urls
+  # domains
   # description
   # tags
   # images
   # address_raw text - from the website that was crawled
   # time_zone text
   # last_geocoding_request timestamp with time zone
+  # duid
+  # muid
+  # uuid
 
   def initialize(params)
     @name = params['title']

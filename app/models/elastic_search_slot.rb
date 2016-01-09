@@ -23,9 +23,11 @@ class ElasticSearchSlot
     @end_date = crawler_slot['stop_timestamp']
 
     # @address_raw = crawler_slot['address_raw']
-    @loc_name = crawler_slot['location_title']
-    @locality = crawler_slot['locality']
-    @country = crawler_slot['country']
+    @loc_name = crawler_slot['location']
+    # @loc_name = crawler_slot['location_title']
+    # @locality = crawler_slot['locality'] # should be included in 'location' but this is not always the case...
+    # @country = crawler_slot['country']
+    @iso_country_code = crawler_slot['country_iso_code']
     @longitude, @latitude = crawler_slot['location_geo']
 
     @url = crawler_slot['url']
