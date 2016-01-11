@@ -8,12 +8,6 @@ json.location do
   end
 end
 
-# we would need to differentiate the counts based on the relationship of the
-# rendered user to the current user
-# for friends the count would include friend-visible slots, for strangers
-# it would only count public slots -> sounds like an exhibitor is neccessary
-# however, should check back with stani before implementing
-json.slot_count user.visible_slots_counter(current_user)
-
-json.reslot_count user.re_slots.active.count
+json.slot_count user.visible_slots_counter(current_user, StdSlot)
+json.reslot_count user.visible_slots_counter(current_user, ReSlot)
 json.friends_count user.friends_count

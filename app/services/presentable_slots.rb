@@ -33,12 +33,24 @@ class PresentableSlots
     when ME
       [user.std_slots]
     when FRIEND
-      # TODO: use 'unprivate' scope here
-      [user.std_slots_public, user.std_slots_friends, user.std_slots_foaf]
+      [user.std_slots.unprivate]
     when FOAF
       [user.std_slots_public, user.std_slots_foaf]
     when STRANGER, VISITOR
       [user.std_slots_public]
+    end
+  end
+
+  def self.re_slots(relationship:, user:)
+    case relationship
+    when ME
+      [user.re_slots]
+    when FRIEND
+      [user.re_slots.unprivate]
+    when FOAF
+      [user.re_slots_public, user.re_slots_foaf]
+    when STRANGER, VISITOR
+      [user.re_slots_public]
     end
   end
 end

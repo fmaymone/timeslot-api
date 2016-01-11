@@ -239,8 +239,9 @@ class User < ActiveRecord::Base
     group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
   end
 
-  def visible_slots_counter(user)
-    SlotsCollector.new.active_stdslots_count(current_user: user, user: self)
+  def visible_slots_counter(user, slot_class)
+    SlotsCollector.new.active_slots_count(current_user: user, user: self,
+                                          slot_class: slot_class)
   end
 
   def prepare_for_slot_deletion(slot)

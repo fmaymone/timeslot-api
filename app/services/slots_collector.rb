@@ -73,9 +73,14 @@ class SlotsCollector
   # collects only active std_slots current_user or visitor is allowed to
   # see from requested_user, currently this is only used for counting, so
   # I skip the pagination functionality
-  def active_stdslots_count(current_user: nil, user:)
+  def active_slots_count(current_user: nil, user:, slot_class: StdSlot)
     rs = UserRelationship.call(current_user.try(:id), user.id)
-    showables = PresentableSlots.std_slots(relationship: rs, user: user)
+
+    if slot_class == StdSlot
+      showables = PresentableSlots.std_slots(relationship: rs, user: user)
+    elsif slot_class == ReSlot
+      showables = PresentableSlots.re_slots(relationship: rs, user: user)
+    end
 
     counter = 0
     showables.each { |relation| counter += relation.active.count }

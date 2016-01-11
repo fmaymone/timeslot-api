@@ -274,30 +274,41 @@ RSpec.describe User, type: :model do
     let!(:current_user) { create(:user) }
     let(:friend) do
       friend = create(:user, :with_private_slot, :with_friend_slot,
-                      :with_foaf_slot, :with_public_slot)
+                      :with_foaf_slot, :with_public_slot,
+                      :with_private_reslot, :with_friend_reslot,
+                      :with_foaf_reslot, :with_public_reslot)
       create(:friendship, :established, user: current_user, friend: friend)
       friend
     end
     let(:foaf) do
       friend = create(:user)
       foaf = create(:user, :with_private_slot, :with_friend_slot,
-                    :with_foaf_slot, :with_public_slot)
+                    :with_foaf_slot, :with_public_slot,
+                    :with_private_reslot, :with_friend_reslot,
+                    :with_foaf_reslot, :with_public_reslot)
       create(:friendship, :established, user: current_user, friend: friend)
       create(:friendship, :established, user: foaf, friend: friend)
       foaf
     end
     let!(:stranger) do
       stranger = create(:user, :with_private_slot, :with_friend_slot,
-                        :with_foaf_slot, :with_public_slot)
+                        :with_foaf_slot, :with_public_slot,
+                        :with_private_reslot, :with_friend_reslot,
+                        :with_foaf_reslot, :with_public_reslot)
       create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
-      create(:re_slot, slotter: stranger)
       stranger
     end
 
-    it "returns the number of slots visible for current_user from other user" do
-      expect(friend.visible_slots_counter(current_user)).to eq 3
-      expect(foaf.visible_slots_counter(current_user)).to eq 2
-      expect(stranger.visible_slots_counter(current_user)).to eq 1
+    it "returns the number of stdslots current_user can see from other user" do
+      expect(friend.visible_slots_counter(current_user, StdSlot)).to eq 3
+      expect(foaf.visible_slots_counter(current_user, StdSlot)).to eq 2
+      expect(stranger.visible_slots_counter(current_user, StdSlot)).to eq 1
+    end
+
+    it "returns the number of reslots current_user can see from other user" do
+      expect(friend.visible_slots_counter(current_user, ReSlot)).to eq 3
+      expect(foaf.visible_slots_counter(current_user, ReSlot)).to eq 2
+      expect(stranger.visible_slots_counter(current_user, ReSlot)).to eq 1
     end
   end
 

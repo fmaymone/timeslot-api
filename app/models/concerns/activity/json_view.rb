@@ -156,8 +156,8 @@ module JSONView
         localId: (user.image.try(:local_id) ? user.image.local_id : nil)
     }
 
-    json['slotCount'] = user.std_slots_public.count
-    json['reslotCount'] = user.re_slots.count
+    json['slotCount'] = user.visible_slots_counter(friend, StdSlot)
+    json['reslotCount'] = user.visible_slots_counter(friend, ReSlot)
     json['friendsCount'] = user.friends_count
 
     if friend
