@@ -44,8 +44,12 @@ class Group < ActiveRecord::Base
   def delete
     remove_all_followers
     owner.touch
-    memberships.each(&:delete)
-    group_slots.each(&:delete)
+    # wow: this must all be eager loaded to avoid n+1 queries here
+    memberships.includes(:user).each(&:delete)
+    group_slots.includes([:likes, :comments, :group,
+                          media_items: [:creator, :mediable],
+                          meta_slot: [:creator],
+                          notes: [:creator]]).each(&:delete)
     ts_soft_delete
   end
 
