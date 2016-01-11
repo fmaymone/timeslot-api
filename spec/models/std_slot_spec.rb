@@ -16,8 +16,13 @@ RSpec.describe StdSlot, type: :model do
   it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:meta_slot) }
   it { is_expected.to respond_to(:slot_type) }
+  it { is_expected.to respond_to(:likes) }
+  it { is_expected.to respond_to(:comments) }
+  it { is_expected.to respond_to(:notes) }
+  it { is_expected.to respond_to(:media_items) }
   it { is_expected.to belong_to(:owner).inverse_of(:std_slots) }
   it { is_expected.to belong_to(:meta_slot) }
+  it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -175,7 +180,7 @@ RSpec.describe StdSlot, type: :model do
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "returns an array of the reslots of this slot" do
-      res = parent.reslots
+      res = parent.re_slots
       expect(res.size).to be 3
       expect(res).to include reslots.first
     end

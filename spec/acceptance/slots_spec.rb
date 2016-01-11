@@ -1396,7 +1396,7 @@ resource "Slots" do
                   "returns 422 if parameters are invalid\n\n" \
                   "returns 422 if required parameters are missing"
 
-      slot_user_tags = slot.reload.reslots
+      slot_user_tags = slot.reload.re_slots
                        .where('re_slots.tagged_from = ?', current_user.id)
                        .pluck(:slotter_id)
       expect(slot_user_tags).to eq([])
@@ -1404,7 +1404,7 @@ resource "Slots" do
       do_request
       expect(response_status).to eq(200)
 
-      slot_user_tags = slot.reload.reslots
+      slot_user_tags = slot.reload.re_slots
                        .where('re_slots.tagged_from = ?', current_user.id)
                        .pluck(:slotter_id)
       expect(slot_user_tags).to eq(user_tags)

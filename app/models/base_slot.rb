@@ -48,7 +48,8 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
+  has_many :re_slots, -> { includes(:slotter) },
+           foreign_key: :parent_id, inverse_of: :parent
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
@@ -82,11 +83,6 @@ class BaseSlot < ActiveRecord::Base
 
   def comments_with_details
     comments.includes([:user])
-  end
-
-  def reslots
-    # TODO: I think in some cases this should not include private reslots
-    ReSlot.where(parent_id: id)
   end
 
   def as_paging_cursor
@@ -224,7 +220,7 @@ class BaseSlot < ActiveRecord::Base
 
     # NOTE: Actually we remove all reslots if one
     # of the parent/predecessor slot was removed
-    reslots.each(&:delete) if self.try(:reslots)
+    re_slots.each(&:delete)
 
     remove_all_followers
     prepare_for_deletion

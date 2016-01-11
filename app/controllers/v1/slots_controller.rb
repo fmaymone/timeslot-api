@@ -295,7 +295,7 @@ module V1
     def get_user_tags
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      tagged_reslots = @slot.reslots.where('re_slots.tagged_from = ?', current_user.id)
+      tagged_reslots = @slot.re_slots.where('re_slots.tagged_from = ?', current_user.id)
       @users = tagged_reslots.any? ? User.find(tagged_reslots.pluck(:slotter_id)) : []
 
       render "v1/users/list"

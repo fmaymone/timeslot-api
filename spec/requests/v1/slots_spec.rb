@@ -747,7 +747,7 @@ RSpec.describe "V1::Slots", type: :request do
           existing_deleted_reslot.reload
           expect(existing_deleted_reslot.deleted_at).to be nil
           existing_deleted_reslot.reload
-          expect(existing_deleted_reslot.reslots.count)
+          expect(existing_deleted_reslot.re_slots.count)
             .to eq existing_deleted_reslot.re_slots_count
         end
 
