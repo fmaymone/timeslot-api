@@ -66,8 +66,7 @@ class GlobalSlotConsumer
     slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
   rescue ActiveRecord::RecordNotFound
     msg = "Couldn't find User for given Domain. Seed data loaded?"
-    opts = {}
-    opts[:parameters] = {
+    opts = {
       domain: result['domain'],
       muid: result['muid'],
       global_slot: msg }

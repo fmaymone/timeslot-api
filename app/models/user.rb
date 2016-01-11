@@ -435,8 +435,7 @@ class User < ActiveRecord::Base
       # TODO: ts_notify(msg: "unknown slottype #{slot} for user #{id}")
       # maybe not the best idea, but at least we hear if something goes wrong
       msg = "unknown slottype #{slot} for user #{id}"
-      opts = { error_message: msg }
-      Airbrake.notify(ActiveRecord::StatementInvalid, opts)
+      Airbrake.notify(ActiveRecord::StatementInvalid, error: msg)
       fail ActiveRecord::StatementInvalid, msg
     end
   end

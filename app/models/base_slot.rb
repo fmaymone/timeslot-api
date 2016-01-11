@@ -410,10 +410,9 @@ class BaseSlot < ActiveRecord::Base
     else
       if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
          slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
-        opts = {}
-        opts[:parameters] = { cursor_id: cursor[:id],
-                              cursor_startdate: cursor[:startdate],
-                              cursor_enddate: cursor[:enddate] }
+        opts = { cursor_id: cursor[:id],
+                 cursor_startdate: cursor[:startdate],
+                 cursor_enddate: cursor[:enddate] }
         Airbrake.notify(ApplicationController::PaginationError, opts)
         fail PaginationError, "cursor slot changed" if Rails.env.development?
       end

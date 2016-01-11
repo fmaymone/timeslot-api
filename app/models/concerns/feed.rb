@@ -465,13 +465,8 @@ module Feed
     end
 
     private def error_handler(error, feed, params)
-      opts = {}
-      opts[:parameters] = {
-          feed: feed,
-          params: params
-      }
       Rails.logger.error { error }
-      Airbrake.notify(error, opts)
+      Airbrake.notify(error, feed: feed, params: params)
     end
   end
 end

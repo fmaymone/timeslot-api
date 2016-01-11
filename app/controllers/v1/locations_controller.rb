@@ -18,7 +18,7 @@ module V1
       begin
         result = open(query, auth).read
       rescue => e
-        Airbrake.notify(e)
+        Airbrake.notify(e, query: query, current_user: current_user)
         return render json: { error: "Search Service Error: #{e}" },
                       status: :service_unavailable
       end
