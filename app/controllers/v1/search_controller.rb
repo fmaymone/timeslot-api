@@ -30,11 +30,29 @@ module V1
     end
 
     # GET /v1/search/user
-    # TODO: define and check allowed attributes for searching
     def user
       authorize :search
       return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'username', query, page)
+
+      render "v1/users/list"
+    end
+
+    # GET /v1/search/friend
+    def friend
+      authorize :search
+      return head 422 unless has_allowed_params?
+      friends = Friendship.where(user: current_user,
+                                 state: ESTABLISHED,
+                                 deleted_at: nil).collect(&:friend_id) +
+                Friendship.where(friend: current_user,
+                                 state: ESTABLISHED,
+                                 deleted_at: nil).collect(&:user_id)
+      if friends.any?
+        @users = Search.new(User.where(id: friends.uniq), params[:attr] || 'username', query, page)
+      else
+        @users = []
+      end
 
       render "v1/users/list"
     end
@@ -86,7 +104,7 @@ module V1
 
     private def query
       # if we need to store usernames/titles with specials signs then we have to
-      # save username/title transliterated as well to get better search results
+      # search through username/title transliterated as well to get better search results
       # http://apidock.com/rails/ActiveSupport/Inflector/transliterate
       ActiveSupport::Inflector
         .transliterate(params.require(:query))
@@ -104,7 +122,12 @@ module V1
     end
 
     private def page
-      params.permit(:datetime, :page, :limit, :method).symbolize_keys
+      params.permit(:datetime,
+                    :page,
+                    :limit,
+                    :method,
+                    :include,
+                    :exclude).symbolize_keys
     end
 
     # Example rails sanitize:

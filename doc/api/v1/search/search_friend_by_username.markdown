@@ -1,8 +1,8 @@
 # Search API
 
-## Search by custom attribute
+## Search friend by username
 
-### GET /v1/search/user
+### GET /v1/search/friend
 
 returns 404 if query is invalid
 
@@ -12,9 +12,6 @@ returns 404 if query is invalid
 
 Name : query *- required -*
 Description : The query of the search
-
-Name : attr
-Description : The custom search attribute
 
 
 ### Response Fields
@@ -45,24 +42,23 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=FOagaw54YFScm-njUdXc8tKa7Ro
+Authorization: Token token=KFngFI8x9sklpm3cCrfhGh4lc98
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/search/user?query=john_doe%40email.com&amp;attr=email</pre>
+<pre>GET /v1/search/friend?query=john</pre>
 
 #### Query Parameters
 
-<pre>query: john_doe@email.com
-attr: email</pre>
+<pre>query: john</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=john_doe%40email.com&amp;attr=email&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/search/friend?query=john&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=FOagaw54YFScm-njUdXc8tKa7Ro&quot; \
+	-H &quot;Authorization: Token token=KFngFI8x9sklpm3cCrfhGh4lc98&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,12 +69,12 @@ attr: email</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d050e6e1b1c7c10aff528cdeda70e5f9&quot;
+ETag: W/&quot;13bc1efa5bc73cd0460133ef0154c727&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 62a21eb7-c5e2-498e-9bcb-9b05d15b99be
-X-Runtime: 0.010592
+X-Request-Id: 810ff512-76bd-41fe-96a6-fa4d945d7e03
+X-Runtime: 0.013434
 Vary: Origin
-Content-Length: 169</pre>
+Content-Length: 167</pre>
 
 #### Status
 
@@ -89,13 +85,13 @@ Content-Length: 169</pre>
 ```javascript
 [
   {
-    "id" : 162,
+    "id" : 168,
     "username" : "John Doe",
-    "createdAt" : "2016-01-05T13:32:46.557Z",
-    "updatedAt" : "2016-01-05T13:32:46.557Z",
+    "createdAt" : "2016-01-05T13:32:46.621Z",
+    "updatedAt" : "2016-01-05T13:32:46.621Z",
     "deletedAt" : null,
     "image" : "",
-    "friendshipState" : "stranger"
+    "friendshipState" : "friend"
   }
 ]
 ```
