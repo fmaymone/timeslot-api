@@ -26,12 +26,7 @@ class SlotsCollector
 
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
-    showables = [
-      user.std_slots.includes(:notes, :media_items,
-                              meta_slot: [:ios_location, :creator]),
-      user.re_slots.includes(parent: [:notes, :media_items],
-                             meta_slot: [:ios_location, :creator])
-    ]
+    showables = [user.std_slots, user.re_slots]
     consider_filter(showables, @filter)
   end
 
@@ -56,17 +51,8 @@ class SlotsCollector
     # friends = UserQuery::Relationship.new(current_user.id).my_friends
     friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
-    showables = [StdSlot
-                  .includes(:notes, :media_items,
-                            meta_slot: [:ios_location, :creator])
-                  .where(owner: friends)
-                  .unprivate,
-                 ReSlot
-                   .includes(parent: [:notes, :media_items],
-                             meta_slot: [:ios_location, :creator])
-                   .where(slotter: friends)
-                   .unprivate
-                ]
+    showables = [StdSlot.where(owner: friends).unprivate,
+                 ReSlot.where(slotter: friends).unprivate]
     consider_filter(showables, @filter)
   end
 
@@ -114,9 +100,21 @@ class SlotsCollector
     ### fetch slots
     relations.each do |relation|
       next unless relation
-
+      if relation.table_name == StdSlot.table_name
+        full_relation = relation.includes(
+          :notes, :media_items,
+          meta_slot: [:ios_location, :creator])
+      elsif relation.table_name == ReSlot.table_name
+        full_relation = relation.includes(
+          parent: [:notes, :media_items],
+          meta_slot: [:ios_location, :creator])
+      else
+        # groupslots ...
+        full_relation = relation
+      end
       ### initialize query object
-      query = SlotQuery::OwnSlots.new(relation: relation, direction: @direction)
+      query = SlotQuery::OwnSlots.new(relation: full_relation,
+                                      direction: @direction)
 
       ### build and execute query
       # get [limit] slots from all collections, not efficient but simple
