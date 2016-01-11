@@ -241,7 +241,7 @@ module V1
 
     # GET /v1/slots/abcd1234/sharedata
     def share_data
-      @slot = BaseSlot.find_by(share_id: params[:uid])
+      @slot = BaseSlot.includes(:meta_slot).find_by(share_id: params[:uid])
       authorize @slot
 
       render :sharedata, locals: { slot: @slot }

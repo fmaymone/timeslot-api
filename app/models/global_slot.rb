@@ -22,7 +22,7 @@ class GlobalSlot < BaseSlot
   end
 
   def self.find_or_create(muid)
-    global_slot = find_by(muid: muid)
+    global_slot = includes(:meta_slot).find_by(muid: muid)
     return global_slot if global_slot
 
     attributes = GlobalSlotConsumer.new.slot(muid)

@@ -128,7 +128,7 @@ class BaseSlot < ActiveRecord::Base
 
     # update position of following media items
     if item["position"].to_i < media_items.size
-      coll = media_items.where(
+      coll = media_items.includes(:creator).where(
         "media_items.position >= ?", item["position"]).to_a
       coll.each do |coll_item|
         coll_item.update(position: coll_item.position += 1)

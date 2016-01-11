@@ -54,10 +54,10 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
-  has_many :initiated_friendships, class_name: Friendship,
-           inverse_of: :user
-  has_many :received_friendships, class_name: Friendship,
-           foreign_key: :friend_id, inverse_of: :friend
+  has_many :initiated_friendships, -> { includes :friend },
+           class_name: Friendship, inverse_of: :user
+  has_many :received_friendships, -> { includes :user },
+           class_name: Friendship, foreign_key: :friend_id, inverse_of: :friend
 
   # friends
   has_many :friends_by_request, -> { merge(Friendship.established) },

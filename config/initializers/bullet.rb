@@ -43,6 +43,9 @@ if Rails.env.development? || Rails.env.test?
       Bullet.add_whitelist :type => :n_plus_one_query,
                            :class_name => "MetaSlot",
                            :association => :slots
+      Bullet.add_whitelist :type => :n_plus_one_query,
+                           :class_name => "User",
+                           :association => :memberships
 
       # Bullet.add_whitelist :type => :n_plus_one_query,
       #                      :class_name => "Post",
