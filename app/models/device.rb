@@ -45,6 +45,7 @@ class Device < ActiveRecord::Base
     return unless endpoint
 
     Device.create_client.delete_endpoint(endpoint_arn: endpoint)
+    Rails.logger.warn { "endpoint: #{endpoint} successfully removed" }
   rescue Aws::SNS::Errors::ServiceError => exception
     Airbrake.notify(exception, endpoint_arn: endpoint)
 
@@ -128,8 +129,11 @@ class Device < ActiveRecord::Base
     begin
       client.publish(push_notification)
     rescue Aws::SNS::Errors::InvalidParameter => exception
-      Rails.logger.warn { "Target ARN: No endpoint found. Endpoint was removed from users device." }
-      device = Device.find(device['id']).unregister_endpoint
+      Rails.logger.warn {
+        "Target ARN: No endpoint found. Endpoint was removed from users device."
+      }
+      device = Device.find(device['id'])
+      device.unregister_endpoint
       Airbrake.notify(exception, news: 'endpoint removed from AWS SNS',
                       reason: 'invalid parameter',
                       device: device)
@@ -139,7 +143,8 @@ class Device < ActiveRecord::Base
         "AWS SNS Error: Endpoint (#{device['endpoint']}) for device " \
         "(ID: #{device['id']}) disabled. Removing it..."
       }
-      device = Device.find(device['id']).unregister_endpoint
+      device = Device.find(device['id'])
+      device.unregister_endpoint
       Airbrake.notify(exception, news: 'endpoint removed from AWS SNS',
                       reason: 'endpoint disabled',
                       device: device)
