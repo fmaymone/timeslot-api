@@ -136,8 +136,8 @@ class Device < ActiveRecord::Base
     rescue Aws::SNS::Errors::EndpointDisabled => exception
       # maybe also remove the device here?
       Rails.logger.warn {
-        "AWS SNS Error: Endpoint (#{device.endpoint}) for device " \
-        "(ID: #{device.id}) disabled. Removing it..."
+        "AWS SNS Error: Endpoint (#{device['endpoint']}) for device " \
+        "(ID: #{device['id']}) disabled. Removing it..."
       }
       device = Device.find(device['id']).unregister_endpoint
       Airbrake.notify(exception, news: 'endpoint removed from AWS SNS',
