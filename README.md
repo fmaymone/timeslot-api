@@ -81,30 +81,6 @@ ENV['TS_DATA_MALL_NAME'] || "tsgatekeeper"
 ENV['TS_DATA_MALL_PASSWORD'] || "***REMOVED***"
 ```
 
-## Location DB
-
--> not used at the moment
-
-The Data Team provides a database based on OSM Location Data. This DB is
-transparently available for the backend. At the moment we use a ssh tunnel for
-connecting.
-
-```
-ENV['LOCATION_DB_URI'] # postgres uri of locations production db
-```
-
-## Location Search Service
-
--> not used at the moment
-
-The Data Team provides an elasticSearch - Location Search Interface for it's location data.
-
-```bash
-ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] # username
-ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] # password
-ENV['TS_LOCATION_SEARCH_SERVICE_URL'] # search url
-```
-
 # External Services
 
 The following env variables are available/expected:

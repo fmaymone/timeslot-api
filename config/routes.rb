@@ -188,7 +188,6 @@ Rails.application.routes.draw do
     end
 
     get 'search/:action', to: 'search#:action'
-    get 'locations/search', to: 'locations#search'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
