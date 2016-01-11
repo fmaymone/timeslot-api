@@ -13,14 +13,12 @@ module V1
     def friend
       authorize :search
       return head 422 unless has_allowed_params?
-      friends = Friendship.where(user: current_user,
-                                 state: ESTABLISHED,
-                                 deleted_at: nil).collect(&:friend_id) +
-                Friendship.where(friend: current_user,
-                                 state: ESTABLISHED,
-                                 deleted_at: nil).collect(&:user_id)
+      friends = current_user.friends_by_request_ids +
+                current_user.friends_by_offer_ids
+
       if friends.any?
-        @users = Search.new(User.where(id: friends.uniq), params[:attr] || 'username', query, page)
+        @users = Search.new(
+          User.where(id: friends), params[:attr] || 'username', query, page)
       else
         @users = []
       end
