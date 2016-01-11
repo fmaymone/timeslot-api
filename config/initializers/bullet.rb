@@ -37,6 +37,10 @@ if Rails.env.development? || Rails.env.test?
       # with a counter_cache
       # Bullet.counter_cache_enable        = false
 
+      Bullet.add_whitelist :type => :n_plus_one_query,
+                           :class_name => "User",
+                           :association => :location
+
       # Bullet.add_whitelist :type => :n_plus_one_query,
       #                      :class_name => "Post",
       #                      :association => :comments
