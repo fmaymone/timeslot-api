@@ -42,9 +42,10 @@ Airbrake.configure do |c|
   # c.ignore_environments = %w(development test)
 end
 
-Airbrake.add_filter do |notice|
-  notice[:environment] = ENV
-end
+# send environment information
+# Airbrake.add_filter do |notice|
+  # notice[:environment] = ENV
+# end
 
 Airbrake.blacklist_keys([:credit_card_number, :password])
 
