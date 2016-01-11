@@ -158,7 +158,7 @@ module JSONView
 
     json['slotCount'] = user.std_slots_public.count
     json['reslotCount'] = user.re_slots.count
-    json['friendsCount'] = user.friends.count
+    json['friendsCount'] = user.friends_count
 
     if friend
       friendship = friend.friendship(user)

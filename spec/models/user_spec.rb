@@ -259,6 +259,17 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe :friends_count do
+    let(:user) { create(:user)}
+    let(:friends) do
+      create_list(:friendship, 3, :established, user: current_user)
+    end
+
+    it "returns the number of confirmed friends" do
+      expect(user.friends_count).to eq user.friends.count
+    end
+  end
+
   describe :visible_slots_counter do
     let!(:current_user) { create(:user) }
     let(:friend) do

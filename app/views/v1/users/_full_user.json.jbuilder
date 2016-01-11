@@ -16,4 +16,4 @@ end
 json.slot_count user.visible_slots_counter(current_user)
 
 json.reslot_count user.re_slots.active.count
-json.friends_count user.friends.count
+json.friends_count user.friends_count
