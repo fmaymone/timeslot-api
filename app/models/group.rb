@@ -41,15 +41,18 @@ class Group < ActiveRecord::Base
     membership && membership.kick
   end
 
+  def group_slots_with_associations
+    group_slots.includes([:likes, :comments, :group, :re_slots,
+                          media_items: [:creator, :mediable],
+                          meta_slot: [:creator],
+                          notes: [:creator]])
+  end
+
   def delete
     remove_all_followers
     owner.touch
-    # wow: this must all be eager loaded to avoid n+1 queries here
     memberships.includes(:user).each(&:delete)
-    group_slots.includes([:likes, :comments, :group,
-                          media_items: [:creator, :mediable],
-                          meta_slot: [:creator],
-                          notes: [:creator]]).each(&:delete)
+    group_slots_with_associations.each(&:delete)
     ts_soft_delete
   end
 
