@@ -271,10 +271,14 @@ RSpec.describe "V1::Me", type: :request do
         end
 
         it "updates the default slot type of the current user" do
-          skip 'needs slottype table'
-          patch "/v1/me", { slotDefaultType: 'StdSlotPrivate' }, auth_header
+          skip 'not yet implemented, needs migration'
+          # TODO: remove slot_default_type_id from user,
+          # add string 'slot_default_visibility'
+          # check field when creating new slots and no visibility is provided
+          # write spec which tests this behaviour
+          patch "/v1/me", { slotDefaultVisibility: 'private' }, auth_header
           current_user.reload
-          expect(current_user.slot_default_type).to eq(StdSlotPrivate)
+          expect(current_user.slot_default_visibility).to eq('private')
         end
       end
     end

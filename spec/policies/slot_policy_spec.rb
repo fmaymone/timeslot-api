@@ -265,11 +265,6 @@ describe SlotPolicy do
         it "allows access if target is public_slots" do
           expect(subject).to permit(user, slot)
         end
-
-        it "denies access if target is private_slots" do
-          skip 'limit copy-to targets to increasing visibility'
-          expect(subject).not_to permit(user, slot)
-        end
       end
     end
 
@@ -279,9 +274,8 @@ describe SlotPolicy do
 
       # should a public stdslot be allowed to be moved to a public group?
       # visibility would stay the same...
-      it "denies access" do
-        skip 'limit copy-to targets to increasing visibility'
-        expect(subject).not_to permit(user, slot)
+      it "allows access" do
+        expect(subject).to permit(user, slot)
       end
     end
 
