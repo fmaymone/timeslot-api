@@ -4,9 +4,7 @@ class PresentableMediaItems
   def self.call(relationship:, user:, current_user: nil)
     case relationship
     when FRIEND
-      [user.std_slots_friends,
-       user.std_slots_foaf,
-       user.std_slots_public,
+      [user.std_slots.unprivate,
        user.shared_group_slots(current_user)]
     when FOAF
       [user.std_slots_foaf,
