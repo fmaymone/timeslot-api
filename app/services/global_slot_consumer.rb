@@ -12,7 +12,13 @@ class GlobalSlotConsumer
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    raw_result = fetch('locations', muid)
+    raw_result = {}
+    timespent_location_fetch = Benchmark.measure {
+      raw_result = fetch('locations', muid)
+    }
+    Rails.logger.warn {
+      "Fetching location for slot #{muid} has taken #{timespent_location_fetch}"
+    }
     CandyLocation.new(raw_result)
   end
 
