@@ -62,14 +62,9 @@ module Feed
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # The target can have different types (e.g. Slot, User, Group)
-      if params[:type] == 'User' || params[:type] == 'Group'
-        # If target is from type user --> forward target to user shared objects
-        @storage.set("#{params[:type]}:#{params[:object]}", gzip_data_field(params, :target))
-      else
-        # Store target to its own index (shared objects)
-        @storage.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
-      end
+      # Store target to its own index (shared objects)
+      # NOTE: Targets are generic and can have different types (e.g. Slot, User, Group)
+      @storage.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
       # Store actor to its own index (shared objects)
       @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
 
