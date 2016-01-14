@@ -17,16 +17,17 @@ class ElasticSearchSlot
                 :url
 
   def initialize(crawler_slot)
-    @muid = crawler_slot['muid'] || crawler_slot['duid'] || crawler_slot['cuid']
+    @muid = crawler_slot['muid']
     @title = crawler_slot['title']
     @start_date = crawler_slot['start_timestamp']
     @end_date = crawler_slot['stop_timestamp']
 
-    @location = crawler_slot['location']
-    @address = crawler_slot['address']
-    @loc_name = crawler_slot['address'].split(',').first
-    @locality = crawler_slot['city']
-    @country = crawler_slot['country']
+    # @address_raw = crawler_slot['address_raw']
+    @loc_name = crawler_slot['location']
+    # @loc_name = crawler_slot['location_title']
+    # @locality = crawler_slot['locality'] # should be included in 'location' but this is not always the case...
+    # @country = crawler_slot['country']
+    @iso_country_code = crawler_slot['country_iso_code']
     @longitude, @latitude = crawler_slot['location_geo']
 
     @url = crawler_slot['url']
