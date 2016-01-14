@@ -30,11 +30,21 @@ class Comment < ActiveRecord::Base
     'comment'
   end
 
-  private def activity_notify
-    user_ids = super + activity_push
-    user_ids.delete(activity_foreign.id)
-    user_ids.uniq
-  end
+  # TODO:
+  # private def activity_forward
+  #   foreign = activity_foreign.try(:id).try(:to_s)
+  #   actor = activity_actor.id.to_s
+  #   forwarding = {
+  #       User: [actor],
+  #       News: activity_notify,
+  #       Notification:
+  #           foreign.present? && (actor != foreign) ?
+  #             [foreign]
+  #           : []
+  #   }
+  #   forwarding[:Notification] = (forwarding[:Notification] + activity_push).uniq
+  #   forwarding
+  # end
 
   private def activity_push
     user_ids = super

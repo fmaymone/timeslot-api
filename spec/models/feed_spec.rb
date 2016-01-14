@@ -137,11 +137,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 delegated activity
+        expect(news_feed_follower.count).to be(0) # has no followings
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -247,11 +247,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 delegated activity
+        expect(news_feed_follower.count).to be(0) # has no followings
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do
@@ -494,11 +494,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 delegated activity
+        expect(news_feed_follower.count).to be(0) # has no followings
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own contents)" do

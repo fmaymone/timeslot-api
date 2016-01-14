@@ -82,7 +82,7 @@ module Feed
       feed_register = { User: [], News: [], Notification: [] }
 
       # Skip default distribution if fowardings was passed
-      if params[:forward].nil?
+      if params[:forward].empty?
         # Store activity to own feed (me activities)
         feed_register[:User] << params[:actor]
         # Send to other users through social relations ("Read-Opt" Strategy)
@@ -279,6 +279,9 @@ module Feed
       i18_params = { USER: actor['username'], USERCOUNT: actor_count }
       # Add the title to the translation params holder
       i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
+      # TODO:
+      # Add the targets field to the translation params holder
+      i18_params[:FIELD] = 'title'
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if actor_count > 1
         # Get second actor (from shared objects)
