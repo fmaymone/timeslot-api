@@ -3,12 +3,11 @@ require 'rails_helper'
 describe SlotPolicy do
   subject { described_class }
 
-  let(:slot) { create(:std_slot) }
-
   permissions :share_data? do
+    let(:slot) { create(:std_slot) }
+
     context "for a user with role 'webview'" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot) }
       before { user.webview! }
 
       it "allows access" do
@@ -27,6 +26,7 @@ describe SlotPolicy do
 
   permissions :unlike? do
     let(:user) { create(:user) }
+    let(:slot) { create(:std_slot) }
     let!(:like) { create(:like, slot: slot) }
 
     context "for the like creator" do
@@ -66,17 +66,6 @@ describe SlotPolicy do
     end
   end
 
-  permissions :create_reslot? do
-    context "ReSlot" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:re_slot) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-  end
-
   permissions :show?, :show_many?, :show_comments?, :show_likes?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
@@ -94,68 +83,130 @@ describe SlotPolicy do
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
               :reslot_history?, :add_like?, :add_comment?, :copy?,
               :create_reslot? do
+    let(:user) { create(:user) }
+
     context "std_slot" do
-      context "for a user" do
-        let(:user) { create(:user) }
+      context "public slot" do
+        let(:slot) { create(:std_slot_public) }
 
-        context "public slot" do
-          let(:slot) { create(:std_slot_public) }
-
-          it "allows access" do
-            expect(subject).to permit(user, slot)
-          end
+        it "allows access" do
+          expect(subject).to permit(user, slot)
         end
+      end
 
-        context "foaf slot if slot owner is friend" do
-          let(:slot) { create(:std_slot_foaf) }
+      context "foaf slot if slot owner is friend" do
+        let(:slot) { create(:std_slot_foaf) }
 
-          it "allows access" do
-            create(:friendship, :established, user: user, friend: slot.owner)
-            expect(subject).to permit(user, slot)
-          end
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: slot.owner)
+          expect(subject).to permit(user, slot)
         end
+      end
 
-        context "foaf slot if slot owner has common friends" do
-          let(:slot) { create(:std_slot_foaf) }
-          let(:friend) { create(:user) }
+      context "foaf slot if slot owner has common friends" do
+        let(:slot) { create(:std_slot_foaf) }
+        let(:friend) { create(:user) }
 
-          it "allows access" do
-
-            create(:friendship, :established, user: user, friend: friend)
-            create(:friendship, :established, user: friend, friend: slot.owner)
-            expect(subject).to permit(user, slot)
-          end
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: friend)
+          create(:friendship, :established, user: friend, friend: slot.owner)
+          expect(subject).to permit(user, slot)
         end
+      end
 
-        context "foaf slot if slot owner isn't friend & has no common friends" do
-          let(:slot) { create(:std_slot_foaf) }
+      context "foaf slot if slot owner isn't friend & has no common friends" do
+        let(:slot) { create(:std_slot_foaf) }
 
-          it "denies access" do
-            expect(subject).not_to permit(user, slot)
-          end
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
         end
+      end
 
-        context "friend slot if slot owner is friend" do
-          let(:slot) { create(:std_slot_friends) }
+      context "friend slot if slot owner is friend" do
+        let(:slot) { create(:std_slot_friends) }
 
-          it "allows access" do
-            create(:friendship, :established, user: user, friend: slot.owner)
-            expect(subject).to permit(user, slot)
-          end
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: slot.owner)
+          expect(subject).to permit(user, slot)
         end
+      end
 
-        context "friend slot if slot owner is not friend" do
-          let(:slot) { create(:std_slot_friends) }
+      context "friend slot if slot owner is not friend" do
+        let(:slot) { create(:std_slot_friends) }
 
-          it "denies access" do
-            expect(subject).not_to permit(user, slot)
-          end
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
         end
+      end
 
-        context "others private slot" do
-          it "denies access" do
-            expect(subject).not_to permit(user, slot)
-          end
+      context "others private slot" do
+        let(:slot) { create(:std_slot_private) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+    end
+
+    context "re_slot" do
+      context "public slot" do
+        let(:slot) { create(:re_slot_public) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf slot if reslot slotter is friend" do
+        let(:slot) { create(:re_slot_foaf) }
+
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: slot.slotter)
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf slot if reslot slotter has common friends" do
+        let(:slot) { create(:re_slot_foaf) }
+        let(:friend) { create(:user) }
+
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: friend)
+          create(:friendship, :established, user: friend, friend: slot.slotter)
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf slot if reslot slotter not friend & no common friends" do
+        let(:slot) { create(:re_slot_foaf) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "friend slot if reslot slotter is friend" do
+        let(:slot) { create(:re_slot_friends) }
+
+        it "allows access" do
+          create(:friendship, :established, user: user, friend: slot.slotter)
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "friend slot if reslot slotter is not friend" do
+        let(:slot) { create(:re_slot_friends) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "others private reslot" do
+        let(:slot) { create(:re_slot_private) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
         end
       end
     end

@@ -75,7 +75,8 @@ module V1
       authorize predecessor
 
       @slot = ReSlot.create_from_slot(predecessor: predecessor,
-                                      slotter: current_user)
+                                      slotter: current_user,
+                                      visibility: visibility)
       if @slot.save
         render :create, status: :created, locals: { slot: @slot }
       else
@@ -349,19 +350,6 @@ module V1
 
     private def enforce_visibility
       params.require :visibility
-      visibility
-    end
-
-    private def visibility
-      return nil unless params.key? :visibility
-
-      visibility = params[:visibility]
-      valid_values = %w(private friends foaf public)
-
-      unless valid_values.include? visibility
-        fail ActionController::ParameterMissing,
-             "visibility must be one of #{valid_values}"
-      end
       visibility
     end
 

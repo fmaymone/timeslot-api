@@ -10,118 +10,277 @@ RSpec.describe "V1::Slots", type: :request do
   describe "GET /v1/slots/:id" do
     let(:std_slot) { create(:std_slot_public) }
 
-    context "StdSlot, with valid ID" do
-      it "returns success" do
-        get "/v1/slots/#{std_slot.id}"
-        expect(response).to have_http_status(200)
+    describe "StdSlot" do
+      context "with valid ID" do
+        it "returns success" do
+          get "/v1/slots/#{std_slot.id}"
+          expect(response).to have_http_status(200)
+        end
+
+        it "returns details of slot with given id" do
+          get "/v1/slots/#{std_slot.id}"
+          expect(json).to have_key('id')
+          expect(json).to have_key('title')
+          expect(json).to have_key('startDate')
+          expect(json).to have_key('endDate')
+          expect(json).to have_key('notes')
+          expect(json).to have_key('visibility')
+          expect(json).to have_key('createdAt')
+          expect(json).to have_key('updatedAt')
+        end
+
+        it "does return the correct attributes" do
+          get "/v1/slots/#{std_slot.id}"
+          expect(json['id']).to eq(std_slot.id)
+          expect(json['title']).to eq(std_slot.title)
+          expect(json['startDate']).to eq(std_slot.start_date.as_json)
+          expect(json['endDate']).to eq(std_slot.end_date.as_json)
+          expect(json['notes']).to eq(std_slot.notes)
+          expect(json['visibility']).to eq 'public'
+        end
+
+        it "does return the slot title" do
+          std_slot.meta_slot.update(title: "Expected title")
+          get "/v1/slots/#{std_slot.id}"
+          expect(json['title']).to eq("Expected title")
+        end
       end
 
-      it "returns details of slot with given id" do
-        get "/v1/slots/#{std_slot.id}"
-        expect(json).to have_key('id')
-        expect(json).to have_key('title')
-        expect(json).to have_key('startDate')
-        expect(json).to have_key('endDate')
-        expect(json).to have_key('notes')
-        expect(json).to have_key('visibility')
-        expect(json).to have_key('createdAt')
-        expect(json).to have_key('updatedAt')
+      context "with invalid ID" do
+        it "returns not found" do
+          wrong_id = std_slot.id + 1
+          get "/v1/slots/#{wrong_id}"
+          expect(response).to have_http_status(:not_found)
+        end
       end
 
-      it "does return the correct attributes" do
-        get "/v1/slots/#{std_slot.id}"
-        expect(json['id']).to eq(std_slot.id)
-        expect(json['title']).to eq(std_slot.title)
-        expect(json['startDate']).to eq(std_slot.start_date.as_json)
-        expect(json['endDate']).to eq(std_slot.end_date.as_json)
-        expect(json['notes']).to eq(std_slot.notes)
-        expect(json['visibility']).to eq 'public'
-      end
+      # this is basically a policy test, not sure if it's a good idea to test
+      # this here
+      describe "StdSlot visibility" do
+        context "friends of friends" do
+          let(:std_slot) { create(:std_slot_foaf) }
+          let(:common_friend) { create(:user) }
 
-      it "does return the slot title" do
-        std_slot.meta_slot.update(title: "Expected title")
-        get "/v1/slots/#{std_slot.id}"
-        expect(json['title']).to eq("Expected title")
+          it "is visible to the owner" do
+            get "/v1/slots/#{std_slot.id}", {},
+                { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: std_slot.owner)
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: std_slot.owner)
+
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is not visible to unrelated users" do
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to strangers (not logged in)" do
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+        end
       end
     end
 
-    context "with invalid ID" do
-      it "returns not found" do
-        wrong_id = std_slot.id + 1
-        get "/v1/slots/#{wrong_id}"
-        expect(response).to have_http_status(:not_found)
-      end
-    end
+    describe "ReSlot" do
+      context "with valid ID" do
+        let(:std_slot) {
+          create(:std_slot_public, :with_media, :with_notes) }
+        let(:re_slot_1) {
+          create(:re_slot, predecessor: std_slot,
+                 meta_slot: std_slot.meta_slot, parent: std_slot) }
+        let(:re_slot_2) {
+          create(:re_slot, predecessor: re_slot_1,
+                 meta_slot: std_slot.meta_slot, parent: std_slot) }
 
-    # this is basically a policy test, not sure if it's a good idea to test
-    # this here
-    describe "StdSlot visibility" do
-      context "friends of friends" do
-        let(:std_slot) { create(:std_slot_foaf) }
+        it "returns success" do
+          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+          expect(response).to have_http_status(200)
+        end
+
+        it "has the same media items as the parent slot" do
+          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+          expect(json).to have_key('media')
+          expect(response.body).to include std_slot.images.first.public_id
+        end
+
+        it "has the same notes as the parent slot" do
+          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
+          expect(json).to have_key('notes')
+          expect(
+            json['notes'][1]['title']
+          ).to eq(std_slot.notes.second.title)
+        end
+      end
+
+      # this is basically a policy test, not sure if it's a good idea to test
+      # this here
+      describe "ReSlot visibility" do
         let(:common_friend) { create(:user) }
 
-        it "is visible to the owner" do
-          get "/v1/slots/#{std_slot.id}", {},
-              { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
-          expect(response).to have_http_status :ok
+        context "private" do
+          let(:re_slot) { create(:re_slot_private) }
+
+          it "is visible to the owner" do
+            get "/v1/slots/#{re_slot.id}", {},
+                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+            expect(response).to have_http_status :ok
+          end
+
+          it "is not visible to friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: re_slot.slotter)
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to friends of friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: re_slot.slotter)
+
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to unrelated users" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to strangers (not logged in)" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
         end
 
-        it "is visible to friends of owner" do
-          create(:friendship, :established, user: current_user,
-                 friend: std_slot.owner)
-          get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :ok
+        context "friends" do
+          let(:re_slot) { create(:re_slot_friends) }
+
+          it "is visible to the owner" do
+            get "/v1/slots/#{re_slot.id}", {},
+                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: re_slot.slotter)
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is not visible to friends of friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: re_slot.slotter)
+
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to unrelated users" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to strangers (not logged in)" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
         end
 
-        it "is visible to friends of friends of owner" do
-          create(:friendship, :established, user: current_user,
-                 friend: common_friend)
-          create(:friendship, :established, user: common_friend,
-                 friend: std_slot.owner)
+        context "friends of friends" do
+          let(:re_slot) { create(:re_slot_foaf) }
 
-          get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :ok
+          it "is visible to the owner" do
+            get "/v1/slots/#{re_slot.id}", {},
+                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: re_slot.slotter)
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: re_slot.slotter)
+
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is not visible to unrelated users" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
+
+          it "is not visible to strangers (not logged in)" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :not_found
+          end
         end
 
-        it "is not visible to unrelated users" do
-          get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :not_found
+        context "public" do
+          let(:re_slot) { create(:re_slot_public) }
+          let(:common_friend) { create(:user) }
+
+          it "is visible to the owner" do
+            get "/v1/slots/#{re_slot.id}", {},
+                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: re_slot.slotter)
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to friends of friends of owner" do
+            create(:friendship, :established, user: current_user,
+                   friend: common_friend)
+            create(:friendship, :established, user: common_friend,
+                   friend: re_slot.slotter)
+
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to unrelated users" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
+
+          it "is visible to strangers (not logged in)" do
+            get "/v1/slots/#{re_slot.id}", {}, auth_header
+            expect(response).to have_http_status :ok
+          end
         end
-
-        it "is not visible to strangers (not logged in)" do
-          get "/v1/slots/#{std_slot.id}", {}, auth_header
-          expect(response).to have_http_status :not_found
-        end
-      end
-    end
-
-    context "ReSlot, with valid ID" do
-      let(:std_slot) {
-        create(:std_slot_public, :with_media, :with_notes) }
-      let(:re_slot_1) {
-        create(:re_slot, predecessor: std_slot,
-               meta_slot: std_slot.meta_slot, parent: std_slot) }
-      let(:re_slot_2) {
-        create(:re_slot, predecessor: re_slot_1,
-               meta_slot: std_slot.meta_slot, parent: std_slot) }
-
-      it "returns success" do
-        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-        expect(response).to have_http_status(200)
-      end
-
-      it "has the same media items as the parent slot" do
-        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-        expect(json).to have_key('media')
-        expect(response.body).to include std_slot.images.first.public_id
-      end
-
-      it "has the same notes as the parent slot" do
-        get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-        expect(json).to have_key('notes')
-        expect(
-          json['notes'][1]['title']
-        ).to eq(std_slot.notes.second.title)
       end
     end
 
@@ -521,7 +680,7 @@ RSpec.describe "V1::Slots", type: :request do
       # leave it here as it is until it hurts us
       context "ReSlot from GroupSlot" do
         let(:pred) do
-          slot = create(:group_slot)
+          slot = create(:group_slot_public)
           create(:membership, :active, group: slot.group, user: current_user)
           slot
         end
@@ -597,6 +756,53 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/reslot/", valid_attributes, auth_header
           existing_deleted_reslot.reload
           expect(existing_deleted_reslot.predecessor_id).to eq pred.id
+        end
+      end
+
+      context "custom reslot visibility" do
+        let(:valid_attributes) do
+          { predecessorId: pred.id,
+            visibility: 'foaf' }
+        end
+
+        it "creates reslot with visibility friends-of-friends" do
+          expect {
+            post "/v1/reslot/", valid_attributes, auth_header
+          }.to change(ReSlot, :count)
+          expect(response).to have_http_status :created
+          expect(ReSlot.last.visibility).to eq 'foaf'
+        end
+
+        context 'global slots' do
+          let!(:global_slot) { create(:global_slot) }
+
+          it "creates reslot from globalslot with visibility friends" do
+            expect {
+              post "/v1/globalslots/reslot/",
+                   { predecessor: global_slot.muid,
+                     visibility: 'friends' },
+                   auth_header
+            }.to change(ReSlot, :count)
+            expect(response).to have_http_status :created
+            expect(ReSlot.last.visibility).to eq 'friends'
+          end
+        end
+
+        context 'invalid parameter' do
+          let!(:friend_slot) do
+            uwe = build(:user)
+            create(:friendship, :established, user: current_user, friend: uwe)
+            create(:std_slot_friends, owner: uwe)
+          end
+
+          it "returns 422 if reslot visibility exceeds parent visibility" do
+            post "/v1/reslot/",
+                 { predecessorId: friend_slot.id,
+                   visibility: 'foaf' },
+                 auth_header
+            expect(response).to have_http_status :unprocessable_entity
+            expect(response.body).to include 'exceed'
+          end
         end
       end
     end
@@ -1535,7 +1741,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/reslot/:id" do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_public) }
     let!(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
 
     context "with a valid ID" do
@@ -1552,7 +1758,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "parent attributes" do
         context "likes" do
-          let(:parent) { create(:std_slot, :with_likes) }
+          let(:parent) { create(:std_slot_foaf, :with_likes) }
 
           it "doesn't destroy the likes of the parent slot" do
             expect {
@@ -1562,7 +1768,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "comments" do
-          let(:parent) { create(:std_slot, :with_comments) }
+          let(:parent) { create(:std_slot_friends, :with_comments) }
 
           it "doesn't destroy the comments of the parent slot" do
             expect {
@@ -1572,7 +1778,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "media" do
-          let(:parent) { create(:std_slot, :with_media) }
+          let(:parent) { create(:std_slot_friends, :with_media) }
 
           it "doesn't destroy the media of the parent slot" do
             expect {

@@ -27,8 +27,6 @@ class SlotPolicy < ApplicationPolicy
   # which he wants to reslot
   def create_reslot?
     return false if slot.StdSlotPrivate?
-    # TODO: remove next line when we have ReSlot visibilities
-    return true if slot.ReSlot?
     show_to_current_user?
   end
 
@@ -111,8 +109,7 @@ class SlotPolicy < ApplicationPolicy
     return false unless current_user?
     return true if slot.class == GlobalSlot
     return show_std_slot? if slot.class < StdSlot
-    return show_re_slot? if slot.try(:slotter)
-    # if slot.class < ReSlot or slot.class == ReSlot
+    return show_re_slot? if slot.class <= ReSlot
     return show_group_slot? if slot.try(:group)
     false
   end
@@ -136,24 +133,26 @@ class SlotPolicy < ApplicationPolicy
   end
 
   # re slot
-  # true if it's a reslot of mine
-  # true if it's a reslot from a friend
-  # true if it's a reslot from a public slot
+  # true if it's a public reslot (a reslot from a public slot)
+  # true if it's my own reslot
+  # true if it's a friend-visible reslot of a friend
+  # true if it's a foaf-visible reslot of a user with common friends
   # later: true if it's a reslot from a pulic group's groupslot
   private def show_re_slot?
     return true if slot.ReSlotPublic?
     return true if current_user == slot.slotter
-    return true if current_user.friend_with?(slot.slotter)
-    # TODO: remove following lines later, they should not be necessary then
-    parent = BaseSlot.get(slot.parent.id)
-    return true if parent.StdSlotPublic?
-    # return true if parent.GroupSlotPublic?
+    if slot.ReSlotFriends? || slot.ReSlotFoaf?
+      return true if current_user.friend_with?(slot.slotter)
+    end
+    # combined check determines if read access to foaf slot
+    return false unless slot.ReSlotFoaf?
+    return true if current_user.common_friend_with?(slot.slotter)
     false
   end
 
   # group slot
   # true if slot is group slot and I'm a member of the group
-  # later: true if it's a groupslot in a pulic group
+  # later: true if it's a groupslot in a public group
   private def show_group_slot?
     return true if slot.GroupSlotPublic?
     return true if slot.group.members.include? current_user

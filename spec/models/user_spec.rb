@@ -29,6 +29,10 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:std_slots_foaf).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_public).inverse_of(:owner) }
   it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_private).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_friends).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_foaf).inverse_of(:slotter) }
+  it { is_expected.to have_many(:re_slots_public).inverse_of(:slotter) }
   it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
@@ -191,9 +195,8 @@ RSpec.describe User, type: :model do
         create(:std_slot_public, meta_slot: meta_slot, owner: user) }
 
       it "returns std_slot" do
-        skip "will be fixed in the reslot-visibilities PR"
-        expect(user.active_slots(meta_slot)).to include std_slot_private
-        expect(user.active_slots(meta_slot)).to include std_slot_public
+        expect(user.active_slots(meta_slot)).to include_slot std_slot_private
+        expect(user.active_slots(meta_slot)).to include_slot std_slot_public
       end
     end
 
@@ -201,7 +204,7 @@ RSpec.describe User, type: :model do
       let!(:re_slot) { create(:re_slot, meta_slot: meta_slot, slotter: user) }
 
       it "returns reslot" do
-        expect(user.active_slots(meta_slot)).to include re_slot
+        expect(user.active_slots(meta_slot)).to include_slot re_slot
       end
     end
 

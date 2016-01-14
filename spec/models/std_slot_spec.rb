@@ -171,7 +171,7 @@ RSpec.describe StdSlot, type: :model do
   end
 
   describe :reslots do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_friends) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "returns an array of the reslots of this slot" do
@@ -182,7 +182,7 @@ RSpec.describe StdSlot, type: :model do
   end
 
   describe :re_slots_count do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_foaf) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "returns the number of reslots for this slot" do

@@ -16,8 +16,8 @@ module V1
       muid = params.require(:predecessor)
       global_slot = GlobalSlot.find_or_create(muid)
       reslot = ReSlot.create_from_slot(predecessor: global_slot,
-                                       slotter: current_user)
-                                       # visibility: params[:visibility])
+                                       slotter: current_user,
+                                       visibility: visibility)
       if reslot.save
         render "v1/slots/create", status: :created, locals: { slot: reslot }
       else

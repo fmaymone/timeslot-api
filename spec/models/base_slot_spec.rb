@@ -113,11 +113,12 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :get do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot_private) }
 
     it "returns the specific slot representation" do
       result = BaseSlot.get(std_slot.id)
-      expect(result.class).to eq StdSlot
+      expect(result.class).to eq std_slot.class
+      expect(result.class).to eq StdSlotPrivate
     end
 
     it "fails with ActiveRecord::RecordNotFound if invalid ID" do

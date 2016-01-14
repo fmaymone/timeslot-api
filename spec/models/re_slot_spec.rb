@@ -15,6 +15,7 @@ RSpec.describe ReSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:meta_slot) }
+  it { is_expected.to respond_to(:visibility) }
   it { is_expected.to belong_to(:meta_slot) }
   it { is_expected.to belong_to(:predecessor) }
   it { is_expected.to belong_to(:slotter) }
@@ -56,6 +57,80 @@ RSpec.describe ReSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when visibility exceeds visibility of parent" do
+    before { re_slot.parent = create(:std_slot_friends) }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "unprivate scope" do
+    let(:user) { create(:user) }
+    let!(:privat_slot) { create(:re_slot_private, slotter: user) }
+    let!(:friend_slot) { create(:re_slot_friends, slotter: user) }
+    let!(:foaf_slot) { create(:re_slot_foaf, slotter: user) }
+    # let!(:public_slot) { create(:re_slot_public, owner: user) }
+    let!(:public_slot) { create(:re_slot, slotter: user) }
+
+    it "returns all non-private slots" do
+      result = user.re_slots.unprivate.ids
+
+      expect(result).to include public_slot.id
+      expect(result).to include friend_slot.id
+      expect(result).to include foaf_slot.id
+      expect(result).not_to include privat_slot.id
+    end
+  end
+
+  describe "create_from_slot" do
+    let(:pred) { create(:std_slot_public) }
+    let(:user) { create(:user) }
+
+    it "creates a new ReSlotPrivate" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'private')
+      }.to change(ReSlotPrivate, :count).by 1
+    end
+
+    it "creates a new ReSlotFriends" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'friends')
+      }.to change(ReSlotFriends, :count).by 1
+    end
+
+    it "creates a new ReSlotFoaf" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'foaf')
+      }.to change(ReSlotFoaf, :count).by 1
+    end
+
+    it "creates a new RelotPublic" do
+      expect {
+        described_class.create_from_slot(predecessor: pred,
+                                         slotter: user,
+                                         visibility: 'public')
+      }.to change(ReSlotPublic, :count).by 1
+    end
+
+    context "existing reslot" do
+      let!(:reslot) { create(:re_slot, slotter: user, predecessor: pred) }
+
+      it "updates the visibility" do
+        expect(reslot.visibility).to eq "public"
+
+        described_class.create_from_slot(predecessor: pred,
+                                           slotter: user,
+                                           visibility: 'friends')
+        reslot.reload
+        expect(reslot.visibility).to eq "friends"
+      end
+    end
+  end
+
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
     let(:re_slot) { create(:re_slot, meta_slot: meta_slot) }
@@ -88,7 +163,7 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe :re_slots_count do
-    let(:parent) { create(:std_slot) }
+    let(:parent) { create(:std_slot_public) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
     it "reslot returns the number of reslots of the parent slot" do
@@ -97,7 +172,7 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe :delete do
-    let(:group_slot) { create(:group_slot) }
+    let(:group_slot) { create(:group_slot_public) }
     let(:re_slot_1) { create(:re_slot, predecessor: group_slot,
                              meta_slot: group_slot.meta_slot) }
     let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,

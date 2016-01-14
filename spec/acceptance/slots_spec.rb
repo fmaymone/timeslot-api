@@ -1,100 +1,10 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
-
-  shared_context "default slot response fields" do
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag"
-    response_field :createdAt, "Creation of slot"
-    response_field :updatedAt, "Last update of slot"
-    response_field :deletedAt, "Delete date of slot or nil"
-    response_field :location, "Location data for the slot"
-    response_field :creator, "User who created the slot"
-    response_field :settings,
-                   "Only included if it's a slot of the current User " \
-                   "(created-/friend-/re-/groupslot),\n\n" \
-                   "contains User specific settings for this slot (alerts)"
-    response_field :visibility,
-                   "Visibiltiy of the slot (private/friend/foaf/public)"
-    response_field :notes, "Notes on the slot"
-    response_field :likes, "Likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos recordings for the slot"
-  end
-
-  shared_context "stdslot response fields" do
-    include_context "default slot response fields"
-    response_field :reslotsCounter, "Number of reslots for this slot"
-  end
-
-  shared_context "reslot response fields" do
-    include_context "stdslot response fields"
-    response_field :slotter, "contains ID of the User who did reslot"
-    response_field :parent, "contains ID of the original slot that was reslottet"
-  end
-
-  shared_context "group slot response fields" do
-    include_context "default slot response fields"
-    response_field :groupId, "ID of the group the slot belongs to"
-  end
-
-  shared_context "default slot parameter" do
-    parameter :title, "Title of slot (max. 60 characters)",
-              required: true
-    parameter :startDate,
-              "Startdate and Time of the Slot",
-              required: true
-    parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration).",
-              required: true
-    #parameter :openEnd,
-    #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
-    #          required: true
-    parameter :location, "Location associated with this slot (see example)"
-    parameter :media, "Media items (image/audio/video) of to the Slot " \
-                      "(see example)"
-    parameter :notes, "Notes for to the Slot (see example)"
-    parameter :settings, "User specific settings for the slot (alerts)"
-    parameter :alerts, "Alerts for the Slot", scope: :settings
-  end
-
-  shared_context "ios location params" do
-    parameter :name, "Name of the location, eg. Timeslot Inc. (255 chars)",
-              scope: :location
-    parameter :thoroughfare, "Street address, eg. Dolziger Str. 9 (255 ch.)",
-              scope: :location
-    parameter :subThoroughfare, "house number, eg. 9 (255 chars)",
-              scope: :location
-    parameter :locality, "city, e.g. Berlin (255 chars)",
-              scope: :location
-    parameter :subLocality, "neighborhood, common name, eg. Mitte (255 ch.)",
-              scope: :location
-    parameter :postalCode, "zip code, eg. 94114 (32 chars)",
-              scope: :location
-    parameter :country, "country, eg. Germany (255 chars)",
-              scope: :location
-    parameter :isoCountryCode, "Country Code, eg. US (8 chars)",
-              scope: :location
-    parameter :inLandWater, "eg. Lake Tahoe", scope: :location
-    parameter :ocean, "eg. Pacific Ocean", scope: :location
-    parameter :areasOfInterest, "eg. Volkspark Friedrichshain",
-              scope: :location
-    parameter :latitude, "Latitude", scope: :location
-    parameter :longitude, "Longitude", scope: :location
-    parameter :privateLocation,
-              "private location for this user (true/false) [not yet " \
-              "sure what it will mean technically] -> default: false",
-              scope: :location
-  end
 
   post "/v1/slots" do
     header "Content-Type", "application/json"
@@ -661,19 +571,24 @@ resource "Slots" do
     parameter :predecessorId,
               "ID of the Slot which was resloted",
               required: true
+    parameter :visibility,
+              "Visibility of the ReSlot (private/friends/foaf/public)." \
+              "If not given it defaults to the visibility of the " \
+              "slot that was resloted (predecessor, which by now is always " \
+              "also the parent). The visibility can not exceed the " \
+              "visibility of the original Slot (Parent)."
+
+    include_context "reslot response fields"
 
     let(:pred) { create(:std_slot_public) }
+    let(:predecessorId) { pred.id }
 
     describe "Reslot a StandardSlot" do
-      include_context "reslot response fields"
-
-      let(:predecessorId) { pred.id }
-      let(:note) { "re-revolutionizing the calendar" }
-
-      example "Reslot a slot",
-              document: :v1 do
+      example "Reslot a slot", document: :v1 do
         explanation "Returns data of new ReSlot.\n\n" \
                     "returns 404 if Predecessor Slot doesn't exist\n\n" \
+                    "returns 422 if given visibility exceeds visibility of " \
+                    "the parent\n\n" \
                     "returns 422 if parameters are invalid\n\n" \
                     "returns 422 if required parameters are missing"
         do_request
@@ -692,6 +607,28 @@ resource "Slots" do
         expect(json["endDate"]).to eq pred.end_date.as_json
         expect(json["creator"]["id"]).to eq pred.creator.id
         expect(json["visibility"]).to eq pred.visibility
+      end
+    end
+
+    describe "Reslot with explicit visibility" do
+      let(:visibility) { 'private' }
+
+      example "Reslot a public StandardSlot as private", document: :v1 do
+        explanation "Returns data of new ReSlot.\n\n" \
+                    "returns 404 if Predecessor Slot doesn't exist\n\n" \
+                    "returns 422 if given visibility exceeds visibility of " \
+                    "the parent\n\n" \
+                    "returns 422 if parameters are invalid\n\n" \
+                    "returns 422 if required parameters are missing"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json["slotter"]["id"]).to eq current_user.id
+        expect(json["title"]).to eq pred.title
+        expect(json["startDate"]).to eq pred.start_date.as_json
+        expect(json["endDate"]).to eq pred.end_date.as_json
+        expect(json["creator"]["id"]).to eq pred.creator.id
+        expect(json["visibility"]).to eq visibility
       end
     end
   end
@@ -1437,30 +1374,39 @@ resource "Slots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Slot where the user should be tagged", required: true
-    parameter :user_tags, "Array of users ids which should be tagged for this slot", required: true
+    parameter :id, "ID of the Slot where the user should be tagged",
+              required: true
+    parameter :user_tags,
+              "Array of users ids which should be tagged for this slot",
+              required: true
 
     let!(:slot) { create(:std_slot_public, owner: current_user) }
-    let(:user_tags) {[
-        create(:user).id,
-        create(:user).id,
-        create(:user).id
-    ]}
+    let(:user_tags) do
+      [create(:user).id,
+       create(:user).id,
+       create(:user).id]
+    end
     let(:id) { slot.id }
 
     example "Tagging users to a slot", document: :v1 do
-      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+      explanation "Creates ReSlots of the given slot for the users given " \
+                  "as User IDs in the POST parameters. Returns a list of " \
+                  "all user IDs tagged to this slot.\n\n" \
                   "returns 404 if ID is invalid.\n\n" \
                   "returns 422 if parameters are invalid\n\n" \
                   "returns 422 if required parameters are missing"
 
-      slot_user_tags = slot.reload.reslots.where('re_slots.tagged_from = ?', current_user.id).pluck(:slotter_id)
+      slot_user_tags = slot.reload.reslots
+                       .where('re_slots.tagged_from = ?', current_user.id)
+                       .pluck(:slotter_id)
       expect(slot_user_tags).to eq([])
 
       do_request
       expect(response_status).to eq(200)
 
-      slot_user_tags = slot.reload.reslots.where('re_slots.tagged_from = ?', current_user.id).pluck(:slotter_id)
+      slot_user_tags = slot.reload.reslots
+                       .where('re_slots.tagged_from = ?', current_user.id)
+                       .pluck(:slotter_id)
       expect(slot_user_tags).to eq(user_tags)
     end
   end
@@ -1473,21 +1419,21 @@ resource "Slots" do
     response_field :array, "containing a list of users"
 
     let!(:slot) { create(:std_slot_public) }
-    let!(:reslots) {[
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id),
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id),
-        create(:re_slot, predecessor: slot,
-                         slotter: create(:user),
-                         tagged_from: current_user.id)
-    ]}
+    let!(:reslots) do
+      [create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id),
+       create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id),
+       create(:re_slot, predecessor: slot,
+              slotter: create(:user),
+              tagged_from: current_user.id)]
+    end
     let(:id) { slot.id }
 
     example "Get all tagged users of a slot", document: :v1 do
-      explanation "returns a list of user ids which was tagged to this slot.\n\n" \
+      explanation "returns a list of user ids which are tagged to this slot.\n\n" \
                   "returns 404 if ID is invalid"
       do_request
 

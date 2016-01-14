@@ -1,11 +1,16 @@
 class ReSlot < BaseSlot
   self.table_name = model_name.plural
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   class ReslotHistroyError < StandardError; end
+
+  # mapping the frontend string to the class
+  RE_SLOT_TYPES = { 'private' => :ReSlotPrivate,
+                    'friends' => :ReSlotFriends,
+                    'foaf' => :ReSlotFoaf,
+                    'public' => :ReSlotPublic
+                  }
+
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:ReSlotPrivate]) }
 
   belongs_to :slotter, class_name: User, inverse_of: :re_slots
   belongs_to :predecessor, class_name: BaseSlot
@@ -18,6 +23,7 @@ class ReSlot < BaseSlot
            :media_items=, :notes=, :likes=, :comments=, :images=, :audios=, :videos=,
            to: :parent
 
+  validate :parent_visibility_not_exceeded
   validates :slotter, presence: true
   validates :predecessor, presence: true
   validates :parent, presence: true
@@ -72,29 +78,42 @@ class ReSlot < BaseSlot
     end
   end
 
-  def self.create_from_slot(predecessor:, slotter:)
-    original_source = predecessor.class == ReSlot ? predecessor.parent : predecessor
-    # TODO: use this when having reslot visibilities
-    # original_source = predecessor.class < ReSlot ? predecessor.parent : predecessor
+  private def parent_visibility_not_exceeded
+    return unless parent
+    if (parent.visibility != 'public' && visibility == 'public') ||
+       (parent.visibility == 'friends' && visibility == 'foaf')
+      errors.add(:visibility,
+                 "can't exceed parent visibility ('#{parent.visibility}')")
+    end
+  end
 
-    # if same original event was already reslottet by user, use this reslot
-    reslot = where(slotter: slotter, parent: original_source).take
+  def reuse_existing(predecessor, slottype)
+    # update visibility if different than the original reslot
+    update(slot_type: SLOT_TYPES[slottype.to_sym]) unless slot_type == slottype
+
+    return unless deleted_at?
+
+    update(deleted_at: nil, predecessor: predecessor)
+    BaseSlot.increment_counter(:re_slots_count, parent_id)
+    create_activity
+  end
+
+  def self.create_from_slot(predecessor:, slotter:, visibility: nil)
+    parent = predecessor.class <= ReSlot ? predecessor.parent : predecessor
+    # use visibility of parent if not given or 'public' for group/global slots
+    visibility ||= parent.visibility || 'public'
+    slot_type = RE_SLOT_TYPES[visibility].to_s
 
     slotter.follow(predecessor)
 
-    # if deleted reslot was reslottet again, unset deleted_at & update predecessor
-    if reslot && reslot.deleted_at?
-      reslot.update(deleted_at: nil)
-      reslot.update(predecessor: predecessor)
-      BaseSlot.increment_counter(:re_slots_count, reslot.parent_id)
-      reslot.create_activity
-    end
-
-    unless reslot
-      reslot = create(slotter: slotter,
-                      predecessor: predecessor,
-                      parent: original_source,
-                      meta_slot: predecessor.meta_slot)
+    if reslot = where(slotter: slotter, parent: parent).take
+      reslot.reuse_existing(predecessor, slot_type)
+    else
+      slot_class = slot_type.constantize
+      reslot = slot_class.create(slotter: slotter,
+                                 predecessor: predecessor,
+                                 parent: parent,
+                                 meta_slot: parent.meta_slot)
       reslot.create_activity
     end
 

@@ -1,10 +1,6 @@
 class StdSlot < BaseSlot
   self.table_name = model_name.plural
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   # mapping the frontend string to the class
   STD_SLOT_TYPES = { 'private' => :StdSlotPrivate,
                      'friends' => :StdSlotFriends,
@@ -27,11 +23,9 @@ class StdSlot < BaseSlot
       # Update Follower + Feeds status if visibility change to private
       # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        if self.try(:reslots)
-          reslots.each{ |slot|
-            slot.remove_all_activities(target: self)
-            slot.remove_all_followers
-          }
+        reslots.each do |slot|
+          slot.remove_all_activities(target: self)
+          slot.remove_all_followers
         end
         remove_all_activities('private', target: self)
         remove_all_followers

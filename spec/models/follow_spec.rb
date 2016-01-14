@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Follow, type: :model do
-  let(:follower) { create(:user) }
-  let(:follower2) { create(:user) }
+  let(:follower) { create(:user, username: 'follower 1') }
+  let(:follower2) { create(:user, username: 'follower 2') }
 
   subject { follower }
 

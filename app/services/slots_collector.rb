@@ -65,7 +65,7 @@ class SlotsCollector
                    .includes(parent: [:notes, :media_items],
                              meta_slot: [:ios_location, :creator])
                    .where(slotter: friends)
-                   # .unprivate
+                   .unprivate
                 ]
     consider_filter(showables, @filter)
   end

@@ -1,7 +1,7 @@
-class ReSlotFriends < ReSlot
+class ReSlotPrivate < ReSlot
   self.table_name = 're_slots'
 
   def self.visibility
-    'friends'
+    'private'
   end
 end

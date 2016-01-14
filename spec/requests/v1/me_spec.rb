@@ -324,7 +324,10 @@ RSpec.describe "V1::Me", type: :request do
         slots.push create(:std_slot_private, owner: current_user)
         slots.push create(:std_slot_friends, owner: current_user)
         slots.push create(:std_slot_public, owner: current_user)
-        slots.push(*create_list(:re_slot, 2, slotter: current_user))
+        slots.push(*create_list(:re_slot_public, 2, slotter: current_user))
+        slots.push create(:re_slot_foaf, slotter: current_user)
+        slots.push create(:re_slot_friends, slotter: current_user)
+        slots.push create(:re_slot_private, slotter: current_user)
       end
 
       it "returns success" do
@@ -354,73 +357,101 @@ RSpec.describe "V1::Me", type: :request do
           'Authorization' => "Token token=#{@current_user.auth_token}" }
 
         # upcoming slots
-        create(:std_slot_private,
-               start_date: Time.zone.tomorrow,
-               title: 'not my upcoming slot')
-        create(:std_slot_private,
-               start_date: Time.zone.tomorrow,
-               title: 'upcoming slot',
-               owner: @current_user)
-        create(:std_slot_private,
-               start_date: Time.zone.today.next_week.end_of_day,
-               end_date: Time.zone.today.next_week.next_month,
-               title: 'upcoming slot A',
-               owner: @current_user)
-        create(:std_slot_private,
-               start_date: Time.zone.today.next_week.end_of_day,
-               end_date: Time.zone.today.next_week.next_month,
-               title: 'upcoming slot B',
-               owner: @current_user)
-        create_list(:std_slot_private, 3,
-                    start_date: Time.zone.tomorrow,
-                    owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.tomorrow.midday,
-               end_date: Time.zone.tomorrow.next_week.end_of_day,
-               title: 'upcoming reslot',
-               slotter: @current_user)
+        @not_my_private_upcoming_slot = create(
+          :std_slot_private,
+          start_date: Time.zone.tomorrow,
+          title: 'not my upcoming slot')
+        @private_upcoming_slot = create(
+          :std_slot_private,
+          start_date: Time.zone.tomorrow,
+          title: 'upcoming slot',
+          owner: @current_user)
+        @private_upcoming_slot_a = create(
+          :std_slot_private,
+          start_date: Time.zone.today.next_week.end_of_day,
+          end_date: Time.zone.today.next_week.next_month,
+          title: 'upcoming slot A',
+          owner: @current_user)
+        @private_upcoming_slot_b = create(
+          :std_slot_private,
+          start_date: Time.zone.today.next_week.end_of_day,
+          end_date: Time.zone.today.next_week.next_month,
+          title: 'upcoming slot B',
+          owner: @current_user)
+        @private_upcoming_slots = create_list(
+          :std_slot_private, 3,
+          start_date: Time.zone.tomorrow,
+          owner: @current_user)
+        @upcoming_reslot = create(
+          :re_slot,
+          start_date: Time.zone.tomorrow.midday,
+          end_date: Time.zone.tomorrow.next_week.end_of_day,
+          title: 'upcoming reslot',
+          slotter: @current_user)
+        @friends_upcoming_reslot = create(
+          :re_slot_friends,
+          start_date: Time.zone.tomorrow.midday,
+          end_date: Time.zone.tomorrow.next_week.end_of_day,
+          title: 'friend upcoming reslot',
+          slotter: @current_user)
+
         # ongoing slots
-        create(:std_slot_friends,
-               start_date: Time.zone.yesterday,
-               end_date: Time.zone.tomorrow,
-               title: 'ongoing slot',
-               owner: @current_user)
-        create_list(:std_slot_friends, 12,
-                    start_date: Time.zone.yesterday,
-                    end_date: Time.zone.tomorrow,
-                    title: 'ongoing slots',
-                    owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday,
-               end_date: Time.zone.tomorrow,
-               title: 'ongoing reslot',
-               slotter: @current_user)
+        @friends_ongoing_slot = create(
+          :std_slot_friends,
+          start_date: Time.zone.yesterday,
+          end_date: Time.zone.tomorrow,
+          title: 'ongoing slot',
+          owner: @current_user)
+        @friends_ongoing_slots = create_list(
+          :std_slot_friends, 12,
+          start_date: Time.zone.yesterday,
+          end_date: Time.zone.tomorrow,
+          title: 'ongoing slots',
+          owner: @current_user)
+        @private_ongoing_reslot = create(
+          :re_slot_private,
+          start_date: Time.zone.yesterday,
+          end_date: Time.zone.tomorrow,
+          title: 'ongoing reslot',
+          slotter: @current_user)
+
         # past slots
-        create(:std_slot_public,
-               start_date: Time.zone.yesterday.last_year,
-               end_date: Time.zone.today.last_year,
-               title: 'long ago slot',
-               owner: @current_user)
-        create(:std_slot_foaf,
-               start_date: Time.zone.yesterday.last_year,
-               end_date: Time.zone.today.last_year,
-               title: 'foaf past slot',
-               owner: @current_user)
-        create(:std_slot_public,
-               start_date: Time.zone.yesterday.at_midday,
-               end_date: Time.zone.yesterday.end_of_day,
-               title: 'past slot',
-               owner: @current_user)
-        create_list(:std_slot_public, 13,
-                    start_date: Time.zone.yesterday.at_midday,
-                    end_date: Time.zone.yesterday.end_of_day,
-                    title: 'past slots',
-                    owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday.last_month,
-               end_date: Time.zone.today.last_month,
-               title: 'past reslot',
-               slotter: @current_user)
+        @public_long_ago_slot = create(
+          :std_slot_public,
+          start_date: Time.zone.yesterday.last_year,
+          end_date: Time.zone.today.last_year,
+          title: 'long ago slot',
+          owner: @current_user)
+        @foaf_past_slot = create(
+          :std_slot_foaf,
+          start_date: Time.zone.yesterday.last_year,
+          end_date: Time.zone.today.last_year,
+          title: 'foaf past slot',
+          owner: @current_user)
+        @private_past_slot = create(
+          :std_slot_public,
+          start_date: Time.zone.yesterday.at_midday,
+          end_date: Time.zone.yesterday.end_of_day,
+          title: 'private past slot',
+          owner: @current_user)
+        @public_past_slots = create_list(
+          :std_slot_public, 13,
+          start_date: Time.zone.yesterday.at_midday,
+          end_date: Time.zone.yesterday.end_of_day,
+          title: 'past slots',
+          owner: @current_user)
+        @public_past_reslot = create(
+          :re_slot_public,
+          start_date: Time.zone.yesterday.last_month,
+          end_date: Time.zone.today.last_month,
+          title: 'past reslot',
+          slotter: @current_user)
+        @private_past_reslot = create(
+          :re_slot_private,
+          start_date: Time.zone.yesterday.last_month,
+          end_date: Time.zone.today.last_month,
+          title: 'private past reslot',
+          slotter: @current_user)
       end
 
       describe "paginate" do
@@ -469,8 +500,9 @@ RSpec.describe "V1::Me", type: :request do
                   .to be >= previous_result.last['id']
               end
               # those should never be in the result
-              expect(response.body).not_to include 'past slot'
+              expect(response.body).not_to include 'private past slot'
               expect(response.body).not_to include 'past reslot'
+              expect(response.body).not_to include 'private past reslot'
               expect(response.body).not_to include 'ongoing slot'
               expect(response.body).not_to include 'ongoing reslot'
               expect(response.body).not_to include 'not my upcoming slot'
@@ -585,11 +617,10 @@ RSpec.describe "V1::Me", type: :request do
       describe "filter by slot status:" do
         let(:over_limit) { BaseSlot.all.count * 2 }
 
-        context "default filter" do
+        context "default filter (all)" do
           let(:filter) { 'past' }
 
-          it "doesn't use default filter if explicitly send" do
-
+          it "doesn't use default filter if explicitly overwritten" do
             get "/v1/me/slots", { filter: filter }, @auth_header
 
             expect(response.status).to be(200)
@@ -612,7 +643,7 @@ RSpec.describe "V1::Me", type: :request do
 
             expect(response.body).to include 'ongoing slot'
             expect(response.body).to include 'upcoming slot'
-            expect(response.body).to include 'past slot'
+            expect(response.body).to include @private_past_slot.title
           end
         end
 
@@ -631,8 +662,9 @@ RSpec.describe "V1::Me", type: :request do
               expect(slot['startDate']).to be >= now
             end
             expect(response.body).to include 'upcoming slot'
+            expect(response.body).to include 'upcoming slot'
             expect(response.body).not_to include 'ongoing slot'
-            expect(response.body).not_to include 'past slot'
+            expect(response.body).not_to include @private_past_slot.title
           end
 
           it "doesn't return 'after' cursor if no more results" do
@@ -658,7 +690,7 @@ RSpec.describe "V1::Me", type: :request do
             json['data'].each do |slot|
               expect(slot['startDate']).to be < now
             end
-            expect(response.body).to include 'past slot'
+            expect(response.body).to include @private_past_slot.title
             expect(response.body).to include 'ongoing slot'
             expect(response.body).not_to include 'upcoming slot'
           end
@@ -684,7 +716,7 @@ RSpec.describe "V1::Me", type: :request do
             json['data'].each do |slot|
               expect(slot['endDate']).to be < now
             end
-            expect(response.body).to include 'past slot'
+            expect(response.body).to include @private_past_slot.title
             expect(response.body).not_to include 'ongoing slot'
             expect(response.body).not_to include 'upcoming slot'
           end
@@ -705,7 +737,7 @@ RSpec.describe "V1::Me", type: :request do
             end
             expect(response.body).to include 'ongoing slot'
             expect(response.body).not_to include 'upcoming slot'
-            expect(response.body).not_to include 'past slot'
+            expect(response.body).not_to include @private_past_slot.title
           end
         end
 
@@ -720,7 +752,7 @@ RSpec.describe "V1::Me", type: :request do
             expect(response.body).to include 'upcoming slot'
             expect(response.body).to include 'ongoing slot'
             expect(response.body).to include 'ongoing reslot'
-            expect(response.body).not_to include 'past slot'
+            expect(response.body).not_to include @private_past_slot.title
             expect(response.body).not_to include 'not my upcoming slot'
             expect(json).to have_key 'paging'
             expect(json['paging']).to have_key 'moment'
@@ -774,15 +806,18 @@ RSpec.describe "V1::Me", type: :request do
       end
 
       let!(:bob_slots) do
-        create(:re_slot, slotter: bob)
-        create(:std_slot_private, owner: bob, title: 'private slot')
-        create(:std_slot_friends, owner: bob, title: 'friendslot-upcoming',
+        create(:std_slot_private, owner: bob, title: 'private_slot')
+        create(:std_slot_friends, owner: bob, title: 'friendslot_upcoming',
                start_date: Time.zone.tomorrow.next_day)
-        create(:std_slot_friends, owner: bob, title: 'friendslot-ongoing',
+        create(:std_slot_friends, owner: bob, title: 'friendslot_ongoing',
                start_date: Time.zone.yesterday, end_date: Time.zone.tomorrow)
-        create(:std_slot_friends, owner: bob, title: 'friendslot-past',
+        create(:std_slot_friends, owner: bob, title: 'friendslot_past',
                start_date: Time.zone.yesterday.last_week,
                end_date: Time.zone.yesterday)
+        create(:re_slot_public, slotter: bob, title: 'public_reslot')
+        create(:re_slot_foaf, slotter: bob, title: 'foaf_reslot')
+        create(:re_slot_friends, slotter: bob, title: 'friends_reslot')
+        create(:re_slot_private, slotter: bob, title: 'private_reslot')
       end
 
       it "returns success" do
@@ -792,7 +827,8 @@ RSpec.describe "V1::Me", type: :request do
 
       it "doesn't include private slots from friends" do
         get "/v1/me/friendslots", {}, auth_header
-        expect(response.body).not_to include 'private slot'
+        expect(response.body).not_to include 'private_slot'
+        expect(response.body).not_to include 'private_reslot'
       end
 
       it "orders the slots by startdate" do
@@ -802,11 +838,14 @@ RSpec.describe "V1::Me", type: :request do
         expect(json.third['startDate']).to be <= json.last['startDate']
       end
 
-      it "includes past, ongoing and upcoming slots" do
+      it "includes past, ongoing and upcoming slots and reslots" do
         get "/v1/me/friendslots", {}, auth_header
-        expect(response.body).to include 'friendslot-upcoming'
-        expect(response.body).to include 'friendslot-ongoing'
-        expect(response.body).to include 'friendslot-past'
+        expect(response.body).to include 'friendslot_upcoming'
+        expect(response.body).to include 'friendslot_ongoing'
+        expect(response.body).to include 'friendslot_past'
+        expect(response.body).to include 'public_reslot'
+        expect(response.body).to include 'foaf_reslot'
+        expect(response.body).to include 'friends_reslot'
       end
     end
 

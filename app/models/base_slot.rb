@@ -17,33 +17,24 @@ class BaseSlot < ActiveRecord::Base
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
                  StdSlotFoaf: 4,
+                 ReSlotPrivate: 5,
                  ReSlotFriends: 6,
-                 ReSlotPublic: 7,
+                 ReSlotFoaf: 7,
+                 ReSlotPublic: 22, # maintain backwards compatibility
                  GroupSlotMembers: 11,
                  GroupSlotPublic: 12,
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
-                 ReSlot: 22,
+                 # ReSlot: 23,
                  GroupSlot: 21
                }
 
   enum slot_type: SLOT_TYPES
 
-  # make sure sti is not used until we populated the type columns for
-  # existing values
-  self.inheritance_column = :_type_disabled
-
   after_commit AuditLog
   after_initialize :set_slot_type, if: :new_record?
-
-  # TODO: remove this when reslot_visibility is merged
-  before_save :set_type
-
-  private def set_type
-    self.type = slot_type == 'ReSlot' ? 'ReSlotPublic' : slot_type
-  end
 
   scope :active, -> { where deleted_at: nil }
   # there are additonal scopes defined as class method (upcoming, past)
@@ -94,9 +85,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def reslots
-    # this should not include private reslots
-    # TODO: change it when we have reslots with different visibilities
-    ReSlot.where parent_id: id
+    # TODO: I think in some cases this should not include private reslots
+    ReSlot.where(parent_id: id)
   end
 
   def as_paging_cursor
@@ -319,8 +309,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def self.get(slot_id)
-    bs = BaseSlot.find(slot_id)
-    bs.slot_type.constantize.find(slot_id)
+    # reloading necessary to get attributes from MTI tables
+    BaseSlot.find(slot_id).reload
   end
 
   def self.get_many(slot_ids)
@@ -419,7 +409,7 @@ class BaseSlot < ActiveRecord::Base
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
       raise PaginationError, "invalid pagination cursor"
-    # the following is not really neccessary, might be removed at some point
+    # the following is not really necessary, might be removed at some point
     # but for now it gives some useful info about the system
     else
       if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||

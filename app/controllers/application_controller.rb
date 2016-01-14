@@ -45,6 +45,19 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
+  private def visibility
+    return nil unless params.key? :visibility
+
+    visibility = params[:visibility]
+    valid_values = %w(private friends foaf public)
+
+    unless valid_values.include? visibility
+      fail ActionController::ParameterMissing,
+           "visibility must be one of #{valid_values}"
+    end
+    visibility
+  end
+
   private def slot_paging_params
     p = params.permit(:filter, :moment, :limit, :after, :before).symbolize_keys
 
