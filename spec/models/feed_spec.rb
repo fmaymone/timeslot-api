@@ -1317,6 +1317,64 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('friend')
       end
     end
+
+    context "Forward user tagging" do
+      let!(:slot) { create(:std_slot_public, owner: user) }
+
+      before(:each) do
+        # Perform activity: tag users to a slot
+        slot.update_user_tags(user, [follower, follower2])
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(2) # +2 own activities (2 users tagged)
+        expect(user_feed.first['target']).to eq(slot.id.to_s)
+        expect(user_feed.first['action']).to eq('tagged')
+        expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['actor']['id']).to be(user.id)
+        expect(user_feed.second['target']).to eq(slot.id.to_s)
+        expect(user_feed.second['action']).to eq('tagged')
+        expect(user_feed.second['data']['target']['id']).to be(slot.id)
+        expect(user_feed.second['data']['actor']['id']).to be(user.id)
+
+        user_feed_follower = Feed.user_feed(follower.id).as_json
+        expect(user_feed_follower.count).to be(0) # has no own activities
+
+        user_feed_follower2 = Feed.user_feed(follower2.id).as_json
+        expect(user_feed_follower2.count).to be(0) # has no own activities
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0) # has no followings
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(0) # has no followings
+
+        news_feed_follower2 = Feed.news_feed(follower2.id).as_json
+        expect(news_feed_follower2.count).to be(0) # has no followings
+      end
+
+      it "Notification Feed (activities to own contents)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(0) # has no own content
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(1) # +1 foreign activity (user tag)
+        expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower.first['action']).to eq('tagged')
+        expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
+
+        notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
+        expect(notification_feed_follower2.count).to be(1) # +1 foreign activity (user tag)
+        expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
+        expect(notification_feed_follower2.first['action']).to eq('tagged')
+        expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
+      end
+    end
   end
 
   context "Update Shared Objects", :redis do
@@ -1336,15 +1394,20 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "Feeds retrieved updates from shared objects" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(1) # +1 public activities
+        expect(user_feed.count).to be(2) # +2 own activities
         expect(user_feed.first['type']).to eq('Slot')
-        expect(user_feed.first['action']).to eq('like')
+        expect(user_feed.first['action']).to eq('update')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
         expect(user_feed.first['data']['target']['title']).to eq('New Title')
+        expect(user_feed.second['type']).to eq('Slot')
+        expect(user_feed.second['action']).to eq('like')
+        expect(user_feed.second['data']['target']['id']).to be(slot.id)
+        expect(user_feed.second['data']['actor']['id']).to be(user.id)
+        expect(user_feed.second['data']['target']['title']).to eq('New Title')
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 public activities
+        expect(news_feed_follower.count).to be(1) # +1 public activity
         expect(news_feed_follower.first['type']).to eq('Slot')
         expect(news_feed_follower.first['action']).to eq('like')
         expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)

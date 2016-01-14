@@ -204,8 +204,7 @@ class BaseSlot < ActiveRecord::Base
     unless user_tags.nil?
       reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
       User.find(user_tags - reslotters).each do |user|
-        reslot = ReSlot.create_from_slot(predecessor: self, slotter: user)
-        reslot.update(tagged_from: current_user.id)
+        ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
       end
     end
   end

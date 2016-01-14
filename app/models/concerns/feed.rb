@@ -277,11 +277,11 @@ module Feed
       actor_count = activity['actors'].count
       # Adds the first username and sets usercount to translation params
       i18_params = { USER: actor['username'], USERCOUNT: actor_count }
-      # Add the title to the translation params holder
-      i18_params[:TITLE] = (target['title'] || target['name']) if target['title'] || target['name']
       # TODO:
       # Add the targets field to the translation params holder
       i18_params[:FIELD] = 'title'
+      # Add the title to the translation params holder
+      i18_params[:TITLE] = (target['title'] || target['name']) if target && (target['title'] || target['name'])
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if actor_count > 1
         # Get second actor (from shared objects)
