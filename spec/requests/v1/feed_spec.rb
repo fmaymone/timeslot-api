@@ -28,11 +28,11 @@ RSpec.describe "V1::Feed", :async, type: :request do
     # test for Bug BKD-294
     describe "reslot a slot" do
       it "creates a new activity without an exception" do
-        activities_before = $redis.keys.count
+        activities_before = storage.keys.count
         expect {
           post "/v1/reslot/", { predecessorId: slot.id }, auth_header
         }.not_to raise_error
-        expect($redis.keys.count).to be > activities_before
+        expect(storage.keys.count).to be > activities_before
       end
     end
   end

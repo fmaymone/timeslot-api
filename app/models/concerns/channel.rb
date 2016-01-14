@@ -1,22 +1,28 @@
 module Channel
+
+  # Initialize the storage controller
+  def storage
+    @storage ||= RedisStorage
+  end
+
   def connect
-    $redis.sadd(redis_key, self.id)
+    storage.add_to_set(redis_key, self.id)
   end
 
   def disconnect
-    $redis.srem(redis_key, self.id)
+    storage.remove_from_set(redis_key, self.id)
   end
 
   def is_connected?
-    $redis.sismember(redis_key, self.id)
+    storage.set_include?(redis_key, self.id)
   end
 
   def connections
-    $redis.smembers(redis_key)
+    storage.get_from_set(redis_key)
   end
 
   def connection_count
-    $redis.scard(redis_key)
+    storage.length_of_set(redis_key)
   end
 
   def redis_key

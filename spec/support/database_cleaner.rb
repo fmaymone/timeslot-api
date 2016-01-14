@@ -24,7 +24,7 @@ RSpec.configure do |config|
 
   config.after(:each, :redis) do
     DatabaseCleaner.strategy = :transaction
-    $redis.flushall
+    RedisStorage.flush
   end
 
   # whenever we load seed data (via :seed flag) we need to use
