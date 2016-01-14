@@ -313,6 +313,29 @@ resource "Me" do
     end
   end
 
+  get "/v1/me/friends" do
+    header 'Authorization', :auth_header
+
+    let!(:friendship_1) { create(:friendship, :established, friend: create(:user), user: current_user) }
+    let!(:friendship_2) { create(:friendship, :established, friend: create(:user), user: current_user) }
+    let!(:friendship_3) { create(:friendship, :established, friend: create(:user), user: current_user) }
+
+    response_field :array, "containing friends as a list of Users"
+
+    example "Get friends", document: :v1 do
+      explanation "Returns an array which includes all friends of " \
+                  "the current user."
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json[0]['id']).to eq(friendship_1['friend_id'])
+      expect(json[1]['id']).to eq(friendship_2['friend_id'])
+      expect(json[2]['id']).to eq(friendship_3['friend_id'])
+      expect(json.length).to eq(3)
+    end
+  end
+
   patch "/v1/me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
