@@ -21,6 +21,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def my_friends?
+    current_user?
+  end
+
   def slots_of_my_friends?
     current_user?
   end

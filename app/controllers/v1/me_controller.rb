@@ -89,6 +89,13 @@ module V1
       render "v1/media/index"
     end
 
+    # GET /v1/me/friends
+    def my_friends
+      authorize :me
+      @users = current_user.friends
+      render "v1/users/list"
+    end
+
     # PATCH /v1/me/device
     # updates an existing device or creates a new one with the given attributes
     def update_device
