@@ -35,6 +35,8 @@ module TsRailsBackend
     config.i18n.default_locale = :en
     # http://guides.rubyonrails.org/i18n.html
 
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
+
     # don't log passwords
     config.filter_parameters += [:password]
 
