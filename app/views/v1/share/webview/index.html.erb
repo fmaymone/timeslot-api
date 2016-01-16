@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <%= render "v1/share/webview/meta" %>
+  <title>Timeslot Webview - <%= @slot['title'] %></title>
+  <style media="all">
+    <%= raw "\n#{File.read('app/views/v1/share/webview/assets/all.css', mode: 'rb')}\n" %>
+    <%= raw "\n#{File.read('app/views/v1/share/webview/assets/' << @style << '.css', mode: 'rb')}\n" %>
+  </style>
+</head>
+<body>
+<%= render "v1/share/webview/header" %>
+<%= render "v1/share/webview/slot" %>
+<%= render "v1/share/webview/footer" %>
+<script type="text/javascript">
+  <%= raw "\n#{File.read('app/views/v1/share/webview/assets/main.js', mode: 'rb')}\n" %>
+</script>
+</body>
+</html>

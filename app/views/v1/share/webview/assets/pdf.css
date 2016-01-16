@@ -1,0 +1,9 @@
+        /* CSS Stylesheet */
+        html, body{
+            height: auto;
+            width: auto;
+        }
+        section, footer{
+            background-color: transparent;
+            border: none;
+        }

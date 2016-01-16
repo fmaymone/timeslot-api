@@ -1,0 +1,38 @@
+<section>
+  <header>
+    <h1>
+      <%= @slot['title'] %>
+    </h1>
+    <p>
+      <a href="#comments">
+        <%= @slot['commentsCounter'] %> comments
+      </a>
+      -
+      <a href="#comments">
+        <%= @slot['likes'] %> likes
+      </a>
+      -
+      <a href="#comments">
+        <%= @slot['reslotsCounter'] %> relots
+      </a>
+    </p>
+  </header>
+  <% @slot['media'].each do |item|  %>
+      <% if item['mediaType'] == 'image' %>
+        <p>
+          <img src="<%= item['publicId'] %>">
+        </p>
+      <% break %>
+      <% end %>
+  <% end %>
+  <p>
+    Posted on
+    <time datetime="<%= @slot['createdAt'] %>">
+      <%= @slot['createdAt'] %>
+    </time>
+    by
+    <a href="#">
+      <%= @slot['creator']['username'] %>
+    </a>
+  </p>
+</section>

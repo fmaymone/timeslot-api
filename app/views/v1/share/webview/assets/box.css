@@ -1,0 +1,10 @@
+        /* CSS Stylesheet */
+        html, body{
+            height: auto;
+            width: 500px;
+        }
+        section, footer{
+            background-color: #eee;
+            border: 2px solid #ccc;
+            padding: 2%;
+        }

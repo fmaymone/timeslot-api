@@ -1,0 +1,22 @@
+        /* CSS Stylesheet */
+        html, body{
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding:0;
+            background: none;
+            border: none;
+        }
+        section, footer{
+            padding: 2%;
+        }
+        header nav{
+            display:none;
+        }
+        header nav ul{
+            margin:0;
+            padding:0;
+        }
+        header nav ul li{
+            display: inline;
+        }
