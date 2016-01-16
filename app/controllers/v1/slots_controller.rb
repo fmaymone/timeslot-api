@@ -182,18 +182,6 @@ module V1
       end
     end
 
-    # GET /v1/slots/1/share
-    def share_url
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-
-      if @slot.set_share_id(current_user)
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
     # GET /v1/slots/abcd1234/sharedata
     def share_data
       @slot = BaseSlot.includes(:meta_slot).find_by(share_id: params[:uid])
