@@ -21,6 +21,11 @@ Rails.application.routes.draw do
 
       delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
       delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
+
+      get '/', to: 'share#redirect', as: 'redirect'
+      post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
+      delete 'share/:id/', to: 'share#delete_handler', as: 'share_delete'
+      post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
