@@ -20,7 +20,7 @@ module V1
           when 'image'
             data_handler(result, 'image/jpg')
           when 'webview'
-            render html: result.html_safe
+            render html: result.html_safe, content_type: "text/html"
           when 'qrcode'
             data_handler(result, 'image/png')
           when 'pdf'
