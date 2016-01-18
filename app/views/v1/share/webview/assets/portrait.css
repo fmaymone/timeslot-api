@@ -10,12 +10,12 @@
         */
         html, body{
             height: 100%;
-            max-width: 500px;
             font-family: 'Lato';
         }
         section, footer{
             background-color: #fff;
             border: 2px solid #ccc;
             padding: 2%;
+            max-width: 500px;
         }
 

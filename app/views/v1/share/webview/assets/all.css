@@ -6,9 +6,12 @@
             padding:0;
             background: none;
             border: none;
+            text-align: center;
         }
         section, footer{
             padding: 2%;
+            text-align: center;
+            margin: 0 auto;
         }
         header nav{
             display:none;

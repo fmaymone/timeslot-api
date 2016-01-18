@@ -1,30 +1,47 @@
 <section>
   <header>
-    <h1>
-      <%= @slot['title'] %>
-    </h1>
-    <p>
-      <a href="#comments">
-        <%= @slot['commentsCounter'] %> comments
-      </a>
-      -
-      <a href="#comments">
-        <%= @slot['likes'] %> likes
-      </a>
-      -
-      <a href="#comments">
-        <%= @slot['reslotsCounter'] %> relots
-      </a>
-    </p>
   </header>
-  <% @slot['media'].each do |item|  %>
-      <% if item['mediaType'] == 'image' %>
-        <p>
-          <img src="<%= item['publicId'] %>">
-        </p>
-      <% break %>
+  <p>
+    <%= Time.zone.parse(@slot['startDate']).strftime('%a %d %b. %Y') %>
+  </p>
+  <p>
+    <%= Time.zone.parse(@slot['startDate']).strftime('%H:%M') %>
+  </p>
+  <p>
+    <%= @slot['endDate'] ? hours = ((diff = (Time.zone.parse(@slot['endDate']) - Time.zone.parse(@slot['startDate'])).to_i) / 3600).floor : 'Open End' %>
+  </p>
+  <p>
+    <%= @slot['endDate'] ? (diff - (3600 * hours) / 3600 / 60).floor : 'Open End' %>
+  </p>
+  <p>
+    <% @slot['media'].each do |item|  %>
+        <% if item['mediaType'] == 'image' %>
+          <p>
+            <img src="<%= item['publicId'] %>">
+          </p>
+          <% break %>
       <% end %>
   <% end %>
+  </p>
+  <h1>
+    <%= @slot['title'] %>
+  </h1>
+  <p>
+    <%= @slot['location'] %>
+  </p>
+  <p>
+    <a href="#comments">
+      <%= @slot['commentsCounter'] %> comments
+    </a>
+    -
+    <a href="#comments">
+      <%= @slot['likes'] %> likes
+    </a>
+    -
+    <a href="#comments">
+      <%= @slot['reslotsCounter'] %> relots
+    </a>
+  </p>
   <p>
     Posted on
     <time datetime="<%= @slot['createdAt'] %>">
