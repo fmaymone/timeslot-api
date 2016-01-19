@@ -84,6 +84,11 @@ module Share
       url
     end
 
+    def create_client
+      # this client will be overridden by a stub for rspec testings
+      Aws::SES::Client.new
+    end
+
     def share_email(user, slot, params = nil)
       # Store shared objects
       obj = share_objects(user, slot)
@@ -94,7 +99,7 @@ module Share
                style: 'box')
       begin
         # Send as email
-        Aws::SES::Client.new.send_email(
+        create_client.send_email(
             source: user.email || 'support@timeslot.com',
             destination: {
                 to_addresses: [params['email'] || user.email]
