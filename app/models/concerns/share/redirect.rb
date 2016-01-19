@@ -1,6 +1,6 @@
 module Redirect
 
-  @storage = RedisStorage
+  #@storage = RedisStorage
 
   class << self
 

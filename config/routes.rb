@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
       delete 'share/:id/', to: 'share#delete', as: 'share_delete'
       post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
+      post 'import', to: 'import#handler', as: 'slot_import'
     end
 
     scope :slots, constraints: { id: /\d+/ } do

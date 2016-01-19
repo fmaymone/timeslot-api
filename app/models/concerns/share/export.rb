@@ -1,7 +1,5 @@
 module Export
 
-  @storage = RedisStorage
-
   class << self
 
     def export_ical
@@ -16,7 +14,4 @@ module Export
       # TODO
     end
   end
-
-  # module ClassMethods
-  # end
 end
