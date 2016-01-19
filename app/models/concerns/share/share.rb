@@ -187,15 +187,5 @@ module Share
     private def unzip_content(content)
       ActiveSupport::Gzip.decompress(content)
     end
-
-    private def error_handler(error, feed, params)
-      opts = {}
-      opts[:parameters] = {
-          feed: feed,
-          params: params
-      }
-      Rails.logger.error { error }
-      Airbrake.notify(error, opts)
-    end
   end
 end

@@ -38,6 +38,8 @@ module V1
           head 404
         end
       end
+    rescue => error
+      error_handler(error, "failed: redirect to shared view")
     end
 
     ## -- SHARING TYPES -- ##
@@ -98,6 +100,8 @@ module V1
       else
         head 404
       end
+    rescue => error
+      error_handler(error, "failed: unshare views")
     end
 
     ## -- HANDLERS -- ##
@@ -126,6 +130,16 @@ module V1
       else
         head 404
       end
+    rescue => error
+      error_handler(error, "failed: create shared view")
+    end
+
+    private def error_handler(error, msg, params = nil)
+      opts = {}
+      opts[:parameters] = { msg: msg }
+      opts[:parameters][:params] = params if params
+      Rails.logger.error { error }
+      Airbrake.notify(error, opts)
     end
   end
 end

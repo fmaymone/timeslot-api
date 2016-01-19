@@ -63,15 +63,5 @@ module Redirect
     private def unzip_data(content)
       JSON.parse(unzip_content(content))
     end
-
-    private def error_handler(error, feed, params)
-      opts = {}
-      opts[:parameters] = {
-          feed: feed,
-          params: params
-      }
-      Rails.logger.error { error }
-      Airbrake.notify(error, opts)
-    end
   end
 end
