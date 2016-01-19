@@ -74,17 +74,6 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  if defined?(Bullet) && Bullet.enable?
-    config.before(:each) do
-      Bullet.start_request
-    end
-
-    config.after(:each) do
-      Bullet.perform_out_of_channel_notifications if Bullet.notification?
-      Bullet.end_request
-    end
-  end
-
   config.around(:each, :db) do |example|
     with_std_out_logger { example.run }
   end
