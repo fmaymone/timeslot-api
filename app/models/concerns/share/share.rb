@@ -34,14 +34,10 @@ module Share
                 JSONView.user(user),
                 JSONView.slot(slot),
                 style: 'box'))
+
       url = create_share_url(:image, slot)
       path = 'store/share/image'
-
-      # Save image to file
-      FileUtils.mkdir_p(path) unless File.exists?(path)
-      File.open("#{path}/#{url}.jpg", 'wb') do |f|
-        f.write(gzip_content(image))
-      end
+      save_to_file(path, "#{url}.jpg", image)
       # Returns the share URL
       url
     end
@@ -50,16 +46,12 @@ module Share
       # Generate HTML from slot/user data
       share_url = share_webview(user, slot)
       # Generate QR-Code from given URL
-      image = Convert.url_to_qrcode(share_url)
+      qrcode = Convert.url_to_qrcode(share_url)
       # Apply public sharing URL
+
       url = create_share_url(:qrcode, slot)
       path = 'store/share/qrcode'
-
-      # Save image to file
-      FileUtils.mkdir_p(path) unless File.exists?(path)
-      File.open("#{path}/#{url}.png", 'wb') do |f|
-        f.write(gzip_content(image))
-      end
+      save_to_file(path, "#{url}.png", qrcode)
       # Returns the share URL
       url
     end
@@ -71,14 +63,10 @@ module Share
               JSONView.user(user),
               JSONView.slot(slot),
               style: 'pdf'))
+
       url = create_share_url(:pdf, slot)
       path = 'store/share/pdf'
-
-      # Save image to file
-      FileUtils.mkdir_p(path) unless File.exists?(path)
-      File.open("#{path}/#{url}.pdf", 'wb') do |f|
-        f.write(gzip_content(pdf))
-      end
+      save_to_file(path, "#{url}.pdf", pdf)
       # Returns the share URL
       url
     end
@@ -106,6 +94,13 @@ module Share
     #   end
     #   url
     # end
+
+    private def save_to_file(path, filepath, file)
+      FileUtils.mkdir_p(path) unless File.exists?(path)
+      File.open("#{path}/#{filepath}", 'wb') do |f|
+        f.write(gzip_content(file))
+      end
+    end
 
     private def gzip_content(content)
       ActiveSupport::Gzip.compress(content)
