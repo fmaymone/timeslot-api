@@ -153,15 +153,6 @@ module Share
       Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id}").gsub('=', '')
     end
 
-    # private def create_share_url(type, user, target)
-    #   length = ENV['SHARE_URL_MIN_LENGTH'] || 3
-    #   dupes = 0
-    #   while @storage.exists((url = "SHARE:#{share_types_enum[type]}:#{Digest::SHA1.hexdigest("#{user}#{target}#{type}").slice(0, length).downcase}")) do
-    #     length += 1 and (dupes = 0) if dupes += 1 > 3
-    #   end
-    #   url
-    # end
-
     private def share_objects(user, slot)
       user = JSONView.user(user)
       slot = JSONView.slot(slot)

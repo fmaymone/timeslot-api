@@ -30,9 +30,9 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
-  # def share_url?
-  #   show?
-  # end
+  def share_url?
+    show?
+  end
 
   # this should only be allowed for our rails slot webview app
   def share_data?

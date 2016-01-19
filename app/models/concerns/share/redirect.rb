@@ -20,12 +20,15 @@ module Redirect
     ## -- REDIRECTS -- ##
 
     private def show_webview(url)
+      # Build Live:
       # url = decode_share_url(url).split(':')
       # # Retrieve shared objects
       # slot = unzip_data(@storage.get("Slot:#{url[1]}"))
       # user = unzip_data(@storage.get("User:#{slot['creator']['id']}"))
       # # Generate HTML from slot/user data
       # Convert.slot_to_html(user, slot, style: 'portrait')
+
+      # Get from Cache:
       get_content(url, 'webview', '.html')
     end
 
