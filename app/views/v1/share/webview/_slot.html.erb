@@ -17,16 +17,14 @@
     %>
     <%= (@slot['endDate'] ? "#{days}d #{hours}h #{minutes}min" : 'Open End') << ' Slot' %>
   </p>
-  <p id="slot_image">
-    <% @slot['media'].each do |item|  %>
-        <% if item['mediaType'] == 'image' %>
-          <p>
-            <img src="<%= item['publicId'] %>">
-          </p>
-          <% break %>
-      <% end %>
+  <% @slot['media'].each do |item|  %>
+      <% if item['mediaType'] == 'image' %>
+        <p>
+          <div id="slot_image" style="background-image: url(<%= item['publicId'] %>)"></div>
+        </p>
+        <% break %>
     <% end %>
-  </p>
+  <% end %>
   <h1>
     <%= @slot['title'] %>
   </h1>
