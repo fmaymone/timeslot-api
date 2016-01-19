@@ -44,6 +44,8 @@ Rails.application.routes.draw do
       get ':id/user_tags', to: 'slots#get_user_tags', as: 'slot_get_user_tags'
       post ':id/user_tags', to: 'slots#update_user_tags', as: 'user_tags'
 
+      post ':id/slotgroups', to: 'slots#add_to_groups'
+
       # currently unused
       get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
       post ':id/copy', to: 'slots#copy', as: 'slot_copy'

@@ -317,6 +317,9 @@ module V1
       render :slotters
     end
 
+    def add_to_groups
+    end
+
     # GET /v1/slots/1/history
     def reslot_history
       @slot = BaseSlot.get(params[:id])
