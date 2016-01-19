@@ -1,5 +1,6 @@
 class Group < ActiveRecord::Base
   include Follow
+  before_create :set_uuid
   after_commit AuditLog
 
   after_create :add_owner_as_member, on: :create
@@ -58,6 +59,14 @@ class Group < ActiveRecord::Base
 
   private def add_owner_as_member
     Membership.create(group_id: id, user_id: owner.id, state: '111')
+  end
+
+  private def set_uuid
+    self.uuid = self.class.generate_uuid
+  end
+
+  def self.generate_uuid
+    SecureRandom.uuid
   end
 
   def self.create_with_invitees(group_params:, invitees: nil)

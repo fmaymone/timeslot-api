@@ -2,6 +2,7 @@ json.extract!(
   @group,
   :id,
   :name,
+  :uuid,
   :image,
   :members_can_post,
   :members_can_invite,

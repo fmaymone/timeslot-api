@@ -4,6 +4,7 @@ FactoryGirl.define do
   factory :group do
     association :owner, factory: :user, strategy: :build
     name
+    uuid { SecureRandom.uuid }
     members_can_post false
     members_can_invite false
 

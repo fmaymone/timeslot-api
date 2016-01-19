@@ -8,6 +8,7 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:owner) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:name) }
+  it { is_expected.to respond_to(:uuid) }
   it { is_expected.to respond_to(:members_can_post) }
   it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
@@ -51,6 +52,15 @@ RSpec.describe Group, type: :model do
   describe "when name is too long" do
     before { group.name = "a" * 256 }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "when uuid is not present" do
+    let(:group) { create(:group) }
+    before { group.uuid = nil }
+
+    it "raises not_null constraint error" do
+      expect { group.save }.to raise_error ActiveRecord::StatementInvalid
+    end
   end
 
   describe :members do
