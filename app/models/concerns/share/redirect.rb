@@ -12,7 +12,8 @@ module Redirect
     def decode_share_url(base64)
       # Determine base64 padding (multiple of 4 bytes)
       padding = ''
-      ((base64.length * 6 / 8) % 4).times{ padding << '=' }
+      #((base64.length * 6 / 8) % 4).times{ padding << '=' }
+      ((base64.length * 6) % 8).times{ padding << '=' }
       # Decode and apply padding
       Base64.urlsafe_decode64("#{base64}#{padding}")
     end
@@ -22,8 +23,8 @@ module Redirect
     private def show_webview(url)
       url = decode_share_url(url).split(':')
       # Retrieve shared objects
-      user = unzip_data(@storage.get("User:#{url[0]}"))
-      slot = unzip_data(@storage.get("Slot:#{url[2]}"))
+      slot = unzip_data(@storage.get("Slot:#{url[1]}"))
+      user = unzip_data(@storage.get("User:#{slot['creator']['id']}"))
       # Generate HTML from slot/user data
       Convert.slot_to_html(user, slot, style: 'portrait')
     end

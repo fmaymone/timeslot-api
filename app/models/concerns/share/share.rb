@@ -24,18 +24,17 @@ module Share
       @storage.set("User:#{user.id}", gzip_content(JSONView.user(user).to_json))
       @storage.set("Slot:#{slot.id}", gzip_content(JSONView.slot(slot).to_json))
       # Returns the share URL
-      create_share_url(:webview, user, slot)
+      create_share_url(:webview, slot)
     end
 
     def share_image(user, slot)
       # Generate HTML from slot/user data
-      image = Convert.html_to_image(Convert.slot_to_html(
-          JSONView.user(user),
-          JSONView.slot(slot),
-          style: 'box'
-      ))
-
-      url = create_share_url(:image, user, slot)
+      image = Convert.html_to_image(
+              Convert.slot_to_html(
+                JSONView.user(user),
+                JSONView.slot(slot),
+                style: 'box'))
+      url = create_share_url(:image, slot)
       path = 'store/share/image'
 
       # Save image to file
@@ -53,7 +52,7 @@ module Share
       # Generate QR-Code from given URL
       image = Convert.url_to_qrcode(share_url)
       # Apply public sharing URL
-      url = create_share_url(:qrcode, user, slot)
+      url = create_share_url(:qrcode, slot)
       path = 'store/share/qrcode'
 
       # Save image to file
@@ -67,12 +66,12 @@ module Share
 
     def share_pdf(user, slot)
       # Generate HTML from slot/user data
-      pdf = Convert.html_to_pdf(Convert.slot_to_html(
-          JSONView.user(user),
-          JSONView.slot(slot),
-          style: 'pdf'
-      ))
-      url = create_share_url(:pdf, user, slot)
+      pdf = Convert.html_to_pdf(
+            Convert.slot_to_html(
+              JSONView.user(user),
+              JSONView.slot(slot),
+              style: 'pdf'))
+      url = create_share_url(:pdf, slot)
       path = 'store/share/pdf'
 
       # Save image to file
@@ -94,9 +93,9 @@ module Share
 
     ## -- HELPERS -- ##
 
-    private def create_share_url(type, user, slot)
+    private def create_share_url(type, slot)
       # Returns base64 without padding
-      Base64.urlsafe_encode64("#{user.id}:#{share_types_enum[type]}:#{slot.id}").gsub('=', '')
+      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id}").gsub('=', '')
     end
 
     # private def create_share_url(type, user, target)

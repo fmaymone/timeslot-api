@@ -13,7 +13,7 @@ module V1
 
         # Determine params
         url = Redirect.decode_share_url(params[:id]).split(':')
-        type = Share.share_types_index[url[1].to_i]
+        type = Share.share_types_index[url[0].to_i]
         result = Redirect.show(type, params[:id])
 
         # Dispatch type of views
