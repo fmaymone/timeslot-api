@@ -19,20 +19,30 @@ module Share
       %w(webview email qrcode image pdf intern)
     end
 
-    def share_webview(user, slot)
+    def share_webview(user, slot, params = nil)
       # Store shared objects
-      @storage.set("User:#{user.id}", gzip_content(JSONView.user(user).to_json))
-      @storage.set("Slot:#{slot.id}", gzip_content(JSONView.slot(slot).to_json))
+      obj = share_objects(user, slot)
+      # Generate HTML from slot/user data
+      html = Convert.slot_to_html(
+               obj[:user],
+               obj[:slot],
+               style: 'portrait')
       # Returns the share URL
-      create_share_url(:webview, slot)
+      url = create_share_url(:webview, slot)
+      path = 'store/share/webview'
+      save_to_file(path, "#{url}.html", html)
+      # Returns the share URL
+      url
     end
 
-    def share_image(user, slot)
-      # Generate HTML from slot/user data
+    def share_image(user, slot, params = nil)
+      # Store shared objects
+      obj = share_objects(user, slot)
+      # Generate Image from slot/user data
       image = Convert.html_to_image(
               Convert.slot_to_html(
-                JSONView.user(user),
-                JSONView.slot(slot),
+                obj[:user],
+                obj[:slot],
                 style: 'box'))
 
       url = create_share_url(:image, slot)
@@ -42,26 +52,14 @@ module Share
       url
     end
 
-    def share_qrcode(user, slot)
-      # Generate HTML from slot/user data
-      share_url = share_webview(user, slot)
-      # Generate QR-Code from given URL
-      qrcode = Convert.url_to_qrcode(share_url)
-      # Apply public sharing URL
-
-      url = create_share_url(:qrcode, slot)
-      path = 'store/share/qrcode'
-      save_to_file(path, "#{url}.png", qrcode)
-      # Returns the share URL
-      url
-    end
-
-    def share_pdf(user, slot)
+    def share_pdf(user, slot, params = nil)
+      # Store shared objects
+      obj = share_objects(user, slot)
       # Generate HTML from slot/user data
       pdf = Convert.html_to_pdf(
             Convert.slot_to_html(
-              JSONView.user(user),
-              JSONView.slot(slot),
+              obj[:user],
+              obj[:slot],
               style: 'pdf'))
 
       url = create_share_url(:pdf, slot)
@@ -71,12 +69,76 @@ module Share
       url
     end
 
-    def share_email(user, slot)
+    def share_qrcode(user, slot, params = nil)
+      # Store shared objects
+      share_objects(user, slot)
+      # Generate HTML from slot/user data
+      share_url = share_webview(user, slot)
+      # Generate QR-Code from given URL
+      qrcode = Convert.url_to_qrcode(share_url)
+
+      url = create_share_url(:qrcode, slot)
+      path = 'store/share/qrcode'
+      save_to_file(path, "#{url}.png", qrcode)
+      # Returns the share URL
+      url
+    end
+
+    def share_email(user, slot, params = nil)
+      # Store shared objects
+      obj = share_objects(user, slot)
+      # Generate HTML from slot/user data
+      html = Convert.slot_to_html(
+               obj[:user],
+               obj[:slot],
+               style: 'box')
+      begin
+        # Send as email
+        Aws::SES::Client.new.send_email(
+            source: 'support@timeslot.com',
+            destination: {
+                to_addresses: [params['email'] || user.email]
+            },
+            message: {
+                subject: {
+                    data: "[Timeslot] #{user.username} shared the slot: '#{slot.title}'"
+                    # charset: "Charset"
+                },
+                body: {
+                    text: {
+                        data: ''
+                        # charset: "Charset"
+                    },
+                    html: {
+                        data: html
+                        # charset: "Charset"
+                    }
+                }
+            },
+            reply_to_addresses: [params['email'] || user.email],
+            return_path: 'invalid_email_address@timeslot.com'
+        )
+      rescue Aws::SES::Errors::ServiceError => exception
+        Rails.logger.error { exception }
+        Airbrake.notify(exception)
+        raise exception if Rails.env.test? || Rails.env.development?
+      end
+      # Returns true (no response is send back to the client)
+      true
+    end
+
+    def share_intern(user, slot, params = nil)
       # TODO
     end
 
-    def share_intern(user, slot)
-      # TODO
+    def unshare(slot)
+      ["store/share/image/#{create_share_url(:image, slot)}.jpg",
+       "store/share/qrcode/#{create_share_url(:png, slot)}.png",
+       "store/share/pdf/#{create_share_url(:pdf, slot)}.pdf"].each do |file|
+        File.delete(file) if File.exist?(file)
+      end
+      # Returns true (no response is send back to the client)
+      true
     end
 
     ## -- HELPERS -- ##
@@ -94,6 +156,17 @@ module Share
     #   end
     #   url
     # end
+
+    private def share_objects(user, slot)
+      user = JSONView.user(user)
+      slot = JSONView.slot(slot)
+      @storage.set("User:#{user['id']}", gzip_content(user.to_json))
+      @storage.set("Slot:#{slot['id']}", gzip_content(slot.to_json))
+      {
+          user: user,
+          slot: slot
+      }
+    end
 
     private def save_to_file(path, filepath, file)
       FileUtils.mkdir_p(path) unless File.exists?(path)

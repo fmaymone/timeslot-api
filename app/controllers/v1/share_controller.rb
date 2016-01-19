@@ -22,7 +22,8 @@ module V1
           when 'image'
             data_handler(result, 'image/jpg')
           when 'webview'
-            render html: result.html_safe, content_type: "text/html"
+            #render html: result.html_safe, content_type: "text/html"
+            data_handler(result.html_safe, 'text/html')
           when 'qrcode'
             data_handler(result, 'image/png')
           when 'pdf'
@@ -67,7 +68,8 @@ module V1
 
     # POST /v1/share/1/email
     def email
-      # TODO
+      authorize :share
+      share_handler(:email)
     end
 
     # POST /v1/share/1/intern
@@ -83,6 +85,21 @@ module V1
       end
     end
 
+    def delete
+      authorize :share
+      slot = BaseSlot.get(params[:id])
+
+      if slot
+        if Share.unshare(slot)
+          head :ok
+        else
+          head 500
+        end
+      else
+        head 404
+      end
+    end
+
     ## -- HANDLERS -- ##
 
     private def data_handler(result, type)
@@ -93,10 +110,16 @@ module V1
 
     private def share_handler(type)
       if (slot = BaseSlot.get(params[:id]))
-        if (url = (Share.send("share_#{type}", current_user, slot)))
-          host = Rails.env.production? ? ENV['SHARE_URL_HOST_PUBLIC'] : ENV['SHARE_URL_HOST_LOCAL']
-          render json: { shareId: url,
-                         shareUrl: "#{host}/v1/?id=#{url}" }
+        # Delegate to the related share method
+        if (url = (Share.send("share_#{type}", current_user, slot, params)))
+          # Check if a response has to be returned to the client
+          if url == true
+            head :ok
+          else
+            host = Rails.env.production? ? ENV['SHARE_URL_HOST_PUBLIC'] : ENV['SHARE_URL_HOST_LOCAL']
+            render json: { shareId: url,
+                           shareUrl: "#{host}/v1/?id=#{url}" }
+          end
         else
           head 500
         end

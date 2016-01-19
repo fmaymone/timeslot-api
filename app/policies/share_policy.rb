@@ -31,7 +31,12 @@ class SharePolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
-  def url?
+  def intern?
+    current_user?
+  end
+
+  # true if a user is logged in
+  def delete?
     current_user?
   end
 end

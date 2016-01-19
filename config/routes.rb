@@ -24,7 +24,7 @@ Rails.application.routes.draw do
 
       get '/', to: 'share#redirect', as: 'redirect'
       post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
-      delete 'share/:id/', to: 'share#delete_handler', as: 'share_delete'
+      delete 'share/:id/', to: 'share#delete', as: 'share_delete'
       post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
     end
 
