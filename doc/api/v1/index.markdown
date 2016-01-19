@@ -19,6 +19,8 @@
 ## GlobalSlots
 
 * [Reslot global slot](globalslots/reslot_global_slot.markdown)
+* [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
+* [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
 ## Groups
 
@@ -45,6 +47,7 @@
 * [Get slots - no pagination](me/get_slots_-_no_pagination.markdown)
 * [Get slots from friends](me/get_slots_from_friends.markdown)
 * [Get media items](me/get_media_items.markdown)
+* [Get friends](me/get_friends.markdown)
 * [Update - username and default alerts](me/update_-_username_and_default_alerts.markdown)
 * [Update - password](me/update_-_password.markdown)
 * [Update - user image](me/update_-_user_image.markdown)
@@ -70,10 +73,19 @@
 * [Search by username](search/search_by_username.markdown)
 * [Search by custom attribute](search/search_by_custom_attribute.markdown)
 * [Search by custom search algorithm](search/search_by_custom_search_algorithm.markdown)
+* [Search friend by username](search/search_friend_by_username.markdown)
 * [Search by slot title](search/search_by_slot_title.markdown)
 * [Search by media title](search/search_by_media_title.markdown)
 * [Search by group name](search/search_by_group_name.markdown)
 * [Search by location name](search/search_by_location_name.markdown)
+
+## Share
+
+* [Share Slot as Webview](share/share_slot_as_webview.markdown)
+* [Share Slot as Image](share/share_slot_as_image.markdown)
+* [Share Slot as PDF](share/share_slot_as_pdf.markdown)
+* [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
+* [Share Slot via Email](share/share_slot_via_email.markdown)
 
 ## Slots
 
@@ -84,6 +96,7 @@
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
 * [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
+* [Reslot a public StandardSlot as private](slots/reslot_a_public_standardslot_as_private.markdown)
 * [Create new ReSlot from the Web Search service](slots/create_new_reslot_from_the_web_search_service.markdown)
 * [Update MetaSlot](slots/update_metaslot.markdown)
 * [Update StdSlot - change title](slots/update_stdslot_-_change_title.markdown)
@@ -107,7 +120,6 @@
 * [Get all tagged users of a slot](slots/get_all_tagged_users_of_a_slot.markdown)
 * [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
 * [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)
-* [Share slot](slots/share_slot.markdown)
 
 ## Users
 
