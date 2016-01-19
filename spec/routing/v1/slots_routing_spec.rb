@@ -8,6 +8,10 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show", id: "1", format: :json)
     end
 
+    it "does not route to #show if invalid id format" do
+      expect(get: "/v1/slots/12foo").not_to be_routable
+    end
+
     it "routes to #show_many" do
       expect(post: "/v1/slots")
         .to route_to("v1/slots#show_many", format: :json)
