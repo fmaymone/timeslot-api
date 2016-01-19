@@ -1,7 +1,5 @@
 module Redirect
 
-  #@storage = RedisStorage
-
   class << self
 
     def show(method, target)
@@ -21,10 +19,11 @@ module Redirect
 
     private def show_webview(url)
       # Build Live:
+      # TODO: Use this snippet for rake task (re-build shared views)
       # url = decode_share_url(url).split(':')
       # # Retrieve shared objects
-      # slot = unzip_data(@storage.get("Slot:#{url[1]}"))
-      # user = unzip_data(@storage.get("User:#{slot['creator']['id']}"))
+      # slot = unzip_json(@storage.get("Slot:#{url[1]}"))
+      # user = unzip_json(@storage.get("User:#{slot['creator']['id']}"))
       # # Generate HTML from slot/user data
       # Convert.slot_to_html(user, slot, style: 'portrait')
 
@@ -63,7 +62,7 @@ module Redirect
       ActiveSupport::Gzip.decompress(content)
     end
 
-    private def unzip_data(content)
+    private def unzip_json(content)
       JSON.parse(unzip_content(content))
     end
   end
