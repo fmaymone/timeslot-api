@@ -110,7 +110,7 @@ class ReSlot < BaseSlot
 
     slotter.follow(predecessor)
 
-    if reslot = where(slotter: slotter, parent: parent).take
+    if (reslot = where(slotter: slotter, parent: parent).take)
       reslot.reuse_existing(predecessor, slot_type)
     else
       slot_class = slot_type.constantize
@@ -124,7 +124,8 @@ class ReSlot < BaseSlot
             feed_fwd: {
                 User: [tagger.to_s],
                 Notification: [slotter.id.to_s]
-            }
+            },
+            push_fwd: [slotter.id.to_s]
         )
       else
         reslot.create_activity
