@@ -18,7 +18,7 @@ class Group < ActiveRecord::Base
   has_many :members, through: :active_memberships, class_name: User,
            source: :user
 
-  validates :name, presence: true, length: { maximum: 255 } # screens have max length of 25
+  validates :name, presence: true, length: { maximum: 255 }
   validates :owner, presence: true
 
   def related_memberships

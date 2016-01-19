@@ -11,6 +11,11 @@ RSpec.describe "V1::Groups", type: :request do
   describe "POST /v1/groups" do
     let(:new_params) { { name: "bar" } }
 
+    it "returns 201 created" do
+      post "/v1/groups", new_params, auth_header
+      expect(response).to have_http_status :created
+    end
+
     it "creates a new group" do
       expect {
         post "/v1/groups", new_params, auth_header

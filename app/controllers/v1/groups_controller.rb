@@ -60,7 +60,7 @@ module V1
       end
     end
 
-    # GET /v1/groups/:group_id/members
+    # GET /v1/groups/:group_id/slots
     def slots
       @group = Group.find(group_id)
       authorize @group

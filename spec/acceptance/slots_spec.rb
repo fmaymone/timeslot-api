@@ -1082,7 +1082,7 @@ resource "Slots" do
 
     parameter :id, "ID of the ReSlot to delete", required: true
 
-    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+    let(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
       include_context "reslot response fields"
@@ -1132,13 +1132,19 @@ resource "Slots" do
     end
   end
 
-  post "/v1/slots/:id/slotgroups", :focus do
+  post "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Slot to be added to SlotGroups", required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups the slot should be added to",
+              required: true
 
-    let!(:slot) { create(:std_slot_public) }
-    let!(:slotgroups) { create(:group) }
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group) }
+    let(:group_2) { create(:group) }
+    let!(:slotGroups) { [group_1.uuid, group_2.uuid] }
 
     describe "Add Slot to multiple SlotGroups" do
       include_context "stdslot response fields"
@@ -1152,7 +1158,8 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        slot.reload
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
       end
     end
   end
