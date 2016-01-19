@@ -16,16 +16,16 @@ module Convert
 
   def self.html_to_image(html, type: 'jpeg', style: 'box', quality: 95)
     kit = IMGKit.new(html, quality: quality)
-    kit.stylesheets << "app/views/v1/share/webview/assets/all.css"
-    kit.stylesheets << "app/views/v1/share/webview/assets/#{style}.css"
-    kit.javascripts << "app/views/v1/share/webview/assets/main.js"
+    kit.stylesheets << "app/views/v1/share/webview/css/all.css"
+    kit.stylesheets << "app/views/v1/share/webview/css/#{style}.css"
+    kit.javascripts << "app/views/v1/share/webview/js/main.js"
     kit.send("to_#{type}")
   end
 
   def self.html_to_pdf(html, style: 'pdf')
     kit = PDFKit.new(html, :page_size => 'Letter')
-    kit.stylesheets << "app/views/v1/share/webview/assets/all.css"
-    kit.stylesheets << "app/views/v1/share/webview/assets/#{style}.css"
+    kit.stylesheets << "app/views/v1/share/webview/css/all.css"
+    kit.stylesheets << "app/views/v1/share/webview/css/#{style}.css"
     kit.to_pdf
   end
 

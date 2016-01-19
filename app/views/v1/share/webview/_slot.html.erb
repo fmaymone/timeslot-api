@@ -1,19 +1,23 @@
 <section>
   <header>
   </header>
-  <p>
-    <%= Time.zone.parse(@slot['startDate']).strftime('%a %d %b. %Y') %>
+  <p id="slot_date">
+    <%= Time.zone.parse(@slot['startDate']).strftime('%A %d %b. %Y') %>
   </p>
-  <p>
+  <p id="slot_start">
     <%= Time.zone.parse(@slot['startDate']).strftime('%H:%M') %>
   </p>
-  <p>
-    <%= @slot['endDate'] ? hours = ((diff = (Time.zone.parse(@slot['endDate']) - Time.zone.parse(@slot['startDate'])).to_i) / 3600).floor : 'Open End' %>
+  <p id="slot_duration">
+    <%
+      if(@slot['endDate'])
+        days = ((diff = (Time.zone.parse(@slot['endDate']) - Time.zone.parse(@slot['startDate'])).to_i) / 3600 / 24).floor
+        hours = ((diff = (Time.zone.parse(@slot['endDate']) - Time.zone.parse(@slot['startDate']) - (days * 3600 * 24)).to_i) / 3600).floor
+        minutes = ((diff - (hours * 3600)) / 60).floor
+      end
+    %>
+    <%= (@slot['endDate'] ? "#{days}d #{hours}h #{minutes}min" : 'Open End') << ' Slot' %>
   </p>
-  <p>
-    <%= @slot['endDate'] ? (diff - (3600 * hours) / 3600 / 60).floor : 'Open End' %>
-  </p>
-  <p>
+  <p id="slot_image">
     <% @slot['media'].each do |item|  %>
         <% if item['mediaType'] == 'image' %>
           <p>
@@ -21,7 +25,7 @@
           </p>
           <% break %>
       <% end %>
-  <% end %>
+    <% end %>
   </p>
   <h1>
     <%= @slot['title'] %>
