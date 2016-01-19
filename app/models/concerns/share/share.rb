@@ -95,7 +95,7 @@ module Share
       begin
         # Send as email
         Aws::SES::Client.new.send_email(
-            source: 'support@timeslot.com',
+            source: user.email || 'support@timeslot.com',
             destination: {
                 to_addresses: [params['email'] || user.email]
             },
