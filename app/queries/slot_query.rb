@@ -36,11 +36,9 @@ module SlotQuery
         else
           # TODO: make a helper for enriched airbrake error messages
           error_string = "unkown pagination filter #{filter}"
-          msg = { error_message: error_string }
-          opts = {}
-          opts[:parameters] = msg
+          msg = { message: error_string }
           Rails.logger.error { error_string }
-          Airbrake.notify(PaginationError, opts)
+          Airbrake.notify(PaginationError, msg)
           fail PaginationError, msg if Rails.env.test? || Rails.env.development?
           # TODO: check if we should call 'new' for custom error classes? Why?
           # fail PaginationError.new(msg) if Rails.env.test? || Rails.env.development?

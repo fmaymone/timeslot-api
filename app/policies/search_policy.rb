@@ -6,11 +6,6 @@ class SearchPolicy < ApplicationPolicy
     @user = user
   end
 
-  # always true
-  def index?
-    true
-  end
-
   # true if a user is logged in
   def user?
     current_user?

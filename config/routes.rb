@@ -187,9 +187,7 @@ Rails.application.routes.draw do
       get 'ios/clean-db', to: 'ios#clean_db'
     end
 
-    get 'search', to: 'search#index'
     get 'search/:action', to: 'search#:action'
-    get 'locations/search', to: 'locations#search'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

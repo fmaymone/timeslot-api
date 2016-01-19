@@ -5,8 +5,8 @@ module Activity
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
     end
-   rescue => error
-     error_handler(error, "failed: create '#{action}' activity as worker job")
+  rescue => error
+    error_handler(error, "failed: create '#{action}' activity as worker job")
   ensure
     return self
   end
@@ -314,10 +314,7 @@ module Activity
   end
 
   private def error_handler(error, activity, params = nil)
-    opts = {}
-    opts[:parameters] = { activity: activity }
-    opts[:parameters][:params] = params if params
     Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+    Airbrake.notify(error, activity: activity, params: params)
   end
 end

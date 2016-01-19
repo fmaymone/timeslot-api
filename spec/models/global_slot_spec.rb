@@ -15,7 +15,7 @@ RSpec.describe GlobalSlot, type: :model do
   it { is_expected.to respond_to(:url) }
   it { is_expected.to respond_to(:notes) }
   it { is_expected.to respond_to(:images) }
-  it { is_expected.to respond_to(:reslots) }
+  it { is_expected.to respond_to(:re_slots) }
   it { is_expected.to respond_to(:created_at) }
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
@@ -47,12 +47,12 @@ RSpec.describe GlobalSlot, type: :model do
     end
   end
 
-  describe :reslots do
+  describe :re_slots do
     let(:parent) { build(:global_slot) }
     let!(:reslots) { build_stubbed_list(:re_slot, 3, parent: parent) }
 
     it "returns an array of the reslots of this slot" do
-      res = parent.reslots
+      res = parent.re_slots
       expect(res.size).to be 3
       expect(res).to include reslots.first
     end

@@ -48,7 +48,8 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
+  has_many :re_slots, -> { includes(:slotter) },
+           foreign_key: :parent_id, inverse_of: :parent
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
@@ -82,11 +83,6 @@ class BaseSlot < ActiveRecord::Base
 
   def comments_with_details
     comments.includes([:user])
-  end
-
-  def reslots
-    # TODO: I think in some cases this should not include private reslots
-    ReSlot.where(parent_id: id)
   end
 
   def as_paging_cursor
@@ -132,7 +128,7 @@ class BaseSlot < ActiveRecord::Base
 
     # update position of following media items
     if item["position"].to_i < media_items.size
-      coll = media_items.where(
+      coll = media_items.includes(:creator).where(
         "media_items.position >= ?", item["position"]).to_a
       coll.each do |coll_item|
         coll_item.update(position: coll_item.position += 1)
@@ -223,7 +219,7 @@ class BaseSlot < ActiveRecord::Base
 
     # NOTE: Actually we remove all reslots if one
     # of the parent/predecessor slot was removed
-    reslots.each(&:delete) if self.try(:reslots)
+    re_slots.each(&:delete)
 
     remove_all_followers
     prepare_for_deletion
@@ -413,10 +409,9 @@ class BaseSlot < ActiveRecord::Base
     else
       if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
          slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
-        opts = {}
-        opts[:parameters] = { cursor_id: cursor[:id],
-                              cursor_startdate: cursor[:startdate],
-                              cursor_enddate: cursor[:enddate] }
+        opts = { cursor_id: cursor[:id],
+                 cursor_startdate: cursor[:startdate],
+                 cursor_enddate: cursor[:enddate] }
         Airbrake.notify(ApplicationController::PaginationError, opts)
         fail PaginationError, "cursor slot changed" if Rails.env.development?
       end

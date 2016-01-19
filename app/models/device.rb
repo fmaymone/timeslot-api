@@ -42,18 +42,21 @@ class Device < ActiveRecord::Base
   end
 
   def unregister_endpoint
-    if endpoint
-      begin
-        Device.create_client.delete_endpoint({ endpoint_arn: endpoint })
-      rescue Aws::SNS::Errors::ServiceError => exception
-        Rails.logger.error { exception }
-        Airbrake.notify(exception)
-        errors.add(:unregister_endpoint, "could not unregister endpoint")
-        raise exception if Rails.env.test? || Rails.env.development?
-      ensure
-        update(endpoint: nil)
-      end
+    return unless endpoint
+
+    Device.create_client.delete_endpoint(endpoint_arn: endpoint)
+    Rails.logger.warn { "endpoint: #{endpoint} successfully removed" }
+  rescue Aws::SNS::Errors::ServiceError => exception
+    Airbrake.notify(exception, endpoint_arn: endpoint)
+
+    if Rails.env.test? || Rails.env.development?
+      raise exception
+    else
+      Rails.logger.error { exception }
+      errors.add(:unregister_endpoint, "could not unregister endpoint")
     end
+  ensure
+    update(endpoint: nil)
   end
 
   # delete if user deactivates his profile
@@ -67,10 +70,14 @@ class Device < ActiveRecord::Base
       platform_application_arn: ENV['AWS_PLATFORM_APPLICATION_IOS'],
       token: token)[:endpoint_arn]
   rescue Aws::SNS::Errors::ServiceError => exception
-    Rails.logger.error { exception }
-    Airbrake.notify(exception)
-    errors.add(:register_endpoint, "could not register endpoint")
-    raise exception if Rails.env.test? || Rails.env.development?
+    Airbrake.notify(exception, token: token)
+
+    if Rails.env.test? || Rails.env.development?
+      raise exception
+    else
+      Rails.logger.error { exception }
+      errors.add(:register_endpoint, "could not register endpoint")
+    end
   end
 
   # push notification to APNS (apple push notification service)
@@ -96,10 +103,10 @@ class Device < ActiveRecord::Base
     return if message_push.nil? || message_push.blank?
 
     aps = {
-        alert: message_push,
-        sound: sound,
-        badge: badge,
-        extra: extra
+      alert: message_push,
+      sound: sound,
+      badge: badge,
+      extra: extra
     }
     aps[:slot_id] = slot_id if slot_id
     aps[:user_id] = user_id if user_id
@@ -122,8 +129,25 @@ class Device < ActiveRecord::Base
     begin
       client.publish(push_notification)
     rescue Aws::SNS::Errors::InvalidParameter => exception
-      Rails.logger.warn { "Target ARN: No endpoint found. Endpoint was removed from users device." }
-      device = Device.find(device['id']).unregister_endpoint
+      Rails.logger.warn {
+        "Target ARN: No endpoint found. Endpoint was removed from users device."
+      }
+      device = Device.find(device['id'])
+      device.unregister_endpoint
+      Airbrake.notify(exception, news: 'endpoint removed from AWS SNS',
+                      reason: 'invalid parameter',
+                      device: device)
+    rescue Aws::SNS::Errors::EndpointDisabled => exception
+      # maybe also remove the device here?
+      Rails.logger.warn {
+        "AWS SNS Error: Endpoint (#{device['endpoint']}) for device " \
+        "(ID: #{device['id']}) disabled. Removing it..."
+      }
+      device = Device.find(device['id'])
+      device.unregister_endpoint
+      Airbrake.notify(exception, news: 'endpoint removed from AWS SNS',
+                      reason: 'endpoint disabled',
+                      device: device)
     rescue Aws::SNS::Errors::ServiceError => exception
       Rails.logger.error { exception }
       opts = { error_message: "AWS SNS Service Error (#{exception.class.name})" }
@@ -168,10 +192,13 @@ class Device < ActiveRecord::Base
 
   def self.update_or_create(user, params)
     return if params.nil?
+
     device = Device.find_by(device_id: params[:device_id]) ||
              Device.create(params.extract!(:device_id, :system, :version))
+
     device.update(user: user)
     device.update(params)
+
     if params[:endpoint] == false
       device.unregister_endpoint
     elsif params[:token]

@@ -63,5 +63,29 @@ FactoryGirl.define do
         create :std_slot_public, owner: user
       end
     end
+
+    trait :with_private_reslot do
+      after :create do |user|
+        create :re_slot_private, slotter: user
+      end
+    end
+
+    trait :with_friend_reslot do
+      after :create do |user|
+        create :re_slot_friends, slotter: user
+      end
+    end
+
+    trait :with_foaf_reslot do
+      after :create do |user|
+        create :re_slot_foaf, slotter: user
+      end
+    end
+
+    trait :with_public_reslot do
+      after :create do |user|
+        create :re_slot_public, slotter: user
+      end
+    end
   end
 end

@@ -1,34 +1,5 @@
 module V1
-  require 'open-uri'
-
   class SearchController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, only: :index
-
-    # GET /v1/search/?q=berghain&limit=10&timestamp=2015-08-08T12:00
-    # Global search through elastic search (crawler data)
-    def index
-      authorize :search
-
-      user = ENV['TS_SEARCH_SERVICE_NAME']
-      pw = ENV['TS_SEARCH_SERVICE_PASSWORD']
-      auth = { http_basic_authentication: [user, pw] }
-
-      search_url = ENV['TS_SEARCH_SERVICE_URL']
-      time = page[:datetime] || Time.zone.now.strftime('%Y-%m-%dT%H:%M')
-
-      query = "#{search_url}?q=#{params.require(:query)}" \
-              "&size=#{page[:limit] || 10}&timestamp=#{time}"
-
-      begin
-        result = open(URI.escape(query), auth).read
-      rescue => e
-        Airbrake.notify(e)
-        return render json: { error: "Search Service Error: #{e}" },
-                      status: :service_unavailable
-      end
-      render json: result, status: :ok
-    end
-
     # GET /v1/search/user
     def user
       authorize :search
@@ -42,14 +13,12 @@ module V1
     def friend
       authorize :search
       return head 422 unless has_allowed_params?
-      friends = Friendship.where(user: current_user,
-                                 state: ESTABLISHED,
-                                 deleted_at: nil).collect(&:friend_id) +
-                Friendship.where(friend: current_user,
-                                 state: ESTABLISHED,
-                                 deleted_at: nil).collect(&:user_id)
+      friends = current_user.friends_by_request_ids +
+                current_user.friends_by_offer_ids
+
       if friends.any?
-        @users = Search.new(User.where(id: friends.uniq), params[:attr] || 'username', query, page)
+        @users = Search.new(
+          User.where(id: friends), params[:attr] || 'username', query, page)
       else
         @users = []
       end
@@ -122,8 +91,7 @@ module V1
     end
 
     private def page
-      params.permit(:datetime,
-                    :page,
+      params.permit(:page,
                     :limit,
                     :method,
                     :include,

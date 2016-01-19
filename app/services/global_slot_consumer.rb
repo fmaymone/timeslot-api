@@ -12,7 +12,13 @@ class GlobalSlotConsumer
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    raw_result = fetch('locations', muid)
+    raw_result = {}
+    timespent_location_fetch = Benchmark.measure {
+      raw_result = fetch('locations', muid)
+    }
+    Rails.logger.warn {
+      "Fetching location for slot #{muid} has taken #{timespent_location_fetch}"
+    }
     CandyLocation.new(raw_result)
   end
 
@@ -66,8 +72,7 @@ class GlobalSlotConsumer
     slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
   rescue ActiveRecord::RecordNotFound
     msg = "Couldn't find User for given Domain. Seed data loaded?"
-    opts = {}
-    opts[:parameters] = {
+    opts = {
       domain: result['domain'],
       muid: result['muid'],
       global_slot: msg }

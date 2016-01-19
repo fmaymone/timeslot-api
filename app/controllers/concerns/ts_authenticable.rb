@@ -17,9 +17,19 @@ module TSAuthenticable
     fail MissingCurrentUserError unless authenticate_token
   end
 
+  private def authenticate_me_from_token!
+    fail MissingCurrentUserError unless authenticate_token_extended
+  end
+
   private def authenticate_token
-    authenticate_with_http_token do |token, options|
+    authenticate_with_http_token do |token, _options|
       @current_user = User.find_by(auth_token: token)
+    end
+  end
+
+  private def authenticate_token_extended
+    authenticate_with_http_token do |token, _options|
+      @current_user = User.includes(:memberships).find_by(auth_token: token)
     end
   end
 end

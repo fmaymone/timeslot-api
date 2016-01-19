@@ -50,11 +50,13 @@ else
     json.parent do
       json.id slot.parent_id
     end
+    # if we have a globalslot - reslot, return the muid
+    json.muid slot.muid if slot.parent.GlobalSlot?
   end
 end
 
-# if we have a crawler slot/reslot, return the muid
-json.muid slot.muid if slot.try(:muid)
+# if we have a global slot, return the muid
+json.muid slot.muid if slot.GlobalSlot?
 
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count

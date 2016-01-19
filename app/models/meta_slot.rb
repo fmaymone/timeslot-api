@@ -28,7 +28,7 @@ class MetaSlot < ActiveRecord::Base
   def location
     GlobalSlotConsumer.new.location(location_uid)
   rescue => e
-    Airbrake.notify(e)
+    Airbrake.notify(e, invalid_candy_location_muid: location_uid)
     nil
   end
 
@@ -48,7 +48,7 @@ class MetaSlot < ActiveRecord::Base
 
   def self.find_or_add(meta_params)
     meta_id = meta_params[:meta_slot_id]
-    MetaSlot.where(id: meta_id).first_or_create do |meta_slot|
+    MetaSlot.includes(:creator).where(id: meta_id).first_or_create do |meta_slot|
       meta_slot.update(meta_params.except(:ios_location))
       return meta_slot if meta_params[:ios_location].nil?
 

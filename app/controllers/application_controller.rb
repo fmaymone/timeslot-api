@@ -15,13 +15,13 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
-    notify_airbrake(exception)
+    Airbrake.notify(exception, current_user: current_user, params: params)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
   rescue_from Pundit::NotAuthorizedError do |e|
     # abuse Airbrake to learn more about the system
-    notify_airbrake(e)
+    Airbrake.notify(e, current_user: current_user, params: params)
 
     if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
       head :forbidden
@@ -37,7 +37,7 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from DataTeamServiceError do |exception|
-    notify_airbrake(exception)
+    Airbrake.notify(exception, current_user: current_user, params: params)
     render json: { error: exception.message }, status: :service_unavailable
   end
 

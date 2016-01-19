@@ -1,5 +1,8 @@
 module V1
   class MeController < ApplicationController
+    before_action :authenticate_me_from_token!,
+                  only: [:show, :update, :inactivate]
+
     # GET /v1/me
     def show
       authorize :me

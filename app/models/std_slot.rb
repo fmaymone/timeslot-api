@@ -23,7 +23,7 @@ class StdSlot < BaseSlot
       # Update Follower + Feeds status if visibility change to private
       # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        reslots.each do |slot|
+        re_slots.each do |slot|
           slot.remove_all_activities(target: self)
           slot.remove_all_followers
         end

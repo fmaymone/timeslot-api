@@ -6,7 +6,7 @@ gem 'rails', '4.2.5'
 
 gem 'rails-api', '0.4.0'
 
-gem 'pg', '0.18.2'
+gem 'pg', '0.18.4'
 
 # Authentication (to use ActiveModel has_secure_password)
 gem 'bcrypt'
@@ -15,8 +15,8 @@ gem 'bcrypt'
 gem 'pundit', '1.0.1'
 
 # JSON
-gem 'jbuilder', '2.3.0'
-gem 'oj', '2.12.9'
+gem 'jbuilder', '2.4.0'
+gem 'oj', '2.14.3'
 gem 'oj_mimic_json', '1.0.1'
 
 # for heroku
@@ -26,7 +26,7 @@ gem 'rails_12factor', group: :production
 
 # third party services
 gem 'cloudinary'
-gem 'airbrake', '4.3.1'
+gem 'airbrake'
 gem 'aws-sdk'
 gem 'newrelic_rpm'
 
@@ -38,10 +38,6 @@ gem 'sucker_punch'
 
 # Redis Data Storage
 gem 'redis'
-
-# WebSockets
-#gem 'websocket-rails', '0.1.8'
-#gem 'faye-websocket'
 
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
@@ -98,7 +94,8 @@ group :development, :test, :herokutest do
   gem 'database_cleaner'
 
   # github version contains a monkey patch for pretty printing response body in API docs
-  gem 'rspec_api_documentation', git: 'https://github.com/ts-silvio/rspec_api_documentation.git'
+  # gem 'rspec_api_documentation'
+  gem 'rspec_api_documentation', git: 'https://github.com/ts-silvio/rspec_api_documentation.git', branch: 'test'
 
   gem 'shoulda-matchers', '~> 3.0'
 

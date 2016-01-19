@@ -119,10 +119,7 @@ module Follow
   end
 
   private def error_handler(error, message, params = nil)
-    opts = {}
-    opts[:parameters] = { message: message }
-    opts[:parameters][:params] = params if params
     Rails.logger.error { error }
-    Airbrake.notify(error, opts)
+    Airbrake.notify(error, message: message, params: params)
   end
 end

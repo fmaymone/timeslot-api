@@ -15,11 +15,10 @@ class RemoveJob
       end
     end
   rescue => e
-    opts = {}
-    opts[:parameters] = {
-        object: params[:object],
-        target: params[:target],
-        sucker_punch: "remove from feed failed"
+    opts = {
+      object: params[:object],
+      target: params[:target],
+      sucker_punch: "remove from feed failed"
     }
     Rails.logger.error { e }
     Airbrake.notify(e, opts)

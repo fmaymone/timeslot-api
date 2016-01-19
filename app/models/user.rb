@@ -54,10 +54,10 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
-  has_many :initiated_friendships, class_name: Friendship,
-           inverse_of: :user
-  has_many :received_friendships, class_name: Friendship,
-           foreign_key: :friend_id, inverse_of: :friend
+  has_many :initiated_friendships, -> { includes :friend },
+           class_name: Friendship, inverse_of: :user
+  has_many :received_friendships, -> { includes :user },
+           class_name: Friendship, foreign_key: :friend_id, inverse_of: :friend
 
   # friends
   has_many :friends_by_request, -> { merge(Friendship.established) },
@@ -84,8 +84,7 @@ class User < ActiveRecord::Base
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
-  # has_one :slot_default_location, class_name: Location
-  # has_one :slot_default_type, class_name: SlotType
+  # has_one :slot_default_location, class_name: IosLocation
 
   ## validations ##
 
@@ -239,8 +238,9 @@ class User < ActiveRecord::Base
     group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
   end
 
-  def visible_slots_counter(user)
-    SlotsCollector.new.active_stdslots_count(current_user: user, user: self)
+  def visible_slots_counter(user, slot_class)
+    SlotsCollector.new.active_slots_count(current_user: user, user: self,
+                                          slot_class: slot_class)
   end
 
   def prepare_for_slot_deletion(slot)
@@ -276,6 +276,10 @@ class User < ActiveRecord::Base
     # but it seems 2 queries are faster at the moment
     # UserQuery::Relationship.new(id).my_friends.to_a
     friends_by_request + friends_by_offer
+  end
+
+  def friends_count
+    UserQuery::Relationship.new(id).my_friends.count
   end
 
   def friendships
@@ -430,8 +434,7 @@ class User < ActiveRecord::Base
       # TODO: ts_notify(msg: "unknown slottype #{slot} for user #{id}")
       # maybe not the best idea, but at least we hear if something goes wrong
       msg = "unknown slottype #{slot} for user #{id}"
-      opts = { error_message: msg }
-      Airbrake.notify(ActiveRecord::StatementInvalid, opts)
+      Airbrake.notify(ActiveRecord::StatementInvalid, error: msg)
       fail ActiveRecord::StatementInvalid, msg
     end
   end
