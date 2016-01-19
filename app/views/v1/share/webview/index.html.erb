@@ -9,9 +9,11 @@
   </style>
 </head>
 <body>
-<%= render "v1/share/webview/header" %>
-<%= render "v1/share/webview/slot" %>
-<%= render "v1/share/webview/footer" %>
+<div id="wrapper">
+  <%= render "v1/share/webview/header" %>
+  <%= render "v1/share/webview/slot" %>
+  <%= render "v1/share/webview/footer" %>
+</div>
 <script type="text/javascript">
   <%= raw "\n#{File.read('app/views/v1/share/webview/js/main.js', mode: 'rb')}\n" %>
 </script>

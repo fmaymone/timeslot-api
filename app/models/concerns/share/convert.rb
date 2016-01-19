@@ -2,7 +2,7 @@ module Convert
 
   ## -- GENERATORS -- ##
 
-  def self.slot_to_html(user, slot, style: 'box')
+  def self.slot_to_html(user, slot, style: 'portrait')
     ApplicationController.new.render_to_string(
         template: 'v1/share/webview/index',
         layout: false,

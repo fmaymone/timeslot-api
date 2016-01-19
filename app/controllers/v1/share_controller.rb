@@ -1,4 +1,6 @@
 module V1
+  require 'open-uri'
+
   class ShareController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: :redirect
     skip_after_action :verify_authorized, only: :redirect

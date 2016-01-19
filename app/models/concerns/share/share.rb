@@ -30,8 +30,10 @@ module Share
     def share_image(user, slot)
       # Generate HTML from slot/user data
       image = Convert.html_to_image(Convert.slot_to_html(
-          JSONView.user(user), JSONView.slot(slot)
-      ), style: 'portrait')
+          JSONView.user(user),
+          JSONView.slot(slot),
+          style: 'box'
+      ))
 
       url = create_share_url(:image, user, slot)
       path = 'store/share/image'
@@ -67,7 +69,8 @@ module Share
       # Generate HTML from slot/user data
       pdf = Convert.html_to_pdf(Convert.slot_to_html(
           JSONView.user(user),
-          JSONView.slot(slot)
+          JSONView.slot(slot),
+          style: 'pdf'
       ))
       url = create_share_url(:pdf, user, slot)
       path = 'store/share/pdf'

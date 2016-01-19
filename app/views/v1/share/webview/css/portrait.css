@@ -1,21 +1,24 @@
         /* CSS Stylesheet */
-        @import url(https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
-        /*
-        @font-face {
-            font-family: 'Lato';
-            font-style: normal;
-            font-weight: 400;
-            src: local('Lato Hairline'), local('Lato-Hairline'), url('app/assets/fonts/Lato-Hairline.woff') format('woff');
-        }
-        */
         html, body{
             height: 100%;
             font-family: 'Lato';
+
+            -webkit-transform-style: preserve-3d;
+            -moz-transform-style: preserve-3d;
+            transform-style: preserve-3d;
         }
         section, footer{
             background-color: #fff;
-            border: 2px solid #ccc;
-            padding: 2%;
             max-width: 500px;
         }
-
+        section{
+            box-sizing: content-box;
+            border: 1px solid #ccc;
+        }
+        #wrapper{
+            position: relative;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -ms-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
