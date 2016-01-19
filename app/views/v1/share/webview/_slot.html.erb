@@ -18,9 +18,9 @@
     <%= (@slot['endDate'] ? "#{days}d #{hours}h #{minutes}min" : 'Open End') << ' Slot' %>
   </p>
   <% @slot['media'].each do |item|  %>
-      <% if item[:mediaType] == 'image' %>
+      <% if (item['mediaType'] || item[:mediaType]) == 'image' %>
         <p>
-          <div id="slot_image" style="background-image: url(data:image/jpg;base64,<%= Base64.encode64(open(item[:publicId]) { |io| io.read }).gsub("\n", '') %>)"></div>
+          <div id="slot_image" style="background-image: url(data:image/jpg;base64,<%= Base64.encode64(open(item['publicId'] || item[:publicId]) { |io| io.read }).gsub("\n", '') %>)"></div>
         </p>
         <% break %>
     <% end %>
