@@ -659,6 +659,39 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 
 --
+-- Name: slotgroupship; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE slotgroupship (
+    id bigint NOT NULL,
+    slot_id bigint NOT NULL,
+    group_id bigint NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: slotgroupship_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE slotgroupship_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: slotgroupship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE slotgroupship_id_seq OWNED BY slotgroupship.id;
+
+
+--
 -- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -898,6 +931,13 @@ ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_setting
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY slotgroupship ALTER COLUMN id SET DEFAULT nextval('slotgroupship_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -1046,6 +1086,14 @@ ALTER TABLE ONLY providers
 
 ALTER TABLE ONLY slot_settings
     ADD CONSTRAINT slot_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: slotgroupship_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY slotgroupship
+    ADD CONSTRAINT slotgroupship_pkey PRIMARY KEY (id);
 
 
 --
@@ -1451,4 +1499,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160102223742');
 INSERT INTO schema_migrations (version) VALUES ('20160104012453');
 
 INSERT INTO schema_migrations (version) VALUES ('20160107230953');
+
+INSERT INTO schema_migrations (version) VALUES ('20160119114255');
 

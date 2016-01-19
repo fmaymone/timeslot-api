@@ -1132,6 +1132,31 @@ resource "Slots" do
     end
   end
 
+  post "/v1/slots/:id/slotgroups", :focus do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be added to SlotGroups", required: true
+
+    let!(:slot) { create(:std_slot_public) }
+    let!(:slotgroups) { create(:group) }
+
+    describe "Add Slot to multiple SlotGroups" do
+      include_context "stdslot response fields"
+
+      let(:id) { slot.id }
+
+      example "Add Slot to multiple SlotGroups", document: :v1 do
+        explanation "Sets 'deletedAt', returns updated reslot data." \
+                    " Doesn't delete anything.\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        slot.reload
+      end
+    end
+  end
+
   post "/v1/slots/:id/like" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
