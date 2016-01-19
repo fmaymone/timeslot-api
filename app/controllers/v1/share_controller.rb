@@ -78,7 +78,7 @@ module V1
       slot = BaseSlot.get(params[:id])
 
       if slot.set_share_id(current_user)
-        render :show, locals: { slot: slot }
+        render 'v1/slots/show', locals: { slot: slot }
       else
         render json: slot.errors.messages,
                status: :unprocessable_entity
