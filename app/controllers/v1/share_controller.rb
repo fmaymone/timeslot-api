@@ -28,9 +28,6 @@ module V1
             data_handler(result, 'image/png')
           when 'pdf'
             data_handler(result, 'application/pdf')
-          when 'email'
-            # Will perform aync through configured active job controller (Sucker Punch)
-            SlotMailer.slot_as_email(user).deliver_later
           else
             head 422
           end
