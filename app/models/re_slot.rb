@@ -57,6 +57,10 @@ class ReSlot < BaseSlot
     [slotter]
   end
 
+  def tagger
+    self.tagged_from.nil? ? nil : User.find(self.tagged_from)
+  end
+
   def prepare_for_deletion
     update_successors
   end
@@ -98,7 +102,7 @@ class ReSlot < BaseSlot
     create_activity
   end
 
-  def self.create_from_slot(predecessor:, slotter:, visibility: nil)
+  def self.create_from_slot(predecessor:, slotter:, tagger: nil, visibility: nil)
     parent = predecessor.class <= ReSlot ? predecessor.parent : predecessor
     # use visibility of parent if not given or 'public' for group/global slots
     visibility ||= parent.visibility || 'public'
@@ -114,7 +118,17 @@ class ReSlot < BaseSlot
                                  predecessor: predecessor,
                                  parent: parent,
                                  meta_slot: parent.meta_slot)
-      reslot.create_activity
+      if tagger
+        reslot.update(tagged_from: tagger)
+        reslot.reload.forward_activity(
+            feed_fwd: {
+                User: [tagger.to_s],
+                Notification: [slotter.id.to_s]
+            }
+        )
+      else
+        reslot.create_activity
+      end
     end
 
     reslot
@@ -132,11 +146,15 @@ class ReSlot < BaseSlot
   end
 
   private def activity_actor
-    slotter
+    tagger || slotter
+  end
+
+  private def activity_foreign
+    tagger || super
   end
 
   # TODO: maybe the action can always be passed like: create_activity(action), this will also improve code readings
   private def activity_action
-    'reslot'
+    tagger ? 'tagged' : 'reslot'
   end
 end

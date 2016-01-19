@@ -80,7 +80,7 @@ module Activity
       message: activity_message_params,
       foreign: activity_foreign.try(:id).try(:to_s),
       notify: notify || activity_notify,
-      forward: forward,
+      forward: forward || activity_forward,
       data: activity_extra_data,
       time: time || self.updated_at
     })
@@ -260,8 +260,13 @@ module Activity
     user_ids
   end
 
-  # Returns an array of user which should be via push notification (AWS SNS)
+  # Returns an array of user which should be notified via push notification (AWS SNS)
   private def activity_push
+    []
+  end
+
+  # Returns an array of user which should be notified via internal app notification (feed)
+  private def activity_forward
     []
   end
 

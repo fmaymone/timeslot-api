@@ -30,9 +30,23 @@ class Comment < ActiveRecord::Base
     'comment'
   end
 
+  # TODO:
+  # private def activity_forward
+  #   foreign = activity_foreign.try(:id).try(:to_s)
+  #   actor = activity_actor.id.to_s
+  #   forwarding = {
+  #       User: [actor],
+  #       News: activity_notify,
+  #       Notification:
+  #           foreign.present? && (actor != foreign) ?
+  #             [foreign]
+  #           : []
+  #   }
+  #   forwarding[:Notification] = (forwarding[:Notification] + activity_push).uniq
+  #   forwarding
+  # end
+
   private def activity_push
-    # Is the creator really what we want?
-    # For std_slots we want the owner. For Groupslots?
     user_ids = super
     user_ids += activity_target.comments.pluck(:user_id)
     user_ids += activity_target.likes.pluck(:user_id)
