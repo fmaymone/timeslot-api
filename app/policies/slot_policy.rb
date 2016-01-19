@@ -67,6 +67,18 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
+  # a user needs to be signed-in
+  # ReSlots are not accepted (for now?), the parent should be used
+  # for now we decided to only allow adding to groups for public/global slots
+  # the creator of a slot can put the slot whereever he wants
+  def add_to_groups?
+    return false unless current_user?
+    return false if slot.class < ReSlot
+    return true if slot.visibility == 'public'
+    return true if slot.creator == current_user
+    false
+  end
+
   # ASK: can only logged in users see the history?
   def reslot_history?
     return false if slot.StdSlotPrivate?

@@ -318,6 +318,9 @@ module V1
     end
 
     def add_to_groups
+      @slot = BaseSlot.get(params[:id])
+      @slot = @slot.parent if @slot.class < ReSlot
+      authorize @slot
     end
 
     # GET /v1/slots/1/history
