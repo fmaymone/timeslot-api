@@ -47,4 +47,9 @@ Rails.application.configure do
 
   # raise exception when hitting deprecation warning
   ActiveSupport::Deprecation.behavior = :raise
+
+  # let Rails.logger print to console in tests
+  config.logger = Logger.new(STDOUT)
+  log_level = ENV.fetch('LOG_LEVEL', 'ERROR').upcase.to_sym
+  config.log_level = log_level
 end
