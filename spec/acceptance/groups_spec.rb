@@ -43,10 +43,11 @@ resource "Groups" do
       expect(json.size).to eq current_user.groups.count
       expect(json[0]).to have_key("id")
       expect(json[0]).to have_key("name")
-      expect(json[0]).to have_key("upcomingCount")
-      expect(json[0]).to have_key("next")
       expect(json[0]).to have_key("image")
-      expect(json[0]).to have_key("url")
+      expect(json[0]).to have_key("owner")
+      expect(json[0]).to have_key("createdAt")
+      expect(json[0]).to have_key("updatedAt")
+      expect(json[0]).to have_key("deletedAt")
     end
   end
 

@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'documentation_helper'
 
 resource "Search" do
@@ -239,10 +240,11 @@ resource "Search" do
         expect(json.length).to be 1
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("name")
-        expect(json.first).to have_key("upcomingCount")
-        expect(json.first).to have_key("next")
         expect(json.first).to have_key("image")
-        expect(json.first).to have_key("url")
+        expect(json.first).to have_key("owner")
+        expect(json.first).to have_key("createdAt")
+        expect(json.first).to have_key("updatedAt")
+        expect(json.first).to have_key("deletedAt")
         expect(json.first['name']).to eq("Timeslot Developer Group (Berlin)")
       end
     end
