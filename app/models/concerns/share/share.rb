@@ -141,7 +141,6 @@ module Share
          store/share/image/#{create_share_url(:image, slot)}.jpg
          store/share/qrcode/#{create_share_url(:qrcode, slot)}.png
          store/share/pdf/#{create_share_url(:pdf, slot)}.pdf).each do |file|
-        pp file
         File.delete(file) if File.exist?(file)
       end
       # Returns true (no response is send back to the client)
