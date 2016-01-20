@@ -1,11 +1,11 @@
 if (Rails.env.development? || Rails.env.test?) && ENV['DISABLE_SPRING']
 
   require 'bullet'
-  puts 'bullet checking for n+1 queries'
 
   Rails.application.configure do
     config.after_initialize do
-      Bullet.enable = true
+      # Bullet.enable = true
+      Bullet.enable = false
       # Bullet.growl = true
       Bullet.raise = true
       # Bullet.alert = true
@@ -60,15 +60,18 @@ if (Rails.env.development? || Rails.env.test?) && ENV['DISABLE_SPRING']
     end
   end
 
-  RSpec.configure do |config|
-    # if defined?(Bullet) && Bullet.enable?
-    config.before(:each) do
-      Bullet.start_request
-    end
+  if defined?(Bullet) && Bullet.enable?
+    RSpec.configure do |config|
+      puts 'bullet checking for n+1 queries'
 
-    config.after(:each) do
-      Bullet.perform_out_of_channel_notifications if Bullet.notification?
-      Bullet.end_request
+      config.before(:each) do
+        Bullet.start_request
+      end
+
+      config.after(:each) do
+        Bullet.perform_out_of_channel_notifications if Bullet.notification?
+        Bullet.end_request
+      end
     end
   end
 end
