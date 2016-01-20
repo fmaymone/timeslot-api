@@ -137,9 +137,11 @@ module Share
     end
 
     def unshare(slot)
-      ["store/share/image/#{create_share_url(:image, slot)}.jpg",
-       "store/share/qrcode/#{create_share_url(:png, slot)}.png",
-       "store/share/pdf/#{create_share_url(:pdf, slot)}.pdf"].each do |file|
+      %W(store/share/webview/#{create_share_url(:webview, slot)}.html
+         store/share/image/#{create_share_url(:image, slot)}.jpg
+         store/share/qrcode/#{create_share_url(:qrcode, slot)}.png
+         store/share/pdf/#{create_share_url(:pdf, slot)}.pdf).each do |file|
+        pp file
         File.delete(file) if File.exist?(file)
       end
       # Returns true (no response is send back to the client)
@@ -150,7 +152,7 @@ module Share
 
     private def create_share_url(type, slot)
       # Returns base64 without padding
-      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id}").gsub('=', '')
+      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id || slot['id']}").gsub('=', '')
     end
 
     private def share_objects(user, slot)

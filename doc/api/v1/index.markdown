@@ -86,6 +86,7 @@
 * [Share Slot as PDF](share/share_slot_as_pdf.markdown)
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
 * [Share Slot via Email](share/share_slot_via_email.markdown)
+* [Delete all shared contents](share/delete_all_shared_contents.markdown)
 
 ## Slots
 
