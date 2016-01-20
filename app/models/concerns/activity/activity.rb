@@ -156,13 +156,12 @@ module Activity
     if activity_action == 'slot' && (action == 'private' || action == 'delete') # || action == 'unslot'
       # Forward "delete" action as an activity to the dispatcher
       forward_activity(
-        action,
-        feed_fwd: {
-            User: [ activity_actor.id.to_s ],
-            Notification: activity_target.followers +
-                activity_actor.followers
-        },
-        push_fwd: activity_target.followers
+          action,
+          feed_fwd: {
+              User: [activity_actor.id.to_s],
+              Notification: activity_target.followers
+          },
+          push_fwd: activity_target.followers
       )
     end
   rescue => error
