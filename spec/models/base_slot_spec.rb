@@ -164,6 +164,27 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
+  describe :add_to_group do
+    let(:std_slot) { create(:std_slot_public) }
+    let(:group) { create(:group) }
+
+    it "creates a new containership" do
+      expect {
+        std_slot.add_to_group(group)
+      }.to change(Containership, :count).by 1
+    end
+
+    it "adds the slot to a given group" do
+      std_slot.add_to_group(group)
+      expect(group.slots).to include std_slot
+    end
+
+    it "adds the group to the given slot" do
+      std_slot.add_to_group(group)
+      expect(std_slot.slot_groups).to include group
+    end
+  end
+
   describe :set_share_id do
     let(:std_slot) { create(:std_slot_public) }
     let(:user) { create(:user) }

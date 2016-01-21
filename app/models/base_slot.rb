@@ -229,6 +229,15 @@ class BaseSlot < ActiveRecord::Base
     meta_slot.unregister
   end
 
+  def add_to_groups(groups)
+    # groups.each(&:add_to_group)
+    groups.each { |group| add_to_group group }
+  end
+
+  def add_to_group(group)
+    Containership.create(slot: self, group: group)
+  end
+
   def copy_to(targets, user)
     targets.each do |target|
       BaseSlot.duplicate_slot(self, target, user)
