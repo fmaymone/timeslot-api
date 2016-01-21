@@ -40,8 +40,6 @@ class User < ActiveRecord::Base
   has_many :re_slots_public, class_name: ReSlotPublic,
            foreign_key: :slotter_id, inverse_of: :slotter
 
-  has_many :group_slots, through: :active_groups
-
   # group related
   has_many :own_groups, class_name: Group,
            foreign_key: :owner_id, inverse_of: :owner
@@ -230,13 +228,13 @@ class User < ActiveRecord::Base
   def active_slots(meta_slot)
     slots = []
     slots.push(*std_slots.active.where(meta_slot: meta_slot))
-    slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    # slots.push(*group_slots.active.where(meta_slot: meta_slot))
     slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end
 
-  def shared_group_slots(user)
-    group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
-  end
+  # def shared_group_slots(user)
+  #   group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
+  # end
 
   def visible_slots_counter(user, slot_class)
     SlotsCollector.new.active_slots_count(current_user: user, user: self,
@@ -462,7 +460,7 @@ class User < ActiveRecord::Base
     representations = []
     representations.push(*std_slots.where(meta_slot: slot.meta_slot))
     representations.push(*re_slots.where(meta_slot: slot.meta_slot))
-    representations.push(*group_slots.where(meta_slot: slot.meta_slot))
+    # representations.push(*group_slots.where(meta_slot: slot.meta_slot))
     representations
   end
 

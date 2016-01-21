@@ -33,7 +33,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:re_slots_friends).inverse_of(:slotter) }
   it { is_expected.to have_many(:re_slots_foaf).inverse_of(:slotter) }
   it { is_expected.to have_many(:re_slots_public).inverse_of(:slotter) }
-  it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
   it { is_expected.to have_many(:devices).inverse_of(:user) }
@@ -208,17 +207,17 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user has group_slot with the specified meta_slot" do
-      let(:group) { create(:group) }
-      let!(:membership) {
-        create(:membership, :active, user: user, group: group) }
-      let!(:group_slot) {
-        create(:group_slot, meta_slot: meta_slot, group: group)
-      }
-      it "returns group_slot" do
-        expect(user.active_slots(meta_slot)).to include group_slot
-      end
-    end
+    # context "user has group_slot with the specified meta_slot" do
+    #   let(:group) { create(:group) }
+    #   let!(:membership) {
+    #     create(:membership, :active, user: user, group: group) }
+    #   let!(:group_slot) {
+    #     create(:group_slot, meta_slot: meta_slot, group: group)
+    #   }
+    #   it "returns group_slot" do
+    #     expect(user.active_slots(meta_slot)).to include group_slot
+    #   end
+    # end
 
     context "user has no representation of the specified meta_slot" do
       it "returns empty array" do
@@ -236,28 +235,28 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :shared_group_slots do
-    let(:user) { create(:user) }
-    let(:bob) { create(:user) }
+  # describe :shared_group_slots do
+  #   let(:user) { create(:user) }
+  #   let(:bob) { create(:user) }
 
-    let!(:slot_1) { create(:group_slot) }
-    let!(:slot_2) { create(:group_slot) }
-    let!(:slot_3) { create(:group_slot) }
+  #   let!(:slot_1) { create(:group_slot) }
+  #   let!(:slot_2) { create(:group_slot) }
+  #   let!(:slot_3) { create(:group_slot) }
 
-    let!(:memberships) {
-      create(:membership, :active, group: slot_1.group, user: user)
-      create(:membership, :active, group: slot_1.group, user: bob)
-      create(:membership, :active, group: slot_2.group, user: user)
-      create(:membership, :active, group: slot_2.group, user: bob)
-      create(:membership, :active, group: slot_3.group, user: bob)
-    }
+  #   let!(:memberships) {
+  #     create(:membership, :active, group: slot_1.group, user: user)
+  #     create(:membership, :active, group: slot_1.group, user: bob)
+  #     create(:membership, :active, group: slot_2.group, user: user)
+  #     create(:membership, :active, group: slot_2.group, user: bob)
+  #     create(:membership, :active, group: slot_3.group, user: bob)
+  #   }
 
-    it "returns slots from common groups but not from other groups" do
-      result = user.shared_group_slots(bob)
-      expect(result).to include slot_1
-      expect(result).not_to include slot_3
-    end
-  end
+  #   it "returns slots from common groups but not from other groups" do
+  #     result = user.shared_group_slots(bob)
+  #     expect(result).to include slot_1
+  #     expect(result).not_to include slot_3
+  #   end
+  # end
 
   describe :friends_count do
     let(:user) { create(:user)}
@@ -333,25 +332,25 @@ RSpec.describe User, type: :model do
         }.not_to change(SlotSetting, :count)
       end
 
-      context "group_slot" do
-        let(:slot) { create(:group_slot) }
-        let!(:membership) { create(:membership, :active, group: slot.group,
-                                   user: user, default_alerts: '1110011110') }
-        before { user.update(default_group_alerts: '0000000010') }
+      # context "group_slot" do
+      #   let(:slot) { create(:group_slot) }
+      #   let!(:membership) { create(:membership, :active, group: slot.group,
+      #                              user: user, default_alerts: '1110011110') }
+      #   before { user.update(default_group_alerts: '0000000010') }
 
-        it "doesn't create slot_setting if alerts eq group default alerts" do
-          expect {
-            user.update_alerts(slot, '1110011110')
-          }.not_to change(SlotSetting, :count)
-        end
+      #   it "doesn't create slot_setting if alerts eq group default alerts" do
+      #     expect {
+      #       user.update_alerts(slot, '1110011110')
+      #     }.not_to change(SlotSetting, :count)
+      #   end
 
-        it "creates a new slot_setting if alerts eq default group alerts " \
-           "but not the default membership alerts" do
-          expect {
-            user.update_alerts(slot, '0000000010')
-          }.to change(SlotSetting, :count).by 1
-        end
-      end
+      #   it "creates a new slot_setting if alerts eq default group alerts " \
+      #      "but not the default membership alerts" do
+      #     expect {
+      #       user.update_alerts(slot, '0000000010')
+      #     }.to change(SlotSetting, :count).by 1
+      #   end
+      # end
     end
 
     describe "existing SlotSetting" do
@@ -418,60 +417,60 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "groupSlot" do
-      let(:slot) { create(:group_slot) }
-      let!(:membership) {
-        create(:membership, :active, group: slot.group, user: user) }
+    # context "groupSlot" do
+    #   let(:slot) { create(:group_slot) }
+    #   let!(:membership) {
+    #     create(:membership, :active, group: slot.group, user: user) }
 
-      context "existing alerts" do
-        let(:new_alert) { '1010101010' }
-        before { user.update(default_group_alerts: new_alert) }
+    #   context "existing alerts" do
+    #     let(:new_alert) { '1010101010' }
+    #     before { user.update(default_group_alerts: new_alert) }
 
-        describe "existing default alert for group" do
-          it "returns the group default alert for this user" do
-            membership.update(default_alerts: '1110011110')
-            expect(user.alerts(slot)).to eq membership.default_alerts
-          end
-        end
+    #     describe "existing default alert for group" do
+    #       it "returns the group default alert for this user" do
+    #         membership.update(default_alerts: '1110011110')
+    #         expect(user.alerts(slot)).to eq membership.default_alerts
+    #       end
+    #     end
 
-        describe "existing default group alert for user but not for membership" do
-          it "returns the users default group alert" do
-            expect(user.alerts(slot)).to eq new_alert
-          end
-        end
+    #     describe "existing default group alert for user but not for membership" do
+    #       it "returns the users default group alert" do
+    #         expect(user.alerts(slot)).to eq new_alert
+    #       end
+    #     end
 
-        describe "existing slot_setting" do
-          let!(:slot_setting) {
-            create(:slot_setting, user: user, meta_slot: slot.meta_slot,
-                   alerts: '0000011111') }
+    #     describe "existing slot_setting" do
+    #       let!(:slot_setting) {
+    #         create(:slot_setting, user: user, meta_slot: slot.meta_slot,
+    #                alerts: '0000011111') }
 
-          it "returns the alarm for a specific slot representation" do
-            expect(user.alerts(slot)).to eq slot_setting.alerts
-          end
-        end
-      end
+    #       it "returns the alarm for a specific slot representation" do
+    #         expect(user.alerts(slot)).to eq slot_setting.alerts
+    #       end
+    #     end
+    #   end
 
-      describe "no alerts set" do
-        it "returns 0000000000" do
-          expect(user.alerts(slot)).to eq '0000000000'
-        end
-      end
-    end
+    #   describe "no alerts set" do
+    #     it "returns 0000000000" do
+    #       expect(user.alerts(slot)).to eq '0000000000'
+    #     end
+    #   end
+    # end
 
-    context "several slot representations" do
-      let(:std_slot) { create(:std_slot_friends, owner: user) }
-      let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
-      let!(:membership) {
-        create(:membership, :active, group: group_slot.group, user: user) }
-      before {
-        user.update(default_own_friendslot_alerts: '0000000111')
-        user.update(default_group_alerts: '1110000000')
-      }
+    # context "several slot representations" do
+    #   let(:std_slot) { create(:std_slot_friends, owner: user) }
+    #   let!(:group_slot) { create(:group_slot, meta_slot: std_slot.meta_slot) }
+    #   let!(:membership) {
+    #     create(:membership, :active, group: group_slot.group, user: user) }
+    #   before {
+    #     user.update(default_own_friendslot_alerts: '0000000111')
+    #     user.update(default_group_alerts: '1110000000')
+    #   }
 
-      it "merges the default alerts" do
-        expect(user.alerts(std_slot)).to eq '1110000111'
-      end
-    end
+    #   it "merges the default alerts" do
+    #     expect(user.alerts(std_slot)).to eq '1110000111'
+    #   end
+    # end
   end
 
   describe :groups do
