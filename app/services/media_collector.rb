@@ -23,7 +23,7 @@ class MediaCollector
     # collect media_items from all slots of all allowed collections
     collections.each do |slots|
       # TODO: optimize performance
-      slots = slots.includes(:group) if slots.table_name == GroupSlot.table_name
+      # slots = slots.includes(:group) if slots.table_name == GroupSlot.table_name
       slots.find_each do |slot|
         medias += slot.media_items.includes(:creator)
       end

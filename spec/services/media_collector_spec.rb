@@ -124,58 +124,58 @@ RSpec.describe MediaCollector, type: :service do
       end
     end
 
-    context "common/shared group" do
-      let!(:group_slot) {
-        create(:group_slot, :with_media, creator: target_user) }
-      let!(:group_slot_from_third) {
-        create(:group_slot, :with_media, group: group_slot.group) }
-      let!(:memberships) do
-        [create(:membership, :active,
-                group: group_slot.group, user: current_user),
-         create(:membership, :active,
-                group: group_slot.group, user: target_user)]
-      end
+    # context "common/shared group" do
+    #   let!(:group_slot) {
+    #     create(:group_slot, :with_media, creator: target_user) }
+    #   let!(:group_slot_from_third) {
+    #     create(:group_slot, :with_media, group: group_slot.group) }
+    #   let!(:memberships) do
+    #     [create(:membership, :active,
+    #             group: group_slot.group, user: current_user),
+    #      create(:membership, :active,
+    #             group: group_slot.group, user: target_user)]
+    #   end
 
-      it "returns all media items which the other user has added to" \
-         " a common group" do
-        result = collector.retrieve
-        expect(result).to include group_slot.media_items.first
-        expect(result.length).to eq(12)
-      end
+    #   it "returns all media items which the other user has added to" \
+    #      " a common group" do
+    #     result = collector.retrieve
+    #     expect(result).to include group_slot.media_items.first
+    #     expect(result.length).to eq(12)
+    #   end
 
-      it "doesn't return media items which another user has added to" \
-         " the common group" do
-        result = collector.retrieve
-        expect(result).not_to include group_slot_from_third.media_items.first
-        expect(result.length).to eq(12)
-      end
+    #   it "doesn't return media items which another user has added to" \
+    #      " the common group" do
+    #     result = collector.retrieve
+    #     expect(result).not_to include group_slot_from_third.media_items.first
+    #     expect(result.length).to eq(12)
+    #   end
 
-      describe "user has left group" do
-        it "doesn't return media_items from this group anymore" do
-          result = collector.retrieve
-          expect(result.length).to eq(12)
-          expect(result).to include group_slot.media_items.first
+    #   describe "user has left group" do
+    #     it "doesn't return media_items from this group anymore" do
+    #       result = collector.retrieve
+    #       expect(result.length).to eq(12)
+    #       expect(result).to include group_slot.media_items.first
 
-          current_user.leave_group(group_slot.group.id)
-          result = collector.retrieve
-          expect(result.length).to eq(6)
-          expect(result).not_to include group_slot.media_items.first
-        end
-      end
+    #       current_user.leave_group(group_slot.group.id)
+    #       result = collector.retrieve
+    #       expect(result.length).to eq(6)
+    #       expect(result).not_to include group_slot.media_items.first
+    #     end
+    #   end
 
-      describe "membership inactive" do
-        it "doesn't return media_items from this group anymore" do
-          result = collector.retrieve
-          expect(result.length).to eq(12)
-          expect(result).to include group_slot.media_items.first
+    #   describe "membership inactive" do
+    #     it "doesn't return media_items from this group anymore" do
+    #       result = collector.retrieve
+    #       expect(result.length).to eq(12)
+    #       expect(result).to include group_slot.media_items.first
 
-          memberships.first.leave
-          result = collector.retrieve
-          expect(result.length).to eq(6)
-          expect(result).not_to include group_slot.media_items.first
-        end
-      end
-    end
+    #       memberships.first.leave
+    #       result = collector.retrieve
+    #       expect(result.length).to eq(6)
+    #       expect(result).not_to include group_slot.media_items.first
+    #     end
+    #   end
+    # end
 
     context "for STRANGER" do
       it "returns all public media items of the stranger" do
