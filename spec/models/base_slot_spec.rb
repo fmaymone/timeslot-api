@@ -61,13 +61,6 @@ RSpec.describe BaseSlot, type: :model do
       }.to change(StdSlot.unscoped, :count).by 1
     end
 
-    it "creates a new GroupSlot" do
-      expect {
-        described_class.create_slot(meta: meta_param, group: group,
-                                    user: user)
-      }.to change(GroupSlot.unscoped, :count).by 1
-    end
-
     it "creates a new MetaSlot" do
       expect {
         described_class.create_slot(meta: meta_param, visibility: 'friends',
@@ -130,17 +123,17 @@ RSpec.describe BaseSlot, type: :model do
 
   describe :get_many do
     let(:std_slots) { create_list(:std_slot_private, 3) }
-    let(:group_slots) { create_list(:group_slot, 2) }
+    let(:global_slots) { create_list(:global_slot, 2) }
     let(:other_slots) { create_list(:re_slot, 2) }
 
     it "returns a list of specific slots" do
       a = []
-      [std_slots, group_slots].each do |slots|
+      [std_slots, global_slots].each do |slots|
         a << slots.collect(&:id)
       end
       result = BaseSlot.get_many(a.flatten)
       expect(result).to include(*std_slots)
-      expect(result).to include(*group_slots)
+      expect(result).to include(*global_slots)
       expect(result).not_to include(*other_slots)
     end
   end

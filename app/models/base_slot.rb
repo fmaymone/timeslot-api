@@ -21,14 +21,11 @@ class BaseSlot < ActiveRecord::Base
                  ReSlotFriends: 6,
                  ReSlotFoaf: 7,
                  ReSlotPublic: 22, # maintain backwards compatibility
-                 GroupSlotMembers: 11,
-                 GroupSlotPublic: 12,
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
                  # ReSlot: 23,
-                 GroupSlot: 21
                }
 
   enum slot_type: SLOT_TYPES
@@ -331,7 +328,7 @@ class BaseSlot < ActiveRecord::Base
                        notes: nil, alerts: nil, user: nil)
 
     # TODO: improve
-    fail unless visibility || group
+    fail unless visibility #|| group
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
@@ -340,8 +337,8 @@ class BaseSlot < ActiveRecord::Base
     if visibility
       slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
                                  user: user)
-    elsif group
-      slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
+    # elsif group
+    #   slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
     end
 
     # TODO: fail instead of return here or even better, fail in the create_slot
@@ -359,14 +356,14 @@ class BaseSlot < ActiveRecord::Base
 
   def self.duplicate_slot(source, target, current_user)
     visibility = target[:slot_type] if target[:slot_type]
-    group = Group.find(target[:group_id]) if target[:group_id]
+    # group = Group.find(target[:group_id]) if target[:group_id]
     details = target[:details]
     # YAML.load converts to boolean
     with_details = details.present? ? YAML.load(details.to_s) : true
 
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
-                                  group: group,
+                                  # group: group,
                                   user: current_user)
 
     duplicate_slot_details(source, duplicated_slot, current_user) if with_details
