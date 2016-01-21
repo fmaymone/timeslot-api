@@ -12,13 +12,12 @@ class Group < ActiveRecord::Base
            inverse_of: :slot_groups
 
   has_many :memberships, inverse_of: :group
-  has_many :related_users, through: :memberships, class_name: User,
-           source: :user # includes all membership states
+  # includes all membership states
+  has_many :related_users, through: :memberships, source: :user
 
   has_many :active_memberships, -> { where state: '111' },
            class_name: Membership
-  has_many :members, through: :active_memberships, class_name: User,
-           source: :user
+  has_many :members, through: :active_memberships, source: :user
 
   validates :name, presence: true, length: { maximum: 255 }
   validates :owner, presence: true
