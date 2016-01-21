@@ -10,12 +10,9 @@ Rails.application.routes.draw do
     post 'tw-connect', to: 'connects#twitter_connect'
 
     scope constraints: { id: /\d+/ } do
-      get 'slots/:id', to: 'slots#show', as: 'slot'
-      post 'slots', to: 'slots#show_many', as: 'slots_read'
-      get 'slots/demo', to: 'slots#show_last', as: 'slots_last'
-
       post 'stdslot', to: 'slots#create_stdslot'
       post 'reslot', to: 'slots#create_reslot'
+      # TODO: remove/disable route
       post 'webslot', to: 'slots#create_webslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
@@ -27,6 +24,11 @@ Rails.application.routes.draw do
     end
 
     scope :slots, constraints: { id: /\d+/ } do
+      get ':id', to: 'slots#show', as: 'slot'
+      post '', to: 'slots#show_many', as: 'slots_read'
+      # TODO: remove/disable route
+      get 'demo', to: 'slots#show_last', as: 'slots_last'
+
       get ':id/share', to: 'slots#share_url', as: 'slot_shareurl'
       get ':uid/sharedata', to: 'slots#share_data', as: 'slot_sharedata'
 
