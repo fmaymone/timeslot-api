@@ -32,27 +32,17 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#create_reslot", format: :json)
     end
 
-    it "routes to #create_groupslot" do
-      expect(post: "/v1/groupslot")
-        .to route_to("v1/slots#create_groupslot", format: :json)
-    end
-
-    it "routes to #update_metaslot via PATCH" do
+    it "routes to #update_metaslot" do
       expect(patch: "/v1/metaslot/1")
         .to route_to("v1/slots#update_metaslot", id: "1", format: :json)
     end
 
-    it "routes to #update_stdslot via PATCH" do
+    it "routes to #update_stdslot" do
       expect(patch: "/v1/stdslot/1")
         .to route_to("v1/slots#update_stdslot", id: "1", format: :json)
     end
 
-    it "routes to #update_groupslot via PATCH" do
-      expect(patch: "/v1/groupslot/1")
-        .to route_to("v1/slots#update_groupslot", id: "1", format: :json)
-    end
-
-    it "routes to #update_reslot via PATCH" do
+    it "routes to #update_reslot" do
       expect(patch: "/v1/reslot/1")
         .to route_to("v1/slots#update_reslot", id: "1", format: :json)
     end
@@ -60,11 +50,6 @@ RSpec.describe V1::SlotsController, type: :routing do
     it "routes to #destroy_stdslot" do
       expect(delete: "/v1/stdslot/1")
         .to route_to("v1/slots#destroy_stdslot", id: "1", format: :json)
-    end
-
-    it "routes to #destroy_groupslot" do
-      expect(delete: "/v1/groupslot/1")
-        .to route_to("v1/slots#destroy_groupslot", id: "1", format: :json)
     end
 
     it "routes to #destroy_reslot" do

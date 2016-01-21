@@ -16,16 +16,13 @@ Rails.application.routes.draw do
 
       post 'stdslot', to: 'slots#create_stdslot'
       post 'reslot', to: 'slots#create_reslot'
-      post 'groupslot', to: 'slots#create_groupslot'
       post 'webslot', to: 'slots#create_webslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-      patch 'groupslot/:id', to: 'slots#update_groupslot', as: 'groupslot_update'
       patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
       delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
-      delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
       delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
     end
 
