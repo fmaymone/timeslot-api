@@ -393,10 +393,10 @@ class User < ActiveRecord::Base
     membership
   end
 
-  # ordered by start_date of the next group slot
-  def groups_ordered
-    groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
-  end
+  # # ordered by start_date of the next group slot
+  # def groups_ordered
+  #   groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
+  # end
 
   ## private methods ##
 
