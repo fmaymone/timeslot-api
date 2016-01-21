@@ -211,22 +211,22 @@ describe SlotPolicy do
       end
     end
 
-    context "group_slot" do
-      let(:slot) { create(:group_slot) }
+    # context "group_slot" do
+    #   let(:slot) { create(:group_slot) }
 
-      context "for a user" do
-        let(:user) { create(:user) }
+    #   context "for a user" do
+    #     let(:user) { create(:user) }
 
-        it "allows access if user is group member" do
-          create(:membership, :active, group: slot.group, user: user)
-          expect(subject).to permit(user, slot)
-        end
+    #     it "allows access if user is group member" do
+    #       create(:membership, :active, group: slot.group, user: user)
+    #       expect(subject).to permit(user, slot)
+    #     end
 
-        it "denies access if user not group member" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-    end
+    #     it "denies access if user not group member" do
+    #       expect(subject).not_to permit(user, slot)
+    #     end
+    #   end
+    # end
   end
 
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url? do
@@ -279,18 +279,18 @@ describe SlotPolicy do
       end
     end
 
-    context "group_slot" do
-      let(:slot) { create(:group_slot) }
+    # context "group_slot" do
+    #   let(:slot) { create(:group_slot) }
 
-      context "for a user" do
-        let(:user) { create(:user) }
+    #   context "for a user" do
+    #     let(:user) { create(:user) }
 
-        it "denies access, even if user is group member" do
-          create(:membership, :active, group: slot.group, user: user)
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-    end
+    #     it "denies access, even if user is group member" do
+    #       create(:membership, :active, group: slot.group, user: user)
+    #       expect(subject).not_to permit(user, slot)
+    #     end
+    #   end
+    # end
   end
 
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
@@ -356,17 +356,17 @@ describe SlotPolicy do
       end
     end
 
-    context "group_public" do
-      let(:slot) { create(:group_slot) }
+    # context "group_public" do
+    #   let(:slot) { create(:group_slot) }
 
-      it "raises MissingCurrentUserError" do
-        permissions.each do |permission|
-          expect {
-            subject.new(user, slot).public_send(permission)
-          }.to raise_error TSErrors::MissingCurrentUserError
-        end
-      end
-    end
+    #   it "raises MissingCurrentUserError" do
+    #     permissions.each do |permission|
+    #       expect {
+    #         subject.new(user, slot).public_send(permission)
+    #       }.to raise_error TSErrors::MissingCurrentUserError
+    #     end
+    #   end
+    # end
   end
 
   permissions :add_to_groups? do

@@ -11,7 +11,7 @@ class SlotPolicy < ApplicationPolicy
   def show?
     return true if slot.StdSlotPublic?
     return true if slot.ReSlotPublic?
-    return true if slot.GroupSlotPublic?
+    # return true if slot.GroupSlotPublic?
     show_to_current_user?
   end
 
@@ -122,7 +122,7 @@ class SlotPolicy < ApplicationPolicy
     return true if slot.class == GlobalSlot
     return show_std_slot? if slot.class < StdSlot
     return show_re_slot? if slot.class <= ReSlot
-    return show_group_slot? if slot.try(:group)
+    # return show_group_slot? if slot.try(:group)
     false
   end
 
@@ -165,8 +165,8 @@ class SlotPolicy < ApplicationPolicy
   # group slot
   # true if slot is group slot and I'm a member of the group
   # later: true if it's a groupslot in a public group
-  private def show_group_slot?
-    return true if slot.GroupSlotPublic?
-    return true if slot.group.members.include? current_user
-  end
+  # private def show_group_slot?
+  #   return true if slot.GroupSlotPublic?
+  #   return true if slot.group.members.include? current_user
+  # end
 end
