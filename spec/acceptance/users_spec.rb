@@ -239,17 +239,17 @@ resource "Users" do
       create(:std_slot_friends, :with_media, owner: user, creator: user) }
     let!(:slot_private) {
       create(:std_slot_private, :with_media, owner: user, creator: user) }
-    let!(:shared_group) do
-      gs = create(:group_slot, :with_media, creator: user)
-      create(:membership, :active, group: gs.group, user: current_user)
-      create(:membership, :active, group: gs.group, user: user)
-      gs
-    end
-    let!(:unshared_group) do
-      gs = create(:group_slot, :with_media, creator: user)
-      create(:membership, :active, group: gs.group, user: user)
-      gs
-    end
+    # let!(:shared_group) do
+    #   gs = create(:group_slot, :with_media, creator: user)
+    #   create(:membership, :active, group: gs.group, user: current_user)
+    #   create(:membership, :active, group: gs.group, user: user)
+    #   gs
+    # end
+    # let!(:unshared_group) do
+    #   gs = create(:group_slot, :with_media, creator: user)
+    #   create(:membership, :active, group: gs.group, user: user)
+    #   gs
+    # end
 
     context "friend" do
       let!(:friendship) {
@@ -267,14 +267,15 @@ resource "Users" do
         expect(response_body).to include(slot_public.media_items[0].public_id)
         expect(response_body).to include(slot_foaf.media_items[0].public_id)
         expect(response_body).to include(slot_friend.media_items[0].public_id)
-        expect(response_body).to include(shared_group.media_items[0].public_id)
+        # expect(response_body).to include(shared_group.media_items[0].public_id)
         expect(
           response_body
         ).not_to include(slot_private.media_items[0].public_id)
-        expect(
-          response_body
-        ).not_to include(unshared_group.media_items[0].public_id)
-        expect(json.length).to eq(24)
+        # expect(
+        #   response_body
+        # ).not_to include(unshared_group.media_items[0].public_id)
+        # expect(json.length).to eq(24)
+        expect(json.length).to eq(18)
       end
     end
 
@@ -295,17 +296,18 @@ resource "Users" do
         expect(response_status).to eq(200)
         expect(response_body).to include(slot_public.media_items[0].public_id)
         expect(response_body).to include(slot_foaf.media_items[0].public_id)
-        expect(response_body).to include(shared_group.media_items[0].public_id)
+        # expect(response_body).to include(shared_group.media_items[0].public_id)
         expect(
           response_body
         ).not_to include(slot_private.media_items[0].public_id)
         expect(
           response_body
         ).not_to include(slot_friend.media_items[0].public_id)
-        expect(
-          response_body
-        ).not_to include(unshared_group.media_items[0].public_id)
-        expect(json.length).to eq(18)
+        # expect(
+        #   response_body
+        # ).not_to include(unshared_group.media_items[0].public_id)
+        # expect(json.length).to eq(18)
+        expect(json.length).to eq(12)
       end
     end
 
@@ -318,17 +320,18 @@ resource "Users" do
 
         expect(response_status).to eq(200)
         expect(response_body).to include(slot_public.media_items[0].public_id)
-        expect(response_body).to include(shared_group.media_items[0].public_id)
+        # expect(response_body).to include(shared_group.media_items[0].public_id)
         expect(
           response_body
         ).not_to include(slot_private.media_items[0].public_id)
         expect(
           response_body
         ).not_to include(slot_friend.media_items[0].public_id)
-        expect(
-          response_body
-        ).not_to include(unshared_group.media_items[0].public_id)
-        expect(json.length).to eq(12)
+        # expect(
+        #   response_body
+        # ).not_to include(unshared_group.media_items[0].public_id)
+        # expect(json.length).to eq(12)
+        expect(json.length).to eq(6)
       end
     end
 
@@ -353,12 +356,12 @@ resource "Users" do
         expect(
           response_body
         ).not_to include(slot_friend.media_items[0].public_id)
-        expect(
-          response_body
-        ).not_to include(unshared_group.media_items[0].public_id)
-        expect(
-          response_body
-        ).not_to include(shared_group.media_items[0].public_id)
+        # expect(
+        #   response_body
+        # ).not_to include(unshared_group.media_items[0].public_id)
+        # expect(
+        #   response_body
+        # ).not_to include(shared_group.media_items[0].public_id)
         expect(json.length).to eq(6)
       end
     end
@@ -528,19 +531,19 @@ resource "Users" do
         let!(:std_slot_foaf) { create(:std_slot_foaf, owner: joe) }
         let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
         let!(:re_slots) { create(:re_slot, slotter: joe) }
-        let(:incommon_groupslot) { create(:group_slot) }
+        # let(:incommon_groupslot) { create(:group_slot) }
 
         describe "befriended user" do
           let!(:friendship) {
             create(:friendship, :established, user: joe, friend: current_user) }
-          let(:groupslot) { create(:group_slot) }
-          let!(:memberships) {
-            create(:membership, :active, group: groupslot.group,
-                   user: current_user)
-            create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group,
-                   user: joe)
-          }
+          # let(:groupslot) { create(:group_slot) }
+          # let!(:memberships) {
+          #   create(:membership, :active, group: groupslot.group,
+          #          user: current_user)
+          #   create(:membership, :active, group: groupslot.group, user: joe)
+          #   create(:membership, :active, group: incommon_groupslot.group,
+          #          user: joe)
+          # }
 
           example "Get slots for Friend", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
@@ -554,7 +557,7 @@ resource "Users" do
             slot_count = joe.std_slots_friends.count +
                          joe.std_slots_foaf.count +
                          joe.std_slots_public.count +
-                         current_user.shared_group_slots(joe).count +
+                         # current_user.shared_group_slots(joe).count +
                          joe.re_slots.count
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
@@ -562,8 +565,8 @@ resource "Users" do
             expect(response_body).to include std_slot_friend.title
             expect(response_body).to include std_slot_foaf.title
             expect(response_body).to include std_slot_public.title
-            expect(response_body).to include groupslot.title
-            expect(response_body).not_to include incommon_groupslot.title
+            # expect(response_body).to include groupslot.title
+            # expect(response_body).not_to include incommon_groupslot.title
           end
         end
 
@@ -575,14 +578,14 @@ resource "Users" do
             create(:friendship, :established, user: common_friend,
                    friend: current_user)
           end
-          let(:groupslot) { create(:group_slot) }
-          let!(:memberships) {
-            create(:membership, :active, group: groupslot.group,
-                   user: current_user)
-            create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group,
-                   user: joe)
-          }
+          # let(:groupslot) { create(:group_slot) }
+          # let!(:memberships) {
+          #   create(:membership, :active, group: groupslot.group,
+          #          user: current_user)
+          #   create(:membership, :active, group: groupslot.group, user: joe)
+          #   create(:membership, :active, group: incommon_groupslot.group,
+          #          user: joe)
+          # }
 
           example "Get slots for Friend-of-Friend", document: :v1 do
             explanation "Returns an array which includes StandardSlots with" \
@@ -595,28 +598,28 @@ resource "Users" do
             expect(response_status).to eq(200)
             slot_count = joe.std_slots_foaf.count +
                          joe.std_slots_public.count +
-                         current_user.shared_group_slots(joe).count +
                          joe.re_slots.count
+            # current_user.shared_group_slots(joe).count +
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
             expect(response_body).not_to include std_slot_secret.title
             expect(response_body).not_to include std_slot_friend.title
             expect(response_body).to include std_slot_foaf.title
             expect(response_body).to include std_slot_public.title
-            expect(response_body).to include groupslot.title
-            expect(response_body).not_to include incommon_groupslot.title
+            # expect(response_body).to include groupslot.title
+            # expect(response_body).not_to include incommon_groupslot.title
           end
         end
 
         describe "unrelated user with common groups" do
-          let(:groupslot) { create(:group_slot) }
-          let!(:memberships) {
-            create(:membership, :active, group: groupslot.group,
-                   user: current_user)
-            create(:membership, :active, group: groupslot.group, user: joe)
-            create(:membership, :active, group: incommon_groupslot.group,
-                   user: joe)
-          }
+          # let(:groupslot) { create(:group_slot) }
+          # let!(:memberships) {
+          #   create(:membership, :active, group: groupslot.group,
+          #          user: current_user)
+          #   create(:membership, :active, group: groupslot.group, user: joe)
+          #   create(:membership, :active, group: incommon_groupslot.group,
+          #          user: joe)
+          # }
 
           example "Get slots for Stranger with common groups",
                   document: :v1 do
@@ -629,15 +632,15 @@ resource "Users" do
 
             expect(response_status).to eq(200)
             slot_count = joe.std_slots_public.count +
-                         joe.re_slots.count +
-                         current_user.shared_group_slots(joe).count
+                         joe.re_slots.count
+                         # current_user.shared_group_slots(joe).count
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
             expect(response_body).not_to include std_slot_secret.title
             expect(response_body).not_to include std_slot_friend.title
             expect(response_body).to include std_slot_public.title
-            expect(response_body).to include groupslot.title
-            expect(response_body).not_to include incommon_groupslot.title
+            # expect(response_body).to include groupslot.title
+            # expect(response_body).not_to include incommon_groupslot.title
           end
         end
 
@@ -655,7 +658,7 @@ resource "Users" do
             expect(response_body).not_to include std_slot_secret.title
             expect(response_body).not_to include std_slot_friend.title
             expect(response_body).to include std_slot_public.title
-            expect(response_body).not_to include incommon_groupslot.title
+            # expect(response_body).not_to include incommon_groupslot.title
           end
         end
       end

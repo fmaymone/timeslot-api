@@ -231,56 +231,56 @@ resource "Groups" do
   end
 
   # slots
-  get "/v1/groups/:group_id/slots" do
-    header "accept", "application/json"
-    header "Authorization", :auth_header
+  # get "/v1/groups/:group_id/slots" do
+  #   header "accept", "application/json"
+  #   header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get slots for", required: true
+  #   parameter :group_id, "ID of the group to get slots for", required: true
 
-    response_field :groupId, "ID of the group"
-    response_field :slotCount, "Number of all slot in this group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :slots, "Array of group slots"
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag of the slot"
-    response_field :alerts, "Alerts for the slot for the current user"
-    response_field :media, "Media items of the slot"
-    response_field :url, "direct url to fetch the slot"
-    response_field :createdAt, "Creation datetime of the slot"
-    response_field :updatedAt, "Last update of the slot"
-    response_field :deletedAt, "Deletion datetime of the slot"
+  #   response_field :groupId, "ID of the group"
+  #   response_field :slotCount, "Number of all slot in this group"
+  #   response_field :upcomingCount, "Number of upcoming group slots"
+  #   response_field :slots, "Array of group slots"
+  #   response_field :id, "ID of the slot"
+  #   response_field :title, "Title of the slot"
+  #   response_field :startDate, "Startdate of the slot"
+  #   response_field :endDate, "Enddate of the slot"
+  #   response_field :openEnd, "OpenEnd Boolean Flag of the slot"
+  #   response_field :alerts, "Alerts for the slot for the current user"
+  #   response_field :media, "Media items of the slot"
+  #   response_field :url, "direct url to fetch the slot"
+  #   response_field :createdAt, "Creation datetime of the slot"
+  #   response_field :updatedAt, "Last update of the slot"
+  #   response_field :deletedAt, "Deletion datetime of the slot"
 
-    let(:group) { create(:group) }
-    let(:group_id) { group.id }
-    let!(:slots) { create_list(:group_slot, 4, group: group) }
-    let!(:membership) do
-      create(:membership, :active, user: current_user, group: group)
-    end
+  #   let(:group) { create(:group) }
+  #   let(:group_id) { group.id }
+  #   let!(:slots) { create_list(:group_slot, 4, group: group) }
+  #   let!(:membership) do
+  #     create(:membership, :active, user: current_user, group: group)
+  #   end
 
-    example "Get slots in a group", document: :v1 do
-      explanation "returns 200 and a list of all slots\n\n" \
-                  "returns 404 if ID is invalid"
-      do_request
+  #   example "Get slots in a group", document: :v1 do
+  #     explanation "returns 200 and a list of all slots\n\n" \
+  #                 "returns 404 if ID is invalid"
+  #     do_request
 
-      expect(response_status).to eq(200)
-      expect(json).to include({ "id" => group.id,
-                                "slotCount" => slots.length })
-      expect(json["slots"].length).to eq slots.length
-      expect(json["slots"].first).to have_key("id")
-      expect(json["slots"].first).to have_key("title")
-      expect(json["slots"].first).to have_key("startDate")
-      expect(json["slots"].first).to have_key("endDate")
-      expect(json["slots"].first).to have_key("createdAt")
-      expect(json["slots"].first).to have_key("updatedAt")
-      expect(json["slots"].first).to have_key("deletedAt")
-      expect(json["slots"].first).to have_key("settings")
-      expect(json["slots"].first).to have_key("media")
-      expect(response_body).to include(slots.first.title)
-    end
-  end
+  #     expect(response_status).to eq(200)
+  #     expect(json).to include({ "id" => group.id,
+  #                               "slotCount" => slots.length })
+  #     expect(json["slots"].length).to eq slots.length
+  #     expect(json["slots"].first).to have_key("id")
+  #     expect(json["slots"].first).to have_key("title")
+  #     expect(json["slots"].first).to have_key("startDate")
+  #     expect(json["slots"].first).to have_key("endDate")
+  #     expect(json["slots"].first).to have_key("createdAt")
+  #     expect(json["slots"].first).to have_key("updatedAt")
+  #     expect(json["slots"].first).to have_key("deletedAt")
+  #     expect(json["slots"].first).to have_key("settings")
+  #     expect(json["slots"].first).to have_key("media")
+  #     expect(response_body).to include(slots.first.title)
+  #   end
+  # end
 
   # members
   get "/v1/groups/:group_id/members" do
