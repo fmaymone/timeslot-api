@@ -13,7 +13,6 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
-  it { is_expected.to have_many(:group_slots).inverse_of(:group) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
                        .class_name(User)
@@ -24,7 +23,6 @@ RSpec.describe Group, type: :model do
                        .class_name(User)
                        .through(:active_memberships)
                        .source(:user) }
-
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
   it { is_expected.to respond_to(:follow) }

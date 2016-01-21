@@ -7,7 +7,6 @@ class Group < ActiveRecord::Base
 
   belongs_to :owner, class_name: User, inverse_of: :own_groups
 
-  has_many :group_slots, inverse_of: :group
 
   has_many :memberships, inverse_of: :group
   has_many :related_users, through: :memberships, class_name: User,
@@ -42,18 +41,10 @@ class Group < ActiveRecord::Base
     membership && membership.kick
   end
 
-  def group_slots_with_associations
-    group_slots.includes([:likes, :comments, :group, :re_slots,
-                          media_items: [:creator, :mediable],
-                          meta_slot: [:creator],
-                          notes: [:creator]])
-  end
-
   def delete
     remove_all_followers
     owner.touch
     memberships.includes(:user).each(&:delete)
-    group_slots_with_associations.each(&:delete)
     ts_soft_delete
   end
 

@@ -154,54 +154,54 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
 
-    context "group_slots" do
-      let!(:group_slots) { create_list(:group_slot, 3, group: group) }
+    # context "group_slots" do
+    #   let!(:group_slots) { create_list(:group_slot, 3, group: group) }
 
-      it "deletes all group slots" do
-        g_slots = group.group_slots
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots.reload
-        expect(g_slots.first.deleted_at?).to be true
-        expect(g_slots.last.deleted_at?).to be true
-      end
+    #   it "deletes all group slots" do
+    #     g_slots = group.group_slots
+    #     delete "/v1/groups/#{group.id}", {}, auth_header
+    #     g_slots.reload
+    #     expect(g_slots.first.deleted_at?).to be true
+    #     expect(g_slots.last.deleted_at?).to be true
+    #   end
 
-      it "deletes the metaslot of the group slots if no other reference" do
-        group_metaslot = group.group_slots.first.meta_slot
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        group_metaslot.reload
-        expect(group_metaslot.deleted_at?).to be true
-      end
-    end
+    #   it "deletes the metaslot of the group slots if no other reference" do
+    #     group_metaslot = group.group_slots.first.meta_slot
+    #     delete "/v1/groups/#{group.id}", {}, auth_header
+    #     group_metaslot.reload
+    #     expect(group_metaslot.deleted_at?).to be true
+    #   end
+    # end
 
-    context "group_slots media" do
-      let!(:group_slots) {
-        create_list(:group_slot, 3, :with_media, group: group) }
+    # context "group_slots media" do
+    #   let!(:group_slots) {
+    #     create_list(:group_slot, 3, :with_media, group: group) }
 
-      it "deletes all images on the group slots" do
-        g_slots_img_first = group.group_slots.first.images.first
-        g_slots_img_last = group.group_slots.first.images.last
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots_img_first.reload
-        g_slots_img_last.reload
-        expect(g_slots_img_first.deleted_at?).to be true
-        expect(g_slots_img_last.deleted_at?).to be true
-      end
-    end
+    #   it "deletes all images on the group slots" do
+    #     g_slots_img_first = group.group_slots.first.images.first
+    #     g_slots_img_last = group.group_slots.first.images.last
+    #     delete "/v1/groups/#{group.id}", {}, auth_header
+    #     g_slots_img_first.reload
+    #     g_slots_img_last.reload
+    #     expect(g_slots_img_first.deleted_at?).to be true
+    #     expect(g_slots_img_last.deleted_at?).to be true
+    #   end
+    # end
 
-    context "group_slots notes" do
-      let!(:group_slots) {
-        create_list(:group_slot, 3, :with_notes, group: group) }
+    # context "group_slots notes" do
+    #   let!(:group_slots) {
+    #     create_list(:group_slot, 3, :with_notes, group: group) }
 
-      it "deletes all notes on the group slots" do
-        g_slots_note_first = group.group_slots.first.notes.first
-        g_slots_note_last = group.group_slots.first.notes.last
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots_note_first.reload
-        g_slots_note_last.reload
-        expect(g_slots_note_first.deleted_at?).to be true
-        expect(g_slots_note_last.deleted_at?).to be true
-      end
-    end
+    #   it "deletes all notes on the group slots" do
+    #     g_slots_note_first = group.group_slots.first.notes.first
+    #     g_slots_note_last = group.group_slots.first.notes.last
+    #     delete "/v1/groups/#{group.id}", {}, auth_header
+    #     g_slots_note_first.reload
+    #     g_slots_note_last.reload
+    #     expect(g_slots_note_first.deleted_at?).to be true
+    #     expect(g_slots_note_last.deleted_at?).to be true
+    #   end
+    # end
   end
 
   # invite
