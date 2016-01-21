@@ -65,51 +65,6 @@ RSpec.describe V1::SlotsController, type: :controller do
     end
   end
 
-  describe "POST create_groupslot" do
-    describe "with valid params" do
-      let(:group) { create(:group, owner: current_user) }
-      let(:valid_attributes) {
-        attr = attributes_for(
-          :meta_slot, creator: current_user).merge(groupId: group.id)
-        attr.transform_keys { |key| key.to_s.camelize(:lower) }
-      }
-      it "responds with http status Created (201)" do
-        post :create_groupslot, valid_attributes
-        expect(response).to have_http_status(:created)
-      end
-
-      it "renders the create template" do
-        post :create_groupslot, valid_attributes
-        expect(response).to render_template("show")
-      end
-
-      it "creates a new MetaSlot" do
-        expect {
-          post :create_groupslot, valid_attributes, valid_session
-        }.to change(MetaSlot, :count).by(1)
-      end
-
-      it "creates a new GroupSlot" do
-        expect {
-          post :create_groupslot, valid_attributes, valid_session
-        }.to change(GroupSlot.unscoped, :count).by(1)
-      end
-
-      it "creates a new SlotSetting" do
-        expect {
-          post :create_groupslot, valid_attributes.merge(
-                 settings: { alerts: '1110111010' }), valid_session
-        }.to change(SlotSetting, :count).by(1)
-      end
-
-      it "assigns a newly created group_slot as @slot" do
-        post :create_groupslot, valid_attributes, valid_session
-        expect(assigns(:slot)).to be_a(GroupSlot)
-        expect(assigns(:slot)).to be_persisted
-      end
-    end
-  end
-
   describe "POST create_reslot" do
     describe "with valid params" do
       let(:pred) { create(:std_slot_public) }
@@ -229,29 +184,6 @@ RSpec.describe V1::SlotsController, type: :controller do
       end
 
       describe "when meta_slot is referenced" do
-        context "by users group_slot" do
-          let(:group) { create(:group) }
-          let!(:memberships) {
-            create(:membership, :active, group: group, user: current_user)
-          }
-          let!(:group_slot) {
-            create(:group_slot, group: group, meta_slot: reslot.meta_slot)
-          }
-          it "doesn't set deleted_at on the slot_setting" do
-            delete :destroy_reslot, id: reslot.id
-            slot_setting.reload
-            expect(slot_setting.deleted_at?).to be false
-          end
-
-          it "sets deleted_at on the slot_setting when group_slot is deleted" do
-            group_slot.update(deleted_at: Time.zone.now)
-
-            delete :destroy_reslot, id: reslot.id
-            slot_setting.reload
-            expect(slot_setting.deleted_at?).to be true
-          end
-        end
-
         context "by users std_slot" do
           let!(:std_slot) {
             create(:std_slot_private, meta_slot: reslot.meta_slot,
