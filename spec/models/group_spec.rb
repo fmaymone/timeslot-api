@@ -13,6 +13,7 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
+  it { is_expected.to have_many(:containerships).inverse_of(:group) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
                        .class_name(User)

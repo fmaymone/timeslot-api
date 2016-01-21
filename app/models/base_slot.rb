@@ -47,8 +47,12 @@ class BaseSlot < ActiveRecord::Base
            inverse_of: :slot
   has_many :re_slots, -> { includes(:slotter) },
            foreign_key: :parent_id, inverse_of: :parent
+
+  has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :slot_groups, through: :containerships, source: :group,
+           inverse_of: :slots
+
   belongs_to :shared_by, class_name: User
-  has_many :containerships, inverse_of: :slot
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
