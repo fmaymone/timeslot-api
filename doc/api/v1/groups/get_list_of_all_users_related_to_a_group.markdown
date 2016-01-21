@@ -41,19 +41,19 @@ Description : Deletion date of membership
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Df7vEsS2gPIFxp2ylf5ch-FzY7Y
+Authorization: Token token=mvLsbd6sFbYaGLaHjzF07zFPvYk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/16/related</pre>
+<pre>GET /v1/groups/15/related</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/16/related&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/15/related&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Df7vEsS2gPIFxp2ylf5ch-FzY7Y&quot; \
+	-H &quot;Authorization: Token token=mvLsbd6sFbYaGLaHjzF07zFPvYk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -64,10 +64,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;334bb9e4e6e2b5670f17188718599543&quot;
+ETag: W/&quot;fb0a18ab947b1fcdf1e433deeb8dd702&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 91a91171-ec8f-47f5-a376-6d42b5b97075
-X-Runtime: 0.017233
+X-Request-Id: b789bc83-ae78-4edc-ba08-888fc6ae16bf
+X-Runtime: 0.012530
 Vary: Origin
 Content-Length: 442</pre>
 
@@ -79,43 +79,43 @@ Content-Length: 442</pre>
 
 ```javascript
 {
-  "groupId" : 16,
+  "groupId" : 15,
   "size" : 7,
   "related" : [
     {
+      "userId" : 38,
+      "state" : "active",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 39,
+      "state" : "active",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 40,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 41,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 42,
+      "state" : "invited",
+      "deletedAt" : "2016-01-21T23:11:32.964Z"
+    },
+    {
+      "userId" : 43,
+      "state" : "invited",
+      "deletedAt" : "2016-01-21T23:11:32.964Z"
+    },
+    {
       "userId" : 44,
-      "state" : "active",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 45,
-      "state" : "active",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 46,
       "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 47,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 48,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
-    },
-    {
-      "userId" : 49,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
-    },
-    {
-      "userId" : 50,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
+      "deletedAt" : "2016-01-21T23:11:32.964Z"
     }
   ]
 }

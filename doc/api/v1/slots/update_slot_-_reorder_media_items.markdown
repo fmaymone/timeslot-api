@@ -120,7 +120,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=LkCCUs-Lc2bYpkBQxRB9iHTnIUs
+Authorization: Token token=lQvt2M7yL6ks__Hp-WEwjnuwMvc
 Host: example.org
 Cookie: </pre>
 
@@ -156,7 +156,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/5&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:2,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:3,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:4,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=LkCCUs-Lc2bYpkBQxRB9iHTnIUs&quot; \
+	-H &quot;Authorization: Token token=lQvt2M7yL6ks__Hp-WEwjnuwMvc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -167,10 +167,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bb8f4ea0ac013f840d51265cea6f3fde&quot;
+ETag: W/&quot;ef50cef0c64cb0a2a58c3fa31b2745d4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9f2e654a-7b79-4a1d-bd75-b696cd8c15cd
-X-Runtime: 0.034369
+X-Request-Id: 1ca00682-e0a5-462e-9bf2-8d0251c7fc54
+X-Runtime: 0.047755
 Vary: Origin
 Content-Length: 919</pre>
 
@@ -183,18 +183,18 @@ Content-Length: 919</pre>
 ```javascript
 {
   "id" : 5,
-  "title" : "Slot title 67",
-  "startDate" : "2019-09-18T23:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.857Z",
-  "updatedAt" : "2015-12-23T11:18:34.857Z",
+  "title" : "Slot title 69",
+  "startDate" : "2019-09-20T01:44:02.000Z",
+  "createdAt" : "2016-01-21T23:11:40.900Z",
+  "updatedAt" : "2016-01-21T23:11:40.900Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-18T23:44:02.000Z",
+  "endDate" : "2019-10-20T01:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 10,
-    "username" : "User 301",
-    "createdAt" : "2015-12-23T11:18:34.846Z",
-    "updatedAt" : "2015-12-23T11:18:34.846Z",
+    "username" : "User 309",
+    "createdAt" : "2016-01-21T23:11:40.893Z",
+    "updatedAt" : "2016-01-21T23:11:40.893Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -202,27 +202,27 @@ Content-Length: 919</pre>
   "media" : [
     {
       "mediaId" : 4,
-      "publicId" : "dfhjghjkdisudgfds7iy76",
+      "publicId" : "dfhjghjkdisudgfds7iy70",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:34.872Z"
+      "createdAt" : "2016-01-21T23:11:40.921Z"
     },
     {
       "mediaId" : 3,
-      "publicId" : "dfhjghjkdisudgfds7iy75",
+      "publicId" : "dfhjghjkdisudgfds7iy69",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:34.867Z"
+      "createdAt" : "2016-01-21T23:11:40.916Z"
     },
     {
       "mediaId" : 2,
-      "publicId" : "dfhjghjkdisudgfds7iy74",
+      "publicId" : "dfhjghjkdisudgfds7iy68",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:34.862Z"
+      "createdAt" : "2016-01-21T23:11:40.907Z"
     }
   ],
   "settings" : {

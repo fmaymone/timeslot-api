@@ -65,7 +65,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=pAc1lmBR15lvGAOS9CUsYpya7oQ
+Authorization: Token token=18hQM9RF-yGEGsMitwnp9DUABZ4
 Host: example.org
 Cookie: </pre>
 
@@ -91,7 +91,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://localhost:5000/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;invitees&quot;:[7,8,9]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=pAc1lmBR15lvGAOS9CUsYpya7oQ&quot; \
+	-H &quot;Authorization: Token token=18hQM9RF-yGEGsMitwnp9DUABZ4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -102,12 +102,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fa29357a5f7fd5ca73d15c00e084e1d2&quot;
+ETag: W/&quot;60ae09c03b50d6306650a45250290202&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e0f7b1fb-18c3-4f44-87ce-bcf68c44f7d5
-X-Runtime: 0.033924
+X-Request-Id: ccb53549-cce6-4a07-96e6-c2487dfce142
+X-Runtime: 0.035558
 Vary: Origin
-Content-Length: 346</pre>
+Content-Length: 392</pre>
 
 #### Status
 
@@ -119,17 +119,18 @@ Content-Length: 346</pre>
 {
   "id" : 8,
   "name" : "foo",
+  "uuid" : "82f44fff-14fc-4809-a8ab-a7d26ba0f3ee",
   "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : false,
-  "createdAt" : "2015-12-23T11:18:30.439Z",
-  "updatedAt" : "2015-12-23T11:18:30.439Z",
+  "createdAt" : "2016-01-21T23:11:36.524Z",
+  "updatedAt" : "2016-01-21T23:11:36.524Z",
   "deletedAt" : null,
   "owner" : {
     "id" : 10,
-    "username" : "User 76",
-    "createdAt" : "2015-12-23T11:18:30.428Z",
-    "updatedAt" : "2015-12-23T11:18:30.428Z",
+    "username" : "User 88",
+    "createdAt" : "2016-01-21T23:11:36.519Z",
+    "updatedAt" : "2016-01-21T23:11:36.519Z",
     "deletedAt" : null,
     "image" : ""
   },

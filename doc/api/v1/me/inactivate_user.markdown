@@ -98,7 +98,7 @@ Description : all devices from user
 
 #### Headers
 
-<pre>Authorization: Token token=8eKujDVEel33FFaFuMgXnB6SH-w
+<pre>Authorization: Token token=Ue9aHVI8UDyC7Z_Z_NBo4MXkkPc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -110,7 +110,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=8eKujDVEel33FFaFuMgXnB6SH-w&quot; \
+	-H &quot;Authorization: Token token=Ue9aHVI8UDyC7Z_Z_NBo4MXkkPc&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -122,10 +122,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;47f333fef0dbcd55be9f3802879d1c51&quot;
+ETag: W/&quot;89d070822a83f7f011d4d8ac73821e92&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 90b92ffc-ab5c-4bfb-848a-29e375e39074
-X-Runtime: 0.051142
+X-Request-Id: 0eb87083-4dd8-4fea-b72d-1cca4b183a51
+X-Runtime: 0.053540
 Vary: Origin
 Content-Length: 736</pre>
 
@@ -137,11 +137,11 @@ Content-Length: 736</pre>
 
 ```javascript
 {
-  "id" : 140,
-  "username" : "User 206",
-  "createdAt" : "2015-12-23T11:18:32.479Z",
-  "updatedAt" : "2015-12-23T11:18:32.512Z",
-  "deletedAt" : "2015-12-23T11:18:32.509Z",
+  "id" : 135,
+  "username" : "User 213",
+  "createdAt" : "2016-01-21T23:11:38.491Z",
+  "updatedAt" : "2016-01-21T23:11:38.516Z",
+  "deletedAt" : "2016-01-21T23:11:38.515Z",
   "image" : "",
   "location" : null,
   "slotCount" : 0,

@@ -20,7 +20,7 @@ Description : &#39;muid&#39; of the global slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=9qte6tZXn50LJEIQ7uJoHETJSuc
+Authorization: Token token=lXtyMc8eGCuBf_aVCdPDwfvCD_4
 Host: example.org
 Cookie: </pre>
 
@@ -40,7 +40,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/globalslots/reslot&quot; -d &#39;{&quot;predecessor&quot;:&quot;238a69a4-271c-f5cb-e60e-48952d805859&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=9qte6tZXn50LJEIQ7uJoHETJSuc&quot; \
+	-H &quot;Authorization: Token token=lXtyMc8eGCuBf_aVCdPDwfvCD_4&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -51,12 +51,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c97fd8cbada6a3dbdf103f15ca02a950&quot;
+ETag: W/&quot;e53da2ae1d9262592061723eda0aa574&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bfd6b22c-1fdc-4185-ac93-0600e9af8e70
-X-Runtime: 0.165157
+X-Request-Id: 681f1f2b-1a01-47b4-a7fb-214643fdcb07
+X-Runtime: 0.174039
 Vary: Origin
-Content-Length: 1621</pre>
+Content-Length: 1637</pre>
 
 #### Status
 
@@ -69,21 +69,21 @@ Content-Length: 1621</pre>
   "id" : 5,
   "title" : "Borussia Mönchengladbach vs. Borussia Dortmund",
   "startDate" : "2016-01-23T18:30:00.000Z",
-  "createdAt" : "2015-12-23T11:18:29.960Z",
-  "updatedAt" : "2015-12-23T11:18:29.960Z",
+  "createdAt" : "2016-01-21T23:11:35.991Z",
+  "updatedAt" : "2016-01-21T23:11:35.991Z",
   "deletedAt" : null,
   "endDate" : "2016-01-23T20:30:00.000Z",
   "location" : {
     "name" : "Borussia-Park",
-    "thoroughfare" : null,
+    "thoroughfare" : "Am Borussiapark",
     "subThoroughfare" : null,
     "locality" : "Mönchengladbach",
     "subLocality" : null,
-    "administrativeArea" : null,
+    "administrativeArea" : "NW",
     "subAdministrativeArea" : null,
-    "postalCode" : null,
-    "country" : "Deutschland",
-    "isoCountryCode" : null,
+    "postalCode" : "41179",
+    "country" : null,
+    "isoCountryCode" : "Deutschland",
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
@@ -93,8 +93,8 @@ Content-Length: 1621</pre>
   "creator" : {
     "id" : 13,
     "username" : "dfb.de",
-    "createdAt" : "2015-12-23T11:18:29.828Z",
-    "updatedAt" : "2015-12-23T11:18:29.828Z",
+    "createdAt" : "2016-01-21T23:11:35.854Z",
+    "updatedAt" : "2016-01-21T23:11:35.854Z",
     "deletedAt" : null,
     "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
   },
@@ -104,7 +104,7 @@ Content-Length: 1621</pre>
       "title" : "Description",
       "content" : "Bundesliga, 2015/2016, 18. Spieltag",
       "localId" : null,
-      "createdAt" : "2015-12-23T11:18:29.928Z"
+      "createdAt" : "2016-01-21T23:11:35.951Z"
     }
   ],
   "media" : [
@@ -114,18 +114,19 @@ Content-Length: 1621</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:29.894Z"
+      "createdAt" : "2016-01-21T23:11:35.917Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
+  "visibility" : "public",
   "reslotsCounter" : 1,
   "slotter" : {
     "id" : 15,
-    "username" : "User 66",
-    "createdAt" : "2015-12-23T11:18:29.840Z",
-    "updatedAt" : "2015-12-23T11:18:29.840Z",
+    "username" : "User 78",
+    "createdAt" : "2016-01-21T23:11:35.865Z",
+    "updatedAt" : "2016-01-21T23:11:35.865Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -136,7 +137,6 @@ Content-Length: 1621</pre>
   "parent" : {
     "id" : 4
   },
-  "visibility" : "public",
   "muid" : "238a69a4-271c-f5cb-e60e-48952d805859",
   "likes" : 0,
   "commentsCounter" : 0,

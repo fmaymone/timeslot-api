@@ -45,7 +45,7 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=pz9SPbVkf6YiKJDVstnjF-YcYu0
+Authorization: Token token=-T2xnRyjUSX4aFT6Ep3sP5BhIyc
 Host: example.org
 Cookie: </pre>
 
@@ -62,7 +62,7 @@ method: metaphone</pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=pz9SPbVkf6YiKJDVstnjF-YcYu0&quot; \
+	-H &quot;Authorization: Token token=-T2xnRyjUSX4aFT6Ep3sP5BhIyc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -73,10 +73,10 @@ method: metaphone</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c288865b4c4fb01518ed8f2d4f669507&quot;
+ETag: W/&quot;845a57440f975ca2428b66665d91908b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 916abc10-6d3b-4f70-9661-4a403617b4a3
-X-Runtime: 0.013784
+X-Request-Id: 749b0c5e-0835-47dc-b006-76c42c23c66f
+X-Runtime: 0.012364
 Vary: Origin
 Content-Length: 337</pre>
 
@@ -89,19 +89,19 @@ Content-Length: 337</pre>
 ```javascript
 [
   {
-    "id" : 164,
+    "id" : 159,
     "username" : "John Doe",
-    "createdAt" : "2016-01-05T13:32:46.584Z",
-    "updatedAt" : "2016-01-05T13:32:46.584Z",
+    "createdAt" : "2016-01-21T23:11:39.420Z",
+    "updatedAt" : "2016-01-21T23:11:39.420Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 165,
+    "id" : 160,
     "username" : "John Doh",
-    "createdAt" : "2016-01-05T13:32:46.587Z",
-    "updatedAt" : "2016-01-05T13:32:46.587Z",
+    "createdAt" : "2016-01-21T23:11:39.423Z",
+    "updatedAt" : "2016-01-21T23:11:39.423Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

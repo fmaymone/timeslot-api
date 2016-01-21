@@ -53,12 +53,12 @@ limit: 5</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3764503e3a54c3a372cc897efb8dd570&quot;
+ETag: W/&quot;f8e22f109af36ba2d6a4e03a02efc813&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7b481029-ef8d-4969-bd71-c8ded0da4300
-X-Runtime: 0.009387
+X-Request-Id: bc109bb3-c2ff-4135-a3ed-b5645befb24d
+X-Runtime: 0.020841
 Vary: Origin
-Content-Length: 3824</pre>
+Content-Length: 3854</pre>
 
 #### Status
 
@@ -69,54 +69,6 @@ Content-Length: 3824</pre>
 ```javascript
 {
   "result" : [
-    {
-      "muid" : "3ecc7d80-d953-cc62-2c6e-4f160cf9a9bc",
-      "title" : "Borussia Dortmund vs. FC Ingolstadt",
-      "startDate" : "2016-01-30T15:30:00",
-      "endDate" : "2016-01-30T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222608",
-      "description" : "Bundesliga, 2015/2016, 19. Spieltag",
-      "sources" : [
-        {
-          "name" : "DFB",
-          "url" : "http://dfb.de",
-          "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
-        }
-      ],
-      "location" : {
-        "name" : "Signal Iduna Park",
-        "locality" : "Dortmund",
-        "thoroughfare" : null,
-        "country" : "Deutschland",
-        "latitude" : 51.4940605163574,
-        "longitude" : 7.45179986953735
-      }
-    },
-    {
-      "muid" : "0f2bddbb-c75c-a994-1af9-5ce7ea36c397",
-      "title" : "Borussia Dortmund vs. 1. FC Köln",
-      "startDate" : "2016-05-14T15:30:00",
-      "endDate" : "2016-05-14T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222900",
-      "description" : "Bundesliga, 2015/2016, 34. Spieltag",
-      "sources" : [
-        {
-          "name" : "DFB",
-          "url" : "http://dfb.de",
-          "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
-        }
-      ],
-      "location" : {
-        "name" : "Signal Iduna Park",
-        "locality" : "Dortmund",
-        "thoroughfare" : null,
-        "country" : "Deutschland",
-        "latitude" : 51.4940605163574,
-        "longitude" : 7.45179986953735
-      }
-    },
     {
       "muid" : "238a69a4-271c-f5cb-e60e-48952d805859",
       "title" : "Borussia Mönchengladbach vs. Borussia Dortmund",
@@ -133,12 +85,36 @@ Content-Length: 3824</pre>
         }
       ],
       "location" : {
-        "name" : "Borussia-Park",
-        "locality" : "Mönchengladbach",
+        "name" : "Borussia-Park, Mönchengladbach, Deutschland",
+        "locality" : null,
         "thoroughfare" : null,
-        "country" : "Deutschland",
+        "country" : null,
         "latitude" : 51.171221,
         "longitude" : 6.385442
+      }
+    },
+    {
+      "muid" : "3ecc7d80-d953-cc62-2c6e-4f160cf9a9bc",
+      "title" : "Borussia Dortmund vs. FC Ingolstadt",
+      "startDate" : "2016-01-30T15:30:00",
+      "endDate" : "2016-01-30T17:30:00",
+      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222608",
+      "description" : "Bundesliga, 2015/2016, 19. Spieltag",
+      "sources" : [
+        {
+          "name" : "DFB",
+          "url" : "http://dfb.de",
+          "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
+        }
+      ],
+      "location" : {
+        "name" : "Signal Iduna Park, Dortmund, Deutschland",
+        "locality" : null,
+        "thoroughfare" : null,
+        "country" : null,
+        "latitude" : 51.4940605163574,
+        "longitude" : 7.45179986953735
       }
     },
     {
@@ -157,22 +133,22 @@ Content-Length: 3824</pre>
         }
       ],
       "location" : {
-        "name" : "Olympiastadion",
-        "locality" : "Berlin",
+        "name" : "Olympiastadion, Berlin, Deutschland",
+        "locality" : null,
         "thoroughfare" : null,
-        "country" : "Deutschland",
+        "country" : null,
         "latitude" : 52.5149993896484,
         "longitude" : 13.2428102493286
       }
     },
     {
-      "muid" : "7ec32216-ffee-af00-cdc2-72fe84c1f176",
-      "title" : "Eintracht Frankfurt vs. Borussia Dortmund",
-      "startDate" : "2016-05-07T15:30:00",
-      "endDate" : "2016-05-07T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/a23b2f3d4a08965ecb1d02991a10be9ef678314e438ebb9c0ec6e7bc6abf",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222880",
-      "description" : "Bundesliga, 2015/2016, 33. Spieltag",
+      "muid" : "c68031ff-e93c-fae0-6fa0-de3cc4e77a32",
+      "title" : "Borussia Dortmund vs. Hannover 96",
+      "startDate" : "2016-02-13T15:30:00",
+      "endDate" : "2016-02-13T17:30:00",
+      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222640",
+      "description" : "Bundesliga, 2015/2016, 21. Spieltag",
       "sources" : [
         {
           "name" : "DFB",
@@ -181,12 +157,36 @@ Content-Length: 3824</pre>
         }
       ],
       "location" : {
-        "name" : "Commerzbank-Arena",
-        "locality" : "Frankfurt am Main",
+        "name" : "Signal Iduna Park, Dortmund, Deutschland",
+        "locality" : null,
         "thoroughfare" : null,
-        "country" : "Deutschland",
-        "latitude" : 50.0728416442871,
-        "longitude" : 8.651920318603519
+        "country" : null,
+        "latitude" : 51.4940605163574,
+        "longitude" : 7.45179986953735
+      }
+    },
+    {
+      "muid" : "0b1083b4-6020-56f8-dc28-163ca0a0d683",
+      "title" : "Borussia Dortmund vs. FC Porto",
+      "startDate" : "2016-02-18T19:00:00",
+      "endDate" : "2016-02-18T21:00:00",
+      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+      "url" : "http://www.dfb.de/europa-league/saisonplan?spieledb_path=%2Fmatches%2F2231918",
+      "description" : "Europa League, 2015/2016, Sechzehntelfinale",
+      "sources" : [
+        {
+          "name" : "DFB",
+          "url" : "http://dfb.de",
+          "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
+        }
+      ],
+      "location" : {
+        "name" : "Signal Iduna Park, Dortmund, Deutschland",
+        "locality" : null,
+        "thoroughfare" : null,
+        "country" : null,
+        "latitude" : 51.4940605163574,
+        "longitude" : 7.45179986953735
       }
     }
   ]

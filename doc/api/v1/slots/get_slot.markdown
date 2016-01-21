@@ -83,19 +83,19 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_LMyJ9UEh3StL0s7kRSMbFIReP4
+Authorization: Token token=CYfP2xBL6R1bVnCm38Y2f_yFxR0
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/33</pre>
+<pre>GET /v1/slots/28</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/33&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/28&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_LMyJ9UEh3StL0s7kRSMbFIReP4&quot; \
+	-H &quot;Authorization: Token token=CYfP2xBL6R1bVnCm38Y2f_yFxR0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -106,10 +106,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;464bf550c224066998415c15b25c3b8b&quot;
+ETag: W/&quot;f56ff4b120a4e4c10b344e8be4ac4db8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1ffc3268-bbbc-40c4-aa16-eb94a2244965
-X-Runtime: 0.012788
+X-Request-Id: c2bd3023-23aa-4f90-af5e-75f0a938bbfc
+X-Runtime: 0.013651
 Vary: Origin
 Content-Length: 1466</pre>
 
@@ -121,77 +121,77 @@ Content-Length: 1466</pre>
 
 ```javascript
 {
-  "id" : 33,
-  "title" : "Slot title 54",
-  "startDate" : "2019-09-04T09:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:33.571Z",
-  "updatedAt" : "2015-12-23T11:18:33.571Z",
+  "id" : 28,
+  "title" : "Slot title 55",
+  "startDate" : "2019-09-05T10:44:02.000Z",
+  "createdAt" : "2016-01-21T23:11:39.702Z",
+  "updatedAt" : "2016-01-21T23:11:39.702Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T09:44:02.000Z",
+  "endDate" : "2019-10-05T10:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 180,
-    "username" : "User 240",
-    "createdAt" : "2015-12-23T11:18:33.564Z",
-    "updatedAt" : "2015-12-23T11:18:33.564Z",
+    "id" : 178,
+    "username" : "User 248",
+    "createdAt" : "2016-01-21T23:11:39.695Z",
+    "updatedAt" : "2016-01-21T23:11:39.695Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 31,
-      "publicId" : "dfhjghjkdisudgfds7iy59",
+      "mediaId" : 25,
+      "publicId" : "dfhjghjkdisudgfds7iy53",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-12-23T11:18:33.586Z",
+      "createdAt" : "2016-01-21T23:11:39.716Z",
       "duration" : null,
-      "title" : "Title 58"
+      "title" : "Title 52"
     },
     {
-      "mediaId" : 30,
-      "publicId" : "dfhjghjkdisudgfds7iy58",
+      "mediaId" : 24,
+      "publicId" : "dfhjghjkdisudgfds7iy52",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-12-23T11:18:33.584Z",
+      "createdAt" : "2016-01-21T23:11:39.714Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
-      "mediaId" : 29,
-      "publicId" : "dfhjghjkdisudgfds7iy57",
+      "mediaId" : 23,
+      "publicId" : "dfhjghjkdisudgfds7iy51",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-12-23T11:18:33.581Z",
+      "createdAt" : "2016-01-21T23:11:39.712Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
-      "mediaId" : 28,
-      "publicId" : "dfhjghjkdisudgfds7iy56",
+      "mediaId" : 22,
+      "publicId" : "dfhjghjkdisudgfds7iy50",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.579Z"
+      "createdAt" : "2016-01-21T23:11:39.709Z"
     },
     {
-      "mediaId" : 27,
-      "publicId" : "dfhjghjkdisudgfds7iy55",
+      "mediaId" : 21,
+      "publicId" : "dfhjghjkdisudgfds7iy49",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.576Z"
+      "createdAt" : "2016-01-21T23:11:39.707Z"
     },
     {
-      "mediaId" : 26,
-      "publicId" : "dfhjghjkdisudgfds7iy54",
+      "mediaId" : 20,
+      "publicId" : "dfhjghjkdisudgfds7iy48",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.574Z"
+      "createdAt" : "2016-01-21T23:11:39.705Z"
     }
   ],
   "settings" : {

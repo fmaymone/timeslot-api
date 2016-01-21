@@ -4,7 +4,7 @@
 
 ### GET /v1/slots/:id/user_tags
 
-returns a list of user ids which was tagged to this slot.
+returns a list of user ids which are tagged to this slot.
 
 returns 404 if ID is invalid
 
@@ -24,19 +24,19 @@ Description : containing a list of users
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=JVTPWr32FqSEJJ4n1PmjPEEGjIo
+Authorization: Token token=bREzMdMkFPPMg2m0yDcFj0HNRuA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/35/user_tags</pre>
+<pre>GET /v1/slots/34/user_tags</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/35/user_tags&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/34/user_tags&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=JVTPWr32FqSEJJ4n1PmjPEEGjIo&quot; \
+	-H &quot;Authorization: Token token=bREzMdMkFPPMg2m0yDcFj0HNRuA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -47,10 +47,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fe5e3533784983679d476c5726dd7d84&quot;
+ETag: W/&quot;956f7afac98711775346ebecabf4a2e6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 44384d39-7485-4421-bee8-766a0ca6aa4c
-X-Runtime: 0.017034
+X-Request-Id: 8e476a40-82b2-45b6-bb46-6af991d29fde
+X-Runtime: 0.015580
 Vary: Origin
 Content-Length: 502</pre>
 
@@ -64,27 +64,27 @@ Content-Length: 502</pre>
 [
   {
     "id" : 94,
-    "username" : "User 389",
-    "createdAt" : "2015-12-29T10:15:16.226Z",
-    "updatedAt" : "2015-12-29T10:15:16.226Z",
+    "username" : "User 397",
+    "createdAt" : "2016-01-21T23:11:42.200Z",
+    "updatedAt" : "2016-01-21T23:11:42.200Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
     "id" : 97,
-    "username" : "User 392",
-    "createdAt" : "2015-12-29T10:15:16.287Z",
-    "updatedAt" : "2015-12-29T10:15:16.287Z",
+    "username" : "User 400",
+    "createdAt" : "2016-01-21T23:11:42.248Z",
+    "updatedAt" : "2016-01-21T23:11:42.248Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
     "id" : 99,
-    "username" : "User 394",
-    "createdAt" : "2015-12-29T10:15:16.341Z",
-    "updatedAt" : "2015-12-29T10:15:16.341Z",
+    "username" : "User 402",
+    "createdAt" : "2016-01-21T23:11:42.283Z",
+    "updatedAt" : "2016-01-21T23:11:42.283Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

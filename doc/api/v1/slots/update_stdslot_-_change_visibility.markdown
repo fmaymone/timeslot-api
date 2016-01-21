@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8
+Authorization: Token token=wQeGh_nyT1kKmaVj97EQ6YLIo6Y
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8&quot; \
+	-H &quot;Authorization: Token token=wQeGh_nyT1kKmaVj97EQ6YLIo6Y&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,10 +144,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a3ac8b0522cd9deb49e7942a412be261&quot;
+ETag: W/&quot;54640c5e0d8351604f1c2a39be43bcc4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 502c7638-fb3a-4698-b281-34040f2b8f97
-X-Runtime: 0.029337
+X-Request-Id: 451bde8a-c4c0-4cfd-8ccf-cc5ea25bca33
+X-Runtime: 0.030883
 Vary: Origin
 Content-Length: 508</pre>
 
@@ -160,18 +160,18 @@ Content-Length: 508</pre>
 ```javascript
 {
   "id" : 2,
-  "title" : "Slot title 64",
-  "startDate" : "2019-09-15T20:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.698Z",
-  "updatedAt" : "2015-12-23T11:18:34.706Z",
+  "title" : "Slot title 66",
+  "startDate" : "2019-09-17T22:44:02.000Z",
+  "createdAt" : "2016-01-21T23:11:40.767Z",
+  "updatedAt" : "2016-01-21T23:11:40.777Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-15T20:44:02.000Z",
+  "endDate" : "2019-10-17T22:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 4,
-    "username" : "User 295",
-    "createdAt" : "2015-12-23T11:18:34.690Z",
-    "updatedAt" : "2015-12-23T11:18:34.690Z",
+    "username" : "User 303",
+    "createdAt" : "2016-01-21T23:11:40.760Z",
+    "updatedAt" : "2016-01-21T23:11:40.760Z",
     "deletedAt" : null,
     "image" : ""
   },

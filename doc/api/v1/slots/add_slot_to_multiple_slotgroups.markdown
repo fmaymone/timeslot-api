@@ -1,45 +1,22 @@
 # Slots API
 
-## Create new ReSlot from the Web Search service
+## Add Slot to multiple SlotGroups
 
-### POST /v1/webslot
+### POST /v1/slots/:id/slotgroups
 
-Returns status code 200.
+Send an array of slotGroup UUIDs and the slot will be added to those slotGroups.
 
-Missing unrequiered fields will be filled with default values.
+returns 404 if ID is invalid
 
-returns 422 if parameters are invalid
-
-returns 422 if required parameters are missing
+returns ???
 
 ### Parameters
 
-Name : visibility *- required -*
-Description : Visibility of the Slot (private/friends/public)
+Name : id *- required -*
+Description : ID of the Slot to be added to SlotGroups
 
-Name : title *- required -*
-Description : Title of slot (max. 60 characters)
-
-Name : startDate *- required -*
-Description : Startdate and Time of the Slot
-
-Name : endDate *- required -*
-Description : Enddate and Time of the Slot (startdate + duration).
-
-Name : location
-Description : Location associated with this slot (see example)
-
-Name : media
-Description : Media items (image/audio/video) of to the Slot (see example)
-
-Name : notes
-Description : Notes for to the Slot (see example)
-
-Name : settings
-Description : User specific settings for the slot (alerts)
-
-Name : alerts
-Description : Alerts for the Slot
+Name : slotGroups *- required -*
+Description : Array with UUIDs of the SlotGroups the slot should be added to
 
 
 ### Response Fields
@@ -111,32 +88,30 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Content-Type: application/json
-Accept: application/json
-Authorization: Token token=JmYpSh5xJDxqlf6w7-aeD5Y6C1Q
+Authorization: Token token=GYjQ9zShJA_CeJZ8u3t5If80QUo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/webslot</pre>
+<pre>POST /v1/slots/14/slotgroups</pre>
 
 #### Body
 ```javascript
 {
-  "visibility" : "public",
-  "title" : "Time for a Slot",
-  "startDate" : "2014-09-08T13:31:02.000Z",
-  "endDate" : "2014-09-13T22:03:24.000Z"
+  "slotGroups" : [
+    "1a3e1691-eafc-47cd-a725-d2751938b100",
+    "3c40cf89-771f-4d5e-9c5c-30b06a0f93af"
+  ]
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/webslot&quot; -d &#39;{&quot;visibility&quot;:&quot;public&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/14/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;1a3e1691-eafc-47cd-a725-d2751938b100&quot;,&quot;3c40cf89-771f-4d5e-9c5c-30b06a0f93af&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=JmYpSh5xJDxqlf6w7-aeD5Y6C1Q&quot; \
+	-H &quot;Authorization: Token token=GYjQ9zShJA_CeJZ8u3t5If80QUo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -148,8 +123,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: fd94b739-d159-4671-bdaf-bb80f27962c2
-X-Runtime: 0.058002
+X-Request-Id: e34c4eb7-580b-4761-99e1-94f0b97a6c82
+X-Runtime: 0.009704
 Vary: Origin
 Content-Length: 0</pre>
 

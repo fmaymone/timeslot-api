@@ -34,18 +34,18 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=HevAfr3aoWZfFPAy3W6wQjpJn8I
+<pre>Authorization: Token token=6bUq9fwMODYUWfOIJ-VRNH2sy44
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/30/history</pre>
+<pre>GET /v1/slots/29/history</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/30/history&quot; -X GET \
-	-H &quot;Authorization: Token token=HevAfr3aoWZfFPAy3W6wQjpJn8I&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/29/history&quot; -X GET \
+	-H &quot;Authorization: Token token=6bUq9fwMODYUWfOIJ-VRNH2sy44&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,10 +56,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9e9da71309bafea4a0a10d3f76b5057d&quot;
+ETag: W/&quot;6fec12fac17ab95dbf77f70161ab10d0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fab03e0f-097e-4b31-8260-95e0ea11b8ff
-X-Runtime: 0.014640
+X-Request-Id: 928494ce-4f9d-40ed-a122-789d718206d5
+X-Runtime: 0.015719
 Vary: Origin
 Content-Length: 341</pre>
 
@@ -74,22 +74,22 @@ Content-Length: 341</pre>
   "predecessors" : [
     {
       "id" : 84,
-      "username" : "User 379",
+      "username" : "User 387",
       "userImage" : "",
-      "timestamp" : "2015-12-23T11:18:36.035Z"
+      "timestamp" : "2016-01-21T23:11:41.971Z"
     },
     {
       "id" : 82,
-      "username" : "User 377",
+      "username" : "User 385",
       "userImage" : "",
-      "timestamp" : "2015-12-23T11:18:35.989Z"
+      "timestamp" : "2016-01-21T23:11:41.923Z"
     }
   ],
   "parentUser" : {
     "id" : 80,
-    "username" : "User 375",
-    "createdAt" : "2015-12-23T11:18:35.976Z",
-    "updatedAt" : "2015-12-23T11:18:35.976Z",
+    "username" : "User 383",
+    "createdAt" : "2016-01-21T23:11:41.909Z",
+    "updatedAt" : "2016-01-21T23:11:41.909Z",
     "deletedAt" : null,
     "image" : ""
   }

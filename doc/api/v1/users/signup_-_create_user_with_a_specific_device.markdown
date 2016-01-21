@@ -151,7 +151,7 @@ Cookie: </pre>
   "password" : "secret-thing",
   "device" : {
     "device" : {
-      "device_id" : "sn-263462873410834786765439526",
+      "device_id" : "sn-273462873410834786765439527",
       "system" : "ios",
       "version" : "6.0"
     }
@@ -162,7 +162,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-263462873410834786765439526&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-273462873410834786765439527&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -175,10 +175,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3b156a6ddadd7438b11e96a5a3e744bd&quot;
+ETag: W/&quot;8bb8259d673ad041461b01b36b6d3dbd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f5d1b4c2-0d9f-48d2-a607-670a09f0d8d6
-X-Runtime: 0.024437
+X-Request-Id: 19281a5a-b6b9-4d94-bfd1-2bd59eeba77e
+X-Runtime: 0.022364
 Vary: Origin
 Content-Length: 755</pre>
 
@@ -190,10 +190,10 @@ Content-Length: 755</pre>
 
 ```javascript
 {
-  "id" : 101,
+  "id" : 115,
   "username" : "foo",
-  "createdAt" : "2015-12-23T11:18:36.390Z",
-  "updatedAt" : "2015-12-23T11:18:36.390Z",
+  "createdAt" : "2016-01-21T23:11:42.606Z",
+  "updatedAt" : "2016-01-21T23:11:42.606Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -219,6 +219,6 @@ Content-Length: 755</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "auVP-7OpCepEIYEKFqrDsj0IcjI"
+  "authToken" : "yr0OU-2iokKizz7hmgKzF2ciSaw"
 }
 ```

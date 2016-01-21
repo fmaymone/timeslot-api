@@ -19,13 +19,13 @@ Description : Content of the comment
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=uQqidBQuMCYuM3LAHNwP_aVXhf0
+Authorization: Token token=3mn5KASzn4CZlTNtV5hoyWo6lsk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/19/comment</pre>
+<pre>POST /v1/slots/18/comment</pre>
 
 #### Body
 ```javascript
@@ -37,9 +37,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/19/comment&quot; -d &#39;{&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/18/comment&quot; -d &#39;{&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=uQqidBQuMCYuM3LAHNwP_aVXhf0&quot; \
+	-H &quot;Authorization: Token token=3mn5KASzn4CZlTNtV5hoyWo6lsk&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -51,8 +51,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 42decc77-3d2c-4441-85b1-32ac8c7dbf91
-X-Runtime: 0.045543
+X-Request-Id: d55732e3-1805-43ab-bee1-420eb641bc49
+X-Runtime: 0.045195
 Vary: Origin
 Content-Length: 0</pre>
 

@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo
+Authorization: Token token=B1PGOxQoQHamW7YkbZY_uBJxNm0
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo&quot; \
+	-H &quot;Authorization: Token token=B1PGOxQoQHamW7YkbZY_uBJxNm0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,10 +75,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ee1ec3660f62c84565804710a722ae0f&quot;
+ETag: W/&quot;7fd96c4ecb0d85a7efe4dba1b346d66c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d36afece-0434-4eeb-9198-b157971e17d1
-X-Runtime: 0.012497
+X-Request-Id: dff5fa44-cc1c-40ae-8219-6a4dc43b32ca
+X-Runtime: 0.021015
 Vary: Origin
 Content-Length: 525</pre>
 
@@ -91,19 +91,19 @@ Content-Length: 525</pre>
 ```javascript
 [
   {
-    "id" : 29,
+    "id" : 24,
     "title" : "Timeslot Party Berlin 2015",
-    "startDate" : "2019-09-27T05:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:33.378Z",
-    "updatedAt" : "2015-12-23T11:18:33.378Z",
+    "startDate" : "2019-09-01T06:44:02.000Z",
+    "createdAt" : "2016-01-21T23:11:39.494Z",
+    "updatedAt" : "2016-01-21T23:11:39.494Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-27T05:44:02.000Z",
+    "endDate" : "2019-10-01T06:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 167,
-      "username" : "User 220",
-      "createdAt" : "2015-12-23T11:18:33.365Z",
-      "updatedAt" : "2015-12-23T11:18:33.365Z",
+      "id" : 165,
+      "username" : "User 228",
+      "createdAt" : "2016-01-21T23:11:39.484Z",
+      "updatedAt" : "2016-01-21T23:11:39.484Z",
       "deletedAt" : null,
       "image" : ""
     },

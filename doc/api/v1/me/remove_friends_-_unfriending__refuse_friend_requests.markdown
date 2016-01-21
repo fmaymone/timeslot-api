@@ -19,7 +19,7 @@ Description : Array of User IDs for whom to refuse/destroy a friendship
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=PVJXP9j9rjjMV4K9ujR7aQKc0B4
+Authorization: Token token=S9863nxfnjDt1xgJ-2wxJaNcdNE
 Host: example.org
 Cookie: </pre>
 
@@ -31,10 +31,10 @@ Cookie: </pre>
 ```javascript
 {
   "ids" : [
-    157,
-    158,
-    159,
-    156
+    152,
+    153,
+    154,
+    151
   ]
 }
 ```
@@ -42,10 +42,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/remove_friends&quot; -d &#39;{&quot;ids&quot;:[157,158,159,156]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/me/remove_friends&quot; -d &#39;{&quot;ids&quot;:[152,153,154,151]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=PVJXP9j9rjjMV4K9ujR7aQKc0B4&quot; \
+	-H &quot;Authorization: Token token=S9863nxfnjDt1xgJ-2wxJaNcdNE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -57,8 +57,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: b97f64cf-650b-4713-b45e-9984fa845765
-X-Runtime: 0.028800
+X-Request-Id: 3795bb8e-0961-4f11-adef-935ce82e174e
+X-Runtime: 0.026995
 Vary: Origin
 Content-Length: 0</pre>
 
