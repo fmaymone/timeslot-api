@@ -1021,14 +1021,17 @@ resource "Slots" do
       let(:id) { slot.id }
 
       example "Add Slot to multiple SlotGroups", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated reslot data." \
-                    " Doesn't delete anything.\n\n" \
-                    "returns 404 if ID is invalid"
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
         do_request
 
         expect(response_status).to eq(200)
         expect(group_1.slots).to include slot
         expect(group_2.slots).to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
       end
     end
   end

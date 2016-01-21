@@ -274,8 +274,13 @@ module V1
 
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
-      @slot = @slot.parent if @slot.class < ReSlot
+      @slot = @slot.parent if @slot.class < ReSlot # not sure about this
       authorize @slot
+
+      groups = Group.where(uuid: params[:slotGroups])
+      @slot.add_to_groups(groups)
+
+      head :ok
     end
 
     # GET /v1/slots/1/history
