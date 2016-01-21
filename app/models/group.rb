@@ -7,6 +7,7 @@ class Group < ActiveRecord::Base
 
   belongs_to :owner, class_name: User, inverse_of: :own_groups
 
+  has_many :containerships, inverse_of: :group
 
   has_many :memberships, inverse_of: :group
   has_many :related_users, through: :memberships, class_name: User,

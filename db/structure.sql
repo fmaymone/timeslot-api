@@ -194,6 +194,39 @@ ALTER SEQUENCE connects_id_seq OWNED BY connects.id;
 
 
 --
+-- Name: containerships; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE containerships (
+    id bigint NOT NULL,
+    slot_id bigint NOT NULL,
+    group_id bigint NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: containerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE containerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: containerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE containerships_id_seq OWNED BY containerships.id;
+
+
+--
 -- Name: devices; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -646,39 +679,6 @@ ALTER SEQUENCE slot_settings_id_seq OWNED BY slot_settings.id;
 
 
 --
--- Name: slotgroupship; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE slotgroupship (
-    id bigint NOT NULL,
-    slot_id bigint NOT NULL,
-    group_id bigint NOT NULL,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
-);
-
-
---
--- Name: slotgroupship_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE slotgroupship_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: slotgroupship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE slotgroupship_id_seq OWNED BY slotgroupship.id;
-
-
---
 -- Name: std_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -765,6 +765,13 @@ ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq':
 --
 
 ALTER TABLE ONLY connects ALTER COLUMN id SET DEFAULT nextval('connects_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY containerships ALTER COLUMN id SET DEFAULT nextval('containerships_id_seq'::regclass);
 
 
 --
@@ -883,13 +890,6 @@ ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_setting
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY slotgroupship ALTER COLUMN id SET DEFAULT nextval('slotgroupship_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
@@ -950,6 +950,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY connects
     ADD CONSTRAINT connects_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: containerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY containerships
+    ADD CONSTRAINT containerships_pkey PRIMARY KEY (id);
 
 
 --
@@ -1041,14 +1049,6 @@ ALTER TABLE ONLY slot_settings
 
 
 --
--- Name: slotgroupship_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY slotgroupship
-    ADD CONSTRAINT slotgroupship_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1082,6 +1082,20 @@ CREATE UNIQUE INDEX index_connects_on_social_id_and_user_id ON connects USING bt
 --
 
 CREATE INDEX index_connects_on_user_id ON connects USING btree (user_id);
+
+
+--
+-- Name: index_containerships_on_group_id_and_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_containerships_on_group_id_and_slot_id ON containerships USING btree (group_id, slot_id);
+
+
+--
+-- Name: index_containerships_on_slot_id_and_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_containerships_on_slot_id_and_group_id ON containerships USING btree (slot_id, group_id);
 
 
 --
@@ -1443,4 +1457,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160119114255');
 INSERT INTO schema_migrations (version) VALUES ('20160119125106');
 
 INSERT INTO schema_migrations (version) VALUES ('20160121113721');
+
+INSERT INTO schema_migrations (version) VALUES ('20160121133720');
 
