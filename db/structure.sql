@@ -287,20 +287,6 @@ INHERITS (base_slots);
 
 
 --
--- Name: group_slots; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE group_slots (
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
-    group_id bigint NOT NULL
-)
-INHERITS (base_slots);
-
-
---
 -- Name: groups; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -799,41 +785,6 @@ ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY group_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
-
-
---
--- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY group_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
-
-
---
--- Name: likes_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY group_slots ALTER COLUMN likes_count SET DEFAULT 0;
-
-
---
--- Name: comments_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY group_slots ALTER COLUMN comments_count SET DEFAULT 0;
-
-
---
--- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY group_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
@@ -1152,20 +1103,6 @@ CREATE INDEX index_friendships_on_friend_id ON friendships USING btree (friend_i
 --
 
 CREATE UNIQUE INDEX index_friendships_on_user_id_and_friend_id ON friendships USING btree (user_id, friend_id);
-
-
---
--- Name: index_group_slots_on_group_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_group_slots_on_group_id ON group_slots USING btree (group_id);
-
-
---
--- Name: index_group_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE INDEX index_group_slots_on_meta_slot_id ON group_slots USING btree (meta_slot_id);
 
 
 --
@@ -1504,4 +1441,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160107230953');
 INSERT INTO schema_migrations (version) VALUES ('20160119114255');
 
 INSERT INTO schema_migrations (version) VALUES ('20160119125106');
+
+INSERT INTO schema_migrations (version) VALUES ('20160121113721');
 
