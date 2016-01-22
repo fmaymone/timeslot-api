@@ -62,11 +62,16 @@ module V1
     end
 
     # GET /v1/groups/:group_id/slots
-    def slots
+    def slots_old
       @group = Group.find(group_id)
       authorize @group
 
       render :slots
+    end
+
+    # GET /v1/groups/:group_uuid/slots
+    def slots
+
     end
 
     # GET /v1/groups/:group_id/members
