@@ -26,6 +26,13 @@ class Group < ActiveRecord::Base
     Membership.includes([:user]).where(group_id: id)
   end
 
+  def slots_with_associations
+    slots.includes([:likes, :comments,
+                    media_items: [:creator, :mediable],
+                    meta_slot: [:creator],
+                    notes: [:creator]])
+  end
+
   def invite_users(ids)
     ids.each do |user_id|
       invitee = User.find(user_id)
