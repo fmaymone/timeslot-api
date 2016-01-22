@@ -1,4 +1,5 @@
 json.id @group.id
+json.uuid @group.uuid
 json.slot_count @group.slots.size
 json.upcoming_count @group.slots.upcoming.count
 json.slots do

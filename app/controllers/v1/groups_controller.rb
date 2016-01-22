@@ -71,7 +71,10 @@ module V1
 
     # GET /v1/groups/:group_uuid/slots
     def slots
+      @group = Group.find_by(uuid: params[:group_uuid])
+      authorize @group
 
+      render :slots
     end
 
     # GET /v1/groups/:group_id/members

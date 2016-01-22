@@ -282,6 +282,62 @@ resource "Groups" do
   #   end
   # end
 
+  # slots via uuid
+  get "/v1/groups/:group_uuid/slots" do
+    header "accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_uuid, "ID of the group to get slots for", required: true
+
+    response_field :groupId, "deprecated: ID of the group"
+    response_field :groupUuid, "UUID of the group"
+    response_field :slotCount, "Number of all slot in this group"
+    response_field :upcomingCount, "Number of upcoming group slots"
+    response_field :slots, "Array of group slots"
+    response_field :id, "ID of the slot"
+    response_field :title, "Title of the slot"
+    response_field :startDate, "Startdate of the slot"
+    response_field :endDate, "Enddate of the slot"
+    response_field :openEnd, "OpenEnd Boolean Flag of the slot"
+    response_field :alerts, "Alerts for the slot for the current user"
+    response_field :media, "Media items of the slot"
+    response_field :url, "direct url to fetch the slot"
+    response_field :createdAt, "Creation datetime of the slot"
+    response_field :updatedAt, "Last update of the slot"
+    response_field :deletedAt, "Deletion datetime of the slot"
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:group_uuid) { group.uuid }
+    let!(:containerships) do
+      create_list(:containership, 4, group: group)
+    end
+
+    example "Get slots in a slotgroup by UUID", document: :v1 do
+      explanation "returns 200 and a list of all slots\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key("id")
+      expect(json).to have_key("uuid")
+      expect(json).to have_key("slots")
+      expect(json).to have_key("slotCount")
+      expect(json["uuid"]).to eq group.uuid
+      expect(json["slotCount"]).to eq containerships.length
+      expect(json["slots"].length).to eq containerships.length
+      expect(json["slots"].first).to have_key("id")
+      expect(json["slots"].first).to have_key("title")
+      expect(json["slots"].first).to have_key("startDate")
+      expect(json["slots"].first).to have_key("endDate")
+      expect(json["slots"].first).to have_key("createdAt")
+      expect(json["slots"].first).to have_key("updatedAt")
+      expect(json["slots"].first).to have_key("deletedAt")
+      expect(json["slots"].first).to have_key("settings")
+      expect(json["slots"].first).to have_key("media")
+      expect(response_body).to include(containerships.first.slot.title)
+    end
+  end
+
   # members
   get "/v1/groups/:group_id/members" do
     header "accept", "application/json"
