@@ -52,30 +52,32 @@ resource "Groups" do
   end
 
   # show
-  get "/v1/groups/:group_id" do
+  get "/v1/groups/:group_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get", required: true
+    parameter :group_uuid, "ID of the group to get", required: true
 
     include_context "default group response fields"
 
     let(:group) { create(:group) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
     end
 
     example "Get group data for specific group", document: :v1 do
       explanation "returns data of specified group\n\n" \
-                  "returns 404 if ID is invalid\n\n"
+                  "returns 404 if UUID is invalid\n\n"
       do_request
 
       expect(response_status).to eq(200)
       group.reload
+      expect(json).to have_key 'id'
+      expect(json['id']).to eq group.uuid
       expect(
-        json.except('membershipState', 'owner')
-      ).to eq(group.attributes.as_json.except('owner_id')
+        json.except('membershipState', 'owner', 'id')
+      ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -117,11 +119,11 @@ resource "Groups" do
   end
 
   # update
-  patch "/v1/groups/:group_id" do
+  patch "/v1/groups/:group_uuid" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to update", required: true
+    parameter :group_uuid, "ID of the group to update", required: true
 
     include_context "default group response fields"
 
@@ -129,7 +131,7 @@ resource "Groups" do
       create(:group, name: "foo", owner: current_user,
              members_can_invite: false, members_can_post: false)
     end
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
 
     describe "Update existing group" do
       parameter :name, "Updated name of group (max. 255 characters)"
@@ -143,7 +145,7 @@ resource "Groups" do
       example "Update data for existing group", document: :v1 do
         explanation "e.g. Change groupname\n\n" \
                     "returns 200 if the update was successful\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
+                    "returns 404 if UUID is invalid\n\n" \
                     "returns 422 if parameters are missing\n\n" \
                     "returns 422 if parameters are invalid"
         do_request
@@ -153,9 +155,11 @@ resource "Groups" do
         expect(group.members_can_invite).to eq true
         expect(group.members_can_post).to eq true
         expect(response_status).to eq(200)
+        expect(json).to have_key 'id'
+        expect(json['id']).to eq group.uuid
         expect(
-          json.except('membershipState', 'owner')
-        ).to eq(group.attributes.as_json.except('owner_id')
+          json.except('membershipState', 'owner', 'id')
+        ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json).to have_key "owner"
         expect(json['owner']['id']).to eq group.owner.id
@@ -187,15 +191,15 @@ resource "Groups" do
   end
 
   # destroy
-  delete "/v1/groups/:group_id" do
+  delete "/v1/groups/:group_uuid" do
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to delete", required: true
+    parameter :group_uuid, "ID of the group to delete", required: true
 
     include_context "default group response fields"
 
     let(:group) { create(:group, owner: current_user) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:memberships) { create_list(:membership, 4, :active, group: group) }
 
     example "Delete group", document: :v1 do
@@ -204,7 +208,7 @@ resource "Groups" do
                   "Current User must be group owner" \
                   "returns 200 and the updated data for the group\n\n" \
                   "returns 403 if current user not group owner\n\n" \
-                  "returns 404 if ID is invalid"
+                  "returns 404 if UUID is invalid"
       do_request
 
       group.reload
@@ -212,9 +216,11 @@ resource "Groups" do
       expect(group.memberships.first.deleted_at?).to be true
       expect(group.memberships.last.deleted_at?).to be true
       expect(response_status).to eq(200)
+      expect(json).to have_key 'id'
+      expect(json['id']).to eq group.uuid
       expect(
-        json.except('membershipState', 'owner')
-      ).to eq(group.attributes.as_json.except('owner_id')
+        json.except('membershipState', 'owner', 'id')
+      ).to eq(group.attributes.as_json.except('owner_id', 'uuid', 'id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -231,58 +237,6 @@ resource "Groups" do
   end
 
   # slots
-  # get "/v1/groups/:group_id/slots" do
-  #   header "accept", "application/json"
-  #   header "Authorization", :auth_header
-
-  #   parameter :group_id, "ID of the group to get slots for", required: true
-
-  #   response_field :groupId, "ID of the group"
-  #   response_field :slotCount, "Number of all slot in this group"
-  #   response_field :upcomingCount, "Number of upcoming group slots"
-  #   response_field :slots, "Array of group slots"
-  #   response_field :id, "ID of the slot"
-  #   response_field :title, "Title of the slot"
-  #   response_field :startDate, "Startdate of the slot"
-  #   response_field :endDate, "Enddate of the slot"
-  #   response_field :openEnd, "OpenEnd Boolean Flag of the slot"
-  #   response_field :alerts, "Alerts for the slot for the current user"
-  #   response_field :media, "Media items of the slot"
-  #   response_field :url, "direct url to fetch the slot"
-  #   response_field :createdAt, "Creation datetime of the slot"
-  #   response_field :updatedAt, "Last update of the slot"
-  #   response_field :deletedAt, "Deletion datetime of the slot"
-
-  #   let(:group) { create(:group) }
-  #   let(:group_id) { group.id }
-  #   let!(:slots) { create_list(:group_slot, 4, group: group) }
-  #   let!(:membership) do
-  #     create(:membership, :active, user: current_user, group: group)
-  #   end
-
-  #   example "Get slots in a group", document: :v1 do
-  #     explanation "returns 200 and a list of all slots\n\n" \
-  #                 "returns 404 if ID is invalid"
-  #     do_request
-
-  #     expect(response_status).to eq(200)
-  #     expect(json).to include({ "id" => group.id,
-  #                               "slotCount" => slots.length })
-  #     expect(json["slots"].length).to eq slots.length
-  #     expect(json["slots"].first).to have_key("id")
-  #     expect(json["slots"].first).to have_key("title")
-  #     expect(json["slots"].first).to have_key("startDate")
-  #     expect(json["slots"].first).to have_key("endDate")
-  #     expect(json["slots"].first).to have_key("createdAt")
-  #     expect(json["slots"].first).to have_key("updatedAt")
-  #     expect(json["slots"].first).to have_key("deletedAt")
-  #     expect(json["slots"].first).to have_key("settings")
-  #     expect(json["slots"].first).to have_key("media")
-  #     expect(response_body).to include(slots.first.title)
-  #   end
-  # end
-
-  # slots via uuid
   get "/v1/groups/:group_uuid/slots" do
     header "accept", "application/json"
     header "Authorization", :auth_header
@@ -314,15 +268,15 @@ resource "Groups" do
 
     example "Get slots in a slotgroup by UUID", document: :v1 do
       explanation "returns 200 and a list of all slots\n\n" \
-                  "returns 404 if ID is invalid"
+                  "returns 404 if UUID is invalid"
       do_request
 
       expect(response_status).to eq(200)
       expect(json).to have_key("id")
-      expect(json).to have_key("uuid")
+      expect(json).not_to have_key("uuid")
       expect(json).to have_key("slots")
       expect(json).to have_key("slotCount")
-      expect(json["uuid"]).to eq group.uuid
+      expect(json["id"]).to eq group.uuid
       expect(json["slotCount"]).to eq containerships.length
       expect(json["slots"].length).to eq containerships.length
       expect(json["slots"].first).to have_key("id")
@@ -339,11 +293,11 @@ resource "Groups" do
   end
 
   # members
-  get "/v1/groups/:group_id/members" do
+  get "/v1/groups/:group_uuid/members" do
     header "accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get members for", required: true
+    parameter :group_uuid, "ID of the group to get members for", required: true
 
     response_field :groupId, "ID of the group"
     response_field :size, "Number of active group members"
@@ -353,7 +307,7 @@ resource "Groups" do
     response_field :userUrl, "URL for member"
 
     let(:group) { create(:group) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:active_members) { create_list(:membership, 4, :active, group: group) }
     let!(:inactive_member) { create(:membership, :inactive, group: group) }
     # group owner is automatically an active member too
@@ -363,35 +317,26 @@ resource "Groups" do
 
     example "Get list of all active group members", document: :v1 do
       explanation "returns 200 and a list of all active group members\n\n" \
-                  "returns 404 if ID is invalid"
+                  "returns 404 if UUID is invalid"
       do_request
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "groupId" => group.id,
+                                "groupId" => group.uuid,
                                 "size" => 6
                               })
       expect(response_body).to include(group.members.first.username)
       expect(response_body)
         .to include(v1_user_url(group.members.first, format: :json))
     end
-
-    describe "group ID invalid" do
-      let(:group_id) { group.id + 1 }
-
-      example "returns Not Found", document: false do
-        do_request
-        expect(response_status).to eq(404)
-      end
-    end
   end
 
   # related
-  get "/v1/groups/:group_id/related" do
+  get "/v1/groups/:group_uuid/related" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to get related users for",
+    parameter :group_uuid, "ID of the group to get related users for",
               required: true
 
     response_field :groupId, "ID of the group"
@@ -402,7 +347,7 @@ resource "Groups" do
     response_field :deletedAt, "Deletion date of membership", scope: :related
 
     let(:group) { create(:group, owner: current_user) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:members) { create_list(:membership, 1, :active, group: group) }
     let!(:invitees) { create_list(:membership, 2, :invited, group: group) }
     let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
@@ -412,41 +357,51 @@ resource "Groups" do
       explanation "Also includes user with pending or refused invitations and" \
                   " inactive or kicked members.\n\n" \
                   "returns 200 & list of all users related to this group\n\n" \
-                  "returns 404 if ID is invalid"
+                  "returns 404 if UUID is invalid"
       do_request
 
       expect(response_status).to eq(200)
       expect(json).to include({
-                                "groupId" => group.id,
+                                "groupId" => group.uuid,
                                 "size" => 7
                               })
       expect(json["related"])
         .to include("userId" => group.related_users.first.id,
                     "state" => group.memberships.first.humanize,
                     "deletedAt" => group.memberships.first.deleted_at
-                                 )
+                   )
     end
 
-    describe "group ID invalid" do
-      let(:group_id) { group.id + 1 }
+    describe "no group with given UUID exists" do
+      let(:group_uuid) { "32fe81cb-c11c-427c-b1b2-7888b114c345" }
 
       example "returns Not Found", document: false do
         do_request
         expect(response_status).to eq(404)
       end
     end
+
+    describe "group UUID invalid" do
+      let(:group_uuid) { "04f7504b-3e96-4dbb-ac94-4998f1574bXYZ" }
+
+      example "returns Not Found", document: false do
+        expect {
+          do_request
+        }.to raise_error ActionController::RoutingError
+      end
+    end
   end
 
   # accept invite
-  post "/v1/groups/:group_id/accept" do
+  post "/v1/groups/:group_uuid/accept" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group", required: true
+    parameter :group_uuid, "ID of the group", required: true
 
     let(:invited_user) { current_user }
     let(:group) { create(:group) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:membership) do
       create(:membership, :invited, user: invited_user, group: group)
     end
@@ -454,7 +409,7 @@ resource "Groups" do
     example "Accept Invitation and add invited user to group", document: :v1 do
       explanation "returns 200 if invite successfully accepted\n\n" \
                   "returns 403 if invitation is missing\n\n" \
-                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 404 if group UUID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       do_request
 
@@ -466,15 +421,15 @@ resource "Groups" do
   end
 
   # refuse invite
-  post "/v1/groups/:group_id/refuse" do
+  post "/v1/groups/:group_uuid/refuse" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group", required: true
+    parameter :group_uuid, "ID of the group", required: true
 
     let(:invited_user) { current_user }
     let(:group) { create(:group) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let!(:membership) do
       create(:membership, :invited, user: invited_user, group: group)
     end
@@ -483,7 +438,7 @@ resource "Groups" do
       explanation "The invitation is invalidated.\n\n" \
                   "returns 200 if invite successfully refused.\n\n" \
                   "returns 403 if invitation is missing\n\n" \
-                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 404 if group UUID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       do_request
 
@@ -496,17 +451,17 @@ resource "Groups" do
   end
 
   # invite
-  post "/v1/groups/:group_id/members" do
+  post "/v1/groups/:group_uuid/members" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group", required: true
+    parameter :group_uuid, "ID of the group", required: true
     parameter :invitees, "User IDs to be invited to group", required: true
 
     let!(:group) { create(:group, owner: current_user) }
     let(:invited_users) { create_list(:user, 3) }
 
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let(:invitees) { invited_users.collect(&:id) }
 
     example "Invite multiple users to group", document: :v1 do
@@ -514,7 +469,7 @@ resource "Groups" do
                   " invites by group members.\n\n" \
                   "returns 201 if invite successfully created\n\n" \
                   "returns 403 if user is not allowed to invite\n\n" \
-                  "returns 404 if group ID is invalid\n\n" \
+                  "returns 404 if group UUID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       expect {
         do_request
@@ -528,14 +483,14 @@ resource "Groups" do
   end
 
   # leave
-  delete "/v1/groups/:group_id/members" do
+  delete "/v1/groups/:group_uuid/members" do
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group", required: true
+    parameter :group_uuid, "ID of the group", required: true
 
     let(:member) { current_user }
     let(:group) { create(:group) }
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
 
     describe "membership active" do
       let!(:membership) do
@@ -547,7 +502,7 @@ resource "Groups" do
                     "returns 403 if current user not active group member\n\n" \
                     "returns 403 if current user has no membership for this" \
                     " group at all\n\n" \
-                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 404 if group UUID is invalid\n\n" \
                     "returns 422 if parameters are missing"
         do_request
 
@@ -578,16 +533,16 @@ resource "Groups" do
   end
 
   # kick
-  delete "/v1/groups/:group_id/members/:user_id" do
+  delete "/v1/groups/:group_uuid/members/:user_id" do
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group", required: true
+    parameter :group_uuid, "ID of the group", required: true
     parameter :user_id, "ID of the user to kick", required: true
 
     let(:member) { create(:user) }
     let(:group) { create(:group, owner: current_user) }
 
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let(:user_id) { member.id }
 
     describe "membership active" do
@@ -602,7 +557,7 @@ resource "Groups" do
                     " for this group at all\n\n" \
                     "returns 403 if current user not group owner aka" \
                     " not allowed to kick members\n\n" \
-                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 404 if group UUID is invalid\n\n" \
                     "returns 422 if parameters are missing"
         do_request
 
@@ -633,11 +588,11 @@ resource "Groups" do
   end
 
   # settings
-  patch "/v1/groups/:group_id/members" do
+  patch "/v1/groups/:group_uuid/members" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_id, "ID of the group to delete", required: true
+    parameter :group_uuid, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
     parameter :defaultAlerts, "set default alerts for slots in this group",
               scope: :settings
@@ -645,7 +600,7 @@ resource "Groups" do
     let(:member) { current_user }
     let(:group) { create(:group) }
 
-    let(:group_id) { group.id }
+    let(:group_uuid) { group.uuid }
     let(:notifications) { "false" }
     let(:defaultAlerts) { "1111100000" }
 
@@ -659,7 +614,7 @@ resource "Groups" do
         explanation "Change notifications and default alerts for group\n\n" \
                     "returns 200 if setting was successfully updated\n\n" \
                     "returns 403 if user not active group member\n\n" \
-                    "returns 404 if group ID is invalid\n\n" \
+                    "returns 404 if group UUID is invalid\n\n" \
                     "returns 422 if parameters are missing"
         do_request
 
@@ -715,15 +670,6 @@ resource "Groups" do
       example "returns Forbidden", document: false do
         do_request
         expect(response_status).to eq 403
-      end
-    end
-
-    describe "group ID invalid" do
-      let(:group_id) { group.id + 1 }
-
-      example "returns Not found", document: false do
-        do_request
-        expect(response_status).to eq 404
       end
     end
   end

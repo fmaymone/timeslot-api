@@ -1,4 +1,4 @@
-json.group_id memberships.first.group_id
+json.group_id memberships.first.group.uuid
 json.size memberships.size
 json.related do
   json.array!(memberships) do |membership|

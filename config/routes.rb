@@ -86,22 +86,23 @@ Rails.application.routes.draw do
       get ':id/friends', to: 'users#friends', as: 'user_friends'
     end
 
-    scope :groups, constraints: { group_id: /\d+/ } do
+    scope :groups, constraints: {
+            group_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
       get '', to: 'groups#index', as: 'groups'
       post '', to: 'groups#create', as: 'group_create'
-      get ':group_id', to: 'groups#show', as: 'group'
-      patch ':group_id', to: 'groups#update', as: 'group_update'
-      delete ':group_id', to: 'groups#destroy', as: 'group_delete'
+      get ':group_uuid', to: 'groups#show', as: 'group'
+      patch ':group_uuid', to: 'groups#update', as: 'group_update'
+      delete ':group_uuid', to: 'groups#destroy', as: 'group_delete'
       get ':group_uuid/slots', to: 'groups#slots', as: 'group_slots'
-      get ':group_id/members', to: 'groups#members', as: 'group_members'
-      get ':group_id/related', to: 'groups#related', as: 'group_related'
-      post ':group_id/members', to: 'groups#invite'
-      post ':group_id/accept', to: 'groups#accept_invite'
-      post ':group_id/refuse', to: 'groups#refuse_invite'
-      delete ':group_id/members', to: 'groups#leave'
-      delete ':group_id/members/:user_id', to: 'groups#kick',
+      get ':group_uuid/members', to: 'groups#members', as: 'group_members'
+      get ':group_uuid/related', to: 'groups#related', as: 'group_related'
+      post ':group_uuid/members', to: 'groups#invite'
+      post ':group_uuid/accept', to: 'groups#accept_invite'
+      post ':group_uuid/refuse', to: 'groups#refuse_invite'
+      delete ':group_uuid/members', to: 'groups#leave'
+      delete ':group_uuid/members/:user_id', to: 'groups#kick',
              constraints: { user_id: /\d+/ }
-      patch ':group_id/members', to: 'groups#member_settings'
+      patch ':group_uuid/members', to: 'groups#member_settings'
     end
 
     scope :feed do
