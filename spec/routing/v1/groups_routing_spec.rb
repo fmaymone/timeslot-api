@@ -29,12 +29,6 @@ RSpec.describe V1::GroupsController, type: :routing do
     end
 
     it "routes to #slots" do
-      expect(get: "/v1/groups/1/slots")
-        .to route_to(
-              "v1/groups#slots_old", group_id: "1", format: :json)
-    end
-
-    it "routes to #slots" do
       expect(get: "/v1/groups/b9286b2a-0902-42f7-985a-beac5421db48/slots")
         .to route_to(
               "v1/groups#slots",

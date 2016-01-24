@@ -92,7 +92,6 @@ Rails.application.routes.draw do
       get ':group_id', to: 'groups#show', as: 'group'
       patch ':group_id', to: 'groups#update', as: 'group_update'
       delete ':group_id', to: 'groups#destroy', as: 'group_delete'
-      get ':group_id/slots', to: 'groups#slots_old', as: 'group_slots_old'
       get ':group_uuid/slots', to: 'groups#slots', as: 'group_slots'
       get ':group_id/members', to: 'groups#members', as: 'group_members'
       get ':group_id/related', to: 'groups#related', as: 'group_related'
