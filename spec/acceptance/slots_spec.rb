@@ -1088,6 +1088,70 @@ resource "Slots" do
     end
   end
 
+  delete "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be removed from SlotGroups",
+              required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups slot should be removed from",
+              required: true
+
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:containerships) {
+      create(:containership, slot: slot, group: group_1)
+      create(:containership, slot: slot, group: group_2)
+      create(:containership, slot: slot, group: unauthorized_group)
+      create(:containership, slot: slot, group: deleted_group,
+             deleted_at: Time.zone.now)
+    }
+    let(:slotGroups) { [group_1.uuid,
+                        group_2.uuid,
+                        unauthorized_group.uuid,
+                        deleted_group.uuid] }
+
+    describe "Remove Slot from multiple SlotGroups" do
+      include_context "stdslot response fields"
+
+      let(:id) { slot.id }
+
+      example "Remove Slot from multiple SlotGroups", document: :v1 do
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
+
+        do_request
+        expect(response_status).to eq(200)
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(unauthorized_group.slots).to include slot
+        expect(deleted_group.slots).not_to include slot
+        expect(slot.slot_groups).not_to include group_1
+        expect(slot.slot_groups).not_to include group_2
+        expect(slot.slot_groups).to include unauthorized_group
+        expect(slot.slot_groups).not_to include deleted_group
+        expect(json).to have_key('unauthorizedSlotgroups')
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+      end
+    end
+  end
+
   post "/v1/slots/:id/like" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header

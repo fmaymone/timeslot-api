@@ -293,6 +293,27 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
+    def remove_from_groups
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      groups = Group.where(uuid: params[:slotGroups])
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+
+        begin
+          authorize group, :remove_slot?
+        rescue Pundit::NotAuthorizedError
+          @slot.errors.add(:base, group.uuid)
+        else
+          @slot.remove_from_group group
+        end
+      end
+
+      render :slotgroups, locals: { slot: @slot }
+    end
+
     # GET /v1/slots/1/history
     def reslot_history
       @slot = BaseSlot.get(params[:id])
