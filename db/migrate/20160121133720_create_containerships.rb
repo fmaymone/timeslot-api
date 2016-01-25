@@ -1,6 +1,5 @@
 class CreateContainerships < ActiveRecord::Migration
   def up
-    drop_table :slotgroupship
     create_table :containerships do |t|
       t.bigint :slot_id, null: false
       t.bigint :group_id, null: false
@@ -14,12 +13,5 @@ class CreateContainerships < ActiveRecord::Migration
 
   def down
     drop_table :containerships
-    create_table :slotgroupship do |t|
-      t.bigint :slot_id, null: false
-      t.bigint :group_id, null: false
-      t.datetime :deleted_at
-      t.timestamps null: false
-    end
-    change_column :slotgroupship, :id, :bigint
   end
 end
