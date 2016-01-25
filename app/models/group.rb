@@ -8,7 +8,8 @@ class Group < ActiveRecord::Base
   belongs_to :owner, class_name: User, inverse_of: :own_groups
 
   has_many :containerships, inverse_of: :group
-  has_many :slots, through: :containerships, source: :slot,
+  has_many :slots, -> { merge Containership.active },
+           through: :containerships, source: :slot,
            inverse_of: :slot_groups
 
   has_many :memberships, inverse_of: :group
@@ -54,6 +55,8 @@ class Group < ActiveRecord::Base
     remove_all_followers
     owner.touch
     memberships.includes(:user).each(&:delete)
+    # containerships.includes(:slot).each(&:delete)
+    containerships.each(&:delete)
     ts_soft_delete
   end
 

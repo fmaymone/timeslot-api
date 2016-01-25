@@ -49,7 +49,8 @@ class BaseSlot < ActiveRecord::Base
            foreign_key: :parent_id, inverse_of: :parent
 
   has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
-  has_many :slot_groups, through: :containerships, source: :group,
+  has_many :slot_groups, -> { merge Containership.active },
+           through: :containerships, source: :group,
            inverse_of: :slots
 
   belongs_to :shared_by, class_name: User
@@ -231,6 +232,12 @@ class BaseSlot < ActiveRecord::Base
 
   def add_to_group(group)
     Containership.create(slot: self, group: group)
+  end
+
+  # TODO: add spec
+  def remove_from_group(group)
+    cs = containerships.where(group: group).take
+    cs.delete
   end
 
   def copy_to(targets, user)
