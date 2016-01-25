@@ -1010,28 +1010,80 @@ resource "Slots" do
               "Array with UUIDs of the SlotGroups the slot should be added to",
               required: true
 
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
+
     let(:slot) { create(:std_slot_public) }
-    let(:group_1) { create(:group) }
-    let(:group_2) { create(:group) }
-    let!(:slotGroups) { [group_1.uuid, group_2.uuid] }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
 
-    describe "Add Slot to multiple SlotGroups" do
-      include_context "stdslot response fields"
+    let(:slotGroups) { [group_1.uuid,
+                        group_2.uuid,
+                        unauthorized_group.uuid,
+                        deleted_group.uuid] }
 
-      let(:id) { slot.id }
+    context "std_slot" do
+      describe "Add Slot to multiple SlotGroups" do
+        let(:id) { slot.id }
 
-      example "Add Slot to multiple SlotGroups", document: :v1 do
-        explanation "Send an array of slotGroup UUIDs and the slot will be " \
-                    "added to those slotGroups.\n\n" \
-                    "returns 404 if ID is invalid\n\n" \
-                    "returns ???"
+        example "Add Slot to multiple SlotGroups", document: :v1 do
+          explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                      "added to those slotGroups.\n\n" \
+                      "returns a list of all slotgroups where user has no " \
+                      "access rights\n\n" \
+                      "returns 404 if ID is invalid\n\n" \
+                      "returns ???"
+          do_request
+
+          expect(response_status).to eq(200)
+          expect(group_1.slots).to include slot
+          expect(group_2.slots).to include slot
+          expect(unauthorized_group.slots).not_to include slot
+          expect(deleted_group.slots).not_to include slot
+          expect(slot.slot_groups).to include group_1
+          expect(slot.slot_groups).to include group_2
+          expect(slot.slot_groups).not_to include unauthorized_group
+          expect(slot.slot_groups).not_to include deleted_group
+          expect(json).to have_key('unauthorizedSlotgroups')
+          expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+          expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+        end
+      end
+    end
+
+    context "other public re_slot" do
+      let(:reslot) { create(:re_slot_public, parent: slot) }
+      let(:id) { reslot.id }
+
+      example "Add public ReSlot to multiple SlotGroups",
+              document: :false do
         do_request
-
         expect(response_status).to eq(200)
-        expect(group_1.slots).to include slot
-        expect(group_2.slots).to include slot
-        expect(slot.slot_groups).to include group_1
-        expect(slot.slot_groups).to include group_2
+        expect(group_1.slots).to include reslot
+        expect(group_2.slots).to include reslot
+      end
+    end
+
+    context "own private re_slot" do
+      let(:reslot) {
+        create(:re_slot_private, parent: slot, slotter: current_user) }
+      let(:id) { reslot.id }
+
+      example "Add own private ReSlot to multiple SlotGroups",
+              document: :false do
+        do_request
+        expect(response_status).to eq(200)
+        expect(group_1.slots).to include reslot
+        expect(group_2.slots).to include reslot
       end
     end
   end
@@ -1353,8 +1405,8 @@ resource "Slots" do
                          "[private/friends/public]",
               scope: :copyTo
     # parameter :groupId, "ID of the group to copy to, user must be allowed " \
-                        # "to post to this group",
-              # scope: :copyTo
+    # "to post to this group",
+    # scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",

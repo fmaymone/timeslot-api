@@ -274,13 +274,23 @@ module V1
 
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
-      @slot = @slot.parent if @slot.class < ReSlot # not sure about this
       authorize @slot
 
       groups = Group.where(uuid: params[:slotGroups])
-      @slot.add_to_groups(groups)
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
 
-      head :ok
+        begin
+          authorize group, :add_slot?
+        rescue Pundit::NotAuthorizedError
+          @slot.errors.add(:base, group.uuid)
+        else
+          @slot.add_to_group group
+        end
+      end
+
+      render :slotgroups, locals: { slot: @slot }
     end
 
     # GET /v1/slots/1/history
