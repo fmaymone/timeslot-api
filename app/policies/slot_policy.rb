@@ -71,13 +71,20 @@ class SlotPolicy < ApplicationPolicy
   # true if slot is public visible
   # true if slot is public visible
   # true if it's my own slot
-  # TODO: write specs
+  # group permissions are checked per slotgroup
   def add_to_groups?
     return false unless current_user?
     return true if slot.visibility == 'public'
     return true if slot.class < StdSlot && slot.owner == current_user
     return true if slot.class < ReSlot && slot.slotter == current_user
     false
+  end
+
+  # false if no user is signed-in
+  # true, if the user has read access for the slot
+  # group permissions are checked per slotgroup
+  def remove_from_groups?
+    show_to_current_user?
   end
 
   # ASK: can only logged in users see the history?
@@ -136,6 +143,7 @@ class SlotPolicy < ApplicationPolicy
   private def show_std_slot?
     return true if slot.StdSlotPublic?
     return true if current_user == slot.owner
+    # TODO: return true if slot is in a slotgroup where user has access
     if slot.StdSlotFriends? || slot.StdSlotFoaf?
       return true if current_user.friend_with?(slot.owner)
     end
@@ -154,6 +162,7 @@ class SlotPolicy < ApplicationPolicy
   private def show_re_slot?
     return true if slot.ReSlotPublic?
     return true if current_user == slot.slotter
+    # TODO: return true if slot is in a slotgroup where user has access
     if slot.ReSlotFriends? || slot.ReSlotFoaf?
       return true if current_user.friend_with?(slot.slotter)
     end

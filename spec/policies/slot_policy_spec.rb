@@ -82,7 +82,7 @@ describe SlotPolicy do
 
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
               :reslot_history?, :add_like?, :add_comment?, :copy?,
-              :create_reslot? do
+              :create_reslot?, :remove_from_groups? do
     let(:user) { create(:user) }
 
     context "std_slot" do
@@ -382,7 +382,7 @@ describe SlotPolicy do
 
     context "own std_slots" do
       context "public slot" do
-        let(:slot) { create(:std_slot_public, creator: user) }
+        let(:slot) { create(:std_slot_public, owner: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -390,7 +390,7 @@ describe SlotPolicy do
       end
 
       context "foaf-visible slot" do
-        let(:slot) { create(:std_slot_foaf, creator: user) }
+        let(:slot) { create(:std_slot_foaf, owner: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -398,7 +398,7 @@ describe SlotPolicy do
       end
 
       context "friend-visible slot" do
-        let(:slot) { create(:std_slot_friends, creator: user) }
+        let(:slot) { create(:std_slot_friends, owner: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -406,7 +406,7 @@ describe SlotPolicy do
       end
 
       context "private slot" do
-        let(:slot) { create(:std_slot_private, creator: user) }
+        let(:slot) { create(:std_slot_private, owner: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -448,12 +448,46 @@ describe SlotPolicy do
       end
     end
 
-    context "re_slot" do
+    context "own re_slot" do
+      context "public reslot" do
+        let(:slot) { create(:re_slot_public, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf reslot" do
+        let(:slot) { create(:re_slot_foaf, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "friend reslot" do
+        let(:slot) { create(:re_slot_friends, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "private reslot" do
+        let(:slot) { create(:re_slot_private, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+    end
+
+    context "others re_slot" do
       context "public reslot" do
         let(:slot) { create(:re_slot_public) }
 
         it "denies access" do
-          expect(subject).not_to permit(user, slot)
+          expect(subject).to permit(user, slot)
         end
       end
 
