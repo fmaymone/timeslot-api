@@ -22,4 +22,25 @@ RSpec.describe Containership, type: :model do
     before { containership.slot = nil }
     it { is_expected.to_not be_valid }
   end
+
+  describe "delete" do
+    let(:containership) { create(:containership) }
+
+    it "sets deleted_at on the containership" do
+      subject.delete
+      expect(subject.deleted_at?).to be true
+    end
+
+    it "touches the slot of the deleted containership" do
+      expect {
+        subject.delete
+      }.to change(subject.slot, :updated_at)
+    end
+
+    it "touches the group of the deleted containership" do
+      expect {
+        subject.delete
+      }.to change(subject.group, :updated_at)
+    end
+  end
 end

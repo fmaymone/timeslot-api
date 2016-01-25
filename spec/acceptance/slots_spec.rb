@@ -1098,6 +1098,11 @@ resource "Slots" do
               "Array with UUIDs of the SlotGroups slot should be removed from",
               required: true
 
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
+
     let(:slot) { create(:std_slot_public) }
     let(:group_1) { create(:group, owner: current_user) }
     let(:group_2) do
@@ -1121,8 +1126,6 @@ resource "Slots" do
                         deleted_group.uuid] }
 
     describe "Remove Slot from multiple SlotGroups" do
-      include_context "stdslot response fields"
-
       let(:id) { slot.id }
 
       example "Remove Slot from multiple SlotGroups", document: :v1 do

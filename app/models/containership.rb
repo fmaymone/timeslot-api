@@ -18,7 +18,6 @@ class Containership < ActiveRecord::Base
   # when a slot is removed from a slotgroup or
   # when a slot gets deleted or
   # when a slotgroup gets deleted
-  # TODO: add spec
   def delete
     slot.touch
     group.touch

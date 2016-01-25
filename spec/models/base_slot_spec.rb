@@ -183,6 +183,62 @@ RSpec.describe BaseSlot, type: :model do
       std_slot.add_to_group(group)
       expect(std_slot.slot_groups).to include group
     end
+
+    context "existing deleted containership" do
+      let(:containership) { create(:containership, slot: std_slot, group: group,
+                                   deleted_at: Time.zone.now) }
+
+      it "unsets deleted at" do
+        expect(containership.deleted_at?).to be true
+        std_slot.add_to_group(group)
+        containership.reload
+        expect(containership.deleted_at?).to be false
+      end
+    end
+  end
+
+  describe :remove_from_group, :focus do
+    let(:std_slot) { create(:std_slot_public) }
+    let(:group) { create(:group) }
+    let!(:containership) {
+      create(:containership, slot: std_slot, group: group) }
+
+    it "doesn't remove the containership from the database" do
+      expect {
+        std_slot.remove_from_group(group)
+      }.not_to change(Containership, :count)
+    end
+
+    it "sets deleted_at on the containership" do
+      expect(containership.deleted_at?).to be false
+      std_slot.remove_from_group(group)
+      containership.reload
+      expect(containership.deleted_at?).to be true
+    end
+
+    it "removes the slot from the given group" do
+      expect(group.slots).to include std_slot
+      std_slot.remove_from_group(group)
+      expect(group.slots).not_to include std_slot
+    end
+
+    it "removes the group from the given slot" do
+      expect(std_slot.slot_groups).to include group
+      std_slot.remove_from_group(group)
+      expect(std_slot.slot_groups).not_to include group
+    end
+
+    context "existing deleted containership" do
+      let(:containership) { create(:containership, slot: std_slot, group: group,
+                                   deleted_at: Time.zone.now) }
+
+      it "does nothing, is idempotent" do
+        expect(containership.deleted_at?).to be true
+        std_slot.remove_from_group(group)
+        containership.reload
+        expect(containership.deleted_at?).to be true
+      end
+    end
   end
 
   describe :set_share_id do

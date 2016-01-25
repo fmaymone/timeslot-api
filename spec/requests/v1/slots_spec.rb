@@ -1557,6 +1557,19 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
+  describe "POST /v1/slots/:id/slotgroups" do
+    let(:slot) { create(:std_slot_public) }
+    let(:group) { create(:group, owner: current_user) }
+
+    it "adds the slot to the given slotgroup" do
+      post "/v1/slots/#{slot.id}/slotgroups",
+           { slotGroups: [group.uuid] }, auth_header
+
+      expect(group.slots).to include slot
+      expect(response).to have_http_status :ok
+    end
+  end
+
   describe "GET /v1/slots/:id/share" do
     let(:slot) { create(:std_slot_public) }
 

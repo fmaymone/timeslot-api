@@ -231,13 +231,13 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def add_to_group(group)
-    Containership.create(slot: self, group: group)
+    cs = Containership.find_or_create_by(slot: self, group: group)
+    cs.update(deleted_at: nil) if cs.deleted_at?
   end
 
-  # TODO: add spec
   def remove_from_group(group)
     cs = containerships.where(group: group).take
-    cs.delete
+    cs.delete unless cs.deleted_at?
   end
 
   def copy_to(targets, user)
