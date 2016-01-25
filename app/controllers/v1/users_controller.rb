@@ -52,7 +52,7 @@ module V1
     # returns all slots of the requested user visible for the current user
     def slots
       authorize :user
-      requested_user = User.find(params[:user_id])
+      requested_user = User.find(params[:id])
 
       collector = SlotsCollector.new(**slot_paging_params)
       @slots = collector.user_slots(current_user: current_user,
@@ -71,7 +71,7 @@ module V1
     def media_items
       authorize :user
 
-      target_user = User.find(params[:user_id])
+      target_user = User.find(params[:id])
       collector = MediaCollector.new(current_user: current_user,
                                      other_user: target_user)
       @media_items = collector.retrieve
