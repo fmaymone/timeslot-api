@@ -1,6 +1,7 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, except: :show
+    skip_before_action :authenticate_user_from_token!,
+                       except: [:show, :friends]
 
     # GET /v1/users/1
     def show
@@ -64,6 +65,16 @@ module V1
         @result = SlotPaginator.new(data: @slots, **slot_paging_params)
         render "v1/paginated/slots"
       end
+    end
+
+    # GET /v1/users/1/friends
+    # returns all friends of a user
+    def friends
+      requested_user = User.find(params[:id])
+      authorize requested_user
+      @users = requested_user.friends
+
+      render "v1/users/list"
     end
 
     # GET /v1/users/1/media
