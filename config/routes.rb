@@ -44,6 +44,7 @@ Rails.application.routes.draw do
       post ':id/user_tags', to: 'slots#update_user_tags', as: 'user_tags'
 
       post ':id/slotgroups', to: 'slots#add_to_groups'
+      delete ':id/slotgroups', to: 'slots#remove_from_groups'
 
       # currently unused
       get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
