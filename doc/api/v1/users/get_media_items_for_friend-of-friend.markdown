@@ -21,18 +21,18 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=Fn9Xtyv_7ymdCsxvB8My1pPAswM
+<pre>Authorization: Token token=x9LENxKae5kc3Kiid1xYZZ8tnSU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/128/media</pre>
+<pre>GET /v1/users/118/media</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/128/media&quot; -X GET \
-	-H &quot;Authorization: Token token=Fn9Xtyv_7ymdCsxvB8My1pPAswM&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/118/media&quot; -X GET \
+	-H &quot;Authorization: Token token=x9LENxKae5kc3Kiid1xYZZ8tnSU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -43,12 +43,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;158003ff3c1a060c7e0eb3e90d214fa9&quot;
+ETag: W/&quot;c8412ef2ec211134d092e190351e3b6a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: de5a2888-1c23-4ec6-8a83-a65febdb70a2
-X-Runtime: 0.023593
+X-Request-Id: 5da5019a-c03a-4022-867a-3166f95cbeff
+X-Runtime: 0.026599
 Vary: Origin
-Content-Length: 1869</pre>
+Content-Length: 2817</pre>
 
 #### Status
 
@@ -59,112 +59,166 @@ Content-Length: 1869</pre>
 ```javascript
 [
   {
-    "mediaId" : 29,
-    "publicId" : "dfhjghjkdisudgfds7iy95",
+    "mediaId" : 41,
+    "publicId" : "dfhjghjkdisudgfds7iy113",
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.932Z"
+    "createdAt" : "2015-12-23T11:18:36.813Z"
   },
   {
-    "mediaId" : 30,
-    "publicId" : "dfhjghjkdisudgfds7iy96",
+    "mediaId" : 42,
+    "publicId" : "dfhjghjkdisudgfds7iy114",
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.934Z"
+    "createdAt" : "2015-12-23T11:18:36.816Z"
   },
   {
-    "mediaId" : 31,
-    "publicId" : "dfhjghjkdisudgfds7iy97",
+    "mediaId" : 43,
+    "publicId" : "dfhjghjkdisudgfds7iy115",
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.936Z"
+    "createdAt" : "2015-12-23T11:18:36.818Z"
   },
   {
-    "mediaId" : 32,
-    "publicId" : "dfhjghjkdisudgfds7iy98",
+    "mediaId" : 44,
+    "publicId" : "dfhjghjkdisudgfds7iy116",
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-21T23:11:42.939Z",
+    "createdAt" : "2015-12-23T11:18:36.821Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 33,
-    "publicId" : "dfhjghjkdisudgfds7iy99",
+    "mediaId" : 45,
+    "publicId" : "dfhjghjkdisudgfds7iy117",
     "position" : 4,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-21T23:11:42.941Z",
+    "createdAt" : "2015-12-23T11:18:36.824Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 34,
-    "publicId" : "dfhjghjkdisudgfds7iy100",
+    "mediaId" : 46,
+    "publicId" : "dfhjghjkdisudgfds7iy118",
     "position" : 5,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2016-01-21T23:11:42.943Z",
+    "createdAt" : "2015-12-23T11:18:36.826Z",
     "duration" : null,
-    "title" : "Title 99"
+    "title" : "Title 117"
   },
   {
-    "mediaId" : 35,
-    "publicId" : "dfhjghjkdisudgfds7iy101",
+    "mediaId" : 47,
+    "publicId" : "dfhjghjkdisudgfds7iy119",
     "position" : 6,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.954Z"
+    "createdAt" : "2015-12-23T11:18:36.836Z"
   },
   {
-    "mediaId" : 36,
-    "publicId" : "dfhjghjkdisudgfds7iy102",
+    "mediaId" : 48,
+    "publicId" : "dfhjghjkdisudgfds7iy120",
     "position" : 7,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.957Z"
+    "createdAt" : "2015-12-23T11:18:36.839Z"
   },
   {
-    "mediaId" : 37,
-    "publicId" : "dfhjghjkdisudgfds7iy103",
+    "mediaId" : 49,
+    "publicId" : "dfhjghjkdisudgfds7iy121",
     "position" : 8,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-21T23:11:42.959Z"
+    "createdAt" : "2015-12-23T11:18:36.843Z"
   },
   {
-    "mediaId" : 38,
-    "publicId" : "dfhjghjkdisudgfds7iy104",
+    "mediaId" : 50,
+    "publicId" : "dfhjghjkdisudgfds7iy122",
     "position" : 9,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-21T23:11:42.965Z",
+    "createdAt" : "2015-12-23T11:18:36.845Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 39,
-    "publicId" : "dfhjghjkdisudgfds7iy105",
+    "mediaId" : 51,
+    "publicId" : "dfhjghjkdisudgfds7iy123",
     "position" : 10,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-21T23:11:42.971Z",
+    "createdAt" : "2015-12-23T11:18:36.848Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 40,
-    "publicId" : "dfhjghjkdisudgfds7iy106",
+    "mediaId" : 52,
+    "publicId" : "dfhjghjkdisudgfds7iy124",
     "position" : 11,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2016-01-21T23:11:42.973Z",
+    "createdAt" : "2015-12-23T11:18:36.853Z",
     "duration" : null,
-    "title" : "Title 105"
+    "title" : "Title 123"
+  },
+  {
+    "mediaId" : 65,
+    "publicId" : "dfhjghjkdisudgfds7iy137",
+    "position" : 24,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:36.917Z"
+  },
+  {
+    "mediaId" : 66,
+    "publicId" : "dfhjghjkdisudgfds7iy138",
+    "position" : 25,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:36.920Z"
+  },
+  {
+    "mediaId" : 67,
+    "publicId" : "dfhjghjkdisudgfds7iy139",
+    "position" : 26,
+    "localId" : null,
+    "mediaType" : "image",
+    "createdAt" : "2015-12-23T11:18:36.923Z"
+  },
+  {
+    "mediaId" : 68,
+    "publicId" : "dfhjghjkdisudgfds7iy140",
+    "position" : 27,
+    "localId" : null,
+    "mediaType" : "video",
+    "createdAt" : "2015-12-23T11:18:36.925Z",
+    "duration" : null,
+    "thumbnail" : null
+  },
+  {
+    "mediaId" : 69,
+    "publicId" : "dfhjghjkdisudgfds7iy141",
+    "position" : 28,
+    "localId" : null,
+    "mediaType" : "video",
+    "createdAt" : "2015-12-23T11:18:36.928Z",
+    "duration" : null,
+    "thumbnail" : null
+  },
+  {
+    "mediaId" : 70,
+    "publicId" : "dfhjghjkdisudgfds7iy142",
+    "position" : 29,
+    "localId" : null,
+    "mediaType" : "audio",
+    "createdAt" : "2015-12-23T11:18:36.930Z",
+    "duration" : null,
+    "title" : "Title 141"
   }
 ]
 ```

@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=3MyZv8TIfy7jMY4YqMKLao-PLzI
+Authorization: Token token=KNzGlPHCNsFNx1cBRX3hOo9exdI
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "deviceId" : "sn-223462873410834786765439522",
+  "deviceId" : "sn-213462873410834786765439521",
   "system" : "android",
   "version" : "5.0b",
   "token" : "a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee"
@@ -53,9 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-223462873410834786765439522&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-213462873410834786765439521&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=3MyZv8TIfy7jMY4YqMKLao-PLzI&quot; \
+	-H &quot;Authorization: Token token=KNzGlPHCNsFNx1cBRX3hOo9exdI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -67,8 +67,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 0589220b-54e7-498a-a350-bb6e2e9fce1d
-X-Runtime: 0.007830
+X-Request-Id: fddb2053-2b38-4bf7-8628-dfd8f272a3b3
+X-Runtime: 0.010114
 Vary: Origin
 Content-Length: 0</pre>
 

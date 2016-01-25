@@ -4,7 +4,7 @@
 
 ### POST /v1/slots/:id/user_tags
 
-Creates ReSlots of the given slot for the users given as User IDs in the POST parameters. Returns a list of all user IDs tagged to this slot.
+returns a list of user ids which was tagged to this slot.
 
 returns 404 if ID is invalid.
 
@@ -26,13 +26,13 @@ Description : Array of users ids which should be tagged for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=G9mFudujRssIFrgH9Tdpu0fomMo
+Authorization: Token token=G3TjzvYXnRyvsRm2fd7HriNJuUU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/30/user_tags</pre>
+<pre>POST /v1/slots/31/user_tags</pre>
 
 #### Body
 ```javascript
@@ -48,10 +48,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/30/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[89,90,91]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/31/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[89,90,91]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=G9mFudujRssIFrgH9Tdpu0fomMo&quot; \
+	-H &quot;Authorization: Token token=G3TjzvYXnRyvsRm2fd7HriNJuUU&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -63,8 +63,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 1a553c87-7b96-4c40-9d0d-92ce1dd83d3e
-X-Runtime: 0.112303
+X-Request-Id: e4ecc17e-bec9-4c69-9f41-cb14401939f8
+X-Runtime: 0.116230
 Vary: Origin
 Content-Length: 0</pre>
 

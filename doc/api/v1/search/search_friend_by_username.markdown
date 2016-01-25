@@ -42,7 +42,7 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=6eWddg2NcuKtfs9Xt83YwDiWb44
+Authorization: Token token=KFngFI8x9sklpm3cCrfhGh4lc98
 Host: example.org
 Cookie: </pre>
 
@@ -58,7 +58,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/friend?query=john&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=6eWddg2NcuKtfs9Xt83YwDiWb44&quot; \
+	-H &quot;Authorization: Token token=KFngFI8x9sklpm3cCrfhGh4lc98&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -69,10 +69,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9dd5ebefdf29f179d540f62ad341f425&quot;
+ETag: W/&quot;13bc1efa5bc73cd0460133ef0154c727&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 392a9c03-b1ec-467e-bbd4-be364dbff45d
-X-Runtime: 0.012071
+X-Request-Id: 810ff512-76bd-41fe-96a6-fa4d945d7e03
+X-Runtime: 0.013434
 Vary: Origin
 Content-Length: 167</pre>
 
@@ -85,10 +85,10 @@ Content-Length: 167</pre>
 ```javascript
 [
   {
-    "id" : 163,
+    "id" : 168,
     "username" : "John Doe",
-    "createdAt" : "2016-01-21T23:11:39.449Z",
-    "updatedAt" : "2016-01-21T23:11:39.449Z",
+    "createdAt" : "2016-01-05T13:32:46.621Z",
+    "updatedAt" : "2016-01-05T13:32:46.621Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"

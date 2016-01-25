@@ -138,7 +138,7 @@ Cookie: </pre>
   "password" : "timeslot",
   "device" : {
     "device" : {
-      "device_id" : "sn-283462873410834786765439528",
+      "device_id" : "sn-273462873410834786765439527",
       "system" : "ios",
       "version" : "6.0"
     }
@@ -149,7 +149,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user105@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user105@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-273462873410834786765439527&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -162,10 +162,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fe63c81e69db149a402536b8b4b063d8&quot;
+ETag: W/&quot;430c702950c01acc6a3f70e6be416ddc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2ac0eda1-4a26-4eb1-8727-0b8d440172d2
-X-Runtime: 0.021244
+X-Request-Id: fafbd3e5-4b8e-46d8-aea6-91d813645221
+X-Runtime: 0.021561
 Vary: Origin
 Content-Length: 757</pre>
 
@@ -177,10 +177,10 @@ Content-Length: 757</pre>
 
 ```javascript
 {
-  "id" : 117,
-  "username" : "User 418",
-  "createdAt" : "2016-01-21T23:11:42.658Z",
-  "updatedAt" : "2016-01-21T23:11:42.658Z",
+  "id" : 103,
+  "username" : "User 396",
+  "createdAt" : "2015-12-23T11:18:36.450Z",
+  "updatedAt" : "2015-12-23T11:18:36.450Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -206,6 +206,6 @@ Content-Length: 757</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "kAlIUHznBN4zjpqlFK57I-Wbjbc"
+  "authToken" : "XJAxOCY1g4B0wHqRGXJXOnLC4Cw"
 }
 ```

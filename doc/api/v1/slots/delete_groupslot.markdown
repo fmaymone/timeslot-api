@@ -1,25 +1,17 @@
 # Slots API
 
-## Move Slot from private Slots to Friend Slots
+## Delete GroupSlot
 
-### POST /v1/slots/:id/move
+### DELETE /v1/groupslot/:id
 
-A new slot will be created with  the same Metadata as it&#39;s source. Either slotType or groupId must be provided! If details is set to &#39;true&#39; all media items and notes will be duplicated. The source will be deleted afterwards and with it all comments and likes.
+Sets &#39;deletedAt&#39;, returns updated Group Slot data. Doesn&#39;t delete anything.
 
-Returns 200 and the data of the new slot.
+returns 404 if ID is invalid
 
 ### Parameters
 
-Name : slotType
-Description : Type of slot to move to. Must be own of [private/friends/public]
-
-Name : groupId
-Description : Contains the group ID if moving into a group User must be allowed to post to this group
-
-Name : details
-Description : Move all media data and notes to the new  slot. Otherwise they will be deleted.
-
-Defaults to &#39;true&#39;, must be one of [true/false]
+Name : id *- required -*
+Description : ID of the Group Slot to delete
 
 
 ### Response Fields
@@ -90,30 +82,21 @@ Description : ID of the group the slot belongs to
 
 #### Headers
 
-<pre>Content-Type: application/json
-Authorization: Token token=zzwSpz2PC8-aMs9FXzf-3zI0TrU
+<pre>Authorization: Token token=_5wl0sel5rEo-ts-jxTnDp-sswE
 Host: example.org
+Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/34/move</pre>
-
-#### Body
-```javascript
-{
-  "slotType" : "friends",
-  "details" : "true"
-}
-```
-
+<pre>DELETE /v1/groupslot/10</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
-	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zzwSpz2PC8-aMs9FXzf-3zI0TrU&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot/10&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=_5wl0sel5rEo-ts-jxTnDp-sswE&quot; \
+	-H &quot;Host: example.org&quot; \
+	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
 
@@ -123,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bd4a341ed09e1a9e67d9b294347e981a&quot;
+ETag: W/&quot;2111af87c167b58bac0b9448f37911be&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 61c1a687-1c84-40e5-9947-bfcd6ae8ac69
-X-Runtime: 0.048824
+X-Request-Id: 823af068-a3b3-43d7-8086-c1a9f569ea96
+X-Runtime: 0.055113
 Vary: Origin
-Content-Length: 510</pre>
+Content-Length: 507</pre>
 
 #### Status
 
@@ -138,19 +121,19 @@ Content-Length: 510</pre>
 
 ```javascript
 {
-  "id" : 35,
-  "title" : "Slot title 98",
-  "startDate" : "2019-09-22T06:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:36.253Z",
-  "updatedAt" : "2015-12-23T11:18:36.253Z",
-  "deletedAt" : null,
-  "endDate" : "2019-10-22T06:44:02.000Z",
+  "id" : 10,
+  "title" : "Slot title 72",
+  "startDate" : "2019-09-23T04:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:35.120Z",
+  "updatedAt" : "2015-12-23T11:18:35.164Z",
+  "deletedAt" : "2015-12-23T11:18:35.163Z",
+  "endDate" : "2019-10-23T04:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 95,
-    "username" : "User 390",
-    "createdAt" : "2015-12-23T11:18:36.240Z",
-    "updatedAt" : "2015-12-23T11:18:36.240Z",
+    "id" : 24,
+    "username" : "User 315",
+    "createdAt" : "2015-12-23T11:18:35.115Z",
+    "updatedAt" : "2015-12-23T11:18:35.115Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -159,8 +142,9 @@ Content-Length: 510</pre>
   "settings" : {
     "alerts" : "omitted"
   },
-  "visibility" : "friends",
-  "reslotsCounter" : 0,
+  "group" : {
+    "id" : 1
+  },
   "likes" : 0,
   "commentsCounter" : 0,
   "shareUrl" : null

@@ -145,7 +145,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=LcWO-_c7utKERB5nSnPnNC9FBhU
+Authorization: Token token=1YuNY_PSrgve5wBtpC2Cbzn8HXc
 Host: example.org
 Cookie: </pre>
 
@@ -169,7 +169,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=LcWO-_c7utKERB5nSnPnNC9FBhU&quot; \
+	-H &quot;Authorization: Token token=1YuNY_PSrgve5wBtpC2Cbzn8HXc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -180,10 +180,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fd60445ec87d34226cc41cff350732a8&quot;
+ETag: W/&quot;131080a796e704bca2552ec43271c21a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8106b3e1-c2ef-4915-a4d4-b463dfcc0c54
-X-Runtime: 0.015947
+X-Request-Id: cd3b18b8-e702-41fd-b60d-31b56cc06e5d
+X-Runtime: 0.019255
 Vary: Origin
 Content-Length: 850</pre>
 
@@ -196,12 +196,12 @@ Content-Length: 850</pre>
 ```javascript
 {
   "id" : 7,
-  "title" : "Slot title 71",
-  "startDate" : "2019-09-22T03:44:02.000Z",
-  "createdAt" : "2016-01-21T23:11:41.032Z",
-  "updatedAt" : "2016-01-21T23:11:41.032Z",
+  "title" : "Slot title 69",
+  "startDate" : "2019-09-20T01:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.985Z",
+  "updatedAt" : "2015-12-23T11:18:34.985Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-22T03:44:02.000Z",
+  "endDate" : "2019-10-20T01:44:02.000Z",
   "location" : {
     "id" : 2,
     "name" : "Soho House Custom",
@@ -223,9 +223,9 @@ Content-Length: 850</pre>
   },
   "creator" : {
     "id" : 17,
-    "username" : "User 316",
-    "createdAt" : "2016-01-21T23:11:41.019Z",
-    "updatedAt" : "2016-01-21T23:11:41.019Z",
+    "username" : "User 308",
+    "createdAt" : "2015-12-23T11:18:34.978Z",
+    "updatedAt" : "2015-12-23T11:18:34.978Z",
     "deletedAt" : null,
     "image" : ""
   },

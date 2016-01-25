@@ -1,14 +1,14 @@
 # Slots API
 
-## Reslot a public StandardSlot as private
+## Create GroupSlot
 
-### POST /v1/reslot
+### POST /v1/groupslot
 
-Returns data of new ReSlot.
+Returns data of new slot.
 
-returns 404 if Predecessor Slot doesn&#39;t exist
+Missing unrequiered fields will be filled with default values.
 
-returns 422 if given visibility exceeds visibility of the parent
+returns 404 if Group ID is invalid
 
 returns 422 if parameters are invalid
 
@@ -16,11 +16,32 @@ returns 422 if required parameters are missing
 
 ### Parameters
 
-Name : predecessorId *- required -*
-Description : ID of the Slot which was resloted
+Name : title *- required -*
+Description : Title of slot (max. 60 characters)
 
-Name : visibility
-Description : Visibility of the ReSlot (private/friends/foaf/public).If not given it defaults to the visibility of the slot that was resloted (predecessor, which by now is always also the parent). The visibility can not exceed the visibility of the original Slot (Parent).
+Name : startDate *- required -*
+Description : Startdate and Time of the Slot
+
+Name : endDate *- required -*
+Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : location
+Description : Location associated with this slot (see example)
+
+Name : media
+Description : Media items (image/audio/video) of to the Slot (see example)
+
+Name : notes
+Description : Notes for to the Slot (see example)
+
+Name : settings
+Description : User specific settings for the slot (alerts)
+
+Name : alerts
+Description : Alerts for the Slot
+
+Name : groupId *- required -*
+Description : ID of the group to which the Slot belongs
 
 
 ### Response Fields
@@ -84,14 +105,8 @@ Description : Audio recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
-Name : slotter
-Description : contains ID of the User who did reslot
-
-Name : parent
-Description : contains ID of the original slot that was reslottet
+Name : groupId
+Description : ID of the group the slot belongs to
 
 ### Request
 
@@ -99,29 +114,34 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=8P9U6CvS67LUO_ymWBV_A3nLa3c
+Authorization: Token token=UL42ASNnBMqScI6GpIMqyTv2dgg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/reslot</pre>
+<pre>POST /v1/groupslot</pre>
 
 #### Body
 ```javascript
 {
-  "predecessorId" : 42,
-  "visibility" : "private"
+  "title" : "Time for a Slot",
+  "startDate" : "2014-09-08T13:31:02.000Z",
+  "endDate" : "2014-09-13T22:03:24.000Z",
+  "settings" : {
+    "alerts" : "0101010101"
+  },
+  "groupId" : 35
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:42,&quot;visibility&quot;:&quot;private&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groupslot&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;groupId&quot;:35}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=8P9U6CvS67LUO_ymWBV_A3nLa3c&quot; \
+	-H &quot;Authorization: Token token=UL42ASNnBMqScI6GpIMqyTv2dgg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -132,12 +152,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;230cd0bffe7bb1f9b761bd21428cfee6&quot;
+ETag: W/&quot;cd59f8e09bac67632c443a2871048f62&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f5f156d3-ffeb-41fe-9668-205f16553f26
-X-Runtime: 0.049838
+X-Request-Id: eb411cbe-e2de-4b3f-9676-300a69cb541a
+X-Runtime: 0.042253
 Vary: Origin
-Content-Length: 742</pre>
+Content-Length: 512</pre>
 
 #### Status
 
@@ -147,19 +167,19 @@ Content-Length: 742</pre>
 
 ```javascript
 {
-  "id" : 43,
-  "title" : "Slot title 63",
-  "startDate" : "2019-09-14T19:44:02.000Z",
-  "createdAt" : "2016-01-21T23:11:40.346Z",
-  "updatedAt" : "2016-01-21T23:11:40.346Z",
+  "id" : 45,
+  "title" : "Time for a Slot",
+  "startDate" : "2014-09-08T13:31:02.000Z",
+  "createdAt" : "2015-12-23T11:18:34.196Z",
+  "updatedAt" : "2015-12-23T11:18:34.196Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-14T19:44:02.000Z",
+  "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 211,
-    "username" : "User 293",
-    "createdAt" : "2016-01-21T23:11:40.325Z",
-    "updatedAt" : "2016-01-21T23:11:40.325Z",
+    "id" : 210,
+    "username" : "User 282",
+    "createdAt" : "2015-12-23T11:18:34.170Z",
+    "updatedAt" : "2015-12-23T11:18:34.170Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -168,22 +188,9 @@ Content-Length: 742</pre>
   "settings" : {
     "alerts" : "omitted"
   },
-  "visibility" : "private",
-  "reslotsCounter" : 1,
-  "slotter" : {
-    "id" : 213,
-    "username" : "User 295",
-    "createdAt" : "2016-01-21T23:11:40.335Z",
-    "updatedAt" : "2016-01-21T23:11:40.335Z",
-    "deletedAt" : null,
-    "image" : "",
-    "location" : null,
-    "slotCount" : 0,
-    "reslotCount" : 1,
-    "friendsCount" : 0
-  },
-  "parent" : {
-    "id" : 42
+  "visibility" : "members",
+  "group" : {
+    "id" : 35
   },
   "likes" : 0,
   "commentsCounter" : 0,

@@ -15,7 +15,7 @@ Description : containing friends as a list of Users
 
 #### Headers
 
-<pre>Authorization: Token token=QxUoluwzs6Gqly6FE-i2KgzznSY
+<pre>Authorization: Token token=tuiUyubybn3hwt41f6uPVj6Rw7c
 Host: example.org
 Cookie: </pre>
 
@@ -26,7 +26,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/me/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=QxUoluwzs6Gqly6FE-i2KgzznSY&quot; \
+	-H &quot;Authorization: Token token=tuiUyubybn3hwt41f6uPVj6Rw7c&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -37,10 +37,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c8cf11d2becb37737a691d01f4736f0c&quot;
+ETag: W/&quot;b141fd3a462cbf4912123e03c45f3803&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 470cba1e-908f-437e-b042-479cd1461321
-X-Runtime: 0.019526
+X-Request-Id: 50d409de-350d-4daa-9bc4-c6c68b5b57ab
+X-Runtime: 0.015337
 Vary: Origin
 Content-Length: 499</pre>
 
@@ -53,28 +53,28 @@ Content-Length: 499</pre>
 ```javascript
 [
   {
-    "id" : 124,
-    "username" : "User 202",
-    "createdAt" : "2016-01-21T23:11:38.203Z",
-    "updatedAt" : "2016-01-21T23:11:38.203Z",
+    "id" : 133,
+    "username" : "User 215",
+    "createdAt" : "2016-01-14T16:03:37.848Z",
+    "updatedAt" : "2016-01-14T16:03:37.848Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"
   },
   {
-    "id" : 126,
-    "username" : "User 204",
-    "createdAt" : "2016-01-21T23:11:38.216Z",
-    "updatedAt" : "2016-01-21T23:11:38.216Z",
+    "id" : 135,
+    "username" : "User 217",
+    "createdAt" : "2016-01-14T16:03:37.867Z",
+    "updatedAt" : "2016-01-14T16:03:37.867Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"
   },
   {
-    "id" : 127,
-    "username" : "User 205",
-    "createdAt" : "2016-01-21T23:11:38.222Z",
-    "updatedAt" : "2016-01-21T23:11:38.222Z",
+    "id" : 136,
+    "username" : "User 218",
+    "createdAt" : "2016-01-14T16:03:37.875Z",
+    "updatedAt" : "2016-01-14T16:03:37.875Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"

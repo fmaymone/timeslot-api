@@ -79,7 +79,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=Iy8Ij1HJC95xj0d5AIPTPlaSe4M
+<pre>Authorization: Token token=eHdb9VrHKb5DNMf2jTxd7ujMoeg
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/8&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=Iy8Ij1HJC95xj0d5AIPTPlaSe4M&quot; \
+	-H &quot;Authorization: Token token=eHdb9VrHKb5DNMf2jTxd7ujMoeg&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,10 +103,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;263a0288e934673be94eed0b20745e68&quot;
+ETag: W/&quot;e3cb6ef162ec2ffd2746d9aed01098b2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 42a29c9f-643e-43f8-96db-a410a51dad50
-X-Runtime: 0.051747
+X-Request-Id: c8f71790-7eab-4c5b-a2d4-76fb3c7e0aa5
+X-Runtime: 0.051966
 Vary: Origin
 Content-Length: 594</pre>
 
@@ -119,18 +119,18 @@ Content-Length: 594</pre>
 ```javascript
 {
   "id" : 8,
-  "title" : "Slot title 72",
-  "startDate" : "2019-09-23T04:44:02.000Z",
-  "createdAt" : "2016-01-21T23:11:41.066Z",
-  "updatedAt" : "2016-01-21T23:11:41.089Z",
-  "deletedAt" : "2016-01-21T23:11:41.088Z",
-  "endDate" : "2019-10-23T04:44:02.000Z",
+  "title" : "Slot title 70",
+  "startDate" : "2019-09-21T02:44:02.000Z",
+  "createdAt" : "2015-12-23T11:18:35.023Z",
+  "updatedAt" : "2015-12-23T11:18:35.046Z",
+  "deletedAt" : "2015-12-23T11:18:35.044Z",
+  "endDate" : "2019-10-21T02:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 19,
-    "username" : "User 318",
-    "createdAt" : "2016-01-21T23:11:41.059Z",
-    "updatedAt" : "2016-01-21T23:11:41.059Z",
+    "username" : "User 310",
+    "createdAt" : "2015-12-23T11:18:35.014Z",
+    "updatedAt" : "2015-12-23T11:18:35.014Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
