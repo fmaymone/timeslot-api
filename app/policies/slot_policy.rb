@@ -67,15 +67,16 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
-  # a user needs to be signed-in
-  # ReSlots are not accepted (for now?), the parent should be used
-  # for now we decided to only allow adding to groups for public/global slots
-  # the creator of a slot can put the slot whereever he wants
+  # false if no user is signed-in
+  # true if slot is public visible
+  # true if slot is public visible
+  # true if it's my own slot
+  # TODO: write specs
   def add_to_groups?
     return false unless current_user?
-    return false if slot.class < ReSlot
     return true if slot.visibility == 'public'
-    return true if slot.creator == current_user
+    return true if slot.class < StdSlot && slot.owner == current_user
+    return true if slot.class < ReSlot && slot.slotter == current_user
     false
   end
 
