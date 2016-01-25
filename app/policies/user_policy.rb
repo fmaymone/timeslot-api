@@ -1,4 +1,11 @@
 class UserPolicy < ApplicationPolicy
+  attr_reader :current_user, :user
+
+  def initialize(current_user, other_user)
+    @current_user = current_user
+    @user = other_user
+  end
+
   # true if a user is logged in
   # TODO: also allow for visitors?
   def show?
@@ -23,6 +30,14 @@ class UserPolicy < ApplicationPolicy
   # This is determined in the presentable slots service
   def slots?
     true
+  end
+
+  # true if current_user is asking for his own friends
+  # true if current_user is a friend of the user for whom to get the friends
+  def friends?
+    return true if user == current_user
+    return true if user.friend_with? current_user
+    false
   end
 
   # no prerequisites

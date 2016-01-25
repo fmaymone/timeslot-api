@@ -108,19 +108,14 @@ Rails.application.routes.draw do
       patch 'device', to: 'me#update_device', as: 'update_device'
     end
 
-    scope :users do
-      get ':id', to: 'users#show', as: 'user', constraints: { id: /\d+/ }
+    scope :users, constraints: { id: /\d+/ } do
+      get ':id', to: 'users#show', as: 'user'
       post '', to: 'users#create', as: 'user_create'
       post 'signin', to: 'users#signin', as: 'signin'
       post 'reset', to: 'users#reset_password', as: 'reset_password'
-      get ':user_id/slots',
-          to: 'users#slots',
-          as: 'user_slots',
-          constraints: { id: /\d+/ }
-      get ':user_id/media',
-          to: 'users#media_items',
-          as: 'user_media',
-          constraints: { id: /\d+/ }
+      get ':id/slots', to: 'users#slots', as: 'user_slots'
+      get ':id/media', to: 'users#media_items', as: 'user_media'
+      get ':id/friends', to: 'users#friends', as: 'user_friends'
     end
 
     scope :groups do

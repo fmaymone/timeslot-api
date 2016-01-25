@@ -1,6 +1,7 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, except: :show
+    skip_before_action :authenticate_user_from_token!,
+                       except: [:show, :friends]
 
     # GET /v1/users/1
     def show
@@ -52,7 +53,7 @@ module V1
     # returns all slots of the requested user visible for the current user
     def slots
       authorize :user
-      requested_user = User.find(params[:user_id])
+      requested_user = User.find(params[:id])
 
       collector = SlotsCollector.new(**slot_paging_params)
       @slots = collector.user_slots(current_user: current_user,
@@ -66,12 +67,22 @@ module V1
       end
     end
 
+    # GET /v1/users/1/friends
+    # returns all friends of a user
+    def friends
+      requested_user = User.find(params[:id])
+      authorize requested_user
+      @users = requested_user.friends
+
+      render "v1/users/list"
+    end
+
     # GET /v1/users/1/media
     # get all media items of the given user
     def media_items
       authorize :user
 
-      target_user = User.find(params[:user_id])
+      target_user = User.find(params[:id])
       collector = MediaCollector.new(current_user: current_user,
                                      other_user: target_user)
       @media_items = collector.retrieve

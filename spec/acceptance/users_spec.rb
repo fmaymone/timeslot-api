@@ -662,6 +662,31 @@ resource "Users" do
     end
   end
 
+  get "/v1/users/:id/friends" do
+    header "Authorization", :auth_header
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to get the friends of."
+
+    let(:user) do
+      user = create(:user, :with_3_friends)
+      create(:friendship, :established, user: user, friend: current_user)
+      user
+    end
+    let(:id) { user.id }
+
+    example "Get list of friends of another user", document: :v1 do
+      explanation "Other user must be friend with current user.\n\n" \
+                  "returns list of friends of other user\n\n" \
+                  "returns 404 if current user not friend with other user"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(response_body).to include user.friends.first.username
+      expect(response_body).to include user.friends.last.username
+    end
+  end
+
   post "/v1/users/reset", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"

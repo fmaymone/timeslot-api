@@ -28,6 +28,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_3_friends do
+      after :create do |user|
+        create_list :friendship, 3, :established, user: user
+      end
+    end
+
     trait :with_3_own_groups do
       after :create do |user|
         create_list :group, 3, owner: user
