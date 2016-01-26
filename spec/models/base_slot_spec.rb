@@ -197,7 +197,7 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :remove_from_group, :focus do
+  describe :remove_from_group do
     let(:std_slot) { create(:std_slot_public) }
     let(:group) { create(:group) }
     let!(:containership) {
@@ -226,6 +226,17 @@ RSpec.describe BaseSlot, type: :model do
       expect(std_slot.slot_groups).to include group
       std_slot.remove_from_group(group)
       expect(std_slot.slot_groups).not_to include group
+    end
+
+    context "slotgroup does not contain slot" do
+      let(:other_slot) { create(:std_slot_public) }
+
+      it "does nothing, is idempotent" do
+        expect(group.slots).not_to include other_slot
+        expect {
+          other_slot.remove_from_group(group)
+        }.not_to raise_error
+      end
     end
 
     context "existing deleted containership" do

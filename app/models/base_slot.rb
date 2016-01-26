@@ -237,7 +237,7 @@ class BaseSlot < ActiveRecord::Base
 
   def remove_from_group(group)
     cs = containerships.where(group: group).take
-    cs.delete unless cs.deleted_at?
+    cs.delete if cs && !cs.deleted_at?
   end
 
   def copy_to(targets, user)
