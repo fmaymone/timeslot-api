@@ -44,28 +44,6 @@ describe SlotPolicy do
     end
   end
 
-  permissions :add_comment?, :show_comments?, :reslot_history? do
-    context "own private slot" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, owner: user) }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-  end
-
-  permissions :show?, :show_likes?, :copy?, :share_url? do
-    context "own private slot" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, owner: user) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-  end
-
   permissions :show?, :show_many?, :show_comments?, :show_likes?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
@@ -80,9 +58,12 @@ describe SlotPolicy do
     end
   end
 
+  # TODO: write spec for :create_reslot? if it is clear how it should work
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
-              :reslot_history?, :add_like?, :add_comment?, :copy?,
-              :create_reslot?, :remove_from_groups? do
+              :reslot_history?, :add_like?, :copy?, :add_comment?,
+              # :create_reslot?,
+              :remove_from_groups? do
+
     let(:user) { create(:user) }
 
     context "std_slot" do
@@ -136,6 +117,14 @@ describe SlotPolicy do
 
         it "denies access" do
           expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "own private slot" do
+        let(:slot) { create(:std_slot_private, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
         end
       end
 
@@ -211,22 +200,27 @@ describe SlotPolicy do
       end
     end
 
-    # context "group_slot" do
-    #   let(:slot) { create(:group_slot) }
+    context "slot groups" do
+      let(:group) { create(:group) }
+      let(:slot) do
+        slot = create(:std_slot_private)
+        create(:containership, slot: slot, group: group)
+        slot
+      end
 
-    #   context "for a user" do
-    #     let(:user) { create(:user) }
+      context "for a user" do
+        let(:user) { create(:user) }
 
-    #     it "allows access if user is group member" do
-    #       create(:membership, :active, group: slot.group, user: user)
-    #       expect(subject).to permit(user, slot)
-    #     end
+        it "allows access if user is slotgroup member" do
+          create(:membership, :active, group: group, user: user)
+          expect(subject).to permit(user, slot)
+        end
 
-    #     it "denies access if user not group member" do
-    #       expect(subject).not_to permit(user, slot)
-    #     end
-    #   end
-    # end
+        it "denies access if user not group member" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+    end
   end
 
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url? do
