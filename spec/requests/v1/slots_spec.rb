@@ -250,7 +250,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{re_slot.id}", {},
-                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -284,18 +284,30 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    # context "GroupSlot, with valid ID" do
-    #   let(:group) { create(:group, owner: current_user) }
-    #   let(:group_slot) { create(:group_slot, group: group) }
+    describe "Slot in SlotGroup" do
+      let(:slot) { create(:std_slot_private) }
+      let(:group) { create(:group) }
+      let!(:containership) {
+        create(:containership, slot: slot, group: group)}
 
-    #   it "returns success" do
-    #     get "/v1/slots/#{group_slot.id}", {}, auth_header
-    #     expect(response).to have_http_status(200)
-    #     expect(json['id']).to eq(group_slot.id)
-    #     expect(json).to have_key('group')
-    #     expect(json['group']['id']).to eq(group_slot.group_id)
-    #   end
-    # end
+      context "user is member" do
+        let!(:membership) {
+          create(:membership, :active, group: group, user: current_user) }
+
+        it "returns success" do
+          get "/v1/slots/#{slot.id}", {}, auth_header
+          expect(response).to have_http_status(200)
+          expect(json['id']).to eq slot.id
+        end
+      end
+
+      context "user not member" do
+        it "returns Not Found" do
+          get "/v1/slots/#{slot.id}", {}, auth_header
+          expect(response).to have_http_status :not_found
+        end
+      end
+    end
   end
 
   describe "POST /v1/stdlot" do
