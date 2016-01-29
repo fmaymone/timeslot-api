@@ -1,6 +1,6 @@
 class SharePolicy < ApplicationPolicy
 
-  # allow all (public contents)
+  # allow all (public content)
   def redirect?
     true
   end

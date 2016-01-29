@@ -251,33 +251,6 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :set_share_id do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:user) { create(:user) }
-
-    it "adds a share url to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.share_id?).to be true
-    end
-
-    it "adds shared_by to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.shared_by_id).to eq user.id
-    end
-
-    context "existing share url" do
-      let(:std_slot) { create(:std_slot_public, share_id: '12345678') }
-
-      it "doesn't overwrite an existing share url" do
-        std_slot.set_share_id(user)
-        std_slot.reload
-        expect(std_slot.share_id).to eq '12345678'
-      end
-    end
-  end
-
   describe :create_like do
     let(:std_slot) { create(:std_slot) }
     let(:user) { create(:user) }

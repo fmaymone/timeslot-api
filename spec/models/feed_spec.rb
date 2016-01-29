@@ -83,7 +83,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(4) # +4 foreign activities to own content
         expect(notification_feed.first['data']['target']['id']).to be(slot.id)
@@ -144,7 +144,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(2) # +2 foreign activities to own content
 
@@ -204,7 +204,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(4) # +4 foreign activities to own content
 
@@ -254,7 +254,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(2) # +2 foreign activities to own content
 
@@ -327,7 +327,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_foreign.count).to be(0) # has no followings
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(4) # +4 foreign activities to own content
 
@@ -389,7 +389,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_foreign.count).to be(0) # has no followings
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # +4-4 foreign activities to own content
 
@@ -456,7 +456,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         # expect(notification_feed.count).to be(4) # +4 foreign activities to own content
         expect(notification_feed.count).to eq 0
@@ -510,7 +510,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         # expect(notification_feed.count).to be(2) # +2 foreign activities to own content
         expect(notification_feed.count).to eq 0
@@ -714,7 +714,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower[0]['data']['actor']['id']).to be(follower2.id)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         # expect(notification_feed.count).to be(12) # +12 foreign activities to own content
         expect(notification_feed.count).to be(10)
@@ -797,7 +797,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         # expect(notification_feed.count).to be(5) # +5 foreign activities to own content
         expect(notification_feed.count).to be(4)
@@ -862,7 +862,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).not_to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(4) # +4 foreign activities to own content
 
@@ -923,7 +923,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # +4-4 foreign activities to own content
 
@@ -999,7 +999,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # +4-4 foreign activities to own content
 
@@ -1079,7 +1079,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # +6-6 foreign activities to own content
 
@@ -1154,7 +1154,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # +3-3 foreign activities to own content
 
@@ -1217,7 +1217,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower2.count).to be(1) # +2-1 public activities
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(2) # +2 foreign activities to own content
 
@@ -1265,7 +1265,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_friend.count).to be(0) # has no related activities
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(1) # +1 friendship offered
         expect(notification_feed.first['type']).to eq('User')
@@ -1312,7 +1312,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_friend.count).to be(0) # has no related activities
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(1) # +1 friendship established
         expect(notification_feed.first['type']).to eq('User')
@@ -1371,7 +1371,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower2.count).to be(0) # has no followings
       end
 
-      it "Notification Feed (activities to own contents)" do
+      it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # has no own content
 

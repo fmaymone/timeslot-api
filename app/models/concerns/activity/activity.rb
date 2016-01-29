@@ -220,7 +220,7 @@ module Activity
       user_ids += activity_group.followers
     else
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
-      # NOTE: Actually we simplify activities on own contents and foreign related content
+      # NOTE: Actually we simplify activities on own content and foreign related content
       # 1. Target related context (by default):
       user_ids += activity_target.followers
       # 5. Foreign related context (by default):
