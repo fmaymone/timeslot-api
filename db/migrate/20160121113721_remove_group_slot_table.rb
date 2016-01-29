@@ -9,8 +9,6 @@ class RemoveGroupSlotTable < ActiveRecord::Migration
       t.bigint :meta_slot_id, index: true, null: false
       t.integer :slot_type, null: false
       t.text :type, null: false
-      t.string :share_id, limit: 8, default: ''
-      t.bigint :shared_by_id
       t.integer :likes_count, default: 0
       t.integer :comments_count, default: 0
       t.integer :re_slots_count, default: 0

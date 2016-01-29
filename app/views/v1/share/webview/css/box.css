@@ -1,0 +1,16 @@
+        /* CSS Stylesheet */
+        html, body{
+            height: 100%;
+            font-family: 'Lato';
+        }
+        section, footer{
+            background-color: #fff;
+            max-width: 500px;
+        }
+        section{
+            box-sizing: content-box;
+            border: 1px solid #ccc;
+        }
+        #wrapper{
+            position: relative;
+        }

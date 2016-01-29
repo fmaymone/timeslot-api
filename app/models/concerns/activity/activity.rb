@@ -70,7 +70,7 @@ module Activity
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?
     # Initialize job worker
-    FeedJob.new.async.perform({
+    FeedJob.perform_async({
       type: activity_type,
       actor: activity_actor.id.to_s,
       object: self.id.to_s,
@@ -140,7 +140,7 @@ module Activity
     user_targets = user ? Feed.remove_user_from_feeds(user: user, notify: notify) : nil
 
     # Remove activities from target feeds:
-    RemoveJob.new.async.perform({
+    RemoveJob.perform_async({
         object: self.id.to_s,
         model: self.class.name,
         target: activity_target.id.to_s,
@@ -220,7 +220,7 @@ module Activity
       user_ids += activity_group.followers
     else
       # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
-      # NOTE: Actually we simplify activities on own contents and foreign related content
+      # NOTE: Actually we simplify activities on own content and foreign related content
       # 1. Target related context (by default):
       user_ids += activity_target.followers
       # 5. Foreign related context (by default):

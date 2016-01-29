@@ -8,6 +8,8 @@ Returns data of new ReSlot.
 
 returns 404 if Predecessor Slot doesn&#39;t exist
 
+returns 422 if given visibility exceeds visibility of the parent
+
 returns 422 if parameters are invalid
 
 returns 422 if required parameters are missing
@@ -16,6 +18,9 @@ returns 422 if required parameters are missing
 
 Name : predecessorId *- required -*
 Description : ID of the Slot which was resloted
+
+Name : visibility
+Description : Visibility of the ReSlot (private/friends/foaf/public).If not given it defaults to the visibility of the slot that was resloted (predecessor, which by now is always also the parent). The visibility can not exceed the visibility of the original Slot (Parent).
 
 
 ### Response Fields
@@ -94,7 +99,7 @@ Description : contains ID of the original slot that was reslottet
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=7V9bFue7ICMggbPFhryLhtgc-SY
+Authorization: Token token=iJWVxQtzH6uyA0tkTI62q2Od1KM
 Host: example.org
 Cookie: </pre>
 
@@ -105,17 +110,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessorId" : 47
+  "predecessorId" : 15
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:47}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/reslot&quot; -d &#39;{&quot;predecessorId&quot;:15}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=7V9bFue7ICMggbPFhryLhtgc-SY&quot; \
+	-H &quot;Authorization: Token token=iJWVxQtzH6uyA0tkTI62q2Od1KM&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -126,12 +131,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;04795a82cbeb93897510cd260022a79f&quot;
+ETag: W/&quot;10a0606848f4a6f4cbf235dfa7268ea1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5495d3b7-0d1c-4125-afc2-7ae64e5d8c38
-X-Runtime: 0.051712
+X-Request-Id: 6790affc-473b-4d13-8f10-a951e6582f0b
+X-Runtime: 0.057717
 Vary: Origin
-Content-Length: 741</pre>
+Content-Length: 723</pre>
 
 #### Status
 
@@ -141,19 +146,19 @@ Content-Length: 741</pre>
 
 ```javascript
 {
-  "id" : 48,
-  "title" : "Slot title 61",
-  "startDate" : "2019-09-12T17:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.318Z",
-  "updatedAt" : "2015-12-23T11:18:34.318Z",
+  "id" : 16,
+  "title" : "Slot title 80",
+  "startDate" : "2019-09-04T12:44:02.000Z",
+  "createdAt" : "2016-01-29T19:39:09.754Z",
+  "updatedAt" : "2016-01-29T19:39:09.754Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T17:44:02.000Z",
+  "endDate" : "2019-10-04T12:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 213,
-    "username" : "User 285",
-    "createdAt" : "2015-12-23T11:18:34.297Z",
-    "updatedAt" : "2015-12-23T11:18:34.297Z",
+    "id" : 35,
+    "username" : "User 321",
+    "createdAt" : "2016-01-29T19:39:09.723Z",
+    "updatedAt" : "2016-01-29T19:39:09.723Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -162,12 +167,13 @@ Content-Length: 741</pre>
   "settings" : {
     "alerts" : "omitted"
   },
+  "visibility" : "public",
   "reslotsCounter" : 1,
   "slotter" : {
-    "id" : 215,
-    "username" : "User 287",
-    "createdAt" : "2015-12-23T11:18:34.308Z",
-    "updatedAt" : "2015-12-23T11:18:34.308Z",
+    "id" : 37,
+    "username" : "User 323",
+    "createdAt" : "2016-01-29T19:39:09.739Z",
+    "updatedAt" : "2016-01-29T19:39:09.739Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -176,11 +182,9 @@ Content-Length: 741</pre>
     "friendsCount" : 0
   },
   "parent" : {
-    "id" : 47
+    "id" : 15
   },
-  "visibility" : "public",
   "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
+  "commentsCounter" : 0
 }
 ```

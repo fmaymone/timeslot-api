@@ -58,20 +58,20 @@ Description : [pending active, pending passive, friend, stranger]
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=j5Zr1y4Eit8i8sC1uOYWpxXVEYw
+Authorization: Token token=TTAzNZPVP9C4w1wY7mhpNbyM2_g
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/me/friendship/153</pre>
+<pre>DELETE /v1/me/friendship/151</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/friendship/153&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;http://localhost:5000/v1/me/friendship/151&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=j5Zr1y4Eit8i8sC1uOYWpxXVEYw&quot; \
+	-H &quot;Authorization: Token token=TTAzNZPVP9C4w1wY7mhpNbyM2_g&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -83,10 +83,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;46c6ce8b56351bc70c53defa5ee5ebb6&quot;
+ETag: W/&quot;a109c0184bbebd3682925fe3cf742102&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ad8a7d10-d9b8-4d2d-8958-871e0eef1bf8
-X-Runtime: 0.025001
+X-Request-Id: 86413d8c-464f-4936-9d87-3bb406943184
+X-Runtime: 0.067367
 Vary: Origin
 Content-Length: 226</pre>
 
@@ -98,10 +98,10 @@ Content-Length: 226</pre>
 
 ```javascript
 {
-  "id" : 153,
+  "id" : 151,
   "username" : "John",
-  "createdAt" : "2015-12-23T11:18:33.039Z",
-  "updatedAt" : "2015-12-23T11:18:33.039Z",
+  "createdAt" : "2016-01-29T19:39:02.543Z",
+  "updatedAt" : "2016-01-29T19:39:02.543Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,

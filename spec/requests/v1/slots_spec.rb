@@ -1582,32 +1582,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "GET /v1/slots/:id/share" do
-    let(:slot) { create(:std_slot_public) }
-
-    it "returns data of slot including share url" do
-      get "/v1/slots/#{slot.id}/share", {}, auth_header
-
-      expect(response).to have_http_status :ok
-      expect(json).to have_key 'shareUrl'
-      expect(json["shareUrl"]).to include slot.share_id
-    end
-  end
-
-  describe "GET /v1/slots/:uid/slotdata" do
-    let!(:slot) { create(:std_slot_private, :with_notes, :with_ios_location,
-                         :with_real_image, share_id: '12345xyz',
-                         shared_by: create(:user)) }
-    before { current_user.webview! }
-
-    it "returns data of slot" do
-      get "/v1/slots/#{slot.share_id}/sharedata", {}, auth_header
-      expect(response).to have_http_status :ok
-      expect(json["title"]).to eq slot.title
-      expect(json["startDate"]).to eq slot.start_date.as_json
-    end
-  end
-
   describe "POST /v1/slots/:id/like" do
     let(:std_slot) { create(:std_slot_public) }
 

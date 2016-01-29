@@ -79,7 +79,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=eHdb9VrHKb5DNMf2jTxd7ujMoeg
+<pre>Authorization: Token token=xh5_mTjyjoPwv9prL9wbUKtoKTs
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -91,7 +91,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/8&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=eHdb9VrHKb5DNMf2jTxd7ujMoeg&quot; \
+	-H &quot;Authorization: Token token=xh5_mTjyjoPwv9prL9wbUKtoKTs&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -103,12 +103,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e3cb6ef162ec2ffd2746d9aed01098b2&quot;
+ETag: W/&quot;da82d8b5306039e1c0a2412c7507a654&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c8f71790-7eab-4c5b-a2d4-76fb3c7e0aa5
-X-Runtime: 0.051966
+X-Request-Id: 7dede918-7c1c-4684-8159-abfc85f89ca3
+X-Runtime: 0.219727
 Vary: Origin
-Content-Length: 594</pre>
+Content-Length: 578</pre>
 
 #### Status
 
@@ -119,18 +119,18 @@ Content-Length: 594</pre>
 ```javascript
 {
   "id" : 8,
-  "title" : "Slot title 70",
-  "startDate" : "2019-09-21T02:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:35.023Z",
-  "updatedAt" : "2015-12-23T11:18:35.046Z",
-  "deletedAt" : "2015-12-23T11:18:35.044Z",
-  "endDate" : "2019-10-21T02:44:02.000Z",
+  "title" : "Slot title 90",
+  "startDate" : "2019-09-14T22:44:02.000Z",
+  "createdAt" : "2016-01-29T19:39:12.453Z",
+  "updatedAt" : "2016-01-29T19:39:12.560Z",
+  "deletedAt" : "2016-01-29T19:39:12.553Z",
+  "endDate" : "2019-10-14T22:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 19,
-    "username" : "User 310",
-    "createdAt" : "2015-12-23T11:18:35.014Z",
-    "updatedAt" : "2015-12-23T11:18:35.014Z",
+    "username" : "User 349",
+    "createdAt" : "2016-01-29T19:39:12.371Z",
+    "updatedAt" : "2016-01-29T19:39:12.371Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -146,7 +146,6 @@ Content-Length: 594</pre>
   "visibility" : "private",
   "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
+  "commentsCounter" : 0
 }
 ```

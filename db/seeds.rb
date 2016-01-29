@@ -9,12 +9,6 @@
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
 
-# Pseudo-User for the webview
-User.create(username: 'webview',
-            role: 1,
-            email: 'webview@timeslot.com')
-# TS_SLOT_WEBSHARING needs the auth_token of this 'webview' user as env variable
-
 # Pseudo-User for the crawler data/slots aka sources
 User.create(username: 'Timeslot Official',
             role: 1,

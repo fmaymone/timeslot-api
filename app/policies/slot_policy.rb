@@ -30,16 +30,6 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
-  def share_url?
-    show?
-  end
-
-  # this should only be allowed for our rails slot webview app
-  def share_data?
-    return false unless current_user?
-    return true if current_user.webview?
-    false
-  end
 
   # methods that require a signed-in user
 

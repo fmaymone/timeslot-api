@@ -1,0 +1,57 @@
+<section>
+  <header>
+  </header>
+  <p id="slot_date">
+    <%= Time.zone.parse(@slot['startDate']).strftime('%A %d %b. %Y') %>
+  </p>
+  <p id="slot_start">
+    <%= Time.zone.parse(@slot['startDate']).strftime('%H:%M') %>
+  </p>
+  <p id="slot_duration">
+    <%
+      if(@slot['endDate'])
+        days    = ((diff = (Time.zone.parse(@slot['endDate'].to_s).to_i - Time.zone.parse(@slot['startDate'].to_s).to_i)) / 3600 / 24).floor
+        hours   = ((diff = (Time.zone.parse(@slot['endDate'].to_s).to_i - Time.zone.parse(@slot['startDate'].to_s).to_i - (days * 3600 * 24)).to_i) / 3600).floor
+        minutes = ((diff - (hours * 3600)) / 60).floor
+      end
+    %>
+    <%= (@slot['endDate'] ? "#{days}d #{hours}h #{minutes}min" : 'Open End') << ' Slot' %>
+  </p>
+  <% @slot['media'].each do |item|  %>
+      <% if (item['mediaType'] || item[:mediaType]) == 'image' %>
+        <p>
+          <div id="slot_image" style="background-image: url(data:image/jpg;base64,<%= Base64.encode64(open(item['publicId'] || item[:publicId]) { |io| io.read }).gsub("\n", '') %>)"></div>
+        </p>
+        <% break %>
+    <% end %>
+  <% end %>
+  <h1>
+    <%= @slot['title'] %>
+  </h1>
+  <p>
+    <%= @slot['location'] %>
+  </p>
+  <p>
+    <a href="#comments">
+      <%= @slot['commentsCounter'] %> comments
+    </a>
+    -
+    <a href="#comments">
+      <%= @slot['likes'] %> likes
+    </a>
+    -
+    <a href="#comments">
+      <%= @slot['reslotsCounter'] %> reslots
+    </a>
+  </p>
+  <p>
+    Posted on
+    <time datetime="<%= @slot['createdAt'] %>">
+      <%= Time.zone.parse(@slot['createdAt']).strftime('%Y.%m.%d at %H:%M') %>
+    </time>
+    by
+    <a href="#">
+      <%= @slot['creator']['username'] %>
+    </a>
+  </p>
+</section>

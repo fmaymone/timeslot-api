@@ -122,7 +122,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user104@email.com",
+  "email" : "user119@email.com",
   "password" : "timeslot"
 }
 ```
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user104@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user119@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -143,10 +143,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;27d6e8a3771d69b274b17df81c434519&quot;
+ETag: W/&quot;a113ecc76de647e5c1535a4d50e65e81&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f6956b32-fd17-41de-ba3d-baab39d1c3b3
-X-Runtime: 0.023191
+X-Request-Id: 1d293b8b-939b-46c1-a0c1-9a059700ac8a
+X-Runtime: 0.033912
 Vary: Origin
 Content-Length: 757</pre>
 
@@ -158,10 +158,10 @@ Content-Length: 757</pre>
 
 ```javascript
 {
-  "id" : 102,
-  "username" : "User 395",
-  "createdAt" : "2015-12-23T11:18:36.417Z",
-  "updatedAt" : "2015-12-23T11:18:36.417Z",
+  "id" : 132,
+  "username" : "User 466",
+  "createdAt" : "2016-01-29T19:39:17.499Z",
+  "updatedAt" : "2016-01-29T19:39:17.499Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -169,7 +169,7 @@ Content-Length: 757</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user104@email.com",
+  "email" : "user119@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -187,6 +187,6 @@ Content-Length: 757</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "FFMCyycDluDMx1X7FlYOONmjJE8"
+  "authToken" : "7r9Grz3uhCkQ1hVSzMrb9SiT9es"
 }
 ```

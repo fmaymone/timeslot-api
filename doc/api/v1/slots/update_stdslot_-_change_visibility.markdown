@@ -113,7 +113,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8
+Authorization: Token token=HFl6T1Zk-Uu8ftpni9h1JSx3bsI
 Host: example.org
 Cookie: </pre>
 
@@ -133,7 +133,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/stdslot/2&quot; -d &#39;{&quot;visibility&quot;:&quot;friends&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=L8yQNSkLzIqBPzeueDk5q6O9oz8&quot; \
+	-H &quot;Authorization: Token token=HFl6T1Zk-Uu8ftpni9h1JSx3bsI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -144,12 +144,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a3ac8b0522cd9deb49e7942a412be261&quot;
+ETag: W/&quot;2e905b949b6dd396dded11ee2aee5e63&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 502c7638-fb3a-4698-b281-34040f2b8f97
-X-Runtime: 0.029337
+X-Request-Id: e27d6630-c850-4bef-9e8d-30459ae3920c
+X-Runtime: 0.117735
 Vary: Origin
-Content-Length: 508</pre>
+Content-Length: 492</pre>
 
 #### Status
 
@@ -160,18 +160,18 @@ Content-Length: 508</pre>
 ```javascript
 {
   "id" : 2,
-  "title" : "Slot title 64",
-  "startDate" : "2019-09-15T20:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.698Z",
-  "updatedAt" : "2015-12-23T11:18:34.706Z",
+  "title" : "Slot title 84",
+  "startDate" : "2019-09-08T16:44:02.000Z",
+  "createdAt" : "2016-01-29T19:39:11.016Z",
+  "updatedAt" : "2016-01-29T19:39:11.059Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-15T20:44:02.000Z",
+  "endDate" : "2019-10-08T16:44:02.000Z",
   "location" : null,
   "creator" : {
     "id" : 4,
-    "username" : "User 295",
-    "createdAt" : "2015-12-23T11:18:34.690Z",
-    "updatedAt" : "2015-12-23T11:18:34.690Z",
+    "username" : "User 334",
+    "createdAt" : "2016-01-29T19:39:10.977Z",
+    "updatedAt" : "2016-01-29T19:39:10.977Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -183,7 +183,6 @@ Content-Length: 508</pre>
   "visibility" : "friends",
   "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
+  "commentsCounter" : 0
 }
 ```

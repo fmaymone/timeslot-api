@@ -54,19 +54,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=sbBrIIMBi73wv6SV1vsw44Iy7ZM
+Authorization: Token token=HoDzcnntQvQXOq8GW3ifYuKJKlo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/106</pre>
+<pre>GET /v1/users/136</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/106&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/136&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=sbBrIIMBi73wv6SV1vsw44Iy7ZM&quot; \
+	-H &quot;Authorization: Token token=HoDzcnntQvQXOq8GW3ifYuKJKlo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -77,10 +77,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ecbe52a4cdb3723dd5099412ae057056&quot;
+ETag: W/&quot;22d31602a30280a2dcc4652c59883281&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e9cc952c-f870-47d3-bf67-6aae7e86146a
-X-Runtime: 0.020610
+X-Request-Id: 51c849c9-f135-4363-8952-06c9e1153b4a
+X-Runtime: 0.041456
 Vary: Origin
 Content-Length: 557</pre>
 
@@ -92,10 +92,10 @@ Content-Length: 557</pre>
 
 ```javascript
 {
-  "id" : 106,
-  "username" : "User 398",
-  "createdAt" : "2015-12-23T11:18:36.525Z",
-  "updatedAt" : "2015-12-23T11:18:36.525Z",
+  "id" : 136,
+  "username" : "User 469",
+  "createdAt" : "2016-01-29T19:39:17.686Z",
+  "updatedAt" : "2016-01-29T19:39:17.686Z",
   "deletedAt" : null,
   "image" : "",
   "location" : {

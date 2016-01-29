@@ -15,6 +15,11 @@ module RedisStorage
       $redis.get(index)
     end
 
+    # Returns true if the key already exists
+    def exists(index)
+      $redis.exists(index)
+    end
+
     # Removes the list at the given index
     def del(index)
       $redis.del(index)

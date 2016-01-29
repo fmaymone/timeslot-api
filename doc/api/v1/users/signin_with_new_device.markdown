@@ -134,11 +134,11 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user105@email.com",
+  "email" : "user120@email.com",
   "password" : "timeslot",
   "device" : {
     "device" : {
-      "device_id" : "sn-273462873410834786765439527",
+      "device_id" : "sn-283462873410834786765439528",
       "system" : "ios",
       "version" : "6.0"
     }
@@ -149,7 +149,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user105@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-273462873410834786765439527&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user120@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
 	-H &quot;Host: example.org&quot;</pre>
@@ -162,10 +162,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;430c702950c01acc6a3f70e6be416ddc&quot;
+ETag: W/&quot;dde502a14724985cbfbb3af1e6b8b3b2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fafbd3e5-4b8e-46d8-aea6-91d813645221
-X-Runtime: 0.021561
+X-Request-Id: b0012993-224d-473b-946c-ae8907d836c9
+X-Runtime: 0.043193
 Vary: Origin
 Content-Length: 757</pre>
 
@@ -177,10 +177,10 @@ Content-Length: 757</pre>
 
 ```javascript
 {
-  "id" : 103,
-  "username" : "User 396",
-  "createdAt" : "2015-12-23T11:18:36.450Z",
-  "updatedAt" : "2015-12-23T11:18:36.450Z",
+  "id" : 133,
+  "username" : "User 467",
+  "createdAt" : "2016-01-29T19:39:17.554Z",
+  "updatedAt" : "2016-01-29T19:39:17.554Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -188,7 +188,7 @@ Content-Length: 757</pre>
   "reslotCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
-  "email" : "user105@email.com",
+  "email" : "user120@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
@@ -206,6 +206,6 @@ Content-Length: 757</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "XJAxOCY1g4B0wHqRGXJXOnLC4Cw"
+  "authToken" : "kHBXuwpjWZTZx9bMKC4f5DA1g0w"
 }
 ```

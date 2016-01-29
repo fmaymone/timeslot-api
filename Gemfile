@@ -42,6 +42,17 @@ gem 'redis'
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
 
+# Convert HTML to Image
+gem 'imgkit'
+gem 'wkhtmltoimage-binary'
+
+# Convert HTML to PDF
+gem 'pdfkit'
+gem 'wkhtmltopdf-binary'
+
+# Convert URL to QR-Code
+gem 'rqrcode'
+
 group :development do
   gem 'rails-erd'
 

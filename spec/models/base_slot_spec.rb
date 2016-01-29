@@ -12,7 +12,6 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:containerships).inverse_of(:slot) }
-  it { is_expected.to belong_to(:shared_by) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
@@ -248,33 +247,6 @@ RSpec.describe BaseSlot, type: :model do
         std_slot.remove_from_group(group)
         containership.reload
         expect(containership.deleted_at?).to be true
-      end
-    end
-  end
-
-  describe :set_share_id do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:user) { create(:user) }
-
-    it "adds a share url to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.share_id?).to be true
-    end
-
-    it "adds shared_by to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.shared_by_id).to eq user.id
-    end
-
-    context "existing share url" do
-      let(:std_slot) { create(:std_slot_public, share_id: '12345678') }
-
-      it "doesn't overwrite an existing share url" do
-        std_slot.set_share_id(user)
-        std_slot.reload
-        expect(std_slot.share_id).to eq '12345678'
       end
     end
   end

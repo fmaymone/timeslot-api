@@ -53,8 +53,6 @@ class BaseSlot < ActiveRecord::Base
            through: :containerships, source: :group,
            inverse_of: :slots
 
-  belongs_to :shared_by, class_name: User
-
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
            :title=, :start_date=, :end_date=, :creator=, :location_uid=, :open_end=,
@@ -195,10 +193,6 @@ class BaseSlot < ActiveRecord::Base
     new_comment
   end
 
-  def set_share_id(user)
-    self.share_id? || create_share_id(user)
-  end
-
   def update_user_tags(current_user, user_tags)
     unless user_tags.nil?
       reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
@@ -286,17 +280,6 @@ class BaseSlot < ActiveRecord::Base
           .merge(media_type: 'video'), creator_id)
       end
     end
-  end
-
-  private def create_share_id(user)
-    new_share_id = ''
-    loop do
-      # length of the result string is about 4/3 of the argument, now: 8 chars
-      new_share_id = SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu')
-      break unless self.class.exists?(share_id: new_share_id)
-    end
-    update(share_id: new_share_id)
-    update(shared_by: user)
   end
 
   ## abstract methods ##

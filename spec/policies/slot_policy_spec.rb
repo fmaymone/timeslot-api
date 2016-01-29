@@ -3,27 +3,6 @@ require 'rails_helper'
 describe SlotPolicy do
   subject { described_class }
 
-  permissions :share_data? do
-    let(:slot) { create(:std_slot) }
-
-    context "for a user with role 'webview'" do
-      let(:user) { create(:user) }
-      before { user.webview! }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-
-    context "for a user" do
-      let(:user) { create(:user) }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-  end
-
   permissions :unlike? do
     let(:user) { create(:user) }
     let(:slot) { create(:std_slot) }
@@ -44,7 +23,8 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_many?, :show_comments?, :show_likes?, :share_url? do
+
+  permissions :show?, :show_many?, :show_comments?, :show_likes? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -59,7 +39,7 @@ describe SlotPolicy do
   end
 
   # TODO: write spec for :create_reslot? if it is clear how it should work
-  permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
+  permissions :show?, :show_many?, :show_likes?, :show_comments?,
               :reslot_history?, :add_like?, :copy?, :add_comment?,
               # :create_reslot?,
               :remove_from_groups? do
@@ -223,7 +203,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url? do
+  permissions :show?, :show_many?, :show_likes?, :show_comments? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -290,7 +270,7 @@ describe SlotPolicy do
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [:reslot_history?, :add_like?, :add_comment?, :copy?,
-       :create_reslot?, :move?, :share_data?, :unlike?]
+       :create_reslot?, :move?, :unlike?]
     }
     let(:user) { nil }
     let(:slot) { create(:std_slot_public) }
@@ -307,9 +287,9 @@ describe SlotPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
+        :show?, :show_many?, :show_likes?, :show_comments?,
         :reslot_history?, :add_like?, :add_comment?, :copy?, :move?,
-        :create_reslot?, :share_data?, :unlike?
+        :create_reslot?, :unlike?
       ]
     }
     let(:user) { nil }

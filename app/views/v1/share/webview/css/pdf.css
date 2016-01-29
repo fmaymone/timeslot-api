@@ -1,0 +1,11 @@
+        /* CSS Stylesheet */
+        html, body{
+            height: auto;
+            width: auto;
+            font-family: 'Lato';
+
+        }
+        section, footer{
+            background-color: transparent;
+            border: none;
+        }

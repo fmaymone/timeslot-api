@@ -34,18 +34,18 @@ Description : Image of the creator of the original slot
 
 #### Headers
 
-<pre>Authorization: Token token=HevAfr3aoWZfFPAy3W6wQjpJn8I
+<pre>Authorization: Token token=ahxSM3Kjpde-ODmCPhMmsyHD7Lg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/30/history</pre>
+<pre>GET /v1/slots/34/history</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/30/history&quot; -X GET \
-	-H &quot;Authorization: Token token=HevAfr3aoWZfFPAy3W6wQjpJn8I&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/34/history&quot; -X GET \
+	-H &quot;Authorization: Token token=ahxSM3Kjpde-ODmCPhMmsyHD7Lg&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -56,12 +56,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9e9da71309bafea4a0a10d3f76b5057d&quot;
+ETag: W/&quot;840e25a5e098c979003ce8329547c409&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fab03e0f-097e-4b31-8260-95e0ea11b8ff
-X-Runtime: 0.014640
+X-Request-Id: 4e3cd297-0564-4ee0-bb16-2339aa275df4
+X-Runtime: 0.022181
 Vary: Origin
-Content-Length: 341</pre>
+Content-Length: 344</pre>
 
 #### Status
 
@@ -73,23 +73,23 @@ Content-Length: 341</pre>
 {
   "predecessors" : [
     {
-      "id" : 84,
-      "username" : "User 379",
+      "id" : 104,
+      "username" : "User 440",
       "userImage" : "",
-      "timestamp" : "2015-12-23T11:18:36.035Z"
+      "timestamp" : "2016-01-29T19:39:16.675Z"
     },
     {
-      "id" : 82,
-      "username" : "User 377",
+      "id" : 102,
+      "username" : "User 438",
       "userImage" : "",
-      "timestamp" : "2015-12-23T11:18:35.989Z"
+      "timestamp" : "2016-01-29T19:39:16.587Z"
     }
   ],
   "parentUser" : {
-    "id" : 80,
-    "username" : "User 375",
-    "createdAt" : "2015-12-23T11:18:35.976Z",
-    "updatedAt" : "2015-12-23T11:18:35.976Z",
+    "id" : 100,
+    "username" : "User 436",
+    "createdAt" : "2016-01-29T19:39:16.541Z",
+    "updatedAt" : "2016-01-29T19:39:16.541Z",
     "deletedAt" : null,
     "image" : ""
   }

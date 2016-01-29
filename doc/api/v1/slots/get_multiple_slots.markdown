@@ -81,7 +81,7 @@ Description : Videos recordings for the slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=6vEfYm6d-yDuhd1VQ8WqRlsV2zc
+Authorization: Token token=mUnrXxbTwnHDDxWYJd9PqQl8XPE
 Host: example.org
 Cookie: </pre>
 
@@ -93,8 +93,8 @@ Cookie: </pre>
 ```javascript
 {
   "ids" : [
-    32,
-    31
+    2,
+    1
   ]
 }
 ```
@@ -102,10 +102,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[32,31]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots&quot; -d &#39;{&quot;ids&quot;:[2,1]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=6vEfYm6d-yDuhd1VQ8WqRlsV2zc&quot; \
+	-H &quot;Authorization: Token token=mUnrXxbTwnHDDxWYJd9PqQl8XPE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -116,12 +116,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;50eee06c00b699ba4bf505231b218a4e&quot;
+ETag: W/&quot;0b476440c5960387242c50d2884280ed&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e19d100e-ccbe-4758-8d57-a4d78831c6a8
-X-Runtime: 0.031580
+X-Request-Id: f9ab8b7b-cc24-4868-93c4-d7f189b4e28c
+X-Runtime: 0.053663
 Vary: Origin
-Content-Length: 1025</pre>
+Content-Length: 987</pre>
 
 #### Status
 
@@ -132,19 +132,19 @@ Content-Length: 1025</pre>
 ```javascript
 [
   {
-    "id" : 32,
-    "title" : "Slot title 53",
-    "startDate" : "2019-09-03T08:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:33.518Z",
-    "updatedAt" : "2015-12-23T11:18:33.518Z",
+    "id" : 2,
+    "title" : "Slot title 72",
+    "startDate" : "2019-09-22T03:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:08.783Z",
+    "updatedAt" : "2016-01-29T19:39:08.783Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-03T08:44:02.000Z",
+    "endDate" : "2019-10-22T03:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 178,
-      "username" : "User 238",
-      "createdAt" : "2015-12-23T11:18:33.510Z",
-      "updatedAt" : "2015-12-23T11:18:33.510Z",
+      "id" : 3,
+      "username" : "User 277",
+      "createdAt" : "2016-01-29T19:39:08.775Z",
+      "updatedAt" : "2016-01-29T19:39:08.775Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -156,23 +156,22 @@ Content-Length: 1025</pre>
     "visibility" : "private",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 31,
-    "title" : "Slot title 52",
-    "startDate" : "2019-09-02T07:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:33.500Z",
-    "updatedAt" : "2015-12-23T11:18:33.500Z",
+    "id" : 1,
+    "title" : "Slot title 71",
+    "startDate" : "2019-09-21T02:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:08.755Z",
+    "updatedAt" : "2016-01-29T19:39:08.755Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-02T07:44:02.000Z",
+    "endDate" : "2019-10-21T02:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 177,
-      "username" : "User 230",
-      "createdAt" : "2015-12-23T11:18:33.495Z",
-      "updatedAt" : "2015-12-23T11:18:33.495Z",
+      "id" : 2,
+      "username" : "User 269",
+      "createdAt" : "2016-01-29T19:39:08.745Z",
+      "updatedAt" : "2016-01-29T19:39:08.745Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -184,8 +183,7 @@ Content-Length: 1025</pre>
     "visibility" : "private",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

@@ -27,18 +27,18 @@ Description : containing creation date of the ReSlot and details of the user who
 
 #### Headers
 
-<pre>Authorization: Token token=2h9VCmcrdLFcP__lq6O52N5kKJI
+<pre>Authorization: Token token=J_vQSRJyrtO6uK7yRzbb3dhoVDc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/21/slotters</pre>
+<pre>GET /v1/slots/25/slotters</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/21/slotters&quot; -X GET \
-	-H &quot;Authorization: Token token=2h9VCmcrdLFcP__lq6O52N5kKJI&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/25/slotters&quot; -X GET \
+	-H &quot;Authorization: Token token=J_vQSRJyrtO6uK7yRzbb3dhoVDc&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -49,10 +49,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1509bef499962ee1108976b61d6a034a&quot;
+ETag: W/&quot;04fe6d285675810d49dfea5c4d960fb7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 27e8d4c0-6664-4ac7-b4c2-348b59cabd7f
-X-Runtime: 0.008566
+X-Request-Id: 29a146d4-a0a3-4077-aaf6-aefdd2c0fabe
+X-Runtime: 0.012360
 Vary: Origin
 Content-Length: 379</pre>
 
@@ -65,23 +65,23 @@ Content-Length: 379</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-12-23T11:18:35.761Z",
+    "createdAt" : "2016-01-29T19:39:16.262Z",
     "slotter" : {
-      "id" : 65,
-      "username" : "User 355",
-      "createdAt" : "2015-12-23T11:18:35.759Z",
-      "updatedAt" : "2015-12-23T11:18:35.759Z",
+      "id" : 85,
+      "username" : "User 416",
+      "createdAt" : "2016-01-29T19:39:16.260Z",
+      "updatedAt" : "2016-01-29T19:39:16.260Z",
       "deletedAt" : null,
       "image" : ""
     }
   },
   {
-    "createdAt" : "2015-12-23T11:18:35.808Z",
+    "createdAt" : "2016-01-29T19:39:16.312Z",
     "slotter" : {
-      "id" : 68,
-      "username" : "User 359",
-      "createdAt" : "2015-12-23T11:18:35.806Z",
-      "updatedAt" : "2015-12-23T11:18:35.806Z",
+      "id" : 88,
+      "username" : "User 420",
+      "createdAt" : "2016-01-29T19:39:16.310Z",
+      "updatedAt" : "2016-01-29T19:39:16.310Z",
       "deletedAt" : null,
       "image" : ""
     }

@@ -65,20 +65,6 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
 
 
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
 SET search_path = public, pg_catalog;
 
 SET default_tablespace = '';
@@ -95,8 +81,6 @@ CREATE TABLE base_slots (
     deleted_at timestamp without time zone,
     meta_slot_id bigint NOT NULL,
     id bigint NOT NULL,
-    share_id character varying(8) DEFAULT ''::character varying,
-    shared_by_id bigint,
     slot_type integer NOT NULL,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
@@ -302,17 +286,17 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
+    slot_type integer,
     share_id character varying(8) DEFAULT ''::character varying,
     shared_by_id bigint,
-    slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -623,11 +607,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL,
     tagged_from bigint
@@ -852,13 +836,6 @@ ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq
 
 
 --
--- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
-
-
---
 -- Name: likes_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -891,13 +868,6 @@ ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_setting
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
-
-
---
--- Name: share_id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY std_slots ALTER COLUMN share_id SET DEFAULT ''::character varying;
 
 
 --
@@ -1453,6 +1423,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160104012453');
 INSERT INTO schema_migrations (version) VALUES ('20160107230953');
 
 INSERT INTO schema_migrations (version) VALUES ('20160119125106');
+
+INSERT INTO schema_migrations (version) VALUES ('20160120123637');
 
 INSERT INTO schema_migrations (version) VALUES ('20160121113721');
 

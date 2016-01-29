@@ -21,6 +21,12 @@ Rails.application.routes.draw do
 
       delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
       delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
+
+      get '/', to: 'share#redirect', as: 'redirect'
+      post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
+      delete 'share/:id', to: 'share#delete', as: 'share_delete'
+      post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
+      post 'import', to: 'import#handler', as: 'slot_import'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
@@ -28,9 +34,6 @@ Rails.application.routes.draw do
       post '', to: 'slots#show_many', as: 'slots_read'
       # TODO: remove/disable route
       get 'demo', to: 'slots#show_last', as: 'slots_last'
-
-      get ':id/share', to: 'slots#share_url', as: 'slot_shareurl'
-      get ':uid/sharedata', to: 'slots#share_data', as: 'slot_sharedata'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'

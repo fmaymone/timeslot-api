@@ -111,8 +111,7 @@ resource "Slots" do
 
       let(:meta_slot) { create(:meta_slot) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          :with_ios_location, meta_slot: meta_slot,
-                          share_id: 'abcd1234') }
+                          :with_ios_location, meta_slot: meta_slot) }
 
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
@@ -150,10 +149,9 @@ resource "Slots" do
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
         expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
+        expect(json.except('media'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -179,7 +177,6 @@ resource "Slots" do
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
-        expect(json["shareUrl"]).to include slot.share_id
       end
     end
 
@@ -286,10 +283,9 @@ resource "Slots" do
         expect(json).to have_key("slotter")
         expect(json).to have_key("parent")
         expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
+        expect(json.except('media'))
           .to eq("id" => reslot.id,
                  "title" => reslot.title,
                  "startDate" => reslot.start_date.as_json,
@@ -1550,58 +1546,6 @@ resource "Slots" do
         expect(StdSlot.unscoped.last.StdSlotFriends?).to be true
         expect(StdSlot.unscoped.last.title).to eq slot.title
         expect(StdSlot.unscoped.last.end_date).to eq slot.end_date
-      end
-    end
-  end
-
-  get "/v1/slots/:id/share" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the slot to share", required: true
-
-    describe "Share slot with valid ID" do
-      include_context "default slot response fields"
-
-      let(:slot) { create(:std_slot_public) }
-
-      let(:id) { slot.id }
-
-      example "Share slot", document: :v1 do
-        explanation "if a user is authenticated the slot shareUrl" \
-                    " will be included\n\n" \
-                    "returns 404 if ID is invalid"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("createdAt")
-        expect(json).to have_key("updatedAt")
-        expect(json).to have_key("deletedAt")
-        expect(json).to have_key("location")
-        expect(json).to have_key("creator")
-        expect(json['creator']).to have_key("username")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("media")
-        expect(json).to have_key("settings")
-        expect(json).to have_key("visibility")
-        expect(json).to have_key("likes")
-        expect(json).to have_key("commentsCounter")
-        expect(json).to have_key("shareUrl")
-        expect(json["shareUrl"]).to include slot.share_id
-        expect(json["shareUrl"]).not_to eq("")
-      end
-    end
-
-    describe "Share slot with invalid ID" do
-      let(:id) { 1 }
-
-      example "Share slot with invalid ID returns not found", document: false do
-        do_request
-        expect(response_status).to eq(404)
       end
     end
   end
