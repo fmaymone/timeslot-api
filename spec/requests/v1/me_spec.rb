@@ -322,7 +322,7 @@ RSpec.describe "V1::Me", type: :request do
   describe "GET /v1/me/slots" do
     context "no pagination" do
       let(:group_member) { create(:membership, user: current_user) }
-      let!(:group_slot) { create(:group_slot, group: group_member.group) }
+      # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
         slots.push create(:std_slot_private, owner: current_user)
@@ -344,10 +344,10 @@ RSpec.describe "V1::Me", type: :request do
         expect(json.length).to eq slots.size
       end
 
-      it "excludes groupslots of the current_user" do
-        get "/v1/me/slots", {}, auth_header
-        expect(response.body).not_to include group_slot.title
-      end
+      # it "excludes groupslots of the current_user" do
+      #   get "/v1/me/slots", {}, auth_header
+      #   expect(response.body).not_to include group_slot.title
+      # end
     end
 
     context "with pagination", :keep_data do

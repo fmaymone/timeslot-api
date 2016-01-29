@@ -4,14 +4,15 @@ module V1
     # return all groups where the current user is member
     def index
       authorize :group
-      @groups = current_user.groups_ordered
+      # @groups = current_user.groups_ordered
+      @groups = current_user.groups
 
       render :index
     end
 
-    # GET /v1/groups/:group_id
+    # GET /v1/groups/:group_uuid
     def show
-      @group = Group.find(group_id)
+      @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
       render :show
@@ -33,10 +34,10 @@ module V1
       end
     end
 
-    # PATCH /v1/groups/:group_id
+    # PATCH /v1/groups/:group_uuid
     # change name, image, subs_can - states
     def update
-      @group = Group.find(group_id)
+      @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
       if @group.update(group_params)
@@ -47,9 +48,9 @@ module V1
       end
     end
 
-    # DELETE /v1/groups/:group_id
+    # DELETE /v1/groups/:group_uuid
     def destroy
-      @group = Group.find(group_id)
+      @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
       if @group.delete
@@ -60,25 +61,25 @@ module V1
       end
     end
 
-    # GET /v1/groups/:group_id/members
+    # GET /v1/groups/:group_uuid/slots
     def slots
-      @group = Group.find(group_id)
+      @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
       render :slots
     end
 
-    # GET /v1/groups/:group_id/members
+    # GET /v1/groups/:group_uuid/members
     def members
-      @group = Group.find(group_id)
+      @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
       render :members
     end
 
-    # GET /v1/groups/:group_id/related
+    # GET /v1/groups/:group_uuid/related
     def related
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
       render :related, locals: { memberships: group.related_memberships }
@@ -90,12 +91,12 @@ module V1
     # def membership_state
     # end
 
-    # POST /v1/groups/:group_id/accept
+    # POST /v1/groups/:group_uuid/accept
     def accept_invite
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
-      if current_user.accept_invite group_id
+      if current_user.accept_invite group.id
         head :ok
       else
         render json: { error: "accepting group invitation failed" },
@@ -103,12 +104,12 @@ module V1
       end
     end
 
-    # POST /v1/groups/:group_id/refuse
+    # POST /v1/groups/:group_uuid/refuse
     def refuse_invite
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
-      if current_user.refuse_invite group_id
+      if current_user.refuse_invite group.id
         head :ok
       else
         render json: { error: "refusing group invitation failed" },
@@ -116,13 +117,13 @@ module V1
       end
     end
 
-    # POST /v1/groups/:group_id/members
+    # POST /v1/groups/:group_uuid/members
     # current user invites other users to own group or to group
     # where he is member and members can invite
     # create membership with state invited/pending
     # notify invited users
     def invite
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
       group.invite_users(params.require(:invitees))
 
@@ -130,44 +131,44 @@ module V1
              locals: { memberships: group.related_memberships }
     end
 
-    # DELETE /v1/groups/:group_id/members
+    # DELETE /v1/groups/:group_uuid/members
     # current user leaves group
     # update membership with state left
     # remove current user from group members
     def leave
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
-      if current_user.leave_group group_id
+      if current_user.leave_group group.id
         head :ok
       else
-        render json: { error: "leaving group #{group_id} failed" },
+        render json: { error: "leaving group #{group.id} failed" },
                status: :unprocessable_entity
       end
     end
 
-    # DELETE /v1/groups/:group_id/members/:user_id
+    # DELETE /v1/groups/:group_uuid/members/:user_id
     def kick
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
       if group.kick_member user_id
         head :ok
       else
         render json: { error: "kicking member with id #{user_id}" \
-                              " from group #{group_id} failed" },
+                              " from group #{group.id} failed" },
                status: :unprocessable_entity
       end
     end
 
-    # PATCH /v1/groups/:group_id/members
+    # PATCH /v1/groups/:group_uuid/members
     # change membership settings if current user is group member
     # notifications, default_alerts
     def member_settings
-      group = Group.find(group_id)
+      group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
       @membership = current_user.update_member_settings(setting_params,
-                                                        group_id)
+                                                        group.id)
       if @membership.errors.empty?
         head :ok
       else
@@ -179,10 +180,6 @@ module V1
     private def group_params
       p = params.permit(:name, :image, :membersCanPost, :membersCanInvite)
       p.transform_keys(&:underscore) if p
-    end
-
-    private def group_id
-      params.require(:group_id)
     end
 
     private def user_id

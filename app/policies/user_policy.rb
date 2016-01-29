@@ -32,12 +32,9 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
-  # true if current_user is asking for his own friends
-  # true if current_user is a friend of the user for whom to get the friends
+  # true for logged in users
   def friends?
-    return true if user == current_user
-    return true if user.friend_with? current_user
-    false
+    current_user?
   end
 
   # no prerequisites

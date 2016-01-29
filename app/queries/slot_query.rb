@@ -35,7 +35,7 @@ module SlotQuery
           @relation.where(send filter, moment).ordered
         else
           # TODO: make a helper for enriched airbrake error messages
-          error_string = "unkown pagination filter #{filter}"
+          error_string = "unknown pagination filter #{filter}"
           msg = { message: error_string }
           Rails.logger.error { error_string }
           Airbrake.notify(PaginationError, msg)

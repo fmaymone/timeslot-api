@@ -11,6 +11,7 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:audios) }
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
+  it { is_expected.to have_many(:containerships).inverse_of(:slot) }
   it { is_expected.to belong_to(:shared_by) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
@@ -59,13 +60,6 @@ RSpec.describe BaseSlot, type: :model do
         described_class.create_slot(meta: meta_param, visibility: 'friends',
                                     user: user)
       }.to change(StdSlot.unscoped, :count).by 1
-    end
-
-    it "creates a new GroupSlot" do
-      expect {
-        described_class.create_slot(meta: meta_param, group: group,
-                                    user: user)
-      }.to change(GroupSlot.unscoped, :count).by 1
     end
 
     it "creates a new MetaSlot" do
@@ -130,17 +124,17 @@ RSpec.describe BaseSlot, type: :model do
 
   describe :get_many do
     let(:std_slots) { create_list(:std_slot_private, 3) }
-    let(:group_slots) { create_list(:group_slot, 2) }
+    let(:global_slots) { create_list(:global_slot, 2) }
     let(:other_slots) { create_list(:re_slot, 2) }
 
     it "returns a list of specific slots" do
       a = []
-      [std_slots, group_slots].each do |slots|
+      [std_slots, global_slots].each do |slots|
         a << slots.collect(&:id)
       end
       result = BaseSlot.get_many(a.flatten)
       expect(result).to include(*std_slots)
-      expect(result).to include(*group_slots)
+      expect(result).to include(*global_slots)
       expect(result).not_to include(*other_slots)
     end
   end
@@ -167,6 +161,94 @@ RSpec.describe BaseSlot, type: :model do
       expect(std_slot.errors.messages).to have_key :video
       expect(*std_slot.errors.messages[:video]).to have_key :public_id
       expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
+    end
+  end
+
+  describe :add_to_group do
+    let(:std_slot) { create(:std_slot_public) }
+    let(:group) { create(:group) }
+
+    it "creates a new containership" do
+      expect {
+        std_slot.add_to_group(group)
+      }.to change(Containership, :count).by 1
+    end
+
+    it "adds the slot to a given group" do
+      std_slot.add_to_group(group)
+      expect(group.slots).to include std_slot
+    end
+
+    it "adds the group to the given slot" do
+      std_slot.add_to_group(group)
+      expect(std_slot.slot_groups).to include group
+    end
+
+    context "existing deleted containership" do
+      let(:containership) { create(:containership, slot: std_slot, group: group,
+                                   deleted_at: Time.zone.now) }
+
+      it "unsets deleted at" do
+        expect(containership.deleted_at?).to be true
+        std_slot.add_to_group(group)
+        containership.reload
+        expect(containership.deleted_at?).to be false
+      end
+    end
+  end
+
+  describe :remove_from_group do
+    let(:std_slot) { create(:std_slot_public) }
+    let(:group) { create(:group) }
+    let!(:containership) {
+      create(:containership, slot: std_slot, group: group) }
+
+    it "doesn't remove the containership from the database" do
+      expect {
+        std_slot.remove_from_group(group)
+      }.not_to change(Containership, :count)
+    end
+
+    it "sets deleted_at on the containership" do
+      expect(containership.deleted_at?).to be false
+      std_slot.remove_from_group(group)
+      containership.reload
+      expect(containership.deleted_at?).to be true
+    end
+
+    it "removes the slot from the given group" do
+      expect(group.slots).to include std_slot
+      std_slot.remove_from_group(group)
+      expect(group.slots).not_to include std_slot
+    end
+
+    it "removes the group from the given slot" do
+      expect(std_slot.slot_groups).to include group
+      std_slot.remove_from_group(group)
+      expect(std_slot.slot_groups).not_to include group
+    end
+
+    context "slotgroup does not contain slot" do
+      let(:other_slot) { create(:std_slot_public) }
+
+      it "does nothing, is idempotent" do
+        expect(group.slots).not_to include other_slot
+        expect {
+          other_slot.remove_from_group(group)
+        }.not_to raise_error
+      end
+    end
+
+    context "existing deleted containership" do
+      let(:containership) { create(:containership, slot: std_slot, group: group,
+                                   deleted_at: Time.zone.now) }
+
+      it "does nothing, is idempotent" do
+        expect(containership.deleted_at?).to be true
+        std_slot.remove_from_group(group)
+        containership.reload
+        expect(containership.deleted_at?).to be true
+      end
     end
   end
 

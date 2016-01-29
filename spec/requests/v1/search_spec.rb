@@ -188,7 +188,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(response.status).to be(200)
       expect(json.length).to eq 1
       expect(json.first).to have_key('id')
-      expect(json.first['id']).to eq(group.id)
+      expect(json.first['id']).to eq(group.uuid)
     end
   end
 

@@ -480,89 +480,6 @@ resource "Slots" do
     end
   end
 
-  post "/v1/groupslot" do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    include_context "default slot parameter"
-
-    parameter :groupId, "ID of the group to which the Slot belongs",
-              required: true
-
-    let(:group) { create(:group, owner: current_user) }
-
-    describe "Create new group slot" do
-      include_context "group slot response fields"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      #let(:openEnd) { false }
-      let(:note) { "revolutionizing the calendar" }
-      let(:alerts) { '0101010101' }
-      let(:groupId) { group.id }
-
-      example "Create GroupSlot",
-              document: :v1 do
-        explanation "Returns data of new slot.\n\n" \
-                    "Missing unrequiered fields will be filled" \
-                    " with default values.\n\n" \
-                    "returns 404 if Group ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid\n\n" \
-                    "returns 422 if required parameters are missing"
-        do_request
-
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("creator")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("group")
-        expect(json['group']).to have_key("id")
-        expect(response_status).to eq(201)
-      end
-    end
-
-    describe "Create group slot with invalid params" do
-      response_field :error, "Explanation which param couldn't be saved"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:alerts) { "oh no" }
-      let(:groupId) { group.id }
-
-      example "Create group slot with invalid params returns 422 & failure details",
-              document: false do
-        explanation "Parameters that can not be written to db will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-      end
-    end
-
-    describe "Create group slot with missing requiered params" do
-      response_field :error, "Contains Error message"
-
-      let(:title) { "Time for a Slot" }
-      let(:endDate) { "2014-09-08T13:31:02.000Z" }
-      let(:groupId) { group.id }
-
-      example "Create group slot with missing requiered params returns 422" \
-              " & failure details", document: false do
-        explanation "Missing requiered fields will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-        expect(response_body).to include "start_date"
-      end
-    end
-  end
-
   post "/v1/reslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -1029,60 +946,12 @@ resource "Slots" do
     end
   end
 
-  delete "/v1/groupslot/:id" do
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the Group Slot to delete", required: true
-
-    let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
-
-    describe "Delete Group Slot" do
-      include_context "group slot response fields"
-
-      let(:id) { group_slot.id }
-
-      example "Delete GroupSlot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated Group Slot data." \
-                    " Doesn't delete anything.\n\n" \
-                    "returns 404 if ID is invalid"
-        do_request
-
-        group_slot.reload
-        expect(group_slot.deleted_at?).to be true
-        expect(response_status).to eq(200)
-        expect(json).to include("id" => group_slot.id,
-                                "title" => group_slot.title,
-                                "startDate" => group_slot.start_date.as_json,
-                                "endDate" => group_slot.end_date.as_json,
-                                "group" => {
-                                  "id" => group_slot.group.id
-                                },
-                                "createdAt" => group_slot.created_at.as_json,
-                                "updatedAt" => group_slot.updated_at.as_json,
-                                "deletedAt" => group_slot.deleted_at.as_json,
-                                "notes" => group_slot.notes
-                               )
-      end
-    end
-
-    describe "Delete GroupSlot with invalid ID" do
-      let(:id) { group_slot.id + 1 }
-
-      example "Delete GroupSlot with invalid ID returns Not found",
-              document: false do
-        do_request
-        expect(response_status).to eq(404)
-      end
-    end
-  end
-
   delete "/v1/reslot/:id" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the ReSlot to delete", required: true
 
-    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+    let(:re_slot) { create(:re_slot, slotter: current_user) }
 
     describe "Delete ReSlot" do
       include_context "reslot response fields"
@@ -1128,6 +997,160 @@ resource "Slots" do
               document: false do
         do_request
         expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  post "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be added to SlotGroups", required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups the slot should be added to",
+              required: true
+
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
+
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+
+    let(:slotGroups) { [group_1.uuid,
+                        group_2.uuid,
+                        unauthorized_group.uuid,
+                        deleted_group.uuid] }
+
+    context "std_slot" do
+      describe "Add Slot to multiple SlotGroups" do
+        let(:id) { slot.id }
+
+        example "Add Slot to multiple SlotGroups", document: :v1 do
+          explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                      "added to those slotGroups.\n\n" \
+                      "returns a list of all slotgroups where user has no " \
+                      "access rights\n\n" \
+                      "returns 404 if ID is invalid\n\n" \
+                      "returns ???"
+          do_request
+
+          expect(response_status).to eq(200)
+          expect(group_1.slots).to include slot
+          expect(group_2.slots).to include slot
+          expect(unauthorized_group.slots).not_to include slot
+          expect(deleted_group.slots).not_to include slot
+          expect(slot.slot_groups).to include group_1
+          expect(slot.slot_groups).to include group_2
+          expect(slot.slot_groups).not_to include unauthorized_group
+          expect(slot.slot_groups).not_to include deleted_group
+          expect(json).to have_key('unauthorizedSlotgroups')
+          expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+          expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+        end
+      end
+    end
+
+    context "other public re_slot" do
+      let(:reslot) { create(:re_slot_public, parent: slot) }
+      let(:id) { reslot.id }
+
+      example "Add public ReSlot to multiple SlotGroups",
+              document: :false do
+        do_request
+        expect(response_status).to eq(200)
+        expect(group_1.slots).to include reslot
+        expect(group_2.slots).to include reslot
+      end
+    end
+
+    context "own private re_slot" do
+      let(:reslot) {
+        create(:re_slot_private, parent: slot, slotter: current_user) }
+      let(:id) { reslot.id }
+
+      example "Add own private ReSlot to multiple SlotGroups",
+              document: :false do
+        do_request
+        expect(response_status).to eq(200)
+        expect(group_1.slots).to include reslot
+        expect(group_2.slots).to include reslot
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be removed from SlotGroups",
+              required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups slot should be removed from",
+              required: true
+
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
+
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:containerships) {
+      create(:containership, slot: slot, group: group_1)
+      create(:containership, slot: slot, group: group_2)
+      create(:containership, slot: slot, group: unauthorized_group)
+      create(:containership, slot: slot, group: deleted_group,
+             deleted_at: Time.zone.now)
+    }
+    let(:slotGroups) { [group_1.uuid,
+                        group_2.uuid,
+                        unauthorized_group.uuid,
+                        deleted_group.uuid] }
+
+    describe "Remove Slot from multiple SlotGroups" do
+      let(:id) { slot.id }
+
+      example "Remove Slot from multiple SlotGroups", document: :v1 do
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
+
+        do_request
+        expect(response_status).to eq(200)
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(unauthorized_group.slots).to include slot
+        expect(deleted_group.slots).not_to include slot
+        expect(slot.slot_groups).not_to include group_1
+        expect(slot.slot_groups).not_to include group_2
+        expect(slot.slot_groups).to include unauthorized_group
+        expect(slot.slot_groups).not_to include deleted_group
+        expect(json).to have_key('unauthorizedSlotgroups')
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
       end
     end
   end
@@ -1197,9 +1220,7 @@ resource "Slots" do
     response_field :array, "containing creation date of the Like and " \
                            "details of the user who made the Like"
 
-    let(:slot) { create(:group_slot, :with_likes) }
-    let!(:membership) {
-      create(:membership, :active, group: slot.group, user: current_user) }
+    let(:slot) { create(:std_slot_public, :with_likes) }
     let!(:like) { create(:like, user: create(:user), slot: slot) }
 
     describe "Get Likes for Slot" do
@@ -1218,7 +1239,7 @@ resource "Slots" do
         expect(json.first).to have_key "createdAt"
         expect(json.first["liker"]).to have_key "id"
         expect(json.first["liker"]).to have_key "image"
-        expect(json.last["liker"]["id"]).to eq like.user.id
+        expect(response_body).to include like.user.username
       end
     end
   end
@@ -1257,11 +1278,7 @@ resource "Slots" do
     response_field :array, "containing comment content and creation date and " \
                            "details of the user who made the comment"
 
-    let(:slot) { create(:group_slot, :with_comments) }
-    let!(:membership) {
-      create(:membership, :active, group: slot.group, user: current_user) }
-    let!(:comment) {
-      create(:comment, user: create(:user), slot: slot) }
+    let(:slot) { create(:std_slot_public, :with_comments) }
 
     describe "Get Comments for Slot" do
       let(:id) { slot.id }
@@ -1454,9 +1471,9 @@ resource "Slots" do
     parameter :slotType, "Type of slot to copy to. Must be own of " \
                          "[private/friends/public]",
               scope: :copyTo
-    parameter :groupId, "ID of the group to copy to, user must be allowed " \
-                        "to post to this group",
-              scope: :copyTo
+    # parameter :groupId, "ID of the group to copy to, user must be allowed " \
+    # "to post to this group",
+    # scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",
@@ -1468,13 +1485,13 @@ resource "Slots" do
       create(:membership, :active, user: current_user, group: group)
     end
 
-    describe "Copy Slot into several targets" do
+    describe "Copy Slot into one (not several) target" do
       let(:id) { slot.id }
       let(:target_1) { { slotType: 'friends',
                          details: 'true' } }
-      let(:target_2) { { groupId: group.id } }
+      # let(:target_2) { { groupId: group.id } }
 
-      let(:copyTo) { [target_1, target_2] }
+      let(:copyTo) { [target_1] }
 
       example "Copy Slot to Friend Slots and into a group", document: :v1 do
         explanation "Several new slot instances can be created which share " \
@@ -1484,15 +1501,15 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(BaseSlot.all.length).to eq 3
+        expect(BaseSlot.count).to eq 2
         new_stdslotfriends = StdSlotFriends.last
         expect(new_stdslotfriends.title).to eq slot.title
         expect(new_stdslotfriends.end_date).to eq slot.end_date
         expect(new_stdslotfriends.notes.length).to eq slot.notes.length
-        new_groupslot = GroupSlot.unscoped.last
-        expect(new_groupslot.title).to eq slot.title
-        expect(new_groupslot.end_date).to eq slot.end_date
-        expect(new_groupslot.notes.length).to eq slot.notes.length
+        # new_groupslot = GroupSlot.unscoped.last
+        # expect(new_groupslot.title).to eq slot.title
+        # expect(new_groupslot.end_date).to eq slot.end_date
+        # expect(new_groupslot.notes.length).to eq slot.notes.length
       end
     end
   end

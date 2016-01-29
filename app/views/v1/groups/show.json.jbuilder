@@ -1,6 +1,7 @@
+json.id @group.uuid
+
 json.extract!(
   @group,
-  :id,
   :name,
   :image,
   :members_can_post,

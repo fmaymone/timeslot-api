@@ -172,13 +172,13 @@ RSpec.describe ReSlot, type: :model do
   end
 
   describe :delete do
-    let(:group_slot) { create(:group_slot_public) }
-    let(:re_slot_1) { create(:re_slot, predecessor: group_slot,
-                             meta_slot: group_slot.meta_slot) }
+    let(:slot) { create(:std_slot_public) }
+    let(:re_slot_1) { create(:re_slot, predecessor: slot,
+                             meta_slot: slot.meta_slot) }
     let(:re_slot_2) { create(:re_slot, predecessor: re_slot_1,
-                             meta_slot: group_slot.meta_slot) }
+                             meta_slot: slot.meta_slot) }
     let!(:re_slot_3) { create(:re_slot, predecessor: re_slot_2,
-                              meta_slot: group_slot.meta_slot) }
+                              meta_slot: slot.meta_slot) }
 
     it "updates the successors predecessor" do
       # what happens if the original source of a reslot history gets deleted?

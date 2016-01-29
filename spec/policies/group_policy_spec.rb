@@ -129,7 +129,8 @@ describe GroupPolicy do
     end
   end
 
-  permissions :show?, :leave?, :slots?, :members?, :member_settings? do
+  permissions :show?, :leave?, :slots?, :members?, :member_settings?,
+              :add_slot?, :remove_slot? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do

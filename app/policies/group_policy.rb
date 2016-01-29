@@ -14,6 +14,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is an active group member
   def show?
     return false unless current_user?
+    return true if current_user == group.owner
     return true if current_user.active_member? group.id
     false
   end
@@ -26,6 +27,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is the group owner
   def update?
     return false unless current_user?
+    return true if current_user == group.owner
     return true if current_user.owner? group
     false
   end
@@ -44,6 +46,24 @@ class GroupPolicy < ApplicationPolicy
 
   def related?
     update?
+  end
+
+  # true if the current user is the owner of the group
+  # true if the current user is a active member of the group
+  def add_slot?
+    return false unless current_user?
+    return true if group.owner == current_user
+    return true if current_user.active_member? group
+    false
+  end
+
+  # true if the current_user is the owner of the group
+  # TODO: true if the current_user has added the slot to the group
+  def remove_slot?
+    return false unless current_user?
+    return true if current_user == group.owner
+    return true if current_user.active_member? group.id
+    false
   end
 
   # true if current user has an invitation to the group

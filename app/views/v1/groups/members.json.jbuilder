@@ -1,4 +1,4 @@
-json.group_id @group.id
+json.group_id @group.uuid
 json.size @group.members.size
 json.members do
   json.array!(@group.members) do |member|

@@ -9,75 +9,48 @@ Rails.application.routes.draw do
     post 'fb-connect', to: 'connects#facebook_connect'
     post 'tw-connect', to: 'connects#twitter_connect'
 
-    get 'slots/:id', to: 'slots#show', as: 'slot', constraints: { id: /\d+/ }
-    post 'slots', to: 'slots#show_many', as: 'slots_read'
-    get 'slots/demo', to: 'slots#show_last', as: 'slots_last'
+    scope constraints: { id: /\d+/ } do
+      post 'stdslot', to: 'slots#create_stdslot'
+      post 'reslot', to: 'slots#create_reslot'
+      # TODO: remove/disable route
+      post 'webslot', to: 'slots#create_webslot'
 
-    post 'stdslot', to: 'slots#create_stdslot'
-    post 'reslot', to: 'slots#create_reslot'
-    post 'groupslot', to: 'slots#create_groupslot'
-    post 'webslot', to: 'slots#create_webslot'
+      patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
+      patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
+      patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
-    patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
-    patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-    patch 'groupslot/:id', to: 'slots#update_groupslot', as: 'groupslot_update'
-    patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
+      delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
+      delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
+    end
 
-    delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
-    delete 'groupslot/:id', to: 'slots#destroy_groupslot', as: 'groupslot_delete'
-    delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
+    scope :slots, constraints: { id: /\d+/ } do
+      get ':id', to: 'slots#show', as: 'slot'
+      post '', to: 'slots#show_many', as: 'slots_read'
+      # TODO: remove/disable route
+      get 'demo', to: 'slots#show_last', as: 'slots_last'
 
-    get 'slots/:id/share',
-        to: 'slots#share_url',
-        as: 'slot_shareurl',
-        constraints: { id: /\d+/ }
-    get 'slots/:uid/sharedata',
-        to: 'slots#share_data',
-        as: 'slot_sharedata'
-    get 'slots/:id/likes',
-        to: 'slots#show_likes',
-        as: 'slot_show_likes',
-        constraints: { id: /\d+/ }
-    post 'slots/:id/like',
-         to: 'slots#add_like',
-         as: 'slot_add_like',
-         constraints: { id: /\d+/ }
-    delete 'slots/:id/like',
-           to: 'slots#unlike',
-           as: 'slot_unlike',
-           constraints: { id: /\d+/ }
-    post 'slots/:id/comment',
-         to: 'slots#add_comment',
-         as: 'slot_add_comment',
-         constraints: { id: /\d+/ }
-    get 'slots/:id/comments',
-        to: 'slots#show_comments',
-        as: 'slot_show_comments',
-        constraints: { id: /\d+/ }
-    get 'slots/:id/slotters',
-        to: 'slots#show_slotters',
-        as: 'slot_show_slotters',
-        constraints: { id: /\d+/ }
-    get 'slots/:id/history',
-        to: 'slots#reslot_history',
-        as: 'reslot_history',
-        constraints: { id: /\d+/ }
-    post 'slots/:id/copy',
-         to: 'slots#copy',
-         as: 'slot_copy',
-         constraints: { id: /\d+/ }
-    post 'slots/:id/move',
-         to: 'slots#move',
-         as: 'slot_move',
-         constraints: { id: /\d+/ }
-    get 'slots/:id/user_tags',
-        to: 'slots#get_user_tags',
-        as: 'slot_get_user_tags',
-        constraints: { id: /\d+/ }
-    post 'slots/:id/user_tags',
-         to: 'slots#update_user_tags',
-         as: 'user_tags',
-         constraints: { id: /\d+/ }
+      get ':id/share', to: 'slots#share_url', as: 'slot_shareurl'
+      get ':uid/sharedata', to: 'slots#share_data', as: 'slot_sharedata'
+
+      get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
+      post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
+      delete ':id/like', to: 'slots#unlike', as: 'slot_unlike'
+
+      get ':id/comments', to: 'slots#show_comments', as: 'slot_show_comments'
+      post ':id/comment', to: 'slots#add_comment', as: 'slot_add_comment'
+
+      get ':id/slotters', to: 'slots#show_slotters', as: 'slot_show_slotters'
+      get ':id/user_tags', to: 'slots#get_user_tags', as: 'slot_get_user_tags'
+      post ':id/user_tags', to: 'slots#update_user_tags', as: 'user_tags'
+
+      post ':id/slotgroups', to: 'slots#add_to_groups'
+      delete ':id/slotgroups', to: 'slots#remove_from_groups'
+
+      # currently unused
+      get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
+      post ':id/copy', to: 'slots#copy', as: 'slot_copy'
+      post ':id/move', to: 'slots#move', as: 'slot_move'
+    end
 
     scope :globalslots do
       get 'search', to: 'global_slots#search'
@@ -97,14 +70,10 @@ Rails.application.routes.draw do
       get 'friends', to: 'me#my_friends', as: 'my_friends'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
-      post 'friendship/:user_id',
-           to: 'me#befriend',
-           as: 'befriend',
-           constraints: { id: /\d+/ }
-      delete 'friendship/:user_id',
-             to: 'me#unfriend',
-             as: 'unfriend',
-             constraints: { id: /\d+/ }
+      post 'friendship/:user_id', to: 'me#befriend', as: 'befriend',
+           constraints: { user_id: /\d+/ }
+      delete 'friendship/:user_id', to: 'me#unfriend', as: 'unfriend',
+             constraints: { user_id: /\d+/ }
       patch 'device', to: 'me#update_device', as: 'update_device'
     end
 
@@ -118,58 +87,23 @@ Rails.application.routes.draw do
       get ':id/friends', to: 'users#friends', as: 'user_friends'
     end
 
-    scope :groups do
-      get '',
-          to: 'groups#index',
-          as: 'groups'
-      get ':group_id',
-          to: 'groups#show',
-          as: 'group',
-          constraints: { id: /\d+/ }
-      post '',
-           to: 'groups#create',
-           as: 'group_create'
-      patch ':group_id',
-            to: 'groups#update',
-            as: 'group_update'
-      delete ':group_id',
-             to: 'groups#destroy',
-             as: 'group_delete'
-      get ':group_id/slots',
-          to: 'groups#slots',
-          as: 'group_slots',
-          constraints: { group_id: /\d+/ }
-      get ':group_id/members',
-          to: 'groups#members',
-          as: 'group_members',
-          constraints: { group_id: /\d+/ }
-      get ':group_id/related',
-          to: 'groups#related',
-          as: 'group_related',
-          constraints: { group_id: /\d+/ }
-      post ':group_id/members',
-           to: 'groups#invite',
-           as: 'group_invite'
-      post ':group_id/accept',
-           to: 'groups#accept_invite',
-           as: 'group_accept_invite',
-           constraints: { group_id: /\d+/ }
-      post ':group_id/refuse',
-           to: 'groups#refuse_invite',
-           as: 'group_refuse_invite',
-           constraints: { group_id: /\d+/ }
-      delete ':group_id/members',
-             to: 'groups#leave',
-             as: 'group_leave',
-             constraints: { group_id: /\d+/ }
-      delete ':group_id/members/:user_id',
-             to: 'groups#kick',
-             as: 'group_kick',
-             constraints: { group_id: /\d+/, user_id: /\d+/ }
-      patch ':group_id/members',
-            to: 'groups#member_settings',
-            as: 'group_member_settings',
-            constraints: { group_id: /\d+/ }
+    scope :groups, constraints: {
+            group_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
+      get '', to: 'groups#index', as: 'groups'
+      post '', to: 'groups#create', as: 'group_create'
+      get ':group_uuid', to: 'groups#show', as: 'group'
+      patch ':group_uuid', to: 'groups#update', as: 'group_update'
+      delete ':group_uuid', to: 'groups#destroy', as: 'group_delete'
+      get ':group_uuid/slots', to: 'groups#slots', as: 'group_slots'
+      get ':group_uuid/members', to: 'groups#members', as: 'group_members'
+      get ':group_uuid/related', to: 'groups#related', as: 'group_related'
+      post ':group_uuid/members', to: 'groups#invite'
+      post ':group_uuid/accept', to: 'groups#accept_invite'
+      post ':group_uuid/refuse', to: 'groups#refuse_invite'
+      delete ':group_uuid/members', to: 'groups#leave'
+      delete ':group_uuid/members/:user_id', to: 'groups#kick',
+             constraints: { user_id: /\d+/ }
+      patch ':group_uuid/members', to: 'groups#member_settings'
     end
 
     scope :feed do

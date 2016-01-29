@@ -53,22 +53,6 @@ module V1
       end
     end
 
-    # POST /v1/groupslot
-    def create_groupslot
-      authorize GroupSlot.new(group: group)
-
-      @slot = BaseSlot.create_slot(meta: meta_params, group: group,
-                                   media: media_params, notes: note_param,
-                                   alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :show, status: :created, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
     # POST /v1/reslot
     def create_reslot
       predecessor = BaseSlot.get(re_params)
@@ -155,22 +139,6 @@ module V1
       end
     end
 
-    # PATCH /v1/groupslot/1
-    def update_groupslot
-      @slot = current_user.group_slots.find(params[:id])
-      authorize @slot
-
-      @slot.update_from_params(meta: meta_params, media: media_params,
-                               notes: note_param, alerts: alerts_param,
-                               user: current_user)
-
-      if @slot.errors.empty?
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/reslot/1
     def update_reslot
       @slot = current_user.re_slots.find(params[:id])
@@ -195,19 +163,6 @@ module V1
 
       if @slot.delete
         render :create, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
-    # DELETE /v1/group_slot/1
-    def destroy_groupslot
-      @slot = current_user.group_slots.find(params.require(:id))
-      authorize @slot
-
-      if @slot.delete
-        render :show, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -317,6 +272,48 @@ module V1
       render :slotters
     end
 
+    def add_to_groups
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      groups = Group.where(uuid: params[:slotGroups])
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+
+        begin
+          authorize group, :add_slot?
+        rescue Pundit::NotAuthorizedError
+          @slot.errors.add(:base, group.uuid)
+        else
+          @slot.add_to_group group
+        end
+      end
+
+      render :slotgroups, locals: { slot: @slot }
+    end
+
+    def remove_from_groups
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      groups = Group.where(uuid: params[:slotGroups])
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+
+        begin
+          authorize group, :remove_slot?
+        rescue Pundit::NotAuthorizedError
+          @slot.errors.add(:base, group.uuid)
+        else
+          @slot.remove_from_group group
+        end
+      end
+
+      render :slotgroups, locals: { slot: @slot }
+    end
+
     # GET /v1/slots/1/history
     def reslot_history
       @slot = BaseSlot.get(params[:id])
@@ -344,10 +341,6 @@ module V1
       render :show, locals: { slot: new_slot }
     end
 
-    private def group
-      Group.find(params.require(:groupId))
-    end
-
     private def enforce_visibility
       params.require :visibility
       visibility
@@ -359,7 +352,6 @@ module V1
 
     private def meta_params
       # only the slot creator can update the meta params
-      # TODO: groupslots need special treatment
       return {} if @slot && current_user != @slot.creator
 
       # Check validity of date format

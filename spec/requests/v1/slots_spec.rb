@@ -250,7 +250,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{re_slot.id}", {},
-                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -284,16 +284,28 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "GroupSlot, with valid ID" do
-      let(:group) { create(:group, owner: current_user) }
-      let(:group_slot) { create(:group_slot, group: group) }
+    describe "Slot in SlotGroup" do
+      let(:slot) { create(:std_slot_private) }
+      let(:group) { create(:group) }
+      let!(:containership) {
+        create(:containership, slot: slot, group: group)}
 
-      it "returns success" do
-        get "/v1/slots/#{group_slot.id}", {}, auth_header
-        expect(response).to have_http_status(200)
-        expect(json['id']).to eq(group_slot.id)
-        expect(json).to have_key('group')
-        expect(json['group']['id']).to eq(group_slot.group_id)
+      context "user is member" do
+        let!(:membership) {
+          create(:membership, :active, group: group, user: current_user) }
+
+        it "returns success" do
+          get "/v1/slots/#{slot.id}", {}, auth_header
+          expect(response).to have_http_status(200)
+          expect(json['id']).to eq slot.id
+        end
+      end
+
+      context "user not member" do
+        it "returns Not Found" do
+          get "/v1/slots/#{slot.id}", {}, auth_header
+          expect(response).to have_http_status :not_found
+        end
       end
     end
   end
@@ -449,166 +461,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "POST /v1/groupslot" do
-    let(:group) { create(:group, :members_can_post) }
-    let!(:membership) {
-      create(:membership, :active, group: group, user: current_user) }
-
-    context "GroupSlot with valid params" do
-      let(:valid_slot) {
-        attr = attributes_for(:meta_slot).merge(groupId: group.id)
-        attr.transform_keys { |key| key.to_s.camelize(:lower) }
-      }
-      it "responds with Created (201)" do
-        post "/v1/groupslot/", valid_slot, auth_header
-        expect(response).to have_http_status(:created)
-      end
-
-      it "adds a new group_slot entry to the DB" do
-        expect {
-          post "/v1/groupslot/", valid_slot, auth_header
-        }.to change(GroupSlot.unscoped, :count).by(1)
-      end
-
-      it "adds a new meta_slot entry to the DB" do
-        expect {
-          post "/v1/groupslot/", valid_slot, auth_header
-        }.to change(MetaSlot, :count).by(1)
-      end
-
-      it "returns the ID of the new slot" do
-        post "/v1/groupslot/", valid_slot, auth_header
-        expect(json['id']).to eq(GroupSlot.unscoped.last.id)
-      end
-    end
-
-    describe "create GroupSlot for existing metaslot" do
-      context "copy GroupSlot from existing std_slot" do
-        let!(:existing_slot) { create(:std_slot) }
-        let(:group_slot_params) {
-          params = existing_slot.as_json
-                   .transform_keys { |key| key.to_s.camelize(:lower) }
-          params.merge(groupId: group.id)
-        }
-        it "responds with Created (201)" do
-          post "/v1/groupslot/", group_slot_params, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new group_slot entry to the DB" do
-          expect {
-            post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot.unscoped, :count).by(1)
-        end
-      end
-
-      context "copy GroupSlot from existing group_slot" do
-        let!(:existing_slot) { create(:group_slot) }
-        let(:group_slot_params) {
-          params = existing_slot.as_json
-                   .transform_keys { |key| key.to_s.camelize(:lower) }
-          params.merge(groupId: group.id)
-        }
-        it "responds with Created (201)" do
-          post "/v1/groupslot/", group_slot_params, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new group_slot entry to the DB" do
-          expect {
-            post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot.unscoped, :count).by(1)
-        end
-
-        it "sets the correct group on the new group_slot" do
-          post "/v1/groupslot/", group_slot_params, auth_header
-          expect(GroupSlot.unscoped.last.group_id).to eq group.id
-        end
-      end
-
-      context "copy GroupSlot from existing re_slot" do
-        let!(:existing_slot) { create(:re_slot) }
-        let(:group_slot_params) {
-          params = existing_slot.as_json
-                   .transform_keys { |key| key.to_s.camelize(:lower) }
-          params.merge(groupId: group.id)
-        }
-        it "responds with Created (201)" do
-          post "/v1/groupslot/", group_slot_params, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new group_slot entry to the DB" do
-          expect {
-            post "/v1/groupslot/", group_slot_params, auth_header
-          }.to change(GroupSlot.unscoped, :count).by(1)
-        end
-      end
-    end
-
-    context "with invalid params" do
-      let(:metaslot) { attributes_for(:meta_slot).merge(groupId: group.id) }
-      let(:invalid_attributes) {
-        metaslot.transform_keys! { |key| key.to_s.camelize(:lower) }
-      }
-      describe "does not add a new entry to the DB" do
-        it "with missing group ID" do
-          expect {
-            post "/v1/groupslot/", attributes_for(:meta_slot), auth_header
-          }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "with invalid group ID" do
-          expect {
-            post "/v1/groupslot/", attributes_for(:meta_slot).merge(
-                   groupId: 1), auth_header
-          }.not_to change(MetaSlot, :count) || change(GroupSlot, :count)
-          expect(response).to have_http_status(:not_found)
-        end
-      end
-
-      describe "responds with Unprocessable Entity (422)" do
-        it "for empty title" do
-          metaslot[:title] = ""
-          post "/v1/groupslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for invalid start_date" do
-          metaslot[:start_date] = "|$%^@wer"
-          post "/v1/groupslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "if start_date equals end_date" do
-          group_slot = attributes_for(:meta_slot,
-                                      start_date: "2014-09-08 13:31:02",
-                                      end_date: "2014-09-08 13:31:02",
-                                      group_id: group.id)
-          group_slot.transform_keys! { |key| key.to_s.camelize(:lower) }
-          post "/v1/groupslot/", group_slot, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
-        end
-
-        it "if start_date after end_date" do
-          group_slot = attributes_for(:meta_slot,
-                                      start_date: "2014-09-08 13:31:02",
-                                      end_date: "2014-07-07 13:31:02",
-                                      group_id: group.id)
-          group_slot.transform_keys! { |key| key.to_s.camelize(:lower) }
-
-          post "/v1/groupslot/", group_slot, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
-        end
-      end
-    end
-  end
-
   describe "POST /v1/reslot" do
     context "with valid params" do
       let(:pred) { create(:std_slot_public) }
@@ -672,33 +524,6 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/reslot/", valid_attributes, auth_header
           new_reslot = ReSlot.last
           expect(new_reslot.parent_id).to eq pred.parent_id
-        end
-      end
-
-      # TODO: @sh: I think this shouln't be possible at all...???
-      # but since we don't know where the product is going we'll just
-      # leave it here as it is until it hurts us
-      context "ReSlot from GroupSlot" do
-        let(:pred) do
-          slot = create(:group_slot_public)
-          create(:membership, :active, group: slot.group, user: current_user)
-          slot
-        end
-
-        it "responds with Created (201)" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new entry to the DB" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.to change(ReSlot, :count).by(1)
-        end
-
-        it "returns the ID of the new slot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(ReSlot.last.id)
         end
       end
 
@@ -1585,28 +1410,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "PATCH /v1/groupslot/:id" do
-    let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) {
-      create(:group_slot, group: group, creator: current_user) }
-
-    context "with valid non-media params" do
-      it "responds with 200" do
-        patch "/v1/groupslot/#{group_slot.id}",
-              { title: "Something" }, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "updates the title of a given GroupSlot" do
-        group_slot.meta_slot.title = "Old title"
-        patch "/v1/groupslot/#{group_slot.id}",
-              { title: "New title" }, auth_header
-        group_slot.reload
-        expect(group_slot.title).to eq("New title")
-      end
-    end
-  end
-
   describe "PATCH /v1/reslot/:id" do
     let!(:re_slot) { create(:re_slot, slotter: current_user) }
 
@@ -1701,45 +1504,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "DELETE /v1/groupslot/:id" do
-    let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
-
-    context "with a valid ID" do
-      it "returns success" do
-        delete "/v1/groupslot/#{group_slot.id}", {}, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "doesn't destroy the group_slot" do
-        expect {
-          delete "/v1/groupslot/#{group_slot.id}", {}, auth_header
-        }.not_to change(GroupSlot, :count)
-      end
-
-      it "changes the number of active group_slots for the user" do
-        expect {
-          delete "/v1/groupslot/#{group_slot.id}", {}, auth_header
-        }.to change(current_user.group_slots.active, :count)
-      end
-    end
-
-    context "with an invalid ID" do
-      let(:wrong_id) { group_slot.id + 1 }
-
-      it "responds with Not Found" do
-        delete "/v1/groupslot/#{wrong_id}", {}, auth_header
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it "does not remove an entry from the DB" do
-        expect {
-          delete "/v1/groupslot/#{wrong_id}", {}, auth_header
-        }.not_to change(GroupSlot, :count)
-      end
-    end
-  end
-
   describe "DELETE /v1/reslot/:id" do
     let(:parent) { create(:std_slot_public) }
     let!(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
@@ -1802,6 +1566,19 @@ RSpec.describe "V1::Slots", type: :request do
           delete "/v1/reslot/#{wrong_id}", {}, auth_header
         }.not_to change(ReSlot, :count)
       end
+    end
+  end
+
+  describe "POST /v1/slots/:id/slotgroups" do
+    let(:slot) { create(:std_slot_public) }
+    let(:group) { create(:group, owner: current_user) }
+
+    it "adds the slot to the given slotgroup" do
+      post "/v1/slots/#{slot.id}/slotgroups",
+           { slotGroups: [group.uuid] }, auth_header
+
+      expect(group.slots).to include slot
+      expect(response).to have_http_status :ok
     end
   end
 
@@ -1988,107 +1765,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "POST /v1/slots/:id/copy" do
-    # rspec seems to have bug regarding post parameters with array of hashes
-    # so I can not test copying into stdslots and groupslots at the same time
-    # however, from the console it seems to work that's why I think it's rspec
-    # using :
-
-    # let(:copy_params) { { copyTo: [
-    #                         { slot_type: 'public', details: 'false' },
-    #                         { group_id: group_1.id, details: 'false' }
-    #                       ] } }
-
-    # gives me:
-
-    # pry(#<V1::SlotsController>)> params
-    # => {"copyTo"=>[
-    #          {"slot_type"=>"public", "details"=>"false", "group_id"=>"6"},
-    #          {"details"=>"false"}],
-
-    # couldn't find a way to solve this yet
-
-    let(:group_1) { create(:group) }
-    let(:group_2) { create(:group) }
-
-    describe "copy groupSlot to stdslots without details" do
-      let!(:group_slot) { create(:group_slot_public, :with_likes, :with_notes) }
-
-      let(:copy_params) { { copyTo: [
-                              { slotType: 'public',
-                                details: 'false' },
-                              { slotType: 'private',
-                                details: 'false' }
-                            ] } }
-
-      it "creates new slots" do
-        expect {
-          post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
-        }.to change(BaseSlot.unscoped, :count).by 2
-      end
-    end
-
-    describe "copy into groups without details" do
-      let!(:std_slot) { create(:std_slot_public, owner: current_user) }
-      let(:copy_params) { { copyTo: [
-                              { groupId: group_1.id,
-                                details: 'false' },
-                              { groupId: group_2.id,
-                                details: 'false' }
-                            ] } }
-
-      it "creates new slots" do
-        expect {
-          post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        }.to change(GroupSlot.unscoped, :count).by 2
-      end
-    end
-
-    describe "copy groupslot with details into private stdslot" do
-      let!(:current_user) { create(:user) }
-      let!(:user) { create(:user) }
-      let!(:group_slot) { create(:group_slot_public, :with_media, :with_likes,
-                                 :with_notes, creator: user) }
-      let(:copy_params) { { copyTo: [ { slotType: 'private',
-                                        details: 'true' }] } }
-
-      it "copys media data and notes unless explictly disabled" do
-        post "/v1/slots/#{group_slot.id}/copy", copy_params, auth_header
-        new_slot = BaseSlot.unscoped.last
-        expect(new_slot.notes.size).to eq 3
-        expect(new_slot.notes.second.title).to eq group_slot.notes.second.title
-        expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 6
-        expect(new_slot.images.first.public_id).to eq group_slot.images.first.public_id
-        expect(new_slot.images.first.id).not_to eq group_slot.images.first.id
-        expect(new_slot.images.first.creator).to eq user
-      end
-    end
-
-    describe "copy stdslot with details into groupslot" do
-      let!(:current_user) { create(:user) }
-      let!(:user) { create(:user) }
-      let!(:std_slot) { create(:std_slot_public, :with_media, :with_likes,
-                               :with_notes, creator: user) }
-      let(:copy_params) { { copyTo: [{ groupId: group_1.id,
-                                       details: 'true' },
-                                     { groupId: group_2.id,
-                                       details: true }] } }
-
-      it "copys media data and notes unless explictly disabled" do
-        post "/v1/slots/#{std_slot.id}/copy", copy_params, auth_header
-        new_slot = BaseSlot.unscoped.last
-        expect(new_slot.notes.size).to eq 3
-        expect(new_slot.notes.second.title).to eq std_slot.notes.second.title
-        expect(new_slot.likes.size).to eq 0
-        expect(new_slot.media_items.size).to eq 6
-        expect(new_slot.images.first.public_id).to eq std_slot.images.first.public_id
-        expect(new_slot.images.first.id).not_to eq std_slot.images.first.id
-        expect(new_slot.images.first.creator).to eq user
-      end
-    end
-  end
-
   describe "POST /v1/slots/:id/move" do
     let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
@@ -2142,17 +1818,6 @@ RSpec.describe "V1::Slots", type: :request do
         expect(tags).not_to include "replaced" if tags
         image.reload
         expect(image.deleted_at?).to be true
-      end
-    end
-
-    context "move to group without details" do
-      let(:move_params) { { groupId: create(:group).id,
-                            details: false } }
-
-      it "creates a new groupslot" do
-        expect {
-          post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        }.to change(GroupSlot.unscoped, :count).by 1
       end
     end
   end

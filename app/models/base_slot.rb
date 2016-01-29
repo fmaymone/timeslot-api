@@ -21,14 +21,11 @@ class BaseSlot < ActiveRecord::Base
                  ReSlotFriends: 6,
                  ReSlotFoaf: 7,
                  ReSlotPublic: 22, # maintain backwards compatibility
-                 GroupSlotMembers: 11,
-                 GroupSlotPublic: 12,
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
                  StdSlot: 20,
                  # ReSlot: 23,
-                 GroupSlot: 21
                }
 
   enum slot_type: SLOT_TYPES
@@ -50,6 +47,12 @@ class BaseSlot < ActiveRecord::Base
            inverse_of: :slot
   has_many :re_slots, -> { includes(:slotter) },
            foreign_key: :parent_id, inverse_of: :parent
+
+  has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :slot_groups, -> { merge Containership.active },
+           through: :containerships, source: :group,
+           inverse_of: :slots
+
   belongs_to :shared_by, class_name: User
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
@@ -227,6 +230,16 @@ class BaseSlot < ActiveRecord::Base
     meta_slot.unregister
   end
 
+  def add_to_group(group)
+    cs = Containership.find_or_create_by(slot: self, group: group)
+    cs.update(deleted_at: nil) if cs.deleted_at?
+  end
+
+  def remove_from_group(group)
+    cs = containerships.where(group: group).take
+    cs.delete if cs && !cs.deleted_at?
+  end
+
   def copy_to(targets, user)
     targets.each do |target|
       BaseSlot.duplicate_slot(self, target, user)
@@ -331,7 +344,7 @@ class BaseSlot < ActiveRecord::Base
                        notes: nil, alerts: nil, user: nil)
 
     # TODO: improve
-    fail unless visibility || group
+    fail unless visibility #|| group
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
@@ -340,8 +353,8 @@ class BaseSlot < ActiveRecord::Base
     if visibility
       slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
                                  user: user)
-    elsif group
-      slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
+    # elsif group
+    #   slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
     end
 
     # TODO: fail instead of return here or even better, fail in the create_slot
@@ -359,14 +372,14 @@ class BaseSlot < ActiveRecord::Base
 
   def self.duplicate_slot(source, target, current_user)
     visibility = target[:slot_type] if target[:slot_type]
-    group = Group.find(target[:group_id]) if target[:group_id]
+    # group = Group.find(target[:group_id]) if target[:group_id]
     details = target[:details]
     # YAML.load converts to boolean
     with_details = details.present? ? YAML.load(details.to_s) : true
 
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
-                                  group: group,
+                                  # group: group,
                                   user: current_user)
 
     duplicate_slot_details(source, duplicated_slot, current_user) if with_details

@@ -82,10 +82,10 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
         expect(result.to_a).to include slot
       end
 
-      it "unkown" do
+      it "unknown" do
         slots = described_class.new(relation: @current_user.std_slots)
         expect {
-          slots.retrieve(filter: 'unkown', moment: Time.zone.now)
+          slots.retrieve(filter: 'unknown', moment: Time.zone.now)
         }.to raise_error ApplicationController::PaginationError
       end
     end

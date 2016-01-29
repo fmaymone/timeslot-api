@@ -1,5 +1,6 @@
 json.array!(@groups) do |group|
-  json.extract! group, :id, :name, :image
+  json.id group.uuid
+  json.extract! group, :name, :image
   json.owner do
     json.partial! 'v1/users/user', user: group.owner
   end

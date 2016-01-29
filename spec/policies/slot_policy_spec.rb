@@ -44,28 +44,6 @@ describe SlotPolicy do
     end
   end
 
-  permissions :add_comment?, :show_comments?, :reslot_history? do
-    context "own private slot" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, owner: user) }
-
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-  end
-
-  permissions :show?, :show_likes?, :copy?, :share_url? do
-    context "own private slot" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, owner: user) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-  end
-
   permissions :show?, :show_many?, :show_comments?, :show_likes?, :share_url? do
     context "for a visitor" do
       let(:user) { nil }
@@ -80,9 +58,12 @@ describe SlotPolicy do
     end
   end
 
+  # TODO: write spec for :create_reslot? if it is clear how it should work
   permissions :show?, :show_many?, :show_likes?, :show_comments?, :share_url?,
-              :reslot_history?, :add_like?, :add_comment?, :copy?,
-              :create_reslot? do
+              :reslot_history?, :add_like?, :copy?, :add_comment?,
+              # :create_reslot?,
+              :remove_from_groups? do
+
     let(:user) { create(:user) }
 
     context "std_slot" do
@@ -136,6 +117,14 @@ describe SlotPolicy do
 
         it "denies access" do
           expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "own private slot" do
+        let(:slot) { create(:std_slot_private, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
         end
       end
 
@@ -211,14 +200,19 @@ describe SlotPolicy do
       end
     end
 
-    context "group_slot" do
-      let(:slot) { create(:group_slot) }
+    context "slot groups" do
+      let(:group) { create(:group) }
+      let(:slot) do
+        slot = create(:std_slot_private)
+        create(:containership, slot: slot, group: group)
+        slot
+      end
 
       context "for a user" do
         let(:user) { create(:user) }
 
-        it "allows access if user is group member" do
-          create(:membership, :active, group: slot.group, user: user)
+        it "allows access if user is slotgroup member" do
+          create(:membership, :active, group: group, user: user)
           expect(subject).to permit(user, slot)
         end
 
@@ -279,18 +273,18 @@ describe SlotPolicy do
       end
     end
 
-    context "group_slot" do
-      let(:slot) { create(:group_slot) }
+    # context "group_slot" do
+    #   let(:slot) { create(:group_slot) }
 
-      context "for a user" do
-        let(:user) { create(:user) }
+    #   context "for a user" do
+    #     let(:user) { create(:user) }
 
-        it "denies access, even if user is group member" do
-          create(:membership, :active, group: slot.group, user: user)
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-    end
+    #     it "denies access, even if user is group member" do
+    #       create(:membership, :active, group: slot.group, user: user)
+    #       expect(subject).not_to permit(user, slot)
+    #     end
+    #   end
+    # end
   end
 
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
@@ -356,14 +350,162 @@ describe SlotPolicy do
       end
     end
 
-    context "group_public" do
-      let(:slot) { create(:group_slot) }
+    # context "group_public" do
+    #   let(:slot) { create(:group_slot) }
 
-      it "raises MissingCurrentUserError" do
-        permissions.each do |permission|
-          expect {
-            subject.new(user, slot).public_send(permission)
-          }.to raise_error TSErrors::MissingCurrentUserError
+    #   it "raises MissingCurrentUserError" do
+    #     permissions.each do |permission|
+    #       expect {
+    #         subject.new(user, slot).public_send(permission)
+    #       }.to raise_error TSErrors::MissingCurrentUserError
+    #     end
+    #   end
+    # end
+  end
+
+  permissions :add_to_groups? do
+    let(:user) { create(:user) }
+
+    context "globalslot" do
+      let(:slot) { create(:global_slot) }
+
+      it "allows access" do
+        expect(subject).to permit(user, slot)
+      end
+    end
+
+    context "own std_slots" do
+      context "public slot" do
+        let(:slot) { create(:std_slot_public, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf-visible slot" do
+        let(:slot) { create(:std_slot_foaf, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "friend-visible slot" do
+        let(:slot) { create(:std_slot_friends, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "private slot" do
+        let(:slot) { create(:std_slot_private, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+    end
+
+    context "other users std_slots" do
+      context "public slot" do
+        let(:slot) { create(:std_slot_public) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf-visible slot" do
+        let(:slot) { create(:std_slot_foaf) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "friend-visible slot" do
+        let(:slot) { create(:std_slot_friends) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "private slot" do
+        let(:slot) { create(:std_slot_private) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+    end
+
+    context "own re_slot" do
+      context "public reslot" do
+        let(:slot) { create(:re_slot_public, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf reslot" do
+        let(:slot) { create(:re_slot_foaf, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "friend reslot" do
+        let(:slot) { create(:re_slot_friends, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "private reslot" do
+        let(:slot) { create(:re_slot_private, slotter: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+    end
+
+    context "others re_slot" do
+      context "public reslot" do
+        let(:slot) { create(:re_slot_public) }
+
+        it "denies access" do
+          expect(subject).to permit(user, slot)
+        end
+      end
+
+      context "foaf reslot" do
+        let(:slot) { create(:re_slot_foaf) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "friend reslot" do
+        let(:slot) { create(:re_slot_friends) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
+        end
+      end
+
+      context "private reslot" do
+        let(:slot) { create(:re_slot_private) }
+
+        it "denies access" do
+          expect(subject).not_to permit(user, slot)
         end
       end
     end
