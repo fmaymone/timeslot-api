@@ -34,7 +34,7 @@ gem 'newrelic_rpm'
 gem 'pry-rails'
 
 # Worker (background processing)
-gem 'sucker_punch'
+gem 'sucker_punch', '~> 2.0'
 
 # Redis Data Storage
 gem 'redis'
