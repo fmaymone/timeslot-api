@@ -151,7 +151,7 @@ module Share
 
     private def create_share_url(type, slot)
       # Returns base64 without padding
-      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id || slot['id']}").gsub('=', '')
+      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id || slot['id']}") #.gsub('=', '')
     end
 
     private def share_objects(user, slot)
