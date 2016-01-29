@@ -60,5 +60,3 @@ json.muid slot.muid if slot.GlobalSlot?
 
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count
-
-json.partial! 'v1/slots/share_url', share_id: slot.share_id

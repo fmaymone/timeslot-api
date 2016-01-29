@@ -35,9 +35,6 @@ Rails.application.routes.draw do
       # TODO: remove/disable route
       get 'demo', to: 'slots#show_last', as: 'slots_last'
 
-      get ':id/share', to: 'slots#share_url', as: 'slot_shareurl'
-      get ':uid/sharedata', to: 'slots#share_data', as: 'slot_sharedata'
-
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
       delete ':id/like', to: 'slots#unlike', as: 'slot_unlike'

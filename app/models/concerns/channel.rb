@@ -33,7 +33,7 @@ module Channel
     # TODO: Channel.notify not used at the moment
     def notify(params)
       # we using worker background processing to perform stream tasks asynchronously
-      StreamJob.new.async.perform(connections, params) unless connections.empty?
+      StreamJob.perform_async(connections, params) unless connections.empty?
 
       # Stream.send(follower.devices.active_sockets)
       # notify_queue = []

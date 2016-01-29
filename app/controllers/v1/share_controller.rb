@@ -1,5 +1,6 @@
 module V1
-  require 'open-uri'
+  # May 'open-uri' is required to forward https requests:
+  # require 'open-uri'
 
   class ShareController < ApplicationController
     skip_before_action :authenticate_user_from_token!, only: :redirect
@@ -7,7 +8,7 @@ module V1
 
     ## -- REDIRECT SHARE URL -- ##
 
-    # GET /v1/:id
+    # GET /v1/
     def redirect
       if params[:id].present?
 
@@ -22,7 +23,9 @@ module V1
           when 'image'
             data_handler(result, 'image/jpg')
           when 'webview'
+            # Render from cached final view:
             #render html: result.html_safe, content_type: "text/html"
+            # Render from cached data ("Live Enrich"):
             data_handler(result.html_safe, 'text/html')
           when 'qrcode'
             data_handler(result, 'image/png')
@@ -43,47 +46,36 @@ module V1
 
     # POST /v1/share/1/webview
     def webview
-      authorize :share
       share_handler(:webview)
     end
 
     # POST /v1/share/1/image
     def image
-      authorize :share
       share_handler(:image)
     end
 
     # POST /v1/share/1/qrcode
     def qrcode
-      authorize :share
       share_handler(:qrcode)
     end
 
     # POST /v1/share/1/pdf
     def pdf
-      authorize :share
       share_handler(:pdf)
     end
 
     # POST /v1/share/1/email
     def email
-      authorize :share
       share_handler(:email)
     end
 
     # POST /v1/share/1/intern
     def intern
-      authorize :share
-      slot = BaseSlot.get(params[:id])
-
-      if slot.set_share_id(current_user)
-        render 'v1/slots/show', locals: { slot: slot }
-      else
-        render json: slot.errors.messages,
-               status: :unprocessable_entity
-      end
+      # TODO: Share As Internal App Forwarding
+      #share_handler(:intern)
     end
 
+    # DELETE /v1/share/1/
     def delete
       authorize :share
       slot = BaseSlot.get(params[:id])
@@ -103,6 +95,10 @@ module V1
 
     ## -- HANDLERS -- ##
 
+    private def slot_is_public(slot)
+      slot.try(:visibility) == 'public'
+    end
+
     private def data_handler(result, type)
       send_data(result, filename: "slot-#{params[:id]}.#{type.split('/')[1]}",
                         type: type,
@@ -110,16 +106,18 @@ module V1
     end
 
     private def share_handler(type)
-      if (slot = BaseSlot.get(params[:id]))
+      slot = BaseSlot.get(params[:id])
+      authorize :share
+
+      if slot_is_public(slot)
         # Delegate to the related share method
         if (url = (Share.send("share_#{type}", current_user, slot, params)))
           # Check if a response has to be returned to the client
           if url == true
             head :ok
           else
-            host = Rails.env.production? ? ENV['SHARE_URL_HOST_PUBLIC'] : ENV['SHARE_URL_HOST_LOCAL']
             render json: { shareId: url,
-                           shareUrl: "#{host}/v1/?id=#{url}" }
+                           shareUrl: "#{ENV['SHARE_HOST_URL']}/v1/?id=#{url}" }
           end
         else
           head 500
@@ -131,12 +129,9 @@ module V1
       error_handler(error, "failed: create shared view")
     end
 
-    private def error_handler(error, msg, params = nil)
-      opts = {}
-      opts[:parameters] = { msg: msg }
-      opts[:parameters][:params] = params if params
+    private def error_handler(error, msg, params = {})
       Rails.logger.error { error }
-      Airbrake.notify(error, opts)
+      Airbrake.notify(msg, params.merge(error: error))
     end
   end
 end

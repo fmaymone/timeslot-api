@@ -83,7 +83,6 @@ resource "GlobalSlots" do
         expect(first).not_to have_key("likes")
         expect(first).not_to have_key("commentsCounter")
         expect(first).not_to have_key("reslotsCounter")
-        expect(first).not_to have_key("shareUrl")
         expect(first).not_to have_key("visibility")
       end
     end
@@ -134,7 +133,6 @@ resource "GlobalSlots" do
         expect(first).not_to have_key("likes")
         expect(first).not_to have_key("commentsCounter")
         expect(first).not_to have_key("reslotsCounter")
-        expect(first).not_to have_key("shareUrl")
         expect(first).not_to have_key("visibility")
       end
     end

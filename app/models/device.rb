@@ -187,7 +187,7 @@ class Device < ActiveRecord::Base
       user_queue << { lang: user.lang || 'en', queue: device_queue }.as_json if device_queue.any?
     end
     # Start worker job asynchronously
-    NotifyJob.new.async.perform(user_queue, params) if user_queue.any?
+    NotifyJob.perform_async(user_queue, params) if user_queue.any?
   end
 
   def self.update_or_create(user, params)

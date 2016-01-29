@@ -111,8 +111,7 @@ resource "Slots" do
 
       let(:meta_slot) { create(:meta_slot) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          :with_ios_location, meta_slot: meta_slot,
-                          share_id: 'abcd1234') }
+                          :with_ios_location, meta_slot: meta_slot) }
 
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
@@ -150,10 +149,9 @@ resource "Slots" do
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
         expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
+        expect(json.except('media'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -179,7 +177,6 @@ resource "Slots" do
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
-        expect(json["shareUrl"]).to include slot.share_id
       end
     end
 
@@ -286,10 +283,9 @@ resource "Slots" do
         expect(json).to have_key("slotter")
         expect(json).to have_key("parent")
         expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
+        expect(json.except('media'))
           .to eq("id" => reslot.id,
                  "title" => reslot.title,
                  "startDate" => reslot.start_date.as_json,

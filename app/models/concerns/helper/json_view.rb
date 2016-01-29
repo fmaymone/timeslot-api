@@ -118,12 +118,6 @@ module JSONView
     json['likes'] = slot.likes_count
     json['commentsCounter'] = slot.comments_count
 
-    if slot.share_id.empty?
-      json['shareUrl'] = nil
-    else
-      json['shareUrl'] = "#{ENV['TS_SLOT_WEBSHARING_URL']}#{slot.share_id}"
-    end
-
     json
   end
 

@@ -30,8 +30,7 @@ module Convert
   end
 
   def self.url_to_qrcode(share_url, size: 512, border_modules: 4, module_px_size: 6)
-    host = Rails.env.production? ? ENV['SHARE_URL_HOST_PUBLIC'] : ENV['SHARE_URL_HOST_LOCAL']
-    qrcode = RQRCode::QRCode.new("#{host}/v1/?id=#{share_url}")
+    qrcode = RQRCode::QRCode.new("#{ENV['SHARE_HOST_URL']}/v1/?id=#{share_url}")
     # Specify default options
     qrcode.as_png(
         resize_gte_to: false,

@@ -182,14 +182,6 @@ module V1
       end
     end
 
-    # GET /v1/slots/abcd1234/sharedata
-    def share_data
-      @slot = BaseSlot.includes(:meta_slot).find_by(share_id: params[:uid])
-      authorize @slot
-
-      render :sharedata, locals: { slot: @slot }
-    end
-
     # POST /v1/slots/1/like
     def add_like
       @slot = BaseSlot.get(params[:id])
