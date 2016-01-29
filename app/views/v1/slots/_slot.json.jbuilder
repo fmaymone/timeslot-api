@@ -32,28 +32,24 @@ json.partial! 'v1/slots/settings', slot: slot if current_user
 
 json.visibility slot.visibility if slot.try(:visibility)
 
-# json.group_id slot.group.id if slot.class < GroupSlot
-if slot.try(:group)
-  json.group do
-    json.id slot.group.id
-  end
-else
-  json.reslotsCounter slot.re_slots_count
+json.reslotsCounter slot.re_slots_count
 
-  if slot.class <= ReSlot
-    json.slotter do
-      json.id slot.slotter_id
-    end
-    json.parent do
-      json.id slot.parent_id
-    end
-    # if we have a globalslot - reslot, return the muid
-    json.muid slot.muid if slot.parent.GlobalSlot?
-  end
+if slot.class <= ReSlot
+  # overwritting reslot ID with ID of the parent
+  json.id slot.parent_id
+
+  # json.slotter do
+  #   json.id slot.slotter_id
+  # end
+  # json.parent do
+  #   json.id slot.parent_id
+  # end
+  # if we have a globalslot - reslot, return the muid
+  # json.muid slot.muid if slot.parent.GlobalSlot?
 end
 
 # if we have a global slot, return the muid
-json.muid slot.muid if slot.GlobalSlot?
+# json.muid slot.muid if slot.GlobalSlot?
 
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count
