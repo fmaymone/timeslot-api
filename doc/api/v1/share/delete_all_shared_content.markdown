@@ -1,6 +1,6 @@
 # Share API
 
-## Delete all shared contents
+## Delete all shared content
 
 ### DELETE /v1/share/:id
 
@@ -20,20 +20,20 @@ Description : The id of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=nW-KdLecCSqblTfd6fkXEIG5X0g
+Authorization: Token token=ReOFnl8n-ECbrZy4Fb74u-M0X_4
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/share/31</pre>
+<pre>DELETE /v1/share/30</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/share/31&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;http://localhost:5000/v1/share/30&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=nW-KdLecCSqblTfd6fkXEIG5X0g&quot; \
+	-H &quot;Authorization: Token token=ReOFnl8n-ECbrZy4Fb74u-M0X_4&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -46,8 +46,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: a7502dec-c1e9-4ded-bf5e-03ad0872f8ab
-X-Runtime: 0.026332
+X-Request-Id: 4300ea1e-f003-46e5-a3b7-f91f9db9a59a
+X-Runtime: 0.006899
 Vary: Origin
 Content-Length: 0</pre>
 

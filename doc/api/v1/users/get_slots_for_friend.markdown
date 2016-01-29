@@ -71,18 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0
+<pre>Authorization: Token token=64l8KK4ZFPIdiOw2zjFhO5YLYJI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/161/slots</pre>
+<pre>GET /v1/users/174/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/161/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/174/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=64l8KK4ZFPIdiOw2zjFhO5YLYJI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -93,12 +93,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;00691717f6745dee463a4d2f3595d660&quot;
+ETag: W/&quot;3e71103144bdb7b2d64e09b25af44fd9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1f7262f9-bf6d-4c94-98ec-1d5176bc250a
-X-Runtime: 0.042688
+X-Request-Id: 44783368-496f-42da-b190-2ab13b31760b
+X-Runtime: 0.048365
 Vary: Origin
-Content-Length: 2577</pre>
+Content-Length: 2024</pre>
 
 #### Status
 
@@ -109,19 +109,52 @@ Content-Length: 2577</pre>
 ```javascript
 [
   {
-    "id" : 70,
-    "title" : "Slot title 133",
-    "startDate" : "2019-09-03T17:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.670Z",
-    "updatedAt" : "2015-12-23T11:18:37.670Z",
+    "id" : 76,
+    "title" : "Slot title 158",
+    "startDate" : "2019-09-01T18:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:18.973Z",
+    "updatedAt" : "2016-01-29T19:39:18.973Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-03T17:44:02.000Z",
+    "endDate" : "2019-10-01T18:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 163,
-      "username" : "User 455",
-      "createdAt" : "2015-12-23T11:18:37.666Z",
-      "updatedAt" : "2015-12-23T11:18:37.666Z",
+      "id" : 179,
+      "username" : "User 512",
+      "createdAt" : "2016-01-29T19:39:18.953Z",
+      "updatedAt" : "2016-01-29T19:39:18.953Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "notes" : [],
+    "media" : [],
+    "settings" : {
+      "alerts" : "omitted"
+    },
+    "visibility" : "public",
+    "reslotsCounter" : 1,
+    "slotter" : {
+      "id" : 174
+    },
+    "parent" : {
+      "id" : 75
+    },
+    "likes" : 0,
+    "commentsCounter" : 0
+  },
+  {
+    "id" : 72,
+    "title" : "Slot title 155",
+    "startDate" : "2019-09-25T15:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:18.930Z",
+    "updatedAt" : "2016-01-29T19:39:18.930Z",
+    "deletedAt" : null,
+    "endDate" : "2019-10-25T15:44:02.000Z",
+    "location" : null,
+    "creator" : {
+      "id" : 176,
+      "username" : "User 509",
+      "createdAt" : "2016-01-29T19:39:18.923Z",
+      "updatedAt" : "2016-01-29T19:39:18.923Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -133,23 +166,22 @@ Content-Length: 2577</pre>
     "visibility" : "friends",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 71,
-    "title" : "Slot title 134",
-    "startDate" : "2019-09-04T18:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.677Z",
-    "updatedAt" : "2015-12-23T11:18:37.677Z",
+    "id" : 73,
+    "title" : "Slot title 156",
+    "startDate" : "2019-09-26T16:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:18.940Z",
+    "updatedAt" : "2016-01-29T19:39:18.940Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-04T18:44:02.000Z",
+    "endDate" : "2019-10-26T16:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 164,
-      "username" : "User 456",
-      "createdAt" : "2015-12-23T11:18:37.673Z",
-      "updatedAt" : "2015-12-23T11:18:37.673Z",
+      "id" : 177,
+      "username" : "User 510",
+      "createdAt" : "2016-01-29T19:39:18.934Z",
+      "updatedAt" : "2016-01-29T19:39:18.934Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -161,23 +193,22 @@ Content-Length: 2577</pre>
     "visibility" : "foaf",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 72,
-    "title" : "Slot title 135",
-    "startDate" : "2019-09-05T19:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.683Z",
-    "updatedAt" : "2015-12-23T11:18:37.683Z",
+    "id" : 74,
+    "title" : "Slot title 157",
+    "startDate" : "2019-09-27T17:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:18.950Z",
+    "updatedAt" : "2016-01-29T19:39:18.950Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-05T19:44:02.000Z",
+    "endDate" : "2019-10-27T17:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 165,
-      "username" : "User 457",
-      "createdAt" : "2015-12-23T11:18:37.679Z",
-      "updatedAt" : "2015-12-23T11:18:37.679Z",
+      "id" : 178,
+      "username" : "User 511",
+      "createdAt" : "2016-01-29T19:39:18.944Z",
+      "updatedAt" : "2016-01-29T19:39:18.944Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -189,71 +220,7 @@ Content-Length: 2577</pre>
     "visibility" : "public",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 74,
-    "title" : "Slot title 136",
-    "startDate" : "2019-09-06T20:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.701Z",
-    "updatedAt" : "2015-12-23T11:18:37.701Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-06T20:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 166,
-      "username" : "User 458",
-      "createdAt" : "2015-12-23T11:18:37.686Z",
-      "updatedAt" : "2015-12-23T11:18:37.686Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "reslotsCounter" : 1,
-    "slotter" : {
-      "id" : 161
-    },
-    "parent" : {
-      "id" : 73
-    },
-    "visibility" : "public",
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 75,
-    "title" : "Slot title 138",
-    "startDate" : "2019-09-08T22:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.758Z",
-    "updatedAt" : "2015-12-23T11:18:37.758Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-08T22:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 170,
-      "username" : "User 462",
-      "createdAt" : "2015-12-23T11:18:37.748Z",
-      "updatedAt" : "2015-12-23T11:18:37.748Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "group" : {
-      "id" : 14
-    },
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

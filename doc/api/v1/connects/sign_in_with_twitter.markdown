@@ -74,10 +74,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;259b60f53acccb52d9e93aff34e18197&quot;
+ETag: W/&quot;61e33f7706d0bbbd03fcb63da6b89620&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: eac0d43c-6a37-4146-aa3b-1925a5798587
-X-Runtime: 0.019678
+X-Request-Id: 231090b0-2586-4879-90ee-0690ec2e7f22
+X-Runtime: 0.026235
 Vary: Origin
 Content-Length: 745</pre>
 
@@ -89,10 +89,10 @@ Content-Length: 745</pre>
 
 ```javascript
 {
-  "id" : 7,
+  "id" : 6,
   "username" : "alexandrospar",
-  "createdAt" : "2015-12-23T11:18:29.365Z",
-  "updatedAt" : "2015-12-23T11:18:29.365Z",
+  "createdAt" : "2016-01-29T19:38:53.907Z",
+  "updatedAt" : "2016-01-29T19:38:53.907Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
@@ -118,6 +118,6 @@ Content-Length: 745</pre>
   "defaultGroupAlerts" : "0000000000",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "DPZ8-WkNdtih4aR_7qqwNKwXM5k"
+  "authToken" : "wlO1AXG4QAwJ1oNccmZqP70bjsU"
 }
 ```

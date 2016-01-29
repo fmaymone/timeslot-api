@@ -39,7 +39,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=s4P5hP09W1s4FNmxSH_PwsuRxqU
+Authorization: Token token=iMtHtb-bC18O8OcUsk5SHzHCeyI
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/group?query=timeslot+developer&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=s4P5hP09W1s4FNmxSH_PwsuRxqU&quot; \
+	-H &quot;Authorization: Token token=iMtHtb-bC18O8OcUsk5SHzHCeyI&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -66,12 +66,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;32c7474180e9df77af974ca1aa335478&quot;
+ETag: W/&quot;5d1764a192566058ddd576e0b6b2e260&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2f28fcfd-aab7-466f-9e84-319aa6850486
-X-Runtime: 0.009538
+X-Request-Id: 10ca106d-939c-4c9a-851a-a3cecebacabb
+X-Runtime: 0.011887
 Vary: Origin
-Content-Length: 135</pre>
+Content-Length: 343</pre>
 
 #### Status
 
@@ -82,12 +82,20 @@ Content-Length: 135</pre>
 ```javascript
 [
   {
-    "id" : 34,
+    "id" : "9b0d9f06-5319-4873-8dbf-7f25e2c64898",
     "name" : "Timeslot Developer Group (Berlin)",
     "image" : "",
-    "upcomingCount" : 0,
-    "next" : null,
-    "url" : "http://example.org/v1/groups/34"
+    "owner" : {
+      "id" : 174,
+      "username" : "User 237",
+      "createdAt" : "2016-01-29T19:39:03.146Z",
+      "updatedAt" : "2016-01-29T19:39:03.146Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "createdAt" : "2016-01-29T19:39:03.148Z",
+    "updatedAt" : "2016-01-29T19:39:03.148Z",
+    "deletedAt" : null
   }
 ]
 ```

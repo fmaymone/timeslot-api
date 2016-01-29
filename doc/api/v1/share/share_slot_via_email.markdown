@@ -23,14 +23,14 @@ Description : The email of the recipient
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=WineXCthOPU-QZj-k_burOjXo_M
+Authorization: Token token=0jKjMZbGM7aNg_adSy1YXu-m4pU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/share/35/email</pre>
+<pre>POST /v1/share/30/email</pre>
 
 #### Body
 ```javascript
@@ -42,9 +42,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/share/35/email&quot; -d &#39;{&quot;email&quot;:&quot;test@timeslot.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/share/30/email&quot; -d &#39;{&quot;email&quot;:&quot;test@timeslot.com&quot;}&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=WineXCthOPU-QZj-k_burOjXo_M&quot; \
+	-H &quot;Authorization: Token token=0jKjMZbGM7aNg_adSy1YXu-m4pU&quot; \
 	-H &quot;Host: example.org&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
@@ -57,8 +57,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: d61f2704-51b9-4614-94a9-6280fe6cb1dd
-X-Runtime: 0.149175
+X-Request-Id: c847a5f9-289d-4268-93c2-8681a53503fb
+X-Runtime: 0.039497
 Vary: Origin
 Content-Length: 0</pre>
 

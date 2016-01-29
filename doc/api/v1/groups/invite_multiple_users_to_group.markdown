@@ -2,7 +2,7 @@
 
 ## Invite multiple users to group
 
-### POST /v1/groups/:group_id/members
+### POST /v1/groups/:group_uuid/members
 
 Inviting user must be group owner or group must allow invites by group members.
 
@@ -10,13 +10,13 @@ returns 201 if invite successfully created
 
 returns 403 if user is not allowed to invite
 
-returns 404 if group ID is invalid
+returns 404 if group UUID is invalid
 
 returns 422 if parameters are missing
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group
 
 Name : invitees *- required -*
@@ -27,21 +27,21 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Dv_6LjxgsQihy-X22CH44nXOLwo
+Authorization: Token token=yqH-o0B8v2H6xfLYd4mLmgauZyE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/20/members</pre>
+<pre>POST /v1/groups/6fb3211d-0a06-41bc-8038-75e844cb36e7/members</pre>
 
 #### Body
 ```javascript
 {
   "invitees" : [
+    62,
     63,
-    64,
-    65
+    64
   ]
 }
 ```
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/20/members&quot; -d &#39;{&quot;invitees&quot;:[63,64,65]}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/6fb3211d-0a06-41bc-8038-75e844cb36e7/members&quot; -d &#39;{&quot;invitees&quot;:[62,63,64]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Dv_6LjxgsQihy-X22CH44nXOLwo&quot; \
+	-H &quot;Authorization: Token token=yqH-o0B8v2H6xfLYd4mLmgauZyE&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,12 +62,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;46d1087c78704c8982608b237f5246e4&quot;
+ETag: W/&quot;4bb2fd4a42ee3d47c401741840dfed8b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 22e35ace-a729-4d87-82d5-68ef3365bfb1
-X-Runtime: 0.029435
+X-Request-Id: 53ae3276-f03a-47be-b782-0388e257988e
+X-Runtime: 0.142211
 Vary: Origin
-Content-Length: 230</pre>
+Content-Length: 266</pre>
 
 #### Status
 
@@ -77,12 +77,17 @@ Content-Length: 230</pre>
 
 ```javascript
 {
-  "groupId" : 20,
+  "groupId" : "6fb3211d-0a06-41bc-8038-75e844cb36e7",
   "size" : 4,
   "related" : [
     {
-      "userId" : 62,
+      "userId" : 61,
       "state" : "active",
+      "deletedAt" : null
+    },
+    {
+      "userId" : 62,
+      "state" : "invited",
       "deletedAt" : null
     },
     {
@@ -92,11 +97,6 @@ Content-Length: 230</pre>
     },
     {
       "userId" : 64,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 65,
       "state" : "invited",
       "deletedAt" : null
     }

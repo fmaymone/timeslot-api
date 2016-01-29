@@ -18,7 +18,6 @@
 
 ## GlobalSlots
 
-* [Reslot global slot](globalslots/reslot_global_slot.markdown)
 * [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
 * [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
@@ -30,7 +29,7 @@
 * [Update data for existing group](groups/update_data_for_existing_group.markdown)
 * [Add image to existing group](groups/add_image_to_existing_group.markdown)
 * [Delete group](groups/delete_group.markdown)
-* [Get slots in a group](groups/get_slots_in_a_group.markdown)
+* [Get slots in a slotgroup by UUID](groups/get_slots_in_a_slotgroup_by_uuid.markdown)
 * [Get list of all active group members](groups/get_list_of_all_active_group_members.markdown)
 * [Get list of all users related to a group](groups/get_list_of_all_users_related_to_a_group.markdown)
 * [Accept Invitation and add invited user to group](groups/accept_invitation_and_add_invited_user_to_group.markdown)
@@ -86,7 +85,7 @@
 * [Share Slot as PDF](share/share_slot_as_pdf.markdown)
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
 * [Share Slot via Email](share/share_slot_via_email.markdown)
-* [Delete all shared contents](share/delete_all_shared_contents.markdown)
+* [Delete all shared content](share/delete_all_shared_content.markdown)
 
 ## Slots
 
@@ -95,7 +94,6 @@
 * [Get Reslot](slots/get_reslot.markdown)
 * [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
-* [Create GroupSlot](slots/create_groupslot.markdown)
 * [Reslot a slot](slots/reslot_a_slot.markdown)
 * [Reslot a public StandardSlot as private](slots/reslot_a_public_standardslot_as_private.markdown)
 * [Create new ReSlot from the Web Search service](slots/create_new_reslot_from_the_web_search_service.markdown)
@@ -108,8 +106,9 @@
 * [Update Slot - Add Location](slots/update_slot_-_add_location.markdown)
 * [Update Slot - Custom Location Label](slots/update_slot_-_custom_location_label.markdown)
 * [Delete StandardSlot](slots/delete_standardslot.markdown)
-* [Delete GroupSlot](slots/delete_groupslot.markdown)
 * [Delete ReSlot](slots/delete_reslot.markdown)
+* [Add Slot to multiple SlotGroups](slots/add_slot_to_multiple_slotgroups.markdown)
+* [Remove Slot from multiple SlotGroups](slots/remove_slot_from_multiple_slotgroups.markdown)
 * [Like a Slot](slots/like_a_slot.markdown)
 * [Unlike a Slot](slots/unlike_a_slot.markdown)
 * [Get Likes for Slot](slots/get_likes_for_slot.markdown)
@@ -139,5 +138,6 @@
 * [Get slots for Friend-of-Friend](users/get_slots_for_friend-of-friend.markdown)
 * [Get slots for Stranger with common groups](users/get_slots_for_stranger_with_common_groups.markdown)
 * [Get slots for Stranger](users/get_slots_for_stranger.markdown)
+* [Get list of friends of another user](users/get_list_of_friends_of_another_user.markdown)
 * [Reset password](users/reset_password.markdown)
 

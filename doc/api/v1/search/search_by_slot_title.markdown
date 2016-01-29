@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo
+Authorization: Token token=08XEFUQJnd6qYvdZFBAeAR1Nzes
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo&quot; \
+	-H &quot;Authorization: Token token=08XEFUQJnd6qYvdZFBAeAR1Nzes&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -75,12 +75,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ee1ec3660f62c84565804710a722ae0f&quot;
+ETag: W/&quot;bb83b30181861c6ab9832b07fb8d81bc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d36afece-0434-4eeb-9198-b157971e17d1
-X-Runtime: 0.012497
+X-Request-Id: 863a8c0d-62f6-4f3c-bd97-ec0331357c3d
+X-Runtime: 0.019469
 Vary: Origin
-Content-Length: 525</pre>
+Content-Length: 509</pre>
 
 #### Status
 
@@ -91,19 +91,19 @@ Content-Length: 525</pre>
 ```javascript
 [
   {
-    "id" : 29,
+    "id" : 28,
     "title" : "Timeslot Party Berlin 2015",
-    "startDate" : "2019-09-27T05:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:33.378Z",
-    "updatedAt" : "2015-12-23T11:18:33.378Z",
+    "startDate" : "2019-09-05T10:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:03.070Z",
+    "updatedAt" : "2016-01-29T19:39:03.070Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-27T05:44:02.000Z",
+    "endDate" : "2019-10-05T10:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 167,
-      "username" : "User 220",
-      "createdAt" : "2015-12-23T11:18:33.365Z",
-      "updatedAt" : "2015-12-23T11:18:33.365Z",
+      "id" : 168,
+      "username" : "User 231",
+      "createdAt" : "2016-01-29T19:39:03.056Z",
+      "updatedAt" : "2016-01-29T19:39:03.056Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -115,8 +115,7 @@ Content-Length: 525</pre>
     "visibility" : "public",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

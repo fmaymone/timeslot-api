@@ -71,18 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=77r8L7ntqx7QQ-vxwuL_PyBPvwY
+<pre>Authorization: Token token=CF369QM_7DYWz4Ndgvuhm4oXtug
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/188/slots</pre>
+<pre>GET /v1/users/193/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/188/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=77r8L7ntqx7QQ-vxwuL_PyBPvwY&quot; \
+<pre class="request">curl &quot;http://localhost:5000/v1/users/193/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=CF369QM_7DYWz4Ndgvuhm4oXtug&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -93,12 +93,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;03573ba9645495ac1b79708bc5318bf2&quot;
+ETag: W/&quot;a2f6a7b3580aec0d627bdaca18fdc7a4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ebe7e10a-edac-4ad6-a37c-2d81fc13d6bb
-X-Runtime: 0.048835
+X-Request-Id: a6f728f2-78e7-4e28-a537-40c6cbced3c2
+X-Runtime: 0.044659
 Vary: Origin
-Content-Length: 1554</pre>
+Content-Length: 1033</pre>
 
 #### Status
 
@@ -109,19 +109,19 @@ Content-Length: 1554</pre>
 ```javascript
 [
   {
-    "id" : 88,
-    "title" : "Slot title 151",
-    "startDate" : "2019-09-21T11:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:38.057Z",
-    "updatedAt" : "2015-12-23T11:18:38.057Z",
+    "id" : 86,
+    "title" : "Slot title 169",
+    "startDate" : "2019-09-12T05:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:19.335Z",
+    "updatedAt" : "2016-01-29T19:39:19.335Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-21T11:44:02.000Z",
+    "endDate" : "2019-10-12T05:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 192,
-      "username" : "User 482",
-      "createdAt" : "2015-12-23T11:18:38.053Z",
-      "updatedAt" : "2015-12-23T11:18:38.053Z",
+      "id" : 197,
+      "username" : "User 528",
+      "createdAt" : "2016-01-29T19:39:19.325Z",
+      "updatedAt" : "2016-01-29T19:39:19.325Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -133,23 +133,22 @@ Content-Length: 1554</pre>
     "visibility" : "public",
     "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 90,
-    "title" : "Slot title 152",
-    "startDate" : "2019-09-22T12:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:38.075Z",
-    "updatedAt" : "2015-12-23T11:18:38.075Z",
+    "id" : 88,
+    "title" : "Slot title 170",
+    "startDate" : "2019-09-13T06:44:02.000Z",
+    "createdAt" : "2016-01-29T19:39:19.369Z",
+    "updatedAt" : "2016-01-29T19:39:19.369Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-22T12:44:02.000Z",
+    "endDate" : "2019-10-13T06:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 193,
-      "username" : "User 483",
-      "createdAt" : "2015-12-23T11:18:38.060Z",
-      "updatedAt" : "2015-12-23T11:18:38.060Z",
+      "id" : 198,
+      "username" : "User 529",
+      "createdAt" : "2016-01-29T19:39:19.339Z",
+      "updatedAt" : "2016-01-29T19:39:19.339Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -157,47 +156,17 @@ Content-Length: 1554</pre>
     "media" : [],
     "settings" : {
       "alerts" : "omitted"
-    },
-    "reslotsCounter" : 1,
-    "slotter" : {
-      "id" : 188
-    },
-    "parent" : {
-      "id" : 89
     },
     "visibility" : "public",
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 91,
-    "title" : "Slot title 154",
-    "startDate" : "2019-09-24T14:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:38.120Z",
-    "updatedAt" : "2015-12-23T11:18:38.120Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-24T14:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 196,
-      "username" : "User 486",
-      "createdAt" : "2015-12-23T11:18:38.109Z",
-      "updatedAt" : "2015-12-23T11:18:38.109Z",
-      "deletedAt" : null,
-      "image" : ""
+    "reslotsCounter" : 1,
+    "slotter" : {
+      "id" : 193
     },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "group" : {
-      "id" : 18
+    "parent" : {
+      "id" : 87
     },
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

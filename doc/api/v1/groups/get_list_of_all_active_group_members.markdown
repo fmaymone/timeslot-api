@@ -2,15 +2,15 @@
 
 ## Get list of all active group members
 
-### GET /v1/groups/:group_id/members
+### GET /v1/groups/:group_uuid/members
 
 returns 200 and a list of all active group members
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to get members for
 
 
@@ -39,19 +39,19 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=XbK-pWXKpNlH72XK12E7t56BnXg
+Authorization: Token token=l3NozhaFN0gumtQ3tFikzAz6Zp0
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/14/members</pre>
+<pre>GET /v1/groups/0f889799-3068-4646-a634-39079f647836/members</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/14/members&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/0f889799-3068-4646-a634-39079f647836/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=XbK-pWXKpNlH72XK12E7t56BnXg&quot; \
+	-H &quot;Authorization: Token token=l3NozhaFN0gumtQ3tFikzAz6Zp0&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -62,12 +62,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8ce2d465dfad94772450e34fb892f4c0&quot;
+ETag: W/&quot;7c9c12f834ee2f9f66e4b1d47ab774b6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1a7b76bb-1779-4ad2-8c4b-4222c8837165
-X-Runtime: 0.015935
+X-Request-Id: 478977b3-fa99-4878-8b43-e3976ccb9490
+X-Runtime: 0.078154
 Vary: Origin
-Content-Length: 505</pre>
+Content-Length: 545</pre>
 
 #### Status
 
@@ -77,38 +77,38 @@ Content-Length: 505</pre>
 
 ```javascript
 {
-  "groupId" : 14,
+  "groupId" : "0f889799-3068-4646-a634-39079f647836",
   "size" : 6,
   "members" : [
     {
+      "userId" : 29,
+      "username" : "User 107",
+      "userUrl" : "http://example.org/v1/users/29"
+    },
+    {
       "userId" : 30,
-      "username" : "User 96",
+      "username" : "User 108",
       "userUrl" : "http://example.org/v1/users/30"
     },
     {
       "userId" : 31,
-      "username" : "User 97",
+      "username" : "User 109",
       "userUrl" : "http://example.org/v1/users/31"
     },
     {
       "userId" : 32,
-      "username" : "User 98",
+      "username" : "User 110",
       "userUrl" : "http://example.org/v1/users/32"
     },
     {
       "userId" : 33,
-      "username" : "User 99",
+      "username" : "User 111",
       "userUrl" : "http://example.org/v1/users/33"
     },
     {
-      "userId" : 34,
-      "username" : "User 100",
-      "userUrl" : "http://example.org/v1/users/34"
-    },
-    {
-      "userId" : 36,
-      "username" : "User 102",
-      "userUrl" : "http://example.org/v1/users/36"
+      "userId" : 35,
+      "username" : "User 113",
+      "userUrl" : "http://example.org/v1/users/35"
     }
   ]
 }

@@ -91,13 +91,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zzwSpz2PC8-aMs9FXzf-3zI0TrU
+Authorization: Token token=TSymvnas9GKbC4pMdn7QU--v1HA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/34/move</pre>
+<pre>POST /v1/slots/45/move</pre>
 
 #### Body
 ```javascript
@@ -110,9 +110,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/34/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/45/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zzwSpz2PC8-aMs9FXzf-3zI0TrU&quot; \
+	-H &quot;Authorization: Token token=TSymvnas9GKbC4pMdn7QU--v1HA&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -123,12 +123,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bd4a341ed09e1a9e67d9b294347e981a&quot;
+ETag: W/&quot;8933afd70a80253af287d8e02717270d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 61c1a687-1c84-40e5-9947-bfcd6ae8ac69
-X-Runtime: 0.048824
+X-Request-Id: 55ed4b9b-d820-484a-a631-f20fef1823ad
+X-Runtime: 0.055862
 Vary: Origin
-Content-Length: 510</pre>
+Content-Length: 496</pre>
 
 #### Status
 
@@ -138,19 +138,19 @@ Content-Length: 510</pre>
 
 ```javascript
 {
-  "id" : 35,
-  "title" : "Slot title 98",
-  "startDate" : "2019-09-22T06:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:36.253Z",
-  "updatedAt" : "2015-12-23T11:18:36.253Z",
+  "id" : 46,
+  "title" : "Slot title 129",
+  "startDate" : "2019-09-26T13:44:02.000Z",
+  "createdAt" : "2016-01-29T19:39:17.350Z",
+  "updatedAt" : "2016-01-29T19:39:17.350Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-22T06:44:02.000Z",
+  "endDate" : "2019-10-26T13:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 95,
-    "username" : "User 390",
-    "createdAt" : "2015-12-23T11:18:36.240Z",
-    "updatedAt" : "2015-12-23T11:18:36.240Z",
+    "id" : 129,
+    "username" : "User 465",
+    "createdAt" : "2016-01-29T19:39:17.329Z",
+    "updatedAt" : "2016-01-29T19:39:17.329Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -162,7 +162,6 @@ Content-Length: 510</pre>
   "visibility" : "friends",
   "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
+  "commentsCounter" : 0
 }
 ```

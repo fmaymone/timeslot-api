@@ -2,13 +2,13 @@
 
 ## Update data for existing group
 
-### PATCH /v1/groups/:group_id
+### PATCH /v1/groups/:group_uuid
 
 e.g. Change groupname
 
 returns 200 if the update was successful
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 returns 422 if parameters are missing
 
@@ -16,7 +16,7 @@ returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to update
 
 Name : name
@@ -66,13 +66,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tERv5DZCCjRYfBPbjjOdcqA4i_w
+Authorization: Token token=-W6eLtv2w8Ogb-T56e_Gc6X-Tyo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/9</pre>
+<pre>PATCH /v1/groups/aa174b18-9056-48be-aa73-3dea7cb2e520</pre>
 
 #### Body
 ```javascript
@@ -86,9 +86,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/9&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/aa174b18-9056-48be-aa73-3dea7cb2e520&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tERv5DZCCjRYfBPbjjOdcqA4i_w&quot; \
+	-H &quot;Authorization: Token token=-W6eLtv2w8Ogb-T56e_Gc6X-Tyo&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -99,12 +99,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;878f8ffcc7421567d89cd307a3238a4a&quot;
+ETag: W/&quot;c08a5991fffcc8345833edfc0f896043&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 76b2ae3b-0a37-4676-8417-554cfb0104cc
-X-Runtime: 0.008596
+X-Request-Id: 233bb590-2764-4819-96f5-e7c026516ad8
+X-Runtime: 0.013887
 Vary: Origin
-Content-Length: 345</pre>
+Content-Length: 382</pre>
 
 #### Status
 
@@ -114,19 +114,19 @@ Content-Length: 345</pre>
 
 ```javascript
 {
-  "id" : 9,
+  "id" : "aa174b18-9056-48be-aa73-3dea7cb2e520",
   "name" : "bar",
   "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-12-23T11:18:30.486Z",
-  "updatedAt" : "2015-12-23T11:18:30.495Z",
+  "createdAt" : "2016-01-29T19:38:54.954Z",
+  "updatedAt" : "2016-01-29T19:38:54.967Z",
   "deletedAt" : null,
   "owner" : {
     "id" : 11,
-    "username" : "User 77",
-    "createdAt" : "2015-12-23T11:18:30.483Z",
-    "updatedAt" : "2015-12-23T11:18:30.483Z",
+    "username" : "User 89",
+    "createdAt" : "2016-01-29T19:38:54.950Z",
+    "updatedAt" : "2016-01-29T19:38:54.950Z",
     "deletedAt" : null,
     "image" : ""
   },

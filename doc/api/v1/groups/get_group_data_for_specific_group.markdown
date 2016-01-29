@@ -2,17 +2,17 @@
 
 ## Get group data for specific group
 
-### GET /v1/groups/:group_id
+### GET /v1/groups/:group_uuid
 
 returns data of specified group
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to get
 
 
@@ -53,19 +53,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=LaxVjJPnPibYjPSju5h4IKOlFBY
+Authorization: Token token=FkUHYO6iUzOlOOzpmBwbDtls63Y
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/7</pre>
+<pre>GET /v1/groups/cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/7&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/groups/cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LaxVjJPnPibYjPSju5h4IKOlFBY&quot; \
+	-H &quot;Authorization: Token token=FkUHYO6iUzOlOOzpmBwbDtls63Y&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -76,12 +76,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4224aee36c6b78c992e6d654fe4c390f&quot;
+ETag: W/&quot;1ca571a6715dd6f33719f726965fdc1b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c61ea9f4-49d9-4366-9e20-7079c2b0fd4e
-X-Runtime: 0.009229
+X-Request-Id: 0c256499-7173-4d4c-99af-095b454f71f9
+X-Runtime: 0.011400
 Vary: Origin
-Content-Length: 355</pre>
+Content-Length: 392</pre>
 
 #### Status
 
@@ -91,19 +91,19 @@ Content-Length: 355</pre>
 
 ```javascript
 {
-  "id" : 7,
-  "name" : "Testgroup 12",
+  "id" : "cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee",
+  "name" : "Testgroup 10",
   "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-12-23T11:18:30.392Z",
-  "updatedAt" : "2015-12-23T11:18:30.392Z",
+  "createdAt" : "2016-01-29T19:38:54.843Z",
+  "updatedAt" : "2016-01-29T19:38:54.843Z",
   "deletedAt" : null,
   "owner" : {
     "id" : 6,
-    "username" : "User 72",
-    "createdAt" : "2015-12-23T11:18:30.391Z",
-    "updatedAt" : "2015-12-23T11:18:30.391Z",
+    "username" : "User 84",
+    "createdAt" : "2016-01-29T19:38:54.841Z",
+    "updatedAt" : "2016-01-29T19:38:54.841Z",
     "deletedAt" : null,
     "image" : ""
   },

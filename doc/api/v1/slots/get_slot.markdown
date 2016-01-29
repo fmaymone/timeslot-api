@@ -83,19 +83,19 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_LMyJ9UEh3StL0s7kRSMbFIReP4
+Authorization: Token token=wjh2GdAKOwfP9wOXUitFjVqO46w
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/33</pre>
+<pre>GET /v1/slots/3</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/33&quot; -X GET \
+<pre class="request">curl &quot;http://localhost:5000/v1/slots/3&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_LMyJ9UEh3StL0s7kRSMbFIReP4&quot; \
+	-H &quot;Authorization: Token token=wjh2GdAKOwfP9wOXUitFjVqO46w&quot; \
 	-H &quot;Host: example.org&quot;</pre>
 
 ### Response
@@ -106,12 +106,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;464bf550c224066998415c15b25c3b8b&quot;
+ETag: W/&quot;982de06cdce5bfd937e1f67fb969b6fb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1ffc3268-bbbc-40c4-aa16-eb94a2244965
-X-Runtime: 0.012788
+X-Request-Id: 32b82764-226c-4070-b2fb-114067cc62f2
+X-Runtime: 0.017557
 Vary: Origin
-Content-Length: 1466</pre>
+Content-Length: 1413</pre>
 
 #### Status
 
@@ -121,77 +121,77 @@ Content-Length: 1466</pre>
 
 ```javascript
 {
-  "id" : 33,
-  "title" : "Slot title 54",
-  "startDate" : "2019-09-04T09:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:33.571Z",
-  "updatedAt" : "2015-12-23T11:18:33.571Z",
+  "id" : 3,
+  "title" : "Slot title 73",
+  "startDate" : "2019-09-23T04:44:02.000Z",
+  "createdAt" : "2016-01-29T19:39:08.872Z",
+  "updatedAt" : "2016-01-29T19:39:08.872Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T09:44:02.000Z",
+  "endDate" : "2019-10-23T04:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 180,
-    "username" : "User 240",
-    "createdAt" : "2015-12-23T11:18:33.564Z",
-    "updatedAt" : "2015-12-23T11:18:33.564Z",
+    "id" : 5,
+    "username" : "User 279",
+    "createdAt" : "2016-01-29T19:39:08.859Z",
+    "updatedAt" : "2016-01-29T19:39:08.859Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 31,
-      "publicId" : "dfhjghjkdisudgfds7iy59",
+      "mediaId" : 6,
+      "publicId" : "dfhjghjkdisudgfds7iy53",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2015-12-23T11:18:33.586Z",
+      "createdAt" : "2016-01-29T19:39:08.896Z",
       "duration" : null,
-      "title" : "Title 58"
+      "title" : "Title 52"
     },
     {
-      "mediaId" : 30,
-      "publicId" : "dfhjghjkdisudgfds7iy58",
+      "mediaId" : 5,
+      "publicId" : "dfhjghjkdisudgfds7iy52",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-12-23T11:18:33.584Z",
+      "createdAt" : "2016-01-29T19:39:08.892Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
-      "mediaId" : 29,
-      "publicId" : "dfhjghjkdisudgfds7iy57",
+      "mediaId" : 4,
+      "publicId" : "dfhjghjkdisudgfds7iy51",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2015-12-23T11:18:33.581Z",
+      "createdAt" : "2016-01-29T19:39:08.888Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
-      "mediaId" : 28,
-      "publicId" : "dfhjghjkdisudgfds7iy56",
+      "mediaId" : 3,
+      "publicId" : "dfhjghjkdisudgfds7iy50",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.579Z"
+      "createdAt" : "2016-01-29T19:39:08.885Z"
     },
     {
-      "mediaId" : 27,
-      "publicId" : "dfhjghjkdisudgfds7iy55",
+      "mediaId" : 2,
+      "publicId" : "dfhjghjkdisudgfds7iy49",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.576Z"
+      "createdAt" : "2016-01-29T19:39:08.881Z"
     },
     {
-      "mediaId" : 26,
-      "publicId" : "dfhjghjkdisudgfds7iy54",
+      "mediaId" : 1,
+      "publicId" : "dfhjghjkdisudgfds7iy48",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2015-12-23T11:18:33.574Z"
+      "createdAt" : "2016-01-29T19:39:08.876Z"
     }
   ],
   "settings" : {
@@ -200,7 +200,6 @@ Content-Length: 1466</pre>
   "visibility" : "public",
   "reslotsCounter" : 0,
   "likes" : 3,
-  "commentsCounter" : 0,
-  "shareUrl" : "http://localhost:3100/abcd1234"
+  "commentsCounter" : 0
 }
 ```
