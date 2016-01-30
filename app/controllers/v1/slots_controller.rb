@@ -96,22 +96,15 @@ module V1
       end
     end
 
-    # DELETE /v1/std_slot/1
-    def destroy_stdslot
-      @slot = current_user.std_slots.find(params[:id])
-      authorize @slot
-
-      if @slot.delete
-        render :create, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
-    # DELETE /v1/re_slot/1
-    def destroy_reslot
-      @slot = current_user.re_slots.find(params.require(:id))
+    # DELETE /v1/slot/1
+    # temporary unification of slot deletion routes,
+    # we don't need this for reslots in the future
+    def delete
+      slot_id = params[:id].to_i
+      @slot = current_user.std_slots.find(slot_id)
+    rescue ActiveRecord::RecordNotFound
+      @slot = current_user.re_slots.find_by(parent_id: slot_id)
+    ensure
       authorize @slot
 
       if @slot.delete

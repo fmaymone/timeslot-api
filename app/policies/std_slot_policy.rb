@@ -15,7 +15,7 @@ class StdSlotPolicy < SlotPolicy
 
   # true if the user is signed in and
   # the user is slot owner
-  def destroy_stdslot?
+  def delete?
     return false unless current_user?
     return true if current_user == slot.owner
     false

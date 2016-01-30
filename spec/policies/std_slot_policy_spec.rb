@@ -15,7 +15,7 @@ describe StdSlotPolicy do
     end
   end
 
-  permissions :update_stdslot?, :destroy_stdslot? do
+  permissions :update_stdslot?, :delete? do
     context "for the slot owner" do
       let(:user) { create(:user) }
       let(:slot) { create(:std_slot, owner: user) }

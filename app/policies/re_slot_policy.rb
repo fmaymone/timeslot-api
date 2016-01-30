@@ -10,7 +10,7 @@ class ReSlotPolicy < SlotPolicy
 
   # true if the user is signed in and
   # the user is the slotter
-  def destroy_reslot?
+  def delete?
     return false unless current_user?
     return true if current_user == slot.slotter
     false

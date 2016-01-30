@@ -17,19 +17,23 @@ Rails.application.routes.draw do
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
       patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
-      delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
-      delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
-
+      # share routes
       get '/', to: 'share#redirect', as: 'redirect'
       post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
       delete 'share/:id', to: 'share#delete', as: 'share_delete'
       post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
       post 'import', to: 'import#handler', as: 'slot_import'
+
+      # TODO: remove routes
+      delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
+      delete 'reslot/:id', to: 'slots#delete', as: 'reslot_delete'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
       get ':id', to: 'slots#show', as: 'slot'
       post '', to: 'slots#show_many', as: 'slots_read'
+
+      delete ':id', to: 'slots#delete', as: 'slot_delete'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'

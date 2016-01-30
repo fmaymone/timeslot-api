@@ -15,7 +15,7 @@ describe ReSlotPolicy do
     end
   end
 
-  permissions :destroy_reslot? do
+  permissions :delete? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -38,7 +38,7 @@ describe ReSlotPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :update_reslot?, :destroy_reslot?
+        :update_reslot?, :delete?
       ]
     }
     let(:user) { nil }

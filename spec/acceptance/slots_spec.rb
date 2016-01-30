@@ -860,7 +860,7 @@ resource "Slots" do
     describe "Delete ReSlot" do
       include_context "reslot response fields"
 
-      let(:id) { re_slot.id }
+      let(:id) { re_slot.parent_id }
 
       example "Delete ReSlot", document: :v1 do
         explanation "Sets 'deletedAt', returns updated reslot data." \
