@@ -603,6 +603,39 @@ ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
 
 
 --
+-- Name: passengerships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE passengerships (
+    id bigint NOT NULL,
+    slot_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: passengerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE passengerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: passengerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE passengerships_id_seq OWNED BY passengerships.id;
+
+
+--
 -- Name: providers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -856,6 +889,13 @@ ALTER TABLE ONLY notes ALTER COLUMN id SET DEFAULT nextval('notes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY passengerships ALTER COLUMN id SET DEFAULT nextval('passengerships_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq'::regclass);
 
 
@@ -1034,6 +1074,14 @@ ALTER TABLE ONLY notes
 
 
 --
+-- Name: passengerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY passengerships
+    ADD CONSTRAINT passengerships_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1181,6 +1229,20 @@ CREATE INDEX index_meta_slots_on_creator_id ON meta_slots USING btree (creator_i
 --
 
 CREATE INDEX index_notes_on_base_slot_id ON notes USING btree (base_slot_id);
+
+
+--
+-- Name: index_passengerships_on_slot_id_and_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_passengerships_on_slot_id_and_user_id ON passengerships USING btree (slot_id, user_id);
+
+
+--
+-- Name: index_passengerships_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -:
+--
+
+CREATE UNIQUE INDEX index_passengerships_on_user_id_and_slot_id ON passengerships USING btree (user_id, slot_id);
 
 
 --
@@ -1461,5 +1523,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160121113721');
 
 INSERT INTO schema_migrations (version) VALUES ('20160121133720');
 
-INSERT INTO schema_migrations (version) VALUES ('20160209102620');
+INSERT INTO schema_migrations (version) VALUES ('20160130125422');
 
+INSERT INTO schema_migrations (version) VALUES ('20160209102620');
