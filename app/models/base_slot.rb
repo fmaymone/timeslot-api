@@ -53,6 +53,11 @@ class BaseSlot < ActiveRecord::Base
            through: :containerships, source: :group,
            inverse_of: :slots
 
+  has_many :passengerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :my_calendar_users, -> { merge Passengership.active },
+           through: :passengerships, source: :user,
+           inverse_of: :my_calendar_slots
+
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
            :title=, :start_date=, :end_date=, :creator=, :location_uid=, :open_end=,

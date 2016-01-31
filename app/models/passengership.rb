@@ -6,8 +6,8 @@ class Passengership < ActiveRecord::Base
 
   scope :active, -> { where deleted_at: nil }
 
-  belongs_to :slot, class_name: BaseSlot #, inverse_of: :passengerships
-  belongs_to :user #, inverse_of: :passengerships
+  belongs_to :slot, class_name: BaseSlot, inverse_of: :passengerships
+  belongs_to :user, inverse_of: :passengerships
 
   validates :slot, presence: true
   validates :user, presence: true

@@ -8,8 +8,8 @@ RSpec.describe Passengership, type: :model do
   it { is_expected.to respond_to(:slot) }
   it { is_expected.to respond_to(:user) }
   it { is_expected.to respond_to(:deleted_at) }
-  it { is_expected.to belong_to(:slot) }#.inverse_of(:passengerships) }
-  it { is_expected.to belong_to(:user) }#.inverse_of(:passengerships) }
+  it { is_expected.to belong_to(:slot).inverse_of(:passengerships) }
+  it { is_expected.to belong_to(:user).inverse_of(:passengerships) }
 
   it { is_expected.to be_valid }
 

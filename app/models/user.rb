@@ -40,6 +40,11 @@ class User < ActiveRecord::Base
   has_many :re_slots_public, class_name: ReSlotPublic,
            foreign_key: :slotter_id, inverse_of: :slotter
 
+  has_many :passengerships, foreign_key: :user_id, inverse_of: :user
+  has_many :my_calendar_slots, -> { merge Passengership.active },
+           through: :passengerships, source: :slot,
+           inverse_of: :my_calendar_users
+
   # group related
   has_many :own_groups, class_name: Group,
            foreign_key: :owner_id, inverse_of: :owner

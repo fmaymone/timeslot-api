@@ -17,6 +17,9 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:re_slots) }
   it { is_expected.to respond_to(:devices) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
+  it { is_expected.to have_many(:passengerships).inverse_of(:user) }
+  it { is_expected.to have_many(:my_calendar_slots)
+                       .inverse_of(:my_calendar_users) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:active_memberships).inverse_of(:user) }

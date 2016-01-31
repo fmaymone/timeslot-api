@@ -12,6 +12,10 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:containerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:slot_groups).inverse_of(:slots) }
+  it { is_expected.to have_many(:passengerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:my_calendar_users)
+                       .inverse_of(:my_calendar_slots) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
