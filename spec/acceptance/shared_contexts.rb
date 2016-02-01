@@ -103,12 +103,13 @@ end
 RSpec.shared_context "default user response fields" do
   response_field :id, "ID of the user"
   response_field :username, "Username of the user"
-  response_field :image, "URL of the user image"
-  response_field :location, "Home location of user"
-  response_field :push, "Send push Notifications (true/false)"
   response_field :createdAt, "Creation of user"
   response_field :updatedAt, "Latest update of user in db"
   response_field :deletedAt, "Deletion of user"
+  response_field :image, "URL of the user image"
+  response_field :location, "Home location of user"
+  # we could need this when we can toggle notifications per friend
+  # response_field :push, "Send push Notifications (true/false)"
   response_field :slotCount, "Number of slots for this user"
   response_field :reslotCount, "Number of reslots for this user"
   response_field :friendsCount, "Number of friends for this user"
@@ -117,10 +118,14 @@ end
 RSpec.shared_context "current user response fields" do
   include_context "default user response fields"
 
-  response_field :email, "Email of user (max. 255 characters)"
-  response_field :phone, "Phone number of user (max. 35 characters)"
   response_field :lang, "Language code (ISO 639-1)"
+
+  response_field :email, "Email of user (max. 255 characters)"
+  response_field :email_verified, "User has confirmed Email (true/false)"
+  response_field :phone, "Phone number of user (max. 35 characters)"
+  response_field :phone_verified, "User has confirmed phone number (true/false)"
   response_field :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+  response_field :push, "Send push Notifications (true/false)"
   response_field :slotDefaultDuration, "Default Slot Duration in seconds"
   response_field :slotDefaultTypeId, "Default Slot Type - WIP"
   response_field :slotDefaultLocationId, "Default Slot Location ID - WIP"
@@ -140,6 +145,16 @@ RSpec.shared_context "current user response fields" do
                  "Default alerts for all groupslots of this user" \
                  " where no specific alert is set. Groupslots" \
                  " may also have their own default alerts per group"
+
+  response_field :all_my_slots_uuid, "UUID to retrive all slots related to " \
+                                     "the user. (Needs further specification)"
+  response_field :my_calendar_uuid, "UUID to get/add or remove slots of the " \
+                                    " users 'MyCalendar'."
+  # response_field :friends_calendar_uuid, "UUID to get the slots of the friends" \
+  # " of the current user visible to him."
+  response_field :friend_slots_uuid, "UUID for friend-visible slots of the user"
+  response_field :public_slots_uuid, "UUID for public slots of the current user"
+
   response_field :friendships, "all connections to other users"
   response_field :memberships, "all connections to groups"
   response_field :devices, "all devices from user"

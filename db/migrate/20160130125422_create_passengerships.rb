@@ -12,6 +12,6 @@ class CreatePassengerships < ActiveRecord::Migration
   end
 
   def down
-    drop_table :passsengerships
+    drop_table :passengerships
   end
 end

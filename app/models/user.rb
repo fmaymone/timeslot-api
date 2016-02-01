@@ -1,10 +1,15 @@
 class User < ActiveRecord::Base
   include TS_Role
   include Follow
+
+  store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,
+                 :my_lib_uuid, :my_created_slots_uuid,
+                 :my_friend_slots_uuid, :my_public_slots_uuid
+
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
-  before_create :set_auth_token
+  before_create :set_auth_token, :set_slot_sets
   after_commit AuditLog
 
   ## associations ##
@@ -194,6 +199,17 @@ class User < ActiveRecord::Base
 
   def set_auth_token
     self.auth_token = self.class.generate_auth_token
+  end
+
+  def set_slot_sets
+    self.slot_sets = {
+      my_cal_uuid: SecureRandom.uuid,
+      my_lib_uuid: SecureRandom.uuid,
+      friends_cal_uuid: SecureRandom.uuid,
+      my_friend_slots_uuid: SecureRandom.uuid,
+      my_public_slots_uuid: SecureRandom.uuid,
+      my_created_slots_uuid: SecureRandom.uuid
+    }
   end
 
   def inactivate

@@ -12,37 +12,97 @@ resource "Me" do
 
     include_context "current user response fields"
 
-    example "Get basic data", document: :v1 do
+    let(:current_user) do
+      user = create(:user, :with_email, :with_password, :with_location,
+                    :with_private_slot, :with_public_slot,
+                    :with_device, :with_phone, :with_3_friends, :with_3_groups)
+      user.update(public_url: 'www.foo.bar', picture: 'www.looking.good')
+      user
+    end
+
+    example "Get complete User data", document: :v1 do
       explanation "shows all User data."
       do_request
 
       expect(response_status).to eq(200)
+      # basic user response fields
       expect(json).to have_key "id"
       expect(json).to have_key "username"
-      expect(json).to have_key "image"
-      expect(json).to have_key "location"
-      expect(json).to have_key "push"
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
+      expect(json).to have_key "image"
+      # default user response fields
+      expect(json).to have_key "location"
       expect(json).to have_key "slotCount"
       expect(json).to have_key "reslotCount"
       expect(json).to have_key "friendsCount"
-      expect(json).to have_key "defaultPrivateAlerts"
-      expect(json).to have_key "slotDefaultDuration"
+      # current user response fields
+      expect(json).to have_key "lang"
+      expect(json).to have_key "email"
+      expect(json).to have_key "emailVerified"
+      expect(json).to have_key "phone"
+      expect(json).to have_key "phoneVerified"
+      expect(json).to have_key "publicUrl"
+      expect(json).to have_key "push"
+      # defaults
+      # expect(json).to have_key "slotDefaultDuration"
+      # expect(json).to have_key "slotDefaultLocationId"
+      # expect(json).to have_key "slotDefaultTypeId"
+      # expect(json).to have_key "defaultPrivateAlerts"
+      # expect(json).to have_key "defaultOwnFriendslotAlerts"
+      # expect(json).to have_key "defaultOwnPublicAlerts"
+      # expect(json).to have_key "defaultFriendsFriendslotAlerts"
+      # expect(json).to have_key "defaultFriendsPublicAlerts"
+      # expect(json).to have_key "defaultReslotAlerts"
+      # expect(json).to have_key "defaultGroupAlerts"
+      # special slotsets
+      expect(json).to have_key "myCalendarUuid"
+      expect(json).to have_key "friendsCalendarUuid"
+      expect(json).to have_key "allMySlotsUuid"
+      expect(json).to have_key "myCreatedSlotsUuid"
+      expect(json).to have_key "myFriendSlotsUuid"
+      expect(json).to have_key "myPublicSlotsUuid"
+      # social relations
+      expect(json).to have_key "friendships"
+      expect(json).to have_key "memberships"
+      # excluded attributes
       expect(json).not_to have_key "authToken"
       expect(json).not_to have_key "passwordDigest"
       expect(json).not_to have_key "role"
-      expect(
-        json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                    'slotCount', 'memberships', 'location', 'friendshipState')
-      ).to eq(current_user.attributes.as_json
-               .except("auth_token", "password_digest", "role",
-                       "picture",
-                       "device_token", "location_id")
-               .transform_keys { |key| key.camelize(:lower) })
-      expect(json['location']).to eq nil
-      expect(json['friendshipState']).to eq 'myself'
+      expect(json).not_to have_key "deviceToken"
+      expect(json).not_to have_key "picture"
+
+      current_user.reload
+
+      expect(json['id']).to eq current_user.id
+      expect(json['username']).to eq current_user.username
+      expect(json['createdAt']).to eq current_user.created_at.as_json
+      expect(json['updatedAt']).to eq current_user.updated_at.as_json
+      expect(json['deletedAt']).to eq current_user.deleted_at.as_json
+      expect(json['image']).to eq current_user.image
+      expect(json['location']['name']).to eq current_user.location.name
+      expect(json['slotCount']).to eq current_user.std_slots.active.count
+      expect(json['reslotCount']).to eq current_user.re_slots.active.count
+      expect(json['friendsCount']).to eq current_user.friends_count
+
+      expect(json['lang']).to eq current_user.lang
+      expect(json['email']).to eq current_user.email
+      expect(json['emailVerified']).to eq current_user.email_verified
+      expect(json['phone']).to eq current_user.phone
+      expect(json['phoneVerified']).to eq current_user.phone_verified
+      expect(json['publicUrl']).to eq current_user.public_url
+      expect(json['push']).to eq current_user.push
+
+      expect(json['myCalendarUuid']).to eq current_user.my_cal_uuid
+      expect(json['friendsCalendarUuid']).to eq current_user.friends_cal_uuid
+      expect(json['allMySlotsUuid']).to eq current_user.my_lib_uuid
+      expect(json['myCreatedSlotsUuid']).to eq current_user.my_created_slots_uuid
+      expect(json['myFriendSlotsUuid']).to eq current_user.my_friend_slots_uuid
+      expect(json['myPublicSlotsUuid']).to eq current_user.my_public_slots_uuid
+
+      expect(json['friendships'].size).to eq current_user.friendships.count
+      expect(json['memberships'].size).to eq current_user.memberships.count
     end
   end
 
@@ -453,14 +513,8 @@ resource "Me" do
         expect(current_user.username).to eq "bar"
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
-        expect(
-          json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships', 'location', 'friendshipState')
-        ).to eq(current_user.attributes.as_json
-                 .except('auth_token', 'password_digest', 'role',
-                         'picture',
-                         'device_token', 'location_id')
-                 .transform_keys { |key| key.camelize(:lower) })
+        expect(json["username"]).to eq current_user.username
+        # expect(json["defaultPrivateAlerts"]).to eq current_user.default_private_alerts
       end
     end
 
