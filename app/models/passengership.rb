@@ -13,8 +13,7 @@ class Passengership < ActiveRecord::Base
   validates :user, presence: true
 
   # when a slot is removed from MyCalendar or
-  # when a slot is deleted or
-  # when a user is incativated
+  # when a slot is deleted
   def delete
     slot.touch
     user.touch

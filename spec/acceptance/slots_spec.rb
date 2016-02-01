@@ -18,7 +18,7 @@ resource "Slots" do
     parameter :slotGroups,
               "Array with UUIDs of the SlotGroups slot should be added to"
 
-    describe "Create new standard slot", :focus do
+    describe "Create new standard slot" do
       include_context "stdslot response fields"
 
       response_field :unauthorizedSlotgroups,

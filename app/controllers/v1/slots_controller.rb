@@ -1,6 +1,6 @@
 module V1
   class SlotsController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
+    skip_before_action :authenticate_user_from_token!, only: :show
 
     # GET /v1/slots/1
     def show
