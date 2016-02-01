@@ -321,10 +321,7 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({
-                                "groupId" => group.uuid,
-                                "size" => 6
-                              })
+      expect(json).to include({ "id" => group.uuid, "size" => 6 })
       expect(response_body).to include(group.members.first.username)
       expect(response_body)
         .to include(v1_user_url(group.members.first, format: :json))
@@ -361,12 +358,9 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({
-                                "groupId" => group.uuid,
-                                "size" => 7
-                              })
+      expect(json).to include({ "id" => group.uuid, "size" => 7 })
       expect(json["related"])
-        .to include("userId" => group.related_users.first.id,
+        .to include("id" => group.related_users.first.id,
                     "state" => group.memberships.first.humanize,
                     "deletedAt" => group.memberships.first.deleted_at
                    )
