@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
+      get 'calendar', to: 'me#calendar', as: 'my_calendar'
       get 'friendslots', to: 'me#slots_of_my_friends'
       get 'media', to: 'me#my_media_items', as: 'my_media'
       get 'signout', to: 'me#signout', as: 'sign_me_out'

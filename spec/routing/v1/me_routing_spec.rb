@@ -17,14 +17,19 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#update", format: :json)
     end
 
-    it "routes to #destroy" do
+    it "routes to #inactivate" do
       expect(delete: "/v1/me")
         .to route_to("v1/me#inactivate", format: :json)
     end
 
-    it "routes to #slots" do
+    it "routes to #my_slots" do
       expect(get: "/v1/me/slots")
         .to route_to("v1/me#my_slots", format: :json)
+    end
+
+    it "routes to #calendar" do
+      expect(get: "/v1/me/calendar")
+        .to route_to("v1/me#calendar", format: :json)
     end
 
     it "routes to #slots_of_my_friends" do

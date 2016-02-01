@@ -106,6 +106,27 @@ resource "Me" do
     end
   end
 
+  get "/v1/me/calendar" do
+    header "Authorization", :auth_header
+    let(:slot_1) { create(:std_slot_private) }
+    let(:slot_2) { create(:std_slot_public) }
+
+    let!(:my_calendar_slots) do
+      create(:passengership, slot: slot_1, user: current_user)
+      create(:passengership, slot: slot_2, user: current_user)
+    end
+
+    example "Get my Calendar slots", document: :v1 do
+      explanation "Returns array with all slots in users 'MyCalendar'."
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(response_body).to include slot_1.title
+      expect(response_body).to include slot_2.title
+    end
+  end
+
   get "/v1/me/slots" do
     header "Authorization", :auth_header
 

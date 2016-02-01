@@ -21,6 +21,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def calendar?
+    current_user?
+  end
+
   def my_friends?
     current_user?
   end
