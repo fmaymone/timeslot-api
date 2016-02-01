@@ -93,7 +93,7 @@ resource "Groups" do
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :membersCanPost, "Can subscribers post?"
     parameter :membersCanInvite, "Can subscribers invite friends?"
-    parameter :invitees, "Array of User IDs to be invited"
+    parameter :invitees, "Array of User IDs to be added to the group"
 
     include_context "default group response fields"
 
@@ -114,7 +114,7 @@ resource "Groups" do
       expect(group.owner).to eq current_user
       expect(group.members).to include current_user
       expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
-      expect(Membership.last.invited?).to be true
+      expect(Membership.last.active?).to be true
     end
   end
 
@@ -453,26 +453,26 @@ resource "Groups" do
     parameter :invitees, "User IDs to be invited to group", required: true
 
     let!(:group) { create(:group, owner: current_user) }
-    let(:invited_users) { create_list(:user, 3) }
+    let(:added_users) { create_list(:user, 3) }
 
     let(:group_uuid) { group.uuid }
-    let(:invitees) { invited_users.collect(&:id) }
+    let(:invitees) { added_users.collect(&:id) }
 
-    example "Invite multiple users to group", document: :v1 do
-      explanation "Inviting user must be group owner or group must allow" \
-                  " invites by group members.\n\n" \
+    example "Add multiple users to group", document: :v1 do
+      explanation "Adds the given Users to the group. Inviting user must" \
+                  " be group member.\n\n" \
                   "returns 201 if invite successfully created\n\n" \
                   "returns 403 if user is not allowed to invite\n\n" \
                   "returns 404 if group UUID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       expect {
         do_request
-      }.to change(Membership, :count).by invited_users.length
+      }.to change(Membership, :count).by added_users.length
       expect(response_status).to eq(201)
       membership = Membership.last
-      expect(membership.invited?).to be true
-      expect(group.members).not_to include invited_users.first
-      expect(group.related_users).to include invited_users.first
+      expect(membership.active?).to be true
+      expect(group.members).to include added_users.first
+      expect(group.related_users).to include added_users.first
     end
   end
 

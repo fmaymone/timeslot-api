@@ -118,10 +118,10 @@ module V1
     end
 
     # POST /v1/groups/:group_uuid/members
-    # current user invites other users to own group or to group
+    # current user adds other users to own group or to group
     # where he is member and members can invite
-    # create membership with state invited/pending
-    # notify invited users
+    # create membership with state active, (was: invited/pending before)
+    # notify new members
     def invite
       group = Group.find_by!(uuid: params[:group_uuid])
       authorize group

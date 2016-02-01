@@ -128,12 +128,12 @@ RSpec.describe Group, type: :model do
         expect(Group.last.image).to eq image
       end
 
-      it "invites users to the group if provided" do
+      it "adds users to the group if provided" do
         Group.create_with_invitees(group_params: group_params,
                                    invitees: invitees)
         expect(Group.last.related_users).not_to be nil
         expect(Group.last.related_users.count).to eq 4
-        expect(Group.last.members.count).to eq 1
+        expect(Group.last.members.count).to eq 4
         expect(Group.last.members).to include owner
       end
     end
