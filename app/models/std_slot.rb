@@ -49,6 +49,7 @@ class StdSlot < BaseSlot
     Airbrake.notify(NameError, error_message: msg)
   else
     slot = slot_type.create(meta_slot: meta_slot, owner: user)
+    Passengership.create(slot: slot, user: user)
     slot.create_activity
   end
 

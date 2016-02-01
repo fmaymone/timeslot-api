@@ -333,20 +333,15 @@ class BaseSlot < ActiveRecord::Base
 
   def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
                        notes: nil, alerts: nil, user: nil)
-
-    # TODO: improve
-    fail unless visibility #|| group
+    fail unless visibility
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    if visibility
-      slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
-                                 user: user)
-    # elsif group
-    #   slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
-    end
+    slot = StdSlot.create_slot(meta_slot: meta_slot,
+                               visibility: visibility,
+                               user: user)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?

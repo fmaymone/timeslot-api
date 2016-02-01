@@ -469,4 +469,20 @@ describe SlotPolicy do
       end
     end
   end
+
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [:create?]
+    }
+    let(:user) { nil }
+    let(:slot) { create(:std_slot_private) }
+
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, slot).public_send(permission)
+        }.to raise_error TSErrors::MissingCurrentUserError
+      end
+    end
+  end
 end

@@ -15,6 +15,11 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
+  # true if the user is signed in
+  def create?
+    current_user?
+  end
+
   def show_likes?
     show?
   end

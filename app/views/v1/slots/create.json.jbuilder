@@ -13,3 +13,7 @@ if slot.class <= StdSlot
 #     json.partial! 'v1/users/full_user', user: current_user
 #   end
 end
+
+# render unauthorized slotgroups
+json.unauthorized_slotgroups slot.errors[:base]
+# json.partial! 'v1/slots/slotgroups', slot: slot # is not a partial

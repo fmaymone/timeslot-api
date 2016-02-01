@@ -6,6 +6,99 @@ resource "Slots" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
+  post "/v1/slots" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    include_context "default slot parameter"
+    parameter :visibility,
+              "Visibility of the Slot (private/friends/foaf/public)",
+              required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups slot should be added to"
+
+    describe "Create new standard slot", :focus do
+      include_context "stdslot response fields"
+
+      response_field :unauthorizedSlotgroups,
+                     "Array of Slotgroup UUIDs where the current_user has no " \
+                     "write access or Slotgroup was deleted. Will be empty if " \
+                     "all worked fine."
+
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      #let(:openEnd) { false }
+      let(:notes) { [{ title: "revolutionizing the calendar",
+                       content: "this is content" },
+                     { title: "and another title",
+                       content: "more content here" }] }
+      let(:alerts) { '0101010101' }
+      let(:visibility) { 'private' }
+      let(:visibility) { 'private' }
+
+      # additional slotgroups
+      let(:group_1) { create(:group, owner: current_user) }
+      let(:group_2) do
+        group = create(:group)
+        create(:membership, :active, group: group, user: current_user)
+        group
+      end
+      let(:unauthorized_group) { create(:group) }
+      let(:deleted_group) {
+        create(:group, owner: current_user, deleted_at: Time.zone.now) }
+
+      let(:slotGroups) { [group_1.uuid,
+                          group_2.uuid,
+                          unauthorized_group.uuid,
+                          deleted_group.uuid] }
+
+      example "Create new slots", document: :v1 do
+        explanation "Creates new slot for user and adds it to the users" \
+                    " 'MyCalendar' and to all slotGroups which were given" \
+                    " additionally.\n\n" \
+                    "Returns data of new slot and array with unauthorized " \
+                    "slotgroup UUIDs (User has no write access or slotgroup" \
+                    " deleted).\n\n" \
+                    "Returns 422 if parameters are invalid or missing."
+        do_request
+
+        new_slot = BaseSlot.last
+
+        expect(current_user.created_slots).to include new_slot.meta_slot
+        expect(current_user.my_calendar_slots).to include new_slot
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key("id")
+        expect(json["id"]).to eq new_slot.id
+        expect(json).to have_key("title")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("createdAt")
+        expect(json).to have_key("updatedAt")
+        expect(json).to have_key("deletedAt")
+        expect(json).to have_key("endDate")
+        expect(json).to have_key("location")
+        # expect(json.last['location']).to have_key("name")
+        expect(json).to have_key("creator")
+        expect(json['creator']).to have_key("username")
+        expect(json['creator']['username']).to eq current_user.username
+        expect(json).to have_key("notes")
+        expect(json).to have_key("media")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("visibility")
+        expect(json["visibility"]).to eq visibility
+        expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("likes")
+        expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("unauthorizedSlotgroups")
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+      end
+    end
+  end
+
   get "/v1/slots/:id" do
     header "Accept", "application/json"
     header "Authorization", :auth_header

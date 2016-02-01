@@ -31,6 +31,7 @@ Rails.application.routes.draw do
 
     scope :slots, constraints: { id: /\d+/ } do
       get ':id', to: 'slots#show', as: 'slot'
+      post '', to: 'slots#create', as: 'slot_create'
       delete ':id', to: 'slots#delete', as: 'slot_delete'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'

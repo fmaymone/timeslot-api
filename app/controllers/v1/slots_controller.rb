@@ -10,6 +10,42 @@ module V1
       render :show, locals: { slot: @slot }
     end
 
+    # POST /v1/slots
+    def create
+      authorize :stdSlot
+      @slot = BaseSlot.create_slot(meta: meta_params,
+                                   visibility: enforce_visibility,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
+
+      if params.key?(:slotGroups) && params[:slotGroups].any?
+        add_to_slotgroups(params[:slotGroups])
+      end
+
+      if @slot.persisted?
+        render :create, status: :created, locals: { slot: @slot }
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
+    end
+
+    private def add_to_slotgroups(group_uuids)
+      groups = Group.where(uuid: group_uuids)
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+
+        begin
+          authorize group, :add_slot?
+        rescue Pundit::NotAuthorizedError
+          @slot.errors.add(:base, group.uuid)
+        else
+          @slot.add_to_group group
+        end
+      end
+    end
+
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
