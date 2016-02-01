@@ -3,7 +3,7 @@ require 'rails_helper'
 describe SlotPolicy do
   subject { described_class }
 
-  permissions :show?, :show_many?, :show_comments?, :show_likes? do
+  permissions :show?, :show_comments?, :show_likes? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -18,7 +18,7 @@ describe SlotPolicy do
   end
 
   # TODO: write spec for :create_reslot? if it is clear how it should work
-  permissions :show?, :show_many?, :show_likes?, :show_comments?, :unlike?,
+  permissions :show?, :show_likes?, :show_comments?, :unlike?,
               :reslot_history?, :add_like?, :copy?, :add_comment?,
               # :create_reslot?,
               :remove_from_groups? do
@@ -182,7 +182,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_many?, :show_likes?, :show_comments? do
+  permissions :show?, :show_likes?, :show_comments? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -266,7 +266,7 @@ describe SlotPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :show_many?, :show_likes?, :show_comments?,
+        :show?, :show_likes?, :show_comments?,
         :reslot_history?, :add_like?, :add_comment?, :copy?, :move?,
         :create_reslot?, :unlike?
       ]

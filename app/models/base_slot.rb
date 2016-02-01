@@ -316,10 +316,6 @@ class BaseSlot < ActiveRecord::Base
     BaseSlot.find(slot_id).reload
   end
 
-  def self.get_many(slot_ids)
-    slot_ids.collect { |id| get(id) }
-  end
-
   # TODO: add spec
   def self.upcoming
     # BaseSlot.includes(:meta_slot).

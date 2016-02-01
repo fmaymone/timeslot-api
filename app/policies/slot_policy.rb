@@ -15,11 +15,6 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # will probably be removed
-  def show_many?
-    show?
-  end
-
   def show_likes?
     show?
   end

@@ -11,11 +11,6 @@ RSpec.describe V1::SlotsController, type: :routing do
       expect(get: "/v1/slots/12foo").not_to be_routable
     end
 
-    it "routes to #show_many" do
-      expect(post: "/v1/slots")
-        .to route_to("v1/slots#show_many", format: :json)
-    end
-
     it "routes to #delete" do
       expect(delete: "/v1/slots/1")
         .to route_to("v1/slots#delete", id: "1", format: :json)

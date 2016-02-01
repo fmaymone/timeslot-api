@@ -179,23 +179,6 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :get_many do
-    let(:std_slots) { create_list(:std_slot_private, 3) }
-    let(:global_slots) { create_list(:global_slot, 2) }
-    let(:other_slots) { create_list(:re_slot, 2) }
-
-    it "returns a list of specific slots" do
-      a = []
-      [std_slots, global_slots].each do |slots|
-        a << slots.collect(&:id)
-      end
-      result = BaseSlot.get_many(a.flatten)
-      expect(result).to include(*std_slots)
-      expect(result).to include(*global_slots)
-      expect(result).not_to include(*other_slots)
-    end
-  end
-
   describe :add_media do
     let(:user) { create(:user) }
     let(:std_slot) { create(:std_slot) }

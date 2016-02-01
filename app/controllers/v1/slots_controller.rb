@@ -10,14 +10,6 @@ module V1
       render :show, locals: { slot: @slot }
     end
 
-    # POST /v1/slots
-    def show_many
-      @slots = BaseSlot.get_many(params[:ids])
-      @slots.each { |slot| authorize slot }
-
-      render :index
-    end
-
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
