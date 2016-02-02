@@ -73,7 +73,7 @@ class GlobalSlotConsumer
   rescue ActiveRecord::RecordNotFound
     msg = "Couldn't find User for given Domain. Seed data loaded?"
     opts = {
-      domain: result['domain'],
+      domain: result['domains'].try(:first),
       muid: result['muid'],
       global_slot: msg }
     Airbrake.notify(ActionController::ParameterMissing, opts)
@@ -83,8 +83,8 @@ class GlobalSlotConsumer
       user: slot_source,
       meta: {
         title: result['title'],
-        start_date: result['start_timestamp'],
-        end_date: result['stop_timestamp'],
+        start_date: result['start_timestamptz'],
+        end_date: result['stop_timestamptz'],
         location_uid: result['location_muid']
       },
       muid: result['muid'],
