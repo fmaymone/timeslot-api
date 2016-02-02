@@ -5,7 +5,7 @@ module V1
     def index
       authorize :group
       # @groups = current_user.groups_ordered
-      @groups = current_user.groups
+      @groups = current_user.active_groups
 
       render :index
     end

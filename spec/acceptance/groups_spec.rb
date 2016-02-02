@@ -40,7 +40,7 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq current_user.groups.count
+      expect(json.size).to eq current_user.active_groups.count
       expect(json[0]).to have_key("id")
       expect(json[0]).to have_key("name")
       expect(json[0]).to have_key("image")
