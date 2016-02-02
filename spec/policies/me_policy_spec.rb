@@ -5,7 +5,7 @@ describe MePolicy do
 
   permissions :show?, :update?, :inactivate?, :signout?, :suggested_users?,
               :my_slots?, :calendar?, :slots_of_my_friends?, :my_media_items?,
-              :add_friends?, :remove_friends?, :update_device? do
+              :my_groups?, :add_friends?, :remove_friends?, :update_device? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -20,7 +20,7 @@ describe MePolicy do
       [
         :show?, :update?, :inactivate?, :signout?, :suggested_users?,
         :my_slots?, :calendar?, :slots_of_my_friends?, :my_media_items?,
-        :add_friends?, :remove_friends?, :update_device?
+        :my_groups?, :add_friends?, :remove_friends?, :update_device?
       ]
     }
     let(:user) { nil }

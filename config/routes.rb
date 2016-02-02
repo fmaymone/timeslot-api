@@ -72,6 +72,7 @@ Rails.application.routes.draw do
       get 'signout', to: 'me#signout', as: 'sign_me_out'
       get 'suggested_users', to: 'me#suggested_users'
       get 'friends', to: 'me#my_friends', as: 'my_friends'
+      get 'slotgroups', to: 'me#my_groups', as: 'my_slotgroups'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
       post 'friendship/:user_id', to: 'me#befriend', as: 'befriend',
@@ -93,7 +94,6 @@ Rails.application.routes.draw do
 
     scope :groups, constraints: {
             group_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
-      get '', to: 'groups#index', as: 'groups'
       post '', to: 'groups#create', as: 'group_create'
       get ':group_uuid', to: 'groups#show', as: 'group'
       patch ':group_uuid', to: 'groups#update', as: 'group_update'

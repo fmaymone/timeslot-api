@@ -1,15 +1,5 @@
 module V1
   class GroupsController < ApplicationController
-    # GET /v1/groups
-    # return all groups where the current user is member
-    def index
-      authorize :group
-      # @groups = current_user.groups_ordered
-      @groups = current_user.active_groups
-
-      render :index
-    end
-
     # GET /v1/groups/:group_uuid
     def show
       @group = Group.find_by!(uuid: params[:group_uuid])

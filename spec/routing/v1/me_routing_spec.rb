@@ -47,6 +47,11 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#suggested_users", format: :json)
     end
 
+    it "routes to #my_groups" do
+      expect(get: "/v1/me/slotgroups")
+        .to route_to("v1/me#my_groups", format: :json)
+    end
+
     it "routes to #add_friends" do
       expect(post: "/v1/me/add_friends")
         .to route_to("v1/me#add_friends", format: :json)

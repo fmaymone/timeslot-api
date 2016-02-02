@@ -484,6 +484,38 @@ resource "Me" do
     end
   end
 
+  get "/v1/me/slotgroups" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    response_field :id, "ID of the group"
+    response_field :name, "name of the group"
+    response_field :upcomingCount, "Number of upcoming group slots"
+    response_field :next, "Start date and Time of the next upcoming slot"
+    response_field :image, "URL of the group image"
+    response_field :url, "ressource URL for the group"
+
+    let!(:current_user) { create(:user, :with_email, :with_password,
+                                 :with_3_groups, :with_3_own_groups) }
+
+    example "Get all groups where current user is member or owner",
+            document: :v1 do
+      explanation "returns an array of groups"
+
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json.size).to eq current_user.active_groups.count
+      expect(json[0]).to have_key("id")
+      expect(json[0]).to have_key("name")
+      expect(json[0]).to have_key("image")
+      expect(json[0]).to have_key("owner")
+      expect(json[0]).to have_key("createdAt")
+      expect(json[0]).to have_key("updatedAt")
+      expect(json[0]).to have_key("deletedAt")
+    end
+  end
+
   patch "/v1/me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header

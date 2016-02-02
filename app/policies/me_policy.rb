@@ -41,6 +41,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def my_groups?
+    current_user?
+  end
+
   def update_device?
     current_user?
   end

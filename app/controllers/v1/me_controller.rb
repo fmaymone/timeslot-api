@@ -119,6 +119,14 @@ module V1
       render "v1/users/list"
     end
 
+    # GET /v1/me/groups
+    # return all groups where the current user is member
+    def my_groups
+      authorize :me
+      @groups = current_user.active_groups
+      render "v1/groups/index"
+    end
+
     # PATCH /v1/me/device
     # updates an existing device or creates a new one with the given attributes
     def update_device
