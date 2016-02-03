@@ -55,12 +55,19 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
+  # TODO: write spec
   def update_user_tags?
     current_user_has_read_access?
   end
 
+  # TODO: write spec
   def get_user_tags?
-    current_user_has_read_access?
+    # current_user_has_read_access?
+    # we had a problem that people which were tagged to a private slot couldn't
+    # get the tags because they had no read access for the slot, to temporary
+    # work around this (until we have a proper specification for user tagging)
+    # I relax this policy
+    current_user?
   end
 
   # false if no user is signed-in
