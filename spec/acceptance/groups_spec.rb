@@ -275,6 +275,11 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:group_uuid) { group.uuid }
+    let!(:active_member) {
+      user = create(:user, :with_picture)
+      create(:membership, :active, user: user, group: group)
+      user
+    }
     let!(:active_members) { create_list(:membership, 4, :active, group: group) }
     let!(:inactive_member) { create(:membership, :inactive, group: group) }
     # group owner is automatically an active member too
@@ -288,10 +293,11 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({ "id" => group.uuid, "size" => 6 })
+      expect(json).to include("id" => group.uuid, "size" => 7)
       expect(response_body).to include(group.members.first.username)
-      expect(response_body)
-        .to include(v1_user_url(group.members.first, format: :json))
+      expect(response_body).to include(active_member.picture)
+      # expect(response_body)
+        # .to include(v1_user_url(group.members.first, format: :json))
     end
   end
 
