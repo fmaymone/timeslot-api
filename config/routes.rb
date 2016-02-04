@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       get ':id/user_tags', to: 'slots#get_user_tags', as: 'slot_get_user_tags'
       post ':id/user_tags', to: 'slots#update_user_tags', as: 'user_tags'
 
+      get ':id/slotsets', to: 'slots#slotsets'
       post ':id/slotgroups', to: 'slots#add_to_groups'
       delete ':id/slotgroups', to: 'slots#remove_from_groups'
 

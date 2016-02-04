@@ -904,6 +904,57 @@ resource "Slots" do
     end
   end
 
+  get "/v1/slots/:id/slotsets" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be added to SlotGroups", required: true
+
+    response_field :slotSets,
+                   "Array of Slotgroup and eventually myCalendar uuid of " \
+                   "the current_user."
+
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group, name: 'unauthorized') }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:containerships) {
+      create(:containership, slot: slot, group: group_1)
+      create(:containership, slot: slot, group: group_2)
+      create(:containership, slot: slot, group: unauthorized_group)
+      create(:containership, slot: slot, group: deleted_group,
+             deleted_at: Time.zone.now)
+    }
+    let!(:passengership) {
+      create(:passengership, user: current_user, slot: slot) }
+
+    let(:id) { slot.id }
+
+    example "Add Slot to multiple SlotGroups", document: :v1 do
+      explanation "Send an array of slotGroup UUIDs that contain the " \
+                  "slot and where the user has write access.\n\n" \
+                  "returns a list of all slotgroups where user has no " \
+                  "access rights\n\n" \
+                  "returns 404 if ID is invalid\n\n" \
+                  "returns ???"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key 'slotSets'
+      expect(response_body).to include group_1.uuid
+      expect(response_body).to include group_2.uuid
+      expect(response_body).to include current_user.slot_sets['my_cal_uuid']
+      expect(response_body).not_to include deleted_group.uuid
+      expect(response_body).not_to include unauthorized_group.uuid
+    end
+  end
+
   post "/v1/slots/:id/slotgroups" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header

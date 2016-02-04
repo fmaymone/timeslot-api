@@ -198,6 +198,21 @@ module V1
       render :slotters
     end
 
+    # GET /v1/slots/1/slotsets
+    def slotsets
+      slot = BaseSlot.get(params[:id])
+      authorize slot
+
+      @slotsets = current_user.groups & slot.slot_groups
+
+      if current_user.my_calendar_slots.include? slot
+        @slotsets += [myCalendar: current_user.slot_sets['my_cal_uuid']]
+      end
+
+      render :slotsets
+    end
+
+    # POST /v1/slots/1/slotsets
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot

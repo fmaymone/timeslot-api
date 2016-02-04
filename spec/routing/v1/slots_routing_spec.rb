@@ -58,6 +58,11 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#delete", id: "1", format: :json)
     end
 
+    it "routes to #slotsets" do
+      expect(get: "/v1/slots/1/slotsets")
+        .to route_to("v1/slots#slotsets", id: "1", format: :json)
+    end
+
     it "routes to #add_to_groups" do
       expect(post: "/v1/slots/1/slotgroups")
         .to route_to("v1/slots#add_to_groups", id: "1", format: :json)
