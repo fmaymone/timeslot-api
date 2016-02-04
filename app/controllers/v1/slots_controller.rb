@@ -239,7 +239,8 @@ module V1
       # pp slot_set
       case slot_set
       when 'my_cal_uuid'
-        Passengership.create(slot: slot, user: current_user)
+        Passengership.find_or_create_by(slot: slot,
+                                        user: current_user).update(deleted_at: nil)
       when 'my_friends_slots_uuid'
         slot.StdSlotFriends!
       when 'my_public_slots_uuid'

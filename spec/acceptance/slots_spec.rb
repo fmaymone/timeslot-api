@@ -980,37 +980,59 @@ resource "Slots" do
     let(:deleted_group) {
       create(:group, owner: current_user, deleted_at: Time.zone.now) }
 
-    let(:slotGroups) { [group_1.uuid,
-                        group_2.uuid,
-                        unauthorized_group.uuid,
-                        deleted_group.uuid] }
+    let(:id) { slot.id }
 
-    context "std_slot" do
-      describe "Add Slot to multiple SlotGroups" do
-        let(:id) { slot.id }
+    describe "Add Slot to multiple SlotGroups" do
+      let(:slotGroups) { [group_1.uuid,
+                          group_2.uuid,
+                          unauthorized_group.uuid,
+                          deleted_group.uuid] }
 
-        example "Add Slot to multiple SlotGroups", document: :v1 do
-          explanation "Send an array of slotGroup UUIDs and the slot will be " \
-                      "added to those slotGroups.\n\n" \
-                      "returns a list of all slotgroups where user has no " \
-                      "access rights\n\n" \
-                      "returns 404 if ID is invalid\n\n" \
-                      "returns ???"
-          do_request
+      example "Add Slot to multiple SlotGroups", document: :v1 do
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns a list of all slotgroups where user has no " \
+                    "access rights\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
+        do_request
 
-          expect(response_status).to eq(200)
-          expect(group_1.slots).to include slot
-          expect(group_2.slots).to include slot
-          expect(unauthorized_group.slots).not_to include slot
-          expect(deleted_group.slots).not_to include slot
-          expect(slot.slot_groups).to include group_1
-          expect(slot.slot_groups).to include group_2
-          expect(slot.slot_groups).not_to include unauthorized_group
-          expect(slot.slot_groups).not_to include deleted_group
-          expect(json).to have_key('unauthorizedSlotgroups')
-          expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
-          expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
-        end
+        expect(response_status).to eq(200)
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        expect(unauthorized_group.slots).not_to include slot
+        expect(deleted_group.slots).not_to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
+        expect(slot.slot_groups).not_to include unauthorized_group
+        expect(slot.slot_groups).not_to include deleted_group
+        expect(json).to have_key('unauthorizedSlotgroups')
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+      end
+    end
+
+    describe "Re-Add Slot to SlotSets" do
+      let!(:containership) {
+        create(:containership, slot: slot, group: group_1,
+               deleted_at: Time.zone.now) }
+      let!(:passengership) {
+        create(:passengership, user: current_user, slot: slot,
+               deleted_at: Time.zone.now) }
+      let(:slotGroups) { [group_1.uuid,
+                          current_user.slot_sets['my_cal_uuid']]}
+
+      example "re-add to group", document: false do
+        expect(group_1.slots).not_to include slot
+        expect(current_user.my_calendar_slots).not_to include slot
+
+        do_request
+
+        expect(response_status).to eq 200
+        group_1.reload
+        current_user.reload
+        expect(group_1.slots).to include slot
+        expect(current_user.my_calendar_slots).to include slot
       end
     end
 
