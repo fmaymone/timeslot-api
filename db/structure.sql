@@ -70,20 +70,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
---
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -318,15 +304,15 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -671,11 +657,11 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 --
 
 CREATE TABLE re_slots (
+    predecessor_id bigint NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
     slotter_id bigint NOT NULL,
     parent_id bigint NOT NULL,
     tagged_from bigint
@@ -771,7 +757,8 @@ CREATE TABLE users (
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
     lang character varying(8),
-    picture character varying(255) DEFAULT ''::character varying NOT NULL
+    picture character varying(255) DEFAULT ''::character varying NOT NULL,
+    slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL
 );
 
 
@@ -1239,7 +1226,7 @@ CREATE UNIQUE INDEX index_passengerships_on_slot_id_and_user_id ON passengership
 
 
 --
--- Name: index_passengerships_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -:
+-- Name: index_passengerships_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_passengerships_on_user_id_and_slot_id ON passengerships USING btree (user_id, slot_id);
@@ -1525,4 +1512,7 @@ INSERT INTO schema_migrations (version) VALUES ('20160121133720');
 
 INSERT INTO schema_migrations (version) VALUES ('20160130125422');
 
+INSERT INTO schema_migrations (version) VALUES ('20160131005126');
+
 INSERT INTO schema_migrations (version) VALUES ('20160209102620');
+

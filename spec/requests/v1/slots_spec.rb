@@ -1569,12 +1569,113 @@ RSpec.describe "V1::Slots", type: :request do
     let(:slot) { create(:std_slot_public) }
     let(:group) { create(:group, owner: current_user) }
 
-    it "adds the slot to the given slotgroup" do
-      post "/v1/slots/#{slot.id}/slotgroups",
-           { slot_groups: [group.uuid] }, auth_header
+    context "normal slotgroups" do
+      it "adds the slot to the given slotgroup" do
+        post "/v1/slots/#{slot.id}/slotgroups",
+             { slot_groups: [group.uuid] }, auth_header
 
-      expect(group.slots).to include slot
-      expect(response).to have_http_status :ok
+        expect(group.slots).to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "special slotsets" do
+      it "adds the slot to myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+
+        post "/v1/slots/#{slot.id}/slotgroups",
+             { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+             auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).to include slot
+        expect(response).to have_http_status :ok
+      end
+
+      context "mixed slotsets" do
+        it "adds the slot to all slotsets" do
+          expect(current_user.reload.slot_sets).not_to be nil
+
+          post "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [current_user.slot_sets['my_cal_uuid'],
+                              group.uuid] },
+               auth_header
+
+          current_user.reload
+          expect(group.slots).to include slot
+          expect(current_user.my_calendar_slots).to include slot
+          expect(response).to have_http_status :ok
+        end
+      end
+    end
+  end
+
+  describe "DELETE /v1/slots/:id/slotgroups" do
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) {
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    }
+    let(:slot) {
+      slot = create(:std_slot_public)
+      create(:containership, group: group_1, slot: slot)
+      create(:containership, group: group_2, slot: slot)
+      slot
+    }
+    context "normal slotgroups" do
+      it "removes the slot from the given slotgroups" do
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [group_1.uuid, group_2.uuid] }, auth_header
+
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "special slotsets" do
+      let!(:passengership) {
+        create(:passengership, slot: slot, user: current_user)
+      }
+      it "removes the slot from myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+        expect(current_user.my_calendar_slots).to include slot
+
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+               auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "mixed slotsets" do
+      let!(:passengership) {
+        create(:passengership, slot: slot, user: current_user)
+      }
+      it "removes the slot from myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+        expect(current_user.my_calendar_slots).to include slot
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [group_1.uuid,
+                              current_user.slot_sets['my_cal_uuid'],
+                              group_2.uuid] },
+               auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).not_to include slot
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
     end
   end
 

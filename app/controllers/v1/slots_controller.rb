@@ -30,22 +30,6 @@ module V1
       end
     end
 
-    private def add_to_slotgroups(group_uuids)
-      groups = Group.where(uuid: group_uuids)
-      groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-
-        begin
-          authorize group, :add_slot?
-        rescue Pundit::NotAuthorizedError
-          @slot.errors.add(:base, group.uuid)
-        else
-          @slot.add_to_group group
-        end
-      end
-    end
-
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -218,26 +202,62 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      groups = Group.where(uuid: params[:slot_groups])
-      groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+      special_sets = current_user.slot_sets.invert
 
-        begin
-          authorize group, :add_slot?
-        rescue Pundit::NotAuthorizedError
-          @slot.errors.add(:base, group.uuid)
+      params[:slot_groups].each do |slot_set|
+        if special_sets.key? slot_set
+          handle_special_slotset(special_sets[slot_set], @slot)
         else
-          @slot.add_to_group group
+          group = Group.find_by(uuid: slot_set)
+
+          # skip deleted groups
+          @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+          add_to_slotgroup(group)
         end
       end
 
       render :slotgroups, locals: { slot: @slot }
     end
 
+    # TODO: put this into service
+    private def handle_special_slotset(slot_set, slot)
+      # pp slot_set
+      case slot_set
+      when 'my_cal_uuid'
+        Passengership.create(slot: slot, user: current_user)
+      when 'my_friends_slots_uuid'
+        slot.StdSlotFriends!
+      when 'my_public_slots_uuid'
+        pp 'create public slot'
+      end
+    end
+
+    # TODO: put this into service
+    private def add_to_slotgroups(group_uuids)
+      groups = Group.where(uuid: group_uuids)
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+        add_to_slotgroup(group)
+      end
+    end
+
+    # TODO: put this into service
+    private def add_to_slotgroup(group)
+      authorize group, :add_slot?
+    rescue Pundit::NotAuthorizedError
+      @slot.errors.add(:base, group.uuid)
+    else
+      @slot.add_to_group group
+    end
+
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
+
+      if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
+        current_user.passengerships.find_by(slot: @slot).try(:delete)
+      end
 
       groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
