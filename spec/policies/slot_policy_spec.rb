@@ -23,7 +23,6 @@ describe SlotPolicy do
     end
   end
 
-
   permissions :show?, :show_many?, :show_comments?, :show_likes? do
     context "for a visitor" do
       let(:user) { nil }

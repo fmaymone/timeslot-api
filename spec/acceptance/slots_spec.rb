@@ -1441,7 +1441,9 @@ resource "Slots" do
               tagged_from: current_user.id),
        create(:re_slot, predecessor: slot,
               slotter: create(:user),
-              tagged_from: current_user.id)]
+              tagged_from: current_user.id),
+       create(:re_slot, predecessor: slot,
+              slotter: create(:user))]
     end
     let(:id) { slot.id }
 

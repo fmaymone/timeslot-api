@@ -56,7 +56,7 @@ RSpec.describe MediaItem, type: :model do
     it { is_expected.to_not be_valid }
   end
 
-  describe :delete do
+  describe :delete, :vcr do
     let!(:media_item) { create(:real_slot_image) }
 
     it "doesn't remove the media_item from the database" do
@@ -68,7 +68,7 @@ RSpec.describe MediaItem, type: :model do
       expect(media_item.deleted_at?).to be true
     end
 
-    it "adds a cloudinary tag to the image", :vcr do
+    it "adds a cloudinary tag to the image" do
       media_item.delete
 
       tags = Cloudinary::Api.resource(media_item.public_id)["tags"]
