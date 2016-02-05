@@ -19,8 +19,8 @@ class ElasticSearchSlot
   def initialize(crawler_slot)
     @muid = crawler_slot['muid']
     @title = crawler_slot['title']
-    @start_date = crawler_slot['start_timestamp']
-    @end_date = crawler_slot['stop_timestamp']
+    @start_date = crawler_slot['start_timestamptz'] || crawler_slot['start_timestamp']
+    @end_date = crawler_slot['stop_timestamptz'] || crawler_slot['stop_timestamp']
 
     # @address_raw = crawler_slot['address_raw']
     @loc_name = crawler_slot['location']
