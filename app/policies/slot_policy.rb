@@ -67,6 +67,11 @@ class SlotPolicy < ApplicationPolicy
     current_user?
   end
 
+  # TODO: write spec
+  def slotsets?
+    current_user_has_read_access?
+  end
+
   # false if no user is signed-in
   # true, if the user has read access for the slot
   # group permissions are checked per slotgroup
