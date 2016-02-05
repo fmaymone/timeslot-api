@@ -18,7 +18,7 @@ class Like < ActiveRecord::Base
   ## Activity Methods ##
 
   private def activity_target
-    slot
+    slot.reload # FIX: reload MTI
   end
 
   private def activity_actor
