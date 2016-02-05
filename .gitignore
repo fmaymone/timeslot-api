@@ -80,6 +80,7 @@ pickle-email-*.html
 .env
 .env.test
 .powenv
+.rbenv-gemsets
 config/app_environment_variables.rb
 
 # ignore vcr cassettes
