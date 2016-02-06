@@ -18,25 +18,6 @@ module V1
       render :index
     end
 
-    # GET /v1/slots/demo
-    def show_last
-      authorize :stdSlot
-
-      if slot_paging_params.blank?
-        slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
-        @slots = StdSlotPublic
-                 .includes(:notes, :media_items,
-                           meta_slot: [:ios_location, :creator])
-                 .last(slot_count)
-        render :index
-      else
-        collector = SlotsCollector.new(**slot_paging_params)
-        @slots = collector.latest_public_slots
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
-        render "v1/paginated/slots"
-      end
-    end
-
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -67,47 +48,6 @@ module V1
         render json: { error: @slot.errors },
                status: :unprocessable_entity
       end
-    end
-
-    # POST /v1/reslot
-    def create_webslot
-      authorize :stdSlot
-
-      # TODO: we need an unique identifier from each crawler slot to re-identify
-      # exist reslots
-      # Check if Slot already exist
-      user_reslots = current_user.re_slots.joins(:meta_slot)
-      same_reslot = user_reslots.where(
-        'meta_slots.start_date = ? AND meta_slots.title = ?',
-        params.require(:startDate), params.require(:title)
-      )
-      return head 421 if same_reslot.any?
-
-      # Set Slot Creator:
-      slot_creator = User.find_by(email: 'info@timeslot.com')
-      # Create MetaSlot:
-      metaslot = MetaSlot.find_by(creator_id: slot_creator.id,
-                                  start_date: params[:startDate],
-                                  title: params[:title])
-      # Create BaseSlot:
-      if metaslot
-        @slot = BaseSlot.find_by(meta_slot_id: metaslot.id)
-      else
-        @slot = BaseSlot.create_slot(meta: meta_params,
-                                     visibility: enforce_visibility,
-                                     media: media_params, notes: note_param,
-                                     alerts: alerts_param, user: slot_creator)
-      end
-
-      # Create ReSlot:
-      if @slot.errors.empty?
-        authorize :reSlot
-        @slot = ReSlot.create_from_slot(predecessor: @slot,
-                                        slotter: current_user)
-        return head :ok if @slot.save
-      end
-      render json: { error: @slot.errors },
-             status: :unprocessable_entity
     end
 
     # PATCH /v1/metaslot/1

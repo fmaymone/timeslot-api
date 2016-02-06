@@ -3,7 +3,7 @@ require 'rails_helper'
 describe MePolicy do
   subject { described_class }
 
-  permissions :show?, :update?, :inactivate?, :signout?,
+  permissions :show?, :update?, :inactivate?, :signout?, :suggested_users?,
               :my_slots?, :slots_of_my_friends?, :my_media_items?,
               :add_friends?, :remove_friends?, :update_device? do
     context "for a user" do
@@ -18,7 +18,7 @@ describe MePolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :update?, :inactivate?, :signout?,
+        :show?, :update?, :inactivate?, :signout?, :suggested_users?,
         :my_slots?, :slots_of_my_friends?, :my_media_items?,
         :add_friends?, :remove_friends?, :update_device?
       ]

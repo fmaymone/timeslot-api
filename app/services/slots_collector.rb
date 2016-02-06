@@ -19,11 +19,6 @@ class SlotsCollector
     @direction = @after.nil? ? 'before' : 'after'
   end
 
-  # demo slots / public standard slots
-  def latest_public_slots
-    consider_filter([StdSlotPublic.all], @filter)
-  end
-
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
     showables = [user.std_slots, user.re_slots]

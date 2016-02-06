@@ -33,6 +33,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def suggested_users?
+    current_user?
+  end
+
   def update_device?
     current_user?
   end

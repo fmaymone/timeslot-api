@@ -92,6 +92,21 @@ module V1
       render "v1/media/index"
     end
 
+    # GET /v1/me/suggested_users
+    def suggested_users
+      authorize :me
+
+      if current_user.friends_count == 0
+        @users = [User.find_by(email: 'kalirad@me.com')] # Kaweh
+      else
+        user_ids = current_user.friends_ids
+        suggested_user_ids = pick_some_foafs(user_ids)
+        @users = User.find(suggested_user_ids)
+      end
+
+      render "v1/users/list"
+    end
+
     # GET /v1/me/friends
     def my_friends
       authorize :me
@@ -148,6 +163,16 @@ module V1
       current_user.remove_friends friends_ids
 
       head :ok
+    end
+
+    private def pick_some_foafs(user_ids)
+      foaf_ids = []
+      user_ids.each do |id|
+        foaf_ids += User.find(id).friends_ids
+      end
+      foaf_ids.delete(current_user.id) # remove me
+      foaf_ids -= current_user.friends_ids # remove my friends
+      foaf_ids.uniq.sample(10) # take 10 random users
     end
 
     private def user_params

@@ -5,7 +5,7 @@ describe StdSlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :create_stdslot?, :create_webslot? do
+  permissions :create_stdslot? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -45,7 +45,7 @@ describe StdSlotPolicy do
 
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:create_stdslot?, :create_webslot?, :update_stdslot?, :destroy_stdslot?]
+      [:create_stdslot?, :update_stdslot?, :destroy_stdslot?]
     }
     let(:user) { nil }
 

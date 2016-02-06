@@ -313,6 +313,64 @@ resource "Me" do
     end
   end
 
+  get "/v1/me/suggested_users" do
+    header 'Authorization', :auth_header
+
+    response_field :array, "contains potentially interesting users"
+
+    context "no friends" do
+      let!(:kaweh) { create(:user, email: 'kalirad@me.com') }
+
+      example "Get suggested Users", document: false do
+        do_request
+        expect(response_status).to eq(200)
+        expect(response_body).not_to include current_user.username
+        expect(response_body).to include kaweh.username
+      end
+    end
+
+    context "with friends" do
+      let(:friend) {
+        friend = create(:user)
+        create(:friendship, :established, friend: friend, user: current_user)
+        friend
+      }
+      let(:kaweh) {
+        kw = create(:user, email: 'kalirad@me.com')
+        create(:friendship, :established, friend: current_user, user: kw)
+        create(:friendship, :established, friend: kw, user: friend)
+        kw
+      }
+      let(:foaf) {
+        foaf = create(:user)
+        create(:friendship, :established, friend: friend, user: foaf)
+        foaf
+      }
+      let!(:friendship_1) { create(:friendship, :established,
+                                   friend: create(:user), user: kaweh) }
+      let!(:friendship_2) { create(:friendship, :established,
+                                   friend: create(:user), user: friend) }
+      let!(:friendship_3) { create(:friendship, :established,
+                                   friend: create(:user), user: foaf) }
+
+      example "Get suggested Users", document: :v1 do
+        explanation "Returns an array which includes Kaweh if User has no " \
+                    "friends whatsoever. If User has one or more friends " \
+                    "returns the friends-of-the-friends ('foafs' :)."
+
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(response_body).not_to include current_user.username
+        expect(response_body).to include friendship_1.friend.username
+        expect(response_body).to include friendship_2.friend.username
+        expect(response_body).not_to include friendship_3.friend.username
+        expect(response_body).not_to include kaweh.username
+        expect(response_body).not_to include friend.username
+      end
+    end
+  end
+
   get "/v1/me/friends" do
     header 'Authorization', :auth_header
 

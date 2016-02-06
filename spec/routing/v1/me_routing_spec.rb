@@ -38,6 +38,11 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#my_media_items", format: :json)
     end
 
+    it "routes to #suggested_users" do
+      expect(get: "/v1/me/suggested_users")
+        .to route_to("v1/me#suggested_users", format: :json)
+    end
+
     it "routes to #add_friends" do
       expect(post: "/v1/me/add_friends")
         .to route_to("v1/me#add_friends", format: :json)

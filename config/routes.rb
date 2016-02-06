@@ -12,8 +12,6 @@ Rails.application.routes.draw do
     scope constraints: { id: /\d+/ } do
       post 'stdslot', to: 'slots#create_stdslot'
       post 'reslot', to: 'slots#create_reslot'
-      # TODO: remove/disable route
-      post 'webslot', to: 'slots#create_webslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
@@ -32,8 +30,6 @@ Rails.application.routes.draw do
     scope :slots, constraints: { id: /\d+/ } do
       get ':id', to: 'slots#show', as: 'slot'
       post '', to: 'slots#show_many', as: 'slots_read'
-      # TODO: remove/disable route
-      get 'demo', to: 'slots#show_last', as: 'slots_last'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
@@ -70,6 +66,7 @@ Rails.application.routes.draw do
       get 'friendslots', to: 'me#slots_of_my_friends'
       get 'media', to: 'me#my_media_items', as: 'my_media'
       get 'signout', to: 'me#signout', as: 'sign_me_out'
+      get 'suggested_users', to: 'me#suggested_users'
       get 'friends', to: 'me#my_friends', as: 'my_friends'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
