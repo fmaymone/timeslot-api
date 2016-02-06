@@ -15,6 +15,7 @@
 - some updates for global slot locations
 - several other fixes and optimizations
 
+- remove demoslots endpoint and DEMO_SLOTS_COUNT env var
 
 ## v0.9.0
 - this release needs MIGRATION, SEED, new ENV_VARs

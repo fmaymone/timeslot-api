@@ -18,25 +18,6 @@ module V1
       render :index
     end
 
-    # GET /v1/slots/demo
-    def show_last
-      authorize :stdSlot
-
-      if slot_paging_params.blank?
-        slot_count = ENV['DEMO_SLOTS_COUNT'].try(:to_i) || 100
-        @slots = StdSlotPublic
-                 .includes(:notes, :media_items,
-                           meta_slot: [:ios_location, :creator])
-                 .last(slot_count)
-        render :index
-      else
-        collector = SlotsCollector.new(**slot_paging_params)
-        @slots = collector.latest_public_slots
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
-        render "v1/paginated/slots"
-      end
-    end
-
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot

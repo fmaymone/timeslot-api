@@ -30,7 +30,6 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
-
   # methods that require a signed-in user
 
   # true if user is signed-in and has read-access for the slot
