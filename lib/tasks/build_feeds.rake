@@ -49,10 +49,10 @@ namespace :feed do
                 Like.all +
                 Comment.all +
                 StdSlot.all +
-                GroupSlot.all +
                 ReSlot.all +
                 Friendship.all +
-                Membership.all
+                Membership.all +
+                Containership.all
 
       # TODO: handle friendship date during re-build task
       # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil

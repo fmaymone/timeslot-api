@@ -110,13 +110,11 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
+  private def activity_is_valid?
     super and active?
   end
 
-  def activity_target
+  private def activity_target
     group
   end
 
@@ -124,8 +122,7 @@ class Membership < ActiveRecord::Base
     group.owner
   end
 
-  # The user who made the update
-  def activity_actor
+  private def activity_actor
     user
   end
 
@@ -133,7 +130,7 @@ class Membership < ActiveRecord::Base
     []
   end
 
-  def activity_action
+  private def activity_action
     'membership'
   end
 end
