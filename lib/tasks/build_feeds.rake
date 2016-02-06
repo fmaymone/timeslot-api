@@ -26,33 +26,36 @@ namespace :feed do
 
       Friendship.includes(:user, :friend).all.find_each do |relation|
         # friends follows each other
-        if relation.established?
+        if relation.established? && relation.deleted_at.nil?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
       Membership.includes(:group, :user).all.find_each do |relation|
-        if relation.active?
+        if relation.active? && relation.deleted_at.nil?
           relation.group.add_follower(relation.user)
         end
       end
 
       ReSlot.includes(:slotter).all.find_each do |slot|
-        slot.add_follower(slot.slotter)
+        if slot.deleted_at.nil?
+          slot.add_follower(slot.slotter)
+        end
       end
 
       ## Collect Activities ##
 
-      storage = MediaItem.all +
-                Note.all +
-                Like.all +
-                Comment.all +
+      storage = MediaItem.where('deleted_at = ?', nil) +
+                Note.where('deleted_at = ?', nil) +
+                Like.where('deleted_at = ?', nil) +
+                Comment.where('deleted_at = ?', nil) +
+                Friendship.where('deleted_at = ?', nil) +
+                Membership.where('deleted_at = ?', nil) +
+                Containership.where('deleted_at = ?', nil) +
+                # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all +
-                ReSlot.all +
-                Friendship.all +
-                Membership.all +
-                Containership.all
+                ReSlot.all
 
       # TODO: handle friendship date during re-build task
       # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil
