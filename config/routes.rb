@@ -70,6 +70,7 @@ Rails.application.routes.draw do
       get 'friendslots', to: 'me#slots_of_my_friends'
       get 'media', to: 'me#my_media_items', as: 'my_media'
       get 'signout', to: 'me#signout', as: 'sign_me_out'
+      get 'suggested_users', to: 'me#suggested_users'
       get 'friends', to: 'me#my_friends', as: 'my_friends'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'

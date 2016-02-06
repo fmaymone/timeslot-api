@@ -276,6 +276,10 @@ class User < ActiveRecord::Base
     friends_by_request + friends_by_offer
   end
 
+  def friends_ids
+    friends_by_offer_ids + friends_by_request_ids
+  end
+
   def friends_count
     UserQuery::Relationship.new(id).my_friends.count
   end
