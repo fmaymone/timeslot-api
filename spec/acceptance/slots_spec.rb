@@ -1327,7 +1327,7 @@ resource "Slots" do
       slot_user_tags = slot.reload.re_slots
                        .where('re_slots.tagged_from = ?', current_user.id)
                        .pluck(:slotter_id)
-      expect(slot_user_tags).to eq(user_tags)
+      expect(slot_user_tags.sort).to eq(user_tags.sort)
     end
   end
 
