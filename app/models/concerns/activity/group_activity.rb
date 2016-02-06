@@ -8,9 +8,9 @@ module GroupActivity
   # The foreign id is required to find activities for
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
-  private def activity_foreign
-    activity_target.owner
-  end
+  #private def activity_foreign
+  #  activity_target.owner
+  #end
 
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
@@ -18,7 +18,7 @@ module GroupActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.group(activity_target),
+      target: JSONView.group(self.group),
       actor: JSONView.user(activity_actor)
     }
   end
@@ -28,7 +28,7 @@ module GroupActivity
   private def activity_message_params
     {
       USER: activity_actor.username,
-      TITLE: activity_target.name
+      TITLE: self.group.name
     }
   end
 end

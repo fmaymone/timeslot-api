@@ -32,7 +32,7 @@ class Containership < ActiveRecord::Base
   end
 
   private def activity_actor
-    slot.owner
+    slot.try(:owner) || slot.try(:slotter)
   end
 
   private def activity_action

@@ -130,7 +130,7 @@ module JSONView
                        :updated_at,
                        :deleted_at).as_json.transform_keys { |key| key.camelize(:lower) }
     json['image'] = {
-        publicId: (group.image ? group.image.public_id : nil),
+        publicId: (group.image.present? ? group.image.public_id : nil),
         localId: (group.image.try(:local_id) ? group.image.local_id : nil)
     }
 
