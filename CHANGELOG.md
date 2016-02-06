@@ -6,16 +6,19 @@
 - ReSlots can have different visibilities now
 - Slots support user-tags, will create a reslot for the tagged user
 - allow searching through users friends
+- get list of potentially interesting users (suggested users)
 - update Gems, migrate Airbrake to 5.0
-- reactivate Bullet, optimize several n+1 queries
+- upgrade to Ruby 2.3.0
+- optimize several n+1 queries
 - reslot counter returns number based on visibility
 - use STI feature of Rails where DB-Type column has the class that gets loaded
 - FIX email addresses are matched case-insensitive now
-- remove deprecated location and globalslots code
-- some updates for global slot locations
 - several other fixes and optimizations
-
+- some updates for global slot locations
+- remove deprecated location and globalslots code
 - remove demoslots endpoint and DEMO_SLOTS_COUNT env var
+- remove webslots endpoint, will use new globalslot api in the future
+
 
 ## v0.9.0
 - this release needs MIGRATION, SEED, new ENV_VARs

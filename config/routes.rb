@@ -12,8 +12,6 @@ Rails.application.routes.draw do
     scope constraints: { id: /\d+/ } do
       post 'stdslot', to: 'slots#create_stdslot'
       post 'reslot', to: 'slots#create_reslot'
-      # TODO: remove/disable route
-      post 'webslot', to: 'slots#create_webslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
