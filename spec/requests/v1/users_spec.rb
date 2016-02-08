@@ -165,7 +165,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "creates a new auth_token for user" do
-          skip 'new auth_token on signin temorary disabled'
+          skip 'new auth_token on signin temporary disabled'
           expect {
             post "/v1/users/signin", valid_attributes
             user.reload
@@ -195,7 +195,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "creates a new auth_token for user" do
-          skip 'new auth_token on signin temorary disabled'
+          skip 'new auth_token on signin temporary disabled'
           expect {
             post "/v1/users/signin", valid_attributes
             user.reload

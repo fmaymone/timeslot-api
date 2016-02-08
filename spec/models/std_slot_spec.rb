@@ -144,7 +144,7 @@ RSpec.describe StdSlot, type: :model do
       expect(slot.deleted_at?).to be true
     end
 
-    context "media" do
+    context "media", :vcr do
       let(:slot) { create(:std_slot_private, :with_media) }
 
       it "invalidates belonging media_items" do
