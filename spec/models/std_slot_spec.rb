@@ -165,12 +165,15 @@ RSpec.describe StdSlot, type: :model do
     end
 
     context "likes" do
-      let(:slot) { create(:std_slot_private, :with_likes) }
+      let(:slot) { build(:std_slot_private, :with_likes) }
+      let!(:like) { create(:like, slot: slot) }
 
       it "deletes belonging likes" do
         slot.delete
-        expect(slot.likes.first.deleted_at?).to be true
-        expect(slot.likes.last.deleted_at?).to be true
+        like.reload
+        slot.reload
+        expect(like.deleted_at?).to be true
+        expect(slot.likes).to be_empty
       end
     end
   end
