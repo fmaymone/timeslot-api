@@ -214,42 +214,40 @@ module Activity
     # Returns the array of users which should be notified through the distribution process
     user_ids = []
 
-    # When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
-    if activity_group
-      # 4. Group related context:
-      user_ids += activity_group.followers
-    else
-      # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
-      # NOTE: Actually we simplify activities on own content and foreign related content
-      # 1. Target related context (by default):
-      user_ids += activity_target.followers
-      # 5. Foreign related context (by default):
-      user_ids += activity_foreign.followers if activity_foreign
-      # 2. Actor related context:
-      user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
-
-      # NOTE: Instead of distributing unrelated public slots we try to extend the social context
-      # 3. Friend related context:
-      # if visibility == 'public'
-      #   %W(#{activity_target}
-      #      #{activity_actor}
-      #      #{activity_foreign}).each do |context|
-      #       # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
-      #       # NOTE: we can loop through followers here, but this has an additional fetching users from DB
-      #       # This can also be solved by adding friends of friends as a relation directly into the follower model
-      #       unless context.try(:friends).nil?
-      #         context.friends.each do |friend|
-      #           # Here we can fetch followers, change this into friends if further chaining is required
-      #           user_ids += friend.followers #friend.friends.collect(&:id)
-      #         end
-      #       end
-      #   end
-      # end
-
-      user_ids
+    # ACTUALLY NOT ACTIVE: When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
+    # 4. Group related context:
+    activity_containerships.each do |containership|
+      user_ids += containership.group.followers
     end
 
-    # Temporary fallback to simulate a "public activity" feed
+    # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
+    # NOTE: Actually we simplify activities on own content and foreign related content
+    # 1. Target related context (by default):
+    user_ids += activity_target.followers
+    # 5. Foreign related context (by default):
+    user_ids += activity_foreign.followers if activity_foreign
+    # 2. Actor related context:
+    user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
+
+    # NOTE: Instead of distributing unrelated public slots we try to extend the social context
+    # 3. Friend related context:
+    # if visibility == 'public'
+    #   %W(#{activity_target}
+    #      #{activity_actor}
+    #      #{activity_foreign}).each do |context|
+    #       # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
+    #       # NOTE: we can loop through followers here, but this has an additional fetching users from DB
+    #       # This can also be solved by adding friends of friends as a relation directly into the follower model
+    #       unless context.try(:friends).nil?
+    #         context.friends.each do |friend|
+    #           # Here we can fetch followers, change this into friends if further chaining is required
+    #           user_ids += friend.followers #friend.friends.collect(&:id)
+    #         end
+    #       end
+    #   end
+    # end
+
+    # Temporary fallback to simulate a "public-to-all-activity" feed
     # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.production?
 
     # Remove the user who did the actual activity
@@ -269,9 +267,9 @@ module Activity
     []
   end
 
-  # Indicates that the activity target belongs to a group
-  private def activity_group
-    activity_target.try(:group)
+  # Indicates that the activity target belongs to one or more containerships
+  private def activity_containerships
+    activity_target.containerships
   end
 
   # The foreign id is required to find activities for

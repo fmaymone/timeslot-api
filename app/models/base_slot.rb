@@ -227,6 +227,7 @@ class BaseSlot < ActiveRecord::Base
   def add_to_group(group)
     cs = Containership.find_or_create_by(slot: self, group: group)
     cs.update(deleted_at: nil) if cs.deleted_at?
+    cs.create_activity
   end
 
   def remove_from_group(group)

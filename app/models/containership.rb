@@ -3,7 +3,7 @@ class Containership < ActiveRecord::Base
   # concerning the naming: a group 'contains' slots
   # while this name is kinda funny IMHO it's much better than SlotGroupship
 
-  # include GroupActivity
+  include GroupActivity
 
   after_commit AuditLog
 
@@ -21,6 +21,21 @@ class Containership < ActiveRecord::Base
   def delete
     slot.touch
     group.touch
+    remove_activity
     ts_soft_delete
+  end
+
+  ## Activity Methods ##
+
+  private def activity_target
+    slot
+  end
+
+  private def activity_actor
+    slot.try(:owner) || slot.try(:slotter)
+  end
+
+  private def activity_action
+    'containership'
   end
 end
