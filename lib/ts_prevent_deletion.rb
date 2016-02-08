@@ -31,7 +31,7 @@ module TSPreventDeletion
       next if item.deleted_at?
       error_string = "#{item} wasn't deleted (but should) when deleting #{self}"
       msg = { message: error_string }
-      Rails.logger.error { error_string }
+      Rails.logger.error { error_string } unless Rails.env.test?
       Airbrake.notify(AssociationNotDeleted, msg)
       fail AssociationNotDeleted, msg if Rails.env.test? || Rails.env.development?
     end

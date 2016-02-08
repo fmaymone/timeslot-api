@@ -99,7 +99,7 @@ class Friendship < ActiveRecord::Base
     # also prevents friendship with oneself
     if Friendship.where(user_id: friend_id, friend_id: user_id).exists? || (user_id == friend_id)
       msg = "reverse friendship from #{user_id} to #{friend_id} already exists"
-      Rails.logger.error {{ duplicate_friendship: msg }}
+      Rails.logger.warn {{ duplicate_friendship: msg }}
       Airbrake.notify(DuplicateEntry, duplicate_friendship: msg)
       fail DuplicateEntry, duplicate_friendship: msg
     end
