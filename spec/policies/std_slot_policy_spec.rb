@@ -45,7 +45,7 @@ describe StdSlotPolicy do
 
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:create_stdslot?, :update_stdslot?, :destroy_stdslot?]
+      [:create_stdslot?, :update_stdslot?]
     }
     let(:user) { nil }
 
