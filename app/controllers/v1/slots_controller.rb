@@ -203,13 +203,16 @@ module V1
       slot = BaseSlot.get(params[:id])
       authorize slot
 
-      @slotsets = current_user.groups & slot.slot_groups
+      @slotgroups = current_user.groups & slot.slot_groups
 
       if current_user.my_calendar_slots.include? slot
-        @slotsets += [myCalendar: current_user.slot_sets['my_cal_uuid']]
+        @my_cal_uuid = current_user.slot_sets['my_cal_uuid']
+      else
+        @my_cal_uuid = false
       end
 
-      render :slotsets
+      render :slotsets, locals: { slot_groups: @slotgroups,
+                                  my_cal_uuid: @my_cal_uuid }
     end
 
     # POST /v1/slots/1/slotsets

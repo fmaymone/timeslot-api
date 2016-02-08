@@ -1,13 +1,4 @@
-json.slot_sets @slotsets do |slotset|
-  json.id slotset.uuid
-  json.extract!(slotset,
-                :name,
-                :image,
-                :created_at,
-                :updated_at,
-                :deleted_at
-               )
-  json.owner do
-    json.id slotset.owner_id
-  end
+json.slot_sets do
+  json.slot_groups slot_groups, partial: 'v1/slots/slotgroup', as: :slotgroup
+  json.my_calendar my_cal_uuid if my_cal_uuid
 end
