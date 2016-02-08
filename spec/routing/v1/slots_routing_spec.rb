@@ -26,11 +26,6 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#create_stdslot", format: :json)
     end
 
-    it "routes to #create_reslot" do
-      expect(post: "/v1/reslot")
-        .to route_to("v1/slots#create_reslot", format: :json)
-    end
-
     it "routes to #update_metaslot" do
       expect(patch: "/v1/metaslot/1")
         .to route_to("v1/slots#update_metaslot", id: "1", format: :json)
@@ -41,20 +36,9 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#update_stdslot", id: "1", format: :json)
     end
 
-    it "routes to #update_reslot" do
-      expect(patch: "/v1/reslot/1")
-        .to route_to("v1/slots#update_reslot", id: "1", format: :json)
-    end
-
     # TODO: remove this
     it "routes to #destroy_stdslot" do
       expect(delete: "/v1/stdslot/1")
-        .to route_to("v1/slots#delete", id: "1", format: :json)
-    end
-
-    # TODO: remove this
-    it "routes to #destroy_reslot" do
-      expect(delete: "/v1/reslot/1")
         .to route_to("v1/slots#delete", id: "1", format: :json)
     end
 

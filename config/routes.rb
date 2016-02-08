@@ -11,11 +11,9 @@ Rails.application.routes.draw do
 
     scope constraints: { id: /\d+/ } do
       post 'stdslot', to: 'slots#create_stdslot'
-      post 'reslot', to: 'slots#create_reslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-      patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
       # share routes
       get '/', to: 'share#redirect', as: 'redirect'
@@ -26,7 +24,6 @@ Rails.application.routes.draw do
 
       # TODO: remove routes
       delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
-      delete 'reslot/:id', to: 'slots#delete', as: 'reslot_delete'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
