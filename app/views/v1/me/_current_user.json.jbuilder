@@ -45,3 +45,6 @@ end
 
 # overwrite slot_count if query for yourself
 json.slot_count user.std_slots.active.count
+
+# send friendship state for current_user as this makes things for frontend easier
+json.friendship_state 'myself'

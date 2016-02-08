@@ -35,13 +35,14 @@ resource "Me" do
       expect(json).not_to have_key "role"
       expect(
         json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                    'slotCount', 'memberships', 'location')
+                    'slotCount', 'memberships', 'location', 'friendshipState')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role",
                        "picture",
                        "device_token", "location_id")
                .transform_keys { |key| key.camelize(:lower) })
       expect(json['location']).to eq nil
+      expect(json['friendshipState']).to eq 'myself'
     end
   end
 
@@ -446,7 +447,7 @@ resource "Me" do
         expect(response_status).to eq(200)
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships', 'location')
+                      'slotCount', 'memberships', 'location', 'friendshipState')
         ).to eq(current_user.attributes.as_json
                  .except('auth_token', 'password_digest', 'role',
                          'picture',
