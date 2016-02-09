@@ -27,8 +27,12 @@ class MetaSlot < ActiveRecord::Base
 
   def location
     GlobalSlotConsumer.new.location(location_uid)
-  rescue => e
-    Airbrake.notify(e, invalid_candy_location_muid: location_uid)
+  rescue => exception
+    Airbrake.notify(exception,
+                    invalid_candy_location_muid: location_uid,
+                    global_slot_id: id,
+                    global_slot_title: title,
+                    exception: exception)
     nil
   end
 

@@ -5,7 +5,7 @@ FactoryGirl.define do
   end
 
   trait :with_candy_location do
-    location_uid '19f95a00-2f9c-3578-7bdb-10b6276e08a8'
+    location_uid '89840bc4-99fc-bc22-4168-285003ecfd12'
   end
 
   trait :with_ios_location do

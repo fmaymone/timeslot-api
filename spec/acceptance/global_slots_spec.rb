@@ -11,7 +11,7 @@ resource "GlobalSlots" do
 
     parameter :predecessor, "'muid' of the global slot", required: true
 
-    let(:predecessor) { '238a69a4-271c-f5cb-e60e-48952d805859' }
+    let(:predecessor) { attributes_for(:global_slot)[:muid] }
 
     example "Reslot global slot", document: :v1 do
       explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \
