@@ -286,7 +286,7 @@ resource "Search" do
         expect(json.first).to have_key("areasOfInterest")
         expect(json.first).to have_key("latitude")
         expect(json.first).to have_key("longitude")
-        expect(json.first).to have_key("privateLocation")
+        # expect(json.first).to have_key("privateLocation")
         expect(json.first['name']).to eq("Timeslot Friedrichstraße 110 (Berlin)")
       end
     end

@@ -1,6 +1,5 @@
 class CandyLocation
-  attr_reader :name,
-              :luid,
+  attr_reader :uuid,
               :name,
               :thoroughfare,
               :sub_thoroughfare,
@@ -47,6 +46,7 @@ class CandyLocation
   # uuid
 
   def initialize(params)
+    @uuid = params['muid']
     @name = params['title']
     @thoroughfare = params['street_address']
     # @sub_thoroughfare = params['']

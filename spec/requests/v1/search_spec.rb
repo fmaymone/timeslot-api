@@ -202,7 +202,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('latitude')
       expect(json.first).to have_key('longitude')
-      expect(json.first['id']).to eq(ios_location.id)
+      expect(json.first['id']).to eq(ios_location.uuid)
     end
   end
 
