@@ -26,7 +26,7 @@ class BaseSlot < ActiveRecord::Base
                  BaseSlot: 0,
                  StdSlot: 20,
                  # ReSlot: 23,
-               }
+               }.freeze
 
   enum slot_type: SLOT_TYPES
 
@@ -118,9 +118,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def add_media(item, creator_id)
-    item.merge!(position: media_items.size) unless item.key? "position"
-    item.merge!(mediable_id: id, mediable_type: BaseSlot,
-                creator_id: creator_id)
+    item[:position] = media_items.size unless item.key? "position"
+    item[:mediable_id] = id
+    item[:mediable_type] = BaseSlot
+    item[:creator_id] = creator_id
 
     new_media = MediaItem.new(item)
     unless new_media.valid?
@@ -153,10 +154,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    if self.class <= ReSlot
-      like = Like.find_by(slot: parent, user: user)
-    else
-      like = Like.find_by(slot: self, user: user)
+    like = if self.class <= ReSlot
+             Like.find_by(slot: parent, user: user)
+           else
+             Like.find_by(slot: self, user: user)
     end
 
     unless like
@@ -195,7 +196,7 @@ class BaseSlot < ActiveRecord::Base
 
   def update_user_tags(current_user, user_tags)
     unless user_tags.nil?
-      reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
+      reslotters = ReSlot.where(parent_id: id).pluck(:slotter_id)
       User.find(user_tags - reslotters).each do |user|
         ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
       end
@@ -231,7 +232,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def remove_from_group(group)
-    cs = containerships.where(group: group).take
+    cs = containerships.find_by(group: group)
     cs.delete if cs && !cs.deleted_at?
   end
 
@@ -395,9 +396,9 @@ class BaseSlot < ActiveRecord::Base
     # check for validity
     begin
       cursor_array = decoded_cursor_string.split('%')
-      cursor = {id: cursor_array.first.to_i,
+      cursor = { id: cursor_array.first.to_i,
                 startdate: cursor_array.second,
-                enddate: cursor_array.third}
+                enddate: cursor_array.third }
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
       raise PaginationError, "invalid pagination cursor"

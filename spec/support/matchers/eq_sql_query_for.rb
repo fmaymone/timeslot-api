@@ -1,5 +1,4 @@
 RSpec::Matchers.define :eq_sql_query_for do |showables|
-
   match do |collection|
     showables.each_with_index do |showable, i|
       return false unless showable.to_sql == collection[i].to_sql

@@ -17,9 +17,9 @@ module TSPreventDeletion
 
   private def prevent_remove
     msg = { prevent_deletion: "Deletion was prevented for object: #{self}" }
-    msg.merge!(caller_0: caller[0])
-    msg.merge!(caller_1: caller[1])
-    msg.merge!(caller_2: caller[2])
+    msg[:caller_0] = caller[0]
+    msg[:caller_1] = caller[1]
+    msg[:caller_2] = caller[2]
     Rails.logger.error { msg }
     fail NotActivated, msg
   end

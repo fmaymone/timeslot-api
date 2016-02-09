@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Load the Rails application.
 require File.expand_path('../application', __FILE__)
 
@@ -11,16 +12,16 @@ end
 
 # some timeslot variables, put them here until we need a better place
 # user relations
-VISITOR = 'visitor' # no user is logged-in
-STRANGER = 'stranger' # a logged-in but unrelated user
-FRIEND = 'friend' # a user with an active friendship with current_user
-FOAF = 'foaf' # friend-of-a-friend -> shared friend(s) with current_user
-ME = 'me'
+VISITOR = 'visitor'.freeze # no user is logged-in
+STRANGER = 'stranger'.freeze # a logged-in but unrelated user
+FRIEND = 'friend'.freeze # a user with an active friendship with current_user
+FOAF = 'foaf'.freeze # friend-of-a-friend -> shared friend(s) with current_user
+ME = 'me'.freeze
 
 # friendships
-OFFERED = '00'
-ESTABLISHED = '11'
-REJECTED = '01'
+OFFERED = '00'.freeze
+ESTABLISHED = '11'.freeze
+REJECTED = '01'.freeze
 
 PAGINATION_DEFAULT_LIMIT = ENV['PAGINATION_DEFAULT_LIMIT'].try(:to_i) || 40
 PAGINATION_MAX_LIMIT = ENV['PAGINATION_MAX_LIMIT'].try(:to_i) || 100

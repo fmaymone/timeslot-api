@@ -6,7 +6,7 @@ class StdSlot < BaseSlot
                      'friends' => :StdSlotFriends,
                      'foaf' => :StdSlotFoaf,
                      'public' => :StdSlotPublic
-                   }
+                   }.freeze
 
   scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
 

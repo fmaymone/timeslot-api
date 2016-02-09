@@ -63,7 +63,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{std_slot.id}", {},
-                { 'Authorization' => "Token token=#{std_slot.owner.auth_token}" }
+                'Authorization' => "Token token=#{std_slot.owner.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -138,7 +138,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{re_slot.id}", {},
-                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -175,7 +175,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{re_slot.id}", {},
-                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -212,7 +212,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{re_slot.id}", {},
-                { 'Authorization' => "Token token=#{re_slot.slotter.auth_token}" }
+                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -1416,7 +1416,7 @@ RSpec.describe "V1::Slots", type: :request do
     context "with valid alerts" do
       it "responds with 200" do
         patch "/v1/reslot/#{re_slot.id}",
-              { settings: { alerts: '1110001100' }}, auth_header
+              { settings: { alerts: '1110001100' } }, auth_header
         expect(response).to have_http_status(:ok)
       end
 

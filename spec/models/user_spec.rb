@@ -86,7 +86,7 @@ RSpec.describe User, type: :model do
     context "when email format is invalid" do
       it "will be invalid" do
         addresses = %w([user@foo,com user_at_foo.org example.user@foo.
-                     @barbaz.com foo@.com])
+                       @barbaz.com foo@.com])
         addresses.each do |invalid_address|
           user.email = invalid_address
           expect(user).not_to be_valid
@@ -965,7 +965,7 @@ RSpec.describe User, type: :model do
       end
 
       it "sets a device if provided" do
-        user_params.merge!(device: device)
+        user_params[:device] = device
         expect {
           User.create_with_device(user_params)
         }.to change(Device, :count).by 1

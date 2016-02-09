@@ -1,5 +1,4 @@
 FactoryGirl.define do
-
   factory :note, class: Note do
     slot
     sequence(:title) { |n| "Title for Note #{n}" }

@@ -129,7 +129,7 @@ resource "Users" do
                 scope: :device,
                 required: true
 
-      let(:device) { { device: attributes_for(:device)}}
+      let(:device) { { device: attributes_for(:device) }}
 
       example "Signin with new device", document: :v1 do
         explanation "returns OK and an AuthToken if credentials match\n\n" \

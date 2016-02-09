@@ -10,7 +10,7 @@ class Device < ActiveRecord::Base
   validates :system, presence: true
   validates :version, presence: true
 
-  #scope :active_sockets, -> { where.not(socket: nil) }
+  # scope :active_sockets, -> { where.not(socket: nil) }
 
   # Mobile token management with Amazon SNS:
   # http://mobile.awsblog.com/post/Tx223MJB0XKV9RU/Mobile-token-management-with-Amazon-SNS
@@ -26,11 +26,9 @@ class Device < ActiveRecord::Base
     end
 
     # sets new endpoint if not exist or update if new token was passed
-    case system
+    endpoint_arn = case system
     when 'ios'
-      endpoint_arn = register_endpoint_ios(token)
-    else
-      endpoint_arn = nil
+      register_endpoint_ios(token)
     end
 
     # unregister endpoint if it was disabled
@@ -113,14 +111,14 @@ class Device < ActiveRecord::Base
     aps[:friend_id] = friend_id if friend_id
 
     # Always includes the default message
-    payload = {default: { message: message_push }}
+    payload = { default: { message: message_push } }
 
     if ENV['PUSH_APNS'].nil? || ENV['PUSH_APNS'] == 'true'
-      payload.merge!(APNS: { aps: aps }.to_json)
+      payload[:APNS] = { aps: aps }.to_json
     end
 
     if ENV['PUSH_APNS_SANDBOX'].nil? || ENV['PUSH_APNS_SANDBOX'] == 'true'
-      payload.merge!(APNS_SANDBOX: { aps: aps }.to_json)
+      payload[:APNS_SANDBOX] = { aps: aps }.to_json
     end
 
     push_notification = { message: payload.to_json,

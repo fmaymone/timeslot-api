@@ -4,14 +4,14 @@ module Redirect
 
     def show(method, target)
       # Delegate to the related method
-      send("show_#{method.to_s}", target)
+      send("show_#{method}", target)
     end
 
     def decode_share_url(base64)
       # Determine base64 padding (multiple of 4 bytes)
       padding = ''
       # TODO: handle padding manually
-      #(base64.length % 4).times{ padding << '=' }
+      # (base64.length % 4).times{ padding << '=' }
       # Decode and apply padding
       Base64.urlsafe_decode64("#{base64}#{padding}")
     end
@@ -48,7 +48,7 @@ module Redirect
 
     private def get_content(url, type, file)
       path = "store/share/#{type}/#{url}#{file}"
-      if File.exists?(path)
+      if File.exist?(path)
         unzip_content(File.read(path, mode: 'rb'))
       else
         false

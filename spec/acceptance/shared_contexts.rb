@@ -1,9 +1,9 @@
-RSpec.shared_context "shared stuff", :a => :b do
+RSpec.shared_context "shared stuff", a: :b do
   before { @some_var = :some_value }
   def shared_method
     "it works"
   end
-  let(:shared_let) { {'arbitrary' => 'object'} }
+  let(:shared_let) { { 'arbitrary' => 'object' } }
   subject do
     'this is the subject'
   end
@@ -60,7 +60,7 @@ RSpec.shared_context "default slot parameter" do
   parameter :endDate,
             "Enddate and Time of the Slot (startdate + duration).",
             required: true
-  #parameter :openEnd,
+  # parameter :openEnd,
   #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
   #          required: true
   parameter :location, "Location associated with this slot (see example)"

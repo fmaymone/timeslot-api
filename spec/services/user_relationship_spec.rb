@@ -8,21 +8,22 @@ RSpec.describe UserRelationship, type: :service do
     let(:foaf) { create(:user) }
 
     context 'friends' do
-      let!(:friendship) { create(:friendship, :established,
-                                 user: user, friend: friend)
-      }
+      let!(:friendship) do
+        create(:friendship, :established,
+               user: user, friend: friend)
+      end
       it "returns 'friend' if users are friends" do
         expect(described_class.call(user.id, friend.id)).to eq FRIEND
       end
     end
 
     context 'friend-of-a-friend' do
-      let!(:friendships) {
+      let!(:friendships) do
         create(:friendship, :established,
                user: user, friend: friend)
         create(:friendship, :established,
                user: foaf, friend: friend)
-      }
+      end
       it "returns 'foaf' if users have common friends" do
         expect(described_class.call(user.id, foaf.id)).to eq FOAF
       end

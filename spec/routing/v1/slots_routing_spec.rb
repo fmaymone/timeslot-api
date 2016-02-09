@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe V1::SlotsController, type: :routing do
   describe "routing" do
-
     it "routes to #show" do
       expect(get: "/v1/slots/1")
         .to route_to("v1/slots#show", id: "1", format: :json)
