@@ -1,4 +1,5 @@
 class IosLocation < ActiveRecord::Base
+  before_create { self.uuid = SecureRandom.uuid }
   after_commit AuditLog
 
   belongs_to :creator, class_name: User

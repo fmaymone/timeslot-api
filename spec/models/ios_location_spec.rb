@@ -5,6 +5,8 @@ RSpec.describe IosLocation, type: :model do
 
   subject { ios_location }
 
+  it { is_expected.to respond_to(:id) }
+  it { is_expected.to respond_to(:uuid) }
   it { is_expected.to respond_to(:name) }
   it { is_expected.not_to respond_to(:street) }
   it { is_expected.to respond_to(:thoroughfare) }
