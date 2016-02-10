@@ -120,20 +120,14 @@ module JSONView
   end
 
   def self.group(group)
-    json = group.slice(:id,
-                       :name,
-                       :members_can_post,
-                       :members_can_invite,
-                       :created_at,
-                       :updated_at,
-                       :deleted_at).as_json.transform_keys { |key| key.camelize(:lower) }
-    json['image'] = {
-      publicId: (group.image.present? ? group.image.public_id : nil),
-      localId: (group.image.try(:local_id) ? group.image.local_id : nil)
-    }
+    json = group.slice(:name, :image,
+                       :members_can_post, :members_can_invite,
+                       :created_at, :updated_at, :deleted_at
+                      ).as_json.transform_keys { |key| key.camelize(:lower) }
 
+    json['id'] = group.uuid
     json['owner'] = self.user(group.owner)
-    json['membershipState'] = true #current_user.get_membership(group.id).humanize
+    # json['membershipState'] = current_user.get_membership(group.id).humanize
 
     json
   end
