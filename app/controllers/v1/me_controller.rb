@@ -97,7 +97,7 @@ module V1
       authorize :me
 
       if current_user.friends_count == 0
-        @users = [User.find_by(email: 'kalirad@me.com')] # Kaweh
+        @users = [User.find_by(email: SUGGESTED_USER_EMAIL)]
       else
         user_ids = current_user.friends_ids
         suggested_user_ids = pick_some_foafs(user_ids)
