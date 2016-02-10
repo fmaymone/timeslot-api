@@ -135,49 +135,6 @@ RSpec.describe StdSlot, type: :model do
     end
   end
 
-  describe :delete do
-    let(:slot) { create(:std_slot) }
-
-    it "sets deleted_at on itself" do
-      expect(slot.deleted_at?).to be false
-      slot.delete
-      expect(slot.deleted_at?).to be true
-    end
-
-    context "media", :vcr do
-      let(:slot) { create(:std_slot_private, :with_media) }
-
-      it "invalidates belonging media_items" do
-        slot.delete
-        expect(slot.media_items.first.deleted_at?).to be true
-        expect(slot.media_items.last.deleted_at?).to be true
-      end
-    end
-
-    context "notes" do
-      let(:slot) { create(:std_slot_private, :with_notes) }
-
-      it "deletes belonging notes" do
-        slot.delete
-        expect(slot.notes.first.deleted_at?).to be true
-        expect(slot.notes.last.deleted_at?).to be true
-      end
-    end
-
-    context "likes" do
-      let(:slot) { build(:std_slot_private, :with_likes) }
-      let!(:like) { create(:like, slot: slot) }
-
-      it "deletes belonging likes" do
-        slot.delete
-        like.reload
-        slot.reload
-        expect(like.deleted_at?).to be true
-        expect(slot.likes).to be_empty
-      end
-    end
-  end
-
   describe :reslots do
     let(:parent) { create(:std_slot_friends) }
     let!(:reslots) { create_list(:re_slot, 3, parent: parent) }

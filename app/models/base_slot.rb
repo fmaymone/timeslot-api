@@ -208,6 +208,7 @@ class BaseSlot < ActiveRecord::Base
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
+    containerships.each(&:delete)
 
     remove_all_activities(target: self)
 
