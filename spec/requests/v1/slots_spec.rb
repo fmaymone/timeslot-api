@@ -1664,7 +1664,7 @@ RSpec.describe "V1::Slots", type: :request do
 
   describe "DELETE /v1/slots/:id/like" do
     context "StdSlot" do
-      let(:std_slot) { create(:std_slot) }
+      let(:std_slot) { create(:std_slot_public) }
       let!(:like) { create(:like, user: current_user, slot: std_slot) }
 
       it "sets deleted_at on the like" do
@@ -1679,6 +1679,13 @@ RSpec.describe "V1::Slots", type: :request do
         std_slot.reload
         expect(std_slot.likes.count).to eq 0
         expect(std_slot.likes_count).to eq 0
+      end
+
+      it "is idempotent" do
+        delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        expect(response).to have_http_status :ok
+        delete "/v1/slots/#{std_slot.id}/like", {}, auth_header
+        expect(response).to have_http_status :ok
       end
     end
 

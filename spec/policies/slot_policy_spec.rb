@@ -3,26 +3,6 @@ require 'rails_helper'
 describe SlotPolicy do
   subject { described_class }
 
-  permissions :unlike? do
-    let(:user) { create(:user) }
-    let(:slot) { create(:std_slot) }
-    let!(:like) { create(:like, slot: slot) }
-
-    context "for the like creator" do
-      let!(:like) { create(:like, user: user, slot: slot) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-
-    context "for a user" do
-      it "denies access" do
-        expect(subject).not_to permit(user, slot)
-      end
-    end
-  end
-
   permissions :show?, :show_many?, :show_comments?, :show_likes? do
     context "for a visitor" do
       let(:user) { nil }
@@ -38,7 +18,7 @@ describe SlotPolicy do
   end
 
   # TODO: write spec for :create_reslot? if it is clear how it should work
-  permissions :show?, :show_many?, :show_likes?, :show_comments?,
+  permissions :show?, :show_many?, :show_likes?, :show_comments?, :unlike?,
               :reslot_history?, :add_like?, :copy?, :add_comment?,
               # :create_reslot?,
               :remove_from_groups? do

@@ -158,7 +158,7 @@ class BaseSlot < ActiveRecord::Base
              Like.find_by(slot: parent, user: user)
            else
              Like.find_by(slot: self, user: user)
-    end
+           end
 
     unless like
       like = likes.create(user: user)
