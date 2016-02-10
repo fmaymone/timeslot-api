@@ -331,6 +331,11 @@ resource "Me" do
     end
 
     context "with friends" do
+      let(:pending) {
+        pending = create(:user)
+        create(:friendship, friend: pending, user: current_user)
+        pending
+      }
       let(:friend) {
         friend = create(:user)
         create(:friendship, :established, friend: friend, user: current_user)
@@ -353,6 +358,8 @@ resource "Me" do
                                    friend: create(:user), user: friend) }
       let!(:friendship_3) { create(:friendship, :established,
                                    friend: create(:user), user: foaf) }
+      let!(:friendship_4) { create(:friendship, :established,
+                                   friend: pending, user: kaweh) }
 
       example "Get suggested Users", document: :v1 do
         explanation "Returns an array which includes Kaweh if User has no " \
@@ -368,6 +375,7 @@ resource "Me" do
         expect(response_body).not_to include friendship_3.friend.username
         expect(response_body).not_to include kaweh.username
         expect(response_body).not_to include friend.username
+        expect(response_body).not_to include pending.username
       end
     end
   end

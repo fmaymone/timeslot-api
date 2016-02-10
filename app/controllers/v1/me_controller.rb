@@ -171,7 +171,7 @@ module V1
         foaf_ids += User.find(id).friends_ids
       end
       foaf_ids.delete(current_user.id) # remove me
-      foaf_ids -= current_user.friends_ids # remove my friends
+      foaf_ids -= current_user.contacts_ids # remove my friends
       foaf_ids.uniq.sample(10) # take 10 random users
     end
 
