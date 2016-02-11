@@ -97,7 +97,7 @@ module V1
       authorize :me
 
       if current_user.friends_count == 0
-        @users = [User.find_by(email: 'kalirad@me.com')] # Kaweh
+        @users = [User.find_by(email: SUGGESTED_USER_EMAIL)]
       else
         user_ids = current_user.friends_ids
         suggested_user_ids = pick_some_foafs(user_ids)
@@ -171,7 +171,7 @@ module V1
         foaf_ids += User.find(id).friends_ids
       end
       foaf_ids.delete(current_user.id) # remove me
-      foaf_ids -= current_user.friends_ids # remove my friends
+      foaf_ids -= current_user.contacts_ids # remove my friends
       foaf_ids.uniq.sample(10) # take 10 random users
     end
 

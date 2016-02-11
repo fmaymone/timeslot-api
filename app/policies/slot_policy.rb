@@ -39,9 +39,7 @@ class SlotPolicy < ApplicationPolicy
 
   # true if current user has liked the slot before
   def unlike?
-    return false unless current_user?
-    return true if slot.likes.exists?(user: current_user)
-    false
+    current_user_has_read_access?
   end
 
   # false if slot is private? (screen doesn't have 'Add a comment')

@@ -1,5 +1,4 @@
 json.array!(media) do |item|
-
   json.partial! 'v1/media/basic_media', item: item
   json.media_type item.media_type
   json.created_at item.created_at

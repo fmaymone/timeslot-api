@@ -32,10 +32,10 @@ class MediaItem < ActiveRecord::Base
     Cloudinary::Uploader.add_tag("replaced", public_id)
     Cloudinary::Uploader.add_tag(
       "mediable_id:#{mediable.id}, mediable_type:#{mediable_type}", public_id)
-  rescue => e
+  rescue CloudinaryException => e
     msg = { image: self }
-    msg.merge!(cloudinary: "adding tag for destroyed media_item failed.")
-    msg.merge!(error: e)
+    msg[:cloudinary] = "adding tag for destroyed media_item failed."
+    msg[:error] = e
     Rails.logger.error { msg }
     Airbrake.notify(e, parameters: msg)
   ensure

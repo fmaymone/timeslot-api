@@ -36,7 +36,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
   end
 
   describe 'location', :vcr do
-    let(:loc_muid) { "24809a65-9e21-9376-1ba8-745795be17dd" }
+    let(:loc_muid) { attributes_for(:slot, :with_candy_location)[:location_uid] }
 
     it "returns a location from TS_DATA_MALL" do
       location = described_class.new.location(loc_muid)

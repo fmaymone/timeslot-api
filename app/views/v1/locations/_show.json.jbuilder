@@ -1,7 +1,7 @@
 if location_data.nil?
   json.null!
 else
-  json.id location_data.id
+  json.id location_data.uuid
   json.name location_data.name.blank? ? nil : location_data.name
   json.thoroughfare location_data.thoroughfare
   json.sub_thoroughfare location_data.sub_thoroughfare
@@ -17,5 +17,5 @@ else
   json.areas_of_interest location_data.areas_of_interest
   json.latitude location_data.latitude
   json.longitude location_data.longitude
-  json.private_location location_data.private_location
+  # json.private_location location_data.private_location # not used so far
 end

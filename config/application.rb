@@ -50,7 +50,7 @@ module TsRailsBackend
 
     logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
     # should sucker punch run async?
-    if (ENV['INLINE_WORKERS'] == 'true')
+    if ENV['INLINE_WORKERS'] == 'true'
       require 'sucker_punch/testing/inline'
       logger.tagged('WORKER') { logger.info { 'workers not ASYNC' } }
     else
@@ -65,7 +65,7 @@ module TsRailsBackend
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options]
+        resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
 

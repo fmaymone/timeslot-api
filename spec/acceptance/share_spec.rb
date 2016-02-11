@@ -218,7 +218,7 @@ resource "Share", :keep_data do
 
     context "Delete all shared content" do
       let(:id) { share_id_user ||= slot.id }
-      
+
       example "Delete all shared content", document: :v1 do
         explanation "returns 404 if slot was not found\n\n" \
                     "returns 422 if slot could not be unshared\n\n"

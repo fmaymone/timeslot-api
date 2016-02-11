@@ -107,7 +107,7 @@ resource "Search" do
       let!(:user) { create(:user, username: 'Johnny Doehl') }
       let!(:friend) { create(:user, username: 'John Doe') }
       let!(:friendship) { create(:friendship, :established,
-                                friend: friend, user: current_user)}
+                                 friend: friend, user: current_user)}
       let(:query) { 'john' }
 
       example "Search friend by username", document: :v1 do
@@ -286,7 +286,7 @@ resource "Search" do
         expect(json.first).to have_key("areasOfInterest")
         expect(json.first).to have_key("latitude")
         expect(json.first).to have_key("longitude")
-        expect(json.first).to have_key("privateLocation")
+        # expect(json.first).to have_key("privateLocation")
         expect(json.first['name']).to eq("Timeslot Friedrichstraße 110 (Berlin)")
       end
     end

@@ -4,10 +4,10 @@ class MetaSlot < ActiveRecord::Base
   # give 'openEnd' slots an end
   before_validation do |metaslot|
     if open_end || end_date.blank?
-      if start_date < start_date.to_datetime.at_middle_of_day
-        metaslot.end_date = start_date.to_datetime.at_end_of_day
-      else
-        metaslot.end_date = start_date.to_datetime.next_day.at_midday
+      metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
+                            start_date.to_datetime.at_end_of_day
+                          else
+                            start_date.to_datetime.next_day.at_midday
       end
       metaslot.open_end = true
     end
@@ -27,8 +27,12 @@ class MetaSlot < ActiveRecord::Base
 
   def location
     GlobalSlotConsumer.new.location(location_uid)
-  rescue => e
-    Airbrake.notify(e, invalid_candy_location_muid: location_uid)
+  rescue => exception
+    Airbrake.notify(exception,
+                    invalid_candy_location_muid: location_uid,
+                    global_slot_id: id,
+                    global_slot_title: title,
+                    exception: exception)
     nil
   end
 

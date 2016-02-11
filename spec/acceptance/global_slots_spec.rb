@@ -11,7 +11,7 @@ resource "GlobalSlots" do
 
     parameter :predecessor, "'muid' of the global slot", required: true
 
-    let(:predecessor) { '238a69a4-271c-f5cb-e60e-48952d805859' }
+    let(:predecessor) { attributes_for(:global_slot)[:muid] }
 
     example "Reslot global slot", document: :v1 do
       explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \
@@ -42,7 +42,7 @@ resource "GlobalSlots" do
     describe "cinema" do
       let(:category) { 'cinema' }
       let(:q) { 'James' }
-      let(:moment) { '2015-11-29T12:43:28.907Z'}
+      let(:moment) { '2015-11-29T12:43:28.907Z' }
       let(:limit) { 10 }
 
       example "Cinema - Find global slots", document: :v1 do
@@ -92,7 +92,7 @@ resource "GlobalSlots" do
       # The search service from data-team has some issues atm...
       # let(:q) { 'Borussia' }
       let(:q) { 'Dortmund' }
-      let(:moment) { '2015-07-05'}
+      let(:moment) { '2015-07-05' }
       let(:limit) { 5 }
 
       example "Football - Find global slots", document: :v1 do

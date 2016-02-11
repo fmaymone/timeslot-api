@@ -28,7 +28,7 @@ resource "Connects" do
     response_field :username, "Username of the user"
     response_field :email, "Email of the user"
 
-    let(:socialId) { 10152854206708061 }
+    let(:socialId) { 10_152_854_206_708_061 }
     let(:username) { "Silvi O Ivlis" }
     let(:first_name) { "Silvi" }
     let(:last_name) { "Ivlis" }
@@ -77,8 +77,9 @@ resource "Connects" do
 
       context "sign in" do
         let(:user) { create(:user) }
-        let!(:identity) {
-          create(:connect, user: user, social_id: socialId) }
+        let!(:identity) do
+          create(:connect, user: user, social_id: socialId)
+        end
 
         example "Sign in with facebook", document: :v1 do
           explanation "Existing connection to the submitted facebook account\n\n" \
@@ -113,8 +114,9 @@ resource "Connects" do
       header "Authorization", :auth_header
 
       let(:user) { create(:user) }
-      let!(:identity) {
-        create(:connect, user: user, social_id: socialId) }
+      let!(:identity) do
+        create(:connect, user: user, social_id: socialId)
+      end
 
       example "Connect facebook account, email collision", document: false do
         do_request
@@ -141,7 +143,7 @@ resource "Connects" do
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
 
-    let(:socialId) { 3186786310 }
+    let(:socialId) { 3_186_786_310 }
     let(:username) { "alexandrospar" }
     let(:auth_token) { "3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV" }
     let(:auth_secret) { "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x" }
@@ -161,8 +163,9 @@ resource "Connects" do
 
       context "sign in" do
         let(:user) { create(:user) }
-        let!(:identity) {
-          create(:connect, user: user, social_id: socialId) }
+        let!(:identity) do
+          create(:connect, user: user, social_id: socialId)
+        end
 
         example "Sign in with twitter", document: :v1 do
           explanation "Existing connection to the submitted twitter account\n\n" \

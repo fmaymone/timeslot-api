@@ -95,17 +95,17 @@ class SlotsCollector
     ### fetch slots
     relations.each do |relation|
       next unless relation
-      if relation.table_name == StdSlot.table_name
-        full_relation = relation.includes(
-          :notes, :media_items,
-          meta_slot: [:ios_location, :creator])
-      elsif relation.table_name == ReSlot.table_name
-        full_relation = relation.includes(
-          parent: [:notes, :media_items],
-          meta_slot: [:ios_location, :creator])
-      else
-        # groupslots ...
-        full_relation = relation
+      full_relation = if relation.table_name == StdSlot.table_name
+                        relation.includes(
+                          :notes, :media_items,
+                          meta_slot: [:ios_location, :creator])
+                      elsif relation.table_name == ReSlot.table_name
+                        relation.includes(
+                          parent: [:notes, :media_items],
+                          meta_slot: [:ios_location, :creator])
+                      else
+                        # groupslots ...
+                        relation
       end
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: full_relation,

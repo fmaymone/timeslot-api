@@ -62,12 +62,12 @@ RSpec.configure do |config|
   config.include(FactoryGirl::Syntax::Methods,
                  type: :services,
                  file_path: %r{/spec\/services/}
-  )
+                )
 
   config.include(FactoryGirl::Syntax::Methods,
                  type: :query,
                  file_path: %r{/spec\/queries/}
-  )
+                )
 
   # to be able to use route helpers in specs
   config.include Rails.application.routes.url_helpers

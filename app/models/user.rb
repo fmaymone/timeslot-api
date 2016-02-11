@@ -280,6 +280,10 @@ class User < ActiveRecord::Base
     friends_by_offer_ids + friends_by_request_ids
   end
 
+  def contacts_ids
+    initiated_friendships.pluck(:friend_id) + received_friendships.pluck(:user_id)
+  end
+
   def friends_count
     UserQuery::Relationship.new(id).my_friends.count
   end

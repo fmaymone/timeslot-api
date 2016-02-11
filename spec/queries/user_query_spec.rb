@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe UserQuery::Relationship, type: :query do
-
   describe "common_friends" do
     let(:user) { create(:user) }
     let!(:stranger) { create(:user) }

@@ -657,7 +657,7 @@ RSpec.describe "V1::Me", type: :request do
           it "returns slots where start_date is equal or after moment" do
 
             get "/v1/me/slots",
-                { filter: filter},
+                { filter: filter },
                 @auth_header
 
             expect(response.status).to be(200)
@@ -1150,7 +1150,7 @@ RSpec.describe "V1::Me", type: :request do
           it "returns slots where start_date is equal or after moment" do
 
             get "/v1/me/friendslots",
-                { filter: filter},
+                { filter: filter },
                 @auth_header
 
             expect(response.status).to be(200)

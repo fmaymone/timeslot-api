@@ -77,7 +77,7 @@ RSpec.describe Friendship, type: :model do
     let(:friendship) {
       create(:friendship, :established, friend: create(:user)) }
     let(:resultValues) {
-      [{'00' => 'pending'}, {'11' => 'friend'}, {'01' => 'stranger'}] }
+      [{ '00' => 'pending' }, { '11' => 'friend' }, { '01' => 'stranger' }] }
 
     it "maps friendship state to string or nil" do
       resultValues.each do |res|

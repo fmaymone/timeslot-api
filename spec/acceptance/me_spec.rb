@@ -35,13 +35,14 @@ resource "Me" do
       expect(json).not_to have_key "role"
       expect(
         json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                    'slotCount', 'memberships', 'location')
+                    'slotCount', 'memberships', 'location', 'friendshipState')
       ).to eq(current_user.attributes.as_json
                .except("auth_token", "password_digest", "role",
                        "picture",
                        "device_token", "location_id")
                .transform_keys { |key| key.camelize(:lower) })
       expect(json['location']).to eq nil
+      expect(json['friendshipState']).to eq 'myself'
     end
   end
 
@@ -330,6 +331,11 @@ resource "Me" do
     end
 
     context "with friends" do
+      let(:pending) {
+        pending = create(:user)
+        create(:friendship, friend: pending, user: current_user)
+        pending
+      }
       let(:friend) {
         friend = create(:user)
         create(:friendship, :established, friend: friend, user: current_user)
@@ -352,6 +358,8 @@ resource "Me" do
                                    friend: create(:user), user: friend) }
       let!(:friendship_3) { create(:friendship, :established,
                                    friend: create(:user), user: foaf) }
+      let!(:friendship_4) { create(:friendship, :established,
+                                   friend: pending, user: kaweh) }
 
       example "Get suggested Users", document: :v1 do
         explanation "Returns an array which includes Kaweh if User has no " \
@@ -367,6 +375,7 @@ resource "Me" do
         expect(response_body).not_to include friendship_3.friend.username
         expect(response_body).not_to include kaweh.username
         expect(response_body).not_to include friend.username
+        expect(response_body).not_to include pending.username
       end
     end
   end
@@ -446,7 +455,7 @@ resource "Me" do
         expect(response_status).to eq(200)
         expect(
           json.except('image', 'friendships', 'friendsCount', 'reslotCount',
-                      'slotCount', 'memberships', 'location')
+                      'slotCount', 'memberships', 'location', 'friendshipState')
         ).to eq(current_user.attributes.as_json
                  .except('auth_token', 'password_digest', 'role',
                          'picture',

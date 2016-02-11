@@ -121,7 +121,7 @@ RSpec.describe Group, type: :model do
       end
 
       it "sets an image if provided" do
-        group_params.merge!(image: image)
+        group_params[:image] = image
         Group.create_with_invitees(group_params: group_params)
         expect(Group.last.image).not_to be nil
         expect(Group.last.image).to eq image

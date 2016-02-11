@@ -293,7 +293,7 @@ module V1
           p[:open_end] = true
         else
           # validate submitted end_date
-          enddate = (params[:endDate])
+          enddate = params[:endDate]
           valid_date = Time.zone.parse(enddate)
           fail ParameterInvalid.new(:end_date, enddate) unless valid_date
           # TODO: add spec for open_end
