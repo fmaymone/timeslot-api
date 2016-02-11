@@ -1,6 +1,11 @@
 module GroupActivity
   include Activity
 
+  # TMP: temporary turns off all group activities
+  private def activity_is_valid?
+    !Rails.env.production?
+  end
+
   private def activity_type
     'Group'
   end
