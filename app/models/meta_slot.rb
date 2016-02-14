@@ -8,7 +8,7 @@ class MetaSlot < ActiveRecord::Base
                             start_date.to_datetime.at_end_of_day
                           else
                             start_date.to_datetime.next_day.at_midday
-      end
+                          end
       metaslot.open_end = true
     end
   end
@@ -31,8 +31,7 @@ class MetaSlot < ActiveRecord::Base
     Airbrake.notify(exception,
                     invalid_candy_location_muid: location_uid,
                     global_slot_id: id,
-                    global_slot_title: title,
-                    exception: exception)
+                    global_slot_title: title)
     nil
   end
 
@@ -54,9 +53,11 @@ class MetaSlot < ActiveRecord::Base
     meta_id = meta_params[:meta_slot_id]
     MetaSlot.includes(:creator).where(id: meta_id).first_or_create do |meta_slot|
       meta_slot.update(meta_params.except(:ios_location))
-      return meta_slot if meta_params[:ios_location].nil?
 
-      ios_params = meta_params[:ios_location]
+      return meta_slot if meta_params[:ios_location].nil? &&
+                          meta_params[:location_uid].nil?
+
+      ios_params = meta_params[:ios_location] || meta_slot.location.as_json
       if ios_params[:latitude].present? && ios_params[:longitude].present?
         ios_location = IosLocation.find_by(
           latitude: ios_params[:latitude], longitude: ios_params[:longitude])

@@ -32,13 +32,26 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
-      let(:muid) { attributes_for(:global_slot)[:muid] }
+      let(:gs_data) { attributes_for(:global_slot) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: muid },
+             { predecessor: gs_data[:muid] },
              auth_header
         expect(response).to have_http_status :created
+      end
+
+      it "adds the candy store location to the local db", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:muid] },
+               auth_header
+        }.to change(IosLocation, :count)
+        new_slot = GlobalSlot.last
+        new_location = IosLocation.last
+
+        expect(new_slot.ios_location.as_json).to eq new_location.as_json
+        expect(new_slot.ios_location.uuid).to eq new_slot.location_uid
       end
     end
 

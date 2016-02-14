@@ -1,5 +1,5 @@
 class IosLocation < ActiveRecord::Base
-  before_create { self.uuid = SecureRandom.uuid }
+  before_create :set_uuid, if: :uuid_nil?
   after_commit AuditLog
 
   belongs_to :creator, class_name: User
@@ -18,4 +18,12 @@ class IosLocation < ActiveRecord::Base
   validates :in_land_water, length: { maximum: 255 }, allow_nil: true
   validates :ocean, length: { maximum: 255 }, allow_nil: true
   validates :areas_of_interest, length: { maximum: 255 }, allow_nil: true
+
+  private def set_uuid
+    self.uuid = SecureRandom.uuid
+  end
+
+  private def uuid_nil?
+    uuid.nil?
+  end
 end
