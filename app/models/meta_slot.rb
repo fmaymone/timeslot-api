@@ -25,14 +25,9 @@ class MetaSlot < ActiveRecord::Base
   validates :end_date, presence: true
   validate :enddate_is_after_startdate
 
+  # TODO: refactor this
   def location
-    ios_location || GlobalSlotConsumer.new.location(location_uid)
-  rescue => exception
-    Airbrake.notify(exception,
-                    invalid_candy_location_muid: location_uid,
-                    global_slot_id: id,
-                    global_slot_title: title)
-    nil
+    ios_location
   end
 
   def unregister
@@ -57,7 +52,9 @@ class MetaSlot < ActiveRecord::Base
       return meta_slot if meta_params[:ios_location].nil? &&
                           meta_params[:location_uid].nil?
 
-      ios_params = meta_params[:ios_location] || meta_slot.location.as_json
+      ios_params = meta_params[:ios_location] ||
+                   GlobalSlotConsumer.new.location(meta_slot.location_uid).as_json
+
       if ios_params[:latitude].present? && ios_params[:longitude].present?
         ios_location = IosLocation.find_by(
           latitude: ios_params[:latitude], longitude: ios_params[:longitude])
