@@ -19,8 +19,8 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: FRIEND, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots.unprivate,
-                             user.re_slots.unprivate]
+      ).to eq_sql_query_for [user.std_slots.unprivate]
+                             # user.re_slots.unprivate]
                              # current_user.shared_group_slots(user)]
     end
 
@@ -29,9 +29,9 @@ RSpec.describe PresentableSlots, type: :service do
         described_class.call(relationship: FOAF, user: user,
                              current_user: current_user)
       ).to eq_sql_query_for [user.std_slots_public,
-                             user.std_slots_foaf,
-                             user.re_slots_public,
-                             user.re_slots_foaf]
+                             user.std_slots_foaf]
+                             # user.re_slots_public,
+                             # user.re_slots_foaf]
                              # current_user.shared_group_slots(user)]
     end
 
@@ -39,8 +39,8 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: STRANGER, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots_public,
-                             user.re_slots_public]
+      ).to eq_sql_query_for [user.std_slots_public]
+                             # user.re_slots_public]
                              # current_user.shared_group_slots(user)]
     end
 
@@ -48,8 +48,8 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: STRANGER, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots_public,
-                             user.re_slots_public]
+      ).to eq_sql_query_for [user.std_slots_public]
+                             # user.re_slots_public]
     end
   end
 end

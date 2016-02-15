@@ -11,10 +11,10 @@ RSpec.describe SlotsCollector, type: :service do
     let!(:friends_stdslot) { create(:std_slot_friends, owner: other) }
     let!(:private_stdslot) { create(:std_slot_private, owner: other) }
 
-    let!(:public_reslot) { create(:re_slot_public, slotter: other) }
-    let!(:foaf_reslot) { create(:re_slot_foaf, slotter: other) }
-    let!(:friends_reslot) { create(:re_slot_friends, slotter: other) }
-    let!(:private_reslot) { create(:re_slot_private, slotter: other) }
+    # let!(:public_reslot) { create(:re_slot_public, slotter: other) }
+    # let!(:foaf_reslot) { create(:re_slot_foaf, slotter: other) }
+    # let!(:friends_reslot) { create(:re_slot_friends, slotter: other) }
+    # let!(:private_reslot) { create(:re_slot_private, slotter: other) }
 
     context 'friend' do
       let!(:other) do
@@ -31,10 +31,10 @@ RSpec.describe SlotsCollector, type: :service do
         expect(slots).to include friends_stdslot
         expect(slots).not_to include private_stdslot
 
-        expect(slots).to include public_reslot
-        expect(slots).to include foaf_reslot
-        expect(slots).to include friends_reslot
-        expect(slots).not_to include private_reslot
+        # expect(slots).to include public_reslot
+        # expect(slots).to include foaf_reslot
+        # expect(slots).to include friends_reslot
+        # expect(slots).not_to include private_reslot
       end
     end
 
@@ -55,10 +55,10 @@ RSpec.describe SlotsCollector, type: :service do
         expect(slots).not_to include friends_stdslot
         expect(slots).not_to include private_stdslot
 
-        expect(slots).to include public_reslot
-        expect(slots).to include foaf_reslot
-        expect(slots).not_to include friends_reslot
-        expect(slots).not_to include private_reslot
+        # expect(slots).to include public_reslot
+        # expect(slots).to include foaf_reslot
+        # expect(slots).not_to include friends_reslot
+        # expect(slots).not_to include private_reslot
       end
     end
 
@@ -73,10 +73,10 @@ RSpec.describe SlotsCollector, type: :service do
         expect(slots).not_to include friends_stdslot
         expect(slots).not_to include private_stdslot
 
-        expect(slots).to include public_reslot
-        expect(slots).not_to include foaf_reslot
-        expect(slots).not_to include friends_reslot
-        expect(slots).not_to include private_reslot
+        # expect(slots).to include public_reslot
+        # expect(slots).not_to include foaf_reslot
+        # expect(slots).not_to include friends_reslot
+        # expect(slots).not_to include private_reslot
       end
     end
 
@@ -91,10 +91,10 @@ RSpec.describe SlotsCollector, type: :service do
         expect(slots).not_to include friends_stdslot
         expect(slots).not_to include private_stdslot
 
-        expect(slots).to include public_reslot
-        expect(slots).not_to include foaf_reslot
-        expect(slots).not_to include friends_reslot
-        expect(slots).not_to include private_reslot
+        # expect(slots).to include public_reslot
+        # expect(slots).not_to include foaf_reslot
+        # expect(slots).not_to include friends_reslot
+        # expect(slots).not_to include private_reslot
       end
     end
   end
@@ -113,10 +113,10 @@ RSpec.describe SlotsCollector, type: :service do
     let!(:friends_stdslot) { create(:std_slot_foaf, owner: friends.third) }
     let!(:private_stdslot) { create(:std_slot_private, owner: friends.last) }
 
-    let!(:public_reslot) { create(:re_slot_public, slotter: friends.last) }
-    let!(:foaf_reslot) { create(:re_slot_foaf, slotter: friends.last) }
-    let!(:friends_reslot) { create(:re_slot_friends, slotter: friends.last) }
-    let!(:private_reslot) { create(:re_slot_private, slotter: friends.last) }
+    # let!(:public_reslot) { create(:re_slot_public, slotter: friends.last) }
+    # let!(:foaf_reslot) { create(:re_slot_foaf, slotter: friends.last) }
+    # let!(:friends_reslot) { create(:re_slot_friends, slotter: friends.last) }
+    # let!(:private_reslot) { create(:re_slot_private, slotter: friends.last) }
 
     it "returns all non-private slots & reslots from friends" do
       slots = SlotsCollector.new.slots_from_friends(user: user)
@@ -126,10 +126,10 @@ RSpec.describe SlotsCollector, type: :service do
       expect(slots).to include friends_stdslot
       expect(slots).not_to include private_stdslot
 
-      expect(slots).to include public_reslot
-      expect(slots).to include foaf_reslot
-      expect(slots).to include friends_reslot
-      expect(slots).not_to include private_reslot
+      # expect(slots).to include public_reslot
+      # expect(slots).to include foaf_reslot
+      # expect(slots).to include friends_reslot
+      # expect(slots).not_to include private_reslot
     end
   end
 end

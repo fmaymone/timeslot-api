@@ -7,24 +7,26 @@ class PresentableSlots
       # includes public, friend-visible and friend-of-friend (foaf) visible
       # std_slots, public, friend-visible and foaf-visible
       # reslots and shared group_slots (between user and current_user)
-      [user.std_slots.unprivate,
-       user.re_slots.unprivate]
+      [user.std_slots.unprivate]
+       # user.re_slots.unprivate]
        # current_user.shared_group_slots(user)]
     when FOAF
       # includes public and friend-of-friend (foaf) visible std_slots,
       # public and friend-of-friend-visible
       # reslots and shared group_slots (between user and current_user)
-      [user.std_slots_public, user.std_slots_foaf,
-       user.re_slots_public, user.re_slots_foaf]
+      [user.std_slots_public, user.std_slots_foaf]
+       # user.re_slots_public, user.re_slots_foaf]
        # current_user.shared_group_slots(user)]
     when STRANGER
       # includes public std_slots, public reslots and shared
       # group_slots between user and current_user
-      [user.std_slots_public, user.re_slots_public]
+      [user.std_slots_public]
+      # user.re_slots_public]
        # current_user.shared_group_slots(user)]
     when VISITOR
       # includes public std_slots and public reslots
-      [user.std_slots_public, user.re_slots_public]
+      [user.std_slots_public]
+      # user.re_slots_public]
     end
   end
 
@@ -40,17 +42,4 @@ class PresentableSlots
       [user.std_slots_public]
     end
   end
-
-  def self.re_slots(relationship:, user:)
-    case relationship
-    when ME
-      [user.re_slots]
-    when FRIEND
-      [user.re_slots.unprivate]
-    when FOAF
-      [user.re_slots_public, user.re_slots_foaf]
-    when STRANGER, VISITOR
-      [user.re_slots_public]
-    end
-  end
-end
+ end
