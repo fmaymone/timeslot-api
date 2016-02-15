@@ -46,22 +46,6 @@ module V1
       end
     end
 
-    # POST /v1/reslot
-    def create_reslot
-      predecessor = BaseSlot.get(re_params)
-      authorize predecessor
-
-      @slot = ReSlot.create_from_slot(predecessor: predecessor,
-                                      slotter: current_user,
-                                      visibility: visibility)
-      if @slot.save
-        render :create, status: :created, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot
@@ -83,23 +67,6 @@ module V1
       @slot.update_from_params(meta: meta_params, visibility: visibility,
                                media: media_params, notes: note_param,
                                alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
-    # PATCH /v1/reslot/1
-    def update_reslot
-      @slot = current_user.re_slots.find(params[:id])
-      authorize @slot
-
-      # TODO: this should only be allowed for tagged users
-      @slot.parent.update_from_params(media: media_params, notes: note_param,
-                                      user: current_user)
-      @slot.update_from_params(alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
         render :show, locals: { slot: @slot }
@@ -325,10 +292,6 @@ module V1
     private def enforce_visibility
       params.require :visibility
       visibility
-    end
-
-    private def re_params
-      params.require(:predecessor_id)
     end
 
     private def meta_params
