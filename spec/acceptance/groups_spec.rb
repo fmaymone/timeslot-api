@@ -642,4 +642,58 @@ resource "Groups" do
       end
     end
   end
+
+  # global slot lists
+  post "/v1/groups/global_list" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_uuid, "UUID of the group to add slots to", required: true
+    parameter :group_name, "Name of the group to add slots to", required: true
+    parameter :group_image, "Image URL for the group image"
+    parameter :global_slots, "Array with muid's of GlobalSlots"
+
+    let(:group) { create(:group) }
+
+    let(:group_uuid) { group.uuid }
+    let(:group_name) { "Autokino an der alten Eiche" }
+    let(:group_image) { "http://faster.pussycat" }
+    let(:global_slots) { [attributes_for(:global_slot)[:muid]] }
+
+    describe "create new public list and add GlobalSlots" do
+
+      example "Add GlobalSlots to new or existing public group",
+              document: :v1 do
+        explanation "If no public group/list with the given UUID exists, " \
+                    "one is created and the name and image is set and the " \
+                    "given GlobalSlots are added to the new list.\n\n" \
+                    "If a public group/list with the UUID exists, this one " \
+                    "is used to add the given GlobalSlots to it.\n\n" \
+                    "The GlobalSlots which aren't yet in the backend db " \
+                    "are loaded via the candy shop.\n\n" \
+                    "The User which is used to submit the data is set as " \
+                    "creator for newly created objects. This user must be " \
+                    "a known GlobalSlot source in the backend.\n\n" \
+                    "returns 200 if slots were successfully added.\n\n" \
+                    "returns 422 if list with given UUID exists but " \
+                    "name doesn't match.\n\n" \
+                    "returns 422 if requiered parameters are missing or invalid."
+
+        group_counter = Group.count
+        do_request
+
+        expect(Group.count).to eq group_counter + 1
+        autokino = Group.last
+        expect(autokino.uuid).to eq group_uuid
+        expect(autokino.name).to eq group_name
+        expect(autokino.image).to eq group_image
+
+        expect(autokino.slots).not_to be_empty
+        gs = GlobalSlot.find_by uuid: global_slots.first
+        expect(autokino.slots).to include gs
+
+        expect(response_status).to eq(200)
+      end
+    end
+  end
 end
