@@ -113,7 +113,7 @@ resource "Feeds", :activity, :async do
         expect(activity_slot).to have_key("notes")
         expect(activity_slot).to have_key("likes")
         expect(activity_slot).to have_key("commentsCounter")
-        expect(activity_slot).to have_key("reslotsCounter")
+        # expect(activity_slot).to have_key("reslotsCounter")
         expect(activity_slot).to have_key("visibility")
         expect(activity_slot).to have_key("media")
         expect(activity_slot['creator']).to have_key("username")
@@ -125,7 +125,7 @@ resource "Feeds", :activity, :async do
         expect(activity_user).to have_key("username")
         expect(activity_user).to have_key("image")
         expect(activity_user).to have_key("friendsCount")
-        expect(activity_user).to have_key("reslotCount")
+        # expect(activity_user).to have_key("reslotCount")
         expect(activity_user).to have_key("slotCount")
         expect(activity_user['username']).to eq(actor.username)
 

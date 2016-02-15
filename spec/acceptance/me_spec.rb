@@ -35,7 +35,7 @@ resource "Me" do
       # default user response fields
       expect(json).to have_key "location"
       expect(json).to have_key "slotCount"
-      expect(json).to have_key "reslotCount"
+      # expect(json).to have_key "reslotCount"
       expect(json).to have_key "friendsCount"
       # current user response fields
       expect(json).to have_key "lang"
@@ -83,7 +83,7 @@ resource "Me" do
       expect(json['image']).to eq current_user.image
       expect(json['location']['name']).to eq current_user.location.name
       expect(json['slotCount']).to eq current_user.std_slots.active.count
-      expect(json['reslotCount']).to eq current_user.re_slots.active.count
+      # expect(json['reslotCount']).to eq current_user.re_slots.active.count
       expect(json['friendsCount']).to eq current_user.friends_count
 
       expect(json['lang']).to eq current_user.lang
@@ -173,7 +173,7 @@ resource "Me" do
                                    start_date: Time.zone.tomorrow.next_week) }
         let!(:std_slot_2) { create(:std_slot_friends, owner: current_user,
                                    start_date: Time.zone.today.next_week) }
-        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+        # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
         let!(:upcoming_slot) { create(:std_slot_private, owner: current_user,
                                       start_date: Time.zone.tomorrow) }
 
@@ -193,8 +193,8 @@ resource "Me" do
 
           # first request without a cursor
           expect(response_status).to eq(200)
-          slot_count = current_user.std_slots.count +
-                       current_user.re_slots.count
+          slot_count = current_user.std_slots.count
+                       # current_user.re_slots.count
           expect(json).to have_key 'paging'
           expect(json['paging']).to have_key('after')
           expect(json['paging']['after']).not_to be nil
@@ -235,8 +235,8 @@ resource "Me" do
           expect(json['paging']['filter']).to be nil
           expect(json['paging']['after']).to be nil
           expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
-          expect(response_body).to include(re_slots.first.title)
-          expect(response_body).to include(re_slots.last.title)
+          # expect(response_body).to include(re_slots.first.title)
+          # expect(response_body).to include(re_slots.last.title)
 
           expect(json).to have_key 'data'
           response_slot_count += json['data'].length
@@ -267,9 +267,10 @@ resource "Me" do
       describe "Get slots" do
         let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
         let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
-        let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+        # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
 
         example "Get slots - no pagination", document: :v1 do
+          # TODO: fix wording
           explanation "Returns an array which includes all StandardSlots &" \
                       " ReSlots the current_user has created including" \
                       " the slot settings (alerts).\n\n" \
@@ -278,8 +279,8 @@ resource "Me" do
           do_request
 
           expect(response_status).to eq(200)
-          slot_count = current_user.std_slots.count +
-                       current_user.re_slots.count
+          slot_count = current_user.std_slots.count
+                       # current_user.re_slots.count
           expect(json.length).to eq slot_count
           expect(json.first).to have_key("id")
           expect(json.first).to have_key("title")
@@ -298,7 +299,7 @@ resource "Me" do
           expect(json.first).to have_key("media")
           expect(response_body).to include(std_slot_1.title)
           expect(response_body).to include(std_slot_2.title)
-          expect(response_body).to include(re_slots.first.title)
+          # expect(response_body).to include(re_slots.first.title)
         end
       end
     end
@@ -328,7 +329,7 @@ resource "Me" do
 
     let(:bob) { create(:user, :with_private_slot,
                        :with_friend_slot, :with_public_slot) }
-    let!(:re_slot) { create(:re_slot, slotter: bob) }
+    # let!(:re_slot) { create(:re_slot, slotter: bob) }
     let!(:friendships) {
       create(:friendship, :established,
              user: create(:user, :with_friend_slot),
@@ -340,6 +341,7 @@ resource "Me" do
     }
 
     example "Get slots from friends", document: :v1 do
+      # TODO: fix wording
       explanation "Returns an array which includes all non-private " \
                   "StandardSlots &" \
                   " ReSlots from all friends of the current user.\n\n" \
@@ -352,7 +354,7 @@ resource "Me" do
       current_user.friends.each do |friend|
         slot_count += friend.std_slots_friends.count
         slot_count += friend.std_slots_public.count
-        slot_count += friend.re_slots.count
+        # slot_count += friend.re_slots.count
       end
       expect(json.length).to eq slot_count
     end
