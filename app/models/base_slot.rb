@@ -17,15 +17,10 @@ class BaseSlot < ActiveRecord::Base
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
                  StdSlotFoaf: 4,
-                 ReSlotPrivate: 5,
-                 ReSlotFriends: 6,
-                 ReSlotFoaf: 7,
-                 ReSlotPublic: 22, # maintain backwards compatibility
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
-                 StdSlot: 20,
-                 # ReSlot: 23,
+                 StdSlot: 20
                }.freeze
 
   enum slot_type: SLOT_TYPES
@@ -45,8 +40,6 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  has_many :re_slots, -> { includes(:slotter) },
-           foreign_key: :parent_id, inverse_of: :parent
 
   has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
   has_many :slot_groups, -> { merge Containership.active },
@@ -159,12 +152,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    like = if self.class <= ReSlot
-             Like.find_by(slot: parent, user: user)
-           else
-             Like.find_by(slot: self, user: user)
-           end
-
+    like = Like.find_by(slot: self, user: user)
     unless like
       like = likes.create(user: user)
       like.create_activity
@@ -200,12 +188,12 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def update_user_tags(current_user, user_tags)
-    unless user_tags.nil?
-      reslotters = ReSlot.where(parent_id: id).pluck(:slotter_id)
-      User.find(user_tags - reslotters).each do |user|
-        ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
-      end
-    end
+    # unless user_tags.nil?
+    #   reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
+    #   User.find(user_tags - reslotters).each do |user|
+    #     ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
+    #   end
+    # end
   end
 
   def delete
@@ -221,10 +209,6 @@ class BaseSlot < ActiveRecord::Base
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
-
-    # NOTE: Actually we remove all reslots if one
-    # of the parent/predecessor slot was removed
-    re_slots.each(&:delete)
 
     prepare_for_deletion
     ts_soft_delete

@@ -20,7 +20,6 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
   it { is_expected.to have_many(:comments).inverse_of(:slot) }
-  it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }

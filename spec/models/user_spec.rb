@@ -14,7 +14,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:updated_at) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
-  it { is_expected.to respond_to(:re_slots) }
   it { is_expected.to respond_to(:devices) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
@@ -31,11 +30,6 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:std_slots_friends).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_foaf).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_public).inverse_of(:owner) }
-  it { is_expected.to have_many(:re_slots).inverse_of(:slotter) }
-  it { is_expected.to have_many(:re_slots_private).inverse_of(:slotter) }
-  it { is_expected.to have_many(:re_slots_friends).inverse_of(:slotter) }
-  it { is_expected.to have_many(:re_slots_foaf).inverse_of(:slotter) }
-  it { is_expected.to have_many(:re_slots_public).inverse_of(:slotter) }
   it { is_expected.to have_many(:initiated_friendships).inverse_of(:user) }
   it { is_expected.to have_many(:received_friendships).inverse_of(:friend) }
   it { is_expected.to have_many(:devices).inverse_of(:user) }
@@ -202,14 +196,6 @@ RSpec.describe User, type: :model do
       end
     end
 
-    context "user has re_slot with the specified meta_slot" do
-      let!(:re_slot) { create(:re_slot, meta_slot: meta_slot, slotter: user) }
-
-      it "returns reslot" do
-        expect(user.active_slots(meta_slot)).to include_slot re_slot
-      end
-    end
-
     # context "user has group_slot with the specified meta_slot" do
     #   let(:group) { create(:group) }
     #   let!(:membership) {
@@ -276,27 +262,21 @@ RSpec.describe User, type: :model do
     let!(:current_user) { create(:user) }
     let(:friend) do
       friend = create(:user, :with_private_slot, :with_friend_slot,
-                      :with_foaf_slot, :with_public_slot,
-                      :with_private_reslot, :with_friend_reslot,
-                      :with_foaf_reslot, :with_public_reslot)
+                      :with_foaf_slot, :with_public_slot)
       create(:friendship, :established, user: current_user, friend: friend)
       friend
     end
     let(:foaf) do
       friend = create(:user)
       foaf = create(:user, :with_private_slot, :with_friend_slot,
-                    :with_foaf_slot, :with_public_slot,
-                    :with_private_reslot, :with_friend_reslot,
-                    :with_foaf_reslot, :with_public_reslot)
+                    :with_foaf_slot, :with_public_slot)
       create(:friendship, :established, user: current_user, friend: friend)
       create(:friendship, :established, user: foaf, friend: friend)
       foaf
     end
     let!(:stranger) do
       stranger = create(:user, :with_private_slot, :with_friend_slot,
-                        :with_foaf_slot, :with_public_slot,
-                        :with_private_reslot, :with_friend_reslot,
-                        :with_foaf_reslot, :with_public_reslot)
+                        :with_foaf_slot, :with_public_slot)
       create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
       stranger
     end
@@ -305,12 +285,6 @@ RSpec.describe User, type: :model do
       expect(friend.visible_slots_counter(current_user, StdSlot)).to eq 3
       expect(foaf.visible_slots_counter(current_user, StdSlot)).to eq 2
       expect(stranger.visible_slots_counter(current_user, StdSlot)).to eq 1
-    end
-
-    it "returns the number of reslots current_user can see from other user" do
-      expect(friend.visible_slots_counter(current_user, ReSlot)).to eq 3
-      expect(foaf.visible_slots_counter(current_user, ReSlot)).to eq 2
-      expect(stranger.visible_slots_counter(current_user, ReSlot)).to eq 1
     end
   end
 

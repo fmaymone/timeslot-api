@@ -34,17 +34,6 @@ class User < ActiveRecord::Base
   has_many :std_slots_public, class_name: StdSlotPublic,
            foreign_key: :owner_id, inverse_of: :owner
 
-  has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
-
-  has_many :re_slots_private, class_name: ReSlotPrivate,
-           foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :re_slots_friends, class_name: ReSlotFriends,
-           foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :re_slots_foaf, class_name: ReSlotFoaf,
-           foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :re_slots_public, class_name: ReSlotPublic,
-           foreign_key: :slotter_id, inverse_of: :slotter
-
   has_many :passengerships, foreign_key: :user_id, inverse_of: :user
   has_many :my_calendar_slots, -> { merge Passengership.active },
            through: :passengerships, source: :slot,
@@ -250,7 +239,6 @@ class User < ActiveRecord::Base
     slots = []
     slots.push(*std_slots.active.where(meta_slot: meta_slot))
     # slots.push(*group_slots.active.where(meta_slot: meta_slot))
-    slots.push(*re_slots.active.where(meta_slot: meta_slot))
   end
 
   # def shared_group_slots(user)
@@ -488,7 +476,6 @@ class User < ActiveRecord::Base
   private def multiple_representations(slot)
     representations = []
     representations.push(*std_slots.where(meta_slot: slot.meta_slot))
-    representations.push(*re_slots.where(meta_slot: slot.meta_slot))
     # representations.push(*group_slots.where(meta_slot: slot.meta_slot))
     representations
   end

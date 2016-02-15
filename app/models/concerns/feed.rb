@@ -137,8 +137,8 @@ module Feed
 
     def remove_user_from_feeds(user:, notify:)
       # NOTE: For this step we need to fetch all objects related to target feeds
-      targets = user.std_slots +
-                user.re_slots
+      targets = user.std_slots
+                # user.re_slots
                 # user.group_slots
                 #user.friendships +
                 #user.memberships

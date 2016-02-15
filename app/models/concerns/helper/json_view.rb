@@ -94,24 +94,9 @@ module JSONView
     json['media'] = media
 
     # # slot additionals
-    # json['groupId'] = slot.group.id if slot.class <= GroupSlot
-
-    # if slot.try(:group)
-    #   json['group'] = { id: slot.group.id }
-    #   json['visibility'] = slot.visibility
-    # elsif slot.class <= ReSlot
-    if slot.class <= ReSlot
-      json['slotter'] = { id: slot.slotter_id }
-      json['parent'] = { id: slot.parent_id }
-      json['visibility'] = slot.parent.try(:visibility)
+    json['visibility'] = slot.visibility
     # user must be the current user for alerts
-    # json['settings'] = { alerts: slot.slotter.alerts(slot) }
-    elsif slot.class < StdSlot
-      json['reslotsCounter'] = slot.re_slots_count
-      json['visibility'] = slot.visibility
-      # user must be the current user for alerts
-      # json['settings'] = { alerts: user.alerts(slot) }
-    end
+    # json['settings'] = { alerts: user.alerts(slot) }
 
     json['likes'] = slot.likes_count
     json['commentsCounter'] = slot.comments_count
@@ -144,7 +129,7 @@ module JSONView
     }
 
     json['slotCount'] = user.visible_slots_counter(friend, StdSlot)
-    json['reslotCount'] = user.visible_slots_counter(friend, ReSlot)
+    # json['reslotCount'] = user.visible_slots_counter(friend, ReSlot)
     json['friendsCount'] = user.friends_count
 
     if friend
