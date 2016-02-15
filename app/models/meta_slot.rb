@@ -26,7 +26,7 @@ class MetaSlot < ActiveRecord::Base
   validate :enddate_is_after_startdate
 
   def location
-    GlobalSlotConsumer.new.location(location_uid)
+    ios_location || GlobalSlotConsumer.new.location(location_uid)
   rescue => exception
     Airbrake.notify(exception,
                     invalid_candy_location_muid: location_uid,
