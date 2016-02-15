@@ -70,6 +70,20 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -102,7 +116,6 @@ CREATE TABLE base_slots (
     slot_type integer NOT NULL,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
     type text NOT NULL
 );
 
@@ -304,15 +317,14 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -653,23 +665,6 @@ ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
 
 
 --
--- Name: re_slots; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE re_slots (
-    predecessor_id bigint NOT NULL,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
-    slotter_id bigint NOT NULL,
-    parent_id bigint NOT NULL,
-    tagged_from bigint
-)
-INHERITS (base_slots);
-
-
---
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -890,34 +885,6 @@ ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
-
-
---
--- Name: likes_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN likes_count SET DEFAULT 0;
-
-
---
--- Name: comments_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN comments_count SET DEFAULT 0;
-
-
---
--- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
 ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_settings_id_seq'::regclass);
 
 
@@ -940,13 +907,6 @@ ALTER TABLE ONLY std_slots ALTER COLUMN likes_count SET DEFAULT 0;
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
-
-
---
--- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY std_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
 
 
 --
@@ -1233,27 +1193,6 @@ CREATE UNIQUE INDEX index_passengerships_on_user_id_and_slot_id ON passengership
 
 
 --
--- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_re_slots_on_meta_slot_id ON re_slots USING btree (meta_slot_id);
-
-
---
--- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_re_slots_on_predecessor_id ON re_slots USING btree (predecessor_id);
-
-
---
--- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
-
-
---
 -- Name: index_slot_settings_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1515,4 +1454,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160130125422');
 INSERT INTO schema_migrations (version) VALUES ('20160131005126');
 
 INSERT INTO schema_migrations (version) VALUES ('20160209102620');
+
+INSERT INTO schema_migrations (version) VALUES ('20160215135746');
 
