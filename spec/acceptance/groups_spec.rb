@@ -668,17 +668,20 @@ resource "Groups" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_uuid, "UUID of the group to add slots to", required: true
-    parameter :group_name, "Name of the group to add slots to", required: true
-    parameter :group_image, "Image URL for the group image"
-    parameter :global_slots, "Array with muid's of GlobalSlots"
+    parameter :list, "hash witch contains the payload", required: true
+    parameter :muid, "UUID of the group to add slots to",
+              required: true, scope: :list
+    parameter :name, "Name of the group to add slots to",
+              required: true, scope: :list
+    parameter :image, "Image URL for the group image", scope: :list
+    parameter :slots, "Array with muid's of GlobalSlots", scope: :list
 
     let(:group) { attributes_for(:group) }
 
-    let(:group_uuid) { group[:uuid] }
-    let(:group_name) { "Autokino an der alten Eiche" }
-    let(:group_image) { "http://faster.pussycat" }
-    let(:global_slots) { [attributes_for(:global_slot)[:muid]] }
+    let(:muid) { group[:uuid] }
+    let(:name) { "Autokino an der alten Eiche" }
+    let(:image) { "http://faster.pussycat" }
+    let(:slots) { [attributes_for(:global_slot)[:muid]] }
 
     describe "create new public list and add GlobalSlots", :vcr do
       example "Add GlobalSlots to new or existing public group",
@@ -703,13 +706,13 @@ resource "Groups" do
 
         expect(Group.count).to eq group_counter + 1
         autokino = Group.last
-        expect(autokino.uuid).to eq group_uuid
-        expect(autokino.name).to eq group_name
+        expect(autokino.uuid).to eq muid
+        expect(autokino.name).to eq name
         expect(autokino.public?).to be true
-        expect(autokino.image).to eq group_image
+        expect(autokino.image).to eq image
 
         expect(autokino.slots).not_to be_empty
-        gs = GlobalSlot.find_by muid: global_slots.first
+        gs = GlobalSlot.find_by muid: slots.first
         expect(autokino.slots).to include gs
 
         expect(response_status).to eq(200)
