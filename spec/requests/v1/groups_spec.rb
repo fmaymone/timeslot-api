@@ -622,4 +622,50 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
   end
+
+  # global slot lists
+  describe "POST /v1/groups/global_list", :seed do
+    let(:group) { attributes_for(:group) }
+    let(:params) { { group_uuid: group.uuid, group_name: 'Rephlex' } }
+    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
+    describe "existing public list with different name" do
+      let(:group) { create(:group) }
+
+      it "returns error for non-matching group name" do
+        post "/v1/groups/global_list", params, auth_header
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
+    describe "existing global slot" do
+      let!(:global_slot) { create(:global_slot) }
+      let(:params) { { group_uuid: group[:uuid],
+                       group_name: 'Rephlex',
+                       global_slots: [global_slot.muid] } }
+
+      it "adds the slot to the list" do
+        post "/v1/groups/global_list", params, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include global_slot
+      end
+    end
+
+    describe "global slot already in list" do
+      let(:group) { create(:group, public: true, owner: current_user) }
+      let(:global_slot) { create(:global_slot) }
+      let!(:containership) {
+        create(:containership, slot: global_slot, group: group) }
+      let(:params) { { group_uuid: group.uuid,
+                       group_name: group.name,
+                       global_slots: [global_slot.muid] } }
+
+      it "adds the slot to the list" do
+        expect(Group.last.slots).to include global_slot
+        post "/v1/groups/global_list", params, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include global_slot
+      end
+    end
+  end
 end

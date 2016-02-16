@@ -167,6 +167,23 @@ module V1
       end
     end
 
+    # POST /v1/groups/global_list
+    def global_list
+      authorize current_user
+
+      group = Group.find_or_create_by!(uuid: params[:group_uuid],
+                                       name: params[:group_name]) do |new_group|
+        new_group.image = params[:group_image] if params[:group_image].present?
+        new_group.owner = current_user
+        new_group.public = true
+      end
+
+      authorize group
+      group.add_slots params[:global_slots]
+
+      head :ok
+    end
+
     private def group_params
       params.permit(:name, :image, :public, :members_can_post, :members_can_invite)
     end
