@@ -170,4 +170,43 @@ describe GroupPolicy do
       end
     end
   end
+
+  permissions :global_list? do
+    let(:user) { create(:user) }
+
+    context "group is public" do
+      let(:group) { create(:group, public: true) }
+
+      context "current_user is group owner" do
+        let(:group) { create(:group, public: true, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, group)
+        end
+      end
+
+      context "current_user is group member" do
+        let!(:membership) {
+          create(:membership, :active, group: group, user: user)
+        }
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+
+      context "current_user is not group owner" do
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+    end
+
+    context "group is not public" do
+      let(:group) { create(:group, public: false) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+  end
 end

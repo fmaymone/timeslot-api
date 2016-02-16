@@ -32,4 +32,22 @@ describe UserPolicy do
       end
     end
   end
+
+  permissions :global_list? do
+    context "current_user has role 'crawler_source'", :seed do
+      let(:user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
+      it "allows access" do
+        expect(subject).to permit(user, User)
+      end
+    end
+
+    context "current_user is a basic user" do
+      let(:user) { create(:user) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, User)
+      end
+    end
+  end
 end

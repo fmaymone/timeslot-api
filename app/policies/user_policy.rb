@@ -48,4 +48,10 @@ class UserPolicy < ApplicationPolicy
   def reset_password?
     true
   end
+
+  # true if the request is made by an existing crawler source
+  def global_list?
+    return true if current_user.crawler_source?
+    false
+  end
 end

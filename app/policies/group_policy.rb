@@ -103,4 +103,11 @@ class GroupPolicy < ApplicationPolicy
   def member_settings?
     show?
   end
+
+  # true if the group is public and belongs to
+  # the crawler source making the request
+  def global_list?
+    return true if group.public? && group.owner == current_user
+    false
+  end
 end

@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   namespace :v1, defaults: { format: :json } do
     # TODO: rename connect routes
     # scope :connect do
@@ -106,6 +105,7 @@ Rails.application.routes.draw do
       delete ':group_uuid/members/:user_id', to: 'groups#kick',
              constraints: { user_id: /\d+/ }
       patch ':group_uuid/members', to: 'groups#member_settings'
+      post 'global_list', to: 'groups#global_list'
     end
 
     scope :feed do
