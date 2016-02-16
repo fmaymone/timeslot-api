@@ -58,13 +58,22 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :name, "Name of group (max. 255 characters)", required: true
-    parameter :membersCanPost, "Can subscribers post?"
-    parameter :membersCanInvite, "Can subscribers invite friends?"
+    parameter :image, "Image for the group"
+    parameter :public,
+              "Is the group public? (true/false), default: 'false'"
+    parameter :membersCanPost,
+              "Can members add slots? (true/false), default: 'false'"
+    parameter :membersCanInvite,
+              "Can members add other users? (true/false), default: 'false'"
     parameter :invitees, "Array of User IDs to be added to the group"
 
     include_context "default group response fields"
 
     let(:name) { "foo" }
+    let(:image) { "salvador dali" }
+    let(:membersCanPost) { true }
+    let(:membersCanInvite) { true }
+    let(:public) { true }
     let(:invitees) { create_list(:user, 3).collect(&:id) }
 
     example "Create a new group", document: :v1 do
@@ -77,6 +86,15 @@ resource "Groups" do
 
       expect(response_status).to eq(201)
       expect(json).to have_key("id")
+      expect(json).to have_key("name")
+      expect(json).to have_key("public")
+      expect(json).to have_key("membersCanPost")
+      expect(json).to have_key("membersCanInvite")
+      expect(json["name"]).to eq name
+      expect(json["image"]).to eq image
+      expect(json["public"]).to eq public
+      expect(json["membersCanPost"]).to eq membersCanPost
+      expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
       expect(group.owner).to eq current_user
       expect(group.members).to include current_user
@@ -644,7 +662,9 @@ resource "Groups" do
   end
 
   # global slot lists
-  post "/v1/groups/global_list" do
+  post "/v1/groups/global_list", :seed do
+    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
@@ -653,15 +673,14 @@ resource "Groups" do
     parameter :group_image, "Image URL for the group image"
     parameter :global_slots, "Array with muid's of GlobalSlots"
 
-    let(:group) { create(:group) }
+    let(:group) { attributes_for(:group) }
 
-    let(:group_uuid) { group.uuid }
+    let(:group_uuid) { group[:uuid] }
     let(:group_name) { "Autokino an der alten Eiche" }
     let(:group_image) { "http://faster.pussycat" }
     let(:global_slots) { [attributes_for(:global_slot)[:muid]] }
 
-    describe "create new public list and add GlobalSlots" do
-
+    describe "create new public list and add GlobalSlots", :vcr do
       example "Add GlobalSlots to new or existing public group",
               document: :v1 do
         explanation "If no public group/list with the given UUID exists, " \
@@ -672,7 +691,7 @@ resource "Groups" do
                     "The GlobalSlots which aren't yet in the backend db " \
                     "are loaded via the candy shop.\n\n" \
                     "The User which is used to submit the data is set as " \
-                    "creator for newly created objects. This user must be " \
+                    "owner for created slotgroup/list. This user must be " \
                     "a known GlobalSlot source in the backend.\n\n" \
                     "returns 200 if slots were successfully added.\n\n" \
                     "returns 422 if list with given UUID exists but " \
@@ -686,10 +705,11 @@ resource "Groups" do
         autokino = Group.last
         expect(autokino.uuid).to eq group_uuid
         expect(autokino.name).to eq group_name
+        expect(autokino.public?).to be true
         expect(autokino.image).to eq group_image
 
         expect(autokino.slots).not_to be_empty
-        gs = GlobalSlot.find_by uuid: global_slots.first
+        gs = GlobalSlot.find_by muid: global_slots.first
         expect(autokino.slots).to include gs
 
         expect(response_status).to eq(200)
