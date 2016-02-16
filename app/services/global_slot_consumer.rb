@@ -22,10 +22,12 @@ class GlobalSlotConsumer
     CandyLocation.new(raw_result)
   end
 
-  def search(category, query)
+  def prepare_search(category = nil, query = nil)
     uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
-    uri.path += category
-    uri.query = URI.encode_www_form(query)
+    if category && query
+      uri.path += category
+      uri.query = URI.encode_www_form(query)
+    end
 
     user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
     pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
@@ -37,11 +39,21 @@ class GlobalSlotConsumer
   rescue => e
     raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
   else
-    result = Oj.load(raw_result)
+    Oj.load(raw_result)
+  end
+
+  # TODO: rename to 'slots'
+  def search(category, query)
+    result = prepare_search(category, query)
     crawler_slots = result['search-slots']
     slots = []
     crawler_slots.each { |slot| slots << ElasticSearchSlot.new(slot) }
     slots
+  end
+
+  def categories
+    result = prepare_search
+    result['_links'].keys
   end
 
   private def fetch(resource_type, muid)
