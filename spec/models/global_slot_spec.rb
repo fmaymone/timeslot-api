@@ -72,7 +72,7 @@ RSpec.describe GlobalSlot, type: :model do
       end
     end
 
-    context "additional information" do
+    context "additional information", :vcr do
       let(:meta_params) { attributes_for(:meta_slot, :with_candy_location) }
       let(:url) { 'http://irgendwas.com' }
       let(:image) {

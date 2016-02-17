@@ -31,8 +31,15 @@ class Containership < ActiveRecord::Base
     slot
   end
 
+  # TODO: IMHO the activity_actor is always the current_user but it's
+  # discouraged to use current_user in models bc they shouldn't know about
+  # this kind of state
   private def activity_actor
-    slot.try(:owner) || slot.try(:slotter)
+    # current_user
+    # FIX slot.creator is one of the user objects which is guranteed to be
+    # available in this context, but it's not the correct one
+    slot.creator # group.owner would be another
+    # slot.reload.try(:owner) || slot.reload.try(:slotter)
   end
 
   private def activity_action

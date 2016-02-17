@@ -6,6 +6,7 @@ FactoryGirl.define do
 
   trait :with_candy_location do
     location_uid '89840bc4-99fc-bc22-4168-285003ecfd12'
+    association :meta_slot, :with_candylocation, strategy: :build
   end
 
   trait :with_ios_location do

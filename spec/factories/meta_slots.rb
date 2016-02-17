@@ -11,4 +11,8 @@ FactoryGirl.define do
   trait :with_ioslocation do
     ios_location
   end
+
+  trait :with_candylocation do
+    association :ios_location, factory: :candy_location, strategy: :build
+  end
 end

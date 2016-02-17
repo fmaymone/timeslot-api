@@ -96,15 +96,10 @@ module V1
     def suggested_users
       authorize :me
 
-      if current_user.friends_count == 0
-        @users = [User.find_by(email: SUGGESTED_USER_EMAIL)]
-      else
-        user_ids = current_user.friends_ids
-        suggested_user_ids = pick_some_foafs(user_ids)
-        @users = User.find(suggested_user_ids)
-      end
+      @users = User.find some_foafs
+      @users = [User.find_by(email: SUGGESTED_USER_EMAIL)] if @users.empty?
 
-      render "v1/users/list"
+      render "v1/users/suggesties"
     end
 
     # GET /v1/me/friends
@@ -165,13 +160,16 @@ module V1
       head :ok
     end
 
-    private def pick_some_foafs(user_ids)
+    private def some_foafs
       foaf_ids = []
-      user_ids.each do |id|
-        foaf_ids += User.find(id).friends_ids
+      current_user.friends.each do |friend|
+        foaf_ids += friend.friends_ids
       end
+      # current_user.friends_ids.each do |friend|
+      #   foaf_ids += UserQuery::Relationship.new(friend).my_friends.pluck(:id)
+      # end
       foaf_ids.delete(current_user.id) # remove me
-      foaf_ids -= current_user.contacts_ids # remove my friends
+      foaf_ids -= current_user.contacts_ids # remove my friends & requested friends
       foaf_ids.uniq.sample(10) # take 10 random users
     end
 
