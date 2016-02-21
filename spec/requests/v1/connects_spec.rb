@@ -10,7 +10,7 @@ RSpec.describe "V1::Connects", type: :request do
   describe "POST /v1/fb-connect" do
     let(:payload) do
       {
-        "socialId" => 10_152_854_206_708_061,
+        "social_id" => 10_152_854_206_708_061,
         "first_name" => "Silvi",
         "last_name" => "Ivlis",
         "middle_name" => "O",
@@ -143,7 +143,7 @@ RSpec.describe "V1::Connects", type: :request do
     context "existing user and identity (social sign in)" do
       let!(:user) { create(:user) }
       let!(:identity) do
-        create(:connect, user: user, social_id: payload['socialId'])
+        create(:connect, user: user, social_id: payload['social_id'])
       end
 
       it "returns success" do
@@ -233,7 +233,7 @@ RSpec.describe "V1::Connects", type: :request do
 
     context "signed-in user with existing facebook identity (re-connect)" do
       let!(:identity) do
-        create(:connect, user: current_user, social_id: payload['socialId'])
+        create(:connect, user: current_user, social_id: payload['social_id'])
       end
 
       it "returns success" do
@@ -261,7 +261,7 @@ RSpec.describe "V1::Connects", type: :request do
 
     context "signed-in user & existing facebook identity with other user connected (collision)" do
       let!(:identity) do
-        create(:connect, social_id: payload['socialId'])
+        create(:connect, social_id: payload['social_id'])
       end
 
       it "returns unprocessable entity" do
@@ -296,7 +296,7 @@ RSpec.describe "V1::Connects", type: :request do
   describe "POST /v1/tw-connect" do
     let(:payload) do
       {
-        "socialId" => 3_186_786_310,
+        "social_id" => 3_186_786_310,
         "username" => "alexandrospar",
         "auth_token" => "3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV",
         "auth_secret" => "CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x"
@@ -343,7 +343,7 @@ RSpec.describe "V1::Connects", type: :request do
     context "existing user and identity (social sign in)" do
       let!(:identity) do
         create(:connect, :twitter, user: create(:user),
-                                   social_id: payload['socialId'])
+                                   social_id: payload['social_id'])
       end
 
       it "returns success" do
@@ -402,7 +402,7 @@ RSpec.describe "V1::Connects", type: :request do
     context "signed-in user with existing facebook identity (merge)" do
       let!(:identity) do
         create(:connect, :twitter, user: current_user,
-                                   social_id: payload['socialId'])
+                                   social_id: payload['social_id'])
       end
 
       it "returns success" do

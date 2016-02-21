@@ -188,18 +188,18 @@ module V1
                              :longitude, :private_location, :areas_of_interest]
                         },
                         :name,
-                        :publicUrl,
+                        :public_url,
                         :push,
-                        :slotDefaultDuration,
-                        :slotDefaultLocationId,
-                        :slotDefaultTypeId,
-                        :defaultPrivateAlerts,
-                        :defaultOwnFriendslotAlerts,
-                        :defaultOwnPublicAlerts,
-                        :defaultFriendsFriendslotAlerts,
-                        :defaultFriendsPublicAlerts,
-                        :defaultReslotAlerts,
-                        :defaultGroupAlerts)
+                        :slot_default_duration,
+                        :slot_default_location_id,
+                        :slot_default_type_id,
+                        :default_private_alerts,
+                        :default_own_friendslot_alerts,
+                        :default_own_public_alerts,
+                        :default_friends_friendslot_alerts,
+                        :default_friends_public_alerts,
+                        :default_reslot_alerts,
+                        :default_group_alerts)
 
       # ios prefers to use 'image' instead of 'picture'
       p[:picture] = params[:image] if params[:image].present?
@@ -208,14 +208,12 @@ module V1
         p[:location_attributes] = p.delete 'location'
         p[:location_attributes][:creator] = current_user
       end
-      p.transform_keys(&:underscore) if p
+      p
     end
 
     private def device_params
-      params.require(:deviceId)
-      params.permit(:deviceId, :system, :version, :token, :endpoint)
-        .transform_keys(&:underscore)
-        .symbolize_keys
+      params.require(:device_id)
+      params.permit(:device_id, :system, :version, :token, :endpoint)
     end
 
     private def friends_ids

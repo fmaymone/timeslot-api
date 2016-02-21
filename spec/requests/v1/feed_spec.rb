@@ -30,7 +30,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "creates a new activity without an exception" do
         activities_before = storage.keys.count
         expect {
-          post "/v1/reslot/", { predecessorId: slot.id }, auth_header
+          post "/v1/reslot/", { predecessor_id: slot.id }, auth_header
         }.not_to raise_error
         expect(storage.keys.count).to be > activities_before
       end

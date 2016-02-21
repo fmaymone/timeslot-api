@@ -314,9 +314,8 @@ RSpec.describe "V1::Slots", type: :request do
     context "StdSlot with valid params" do
       let(:visibility) { 'private' }
       let(:valid_slot) {
-        attr = attributes_for(:meta_slot).merge(
+        attributes_for(:meta_slot).merge(
           visibility: visibility, settings: { alerts: '1110001100' })
-        attr.transform_keys { |key| key.to_s.camelize(:lower) }
       }
 
       it "responds with Created (201)" do
@@ -348,8 +347,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       it "sets slot to 'open End' if empty end_date" do
-        valid_slot[:startDate] = "2014-09-08 13:31:02"
-        valid_slot[:endDate] = ""
+        valid_slot[:start_date] = "2014-09-08 13:31:02"
+        valid_slot[:end_date] = ""
         post "/v1/stdslot/", valid_slot, auth_header
         expect(response).to have_http_status(:created)
         slot = StdSlot.unscoped.last
@@ -373,8 +372,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     context "with invalid params" do
       let(:invalid_attributes) {
-        attr = attributes_for(:meta_slot).merge(visibility: 'private')
-        attr.transform_keys { |key| key.to_s.camelize(:lower) }
+        attributes_for(:meta_slot).merge(visibility: 'private')
       }
       describe "does not add a new entry to the DB" do
         it "for empty title" do
@@ -386,7 +384,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "for empty start_date" do
-          invalid_attributes[:startDate] = ""
+          invalid_attributes[:start_date] = ""
           expect {
             post "/v1/stdslot/", invalid_attributes, auth_header
           }.not_to change(MetaSlot, :count)
@@ -404,7 +402,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "for invalid start_date" do
-          invalid_attributes[:startDate] = "|$%^@wer"
+          invalid_attributes[:start_date] = "|$%^@wer"
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
@@ -414,7 +412,6 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:meta_slot,
                                 start_date: "2014-09-08 13:31:02",
                                 end_date: "2014-09-08 13:31:02")
-          slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
           post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
@@ -425,7 +422,6 @@ RSpec.describe "V1::Slots", type: :request do
           slot = attributes_for(:meta_slot,
                                 start_date: "2014-09-08 13:31:02",
                                 end_date: "2014-07-07 13:31:02")
-          slot = slot.transform_keys { |key| key.to_s.camelize(:lower) }
 
           post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
@@ -439,7 +435,7 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         it "for missing visibility" do
-          invalid_attributes.extract! 'visibility'
+          invalid_attributes.extract! :visibility
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
         end
@@ -465,7 +461,7 @@ RSpec.describe "V1::Slots", type: :request do
     context "with valid params" do
       let(:pred) { create(:std_slot_public) }
       let(:valid_attributes) {
-        attributes_for(:re_slot, predecessorId: pred.id)
+        attributes_for(:re_slot, predecessor_id: pred.id)
       }
 
       context "ReSlot from StdSlot" do
@@ -586,7 +582,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "custom reslot visibility" do
         let(:valid_attributes) do
-          { predecessorId: pred.id,
+          { predecessor_id: pred.id,
             visibility: 'foaf' }
         end
 
@@ -622,7 +618,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "returns 422 if reslot visibility exceeds parent visibility" do
             post "/v1/reslot/",
-                 { predecessorId: friend_slot.id,
+                 { predecessor_id: friend_slot.id,
                    visibility: 'foaf' },
                  auth_header
             expect(response).to have_http_status :unprocessable_entity
@@ -654,7 +650,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "updates the start_date of a given metaslot" do
         metaslot.update(start_date: "2014-09-08 13:31:02")
         patch "/v1/metaslot/#{metaslot.id}",
-              { startDate: "2014-07-07 13:31:02" }, auth_header
+              { start_date: "2014-07-07 13:31:02" }, auth_header
         metaslot.reload
         expect(metaslot.start_date).to eq("2014-07-07 13:31:02")
       end
@@ -662,7 +658,7 @@ RSpec.describe "V1::Slots", type: :request do
       it "updates the end_date of a given metaslot" do
         metaslot.update(end_date: "2019-09-09 13:31:02")
         patch "/v1/metaslot/#{metaslot.id}",
-              { endDate: "2019-12-11 13:31:02" }, auth_header
+              { end_date: "2019-12-11 13:31:02" }, auth_header
         metaslot.reload
         expect(metaslot.end_date).to eq("2019-12-11 13:31:02")
         expect(metaslot.open_end).to be false
@@ -670,7 +666,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "sets slot to 'open End' if empty end_date" do
         metaslot.update(start_date: "2014-09-08 07:31:02")
-        patch "/v1/metaslot/#{metaslot.id}", { endDate: "" }, auth_header
+        patch "/v1/metaslot/#{metaslot.id}", { end_date: "" }, auth_header
         expect(response).to have_http_status(:no_content)
         metaslot.reload
         # need to cast to_datetime bc of different millisecond precision
@@ -711,21 +707,21 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "for empty start_date" do
           patch "/v1/metaslot/#{metaslot.id}",
-                { startDate: "" }, auth_header
+                { start_date: "" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
           patch "/v1/metaslot/#{metaslot.id}",
-                { startDate: "|$%^@wer" }, auth_header
+                { start_date: "|$%^@wer" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid end_date" do
           patch "/v1/metaslot/#{metaslot.id}",
-                { endDate: "|$%^@wer" }, auth_header
+                { end_date: "|$%^@wer" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('not a valid value')
         end
@@ -733,7 +729,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "if start_date equals end_date" do
           metaslot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/metaslot/#{metaslot.id}",
-                { endDate: "2014-09-08 13:31:02" }, auth_header
+                { end_date: "2014-09-08 13:31:02" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -741,7 +737,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "if end_date before start_date" do
           metaslot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/metaslot/#{metaslot.id}",
-                { endDate: "2014-07-07 13:31:02" }, auth_header
+                { end_date: "2014-07-07 13:31:02" }, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -772,7 +768,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "updates the start_date of a given StdSlot" do
           std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}",
-                { startDate: "2014-07-07 13:31:02" }, auth_header
+                { start_date: "2014-07-07 13:31:02" }, auth_header
           std_slot.reload
           expect(std_slot.start_date).to eq("2014-07-07 13:31:02")
         end
@@ -788,7 +784,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "updates the end_date of a given StdSlot" do
           std_slot.meta_slot.update(end_date: "2019-12-09 13:31:02")
           patch "/v1/stdslot/#{std_slot.id}",
-                { endDate: "2019-12-11 13:31:02" }, auth_header
+                { end_date: "2019-12-11 13:31:02" }, auth_header
           std_slot.reload
           expect(std_slot.end_date).to eq("2019-12-11 13:31:02")
           expect(std_slot.open_end).to be false
@@ -796,7 +792,7 @@ RSpec.describe "V1::Slots", type: :request do
 
         it "sets slot to 'open End' if empty end_date" do
           std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
-          patch "/v1/stdslot/#{std_slot.id}", { endDate: "" }, auth_header
+          patch "/v1/stdslot/#{std_slot.id}", { end_date: "" }, auth_header
           expect(response).to have_http_status(:ok)
           std_slot.reload
           # need to cast to_datetime bc of different millisecond precision
@@ -813,13 +809,13 @@ RSpec.describe "V1::Slots", type: :request do
                    start_date: "2014-09-08 13:31:02",
                    end_date: "")
           end
-          let(:endDate) { "2014-09-08 15:18:31" }
+          let(:end_date) { "2014-09-08 15:18:31" }
 
           it "unsets 'openEnd' if end_date is set" do
             expect(std_slot.open_end).to be true
-            patch "/v1/stdslot/#{std_slot.id}", { endDate: endDate }, auth_header
+            patch "/v1/stdslot/#{std_slot.id}", { end_date: end_date }, auth_header
             std_slot.reload
-            expect(std_slot.end_date).to eq endDate
+            expect(std_slot.end_date).to eq end_date
             expect(std_slot.open_end).to be false
             expect(response).to have_http_status(:ok)
           end
@@ -829,11 +825,11 @@ RSpec.describe "V1::Slots", type: :request do
           #            expect(std_slot.open_end).to be true
           #            expect {
           #              patch "/v1/stdslot/#{std_slot.id}",
-          #                    { endDate: std_slot.end_date }, auth_header
+          #                    { end_date: std_slot.end_date }, auth_header
           #            }.not_to change(std_slot, :open_end)
           #            expect(response).to have_http_status(:ok)
           #            #expect(json['openEnd']).to be true
-          #            expect(json['endDate']).to be nil
+          #            expect(json['end_date']).to be nil
           #          end
         end
       end
@@ -868,21 +864,21 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "for empty start_date" do
             patch "/v1/stdslot/#{std_slot.id}",
-                  { startDate: "" }, auth_header
+                  { start_date: "" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('blank')
           end
 
           it "for invalid start_date" do
             patch "/v1/stdslot/#{std_slot.id}",
-                  { startDate: "|$%^@wer" }, auth_header
+                  { start_date: "|$%^@wer" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('blank')
           end
 
           it "for invalid end_date" do
             patch "/v1/stdslot/#{std_slot.id}",
-                  { endDate: "|$%^@wer" }, auth_header
+                  { end_date: "|$%^@wer" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('not a valid value')
           end
@@ -890,7 +886,7 @@ RSpec.describe "V1::Slots", type: :request do
           it "if start_date equals end_date" do
             std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
             patch "/v1/stdslot/#{std_slot.id}",
-                  { endDate: "2014-09-08 13:31:02" }, auth_header
+                  { end_date: "2014-09-08 13:31:02" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('start_date')
           end
@@ -898,7 +894,7 @@ RSpec.describe "V1::Slots", type: :request do
           it "if end_date before start_date" do
             std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
             patch "/v1/stdslot/#{std_slot.id}",
-                  { endDate: "2014-07-07 13:31:02" }, auth_header
+                  { end_date: "2014-07-07 13:31:02" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('start_date')
           end
@@ -1006,8 +1002,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "add images with valid params" do
         let(:media) do
-          [{ publicId: "foo-image",
-             mediaType: 'image',
+          [{ public_id: "foo-image",
+             media_type: 'image',
              position: "1" }]
         end
 
@@ -1039,7 +1035,7 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           std_slot.reload
           expect(std_slot.media_items[0].media_type).to eq 'image'
-          expect(std_slot.images[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.images[0].public_id).to eq(media.first[:public_id])
           expect(std_slot.media_items[0].position)
             .to eq(media.first[:position].to_i)
         end
@@ -1058,12 +1054,12 @@ RSpec.describe "V1::Slots", type: :request do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           new_media_item = MediaItem.last
           expect(new_media_item.media_type).to eq 'image'
-          expect(new_media_item.public_id).to eq(media.first[:publicId])
+          expect(new_media_item.public_id).to eq(media.first[:public_id])
           expect(new_media_item.position).to eq(media.first[:position].to_i)
         end
 
         context "missing position parameter" do
-          let(:media) { [{ publicId: "foo-image", mediaType: "image" }] }
+          let(:media) { [{ public_id: "foo-image", media_type: "image" }] }
           let!(:std_slot) {
             create(:std_slot_private, :with_media, owner: current_user)
           }
@@ -1079,8 +1075,8 @@ RSpec.describe "V1::Slots", type: :request do
         end
 
         context "existing position parameter" do
-          let(:media) { [{ publicId: "foo-image",
-                           mediaType: 'image',
+          let(:media) { [{ public_id: "foo-image",
+                           media_type: 'image',
                            position: "0" }] }
 
           it "updates existing position" do
@@ -1103,9 +1099,9 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "add images with invalid params" do
-        let(:media) { [{ position: "0", mediaType: 'image' }] }
+        let(:media) { [{ position: "0", media_type: 'image' }] }
 
-        it "returns 422 if publicId is missing" do
+        it "returns 422 if public_id is missing" do
           patch "/v1/stdslot/#{std_slot.id}", add_media_item, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
         end
@@ -1128,14 +1124,14 @@ RSpec.describe "V1::Slots", type: :request do
         context "with valid params" do
           let(:media_reordering) do
             { media: [
-                { mediaId: media_item_1.id,
-                  mediaType: 'image',
+                { media_id: media_item_1.id,
+                  media_type: 'image',
                   position: 2 },
-                { mediaId: media_item_2.id,
-                  mediaType: 'image',
+                { media_id: media_item_2.id,
+                  media_type: 'image',
                   position: 0 },
-                { mediaId: media_item_3.id,
-                  mediaType: 'image',
+                { media_id: media_item_3.id,
+                  media_type: 'image',
                   position: 1 }
               ] }
           end
@@ -1159,14 +1155,14 @@ RSpec.describe "V1::Slots", type: :request do
             let(:invalid_id) { media_item_3.id + 1 }
             let(:media_reordering) do
               { media: [
-                  { mediaId: media_item_1.id,
-                    mediaType: 'image',
+                  { media_id: media_item_1.id,
+                    media_type: 'image',
                     position: 2 },
-                  { mediaId: media_item_2.id,
-                    mediaType: 'image',
+                  { media_id: media_item_2.id,
+                    media_type: 'image',
                     position: 0 },
-                  { mediaId: invalid_id,
-                    mediaType: 'image',
+                  { media_id: invalid_id,
+                    media_type: 'image',
                     position: 1 }
                 ] }
             end
@@ -1181,14 +1177,14 @@ RSpec.describe "V1::Slots", type: :request do
           describe "invalid sorting" do
             let(:media_reordering) do
               { media: [
-                  { mediaId: media_item_1.id,
-                    mediaType: 'image',
+                  { media_id: media_item_1.id,
+                    media_type: 'image',
                     position: 1 },
-                  { mediaId: media_item_2.id,
-                    mediaType: 'image',
+                  { media_id: media_item_2.id,
+                    media_type: 'image',
                     position: 0 },
-                  { mediaId: media_item_3.id,
-                    mediaType: 'image',
+                  { media_id: media_item_3.id,
+                    media_type: 'image',
                     position: 1 }
                 ] }
             end
@@ -1205,8 +1201,8 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "video" do
         let(:media) do
-          [{ publicId: "foo-video",
-             mediaType: "video"
+          [{ public_id: "foo-video",
+             media_type: "video"
            }]
         end
 
@@ -1215,14 +1211,14 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.videos[0].media_type).to eq 'video'
           expect(std_slot.videos[0].position).to eq 0
-          expect(std_slot.videos[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.videos[0].public_id).to eq(media.first[:public_id])
         end
       end
 
       context "audio" do
         let(:media) do
-          [{ publicId: "foo-audio",
-             mediaType: "audio",
+          [{ public_id: "foo-audio",
+             media_type: "audio",
              title: 'Nice sound',
              position: "1" }]
         end
@@ -1232,7 +1228,7 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.audios[0].media_type).to eq 'audio'
           expect(std_slot.audios[0].title).to eq 'Nice sound'
-          expect(std_slot.audios[0].public_id).to eq(media.first[:publicId])
+          expect(std_slot.audios[0].public_id).to eq(media.first[:public_id])
         end
 
         it "returns audio item in json" do
@@ -1431,8 +1427,8 @@ RSpec.describe "V1::Slots", type: :request do
     context "with valid media params" do
       let(:add_media_item) { { media: media } }
       let(:media) do
-        [{ publicId: "foo-image",
-           mediaType: 'image',
+        [{ public_id: "foo-image",
+           media_type: 'image',
            position: "1" }]
       end
 
@@ -1575,7 +1571,7 @@ RSpec.describe "V1::Slots", type: :request do
 
     it "adds the slot to the given slotgroup" do
       post "/v1/slots/#{slot.id}/slotgroups",
-           { slotGroups: [group.uuid] }, auth_header
+           { slot_groups: [group.uuid] }, auth_header
 
       expect(group.slots).to include slot
       expect(response).to have_http_status :ok
@@ -1750,7 +1746,7 @@ RSpec.describe "V1::Slots", type: :request do
     let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
     context "move to public slots without details" do
-      let(:move_params) { { slotType: 'public',
+      let(:move_params) { { slot_type: 'public',
                             details: 'false' } }
 
       it "creates a new slot" do
@@ -1772,7 +1768,7 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "move to friendslots without details" do
-      let(:move_params) { { slotType: 'friends',
+      let(:move_params) { { slot_type: 'friends',
                             details: false } }
 
       it "creates a new slot" do
@@ -1786,7 +1782,7 @@ RSpec.describe "V1::Slots", type: :request do
       let!(:std_slot) {
         create(:std_slot_private, :with_real_image, owner: current_user) }
       let(:image) { std_slot.media_items.first }
-      let(:move_params) { { slotType: 'friends',
+      let(:move_params) { { slot_type: 'friends',
                             details: true } }
       before {
         Cloudinary::Uploader.remove_tag("replaced", image.public_id)

@@ -197,7 +197,7 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      groups = Group.where(uuid: params[:slotGroups])
+      groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
         # skip deleted groups
         @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
@@ -218,7 +218,7 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      groups = Group.where(uuid: params[:slotGroups])
+      groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
         # skip deleted groups
         @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
@@ -268,32 +268,33 @@ module V1
     end
 
     private def re_params
-      params.require(:predecessorId)
+      params.require(:predecessor_id)
     end
 
     private def meta_params
       # only the slot creator can update the meta params
+      # TODO: this is a policy responsiblity
       return {} if @slot && current_user != @slot.creator
 
       # Check validity of date format
       # metaSlotId is (IMHO only) requiered for copy slot
-      p = params.permit(:title, :startDate, :endDate, :metaSlotId,
+      p = params.permit(:title, :start_date, :end_date, :meta_slot_id,
                         location:
-                          [:name, :thoroughfare, :subThoroughfare,
-                           :locality, :subLocality, :administrativeArea,
-                           :subAdministrativeArea, :postalCode, :country,
-                           :isoCountryCode, :inLandWater, :ocean, :latitude,
-                           :longitude, :privateLocation, :areasOfInterest])
+                          [:name, :thoroughfare, :sub_thoroughfare,
+                           :locality, :sub_locality, :administrative_area,
+                           :sub_administrative_area, :postal_code, :country,
+                           :iso_country_code, :in_land_water, :ocean, :latitude,
+                           :longitude, :private_location, :areas_of_interest])
       # sets iosLocation to the content of params['location']
-      p[:iosLocation] = p.delete(:location) if params[:location].present?
+      p[:ios_location] = p.delete(:location) if params[:location].present?
 
-      if params.key? :endDate
-        if params[:endDate].blank?
+      if params.key? :end_date
+        if params[:end_date].blank?
           # empty end_date means slot with open_end
           p[:open_end] = true
         else
           # validate submitted end_date
-          enddate = params[:endDate]
+          enddate = params[:end_date]
           valid_date = Time.zone.parse(enddate)
           fail ParameterInvalid.new(:end_date, enddate) unless valid_date
           # TODO: add spec for open_end
@@ -301,7 +302,6 @@ module V1
         end
       end
 
-      p.deep_transform_keys!(&:underscore)
       p.deep_symbolize_keys
     end
 
@@ -312,25 +312,26 @@ module V1
     private def note_param
       return nil unless params.key? :notes
 
-      note_params = [:id, :title, :content, :localId]
+      note_params = [:id, :title, :content, :local_id]
       params[:notes].map do |p|
         note = ActionController::Parameters.new(p.to_hash).permit(note_params)
-        note.transform_keys { |key| key.underscore.to_sym }
+        note.transform_keys { |key| key.to_sym }
       end
     end
 
     private def media_params
-      p = params.permit(media: [:publicId,
+      return nil unless params.key? :media
+      p = params.permit(media: [:public_id,
                                 :position,
-                                :mediaId,
-                                :localId,
-                                :creatorId,
-                                :mediaType,
+                                :media_id,
+                                :local_id,
+                                :creator_id,
+                                :media_type,
                                 :title,
                                 :duration,
                                 :thumbnail])
-      p.deep_transform_keys!(&:underscore)
-      p.deep_symbolize_keys[:media]
+      # p.deep_symbolize_keys[:media]
+      p[:media].each(&:symbolize_keys)
     end
 
     private def comment_param
@@ -338,16 +339,15 @@ module V1
     end
 
     private def copy_params
-      target_params = [:slotType, :groupId, :details]
-      params.require(:copyTo).map do |p|
+      target_params = [:slot_type, :group_id, :details]
+      params.require(:copy_to).map do |p|
         t = ActionController::Parameters.new(p.to_hash).permit(target_params)
-        t.transform_keys { |key| key.underscore.to_sym }
+        t.symbolize_keys
       end
     end
 
     private def move_params
-      p = params.permit(:slotType, :groupId, :details)
-      p.transform_keys { |key| key.underscore.to_sym }
+      params.permit(:slot_type, :group_id, :details)
     end
   end
 end
