@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
+ruby '2.2.3'
+# ruby '2.3.0'
 
 gem 'rails', '4.2.5'
 
@@ -105,8 +106,8 @@ group :development, :test, :herokutest do
   gem 'database_cleaner'
 
   # github version contains a monkey patch for pretty printing response body in API docs
-  # gem 'rspec_api_documentation'
-  gem 'rspec_api_documentation', git: 'https://github.com/ts-silvio/rspec_api_documentation.git', branch: 'test'
+  gem 'rspec_api_documentation'
+  # gem 'rspec_api_documentation', git: 'https://github.com/ts-silvio/rspec_api_documentation.git', branch: 'test'
 
   gem 'shoulda-matchers', '~> 3.0'
 

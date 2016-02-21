@@ -1,14 +1,3 @@
-GIT
-  remote: https://github.com/ts-silvio/rspec_api_documentation.git
-  revision: 88a4dcd2912d973f3b04e22b37641e3c30297969
-  branch: test
-  specs:
-    rspec_api_documentation (4.6.0)
-      activesupport (>= 3.0.0)
-      json (~> 1.4, >= 1.4.6)
-      mustache (~> 0.99, >= 0.99.4)
-      rspec (>= 3.0.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -252,6 +241,11 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    rspec_api_documentation (4.7.0)
+      activesupport (>= 3.0.0)
+      json (~> 1.4, >= 1.4.6)
+      mustache (~> 0.99, >= 0.99.4)
+      rspec (>= 3.0.0)
     rubocop (0.36.0)
       parser (>= 2.3.0.0, < 3.0)
       powerpack (~> 0.1)
@@ -342,7 +336,7 @@ DEPENDENCIES
   redis
   rqrcode
   rspec-rails
-  rspec_api_documentation!
+  rspec_api_documentation
   rubocop
   rubocop-rspec
   shoulda-matchers (~> 3.0)
