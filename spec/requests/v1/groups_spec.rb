@@ -666,6 +666,13 @@ RSpec.describe "V1::Groups", type: :request do
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
+
+
+      it "doesn't create a new list" do
+        expect {
+          post "/v1/groups/global_list", { list: params }, auth_header
+        }.not_to change(Group, :count)
+      end
     end
   end
 end
