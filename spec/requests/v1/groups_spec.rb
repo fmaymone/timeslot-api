@@ -623,17 +623,17 @@ RSpec.describe "V1::Groups", type: :request do
     end
   end
 
-  # global slot lists
-  describe "POST /v1/groups/global_list", :seed do
+  # global slot groups
+  describe "POST /v1/groups/global_group", :seed do
     let(:group) { attributes_for(:group) }
     let(:params) { { muid: group.uuid, name: 'Rephlex' } }
     let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
 
-    describe "existing public list with different name" do
+    describe "existing public group with different name" do
       let(:group) { create(:group) }
 
       it "returns error for non-matching group name" do
-        post "/v1/groups/global_list", { list: params }, auth_header
+        post "/v1/groups/global_group", { group: params }, auth_header
         expect(response).to have_http_status :unprocessable_entity
       end
     end
@@ -644,14 +644,14 @@ RSpec.describe "V1::Groups", type: :request do
                        name: 'Rephlex',
                        slots: [global_slot.muid] } }
 
-      it "adds the slot to the list" do
-        post "/v1/groups/global_list", { list: params }, auth_header
+      it "adds the slot to the group" do
+        post "/v1/groups/global_group", { group: params }, auth_header
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
     end
 
-    describe "global slot already in list" do
+    describe "global slot already in group" do
       let(:group) { create(:group, public: true, owner: current_user) }
       let(:global_slot) { create(:global_slot) }
       let!(:containership) {
@@ -660,17 +660,16 @@ RSpec.describe "V1::Groups", type: :request do
                        name: group.name,
                        slots: [global_slot.muid] } }
 
-      it "adds the slot to the list" do
+      it "adds the slot to the group" do
         expect(Group.last.slots).to include global_slot
-        post "/v1/groups/global_list", { list: params }, auth_header
+        post "/v1/groups/global_group", { group: params }, auth_header
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
 
-
-      it "doesn't create a new list" do
+      it "doesn't create a new group" do
         expect {
-          post "/v1/groups/global_list", { list: params }, auth_header
+          post "/v1/groups/global_group", { group: params }, auth_header
         }.not_to change(Group, :count)
       end
     end

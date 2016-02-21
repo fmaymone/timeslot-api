@@ -77,9 +77,9 @@ RSpec.describe V1::GroupsController, type: :routing do
                      format: :json)
     end
 
-    it "routes to #global_list" do
-      expect(post: "/v1/groups/global_list")
-        .to route_to("v1/groups#global_list", format: :json)
+    it "routes to #global_group" do
+      expect(post: "/v1/groups/global_group")
+        .to route_to("v1/groups#global_group", format: :json)
     end
 
     it "does't route to #new" do

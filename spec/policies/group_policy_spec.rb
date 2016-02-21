@@ -171,7 +171,7 @@ describe GroupPolicy do
     end
   end
 
-  permissions :global_list? do
+  permissions :global_group? do
     let(:user) { create(:user) }
 
     context "group is public" do

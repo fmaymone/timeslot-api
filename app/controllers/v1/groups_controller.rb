@@ -167,19 +167,19 @@ module V1
       end
     end
 
-    # POST /v1/groups/global_list
-    def global_list
+    # POST /v1/groups/global_group
+    def global_group
       authorize current_user
 
-      group = Group.find_or_create_by!(uuid: globalist[:muid],
-                                       name: globalist[:name]) do |new_group|
-        new_group.image = globalist[:image] if globalist[:image].present?
+      group = Group.find_or_create_by!(uuid: globalgroup[:muid],
+                                       name: globalgroup[:name]) do |new_group|
+        new_group.image = globalgroup[:image] if globalgroup[:image].present?
         new_group.owner = current_user
         new_group.public = true
       end
 
       authorize group
-      group.add_slots globalist[:slots]
+      group.add_slots globalgroup[:slots]
 
       head :ok
     end
@@ -188,8 +188,8 @@ module V1
       params.permit(:name, :image, :public, :members_can_post, :members_can_invite)
     end
 
-    private def globalist
-      params.require(:list).permit(:name, :image, :muid, slots: [])
+    private def globalgroup
+      params.require(:group).permit(:name, :image, :muid, slots: [])
     end
 
     private def user_id

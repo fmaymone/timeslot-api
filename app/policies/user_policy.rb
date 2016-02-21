@@ -50,7 +50,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   # true if the request is made by an existing crawler source
-  def global_list?
+  def global_group?
     return true if current_user.crawler_source?
     false
   end

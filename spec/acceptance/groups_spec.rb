@@ -661,20 +661,20 @@ resource "Groups" do
     end
   end
 
-  # global slot lists
-  post "/v1/groups/global_list", :seed do
+  # global slot groups
+  post "/v1/groups/global_group", :seed do
     let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
 
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :list, "hash witch contains the payload", required: true
+    parameter :group, "hash witch contains the payload", required: true
     parameter :muid, "UUID of the group to add slots to",
-              required: true, scope: :list
+              required: true, scope: :group
     parameter :name, "Name of the group to add slots to",
-              required: true, scope: :list
-    parameter :image, "Image URL for the group image", scope: :list
-    parameter :slots, "Array with muid's of GlobalSlots", scope: :list
+              required: true, scope: :group
+    parameter :image, "Image URL for the group image", scope: :group
+    parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
     let(:group) { attributes_for(:group) }
 
@@ -683,13 +683,13 @@ resource "Groups" do
     let(:image) { "http://faster.pussycat" }
     let(:slots) { [attributes_for(:global_slot)[:muid]] }
 
-    describe "create new public list and add GlobalSlots", :vcr do
+    describe "create new public group and add GlobalSlots", :vcr do
       example "Add GlobalSlots to new or existing public group",
               document: :v1 do
-        explanation "If no public group/list with the given UUID exists, " \
+        explanation "If no public group with the given UUID exists, " \
                     "one is created and the name and image is set and the " \
-                    "given GlobalSlots are added to the new list.\n\n" \
-                    "If a public group/list with the UUID exists, this one " \
+                    "given GlobalSlots are added to the new group.\n\n" \
+                    "If a public group with the UUID exists, this one " \
                     "is used to add the given GlobalSlots to it.\n\n" \
                     "The GlobalSlots which aren't yet in the backend db " \
                     "are loaded via the candy shop.\n\n" \
@@ -697,7 +697,7 @@ resource "Groups" do
                     "owner for created slotgroup/list. This user must be " \
                     "a known GlobalSlot source in the backend.\n\n" \
                     "returns 200 if slots were successfully added.\n\n" \
-                    "returns 422 if list with given UUID exists but " \
+                    "returns 422 if group with given UUID exists but " \
                     "name doesn't match.\n\n" \
                     "returns 422 if requiered parameters are missing or invalid."
 

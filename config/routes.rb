@@ -105,7 +105,7 @@ Rails.application.routes.draw do
       delete ':group_uuid/members/:user_id', to: 'groups#kick',
              constraints: { user_id: /\d+/ }
       patch ':group_uuid/members', to: 'groups#member_settings'
-      post 'global_list', to: 'groups#global_list'
+      post 'global_group', to: 'groups#global_group'
     end
 
     scope :feed do

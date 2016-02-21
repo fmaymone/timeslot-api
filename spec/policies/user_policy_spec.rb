@@ -33,7 +33,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :global_list? do
+  permissions :global_group? do
     context "current_user has role 'crawler_source'", :seed do
       let(:user) { User.find_by email: 'dfb.crawler@timeslot.com' }
 
