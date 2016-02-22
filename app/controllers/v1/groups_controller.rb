@@ -173,7 +173,7 @@ module V1
 
       group = Group.find_or_create_by!(uuid: globalgroup[:muid],
                                        name: globalgroup[:name]) do |new_group|
-        new_group.image = globalgroup[:image] if globalgroup[:image].present?
+        new_group.update(globalgroup.except(:muid, :slots))
         new_group.owner = current_user
         new_group.public = true
       end
@@ -189,7 +189,8 @@ module V1
     end
 
     private def globalgroup
-      params.require(:group).permit(:name, :image, :muid, slots: [])
+      p = params.require(:group).permit(:name, :image, :muid, :stringId, slots: [])
+      p.transform_keys(&:underscore) if p
     end
 
     private def user_id

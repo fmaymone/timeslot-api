@@ -44,7 +44,8 @@ resource "Groups" do
       expect(json['id']).to eq group.uuid
       expect(
         json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
+      ).to eq(group.attributes.as_json.except(
+               'owner_id', 'id', 'uuid', 'string_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -144,7 +145,8 @@ resource "Groups" do
         expect(json['id']).to eq group.uuid
         expect(
           json.except('membershipState', 'owner', 'id')
-        ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
+        ).to eq(group.attributes.as_json.except(
+                 'owner_id', 'id', 'uuid', 'string_id')
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json).to have_key "owner"
         expect(json['owner']['id']).to eq group.owner.id
@@ -205,7 +207,8 @@ resource "Groups" do
       expect(json['id']).to eq group.uuid
       expect(
         json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except('owner_id', 'uuid', 'id')
+      ).to eq(group.attributes.as_json.except(
+               'owner_id', 'uuid', 'id', 'string_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -673,6 +676,7 @@ resource "Groups" do
               required: true, scope: :group
     parameter :name, "Name of the group to add slots to",
               required: true, scope: :group
+    parameter :stringId, "String Identifier for the group", scope: :group
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
@@ -681,6 +685,7 @@ resource "Groups" do
     let(:muid) { group[:uuid] }
     let(:name) { "Autokino an der alten Eiche" }
     let(:image) { "http://faster.pussycat" }
+    let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
     let(:slots) { [attributes_for(:global_slot)[:muid]] }
 
     describe "create new public group and add GlobalSlots", :vcr do
@@ -710,6 +715,7 @@ resource "Groups" do
         expect(autokino.name).to eq name
         expect(autokino.public?).to be true
         expect(autokino.image).to eq image
+        expect(autokino.string_id).to eq stringId
 
         expect(autokino.slots).not_to be_empty
         gs = GlobalSlot.find_by muid: slots.first
