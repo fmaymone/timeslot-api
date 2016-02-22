@@ -627,6 +627,8 @@ RSpec.describe "V1::Groups", type: :request do
   describe "POST /v1/groups/global_group", :seed do
     let(:group) { attributes_for(:group) }
     let(:params) { { muid: group.uuid, name: 'Rephlex' } }
+    # let(:image) { "http://faster.pussycat" }
+    # let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
     let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
 
     describe "existing public group with different name" do
@@ -648,6 +650,38 @@ RSpec.describe "V1::Groups", type: :request do
         post "/v1/groups/global_group", { group: params }, auth_header
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
+      end
+    end
+
+    describe "no existing global slot, but existing location", :vcr do
+      let(:slots) { [attributes_for(:global_slot)[:muid]] }
+      let!(:location) { create(:candy_location) }
+      let(:params) { { muid: group[:uuid],
+                       name: 'Rephlex',
+                       slots: slots } }
+
+      it "creates a new group" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.to change(Group, :count)
+      end
+
+      it "creates a new globalslot" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.to change(GlobalSlot, :count)
+      end
+
+      it "adds the slot to the group" do
+        post "/v1/groups/global_group", { group: params }, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include GlobalSlot.last
+      end
+
+      it "doesn't create a new location" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.not_to change(IosLocation, :count)
       end
     end
 
