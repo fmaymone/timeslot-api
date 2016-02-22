@@ -123,10 +123,7 @@ module JSONView
                       :created_at,
                       :updated_at,
                       :deleted_at).as_json.transform_keys { |key| key.camelize(:lower) }
-    json['image'] = {
-      publicId: (user.image.try(:public_id) ? user.image.public_id : nil),
-      localId: (user.image.try(:local_id) ? user.image.local_id : nil)
-    }
+    json['image'] = user.picture
 
     json['slotCount'] = user.visible_slots_counter(friend, StdSlot)
     # json['reslotCount'] = user.visible_slots_counter(friend, ReSlot)
