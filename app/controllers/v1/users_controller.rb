@@ -99,9 +99,8 @@ module V1
     end
 
     private def device_params(params)
-      return nil unless params && params[:deviceId].present?
-      params.permit(:deviceId, :system, :version, :token, :endpoint)
-        .transform_keys(&:underscore)
+      return nil unless params && params[:device_id].present?
+      params.permit(:device_id, :system, :version, :token, :endpoint)
         .symbolize_keys
     end
 
@@ -110,8 +109,7 @@ module V1
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
       params.permit(:email, :phone, :password,
-                    device: [:deviceId, :system, :version, :token])
-        .deep_transform_keys(&:underscore)
+                    device: [:device_id, :system, :version, :token])
         .deep_symbolize_keys
     end
   end

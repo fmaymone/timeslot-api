@@ -178,8 +178,7 @@ module V1
     end
 
     private def group_params
-      p = params.permit(:name, :image, :membersCanPost, :membersCanInvite)
-      p.transform_keys(&:underscore) if p
+      params.permit(:name, :image, :members_can_post, :members_can_invite)
     end
 
     private def user_id
@@ -187,8 +186,7 @@ module V1
     end
 
     private def setting_params
-      p = params.require(:settings).permit(:notifications, :defaultAlerts)
-      p.transform_keys(&:underscore)
+      params.require(:settings).permit(:notifications, :default_alerts)
     end
   end
 end

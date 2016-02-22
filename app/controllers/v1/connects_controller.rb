@@ -51,10 +51,9 @@ module V1
     end
 
     private def identity_params
-      params.require(:socialId)
+      params.require(:social_id)
       params.require(:username)
-      p = params.permit(:socialId, :username)
-      p.transform_keys { |key| key.underscore.to_sym }
+      params.permit(:social_id, :username)
     end
 
     private def facebook_params

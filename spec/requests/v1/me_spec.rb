@@ -241,7 +241,7 @@ RSpec.describe "V1::Me", type: :request do
 
       context "other attributes" do
         it "updates the public URL of the current user" do
-          patch "/v1/me", { publicUrl: 'uffie' }, auth_header
+          patch "/v1/me", { public_url: 'uffie' }, auth_header
           current_user.reload
           expect(current_user.public_url).to eq 'uffie'
         end
@@ -259,15 +259,15 @@ RSpec.describe "V1::Me", type: :request do
         end
 
         it "updates the slot default location id of the current user" do
-          patch "/v1/me", { slotDefaultLocationId: '323323232' }, auth_header
+          patch "/v1/me", { slot_default_location_id: '323323232' }, auth_header
           current_user.reload
-          expect(current_user.slot_default_location_id).to eq(323323232)
+          expect(current_user.slot_default_location_id).to eq(323_323_232)
         end
 
         it "updates the slot default duration of the current user" do
-          patch "/v1/me", { slotDefaultDuration: 1000000 }, auth_header
+          patch "/v1/me", { slot_default_duration: 1_000_000 }, auth_header
           current_user.reload
-          expect(current_user.slot_default_duration).to eq(1000000)
+          expect(current_user.slot_default_duration).to eq(1_000_000)
         end
 
         it "updates the default slot type of the current user" do
@@ -1312,7 +1312,7 @@ RSpec.describe "V1::Me", type: :request do
 
   describe "PATCH /v1/me/device" do
     it "returns success" do
-      patch "/v1/me/device", { deviceId: 'id-34273647263' }, auth_header
+      patch "/v1/me/device", { device_id: 'id-34273647263' }, auth_header
       expect(response.status).to be(200)
     end
 
@@ -1323,12 +1323,12 @@ RSpec.describe "V1::Me", type: :request do
       end
 
       it "doesn't update the device if deviceId is invalid" do
-        patch "/v1/me/device", { deviceId: nil }, auth_header
+        patch "/v1/me/device", { device_id: nil }, auth_header
         expect(response.status).to be(422)
       end
 
       it "doesn't update the device if token is invalid" do
-        patch "/v1/me/device", { deviceId: 'id-34273647263' },
+        patch "/v1/me/device", { device_id: 'id-34273647263' },
               'Authorization' => "Token token=kh34gshg5345hg3g54"
         expect(response.status).to be(401)
       end
