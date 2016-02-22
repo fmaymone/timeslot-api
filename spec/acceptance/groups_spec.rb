@@ -680,9 +680,7 @@ resource "Groups" do
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
-    let(:group) { attributes_for(:group) }
-
-    let(:muid) { group[:uuid] }
+    let(:muid) { attributes_for(:group)[:uuid] }
     let(:name) { "Autokino an der alten Eiche" }
     let(:image) { "http://faster.pussycat" }
     let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
