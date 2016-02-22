@@ -70,20 +70,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
---
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -317,14 +303,15 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
+    re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -346,7 +333,8 @@ CREATE TABLE groups (
     deleted_at timestamp without time zone,
     image character varying(255) DEFAULT ''::character varying NOT NULL,
     uuid uuid NOT NULL,
-    public boolean DEFAULT false NOT NULL
+    public boolean DEFAULT false NOT NULL,
+    string_id text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1466,4 +1454,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160209102620');
 INSERT INTO schema_migrations (version) VALUES ('20160215135746');
 
 INSERT INTO schema_migrations (version) VALUES ('20160215231713');
+
+INSERT INTO schema_migrations (version) VALUES ('20160221192251');
 
