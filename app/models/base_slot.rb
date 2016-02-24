@@ -224,6 +224,8 @@ class BaseSlot < ActiveRecord::Base
     prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister
+
+    forward_deletion
   end
 
   def add_to_group(group)
