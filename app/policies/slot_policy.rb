@@ -107,10 +107,11 @@ class SlotPolicy < ApplicationPolicy
   # true if it's my own slot
   # group permissions are checked per slotgroup
   def add_to_groups?
-    return false unless current_user?
-    return true if slot.visibility == 'public'
-    return true if slot.class < StdSlot && slot.owner == current_user
-    false
+    current_user_has_read_access?
+    # return false unless current_user?
+    # return true if slot.visibility == 'public'
+    # return true if slot.class < StdSlot && slot.owner == current_user
+    # false
   end
 
   # helper
