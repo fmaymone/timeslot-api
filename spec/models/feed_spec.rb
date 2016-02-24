@@ -361,10 +361,12 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['target']).to eq(friendslot.id.to_s)
         expect(user_feed.first['action']).to eq('delete')
         expect(user_feed.first['data']['target']['id']).to be(friendslot.id)
+        expect(user_feed.first['data']['target']['deletedAt']).not_to be(nil)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
         expect(user_feed.second['target']).to eq(publicslot.id.to_s)
         expect(user_feed.second['action']).to eq('private')
         expect(user_feed.second['data']['target']['id']).to be(publicslot.id)
+        expect(user_feed.second['data']['target']['deletedAt']).to be(nil)
         expect(user_feed.second['data']['actor']['id']).to be(user.id)
 
         user_feed_friend = Feed.user_feed(friend.id).as_json
@@ -375,6 +377,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_foreign.first['target']).to eq(foreignslot.id.to_s)
         expect(user_feed_foreign.first['action']).to eq('delete')
         expect(user_feed_foreign.first['data']['target']['id']).to be(foreignslot.id)
+        expect(user_feed_foreign.first['data']['target']['deletedAt']).not_to be(nil)
         expect(user_feed_foreign.first['data']['actor']['id']).to be(foreign.id)
       end
 
@@ -883,6 +886,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['target']).to eq(slot.id.to_s)
         expect(user_feed.first['action']).to eq('delete')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['target']['deletedAt']).not_to be(nil)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
@@ -914,6 +918,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower.first['action']).to eq('delete')
         expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['target']['deletedAt']).not_to be(nil)
         expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
@@ -921,6 +926,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower2.first['action']).to eq('delete')
         expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['target']['deletedAt']).not_to be(nil)
         expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
 
         expect(notification_feed_follower).to eq(notification_feed_follower2)
@@ -959,6 +965,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['target']).to eq(slot.id.to_s)
         expect(user_feed.first['action']).to eq('private')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['target']['deletedAt']).to be(nil)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
@@ -990,6 +997,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower.first['action']).to eq('private')
         expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['target']['deletedAt']).to be(nil)
         expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
@@ -997,6 +1005,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower2.first['action']).to eq('private')
         expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['target']['deletedAt']).to be(nil)
         expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
 
         expect(notification_feed_follower).to eq(notification_feed_follower2)
@@ -1038,6 +1047,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['target']).to eq(slot.id.to_s)
         expect(user_feed.first['action']).to eq('private')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
+        expect(user_feed.first['data']['target']['deletedAt']).to be(nil)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
@@ -1069,6 +1079,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower.first['action']).to eq('private')
         expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['target']['deletedAt']).to be(nil)
         expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
 
         notification_feed_follower2 = Feed.notification_feed(follower2.id).as_json
@@ -1076,6 +1087,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_follower2.first['target']).to eq(slot.id.to_s)
         expect(notification_feed_follower2.first['action']).to eq('private')
         expect(notification_feed_follower2.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower2.first['data']['target']['deletedAt']).to be(nil)
         expect(notification_feed_follower2.first['data']['actor']['id']).to be(user.id)
 
         expect(notification_feed_follower).to eq(notification_feed_follower2)
