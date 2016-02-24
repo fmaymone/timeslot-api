@@ -65,12 +65,12 @@ module Activity
     return self
   end
 
-  def forward_deletion
-    create_activity_feed('delete', notify: nil, forward: {
+  def forward_deletion(action = 'delete')
+    create_activity_feed(action, notify: nil, forward: {
         User: [activity_actor.id.to_s],
         Notification: activity_target.followers
     })
-    create_activity_push('delete', notify: nil, forward: activity_target.followers) if push_is_valid?
+    create_activity_push(action, notify: nil, forward: activity_target.followers) if push_is_valid?
   rescue => error
     error_handler(error, "failed: forward 'deletion' activity as worker job")
   ensure
@@ -167,16 +167,9 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if activity_action == 'slot' && action == 'private' # || action == 'unslot'
+    if activity_action == 'slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
       # Forward "deletion" action as an activity to the dispatcher
-      forward_activity(
-          action,
-          feed_fwd: {
-              User: [activity_actor.id.to_s],
-              Notification: activity_target.followers
-          },
-          push_fwd: activity_target.followers
-      )
+      forward_deletion(action)
     end
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
