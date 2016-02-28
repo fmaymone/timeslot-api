@@ -220,10 +220,14 @@ class BaseSlot < ActiveRecord::Base
     # of the parent/predecessor slot was removed
     re_slots.each(&:delete)
 
-    remove_all_followers
     prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister
+
+    # Forward deletion activity after 'deleted_at' was set:
+    forward_deletion
+    # NOTE: Remove follower relations at least!
+    remove_all_followers
   end
 
   def add_to_group(group)

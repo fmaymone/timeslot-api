@@ -65,6 +65,20 @@ module Activity
     return self
   end
 
+  def forward_deletion(action = 'delete')
+    create_activity_feed(action, notify: nil, forward: {
+        User: [activity_actor.id.to_s],
+        Notification: activity_target.followers
+    })
+    create_activity_push(action, notify: nil, forward: activity_target.followers) if push_is_valid?
+  rescue => error
+    error_handler(error, "failed: forward 'deletion' activity as worker job")
+  ensure
+    return self
+  end
+
+  ## Private Helpers ##
+
   private def create_activity_feed(action, notify: nil, forward: nil, time: nil)
     # FIX: Reload last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
@@ -153,16 +167,9 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
-    if activity_action == 'slot' && (action == 'private' || action == 'delete') # || action == 'unslot'
-      # Forward "delete" action as an activity to the dispatcher
-      forward_activity(
-          action,
-          feed_fwd: {
-              User: [activity_actor.id.to_s],
-              Notification: activity_target.followers
-          },
-          push_fwd: activity_target.followers
-      )
+    if activity_action == 'slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
+      # Forward "deletion" action as an activity to the dispatcher
+      forward_deletion(action)
     end
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
