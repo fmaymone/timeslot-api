@@ -78,14 +78,10 @@ module V1
     end
 
     # DELETE /v1/slot/1
-    # temporary unification of slot deletion routes,
-    # we don't need this for reslots in the future
     def delete
       slot_id = params[:id].to_i
       @slot = current_user.std_slots.find(slot_id)
-    rescue ActiveRecord::RecordNotFound
-      @slot = current_user.re_slots.find_by(parent_id: slot_id)
-    ensure
+
       authorize @slot
 
       if @slot.delete
