@@ -1098,7 +1098,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(current_user.reload.slot_sets).not_to be nil
 
         post "/v1/slots/#{slot.id}/slotgroups",
-             { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+             { slot_groups: [current_user.slot_sets['my_cal_uuid']] },
              auth_header
 
         current_user.reload
@@ -1111,7 +1111,7 @@ RSpec.describe "V1::Slots", type: :request do
           expect(current_user.reload.slot_sets).not_to be nil
 
           post "/v1/slots/#{slot.id}/slotgroups",
-               { slotGroups: [current_user.slot_sets['my_cal_uuid'],
+               { slot_groups: [current_user.slot_sets['my_cal_uuid'],
                               group.uuid] },
                auth_header
 
@@ -1142,7 +1142,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(group_1.slots).to include slot
         expect(group_2.slots).to include slot
         delete "/v1/slots/#{slot.id}/slotgroups",
-               { slotGroups: [group_1.uuid, group_2.uuid] }, auth_header
+               { slot_groups: [group_1.uuid, group_2.uuid] }, auth_header
 
         expect(group_1.slots).not_to include slot
         expect(group_2.slots).not_to include slot
@@ -1159,7 +1159,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(current_user.my_calendar_slots).to include slot
 
         delete "/v1/slots/#{slot.id}/slotgroups",
-               { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+               { slot_groups: [current_user.slot_sets['my_cal_uuid']] },
                auth_header
 
         current_user.reload
@@ -1179,7 +1179,7 @@ RSpec.describe "V1::Slots", type: :request do
         expect(group_2.slots).to include slot
 
         delete "/v1/slots/#{slot.id}/slotgroups",
-               { slotGroups: [group_1.uuid,
+               { slot_groups: [group_1.uuid,
                               current_user.slot_sets['my_cal_uuid'],
                               group_2.uuid] },
                auth_header

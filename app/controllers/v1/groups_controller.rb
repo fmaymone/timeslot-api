@@ -189,7 +189,8 @@ module V1
     end
 
     private def globalgroup
-      p = params.require(:group).permit(:name, :image, :muid, :stringId, slots: [])
+      p = params.require(:group)
+          .permit(:name, :image, :muid, :string_id, slots: [])
       p.transform_keys(&:underscore) if p
     end
 

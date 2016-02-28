@@ -18,8 +18,8 @@ module V1
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
-      if params.key?(:slotGroups) && params[:slotGroups].any?
-        add_to_slotgroups(params[:slotGroups])
+      if params.key?(:slot_groups) && params[:slot_groups].any?
+        add_to_slotgroups(params[:slot_groups])
       end
 
       if @slot.persisted?
@@ -30,6 +30,7 @@ module V1
       end
     end
 
+    # TODO: remove this
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -59,6 +60,7 @@ module V1
       end
     end
 
+    # TODO: rename to /v1/slots/:id
     # PATCH /v1/stdslot/1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])

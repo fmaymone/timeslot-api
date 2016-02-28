@@ -68,6 +68,10 @@ resource "Slots" do
 
         expect(current_user.created_slots).to include new_slot.meta_slot
         expect(current_user.my_calendar_slots).to include new_slot
+        expect(group_1.slots).to include new_slot
+        expect(group_2.slots).to include new_slot
+        expect(unauthorized_group.slots).not_to include new_slot
+        expect(deleted_group.slots).not_to include new_slot
 
         expect(response_status).to eq(201)
         expect(json).to have_key("id")
