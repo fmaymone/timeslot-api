@@ -87,16 +87,16 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "json reslots counter" do
-      let!(:re_slot) { create(:re_slot, slotter: current_user) }
-      let!(:not_my_reslot) { create(:re_slot) }
+    # context "json reslots counter" do
+    #   let!(:re_slot) { create(:re_slot, slotter: current_user) }
+    #   let!(:not_my_reslot) { create(:re_slot) }
 
-      it "return number of re_slots for current user" do
-        get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key 'reslotCount'
-        expect(json['reslotCount']).to eq 1
-      end
-    end
+    #   it "return number of re_slots for current user" do
+    #     get "/v1/users/#{current_user.id}", {}, auth_header
+    #     expect(json).to have_key 'reslotCount'
+    #     expect(json['reslotCount']).to eq 1
+    #   end
+    # end
 
     context "return group membership via json" do
       let!(:membership) { create(:membership, :active, user: current_user) }
@@ -287,7 +287,7 @@ RSpec.describe "V1::Users", type: :request do
         slots.push create(:std_slot_private, owner: current_user)
         slots.push create(:std_slot_friends, owner: current_user)
         slots.push create(:std_slot_public, owner: current_user)
-        slots.push(*create_list(:re_slot, 2, slotter: current_user))
+        # slots.push(*create_list(:re_slot, 2, slotter: current_user))
       end
 
       it "returns success" do
@@ -333,11 +333,6 @@ RSpec.describe "V1::Users", type: :request do
         create_list(:std_slot_private, 3,
                     start_date: Time.zone.tomorrow,
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.tomorrow.midday,
-               end_date: Time.zone.tomorrow.next_week.end_of_day,
-               title: 'upcoming reslot',
-               slotter: @current_user)
         # ongoing slots
         create(:std_slot_friends,
                start_date: Time.zone.yesterday,
@@ -349,11 +344,6 @@ RSpec.describe "V1::Users", type: :request do
                     end_date: Time.zone.tomorrow,
                     title: 'ongoing friendslots',
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday,
-               end_date: Time.zone.tomorrow,
-               title: 'ongoing reslot',
-               slotter: @current_user)
         # past slots
         create(:std_slot_public,
                start_date: Time.zone.yesterday.last_year,
@@ -375,11 +365,6 @@ RSpec.describe "V1::Users", type: :request do
                     end_date: Time.zone.yesterday.end_of_day,
                     title: 'past public slots',
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday.last_month,
-               end_date: Time.zone.today.last_month,
-               title: 'past reslot',
-               slotter: @current_user)
       end
 
       describe "GET slots for befriended user" do
@@ -425,8 +410,8 @@ RSpec.describe "V1::Users", type: :request do
           get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
-          expect(response.body).to include 'ongoing reslot'
-          expect(response.body).to include 'upcoming reslot'
+          # expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'upcoming reslot'
           expect(response.body).to include 'past public slot'
           expect(response.body).to include 'long ago public slot'
         end
@@ -494,8 +479,8 @@ RSpec.describe "V1::Users", type: :request do
           get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
-          expect(response.body).to include 'ongoing reslot'
-          expect(response.body).to include 'upcoming reslot'
+          # expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'upcoming reslot'
           expect(response.body).to include 'long ago public slot'
         end
 
@@ -539,7 +524,7 @@ RSpec.describe "V1::Users", type: :request do
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
-          expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'ongoing reslot'
           expect(response.body).to include 'past public slot'
         end
 
@@ -580,7 +565,7 @@ RSpec.describe "V1::Users", type: :request do
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
-          expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'ongoing reslot'
           expect(response.body).to include 'past public slot'
         end
       end

@@ -18,39 +18,6 @@ resource "Groups" do
     response_field :membershipState, "Membership state for current user"
   end
 
-  # index
-  get "/v1/groups" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
-
-    let!(:current_user) { create(:user, :with_email, :with_password,
-                                 :with_3_groups, :with_3_own_groups) }
-
-    example "Get all groups where current user is member or owner",
-            document: :v1 do
-      explanation "returns an array of groups"
-
-      do_request
-
-      expect(response_status).to eq(200)
-      expect(json.size).to eq current_user.groups.count
-      expect(json[0]).to have_key("id")
-      expect(json[0]).to have_key("name")
-      expect(json[0]).to have_key("image")
-      expect(json[0]).to have_key("owner")
-      expect(json[0]).to have_key("createdAt")
-      expect(json[0]).to have_key("updatedAt")
-      expect(json[0]).to have_key("deletedAt")
-    end
-  end
-
   # show
   get "/v1/groups/:group_uuid" do
     header "Accept", "application/json"
@@ -93,7 +60,7 @@ resource "Groups" do
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :membersCanPost, "Can subscribers post?"
     parameter :membersCanInvite, "Can subscribers invite friends?"
-    parameter :invitees, "Array of User IDs to be invited"
+    parameter :invitees, "Array of User IDs to be added to the group"
 
     include_context "default group response fields"
 
@@ -114,7 +81,7 @@ resource "Groups" do
       expect(group.owner).to eq current_user
       expect(group.members).to include current_user
       expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
-      expect(Membership.last.invited?).to be true
+      expect(Membership.last.active?).to be true
     end
   end
 
@@ -308,6 +275,11 @@ resource "Groups" do
 
     let(:group) { create(:group) }
     let(:group_uuid) { group.uuid }
+    let!(:active_member) {
+      user = create(:user, :with_picture)
+      create(:membership, :active, user: user, group: group)
+      user
+    }
     let!(:active_members) { create_list(:membership, 4, :active, group: group) }
     let!(:inactive_member) { create(:membership, :inactive, group: group) }
     # group owner is automatically an active member too
@@ -321,13 +293,13 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({
-                                "groupId" => group.uuid,
-                                "size" => 6
-                              })
+      expect(json).to include("id" => group.uuid, "membersCounter" => 7)
       expect(response_body).to include(group.members.first.username)
-      expect(response_body)
-        .to include(v1_user_url(group.members.first, format: :json))
+      expect(response_body).to include(active_member.picture)
+      expect(response_body).to include(active_member.created_at.as_json)
+      expect(response_body).to include(active_member.updated_at.as_json)
+      # expect(response_body)
+        # .to include(v1_user_url(group.members.first, format: :json))
     end
   end
 
@@ -361,12 +333,9 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({
-                                "groupId" => group.uuid,
-                                "size" => 7
-                              })
+      expect(json).to include({ "id" => group.uuid, "size" => 7 })
       expect(json["related"])
-        .to include("userId" => group.related_users.first.id,
+        .to include("id" => group.related_users.first.id,
                     "state" => group.memberships.first.humanize,
                     "deletedAt" => group.memberships.first.deleted_at
                    )
@@ -459,26 +428,26 @@ resource "Groups" do
     parameter :invitees, "User IDs to be invited to group", required: true
 
     let!(:group) { create(:group, owner: current_user) }
-    let(:invited_users) { create_list(:user, 3) }
+    let(:added_users) { create_list(:user, 3) }
 
     let(:group_uuid) { group.uuid }
-    let(:invitees) { invited_users.collect(&:id) }
+    let(:invitees) { added_users.collect(&:id) }
 
-    example "Invite multiple users to group", document: :v1 do
-      explanation "Inviting user must be group owner or group must allow" \
-                  " invites by group members.\n\n" \
+    example "Add multiple users to group", document: :v1 do
+      explanation "Adds the given Users to the group. Inviting user must" \
+                  " be group member.\n\n" \
                   "returns 201 if invite successfully created\n\n" \
                   "returns 403 if user is not allowed to invite\n\n" \
                   "returns 404 if group UUID is invalid\n\n" \
                   "returns 422 if parameters are missing"
       expect {
         do_request
-      }.to change(Membership, :count).by invited_users.length
+      }.to change(Membership, :count).by added_users.length
       expect(response_status).to eq(201)
       membership = Membership.last
-      expect(membership.invited?).to be true
-      expect(group.members).not_to include invited_users.first
-      expect(group.related_users).to include invited_users.first
+      expect(membership.active?).to be true
+      expect(group.members).to include added_users.first
+      expect(group.related_users).to include added_users.first
     end
   end
 

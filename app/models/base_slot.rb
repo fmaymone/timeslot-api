@@ -17,15 +17,10 @@ class BaseSlot < ActiveRecord::Base
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
                  StdSlotFoaf: 4,
-                 ReSlotPrivate: 5,
-                 ReSlotFriends: 6,
-                 ReSlotFoaf: 7,
-                 ReSlotPublic: 22, # maintain backwards compatibility
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
-                 StdSlot: 20,
-                 # ReSlot: 23,
+                 StdSlot: 20
                }.freeze
 
   enum slot_type: SLOT_TYPES
@@ -45,13 +40,16 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  has_many :re_slots, -> { includes(:slotter) },
-           foreign_key: :parent_id, inverse_of: :parent
 
   has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
   has_many :slot_groups, -> { merge Containership.active },
            through: :containerships, source: :group,
            inverse_of: :slots
+
+  has_many :passengerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :my_calendar_users, -> { merge Passengership.active },
+           through: :passengerships, source: :user,
+           inverse_of: :my_calendar_slots
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
@@ -154,12 +152,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    like = if self.class <= ReSlot
-             Like.find_by(slot: parent, user: user)
-           else
-             Like.find_by(slot: self, user: user)
-           end
-
+    like = Like.find_by(slot: self, user: user)
     unless like
       like = likes.create(user: user)
       like.create_activity
@@ -195,12 +188,12 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def update_user_tags(current_user, user_tags)
-    unless user_tags.nil?
-      reslotters = ReSlot.where(parent_id: id).pluck(:slotter_id)
-      User.find(user_tags - reslotters).each do |user|
-        ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
-      end
-    end
+    # unless user_tags.nil?
+    #   reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
+    #   User.find(user_tags - reslotters).each do |user|
+    #     ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
+    #   end
+    # end
   end
 
   def delete
@@ -209,16 +202,13 @@ class BaseSlot < ActiveRecord::Base
     notes.each(&:delete)
     media_items.each(&:delete)
     containerships.each(&:delete)
+    passengerships.each(&:delete)
 
     remove_all_activities(target: self)
 
     related_users.each do |user|
       user.prepare_for_slot_deletion self
     end
-
-    # NOTE: Actually we remove all reslots if one
-    # of the parent/predecessor slot was removed
-    re_slots.each(&:delete)
 
     prepare_for_deletion
     ts_soft_delete
@@ -311,10 +301,6 @@ class BaseSlot < ActiveRecord::Base
     BaseSlot.find(slot_id).reload
   end
 
-  def self.get_many(slot_ids)
-    slot_ids.collect { |id| get(id) }
-  end
-
   # TODO: add spec
   def self.upcoming
     # BaseSlot.includes(:meta_slot).
@@ -332,20 +318,15 @@ class BaseSlot < ActiveRecord::Base
 
   def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
                        notes: nil, alerts: nil, user: nil)
-
-    # TODO: improve
-    fail unless visibility #|| group
+    fail unless visibility
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    if visibility
-      slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
-                                 user: user)
-    # elsif group
-    #   slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
-    end
+    slot = StdSlot.create_slot(meta_slot: meta_slot,
+                               visibility: visibility,
+                               user: user)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?

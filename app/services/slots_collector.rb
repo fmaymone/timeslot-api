@@ -21,7 +21,7 @@ class SlotsCollector
 
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
-    showables = [user.std_slots, user.re_slots]
+    showables = [user.std_slots] #, user.re_slots]
     consider_filter(showables, @filter)
   end
 
@@ -46,8 +46,8 @@ class SlotsCollector
     # friends = UserQuery::Relationship.new(current_user.id).my_friends
     friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
-    showables = [StdSlot.where(owner: friends).unprivate,
-                 ReSlot.where(slotter: friends).unprivate]
+    showables = [StdSlot.where(owner: friends).unprivate]
+                 # ReSlot.where(slotter: friends).unprivate]
     consider_filter(showables, @filter)
   end
 
@@ -59,8 +59,8 @@ class SlotsCollector
 
     if slot_class == StdSlot
       showables = PresentableSlots.std_slots(relationship: rs, user: user)
-    elsif slot_class == ReSlot
-      showables = PresentableSlots.re_slots(relationship: rs, user: user)
+    # elsif slot_class == ReSlot
+      # showables = PresentableSlots.re_slots(relationship: rs, user: user)
     end
 
     counter = 0

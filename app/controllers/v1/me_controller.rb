@@ -69,6 +69,16 @@ module V1
       end
     end
 
+    # GET /v1/me/calendar
+    # returns all slots current user has in her calendar
+    def calendar
+      authorize :me
+
+      @slots = current_user.my_calendar_slots
+
+      render "v1/slots/index"
+    end
+
     # GET /v1/me/friendslots
     # returns all non-private slots of all friends from current user
     def slots_of_my_friends
@@ -107,6 +117,14 @@ module V1
       authorize :me
       @users = current_user.friends
       render "v1/users/list"
+    end
+
+    # GET /v1/me/groups
+    # return all groups where the current user is member
+    def my_groups
+      authorize :me
+      @groups = current_user.active_groups
+      render "v1/groups/index"
     end
 
     # PATCH /v1/me/device

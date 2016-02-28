@@ -1,5 +1,51 @@
 namespace :slots do
 
+  desc "Convert StdSlots to passengerships."
+  task convert_stdslot: :environment do
+    puts "Going through all stdslots and create new passengership..."
+
+    ActiveRecord::Base.transaction do
+      slot_count = StdSlot.count
+
+      StdSlot.find_each.with_index do |slot, index|
+        default_msg = "#{index + 1}/#{slot_count} - #{slot.title}"
+
+        ps = Passengership.find_or_create_by(slot_id: slot.id,
+                                             user_id: slot.creator_id)
+        puts "passengership: #{ps.id} for slot #{slot.id}"
+
+        if ps.save
+          puts "#{default_msg} saved (#{ps.id})"
+        else
+          puts "ERROR - #{default_msg} not updated (#{ps.id})"
+        end
+      end
+    end
+  end
+
+  desc "Convert Reslots to passengerships."
+  task convert_reslot: :environment do
+    puts "Going through all reslots and create new passengership..."
+
+    ActiveRecord::Base.transaction do
+      slot_count = ReSlot.count
+
+      ReSlot.find_each.with_index do |slot, index|
+        default_msg = "#{index + 1}/#{slot_count} - #{slot.title}"
+
+        ps = Passengership.find_or_create_by(slot_id: slot.parent_id,
+                                             user_id: slot.slotter_id)
+        puts "passengership: #{ps.id}"
+
+        if ps.save
+          puts "#{default_msg} saved (#{ps.id})"
+        else
+          puts "ERROR - #{default_msg} not updated (#{ps.id})"
+        end
+      end
+    end
+  end
+
   desc "Sets the type column for the existing slots in the db."
   task set_type: :environment do
     puts "Going through all slots and set the type..."

@@ -14,6 +14,7 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
   it { is_expected.to have_many(:containerships).inverse_of(:group) }
+  it { is_expected.to have_many(:slots).inverse_of(:slot_groups) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
                        .class_name(User)
@@ -127,12 +128,12 @@ RSpec.describe Group, type: :model do
         expect(Group.last.image).to eq image
       end
 
-      it "invites users to the group if provided" do
+      it "adds users to the group if provided" do
         Group.create_with_invitees(group_params: group_params,
                                    invitees: invitees)
         expect(Group.last.related_users).not_to be nil
         expect(Group.last.related_users.count).to eq 4
-        expect(Group.last.members.count).to eq 1
+        expect(Group.last.members.count).to eq 4
         expect(Group.last.members).to include owner
       end
     end

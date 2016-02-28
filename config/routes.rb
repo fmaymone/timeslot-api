@@ -11,25 +11,25 @@ Rails.application.routes.draw do
 
     scope constraints: { id: /\d+/ } do
       post 'stdslot', to: 'slots#create_stdslot'
-      post 'reslot', to: 'slots#create_reslot'
 
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
       patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-      patch 'reslot/:id', to: 'slots#update_reslot', as: 'reslot_update'
 
-      delete 'stdslot/:id', to: 'slots#destroy_stdslot', as: 'stdslot_delete'
-      delete 'reslot/:id', to: 'slots#destroy_reslot', as: 'reslot_delete'
-
+      # share routes
       get '/', to: 'share#redirect', as: 'redirect'
       post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
       delete 'share/:id', to: 'share#delete', as: 'share_delete'
       post 'export/:id/:action', to: 'export#:action', as: 'slot_export'
       post 'import', to: 'import#handler', as: 'slot_import'
+
+      # TODO: remove routes
+      delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
       get ':id', to: 'slots#show', as: 'slot'
-      post '', to: 'slots#show_many', as: 'slots_read'
+      post '', to: 'slots#create', as: 'slot_create'
+      delete ':id', to: 'slots#delete', as: 'slot_delete'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       get ':id/user_tags', to: 'slots#get_user_tags', as: 'slot_get_user_tags'
       post ':id/user_tags', to: 'slots#update_user_tags', as: 'user_tags'
 
+      get ':id/slotsets', to: 'slots#slotsets'
       post ':id/slotgroups', to: 'slots#add_to_groups'
       delete ':id/slotgroups', to: 'slots#remove_from_groups'
 
@@ -63,11 +64,13 @@ Rails.application.routes.draw do
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
+      get 'calendar', to: 'me#calendar', as: 'my_calendar'
       get 'friendslots', to: 'me#slots_of_my_friends'
       get 'media', to: 'me#my_media_items', as: 'my_media'
       get 'signout', to: 'me#signout', as: 'sign_me_out'
       get 'suggested_users', to: 'me#suggested_users'
       get 'friends', to: 'me#my_friends', as: 'my_friends'
+      get 'slotgroups', to: 'me#my_groups', as: 'my_slotgroups'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
       post 'friendship/:user_id', to: 'me#befriend', as: 'befriend',
@@ -89,7 +92,6 @@ Rails.application.routes.draw do
 
     scope :groups, constraints: {
             group_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
-      get '', to: 'groups#index', as: 'groups'
       post '', to: 'groups#create', as: 'group_create'
       get ':group_uuid', to: 'groups#show', as: 'group'
       patch ':group_uuid', to: 'groups#update', as: 'group_update'

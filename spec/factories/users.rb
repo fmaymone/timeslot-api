@@ -14,6 +14,10 @@ FactoryGirl.define do
       location
     end
 
+    trait :with_picture do
+      picture 'www.looking.good'
+    end
+
     trait :with_phone do
       phone
     end

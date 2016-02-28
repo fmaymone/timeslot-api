@@ -20,10 +20,6 @@ class StdSlot < BaseSlot
       # Update Follower + Feeds status if visibility change to private
       # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        re_slots.each do |slot|
-          slot.remove_all_activities(target: self)
-          slot.remove_all_followers
-        end
         remove_all_activities('private', target: self)
         remove_all_followers
       end
@@ -49,6 +45,7 @@ class StdSlot < BaseSlot
     Airbrake.notify(NameError, error_message: msg)
   else
     slot = slot_type.create(meta_slot: meta_slot, owner: user)
+    Passengership.create(slot: slot, user: user)
     slot.create_activity
   end
 

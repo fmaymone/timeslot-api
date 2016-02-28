@@ -21,6 +21,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def calendar?
+    current_user?
+  end
+
   def my_friends?
     current_user?
   end
@@ -34,6 +38,10 @@ class MePolicy < ApplicationPolicy
   end
 
   def suggested_users?
+    current_user?
+  end
+
+  def my_groups?
     current_user?
   end
 

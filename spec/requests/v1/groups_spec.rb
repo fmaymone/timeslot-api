@@ -40,11 +40,11 @@ RSpec.describe "V1::Groups", type: :request do
           invitees: create_list(:user, 3).collect(&:id) }
       end
 
-      it "creates memberships for all invitees" do
+      it "creates active memberships for all invitees" do
         expect {
           post "/v1/groups", new_params, auth_header
         }.to change(Membership, :count).by 4
-        expect(Membership.last.invited?).to be true
+        expect(Membership.last.active?).to be true
       end
     end
   end
@@ -224,12 +224,12 @@ RSpec.describe "V1::Groups", type: :request do
         expect(json['related'].size).to eq 6
       end
 
-      it "creates new memberships with state 'invited' for all new members" do
+      it "creates new memberships with state 'active' for all new members" do
         expect {
           post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size)
         other_users.each do |id|
-          expect(Membership.where(user_id: id).first.invited?).to be true
+          expect(Membership.where(user_id: id).first.active?).to be true
         end
       end
 
@@ -249,7 +249,7 @@ RSpec.describe "V1::Groups", type: :request do
         }.to change(Membership, :count).by(other_users.size - 1)
       end
 
-      it "re-invites users who had left the group or rejected a previous invitation" do
+      it "re-adds users who had left the group" do
         create(:membership, :left, user: other_users.first, group: group)
         create(:membership, :refused, user: other_users.last, group: group)
 
@@ -258,14 +258,14 @@ RSpec.describe "V1::Groups", type: :request do
         }.to change(Membership, :count).by(other_users.size - 2)
         membership1 = Membership.where(user_id: other_users.first).first
         membership2 = Membership.where(user_id: other_users.last).first
-        expect(membership1.invited?).to be true
-        expect(membership2.invited?).to be true
+        expect(membership1.active?).to be true
+        expect(membership2.active?).to be true
       end
 
-      it "doesn't add user to group" do
+      it "adds user to group" do
         expect {
           post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
-        }.not_to change(group.members, :count)
+        }.to change(group.members, :count).by 5
       end
 
       describe "existing membership" do
@@ -312,10 +312,10 @@ RSpec.describe "V1::Groups", type: :request do
             }.not_to change(Membership, :count)
           end
 
-          it "changes membership state to 'invited'" do
+          it "changes membership state to 'active'" do
             post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
             membership.reload
-            expect(membership.invited?).to be true
+            expect(membership.active?).to be true
           end
         end
       end

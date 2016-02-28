@@ -22,7 +22,7 @@ RSpec.describe StdSlot, type: :model do
   it { is_expected.to respond_to(:media_items) }
   it { is_expected.to belong_to(:owner).inverse_of(:std_slots) }
   it { is_expected.to belong_to(:meta_slot) }
-  it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
+  # it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -135,29 +135,29 @@ RSpec.describe StdSlot, type: :model do
     end
   end
 
-  describe :reslots do
-    let(:parent) { create(:std_slot_friends) }
-    let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
+  # describe :reslots do
+  #   let(:parent) { create(:std_slot_friends) }
+  #   let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
-    it "returns an array of the reslots of this slot" do
-      res = parent.re_slots
-      expect(res.size).to be 3
-      expect(res).to include reslots.first
-    end
-  end
+  #   it "returns an array of the reslots of this slot" do
+  #     res = parent.re_slots
+  #     expect(res.size).to be 3
+  #     expect(res).to include reslots.first
+  #   end
+  # end
 
-  describe :re_slots_count do
-    let(:parent) { create(:std_slot_foaf) }
-    let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
+  # describe :re_slots_count do
+  #   let(:parent) { create(:std_slot_foaf) }
+  #   let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
-    it "returns the number of reslots for this slot" do
-      expect(parent.re_slots_count).to eq 3
-    end
+  #   it "returns the number of reslots for this slot" do
+  #     expect(parent.re_slots_count).to eq 3
+  #   end
 
-    it "ignores deleted reslots" do
-      ReSlot.last.delete
-      parent.reload
-      expect(parent.re_slots_count).to eq 2
-    end
-  end
+  #   it "ignores deleted reslots" do
+  #     ReSlot.last.delete
+  #     parent.reload
+  #     expect(parent.re_slots_count).to eq 2
+  #   end
+  # end
 end

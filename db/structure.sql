@@ -116,7 +116,6 @@ CREATE TABLE base_slots (
     slot_type integer NOT NULL,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
     type text NOT NULL
 );
 
@@ -326,7 +325,6 @@ CREATE TABLE global_slots (
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -603,6 +601,39 @@ ALTER SEQUENCE notes_id_seq OWNED BY notes.id;
 
 
 --
+-- Name: passengerships; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE passengerships (
+    id bigint NOT NULL,
+    slot_id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: passengerships_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE passengerships_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: passengerships_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE passengerships_id_seq OWNED BY passengerships.id;
+
+
+--
 -- Name: providers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -631,23 +662,6 @@ CREATE SEQUENCE providers_id_seq
 --
 
 ALTER SEQUENCE providers_id_seq OWNED BY providers.id;
-
-
---
--- Name: re_slots; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE re_slots (
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
-    predecessor_id bigint NOT NULL,
-    slotter_id bigint NOT NULL,
-    parent_id bigint NOT NULL,
-    tagged_from bigint
-)
-INHERITS (base_slots);
 
 
 --
@@ -738,7 +752,8 @@ CREATE TABLE users (
     phone_verified boolean DEFAULT false NOT NULL,
     email_verified boolean DEFAULT false NOT NULL,
     lang character varying(8),
-    picture character varying(255) DEFAULT ''::character varying NOT NULL
+    picture character varying(255) DEFAULT ''::character varying NOT NULL,
+    slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL
 );
 
 
@@ -856,35 +871,14 @@ ALTER TABLE ONLY notes ALTER COLUMN id SET DEFAULT nextval('notes_id_seq'::regcl
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq'::regclass);
+ALTER TABLE ONLY passengerships ALTER COLUMN id SET DEFAULT nextval('passengerships_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
-ALTER TABLE ONLY re_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
-
-
---
--- Name: likes_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN likes_count SET DEFAULT 0;
-
-
---
--- Name: comments_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN comments_count SET DEFAULT 0;
-
-
---
--- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY re_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
+ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq'::regclass);
 
 
 --
@@ -913,13 +907,6 @@ ALTER TABLE ONLY std_slots ALTER COLUMN likes_count SET DEFAULT 0;
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
-
-
---
--- Name: re_slots_count; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY std_slots ALTER COLUMN re_slots_count SET DEFAULT 0;
 
 
 --
@@ -1031,6 +1018,14 @@ ALTER TABLE ONLY meta_slots
 
 ALTER TABLE ONLY notes
     ADD CONSTRAINT notes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: passengerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY passengerships
+    ADD CONSTRAINT passengerships_pkey PRIMARY KEY (id);
 
 
 --
@@ -1184,24 +1179,17 @@ CREATE INDEX index_notes_on_base_slot_id ON notes USING btree (base_slot_id);
 
 
 --
--- Name: index_re_slots_on_meta_slot_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_passengerships_on_slot_id_and_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_re_slots_on_meta_slot_id ON re_slots USING btree (meta_slot_id);
-
-
---
--- Name: index_re_slots_on_predecessor_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX index_re_slots_on_predecessor_id ON re_slots USING btree (predecessor_id);
+CREATE UNIQUE INDEX index_passengerships_on_slot_id_and_user_id ON passengerships USING btree (slot_id, user_id);
 
 
 --
--- Name: index_re_slots_on_slotter_id; Type: INDEX; Schema: public; Owner: -
+-- Name: index_passengerships_on_user_id_and_slot_id; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_re_slots_on_slotter_id ON re_slots USING btree (slotter_id);
+CREATE UNIQUE INDEX index_passengerships_on_user_id_and_slot_id ON passengerships USING btree (user_id, slot_id);
 
 
 --
@@ -1461,5 +1449,11 @@ INSERT INTO schema_migrations (version) VALUES ('20160121113721');
 
 INSERT INTO schema_migrations (version) VALUES ('20160121133720');
 
+INSERT INTO schema_migrations (version) VALUES ('20160130125422');
+
+INSERT INTO schema_migrations (version) VALUES ('20160131005126');
+
 INSERT INTO schema_migrations (version) VALUES ('20160209102620');
+
+INSERT INTO schema_migrations (version) VALUES ('20160215135746');
 

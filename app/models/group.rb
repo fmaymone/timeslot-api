@@ -37,12 +37,12 @@ class Group < ActiveRecord::Base
   def invite_users(ids)
     ids.each do |user_id|
       invitee = User.find(user_id)
-      next if invitee.invited?(self) || invitee.active_member?(id)
+      next if invitee.active_member?(id)
 
       # allow to re-invite kicked/refused/left members:
       membership = invitee.get_membership self
       membership ||= Membership.new(group_id: id, user_id: invitee.id)
-      membership.invite && membership.save
+      membership.activate && membership.save
     end
   end
 

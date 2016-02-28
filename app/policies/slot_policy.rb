@@ -15,9 +15,9 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # will probably be removed
-  def show_many?
-    show?
+  # true if the user is signed in
+  def create?
+    current_user?
   end
 
   def show_likes?
@@ -67,15 +67,15 @@ class SlotPolicy < ApplicationPolicy
     current_user?
   end
 
+  # TODO: write spec
+  def slotsets?
+    current_user_has_read_access?
+  end
+
   # false if no user is signed-in
   # true, if the user has read access for the slot
   # group permissions are checked per slotgroup
   def remove_from_groups?
-    current_user_has_read_access?
-  end
-
-  # will probably be removed
-  def reslot_history?
     current_user_has_read_access?
   end
 
@@ -94,12 +94,7 @@ class SlotPolicy < ApplicationPolicy
 
   # actions
 
-  # true if the user is signed in and
-  # the slot which gets resloted is a public slot or
-  # the slot is a friendslot from a friend of the current user or
-  # the slot is in a public group
-  # in other words: allowed if the user is allowed to see the slot
-  # which he wants to reslot
+  # FIX: remove when globalslot-reslot is updated
   def create_reslot?
     return false if slot.StdSlotPrivate?
     current_user_has_read_access?
@@ -110,13 +105,11 @@ class SlotPolicy < ApplicationPolicy
   # false if no user is signed-in
   # true if slot is public visible
   # true if it's my own slot
-  # true if it's a reslot I made
   # group permissions are checked per slotgroup
   def add_to_groups?
     return false unless current_user?
     return true if slot.visibility == 'public'
     return true if slot.class < StdSlot && slot.owner == current_user
-    return true if slot.class < ReSlot && slot.slotter == current_user
     false
   end
 
@@ -128,7 +121,6 @@ class SlotPolicy < ApplicationPolicy
     return true if slot.visibility == 'public'
     # return true if slot.class == GlobalSlot # is public
     return show_std_slot? if slot.class < StdSlot
-    return show_re_slot? if slot.class <= ReSlot
     false
   end
 
@@ -149,25 +141,6 @@ class SlotPolicy < ApplicationPolicy
     # combined check determines if read access to foaf slot
     return false unless slot.StdSlotFoaf?
     return true if current_user.common_friend_with?(slot.owner)
-    false
-  end
-
-  # re slot
-  # true if it's a public reslot (a reslot from a public slot)
-  # true if it's my own reslot
-  # true if it's a friend-visible reslot of a friend
-  # true if it's a foaf-visible reslot of a user with common friends
-  # later: true if it's a reslot from a pulic group's groupslot
-  private def show_re_slot?
-    # return true if slot.ReSlotPublic? # already checked
-    return true if current_user == slot.slotter
-    # TODO: return true if slot is in a slotgroup where user has access
-    if slot.ReSlotFriends? || slot.ReSlotFoaf?
-      return true if current_user.friend_with?(slot.slotter)
-    end
-    # combined check determines if read access to foaf slot
-    return false unless slot.ReSlotFoaf?
-    return true if current_user.common_friend_with?(slot.slotter)
     false
   end
 

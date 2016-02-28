@@ -185,39 +185,67 @@ resource "Users" do
         do_request
 
         expect(response_status).to eq(200)
+        # basic user response fields
         expect(json).to have_key "id"
         expect(json).to have_key "username"
-        expect(json).to have_key "image"
-        expect(json).to have_key "location"
-        # expect(json).to have_key "notifications"
         expect(json).to have_key "createdAt"
         expect(json).to have_key "updatedAt"
         expect(json).to have_key "deletedAt"
+        expect(json).to have_key "image"
+        # default user response fields
+        expect(json).to have_key "location"
         expect(json).to have_key "slotCount"
-        expect(json).to have_key "reslotCount"
+        # expect(json).to have_key "reslotCount"
         expect(json).to have_key "friendsCount"
+
         expect(json).to have_key "friendshipState"
+        # excluded attributes
+        expect(json).not_to have_key "lang"
+        expect(json).not_to have_key "email"
+        expect(json).not_to have_key "emailVerified"
+        expect(json).not_to have_key "phone"
+        expect(json).not_to have_key "phoneVerified"
+        expect(json).not_to have_key "publicUrl"
+        expect(json).not_to have_key "push"
+        # defaults
+        # expect(json).to have_key "slotDefaultDuration"
+        # expect(json).to have_key "slotDefaultLocationId"
+        # expect(json).to have_key "slotDefaultTypeId"
+        # expect(json).to have_key "defaultPrivateAlerts"
+        # expect(json).to have_key "defaultOwnFriendslotAlerts"
+        # expect(json).to have_key "defaultOwnPublicAlerts"
+        # expect(json).to have_key "defaultFriendsFriendslotAlerts"
+        # expect(json).to have_key "defaultFriendsPublicAlerts"
+        # expect(json).to have_key "defaultReslotAlerts"
+        # expect(json).to have_key "defaultGroupAlerts"
+        # special slotsets
+        expect(json).not_to have_key "myCalendarUuid"
+        expect(json).not_to have_key "friendsCalendarUuid"
+        expect(json).not_to have_key "allMySlotsUuid"
+        expect(json).not_to have_key "myCreatedSlotsUuid"
+        expect(json).not_to have_key "myFriendSlotsUuid"
+        expect(json).not_to have_key "myPublicSlotsUuid"
+        # social relations
+        expect(json).not_to have_key "friendships"
+        expect(json).not_to have_key "memberships"
+
         expect(json).not_to have_key "authToken"
         expect(json).not_to have_key "passwordDigest"
         expect(json).not_to have_key "role"
-        expect(
-          json.except('image', 'friendsCount', 'reslotCount',
-                      'slotCount', 'location', 'friendshipState')
-        ).to eq(user.attributes.as_json
-                 .except("auth_token", "password_digest", "role", 'public_url',
-                         'push', 'device_token', 'email', 'email_verified',
-                         'lang', 'picture', 'phone', 'phone_verified',
-                         'location_id', 'default_private_alerts',
-                         'default_own_friendslot_alerts',
-                         'default_own_public_alerts',
-                         'default_friends_friendslot_alerts',
-                         'default_friends_public_alerts',
-                         'default_reslot_alerts',
-                         'default_group_alerts', 'slot_default_duration',
-                         'slot_default_type_id', 'slot_default_location_id'
-                        )
-                 .transform_keys { |key| key.camelize(:lower) })
-        expect(json['location']['name']).to eq "Acapulco"
+        expect(json).not_to have_key "deviceToken"
+        expect(json).not_to have_key "picture"
+
+        expect(json['id']).to eq user.id
+        expect(json['username']).to eq user.username
+        expect(json['createdAt']).to eq user.created_at.as_json
+        expect(json['updatedAt']).to eq user.updated_at.as_json
+        expect(json['deletedAt']).to eq user.deleted_at.as_json
+        expect(json['image']).to eq user.image
+        expect(json['location']['name']).to eq user.location.name
+        expect(json['slotCount']).to eq user.std_slots.active.count
+        # expect(json['reslotCount']).to eq user.re_slots.active.count
+        expect(json['friendsCount']).to eq user.friends_count
+        expect(json['friendshipState']).to eq 'stranger'
       end
     end
   end
@@ -429,7 +457,7 @@ resource "Users" do
         let!(:std_slot_public) {
           create(:std_slot_public, owner: friend,
                  start_date: Time.zone.tomorrow) }
-        let!(:re_slots) { create_list(:re_slot, 2, slotter: friend) }
+        # let!(:re_slots) { create_list(:re_slot, 2, slotter: friend) }
 
         example "Get slots for Friend - with pagination", document: :v1 do
           explanation "Response contains '*paging*' hash & '*data*' array.\n" \
@@ -449,8 +477,8 @@ resource "Users" do
           # first request without a cursor
           expect(response_status).to eq(200)
           slot_count = friend.std_slots.count -
-                       friend.std_slots_private.count +
-                       friend.re_slots.count
+                       friend.std_slots_private.count
+                      # friend.re_slots.count
           expect(json).to have_key 'paging'
           expect(json['paging']).to have_key('after')
           expect(json['paging']['after']).not_to be nil
@@ -493,8 +521,8 @@ resource "Users" do
           expect(json['paging']['filter']).to be nil
           expect(json['paging']['after']).to be nil
           expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
-          expect(response_body).to include(re_slots.first.title)
-          expect(response_body).to include(re_slots.last.title)
+          # expect(response_body).to include(re_slots.first.title)
+          # expect(response_body).to include(re_slots.last.title)
 
           expect(json).to have_key 'data'
           response_slot_count += json['data'].length
@@ -530,7 +558,7 @@ resource "Users" do
         let!(:std_slot_friend) { create(:std_slot_friends, owner: joe) }
         let!(:std_slot_foaf) { create(:std_slot_foaf, owner: joe) }
         let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
-        let!(:re_slots) { create(:re_slot, slotter: joe) }
+        # let!(:re_slots) { create(:re_slot, slotter: joe) }
         # let(:incommon_groupslot) { create(:group_slot) }
 
         describe "befriended user" do
@@ -546,6 +574,7 @@ resource "Users" do
           # }
 
           example "Get slots for Friend", document: :v1 do
+            # TODO: wording
             explanation "Returns an array which includes StandardSlots with" \
                         " visibility 'friend', 'foaf' (friend-of-friend) or" \
                         " 'public', ReSlots & shared GroupSlots\n\n" \
@@ -556,9 +585,9 @@ resource "Users" do
             expect(response_status).to eq(200)
             slot_count = joe.std_slots_friends.count +
                          joe.std_slots_foaf.count +
-                         joe.std_slots_public.count +
+                         joe.std_slots_public.count
                          # current_user.shared_group_slots(joe).count +
-                         joe.re_slots.count
+                         # joe.re_slots.count
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
             expect(response_body).not_to include std_slot_secret.title
@@ -597,8 +626,8 @@ resource "Users" do
 
             expect(response_status).to eq(200)
             slot_count = joe.std_slots_foaf.count +
-                         joe.std_slots_public.count +
-                         joe.re_slots.count
+                         joe.std_slots_public.count
+                         # joe.re_slots.count
             # current_user.shared_group_slots(joe).count +
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
@@ -631,8 +660,8 @@ resource "Users" do
             do_request
 
             expect(response_status).to eq(200)
-            slot_count = joe.std_slots_public.count +
-                         joe.re_slots.count
+            slot_count = joe.std_slots_public.count
+                         # joe.re_slots.count
                          # current_user.shared_group_slots(joe).count
             expect(json.length).to eq slot_count
             expect(json.first).to have_key("id")
@@ -653,7 +682,7 @@ resource "Users" do
             do_request
 
             expect(response_status).to eq(200)
-            slot_count = joe.std_slots_public.count + joe.re_slots.count
+            slot_count = joe.std_slots_public.count # + joe.re_slots.count
             expect(json.length).to eq slot_count
             expect(response_body).not_to include std_slot_secret.title
             expect(response_body).not_to include std_slot_friend.title

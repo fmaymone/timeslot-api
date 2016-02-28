@@ -12,11 +12,14 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:videos) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:containerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:slot_groups).inverse_of(:slots) }
+  it { is_expected.to have_many(:passengerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:my_calendar_users)
+                       .inverse_of(:my_calendar_slots) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
   it { is_expected.to have_many(:comments).inverse_of(:slot) }
-  it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -172,23 +175,6 @@ RSpec.describe BaseSlot, type: :model do
 
     it "fails with ActiveRecord::RecordNotFound if invalid ID" do
       expect { BaseSlot.get('foo') }.to raise_error ActiveRecord::RecordNotFound
-    end
-  end
-
-  describe :get_many do
-    let(:std_slots) { create_list(:std_slot_private, 3) }
-    let(:global_slots) { create_list(:global_slot, 2) }
-    let(:other_slots) { create_list(:re_slot, 2) }
-
-    it "returns a list of specific slots" do
-      a = []
-      [std_slots, global_slots].each do |slots|
-        a << slots.collect(&:id)
-      end
-      result = BaseSlot.get_many(a.flatten)
-      expect(result).to include(*std_slots)
-      expect(result).to include(*global_slots)
-      expect(result).not_to include(*other_slots)
     end
   end
 

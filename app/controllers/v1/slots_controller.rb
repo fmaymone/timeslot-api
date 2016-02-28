@@ -1,6 +1,6 @@
 module V1
   class SlotsController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, only: [:show, :show_many]
+    skip_before_action :authenticate_user_from_token!, only: :show
 
     # GET /v1/slots/1
     def show
@@ -11,11 +11,23 @@ module V1
     end
 
     # POST /v1/slots
-    def show_many
-      @slots = BaseSlot.get_many(params[:ids])
-      @slots.each { |slot| authorize slot }
+    def create
+      authorize :stdSlot
+      @slot = BaseSlot.create_slot(meta: meta_params,
+                                   visibility: enforce_visibility,
+                                   media: media_params, notes: note_param,
+                                   alerts: alerts_param, user: current_user)
 
-      render :index
+      if params.key?(:slotGroups) && params[:slotGroups].any?
+        add_to_slotgroups(params[:slotGroups])
+      end
+
+      if @slot.persisted?
+        render :create, status: :created, locals: { slot: @slot }
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
     end
 
     # POST /v1/stdslot
@@ -27,22 +39,6 @@ module V1
                                    alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
-        render :create, status: :created, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
-    # POST /v1/reslot
-    def create_reslot
-      predecessor = BaseSlot.get(re_params)
-      authorize predecessor
-
-      @slot = ReSlot.create_from_slot(predecessor: predecessor,
-                                      slotter: current_user,
-                                      visibility: visibility)
-      if @slot.save
         render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
@@ -79,39 +75,15 @@ module V1
       end
     end
 
-    # PATCH /v1/reslot/1
-    def update_reslot
-      @slot = current_user.re_slots.find(params[:id])
-      authorize @slot
-
-      # TODO: this should only be allowed for tagged users
-      @slot.parent.update_from_params(media: media_params, notes: note_param,
-                                      user: current_user)
-      @slot.update_from_params(alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
-    # DELETE /v1/std_slot/1
-    def destroy_stdslot
-      @slot = current_user.std_slots.find(params[:id])
-      authorize @slot
-
-      if @slot.delete
-        render :create, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
-    # DELETE /v1/re_slot/1
-    def destroy_reslot
-      @slot = current_user.re_slots.find(params.require(:id))
+    # DELETE /v1/slot/1
+    # temporary unification of slot deletion routes,
+    # we don't need this for reslots in the future
+    def delete
+      slot_id = params[:id].to_i
+      @slot = current_user.std_slots.find(slot_id)
+    rescue ActiveRecord::RecordNotFound
+      @slot = current_user.re_slots.find_by(parent_id: slot_id)
+    ensure
       authorize @slot
 
       if @slot.delete
@@ -193,30 +165,85 @@ module V1
       render :slotters
     end
 
+    # GET /v1/slots/1/slotsets
+    def slotsets
+      slot = BaseSlot.get(params[:id])
+      authorize slot
+
+      @slotgroups = current_user.groups & slot.slot_groups
+
+      if current_user.my_calendar_slots.include? slot
+        @my_cal_uuid = current_user.slot_sets['my_cal_uuid']
+      else
+        @my_cal_uuid = false
+      end
+
+      render :slotsets, locals: { slot_groups: @slotgroups,
+                                  my_cal_uuid: @my_cal_uuid }
+    end
+
+    # POST /v1/slots/1/slotsets
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      groups = Group.where(uuid: params[:slot_groups])
-      groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+      special_sets = current_user.slot_sets.invert
 
-        begin
-          authorize group, :add_slot?
-        rescue Pundit::NotAuthorizedError
-          @slot.errors.add(:base, group.uuid)
+      params[:slot_groups].each do |slot_set|
+        if special_sets.key? slot_set
+          handle_special_slotset(special_sets[slot_set], @slot)
         else
-          @slot.add_to_group group
+          group = Group.find_by(uuid: slot_set)
+
+          # skip deleted groups
+          @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+          add_to_slotgroup(group)
         end
       end
 
       render :slotgroups, locals: { slot: @slot }
     end
 
+    # TODO: put this into service
+    private def handle_special_slotset(slot_set, slot)
+      # pp slot_set
+      case slot_set
+      when 'my_cal_uuid'
+        Passengership.find_or_create_by(slot: slot,
+                                        user: current_user).update(deleted_at: nil)
+      when 'my_friends_slots_uuid'
+        slot.StdSlotFriends!
+      when 'my_public_slots_uuid'
+        pp 'create public slot'
+      end
+    end
+
+    # TODO: put this into service
+    private def add_to_slotgroups(group_uuids)
+      groups = Group.where(uuid: group_uuids)
+      groups.each do |group|
+        # skip deleted groups
+        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
+        add_to_slotgroup(group)
+      end
+    end
+
+    # TODO: put this into service
+    private def add_to_slotgroup(group)
+      authorize group, :add_slot?
+    rescue Pundit::NotAuthorizedError
+      @slot.errors.add(:base, group.uuid)
+    else
+      @slot.add_to_group group
+    end
+
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
+
+      if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
+        current_user.passengerships.find_by(slot: @slot).try(:delete)
+      end
 
       groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
@@ -265,10 +292,6 @@ module V1
     private def enforce_visibility
       params.require :visibility
       visibility
-    end
-
-    private def re_params
-      params.require(:predecessor_id)
     end
 
     private def meta_params

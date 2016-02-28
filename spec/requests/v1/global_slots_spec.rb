@@ -70,7 +70,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
              { predecessor: global_slot.muid },
              auth_header
         expect(json).to have_key('id')
-        expect(json).to have_key('muid')
+        expect(json).not_to have_key('muid')
         expect(json).to have_key('title')
         expect(json).to have_key('startDate')
         expect(json).to have_key('endDate')

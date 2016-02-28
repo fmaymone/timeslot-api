@@ -5,11 +5,6 @@ RSpec.describe V1::GroupsController, type: :routing do
     let(:uuid) { '04f7504b-3e96-4dbb-ac94-4998f1574bbe' }
     let(:invalid_uuid) { '04f7504b-3e96-4dbb-ac94-4998f1574KKK' }
 
-    it "routes to #index" do
-      expect(get: "/v1/groups")
-        .to route_to("v1/groups#index", format: :json)
-    end
-
     it "routes to #show" do
       expect(get: "/v1/groups/#{uuid}")
         .to route_to("v1/groups#show", group_uuid: uuid, format: :json)

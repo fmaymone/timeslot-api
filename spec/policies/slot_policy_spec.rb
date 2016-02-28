@@ -3,7 +3,7 @@ require 'rails_helper'
 describe SlotPolicy do
   subject { described_class }
 
-  permissions :show?, :show_many?, :show_comments?, :show_likes? do
+  permissions :show?, :show_comments?, :show_likes? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -18,9 +18,8 @@ describe SlotPolicy do
   end
 
   # TODO: write spec for :create_reslot? if it is clear how it should work
-  permissions :show?, :show_many?, :show_likes?, :show_comments?, :unlike?,
-              :reslot_history?, :add_like?, :copy?, :add_comment?,
-              # :create_reslot?,
+  permissions :show?, :show_likes?, :show_comments?, :unlike?,
+              :add_like?, :copy?, :add_comment?,
               :remove_from_groups? do
 
     let(:user) { create(:user) }
@@ -96,69 +95,6 @@ describe SlotPolicy do
       end
     end
 
-    context "re_slot" do
-      context "public slot" do
-        let(:slot) { create(:re_slot_public) }
-
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "foaf slot if reslot slotter is friend" do
-        let(:slot) { create(:re_slot_foaf) }
-
-        it "allows access" do
-          create(:friendship, :established, user: user, friend: slot.slotter)
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "foaf slot if reslot slotter has common friends" do
-        let(:slot) { create(:re_slot_foaf) }
-        let(:friend) { create(:user) }
-
-        it "allows access" do
-          create(:friendship, :established, user: user, friend: friend)
-          create(:friendship, :established, user: friend, friend: slot.slotter)
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "foaf slot if reslot slotter not friend & no common friends" do
-        let(:slot) { create(:re_slot_foaf) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-
-      context "friend slot if reslot slotter is friend" do
-        let(:slot) { create(:re_slot_friends) }
-
-        it "allows access" do
-          create(:friendship, :established, user: user, friend: slot.slotter)
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "friend slot if reslot slotter is not friend" do
-        let(:slot) { create(:re_slot_friends) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-
-      context "others private reslot" do
-        let(:slot) { create(:re_slot_private) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-    end
-
     context "slot groups" do
       let(:group) { create(:group) }
       let(:slot) do
@@ -182,7 +118,7 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_many?, :show_likes?, :show_comments? do
+  permissions :show?, :show_likes?, :show_comments? do
     context "for a visitor" do
       let(:user) { nil }
 
@@ -248,8 +184,8 @@ describe SlotPolicy do
 
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:reslot_history?, :add_like?, :add_comment?, :copy?,
-       :create_reslot?, :move?, :unlike?]
+      [:add_like?, :add_comment?, :copy?,
+       :move?, :unlike?]
     }
     let(:user) { nil }
     let(:slot) { create(:std_slot_public) }
@@ -266,9 +202,9 @@ describe SlotPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :show_many?, :show_likes?, :show_comments?,
-        :reslot_history?, :add_like?, :add_comment?, :copy?, :move?,
-        :create_reslot?, :unlike?
+        :show?, :show_likes?, :show_comments?,
+        :add_like?, :add_comment?, :copy?, :move?,
+        :unlike?
       ]
     }
     let(:user) { nil }
@@ -400,72 +336,20 @@ describe SlotPolicy do
         end
       end
     end
+  end
 
-    context "own re_slot" do
-      context "public reslot" do
-        let(:slot) { create(:re_slot_public, slotter: user) }
+  describe 'for a visitor / invalid or missing auth_token' do
+    let(:permissions) {
+      [:create?]
+    }
+    let(:user) { nil }
+    let(:slot) { create(:std_slot_private) }
 
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "foaf reslot" do
-        let(:slot) { create(:re_slot_foaf, slotter: user) }
-
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "friend reslot" do
-        let(:slot) { create(:re_slot_friends, slotter: user) }
-
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "private reslot" do
-        let(:slot) { create(:re_slot_private, slotter: user) }
-
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-    end
-
-    context "others re_slot" do
-      context "public reslot" do
-        let(:slot) { create(:re_slot_public) }
-
-        it "denies access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-
-      context "foaf reslot" do
-        let(:slot) { create(:re_slot_foaf) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-
-      context "friend reslot" do
-        let(:slot) { create(:re_slot_friends) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
-      end
-
-      context "private reslot" do
-        let(:slot) { create(:re_slot_private) }
-
-        it "denies access" do
-          expect(subject).not_to permit(user, slot)
-        end
+    it "raises MissingCurrentUserError" do
+      permissions.each do |permission|
+        expect {
+          subject.new(user, slot).public_send(permission)
+        }.to raise_error TSErrors::MissingCurrentUserError
       end
     end
   end

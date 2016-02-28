@@ -97,193 +97,6 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    describe "ReSlot" do
-      context "with valid ID" do
-        let(:std_slot) {
-          create(:std_slot_public, :with_media, :with_notes) }
-        let(:re_slot_1) {
-          create(:re_slot, predecessor: std_slot,
-                 meta_slot: std_slot.meta_slot, parent: std_slot) }
-        let(:re_slot_2) {
-          create(:re_slot, predecessor: re_slot_1,
-                 meta_slot: std_slot.meta_slot, parent: std_slot) }
-
-        it "returns success" do
-          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-          expect(response).to have_http_status(200)
-        end
-
-        it "has the same media items as the parent slot" do
-          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-          expect(json).to have_key('media')
-          expect(response.body).to include std_slot.images.first.public_id
-        end
-
-        it "has the same notes as the parent slot" do
-          get "/v1/slots/#{re_slot_2.id}", {}, auth_header
-          expect(json).to have_key('notes')
-          expect(
-            json['notes'][1]['title']
-          ).to eq(std_slot.notes.second.title)
-        end
-      end
-
-      # this is basically a policy test, not sure if it's a good idea to test
-      # this here
-      describe "ReSlot visibility" do
-        let(:common_friend) { create(:user) }
-
-        context "private" do
-          let(:re_slot) { create(:re_slot_private) }
-
-          it "is visible to the owner" do
-            get "/v1/slots/#{re_slot.id}", {},
-                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
-            expect(response).to have_http_status :ok
-          end
-
-          it "is not visible to friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: re_slot.slotter)
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to friends of friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: common_friend)
-            create(:friendship, :established, user: common_friend,
-                   friend: re_slot.slotter)
-
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to unrelated users" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to strangers (not logged in)" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-        end
-
-        context "friends" do
-          let(:re_slot) { create(:re_slot_friends) }
-
-          it "is visible to the owner" do
-            get "/v1/slots/#{re_slot.id}", {},
-                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: re_slot.slotter)
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is not visible to friends of friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: common_friend)
-            create(:friendship, :established, user: common_friend,
-                   friend: re_slot.slotter)
-
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to unrelated users" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to strangers (not logged in)" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-        end
-
-        context "friends of friends" do
-          let(:re_slot) { create(:re_slot_foaf) }
-
-          it "is visible to the owner" do
-            get "/v1/slots/#{re_slot.id}", {},
-                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: re_slot.slotter)
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to friends of friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: common_friend)
-            create(:friendship, :established, user: common_friend,
-                   friend: re_slot.slotter)
-
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is not visible to unrelated users" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "is not visible to strangers (not logged in)" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :not_found
-          end
-        end
-
-        context "public" do
-          let(:re_slot) { create(:re_slot_public) }
-          let(:common_friend) { create(:user) }
-
-          it "is visible to the owner" do
-            get "/v1/slots/#{re_slot.id}", {},
-                'Authorization' => "Token token=#{re_slot.slotter.auth_token}"
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: re_slot.slotter)
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to friends of friends of owner" do
-            create(:friendship, :established, user: current_user,
-                   friend: common_friend)
-            create(:friendship, :established, user: common_friend,
-                   friend: re_slot.slotter)
-
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to unrelated users" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-
-          it "is visible to strangers (not logged in)" do
-            get "/v1/slots/#{re_slot.id}", {}, auth_header
-            expect(response).to have_http_status :ok
-          end
-        end
-      end
-    end
-
     describe "Slot in SlotGroup" do
       let(:slot) { create(:std_slot_private) }
       let(:group) { create(:group) }
@@ -452,178 +265,6 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/stdslot/", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
-        end
-      end
-    end
-  end
-
-  describe "POST /v1/reslot" do
-    context "with valid params" do
-      let(:pred) { create(:std_slot_public) }
-      let(:valid_attributes) {
-        attributes_for(:re_slot, predecessor_id: pred.id)
-      }
-
-      context "ReSlot from StdSlot" do
-        it "responds with Created (201)" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new entry to the DB" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.to change(ReSlot, :count).by(1)
-        end
-
-        it "returns the ID of the new reslot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(ReSlot.last.id)
-        end
-
-        context "ReSlot from private std_slot" do
-          let(:pred) { create(:std_slot_private) }
-
-          it "responds with 403" do
-            post "/v1/reslot/", valid_attributes, auth_header
-            expect(response).to have_http_status :not_found
-          end
-
-          it "doesn't add a new entry to the DB" do
-            expect {
-              post "/v1/reslot/", valid_attributes, auth_header
-            }.not_to change(ReSlot, :count)
-          end
-        end
-      end
-
-      context "ReSlot from ReSlot" do
-        let!(:pred) { create(:re_slot) }
-
-        it "responds with Created (201)" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(response).to have_http_status(:created)
-        end
-
-        it "adds a new entry to the DB" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.to change(ReSlot, :count).by(1)
-        end
-
-        it "returns the ID of the new reslot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(ReSlot.last.id)
-        end
-
-        it "sets the parent of the new reslot to the original parent" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          new_reslot = ReSlot.last
-          expect(new_reslot.parent_id).to eq pred.parent_id
-        end
-      end
-
-      context "duplicate reslot" do
-        let!(:existing_reslot) {
-          create(:re_slot, predecessor: pred, slotter: current_user)
-        }
-
-        it "doesn't create a new reslot" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.not_to change(ReSlot, :count)
-        end
-
-        it "returns the existing reslot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(existing_reslot.id)
-        end
-      end
-
-      context "reslot peviously deleted reslot" do
-        # a user makes a reslot of an event, then deletes the reslot, then
-        # does a reslot of the same event again
-        let(:reslot) { create(:re_slot, predecessor: pred) }
-        let!(:existing_deleted_reslot) {
-          rs = create(:re_slot, predecessor: reslot, slotter: current_user,
-                      deleted_at: Time.zone.now)
-          # must manually decrement here
-          BaseSlot.decrement_counter(:re_slots_count, rs.parent_id)
-          rs
-        }
-
-        it "doesn't create a new reslot" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.not_to change(ReSlot, :count)
-        end
-
-        it "returns the existing reslot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          expect(json['id']).to eq(existing_deleted_reslot['id'])
-        end
-
-        it "unsets deleted_at on the existing reslot" do
-          post "/v1/reslot/", valid_attributes, auth_header
-          existing_deleted_reslot.reload
-          expect(existing_deleted_reslot.deleted_at).to be nil
-          existing_deleted_reslot.reload
-          expect(existing_deleted_reslot.re_slots.count)
-            .to eq existing_deleted_reslot.re_slots_count
-        end
-
-        it "updates the predecessor" do
-          expect(existing_deleted_reslot.predecessor_id).to eq reslot.id
-          post "/v1/reslot/", valid_attributes, auth_header
-          existing_deleted_reslot.reload
-          expect(existing_deleted_reslot.predecessor_id).to eq pred.id
-        end
-      end
-
-      context "custom reslot visibility" do
-        let(:valid_attributes) do
-          { predecessor_id: pred.id,
-            visibility: 'foaf' }
-        end
-
-        it "creates reslot with visibility friends-of-friends" do
-          expect {
-            post "/v1/reslot/", valid_attributes, auth_header
-          }.to change(ReSlot, :count)
-          expect(response).to have_http_status :created
-          expect(ReSlot.last.visibility).to eq 'foaf'
-        end
-
-        context 'global slots' do
-          let!(:global_slot) { create(:global_slot) }
-
-          it "creates reslot from globalslot with visibility friends" do
-            expect {
-              post "/v1/globalslots/reslot/",
-                   { predecessor: global_slot.muid,
-                     visibility: 'friends' },
-                   auth_header
-            }.to change(ReSlot, :count)
-            expect(response).to have_http_status :created
-            expect(ReSlot.last.visibility).to eq 'friends'
-          end
-        end
-
-        context 'invalid parameter' do
-          let!(:friend_slot) do
-            uwe = build(:user)
-            create(:friendship, :established, user: current_user, friend: uwe)
-            create(:std_slot_friends, owner: uwe)
-          end
-
-          it "returns 422 if reslot visibility exceeds parent visibility" do
-            post "/v1/reslot/",
-                 { predecessor_id: friend_slot.id,
-                   visibility: 'foaf' },
-                 auth_header
-            expect(response).to have_http_status :unprocessable_entity
-            expect(response.body).to include 'exceed'
-          end
         end
       end
     end
@@ -1406,68 +1047,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "PATCH /v1/reslot/:id" do
-    let!(:re_slot) { create(:re_slot, slotter: current_user) }
-
-    context "with valid alerts" do
-      it "responds with 200" do
-        patch "/v1/reslot/#{re_slot.id}",
-              { settings: { alerts: '1110001100' } }, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "updates the alert of a given ReSlot" do
-        patch "/v1/reslot/#{re_slot.id}",
-              { settings: { alerts: '1110001101' } }, auth_header
-        re_slot.reload
-        expect(current_user.alerts(re_slot)).to eq("1110001101")
-      end
-    end
-
-    context "with valid media params" do
-      let(:add_media_item) { { media: media } }
-      let(:media) do
-        [{ public_id: "foo-image",
-           media_type: 'image',
-           position: "1" }]
-      end
-
-      it "responds with 200" do
-        patch "/v1/reslot/#{re_slot.id}", add_media_item, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "adds new media to the parent slot" do
-        patch "/v1/reslot/#{re_slot.id}", add_media_item, auth_header
-        re_slot.reload
-        expect(re_slot.images.first.public_id).to eq("foo-image")
-      end
-    end
-
-    describe "handling notes" do
-      let(:note) { attributes_for(:note) }
-      let(:add_note) { { notes: [note] } }
-
-      it "returns success" do
-        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "adds a new note to the parent slot" do
-        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
-        re_slot.reload
-        expect(re_slot.notes.size).to eq(1)
-      end
-
-      it "adds the submitted note to the db" do
-        patch "/v1/reslot/#{re_slot.id}", add_note, auth_header
-        re_slot.reload
-        expect(re_slot.notes.first.title).to eq(note[:title])
-        expect(re_slot.notes.first.content).to eq(note[:content])
-      end
-    end
-  end
-
   describe "DELETE /v1/stdslot/:id" do
     let!(:std_slot) { create(:std_slot_private, owner: current_user) }
 
@@ -1484,97 +1063,133 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
-    context "with an invalid ID" do
-      let(:wrong_id) { std_slot.id + 1 }
+    # context "with an invalid ID" do
+    #   let(:wrong_id) { std_slot.id + 1 }
 
-      it "responds with Not Found" do
-        delete "/v1/stdslot/#{wrong_id}", {}, auth_header
-        expect(response).to have_http_status(:not_found)
-      end
+    #   it "responds with Not Found" do
+    #     delete "/v1/stdslot/#{wrong_id}", {}, auth_header
+    #     expect(response).to have_http_status(:not_found)
+    #   end
 
-      it "does not remove an entry from the DB" do
-        expect {
-          delete "/v1/stdslot/#{wrong_id}", {}, auth_header
-        }.not_to change(StdSlot, :count)
-      end
-    end
-  end
-
-  describe "DELETE /v1/reslot/:id" do
-    let(:parent) { create(:std_slot_public) }
-    let!(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
-
-    context "with a valid ID" do
-      it "returns success" do
-        delete "/v1/reslot/#{re_slot.id}", {}, auth_header
-        expect(response).to have_http_status(:ok)
-      end
-
-      it "doesn't destroy the re_slot" do
-        expect {
-          delete "/v1/reslot/#{re_slot.id}", {}, auth_header
-        }.not_to change(ReSlot, :count)
-      end
-
-      context "parent attributes" do
-        context "likes" do
-          let(:parent) { create(:std_slot_foaf, :with_likes) }
-
-          it "doesn't destroy the likes of the parent slot" do
-            expect {
-              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
-            }.not_to change(parent.likes, :count)
-          end
-        end
-
-        context "comments" do
-          let(:parent) { create(:std_slot_friends, :with_comments) }
-
-          it "doesn't destroy the comments of the parent slot" do
-            expect {
-              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
-            }.not_to change(parent.comments, :count)
-          end
-        end
-
-        context "media" do
-          let(:parent) { create(:std_slot_friends, :with_media) }
-
-          it "doesn't destroy the media of the parent slot" do
-            expect {
-              delete "/v1/reslot/#{re_slot.id}", {}, auth_header
-            }.not_to change(parent.media_items, :count)
-          end
-        end
-      end
-    end
-
-    context "with an invalid ID" do
-      let(:wrong_id) { re_slot.id + 1 }
-
-      it "responds with Not Found" do
-        delete "/v1/reslot/#{wrong_id}", {}, auth_header
-        expect(response).to have_http_status(:not_found)
-      end
-
-      it "does not remove an entry from the DB" do
-        expect {
-          delete "/v1/reslot/#{wrong_id}", {}, auth_header
-        }.not_to change(ReSlot, :count)
-      end
-    end
+    #   it "does not remove an entry from the DB" do
+    #     expect {
+    #       delete "/v1/stdslot/#{wrong_id}", {}, auth_header
+    #     }.not_to change(StdSlot, :count)
+    #   end
+    # end
   end
 
   describe "POST /v1/slots/:id/slotgroups" do
     let(:slot) { create(:std_slot_public) }
     let(:group) { create(:group, owner: current_user) }
 
-    it "adds the slot to the given slotgroup" do
-      post "/v1/slots/#{slot.id}/slotgroups",
-           { slot_groups: [group.uuid] }, auth_header
+    context "normal slotgroups" do
+      it "adds the slot to the given slotgroup" do
+        post "/v1/slots/#{slot.id}/slotgroups",
+             { slot_groups: [group.uuid] }, auth_header
 
-      expect(group.slots).to include slot
-      expect(response).to have_http_status :ok
+        expect(group.slots).to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "special slotsets" do
+      it "adds the slot to myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+
+        post "/v1/slots/#{slot.id}/slotgroups",
+             { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+             auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).to include slot
+        expect(response).to have_http_status :ok
+      end
+
+      context "mixed slotsets" do
+        it "adds the slot to all slotsets" do
+          expect(current_user.reload.slot_sets).not_to be nil
+
+          post "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [current_user.slot_sets['my_cal_uuid'],
+                              group.uuid] },
+               auth_header
+
+          current_user.reload
+          expect(group.slots).to include slot
+          expect(current_user.my_calendar_slots).to include slot
+          expect(response).to have_http_status :ok
+        end
+      end
+    end
+  end
+
+  describe "DELETE /v1/slots/:id/slotgroups" do
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) {
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    }
+    let(:slot) {
+      slot = create(:std_slot_public)
+      create(:containership, group: group_1, slot: slot)
+      create(:containership, group: group_2, slot: slot)
+      slot
+    }
+    context "normal slotgroups" do
+      it "removes the slot from the given slotgroups" do
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [group_1.uuid, group_2.uuid] }, auth_header
+
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "special slotsets" do
+      let!(:passengership) {
+        create(:passengership, slot: slot, user: current_user)
+      }
+      it "removes the slot from myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+        expect(current_user.my_calendar_slots).to include slot
+
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [current_user.slot_sets['my_cal_uuid']] },
+               auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "mixed slotsets" do
+      let!(:passengership) {
+        create(:passengership, slot: slot, user: current_user)
+      }
+      it "removes the slot from myCalendar" do
+        expect(current_user.reload.slot_sets).not_to be nil
+        expect(current_user.my_calendar_slots).to include slot
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+
+        delete "/v1/slots/#{slot.id}/slotgroups",
+               { slotGroups: [group_1.uuid,
+                              current_user.slot_sets['my_cal_uuid'],
+                              group_2.uuid] },
+               auth_header
+
+        current_user.reload
+        expect(current_user.my_calendar_slots).not_to include slot
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(response).to have_http_status :ok
+      end
     end
   end
 
@@ -1625,37 +1240,6 @@ RSpec.describe "V1::Slots", type: :request do
         expect(std_slot.likes.count).to eq std_slot.likes_count
       end
     end
-
-    context "ReSlot" do
-      let(:parent) { std_slot }
-      let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
-
-      it "creates a new like" do
-        expect {
-          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-        }.to change(Like, :count).by 1
-      end
-
-      it "adds the new like to the parent slot" do
-        post "/v1/slots/#{std_slot.id}/like", {}, auth_header
-        post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-        expect(Like.last.slot.id).to eq parent.id
-        expect(Like.last.slot.id).to eq re_slot.parent.id
-      end
-
-      # test for bug BKD-288
-      it "liking reslot of already liked parent slot (does nothing)" do
-        create(:like, user: current_user, slot: parent)
-        expect(Like.count).to be 1
-
-        expect {
-          post "/v1/slots/#{re_slot.id}/like", {}, auth_header
-        }.not_to raise_error
-
-        expect(Like.count).to be 1
-        expect(response).to have_http_status :ok
-      end
-    end
   end
 
   describe "DELETE /v1/slots/:id/like" do
@@ -1684,60 +1268,30 @@ RSpec.describe "V1::Slots", type: :request do
         expect(response).to have_http_status :ok
       end
     end
-
-    context "ReSlot" do
-      let(:re_slot) { create(:re_slot, slotter: current_user) }
-      let!(:like) { create(:like, user: current_user, slot: re_slot.parent) }
-
-      it "sets deleted_at on the like" do
-        expect(re_slot.likes.count).to eq 1
-        expect(re_slot.likes_count).to eq 1
-        expect(re_slot.parent.likes.count).to eq 1
-        expect(re_slot.parent.likes_count).to eq 1
-
-        delete "/v1/slots/#{re_slot.id}/like", {}, auth_header
-
-        expect(response).to have_http_status :ok
-        re_slot.reload
-        expect(re_slot.likes.count).to eq 0
-        expect(re_slot.likes_count).to eq 0
-        expect(re_slot.parent.likes.count).to eq 0
-        expect(re_slot.parent.likes_count).to eq 0
-        like.reload
-        expect(like.deleted_at?).to be true
-      end
-    end
   end
 
   describe "GET /v1/slots/1/likes" do
-    let(:std_slot) { create(:std_slot_public, :with_likes) }
+    let(:slot) { create(:std_slot_public, :with_likes) }
 
-    context "ReSlot" do
-      let(:re_slot) {
-        create(:re_slot, slotter: current_user, parent: std_slot) }
-
-      it "retrieves a list of all likes with user details" do
-        get "/v1/slots/#{re_slot.id}/likes", {}, auth_header
-        expect(json.count).to eq std_slot.likes.count
-      end
+    it "retrieves a list of all likes with user details" do
+      get "/v1/slots/#{slot.id}/likes", {}, auth_header
+      expect(json.count).to eq slot.likes.count
     end
   end
 
   describe "POST /v1/slots/:id/comment" do
-    let(:parent) { create(:std_slot_public) }
-    let(:re_slot) { create(:re_slot, slotter: current_user, parent: parent) }
+    let(:slot) { create(:std_slot_public) }
     let(:new_comment) { { content: "Liebe ist ein Kind der Freiheit" } }
 
     it "creates a new comment" do
       expect {
-        post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
+        post "/v1/slots/#{slot.id}/comment", new_comment, auth_header
       }.to change(Comment, :count).by 1
     end
 
     it "adds the new comment to the parent slot" do
-      post "/v1/slots/#{re_slot.id}/comment", new_comment, auth_header
-      expect(Comment.last.slot.id).to eq parent.id
-      expect(Comment.last.slot.id).to eq re_slot.parent.id
+      post "/v1/slots/#{slot.id}/comment", new_comment, auth_header
+      expect(Comment.last.slot.id).to eq slot.id
       expect(Comment.last.content).to eq new_comment[:content]
     end
   end
