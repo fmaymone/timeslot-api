@@ -246,7 +246,7 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
+      if params[:slot_groups].include? current_user.slot_sets['my_cal_uuid']
         current_user.passengerships.find_by(slot: @slot).try(:delete)
       end
 

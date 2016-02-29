@@ -848,6 +848,7 @@ resource "Slots" do
                    "all worked fine."
 
     let(:slot) { create(:std_slot_public) }
+    let(:my_calendar_uuid) { current_user.slot_sets['my_cal_uuid'] }
     let(:group_1) { create(:group, owner: current_user) }
     let(:group_2) do
       group = create(:group)
@@ -857,6 +858,9 @@ resource "Slots" do
     let(:unauthorized_group) { create(:group) }
     let(:deleted_group) {
       create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:passengership) {
+      create(:passengership, slot: slot, user: current_user)
+    }
     let!(:containerships) {
       create(:containership, slot: slot, group: group_1)
       create(:containership, slot: slot, group: group_2)
@@ -866,6 +870,7 @@ resource "Slots" do
     }
     let(:slotGroups) { [group_1.uuid,
                         group_2.uuid,
+                        my_calendar_uuid,
                         unauthorized_group.uuid,
                         deleted_group.uuid] }
 
@@ -881,6 +886,7 @@ resource "Slots" do
         expect(group_2.slots).to include slot
         expect(slot.slot_groups).to include group_1
         expect(slot.slot_groups).to include group_2
+        expect(current_user.my_calendar_slots).to include slot
 
         do_request
         expect(response_status).to eq(200)
@@ -888,6 +894,7 @@ resource "Slots" do
         expect(group_2.slots).not_to include slot
         expect(unauthorized_group.slots).to include slot
         expect(deleted_group.slots).not_to include slot
+        expect(current_user.my_calendar_slots).not_to include slot
         expect(slot.slot_groups).not_to include group_1
         expect(slot.slot_groups).not_to include group_2
         expect(slot.slot_groups).to include unauthorized_group
