@@ -418,8 +418,8 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.visibility).to eq 'private'
           patch "/v1/stdslot/#{std_slot.id}",
                 { visibility: 'public' }, auth_header
-          std_slot.reload
-          expect(std_slot.visibility).to eq 'public'
+          slot = BaseSlot.find std_slot.id
+          expect(slot.visibility).to eq 'public'
         end
 
         it "updates the end_date of a given StdSlot" do
