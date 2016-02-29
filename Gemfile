@@ -31,8 +31,8 @@ gem 'airbrake'
 gem 'aws-sdk'
 gem 'newrelic_rpm'
 
-# use pry also on heroku
-gem 'pry-rails'
+# use pry also on heroku, but doesn't work on aws out-of-the-box
+# gem 'pry-rails'
 
 # Worker (background processing)
 gem 'sucker_punch', '~> 2.0'
@@ -71,6 +71,8 @@ group :test do
 end
 
 group :development, :test do
+  gem 'pry-rails'
+
   gem 'pry-byebug'
 
   gem 'pry-doc'
