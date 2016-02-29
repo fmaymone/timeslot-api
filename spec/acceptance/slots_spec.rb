@@ -466,12 +466,17 @@ resource "Slots" do
                     "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
+
         expect(std_slot.visibility).to eq 'private'
+        expect(std_slot.type).to eq 'StdSlotPrivate'
+
         do_request
 
         expect(response_status).to eq(200)
-        std_slot.reload
-        expect(std_slot.visibility).to eq 'friends'
+        slot = BaseSlot.last
+        expect(slot.id).to eq std_slot.id
+        expect(slot.visibility).to eq 'friends'
+        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 
