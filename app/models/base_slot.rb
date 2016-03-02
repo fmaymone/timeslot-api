@@ -220,17 +220,6 @@ class BaseSlot < ActiveRecord::Base
     remove_all_followers
   end
 
-  def add_to_group(group)
-    cs = Containership.find_or_create_by(slot: self, group: group)
-    cs.update(deleted_at: nil) if cs.deleted_at?
-    cs.create_activity
-  end
-
-  def remove_from_group(group)
-    cs = containerships.find_by(group: group)
-    cs.delete if cs && !cs.deleted_at?
-  end
-
   def copy_to(targets, user)
     targets.each do |target|
       BaseSlot.duplicate_slot(self, target, user)

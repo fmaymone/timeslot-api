@@ -19,7 +19,7 @@ module V1
                                    alerts: alerts_param, user: current_user)
 
       if params.key?(:slot_groups) && params[:slot_groups].any?
-        add_to_slotgroups(params[:slot_groups])
+        add_to_slotsets(@slot, params[:slot_groups])
       end
 
       if @slot.persisted?
@@ -192,54 +192,9 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      special_sets = current_user.slot_sets.invert
-
-      params[:slot_groups].each do |slot_set|
-        if special_sets.key? slot_set
-          handle_special_slotset(special_sets[slot_set], @slot)
-        else
-          group = Group.find_by(uuid: slot_set)
-
-          # skip deleted groups
-          @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-          add_to_slotgroup(group)
-        end
-      end
+      add_to_slotsets(@slot, params[:slot_groups])
 
       render :slotgroups, locals: { slot: @slot }
-    end
-
-    # TODO: put this into service
-    private def handle_special_slotset(slot_set, slot)
-      # pp slot_set
-      case slot_set
-      when 'my_cal_uuid'
-        Passengership.find_or_create_by(slot: slot,
-                                        user: current_user).update(deleted_at: nil)
-      when 'my_friends_slots_uuid'
-        slot.StdSlotFriends!
-      when 'my_public_slots_uuid'
-        pp 'create public slot'
-      end
-    end
-
-    # TODO: put this into service
-    private def add_to_slotgroups(group_uuids)
-      groups = Group.where(uuid: group_uuids)
-      groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-        add_to_slotgroup(group)
-      end
-    end
-
-    # TODO: put this into service
-    private def add_to_slotgroup(group)
-      authorize group, :add_slot?
-    rescue Pundit::NotAuthorizedError
-      @slot.errors.add(:base, group.uuid)
-    else
-      @slot.add_to_group group
     end
 
     def remove_from_groups
@@ -252,15 +207,12 @@ module V1
 
       groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-
         begin
           authorize group, :remove_slot?
-        rescue Pundit::NotAuthorizedError
+          SlotsetManager.new(current_user: current_user).remove!(@slot, group)
+        rescue Pundit::NotAuthorizedError,
+               TSErrors::SlotGroupDeleted
           @slot.errors.add(:base, group.uuid)
-        else
-          @slot.remove_from_group group
         end
       end
 
@@ -297,6 +249,28 @@ module V1
     private def enforce_visibility
       params.require :visibility
       visibility
+    end
+
+    private def add_to_slotgroup(slot, group_uuid)
+      group = Group.find_by!(uuid: group_uuid)
+      authorize group, :add_slot?
+      SlotsetManager.new(current_user: current_user).add!(@slot, group)
+    rescue ActiveRecord::RecordNotFound,
+           Pundit::NotAuthorizedError,
+           TSErrors::SlotGroupDeleted
+      slot.errors.add(:base, group_uuid)
+    end
+
+    private def add_to_slotsets(slot, slot_sets)
+      special_sets = current_user.slot_sets.invert
+
+      slot_sets.each do |slot_set|
+        if special_sets.key? slot_set
+          SlotsetManager.new(current_user: current_user).add!(@slot, slot_set)
+        else
+          add_to_slotgroup(slot, slot_set)
+        end
+      end
     end
 
     private def meta_params
