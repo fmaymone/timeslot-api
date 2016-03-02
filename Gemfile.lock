@@ -106,6 +106,7 @@ GEM
       domain_name (~> 0.5)
     i18n (0.7.0)
     imgkit (1.6.1)
+    immutable-struct (2.2.2)
     jbuilder (2.4.0)
       activesupport (>= 3.0.0, < 5.1)
       multi_json (~> 1.2)
@@ -313,6 +314,7 @@ DEPENDENCIES
   guard-puma
   guard-rspec
   imgkit
+  immutable-struct
   jbuilder (= 2.4.0)
   newrelic_rpm
   oj (= 2.14.3)

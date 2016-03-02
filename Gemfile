@@ -8,6 +8,7 @@ gem 'rails', '4.2.5'
 gem 'rails-api', '0.4.0'
 
 gem 'pg', '0.18.4'
+gem 'redis'
 
 # Authentication (to use ActiveModel has_secure_password)
 gem 'bcrypt'
@@ -20,7 +21,10 @@ gem 'jbuilder', '2.4.0'
 gem 'oj', '2.14.3'
 gem 'oj_mimic_json', '1.0.1'
 
-# for heroku
+# ruby helper
+gem 'immutable-struct'
+
+# for production deploy
 gem 'puma', platforms: :ruby # exclude installation on Windows
 gem 'rack-timeout'
 gem 'rails_12factor', group: :production
@@ -31,14 +35,8 @@ gem 'airbrake'
 gem 'aws-sdk'
 gem 'newrelic_rpm'
 
-# use pry also on heroku, but doesn't work on aws out-of-the-box
-# gem 'pry-rails'
-
 # Worker (background processing)
 gem 'sucker_punch', '~> 2.0'
-
-# Redis Data Storage
-gem 'redis'
 
 # Adding CORS (Cross-Origin Resource Sharing)
 gem 'rack-cors', require: 'rack/cors'
