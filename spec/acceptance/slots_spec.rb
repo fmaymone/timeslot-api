@@ -245,6 +245,12 @@ resource "Slots" do
     parameter :visibility,
               "Visibility of the Slot (private/friends/foaf/public)",
               required: true
+    parameter :slotSets,
+              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
+              "should be added to",
+              required: false
+    # TODO: response needs array with invalid slotset uuids
+
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
@@ -266,6 +272,11 @@ resource "Slots" do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
+                      "At the moment the slot is added to MySchedule by " \
+                      "default. I think we'll change this so it's only added " \
+                      "if the MySchedule UUID is provided in the slotGroups " \
+                      "array. Additional slotGroups can be submitted and the " \
+                      "slot will be added there too.\n\n" \
                       "returns 422 if parameters are invalid\n\n" \
                       "returns 422 if required parameters are missing"
           do_request
