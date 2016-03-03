@@ -164,8 +164,9 @@ module V1
       slot = BaseSlot.get(params[:id])
       authorize slot
 
-      user_ids = Passengership.select(:user_id).where(slot: slot)
-      @slotters = User.where(id: user_ids)
+      # user_ids = Passengership.select(:user_id).where(slot: slot)
+      # @slotters = User.where(id: user_ids)
+      @slotters = slot.my_calendar_users
 
       render :slotters
     end
