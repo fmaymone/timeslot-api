@@ -38,6 +38,9 @@ gem 'newrelic_rpm'
 # Worker (background processing)
 gem 'sucker_punch', '~> 2.0'
 
+# Adding CORS (Cross-Origin Resource Sharing)
+gem 'rack-cors', require: 'rack/cors'
+
 # Convert HTML to Image
 gem 'imgkit'
 gem 'wkhtmltoimage-binary'

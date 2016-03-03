@@ -60,6 +60,15 @@ module TsRailsBackend
     # logger for worker threads from sucker_punch
     # SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
 
+    # Enable CORS
+    # https://github.com/cyu/rack-cors
+    config.middleware.insert_before 0, "Rack::Cors" do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :options]
+      end
+    end
+
     # Use this global flag to skip sending push notifications
     config.SKIP_PUSH_NOTIFICATION = false
 
