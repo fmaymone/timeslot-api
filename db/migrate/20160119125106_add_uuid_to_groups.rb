@@ -1,5 +1,7 @@
 class AddUuidToGroups < ActiveRecord::Migration
   def up
+    # enable_extension "uuid-ossp"
+    # add_column :groups, :uuid, :uuid, null: false, default: 'uuid_generate_v4()'
     add_column :groups, :uuid, :uuid
     set_uuid_for_all_groups
     change_column_null :groups, :uuid, false

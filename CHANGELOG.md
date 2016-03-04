@@ -1,6 +1,19 @@
 #Changelog
 
 ## upcoming
+
+- remove ReSlot Model
+- add Containership Model, to store relations between slots and slotgroups/lists/calendars
+- add Passengership Model, to store relations between slots and Users (My Schedule / MyCalendar)
+- support for automatic import of global-lists (created by data-team)
+- started migration to AWS elastic beanstalk
+- locations now work based on uuids
+- Gemfile:
+  - add immutable-struct (https://github.com/stitchfix/immutable-struct)
+  - remove rack-cors
+
+
+## v0.9.1 (unreleased)
 - this release needs MIGRATION
 - fix and improver follower model
 - ReSlots can have different visibilities now

@@ -38,11 +38,11 @@ namespace :feed do
         end
       end
 
-      ReSlot.includes(:slotter).all.find_each do |slot|
-        if slot.deleted_at.nil?
-          slot.add_follower(slot.slotter)
-        end
-      end
+      # ReSlot.includes(:slotter).all.find_each do |slot|
+      #   if slot.deleted_at.nil?
+      #     slot.add_follower(slot.slotter)
+      #   end
+      # end
 
       ## Collect Activities ##
 
@@ -54,8 +54,7 @@ namespace :feed do
                 Membership.where('deleted_at = ?', nil) +
                 Containership.where('deleted_at = ?', nil) +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
-                StdSlot.all +
-                ReSlot.all
+                StdSlot.all
 
       # TODO: handle friendship date during re-build task
       # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil

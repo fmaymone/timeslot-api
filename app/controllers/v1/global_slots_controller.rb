@@ -15,12 +15,8 @@ module V1
 
       muid = params.require(:predecessor)
       global_slot = GlobalSlot.find_or_create(muid)
-
-      # TODO: add_to_list
-
-      # reslot = ReSlot.create_from_slot(predecessor: global_slot,
-      #                                  slotter: current_user,
-      #                                  visibility: visibility)
+      add_to_slotsets(global_slot, params[:slot_groups] ||
+                                   [current_user.slot_sets['my_cal_uuid']])
 
       if global_slot.errors.empty?
         render "v1/slots/create", status: :created, locals: { slot: global_slot }

@@ -68,6 +68,10 @@ resource "Slots" do
 
         expect(current_user.created_slots).to include new_slot.meta_slot
         expect(current_user.my_calendar_slots).to include new_slot
+        expect(group_1.slots).to include new_slot
+        expect(group_2.slots).to include new_slot
+        expect(unauthorized_group.slots).not_to include new_slot
+        expect(deleted_group.slots).not_to include new_slot
 
         expect(response_status).to eq(201)
         expect(json).to have_key("id")
@@ -241,6 +245,12 @@ resource "Slots" do
     parameter :visibility,
               "Visibility of the Slot (private/friends/foaf/public)",
               required: true
+    parameter :slotSets,
+              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
+              "should be added to",
+              required: false
+    # TODO: response needs array with invalid slotset uuids
+
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
@@ -262,6 +272,11 @@ resource "Slots" do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
+                      "At the moment the slot is added to MySchedule by " \
+                      "default. I think we'll change this so it's only added " \
+                      "if the MySchedule UUID is provided in the slotGroups " \
+                      "array. Additional slotGroups can be submitted and the " \
+                      "slot will be added there too.\n\n" \
                       "returns 422 if parameters are invalid\n\n" \
                       "returns 422 if required parameters are missing"
           do_request
@@ -462,12 +477,17 @@ resource "Slots" do
                     "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
+
         expect(std_slot.visibility).to eq 'private'
+        expect(std_slot.type).to eq 'StdSlotPrivate'
+
         do_request
 
         expect(response_status).to eq(200)
-        std_slot.reload
-        expect(std_slot.visibility).to eq 'friends'
+        slot = BaseSlot.last
+        expect(slot.id).to eq std_slot.id
+        expect(slot.visibility).to eq 'friends'
+        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 
@@ -844,6 +864,7 @@ resource "Slots" do
                    "all worked fine."
 
     let(:slot) { create(:std_slot_public) }
+    let(:my_calendar_uuid) { current_user.slot_sets['my_cal_uuid'] }
     let(:group_1) { create(:group, owner: current_user) }
     let(:group_2) do
       group = create(:group)
@@ -853,6 +874,9 @@ resource "Slots" do
     let(:unauthorized_group) { create(:group) }
     let(:deleted_group) {
       create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:passengership) {
+      create(:passengership, slot: slot, user: current_user)
+    }
     let!(:containerships) {
       create(:containership, slot: slot, group: group_1)
       create(:containership, slot: slot, group: group_2)
@@ -862,6 +886,7 @@ resource "Slots" do
     }
     let(:slotGroups) { [group_1.uuid,
                         group_2.uuid,
+                        my_calendar_uuid,
                         unauthorized_group.uuid,
                         deleted_group.uuid] }
 
@@ -877,6 +902,7 @@ resource "Slots" do
         expect(group_2.slots).to include slot
         expect(slot.slot_groups).to include group_1
         expect(slot.slot_groups).to include group_2
+        expect(current_user.my_calendar_slots).to include slot
 
         do_request
         expect(response_status).to eq(200)
@@ -884,6 +910,7 @@ resource "Slots" do
         expect(group_2.slots).not_to include slot
         expect(unauthorized_group.slots).to include slot
         expect(deleted_group.slots).not_to include slot
+        expect(current_user.my_calendar_slots).not_to include slot
         expect(slot.slot_groups).not_to include group_1
         expect(slot.slot_groups).not_to include group_2
         expect(slot.slot_groups).to include unauthorized_group
@@ -1044,33 +1071,30 @@ resource "Slots" do
 
     parameter :id, "ID of the Slot to get the slotters for", required: true
 
-    response_field :array, "containing creation date of the ReSlot and " \
-                           "details of the user who did the reslot"
+    response_field :array,
+                   "list of all users who added the slot to their 'MyCalendar'"
 
     let(:parent) { create(:std_slot_public) }
-    # let!(:reslots) { create_list(:re_slot, 2, parent: parent) }
+    let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do
       let(:id) { parent.id }
 
       example "Get Slotters for Slot", document: :v1 do
-        skip 'needs update when specified what it means'
-        explanation "returns a list of all users who reslot the slot. " \
-                    "For now there is no distinction between reslot " \
+        explanation "returns a list of all users who have the slot in their " \
+                    "calendar. For now there is no distinction between " \
                     "visibilities as backend has no support for this yet.\n\n" \
-                    "Includes User data and timestamp.\n\n" \
                     "returns 401 if User not allowed to see Slotter data\n\n" \
                     "returns 404 if ID is invalid"
         do_request
-
         expect(response_status).to eq(200)
         expect(json.length).to eq 2
         expect(json.first).to have_key "slotter"
-        expect(json.first).to have_key "createdAt"
+        # expect(json.first).to have_key "createdAt"
         expect(json.first["slotter"]).to have_key "id"
         expect(json.first["slotter"]).to have_key "image"
-        expect(response_body).to include reslots.first.slotter.username
-        expect(response_body).to include reslots.last.slotter.username
+        expect(response_body).to include reslots.first.user.username
+        expect(response_body).to include reslots.last.user.username
       end
     end
   end

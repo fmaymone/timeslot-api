@@ -24,7 +24,9 @@ class StdSlot < BaseSlot
         remove_all_followers
       end
       slot_type = STD_SLOT_TYPES[visibility]
-      update(slot_type: SLOT_TYPES[slot_type])
+      # Now with the change of the type this is a little bit... hmmm
+      # Because I (kind of) do change the class of a loaded instance...
+      update(slot_type: SLOT_TYPES[slot_type], type: slot_type.to_s)
     end
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end

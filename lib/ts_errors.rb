@@ -28,4 +28,7 @@ module TSErrors
   end
 
   class MissingCurrentUserError < Pundit::NotAuthorizedError; end
+
+  # Raised when a slot should be added to a deleted SlotGroup
+  class SlotGroupDeleted < StandardError; end
 end

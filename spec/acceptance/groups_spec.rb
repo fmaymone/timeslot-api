@@ -44,7 +44,8 @@ resource "Groups" do
       expect(json['id']).to eq group.uuid
       expect(
         json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
+      ).to eq(group.attributes.as_json.except(
+               'owner_id', 'id', 'uuid', 'string_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -58,13 +59,22 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :name, "Name of group (max. 255 characters)", required: true
-    parameter :membersCanPost, "Can subscribers post?"
-    parameter :membersCanInvite, "Can subscribers invite friends?"
+    parameter :image, "Image for the group"
+    parameter :public,
+              "Is the group public? (true/false), default: 'false'"
+    parameter :membersCanPost,
+              "Can members add slots? (true/false), default: 'false'"
+    parameter :membersCanInvite,
+              "Can members add other users? (true/false), default: 'false'"
     parameter :invitees, "Array of User IDs to be added to the group"
 
     include_context "default group response fields"
 
     let(:name) { "foo" }
+    let(:image) { "salvador dali" }
+    let(:membersCanPost) { true }
+    let(:membersCanInvite) { true }
+    let(:public) { true }
     let(:invitees) { create_list(:user, 3).collect(&:id) }
 
     example "Create a new group", document: :v1 do
@@ -77,6 +87,15 @@ resource "Groups" do
 
       expect(response_status).to eq(201)
       expect(json).to have_key("id")
+      expect(json).to have_key("name")
+      expect(json).to have_key("public")
+      expect(json).to have_key("membersCanPost")
+      expect(json).to have_key("membersCanInvite")
+      expect(json["name"]).to eq name
+      expect(json["image"]).to eq image
+      expect(json["public"]).to eq public
+      expect(json["membersCanPost"]).to eq membersCanPost
+      expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
       expect(group.owner).to eq current_user
       expect(group.members).to include current_user
@@ -126,7 +145,8 @@ resource "Groups" do
         expect(json['id']).to eq group.uuid
         expect(
           json.except('membershipState', 'owner', 'id')
-        ).to eq(group.attributes.as_json.except('owner_id', 'id', 'uuid')
+        ).to eq(group.attributes.as_json.except(
+                 'owner_id', 'id', 'uuid', 'string_id')
                  .transform_keys { |key| key.camelize(:lower) })
         expect(json).to have_key "owner"
         expect(json['owner']['id']).to eq group.owner.id
@@ -187,7 +207,8 @@ resource "Groups" do
       expect(json['id']).to eq group.uuid
       expect(
         json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except('owner_id', 'uuid', 'id')
+      ).to eq(group.attributes.as_json.except(
+               'owner_id', 'uuid', 'id', 'string_id')
                .transform_keys { |key| key.camelize(:lower) })
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
@@ -639,6 +660,66 @@ resource "Groups" do
       example "returns Forbidden", document: false do
         do_request
         expect(response_status).to eq 403
+      end
+    end
+  end
+
+  # global slot groups
+  post "/v1/groups/global_group", :seed do
+    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group, "hash witch contains the payload", required: true
+    parameter :muid, "UUID of the group to add slots to",
+              required: true, scope: :group
+    parameter :name, "Name of the group to add slots to",
+              required: true, scope: :group
+    parameter :stringId, "String Identifier for the group", scope: :group
+    parameter :image, "Image URL for the group image", scope: :group
+    parameter :slots, "Array with muid's of GlobalSlots", scope: :group
+
+    let(:muid) { attributes_for(:group)[:uuid] }
+    let(:name) { "Autokino an der alten Eiche" }
+    let(:image) { "http://faster.pussycat" }
+    let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
+    let(:slots) { [attributes_for(:global_slot)[:muid]] }
+
+    describe "create new public group and add GlobalSlots", :vcr do
+      example "Add GlobalSlots to new or existing public group",
+              document: :v1 do
+        explanation "If no public group with the given UUID exists, " \
+                    "one is created and the name and image is set and the " \
+                    "given GlobalSlots are added to the new group.\n\n" \
+                    "If a public group with the UUID exists, this one " \
+                    "is used to add the given GlobalSlots to it.\n\n" \
+                    "The GlobalSlots which aren't yet in the backend db " \
+                    "are loaded via the candy shop.\n\n" \
+                    "The User which is used to submit the data is set as " \
+                    "owner for created slotgroup/list. This user must be " \
+                    "a known GlobalSlot source in the backend.\n\n" \
+                    "returns 200 if slots were successfully added.\n\n" \
+                    "returns 422 if group with given UUID exists but " \
+                    "name doesn't match.\n\n" \
+                    "returns 422 if requiered parameters are missing or invalid."
+
+        group_counter = Group.count
+        do_request
+
+        expect(Group.count).to eq group_counter + 1
+        autokino = Group.last
+        expect(autokino.uuid).to eq muid
+        expect(autokino.name).to eq name
+        expect(autokino.public?).to be true
+        expect(autokino.image).to eq image
+        expect(autokino.string_id).to eq stringId
+
+        expect(autokino.slots).not_to be_empty
+        gs = GlobalSlot.find_by muid: slots.first
+        expect(autokino.slots).to include gs
+
+        expect(response_status).to eq(200)
       end
     end
   end

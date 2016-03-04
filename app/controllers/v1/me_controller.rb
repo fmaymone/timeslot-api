@@ -54,7 +54,7 @@ module V1
     end
 
     # GET /v1/me/slots
-    # returns all std_slots and re_slots of the current user
+    # returns all std_slots of the current user
     def my_slots
       authorize :me
 

@@ -44,7 +44,7 @@ class ElasticSearchSlot
     when 'moviepilot.de'
       { name: 'Moviepilot', url: 'http://moviepilot.de', image: 'http://www.goldenerwesten.net/neu/wp-content/uploads/2011/04/moviepilot_logo.jpg' }
     else
-      User.find_by(role: 2, username: domain)
+      user = User.find_by(role: 2, username: domain)
       { name: user.username, url: user.public_url, image: user.picture }
     end
   end

@@ -40,4 +40,9 @@ class SearchPolicy < ApplicationPolicy
   def location?
     current_user?
   end
+
+  # true if a user is logged in
+  def categories?
+    current_user?
+  end
 end

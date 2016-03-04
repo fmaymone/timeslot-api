@@ -33,6 +33,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
       let(:gs_data) { attributes_for(:global_slot) }
+      let(:slot_group) { create(:group, owner: current_user) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
@@ -52,6 +53,26 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
         expect(new_slot.ios_location.as_json).to eq new_location.as_json
         expect(new_slot.ios_location.uuid).to eq new_slot.location_uid
+      end
+
+      it "adds the slot to the users' MyCalendar", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:muid] },
+               auth_header
+        }.to change(Passengership, :count)
+        new_slot = GlobalSlot.last
+        expect(current_user.my_calendar_slots).to include new_slot
+      end
+
+      it "adds the slot to other given slotgroups", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:muid], slot_groups: [slot_group.uuid] },
+               auth_header
+        }.to change(Containership, :count)
+        new_slot = GlobalSlot.last
+        expect(slot_group.slots).to include new_slot
       end
     end
 

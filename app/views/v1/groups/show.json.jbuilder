@@ -6,6 +6,7 @@ json.extract!(
   :image,
   :members_can_post,
   :members_can_invite,
+  :public,
   :created_at,
   :updated_at,
   :deleted_at

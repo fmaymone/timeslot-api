@@ -34,6 +34,13 @@ class Group < ActiveRecord::Base
                     notes: [:creator]])
   end
 
+  def add_slots(muids)
+    muids.each do |muid|
+      slot = GlobalSlot.find_or_create(muid)
+      Containership.find_or_create_by(slot: slot, group: self)
+    end
+  end
+
   def invite_users(ids)
     ids.each do |user_id|
       invitee = User.find(user_id)
@@ -65,7 +72,7 @@ class Group < ActiveRecord::Base
   end
 
   private def set_uuid
-    self.uuid = self.class.generate_uuid
+    self.uuid ||= self.class.generate_uuid
   end
 
   def self.generate_uuid

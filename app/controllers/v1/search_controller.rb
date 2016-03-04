@@ -1,5 +1,13 @@
 module V1
   class SearchController < ApplicationController
+    # GET /v1/search/categories
+    def categories
+      authorize :search
+      categories = GlobalSlotConsumer.new.categories
+
+      render json: { categories: categories }
+    end
+
     # GET /v1/search/user
     def user
       authorize :search

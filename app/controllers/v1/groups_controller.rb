@@ -167,8 +167,31 @@ module V1
       end
     end
 
+    # POST /v1/groups/global_group
+    def global_group
+      authorize current_user
+
+      group = Group.find_or_create_by!(uuid: globalgroup[:muid],
+                                       name: globalgroup[:name]) do |new_group|
+        new_group.update(globalgroup.except(:muid, :slots))
+        new_group.owner = current_user
+        new_group.public = true
+      end
+
+      authorize group
+      group.add_slots globalgroup[:slots]
+
+      head :ok
+    end
+
     private def group_params
-      params.permit(:name, :image, :members_can_post, :members_can_invite)
+      params.permit(:name, :image, :public, :members_can_post, :members_can_invite)
+    end
+
+    private def globalgroup
+      p = params.require(:group)
+          .permit(:name, :image, :muid, :string_id, slots: [])
+      p.transform_keys(&:underscore) if p
     end
 
     private def user_id

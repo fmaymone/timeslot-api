@@ -53,14 +53,21 @@ class MetaSlot < ActiveRecord::Base
                           meta_params[:location_uid].nil?
 
       ios_params = meta_params[:ios_location] ||
-                   GlobalSlotConsumer.new.location(meta_slot.location_uid).as_json
+                   GlobalSlotConsumer.new.location(meta_slot.location_uid)
+                     .as_json.symbolize_keys
 
-      if ios_params[:latitude].present? && ios_params[:longitude].present?
-        ios_location = IosLocation.find_by(
-          latitude: ios_params[:latitude], longitude: ios_params[:longitude])
-      end
-      ios_location ||= IosLocation.create(
-        ios_params.merge(creator: meta_params[:creator]))
+      # TODO: IosLocation.find_or_create(...)
+      ios_location = if ios_params[:latitude].present? &&
+                        ios_params[:longitude].present? &&
+                        known_location = IosLocation
+                                         .find_by(
+                                           latitude: ios_params[:latitude],
+                                           longitude: ios_params[:longitude])
+                       known_location
+                     else
+                       IosLocation.create(
+                         ios_params.merge(creator: meta_params[:creator]))
+                     end
       meta_slot.update(ios_location: ios_location)
     end
   end

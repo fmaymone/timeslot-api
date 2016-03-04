@@ -70,20 +70,6 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
-
-
---
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -317,14 +303,15 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
+    re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -339,13 +326,15 @@ CREATE TABLE groups (
     id bigint NOT NULL,
     owner_id bigint NOT NULL,
     name character varying NOT NULL,
-    members_can_post boolean DEFAULT true,
-    members_can_invite boolean DEFAULT false,
-    created_at timestamp without time zone,
-    updated_at timestamp without time zone,
+    members_can_post boolean DEFAULT false NOT NULL,
+    members_can_invite boolean DEFAULT false NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     deleted_at timestamp without time zone,
     image character varying(255) DEFAULT ''::character varying NOT NULL,
-    uuid uuid NOT NULL
+    uuid uuid NOT NULL,
+    public boolean DEFAULT false NOT NULL,
+    string_id text DEFAULT ''::text NOT NULL
 );
 
 
@@ -1123,6 +1112,13 @@ CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
 
 
 --
+-- Name: index_groups_on_uuid; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_groups_on_uuid ON groups USING btree (uuid);
+
+
+--
 -- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1456,4 +1452,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160131005126');
 INSERT INTO schema_migrations (version) VALUES ('20160209102620');
 
 INSERT INTO schema_migrations (version) VALUES ('20160215135746');
+
+INSERT INTO schema_migrations (version) VALUES ('20160215231713');
+
+INSERT INTO schema_migrations (version) VALUES ('20160221192251');
 

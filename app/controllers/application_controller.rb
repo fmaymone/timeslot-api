@@ -58,6 +58,29 @@ class ApplicationController < ActionController::API
     visibility
   end
 
+  private def add_to_slotgroup(slot, group_uuid)
+    group = Group.find_by!(uuid: group_uuid)
+    # TODO: I need different auth-checks for different slot types
+    authorize group, :add_slot?
+    SlotsetManager.new(current_user: current_user).add!(slot, group)
+  rescue ActiveRecord::RecordNotFound,
+         Pundit::NotAuthorizedError,
+         TSErrors::SlotGroupDeleted
+    slot.errors.add(:base, group_uuid)
+  end
+
+  private def add_to_slotsets(slot, slot_sets)
+    special_sets = current_user.slot_sets.invert
+
+    slot_sets.each do |slot_set|
+      if special_sets.key? slot_set
+        SlotsetManager.new(current_user: current_user).add!(slot, slot_set)
+      else
+        add_to_slotgroup(slot, slot_set)
+      end
+    end
+  end
+
   private def slot_paging_params
     p = params.permit(:filter, :moment, :limit, :after, :before).symbolize_keys
 

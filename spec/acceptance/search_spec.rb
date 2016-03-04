@@ -6,6 +6,23 @@ resource "Search" do
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
+  # get valid elastic search categories
+  get "/v1/search/categories", :vcr do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    example "Get list of all search categories", document: :v1 do
+      explanation "Returns a list of all valid values for the " \
+                  "'category' parameter for searching."
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key("categories")
+      categories = json['categories']
+      expect(categories.sort == %w(football cinema concerts).sort).to be true
+    end
+  end
+
   # search users
   get "/v1/search/user" do
     header "Accept", "application/json"
@@ -23,7 +40,8 @@ resource "Search" do
     # response_field :slotCount, "Number of slots for this user"
     # response_field :reslotCount, "Number of reslots for this user"
     # response_field :friendsCount, "Number of friends for this user"
-    response_field :friendshipState, "The friendship relation to the current user"
+    response_field :friendshipState,
+                   "The friendship relation to the current user"
 
     context "search by username" do
       let!(:user) { create(:user, username: 'John Doe') }
@@ -46,7 +64,8 @@ resource "Search" do
     context "search by custom attribute" do
       parameter :attr, "The custom search attribute"
 
-      let!(:user) { create(:user, username: 'John Doe', email: 'john_doe@email.com') }
+      let!(:user) {
+        create(:user, username: 'John Doe', email: 'john_doe@email.com') }
       let(:query) { 'john_doe@email.com' }
       let(:attr) { 'email' }
 
@@ -101,7 +120,8 @@ resource "Search" do
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
-    response_field :friendshipState, "The friendship relation to the current user"
+    response_field :friendshipState,
+                   "The friendship relation to the current user"
 
     context "search friend by username" do
       let!(:user) { create(:user, username: 'Johnny Doehl') }
@@ -261,7 +281,8 @@ resource "Search" do
     response_field :name, "name of the location"
 
     context "search by location name" do
-      let!(:location) { create(:ios_location, name: 'Timeslot Friedrichstraße 110 (Berlin)') }
+      let!(:location) {
+        create(:ios_location, name: 'Timeslot Friedrichstraße 110 (Berlin)') }
       let(:query) { 'timeslot berlin' }
 
       example "Search by location name", document: :v1 do

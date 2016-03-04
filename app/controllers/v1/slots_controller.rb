@@ -18,8 +18,8 @@ module V1
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
-      if params.key?(:slotGroups) && params[:slotGroups].any?
-        add_to_slotgroups(params[:slotGroups])
+      if params.key?(:slot_groups) && params[:slot_groups].any?
+        add_to_slotsets(@slot, params[:slot_groups])
       end
 
       if @slot.persisted?
@@ -30,6 +30,7 @@ module V1
       end
     end
 
+    # TODO: remove this
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -59,6 +60,7 @@ module V1
       end
     end
 
+    # TODO: rename to /v1/slots/:id
     # PATCH /v1/stdslot/1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
@@ -76,14 +78,10 @@ module V1
     end
 
     # DELETE /v1/slot/1
-    # temporary unification of slot deletion routes,
-    # we don't need this for reslots in the future
     def delete
       slot_id = params[:id].to_i
       @slot = current_user.std_slots.find(slot_id)
-    rescue ActiveRecord::RecordNotFound
-      @slot = current_user.re_slots.find_by(parent_id: slot_id)
-    ensure
+
       authorize @slot
 
       if @slot.delete
@@ -129,6 +127,7 @@ module V1
       head :ok
     end
 
+    # TODO: not working atm, needs specification
     # POST /v1/slots/1/user_tags
     def update_user_tags
       @slot = BaseSlot.get(params[:id])
@@ -138,13 +137,15 @@ module V1
       head :ok
     end
 
+    # TODO: not working atm, needs specification
     # GET /v1/slots/1/user_tags
     def get_user_tags
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      tagged_users = @slot.re_slots.where.not(tagged_from: nil).pluck(:slotter_id)
-      @users = User.find tagged_users
+      # tagged_users = @slot.re_slots.where.not(tagged_from: nil).pluck(:slotter_id)
+      # @users = User.find tagged_users
+      @users = []
 
       render "v1/users/list"
     end
@@ -157,10 +158,15 @@ module V1
       render :comments
     end
 
+    # TODO: return hash with array instead of just an array
     # GET /v1/slots/1/slotters
     def show_slotters
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
+      slot = BaseSlot.get(params[:id])
+      authorize slot
+
+      # user_ids = Passengership.select(:user_id).where(slot: slot)
+      # @slotters = User.where(id: user_ids)
+      @slotters = slot.my_calendar_users
 
       render :slotters
     end
@@ -187,54 +193,9 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      special_sets = current_user.slot_sets.invert
-
-      params[:slot_groups].each do |slot_set|
-        if special_sets.key? slot_set
-          handle_special_slotset(special_sets[slot_set], @slot)
-        else
-          group = Group.find_by(uuid: slot_set)
-
-          # skip deleted groups
-          @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-          add_to_slotgroup(group)
-        end
-      end
+      add_to_slotsets(@slot, params[:slot_groups])
 
       render :slotgroups, locals: { slot: @slot }
-    end
-
-    # TODO: put this into service
-    private def handle_special_slotset(slot_set, slot)
-      # pp slot_set
-      case slot_set
-      when 'my_cal_uuid'
-        Passengership.find_or_create_by(slot: slot,
-                                        user: current_user).update(deleted_at: nil)
-      when 'my_friends_slots_uuid'
-        slot.StdSlotFriends!
-      when 'my_public_slots_uuid'
-        pp 'create public slot'
-      end
-    end
-
-    # TODO: put this into service
-    private def add_to_slotgroups(group_uuids)
-      groups = Group.where(uuid: group_uuids)
-      groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-        add_to_slotgroup(group)
-      end
-    end
-
-    # TODO: put this into service
-    private def add_to_slotgroup(group)
-      authorize group, :add_slot?
-    rescue Pundit::NotAuthorizedError
-      @slot.errors.add(:base, group.uuid)
-    else
-      @slot.add_to_group group
     end
 
     def remove_from_groups
@@ -247,15 +208,12 @@ module V1
 
       groups = Group.where(uuid: params[:slot_groups])
       groups.each do |group|
-        # skip deleted groups
-        @slot.errors.add(:base, group.uuid) && next if group.deleted_at?
-
         begin
           authorize group, :remove_slot?
-        rescue Pundit::NotAuthorizedError
+          SlotsetManager.new(current_user: current_user).remove!(@slot, group)
+        rescue Pundit::NotAuthorizedError,
+               TSErrors::SlotGroupDeleted
           @slot.errors.add(:base, group.uuid)
-        else
-          @slot.remove_from_group group
         end
       end
 

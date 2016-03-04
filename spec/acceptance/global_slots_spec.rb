@@ -10,6 +10,11 @@ resource "GlobalSlots" do
     header "Authorization", :auth_header
 
     parameter :predecessor, "'muid' of the global slot", required: true
+    parameter :slotSets,
+              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
+              "should be added to",
+              required: false
+    # TODO: response needs array with invalid slotset uuids
 
     let(:predecessor) { attributes_for(:global_slot)[:muid] }
 
