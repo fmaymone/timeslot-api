@@ -122,17 +122,18 @@ module V1
     def add_comment
       @slot = BaseSlot.get(params[:id])
       authorize @slot
+
       @slot.create_comment(current_user, comment_param)
 
       head :ok
     end
 
-    # TODO: not working atm, needs specification
     # POST /v1/slots/1/user_tags
-    def update_user_tags
+    def tag_users
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @slot.update_user_tags(current_user, params[:user_tags])
+
+      UsersToSlotTagger.new(@slot).tag(params[:user_tags])
 
       head :ok
     end

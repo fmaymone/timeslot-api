@@ -52,9 +52,11 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # TODO: write spec
-  def update_user_tags?
-    current_user_has_read_access?
+  # only the slot creator is allowes to tag users to the slot
+  def tag_users?
+    return false unless current_user?
+    return true if slot.creator == current_user
+    false
   end
 
   # TODO: write spec
