@@ -37,8 +37,8 @@ describe SlotPolicy do
     end
   end
 
-  permissions :show?, :show_likes?, :show_comments?, :unlike?,
-              :add_like?, :copy?, :add_comment?,
+  permissions :show?, :show_likes?, :show_comments?, :unlike?, :slotsets?,
+              :add_like?, :copy?, :add_comment?, :show_slotters?,
               :remove_from_groups?, :show_tagged_users? do
 
     let(:user) { create(:user) }
@@ -203,8 +203,9 @@ describe SlotPolicy do
 
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:add_like?, :add_comment?, :copy?,
-       :move?, :unlike?, :tag_users?]
+      [:slotsets?, :add_like?, :add_comment?, :copy?, :move?,
+       :unlike?, :tag_users?, :show_slotters?, :show_tagged_users?
+      ]
     }
     let(:user) { nil }
     let(:slot) { create(:std_slot_public) }
@@ -221,7 +222,7 @@ describe SlotPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :show_likes?, :show_comments?,
+        :show?, :show_likes?, :show_comments?, :slotsets?,
         :add_like?, :add_comment?, :copy?, :move?,
         :unlike?, :tag_users?, :show_slotters?, :show_tagged_users?
       ]

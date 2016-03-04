@@ -8,7 +8,7 @@ RSpec.describe UsersToSlotTagger, type: :service do
   let(:users) { create_list(:user, 3) }
   let(:user_ids) { users.collect(&:id) }
 
-  describe "tag users to slot", :focus do
+  describe "tag users to slot" do
     context "no existing passengership" do
       it "creates passengerships" do
         expect {
@@ -22,6 +22,7 @@ RSpec.describe UsersToSlotTagger, type: :service do
         expect(Passengership.last.add_media_permission?).to be true
       end
 
+      # TODO: implement activity notification
       # it "sends a notification to the tagged users" do
       #   tagger.tag(user_ids)
       #   expect(Passengership.last.add_media_permission?).to be true
@@ -36,7 +37,7 @@ RSpec.describe UsersToSlotTagger, type: :service do
       it "does only create missing passengerships" do
         expect {
           tagger.tag(user_ids)
-        }.to change(Passengership, :count).by users.size-1
+        }.to change(Passengership, :count).by(users.size - 1)
         expect(slot.tagged_user_ids).to eq user_ids
       end
 
