@@ -1140,41 +1140,28 @@ resource "Slots" do
     end
   end
 
-  # get "/v1/slots/:id/user_tags" do
-  #   header "Accept", "application/json"
-  #   header "Authorization", :auth_header
+  get "/v1/slots/:id/user_tags" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
 
-  #   parameter :id, "ID of the Slot to get the user tags for", required: true
-  #   response_field :array, "containing a list of users"
+    parameter :id, "ID of the Slot to get the user tags for", required: true
+    response_field :array, "containing a list of users"
 
-  #   let!(:slot) { create(:std_slot_public) }
-  #   let!(:reslots) do
-  #     [create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user))]
-  #   end
-  #   let(:id) { slot.id }
+    let!(:slot) { create(:std_slot_public) }
+    let!(:tags) {
+      create_list(:passengership, 3, :add_media_permitted, slot: slot) }
+    let(:id) { slot.id }
 
-  #   example "Get all tagged users of a slot", document: :v1 do
-  #     explanation "returns a list of user ids which are tagged to this slot.\n\n" \
-  #                 "returns 404 if ID is invalid"
-  #     do_request
+    example "Get all tagged users of a slot", document: :v1 do
+      explanation "returns a list of user ids which are tagged to" \
+                  " this slot.\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
 
-  #     expect(response_status).to eq(200)
-  #     expect(json.size).to eq(3)
-  #     (0..2).each do |i|
-  #       expect(json[i]['id']).to eq(reslots[i][:slotter_id])
-  #     end
-  #   end
-  # end
+      expect(response_status).to eq(200)
+      expect(json.size).to eq(3)
+    end
+  end
 
   post "/v1/slots/:id/copy" do
     header "Content-Type", "application/json"

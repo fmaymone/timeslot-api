@@ -138,15 +138,12 @@ module V1
       head :ok
     end
 
-    # TODO: not working atm, needs specification
     # GET /v1/slots/1/user_tags
-    def get_user_tags
+    def show_tagged_users
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      # tagged_users = @slot.re_slots.where.not(tagged_from: nil).pluck(:slotter_id)
-      # @users = User.find tagged_users
-      @users = []
+      @users = @slot.tagged_users
 
       render "v1/users/list"
     end

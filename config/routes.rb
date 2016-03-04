@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       post ':id/comment', to: 'slots#add_comment', as: 'slot_add_comment'
 
       get ':id/slotters', to: 'slots#show_slotters', as: 'slot_show_slotters'
-      get ':id/user_tags', to: 'slots#get_user_tags', as: 'slot_get_user_tags'
+      get ':id/user_tags', to: 'slots#show_tagged_users', as: 'show_tagged_users'
       post ':id/user_tags', to: 'slots#tag_users', as: 'tag_users_to_slot'
 
       get ':id/slotsets', to: 'slots#slotsets'

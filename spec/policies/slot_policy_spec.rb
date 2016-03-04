@@ -39,7 +39,7 @@ describe SlotPolicy do
 
   permissions :show?, :show_likes?, :show_comments?, :unlike?,
               :add_like?, :copy?, :add_comment?,
-              :remove_from_groups? do
+              :remove_from_groups?, :show_tagged_users? do
 
     let(:user) { create(:user) }
 
@@ -223,7 +223,7 @@ describe SlotPolicy do
       [
         :show?, :show_likes?, :show_comments?,
         :add_like?, :add_comment?, :copy?, :move?,
-        :unlike?, :tag_users?
+        :unlike?, :tag_users?, :show_slotters?, :show_tagged_users?
       ]
     }
     let(:user) { nil }
