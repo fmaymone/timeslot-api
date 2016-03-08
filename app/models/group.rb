@@ -55,6 +55,7 @@ class Group < ActiveRecord::Base
 
   def kick_member(user_id)
     membership = memberships.find_by user_id: user_id
+    return true unless membership # return 200 if user not member, could be improved
     membership && membership.kick
   end
 

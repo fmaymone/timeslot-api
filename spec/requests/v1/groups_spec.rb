@@ -564,9 +564,9 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "no membership" do
-      it "returns Unprocessable Entity" do
+      it "returns OK" do
         delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
-        expect(response.status).to be 422
+        expect(response.status).to be 200
       end
     end
   end
