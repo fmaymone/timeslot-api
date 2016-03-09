@@ -9,6 +9,8 @@ class Passengership < ActiveRecord::Base
   scope :active, -> { where deleted_at: nil }
   scope :add_media_permitted,
         -> { where(deleted_at: nil, add_media_permission: true) }
+  scope :in_schedule,
+        -> { where(deleted_at: nil, show_in_my_schedule: true) }
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :passengerships
   belongs_to :user, inverse_of: :passengerships

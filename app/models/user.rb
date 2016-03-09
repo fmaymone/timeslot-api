@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :passengerships, foreign_key: :user_id, inverse_of: :user
-  has_many :my_calendar_slots, -> { merge Passengership.active },
+  has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :slot,
            inverse_of: :my_calendar_users
 
