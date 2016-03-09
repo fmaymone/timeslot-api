@@ -518,6 +518,52 @@ resource "Me" do
     end
   end
 
+  post "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    let(:slotgroup) { create(:group) }
+    let(:slotgroup_uuid) { slotgroup.uuid }
+    let!(:slot_ids) do
+      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships.collect(&:slot_id)
+    end
+
+    example "Display Slotgroup/Calendar in mySchedule", document: :v1 do
+      explanation "returns 200 if slotgroup was successfully added to " \
+                  "schedule or has been part of it anyway."
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(current_user.my_calendar_slot_ids).to include slot_ids
+    end
+  end
+
+  delete "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    let(:slotgroup) { create(:group) }
+    let(:slotgroup_uuid) { slotgroup.uuid }
+    let!(:slot_ids) do
+      containerships = create_list(:containership, 3, group: slotgroup)
+      slot_ids = containerships.collect(&:slot_id)
+      slots = BaseSlot.find(slot_ids)
+      slots.each { |slot|
+        create(:passengership, slot: slot, user: current_user,
+               show_in_my_calendar: true)
+      }
+    end
+
+    example "Hide Slotgroup/Calendar from mySchedule", document: :v1 do
+      explanation "returns 200 if slotgroup successfully removed from " \
+                  "schedule or hasn't been part of it anyway."
+      do_request
+
+      expect(response_status).to eq(200)
+    end
+  end
+
   patch "/v1/me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
