@@ -28,7 +28,7 @@ namespace :db do
                                   :with_likes,
                                   :with_comments,
                                   :with_media,
-                                  owner: user,
+                                  creator: user,
                                   meta_slot: meta_slot)
 
         FactoryGirl.create_list(:slot_image, 5, mediable: slot)

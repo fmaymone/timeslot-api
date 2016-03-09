@@ -14,7 +14,7 @@ namespace :db do
                                        title: Faker::Name.title + ' ' + Faker::Name.suffix)
 
         FactoryGirl.create(:std_slot_public,
-                           owner: user,
+                           creator: user,
                            meta_slot: meta_slot)
       end
     end

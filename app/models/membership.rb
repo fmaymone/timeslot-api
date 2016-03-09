@@ -12,9 +12,10 @@ class Membership < ActiveRecord::Base
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
   def activate
-    create_activity
+    remove_activity
     update!(state: "111")
     user.follow(group)
+    create_activity
     group.touch
   end
 
@@ -32,6 +33,8 @@ class Membership < ActiveRecord::Base
 
   def refuse
     update!(state: "001")
+    remove_activity('reject')
+    true
   end
 
   def refused?
@@ -40,6 +43,7 @@ class Membership < ActiveRecord::Base
 
   def kick
     update!(state: "010")
+    remove_activity('kick')
     group.remove_follower(user)
     group.touch
   end
@@ -50,6 +54,7 @@ class Membership < ActiveRecord::Base
 
   def leave
     update!(state: "100")
+    remove_activity('leave')
     user.unfollow(group)
     group.touch
   end
@@ -69,6 +74,7 @@ class Membership < ActiveRecord::Base
   # called if user deactivates his account
   # state needs to be preserved in this case
   def inactivate
+    remove_activity
     group.remove_follower(user)
     group.touch
     ts_soft_delete

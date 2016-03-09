@@ -14,7 +14,7 @@ module GroupActivity
   # changing we need the user here. If users changes their
   # visiblity, we have to delete activities from stream.
   #private def activity_foreign
-  #  activity_target.owner
+  #  activity_target.creator
   #end
 
   # Add extra data to each activity. The data can be hide

@@ -32,7 +32,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
         expect(user_feed.first['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
         expect(user_feed.second['data']['target']['id']).to be(slot.id)
         expect(user_feed.second['data']['actor']['id']).to be(user.id)
@@ -42,7 +41,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_follower.first['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower.first['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed_follower.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed_follower.first['data']['actor']['id']).to be(follower.id)
         expect(user_feed_follower.second['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower.second['data']['actor']['id']).to be(follower.id)
@@ -52,7 +50,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed_follower2.first['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower2.first['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed_follower2.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed_follower2.first['data']['actor']['id']).to be(follower2.id)
         expect(user_feed_follower2.second['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower2.second['data']['actor']['id']).to be(follower2.id)
@@ -69,7 +66,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower.first['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(news_feed_follower.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(news_feed_follower.first['data']['actor']['id']).to be(follower2.id)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
@@ -77,7 +73,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower2.first['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower2.first['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower2.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(news_feed_follower2.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(news_feed_follower2.first['data']['actor']['id']).to be(follower.id)
 
         expect(news_feed_follower).not_to eq(news_feed_follower2)
@@ -89,7 +84,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.first['data']['target']['id']).to be(slot.id)
         expect(notification_feed.first['data']['target']['likes']).to be(slot.likes.count)
         expect(notification_feed.first['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(notification_feed.first['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(notification_feed.first['data']['actor']['id']).to be(follower2.id)
         expect(notification_feed.second['data']['target']['id']).to be(slot.id)
         expect(notification_feed.second['data']['actor']['id']).to be(follower2.id)
@@ -405,15 +399,194 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
   end
 
-  context "Group feeds", :redis do
+  context "Passengership feeds", :redis do
     let(:user) { create(:user) }
+    let(:follower) { create(:user) } # as member
     let(:slot) { create(:std_slot_public, creator: user) }
+    let!(:passengership) { create(:passengership, user: follower, slot: slot) }
+
+    context "User follows a group" do
+      before(:each) do
+        # Create relationships
+        follower.follow(slot)
+
+        # Perform activities (User)
+        slot.create_comment(user, 'This is a test comment.')
+        slot.create_like(user)
+        # Perform activities (Follower)
+        slot.create_comment(follower, 'This is a test comment.')
+        slot.create_like(follower)
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(2) # +2 own activities
+
+        user_feed_follower = Feed.user_feed(follower.id).as_json
+        expect(user_feed_follower.count).to be(2) # +2 own activities
+        expect(user_feed).not_to eq(user_feed_follower)
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0) # has no followings
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 public activities (+2 aggregated)
+        expect(news_feed).not_to eq(news_feed_follower)
+      end
+
+      it "Notification Feed (activities to own content)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(2) # +2 foreign activities to own content
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed).not_to eq(notification_feed_follower)
+      end
+    end
+
+    context "User unfollows a passengership" do
+      before(:each) do
+        # NOTE: Old activities were not removed after unfollow!
+        # Unfollow (removes relationship)
+        follower.unfollow(slot)
+
+        # Perform activities
+        slot.create_comment(user, 'This is a test comment.')
+        slot.create_comment(follower, 'This is a test comment.')
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(1) # +2 new activity
+
+        user_feed_follower = Feed.user_feed(follower.id).as_json
+        expect(user_feed_follower.count).to be(1) # +1 new activity
+        expect(user_feed).not_to eq(user_feed_follower)
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0) # has no followings
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 public activities (+2 aggregated)
+        expect(news_feed).not_to eq(news_feed_follower)
+      end
+
+      it "Notification Feed (activities to own content)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(1) # +1 foreign activities to own content
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed).not_to eq(notification_feed_follower)
+      end
+    end
+  end
+
+  context "Containership feeds", :redis do
+    let(:user) { create(:user) }
+    let(:creator) { create(:user) }
+    let(:slot) { create(:std_slot_public, creator: creator) }
     let(:group) { create(:group, owner: user) }
     let!(:containership) { create(:containership, slot: slot, group: group) }
 
     context "User follows a group" do
       before(:each) do
         # Create relationships
+        user.follow(group)
+        creator.follow(group)
+
+        # Perform activities (User)
+        slot.create_comment(user, 'This is a test comment.')
+        slot.create_like(user)
+        # Perform activities (Follower)
+        slot.create_comment(creator, 'This is a test comment.')
+        slot.create_like(creator)
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(2) # +2 own activities
+
+        user_feed_follower = Feed.user_feed(creator.id).as_json
+        expect(user_feed_follower.count).to be(2) # +2 own activities
+        expect(user_feed).not_to eq(user_feed_follower)
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(1) # +1 public activities
+
+        news_feed_follower = Feed.news_feed(creator.id).as_json
+        expect(news_feed_follower.count).to be(0) # no foreign activities to own content
+        expect(news_feed).not_to eq(news_feed_follower)
+      end
+
+      it "Notification Feed (activities to own content)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(0) # has no own content
+
+        notification_feed_follower = Feed.notification_feed(creator.id).as_json
+        expect(notification_feed_follower.count).to be(2) # +2 foreign activities to own content
+        expect(notification_feed).not_to eq(notification_feed_follower)
+      end
+    end
+
+    context "User unfollows a group" do
+      before(:each) do
+        # NOTE: Old activities were not removed after unfollow!
+        # Unfollow (removes relationship)
+        creator.unfollow(group)
+
+        # Perform activities
+        slot.create_comment(user, 'This is a test comment.')
+        slot.create_comment(creator, 'This is a test comment.')
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(1) # +2 new activity
+
+        user_feed_follower = Feed.user_feed(creator.id).as_json
+        expect(user_feed_follower.count).to be(1) # +1 new activity
+        expect(user_feed).not_to eq(user_feed_follower)
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0) # has no followings
+
+        news_feed_follower = Feed.news_feed(creator.id).as_json
+        expect(news_feed_follower.count).to be(0) # has no followings
+        expect(news_feed).to eq(news_feed_follower)
+      end
+
+      it "Notification Feed (activities to own content)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(0) # has no own content
+
+        notification_feed_follower = Feed.notification_feed(creator.id).as_json
+        expect(notification_feed_follower.count).to be(1) # +1 foreign activities to own content
+        expect(notification_feed).not_to eq(notification_feed_follower)
+      end
+    end
+  end
+
+  context "Group feeds", :redis do
+    let(:user) { create(:user) }
+    let(:member) { create(:user) }
+    let(:slot) { create(:std_slot_public, creator: user) }
+    let(:group) { create(:group, owner: user) }
+    let!(:membership) { create(:membership, user: member, group: group) }
+    let!(:containership) { create(:containership, slot: slot, group: group) }
+
+    context "User follows a group" do
+      before(:each) do
+        # Create relationships
+        user.follow(group)
         follower.follow(group)
         follower2.follow(group)
 
@@ -524,8 +697,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
     let!(:group) { create(:group, owner: user) }
     let!(:group_slot) { create(:std_slot_public, creator: user) }
     let!(:containership) { create(:containership, slot: group_slot, group: group) }
-    # let!(:reslot_1) { create(:re_slot, predecessor: slot, parent: slot, slotter: follower) }
-    # let!(:reslot_2) { create(:re_slot, predecessor: reslot_1, parent: slot, slotter: follower2) }
 
     context "User follows mixed type of targets" do
       before(:each) do
@@ -535,9 +706,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Create relationships (Slot-related)
         follower.follow(slot)
         follower2.follow(slot)
-        # Create relationships (ReSlot-related, Crossed)
-        # follower2.follow(reslot_1)
-        # user.follow(reslot_2)
         # Create relationships (Group-related)
         follower.follow(group)
         follower2.follow(group)
@@ -554,121 +722,52 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Perform activities (Group)
         group_slot.create_comment(follower, 'This is a test comment.')
         group_slot.create_like(follower)
-
-        # Perform activities (ReSlot 1)
-        # reslot_1.create_like(user)
-        # reslot_1.create_comment(user, 'This is a test comment.')
-        # reslot_1.create_like(follower)
-        # reslot_1.create_comment(follower, 'This is a test comment.')
-        # reslot_1.create_like(follower2)
-        # reslot_1.create_comment(follower2, 'This is a test comment.')
-
-        # Perform activities (ReSlot 2)
-        # reslot_2.create_like(user)
-        # reslot_2.create_comment(user, 'This is a test comment.')
-        # reslot_2.create_like(follower)
-        # reslot_2.create_comment(follower, 'This is a test comment.')
-        # reslot_2.create_like(follower2)
-        # reslot_2.create_comment(follower2, 'This is a test comment.')
       end
 
       it "User Feed (me activities)" do
-        skip 'needs fix'
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(2) # +4 own activities
-        # expect(user_feed.count).to be(4) # +4 own activities
+        expect(user_feed.count).to be(2) # +2 own activities
         expect(user_feed[0]['data']['target']['id']).to be(slot.id)
         expect(user_feed[0]['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed[0]['data']['actor']['id']).to be(user.id)
         expect(user_feed[1]['data']['target']['id']).to be(slot.id)
         expect(user_feed[1]['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed[1]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed[1]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed[1]['data']['actor']['id']).to be(user.id)
-        # expect(user_feed[2]['data']['target']['id']).to be(slot.id)
-        # expect(user_feed[2]['data']['target']['likes']).to be(slot.likes.count)
-        # expect(user_feed[2]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed[2]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed[2]['data']['actor']['id']).to be(user.id)
-        # expect(user_feed[3]['data']['target']['id']).to be(slot.id)
-        # expect(user_feed[3]['data']['target']['likes']).to be(slot.likes.count)
-        # expect(user_feed[3]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed[3]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed[3]['data']['actor']['id']).to be(user.id)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(7) # +7 own activities
-        # expect(user_feed_follower[0]['data']['target']['id']).to be(slot.id)
-        # expect(user_feed_follower[0]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
+        expect(user_feed_follower.count).to be(4) # +4 own activities
+        expect(user_feed_follower[0]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
         expect(user_feed_follower[0]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[1]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower[1]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower[1]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[1]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
+        expect(user_feed_follower[1]['data']['target']['id']).to be(group_slot.id)
+        expect(user_feed_follower[1]['data']['target']['likes']).to be(group_slot.likes.count)
+        expect(user_feed_follower[1]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
         expect(user_feed_follower[1]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[2]['data']['target']['id']).to be(group_slot.id)
-        expect(user_feed_follower[2]['data']['target']['likes']).to be(group_slot.likes.count)
-        expect(user_feed_follower[2]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
-        # expect(user_feed_follower[2]['data']['target']['reslotsCounter']).to be(group_slot.re_slots.count)
+        expect(user_feed_follower[2]['data']['target']['id']).to be(slot.id)
+        expect(user_feed_follower[2]['data']['target']['likes']).to be(slot.likes.count)
+        expect(user_feed_follower[2]['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(user_feed_follower[2]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[3]['data']['target']['id']).to be(group_slot.id)
-        expect(user_feed_follower[3]['data']['target']['likes']).to be(group_slot.likes.count)
-        expect(user_feed_follower[3]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
-        # expect(user_feed_follower[3]['data']['target']['reslotsCounter']).to be(group_slot.re_slots.count)
+        expect(user_feed_follower[3]['data']['target']['id']).to be(slot.id)
+        expect(user_feed_follower[3]['data']['target']['likes']).to be(slot.likes.count)
+        expect(user_feed_follower[3]['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(user_feed_follower[3]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[4]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower[4]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower[4]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[4]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower[4]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[5]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower[5]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower[5]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[5]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower[5]['data']['actor']['id']).to be(follower.id)
-        expect(user_feed_follower[6]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower[6]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower[6]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower[6]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower[6]['data']['actor']['id']).to be(follower.id)
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(5) # +5 own activities
+        expect(user_feed_follower2.count).to be(2) # +2 own activities
         expect(user_feed_follower2[0]['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower2[0]['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed_follower2[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed_follower2[0]['data']['actor']['id']).to be(follower2.id)
         expect(user_feed_follower2[1]['data']['target']['id']).to be(slot.id)
         expect(user_feed_follower2[1]['data']['target']['likes']).to be(slot.likes.count)
         expect(user_feed_follower2[1]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2[1]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(user_feed_follower2[1]['data']['actor']['id']).to be(follower2.id)
-        expect(user_feed_follower2[2]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower2[2]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower2[2]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2[2]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower2[2]['data']['actor']['id']).to be(follower2.id)
-        expect(user_feed_follower2[3]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower2[3]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower2[3]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2[3]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower2[3]['data']['actor']['id']).to be(follower2.id)
-        expect(user_feed_follower2[4]['data']['target']['id']).to be(slot.id)
-        expect(user_feed_follower2[4]['data']['target']['likes']).to be(slot.likes.count)
-        expect(user_feed_follower2[4]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(user_feed_follower2[4]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(user_feed_follower2[4]['data']['actor']['id']).to be(follower2.id)
 
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
       it "News Feed (aggregated public activities)" do
-        skip 'needs fix'
         news_feed = Feed.news_feed(user.id).as_json
         expect(news_feed.count).to be(0) # has no followings
 
@@ -677,58 +776,47 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower[0]['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower[0]['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(news_feed_follower[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(news_feed_follower[0]['data']['actor']['id']).to be(follower2.id)
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(2) # +2 public activities (+1 aggregated)
-        expect(news_feed_follower2[0]['data']['target']['id']).to be(slot.id)
-        expect(news_feed_follower2[0]['data']['target']['likes']).to be(slot.likes.count)
-        expect(news_feed_follower2[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(news_feed_follower2[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
+        expect(news_feed_follower2[0]['data']['target']['id']).to be(group_slot.id)
+        expect(news_feed_follower2[0]['data']['target']['likes']).to be(group_slot.likes.count)
+        expect(news_feed_follower2[0]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
         expect(news_feed_follower2[0]['data']['actor']['id']).to be(follower.id)
-        expect(news_feed_follower2[1]['data']['target']['id']).to be(group_slot.id)
-        expect(news_feed_follower2[1]['data']['target']['likes']).to be(group_slot.likes.count)
-        expect(news_feed_follower2[1]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
-        # expect(news_feed_follower2[1]['data']['target']['reslotsCounter']).to be(group_slot.re_slots.count)
+        expect(news_feed_follower2[1]['data']['target']['id']).to be(slot.id)
+        expect(news_feed_follower2[1]['data']['target']['likes']).to be(slot.likes.count)
+        expect(news_feed_follower2[1]['data']['target']['commentsCounter']).to be(slot.comments.count)
         expect(news_feed_follower2[1]['data']['actor']['id']).to be(follower.id)
 
         expect(news_feed_follower).not_to eq(news_feed_follower2)
 
         # Test whats happened if last actor is current user (do action on own slot)
-        reslot_1.create_like(follower)
-        reslot_1.create_comment(follower, 'This is a test comment.')
+        slot.create_like(follower)
+        slot.create_comment(follower, 'This is a test comment.')
         news_feed_follower = Feed.news_feed(follower.id).as_json
         expect(news_feed_follower.count).to be(1) # +1 public activities (+1 aggregated)
         expect(news_feed_follower[0]['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower[0]['data']['target']['likes']).to be(slot.likes.count)
         expect(news_feed_follower[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(news_feed_follower[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
         expect(news_feed_follower[0]['data']['actor']['id']).to be(follower2.id)
       end
 
       it "Notification Feed (activities to own content)" do
-        skip 'needs fix'
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(12) # +12 foreign activities to own content
-        expect(notification_feed[0]['data']['target']['id']).to be(slot.id)
-        expect(notification_feed[0]['data']['target']['likes']).to be(slot.likes.count)
-        expect(notification_feed[0]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(notification_feed[0]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
-        expect(notification_feed[0]['data']['actor']['id']).to be(follower2.id)
+        expect(notification_feed.count).to be(6) # +6 foreign activities to own content
+        expect(notification_feed[0]['data']['target']['id']).to be(group_slot.id)
+        expect(notification_feed[0]['data']['target']['likes']).to be(group_slot.likes.count)
+        expect(notification_feed[0]['data']['target']['commentsCounter']).to be(group_slot.comments.count)
+        expect(notification_feed[0]['data']['actor']['id']).to be(follower.id)
         expect(notification_feed[1]['data']['actor']['id']).to be(follower.id)
         expect(notification_feed[2]['data']['actor']['id']).to be(follower2.id)
-        expect(notification_feed[3]['data']['actor']['id']).to be(follower.id)
+        expect(notification_feed[3]['data']['actor']['id']).to be(follower2.id)
         expect(notification_feed[4]['data']['actor']['id']).to be(follower.id)
         expect(notification_feed[5]['data']['actor']['id']).to be(follower.id)
-        expect(notification_feed[6]['data']['actor']['id']).to be(follower2.id)
-        expect(notification_feed[7]['data']['actor']['id']).to be(follower2.id)
-        expect(notification_feed[8]['data']['actor']['id']).to be(follower.id)
-        expect(notification_feed[9]['data']['actor']['id']).to be(follower.id)
-        expect(notification_feed[9]['data']['target']['id']).to be(slot.id)
-        expect(notification_feed[9]['data']['target']['likes']).to be(slot.likes.count)
-        expect(notification_feed[9]['data']['target']['commentsCounter']).to be(slot.comments.count)
-        # expect(notification_feed[9]['data']['target']['reslotsCounter']).to be(slot.re_slots.count)
+        expect(notification_feed[5]['data']['target']['id']).to be(slot.id)
+        expect(notification_feed[5]['data']['target']['likes']).to be(slot.likes.count)
+        expect(notification_feed[5]['data']['target']['commentsCounter']).to be(slot.comments.count)
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
@@ -748,10 +836,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Unfollow (removes Slot-related relationship)
         follower.unfollow(slot)
         follower2.unfollow(slot)
-        # Unfollow (removes Reslot-related relationship)
-        follower.unfollow(slot)
-        # follower2.unfollow(reslot_1)
-        # user.unfollow(reslot_2)
         # Unfollow (removes Group-related relationship)
         follower.unfollow(group)
         follower2.unfollow(group)
@@ -764,36 +848,32 @@ RSpec.describe Feed, :activity, :async, type: :model do
       end
 
       it "User Feed (me activities)" do
-        skip 'needs fix'
         user_feed = Feed.user_feed(user.id).as_json
         expect(user_feed.count).to be(1) # +1 new activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2) # +3 new activities
-        # expect(user_feed_follower.count).to be(3) # +3 new activities
+        expect(user_feed_follower.count).to be(2) # +2 new activities
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2) # +2 new activity
+        expect(user_feed_follower2.count).to be(1) # +1 new activity
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
       it "News Feed (aggregated public activities)" do
-        skip 'needs fix'
         news_feed = Feed.news_feed(user.id).as_json
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        # expect(news_feed_follower.count).to be(1) # +1 public activity (reslot)
+        expect(news_feed_follower.count).to be(0) # has no followings
 
         news_feed_follower2 = Feed.news_feed(follower2.id).as_json
         expect(news_feed_follower2.count).to be(0) # has no followings
-        expect(news_feed_follower).not_to eq(news_feed_follower2)
+        expect(news_feed_follower).to eq(news_feed_follower2)
       end
 
       it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(3) # +5 foreign activities to own content
-        # expect(notification_feed.count).to be(5) # +5 foreign activities to own content
+        expect(notification_feed.count).to be(3) # +3 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
@@ -1335,17 +1415,16 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
 
     context "Forward user tagging" do
-      let!(:slot) { create(:std_slot_public, owner: user) }
+      let!(:slot) { create(:std_slot_public, creator: user) }
 
       before(:each) do
         # Perform activity: tag users to a slot
-        slot.update_user_tags(user, [follower, follower2])
+        UsersToSlotTagger.new(slot).tag([follower.id, follower2.id], user)
       end
 
       it "User Feed (me activities)" do
-        skip 'needs fix'
         user_feed = Feed.user_feed(user.id).as_json
-        # expect(user_feed.count).to be(2) # +2 own activities (2 users tagged)
+        expect(user_feed.count).to be(2) # +2 own activities (2 users tagged)
         expect(user_feed.first['target']).to eq(slot.id.to_s)
         expect(user_feed.first['action']).to eq('tagged')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
@@ -1374,7 +1453,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
       end
 
       it "Notification Feed (activities to own content)" do
-        skip 'needs fix'
         notification_feed = Feed.notification_feed(user.id).as_json
         expect(notification_feed.count).to be(0) # has no own content
 
