@@ -10,7 +10,6 @@ class UsersToSlotTagger
     users = User.find(user_ids)
     users.each do |user|
       ps = user.passengerships.find_or_create_by(slot: @slot)
-      ps = user.passengerships.where(slot: @slot).first_or_create
       ps.update(add_media_permission: true)
       user.follow(@slot)
       ps.create_activity
