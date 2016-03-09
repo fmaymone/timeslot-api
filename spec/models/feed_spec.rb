@@ -401,14 +401,13 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Passengership feeds", :redis do
     let(:user) { create(:user) }
-    let(:follower) { create(:user) } # as member
+    let(:follower) { create(:user) } # as passenger
     let(:slot) { create(:std_slot_public, creator: user) }
-    let!(:passengership) { create(:passengership, user: follower, slot: slot) }
 
-    context "User follows a group" do
+    context "User adds a user to a slot (passengership)" do
       before(:each) do
-        # Create relationships
-        follower.follow(slot)
+        # Perform activities
+        UsersToSlotTagger.new(slot).tag([follower.id], user)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -420,7 +419,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(2) # +2 own activities
+        expect(user_feed.count).to be(3) # +3 own activities (+1 tagged user)
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
         expect(user_feed_follower.count).to be(2) # +2 own activities
@@ -441,16 +440,16 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.count).to be(2) # +2 foreign activities to own content
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
-        expect(notification_feed_follower.count).to be(0) # has no own content
+        expect(notification_feed_follower.count).to be(1) # +1 foreign activity (user tagging)
         expect(notification_feed).not_to eq(notification_feed_follower)
       end
     end
 
-    context "User unfollows a passengership" do
+    context "User removes the passengership" do
       before(:each) do
         # NOTE: Old activities were not removed after unfollow!
-        # Unfollow (removes relationship)
-        follower.unfollow(slot)
+        # Remove relationship
+        follower.passengerships.each(&:delete)
 
         # Perform activities
         slot.create_comment(user, 'This is a test comment.')
@@ -471,8 +470,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed.count).to be(0) # has no followings
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
-        expect(news_feed_follower.count).to be(1) # +1 public activities (+2 aggregated)
-        expect(news_feed).not_to eq(news_feed_follower)
+        expect(news_feed_follower.count).to be(0) # has no followings
+        expect(news_feed).to eq(news_feed_follower)
       end
 
       it "Notification Feed (activities to own content)" do
@@ -491,13 +490,11 @@ RSpec.describe Feed, :activity, :async, type: :model do
     let(:creator) { create(:user) }
     let(:slot) { create(:std_slot_public, creator: creator) }
     let(:group) { create(:group, owner: user) }
-    let!(:containership) { create(:containership, slot: slot, group: group) }
 
-    context "User follows a group" do
+    context "User adds a slot to a slotgroup (containership)" do
       before(:each) do
         # Create relationships
-        user.follow(group)
-        creator.follow(group)
+        SlotsetManager.new(current_user: creator).add!(slot, group)
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -512,22 +509,22 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.count).to be(2) # +2 own activities
 
         user_feed_follower = Feed.user_feed(creator.id).as_json
-        expect(user_feed_follower.count).to be(2) # +2 own activities
+        expect(user_feed_follower.count).to be(3) # +3 own activities (+1 group tagging)
         expect(user_feed).not_to eq(user_feed_follower)
       end
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(1) # +1 public activities
+        expect(news_feed.count).to be(0) # no foreign activities
 
         news_feed_follower = Feed.news_feed(creator.id).as_json
-        expect(news_feed_follower.count).to be(0) # no foreign activities to own content
-        expect(news_feed).not_to eq(news_feed_follower)
+        expect(news_feed_follower.count).to be(0) # no foreign activities
+        expect(news_feed).to eq(news_feed_follower)
       end
 
       it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(0) # has no own content
+        expect(notification_feed.count).to be(1) # +1 foreign activity (group tagging)
 
         notification_feed_follower = Feed.notification_feed(creator.id).as_json
         expect(notification_feed_follower.count).to be(2) # +2 foreign activities to own content
@@ -538,8 +535,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User unfollows a group" do
       before(:each) do
         # NOTE: Old activities were not removed after unfollow!
-        # Unfollow (removes relationship)
-        creator.unfollow(group)
+        # Remove relationship
+        slot.containerships.each(&:delete)
 
         # Perform activities
         slot.create_comment(user, 'This is a test comment.')
@@ -575,20 +572,16 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
   end
 
-  context "Group feeds", :redis do
+  context "Membership feeds", :redis do
     let(:user) { create(:user) }
-    let(:member) { create(:user) }
     let(:slot) { create(:std_slot_public, creator: user) }
     let(:group) { create(:group, owner: user) }
-    let!(:membership) { create(:membership, user: member, group: group) }
     let!(:containership) { create(:containership, slot: slot, group: group) }
 
-    context "User follows a group" do
+    context "User follows a group (membership)" do
       before(:each) do
         # Create relationships
-        user.follow(group)
-        follower.follow(group)
-        follower2.follow(group)
+        group.invite_users([follower.id, follower2.id])
 
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
@@ -606,10 +599,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.count).to be(2) # +2 own activities
 
         user_feed_follower = Feed.user_feed(follower.id).as_json
-        expect(user_feed_follower.count).to be(2) # +2 own activities
+        expect(user_feed_follower.count).to be(3) # +3 own activities (+1 group joinded)
 
         user_feed_follower2 = Feed.user_feed(follower2.id).as_json
-        expect(user_feed_follower2.count).to be(2) # +2 own activities
+        expect(user_feed_follower2.count).to be(3) # +3 own activities (+1 group joinded)
         expect(user_feed_follower).not_to eq(user_feed_follower2)
       end
 
@@ -627,7 +620,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(4) # +4 foreign activities to own content
+        expect(notification_feed.count).to be(6) # +6 foreign activities (+2 users joined)
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no own content
@@ -641,9 +634,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     context "User unfollows a group" do
       before(:each) do
         # NOTE: Old activities were not removed after unfollow!
-        # Unfollow (removes relationship)
-        follower.unfollow(group)
-        follower2.unfollow(group)
+        # Remove relationship
+        group.kick_member([follower.id, follower2.id])
 
         # Perform activities
         slot.create_comment(user, 'This is a test comment.')
