@@ -523,6 +523,8 @@ resource "Me" do
     header "Authorization", :auth_header
 
     let(:slotgroup) { create(:group) }
+    let!(:membership) {
+      create(:membership, :active, group: slotgroup, user: current_user) }
     let(:slotgroup_uuid) { slotgroup.uuid }
     let!(:slot_ids) do
       containerships = create_list(:containership, 3, group: slotgroup)
@@ -535,6 +537,8 @@ resource "Me" do
       do_request
 
       expect(response_status).to eq(200)
+      membership.reload
+      expect(membership.show_slots_in_schedule).to be true
       expect(current_user.my_calendar_slot_ids).to include slot_ids
     end
   end
@@ -544,6 +548,8 @@ resource "Me" do
     header "Authorization", :auth_header
 
     let(:slotgroup) { create(:group) }
+    let!(:membership) {
+      create(:membership, :active, group: slotgroup, user: current_user) }
     let(:slotgroup_uuid) { slotgroup.uuid }
     let!(:slot_ids) do
       containerships = create_list(:containership, 3, group: slotgroup)

@@ -79,6 +79,17 @@ module V1
       render "v1/slots/index"
     end
 
+    # POST /v1/me/schedule/slotgroup/:uuid
+    def add_slotgroup_to_schedule
+      slotgroup = Group.find_by(uuid: params[:uuid])
+      authorize slotgroup
+
+      membership = current_user.active_memberships.find_by group: slotgroup
+      membership.update(show_slots_in_schedule: true)
+
+      head :ok
+    end
+
     # GET /v1/me/friendslots
     # returns all non-private slots of all friends from current user
     def slots_of_my_friends
