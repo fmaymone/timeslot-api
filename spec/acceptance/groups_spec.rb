@@ -570,9 +570,10 @@ resource "Groups" do
     end
 
     describe "no membership" do
-      example "returns Unprocessable Entity", document: false do
+      # now returns ok per request from ios
+      example "returns OK", document: false do
         do_request
-        expect(response_status).to eq(422)
+        expect(response_status).to eq 200
       end
     end
   end

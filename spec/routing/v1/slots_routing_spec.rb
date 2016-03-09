@@ -87,6 +87,16 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#show_slotters", id: "1", format: :json)
     end
 
+    it "routes to #tag_users" do
+      expect(post: "/v1/slots/1/user_tags")
+        .to route_to("v1/slots#tag_users", id: "1", format: :json)
+    end
+
+    it "routes to #show_tagged_users" do
+      expect(get: "/v1/slots/1/user_tags")
+        .to route_to("v1/slots#show_tagged_users", id: "1", format: :json)
+    end
+
     it "routes to #add_to_groups" do
       expect(post: "/v1/slots/1/slotgroups")
         .to route_to("v1/slots#add_to_groups", id: "1", format: :json)

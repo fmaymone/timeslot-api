@@ -70,6 +70,20 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -303,15 +317,14 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid NOT NULL
 )
@@ -599,7 +612,9 @@ CREATE TABLE passengerships (
     user_id bigint NOT NULL,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    add_media_permission boolean DEFAULT false NOT NULL,
+    show_in_my_schedule boolean DEFAULT true NOT NULL
 );
 
 
@@ -1456,4 +1471,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160215135746');
 INSERT INTO schema_migrations (version) VALUES ('20160215231713');
 
 INSERT INTO schema_migrations (version) VALUES ('20160221192251');
+
+INSERT INTO schema_migrations (version) VALUES ('20160303174854');
 

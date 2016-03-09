@@ -37,13 +37,12 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # true if current user has liked the slot before
+  # true if user is signed-in and has read-access for the slot
   def unlike?
     current_user_has_read_access?
   end
 
-  # false if slot is private? (screen doesn't have 'Add a comment')
-  # we need this for private slots so comments can be made in slotgroups
+  # true if user is signed-in and has read-access for the slot
   def add_comment?
     current_user_has_read_access?
   end
@@ -52,22 +51,19 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # TODO: write spec
-  def update_user_tags?
+  # only the slot creator is allowes to tag users to the slot
+  def tag_users?
+    return false unless current_user?
+    return true if slot.creator == current_user
+    false
+  end
+
+  # true if user is signed-in and has read-access for the slot
+  def show_tagged_users?
     current_user_has_read_access?
   end
 
-  # TODO: write spec
-  def get_user_tags?
-    # current_user_has_read_access?
-    # we had a problem that people which were tagged to a private slot couldn't
-    # get the tags because they had no read access for the slot, to temporary
-    # work around this (until we have a proper specification for user tagging)
-    # I relax this policy
-    current_user?
-  end
-
-  # TODO: write spec
+  # true if user is signed-in and has read-access for the slot
   def slotsets?
     current_user_has_read_access?
   end
@@ -116,25 +112,19 @@ class SlotPolicy < ApplicationPolicy
 
   # helper
 
-  private def current_user_has_read_access?
-    # current user must exist
-    return false unless current_user?
-    return true if slot.visibility == 'public'
-    # return true if slot.class == GlobalSlot # is public
-    return show_std_slot? if slot.class < StdSlot
-    false
-  end
-
-  # standard slot
   # true if it's a public slot
   # true if it's my slot
   # TODO: true if slot is in a slotgroup where I'm a member of
   # true if it's friendslot and current_user is befriended with slot owner
   # true if it's foafslot & current_user has common friends with slot owner
   # FYI: foaf = friend-of-a-friend, so it's friends-of-friends visibility
-  private def show_std_slot?
-    # return true if slot.StdSlotPublic? # already checked
-    return true if current_user == slot.owner
+  private def current_user_has_read_access?
+    # current user must exist
+    return false unless current_user?
+    return true if slot.visibility == 'public'
+    # return true if slot.class == GlobalSlot # is public
+    return true if current_user == slot.owner # change to slot.creator
+    return true if slot.tagged_users.include? current_user
     return true if (slot.slot_groups & current_user.groups).any?
     if slot.StdSlotFriends? || slot.StdSlotFoaf?
       return true if current_user.friend_with?(slot.owner)
@@ -144,12 +134,4 @@ class SlotPolicy < ApplicationPolicy
     return true if current_user.common_friend_with?(slot.owner)
     false
   end
-
-  # group slot
-  # true if slot is group slot and I'm a member of the group
-  # later: true if it's a groupslot in a public group
-  # private def show_group_slot?
-  #   return true if slot.GroupSlotPublic?
-  #   return true if slot.group.members.include? current_user
-  # end
 end

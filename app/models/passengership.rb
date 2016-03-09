@@ -5,6 +5,8 @@ class Passengership < ActiveRecord::Base
   after_commit AuditLog
 
   scope :active, -> { where deleted_at: nil }
+  scope :add_media_permitted,
+        -> { where(deleted_at: nil, add_media_permission: true) }
 
   belongs_to :slot, class_name: BaseSlot, inverse_of: :passengerships
   belongs_to :user, inverse_of: :passengerships

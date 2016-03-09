@@ -1100,8 +1100,6 @@ resource "Slots" do
   end
 
   post "/v1/slots/:id/user_tags" do
-    skip 'needs update when specified what it means'
-
     header "Content-Type", "application/json"
     header "Accept", "application/json"
     header "Authorization", :auth_header
@@ -1112,7 +1110,7 @@ resource "Slots" do
               "Array of users ids which should be tagged for this slot",
               required: true
 
-    let!(:slot) { create(:std_slot_public, owner: current_user) }
+    let!(:slot) { create(:std_slot_public, creator: current_user) }
     let(:user_tags) do
       [create(:user).id,
        create(:user).id,
@@ -1121,63 +1119,49 @@ resource "Slots" do
     let(:id) { slot.id }
 
     example "Tagging users to a slot", document: :v1 do
-      explanation "Creates ReSlots of the given slot for the users given " \
-                  "as User IDs in the POST parameters. Returns a list of " \
-                  "all user IDs tagged to this slot.\n\n" \
+      explanation "Tagged Users are allowed to add media to the slot.\n\n" \
+                  "For now the slot is put into the MySchedule for the users " \
+                  "given until we gave them a choice if or where to save it." \
+                  "Returns a list of all user IDs tagged to this slot.\n\n" \
                   "returns 404 if ID is invalid.\n\n" \
                   "returns 422 if parameters are invalid\n\n" \
                   "returns 422 if required parameters are missing"
 
-      # slot_user_tags = slot.reload.re_slots
-      #                      .where('re_slots.tagged_from = ?', current_user.id)
-      #                      .pluck(:slotter_id)
-      # expect(slot_user_tags).to eq([])
+      tagged_users = slot.passengerships.find_by add_media_permission: true
+      expect(tagged_users).to be_nil
 
       do_request
       expect(response_status).to eq(200)
 
-      # slot_user_tags = slot.reload.re_slots
-      #                      .where('re_slots.tagged_from = ?', current_user.id)
-      #                      .pluck(:slotter_id)
-      # expect(slot_user_tags.sort).to eq(user_tags.sort)
+      tagged_users = slot.passengerships.where(add_media_permission: true)
+                     .pluck(:user_id)
+      expect(tagged_users).to eq(user_tags)
+      expect(slot.tagged_users.pluck(:id)).to eq(user_tags)
     end
   end
 
-  # get "/v1/slots/:id/user_tags" do
-  #   header "Accept", "application/json"
-  #   header "Authorization", :auth_header
+  get "/v1/slots/:id/user_tags" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
 
-  #   parameter :id, "ID of the Slot to get the user tags for", required: true
-  #   response_field :array, "containing a list of users"
+    parameter :id, "ID of the Slot to get the user tags for", required: true
+    response_field :array, "containing a list of users"
 
-  #   let!(:slot) { create(:std_slot_public) }
-  #   let!(:reslots) do
-  #     [create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user),
-  #             tagged_from: current_user.id),
-  #      create(:re_slot, predecessor: slot,
-  #             slotter: create(:user))]
-  #   end
-  #   let(:id) { slot.id }
+    let!(:slot) { create(:std_slot_public) }
+    let!(:tags) {
+      create_list(:passengership, 3, :add_media_permitted, slot: slot) }
+    let(:id) { slot.id }
 
-  #   example "Get all tagged users of a slot", document: :v1 do
-  #     explanation "returns a list of user ids which are tagged to this slot.\n\n" \
-  #                 "returns 404 if ID is invalid"
-  #     do_request
+    example "Get all tagged users of a slot", document: :v1 do
+      explanation "returns a list of user ids which are tagged to" \
+                  " this slot.\n\n" \
+                  "returns 404 if ID is invalid"
+      do_request
 
-  #     expect(response_status).to eq(200)
-  #     expect(json.size).to eq(3)
-  #     (0..2).each do |i|
-  #       expect(json[i]['id']).to eq(reslots[i][:slotter_id])
-  #     end
-  #   end
-  # end
+      expect(response_status).to eq(200)
+      expect(json.size).to eq(3)
+    end
+  end
 
   post "/v1/slots/:id/copy" do
     header "Content-Type", "application/json"
