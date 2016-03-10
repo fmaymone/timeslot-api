@@ -24,8 +24,8 @@ module V1
 
       # TODO: improve, write spec
       # only show created slot in schedule if my_calendar_uuid is send
-      unless params[:slot_groups].include(current_user.slot_sets['my_cal_uuid'])
-        current_user.passengerships.find_by(slot: @slot).hide_from_my_calendar
+      unless params[:slot_groups].include?(current_user.slot_sets['my_cal_uuid'])
+        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end
 
       if @slot.persisted?

@@ -25,7 +25,7 @@ resource "GlobalSlots" do
       do_request
 
       expect(response_status).to eq 201
-      expect(json).not_to have_key("muid")
+      expect(json).to have_key("muid")
       # expect(json['muid']).to eq predecessor
       expect(json).to have_key("visibility")
       expect(json['visibility']).to eq 'public'

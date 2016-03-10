@@ -18,7 +18,7 @@ resource "Slots" do
     parameter :slotGroups,
               "Array with UUIDs of the SlotGroups slot should be added to"
 
-    describe "Create new standard slot" do
+    describe "Create new slot" do
       include_context "stdslot response fields"
 
       response_field :unauthorizedSlotgroups,
@@ -36,7 +36,6 @@ resource "Slots" do
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
       let(:visibility) { 'private' }
-      let(:visibility) { 'private' }
 
       # additional slotgroups
       let(:group_1) { create(:group, owner: current_user) }
@@ -49,12 +48,13 @@ resource "Slots" do
       let(:deleted_group) {
         create(:group, owner: current_user, deleted_at: Time.zone.now) }
 
-      let(:slotGroups) { [group_1.uuid,
+      let(:slotGroups) { [current_user.my_cal_uuid,
+                          group_1.uuid,
                           group_2.uuid,
                           unauthorized_group.uuid,
                           deleted_group.uuid] }
 
-      example "Create new slots", document: :v1 do
+      example "Create new slot", document: :v1 do
         explanation "Creates new slot for user and adds it to the users" \
                     " 'MyCalendar' and to all slotGroups which were given" \
                     " additionally.\n\n" \
