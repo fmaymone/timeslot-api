@@ -33,7 +33,7 @@ gem 'rails_12factor', group: :production
 gem 'cloudinary'
 gem 'airbrake'
 gem 'aws-sdk'
-gem 'newrelic_rpm'
+# gem 'newrelic_rpm'
 
 # Worker (background processing)
 gem 'sucker_punch', '~> 2.0'

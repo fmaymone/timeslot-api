@@ -18,6 +18,12 @@ class Passengership < ActiveRecord::Base
   validates :slot, presence: true
   validates :user, presence: true
 
+  # TODO: write spec
+  def hide_from_my_schedule
+    update(show_in_my_schedule: false)
+    save
+  end
+
   # when a slot is removed from MyCalendar or
   # when a slot is deleted
   def delete

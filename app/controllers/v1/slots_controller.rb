@@ -22,6 +22,12 @@ module V1
         add_to_slotsets(@slot, params[:slot_groups])
       end
 
+      # TODO: improve, write spec
+      # only show created slot in schedule if my_calendar_uuid is send
+      unless params[:slot_groups].include?(current_user.slot_sets['my_cal_uuid'])
+        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
+      end
+
       if @slot.persisted?
         render :create, status: :created, locals: { slot: @slot }
       else
@@ -164,7 +170,7 @@ module V1
 
       # user_ids = Passengership.select(:user_id).where(slot: slot)
       # @slotters = User.where(id: user_ids)
-      @slotters = slot.my_calendar_users
+      @slotters = slot.my_calendar_users - [slot.creator]
 
       render :slotters
     end
@@ -200,8 +206,10 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
+      # TODO: update spec
       if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
-        current_user.passengerships.find_by(slot: @slot).try(:delete)
+        # current_user.passengerships.find_by(slot: @slot).try(:delete)
+        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end
 
       groups = Group.where(uuid: params[:slot_groups])
