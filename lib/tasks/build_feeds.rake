@@ -38,6 +38,18 @@ namespace :feed do
         end
       end
 
+      Containership.includes(:group, :slot).all.find_each do |relation|
+        if relation.deleted_at.nil?
+          relation.slot.add_follower(relation.group)
+        end
+      end
+
+      Passengership.includes(:slot, :user).all.find_each do |relation|
+        if relation.deleted_at.nil?
+          relation.slot.add_follower(relation.user)
+        end
+      end
+
       ## Collect Activities ##
 
       storage = MediaItem.where('deleted_at = ?', nil) +
@@ -59,8 +71,9 @@ namespace :feed do
 
       storage.uniq.sort_by!{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
 
-      puts "All feeds was build successfully."
-      puts "ACTIVITY COUNT: #{(User.all.count * storage.count)}"
+      puts "The follower model was successfully regenerated."
+      puts "All feeds was successfully regenerated."
+      puts "ACTIVITY OBJECTS: #{(storage.count)}"
     rescue
       #handle the error here
       puts "An error has occurred during the rebuilding process."
