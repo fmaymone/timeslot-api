@@ -230,7 +230,7 @@ module Activity
 
     # 4. Passengership related context:
     activity_target.passengerships.each do |passengership|
-      user_ids << passengership.user.id
+      user_ids << passengership.user.id.to_s
     end
 
     # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
@@ -262,6 +262,8 @@ module Activity
 
     # Temporary fallback to simulate a "public-to-all-activity" feed
     # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.test?
+
+    user_ids.uniq!
 
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
