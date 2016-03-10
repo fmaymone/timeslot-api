@@ -49,6 +49,8 @@ class User < ActiveRecord::Base
 
   has_many :active_groups, through: :active_memberships, source: :group
   has_many :groups, through: :memberships, source: :group
+  has_many :calendars_in_schedule, -> { merge Membership.show_slots },
+           through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, -> { includes :friend },

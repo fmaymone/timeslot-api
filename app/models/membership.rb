@@ -3,6 +3,8 @@ class Membership < ActiveRecord::Base
 
   after_commit AuditLog
 
+  scope :show_slots, -> { where(show_slots_in_schedule: true) }
+
   belongs_to :user, inverse_of: :memberships
   belongs_to :group, inverse_of: :memberships
 
