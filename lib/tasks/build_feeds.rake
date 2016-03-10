@@ -38,12 +38,6 @@ namespace :feed do
         end
       end
 
-      # ReSlot.includes(:slotter).all.find_each do |slot|
-      #   if slot.deleted_at.nil?
-      #     slot.add_follower(slot.slotter)
-      #   end
-      # end
-
       ## Collect Activities ##
 
       storage = MediaItem.where('deleted_at = ?', nil) +
@@ -53,6 +47,7 @@ namespace :feed do
                 Friendship.where('deleted_at = ?', nil) +
                 Membership.where('deleted_at = ?', nil) +
                 Containership.where('deleted_at = ?', nil) +
+                Passengership.where('deleted_at = ?', nil) +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all
 
