@@ -19,27 +19,29 @@ class Containership < ActiveRecord::Base
   # when a slot gets deleted or
   # when a slotgroup gets deleted
   def delete
+    remove_activity('leave')
+    slot.remove_follower(group)
     slot.touch
     group.touch
-    remove_activity
     ts_soft_delete
   end
 
   ## Activity Methods ##
 
   private def activity_target
-    slot
+    group
   end
 
-  # TODO: IMHO the activity_actor is always the current_user but it's
-  # discouraged to use current_user in models bc they shouldn't know about
-  # this kind of state
   private def activity_actor
-    # current_user
-    # FIX slot.creator is one of the user objects which is guranteed to be
-    # available in this context, but it's not the correct one
-    slot.creator # group.owner would be another
-    # slot.reload.try(:owner) || slot.reload.try(:slotter)
+    slot.creator
+  end
+
+  private def activity_foreign
+    group.owner
+  end
+
+  private def activity_notify
+    []
   end
 
   private def activity_action

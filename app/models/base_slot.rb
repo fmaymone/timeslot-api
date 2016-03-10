@@ -190,15 +190,6 @@ class BaseSlot < ActiveRecord::Base
     new_comment
   end
 
-  def update_user_tags(current_user, user_tags)
-    # unless user_tags.nil?
-    #   reslotters = ReSlot.where(parent_id: self.id).pluck(:slotter_id)
-    #   User.find(user_tags - reslotters).each do |user|
-    #     ReSlot.create_from_slot(predecessor: self, slotter: user, tagger: current_user.id)
-    #   end
-    # end
-  end
-
   def delete
     likes.each(&:delete)
     comments.each(&:delete)

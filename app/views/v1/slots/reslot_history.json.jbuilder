@@ -5,5 +5,5 @@ json.predecessors @slot.chronic do |slot|
 end
 
 json.parent_user do
-  json.partial! 'v1/users/user', user: @slot.source.owner
+  json.partial! 'v1/users/user', user: @slot.source.creator
 end

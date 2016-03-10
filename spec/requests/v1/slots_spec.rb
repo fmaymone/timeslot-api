@@ -63,13 +63,13 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{std_slot.id}", {},
-                'Authorization' => "Token token=#{std_slot.owner.auth_token}"
+                'Authorization' => "Token token=#{std_slot.creator.auth_token}"
             expect(response).to have_http_status :ok
           end
 
           it "is visible to friends of owner" do
             create(:friendship, :established, user: current_user,
-                   friend: std_slot.owner)
+                   friend: std_slot.creator)
             get "/v1/slots/#{std_slot.id}", {}, auth_header
             expect(response).to have_http_status :ok
           end
@@ -78,7 +78,7 @@ RSpec.describe "V1::Slots", type: :request do
             create(:friendship, :established, user: current_user,
                    friend: common_friend)
             create(:friendship, :established, user: common_friend,
-                   friend: std_slot.owner)
+                   friend: std_slot.creator)
 
             get "/v1/slots/#{std_slot.id}", {}, auth_header
             expect(response).to have_http_status :ok
@@ -591,7 +591,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with valid params" do
-        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
+                                                               creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
         }
@@ -605,7 +606,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch non-existing note" do
-        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
+                                                               creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
         }
@@ -618,7 +620,8 @@ RSpec.describe "V1::Slots", type: :request do
       end
 
       context "patch with invalid params" do
-        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user) }
+        let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
+                                                               creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "" }] }
         }
@@ -702,7 +705,8 @@ RSpec.describe "V1::Slots", type: :request do
         context "missing position parameter" do
           let(:media) { [{ public_id: "foo-image", media_type: "image" }] }
           let!(:std_slot) {
-            create(:std_slot_private, :with_media, owner: current_user)
+            create(:std_slot_private, :with_media, owner: current_user,
+                                                   creator: current_user)
           }
 
           it "adds it" do
@@ -1048,7 +1052,7 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user, creator: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1297,7 +1301,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "POST /v1/slots/:id/move" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user) }
+    let!(:std_slot) { create(:std_slot_private, owner: current_user,
+                                                creator: current_user) }
 
     context "move to public slots without details" do
       let(:move_params) { { slot_type: 'public',
@@ -1311,7 +1316,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       it "owner of the new slot is current user" do
         post "/v1/slots/#{std_slot.id}/move", move_params, auth_header
-        expect(StdSlot.unscoped.last.owner).to eq current_user
+        expect(StdSlot.unscoped.last.creator).to eq current_user
       end
 
       it "deletes to original slot" do

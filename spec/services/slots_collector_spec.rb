@@ -6,10 +6,10 @@ RSpec.describe SlotsCollector, type: :service do
 
     let(:current_user) { create(:user) }
 
-    let!(:public_stdslot) { create(:std_slot_public, owner: other) }
-    let!(:foaf_stdslot) { create(:std_slot_foaf, owner: other) }
-    let!(:friends_stdslot) { create(:std_slot_friends, owner: other) }
-    let!(:private_stdslot) { create(:std_slot_private, owner: other) }
+    let!(:public_stdslot) { create(:std_slot_public, owner: other, creator: other) }
+    let!(:foaf_stdslot) { create(:std_slot_foaf, owner: other, creator: other) }
+    let!(:friends_stdslot) { create(:std_slot_friends, owner: other, creator: other) }
+    let!(:private_stdslot) { create(:std_slot_private, owner: other, creator: other) }
 
     # let!(:public_reslot) { create(:re_slot_public, slotter: other) }
     # let!(:foaf_reslot) { create(:re_slot_foaf, slotter: other) }

@@ -106,7 +106,7 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
     # return false unless current_user?
     # return true if slot.visibility == 'public'
-    # return true if slot.class < StdSlot && slot.owner == current_user
+    # return true if slot.class < StdSlot && slot.creator == current_user
     # false
   end
 
@@ -123,15 +123,15 @@ class SlotPolicy < ApplicationPolicy
     return false unless current_user?
     return true if slot.visibility == 'public'
     # return true if slot.class == GlobalSlot # is public
-    return true if current_user == slot.owner # change to slot.creator
+    return true if current_user == slot.creator
     return true if slot.tagged_users.include? current_user
     return true if (slot.slot_groups & current_user.groups).any?
     if slot.StdSlotFriends? || slot.StdSlotFoaf?
-      return true if current_user.friend_with?(slot.owner)
+      return true if current_user.friend_with?(slot.creator)
     end
     # combined check determines if read access to foaf slot
     return false unless slot.StdSlotFoaf?
-    return true if current_user.common_friend_with?(slot.owner)
+    return true if current_user.common_friend_with?(slot.creator)
     false
   end
 end

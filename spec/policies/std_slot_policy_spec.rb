@@ -18,7 +18,7 @@ describe StdSlotPolicy do
   permissions :update_stdslot?, :delete? do
     context "for the slot owner" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, owner: user) }
+      let(:slot) { create(:std_slot, owner: user, creator: user) }
 
       it "allows access" do
         expect(subject).to permit(user, slot)
@@ -27,7 +27,7 @@ describe StdSlotPolicy do
 
     context "for the slot creator" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, creator: user) }
+      let(:slot) { create(:std_slot, owner: user) }
 
       it "fails with MissingCurrentUserError" do
         expect(subject).not_to permit(user, slot)

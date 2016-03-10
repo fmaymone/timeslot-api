@@ -675,7 +675,7 @@ resource "Slots" do
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:std_slot) {
-      create(:std_slot_private, owner: current_user)
+      create(:std_slot_private, owner: current_user, creator: current_user)
     }
     describe "Delete Standard Slot" do
       include_context "default slot response fields"
@@ -930,7 +930,7 @@ resource "Slots" do
 
     let(:slot) { create(:std_slot_friends) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Like a Slot" do
       let(:id) { slot.id }
@@ -958,7 +958,7 @@ resource "Slots" do
     let(:slot) { create(:std_slot_friends) }
     let!(:like) { create(:like, slot: slot, user: current_user) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Unlike a Slot" do
       let(:id) { slot.id }
@@ -1020,7 +1020,7 @@ resource "Slots" do
 
     let(:slot) { create(:std_slot_friends, :with_comments) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Make comment on Slot" do
       let(:id) { slot.id }

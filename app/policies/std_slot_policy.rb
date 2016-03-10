@@ -14,7 +14,7 @@ class StdSlotPolicy < SlotPolicy
   # meta data? can they only be updated by the creator?
   def update_stdslot?
     return false unless current_user?
-    return true if current_user == slot.owner
+    return true if current_user == slot.creator
     false
   end
 
@@ -22,7 +22,7 @@ class StdSlotPolicy < SlotPolicy
   # the user is slot owner
   def delete?
     return false unless current_user?
-    return true if current_user == slot.owner
+    return true if current_user == slot.creator
     false
   end
 end

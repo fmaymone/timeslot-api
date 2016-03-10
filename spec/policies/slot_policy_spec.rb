@@ -56,7 +56,7 @@ describe SlotPolicy do
         let(:slot) { create(:std_slot_foaf) }
 
         it "allows access" do
-          create(:friendship, :established, user: user, friend: slot.owner)
+          create(:friendship, :established, user: user, friend: slot.creator)
           expect(subject).to permit(user, slot)
         end
       end
@@ -67,7 +67,7 @@ describe SlotPolicy do
 
         it "allows access" do
           create(:friendship, :established, user: user, friend: friend)
-          create(:friendship, :established, user: friend, friend: slot.owner)
+          create(:friendship, :established, user: friend, friend: slot.creator)
           expect(subject).to permit(user, slot)
         end
       end
@@ -84,7 +84,7 @@ describe SlotPolicy do
         let(:slot) { create(:std_slot_friends) }
 
         it "allows access" do
-          create(:friendship, :established, user: user, friend: slot.owner)
+          create(:friendship, :established, user: user, friend: slot.creator)
           expect(subject).to permit(user, slot)
         end
       end
@@ -98,7 +98,7 @@ describe SlotPolicy do
       end
 
       context "own private slot" do
-        let(:slot) { create(:std_slot_private, owner: user) }
+        let(:slot) { create(:std_slot_private, owner: user, creator: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -153,7 +153,7 @@ describe SlotPolicy do
 
   permissions :move? do
     context "own private slot" do
-      let(:slot) { create(:std_slot_private, owner: user) }
+      let(:slot) { create(:std_slot_private, owner: user, creator: user) }
 
       context "for a user" do
         let(:user) { create(:user) }
@@ -165,7 +165,7 @@ describe SlotPolicy do
     end
 
     context "own friendslot" do
-      let(:slot) { create(:std_slot_friends, owner: user) }
+      let(:slot) { create(:std_slot_friends, owner: user, creator: user) }
 
       context "for a user" do
         let(:user) { create(:user) }
@@ -177,7 +177,7 @@ describe SlotPolicy do
     end
 
     context "own public slot" do
-      let(:slot) { create(:std_slot_public, owner: user) }
+      let(:slot) { create(:std_slot_public, owner: user, creator: user) }
       let(:user) { create(:user) }
 
       # should a public stdslot be allowed to be moved to a public group?
@@ -291,7 +291,7 @@ describe SlotPolicy do
 
     context "own std_slots" do
       context "public slot" do
-        let(:slot) { create(:std_slot_public, owner: user) }
+        let(:slot) { create(:std_slot_public, owner: user, creator: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -299,7 +299,7 @@ describe SlotPolicy do
       end
 
       context "foaf-visible slot" do
-        let(:slot) { create(:std_slot_foaf, owner: user) }
+        let(:slot) { create(:std_slot_foaf, owner: user, creator: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -307,7 +307,7 @@ describe SlotPolicy do
       end
 
       context "friend-visible slot" do
-        let(:slot) { create(:std_slot_friends, owner: user) }
+        let(:slot) { create(:std_slot_friends, owner: user, creator: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)
@@ -315,7 +315,7 @@ describe SlotPolicy do
       end
 
       context "private slot" do
-        let(:slot) { create(:std_slot_private, owner: user) }
+        let(:slot) { create(:std_slot_private, owner: user, creator: user) }
 
         it "allows access" do
           expect(subject).to permit(user, slot)

@@ -11,12 +11,14 @@ class SlotsetManager
 
       result = Containership.find_or_create_by(slot: slot, group: slotset)
       result.update(deleted_at: nil) if result.deleted_at?
+      slot.follow(slotset)
       result.create_activity
     elsif current_user.slot_sets['my_cal_uuid'] == slotset
       # current_user.my_calendar_slots << slot
       result = Passengership.find_or_create_by(slot: slot, user: current_user)
       result.update(deleted_at: nil) if result.deleted_at?
-    # result.create_activity
+      current_user.follow(slot)
+      result.create_activity
 
       # case slot_set
       # when 'my_cal_uuid'

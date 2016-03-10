@@ -222,9 +222,15 @@ module Activity
     user_ids = []
 
     # ACTUALLY NOT ACTIVE: When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
-    # 4. Group related context:
-    activity_containerships.each do |containership|
+
+    # 4. Containership related context:
+    activity_target.containerships.each do |containership|
       user_ids += containership.group.followers
+    end
+
+    # 4. Passengership related context:
+    activity_target.passengerships.each do |passengership|
+      user_ids << passengership.user.id
     end
 
     # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
@@ -255,7 +261,7 @@ module Activity
     # end
 
     # Temporary fallback to simulate a "public-to-all-activity" feed
-    # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.production?
+    # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.test?
 
     # Remove the user who did the actual activity
     user_ids.delete(activity_actor.id.to_s)
@@ -272,11 +278,6 @@ module Activity
   # Returns an array of user which should be notified via internal app notification (feed)
   private def activity_forward
     []
-  end
-
-  # Indicates that the activity target belongs to one or more containerships
-  private def activity_containerships
-    activity_target.containerships
   end
 
   # The foreign id is required to find activities for
