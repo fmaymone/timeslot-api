@@ -47,7 +47,7 @@ class BaseSlot < ActiveRecord::Base
            inverse_of: :slots
 
   has_many :passengerships, foreign_key: :slot_id, inverse_of: :slot
-  has_many :my_calendar_users, -> { merge Passengership.active },
+  has_many :my_calendar_users, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :user,
            inverse_of: :my_calendar_slots
 

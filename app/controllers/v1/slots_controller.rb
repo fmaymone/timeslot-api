@@ -164,7 +164,7 @@ module V1
 
       # user_ids = Passengership.select(:user_id).where(slot: slot)
       # @slotters = User.where(id: user_ids)
-      @slotters = slot.my_calendar_users
+      @slotters = slot.my_calendar_users - [slot.creator]
 
       render :slotters
     end
