@@ -22,32 +22,35 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
+      ## Temporary cache ##
+
+      friendships = nil
+      memberships = nil
+      containerships = nil
+      passengerships = nil
+
       ## Re-Build Follower Model ##
 
-      Friendship.includes(:user, :friend).all.find_each do |relation|
+      (friendships = Friendship.includes(:user, :friend).where('deleted_at = ?', nil)).find_each do |relation|
         # friends follows each other
-        if relation.established? && relation.deleted_at.nil?
+        if relation.established?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
-      Membership.includes(:group, :user).all.find_each do |relation|
-        if relation.active? && relation.deleted_at.nil?
+      (memberships = Membership.includes(:group, :user).where('deleted_at = ?', nil)).find_each do |relation|
+        if relation.active?
           relation.group.add_follower(relation.user)
         end
       end
 
-      Containership.includes(:group, :slot).all.find_each do |relation|
-        if relation.deleted_at.nil?
+      (containerships = Containership.includes(:group, :slot).where('deleted_at = ?', nil)).find_each do |relation|
           relation.slot.add_follower(relation.group)
-        end
       end
 
-      Passengership.includes(:slot, :user).all.find_each do |relation|
-        if relation.deleted_at.nil?
+      (passengerships = Passengership.includes(:slot, :user).where('deleted_at = ?', nil)).find_each do |relation|
           relation.slot.add_follower(relation.user)
-        end
       end
 
       ## Collect Activities ##
@@ -56,10 +59,10 @@ namespace :feed do
                 Note.where('deleted_at = ?', nil) +
                 Like.where('deleted_at = ?', nil) +
                 Comment.where('deleted_at = ?', nil) +
-                Friendship.where('deleted_at = ?', nil) +
-                Membership.where('deleted_at = ?', nil) +
-                Containership.where('deleted_at = ?', nil) +
-                Passengership.where('deleted_at = ?', nil) +
+                friendships +
+                memberships +
+                containerships +
+                passengerships +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all
 
