@@ -539,7 +539,7 @@ resource "Me" do
       expect(response_status).to eq(200)
       membership.reload
       expect(membership.show_slots_in_schedule).to be true
-      expect(current_user.my_calendar_slot_ids).to include slot_ids
+      expect(current_user.my_calendar_slot_ids).to match_array slot_ids
     end
   end
 

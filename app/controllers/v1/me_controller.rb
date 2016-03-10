@@ -84,8 +84,7 @@ module V1
       slotgroup = Group.find_by(uuid: params[:uuid])
       authorize slotgroup
 
-      membership = current_user.active_memberships.find_by group: slotgroup
-      membership.update(show_slots_in_schedule: true)
+      CalendarInScheduleManager.new(current_user).show(slotgroup)
 
       head :ok
     end
