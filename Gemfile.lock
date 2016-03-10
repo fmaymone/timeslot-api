@@ -128,7 +128,6 @@ GEM
     mustache (0.99.8)
     nenv (0.2.0)
     netrc (0.11.0)
-    newrelic_rpm (3.14.1.311)
     nokogiri (1.6.7.1)
       mini_portile2 (~> 2.0.0.rc2)
     notiffany (0.0.8)
@@ -316,7 +315,6 @@ DEPENDENCIES
   imgkit
   immutable-struct
   jbuilder (= 2.4.0)
-  newrelic_rpm
   oj (= 2.14.3)
   oj_mimic_json (= 1.0.1)
   pdfkit
