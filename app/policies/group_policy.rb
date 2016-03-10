@@ -102,6 +102,20 @@ class GroupPolicy < ApplicationPolicy
     show?
   end
 
+  # true if current user is an active member of the group
+  def add_slotgroup_to_schedule?
+    return false unless current_user?
+    return true if current_user.active_member? group.id
+    false
+  end
+
+  # true if current user is an active member of the group
+  def remove_slotgroup_from_schedule?
+    return false unless current_user?
+    return true if current_user.active_member? group.id
+    false
+  end
+
   # true if the group is public and belongs to
   # the crawler source making the request
   def global_group?

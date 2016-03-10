@@ -2,6 +2,8 @@ require "rails_helper"
 
 RSpec.describe V1::MeController, type: :routing do
   describe "routing" do
+    let(:uuid) { '04f7504b-3e96-4dbb-ac94-4998f1574bbe' }
+
     it "routes to #show" do
       expect(get: "/v1/me")
         .to route_to("v1/me#show", format: :json)
@@ -30,6 +32,18 @@ RSpec.describe V1::MeController, type: :routing do
     it "routes to #calendar" do
       expect(get: "/v1/me/calendar")
         .to route_to("v1/me#calendar", format: :json)
+    end
+
+    it "routes to #add_slotgroup_to_schedule" do
+      expect(post: "/v1/me/schedule/slotgroup/#{uuid}")
+        .to route_to("v1/me#add_slotgroup_to_schedule",
+                     uuid: uuid, format: :json)
+    end
+
+    it "routes to #remove_slotgroup_from_schedule" do
+      expect(delete: "/v1/me/schedule/slotgroup/#{uuid}")
+        .to route_to("v1/me#remove_slotgroup_from_schedule",
+                     uuid: uuid, format: :json)
     end
 
     it "routes to #slots_of_my_friends" do
