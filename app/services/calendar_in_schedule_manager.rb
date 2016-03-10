@@ -18,6 +18,23 @@ class CalendarInScheduleManager
     end
   end
 
+  def hide(calendar)
+    membership = user.active_memberships.find_by group: calendar
+    membership.update(show_slots_in_schedule: false)
+    enabled_calendars = user.calendars_in_schedule_ids
+
+    calendar.slot_ids.each do |slot_id|
+      # are there other calenders in MySchedule which contain the slot?
+      calendars_with_slot = Containership.where(slot_id: slot_id).pluck(:group_id)
+      shown_calendars_with_slot = enabled_calendars & calendars_with_slot
+
+      next if shown_calendars_with_slot.any?
+
+      ps = user.passengerships.find_by(slot_id: slot_id)
+      ps.update(show_in_my_schedule: false)
+    end
+  end
+
   private
 
   attr_reader :user

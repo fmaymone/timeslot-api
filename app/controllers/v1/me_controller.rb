@@ -89,6 +89,16 @@ module V1
       head :ok
     end
 
+    # DELETE /v1/me/schedule/slotgroup/:uuid
+    def remove_slotgroup_from_schedule
+      slotgroup = Group.find_by(uuid: params[:uuid])
+      authorize slotgroup
+
+      CalendarInScheduleManager.new(current_user).hide(slotgroup)
+
+      head :ok
+    end
+
     # GET /v1/me/friendslots
     # returns all non-private slots of all friends from current user
     def slots_of_my_friends
