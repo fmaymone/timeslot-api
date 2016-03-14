@@ -64,15 +64,62 @@ RSpec.describe SlotsetManager, type: :service do
       end
 
       context "existing deleted containership" do
-        let(:containership) { create(:containership, slot: slot,
-                                     group: slot_group,
-                                     deleted_at: Time.zone.now) }
+        let(:containership) do
+          create(:containership, slot: slot,
+                 group: slot_group, deleted_at: Time.zone.now)
+        end
 
         it "unsets deleted at" do
           expect(containership.deleted_at?).to be true
           manager.add!(slot, slot_group)
           containership.reload
           expect(containership.deleted_at?).to be false
+        end
+      end
+
+      context "'show in my schedule' active" do
+        let!(:member) do
+          member = create(:user)
+          create(:membership, :active, user: member, group: slot_group,
+                 show_slots_in_schedule: true)
+          member
+        end
+
+        it "will create a new Passengership" do
+          expect {
+            manager.add!(slot, slot_group)
+          }.to change(Passengership, :count).by 1
+        end
+
+        it "will create mySchedule Slots" do
+          manager.add!(slot, slot_group)
+          member.reload
+          expect(member.my_calendar_slots).to include slot
+        end
+
+        it "sets 'show_in_schedule' to true" do
+          manager.add!(slot, slot_group)
+          passengership = Passengership.find_by(slot: slot, user: member)
+          expect(passengership.show_in_my_schedule?).to be true
+        end
+
+        context "existing passengership" do
+          let!(:passengership) do
+            create(:passengership, slot: slot, user: member,
+                   show_in_my_schedule: false)
+          end
+
+          it "will not create a new Passengership" do
+            expect {
+              manager.add!(slot, slot_group)
+            }.not_to change(Passengership, :count)
+          end
+
+          it "will set show_in_my_schedule to true if not set" do
+            manager.add!(slot, slot_group)
+            passengership = Passengership.find_by(slot: slot, user: member)
+            expect(passengership.show_in_my_schedule?).to be true
+          end
         end
       end
     end
@@ -94,6 +141,19 @@ RSpec.describe SlotsetManager, type: :service do
         expect {
           manager.remove!(slot, my_calendar)
         }.not_to raise_error
+      end
+
+      it "sets 'show_in_my_schedule' to false for the passengership" do
+        manager.remove!(slot, my_calendar)
+        passengership.reload
+        expect(passengership.show_in_my_schedule?).to be false
+      end
+
+      it "doesn't set 'deleted_at'" do
+        expect(passengership.deleted_at?).to be false
+        manager.remove!(slot, my_calendar)
+        passengership.reload
+        expect(passengership.deleted_at?).to be false
       end
     end
 
@@ -160,6 +220,52 @@ RSpec.describe SlotsetManager, type: :service do
           manager.remove!(slot, slot_group)
           containership.reload
           expect(containership.deleted_at?).to be true
+        end
+      end
+
+      context "calendar members with 'show in my schedule' active" do
+        let!(:member) do
+          member = create(:user)
+          create(:membership, :active, user: member, group: slot_group,
+                 show_slots_in_schedule: true)
+          member
+        end
+        let!(:passengership) do
+          create(:passengership, slot: slot, user: member,
+                 show_in_my_schedule: true)
+        end
+
+        it "will remove the slot from members mySchedule" do
+          manager.remove!(slot, slot_group)
+          member.reload
+          expect(member.my_calendar_slots).not_to include slot
+        end
+
+        it "sets 'show_in_schedule' to false" do
+          manager.remove!(slot, slot_group)
+          passengership = Passengership.find_by(slot: slot, user: member)
+          expect(passengership.show_in_my_schedule?).to be false
+        end
+
+        context "AND with another calendar with 'show in my schedule' active" do
+          let!(:other_membership) do
+            calendar = create(:membership, :active, user: member,
+                   show_slots_in_schedule: true)
+            create(:containership, slot: slot, group: calendar.group)
+          end
+
+          it "will not remove the slot from members mySchedule" do
+            expect(member.my_calendar_slots).to include slot
+            manager.remove!(slot, slot_group)
+            member.reload
+            expect(member.my_calendar_slots).to include slot
+          end
+
+          it "doesn't sets 'show_in_schedule' to false" do
+            manager.remove!(slot, slot_group)
+            passengership = Passengership.find_by(slot: slot, user: member)
+            expect(passengership.show_in_my_schedule?).to be true
+          end
         end
       end
     end
