@@ -41,15 +41,19 @@ class SlotsetManager
   def remove!(slot, slotset)
     if slotset.class == Group
       fail TSErrors::SlotGroupDeleted if slotset.deleted_at?
+      # next if slotset.deleted_at? # would be more graceful
 
       result = slot.containerships.find_by(group: slotset)
       if result
         result.delete unless result.deleted_at?
         # result.create_activity
       end
+
+      hide_from_schedule_of_members(slot, slotset)
+
     elsif current_user.slot_sets['my_cal_uuid'] == slotset
       result = current_user.passengerships.find_by(slot: slot)
-      result.delete if result && !result.deleted_at?
+      result.update(show_in_my_schedule: false) if result
     end
   end
 
@@ -69,6 +73,24 @@ class SlotsetManager
       result.update(show_in_my_schedule: true) unless result.show_in_my_schedule?
       member.follow(slot) # is already following group, is it needed?
       # result.create_activity # is it needed?
+    end
+  end
+
+  # hides the slot for all group members which have
+  # 'show in my schedule' enabled for this group/calendar
+  private def hide_from_schedule_of_members(slot, slotset)
+    slotset.active_memberships.find_each do |membership|
+      # skip members which have 'show in my schedule' disabled
+      next unless membership.show_slots_in_schedule?
+
+      member = membership.user
+      # don't hide slot from schedule if member has other calenders with
+      # the same slot where 'show in my schedule' is 'true'
+      next if member.calendars_in_schedule.find(slot.slot_group_ids).any?
+
+      result = Passengership.find_by(slot: slot, user: member)
+      result.update(show_in_my_schedule: false) if result.show_in_my_schedule?
+      member.unfollow(slot) # is already following group, is it needed?
     end
   end
 end
