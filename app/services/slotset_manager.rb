@@ -1,4 +1,5 @@
 class SlotsetManager
+  # adds or removes a single slot from a slotset aka calendar
   include TSErrors
 
   def initialize(current_user:)
@@ -6,6 +7,7 @@ class SlotsetManager
   end
 
   def add!(slot, slotset)
+    # for 'normal' slot groups
     if slotset.class == Group
       fail TSErrors::SlotGroupDeleted if slotset.deleted_at?
 
@@ -13,6 +15,10 @@ class SlotsetManager
       result.update(deleted_at: nil) if result.deleted_at?
       slot.follow(slotset)
       result.create_activity
+
+      put_into_schedule_of_members(slot, slotset)
+
+    # for the current users 'schedule'
     elsif current_user.slot_sets['my_cal_uuid'] == slotset
       # current_user.my_calendar_slots << slot
       result = Passengership.find_or_create_by(slot: slot, user: current_user)
@@ -50,4 +56,19 @@ class SlotsetManager
   private
 
   attr_reader :current_user
+
+  # creates a passengership for all group members which have
+  # 'show in my schedule' enabled for this group
+  private def put_into_schedule_of_members(slot, slotset)
+    slotset.active_memberships.find_each do |membership|
+      next unless membership.show_slots_in_schedule?
+
+      member = membership.user
+      result = Passengership.find_or_create_by(slot: slot, user: member)
+      result.update(deleted_at: nil) if result.deleted_at?
+      result.update(show_in_my_schedule: true) unless result.show_in_my_schedule?
+      member.follow(slot) # is already following group, is it needed?
+      # result.create_activity # is it needed?
+    end
+  end
 end

@@ -75,6 +75,52 @@ RSpec.describe SlotsetManager, type: :service do
           expect(containership.deleted_at?).to be false
         end
       end
+
+      context "'show in my schedule' active" do
+        let!(:member) do
+          member = create(:user)
+          create(:membership, :active, user: member, group: slot_group,
+                 show_slots_in_schedule: true)
+          member
+        end
+
+        it "will create a new Passengership" do
+          expect {
+            manager.add!(slot, slot_group)
+          }.to change(Passengership, :count).by 1
+        end
+
+        it "will create mySchedule Slots" do
+          manager.add!(slot, slot_group)
+          member.reload
+          expect(member.my_calendar_slots).to include slot
+        end
+
+        it "sets 'show_in_schedule' to true" do
+          manager.add!(slot, slot_group)
+          passengership = Passengership.find_by(slot: slot, user: member)
+          expect(passengership.show_in_my_schedule?).to be true
+        end
+
+        context "existing passengership" do
+          let!(:passengership) do
+            create(:passengership, slot: slot, user: member,
+                   show_in_my_schedule: false)
+          end
+
+          it "will not create a new Passengership" do
+            expect {
+              manager.add!(slot, slot_group)
+            }.not_to change(Passengership, :count)
+          end
+
+          it "will set show_in_my_schedule to true if not set" do
+            manager.add!(slot, slot_group)
+            passengership = Passengership.find_by(slot: slot, user: member)
+            expect(passengership.show_in_my_schedule?).to be true
+          end
+        end
+      end
     end
   end
 
