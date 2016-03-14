@@ -1,7 +1,5 @@
 class RemoveReslotTable < ActiveRecord::Migration
   def up
-    migrate_stdslots
-    migrate_reslots
     remove_column :base_slots, :re_slots_count
     drop_table :re_slots
   end
@@ -39,45 +37,5 @@ class RemoveReslotTable < ActiveRecord::Migration
     # BaseSlot.find_each do |slot|
     #   BaseSlot.reset_counters slot.id, :likes, :comments, :re_slots
     # end
-  end
-
-  private def migrate_stdslots
-    ActiveRecord::Base.transaction do
-      slot_count = StdSlot.count
-
-      StdSlot.find_each.with_index do |slot, index|
-        default_msg = "#{index + 1}/#{slot_count} - #{slot.title}"
-
-        ps = Passengership.find_or_create_by(slot_id: slot.id,
-                                             user_id: slot.creator_id)
-        puts "passengership: #{ps.id} for slot #{slot.id}"
-
-        if ps.save
-          puts "#{default_msg} saved (#{ps.id})"
-        else
-          puts "ERROR - #{default_msg} not updated (#{ps.id})"
-        end
-      end
-    end
-  end
-
-  private def migrate_reslots
-    ActiveRecord::Base.transaction do
-      slot_count = ReSlot.count
-
-      ReSlot.find_each.with_index do |slot, index|
-        default_msg = "#{index + 1}/#{slot_count} - #{slot.title}"
-
-        ps = Passengership.find_or_create_by(slot_id: slot.parent_id,
-                                             user_id: slot.slotter_id)
-        puts "passengership: #{ps.id}"
-
-        if ps.save
-          puts "#{default_msg} saved (#{ps.id})"
-        else
-          puts "ERROR - #{default_msg} not updated (#{ps.id})"
-        end
-      end
-    end
   end
 end
