@@ -92,6 +92,24 @@ describe GroupPolicy do
     end
   end
 
+  permissions :subscribe? do
+    let(:user) { create(:user) }
+
+    context "public group/slotgroup/calendar" do
+      let(:group) { create(:group, public: true) }
+
+      it "allows access" do
+        expect(subject).to permit(user, group)
+      end
+    end
+
+    context "non-public group/slotgroup/calendar" do
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+  end
+
   permissions :kick? do
     let(:user) { create(:user) }
 
@@ -157,7 +175,7 @@ describe GroupPolicy do
     let(:permissions) {
       [
         :show?, :leave?, :slots?, :members?, :member_settings?,
-        :index?, :create?, :update?, :destroy?, :related?,
+        :index?, :create?, :update?, :destroy?, :related?, :subscribe?,
         :invite?, :kick?, :accept_invite?, :refuse_invite?,
         :add_slotgroup_to_schedule?, :remove_slotgroup_from_schedule?
       ]

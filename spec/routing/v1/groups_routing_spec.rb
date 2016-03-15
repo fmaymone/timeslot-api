@@ -45,6 +45,11 @@ RSpec.describe V1::GroupsController, type: :routing do
         .to route_to("v1/groups#related", group_uuid: uuid, format: :json)
     end
 
+    it "routes to #subscribe" do
+      expect(post: "/v1/calendars/#{uuid}/subscribe")
+        .to route_to("v1/groups#subscribe", slotgroup_uuid: uuid, format: :json)
+    end
+
     it "routes to #invite" do
       expect(post: "/v1/groups/#{uuid}/members")
         .to route_to("v1/groups#invite", group_uuid: uuid, format: :json)

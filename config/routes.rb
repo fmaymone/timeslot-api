@@ -91,7 +91,8 @@ Rails.application.routes.draw do
       get ':id/friends', to: 'users#friends', as: 'user_friends'
     end
 
-    scope :groups, constraints: {
+    scope :groups,
+          constraints: {
             group_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
       post '', to: 'groups#create', as: 'group_create'
       get ':group_uuid', to: 'groups#show', as: 'group'
@@ -108,6 +109,12 @@ Rails.application.routes.draw do
              constraints: { user_id: /\d+/ }
       patch ':group_uuid/members', to: 'groups#member_settings'
       post 'global_group', to: 'groups#global_group'
+    end
+
+    scope :calendars,
+          constraints: {
+            slotgroup_uuid: /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i } do
+      post ':slotgroup_uuid/subscribe', to: 'groups#subscribe'
     end
 
     scope :feed do
