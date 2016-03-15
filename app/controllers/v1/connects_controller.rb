@@ -31,6 +31,7 @@ module V1
         render json: { error: @user.errors.messages },
                status: :unprocessable_entity
       elsif @user
+        @current_user = @user
         render 'v1/users/signup'
       else
         render json: {

@@ -18,6 +18,7 @@ module V1
       @user = User.create_with_device(params: user_create_params,
                                       device: device_params(params[:device]))
       if @user.errors.empty?
+        @current_user = @user
         render :signup, status: :created
       else
         render json: { error: @user.errors },
@@ -32,6 +33,7 @@ module V1
       @user = User.sign_in(credentials)
 
       if @user
+        @current_user = @user
         render :signup
       else
         render json: { error: "email and password didn't match" },

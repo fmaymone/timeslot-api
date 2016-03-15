@@ -252,6 +252,10 @@ class User < ActiveRecord::Base
                                           slot_class: slot_class)
   end
 
+  def visible_calendars_counter(user)
+    CounterService.new.active_visible_calendars(asker: user, requestee: self)
+  end
+
   def prepare_for_slot_deletion(slot)
     alert = slot_settings.find_by(meta_slot: slot.meta_slot)
     return if alert.nil?

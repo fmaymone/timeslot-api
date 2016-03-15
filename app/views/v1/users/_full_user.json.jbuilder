@@ -9,5 +9,5 @@ json.location do
 end
 
 json.slot_count user.visible_slots_counter(current_user, StdSlot)
-# json.reslot_count user.visible_slots_counter(current_user, ReSlot)
+json.calendar_count user.visible_calendars_counter(current_user)
 json.friends_count user.friends_count
