@@ -139,7 +139,7 @@ module V1
       render "v1/users/list"
     end
 
-    # GET /v1/me/groups
+    # GET /v1/me/slotgroups
     # return all groups where the current user is member
     def my_groups
       authorize :me
