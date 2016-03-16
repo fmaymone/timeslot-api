@@ -318,6 +318,8 @@ module Feed
       # To determine the paging cursor we use a counter
       # Also we use this counter to check on break condition if limit is reached
       feed_count = 0
+      # The inner aggregation count is required to determine the right next cursor
+      aggregation_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
       feed = @storage.range(feed_index, 0, @storage.length("Feed:#{feed_index}") - offset - 1).reverse!
       # Loop through all feeds (has a break statement, offset is optional)
@@ -326,8 +328,7 @@ module Feed
         post = enrich_activity(post)
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
-        # NOTE: Activities vom Reslots cannot be aggregated to its corresponding parent Slot! (this would be result in a merged virtual slot, that not really exist)
-        group = post['group'] = "#{post['target']}:#{post['activity']}" ##{post['activity']#{post['time']} #(post['parent'] || post['target'])
+        group = post['group'] = "#{post['target']}:#{post['action']}" ##{post['time']}
         # Get activity actor
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
@@ -340,12 +341,15 @@ module Feed
           current_feed['activityCount'] += 1
           # Collect actors as unique
           current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
+          # TODO: the intersection feature needs further discussion:
           # Get intersection of actors and the users social context
-          current_feed['actors'] &= context if context
+          # current_feed['actors'] &= context if context
+          # Increase aggregation counter (inner count)
+          aggregation_count += 1
           # Skip counting for cursor and limits
           next
         # If group does not exist, creates a new group for aggregations
-        elsif feed_count < limit.to_i
+        elsif (feed_count - aggregation_count) < limit.to_i
           # Skip if activity is not from type of the last activity which is related to this target
           next if targets.has_key?(post['target'])
           # Set a switch to the target map, so we can check if an activity of these target was already aggregated
