@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe GlobalSlotConsumer, type: :service do
   describe 'slot', :vcr do
-    let(:muid) { attributes_for(:global_slot)[:muid] }
+    let(:muid) { attributes_for(:global_slot)[:slot_uuid] }
 
     context "valid data", :seed do
       it "returns a global slot from TS_DATA_MALL" do

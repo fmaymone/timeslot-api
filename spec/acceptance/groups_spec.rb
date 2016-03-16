@@ -718,7 +718,7 @@ resource "Groups" do
     let(:name) { "Autokino an der alten Eiche" }
     let(:image) { "http://faster.pussycat" }
     let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
-    let(:slots) { [attributes_for(:global_slot)[:muid]] }
+    let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
 
     describe "create new public group and add GlobalSlots", :vcr do
       example "Add GlobalSlots to new or existing public group",
@@ -750,7 +750,7 @@ resource "Groups" do
         expect(autokino.string_id).to eq stringId
 
         expect(autokino.slots).not_to be_empty
-        gs = GlobalSlot.find_by muid: slots.first
+        gs = GlobalSlot.find_by slot_uuid: slots.first
         expect(autokino.slots).to include gs
 
         expect(response_status).to eq(200)

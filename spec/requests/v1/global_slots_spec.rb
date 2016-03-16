@@ -37,7 +37,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: gs_data[:muid] },
+             { predecessor: gs_data[:slot_uuid] },
              auth_header
         expect(response).to have_http_status :created
       end
@@ -45,7 +45,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       it "adds the candy store location to the local db", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:muid] },
+               { predecessor: gs_data[:slot_uuid] },
                auth_header
         }.to change(IosLocation, :count)
         new_slot = GlobalSlot.last
@@ -58,7 +58,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       it "adds the slot to the users' MyCalendar", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:muid] },
+               { predecessor: gs_data[:slot_uuid] },
                auth_header
         }.to change(Passengership, :count)
         new_slot = GlobalSlot.last
@@ -68,7 +68,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       it "adds the slot to other given slotgroups", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:muid], slot_groups: [slot_group.uuid] },
+               { predecessor: gs_data[:slot_uuid], slot_groups: [slot_group.uuid] },
                auth_header
         }.to change(Containership, :count)
         new_slot = GlobalSlot.last
@@ -81,14 +81,14 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns 201" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(response).to have_http_status :created
       end
 
       it "returns details of slot with given id" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(json).to have_key('id')
         expect(json).to have_key('muid')
@@ -103,7 +103,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns the candy store location", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
 
         expect(json).to have_key 'location'
@@ -121,7 +121,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns a note with a description" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(json).to have_key('notes')
         expect(json['notes']).not_to be_empty

@@ -16,7 +16,7 @@ resource "GlobalSlots" do
               required: false
     # TODO: response needs array with invalid slotset uuids
 
-    let(:predecessor) { attributes_for(:global_slot)[:muid] }
+    let(:predecessor) { attributes_for(:global_slot)[:slot_uuid] }
 
     example "Reslot global slot", document: :v1 do
       explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \

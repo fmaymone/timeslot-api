@@ -644,7 +644,7 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:global_slot) { create(:global_slot) }
       let(:params) { { muid: group[:uuid],
                        name: 'Rephlex',
-                       slots: [global_slot.muid] } }
+                       slots: [global_slot.slot_uuid] } }
 
       it "adds the slot to the group" do
         post "/v1/groups/global_group", { group: params }, auth_header
@@ -654,7 +654,7 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "no existing global slot, but existing location", :vcr do
-      let(:slots) { [attributes_for(:global_slot)[:muid]] }
+      let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
       let!(:location) { create(:candy_location) }
       let(:params) { { muid: group[:uuid],
                        name: 'Rephlex',
@@ -692,7 +692,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:containership, slot: global_slot, group: group) }
       let(:params) { { muid: group.uuid,
                        name: group.name,
-                       slots: [global_slot.muid] } }
+                       slots: [global_slot.slot_uuid] } }
 
       it "adds the slot to the group" do
         expect(Group.last.slots).to include global_slot
