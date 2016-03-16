@@ -48,14 +48,14 @@ namespace :feed do
 
       ## Collect Activities ##
 
-      storage = MediaItem.where('deleted_at = ?', nil) +
-                Note.where('deleted_at = ?', nil) +
-                Like.where('deleted_at = ?', nil) +
-                Comment.where('deleted_at = ?', nil) +
-                Friendship.where('deleted_at = ?', nil) +
-                Membership.where('deleted_at = ?', nil) +
-                Containership.where('deleted_at = ?', nil) +
-                Passengership.where('deleted_at = ?', nil) +
+      storage = MediaItem.where(deleted_at: nil) +
+                Note.where(deleted_at: nil) +
+                Like.where(deleted_at: nil) +
+                Comment.where(deleted_at: nil) +
+                Friendship.where(deleted_at: nil) +
+                Membership.where(deleted_at: nil) +
+                Containership.where(deleted_at: nil) +
+                Passengership.where(deleted_at: nil) +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all
 
