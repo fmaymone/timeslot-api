@@ -339,6 +339,8 @@ module Feed
           current = groups[group]
           # Get current aggregation group feed
           current_feed = aggregated_feed[current]
+          # Increase aggregation counter (inner count)
+          aggregation_count += 1
           # Skip this part if the aggregation action is not the same
           if last_actions[group] === post['action']
             # Update activity count
@@ -348,11 +350,9 @@ module Feed
             # TODO: the intersection feature needs further discussion:
             # Get intersection of actors and the users social context
             # current_feed['actors'] &= context if context
+            # Skip counting for cursor and limits
+            next
           end
-          # Increase aggregation counter (inner count)
-          aggregation_count += 1
-          # Skip counting for cursor and limits
-          next
         # If group does not exist, creates a new group for aggregations
         elsif (feed_count - aggregation_count) < limit.to_i
           # Skip if activity is not from type of the last activity which is related to this target
