@@ -107,6 +107,18 @@ module V1
       end
     end
 
+    # POST /v1/calendars/:slotgroup_uuid/subscribe
+    # current user subscribes to public calendar
+    # create membership with state active
+    def subscribe
+      group = Group.find_by!(uuid: params[:slotgroup_uuid])
+      authorize group
+      group.invite_users([current_user])
+
+      render :related, status: :created,
+             locals: { memberships: group.related_memberships }
+    end
+
     # POST /v1/groups/:group_uuid/members
     # current user adds other users to own group or to group
     # where he is member and members can invite
