@@ -70,6 +70,20 @@ COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs
 
 
 --
+-- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -102,7 +116,8 @@ CREATE TABLE base_slots (
     slot_type integer NOT NULL,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    type text NOT NULL
+    type text NOT NULL,
+    slot_uuid uuid DEFAULT uuid_generate_v4()
 );
 
 
@@ -303,17 +318,16 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
-    muid uuid NOT NULL
+    muid uuid
 )
 INHERITS (base_slots);
 
@@ -811,6 +825,13 @@ ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id
 
 
 --
+-- Name: slot_uuid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY global_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4();
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -899,6 +920,13 @@ ALTER TABLE ONLY std_slots ALTER COLUMN likes_count SET DEFAULT 0;
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
+
+
+--
+-- Name: slot_uuid; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4();
 
 
 --
@@ -1463,4 +1491,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160221192251');
 INSERT INTO schema_migrations (version) VALUES ('20160303174854');
 
 INSERT INTO schema_migrations (version) VALUES ('20160309215254');
+
+INSERT INTO schema_migrations (version) VALUES ('20160311110857');
 
