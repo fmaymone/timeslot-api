@@ -11,7 +11,7 @@ RSpec.describe GlobalSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:open_end) }
-  it { is_expected.to respond_to(:muid) }
+  it { is_expected.to respond_to(:slot_uuid) }
   it { is_expected.to respond_to(:url) }
   it { is_expected.to respond_to(:notes) }
   it { is_expected.to respond_to(:images) }
@@ -45,17 +45,6 @@ RSpec.describe GlobalSlot, type: :model do
       expect(described_class.visibility).to eq 'public'
     end
   end
-
-  # describe :re_slots do
-  #   let(:parent) { build(:global_slot) }
-  #   let!(:reslots) { build_stubbed_list(:re_slot, 3, parent: parent) }
-
-  #   it "returns an array of the reslots of this slot" do
-  #     res = parent.re_slots
-  #     expect(res.size).to be 3
-  #     expect(res).to include reslots.first
-  #   end
-  # end
 
   describe "create_slot", :seed do
     let(:user) { User.find_by(role: 2, username: 'dfb.de') }
@@ -125,19 +114,19 @@ RSpec.describe GlobalSlot, type: :model do
 
       it "doesn't create a new global slot" do
         expect {
-          described_class.find_or_create(global_slot.muid)
+          described_class.find_or_create(global_slot.slot_uuid)
         }.not_to change(GlobalSlot, :count)
       end
 
       it "returns the global slot" do
-        result = described_class.find_or_create(global_slot.muid)
+        result = described_class.find_or_create(global_slot.slot_uuid)
         expect(result).to be_an_instance_of GlobalSlot
       end
     end
 
     context "missing global slot, valid 'muid'", :vcr do
       context "valid 'muid'" do
-        let(:muid) { attributes_for(:global_slot)[:muid] }
+        let(:muid) { attributes_for(:global_slot)[:slot_uuid] }
 
         it "creates a new global slot" do
           expect {

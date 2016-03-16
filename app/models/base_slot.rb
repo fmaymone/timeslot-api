@@ -60,6 +60,7 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+  # validates :slot_uuid, presence: true # let the db take care of it for now
 
   # getter
 

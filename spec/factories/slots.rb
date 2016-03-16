@@ -1,6 +1,8 @@
 FactoryGirl.define do
   factory :slot, class: BaseSlot do
     association :meta_slot, strategy: :build
+    slot_uuid "0f2bddbb-c75c-a994-1af9-5ce7ea36c397"
+
     after(:build) { |slot| slot.type = slot.class }
   end
 
