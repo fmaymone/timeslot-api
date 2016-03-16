@@ -65,7 +65,7 @@ namespace :feed do
 
       ## Re-Build Activities ##
 
-      storage.uniq.sort_by(&:created_at).last(MAX_ACTIVITIES).each(&:create_activity)
+      storage.sort_by{|a| Time.zone.parse(a.created_at)}.last(MAX_ACTIVITIES).each(&:create_activity)
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."
