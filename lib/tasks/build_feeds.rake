@@ -31,34 +31,34 @@ namespace :feed do
 
       ## Re-Build Follower Model ##
 
-      (friendships = Friendship.includes(:user, :friend).where('deleted_at = ?', nil)).find_each do |relation|
+      (friendships = Friendship.includes(:user, :friend).all).find_each do |relation|
         # friends follows each other
-        if relation.established?
+        if relation.established? && relation.deleted_at.nil?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
-      (memberships = Membership.includes(:group, :user).where('deleted_at = ?', nil)).find_each do |relation|
-        if relation.active?
+      (memberships = Membership.includes(:group, :user).all).find_each do |relation|
+        if relation.active? && relation.deleted_at.nil?
           relation.group.add_follower(relation.user)
         end
       end
 
-      (containerships = Containership.includes(:group, :slot).where('deleted_at = ?', nil)).find_each do |relation|
-          relation.slot.add_follower(relation.group)
+      (containerships = Containership.includes(:group, :slot).all).find_each do |relation|
+          relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
       end
 
-      (passengerships = Passengership.includes(:slot, :user).where('deleted_at = ?', nil)).find_each do |relation|
-          relation.slot.add_follower(relation.user)
+      (passengerships = Passengership.includes(:slot, :user).all).find_each do |relation|
+          relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
       end
 
       ## Collect Activities ##
 
-      storage = MediaItem.where('deleted_at = ?', nil) +
-                Note.where('deleted_at = ?', nil) +
-                Like.where('deleted_at = ?', nil) +
-                Comment.where('deleted_at = ?', nil) +
+      storage = MediaItem.all +
+                Note.all +
+                Like.all +
+                Comment.all +
                 friendships +
                 memberships +
                 containerships +
