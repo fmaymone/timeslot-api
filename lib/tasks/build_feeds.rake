@@ -22,16 +22,9 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      ## Temporary cache ##
-
-      friendships = nil
-      memberships = nil
-      containerships = nil
-      passengerships = nil
-
       ## Re-Build Follower Model ##
 
-      (friendships = Friendship.includes(:user, :friend).all).find_each do |relation|
+      Friendship.includes(:user, :friend).find_each do |relation|
         # friends follows each other
         if relation.established? && relation.deleted_at.nil?
           relation.user.add_follower(relation.friend)
@@ -39,17 +32,17 @@ namespace :feed do
         end
       end
 
-      (memberships = Membership.includes(:group, :user).all).find_each do |relation|
+      Membership.includes(:group, :user).find_each do |relation|
         if relation.active? && relation.deleted_at.nil?
           relation.group.add_follower(relation.user)
         end
       end
 
-      (containerships = Containership.includes(:group, :slot).all).find_each do |relation|
+      Containership.includes(:group, :slot).find_each do |relation|
           relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
       end
 
-      (passengerships = Passengership.includes(:slot, :user).all).find_each do |relation|
+      Passengership.includes(:slot, :user).find_each do |relation|
           relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
       end
 
@@ -59,10 +52,10 @@ namespace :feed do
                 Note.all +
                 Like.all +
                 Comment.all +
-                friendships +
-                memberships +
-                containerships +
-                passengerships +
+                Friendship.all +
+                Membership.all +
+                Containership.all +
+                Passengership.all +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all
 
