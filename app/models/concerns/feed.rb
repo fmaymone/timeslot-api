@@ -330,7 +330,7 @@ module Feed
         post = enrich_activity(post)
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
-        group = post['group'] = post['target'] ##{post['time']}
+        group = post['group'] = "group:#{post['target']}" ##{post['time']}
         # Get activity actor
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
