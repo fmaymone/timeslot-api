@@ -110,8 +110,8 @@ RSpec.shared_context "default user response fields" do
   response_field :location, "Home location of user"
   # we could need this when we can toggle notifications per friend
   # response_field :push, "Send push Notifications (true/false)"
-  response_field :slotCount, "Number of slots for this user"
-  response_field :reslotCount, "Number of reslots for this user"
+  response_field :slotCount, "Number of visible slots for this user"
+  response_field :calendarCount, "Number of visible calendars for this user"
   response_field :friendsCount, "Number of friends for this user"
 end
 

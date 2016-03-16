@@ -440,6 +440,32 @@ resource "Groups" do
     end
   end
 
+  # subscribe
+  post "/v1/calendars/:slotgroup_uuid/subscribe" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :slotgroup_uuid, "ID of the group", required: true
+
+    let!(:group) { create(:group, public: true) }
+    let(:slotgroup_uuid) { group.uuid }
+
+    example "Subscribe to a public calendar", document: :v1 do
+      explanation "Adds the current user to the slotgroup/calendar." \
+                  " Calendar must be public.\n\n" \
+                  "returns 201 if invite successfully created\n\n" \
+                  "returns 404 if group UUID is invalid"
+      expect {
+        do_request
+      }.to change(Membership, :count).by 1
+      expect(response_status).to eq(201)
+      membership = Membership.last
+      expect(membership.active?).to be true
+      expect(group.members).to include current_user
+      expect(current_user.active_groups).to include group
+    end
+  end
+
   # invite
   post "/v1/groups/:group_uuid/members" do
     header "Content-Type", "application/json"

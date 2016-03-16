@@ -75,6 +75,14 @@ class GroupPolicy < ApplicationPolicy
     accept_invite?
   end
 
+  # true if slotgroup/calendar is public and
+  # a user is signed in
+  def subscribe?
+    return false unless current_user?
+    return false unless group.public?
+    true
+  end
+
   # true if current user is the group owner
   # true if current user is an active member of the group and members can invite
   def invite?

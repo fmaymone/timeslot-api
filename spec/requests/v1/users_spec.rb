@@ -87,16 +87,30 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    # context "json reslots counter" do
-    #   let!(:re_slot) { create(:re_slot, slotter: current_user) }
-    #   let!(:not_my_reslot) { create(:re_slot) }
+    context "json calendar counter" do
+      let!(:user_with_calendars) do
+        requestee = create(:user)
+        create_list(:group, 3, public: false, owner: requestee)
+        create_list(:group, 2, public: true, owner: requestee)
+        public_group = create(:group, public: true)
+        create(:membership, :active, group: public_group, user: requestee)
+        requestee
+      end
+      let!(:shared_nonpublic_calendar) do
+        shared_group = create(:group, public: false)
+        create(:membership, :active, user: current_user,
+               group: shared_group)
+        create(:membership, :active, user: user_with_calendars,
+               group: shared_group)
+        shared_group
+      end
 
-    #   it "return number of re_slots for current user" do
-    #     get "/v1/users/#{current_user.id}", {}, auth_header
-    #     expect(json).to have_key 'reslotCount'
-    #     expect(json['reslotCount']).to eq 1
-    #   end
-    # end
+      it "return number of public and shared calendars" do
+        get "/v1/users/#{user_with_calendars.id}", {}, auth_header
+        expect(json).to have_key('calendarCount')
+        expect(json['calendarCount']).to eq 4
+      end
+    end
 
     context "return group membership via json" do
       let!(:membership) { create(:membership, :active, user: current_user) }
