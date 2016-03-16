@@ -303,6 +303,8 @@ resource "Groups" do
     }
     let!(:active_members) { create_list(:membership, 4, :active, group: group) }
     let!(:inactive_member) { create(:membership, :inactive, group: group) }
+    let!(:deactivated_user) { create(:membership, :active, group: group,
+                                     deleted_at: Time.zone.now) }
     # group owner is automatically an active member too
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -319,6 +321,7 @@ resource "Groups" do
       expect(response_body).to include(active_member.picture)
       expect(response_body).to include(active_member.created_at.as_json)
       expect(response_body).to include(active_member.updated_at.as_json)
+      expect(response_body).not_to include(deactivated_user.user.username)
       # expect(response_body)
         # .to include(v1_user_url(group.members.first, format: :json))
     end
@@ -345,6 +348,8 @@ resource "Groups" do
     let!(:invitees) { create_list(:membership, 2, :invited, group: group) }
     let!(:exmembers) { create_list(:membership, 3, :inactive, group: group) }
     # group owner is automatically an active member too
+    let!(:deactivated_user) { create(:membership, :active, group: group,
+                                     deleted_at: Time.zone.now) }
 
     example "Get list of all users related to a group", document: :v1 do
       explanation "Also includes user with pending or refused invitations and" \
@@ -354,12 +359,14 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to include({ "id" => group.uuid, "size" => 7 })
+      expect(json).to include({ "id" => group.uuid,
+                                "size" => group.related_users.count })
       expect(json["related"])
         .to include("id" => group.related_users.first.id,
                     "state" => group.memberships.first.humanize,
                     "deletedAt" => group.memberships.first.deleted_at
                    )
+      expect(response_body).to include(deactivated_user.user_id.to_s)
     end
 
     describe "no group with given UUID exists" do
