@@ -69,6 +69,22 @@ module V1
       end
     end
 
+    # GET /v1/users/1/calendars
+    # returns public calenders and non-public calenders where user and
+    # current_user are member
+    # TODO: refactor, write spec
+    def calendars
+      authorize :user
+      requestee = User.find(params[:id])
+
+      public_calendars = requestee.active_groups.where(public: true)
+      my_groups = current_user.active_group_ids
+      shared_nonpublic_calendars = requestee.active_groups.where(id: my_groups)
+      @groups = public_calendars + shared_nonpublic_calendars
+
+      render "v1/groups/index"
+    end
+
     # GET /v1/users/1/friends
     # returns all friends of a user
     def friends
