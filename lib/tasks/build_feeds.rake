@@ -22,47 +22,40 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      ## Temporary cache ##
-
-      friendships = nil
-      memberships = nil
-      containerships = nil
-      passengerships = nil
-
       ## Re-Build Follower Model ##
 
-      (friendships = Friendship.includes(:user, :friend).where('deleted_at = ?', nil)).find_each do |relation|
+      Friendship.includes(:user, :friend).find_each do |relation|
         # friends follows each other
-        if relation.established?
+        if relation.established? && relation.deleted_at.nil?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
-      (memberships = Membership.includes(:group, :user).where('deleted_at = ?', nil)).find_each do |relation|
-        if relation.active?
+      Membership.includes(:group, :user).find_each do |relation|
+        if relation.active? && relation.deleted_at.nil?
           relation.group.add_follower(relation.user)
         end
       end
 
-      (containerships = Containership.includes(:group, :slot).where('deleted_at = ?', nil)).find_each do |relation|
-          relation.slot.add_follower(relation.group)
+      Containership.includes(:group, :slot).find_each do |relation|
+          relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
       end
 
-      (passengerships = Passengership.includes(:slot, :user).where('deleted_at = ?', nil)).find_each do |relation|
-          relation.slot.add_follower(relation.user)
+      Passengership.includes(:slot, :user).find_each do |relation|
+          relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
       end
 
       ## Collect Activities ##
 
-      storage = MediaItem.where('deleted_at = ?', nil) +
-                Note.where('deleted_at = ?', nil) +
-                Like.where('deleted_at = ?', nil) +
-                Comment.where('deleted_at = ?', nil) +
-                friendships +
-                memberships +
-                containerships +
-                passengerships +
+      storage = MediaItem.where(deleted_at: nil) +
+                Note.where(deleted_at: nil) +
+                Like.where(deleted_at: nil) +
+                Comment.where(deleted_at: nil) +
+                Friendship.where(deleted_at: nil) +
+                Membership.where(deleted_at: nil) +
+                Containership.where(deleted_at: nil) +
+                Passengership.where(deleted_at: nil) +
                 # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
                 StdSlot.all
 
@@ -72,7 +65,7 @@ namespace :feed do
 
       ## Re-Build Activities ##
 
-      storage.uniq.sort_by!{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
+      storage.sort_by(&:created_at).each(&:create_activity) #.last(MAX_ACTIVITIES)
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."

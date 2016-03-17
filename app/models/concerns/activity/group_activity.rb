@@ -3,7 +3,7 @@ module GroupActivity
 
   # TMP: temporary turns off all group activities
   private def activity_is_valid?
-    !Rails.env.production?
+    super and !Rails.env.production?
   end
 
   private def activity_type
