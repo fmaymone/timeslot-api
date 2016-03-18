@@ -79,7 +79,8 @@ module V1
 
       public_calendars = requestee.active_groups.where(public: true)
       my_groups = current_user.active_group_ids
-      shared_nonpublic_calendars = requestee.active_groups.where(id: my_groups)
+      shared_nonpublic_calendars = requestee.active_groups.where(id: my_groups,
+                                                                 public: false)
       @groups = public_calendars + shared_nonpublic_calendars
 
       render "v1/groups/index"
