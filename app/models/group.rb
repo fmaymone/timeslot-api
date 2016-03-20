@@ -5,6 +5,8 @@ class Group < ActiveRecord::Base
 
   after_create :add_owner_as_member, on: :create
 
+  scope :non_public, -> { where(public: false) }
+
   belongs_to :owner, class_name: User, inverse_of: :own_groups
 
   has_many :containerships, inverse_of: :group

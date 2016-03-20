@@ -72,7 +72,7 @@ module V1
     # GET /v1/users/1/calendars
     # returns public calenders and non-public calenders where user and
     # current_user are member
-    # TODO: refactor, write spec
+    # TODO: refactor
     def calendars
       authorize :user
       requestee = User.find(params[:id])
