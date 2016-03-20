@@ -72,16 +72,12 @@ module V1
     # GET /v1/users/1/calendars
     # returns public calenders and non-public calenders where user and
     # current_user are member
-    # TODO: refactor
     def calendars
       authorize :user
-      requestee = User.find(params[:id])
+      user = User.find(params[:id])
 
-      public_calendars = requestee.active_groups.where(public: true)
-      my_groups = current_user.active_group_ids
-      shared_nonpublic_calendars = requestee.active_groups.where(id: my_groups,
-                                                                 public: false)
-      @groups = public_calendars + shared_nonpublic_calendars
+      calendar_service = CalendarCollector.new(current_user)
+      @groups = calendar_service.calendars_for(user)
 
       render "v1/groups/index"
     end
