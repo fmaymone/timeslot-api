@@ -1,21 +1,21 @@
 module GroupActivity
   include Activity
 
-  # TMP: temporary turns off all group activities
   private def activity_is_valid?
-    super and !Rails.env.production?
+    super and active? #and !Rails.env.production?
   end
 
   private def activity_type
     'Group'
   end
 
-  # The foreign id is required to find activities for
-  # changing we need the user here. If users changes their
-  # visiblity, we have to delete activities from stream.
-  #private def activity_foreign
-  #  activity_target.creator
-  #end
+  private def activity_foreign
+   activity_target.try(:owner)
+  end
+
+  private def activity_push
+    [activity_foreign.id]
+  end
 
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
