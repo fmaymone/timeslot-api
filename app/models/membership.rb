@@ -119,24 +119,12 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    super and active?
-  end
-
   private def activity_target
     group
   end
 
-  private def activity_foreign
-    group.owner
-  end
-
   private def activity_actor
     user
-  end
-
-  private def activity_notify
-    []
   end
 
   private def activity_action

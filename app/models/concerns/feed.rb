@@ -313,8 +313,6 @@ module Feed
       groups = {}
       # We have to store the last activity of each activity group
       last_actions = {}
-      # The aggregation targets index table (used for collect activities from same type as the last activity)
-      #targets = {}
       # The index of the group index table
       index = -1
       # To determine the paging cursor we use a counter
@@ -333,8 +331,6 @@ module Feed
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
         if groups.has_key?(group)
-          # Increase aggregation counter (inner count)
-          #aggregation_count += 1
           # Skip this part if the aggregation action is not the same as the last one
           if last_actions[group] === post['action']
             # Determine current aggregation group index
@@ -345,18 +341,13 @@ module Feed
             current_feed['activityCount'] += 1
             # Collect actors as unique
             current_feed['actors'] << actor unless current_feed['actors'].include?(actor)
-            # TODO: the intersection feature needs further discussion:
             # Get intersection of actors and the users social context
-            # current_feed['actors'] &= context if context
+            current_feed['actors'] &= context if context
           end
           # Skip counting for cursor and limits
           next
         # If group does not exist, creates a new group for aggregations
         elsif feed_count < limit.to_i
-          # Skip if activity is not from type of the last activity which is related to this target
-          #next if targets.has_key?(post['target'])
-          # Set a switch to the target map, so we can check if an activity of these target was already aggregated
-          #targets[post['target']] = true
           # Increment index on each new group (starting from -1)
           current = groups[group] = (index += 1)
           # Keep the last action to skip other activities on the same aggregation group

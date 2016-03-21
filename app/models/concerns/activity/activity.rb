@@ -221,16 +221,18 @@ module Activity
     # Returns the array of users which should be notified through the distribution process
     user_ids = []
 
-    # ACTUALLY NOT ACTIVE: When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
+    # THIS IS ACTUALLY NOT ACTIVE:
+    # When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
+    if activity_type == 'Slot'
+      # 4. Containership related context:
+      activity_target.containerships.each do |containership|
+        user_ids += containership.group.followers
+      end
 
-    # 4. Containership related context:
-    activity_target.containerships.each do |containership|
-      user_ids += containership.group.followers
-    end
-
-    # 4. Passengership related context:
-    activity_target.passengerships.each do |passengership|
-      user_ids << passengership.user.id.to_s
+      # 4. Passengership related context:
+      activity_target.passengerships.each do |passengership|
+        user_ids << passengership.user.id.to_s
+      end
     end
 
     # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
@@ -263,10 +265,14 @@ module Activity
     # Temporary fallback to simulate a "public-to-all-activity" feed
     # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.test?
 
+    # Add the actor to the news feed distribution
+    user_ids << activity_actor.id.to_s
+
     user_ids.uniq!
 
     # Remove the user who did the actual activity
-    user_ids.delete(activity_actor.id.to_s)
+    #user_ids.delete(activity_actor.id.to_s)
+
     # Remove the foreign user
     user_ids.delete(activity_foreign.id.to_s) if activity_foreign
     user_ids
