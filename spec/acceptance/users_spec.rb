@@ -698,7 +698,7 @@ resource "Users" do
     header "Authorization", :auth_header
     header "Accept", "application/json"
 
-    parameter :id, "ID of the user to get the friends of."
+    parameter :id, "ID of the user to get the friends for."
 
     let(:user) do
       user = create(:user, :with_3_friends)
@@ -716,6 +716,52 @@ resource "Users" do
       expect(response_status).to eq(200)
       expect(response_body).to include user.friends.first.username
       expect(response_body).to include user.friends.last.username
+    end
+  end
+
+  get "/v1/users/:id/calendars" do
+    header "Authorization", :auth_header
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to get the calendars for."
+    let(:user_with_calendars) do
+      requestee = create(:user)
+      create_list(:group, 3, public: false, owner: requestee)
+      requestee
+    end
+    let!(:public_calendars) do
+      calendars = create_list(:group, 2, public: true, owner: user_with_calendars)
+      public_group = create(:group, public: true)
+      create(:membership, :active, group: public_group, user: user_with_calendars)
+      calendars + [public_group]
+    end
+    let!(:shared_nonpublic_calendar) do
+      shared_group = create(:group, public: false)
+      create(:membership, :active, user: current_user,
+             group: shared_group)
+      create(:membership, :active, user: user_with_calendars,
+             group: shared_group)
+      shared_group
+    end
+
+    let(:id) { user_with_calendars.id }
+
+    example "Get list of calendars of another user", document: :v1 do
+      explanation "Includes all public calendars of this user and " \
+                  "non-public calendars where user and current user " \
+                  "are members.\n\n" \
+                  "returns array of calendars\n\n" \
+                  "returns 404 if current user not friend with other user"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(response_body).to include public_calendars.first.name
+      expect(response_body).to include public_calendars.second.name
+      expect(response_body).to include public_calendars.third.name
+      expect(response_body).to include shared_nonpublic_calendar.name
+      expect(response_body).
+        not_to include user_with_calendars.groups.non_public.first.name
+      expect(json.length).to eq 4
     end
   end
 

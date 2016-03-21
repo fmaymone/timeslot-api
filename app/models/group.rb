@@ -5,6 +5,9 @@ class Group < ActiveRecord::Base
 
   after_create :add_owner_as_member, on: :create
 
+  # scope :public is defined at class method, was not possible otherwise
+  scope :non_public, -> { where(public: false) }
+
   belongs_to :owner, class_name: User, inverse_of: :own_groups
 
   has_many :containerships, inverse_of: :group
@@ -86,5 +89,9 @@ class Group < ActiveRecord::Base
 
     new_group.invite_users(invitees) if invitees
     new_group
+  end
+
+  def self.public
+    where(public: true)
   end
 end
