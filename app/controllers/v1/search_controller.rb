@@ -1,4 +1,6 @@
 module V1
+  require 'open-uri'
+
   class SearchController < ApplicationController
     # GET /v1/search/categories
     def categories
@@ -68,6 +70,30 @@ module V1
       @groups = Search.new(Group, params[:attr] || 'name', query, page)
 
       render "v1/groups/index"
+    end
+
+    # GET /v1/search/calendars
+    def calendars
+      authorize :search
+
+      uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
+      if params[:q]
+        uri.path += 'public_groups' # 'calendars'
+        uri.query = URI.encode_www_form(q: params[:q])
+      end
+
+      user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
+      pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
+      auth = { http_basic_authentication: [user, pw] }
+
+      # Never pass unchecked URI to 'open'
+      # http://sakurity.com/blog/2015/02/28/openuri.html
+      raw_result = open(uri, auth).read
+    rescue => e
+      pp e
+      # raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
+    else
+      render body: raw_result, content_type: "application/json"
     end
 
     # GET /v1/search/location
