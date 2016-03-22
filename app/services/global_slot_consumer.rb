@@ -45,7 +45,7 @@ class GlobalSlotConsumer
   # TODO: rename to 'slots'
   def search(category, query)
     result = prepare_search(category, query)
-    crawler_slots = result['search-slots']
+    crawler_slots = result['result']['slots']
     slots = []
     crawler_slots.each { |slot| slots << ElasticSearchSlot.new(slot) }
     slots
