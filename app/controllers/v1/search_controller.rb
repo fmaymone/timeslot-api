@@ -75,25 +75,10 @@ module V1
     # GET /v1/search/calendars
     def calendars
       authorize :search
+      result = ClawMachine.new.search(category: 'calendars',
+                                      query_params: query_and_limit)
 
-      uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
-      if params[:q]
-        uri.path += 'public_groups' # 'calendars'
-        uri.query = URI.encode_www_form(q: params[:q])
-      end
-
-      user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
-      pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
-      auth = { http_basic_authentication: [user, pw] }
-
-      # Never pass unchecked URI to 'open'
-      # http://sakurity.com/blog/2015/02/28/openuri.html
-      raw_result = open(uri, auth).read
-    rescue => e
-      pp e
-      # raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
-    else
-      render body: raw_result, content_type: "application/json"
+      render body: result, content_type: "application/json"
     end
 
     # GET /v1/search/location
@@ -103,6 +88,17 @@ module V1
       @locations = Search.new(IosLocation, params[:attr] || 'name', query, page)
 
       render "v1/locations/index"
+    end
+
+    private def query_and_limit
+      params.require(:q)
+      es_search_params = params.permit(:q)
+
+      if params[:limit].present?
+        limit = params[:limit]
+        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+      end
+      es_search_params
     end
 
     private def query
