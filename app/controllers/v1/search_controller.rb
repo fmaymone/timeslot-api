@@ -91,8 +91,8 @@ module V1
     end
 
     private def query_and_limit
-      params.require(:q)
-      es_search_params = params.permit(:q)
+      es_search_params = { q: "" }
+      es_search_params[:q] = params[:q]
 
       if params[:limit].present?
         limit = params[:limit]
