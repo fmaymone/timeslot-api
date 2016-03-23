@@ -6,7 +6,7 @@ FactoryGirl.define do
     creator
 
     factory :candy_location do
-      uuid "89840bc4-99fc-bc22-4168-285003ecfd12"
+      uuid "411456d2-532a-b0cb-8dc6-c0ea5e8f9488"
       name "Signal Iduna Park"
       locality "Dortmund"
       sub_locality "Mitte"
