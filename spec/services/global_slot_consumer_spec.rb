@@ -58,7 +58,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
   describe 'search', :vcr do
     let(:search_term) { "baye" }
     let(:limit) { 6 }
-    let(:timestamp) { "2015-11-29T12:43:28.907Z" }
+    let(:timestamp) { "2016-07-29T12:43:28.907Z" }
     let(:query) {
       { "q" => search_term, "timestamp" => timestamp, "limit" => limit }
     }

@@ -11,12 +11,11 @@ class GroupPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true if the group/calendar is public
   # true if current user is an active group member
   def show?
-    return false unless current_user?
-    return true if current_user == group.owner
-    return true if current_user.active_member? group.id
-    false
+    return true if group.public?
+    active_group_member?
   end
 
   # true if the user is logged in
@@ -94,7 +93,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def leave?
-    show?
+    active_group_member?
   end
 
   # true if current user is an active member of the group
@@ -107,7 +106,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def member_settings?
-    show?
+    active_group_member?
   end
 
   # true if current user is an active member of the group
@@ -128,6 +127,13 @@ class GroupPolicy < ApplicationPolicy
   # the crawler source making the request
   def global_group?
     return true if group.public? && group.owner == current_user
+    false
+  end
+
+  private def active_group_member?
+    return false unless current_user?
+    return true if current_user == group.owner
+    return true if current_user.active_member? group.id
     false
   end
 end

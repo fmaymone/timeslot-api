@@ -19,7 +19,12 @@ resource "Search" do
       expect(response_status).to eq(200)
       expect(json).to have_key("categories")
       categories = json['categories']
-      expect(categories.sort == %w(football cinema concerts).sort).to be true
+      expect(categories.sort).to include "football"
+      expect(categories.sort).to include "cinema"
+      expect(categories.sort).to include "concerts"
+      expect(categories.sort).to include "television"
+      expect(categories.sort).to include "calendars"
+      expect(categories.sort).to include "clubbing"
     end
   end
 

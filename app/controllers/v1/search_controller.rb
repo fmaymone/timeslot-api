@@ -1,4 +1,6 @@
 module V1
+  require 'open-uri'
+
   class SearchController < ApplicationController
     # GET /v1/search/categories
     def categories
@@ -70,6 +72,15 @@ module V1
       render "v1/groups/index"
     end
 
+    # GET /v1/search/calendars
+    def calendars
+      authorize :search
+      result = ClawMachine.new.search(category: 'calendars',
+                                      query_params: query_and_limit)
+
+      render body: result, content_type: "application/json"
+    end
+
     # GET /v1/search/location
     def location
       authorize :search
@@ -77,6 +88,17 @@ module V1
       @locations = Search.new(IosLocation, params[:attr] || 'name', query, page)
 
       render "v1/locations/index"
+    end
+
+    private def query_and_limit
+      es_search_params = { q: "" }
+      es_search_params[:q] = params[:q]
+
+      if params[:limit].present?
+        limit = params[:limit]
+        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+      end
+      es_search_params
     end
 
     private def query

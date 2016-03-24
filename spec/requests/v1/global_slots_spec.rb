@@ -8,7 +8,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
   end
 
   describe "POST /v1/globalslots/search" do
-    let(:query) { "q=Frei&category=cinema&moment=2015-12-18&limit=20" }
+    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
 
     it "returns 200 and results", :vcr do
       get "/v1/globalslots/search?#{query}", {}, auth_header

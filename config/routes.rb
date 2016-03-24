@@ -118,6 +118,10 @@ Rails.application.routes.draw do
       post ':slotgroup_uuid/subscribe', to: 'groups#subscribe'
     end
 
+    scope :search do
+      get ':action', to: 'search#:action'
+    end
+
     scope :feed do
       get 'user', to: 'feed#user_feed'
       get 'news', to: 'feed#news_feed'
@@ -127,8 +131,6 @@ Rails.application.routes.draw do
     if ENV['ENABLE_IOS_DB_CLEAN']
       get 'ios/clean-db', to: 'ios#clean_db'
     end
-
-    get 'search/:action', to: 'search#:action'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

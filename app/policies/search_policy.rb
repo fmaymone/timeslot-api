@@ -36,6 +36,10 @@ class SearchPolicy < ApplicationPolicy
     current_user?
   end
 
+  def calendars?
+    current_user?
+  end
+
   # true if a user is logged in
   def location?
     current_user?
