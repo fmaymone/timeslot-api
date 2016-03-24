@@ -44,11 +44,11 @@ class ElasticSearchSlot
     when 'moviepilot.de'
       { name: 'Moviepilot', url: 'http://moviepilot.de', image: 'http://www.goldenerwesten.net/neu/wp-content/uploads/2011/04/moviepilot_logo.jpg' }
     when 'tvspielfilm.de'
-      { name: 'TV Spielfilm', url: '', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.burda-news.de%2Fsites%2Fdefault%2Ffiles%2Fbilder%2FTVSpielfilm-Logo.jpg&sp=f6b3775130a04b171c78979d6f5f8f57' }
+      { name: 'tvspielfilm.de', url: '', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.burda-news.de%2Fsites%2Fdefault%2Ffiles%2Fbilder%2FTVSpielfilm-Logo.jpg&sp=f6b3775130a04b171c78979d6f5f8f57' }
     when 'residentadvisor.net'
-      { name: 'Resident Advisor', url: 'http://residentadvisor.net', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.technoparade.fr%2Fwp-content%2Fuploads%2F2013%2F08%2Fresident-advisor-logo1.jpg&sp=9a346e1f9e34e708110bce3dfc8d31cb' }
+      { name: 'residentadvisor.net', url: 'http://residentadvisor.net', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.technoparade.fr%2Fwp-content%2Fuploads%2F2013%2F08%2Fresident-advisor-logo1.jpg&sp=9a346e1f9e34e708110bce3dfc8d31cb' }
     when 'songkick.com'
-      { name: 'Songkick', url: 'http://songkick.com', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.songkick.com%2Fblog%2Fwp-content%2Fuploads%2F2012%2F06%2FSK_badge.png&sp=64a28a9e0da93a57272f660599b8e66c' }
+      { name: 'songkick.com', url: 'http://songkick.com', image: 'https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.songkick.com%2Fblog%2Fwp-content%2Fuploads%2F2012%2F06%2FSK_badge.png&sp=64a28a9e0da93a57272f660599b8e66c' }
     else
       user = User.find_by(role: 2, username: domain)
       { name: user.username, url: user.public_url, image: user.picture }
