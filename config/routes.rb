@@ -126,6 +126,11 @@ Rails.application.routes.draw do
       get 'notification', to: 'feed#notification_feed'
     end
 
+    scope :invitecodes do
+      post '', to: 'invitecodes#create'
+      get ':code', to: 'invitecodes#show'
+    end
+
     if ENV['ENABLE_IOS_DB_CLEAN']
       get 'ios/clean-db', to: 'ios#clean_db'
     end
