@@ -14,7 +14,8 @@ module V1
 
       @group = Group.create_with_invitees(
         group_params: group_params.merge(owner: current_user),
-        invitees: params[:invitees])
+        invitees: params[:invitees],
+        initiator: current_user)
 
       if @group.errors.empty?
         render :show, status: :created
@@ -113,7 +114,7 @@ module V1
     def subscribe
       group = Group.find_by!(uuid: params[:slotgroup_uuid])
       authorize group
-      group.invite_users([current_user.id])
+      group.invite_users([current_user.id], current_user)
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }
@@ -127,7 +128,7 @@ module V1
     def invite
       group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
-      group.invite_users(params.require(:invitees))
+      group.invite_users(params.require(:invitees), current_user)
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }

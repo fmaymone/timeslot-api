@@ -83,7 +83,7 @@ module Feed
 
       # Skip default distribution if fowardings was passed
       if params[:forward].empty?
-        # Store activity to own feed (me activities)
+        # Store own activities to feed (my activities)
         feed_register[:User] << params[:actor]
         # Send to other users through social relations ("Read-Opt" Strategy)
         feed_register[:News] += params[:notify]
@@ -136,12 +136,8 @@ module Feed
     end
 
     def remove_user_from_feeds(user:, notify:)
-      # NOTE: For this step we need to fetch all objects related to target feeds
+      # NOTE: For this step we need to fetch all related objects
       targets = user.std_slots
-                # user.re_slots
-                # user.group_slots
-                #user.friendships +
-                #user.memberships
 
       # We collect job data here and pass this into the removal job worker
       job_data = []
@@ -276,7 +272,8 @@ module Feed
     private def enrich_message(activity, actor, target, view)
       actor_count = activity['actors'].count
       # Adds the first username and sets usercount to translation params
-      i18_params = { USER: actor['username'], USERCOUNT: actor_count }
+      # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
+      i18_params = { USER: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
       # TODO:
       # Add the targets field to the translation params holder
       i18_params[:FIELD] = 'title'

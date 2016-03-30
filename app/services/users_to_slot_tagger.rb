@@ -6,28 +6,14 @@ class UsersToSlotTagger
     @slot = slot
   end
 
-  def tag(user_ids, inititator)
+  def tag(user_ids, initiator)
     users = User.find(user_ids)
     users.each do |user|
       ps = user.passengerships.find_or_create_by(slot: @slot)
       ps.update(add_media_permission: true)
       user.follow(@slot)
+      ps.initiator = initiator
       ps.create_activity
-
-      # If a custom initiator is required we can use:
-      # ps.forward_activity(
-      #     feed_fwd: {
-      #         User: [
-      #             inititator.id.to_s
-      #         ],
-      #         Notification: [
-      #             user.id.to_s
-      #         ]
-      #     },
-      #     push_fwd: [
-      #         user.id
-      #     ]
-      # )
     end
   end
 end

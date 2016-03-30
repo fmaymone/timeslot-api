@@ -44,7 +44,7 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def invite_users(ids)
+  def invite_users(ids, initiator = nil)
     ids.each do |user_id|
       invitee = User.find(user_id)
       next if invitee.active_member?(id)
@@ -52,7 +52,7 @@ class Group < ActiveRecord::Base
       # allow to re-invite kicked/refused/left members:
       membership = invitee.get_membership self
       membership ||= Membership.new(group_id: id, user_id: invitee.id)
-      membership.activate && membership.save
+      membership.activate(initiator) && membership.save
     end
   end
 
@@ -63,12 +63,14 @@ class Group < ActiveRecord::Base
   end
 
   def delete
-    remove_all_followers
     owner.touch
     memberships.includes(:user).each(&:delete)
-    # containerships.includes(:slot).each(&:delete)
+    # NOTE: Groups do not include Activity, but we can call feed methods directly:
+    Feed.remove_target_from_feeds(target: self, type: 'Group', notify: self.followers)
     containerships.each(&:delete)
     ts_soft_delete
+    # NOTE: Remove follower relations at least!
+    remove_all_followers
   end
 
   private def add_owner_as_member
@@ -83,11 +85,11 @@ class Group < ActiveRecord::Base
     SecureRandom.uuid
   end
 
-  def self.create_with_invitees(group_params:, invitees: nil)
+  def self.create_with_invitees(group_params:, invitees: nil, initiator: nil)
     new_group = create(group_params)
     return new_group unless new_group.errors.empty?
 
-    new_group.invite_users(invitees) if invitees
+    new_group.invite_users(invitees, initiator) if invitees
     new_group
   end
 

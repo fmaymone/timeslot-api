@@ -18,6 +18,10 @@ class Passengership < ActiveRecord::Base
   validates :slot, presence: true
   validates :user, presence: true
 
+  attr_accessor :initiator
+
+  @initiator = nil
+
   # TODO: write spec
   def hide_from_my_schedule
     update(show_in_my_schedule: false)
@@ -36,23 +40,23 @@ class Passengership < ActiveRecord::Base
 
   ## Activity Methods ##
 
+  private def activity_is_valid?
+    super && @initiator
+  end
+
   private def activity_target
-    slot #.reload # FIX: reload MTI
+    slot
   end
 
   private def activity_actor
-    slot.creator
+    @initiator || user
   end
 
   private def activity_foreign
-    user
+    @initiator ? user : nil
   end
 
   private def activity_action
-    'tagged'
-  end
-
-  private def activity_notify
-    []
+    @initiator ? 'tagged' : 'reslot'
   end
 end
