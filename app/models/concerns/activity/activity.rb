@@ -221,28 +221,37 @@ module Activity
     # Returns the array of users which should be notified through the distribution process
     user_ids = []
 
-    # THIS IS ACTUALLY NOT ACTIVE:
-    # When the target belongs to a group we do not collect any followers from one of the other social context (e.g. friends)
-    if activity_type == 'Slot'
-      # 4. Containership related context:
-      activity_target.containerships.each do |containership|
-        user_ids += containership.group.followers
-      end
-
-      # 4. Passengership related context:
-      activity_target.passengerships.each do |passengership|
-        user_ids << passengership.user.id.to_s
-      end
+    # When the target belongs to a group we do also collect further followers from one of the other social context (e.g. friends)
+    case activity_type
+      when 'Slot'
+        # 4. Containership related context:
+        activity_target.containerships.each do |containership|
+          user_ids += containership.group.followers
+        end
+        # 1. Target related context:
+        activity_target.passengerships.each do |passengership|
+          user_ids << passengership.user.id.to_s
+        end
+      when 'Group'
+        # 4. Membership related context:
+        activity_target.memberships.each do |membership|
+          user_ids += membership.group.followers
+        end
+      when 'User'
+        # 3. Friendship related context:
+        activity_target.friendships.each do |friendship|
+          user_ids << friendship.activity_target.id.to_s
+        end
     end
 
     # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
     # NOTE: Actually we simplify activities on own content and foreign related content
     # 1. Target related context (by default):
     user_ids += activity_target.followers
-    # 5. Foreign related context (by default):
-    user_ids += activity_foreign.followers if activity_foreign
     # 2. Actor related context:
     user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
+    # 5. Foreign related context (actually not active):
+    #user_ids += activity_foreign.followers if activity_foreign
 
     # NOTE: Instead of distributing unrelated public slots we try to extend the social context
     # 3. Friend related context:
@@ -270,11 +279,12 @@ module Activity
 
     user_ids.uniq!
 
+    # NOTE: Actually we show own activities in the users news feed
     # Remove the user who did the actual activity
     #user_ids.delete(activity_actor.id.to_s)
-
     # Remove the foreign user
-    user_ids.delete(activity_foreign.id.to_s) if activity_foreign
+    #user_ids.delete(activity_foreign.id.to_s) if activity_foreign
+
     user_ids
   end
 

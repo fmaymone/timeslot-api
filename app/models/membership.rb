@@ -14,10 +14,13 @@ class Membership < ActiveRecord::Base
   validates :state, presence: true
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
-  def activate
+  @initiator = nil
+
+  def activate(initiator = nil)
     remove_activity
     update!(state: "111")
     user.follow(group)
+    @initiator = initiator
     create_activity
     group.touch
   end
@@ -119,15 +122,23 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
+  private def activity_is_valid?
+    super && @initiator
+  end
+
   private def activity_target
     group
   end
 
   private def activity_actor
-    user
+    @initiator || user
+  end
+
+  private def activity_foreign
+    @initiator ? user : nil
   end
 
   private def activity_action
-    'membership'
+    @initiator ? 'membertag' : 'membership'
   end
 end

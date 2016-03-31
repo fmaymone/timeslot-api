@@ -15,6 +15,10 @@ class Containership < ActiveRecord::Base
   validates :slot, presence: true
   validates :group, presence: true
 
+  attr_accessor :initiator
+
+  @initiator = nil
+
   # when a slot is removed from a slotgroup or
   # when a slot gets deleted or
   # when a slotgroup gets deleted
@@ -33,23 +37,23 @@ class Containership < ActiveRecord::Base
 
   ## Activity Methods ##
 
+  private def activity_is_valid?
+    super && @initiator
+  end
+
   private def activity_target
     group
   end
 
   private def activity_actor
-    slot.creator
+    @initiator || slot.creator
   end
 
   private def activity_foreign
-    group.owner
-  end
-
-  private def activity_notify
-    []
+    @initiator ? slot.creator : nil
   end
 
   private def activity_action
-    'containership'
+    @initiator ? 'containertag' : 'containership'
   end
 end

@@ -155,8 +155,21 @@ module Share
     end
 
     private def share_objects(user, slot)
-      user = JSONView.user(user)
-      slot = JSONView.slot(slot)
+      user = JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => user
+          }
+      ))
+      slot = JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/slots/_slot',
+          layout: false,
+          locals: {
+              :slot => slot,
+              :current_user => user
+          }
+      ))
       @storage.set("User:#{user['id']}", gzip_content(user.to_json))
       @storage.set("Slot:#{slot['id']}", gzip_content(slot.to_json))
       {

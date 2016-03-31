@@ -10,11 +10,11 @@ module GroupActivity
   end
 
   private def activity_foreign
-   activity_target.try(:owner)
+    activity_target.try(:owner)
   end
 
   private def activity_push
-    [activity_foreign.id]
+    [activity_foreign.try(:id)]
   end
 
   # Add extra data to each activity. The data can be hide
@@ -23,8 +23,21 @@ module GroupActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.group(self.group),
-      actor: JSONView.user(activity_actor)
+      target: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/groups/_group',
+          layout: false,
+          locals: {
+              :group => activity_target,
+              :current_user => activity_actor
+          }
+      )),
+      actor: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => activity_actor
+          }
+      ))
     }
   end
 
@@ -33,7 +46,7 @@ module GroupActivity
   private def activity_message_params
     {
       USER: activity_actor.username,
-      TITLE: self.group.name
+      TITLE: activity_target.name
     }
   end
 end
