@@ -15,5 +15,9 @@ FactoryGirl.define do
                creator: slot.creator
       end
     end
+
+    trait :without_description do
+      slot_uuid 'c3c5ccd4-d1e4-8c16-49fc-aaa31c438eaf'
+    end
   end
 end
