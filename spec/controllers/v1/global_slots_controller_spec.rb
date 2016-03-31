@@ -5,6 +5,7 @@ RSpec.describe V1::GlobalSlotsController, type: :controller do
 
   describe "GET search" do
     # moment param is necessary to let vcr detect the correct cassettes
+    # TODO: use Time.zone.now.next_month or so instead of hard-coded date
     let(:basic_params) { { category: 'cinema', q: 'foo', moment: '2015-11-11' } }
 
     it "returns http success", :vcr do

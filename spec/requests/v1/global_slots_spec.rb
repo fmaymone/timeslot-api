@@ -33,6 +33,8 @@ RSpec.describe "V1::GlobalSlots", type: :request do
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
       let(:gs_data) { attributes_for(:global_slot) }
+      let(:gs_no_description_data) {
+        attributes_for(:global_slot, :without_description) }
       let(:slot_group) { create(:group, owner: current_user) }
 
       it "returns 201", :vcr do
@@ -53,6 +55,26 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
         expect(new_slot.ios_location.as_json).to eq new_location.as_json
         expect(new_slot.ios_location.uuid).to eq new_slot.location_uid
+      end
+
+      it "adds a note to the slot with the description", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(Note, :count)
+
+        new_note = Note.last
+        expect(new_note.content).not_to be_empty
+      end
+
+      it "doesn't add a note if the slot has no description", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_no_description_data[:slot_uuid] },
+               auth_header
+        }.not_to change(Note, :count)
+        expect(response).to have_http_status :created
       end
 
       it "adds the slot to the users' MyCalendar", :vcr do

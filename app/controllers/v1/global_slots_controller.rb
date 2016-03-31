@@ -27,7 +27,7 @@ module V1
 
     private def category_param
       category = params.require(:category)
-      valid_categories = %w(cinema football) # this could also be an ENV var
+      valid_categories = %w(cinema football concerts clubbing television)
       return category if valid_categories.include? category
 
       fail ParameterInvalid.new(:category, category)

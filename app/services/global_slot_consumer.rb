@@ -91,7 +91,7 @@ class GlobalSlotConsumer
     Airbrake.notify(ActionController::ParameterMissing, opts)
     raise ActionController::ParameterMissing, msg
   else
-    {
+    slot_data = {
       user: slot_source,
       meta: {
         title: result['title'],
@@ -108,13 +108,16 @@ class GlobalSlotConsumer
           position: 1,
           media_type: "image"
         }
-      ],
-      notes: [
+      ]
+    }
+    if result['description']
+      slot_data[:notes] = [
         {
           title: 'Description',
           content: result['description']
         }
       ]
-    }
+    end
+    slot_data
   end
 end

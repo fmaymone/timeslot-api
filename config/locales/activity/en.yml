@@ -255,7 +255,7 @@ en:
   group_kick_notify_aggregate:	""
   group_kick_push_aggregate:	""
 
-  group_leave_me_singular:	"You leave the calendar: %{TITLE}"
+  group_leave_me_singular:	"You left the calendar: %{TITLE}"
   group_leave_activity_singular:	""
   group_leave_notify_singular:	""
   group_leave_push_singular:	""
