@@ -40,9 +40,14 @@ module V1
     end
 
     # DELETE /v1/groups/:group_uuid
+    # remove group slots from schedule unless otherwise stated
     def destroy
       @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
+
+      unless params[:keep_slots_in_schedule] == 'true'
+        CalendarInScheduleManager.new(current_user).hide(@group)
+      end
 
       if @group.delete
         render :show
@@ -138,9 +143,14 @@ module V1
     # current user leaves group
     # update membership with state left
     # remove current user from group members
+    # remove group slots from schedule unless otherwise stated
     def leave
       group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
+
+      unless params[:keep_slots_in_schedule] == 'true'
+        CalendarInScheduleManager.new(current_user).hide(group)
+      end
 
       if current_user.leave_group group.id
         head :ok

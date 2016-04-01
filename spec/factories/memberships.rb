@@ -32,4 +32,8 @@ FactoryGirl.define do
   trait :left do
     state "100"
   end
+
+  trait :show_in_schedule do
+    show_slots_in_schedule true
+  end
 end

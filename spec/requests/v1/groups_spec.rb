@@ -154,6 +154,62 @@ RSpec.describe "V1::Groups", type: :request do
       end
     end
 
+    context "slots in calendar" do
+      let(:group) {
+        create(:calendar, :with_3_slots, owner: current_user)
+      }
+      let!(:slot_in_schedule) {
+        create(:passengership, slot: group.slots.first, user: current_user,
+               show_in_my_schedule: true)
+      }
+      let!(:slot_in_schedule_and_other_calendar) {
+        shown_calendar = create(:calendar)
+        create(:membership, :show_in_schedule, user: current_user,
+               group: shown_calendar)
+        create(:containership, slot: group.slots.last, group: shown_calendar)
+        create(:passengership, slot: group.slots.last, user: current_user,
+               show_in_my_schedule: true)
+      }
+
+      it "hides the calendar slots from the users schedule" do
+        delete "/v1/groups/#{group.uuid}", {}, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be false
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
+      end
+
+      it "hides the calendar slots from schedule if explicitly stated" do
+        delete "/v1/groups/#{group.uuid}",
+               { keep_slots_in_schedule: false }, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be false
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
+      end
+
+      it "keeps the calendar slots in schedule if explicitly stated" do
+        delete "/v1/groups/#{group.uuid}",
+               { keep_slots_in_schedule: true }, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be true
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
+      end
+    end
+
     # context "group_slots" do
     #   let!(:group_slots) { create_list(:group_slot, 3, group: group) }
 
@@ -459,6 +515,62 @@ RSpec.describe "V1::Groups", type: :request do
         delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         membership.reload
         expect(membership.left?).to be true
+      end
+
+      context "slots in calendar" do
+        let(:group) {
+          create(:calendar, :with_3_slots, owner: create(:user))
+        }
+        let!(:slot_in_schedule) {
+          create(:passengership, slot: group.slots.first, user: current_user,
+                 show_in_my_schedule: true)
+        }
+        let!(:slot_in_schedule_and_other_calendar) {
+          shown_calendar = create(:calendar)
+          create(:membership, :show_in_schedule, user: current_user,
+                 group: shown_calendar)
+          create(:containership, slot: group.slots.last, group: shown_calendar)
+          create(:passengership, slot: group.slots.last, user: current_user,
+                 show_in_my_schedule: true)
+        }
+
+        it "hides the calendar slots from the users schedule" do
+          delete "/v1/groups/#{group.uuid}/members", {}, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be false
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
+
+        it "hides the calendar slots from schedule if explicitly stated" do
+          delete "/v1/groups/#{group.uuid}/members",
+                 { keep_slots_in_schedule: false }, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be false
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
+
+        it "keeps the calendar slots in schedule if explicitly stated" do
+          delete "/v1/groups/#{group.uuid}/members",
+                 { keep_slots_in_schedule: true }, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be true
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
       end
     end
 
