@@ -129,8 +129,8 @@ RSpec.describe Device, type: :model do
   describe :notify, :vcr do
     let(:client) { double("client") }
     let(:params) {{ message: { KEY: 'slot_like_notify_plural',
-                               USER: 'User1',
-                               USER2: 'User2',
+                               ACTOR: 'User1',
+                               USER: 'User2',
                                TITLE: 'Titel'}}}
     let(:lang) { 'en' }
 

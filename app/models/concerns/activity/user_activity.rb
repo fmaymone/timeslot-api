@@ -9,10 +9,6 @@ module UserActivity
     activity_target
   end
 
-  private def activity_push
-    [activity_target.id]
-  end
-
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
@@ -40,8 +36,8 @@ module UserActivity
   # for the users activity feed
   private def activity_message_params
     {
-      USER: activity_target.username,
-      USER2: activity_actor.username
+      ACTOR: activity_target.username,
+      USER: activity_actor.username
     }
   end
 end

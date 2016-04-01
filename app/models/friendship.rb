@@ -147,8 +147,4 @@ class Friendship < ActiveRecord::Base
   private def activity_action
     established? ? 'friendship' : (offered? ? 'request' : '')
   end
-
-  private def activity_notify
-    []
-  end
 end
