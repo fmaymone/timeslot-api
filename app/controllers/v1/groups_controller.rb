@@ -45,7 +45,9 @@ module V1
       @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
-      unless params[:keep_slots_in_schedule] == 'true'
+      # Params comes as URL Parameter and is not snake_cased automatically,
+      # maybe with Rails 5
+      unless params[:keepSlotsInSchedule] == '1'
         CalendarInScheduleManager.new(current_user).hide(@group)
       end
 
@@ -148,7 +150,9 @@ module V1
       group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
 
-      unless params[:keep_slots_in_schedule] == 'true'
+      # Params comes as URL Parameter and is not snake_cased automatically,
+      # maybe with Rails 5
+      unless params[:keepSlotsInSchedule] == '1'
         CalendarInScheduleManager.new(current_user).hide(group)
       end
 
