@@ -112,9 +112,10 @@ module Activity
     if notify.any?
       message_params = {
         KEY: "#{activity_type.downcase}_#{action}_push_singular",
-        USER: activity_actor.username,
-        USER2: activity_target.try(:username),
-        TITLE: activity_target.try(:title)
+        ACTOR: activity_actor.username,
+        USER: activity_target.try(:username),
+        TITLE: activity_target.try(:title),
+        NAME: activity_target.try(:name)
       }
       params = { message: message_params }
       if activity_type == 'Slot'
@@ -144,11 +145,15 @@ module Activity
   end
 
   private def remove_activity_feed(action, target: nil, user: nil)
-    # Add actor and foreign user to the activity removal dispatcher
+    # Add actor + foreign + forwarded users to the activity removal dispatcher
     notify = activity_notify || []
+    notify += activity_forward[:User] if activity_forward[:User]
+    notify += activity_forward[:News] if activity_forward[:News]
+    notify += activity_forward[:Notification] if activity_forward[:Notification]
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
-    notify.uniq
+
+    notify.uniq!
 
     target = target.as_json if target
     user_targets = user ? Feed.remove_user_from_feeds(user: user, notify: notify) : nil
@@ -221,35 +226,14 @@ module Activity
     # Returns the array of users which should be notified through the distribution process
     user_ids = []
 
-    # When the target belongs to a group we do also collect further followers from one of the other social context (e.g. friends)
-    case activity_type
-      when 'Slot'
-        # 4. Containership related context:
-        activity_target.containerships.each do |containership|
-          user_ids += containership.group.followers
-        end
-        # 1. Target related context:
-        activity_target.passengerships.each do |passengership|
-          user_ids << passengership.user.id.to_s
-        end
-      when 'Group'
-        # 4. Membership related context:
-        activity_target.memberships.each do |membership|
-          user_ids += membership.group.followers
-        end
-      when 'User'
-        # 3. Friendship related context:
-        activity_target.friendships.each do |friendship|
-          user_ids << friendship.activity_target.id.to_s
-        end
-    end
-
-    # TODO: Delegate social context as an activity parameter --> so we can justify amount of activities on each users feed during aggregation
-    # NOTE: Actually we simplify activities on own content and foreign related content
     # 1. Target related context (by default):
     user_ids += activity_target.followers
     # 2. Actor related context:
     user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
+    # 4. Containership related context:
+    activity_groups.each do |containership|
+      user_ids += containership.group.followers
+    end
     # 5. Foreign related context (actually not active):
     #user_ids += activity_foreign.followers if activity_foreign
 
@@ -279,9 +263,9 @@ module Activity
 
     user_ids.uniq!
 
-    # NOTE: Actually we show own activities in the users news feed
-    # Remove the user who did the actual activity
-    #user_ids.delete(activity_actor.id.to_s)
+    # NOTE: Actually we show activities to own contents in the creators news feed
+    # Remove the user who did the actual activity (actor)
+    user_ids.delete(activity_actor.id.to_s)
     # Remove the foreign user
     #user_ids.delete(activity_foreign.id.to_s) if activity_foreign
 
@@ -290,11 +274,124 @@ module Activity
 
   # Returns an array of user which should be notified via push notification (AWS SNS)
   private def activity_push
-    []
+    # Remove the user from the news feed who did the actual activity (actor)
+    get_recipients("#{activity_type.downcase}_#{activity_action}_push", remove_actor: true).map(&:to_i)
   end
 
   # Returns an array of user which should be notified via internal app notification (feed)
   private def activity_forward
+    {
+      User:
+        get_recipients("#{activity_type.downcase}_#{activity_action}_me"),
+      News:
+        get_recipients("#{activity_type.downcase}_#{activity_action}_activity", remove_actor: true),
+      Notification:
+        get_recipients("#{activity_type.downcase}_#{activity_action}_notify", remove_actor: true)
+    }
+  end
+
+  private def get_recipients(context, remove_actor: false)
+    # Determine social context from distribution map
+    context = distribution_map[context.to_sym] || {}
+    # Collect recipients through social context
+    recipients = []
+
+    ## -- Distribution Keys: Related to Actor -- ##
+
+    if context.include?('actor')      #  = the user who makes the action (initiator)
+      recipients << activity_actor.id.to_s
+    end
+    if context.include?('friends')    # = all friends of the actor (users follower)
+      recipients += activity_actor.followers
+    end
+    if context.include?('myfoaf')     # = all friends of actors friend (actually unused)
+      activity_actor.friendships.each do |friendship|
+        recipients += (friendship.user == activity_actor ? friendship.friend : friendship.user).followers
+      end
+    end
+
+    ## -- Distribution Keys: Related to Slot-Target -- ##
+
+    if context.include?('follower')   # = slot followers (incl. group members)
+      recipients += activity_target.followers
+    end
+    if context.include?('creator')    # = the creator of the slot
+      recipients << activity_target.creator.id.to_s
+    end
+    if context.include?('commenter')  # = the users who commented on the slot
+      users = activity_target.comments.pluck(:user_id) || []
+      recipients += users.map(&:to_s) if users.any?
+    end
+    if context.include?('liker')      # = the users who likes the slot
+      users = activity_target.likes.pluck(:user_id) || []
+      recipients += users.map(&:to_s) if users.any?
+    end
+    if context.include?('poster')  # = the users who adds content to the slot
+      # actually not supported
+    end
+
+    ## -- Distribution Keys: Related to Group-Target -- ##
+
+    if context.include?('member')     # = members of a group (or slotgroups)
+      if activity_type == 'Group'
+        recipients += activity_target.followers
+      elsif activity_type == 'Slot'
+        activity_groups.each do |containership|
+          recipients += containership.group.followers
+        end
+      end
+    end
+    if context.include?('owner')      # = the owner of the group
+      recipients << activity_target.owner.id.to_s
+    end
+    if context.include?('admin')      # = the admin of the group
+      recipients << activity_target.owner.id.to_s
+    end
+
+    ## -- Distribution Keys: Related to User-Target -- ##
+
+    if context.include?('user')       # = the target user (not the actor!)
+      recipients << activity_target.id.to_s
+    end
+    if context.include?('foaf')       # = all friends of a target user
+      recipients += activity_target.followers
+    end
+    if context.include?('requester')  # = smb. who requests smth.
+      recipients << activity_target.id.to_s
+    end
+    if context.include?('requestee')  # = smb. who has to accept smth.
+      recipients << activity_actor.id.to_s
+    end
+
+    ## -- Distribution Keys: Indirect -- ##
+
+    if context.include?('foreign')    # = the user who is involved indirectly
+      recipients << activity_target.id.to_s
+    end
+    if context.include?('invitee')    # = the user who is involved indirectly
+      recipients += activity_target.followers
+    end
+
+    ## -- Distribution Keys: Mixed Context -- ##
+
+    if context.include?('joiners')    # = friends + member (if: public group?)
+      recipients += activity_actor.followers
+      recipients += activity_target.followers
+
+      groups = activity_type == 'Group' ? [activity_target] : activity_target.activity_groups
+      groups.each do |group|
+        recipients += group.followers if group.try(:public)
+      end
+    end
+
+    recipients.uniq!
+    # Remove the user from the news feed who did the actual activity (actor)
+    recipients.delete(activity_actor.id.to_s) if remove_actor
+    recipients
+  end
+
+  # The groups which are related to the activity target object
+  private def activity_groups
     []
   end
 
@@ -339,5 +436,156 @@ module Activity
   private def error_handler(error, activity, params = nil)
     Rails.logger.error { error }
     Airbrake.notify(error, activity: activity, params: params)
+  end
+
+  # The distribution map exported from the google spreadsheet
+  # NOTE: to beautify the code use: http://www.cleancss.com/ruby-beautify/
+  private def distribution_map
+    {
+        slot_comment_me: %w(actor),
+        slot_comment_activity: %w(friends follower creator member),
+        slot_comment_notify: %w(commenter creator follower),
+        slot_comment_push: %w(commenter creator follower),
+
+        slot_like_me: %w(actor),
+        slot_like_activity: %w(friends follower creator member),
+        slot_like_notify: %w(creator),
+        slot_like_push: %w(creator),
+
+        slot_slot_me: %w(actor),
+        slot_slot_activity: %w(friends follower creator member),
+        slot_slot_notify: [],
+        slot_slot_push: [],
+
+        slot_image_me: %w(actor),
+        slot_image_activity: %w(friends follower creator member),
+        slot_image_notify: %w(follower),
+        slot_image_push: %w(follower),
+
+        slot_video_me: %w(actor),
+        slot_video_activity: %w(friends follower creator member),
+        slot_video_notify: %w(follower),
+        slot_video_push: %w(follower),
+
+        slot_audio_me: %w(actor),
+        slot_audio_activity: %w(friends follower creator member),
+        slot_audio_notify: %w(follower),
+        slot_audio_push: %w(follower),
+
+        slot_note_me: %w(actor),
+        slot_note_activity: %w(friends follower creator member),
+        slot_note_notify: %w(follower),
+        slot_note_push: %w(follower),
+
+        slot_media_me: %w(actor),
+        slot_media_activity: %w(friends follower creator member),
+        slot_media_notify: %w(follower),
+        slot_media_push: %w(follower),
+
+        slot_reslot_me: %w(actor),
+        slot_reslot_activity: %w(friends follower creator member),
+        slot_reslot_notify: %w(creator),
+        slot_reslot_push: %w(creator),
+
+        user_accept_me: %w(actor),
+        user_accept_activity: [],
+        user_accept_notify: %w(requester),
+        user_accept_push: %w(user),
+
+        user_friendship_me: %w(actor),
+        user_friendship_activity: [],
+        user_friendship_notify: %w(requestee),
+        user_friendship_push: %w(user),
+
+        group_membership_me: %w(actor),
+        group_membership_activity: %w(joiners),
+        group_membership_notify: [],
+        group_membership_push: [],
+
+        group_membertag_me: %w(actor),
+        group_membertag_activity: %w(joiners),
+        group_membertag_notify: %w(foreign),
+        group_membertag_push: %w(foreign),
+
+        slot_delete_me: %w(actor),
+        slot_delete_activity: [],
+        slot_delete_notify: %w(follower),
+        slot_delete_push: %w(follower),
+
+        slot_unslot_me: %w(actor),
+        slot_unslot_activity: [],
+        slot_unslot_notify: [],
+        slot_unslot_push: [],
+
+        user_request_me: %w(actor),
+        user_request_activity: [],
+        user_request_notify: %w(user),
+        user_request_push: %w(user),
+
+        slot_private_me: %w(actor),
+        slot_private_activity: [],
+        slot_private_notify: %w(follower),
+        slot_private_push: %w(follower),
+
+        slot_update_me: %w(actor),
+        slot_update_activity: [],
+        slot_update_notify: [],
+        slot_update_push: [],
+
+        user_unfriend_me: %w(actor),
+        user_unfriend_activity: [],
+        user_unfriend_notify: [],
+        user_unfriend_push: [],
+
+        user_reject_me: %w(actor),
+        user_reject_activity: [],
+        user_reject_notify: [],
+        user_reject_push: [],
+
+        slot_tagged_me: %w(actor),
+        slot_tagged_activity: [],
+        slot_tagged_notify: %w(foreign),
+        slot_tagged_push: %w(foreign),
+
+        group_request_me: %w(actor),
+        group_request_activity: [],
+        group_request_notify: [],
+        group_request_push: [],
+
+        group_reject_me: %w(actor),
+        group_reject_activity: [],
+        group_reject_notify: [],
+        group_reject_push: [],
+
+        group_kick_me: %w(actor),
+        group_kick_activity: [],
+        group_kick_notify: [],
+        group_kick_push: [],
+
+        group_leave_me: %w(actor),
+        group_leave_activity: %w(owner),
+        group_leave_notify: [],
+        group_leave_push: [],
+
+        group_containership_me: %w(actor),
+        group_containership_activity: %w(actor member),
+        group_containership_notify: [],
+        group_containership_push: %w(member),
+
+        group_containertag_me: %w(actor),
+        group_containertag_activity: %w(actor member),
+        group_containertag_notify: %w(foreign),
+        group_containertag_push: %w(user member),
+
+        group_ungroup_me: %w(actor),
+        group_ungroup_activity: [],
+        group_ungroup_notify: [],
+        group_ungroup_push: [],
+
+        group_create_me: %w(actor),
+        group_create_activity: [],
+        group_create_notify: [],
+        group_create_push: []
+    }
   end
 end

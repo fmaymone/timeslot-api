@@ -81,7 +81,7 @@ module Feed
 
       feed_register = { User: [], News: [], Notification: [] }
 
-      # Skip default distribution if fowardings was passed
+      # NOTE: Actually we skip default distribution if custom forwardings was passed
       if params[:forward].empty?
         # Store own activities to feed (my activities)
         feed_register[:User] << params[:actor]
@@ -273,23 +273,25 @@ module Feed
       actor_count = activity['actors'].count
       # Adds the first username and sets usercount to translation params
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
-      i18_params = { USER: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
+      i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
       # TODO:
-      # Add the targets field to the translation params holder
+      # Add the targets field to the translation params holder (actually not in use)
       i18_params[:FIELD] = 'title'
       # Add the title to the translation params holder
-      i18_params[:TITLE] = (target['title'] || target['name']) if target && (target['title'] || target['name'])
+      i18_params[:TITLE] = target['title'] if target && target['title']
+      # Add the name to the translation params holder
+      i18_params[:NAME] = target['name'] if target && target['name']
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if actor_count > 1
         # Get second actor (from shared objects)
         actor = get_shared_object("User:#{activity['actors'].second}")
         # Add the second username to the translation params holder
-        i18_params[:USER2] = actor['username']
+        i18_params[:USER] = actor['username']
       elsif activity['foreign'].present?
         # Get second actor (from shared objects)
         actor = get_shared_object("User:#{activity['foreign']}")
         # Add the second username to the translation params holder
-        i18_params[:USER2] = actor['username'].presence if actor
+        i18_params[:USER] = actor['username'].presence if actor
       end
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')

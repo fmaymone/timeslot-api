@@ -13,10 +13,6 @@ module GroupActivity
     activity_target.try(:owner)
   end
 
-  private def activity_push
-    [activity_foreign.try(:id)]
-  end
-
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
@@ -45,8 +41,8 @@ module GroupActivity
   # for the users activity feed
   private def activity_message_params
     {
-      USER: activity_actor.username,
-      TITLE: activity_target.name
+      ACTOR: activity_actor.username,
+      NAME: activity_target.name
     }
   end
 end

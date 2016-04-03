@@ -76,7 +76,7 @@ resource "Feeds", :activity, :async do
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_activity_singular',
-                             USER: actor.username, TITLE: slot.title) }
+                             ACTOR: actor.username, TITLE: slot.title) }
 
       example "Get the feed of social related activities (aggregated)", document: :v1 do
         # Create a relationship
@@ -158,7 +158,7 @@ resource "Feeds", :activity, :async do
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_notify_singular',
-                             USER: actor.username, TITLE: slot.title) }
+                             ACTOR: actor.username, TITLE: slot.title) }
 
       example "Get the feed of the current user notifications", document: :v1 do
         # Perform an activity

@@ -13,15 +13,16 @@ module SlotActivity
     activity_target.try(:owner)
   end
 
+  # The groups which are related to the activity target object
+  private def activity_groups
+    activity_target.containerships
+  end
+
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
     visibility = activity_target.try(:visibility)
     super && (visibility.nil? || (visibility != 'private'))
-  end
-
-  private def activity_push
-    [activity_foreign.id]
   end
 
   # Add extra data to each activity. The data can be hide
@@ -52,7 +53,7 @@ module SlotActivity
   # for the users activity feed
   private def activity_message_params(action = nil)
     {
-      USER: activity_actor.username,
+      ACTOR: activity_actor.username,
       TITLE: activity_target.meta_slot.title,
       FIELD: action || activity_action
     }
