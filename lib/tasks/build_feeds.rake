@@ -70,7 +70,7 @@ namespace :feed do
 
       ## Re-Build Activities ##
 
-      storage.sort_by(&:created_at).each(&:create_activity) #.last(MAX_ACTIVITIES)
+      storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each(&:create_activity)
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."
