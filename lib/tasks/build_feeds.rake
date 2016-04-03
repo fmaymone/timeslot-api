@@ -1,9 +1,14 @@
 require 'sucker_punch/testing/inline'
 
 namespace :feed do
-  desc "Seed redis with activities"
 
-  task :build => :environment do
+  desc "Clear redis from all activities"
+  task clear: :environment do
+    $redis.flushall
+  end
+
+  desc "Seed redis with activities"
+  task build: :environment do
 
     # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
     MAX_ACTIVITIES = 1000
