@@ -8,6 +8,10 @@ class CalendarInScheduleManager
 
   def show(calendar)
     membership = user.active_memberships.find_by group: calendar
+
+    # nothing to do if the slots of this calendar are already shown in schedule
+    return if membership.show_slots_in_schedule?
+
     membership.update(show_slots_in_schedule: true)
 
     calendar.slots.each do |slot|
@@ -20,6 +24,10 @@ class CalendarInScheduleManager
 
   def hide(calendar)
     membership = user.active_memberships.find_by group: calendar
+
+    # nothing to do if the slots of this calendar are not shown in schedule
+    # return unless membership.show_slots_in_schedule?
+
     membership.update(show_slots_in_schedule: false)
     enabled_calendars = user.calendars_in_schedule_ids
 
@@ -31,7 +39,7 @@ class CalendarInScheduleManager
       next if shown_calendars_with_slot.any?
 
       ps = user.passengerships.find_by(slot_id: slot_id)
-      ps.update(show_in_my_schedule: false)
+      ps.update(show_in_my_schedule: false) if ps
     end
   end
 

@@ -182,6 +182,9 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_uuid, "ID of the group to delete", required: true
+    parameter :keep_slots_in_schedule,
+              "Set to true to prevent the removal of the calendar slots" \
+              " from the users schedule. Default: false", required: false
 
     include_context "default group response fields"
 
@@ -510,6 +513,9 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :group_uuid, "ID of the group", required: true
+    parameter :keep_slots_in_schedule,
+              "Set to true to prevent the removal of the calendar slots" \
+              " from the users schedule. Default: false", required: false
 
     let(:member) { current_user }
     let(:group) { create(:group) }
@@ -533,6 +539,35 @@ resource "Groups" do
         membership.reload
         expect(membership.left?).to be true
         expect(group.members).not_to include member
+      end
+
+      context "calendar slots" do
+        let(:group) { create(:calendar, :with_3_slots) }
+        let!(:slot_in_schedule) do
+          create(:passengership, slot: group.slots.first, user: current_user,
+                 show_in_my_schedule: true)
+        end
+        let!(:slot_in_schedule_and_other_calendar) do
+          shown_calendar = create(:calendar)
+          create(:membership, :show_in_schedule, user: current_user,
+                 group: shown_calendar)
+          create(:containership, slot: group.slots.last, group: shown_calendar)
+          create(:passengership, slot: group.slots.last, user: current_user,
+                 show_in_my_schedule: true)
+        end
+
+        example "hides them from schedule", document: false do
+          do_request
+          expect(response_status).to eq 200
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be false
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
       end
     end
 

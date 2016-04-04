@@ -1,7 +1,7 @@
 FactoryGirl.define do
   sequence(:name) { |n| "Testgroup #{n}" }
 
-  factory :group do
+  factory :group, aliases: [:calendar] do
     association :owner, factory: :user, strategy: :build
     name
     uuid { SecureRandom.uuid }
@@ -23,6 +23,12 @@ FactoryGirl.define do
     trait :with_3_members do
       after :create do |group|
         create_list :membership, 3, :active, group: group
+      end
+    end
+
+    trait :with_3_slots do
+      after :create do |group|
+        create_list :containership, 3, group: group
       end
     end
   end
