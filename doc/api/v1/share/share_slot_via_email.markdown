@@ -23,14 +23,14 @@ Description : The email of the recipient
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=0jKjMZbGM7aNg_adSy1YXu-m4pU
+Authorization: Token token=887PWjoQYzbXIsg_jdinaDtRyY0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/share/30/email</pre>
+<pre>POST /v1/share/29/email</pre>
 
 #### Body
 ```javascript
@@ -42,10 +42,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/share/30/email&quot; -d &#39;{&quot;email&quot;:&quot;test@timeslot.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29/email&quot; -d &#39;{&quot;email&quot;:&quot;test@timeslot.com&quot;}&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=0jKjMZbGM7aNg_adSy1YXu-m4pU&quot; \
-	-H &quot;Host: example.org&quot; \
+	-H &quot;Authorization: Token token=887PWjoQYzbXIsg_jdinaDtRyY0&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -57,8 +56,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: c847a5f9-289d-4268-93c2-8681a53503fb
-X-Runtime: 0.039497
+X-Request-Id: c12d96f8-5476-4ea4-9715-783b72b81000
+X-Runtime: 0.018838
 Vary: Origin
 Content-Length: 0</pre>
 

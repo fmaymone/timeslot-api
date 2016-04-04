@@ -2,6 +2,9 @@
 
 ## upcoming
 
+
+## v0.9.2 (4.4.2016)
+
 - remove ReSlot Model
 - add Containership Model, to store relations between slots and slotgroups/lists/calendars
 - add Passengership Model, to store relations between slots and Users (My Schedule / MyCalendar)
@@ -11,6 +14,8 @@
 - Gemfile:
   - add immutable-struct (https://github.com/stitchfix/immutable-struct)
   - remove rack-cors
+
+- and many other things...
 
 
 ## v0.9.1 (unreleased)

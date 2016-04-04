@@ -33,7 +33,7 @@ Description : API Key
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=If1cJcXm-i5BNNgj0BpOizTZ32c
+Authorization: Token token=WFnMrRtAOlZtDYW8Ezco2_HSM1k
 Host: example.org
 Cookie: </pre>
 
@@ -47,10 +47,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/media?query=timeslot+2015&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/media?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=If1cJcXm-i5BNNgj0BpOizTZ32c&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=WFnMrRtAOlZtDYW8Ezco2_HSM1k&quot;</pre>
 
 ### Response
 
@@ -60,10 +59,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3100955ef8a5797da0c40149924f4bc9&quot;
+ETag: W/&quot;918d37df84a516deb6ca8a3b65825b0c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 40ea4088-d5d5-4bd8-bc76-ca666c08f49e
-X-Runtime: 0.010908
+X-Request-Id: a8d1b0ce-71d5-4768-9fb3-7ffdcff3ade2
+X-Runtime: 0.007968
 Vary: Origin
 Content-Length: 172</pre>
 
@@ -81,7 +80,7 @@ Content-Length: 172</pre>
     "position" : 0,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-29T19:39:03.117Z",
+    "createdAt" : "2016-04-04T20:50:26.126Z",
     "duration" : null,
     "thumbnail" : null
   }

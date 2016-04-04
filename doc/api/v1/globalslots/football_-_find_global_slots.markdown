@@ -31,19 +31,18 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/globalslots/search?category=football&amp;q=Dortmund&amp;moment=2015-07-05&amp;limit=5</pre>
+<pre>GET /v1/globalslots/search?category=football&amp;q=Borussia&amp;moment=2016-07-05&amp;limit=5</pre>
 
 #### Query Parameters
 
 <pre>category: football
-q: Dortmund
-moment: 2015-07-05
+q: Borussia
+moment: 2016-07-05
 limit: 5</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/globalslots/search?category=football&amp;q=Dortmund&amp;moment=2015-07-05&amp;limit=5&quot; -X GET \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/search?category=football&amp;q=Borussia&amp;moment=2016-07-05&amp;limit=5&quot; -X GET </pre>
 
 ### Response
 
@@ -53,12 +52,12 @@ limit: 5</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a83cb20693167bc16f973e4186c326d7&quot;
+ETag: W/&quot;aaa1fc34104ce72e5f491a3e6b997186&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d96cf3a4-8aa4-4ecb-a60a-4b6ec1b127e9
-X-Runtime: 0.015722
+X-Request-Id: dfb12a86-42e3-4e2e-87db-11adb67b47e7
+X-Runtime: 0.010366
 Vary: Origin
-Content-Length: 3852</pre>
+Content-Length: 3895</pre>
 
 #### Status
 
@@ -70,13 +69,13 @@ Content-Length: 3852</pre>
 {
   "result" : [
     {
-      "muid" : "3ecc7d80-d953-cc62-2c6e-4f160cf9a9bc",
-      "title" : "Borussia Dortmund vs. FC Ingolstadt",
-      "startDate" : "2016-01-30T15:30:00",
-      "endDate" : "2016-01-30T17:30:00",
+      "muid" : "820304fe-a416-db0d-807e-90cb9ebd9f1b",
+      "title" : "Borussia Dortmund vs. FC Liverpool",
+      "startDate" : "2016-04-07T19:05:00",
+      "endDate" : "2016-04-07T21:05:00",
       "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222608",
-      "description" : "Bundesliga, 2015/2016, 19. Spieltag",
+      "url" : "http://www.dfb.de/europa-league/saisonplan?spieledb_path=%2Fmatches%2F2233236",
+      "description" : "Europa League, 2015/2016, Viertelfinale",
       "sources" : [
         {
           "name" : "DFB",
@@ -94,13 +93,13 @@ Content-Length: 3852</pre>
       }
     },
     {
-      "muid" : "99048c80-0503-fa6c-2a0d-8484be4db8af",
-      "title" : "Hertha BSC vs. Borussia Dortmund",
-      "startDate" : "2016-02-06T15:30:00",
-      "endDate" : "2016-02-06T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/896f2c263b9d3e4d852d551dab27dbe3137f6599b473d962348b90ad6edd",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222665",
-      "description" : "Bundesliga, 2015/2016, 20. Spieltag",
+      "muid" : "9b5fd7df-292b-d8a2-d276-8649e61cbed9",
+      "title" : "FC Ingolstadt vs. Borussia Mönchengladbach",
+      "startDate" : "2016-04-09T13:30:00",
+      "endDate" : "2016-04-09T15:30:00",
+      "image" : "http://assets.dfb.de/public/uploads/6af548a045e8118351752e276109c4948cfa3fc38839e42e19bebd13f4e1",
+      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222806",
+      "description" : "Bundesliga, 2015/2016, 29. Spieltag",
       "sources" : [
         {
           "name" : "DFB",
@@ -109,22 +108,22 @@ Content-Length: 3852</pre>
         }
       ],
       "location" : {
-        "name" : "Olympiastadion, Berlin, Deutschland",
+        "name" : "Audi Sportpark, Ingolstadt, Deutschland",
         "locality" : null,
         "thoroughfare" : null,
         "country" : null,
-        "latitude" : 52.5149993896484,
-        "longitude" : 13.2428102493286
+        "latitude" : 48.745491027832,
+        "longitude" : 11.4837198257446
       }
     },
     {
-      "muid" : "c68031ff-e93c-fae0-6fa0-de3cc4e77a32",
-      "title" : "Borussia Dortmund vs. Hannover 96",
-      "startDate" : "2016-02-13T15:30:00",
-      "endDate" : "2016-02-13T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222640",
-      "description" : "Bundesliga, 2015/2016, 21. Spieltag",
+      "muid" : "cbda1c93-8bbb-c25b-ec59-8d0b4168408a",
+      "title" : "FC Liverpool vs. Borussia Dortmund",
+      "startDate" : "2016-04-14T19:05:00",
+      "endDate" : "2016-04-14T21:05:00",
+      "image" : "http://assets.dfb.de/public/uploads/b41b2594911fb5ad26e7c83e2f4bacadec7a4b21825f08cb5acd6e2dad16",
+      "url" : "http://www.dfb.de/europa-league/saisonplan?spieledb_path=%2Fmatches%2F2233240",
+      "description" : "Europa League, 2015/2016, Viertelfinale",
       "sources" : [
         {
           "name" : "DFB",
@@ -133,22 +132,22 @@ Content-Length: 3852</pre>
         }
       ],
       "location" : {
-        "name" : "Signal Iduna Park, Dortmund, Deutschland",
+        "name" : "Anfield, Liverpool, England",
         "locality" : null,
         "thoroughfare" : null,
         "country" : null,
-        "latitude" : 51.4940605163574,
-        "longitude" : 7.45179986953735
+        "latitude" : 53.4308013916016,
+        "longitude" : -2.96110010147095
       }
     },
     {
-      "muid" : "0b1083b4-6020-56f8-dc28-163ca0a0d683",
-      "title" : "Borussia Dortmund vs. FC Porto",
-      "startDate" : "2016-02-18T19:00:00",
-      "endDate" : "2016-02-18T21:00:00",
-      "image" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
-      "url" : "http://www.dfb.de/europa-league/saisonplan?spieledb_path=%2Fmatches%2F2231918",
-      "description" : "Europa League, 2015/2016, Sechzehntelfinale",
+      "muid" : "d0cff266-82f5-ca41-4325-326db9c31d8b",
+      "title" : "Borussia Mönchengladbach vs. 1899 Hoffenheim",
+      "startDate" : "2016-04-24T13:30:00",
+      "endDate" : "2016-04-24T15:30:00",
+      "image" : "http://assets.dfb.de/public/uploads/960fc3c7c442e24cc34b237dfb62780c3393af69685dd506e97184247fe4",
+      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222823",
+      "description" : "Bundesliga, 2015/2016, 31. Spieltag",
       "sources" : [
         {
           "name" : "DFB",
@@ -157,22 +156,22 @@ Content-Length: 3852</pre>
         }
       ],
       "location" : {
-        "name" : "Signal Iduna Park, Dortmund, Deutschland",
+        "name" : "Borussia-Park, Mönchengladbach, Deutschland",
         "locality" : null,
         "thoroughfare" : null,
         "country" : null,
-        "latitude" : 51.4940605163574,
-        "longitude" : 7.45179986953735
+        "latitude" : 51.1750297546387,
+        "longitude" : 6.38369989395142
       }
     },
     {
-      "muid" : "21b36d10-97c8-3ce9-8c8a-20013896804c",
-      "title" : "Bayer 04 Leverkusen vs. Borussia Dortmund",
-      "startDate" : "2016-02-21T15:30:00",
-      "endDate" : "2016-02-21T17:30:00",
-      "image" : "http://assets.dfb.de/public/uploads/136a93a522d57ff0eea59ea115da15877c6d1d31526e99817ee988d90e8d",
-      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222683",
-      "description" : "Bundesliga, 2015/2016, 22. Spieltag",
+      "muid" : "ba303492-8321-e87e-e81d-4318e628fe5f",
+      "title" : "Borussia Mönchengladbach vs. Bayer 04 Leverkusen",
+      "startDate" : "2016-05-07T13:30:00",
+      "endDate" : "2016-05-07T15:30:00",
+      "image" : "http://assets.dfb.de/public/uploads/960fc3c7c442e24cc34b237dfb62780c3393af69685dd506e97184247fe4",
+      "url" : "http://www.dfb.de/bundesliga/saisonplan?spieledb_path=%2Fmatches%2F2222860",
+      "description" : "Bundesliga, 2015/2016, 33. Spieltag",
       "sources" : [
         {
           "name" : "DFB",
@@ -181,12 +180,12 @@ Content-Length: 3852</pre>
         }
       ],
       "location" : {
-        "name" : "BayArena, Leverkusen, Deutschland",
+        "name" : "Borussia-Park, Mönchengladbach, Deutschland",
         "locality" : null,
         "thoroughfare" : null,
         "country" : null,
-        "latitude" : 51.0388412475586,
-        "longitude" : 7.00342988967896
+        "latitude" : 51.1750297546387,
+        "longitude" : 6.38369989395142
       }
     }
   ]

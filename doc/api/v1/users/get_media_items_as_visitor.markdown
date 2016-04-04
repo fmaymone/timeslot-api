@@ -29,13 +29,12 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/157/media</pre>
+<pre>GET /v1/users/145/media</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/157/media&quot; -X GET \
-	-H &quot;Authorization: &quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/145/media&quot; -X GET \
+	-H &quot;Authorization: &quot;</pre>
 
 ### Response
 
@@ -45,10 +44,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0bc397f6e22724cd73459cc6e6120598&quot;
+ETag: W/&quot;3b2dbbd30b9ab41d5251f22120dd43db&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fabf7062-a2fa-4756-bb45-53a773eb9cc5
-X-Runtime: 0.020622
+X-Request-Id: 6f1bf0db-596e-4525-8811-f4d825e3b693
+X-Runtime: 0.009040
 Vary: Origin
 Content-Length: 937</pre>
 
@@ -61,58 +60,58 @@ Content-Length: 937</pre>
 ```javascript
 [
   {
-    "mediaId" : 77,
-    "publicId" : "dfhjghjkdisudgfds7iy143",
+    "mediaId" : 83,
+    "publicId" : "dfhjghjkdisudgfds7iy129",
     "position" : 0,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-29T19:39:18.396Z"
+    "createdAt" : "2016-04-04T20:50:34.015Z"
   },
   {
-    "mediaId" : 78,
-    "publicId" : "dfhjghjkdisudgfds7iy144",
+    "mediaId" : 84,
+    "publicId" : "dfhjghjkdisudgfds7iy130",
     "position" : 1,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-29T19:39:18.399Z"
+    "createdAt" : "2016-04-04T20:50:34.018Z"
   },
   {
-    "mediaId" : 79,
-    "publicId" : "dfhjghjkdisudgfds7iy145",
+    "mediaId" : 85,
+    "publicId" : "dfhjghjkdisudgfds7iy131",
     "position" : 2,
     "localId" : null,
     "mediaType" : "image",
-    "createdAt" : "2016-01-29T19:39:18.403Z"
+    "createdAt" : "2016-04-04T20:50:34.020Z"
   },
   {
-    "mediaId" : 80,
-    "publicId" : "dfhjghjkdisudgfds7iy146",
+    "mediaId" : 86,
+    "publicId" : "dfhjghjkdisudgfds7iy132",
     "position" : 3,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-29T19:39:18.406Z",
+    "createdAt" : "2016-04-04T20:50:34.022Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 81,
-    "publicId" : "dfhjghjkdisudgfds7iy147",
+    "mediaId" : 87,
+    "publicId" : "dfhjghjkdisudgfds7iy133",
     "position" : 4,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-01-29T19:39:18.409Z",
+    "createdAt" : "2016-04-04T20:50:34.024Z",
     "duration" : null,
     "thumbnail" : null
   },
   {
-    "mediaId" : 82,
-    "publicId" : "dfhjghjkdisudgfds7iy148",
+    "mediaId" : 88,
+    "publicId" : "dfhjghjkdisudgfds7iy134",
     "position" : 5,
     "localId" : null,
     "mediaType" : "audio",
-    "createdAt" : "2016-01-29T19:39:18.412Z",
+    "createdAt" : "2016-04-04T20:50:34.027Z",
     "duration" : null,
-    "title" : "Title 147"
+    "title" : "Title 133"
   }
 ]
 ```

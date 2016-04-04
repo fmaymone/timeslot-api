@@ -60,9 +60,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
-	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
+	-H &quot;Content-Type: application/json&quot;</pre>
 
 ### Response
 
@@ -72,12 +71,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;90e484a7322e0ee72765d3b081d0c0e4&quot;
+ETag: W/&quot;67c2f8115b7ecb3614fe07c5357ca116&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 431693aa-fb84-4bf8-80e6-3f391c6159a4
-X-Runtime: 0.027257
+X-Request-Id: 6e486fb7-4798-4b0d-8252-cf712c4a769e
+X-Runtime: 0.025390
 Vary: Origin
-Content-Length: 745</pre>
+Content-Length: 771</pre>
 
 #### Status
 
@@ -87,15 +86,15 @@ Content-Length: 745</pre>
 
 ```javascript
 {
-  "id" : 4,
+  "id" : 7,
   "username" : "alexandrospar",
-  "createdAt" : "2016-01-29T19:38:53.854Z",
-  "updatedAt" : "2016-01-29T19:38:53.854Z",
+  "createdAt" : "2016-04-04T20:50:20.756Z",
+  "updatedAt" : "2016-04-04T20:50:20.756Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "reslotCount" : 0,
+  "calendarCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
   "email" : null,
@@ -104,18 +103,15 @@ Content-Length: 745</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "slotDefaultDuration" : null,
-  "slotDefaultLocationId" : null,
-  "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0000000000",
-  "defaultOwnFriendslotAlerts" : "0000000000",
-  "defaultOwnPublicAlerts" : "0000000000",
-  "defaultFriendsFriendslotAlerts" : "0000000000",
-  "defaultFriendsPublicAlerts" : "0000000000",
-  "defaultReslotAlerts" : "0000000000",
-  "defaultGroupAlerts" : "0000000000",
+  "myCalendarUuid" : "f13e2887-506a-4d2f-a507-fa9c93deaf24",
+  "friendsCalendarUuid" : "fa495077-1f5a-4d24-afde-99864ff1db00",
+  "allMySlotsUuid" : "1830d64c-f699-4d0c-bfb9-5cda3628d350",
+  "myCreatedSlotsUuid" : "5808aaa7-9901-400d-a7b0-c402c5e47cfa",
+  "myFriendSlotsUuid" : "c81c265f-aa41-40b7-89c4-48d9d0afe8be",
+  "myPublicSlotsUuid" : "f4b5477e-e04a-4540-b544-1805c2943038",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "xYdP_SnGmdJi69u93SA3gyrq-f4"
+  "friendshipState" : "myself",
+  "authToken" : "t18t_79m_BhyqC0qtce_iuCI8lM"
 }
 ```

@@ -20,21 +20,20 @@ Description : The id of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ReOFnl8n-ECbrZy4Fb74u-M0X_4
+Authorization: Token token=ltxgyskFgO7oARJWNkpgf_BrnSQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/share/30</pre>
+<pre>DELETE /v1/share/29</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/share/30&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ReOFnl8n-ECbrZy4Fb74u-M0X_4&quot; \
-	-H &quot;Host: example.org&quot; \
+	-H &quot;Authorization: Token token=ltxgyskFgO7oARJWNkpgf_BrnSQ&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -46,8 +45,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 4300ea1e-f003-46e5-a3b7-f91f9db9a59a
-X-Runtime: 0.006899
+X-Request-Id: 96ca359b-b071-46df-a2da-8a33f00b8012
+X-Runtime: 0.004221
 Vary: Origin
 Content-Length: 0</pre>
 

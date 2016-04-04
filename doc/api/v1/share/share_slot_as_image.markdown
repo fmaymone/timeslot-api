@@ -29,21 +29,20 @@ Description : The full share link including the share ID
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=zqgLoa4wV4ynuADFKXLWmNikNyY
+Authorization: Token token=v02nkwwtQj4AQu5_GyZ5WQr9dM0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/share/30/image</pre>
+<pre>POST /v1/share/29/image</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/share/30/image&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29/image&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zqgLoa4wV4ynuADFKXLWmNikNyY&quot; \
-	-H &quot;Host: example.org&quot; \
+	-H &quot;Authorization: Token token=v02nkwwtQj4AQu5_GyZ5WQr9dM0&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -54,12 +53,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c651fca226a15d5ee44832daf4bfbb36&quot;
+ETag: W/&quot;63b07adc2ec846199e548f4017e20c33&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f03ac8df-f94b-443e-82d6-1d629eaaa733
-X-Runtime: 1.817761
+X-Request-Id: 260cec71-31e4-4044-8d11-3f4b286a0c92
+X-Runtime: 1.735681
 Vary: Origin
-Content-Length: 69</pre>
+Content-Length: 52</pre>
 
 #### Status
 
@@ -69,7 +68,7 @@ Content-Length: 69</pre>
 
 ```javascript
 {
-  "shareId" : "MzozMA",
-  "shareUrl" : "http://localhost:3000/v1/?id=MzozMA"
+  "shareId" : "MzoyOQ==",
+  "shareUrl" : "/v1/?id=MzoyOQ=="
 }
 ```

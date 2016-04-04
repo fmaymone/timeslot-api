@@ -29,22 +29,23 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=A-u5wm6wXS8yDwzjrRCX-Xn-qzg
+Authorization: Token token=xe84TGk65zlvD4_9BM_YvuoOVVE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/slots/19/slotgroups</pre>
+<pre>DELETE /v1/slots/24/slotgroups</pre>
 
 #### Body
 ```javascript
 {
   "slotGroups" : [
-    "fe1d7cd4-9295-4edf-980a-06e312ff7f2d",
-    "4f09fe96-2061-4318-bb87-a4752b4a7c26",
-    "69ce14d3-5e9e-4b70-a3ca-1acab0d49e9a",
-    "f2305481-7125-4893-90b3-45b310fec048"
+    "7994d7f7-82d7-4a0f-9748-df485910043f",
+    "751147e9-b922-43fb-a644-2683158d04d2",
+    "441d698e-92f3-41e5-9547-0ca52b33affa",
+    "51624219-ad2f-42d9-9c1f-f04179b38de0",
+    "87198950-343d-4fed-a460-839de1e594e0"
   ]
 }
 ```
@@ -52,10 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/19/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;fe1d7cd4-9295-4edf-980a-06e312ff7f2d&quot;,&quot;4f09fe96-2061-4318-bb87-a4752b4a7c26&quot;,&quot;69ce14d3-5e9e-4b70-a3ca-1acab0d49e9a&quot;,&quot;f2305481-7125-4893-90b3-45b310fec048&quot;]}&#39; -X DELETE \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/24/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;7994d7f7-82d7-4a0f-9748-df485910043f&quot;,&quot;751147e9-b922-43fb-a644-2683158d04d2&quot;,&quot;441d698e-92f3-41e5-9547-0ca52b33affa&quot;,&quot;51624219-ad2f-42d9-9c1f-f04179b38de0&quot;,&quot;87198950-343d-4fed-a460-839de1e594e0&quot;]}&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=A-u5wm6wXS8yDwzjrRCX-Xn-qzg&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=xe84TGk65zlvD4_9BM_YvuoOVVE&quot;</pre>
 
 ### Response
 
@@ -65,10 +65,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a90c74904ed87b3ca6a3a686992a1a40&quot;
+ETag: W/&quot;ee040e9556da4588dd14089c1004204f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b667e355-427a-4434-9c86-ed1e9ceac41f
-X-Runtime: 0.113489
+X-Request-Id: 5fe31f18-dd39-4a67-b223-106fc8ba3280
+X-Runtime: 0.038841
 Vary: Origin
 Content-Length: 106</pre>
 
@@ -81,8 +81,8 @@ Content-Length: 106</pre>
 ```javascript
 {
   "unauthorizedSlotgroups" : [
-    "69ce14d3-5e9e-4b70-a3ca-1acab0d49e9a",
-    "f2305481-7125-4893-90b3-45b310fec048"
+    "51624219-ad2f-42d9-9c1f-f04179b38de0",
+    "87198950-343d-4fed-a460-839de1e594e0"
   ]
 }
 ```

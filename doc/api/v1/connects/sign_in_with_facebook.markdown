@@ -98,9 +98,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
-	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
+	-H &quot;Content-Type: application/json&quot;</pre>
 
 ### Response
 
@@ -110,12 +109,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e0518dbd47df5cc2884ba632629f33b1&quot;
+ETag: W/&quot;c9aeff745b519e23165a041986c31602&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a4c3e574-e3be-48c3-9cb1-3d1b2d662f8f
-X-Runtime: 0.028940
+X-Request-Id: 12f1ccdd-2df2-4ffe-81d7-e5c6802270ac
+X-Runtime: 0.020667
 Vary: Origin
-Content-Length: 740</pre>
+Content-Length: 766</pre>
 
 #### Status
 
@@ -125,15 +124,15 @@ Content-Length: 740</pre>
 
 ```javascript
 {
-  "id" : 69,
-  "username" : "User 62",
-  "createdAt" : "2016-01-29T19:38:53.094Z",
-  "updatedAt" : "2016-01-29T19:38:53.094Z",
+  "id" : 58,
+  "username" : "User 45",
+  "createdAt" : "2016-04-04T20:50:20.246Z",
+  "updatedAt" : "2016-04-04T20:50:20.246Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "reslotCount" : 0,
+  "calendarCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
   "email" : null,
@@ -142,18 +141,15 @@ Content-Length: 740</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "slotDefaultDuration" : null,
-  "slotDefaultLocationId" : null,
-  "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0000000000",
-  "defaultOwnFriendslotAlerts" : "0000000000",
-  "defaultOwnPublicAlerts" : "0000000000",
-  "defaultFriendsFriendslotAlerts" : "0000000000",
-  "defaultFriendsPublicAlerts" : "0000000000",
-  "defaultReslotAlerts" : "0000000000",
-  "defaultGroupAlerts" : "0000000000",
+  "myCalendarUuid" : "5b46ad4b-50e3-41fe-aefb-dc732d7ea145",
+  "friendsCalendarUuid" : "745a4989-20dc-4603-8d74-945939bdecae",
+  "allMySlotsUuid" : "79620ef2-1fb9-4e39-90f0-77dcc225596a",
+  "myCreatedSlotsUuid" : "72edbd94-8aab-41b9-8806-3e15008076d3",
+  "myFriendSlotsUuid" : "87190786-6c10-4618-a581-73a9f0cc783d",
+  "myPublicSlotsUuid" : "3f3ca694-fa0c-4b3f-b303-81bbd3c5e9f1",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "9A9Vs31ZA82aUvOFX_36pKVpAhA"
+  "friendshipState" : "myself",
+  "authToken" : "WATja2xRLzJ74NSsx5C9LgLXrYI"
 }
 ```

@@ -91,13 +91,13 @@ Description : ID of the group the slot belongs to
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=TSymvnas9GKbC4pMdn7QU--v1HA
+Authorization: Token token=YveYV5DyAp7pPtm6S8DTx7cA8eM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/45/move</pre>
+<pre>POST /v1/slots/35/move</pre>
 
 #### Body
 ```javascript
@@ -110,10 +110,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/45/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/35/move&quot; -d &#39;{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=TSymvnas9GKbC4pMdn7QU--v1HA&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=YveYV5DyAp7pPtm6S8DTx7cA8eM&quot;</pre>
 
 ### Response
 
@@ -123,12 +122,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8933afd70a80253af287d8e02717270d&quot;
+ETag: W/&quot;5a884441b2d50a2878bc7962ad46ce65&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 55ed4b9b-d820-484a-a631-f20fef1823ad
-X-Runtime: 0.055862
+X-Request-Id: 02ff9d9a-5597-4bbb-8ab5-fa05fd43b67c
+X-Runtime: 0.051431
 Vary: Origin
-Content-Length: 496</pre>
+Content-Length: 476</pre>
 
 #### Status
 
@@ -138,19 +137,19 @@ Content-Length: 496</pre>
 
 ```javascript
 {
-  "id" : 46,
-  "title" : "Slot title 129",
-  "startDate" : "2019-09-26T13:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:17.350Z",
-  "updatedAt" : "2016-01-29T19:39:17.350Z",
+  "id" : 36,
+  "title" : "Slot title 99",
+  "startDate" : "2019-09-22T06:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:33.311Z",
+  "updatedAt" : "2016-04-04T20:50:33.311Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-26T13:44:02.000Z",
+  "endDate" : "2019-10-22T06:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 129,
-    "username" : "User 465",
-    "createdAt" : "2016-01-29T19:39:17.329Z",
-    "updatedAt" : "2016-01-29T19:39:17.329Z",
+    "id" : 117,
+    "username" : "User 419",
+    "createdAt" : "2016-04-04T20:50:33.290Z",
+    "updatedAt" : "2016-04-04T20:50:33.290Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -160,7 +159,6 @@ Content-Length: 496</pre>
     "alerts" : "omitted"
   },
   "visibility" : "friends",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0
 }

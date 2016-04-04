@@ -153,13 +153,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=uRniRCE3z2XE5vKuq8jHQfSz6Pg
+Authorization: Token token=jP7ykTpnAA7SMxXjLZHC4n1UURg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/6</pre>
+<pre>PATCH /v1/stdslot/17</pre>
 
 #### Body
 ```javascript
@@ -183,10 +183,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/6&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/17&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=uRniRCE3z2XE5vKuq8jHQfSz6Pg&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=jP7ykTpnAA7SMxXjLZHC4n1UURg&quot;</pre>
 
 ### Response
 
@@ -196,12 +195,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;feb4003da78e3550854bed3c9ed19337&quot;
+ETag: W/&quot;986cefd5d2b359104affa73fe1826449&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ec0497d2-3226-4815-9cdf-d4b8f97245da
-X-Runtime: 0.089233
+X-Request-Id: fe28308f-4491-4d04-87ca-f12e3de562d4
+X-Runtime: 0.024246
 Vary: Origin
-Content-Length: 851</pre>
+Content-Length: 847</pre>
 
 #### Status
 
@@ -211,15 +210,15 @@ Content-Length: 851</pre>
 
 ```javascript
 {
-  "id" : 6,
-  "title" : "Slot title 88",
-  "startDate" : "2019-09-12T20:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:12.062Z",
-  "updatedAt" : "2016-01-29T19:39:12.062Z",
+  "id" : 17,
+  "title" : "Slot title 82",
+  "startDate" : "2019-09-05T13:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:32.066Z",
+  "updatedAt" : "2016-04-04T20:50:32.066Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T20:44:02.000Z",
+  "endDate" : "2019-10-05T13:44:02.000Z",
   "location" : {
-    "id" : 1,
+    "id" : "5b34b799-3f2d-49eb-88fb-3c7dc4dc203d",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : "1",
@@ -234,14 +233,13 @@ Content-Length: 851</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259,
-    "privateLocation" : true
+    "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 15,
-    "username" : "User 345",
-    "createdAt" : "2016-01-29T19:39:12.019Z",
-    "updatedAt" : "2016-01-29T19:39:12.019Z",
+    "id" : 41,
+    "username" : "User 343",
+    "createdAt" : "2016-04-04T20:50:32.050Z",
+    "updatedAt" : "2016-04-04T20:50:32.050Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -251,7 +249,6 @@ Content-Length: 851</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0
 }

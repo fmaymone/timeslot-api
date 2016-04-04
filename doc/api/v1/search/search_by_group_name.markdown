@@ -39,7 +39,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=iMtHtb-bC18O8OcUsk5SHzHCeyI
+Authorization: Token token=j72HNIK4mkv5l2gvbR6tgbcfJ_E
 Host: example.org
 Cookie: </pre>
 
@@ -53,10 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/group?query=timeslot+developer&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/group?query=timeslot+developer&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=iMtHtb-bC18O8OcUsk5SHzHCeyI&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=j72HNIK4mkv5l2gvbR6tgbcfJ_E&quot;</pre>
 
 ### Response
 
@@ -66,12 +65,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5d1764a192566058ddd576e0b6b2e260&quot;
+ETag: W/&quot;51465abce3d04b14d553020b826b77df&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 10ca106d-939c-4c9a-851a-a3cecebacabb
-X-Runtime: 0.011887
+X-Request-Id: 3ece5251-0004-4244-a980-f4964fd5fe10
+X-Runtime: 0.009161
 Vary: Origin
-Content-Length: 343</pre>
+Content-Length: 358</pre>
 
 #### Status
 
@@ -82,19 +81,20 @@ Content-Length: 343</pre>
 ```javascript
 [
   {
-    "id" : "9b0d9f06-5319-4873-8dbf-7f25e2c64898",
+    "id" : "d90bde27-2484-4a76-916f-ae4fd3643bfd",
     "name" : "Timeslot Developer Group (Berlin)",
     "image" : "",
+    "public" : false,
     "owner" : {
-      "id" : 174,
-      "username" : "User 237",
-      "createdAt" : "2016-01-29T19:39:03.146Z",
-      "updatedAt" : "2016-01-29T19:39:03.146Z",
+      "id" : 118,
+      "username" : "User 265",
+      "createdAt" : "2016-04-04T20:50:26.147Z",
+      "updatedAt" : "2016-04-04T20:50:26.147Z",
       "deletedAt" : null,
       "image" : ""
     },
-    "createdAt" : "2016-01-29T19:39:03.148Z",
-    "updatedAt" : "2016-01-29T19:39:03.148Z",
+    "createdAt" : "2016-04-04T20:50:26.149Z",
+    "updatedAt" : "2016-04-04T20:50:26.149Z",
     "deletedAt" : null
   }
 ]

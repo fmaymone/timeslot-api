@@ -10,7 +10,7 @@ Returns a list of all valid values for the &#39;category&#39; parameter for sear
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=1CwtWjKpoALrxfb01_Lzm6kU-J8
+Authorization: Token token=dNVg7hXcFbMP0OSIBnwCuL_nLUI
 Host: example.org
 Cookie: </pre>
 
@@ -22,7 +22,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/categories&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=1CwtWjKpoALrxfb01_Lzm6kU-J8&quot;</pre>
+	-H &quot;Authorization: Token token=dNVg7hXcFbMP0OSIBnwCuL_nLUI&quot;</pre>
 
 ### Response
 
@@ -32,12 +32,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9e15bd52c71f83957a19b3f741918367&quot;
+ETag: W/&quot;6f842869d69634c3e63398e8b7247495&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f9a7e98a-14f3-462d-9ada-d665abdabe2f
-X-Runtime: 0.020104
+X-Request-Id: c80beed4-70c3-4609-978d-fd85779762e6
+X-Runtime: 0.020054
 Vary: Origin
-Content-Length: 47</pre>
+Content-Length: 91</pre>
 
 #### Status
 
@@ -48,9 +48,13 @@ Content-Length: 47</pre>
 ```javascript
 {
   "categories" : [
+    "television",
+    "cinema",
     "football",
-    "concerts",
-    "cinema"
+    "calendars",
+    "clubbing",
+    "slots",
+    "concerts"
   ]
 }
 ```

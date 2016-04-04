@@ -4,7 +4,9 @@
 
 ### POST /v1/slots/:id/user_tags
 
-Creates ReSlots of the given slot for the users given as User IDs in the POST parameters. Returns a list of all user IDs tagged to this slot.
+Tagged Users are allowed to add media to the slot.
+
+For now the slot is put into the MySchedule for the users given until we gave them a choice if or where to save it.Returns a list of all user IDs tagged to this slot.
 
 returns 404 if ID is invalid.
 
@@ -26,21 +28,21 @@ Description : Array of users ids which should be tagged for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Dtz8QvORvGVT-KiGSBVpVVa063g
+Authorization: Token token=jYJSjGZoWbrJ009FO3zrQyP6EAA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/35/user_tags</pre>
+<pre>POST /v1/slots/31/user_tags</pre>
 
 #### Body
 ```javascript
 {
   "user_tags" : [
-    109,
-    110,
-    111
+    100,
+    101,
+    102
   ]
 }
 ```
@@ -48,11 +50,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/35/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[109,110,111]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/31/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[100,101,102]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Dtz8QvORvGVT-KiGSBVpVVa063g&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=jYJSjGZoWbrJ009FO3zrQyP6EAA&quot;</pre>
 
 ### Response
 
@@ -63,8 +64,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 9126e5e6-3ca9-461c-a247-5f5a964abb33
-X-Runtime: 0.145941
+X-Request-Id: a6c1bcc5-c3fb-44c4-b58e-1e895327cfb1
+X-Runtime: 0.046516
 Vary: Origin
 Content-Length: 0</pre>
 

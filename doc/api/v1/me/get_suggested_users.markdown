@@ -15,7 +15,7 @@ Description : contains potentially interesting users
 
 #### Headers
 
-<pre>Authorization: Token token=k_E8FB9cG2p4JUw2UOsUeCzIKYA
+<pre>Authorization: Token token=e--cVsNkO6i2ml3S9o1k5J2cxoI
 Host: example.org
 Cookie: </pre>
 
@@ -26,7 +26,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/suggested_users&quot; -X GET \
-	-H &quot;Authorization: Token token=k_E8FB9cG2p4JUw2UOsUeCzIKYA&quot;</pre>
+	-H &quot;Authorization: Token token=e--cVsNkO6i2ml3S9o1k5J2cxoI&quot;</pre>
 
 ### Response
 
@@ -36,10 +36,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;cabab387201b2b049e079d1ce9fed64f&quot;
+ETag: W/&quot;8838285aa3eb660f29f39cee214f41ce&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 173212a3-c442-47ad-80f2-0aabf160f51b
-X-Runtime: 0.015693
+X-Request-Id: 6c299cc7-c5f3-4f27-b790-981ee6d3f5d1
+X-Runtime: 0.015262
 Vary: Origin
 Content-Length: 502</pre>
 
@@ -53,27 +53,27 @@ Content-Length: 502</pre>
 [
   {
     "id" : 42,
-    "username" : "User 186",
-    "createdAt" : "2016-03-03T13:47:57.867Z",
-    "updatedAt" : "2016-03-03T13:47:57.867Z",
+    "username" : "User 204",
+    "createdAt" : "2016-04-04T20:50:24.237Z",
+    "updatedAt" : "2016-04-04T20:50:24.237Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
     "id" : 46,
-    "username" : "User 190",
-    "createdAt" : "2016-03-03T13:47:57.905Z",
-    "updatedAt" : "2016-03-03T13:47:57.905Z",
+    "username" : "User 208",
+    "createdAt" : "2016-04-04T20:50:24.290Z",
+    "updatedAt" : "2016-04-04T20:50:24.290Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
     "id" : 48,
-    "username" : "User 192",
-    "createdAt" : "2016-03-03T13:47:57.914Z",
-    "updatedAt" : "2016-03-03T13:47:57.914Z",
+    "username" : "User 210",
+    "createdAt" : "2016-04-04T20:50:24.302Z",
+    "updatedAt" : "2016-04-04T20:50:24.302Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

@@ -24,20 +24,19 @@ Description : containing a list of users
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Qs96SakBoCxZuuu5OKNxExc-93c
+Authorization: Token token=7Dmq6MxkFlae2iVwOt9e4rZrgY8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/39/user_tags</pre>
+<pre>GET /v1/slots/32/user_tags</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/39/user_tags&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/32/user_tags&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Qs96SakBoCxZuuu5OKNxExc-93c&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=7Dmq6MxkFlae2iVwOt9e4rZrgY8&quot;</pre>
 
 ### Response
 
@@ -47,10 +46,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d13ceda5b3f1e3998319e179f6c8b7a1&quot;
+ETag: W/&quot;577a0b9f37e620ac903d50889e493932&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 19fd5aa0-b37a-41bc-9bad-9cd4d9670f7c
-X-Runtime: 0.025274
+X-Request-Id: 08baefe8-a043-45cf-93ef-834480dfcad3
+X-Runtime: 0.014991
 Vary: Origin
 Content-Length: 505</pre>
 
@@ -63,28 +62,28 @@ Content-Length: 505</pre>
 ```javascript
 [
   {
-    "id" : 114,
-    "username" : "User 450",
-    "createdAt" : "2016-01-29T19:39:17.008Z",
-    "updatedAt" : "2016-01-29T19:39:17.008Z",
+    "id" : 105,
+    "username" : "User 407",
+    "createdAt" : "2016-04-04T20:50:33.144Z",
+    "updatedAt" : "2016-04-04T20:50:33.144Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 117,
-    "username" : "User 453",
-    "createdAt" : "2016-01-29T19:39:17.065Z",
-    "updatedAt" : "2016-01-29T19:39:17.065Z",
+    "id" : 106,
+    "username" : "User 408",
+    "createdAt" : "2016-04-04T20:50:33.149Z",
+    "updatedAt" : "2016-04-04T20:50:33.149Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 119,
-    "username" : "User 455",
-    "createdAt" : "2016-01-29T19:39:17.112Z",
-    "updatedAt" : "2016-01-29T19:39:17.112Z",
+    "id" : 107,
+    "username" : "User 409",
+    "createdAt" : "2016-04-04T20:50:33.153Z",
+    "updatedAt" : "2016-04-04T20:50:33.153Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

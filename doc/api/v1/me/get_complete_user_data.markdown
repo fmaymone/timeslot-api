@@ -30,10 +30,10 @@ Name : location
 Description : Home location of user
 
 Name : slotCount
-Description : Number of slots for this user
+Description : Number of visible slots for this user
 
-Name : reslotCount
-Description : Number of reslots for this user
+Name : calendarCount
+Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
@@ -115,7 +115,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=xUtXJ3CayPltvInOJXpytCr4jzI
+Authorization: Token token=0y_TLoL8jNI4dS_46ZDasnaC3JA
 Host: example.org
 Cookie: </pre>
 
@@ -127,7 +127,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=xUtXJ3CayPltvInOJXpytCr4jzI&quot;</pre>
+	-H &quot;Authorization: Token token=0y_TLoL8jNI4dS_46ZDasnaC3JA&quot;</pre>
 
 ### Response
 
@@ -137,12 +137,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3b22861a03b78d9829d45067a18a6723&quot;
+ETag: W/&quot;40e64ec73e0b4df2af2461d7248e7b3b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9377a49e-eadc-43c2-8fd4-511250549a7d
-X-Runtime: 0.037512
+X-Request-Id: ef3466d3-13b2-4748-9407-e06e98ad8532
+X-Runtime: 0.036877
 Vary: Origin
-Content-Length: 1386</pre>
+Content-Length: 1404</pre>
 
 #### Status
 
@@ -153,13 +153,13 @@ Content-Length: 1386</pre>
 ```javascript
 {
   "id" : 2,
-  "username" : "User 145",
-  "createdAt" : "2016-03-03T13:47:57.248Z",
-  "updatedAt" : "2016-03-03T13:47:57.340Z",
+  "username" : "User 163",
+  "createdAt" : "2016-04-04T20:50:23.608Z",
+  "updatedAt" : "2016-04-04T20:50:23.697Z",
   "deletedAt" : null,
   "image" : "www.looking.good",
   "location" : {
-    "id" : "616f65bd-a43b-4adc-975a-e2134847df31",
+    "id" : "722e3bda-61f4-4e64-880f-171b4c14d2e5",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -177,20 +177,21 @@ Content-Length: 1386</pre>
     "longitude" : -11.993
   },
   "slotCount" : 2,
+  "calendarCount" : 0,
   "friendsCount" : 3,
   "lang" : null,
-  "email" : "user30@email.com",
+  "email" : "user32@email.com",
   "emailVerified" : false,
   "phone" : "12431",
   "phoneVerified" : false,
   "publicUrl" : "www.foo.bar",
   "push" : true,
-  "myCalendarUuid" : "e7af96af-d149-47fe-b9d3-b005e5a4092f",
-  "friendsCalendarUuid" : "128e6e06-eedb-436e-8541-c6def82c93c8",
-  "allMySlotsUuid" : "e13ea14e-7284-4ee7-b0f5-ff8aa7d04684",
-  "myCreatedSlotsUuid" : "c9434a76-0ef7-42e6-91b8-a8907ee1e584",
-  "myFriendSlotsUuid" : "c668da8d-ea5d-4007-8acc-c0d0d2ef8537",
-  "myPublicSlotsUuid" : "c86c9db1-d7c2-42fa-a3e5-da2272807aea",
+  "myCalendarUuid" : "e610eb8e-09a6-4278-b592-7e32e12ca98f",
+  "friendsCalendarUuid" : "69b100bf-1f49-4712-8eea-71c54c1d8cae",
+  "allMySlotsUuid" : "7bbf821e-2cc5-45a4-a0a4-60875105ab4a",
+  "myCreatedSlotsUuid" : "92514a48-1edb-4519-b479-880643a8dc6a",
+  "myFriendSlotsUuid" : "ca814e4c-f2d2-4135-8227-db8fc888a4cb",
+  "myPublicSlotsUuid" : "fc5ac279-7c18-4ae7-9a55-5e967f6a6540",
   "friendships" : [
     {
       "friend_id" : 5,

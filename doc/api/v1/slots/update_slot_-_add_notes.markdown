@@ -115,13 +115,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=1Mw1vfl22hw3kQYlSlCk7u1xYg8
+Authorization: Token token=pV28956m-KuZ6VubC9YD6pDUsHY
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/3</pre>
+<pre>PATCH /v1/stdslot/14</pre>
 
 #### Body
 ```javascript
@@ -143,10 +143,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/3&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/14&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 2&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 3&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=1Mw1vfl22hw3kQYlSlCk7u1xYg8&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=pV28956m-KuZ6VubC9YD6pDUsHY&quot;</pre>
 
 ### Response
 
@@ -156,12 +155,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8b1c159f5076a4e68205c883c958ff38&quot;
+ETag: W/&quot;4457312f271bfee4cab87d4237d64d59&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3879d021-def3-4e95-9311-13837915d835
-X-Runtime: 0.099053
+X-Request-Id: e89028df-d670-4030-9c0c-5199c407a781
+X-Runtime: 0.042752
 Vary: Origin
-Content-Length: 765</pre>
+Content-Length: 750</pre>
 
 #### Status
 
@@ -171,36 +170,36 @@ Content-Length: 765</pre>
 
 ```javascript
 {
-  "id" : 3,
-  "title" : "Slot title 85",
-  "startDate" : "2019-09-09T17:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:11.226Z",
-  "updatedAt" : "2016-01-29T19:39:11.226Z",
+  "id" : 14,
+  "title" : "Slot title 79",
+  "startDate" : "2019-09-02T10:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:31.830Z",
+  "updatedAt" : "2016-04-04T20:50:31.830Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-09T17:44:02.000Z",
+  "endDate" : "2019-10-02T10:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 6,
-    "username" : "User 336",
-    "createdAt" : "2016-01-29T19:39:11.184Z",
-    "updatedAt" : "2016-01-29T19:39:11.184Z",
+    "id" : 32,
+    "username" : "User 334",
+    "createdAt" : "2016-04-04T20:50:31.814Z",
+    "updatedAt" : "2016-04-04T20:50:31.814Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [
     {
-      "id" : 2,
+      "id" : 12,
       "title" : "Title for Note 3",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : null,
-      "createdAt" : "2016-01-29T19:39:11.306Z"
+      "createdAt" : "2016-04-04T20:50:31.869Z"
     },
     {
-      "id" : 1,
+      "id" : 11,
       "title" : "Title for Note 2",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : "123321",
-      "createdAt" : "2016-01-29T19:39:11.289Z"
+      "createdAt" : "2016-04-04T20:50:31.864Z"
     }
   ],
   "media" : [],
@@ -208,7 +207,6 @@ Content-Length: 765</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0
 }

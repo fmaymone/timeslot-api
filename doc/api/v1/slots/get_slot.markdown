@@ -83,20 +83,19 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=wjh2GdAKOwfP9wOXUitFjVqO46w
+Authorization: Token token=_WQ034nXltuEwoIs6dJRbLLOeJs
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/3</pre>
+<pre>GET /v1/slots/2</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/3&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/2&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=wjh2GdAKOwfP9wOXUitFjVqO46w&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=_WQ034nXltuEwoIs6dJRbLLOeJs&quot;</pre>
 
 ### Response
 
@@ -106,12 +105,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;982de06cdce5bfd937e1f67fb969b6fb&quot;
+ETag: W/&quot;b6d62eaba0850184971cd69eebd94666&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 32b82764-226c-4070-b2fb-114067cc62f2
-X-Runtime: 0.017557
+X-Request-Id: d32b25c4-5135-4591-b3d0-0c64152ab596
+X-Runtime: 0.024043
 Vary: Origin
-Content-Length: 1413</pre>
+Content-Length: 1734</pre>
 
 #### Status
 
@@ -121,19 +120,36 @@ Content-Length: 1413</pre>
 
 ```javascript
 {
-  "id" : 3,
-  "title" : "Slot title 73",
-  "startDate" : "2019-09-23T04:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:08.872Z",
-  "updatedAt" : "2016-01-29T19:39:08.872Z",
+  "id" : 2,
+  "title" : "Slot title 71",
+  "startDate" : "2019-09-21T02:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:31.157Z",
+  "updatedAt" : "2016-04-04T20:50:31.157Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-23T04:44:02.000Z",
-  "location" : null,
+  "endDate" : "2019-10-21T02:44:02.000Z",
+  "location" : {
+    "id" : "4065f530-5f35-44bf-8d93-64e2855ebadf",
+    "name" : "Acapulco",
+    "thoroughfare" : null,
+    "subThoroughfare" : null,
+    "locality" : null,
+    "subLocality" : null,
+    "administrativeArea" : null,
+    "subAdministrativeArea" : null,
+    "postalCode" : null,
+    "country" : null,
+    "isoCountryCode" : null,
+    "inLandWater" : null,
+    "ocean" : null,
+    "areasOfInterest" : null,
+    "latitude" : 51.234,
+    "longitude" : -11.993
+  },
   "creator" : {
     "id" : 5,
-    "username" : "User 279",
-    "createdAt" : "2016-01-29T19:39:08.859Z",
-    "updatedAt" : "2016-01-29T19:39:08.859Z",
+    "username" : "User 300",
+    "createdAt" : "2016-04-04T20:50:31.134Z",
+    "updatedAt" : "2016-04-04T20:50:31.134Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -141,64 +157,63 @@ Content-Length: 1413</pre>
   "media" : [
     {
       "mediaId" : 6,
-      "publicId" : "dfhjghjkdisudgfds7iy53",
+      "publicId" : "dfhjghjkdisudgfds7iy46",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2016-01-29T19:39:08.896Z",
+      "createdAt" : "2016-04-04T20:50:31.186Z",
       "duration" : null,
-      "title" : "Title 52"
+      "title" : "Title 45"
     },
     {
       "mediaId" : 5,
-      "publicId" : "dfhjghjkdisudgfds7iy52",
+      "publicId" : "dfhjghjkdisudgfds7iy45",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-01-29T19:39:08.892Z",
+      "createdAt" : "2016-04-04T20:50:31.183Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 4,
-      "publicId" : "dfhjghjkdisudgfds7iy51",
+      "publicId" : "dfhjghjkdisudgfds7iy44",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-01-29T19:39:08.888Z",
+      "createdAt" : "2016-04-04T20:50:31.178Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 3,
-      "publicId" : "dfhjghjkdisudgfds7iy50",
+      "publicId" : "dfhjghjkdisudgfds7iy43",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-01-29T19:39:08.885Z"
+      "createdAt" : "2016-04-04T20:50:31.171Z"
     },
     {
       "mediaId" : 2,
-      "publicId" : "dfhjghjkdisudgfds7iy49",
+      "publicId" : "dfhjghjkdisudgfds7iy42",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-01-29T19:39:08.881Z"
+      "createdAt" : "2016-04-04T20:50:31.167Z"
     },
     {
       "mediaId" : 1,
-      "publicId" : "dfhjghjkdisudgfds7iy48",
+      "publicId" : "dfhjghjkdisudgfds7iy41",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-01-29T19:39:08.876Z"
+      "createdAt" : "2016-04-04T20:50:31.162Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "public",
-  "reslotsCounter" : 0,
   "likes" : 3,
   "commentsCounter" : 0
 }

@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=08XEFUQJnd6qYvdZFBAeAR1Nzes
+Authorization: Token token=XcmqOvnEzi1x3kxlAW9tyYr3XrI
 Host: example.org
 Cookie: </pre>
 
@@ -62,10 +62,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=08XEFUQJnd6qYvdZFBAeAR1Nzes&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=XcmqOvnEzi1x3kxlAW9tyYr3XrI&quot;</pre>
 
 ### Response
 
@@ -75,12 +74,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;bb83b30181861c6ab9832b07fb8d81bc&quot;
+ETag: W/&quot;8dfb872a1d521e4316bc23272e733bcd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 863a8c0d-62f6-4f3c-bd97-ec0331357c3d
-X-Runtime: 0.019469
+X-Request-Id: 50c5ca60-b613-4902-8897-dc3988ef0419
+X-Runtime: 0.013701
 Vary: Origin
-Content-Length: 509</pre>
+Content-Length: 490</pre>
 
 #### Status
 
@@ -91,19 +90,19 @@ Content-Length: 509</pre>
 ```javascript
 [
   {
-    "id" : 28,
+    "id" : 27,
     "title" : "Timeslot Party Berlin 2015",
     "startDate" : "2019-09-05T10:44:02.000Z",
-    "createdAt" : "2016-01-29T19:39:03.070Z",
-    "updatedAt" : "2016-01-29T19:39:03.070Z",
+    "createdAt" : "2016-04-04T20:50:26.085Z",
+    "updatedAt" : "2016-04-04T20:50:26.085Z",
     "deletedAt" : null,
     "endDate" : "2019-10-05T10:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 168,
-      "username" : "User 231",
-      "createdAt" : "2016-01-29T19:39:03.056Z",
-      "updatedAt" : "2016-01-29T19:39:03.056Z",
+      "id" : 112,
+      "username" : "User 259",
+      "createdAt" : "2016-04-04T20:50:26.068Z",
+      "updatedAt" : "2016-04-04T20:50:26.068Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -113,7 +112,6 @@ Content-Length: 509</pre>
       "alerts" : "omitted"
     },
     "visibility" : "public",
-    "reslotsCounter" : 0,
     "likes" : 0,
     "commentsCounter" : 0
   }

@@ -148,13 +148,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=g19Opiqi7cco0du45tF4qRxc598
+Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/4</pre>
+<pre>PATCH /v1/stdslot/15</pre>
 
 #### Body
 ```javascript
@@ -173,10 +173,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/4&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/15&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=g19Opiqi7cco0du45tF4qRxc598&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk&quot;</pre>
 
 ### Response
 
@@ -186,12 +185,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3f6b7b53e94ef9079baceea98426e2d7&quot;
+ETag: W/&quot;46353acd3e1793dcd0870497942ba285&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 75197a12-1717-4b8f-8ff7-161d4145dbb5
-X-Runtime: 0.173568
+X-Request-Id: 6e6525f6-2d84-42a3-8b66-fc7812d456d5
+X-Runtime: 0.023683
 Vary: Origin
-Content-Length: 681</pre>
+Content-Length: 664</pre>
 
 #### Status
 
@@ -201,38 +200,37 @@ Content-Length: 681</pre>
 
 ```javascript
 {
-  "id" : 4,
-  "title" : "Slot title 86",
-  "startDate" : "2019-09-10T18:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:11.432Z",
-  "updatedAt" : "2016-01-29T19:39:11.432Z",
+  "id" : 15,
+  "title" : "Slot title 80",
+  "startDate" : "2019-09-03T11:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:31.896Z",
+  "updatedAt" : "2016-04-04T20:50:31.896Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-10T18:44:02.000Z",
+  "endDate" : "2019-10-03T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 8,
-    "username" : "User 338",
-    "createdAt" : "2016-01-29T19:39:11.383Z",
-    "updatedAt" : "2016-01-29T19:39:11.383Z",
+    "id" : 34,
+    "username" : "User 336",
+    "createdAt" : "2016-04-04T20:50:31.886Z",
+    "updatedAt" : "2016-04-04T20:50:31.886Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 1,
+      "mediaId" : 7,
       "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2016-01-29T19:39:11.571Z"
+      "createdAt" : "2016-04-04T20:50:31.912Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0
 }
