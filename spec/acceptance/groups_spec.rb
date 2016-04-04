@@ -27,7 +27,7 @@ resource "Groups" do
 
     include_context "default group response fields"
 
-    let(:group) { create(:group) }
+    let(:group) { create(:group, :with_3_members, :with_3_slots) }
     let(:group_uuid) { group.uuid }
     let!(:membership) do
       create(:membership, :active, user: current_user, group: group)
@@ -42,13 +42,27 @@ resource "Groups" do
       group.reload
       expect(json).to have_key 'id'
       expect(json['id']).to eq group.uuid
-      expect(
-        json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except(
-               'owner_id', 'id', 'uuid', 'string_id')
-               .transform_keys { |key| key.camelize(:lower) })
+      expect(json).to have_key 'name'
+      expect(json['name']).to eq group.name
+      expect(json).to have_key 'image'
+      expect(json['image']).to eq group.image
+      expect(json).to have_key "public"
+      expect(json['public']).to eq group.public
+      expect(json).to have_key "membersCanPost"
+      expect(json['membersCanPost']).to eq group.members_can_post
+      expect(json).to have_key "membersCanInvite"
+      expect(json['membersCanInvite']).to eq group.members_can_invite
       expect(json).to have_key "owner"
       expect(json['owner']['id']).to eq group.owner.id
+      expect(json).to have_key "memberIds"
+      expect(json['memberIds']).to eq group.member_ids
+      expect(json).to have_key "memberCount"
+      expect(json['memberCount']).to eq group.members.count
+      expect(json).to have_key "slotCount"
+      expect(json['slotCount']).to eq group.slots.count
+      expect(json).to have_key "createdAt"
+      expect(json).to have_key "updatedAt"
+      expect(json).to have_key "deletedAt"
     end
   end
 
@@ -143,13 +157,12 @@ resource "Groups" do
         expect(response_status).to eq(200)
         expect(json).to have_key 'id'
         expect(json['id']).to eq group.uuid
-        expect(
-          json.except('membershipState', 'owner', 'id')
-        ).to eq(group.attributes.as_json.except(
-                 'owner_id', 'id', 'uuid', 'string_id')
-                 .transform_keys { |key| key.camelize(:lower) })
-        expect(json).to have_key "owner"
-        expect(json['owner']['id']).to eq group.owner.id
+        expect(json).to have_key 'name'
+        expect(json['name']).to eq name
+        expect(json).to have_key "membersCanPost"
+        expect(json['membersCanPost']).to eq membersCanPost
+        expect(json).to have_key "membersCanInvite"
+        expect(json['membersCanInvite']).to eq membersCanInvite
       end
     end
 
@@ -208,13 +221,6 @@ resource "Groups" do
       expect(response_status).to eq(200)
       expect(json).to have_key 'id'
       expect(json['id']).to eq group.uuid
-      expect(
-        json.except('membershipState', 'owner', 'id')
-      ).to eq(group.attributes.as_json.except(
-               'owner_id', 'uuid', 'id', 'string_id')
-               .transform_keys { |key| key.camelize(:lower) })
-      expect(json).to have_key "owner"
-      expect(json['owner']['id']).to eq group.owner.id
     end
 
     describe "current user not group owner" do

@@ -185,7 +185,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "hides the calendar slots from schedule if explicitly stated" do
         delete "/v1/groups/#{group.uuid}",
-               { keep_slots_in_schedule: false }, auth_header
+               { keepSlotsInSchedule: '0' }, auth_header
 
         slot_in_schedule.reload
         expect(slot_in_schedule.show_in_my_schedule).to be false
@@ -198,7 +198,7 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "keeps the calendar slots in schedule if explicitly stated" do
         delete "/v1/groups/#{group.uuid}",
-               { keep_slots_in_schedule: true }, auth_header
+               { keepSlotsInSchedule: '1' }, auth_header
 
         slot_in_schedule.reload
         expect(slot_in_schedule.show_in_my_schedule).to be true
@@ -548,7 +548,7 @@ RSpec.describe "V1::Groups", type: :request do
 
         it "hides the calendar slots from schedule if explicitly stated" do
           delete "/v1/groups/#{group.uuid}/members",
-                 { keep_slots_in_schedule: false }, auth_header
+                 { keepSlotsInSchedule: '0' }, auth_header
 
           slot_in_schedule.reload
           expect(slot_in_schedule.show_in_my_schedule).to be false
@@ -561,7 +561,7 @@ RSpec.describe "V1::Groups", type: :request do
 
         it "keeps the calendar slots in schedule if explicitly stated" do
           delete "/v1/groups/#{group.uuid}/members",
-                 { keep_slots_in_schedule: true }, auth_header
+                 { keepSlotsInSchedule: '1' }, auth_header
 
           slot_in_schedule.reload
           expect(slot_in_schedule.show_in_my_schedule).to be true

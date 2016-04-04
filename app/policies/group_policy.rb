@@ -132,7 +132,7 @@ class GroupPolicy < ApplicationPolicy
 
   private def active_group_member?
     return false unless current_user?
-    return true if current_user == group.owner
+    return true if current_user.id == group.owner_id
     return true if current_user.active_member? group.id
     false
   end
