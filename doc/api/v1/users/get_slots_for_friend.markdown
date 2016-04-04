@@ -71,19 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0
+<pre>Authorization: Token token=xqRuFaGxSBbGFYvlPZ1kk19noC8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/161/slots</pre>
+<pre>GET /v1/users/156/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/161/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=wMmhicSMFtNol8c9X0hFHEZIrh0&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/156/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=xqRuFaGxSBbGFYvlPZ1kk19noC8&quot;</pre>
 
 ### Response
 
@@ -93,12 +92,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;00691717f6745dee463a4d2f3595d660&quot;
+ETag: W/&quot;71d4009adf81aa9818b1de9c21e144ab&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1f7262f9-bf6d-4c94-98ec-1d5176bc250a
-X-Runtime: 0.042688
+X-Request-Id: 35581a1b-4cc7-4089-9af1-15223e830364
+X-Runtime: 0.024090
 Vary: Origin
-Content-Length: 2577</pre>
+Content-Length: 1431</pre>
 
 #### Status
 
@@ -109,19 +108,19 @@ Content-Length: 2577</pre>
 ```javascript
 [
   {
-    "id" : 70,
-    "title" : "Slot title 133",
-    "startDate" : "2019-09-03T17:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.670Z",
-    "updatedAt" : "2015-12-23T11:18:37.670Z",
+    "id" : 58,
+    "title" : "Slot title 121",
+    "startDate" : "2019-09-17T04:44:02.000Z",
+    "createdAt" : "2016-04-04T20:50:34.244Z",
+    "updatedAt" : "2016-04-04T20:50:34.244Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-03T17:44:02.000Z",
+    "endDate" : "2019-10-17T04:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 163,
-      "username" : "User 455",
-      "createdAt" : "2015-12-23T11:18:37.666Z",
-      "updatedAt" : "2015-12-23T11:18:37.666Z",
+      "id" : 158,
+      "username" : "User 457",
+      "createdAt" : "2016-04-04T20:50:34.239Z",
+      "updatedAt" : "2016-04-04T20:50:34.239Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -131,25 +130,23 @@ Content-Length: 2577</pre>
       "alerts" : "omitted"
     },
     "visibility" : "friends",
-    "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 71,
-    "title" : "Slot title 134",
-    "startDate" : "2019-09-04T18:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.677Z",
-    "updatedAt" : "2015-12-23T11:18:37.677Z",
+    "id" : 59,
+    "title" : "Slot title 122",
+    "startDate" : "2019-09-18T05:44:02.000Z",
+    "createdAt" : "2016-04-04T20:50:34.253Z",
+    "updatedAt" : "2016-04-04T20:50:34.253Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-04T18:44:02.000Z",
+    "endDate" : "2019-10-18T05:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 164,
-      "username" : "User 456",
-      "createdAt" : "2015-12-23T11:18:37.673Z",
-      "updatedAt" : "2015-12-23T11:18:37.673Z",
+      "id" : 159,
+      "username" : "User 458",
+      "createdAt" : "2016-04-04T20:50:34.247Z",
+      "updatedAt" : "2016-04-04T20:50:34.247Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -159,25 +156,23 @@ Content-Length: 2577</pre>
       "alerts" : "omitted"
     },
     "visibility" : "foaf",
-    "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   },
   {
-    "id" : 72,
-    "title" : "Slot title 135",
-    "startDate" : "2019-09-05T19:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.683Z",
-    "updatedAt" : "2015-12-23T11:18:37.683Z",
+    "id" : 60,
+    "title" : "Slot title 123",
+    "startDate" : "2019-09-19T06:44:02.000Z",
+    "createdAt" : "2016-04-04T20:50:34.260Z",
+    "updatedAt" : "2016-04-04T20:50:34.260Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-05T19:44:02.000Z",
+    "endDate" : "2019-10-19T06:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 165,
-      "username" : "User 457",
-      "createdAt" : "2015-12-23T11:18:37.679Z",
-      "updatedAt" : "2015-12-23T11:18:37.679Z",
+      "id" : 160,
+      "username" : "User 459",
+      "createdAt" : "2016-04-04T20:50:34.255Z",
+      "updatedAt" : "2016-04-04T20:50:34.255Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -187,73 +182,8 @@ Content-Length: 2577</pre>
       "alerts" : "omitted"
     },
     "visibility" : "public",
-    "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 74,
-    "title" : "Slot title 136",
-    "startDate" : "2019-09-06T20:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.701Z",
-    "updatedAt" : "2015-12-23T11:18:37.701Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-06T20:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 166,
-      "username" : "User 458",
-      "createdAt" : "2015-12-23T11:18:37.686Z",
-      "updatedAt" : "2015-12-23T11:18:37.686Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "reslotsCounter" : 1,
-    "slotter" : {
-      "id" : 161
-    },
-    "parent" : {
-      "id" : 73
-    },
-    "visibility" : "public",
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 75,
-    "title" : "Slot title 138",
-    "startDate" : "2019-09-08T22:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:37.758Z",
-    "updatedAt" : "2015-12-23T11:18:37.758Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-08T22:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 170,
-      "username" : "User 462",
-      "createdAt" : "2015-12-23T11:18:37.748Z",
-      "updatedAt" : "2015-12-23T11:18:37.748Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "group" : {
-      "id" : 14
-    },
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

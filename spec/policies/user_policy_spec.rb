@@ -13,7 +13,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :show? do
+  permissions :show?, :friends?, :calendars? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -29,6 +29,24 @@ describe UserPolicy do
         expect {
           subject.new(user, User).public_send(:show?)
         }.to raise_error TSErrors::MissingCurrentUserError
+      end
+    end
+  end
+
+  permissions :global_group? do
+    context "current_user has role 'crawler_source'", :seed do
+      let(:user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
+      it "allows access" do
+        expect(subject).to permit(user, User)
+      end
+    end
+
+    context "current_user is a basic user" do
+      let(:user) { create(:user) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, User)
       end
     end
   end

@@ -21,11 +21,27 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def calendar?
+    current_user?
+  end
+
+  def my_friends?
+    current_user?
+  end
+
   def slots_of_my_friends?
     current_user?
   end
 
   def my_media_items?
+    current_user?
+  end
+
+  def suggested_users?
+    current_user?
+  end
+
+  def my_groups?
     current_user?
   end
 

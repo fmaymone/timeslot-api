@@ -19,19 +19,9 @@ class SlotsCollector
     @direction = @after.nil? ? 'before' : 'after'
   end
 
-  # demo slots / public standard slots
-  def latest_public_slots
-    consider_filter([StdSlotPublic.all], @filter)
-  end
-
   # collects all std_slots and reslots of current_user
   def my_slots(user:)
-    showables = [
-      user.std_slots.includes(:notes, :media_items,
-                              meta_slot: [:ios_location, :creator]),
-      user.re_slots.includes(parent: [:notes, :media_items],
-                             meta_slot: [:ios_location, :creator])
-    ]
+    showables = [user.std_slots] #, user.re_slots]
     consider_filter(showables, @filter)
   end
 
@@ -56,26 +46,22 @@ class SlotsCollector
     # friends = UserQuery::Relationship.new(current_user.id).my_friends
     friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
-    showables = [StdSlot
-                  .includes(:notes, :media_items,
-                            meta_slot: [:ios_location, :creator])
-                  .where(owner: friends)
-                  .unprivate,
-                 ReSlot
-                   .includes(parent: [:notes, :media_items],
-                             meta_slot: [:ios_location, :creator])
-                   .where(slotter: friends)
-                   # .unprivate
-                ]
+    showables = [StdSlot.where(owner: friends).unprivate]
+                 # ReSlot.where(slotter: friends).unprivate]
     consider_filter(showables, @filter)
   end
 
   # collects only active std_slots current_user or visitor is allowed to
   # see from requested_user, currently this is only used for counting, so
   # I skip the pagination functionality
-  def active_stdslots_count(current_user: nil, user:)
+  def active_slots_count(current_user: nil, user:, slot_class: StdSlot)
     rs = UserRelationship.call(current_user.try(:id), user.id)
-    showables = PresentableSlots.std_slots(relationship: rs, user: user)
+
+    if slot_class == StdSlot
+      showables = PresentableSlots.std_slots(relationship: rs, user: user)
+    # elsif slot_class == ReSlot
+      # showables = PresentableSlots.re_slots(relationship: rs, user: user)
+    end
 
     counter = 0
     showables.each { |relation| counter += relation.active.count }
@@ -109,9 +95,21 @@ class SlotsCollector
     ### fetch slots
     relations.each do |relation|
       next unless relation
-
+      full_relation = if relation.table_name == StdSlot.table_name
+                        relation.includes(
+                          :notes, :media_items,
+                          meta_slot: [:ios_location, :creator])
+                      elsif relation.table_name == ReSlot.table_name
+                        relation.includes(
+                          parent: [:notes, :media_items],
+                          meta_slot: [:ios_location, :creator])
+                      else
+                        # groupslots ...
+                        relation
+      end
       ### initialize query object
-      query = SlotQuery::OwnSlots.new(relation: relation, direction: @direction)
+      query = SlotQuery::OwnSlots.new(relation: full_relation,
+                                      direction: @direction)
 
       ### build and execute query
       # get [limit] slots from all collections, not efficient but simple

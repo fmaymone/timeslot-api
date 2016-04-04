@@ -3,26 +3,24 @@ class GlobalSlot < BaseSlot
 
   after_commit AuditLog
 
-  validates :muid, presence: true
-
   def self.create_slot(meta:, user:, muid:, url: nil, media: nil, notes: nil,
                        _tags: nil)
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     return meta_slot unless meta_slot.errors.empty?
 
-    slot = create(meta_slot: meta_slot, muid: muid, url: url)
+    slot = create(meta_slot: meta_slot, slot_uuid: muid, url: url)
     return slot unless slot.errors.empty?
 
     if media || notes
       slot.update_from_params(media: media, notes: notes, user: user)
     end
 
-    slot
+    slot.create_activity
   end
 
   def self.find_or_create(muid)
-    global_slot = find_by(muid: muid)
+    global_slot = includes(:meta_slot).find_by(slot_uuid: muid)
     return global_slot if global_slot
 
     attributes = GlobalSlotConsumer.new.slot(muid)

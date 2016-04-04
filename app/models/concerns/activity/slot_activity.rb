@@ -13,16 +13,16 @@ module SlotActivity
     activity_target.try(:owner)
   end
 
+  # The groups which are related to the activity target object
+  private def activity_groups
+    activity_target.containerships
+  end
+
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
     visibility = activity_target.try(:visibility)
-    friendship = activity_foreign.present? ? activity_actor.friendship(activity_foreign) : nil
-    super && (visibility.nil? || ((visibility != 'private') && (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
-  end
-
-  private def activity_push
-    [ activity_foreign.id ]
+    super && (visibility.nil? || (visibility != 'private'))
   end
 
   # Add extra data to each activity. The data can be hide
@@ -31,8 +31,21 @@ module SlotActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.slot(activity_target),
-      actor: JSONView.user(activity_actor)
+      target: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/slots/_slot',
+          layout: false,
+          locals: {
+              :slot => activity_target,
+              :current_user => activity_actor
+          }
+      )),
+      actor: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => activity_actor
+          }
+      ))
     }
   end
 
@@ -40,7 +53,7 @@ module SlotActivity
   # for the users activity feed
   private def activity_message_params(action = nil)
     {
-      USER: activity_actor.username,
+      ACTOR: activity_actor.username,
       TITLE: activity_target.meta_slot.title,
       FIELD: action || activity_action
     }

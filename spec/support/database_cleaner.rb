@@ -1,5 +1,4 @@
 RSpec.configure do |config|
-
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
@@ -24,7 +23,7 @@ RSpec.configure do |config|
 
   config.after(:each, :redis) do
     DatabaseCleaner.strategy = :transaction
-    $redis.flushall
+    RedisStorage.flush
   end
 
   # whenever we load seed data (via :seed flag) we need to use
@@ -36,7 +35,7 @@ RSpec.configure do |config|
   # keep some tables intact during testruns
   config.before(:all, :keep_data) do
     DatabaseCleaner.strategy = :truncation, {
-      except: %w(meta_slots base_slots std_slots re_slots users friendships) }
+      except: %w(meta_slots base_slots std_slots users friendships) }
   end
 
   config.after(:all, :keep_data) do

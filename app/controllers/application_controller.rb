@@ -15,13 +15,13 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
-    notify_airbrake(exception)
+    Airbrake.notify(exception, current_user: current_user, params: params)
     render json: { error: exception.message }, status: :unprocessable_entity
   end
 
   rescue_from Pundit::NotAuthorizedError do |e|
     # abuse Airbrake to learn more about the system
-    notify_airbrake(e)
+    Airbrake.notify(e, current_user: current_user, params: params)
 
     if e.query == 'update_metaslot?' || e.policy.class == GroupPolicy
       head :forbidden
@@ -37,12 +37,48 @@ class ApplicationController < ActionController::API
   end
 
   rescue_from DataTeamServiceError do |exception|
-    notify_airbrake(exception)
+    Airbrake.notify(exception, current_user: current_user, params: params)
     render json: { error: exception.message }, status: :service_unavailable
   end
 
   private def unprocessable_entity(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
+  end
+
+  private def visibility
+    return nil unless params.key? :visibility
+
+    visibility = params[:visibility]
+    valid_values = %w(private friends foaf public)
+
+    unless valid_values.include? visibility
+      fail ActionController::ParameterMissing,
+           "visibility must be one of #{valid_values}"
+    end
+    visibility
+  end
+
+  private def add_to_slotgroup(slot, group_uuid)
+    group = Group.find_by!(uuid: group_uuid)
+    # TODO: I need different auth-checks for different slot types
+    authorize group, :add_slot?
+    SlotsetManager.new(current_user: current_user).add!(slot, group)
+  rescue ActiveRecord::RecordNotFound,
+         Pundit::NotAuthorizedError,
+         TSErrors::SlotGroupDeleted
+    slot.errors.add(:base, group_uuid)
+  end
+
+  private def add_to_slotsets(slot, slot_sets)
+    special_sets = current_user.slot_sets.invert
+
+    slot_sets.each do |slot_set|
+      if special_sets.key? slot_set
+        SlotsetManager.new(current_user: current_user).add!(slot, slot_set)
+      else
+        add_to_slotgroup(slot, slot_set)
+      end
+    end
   end
 
   private def slot_paging_params

@@ -6,14 +6,11 @@ class StdSlot < BaseSlot
                      'friends' => :StdSlotFriends,
                      'foaf' => :StdSlotFoaf,
                      'public' => :StdSlotPublic
-                   }
+                   }.freeze
 
   scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
 
   belongs_to :owner, class_name: User, inverse_of: :std_slots
-  # for some strange reason the association is not found even tough it
-  # works for meta_slot just the same
-  belongs_to :shared_by, class_name: User
 
   validates :owner, presence: true
 
@@ -23,17 +20,13 @@ class StdSlot < BaseSlot
       # Update Follower + Feeds status if visibility change to private
       # NOTE: Update feeds before changing the visibility of the model
       if visibility == 'private'
-        if self.try(:reslots)
-          reslots.each{ |slot|
-            slot.remove_all_activities(target: self)
-            slot.remove_all_followers
-          }
-        end
         remove_all_activities('private', target: self)
         remove_all_followers
       end
       slot_type = STD_SLOT_TYPES[visibility]
-      update(slot_type: SLOT_TYPES[slot_type])
+      # Now with the change of the type this is a little bit... hmmm
+      # Because I (kind of) do change the class of a loaded instance...
+      update(slot_type: SLOT_TYPES[slot_type], type: slot_type.to_s)
     end
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
@@ -53,7 +46,9 @@ class StdSlot < BaseSlot
     msg = "invalid value for visibility: #{visibility}"
     Airbrake.notify(NameError, error_message: msg)
   else
-    slot_type.create(meta_slot: meta_slot, owner: user)
+    slot = slot_type.create(meta_slot: meta_slot, owner: user)
+    Passengership.create(slot: slot, user: user)
+    slot.create_activity
   end
 
   # for Pundit

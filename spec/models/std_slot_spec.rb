@@ -16,8 +16,13 @@ RSpec.describe StdSlot, type: :model do
   it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:meta_slot) }
   it { is_expected.to respond_to(:slot_type) }
+  it { is_expected.to respond_to(:likes) }
+  it { is_expected.to respond_to(:comments) }
+  it { is_expected.to respond_to(:notes) }
+  it { is_expected.to respond_to(:media_items) }
   it { is_expected.to belong_to(:owner).inverse_of(:std_slots) }
   it { is_expected.to belong_to(:meta_slot) }
+  # it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -130,69 +135,29 @@ RSpec.describe StdSlot, type: :model do
     end
   end
 
-  describe :delete do
-    let(:slot) { create(:std_slot) }
+  # describe :reslots do
+  #   let(:parent) { create(:std_slot_friends) }
+  #   let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
-    it "sets deleted_at on itself" do
-      expect(slot.deleted_at?).to be false
-      slot.delete
-      expect(slot.deleted_at?).to be true
-    end
+  #   it "returns an array of the reslots of this slot" do
+  #     res = parent.re_slots
+  #     expect(res.size).to be 3
+  #     expect(res).to include reslots.first
+  #   end
+  # end
 
-    context "media" do
-      let(:slot) { create(:std_slot_private, :with_media) }
+  # describe :re_slots_count do
+  #   let(:parent) { create(:std_slot_foaf) }
+  #   let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
 
-      it "invalidates belonging media_items" do
-        slot.delete
-        expect(slot.media_items.first.deleted_at?).to be true
-        expect(slot.media_items.last.deleted_at?).to be true
-      end
-    end
+  #   it "returns the number of reslots for this slot" do
+  #     expect(parent.re_slots_count).to eq 3
+  #   end
 
-    context "notes" do
-      let(:slot) { create(:std_slot_private, :with_notes) }
-
-      it "deletes belonging notes" do
-        slot.delete
-        expect(slot.notes.first.deleted_at?).to be true
-        expect(slot.notes.last.deleted_at?).to be true
-      end
-    end
-
-    context "likes" do
-      let(:slot) { create(:std_slot_private, :with_likes) }
-
-      it "deletes belonging likes" do
-        slot.delete
-        expect(slot.likes.first.deleted_at?).to be true
-        expect(slot.likes.last.deleted_at?).to be true
-      end
-    end
-  end
-
-  describe :reslots do
-    let(:parent) { create(:std_slot) }
-    let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
-
-    it "returns an array of the reslots of this slot" do
-      res = parent.reslots
-      expect(res.size).to be 3
-      expect(res).to include reslots.first
-    end
-  end
-
-  describe :re_slots_count do
-    let(:parent) { create(:std_slot) }
-    let!(:reslots) { create_list(:re_slot, 3, parent: parent) }
-
-    it "returns the number of reslots for this slot" do
-      expect(parent.re_slots_count).to eq 3
-    end
-
-    it "ignores deleted reslots" do
-      ReSlot.last.delete
-      parent.reload
-      expect(parent.re_slots_count).to eq 2
-    end
-  end
+  #   it "ignores deleted reslots" do
+  #     ReSlot.last.delete
+  #     parent.reload
+  #     expect(parent.re_slots_count).to eq 2
+  #   end
+  # end
 end

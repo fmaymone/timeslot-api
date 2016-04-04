@@ -30,12 +30,12 @@ RspecApiDocumentation.configure do |config|
 
   # Used when adding a cURL output to the docs
   # config.curl_host = nil
-  config.curl_host = 'http://localhost:5000'
+  config.curl_host = 'http://tsinc-stage.timeslot.rocks'
 
   # Used when adding a cURL output to the docs
   # Allows you to filter out headers that are not needed in the cURL request,
   # such as "Host" and "Cookie". Set as an array.
-  config.curl_headers_to_filter = ["Cookie"]
+  config.curl_headers_to_filter = ["Cookie", "Host"]
 
   # By default, when these settings are nil, all headers are shown,
   # which is sometimes too chatty. Setting the parameters to an
@@ -89,4 +89,8 @@ RspecApiDocumentation.configure do |config|
   # Removes the DSL method `status`, this is required if you have a
   # parameter named status
   config.disable_dsl_status!
+
+  # Removes the DSL method `method`, this is required if you have a
+  # parameter named method
+  # config.disable_dsl_method!
 end

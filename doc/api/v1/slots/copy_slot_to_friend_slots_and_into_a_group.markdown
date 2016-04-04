@@ -14,9 +14,6 @@ Description : contains an array of the copy targets
 Name : slotType
 Description : Type of slot to copy to. Must be own of [private/friends/public]
 
-Name : groupId
-Description : ID of the group to copy to, user must be allowed to post to this group
-
 Name : details
 Description : Duplicate all media data and notes on the copied slots. Defaults to &#39;true&#39;.
 
@@ -27,13 +24,13 @@ Must be one of [true/false]
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=BIS4VqTLUqOqmnX2RVkGV912Oi0
+Authorization: Token token=WM-3dwzGxdMJ3nl5m_UzIuYEc0I
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/31/copy</pre>
+<pre>POST /v1/slots/33/copy</pre>
 
 #### Body
 ```javascript
@@ -42,9 +39,6 @@ Cookie: </pre>
     {
       "slotType" : "friends",
       "details" : "true"
-    },
-    {
-      "groupId" : 5
     }
   ]
 }
@@ -53,10 +47,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/31/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;},{&quot;groupId&quot;:5}]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/33/copy&quot; -d &#39;{&quot;copyTo&quot;:[{&quot;slotType&quot;:&quot;friends&quot;,&quot;details&quot;:&quot;true&quot;}]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=BIS4VqTLUqOqmnX2RVkGV912Oi0&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=WM-3dwzGxdMJ3nl5m_UzIuYEc0I&quot;</pre>
 
 ### Response
 
@@ -67,8 +60,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: a88611ab-3803-4d32-94f6-8ac1d9ae78d5
-X-Runtime: 0.062435
+X-Request-Id: d863d888-92d2-4bbc-91de-0d07852d7493
+X-Runtime: 0.032583
 Vary: Origin
 Content-Length: 0</pre>
 

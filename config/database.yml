@@ -85,7 +85,25 @@ test:
 #   production:
 #     url: <%= ENV['DATABASE_URL'] %>
 #
+
+# heroku
+# production:
+#   <<: *default
+#   url: <%= ENV['DATABASE_URL'] %>
+#   pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 10 %>
+
+# AWS ElasticBeanstalk + RDS
 production:
   <<: *default
+  # encoding: utf8
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
+
+  # heroku is not evaluating the attributes above so maybe we can use the same
+  # config for heroku and aws
+  # https://devcenter.heroku.com/articles/rails-database-connection-behavior
   url: <%= ENV['DATABASE_URL'] %>
   pool: <%= ENV["DB_POOL"] || ENV['MAX_THREADS'] || 10 %>

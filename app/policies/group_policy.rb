@@ -2,7 +2,7 @@ class GroupPolicy < ApplicationPolicy
   attr_reader :current_user, :group
 
   def initialize(user, group)
-    @current_user = user.try(:current_user) || user
+    @current_user = user
     @group = group
   end
 
@@ -11,11 +11,11 @@ class GroupPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true if the group/calendar is public
   # true if current user is an active group member
   def show?
-    return false unless current_user?
-    return true if current_user.active_member? group.id
-    false
+    return true if group.public?
+    active_group_member?
   end
 
   # true if the user is logged in
@@ -26,6 +26,7 @@ class GroupPolicy < ApplicationPolicy
   # true if current user is the group owner
   def update?
     return false unless current_user?
+    return true if current_user == group.owner
     return true if current_user.owner? group
     false
   end
@@ -46,6 +47,22 @@ class GroupPolicy < ApplicationPolicy
     update?
   end
 
+  # true if the current user is an active member of the group
+  def add_slot?
+    return false unless current_user?
+    return true if current_user.active_member? group
+    false
+  end
+
+  # true if the current_user is the owner of the group
+  # TODO: true if the current_user has added the slot to the group
+  def remove_slot?
+    return false unless current_user?
+    return true if current_user == group.owner
+    return true if current_user.active_member? group.id
+    false
+  end
+
   # true if current user has an invitation to the group
   def accept_invite?
     return false unless current_user?
@@ -55,6 +72,14 @@ class GroupPolicy < ApplicationPolicy
 
   def refuse_invite?
     accept_invite?
+  end
+
+  # true if slotgroup/calendar is public and
+  # a user is signed in
+  def subscribe?
+    return false unless current_user?
+    return false unless group.public?
+    true
   end
 
   # true if current user is the group owner
@@ -68,7 +93,7 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def leave?
-    show?
+    active_group_member?
   end
 
   # true if current user is an active member of the group
@@ -81,6 +106,34 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def member_settings?
-    show?
+    active_group_member?
+  end
+
+  # true if current user is an active member of the group
+  def add_slotgroup_to_schedule?
+    return false unless current_user?
+    return true if current_user.active_member? group.id
+    false
+  end
+
+  # true if current user is an active member of the group
+  def remove_slotgroup_from_schedule?
+    return false unless current_user?
+    return true if current_user.active_member? group.id
+    false
+  end
+
+  # true if the group is public and belongs to
+  # the crawler source making the request
+  def global_group?
+    return true if group.public? && group.owner == current_user
+    false
+  end
+
+  private def active_group_member?
+    return false unless current_user?
+    return true if current_user.id == group.owner_id
+    return true if current_user.active_member? group.id
+    false
   end
 end

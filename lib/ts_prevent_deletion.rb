@@ -17,9 +17,9 @@ module TSPreventDeletion
 
   private def prevent_remove
     msg = { prevent_deletion: "Deletion was prevented for object: #{self}" }
-    msg.merge!(caller_0: caller[0])
-    msg.merge!(caller_1: caller[1])
-    msg.merge!(caller_2: caller[2])
+    msg[:caller_0] = caller[0]
+    msg[:caller_1] = caller[1]
+    msg[:caller_2] = caller[2]
     Rails.logger.error { msg }
     fail NotActivated, msg
   end
@@ -30,11 +30,9 @@ module TSPreventDeletion
     associated_entities.flatten.each do |item|
       next if item.deleted_at?
       error_string = "#{item} wasn't deleted (but should) when deleting #{self}"
-      msg = { error_message: error_string }
-      opts = {}
-      opts[:parameters] = msg
-      Rails.logger.error { error_string }
-      Airbrake.notify(AssociationNotDeleted, opts)
+      msg = { message: error_string }
+      Rails.logger.error { error_string } unless Rails.env.test?
+      Airbrake.notify(AssociationNotDeleted, msg)
       fail AssociationNotDeleted, msg if Rails.env.test? || Rails.env.development?
     end
 

@@ -87,14 +87,28 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "json reslots counter" do
-      let!(:re_slot) { create(:re_slot, slotter: current_user) }
-      let!(:not_my_reslot) { create(:re_slot) }
+    context "json calendar counter" do
+      let!(:user_with_calendars) do
+        requestee = create(:user)
+        create_list(:group, 3, public: false, owner: requestee)
+        create_list(:group, 2, public: true, owner: requestee)
+        public_group = create(:group, public: true)
+        create(:membership, :active, group: public_group, user: requestee)
+        requestee
+      end
+      let!(:shared_nonpublic_calendar) do
+        shared_group = create(:group, public: false)
+        create(:membership, :active, user: current_user,
+               group: shared_group)
+        create(:membership, :active, user: user_with_calendars,
+               group: shared_group)
+        shared_group
+      end
 
-      it "return number of re_slots for current user" do
-        get "/v1/users/#{current_user.id}", {}, auth_header
-        expect(json).to have_key 'reslotCount'
-        expect(json['reslotCount']).to eq 1
+      it "return number of public and shared calendars" do
+        get "/v1/users/#{user_with_calendars.id}", {}, auth_header
+        expect(json).to have_key('calendarCount')
+        expect(json['calendarCount']).to eq 4
       end
     end
 
@@ -165,7 +179,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "creates a new auth_token for user" do
-          skip 'new auth_token on signin temorary disabled'
+          skip 'new auth_token on signin temporary disabled'
           expect {
             post "/v1/users/signin", valid_attributes
             user.reload
@@ -175,6 +189,12 @@ RSpec.describe "V1::Users", type: :request do
         it "returns auth_token for user" do
           post "/v1/users/signin", valid_attributes
           expect(json).to have_key('authToken')
+        end
+
+        it "works when email has different case (upcase/lowercase)" do
+          post "/v1/users/signin",
+               { email: user.email.upcase, password: 'timeslot' }
+          expect(response).to have_http_status(:ok)
         end
       end
 
@@ -189,7 +209,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "creates a new auth_token for user" do
-          skip 'new auth_token on signin temorary disabled'
+          skip 'new auth_token on signin temporary disabled'
           expect {
             post "/v1/users/signin", valid_attributes
             user.reload
@@ -228,23 +248,29 @@ RSpec.describe "V1::Users", type: :request do
   describe "POST /v1/users/reset" do
     context "valid params", :vcr do
       it "returns ok" do
-        post "/v1/users/reset", { email: current_user.email }, auth_header
+        post "/v1/users/reset", { email: current_user.email }
         expect(response).to have_http_status :ok
       end
 
       it "resets the password for the user" do
         expect {
-          post "/v1/users/reset", { email: current_user.email }, auth_header
+          post "/v1/users/reset", { email: current_user.email }
           current_user.reload
         }.to change(current_user, :password_digest)
       end
 
       it "creates a new auth_token for user" do
         expect {
-          post "/v1/users/reset", { email: current_user.email }, auth_header
+          post "/v1/users/reset", { email: current_user.email }
           current_user.reload
         }.to change(current_user, :auth_token)
       end
+
+      it "works when email has different case (upcase/lowercase)" do
+        post "/v1/users/reset", { email: current_user.email.upcase }
+        expect(response).to have_http_status(:ok)
+      end
+
     end
 
     context "invalid params" do
@@ -268,14 +294,14 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "GET /v1/users/:id/slots" do
     context "no pagination" do
-      let(:group_member) { create(:membership, user: current_user) }
-      let!(:group_slot) { create(:group_slot, group: group_member.group) }
+      # let(:group_member) { create(:membership, user: current_user) }
+      # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
         slots.push create(:std_slot_private, owner: current_user)
         slots.push create(:std_slot_friends, owner: current_user)
         slots.push create(:std_slot_public, owner: current_user)
-        slots.push(*create_list(:re_slot, 2, slotter: current_user))
+        # slots.push(*create_list(:re_slot, 2, slotter: current_user))
       end
 
       it "returns success" do
@@ -288,10 +314,10 @@ RSpec.describe "V1::Users", type: :request do
         expect(json.length).to eq slots.size
       end
 
-      it "excludes groupslots of the current_user" do
-        get "/v1/users/#{current_user.id}/slots", {}, auth_header
-        expect(response.body).not_to include group_slot.title
-      end
+      # it "excludes groupslots of the current_user" do
+      #   get "/v1/users/#{current_user.id}/slots", {}, auth_header
+      #   expect(response.body).not_to include group_slot.title
+      # end
     end
 
     context "with pagination", :keep_data do
@@ -321,11 +347,6 @@ RSpec.describe "V1::Users", type: :request do
         create_list(:std_slot_private, 3,
                     start_date: Time.zone.tomorrow,
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.tomorrow.midday,
-               end_date: Time.zone.tomorrow.next_week.end_of_day,
-               title: 'upcoming reslot',
-               slotter: @current_user)
         # ongoing slots
         create(:std_slot_friends,
                start_date: Time.zone.yesterday,
@@ -337,11 +358,6 @@ RSpec.describe "V1::Users", type: :request do
                     end_date: Time.zone.tomorrow,
                     title: 'ongoing friendslots',
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday,
-               end_date: Time.zone.tomorrow,
-               title: 'ongoing reslot',
-               slotter: @current_user)
         # past slots
         create(:std_slot_public,
                start_date: Time.zone.yesterday.last_year,
@@ -363,11 +379,6 @@ RSpec.describe "V1::Users", type: :request do
                     end_date: Time.zone.yesterday.end_of_day,
                     title: 'past public slots',
                     owner: @current_user)
-        create(:re_slot,
-               start_date: Time.zone.yesterday.last_month,
-               end_date: Time.zone.today.last_month,
-               title: 'past reslot',
-               slotter: @current_user)
       end
 
       describe "GET slots for befriended user" do
@@ -413,34 +424,34 @@ RSpec.describe "V1::Users", type: :request do
           get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
-          expect(response.body).to include 'ongoing reslot'
-          expect(response.body).to include 'upcoming reslot'
+          # expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'upcoming reslot'
           expect(response.body).to include 'past public slot'
           expect(response.body).to include 'long ago public slot'
         end
 
-        context "group slots" do
-          let(:unshared_group) { create(:group, owner: friend) }
-          let!(:unshared_groupslot) {
-            create(:group_slot, group: unshared_group) }
+        # context "group slots" do
+        #   let(:unshared_group) { create(:group, owner: friend) }
+        #   let!(:unshared_groupslot) {
+        #     create(:group_slot, group: unshared_group) }
 
-          let(:shared_group) do
-            group = create(:group, :members_can_post)
-            create(:membership, :active, group: group, user: @current_user)
-            create(:membership, :active, group: group, user: friend)
-            group
-          end
-          let!(:shared_groupslot) {
-            create(:group_slot, group: shared_group) }
+        #   let(:shared_group) do
+        #     group = create(:group, :members_can_post)
+        #     create(:membership, :active, group: group, user: @current_user)
+        #     create(:membership, :active, group: group, user: friend)
+        #     group
+        #   end
+        #   let!(:shared_groupslot) {
+        #     create(:group_slot, group: shared_group) }
 
-          it "returns shared group slots" do
-            get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
-                'Authorization' => "Token token=#{friend.auth_token}"
+        #   it "returns shared group slots" do
+        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #         'Authorization' => "Token token=#{friend.auth_token}"
 
-            expect(response.body).not_to include unshared_groupslot.title
-            expect(response.body).to include shared_groupslot.title
-          end
-        end
+        #     expect(response.body).not_to include unshared_groupslot.title
+        #     expect(response.body).to include shared_groupslot.title
+        #   end
+        # end
       end
 
       describe "GET slots for friend of a befriended user" do
@@ -482,33 +493,33 @@ RSpec.describe "V1::Users", type: :request do
           get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
-          expect(response.body).to include 'ongoing reslot'
-          expect(response.body).to include 'upcoming reslot'
+          # expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'upcoming reslot'
           expect(response.body).to include 'long ago public slot'
         end
 
-        context "group slots" do
-          let(:unshared_group) { create(:group, owner: offa) }
-          let!(:unshared_groupslot) {
-            create(:group_slot, group: unshared_group) }
+        # context "group slots" do
+        #   let(:unshared_group) { create(:group, owner: offa) }
+        #   let!(:unshared_groupslot) {
+        #     create(:group_slot, group: unshared_group) }
 
-          let(:shared_group) do
-            group = create(:group, :members_can_post)
-            create(:membership, :active, group: group, user: @current_user)
-            create(:membership, :active, group: group, user: offa)
-            group
-          end
-          let!(:shared_groupslot) {
-            create(:group_slot, group: shared_group) }
+        #   let(:shared_group) do
+        #     group = create(:group, :members_can_post)
+        #     create(:membership, :active, group: group, user: @current_user)
+        #     create(:membership, :active, group: group, user: offa)
+        #     group
+        #   end
+        #   let!(:shared_groupslot) {
+        #     create(:group_slot, group: shared_group) }
 
-          it "returns shared group slots" do
-            get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
-                'Authorization' => "Token token=#{offa.auth_token}"
+        #   it "returns shared group slots" do
+        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #         'Authorization' => "Token token=#{offa.auth_token}"
 
-            expect(response.body).not_to include unshared_groupslot.title
-            expect(response.body).to include shared_groupslot.title
-          end
-        end
+        #     expect(response.body).not_to include unshared_groupslot.title
+        #     expect(response.body).to include shared_groupslot.title
+        #   end
+        # end
       end
 
       describe "GET slots for unrelated user" do
@@ -527,31 +538,31 @@ RSpec.describe "V1::Users", type: :request do
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
-          expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'ongoing reslot'
           expect(response.body).to include 'past public slot'
         end
 
-        context "group slots" do
-          let(:unshared_group) { create(:group, owner: stranger) }
-          let!(:unshared_groupslot) {
-            create(:group_slot, group: unshared_group) }
+        # context "group slots" do
+        #   let(:unshared_group) { create(:group, owner: stranger) }
+        #   let!(:unshared_groupslot) {
+        #     create(:group_slot, group: unshared_group) }
 
-          let(:shared_group) do
-            group = create(:group, :members_can_post)
-            create(:membership, :active, group: group, user: @current_user)
-            create(:membership, :active, group: group, user: stranger)
-            group
-          end
-          let!(:shared_groupslot) { create(:group_slot, group: shared_group) }
+        #   let(:shared_group) do
+        #     group = create(:group, :members_can_post)
+        #     create(:membership, :active, group: group, user: @current_user)
+        #     create(:membership, :active, group: group, user: stranger)
+        #     group
+        #   end
+        #   let!(:shared_groupslot) { create(:group_slot, group: shared_group) }
 
-          it "returns shared group slots" do
-            get "/v1/users/#{stranger.id}/slots", { filter: 'all' },
-                'Authorization' => "Token token=#{@current_user.auth_token}"
+        #   it "returns shared group slots" do
+        #     get "/v1/users/#{stranger.id}/slots", { filter: 'all' },
+        #         'Authorization' => "Token token=#{@current_user.auth_token}"
 
-            expect(response.body).to include shared_groupslot.title
-            expect(response.body).not_to include unshared_groupslot.title
-          end
-        end
+        #     expect(response.body).to include shared_groupslot.title
+        #     expect(response.body).not_to include unshared_groupslot.title
+        #   end
+        # end
       end
 
       describe "GET slots for user if visitor (not logged-in)" do
@@ -568,7 +579,7 @@ RSpec.describe "V1::Users", type: :request do
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
-          expect(response.body).to include 'ongoing reslot'
+          # expect(response.body).to include 'ongoing reslot'
           expect(response.body).to include 'past public slot'
         end
       end
@@ -639,26 +650,26 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
-    context "shared group" do
-      let!(:member) { target_user }
-      let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
-      let!(:memberships) {
-        create(:membership, :active, group: slot_group.group, user: current_user)
-        create(:membership, :active, group: slot_group.group, user: member)
-      }
+    # context "shared group" do
+    #   let!(:member) { target_user }
+    #   let!(:slot_group) { create(:group_slot, :with_media, creator: member) }
+    #   let!(:memberships) {
+    #     create(:membership, :active, group: slot_group.group, user: current_user)
+    #     create(:membership, :active, group: slot_group.group, user: member)
+    #   }
 
-      it "returns array which includes all media " \
-         "items which a specific user has shared in a common group" do
-        get "/v1/users/#{member.id}/media", {}, auth_header
+    #   it "returns array which includes all media " \
+    #      "items which a specific user has shared in a common group" do
+    #     get "/v1/users/#{member.id}/media", {}, auth_header
 
-        expect(response).to have_http_status(:ok)
-        expect(json.length).to eq(12)
-        res = response.body
-        expect(res).to include slot_public.media_items.first.public_id
-        expect(res).to include slot_group.media_items.first.public_id
-        expect(res).not_to include slot_private.media_items.first.public_id
-      end
-    end
+    #     expect(response).to have_http_status(:ok)
+    #     expect(json.length).to eq(12)
+    #     res = response.body
+    #     expect(res).to include slot_public.media_items.first.public_id
+    #     expect(res).to include slot_group.media_items.first.public_id
+    #     expect(res).not_to include slot_private.media_items.first.public_id
+    #   end
+    # end
 
     context "invalid params" do
       it "returns 404 for unknown user ID" do

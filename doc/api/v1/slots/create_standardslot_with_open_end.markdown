@@ -17,6 +17,9 @@ returns 422 if required parameters are missing
 Name : visibility *- required -*
 Description : Visibility of the Slot (private/friends/foaf/public)
 
+Name : slotSets
+Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be added to
+
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -112,7 +115,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=J0ST6e3UN3Sas0tRmy5qcQ_5HE4
+Authorization: Token token=9tA_7BT14QdN_zEN4UKZjG2q_Sw
 Host: example.org
 Cookie: </pre>
 
@@ -146,11 +149,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=J0ST6e3UN3Sas0tRmy5qcQ_5HE4&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=9tA_7BT14QdN_zEN4UKZjG2q_Sw&quot;</pre>
 
 ### Response
 
@@ -160,12 +162,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8441a67f1d00cb77a716462864ea06cc&quot;
+ETag: W/&quot;fe492c2fce9c85ae21d01277e8b0e30f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e517ed69-09e3-4f89-8fac-e9379227601a
-X-Runtime: 0.040427
+X-Request-Id: d96160b3-611d-4784-81af-ad383c146a2f
+X-Runtime: 0.033860
 Vary: Origin
-Content-Length: 789</pre>
+Content-Length: 782</pre>
 
 #### Status
 
@@ -175,39 +177,39 @@ Content-Length: 789</pre>
 
 ```javascript
 {
-  "id" : 42,
+  "id" : 9,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.019Z",
-  "updatedAt" : "2015-12-23T11:18:34.019Z",
+  "createdAt" : "2016-04-04T20:50:31.512Z",
+  "updatedAt" : "2016-04-04T20:50:31.512Z",
   "deletedAt" : null,
   "location" : null,
   "creator" : {
-    "id" : 206,
-    "username" : "User 278",
-    "createdAt" : "2015-12-23T11:18:34.009Z",
-    "updatedAt" : "2015-12-23T11:18:34.009Z",
+    "id" : 23,
+    "username" : "User 325",
+    "createdAt" : "2016-04-04T20:50:31.501Z",
+    "updatedAt" : "2016-04-04T20:50:31.501Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
     "slotCount" : 1,
-    "reslotCount" : 0,
+    "calendarCount" : 0,
     "friendsCount" : 0
   },
   "notes" : [
     {
-      "id" : 6,
+      "id" : 8,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2015-12-23T11:18:34.029Z"
+      "createdAt" : "2016-04-04T20:50:31.520Z"
     },
     {
-      "id" : 5,
+      "id" : 7,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2015-12-23T11:18:34.023Z"
+      "createdAt" : "2016-04-04T20:50:31.517Z"
     }
   ],
   "media" : [],
@@ -215,9 +217,8 @@ Content-Length: 789</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0,
-  "shareUrl" : null
+  "unauthorizedSlotgroups" : []
 }
 ```

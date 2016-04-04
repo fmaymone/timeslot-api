@@ -11,7 +11,7 @@ returns 403 if there was no current user
 
 #### Headers
 
-<pre>Authorization: Token token=wMij0Q8J0fegErkalgPYUsvNdQQ
+<pre>Authorization: Token token=pNZVqs_WYTrKlAPObMaVnS-VuMI
 Host: example.org
 Cookie: </pre>
 
@@ -21,9 +21,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/signout&quot; -X GET \
-	-H &quot;Authorization: Token token=wMij0Q8J0fegErkalgPYUsvNdQQ&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/signout&quot; -X GET \
+	-H &quot;Authorization: Token token=pNZVqs_WYTrKlAPObMaVnS-VuMI&quot;</pre>
 
 ### Response
 
@@ -34,8 +33,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 28c2aadd-f130-4b7c-9b4f-948a04568778
-X-Runtime: 0.005491
+X-Request-Id: 438cbae4-042e-4e9f-910f-fc05b2daada3
+X-Runtime: 0.012208
 Vary: Origin
 Content-Length: 0</pre>
 

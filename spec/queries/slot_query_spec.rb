@@ -27,11 +27,11 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
       create_list(:std_slot_private, 3,
                   start_date: Time.zone.tomorrow,
                   owner: @current_user)
-      create(:re_slot,
-             start_date: Time.zone.tomorrow.midday,
-             end_date: Time.zone.tomorrow.next_week.end_of_day,
-             title: 'upcoming reslot',
-             slotter: @current_user)
+      # create(:re_slot,
+      #        start_date: Time.zone.tomorrow.midday,
+      #        end_date: Time.zone.tomorrow.next_week.end_of_day,
+      #        title: 'upcoming reslot',
+      #        slotter: @current_user)
       # ongoing slots
       create(:std_slot_friends,
              start_date: Time.zone.yesterday,
@@ -43,11 +43,11 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
                   end_date: Time.zone.tomorrow,
                   title: 'ongoing slots',
                   owner: @current_user)
-      create(:re_slot,
-             start_date: Time.zone.yesterday,
-             end_date: Time.zone.tomorrow,
-             title: 'ongoing reslot',
-             slotter: @current_user)
+      # create(:re_slot,
+      #        start_date: Time.zone.yesterday,
+      #        end_date: Time.zone.tomorrow,
+      #        title: 'ongoing reslot',
+      #        slotter: @current_user)
       # past slots
       create(:std_slot_public,
              start_date: Time.zone.yesterday.last_year,
@@ -64,11 +64,11 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
                   end_date: Time.zone.yesterday.end_of_day,
                   title: 'past slots',
                   owner: @current_user)
-      create(:re_slot,
-             start_date: Time.zone.yesterday.last_month,
-             end_date: Time.zone.today.last_month,
-             title: 'past reslot',
-             slotter: @current_user)
+      # create(:re_slot,
+      #        start_date: Time.zone.yesterday.last_month,
+      #        end_date: Time.zone.today.last_month,
+      #        title: 'past reslot',
+      #        slotter: @current_user)
     end
 
     describe "filter" do
@@ -82,10 +82,10 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
         expect(result.to_a).to include slot
       end
 
-      it "unkown" do
+      it "unknown" do
         slots = described_class.new(relation: @current_user.std_slots)
         expect {
-          slots.retrieve(filter: 'unkown', moment: Time.zone.now)
+          slots.retrieve(filter: 'unknown', moment: Time.zone.now)
         }.to raise_error ApplicationController::PaginationError
       end
     end

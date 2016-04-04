@@ -92,6 +92,24 @@ describe GroupPolicy do
     end
   end
 
+  permissions :subscribe? do
+    let(:user) { create(:user) }
+
+    context "public group/slotgroup/calendar" do
+      let(:group) { create(:group, public: true) }
+
+      it "allows access" do
+        expect(subject).to permit(user, group)
+      end
+    end
+
+    context "non-public group/slotgroup/calendar" do
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+  end
+
   permissions :kick? do
     let(:user) { create(:user) }
 
@@ -129,7 +147,9 @@ describe GroupPolicy do
     end
   end
 
-  permissions :show?, :leave?, :slots?, :members?, :member_settings? do
+  permissions :show?, :leave?, :slots?, :members?, :member_settings?,
+              :add_slot?, :remove_slot?, :add_slotgroup_to_schedule?,
+              :remove_slotgroup_from_schedule? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do
@@ -155,8 +175,9 @@ describe GroupPolicy do
     let(:permissions) {
       [
         :show?, :leave?, :slots?, :members?, :member_settings?,
-        :index?, :create?, :update?, :destroy?, :related?,
-        :invite?, :kick?, :accept_invite?, :refuse_invite?
+        :index?, :create?, :update?, :destroy?, :related?, :subscribe?,
+        :invite?, :kick?, :accept_invite?, :refuse_invite?,
+        :add_slotgroup_to_schedule?, :remove_slotgroup_from_schedule?
       ]
     }
     let(:user) { nil }
@@ -166,6 +187,45 @@ describe GroupPolicy do
         expect {
           subject.new(user, group).public_send(permission)
         }.to raise_error TSErrors::MissingCurrentUserError
+      end
+    end
+  end
+
+  permissions :global_group? do
+    let(:user) { create(:user) }
+
+    context "group is public" do
+      let(:group) { create(:group, public: true) }
+
+      context "current_user is group owner" do
+        let(:group) { create(:group, public: true, owner: user) }
+
+        it "allows access" do
+          expect(subject).to permit(user, group)
+        end
+      end
+
+      context "current_user is group member" do
+        let!(:membership) {
+          create(:membership, :active, group: group, user: user)
+        }
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+
+      context "current_user is not group owner" do
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+    end
+
+    context "group is not public" do
+      let(:group) { create(:group, public: false) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
       end
     end
   end

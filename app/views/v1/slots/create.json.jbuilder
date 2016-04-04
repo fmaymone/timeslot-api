@@ -8,8 +8,12 @@ if slot.class <= StdSlot
   json.creator do
     json.partial! 'v1/users/full_user', user: current_user
   end
-elsif slot.class <= ReSlot
-  json.slotter do
-    json.partial! 'v1/users/full_user', user: current_user
-  end
+# elsif slot.class <= ReSlot
+#   json.slotter do
+#     json.partial! 'v1/users/full_user', user: current_user
+#   end
 end
+
+# render unauthorized slotgroups
+json.unauthorized_slotgroups slot.errors[:base]
+# json.partial! 'v1/slots/slotgroups', slot: slot # is not a partial

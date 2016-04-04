@@ -6,7 +6,7 @@ module TSPgExplain
   # :nocov:
   def __explain_analyze(sql, command, *args)
     meth = "#{command}_without_explain_analyze".to_sym
-    if /\A\s*SELECT/i.match(sql)
+    if /\A\s*SELECT/i =~ sql
       newsql = "EXPLAIN (ANALYZE, BUFFERS, VERBOSE) #{sql}"
       # newsql = "EXPLAIN (ANALYZE, BUFFERS) #{sql}"
       # newsql = "EXPLAIN (ANALYZE, VERBOSE) #{sql}"

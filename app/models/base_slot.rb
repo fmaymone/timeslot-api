@@ -17,17 +17,11 @@ class BaseSlot < ActiveRecord::Base
                  StdSlotFriends: 2,
                  StdSlotPublic: 3,
                  StdSlotFoaf: 4,
-                 ReSlotFriends: 6,
-                 ReSlotPublic: 7,
-                 GroupSlotMembers: 11,
-                 GroupSlotPublic: 12,
                  GlobalSlot: 15,
                  # remove the following if not needed by factory girl anymore
                  BaseSlot: 0,
-                 StdSlot: 20,
-                 ReSlot: 22,
-                 GroupSlot: 21
-               }
+                 StdSlot: 20
+               }.freeze
 
   enum slot_type: SLOT_TYPES
 
@@ -46,8 +40,19 @@ class BaseSlot < ActiveRecord::Base
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
-  has_many :re_slots, class_name: ReSlot, foreign_key: :parent_id
-  belongs_to :shared_by, class_name: User
+
+  has_many :containerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :slot_groups, -> { merge Containership.active },
+           through: :containerships, source: :group,
+           inverse_of: :slots
+
+  has_many :passengerships, foreign_key: :slot_id, inverse_of: :slot
+  has_many :my_calendar_users, -> { merge Passengership.in_schedule },
+           through: :passengerships, source: :user,
+           inverse_of: :my_calendar_slots
+
+  has_many :tagged_users, -> { merge Passengership.add_media_permitted },
+           through: :passengerships, source: :user
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
@@ -55,6 +60,7 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+  # validates :slot_uuid, presence: true # let the db take care of it for now
 
   # getter
 
@@ -80,12 +86,6 @@ class BaseSlot < ActiveRecord::Base
 
   def comments_with_details
     comments.includes([:user])
-  end
-
-  def reslots
-    # this should not include private reslots
-    # TODO: change it when we have reslots with different visibilities
-    ReSlot.where parent_id: id
   end
 
   def as_paging_cursor
@@ -120,9 +120,10 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def add_media(item, creator_id)
-    item.merge!(position: media_items.size) unless item.key? "position"
-    item.merge!(mediable_id: id, mediable_type: BaseSlot,
-                creator_id: creator_id)
+    item[:position] = media_items.size unless item.key? "position"
+    item[:mediable_id] = id
+    item[:mediable_type] = BaseSlot
+    item[:creator_id] = creator_id
 
     new_media = MediaItem.new(item)
     unless new_media.valid?
@@ -131,7 +132,7 @@ class BaseSlot < ActiveRecord::Base
 
     # update position of following media items
     if item["position"].to_i < media_items.size
-      coll = media_items.where(
+      coll = media_items.includes(:creator).where(
         "media_items.position >= ?", item["position"]).to_a
       coll.each do |coll_item|
         coll_item.update(position: coll_item.position += 1)
@@ -155,12 +156,7 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def create_like(user)
-    if self.class <= ReSlot
-      like = Like.find_by(slot: parent, user: user)
-    else
-      like = Like.find_by(slot: self, user: user)
-    end
-
+    like = Like.find_by(slot: self, user: user)
     unless like
       like = likes.create(user: user)
       like.create_activity
@@ -195,15 +191,13 @@ class BaseSlot < ActiveRecord::Base
     new_comment
   end
 
-  def set_share_id(user)
-    self.share_id? || create_share_id(user)
-  end
-
   def delete
     likes.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
+    containerships.each(&:delete)
+    passengerships.each(&:delete)
 
     remove_all_activities(target: self)
 
@@ -211,14 +205,14 @@ class BaseSlot < ActiveRecord::Base
       user.prepare_for_slot_deletion self
     end
 
-    # NOTE: Actually we remove all reslots if one
-    # of the parent/predecessor slot was removed
-    reslots.each(&:delete) if self.try(:reslots)
-
-    remove_all_followers
     prepare_for_deletion
     ts_soft_delete
     meta_slot.unregister
+
+    # Forward deletion activity after 'deleted_at' was set:
+    forward_deletion
+    # NOTE: Remove follower relations at least!
+    remove_all_followers
   end
 
   def copy_to(targets, user)
@@ -269,17 +263,6 @@ class BaseSlot < ActiveRecord::Base
     end
   end
 
-  private def create_share_id(user)
-    new_share_id = ''
-    loop do
-      # length of the result string is about 4/3 of the argument, now: 8 chars
-      new_share_id = SecureRandom.urlsafe_base64(6).tr('-_lIO0', 'xzpstu')
-      break unless self.class.exists?(share_id: new_share_id)
-    end
-    update(share_id: new_share_id)
-    update(shared_by: user)
-  end
-
   ## abstract methods ##
 
   def related_users
@@ -298,12 +281,8 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def self.get(slot_id)
-    bs = BaseSlot.find(slot_id)
-    bs.slot_type.constantize.find(slot_id)
-  end
-
-  def self.get_many(slot_ids)
-    slot_ids.collect { |id| get(id) }
+    # reloading necessary to get attributes from MTI tables
+    BaseSlot.find(slot_id).reload
   end
 
   # TODO: add spec
@@ -323,42 +302,39 @@ class BaseSlot < ActiveRecord::Base
 
   def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
                        notes: nil, alerts: nil, user: nil)
-
-    # TODO: improve
-    fail unless visibility || group
+    fail unless visibility
 
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    if visibility
-      slot = StdSlot.create_slot(meta_slot: meta_slot, visibility: visibility,
-                                 user: user)
-    elsif group
-      slot = GroupSlot.create_slot(meta_slot: meta_slot, group: group)
-    end
+    slot = StdSlot.create_slot(meta_slot: meta_slot,
+                               visibility: visibility,
+                               user: user)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
+
+    #slot.create_activity
 
     if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,
                               user: user)
     end
 
-    slot.create_activity
+    slot
   end
 
   def self.duplicate_slot(source, target, current_user)
     visibility = target[:slot_type] if target[:slot_type]
-    group = Group.find(target[:group_id]) if target[:group_id]
+    # group = Group.find(target[:group_id]) if target[:group_id]
     details = target[:details]
     # YAML.load converts to boolean
     with_details = details.present? ? YAML.load(details.to_s) : true
 
     duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
                                   visibility: visibility,
-                                  group: group,
+                                  # group: group,
                                   user: current_user)
 
     duplicate_slot_details(source, duplicated_slot, current_user) if with_details
@@ -390,21 +366,20 @@ class BaseSlot < ActiveRecord::Base
     # check for validity
     begin
       cursor_array = decoded_cursor_string.split('%')
-      cursor = {id: cursor_array.first.to_i,
+      cursor = { id: cursor_array.first.to_i,
                 startdate: cursor_array.second,
-                enddate: cursor_array.third}
+                enddate: cursor_array.third }
       slot = get(cursor[:id])
     rescue ActiveRecord::RecordNotFound
       raise PaginationError, "invalid pagination cursor"
-    # the following is not really neccessary, might be removed at some point
+    # the following is not really necessary, might be removed at some point
     # but for now it gives some useful info about the system
     else
       if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
          slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
-        opts = {}
-        opts[:parameters] = { cursor_id: cursor[:id],
-                              cursor_startdate: cursor[:startdate],
-                              cursor_enddate: cursor[:enddate] }
+        opts = { cursor_id: cursor[:id],
+                 cursor_startdate: cursor[:startdate],
+                 cursor_enddate: cursor[:enddate] }
         Airbrake.notify(ApplicationController::PaginationError, opts)
         fail PaginationError, "cursor slot changed" if Rails.env.development?
       end

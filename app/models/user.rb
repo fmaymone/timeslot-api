@@ -1,10 +1,15 @@
 class User < ActiveRecord::Base
   include TS_Role
   include Follow
+
+  store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,
+                 :my_lib_uuid, :my_created_slots_uuid,
+                 :my_friend_slots_uuid, :my_public_slots_uuid
+
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
-  before_create :set_auth_token
+  before_create :set_auth_token, :set_slot_sets
   after_commit AuditLog
 
   ## associations ##
@@ -29,8 +34,10 @@ class User < ActiveRecord::Base
   has_many :std_slots_public, class_name: StdSlotPublic,
            foreign_key: :owner_id, inverse_of: :owner
 
-  has_many :re_slots, foreign_key: :slotter_id, inverse_of: :slotter
-  has_many :group_slots, through: :active_groups
+  has_many :passengerships, foreign_key: :user_id, inverse_of: :user
+  has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
+           through: :passengerships, source: :slot,
+           inverse_of: :my_calendar_users
 
   # group related
   has_many :own_groups, class_name: Group,
@@ -42,12 +49,14 @@ class User < ActiveRecord::Base
 
   has_many :active_groups, through: :active_memberships, source: :group
   has_many :groups, through: :memberships, source: :group
+  has_many :calendars_in_schedule, -> { merge Membership.show_slots },
+           through: :memberships, source: :group
 
   # all friendships (regardless state & deleted_at)
-  has_many :initiated_friendships, class_name: Friendship,
-           inverse_of: :user
-  has_many :received_friendships, class_name: Friendship,
-           foreign_key: :friend_id, inverse_of: :friend
+  has_many :initiated_friendships, -> { includes :friend },
+           class_name: Friendship, inverse_of: :user
+  has_many :received_friendships, -> { includes :user },
+           class_name: Friendship, foreign_key: :friend_id, inverse_of: :friend
 
   # friends
   has_many :friends_by_request, -> { merge(Friendship.established) },
@@ -74,8 +83,7 @@ class User < ActiveRecord::Base
   # settings
   belongs_to :location, class_name: IosLocation
   accepts_nested_attributes_for :location, reject_if: :all_blank
-  # has_one :slot_default_location, class_name: Location
-  # has_one :slot_default_type, class_name: SlotType
+  # has_one :slot_default_location, class_name: IosLocation
 
   ## validations ##
 
@@ -184,6 +192,17 @@ class User < ActiveRecord::Base
     self.auth_token = self.class.generate_auth_token
   end
 
+  def set_slot_sets
+    self.slot_sets = {
+      my_cal_uuid: SecureRandom.uuid,
+      my_lib_uuid: SecureRandom.uuid,
+      friends_cal_uuid: SecureRandom.uuid,
+      my_friend_slots_uuid: SecureRandom.uuid,
+      my_public_slots_uuid: SecureRandom.uuid,
+      my_created_slots_uuid: SecureRandom.uuid
+    }
+  end
+
   def inactivate
     # Everything needs to stay available so that if user comes back all content
     # is still there
@@ -221,16 +240,20 @@ class User < ActiveRecord::Base
   def active_slots(meta_slot)
     slots = []
     slots.push(*std_slots.active.where(meta_slot: meta_slot))
-    slots.push(*group_slots.active.where(meta_slot: meta_slot))
-    slots.push(*re_slots.active.where(meta_slot: meta_slot))
+    # slots.push(*group_slots.active.where(meta_slot: meta_slot))
   end
 
-  def shared_group_slots(user)
-    group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
+  # def shared_group_slots(user)
+  #   group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
+  # end
+
+  def visible_slots_counter(user, slot_class)
+    SlotsCollector.new.active_slots_count(current_user: user, user: self,
+                                          slot_class: slot_class)
   end
 
-  def visible_slots_counter(user)
-    SlotsCollector.new.active_stdslots_count(current_user: user, user: self)
+  def visible_calendars_counter(user)
+    CounterService.new.active_visible_calendars(asker: user, requestee: self)
   end
 
   def prepare_for_slot_deletion(slot)
@@ -266,6 +289,18 @@ class User < ActiveRecord::Base
     # but it seems 2 queries are faster at the moment
     # UserQuery::Relationship.new(id).my_friends.to_a
     friends_by_request + friends_by_offer
+  end
+
+  def friends_ids
+    friends_by_offer_ids + friends_by_request_ids
+  end
+
+  def contacts_ids
+    initiated_friendships.pluck(:friend_id) + received_friendships.pluck(:user_id)
+  end
+
+  def friends_count
+    UserQuery::Relationship.new(id).my_friends.count
   end
 
   def friendships
@@ -379,10 +414,10 @@ class User < ActiveRecord::Base
     membership
   end
 
-  # ordered by start_date of the next group slot
-  def groups_ordered
-    groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
-  end
+  # # ordered by start_date of the next group slot
+  # def groups_ordered
+  #   groups.includes(group_slots: :meta_slot).order('meta_slots.start_date')
+  # end
 
   ## private methods ##
 
@@ -420,8 +455,7 @@ class User < ActiveRecord::Base
       # TODO: ts_notify(msg: "unknown slottype #{slot} for user #{id}")
       # maybe not the best idea, but at least we hear if something goes wrong
       msg = "unknown slottype #{slot} for user #{id}"
-      opts = { error_message: msg }
-      Airbrake.notify(ActiveRecord::StatementInvalid, opts)
+      Airbrake.notify(ActiveRecord::StatementInvalid, error: msg)
       fail ActiveRecord::StatementInvalid, msg
     end
   end
@@ -448,8 +482,7 @@ class User < ActiveRecord::Base
   private def multiple_representations(slot)
     representations = []
     representations.push(*std_slots.where(meta_slot: slot.meta_slot))
-    representations.push(*re_slots.where(meta_slot: slot.meta_slot))
-    representations.push(*group_slots.where(meta_slot: slot.meta_slot))
+    # representations.push(*group_slots.where(meta_slot: slot.meta_slot))
     representations
   end
 

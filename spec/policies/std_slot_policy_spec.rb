@@ -5,7 +5,7 @@ describe StdSlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :create_stdslot?, :create_webslot? do
+  permissions :create_stdslot? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -15,10 +15,10 @@ describe StdSlotPolicy do
     end
   end
 
-  permissions :update_stdslot?, :destroy_stdslot? do
+  permissions :update_stdslot?, :delete? do
     context "for the slot owner" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, owner: user) }
+      let(:slot) { create(:std_slot, owner: user, creator: user) }
 
       it "allows access" do
         expect(subject).to permit(user, slot)
@@ -27,7 +27,7 @@ describe StdSlotPolicy do
 
     context "for the slot creator" do
       let(:user) { create(:user) }
-      let(:slot) { create(:std_slot, creator: user) }
+      let(:slot) { create(:std_slot, owner: user) }
 
       it "fails with MissingCurrentUserError" do
         expect(subject).not_to permit(user, slot)
@@ -45,7 +45,7 @@ describe StdSlotPolicy do
 
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:create_stdslot?, :create_webslot?, :update_stdslot?, :destroy_stdslot?]
+      [:create_stdslot?, :update_stdslot?]
     }
     let(:user) { nil }
 

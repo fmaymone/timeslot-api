@@ -71,19 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=aY_AlfP_Q7VeuAXnqBdi0zDX3bg
+<pre>Authorization: Token token=0A7gnq8i_N6zH1Op7ko_FCfcaaw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/201/slots</pre>
+<pre>GET /v1/users/175/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/201/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=aY_AlfP_Q7VeuAXnqBdi0zDX3bg&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/175/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=0A7gnq8i_N6zH1Op7ko_FCfcaaw&quot;</pre>
 
 ### Response
 
@@ -93,12 +92,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;681a1bd146c1b8c646231229a6812fe5&quot;
+ETag: W/&quot;0215234a781ed8385383d3f05511dd2a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e72ddeac-7549-4381-9dde-18995ff8bec7
-X-Runtime: 0.031450
+X-Request-Id: 4737f615-a29b-40f0-aa6d-ed1a7b277b25
+X-Runtime: 0.023929
 Vary: Origin
-Content-Length: 1065</pre>
+Content-Length: 478</pre>
 
 #### Status
 
@@ -109,19 +108,19 @@ Content-Length: 1065</pre>
 ```javascript
 [
   {
-    "id" : 96,
-    "title" : "Slot title 159",
-    "startDate" : "2019-09-02T19:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:38.242Z",
-    "updatedAt" : "2015-12-23T11:18:38.242Z",
+    "id" : 72,
+    "title" : "Slot title 135",
+    "startDate" : "2019-09-04T18:44:02.000Z",
+    "createdAt" : "2016-04-04T20:50:34.521Z",
+    "updatedAt" : "2016-04-04T20:50:34.521Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-02T19:44:02.000Z",
+    "endDate" : "2019-10-04T18:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 205,
-      "username" : "User 494",
-      "createdAt" : "2015-12-23T11:18:38.237Z",
-      "updatedAt" : "2015-12-23T11:18:38.237Z",
+      "id" : 179,
+      "username" : "User 475",
+      "createdAt" : "2016-04-04T20:50:34.515Z",
+      "updatedAt" : "2016-04-04T20:50:34.515Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -131,44 +130,8 @@ Content-Length: 1065</pre>
       "alerts" : "omitted"
     },
     "visibility" : "public",
-    "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
-  },
-  {
-    "id" : 98,
-    "title" : "Slot title 160",
-    "startDate" : "2019-09-03T20:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:38.265Z",
-    "updatedAt" : "2015-12-23T11:18:38.265Z",
-    "deletedAt" : null,
-    "endDate" : "2019-10-03T20:44:02.000Z",
-    "location" : null,
-    "creator" : {
-      "id" : 206,
-      "username" : "User 495",
-      "createdAt" : "2015-12-23T11:18:38.244Z",
-      "updatedAt" : "2015-12-23T11:18:38.244Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    "notes" : [],
-    "media" : [],
-    "settings" : {
-      "alerts" : "omitted"
-    },
-    "reslotsCounter" : 1,
-    "slotter" : {
-      "id" : 201
-    },
-    "parent" : {
-      "id" : 97
-    },
-    "visibility" : "public",
-    "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

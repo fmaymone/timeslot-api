@@ -1,191 +1,104 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Slots" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  shared_context "default slot response fields" do
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag"
-    response_field :createdAt, "Creation of slot"
-    response_field :updatedAt, "Last update of slot"
-    response_field :deletedAt, "Delete date of slot or nil"
-    response_field :location, "Location data for the slot"
-    response_field :creator, "User who created the slot"
-    response_field :settings,
-                   "Only included if it's a slot of the current User " \
-                   "(created-/friend-/re-/groupslot),\n\n" \
-                   "contains User specific settings for this slot (alerts)"
-    response_field :visibility,
-                   "Visibiltiy of the slot (private/friend/foaf/public)"
-    response_field :notes, "Notes on the slot"
-    response_field :likes, "Likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos recordings for the slot"
-  end
-
-  shared_context "stdslot response fields" do
-    include_context "default slot response fields"
-    response_field :reslotsCounter, "Number of reslots for this slot"
-  end
-
-  shared_context "reslot response fields" do
-    include_context "stdslot response fields"
-    response_field :slotter, "contains ID of the User who did reslot"
-    response_field :parent, "contains ID of the original slot that was reslottet"
-  end
-
-  shared_context "group slot response fields" do
-    include_context "default slot response fields"
-    response_field :groupId, "ID of the group the slot belongs to"
-  end
-
-  shared_context "default slot parameter" do
-    parameter :title, "Title of slot (max. 60 characters)",
-              required: true
-    parameter :startDate,
-              "Startdate and Time of the Slot",
-              required: true
-    parameter :endDate,
-              "Enddate and Time of the Slot (startdate + duration).",
-              required: true
-    #parameter :openEnd,
-    #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
-    #          required: true
-    parameter :location, "Location associated with this slot (see example)"
-    parameter :media, "Media items (image/audio/video) of to the Slot " \
-                      "(see example)"
-    parameter :notes, "Notes for to the Slot (see example)"
-    parameter :settings, "User specific settings for the slot (alerts)"
-    parameter :alerts, "Alerts for the Slot", scope: :settings
-  end
-
-  shared_context "ios location params" do
-    parameter :name, "Name of the location, eg. Timeslot Inc. (255 chars)",
-              scope: :location
-    parameter :thoroughfare, "Street address, eg. Dolziger Str. 9 (255 ch.)",
-              scope: :location
-    parameter :subThoroughfare, "house number, eg. 9 (255 chars)",
-              scope: :location
-    parameter :locality, "city, e.g. Berlin (255 chars)",
-              scope: :location
-    parameter :subLocality, "neighborhood, common name, eg. Mitte (255 ch.)",
-              scope: :location
-    parameter :postalCode, "zip code, eg. 94114 (32 chars)",
-              scope: :location
-    parameter :country, "country, eg. Germany (255 chars)",
-              scope: :location
-    parameter :isoCountryCode, "Country Code, eg. US (8 chars)",
-              scope: :location
-    parameter :inLandWater, "eg. Lake Tahoe", scope: :location
-    parameter :ocean, "eg. Pacific Ocean", scope: :location
-    parameter :areasOfInterest, "eg. Volkspark Friedrichshain",
-              scope: :location
-    parameter :latitude, "Latitude", scope: :location
-    parameter :longitude, "Longitude", scope: :location
-    parameter :privateLocation,
-              "private location for this user (true/false) [not yet " \
-              "sure what it will mean technically] -> default: false",
-              scope: :location
-  end
-
   post "/v1/slots" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :ids, "Array of slot IDs to get", required: true
+    include_context "default slot parameter"
+    parameter :visibility,
+              "Visibility of the Slot (private/friends/foaf/public)",
+              required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups slot should be added to"
 
-    describe "Get several slots at once" do
-      include_context "default slot response fields"
+    describe "Create new slot" do
+      include_context "stdslot response fields"
 
-      let(:meta_slot) { create(:meta_slot) }
-      let(:slot1) {
-        create(:std_slot_private, owner: current_user) }
-      let(:slot2) {
-        create(:std_slot_private, :with_ios_location, meta_slot: meta_slot,
-               owner: current_user) }
-      let!(:slot_setting) { build_stubbed(:slot_setting,
-                                          user: current_user,
-                                          meta_slot: slot2.meta_slot,
-                                          alerts: '1110001100') }
-      let!(:medias) {
-        build_stubbed_list :slot_image, 3, mediable: slot2
-        build_stubbed_list :audio, 2, mediable: slot2
-        build_stubbed_list :video, 2, mediable: slot2
-      }
-      let(:ids) { [slot1.id, slot2.id] }
+      response_field :unauthorizedSlotgroups,
+                     "Array of Slotgroup UUIDs where the current_user has no " \
+                     "write access or Slotgroup was deleted. Will be empty if " \
+                     "all worked fine."
 
-      let(:deleted_at) { slot.deleted_at? ? slot.deleted_at.as_json : nil }
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      #let(:openEnd) { false }
+      let(:notes) { [{ title: "revolutionizing the calendar",
+                       content: "this is content" },
+                     { title: "and another title",
+                       content: "more content here" }] }
+      let(:alerts) { '0101010101' }
+      let(:visibility) { 'private' }
 
-      example "Get multiple slots", document: :v1 do
-        explanation "if a user is authenticated the slot settings" \
-                    " (alerts) will be included\n\n" \
-                    "returns 404 if an ID is invalid"
+      # additional slotgroups
+      let(:group_1) { create(:group, owner: current_user) }
+      let(:group_2) do
+        group = create(:group)
+        create(:membership, :active, group: group, user: current_user)
+        group
+      end
+      let(:unauthorized_group) { create(:group) }
+      let(:deleted_group) {
+        create(:group, owner: current_user, deleted_at: Time.zone.now) }
+
+      let(:slotGroups) { [current_user.my_cal_uuid,
+                          group_1.uuid,
+                          group_2.uuid,
+                          unauthorized_group.uuid,
+                          deleted_group.uuid] }
+
+      example "Create new slot", document: :v1 do
+        explanation "Creates new slot for user and adds it to the users" \
+                    " 'MyCalendar' and to all slotGroups which were given" \
+                    " additionally.\n\n" \
+                    "Returns data of new slot and array with unauthorized " \
+                    "slotgroup UUIDs (User has no write access or slotgroup" \
+                    " deleted).\n\n" \
+                    "Returns 422 if parameters are invalid or missing."
         do_request
 
-        expect(response_status).to eq(200)
-        expect(json.length).to eq 2
-        expect(json.last).to have_key("id")
-        expect(json.last["id"]).to eq slot2.id
-        expect(json.last).to have_key("title")
-        expect(json.last).to have_key("startDate")
-        expect(json.last).to have_key("endDate")
-        expect(json.last).to have_key("location")
+        new_slot = BaseSlot.last
+
+        expect(current_user.created_slots).to include new_slot.meta_slot
+        expect(current_user.my_calendar_slots).to include new_slot
+        expect(group_1.slots).to include new_slot
+        expect(group_2.slots).to include new_slot
+        expect(unauthorized_group.slots).not_to include new_slot
+        expect(deleted_group.slots).not_to include new_slot
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key("id")
+        expect(json["id"]).to eq new_slot.id
+        expect(json).to have_key("title")
+        expect(json).to have_key("startDate")
+        expect(json).to have_key("createdAt")
+        expect(json).to have_key("updatedAt")
+        expect(json).to have_key("deletedAt")
+        expect(json).to have_key("endDate")
+        expect(json).to have_key("location")
         # expect(json.last['location']).to have_key("name")
-        expect(json.last).to have_key("creator")
-        # expect(json.last['creator']).to have_key("username")
-        # expect(json.last).to have_key("settings")
-        # expect(json.last['settings']).to have_key("alerts")
-        expect(json.last).to have_key("createdAt")
-        expect(json.last).to have_key("updatedAt")
-        expect(json.last).to have_key("deletedAt")
-        expect(json.last).to have_key("notes")
-        expect(json.last).to have_key("likes")
-        expect(json.last).to have_key("commentsCounter")
-        expect(json.last).to have_key("visibility")
-        # expect(json.last).to have_key("images")
-        # expect(json.last).to have_key("audios")
-        # expect(json.last).to have_key("videos")
-        # expect(json.last.except('images', 'audios', 'videos'))
-        #   .to eq("id" => slot.id,
-        #          "title" => slot.title,
-        #          "startDate" => slot.start_date.as_json,
-        #          "endDate" => slot.end_date.as_json,
-        #          "createdAt" => slot.created_at.as_json,
-        #          "updatedAt" => slot.updated_at.as_json,
-        #          "deletedAt" => deleted_at,
-        #          "location" => { "id" => 200_719_253,
-        #                          "name" => slot.location.name,
-        #                          "street" => slot.location.street,
-        #                          "city" => slot.location.city,
-        #                          "postcode" => slot.location.postcode,
-        #                          "country" => slot.location.country,
-        #                          "longitude" => slot.location.longitude,
-        #                          "latitude" => slot.location.latitude,
-        #                          "createdAt" => slot.location.created.as_json,
-        #                          "updatedAt" => slot.location.last_update.as_json,
-        #                          "categories" => slot.location.categories,
-        #                          "images" => slot.location.images
-        #                        },
-        #          "creator" => { "id" => slot.creator.id,
-        #                         "username" => slot.creator.username,
-        #                         "createdAt" => slot.creator.created_at.as_json,
-        #                         "updatedAt" => slot.creator.updated_at.as_json,
-        #                         "deletedAt" => nil },
-        #          # "settings" => { 'alerts' => '1110001100' },
-        #          "visibility" => slot.visibility,
-        #          "notes" => slot.notes
-        #         )
-        # expect(json.last["images"].length).to eq(slot.images.length)
-        # expect(json.last["images"].first['publicId']).to eq(slot.images.first.public_id)
+        expect(json).to have_key("creator")
+        expect(json['creator']).to have_key("username")
+        expect(json['creator']['username']).to eq current_user.username
+        expect(json).to have_key("notes")
+        expect(json).to have_key("media")
+        expect(json).to have_key("settings")
+        expect(json['settings']).to have_key("alerts")
+        expect(json).to have_key("visibility")
+        expect(json["visibility"]).to eq visibility
+        # expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("likes")
+        expect(json).to have_key("commentsCounter")
+        expect(json).to have_key("unauthorizedSlotgroups")
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
       end
     end
   end
@@ -199,10 +112,9 @@ resource "Slots" do
     describe "Get slot with valid ID" do
       include_context "stdslot response fields"
 
-      let(:meta_slot) { create(:meta_slot) }
+      let(:meta_slot) { create(:meta_slot, :with_ioslocation) }
       let(:slot) { create(:std_slot_public, :with_media, :with_likes,
-                          :with_ios_location, meta_slot: meta_slot,
-                          share_id: 'abcd1234') }
+                          meta_slot: meta_slot) }
 
       let!(:slot_setting) { create(:slot_setting,
                                    user: current_user,
@@ -239,11 +151,10 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
-        expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
+        # expect(json).to have_key("reslotsCounter")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
+        expect(json.except('media', 'location'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
@@ -251,7 +162,6 @@ resource "Slots" do
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at.as_json,
-                 "location" => nil,
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
                                 "createdAt" => slot.creator.created_at.as_json,
@@ -265,11 +175,12 @@ resource "Slots" do
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 "reslotsCounter" => slot.re_slots_count
+                 # "reslotsCounter" => slot.re_slots_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
-        expect(json["shareUrl"]).to include slot.share_id
+        expect(json["location"]).to include("id" => meta_slot.ios_location.uuid,
+                                            "name" => 'Acapulco')
       end
     end
 
@@ -326,92 +237,6 @@ resource "Slots" do
     end
   end
 
-  get "/v1/slots/:id" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the slot to get", required: true
-
-    describe "Get reslot with valid ID" do
-      include_context "reslot response fields"
-
-      let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
-      let(:parent) { create(:std_slot_public, meta_slot: meta_slot) }
-      let!(:reslot) { create(:re_slot, parent: parent) }
-
-      let!(:slot_setting) { create(:slot_setting,
-                                   user: current_user,
-                                   meta_slot: reslot.meta_slot,
-                                   alerts: '1110001100') }
-      let!(:medias) {
-        create_list :slot_image, 3, mediable: parent
-        build_stubbed_list :audio, 2, mediable: parent
-        build_stubbed_list :video, 2, mediable: parent
-      }
-      let(:id) { reslot.id }
-      let(:deleted_at) { reslot.deleted_at? ? reslot.deleted_at.as_json : nil }
-
-      example "Get Reslot", document: :v1 do
-        explanation "if a user is authenticated the slot settings" \
-                    " (alerts) will be included\n\n" \
-                    "returns 404 if ID is invalid"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("location")
-        expect(json).to have_key("creator")
-        expect(json['creator']).to have_key("username")
-        expect(json).to have_key("settings")
-        expect(json['settings']).to have_key("alerts")
-        expect(json).to have_key("createdAt")
-        expect(json).to have_key("updatedAt")
-        expect(json).to have_key("deletedAt")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("likes")
-        expect(json).to have_key("commentsCounter")
-        expect(json).to have_key("slotter")
-        expect(json).to have_key("parent")
-        expect(json).to have_key("reslotsCounter")
-        expect(json).to have_key("shareUrl")
-        expect(json).to have_key("visibility")
-        expect(json).to have_key("media")
-        expect(json.except('media', 'shareUrl'))
-          .to eq("id" => reslot.id,
-                 "title" => reslot.title,
-                 "startDate" => reslot.start_date.as_json,
-                 "endDate" => reslot.end_date.as_json,
-                 "createdAt" => reslot.created_at.as_json,
-                 "updatedAt" => reslot.updated_at.as_json,
-                 "deletedAt" => deleted_at.as_json,
-                 "location" => nil,
-                 "creator" => { "id" => reslot.creator.id,
-                                "username" => reslot.creator.username,
-                                "createdAt" => reslot.creator.created_at.as_json,
-                                "updatedAt" => reslot.creator.updated_at.as_json,
-                                "deletedAt" => nil,
-                                "image" => ""
-                              },
-                 # "settings" => { 'alerts' => '1110001100' },
-                 "settings" => { 'alerts' => 'omitted' },
-                 "slotter" => { 'id' => reslot.slotter_id },
-                 "visibility" => reslot.parent.visibility,
-                 "notes" => reslot.notes,
-                 "parent" => { 'id' => reslot.parent.id },
-                 "likes" => reslot.likes.count,
-                 "commentsCounter" => reslot.comments.count,
-                 "reslotsCounter" => reslot.re_slots_count
-                )
-        reslot.reload
-        expect(json["media"].length).to eq(reslot.media_items.length)
-        expect(response_body).to include reslot.images.first.public_id
-      end
-    end
-  end
-
   post "/v1/stdslot" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -420,6 +245,12 @@ resource "Slots" do
     parameter :visibility,
               "Visibility of the Slot (private/friends/foaf/public)",
               required: true
+    parameter :slotSets,
+              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
+              "should be added to",
+              required: false
+    # TODO: response needs array with invalid slotset uuids
+
     include_context "default slot parameter"
 
     describe "Create new standard slot" do
@@ -441,6 +272,11 @@ resource "Slots" do
           explanation "Returns data of new slot.\n\n" \
                       "Missing unrequiered fields will be filled" \
                       " with default values.\n\n" \
+                      "At the moment the slot is added to MySchedule by " \
+                      "default. I think we'll change this so it's only added " \
+                      "if the MySchedule UUID is provided in the slotGroups " \
+                      "array. Additional slotGroups can be submitted and the " \
+                      "slot will be added there too.\n\n" \
                       "returns 422 if parameters are invalid\n\n" \
                       "returns 422 if required parameters are missing"
           do_request
@@ -570,225 +406,6 @@ resource "Slots" do
     end
   end
 
-  post "/v1/groupslot" do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    include_context "default slot parameter"
-
-    parameter :groupId, "ID of the group to which the Slot belongs",
-              required: true
-
-    let(:group) { create(:group, owner: current_user) }
-
-    describe "Create new group slot" do
-      include_context "group slot response fields"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      #let(:openEnd) { false }
-      let(:note) { "revolutionizing the calendar" }
-      let(:alerts) { '0101010101' }
-      let(:groupId) { group.id }
-
-      example "Create GroupSlot",
-              document: :v1 do
-        explanation "Returns data of new slot.\n\n" \
-                    "Missing unrequiered fields will be filled" \
-                    " with default values.\n\n" \
-                    "returns 404 if Group ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid\n\n" \
-                    "returns 422 if required parameters are missing"
-        do_request
-
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("creator")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("group")
-        expect(json['group']).to have_key("id")
-        expect(response_status).to eq(201)
-      end
-    end
-
-    describe "Create group slot with invalid params" do
-      response_field :error, "Explanation which param couldn't be saved"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:alerts) { "oh no" }
-      let(:groupId) { group.id }
-
-      example "Create group slot with invalid params returns 422 & failure details",
-              document: false do
-        explanation "Parameters that can not be written to db will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-      end
-    end
-
-    describe "Create group slot with missing requiered params" do
-      response_field :error, "Contains Error message"
-
-      let(:title) { "Time for a Slot" }
-      let(:endDate) { "2014-09-08T13:31:02.000Z" }
-      let(:groupId) { group.id }
-
-      example "Create group slot with missing requiered params returns 422" \
-              " & failure details", document: false do
-        explanation "Missing requiered fields will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-        expect(response_body).to include "start_date"
-      end
-    end
-  end
-
-  post "/v1/reslot" do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :predecessorId,
-              "ID of the Slot which was resloted",
-              required: true
-
-    let(:pred) { create(:std_slot_public) }
-
-    describe "Reslot a StandardSlot" do
-      include_context "reslot response fields"
-
-      let(:predecessorId) { pred.id }
-      let(:note) { "re-revolutionizing the calendar" }
-
-      example "Reslot a slot",
-              document: :v1 do
-        explanation "Returns data of new ReSlot.\n\n" \
-                    "returns 404 if Predecessor Slot doesn't exist\n\n" \
-                    "returns 422 if parameters are invalid\n\n" \
-                    "returns 422 if required parameters are missing"
-        do_request
-
-        expect(response_status).to eq(201)
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("creator")
-        expect(json).to have_key("slotter")
-        expect(json).to have_key("visibility")
-        expect(json["slotter"]["id"]).to eq current_user.id
-        expect(json["title"]).to eq pred.title
-        expect(json["startDate"]).to eq pred.start_date.as_json
-        expect(json["endDate"]).to eq pred.end_date.as_json
-        expect(json["creator"]["id"]).to eq pred.creator.id
-        expect(json["visibility"]).to eq pred.visibility
-      end
-    end
-  end
-
-  post "/v1/webslot", :seed do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :visibility, "Visibility of the Slot (private/friends/public)",
-              required: true
-    include_context "default slot parameter"
-
-    describe "Create new ReSlot from the Web Search service" do
-      include_context "stdslot response fields"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      let(:visibility) { 'public' }
-
-      example "Create new ReSlot from the Web Search service", document: :v1 do
-        explanation "Returns status code 200.\n\n" \
-                    "Missing unrequiered fields will be filled" \
-                    " with default values.\n\n" \
-                    "returns 422 if parameters are invalid\n\n" \
-                    "returns 422 if required parameters are missing"
-        do_request
-        expect(response_status).to eq(200)
-
-        base_slot = BaseSlot.last
-        expect(base_slot.title).to eq(title)
-        expect(base_slot.start_date).to eq(startDate)
-        expect(base_slot.end_date).to eq(endDate)
-        expect(base_slot.meta_slot.creator.email).to eq 'info@timeslot.com'
-
-        re_slot = ReSlot.last
-        expect(re_slot.slotter_id).to eq(current_user.id)
-        expect(re_slot.meta_slot_id).to eq(base_slot.meta_slot_id)
-      end
-    end
-
-    describe "Create webslot which already exist" do
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-09T13:31:02.000Z" }
-      let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { 'public' }
-
-      example "Create webslot which already exist returns 421", document: false do
-        explanation "returns 421 if the slot was already reslottet from the user"
-
-        do_request
-        expect(response_status).to eq(200)
-
-        do_request
-        expect(response_status).to eq(421)
-      end
-    end
-
-    describe "Create webslot slot with invalid params" do
-      response_field :error, "Explanation which param couldn't be saved"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "abcdefg" }
-      let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      let(:visibility) { 'public' }
-
-      example "Create webslot with invalid params returns 422 & failure details",
-              document: false do
-        explanation "Parameters that can not be written to db will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-      end
-    end
-
-    describe "Create webslot slot with missing required params" do
-      response_field :error, "Contains Error message"
-
-      let(:title) { "Time for a Slot" }
-      let(:endDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { 'public' }
-      let(:creatorId) { nil }
-
-      example "Create webslot slot with missing requiered params returns 422" \
-              " & failure details", document: false do
-        explanation "Missing requiered fields will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-      end
-    end
-  end
-
   patch "/v1/metaslot/:id" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
@@ -860,12 +477,17 @@ resource "Slots" do
                     "returns 200 and slot data if update succeded \n\n" \
                     "returns 404 if User not owner or ID is invalid\n\n" \
                     "returns 422 if parameters are invalid"
+
         expect(std_slot.visibility).to eq 'private'
+        expect(std_slot.type).to eq 'StdSlotPrivate'
+
         do_request
 
         expect(response_status).to eq(200)
-        std_slot.reload
-        expect(std_slot.visibility).to eq 'friends'
+        slot = BaseSlot.last
+        expect(slot.id).to eq std_slot.id
+        expect(slot.visibility).to eq 'friends'
+        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 
@@ -1025,7 +647,7 @@ resource "Slots" do
         expect(location['subLocality']).to eq 'Mitte'
         expect(location['country']).to eq 'Germany'
         expect(location['isoCountryCode']).to eq 'GER'
-        expect(location['privateLocation']).to be true
+        # expect(location['privateLocation']).to be true
       end
     end
 
@@ -1047,13 +669,13 @@ resource "Slots" do
     end
   end
 
-  delete "/v1/stdslot/:id" do
+  delete "/v1/slots/:id" do
     header "Authorization", :auth_header
 
     parameter :id, "ID of the Standard Slot to delete", required: true
 
     let!(:std_slot) {
-      create(:std_slot_private, owner: current_user)
+      create(:std_slot_private, owner: current_user, creator: current_user)
     }
     describe "Delete Standard Slot" do
       include_context "default slot response fields"
@@ -1086,111 +708,216 @@ resource "Slots" do
 
       example "Delete StdSlot with invalid ID returns Not found",
               document: false do
+        skip 'needs fix'
         do_request
         expect(response_status).to eq(404)
       end
     end
   end
 
-  delete "/v1/groupslot/:id" do
+  get "/v1/slots/:id/slotsets" do
+    header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Group Slot to delete", required: true
+    parameter :id, "ID of the Slot to be added to SlotGroups", required: true
 
-    let(:group) { create(:group, owner: current_user) }
-    let!(:group_slot) { create(:group_slot, group: group) }
+    response_field :slotSets,
+                   "Array of Slotgroup and eventually myCalendar uuid of " \
+                   "the current_user."
 
-    describe "Delete Group Slot" do
-      include_context "group slot response fields"
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group, name: 'unauthorized') }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:containerships) {
+      create(:containership, slot: slot, group: group_1)
+      create(:containership, slot: slot, group: group_2)
+      create(:containership, slot: slot, group: unauthorized_group)
+      create(:containership, slot: slot, group: deleted_group,
+             deleted_at: Time.zone.now)
+    }
+    let!(:passengership) {
+      create(:passengership, user: current_user, slot: slot) }
 
-      let(:id) { group_slot.id }
+    let(:id) { slot.id }
 
-      example "Delete GroupSlot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated Group Slot data." \
-                    " Doesn't delete anything.\n\n" \
-                    "returns 404 if ID is invalid"
+    example "Add Slot to multiple SlotGroups", document: :v1 do
+      explanation "Send an array of slotGroup UUIDs that contain the " \
+                  "slot and where the user has write access.\n\n" \
+                  "returns a list of all slotgroups where user has no " \
+                  "access rights\n\n" \
+                  "returns 404 if ID is invalid\n\n" \
+                  "returns ???"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key 'slotSets'
+      expect(response_body).to include group_1.uuid
+      expect(response_body).to include group_2.uuid
+      expect(response_body).to include current_user.slot_sets['my_cal_uuid']
+      expect(response_body).not_to include deleted_group.uuid
+      expect(response_body).not_to include unauthorized_group.uuid
+    end
+  end
+
+  post "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to be added to SlotGroups", required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups the slot should be added to",
+              required: true
+
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
+
+    let(:slot) { create(:std_slot_public) }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
+    end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+
+    let(:id) { slot.id }
+
+    describe "Add Slot to multiple SlotGroups" do
+      let(:slotGroups) { [group_1.uuid,
+                          group_2.uuid,
+                          unauthorized_group.uuid,
+                          deleted_group.uuid] }
+
+      example "Add Slot to multiple SlotGroups", document: :v1 do
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns a list of all slotgroups where user has no " \
+                    "access rights\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
         do_request
 
-        group_slot.reload
-        expect(group_slot.deleted_at?).to be true
         expect(response_status).to eq(200)
-        expect(json).to include("id" => group_slot.id,
-                                "title" => group_slot.title,
-                                "startDate" => group_slot.start_date.as_json,
-                                "endDate" => group_slot.end_date.as_json,
-                                "group" => {
-                                  "id" => group_slot.group.id
-                                },
-                                "createdAt" => group_slot.created_at.as_json,
-                                "updatedAt" => group_slot.updated_at.as_json,
-                                "deletedAt" => group_slot.deleted_at.as_json,
-                                "notes" => group_slot.notes
-                               )
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        expect(unauthorized_group.slots).not_to include slot
+        expect(deleted_group.slots).not_to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
+        expect(slot.slot_groups).not_to include unauthorized_group
+        expect(slot.slot_groups).not_to include deleted_group
+        expect(json).to have_key('unauthorizedSlotgroups')
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
       end
     end
 
-    describe "Delete GroupSlot with invalid ID" do
-      let(:id) { group_slot.id + 1 }
+    describe "Re-Add Slot to SlotSets" do
+      let!(:containership) {
+        create(:containership, slot: slot, group: group_1,
+               deleted_at: Time.zone.now) }
+      let!(:passengership) {
+        create(:passengership, user: current_user, slot: slot,
+               deleted_at: Time.zone.now) }
+      let(:slotGroups) { [group_1.uuid,
+                          current_user.slot_sets['my_cal_uuid']]}
 
-      example "Delete GroupSlot with invalid ID returns Not found",
-              document: false do
+      example "re-add to group", document: false do
+        expect(group_1.slots).not_to include slot
+        expect(current_user.my_calendar_slots).not_to include slot
+
         do_request
-        expect(response_status).to eq(404)
+
+        expect(response_status).to eq 200
+        group_1.reload
+        current_user.reload
+        expect(group_1.slots).to include slot
+        expect(current_user.my_calendar_slots).to include slot
       end
     end
   end
 
-  delete "/v1/reslot/:id" do
+  delete "/v1/slots/:id/slotgroups" do
+    header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the ReSlot to delete", required: true
+    parameter :id, "ID of the Slot to be removed from SlotGroups",
+              required: true
+    parameter :slotGroups,
+              "Array with UUIDs of the SlotGroups slot should be removed from",
+              required: true
 
-    let!(:re_slot) { create(:re_slot, slotter: current_user) }
+    response_field :unauthorizedSlotgroups,
+                   "Array of Slotgroup UUIDs where the current_user has no " \
+                   "write access or Slotgroup was deleted. Will be empty if " \
+                   "all worked fine."
 
-    describe "Delete ReSlot" do
-      include_context "reslot response fields"
-
-      let(:id) { re_slot.id }
-
-      example "Delete ReSlot", document: :v1 do
-        explanation "Sets 'deletedAt', returns updated reslot data." \
-                    " Doesn't delete anything.\n\n" \
-                    "returns 404 if ID is invalid"
-        do_request
-
-        re_slot.reload
-        expect(re_slot.deleted_at?).to be true
-        expect(response_status).to eq(200)
-        re_slot.slotter.reload
-        expect(json).to include(
-                          "id" => re_slot.id,
-                          "title" => re_slot.title,
-                          "slotter" => {
-                            "id" => re_slot.slotter.id,
-                            "username" => re_slot.slotter.username,
-                            "createdAt" => re_slot.slotter.created_at.as_json,
-                            "updatedAt" => re_slot.slotter.updated_at.as_json,
-                            "deletedAt" => re_slot.slotter.deleted_at.as_json,
-                            "image" => re_slot.slotter.picture,
-                            "location" => re_slot.slotter.location,
-                            "slotCount" => re_slot.slotter.std_slots.active.count,
-                            "reslotCount" => re_slot.slotter.re_slots.active.count,
-                            "friendsCount" => re_slot.slotter.friends.count
-                          },
-                          "createdAt" => re_slot.created_at.as_json,
-                          "updatedAt" => re_slot.updated_at.as_json,
-                          "deletedAt" => re_slot.deleted_at.as_json,
-                          "notes" => re_slot.notes)
-      end
+    let(:slot) { create(:std_slot_public) }
+    let(:my_calendar_uuid) { current_user.slot_sets['my_cal_uuid'] }
+    let(:group_1) { create(:group, owner: current_user) }
+    let(:group_2) do
+      group = create(:group)
+      create(:membership, :active, group: group, user: current_user)
+      group
     end
+    let(:unauthorized_group) { create(:group) }
+    let(:deleted_group) {
+      create(:group, owner: current_user, deleted_at: Time.zone.now) }
+    let!(:passengership) {
+      create(:passengership, slot: slot, user: current_user)
+    }
+    let!(:containerships) {
+      create(:containership, slot: slot, group: group_1)
+      create(:containership, slot: slot, group: group_2)
+      create(:containership, slot: slot, group: unauthorized_group)
+      create(:containership, slot: slot, group: deleted_group,
+             deleted_at: Time.zone.now)
+    }
+    let(:slotGroups) { [group_1.uuid,
+                        group_2.uuid,
+                        my_calendar_uuid,
+                        unauthorized_group.uuid,
+                        deleted_group.uuid] }
 
-    describe "Delete ReSlot with invalid ID" do
-      let(:id) { re_slot.id + 1 }
+    describe "Remove Slot from multiple SlotGroups" do
+      let(:id) { slot.id }
 
-      example "Delete ReSlot with invalid ID returns Not found",
-              document: false do
+      example "Remove Slot from multiple SlotGroups", document: :v1 do
+        explanation "Send an array of slotGroup UUIDs and the slot will be " \
+                    "added to those slotGroups.\n\n" \
+                    "returns 404 if ID is invalid\n\n" \
+                    "returns ???"
+        expect(group_1.slots).to include slot
+        expect(group_2.slots).to include slot
+        expect(slot.slot_groups).to include group_1
+        expect(slot.slot_groups).to include group_2
+        expect(current_user.my_calendar_slots).to include slot
+
         do_request
-        expect(response_status).to eq(404)
+        expect(response_status).to eq(200)
+        expect(group_1.slots).not_to include slot
+        expect(group_2.slots).not_to include slot
+        expect(unauthorized_group.slots).to include slot
+        expect(deleted_group.slots).not_to include slot
+        expect(current_user.my_calendar_slots).not_to include slot
+        expect(slot.slot_groups).not_to include group_1
+        expect(slot.slot_groups).not_to include group_2
+        expect(slot.slot_groups).to include unauthorized_group
+        expect(slot.slot_groups).not_to include deleted_group
+        expect(json).to have_key('unauthorizedSlotgroups')
+        expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
+        expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
       end
     end
   end
@@ -1203,7 +930,7 @@ resource "Slots" do
 
     let(:slot) { create(:std_slot_friends) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Like a Slot" do
       let(:id) { slot.id }
@@ -1231,7 +958,7 @@ resource "Slots" do
     let(:slot) { create(:std_slot_friends) }
     let!(:like) { create(:like, slot: slot, user: current_user) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Unlike a Slot" do
       let(:id) { slot.id }
@@ -1260,9 +987,7 @@ resource "Slots" do
     response_field :array, "containing creation date of the Like and " \
                            "details of the user who made the Like"
 
-    let(:slot) { create(:group_slot, :with_likes) }
-    let!(:membership) {
-      create(:membership, :active, group: slot.group, user: current_user) }
+    let(:slot) { create(:std_slot_public, :with_likes) }
     let!(:like) { create(:like, user: create(:user), slot: slot) }
 
     describe "Get Likes for Slot" do
@@ -1281,7 +1006,7 @@ resource "Slots" do
         expect(json.first).to have_key "createdAt"
         expect(json.first["liker"]).to have_key "id"
         expect(json.first["liker"]).to have_key "image"
-        expect(json.last["liker"]["id"]).to eq like.user.id
+        expect(response_body).to include like.user.username
       end
     end
   end
@@ -1295,7 +1020,7 @@ resource "Slots" do
 
     let(:slot) { create(:std_slot_friends, :with_comments) }
     let!(:friendship) {
-      create(:friendship, :established, friend: slot.owner, user: current_user)
+      create(:friendship, :established, friend: slot.creator, user: current_user)
     }
     describe "Make comment on Slot" do
       let(:id) { slot.id }
@@ -1320,11 +1045,7 @@ resource "Slots" do
     response_field :array, "containing comment content and creation date and " \
                            "details of the user who made the comment"
 
-    let(:slot) { create(:group_slot, :with_comments) }
-    let!(:membership) {
-      create(:membership, :active, group: slot.group, user: current_user) }
-    let!(:comment) {
-      create(:comment, user: create(:user), slot: slot) }
+    let(:slot) { create(:std_slot_public, :with_comments) }
 
     describe "Get Comments for Slot" do
       let(:id) { slot.id }
@@ -1350,85 +1071,95 @@ resource "Slots" do
 
     parameter :id, "ID of the Slot to get the slotters for", required: true
 
-    response_field :array, "containing creation date of the ReSlot and " \
-                           "details of the user who did the reslot"
+    response_field :array,
+                   "list of all users who added the slot to their 'MyCalendar'"
 
     let(:parent) { create(:std_slot_public) }
-    let!(:reslots) { create_list(:re_slot, 2, parent: parent) }
+    let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do
       let(:id) { parent.id }
 
       example "Get Slotters for Slot", document: :v1 do
-        explanation "returns a list of all users who reslot the slot. " \
-                    "For now there is no distinction between reslot " \
+        explanation "returns a list of all users who have the slot in their " \
+                    "calendar. For now there is no distinction between " \
                     "visibilities as backend has no support for this yet.\n\n" \
-                    "Includes User data and timestamp.\n\n" \
                     "returns 401 if User not allowed to see Slotter data\n\n" \
                     "returns 404 if ID is invalid"
         do_request
-
         expect(response_status).to eq(200)
         expect(json.length).to eq 2
         expect(json.first).to have_key "slotter"
-        expect(json.first).to have_key "createdAt"
+        # expect(json.first).to have_key "createdAt"
         expect(json.first["slotter"]).to have_key "id"
         expect(json.first["slotter"]).to have_key "image"
-        expect(response_body).to include reslots.first.slotter.username
-        expect(response_body).to include reslots.last.slotter.username
-      end
-    end
-
-    describe "Get Slotters for Reslots Parent" do
-      let(:id) { reslots.first.id }
-
-      example "Get Slotters for Slot", document: :false do
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json.length).to eq 2
-        expect(json.first).to have_key "slotter"
-        expect(json.first).to have_key "createdAt"
-        expect(json.first["slotter"]).to have_key "id"
-        expect(json.first["slotter"]).to have_key "image"
-        expect(response_body).to include reslots.first.slotter.username
-        expect(response_body).to include reslots.last.slotter.username
+        expect(response_body).to include reslots.first.user.username
+        expect(response_body).to include reslots.last.user.username
       end
     end
   end
 
-  get "/v1/slots/:id/history" do
+  post "/v1/slots/:id/user_tags" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :id, "ID of the Slot to get the chronic for", required: true
+    parameter :id, "ID of the Slot where the user should be tagged",
+              required: true
+    parameter :user_tags,
+              "Array of users ids which should be tagged for this slot",
+              required: true
 
-    response_field :predecessors,
-                   "Array of Users who had (re-)slottet that slot before"
-    # TODO: change parentUser to default user object, call it parentCreator
-    response_field :parentUserId, "ID of the creator of the original slot"
-    response_field :parentUsername,
-                   "Username of the creator of the original slot"
-    response_field :parentUserImage, "Image of the creator of the original slot"
+    let!(:slot) { create(:std_slot_public, creator: current_user) }
+    let(:user_tags) do
+      [create(:user).id,
+       create(:user).id,
+       create(:user).id]
+    end
+    let(:id) { slot.id }
+
+    example "Tagging users to a slot", document: :v1 do
+      explanation "Tagged Users are allowed to add media to the slot.\n\n" \
+                  "For now the slot is put into the MySchedule for the users " \
+                  "given until we gave them a choice if or where to save it." \
+                  "Returns a list of all user IDs tagged to this slot.\n\n" \
+                  "returns 404 if ID is invalid.\n\n" \
+                  "returns 422 if parameters are invalid\n\n" \
+                  "returns 422 if required parameters are missing"
+
+      tagged_users = slot.passengerships.find_by add_media_permission: true
+      expect(tagged_users).to be_nil
+
+      do_request
+      expect(response_status).to eq(200)
+
+      tagged_users = slot.passengerships.where(add_media_permission: true)
+                     .pluck(:user_id)
+      expect(tagged_users).to eq(user_tags)
+      expect(slot.tagged_users.pluck(:id)).to eq(user_tags)
+    end
+  end
+
+  get "/v1/slots/:id/user_tags" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the user tags for", required: true
+    response_field :array, "containing a list of users"
 
     let!(:slot) { create(:std_slot_public) }
-    let!(:reslot_1) { create(:re_slot, predecessor: slot) }
-    let!(:reslot_2) { create(:re_slot, predecessor: reslot_1) }
-    let!(:reslot_3) {
-      create(:re_slot, predecessor: reslot_2, slotter: current_user) }
+    let!(:tags) {
+      create_list(:passengership, 3, :add_media_permitted, slot: slot) }
+    let(:id) { slot.id }
 
-    let(:id) { reslot_3.id }
-
-    example "Get Reslot History aka Chronic for Slot", document: :v1 do
-      explanation "returns list of all previous reslots for the slot." \
-                  " Includes User data and timestamp.\n\n" \
-                  "returns 401 if User not allowed to see reslot history\n\n" \
+    example "Get all tagged users of a slot", document: :v1 do
+      explanation "returns a list of user ids which are tagged to" \
+                  " this slot.\n\n" \
                   "returns 404 if ID is invalid"
       do_request
 
       expect(response_status).to eq(200)
-      expect(json['predecessors'].size).to eq 2
-      expect(json).to have_key("parentUser")
-      expect(json["parentUser"]["id"]).to eq slot.owner.id
+      expect(json.size).to eq(3)
     end
   end
 
@@ -1441,9 +1172,9 @@ resource "Slots" do
     parameter :slotType, "Type of slot to copy to. Must be own of " \
                          "[private/friends/public]",
               scope: :copyTo
-    parameter :groupId, "ID of the group to copy to, user must be allowed " \
-                        "to post to this group",
-              scope: :copyTo
+    # parameter :groupId, "ID of the group to copy to, user must be allowed " \
+    # "to post to this group",
+    # scope: :copyTo
     parameter :details, "Duplicate all media data and notes " \
                         "on the copied slots. Defaults to 'true'.\n\n" \
                         "Must be one of [true/false]",
@@ -1455,13 +1186,13 @@ resource "Slots" do
       create(:membership, :active, user: current_user, group: group)
     end
 
-    describe "Copy Slot into several targets" do
+    describe "Copy Slot into one (not several) target" do
       let(:id) { slot.id }
       let(:target_1) { { slotType: 'friends',
                          details: 'true' } }
-      let(:target_2) { { groupId: group.id } }
+      # let(:target_2) { { groupId: group.id } }
 
-      let(:copyTo) { [target_1, target_2] }
+      let(:copyTo) { [target_1] }
 
       example "Copy Slot to Friend Slots and into a group", document: :v1 do
         explanation "Several new slot instances can be created which share " \
@@ -1471,15 +1202,15 @@ resource "Slots" do
         do_request
 
         expect(response_status).to eq(200)
-        expect(BaseSlot.all.length).to eq 3
+        expect(BaseSlot.count).to eq 2
         new_stdslotfriends = StdSlotFriends.last
         expect(new_stdslotfriends.title).to eq slot.title
         expect(new_stdslotfriends.end_date).to eq slot.end_date
         expect(new_stdslotfriends.notes.length).to eq slot.notes.length
-        new_groupslot = GroupSlot.unscoped.last
-        expect(new_groupslot.title).to eq slot.title
-        expect(new_groupslot.end_date).to eq slot.end_date
-        expect(new_groupslot.notes.length).to eq slot.notes.length
+        # new_groupslot = GroupSlot.unscoped.last
+        # expect(new_groupslot.title).to eq slot.title
+        # expect(new_groupslot.end_date).to eq slot.end_date
+        # expect(new_groupslot.notes.length).to eq slot.notes.length
       end
     end
   end
@@ -1520,58 +1251,6 @@ resource "Slots" do
         expect(StdSlot.unscoped.last.StdSlotFriends?).to be true
         expect(StdSlot.unscoped.last.title).to eq slot.title
         expect(StdSlot.unscoped.last.end_date).to eq slot.end_date
-      end
-    end
-  end
-
-  get "/v1/slots/:id/share" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the slot to share", required: true
-
-    describe "Share slot with valid ID" do
-      include_context "default slot response fields"
-
-      let(:slot) { create(:std_slot_public) }
-
-      let(:id) { slot.id }
-
-      example "Share slot", document: :v1 do
-        explanation "if a user is authenticated the slot shareUrl" \
-                    " will be included\n\n" \
-                    "returns 404 if ID is invalid"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json).to have_key("id")
-        expect(json).to have_key("title")
-        expect(json).to have_key("startDate")
-        expect(json).to have_key("endDate")
-        expect(json).to have_key("createdAt")
-        expect(json).to have_key("updatedAt")
-        expect(json).to have_key("deletedAt")
-        expect(json).to have_key("location")
-        expect(json).to have_key("creator")
-        expect(json['creator']).to have_key("username")
-        expect(json).to have_key("notes")
-        expect(json).to have_key("media")
-        expect(json).to have_key("settings")
-        expect(json).to have_key("visibility")
-        expect(json).to have_key("likes")
-        expect(json).to have_key("commentsCounter")
-        expect(json).to have_key("shareUrl")
-        expect(json["shareUrl"]).to include slot.share_id
-        expect(json["shareUrl"]).not_to eq("")
-      end
-    end
-
-    describe "Share slot with invalid ID" do
-      let(:id) { 1 }
-
-      example "Share slot with invalid ID returns not found", document: false do
-        do_request
-        expect(response_status).to eq(404)
       end
     end
   end

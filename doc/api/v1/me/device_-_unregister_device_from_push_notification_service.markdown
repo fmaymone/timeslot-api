@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=41KFpc6wJPwPzRdQzPmfqukpXXw
+Authorization: Token token=B29dzjGRTFJI_Nm98JUOhrGD_U4
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "deviceId" : "sn-193462873410834786765439519",
+  "deviceId" : "sn-263462873410834786765439526",
   "token" : "a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1",
   "endpoint" : false
 }
@@ -52,10 +52,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-193462873410834786765439519&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1&quot;,&quot;endpoint&quot;:false}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-263462873410834786765439526&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1&quot;,&quot;endpoint&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=41KFpc6wJPwPzRdQzPmfqukpXXw&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=B29dzjGRTFJI_Nm98JUOhrGD_U4&quot;</pre>
 
 ### Response
 
@@ -66,8 +65,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 79e33eb8-a075-433a-baee-ca96c36d8ec0
-X-Runtime: 0.008714
+X-Request-Id: 12b2f4b7-8154-49f0-a48b-1336740a4c7f
+X-Runtime: 0.008028
 Vary: Origin
 Content-Length: 0</pre>
 

@@ -39,7 +39,7 @@ Description : ressource URL for the group
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=s4P5hP09W1s4FNmxSH_PwsuRxqU
+Authorization: Token token=j72HNIK4mkv5l2gvbR6tgbcfJ_E
 Host: example.org
 Cookie: </pre>
 
@@ -53,10 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/group?query=timeslot+developer&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/group?query=timeslot+developer&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=s4P5hP09W1s4FNmxSH_PwsuRxqU&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=j72HNIK4mkv5l2gvbR6tgbcfJ_E&quot;</pre>
 
 ### Response
 
@@ -66,12 +65,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;32c7474180e9df77af974ca1aa335478&quot;
+ETag: W/&quot;51465abce3d04b14d553020b826b77df&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2f28fcfd-aab7-466f-9e84-319aa6850486
-X-Runtime: 0.009538
+X-Request-Id: 3ece5251-0004-4244-a980-f4964fd5fe10
+X-Runtime: 0.009161
 Vary: Origin
-Content-Length: 135</pre>
+Content-Length: 358</pre>
 
 #### Status
 
@@ -82,12 +81,21 @@ Content-Length: 135</pre>
 ```javascript
 [
   {
-    "id" : 34,
+    "id" : "d90bde27-2484-4a76-916f-ae4fd3643bfd",
     "name" : "Timeslot Developer Group (Berlin)",
     "image" : "",
-    "upcomingCount" : 0,
-    "next" : null,
-    "url" : "http://example.org/v1/groups/34"
+    "public" : false,
+    "owner" : {
+      "id" : 118,
+      "username" : "User 265",
+      "createdAt" : "2016-04-04T20:50:26.147Z",
+      "updatedAt" : "2016-04-04T20:50:26.147Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "createdAt" : "2016-04-04T20:50:26.149Z",
+    "updatedAt" : "2016-04-04T20:50:26.149Z",
+    "deletedAt" : null
   }
 ]
 ```

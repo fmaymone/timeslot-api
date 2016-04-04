@@ -20,8 +20,7 @@ class NotifyJob
         rescue => e
           # rescuing here has not to much (but some) value bc we already
           # rescue in the device.notify method
-          opts = {}
-          opts[:parameters] = {
+          opts = {
             user_id: device['user_id'],
             device_id: device['id'],
             sucker_punch: "push notification failed" }

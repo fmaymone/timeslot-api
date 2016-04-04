@@ -1,9 +1,32 @@
+# coding: utf-8
 require 'documentation_helper'
 
 resource "Search" do
   let(:json) { JSON.parse(response_body) }
   let(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
+
+  # get valid elastic search categories
+  get "/v1/search/categories", :vcr do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    example "Get list of all search categories", document: :v1 do
+      explanation "Returns a list of all valid values for the " \
+                  "'category' parameter for searching."
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key("categories")
+      categories = json['categories']
+      expect(categories.sort).to include "football"
+      expect(categories.sort).to include "cinema"
+      expect(categories.sort).to include "concerts"
+      expect(categories.sort).to include "television"
+      expect(categories.sort).to include "calendars"
+      expect(categories.sort).to include "clubbing"
+    end
+  end
 
   # search users
   get "/v1/search/user" do
@@ -15,14 +38,15 @@ resource "Search" do
     response_field :id, "ID of the user"
     response_field :username, "Username of the user"
     response_field :image, "URL of the user image"
-    response_field :location, "Home location of user"
-    response_field :push, "Send push Notifications (true/false)"
+    # response_field :location, "Home location of user"
     response_field :createdAt, "Creation of user"
     response_field :updatedAt, "Latest update of user in db"
     response_field :deletedAt, "Deletion of user"
-    response_field :slotCount, "Number of slots for this user"
-    response_field :reslotCount, "Number of reslots for this user"
-    response_field :friendsCount, "Number of friends for this user"
+    # response_field :slotCount, "Number of slots for this user"
+    # response_field :reslotCount, "Number of reslots for this user"
+    # response_field :friendsCount, "Number of friends for this user"
+    response_field :friendshipState,
+                   "The friendship relation to the current user"
 
     context "search by username" do
       let!(:user) { create(:user, username: 'John Doe') }
@@ -45,7 +69,8 @@ resource "Search" do
     context "search by custom attribute" do
       parameter :attr, "The custom search attribute"
 
-      let!(:user) { create(:user, username: 'John Doe', email: 'john_doe@email.com') }
+      let!(:user) {
+        create(:user, username: 'John Doe', email: 'john_doe@email.com') }
       let(:query) { 'john_doe@email.com' }
       let(:attr) { 'email' }
 
@@ -83,6 +108,45 @@ resource "Search" do
         expect(json.first).to have_key "friendshipState"
         expect(json.first['id']).to eq(user1.id)
         expect(json.last['id']).to eq(user2.id)
+      end
+    end
+  end
+
+  # search friends
+  get "/v1/search/friend" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :query, "The query of the search", required: true
+
+    response_field :id, "ID of the user"
+    response_field :username, "Username of the user"
+    response_field :image, "URL of the user image"
+    response_field :createdAt, "Creation of user"
+    response_field :updatedAt, "Latest update of user in db"
+    response_field :deletedAt, "Deletion of user"
+    response_field :friendshipState,
+                   "The friendship relation to the current user"
+
+    context "search friend by username" do
+      let!(:user) { create(:user, username: 'Johnny Doehl') }
+      let!(:friend) { create(:user, username: 'John Doe') }
+      let!(:friendship) { create(:friendship, :established,
+                                 friend: friend, user: current_user)}
+      let(:query) { 'john' }
+
+      example "Search friend by username", document: :v1 do
+        explanation "returns 404 if query is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to be(1)
+        expect(json.first).to have_key("id")
+        expect(json.first).to have_key("username")
+        expect(json.first).to have_key("image")
+        expect(json.first).to have_key("friendshipState")
+        expect(json.first['friendshipState']).to eq('friend')
+        expect(json.first['id']).to eq(friend.id)
       end
     end
   end
@@ -201,10 +265,11 @@ resource "Search" do
         expect(json.length).to be 1
         expect(json.first).to have_key("id")
         expect(json.first).to have_key("name")
-        expect(json.first).to have_key("upcomingCount")
-        expect(json.first).to have_key("next")
         expect(json.first).to have_key("image")
-        expect(json.first).to have_key("url")
+        expect(json.first).to have_key("owner")
+        expect(json.first).to have_key("createdAt")
+        expect(json.first).to have_key("updatedAt")
+        expect(json.first).to have_key("deletedAt")
         expect(json.first['name']).to eq("Timeslot Developer Group (Berlin)")
       end
     end
@@ -221,7 +286,8 @@ resource "Search" do
     response_field :name, "name of the location"
 
     context "search by location name" do
-      let!(:location) { create(:ios_location, name: 'Timeslot Friedrichstraße 110 (Berlin)') }
+      let!(:location) {
+        create(:ios_location, name: 'Timeslot Friedrichstraße 110 (Berlin)') }
       let(:query) { 'timeslot berlin' }
 
       example "Search by location name", document: :v1 do
@@ -246,7 +312,7 @@ resource "Search" do
         expect(json.first).to have_key("areasOfInterest")
         expect(json.first).to have_key("latitude")
         expect(json.first).to have_key("longitude")
-        expect(json.first).to have_key("privateLocation")
+        # expect(json.first).to have_key("privateLocation")
         expect(json.first['name']).to eq("Timeslot Friedrichstraße 110 (Berlin)")
       end
     end

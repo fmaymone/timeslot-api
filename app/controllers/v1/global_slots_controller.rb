@@ -15,19 +15,19 @@ module V1
 
       muid = params.require(:predecessor)
       global_slot = GlobalSlot.find_or_create(muid)
-      reslot = ReSlot.create_from_slot(predecessor: global_slot,
-                                       slotter: current_user)
-                                       # visibility: params[:visibility])
-      if reslot.save
-        render "v1/slots/create", status: :created, locals: { slot: reslot }
+      add_to_slotsets(global_slot, params[:slot_groups] ||
+                                   [current_user.slot_sets['my_cal_uuid']])
+
+      if global_slot.errors.empty?
+        render "v1/slots/create", status: :created, locals: { slot: global_slot }
       else
-        render json: { error: reslot.errors }, status: :unprocessable_entity
+        render json: { error: global_slot.errors }, status: :unprocessable_entity
       end
     end
 
     private def category_param
       category = params.require(:category)
-      valid_categories = %w(cinema football) # this could also be an ENV var
+      valid_categories = %w(cinema football concerts clubbing television)
       return category if valid_categories.include? category
 
       fail ParameterInvalid.new(:category, category)

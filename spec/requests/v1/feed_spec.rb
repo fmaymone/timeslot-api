@@ -25,14 +25,18 @@ RSpec.describe "V1::Feed", :async, type: :request do
   end
 
   context "Activity creation", :redis do
-    # test for Bug BKD-294
     describe "reslot a slot" do
       it "creates a new activity without an exception" do
-        activities_before = $redis.keys.count
+        activities_before = storage.keys.count
         expect {
-          post "/v1/reslot/", { predecessorId: slot.id }, auth_header
+          # Perform activity:
+          post "/v1/slots/#{slot.id}/user_tags",
+               {
+                   user_tags: actors.collect(&:id)
+               },
+               auth_header
         }.not_to raise_error
-        expect($redis.keys.count).to be > activities_before
+        expect(storage.keys.count).to be > activities_before
       end
     end
   end
@@ -60,7 +64,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(0)
+        expect(json.length).to be(1) # activities on own content
       end
     end
 

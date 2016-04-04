@@ -8,7 +8,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
   end
 
   describe "POST /v1/globalslots/search" do
-    let(:query) { "q=Frei&category=cinema&moment=2015-12-18&limit=20" }
+    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
 
     it "returns 200 and results", :vcr do
       get "/v1/globalslots/search?#{query}", {}, auth_header
@@ -32,13 +32,69 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
   describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
-      let(:muid) { attributes_for(:global_slot)[:muid] }
+      let(:gs_data) { attributes_for(:global_slot) }
+      let(:gs_no_description_data) {
+        attributes_for(:global_slot, :without_description) }
+      let(:slot_group) { create(:group, owner: current_user) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: muid },
+             { predecessor: gs_data[:slot_uuid] },
              auth_header
         expect(response).to have_http_status :created
+      end
+
+      it "adds the candy store location to the local db", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(IosLocation, :count)
+        new_slot = GlobalSlot.last
+        new_location = IosLocation.last
+
+        expect(new_slot.ios_location.as_json).to eq new_location.as_json
+        expect(new_slot.ios_location.uuid).to eq new_slot.location_uid
+      end
+
+      it "adds a note to the slot with the description", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(Note, :count)
+
+        new_note = Note.last
+        expect(new_note.content).not_to be_empty
+      end
+
+      it "doesn't add a note if the slot has no description", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_no_description_data[:slot_uuid] },
+               auth_header
+        }.not_to change(Note, :count)
+        expect(response).to have_http_status :created
+      end
+
+      it "adds the slot to the users' MyCalendar", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(Passengership, :count)
+        new_slot = GlobalSlot.last
+        expect(current_user.my_calendar_slots).to include new_slot
+      end
+
+      it "adds the slot to other given slotgroups", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid], slot_groups: [slot_group.uuid] },
+               auth_header
+        }.to change(Containership, :count)
+        new_slot = GlobalSlot.last
+        expect(slot_group.slots).to include new_slot
       end
     end
 
@@ -47,14 +103,14 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns 201" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(response).to have_http_status :created
       end
 
       it "returns details of slot with given id" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(json).to have_key('id')
         expect(json).to have_key('muid')
@@ -69,7 +125,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns the candy store location", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
 
         expect(json).to have_key 'location'
@@ -87,7 +143,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns a note with a description" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.muid },
+             { predecessor: global_slot.slot_uuid },
              auth_header
         expect(json).to have_key('notes')
         expect(json['notes']).not_to be_empty

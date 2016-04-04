@@ -1,5 +1,8 @@
 module V1
   class MeController < ApplicationController
+    before_action :authenticate_me_from_token!,
+                  only: [:show, :update, :inactivate]
+
     # GET /v1/me
     def show
       authorize :me
@@ -51,7 +54,7 @@ module V1
     end
 
     # GET /v1/me/slots
-    # returns all std_slots and re_slots of the current user
+    # returns all std_slots of the current user
     def my_slots
       authorize :me
 
@@ -64,6 +67,36 @@ module V1
         @result = SlotPaginator.new(data: @slots, **slot_paging_params)
         render "v1/paginated/slots"
       end
+    end
+
+    # GET /v1/me/calendar
+    # returns all slots current user has in her calendar
+    def calendar
+      authorize :me
+
+      @slots = current_user.my_calendar_slots
+
+      render "v1/slots/index"
+    end
+
+    # POST /v1/me/schedule/slotgroup/:uuid
+    def add_slotgroup_to_schedule
+      slotgroup = Group.find_by(uuid: params[:uuid])
+      authorize slotgroup
+
+      CalendarInScheduleManager.new(current_user).show(slotgroup)
+
+      head :ok
+    end
+
+    # DELETE /v1/me/schedule/slotgroup/:uuid
+    def remove_slotgroup_from_schedule
+      slotgroup = Group.find_by(uuid: params[:uuid])
+      authorize slotgroup
+
+      CalendarInScheduleManager.new(current_user).hide(slotgroup)
+
+      head :ok
     end
 
     # GET /v1/me/friendslots
@@ -87,6 +120,31 @@ module V1
       authorize :me
       @media_items = current_user.media_items
       render "v1/media/index"
+    end
+
+    # GET /v1/me/suggested_users
+    def suggested_users
+      authorize :me
+
+      @users = User.find some_foafs
+      @users = [User.find_by(email: SUGGESTED_USER_EMAIL)] if @users.empty?
+
+      render "v1/users/suggesties"
+    end
+
+    # GET /v1/me/friends
+    def my_friends
+      authorize :me
+      @users = current_user.friends
+      render "v1/users/list"
+    end
+
+    # GET /v1/me/slotgroups
+    # return all groups where the current user is member
+    def my_groups
+      authorize :me
+      @groups = current_user.active_groups
+      render "v1/groups/index"
     end
 
     # PATCH /v1/me/device
@@ -140,6 +198,19 @@ module V1
       head :ok
     end
 
+    private def some_foafs
+      foaf_ids = []
+      current_user.friends.each do |friend|
+        foaf_ids += friend.friends_ids
+      end
+      # current_user.friends_ids.each do |friend|
+      #   foaf_ids += UserQuery::Relationship.new(friend).my_friends.pluck(:id)
+      # end
+      foaf_ids.delete(current_user.id) # remove me
+      foaf_ids -= current_user.contacts_ids # remove my friends & requested friends
+      foaf_ids.uniq.sample(10) # take 10 random users
+    end
+
     private def user_params
       p = params.permit(:username,
                         :lang,
@@ -155,18 +226,18 @@ module V1
                              :longitude, :private_location, :areas_of_interest]
                         },
                         :name,
-                        :publicUrl,
+                        :public_url,
                         :push,
-                        :slotDefaultDuration,
-                        :slotDefaultLocationId,
-                        :slotDefaultTypeId,
-                        :defaultPrivateAlerts,
-                        :defaultOwnFriendslotAlerts,
-                        :defaultOwnPublicAlerts,
-                        :defaultFriendsFriendslotAlerts,
-                        :defaultFriendsPublicAlerts,
-                        :defaultReslotAlerts,
-                        :defaultGroupAlerts)
+                        :slot_default_duration,
+                        :slot_default_location_id,
+                        :slot_default_type_id,
+                        :default_private_alerts,
+                        :default_own_friendslot_alerts,
+                        :default_own_public_alerts,
+                        :default_friends_friendslot_alerts,
+                        :default_friends_public_alerts,
+                        :default_reslot_alerts,
+                        :default_group_alerts)
 
       # ios prefers to use 'image' instead of 'picture'
       p[:picture] = params[:image] if params[:image].present?
@@ -175,14 +246,12 @@ module V1
         p[:location_attributes] = p.delete 'location'
         p[:location_attributes][:creator] = current_user
       end
-      p.transform_keys(&:underscore) if p
+      p
     end
 
     private def device_params
-      params.require(:deviceId)
-      params.permit(:deviceId, :system, :version, :token, :endpoint)
-        .transform_keys(&:underscore)
-        .symbolize_keys
+      params.require(:device_id)
+      params.permit(:device_id, :system, :version, :token, :endpoint)
     end
 
     private def friends_ids

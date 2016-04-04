@@ -6,13 +6,13 @@ class SearchPolicy < ApplicationPolicy
     @user = user
   end
 
-  # always true
-  def index?
-    true
+  # true if a user is logged in
+  def user?
+    current_user?
   end
 
   # true if a user is logged in
-  def user?
+  def friend?
     current_user?
   end
 
@@ -36,8 +36,17 @@ class SearchPolicy < ApplicationPolicy
     current_user?
   end
 
+  def calendars?
+    current_user?
+  end
+
   # true if a user is logged in
   def location?
+    current_user?
+  end
+
+  # true if a user is logged in
+  def categories?
     current_user?
   end
 end

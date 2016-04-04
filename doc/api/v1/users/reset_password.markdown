@@ -38,10 +38,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/reset&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
 
@@ -52,8 +51,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: e1461858-4eb2-4ace-9744-2025e23a25af
-X-Runtime: 0.034817
+X-Request-Id: 687e0334-3abd-47d0-a53b-c55c533245e9
+X-Runtime: 0.018562
 Vary: Origin
 Content-Length: 0</pre>
 

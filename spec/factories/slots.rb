@@ -1,10 +1,14 @@
 FactoryGirl.define do
   factory :slot, class: BaseSlot do
     association :meta_slot, strategy: :build
+    slot_uuid "0f2bddbb-c75c-a994-1af9-5ce7ea36c397"
+
+    after(:build) { |slot| slot.type = slot.class }
   end
 
   trait :with_candy_location do
-    location_uid '19f95a00-2f9c-3578-7bdb-10b6276e08a8'
+    location_uid '89840bc4-99fc-bc22-4168-285003ecfd12'
+    association :meta_slot, :with_candylocation, strategy: :build
   end
 
   trait :with_ios_location do

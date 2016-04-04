@@ -113,13 +113,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=7Y32107exrzMDVtYGBPmAKO_qlY
+Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/1</pre>
+<pre>PATCH /v1/stdslot/12</pre>
 
 #### Body
 ```javascript
@@ -131,10 +131,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/1&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=7Y32107exrzMDVtYGBPmAKO_qlY&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw&quot;</pre>
 
 ### Response
 
@@ -144,12 +143,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a0cfc2e6ff03738bdb71f4d71444fb31&quot;
+ETag: W/&quot;2c57b48b12c0c69d786e0ef5ddac85a2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b626ab54-ab3d-42f6-bc77-142cfe744bdd
-X-Runtime: 0.020547
+X-Request-Id: e86b932a-143c-49d5-bba0-6e92ea9a5599
+X-Runtime: 0.014287
 Vary: Origin
-Content-Length: 515</pre>
+Content-Length: 482</pre>
 
 #### Status
 
@@ -159,19 +158,19 @@ Content-Length: 515</pre>
 
 ```javascript
 {
-  "id" : 1,
+  "id" : 12,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-14T19:44:02.000Z",
-  "createdAt" : "2015-12-23T11:18:34.655Z",
-  "updatedAt" : "2015-12-23T11:18:34.655Z",
+  "startDate" : "2019-09-27T08:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:31.741Z",
+  "updatedAt" : "2016-04-04T20:50:31.741Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-14T19:44:02.000Z",
+  "endDate" : "2019-10-27T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 2,
-    "username" : "User 293",
-    "createdAt" : "2015-12-23T11:18:34.647Z",
-    "updatedAt" : "2015-12-23T11:18:34.647Z",
+    "id" : 28,
+    "username" : "User 330",
+    "createdAt" : "2016-04-04T20:50:31.729Z",
+    "updatedAt" : "2016-04-04T20:50:31.729Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -181,9 +180,7 @@ Content-Length: 515</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0,
-  "shareUrl" : null
+  "commentsCounter" : 0
 }
 ```

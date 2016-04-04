@@ -3,6 +3,9 @@ class Membership < ActiveRecord::Base
 
   after_commit AuditLog
 
+  scope :show_slots, -> { where(show_slots_in_schedule: true) }
+  scope :active, -> { where(deleted_at: nil, state: '111') }
+
   belongs_to :user, inverse_of: :memberships
   belongs_to :group, inverse_of: :memberships
 
@@ -11,10 +14,14 @@ class Membership < ActiveRecord::Base
   validates :state, presence: true
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
-  def activate
-    create_activity
+  @initiator = nil
+
+  def activate(initiator = nil)
+    remove_activity
     update!(state: "111")
     user.follow(group)
+    @initiator = initiator
+    create_activity
     group.touch
   end
 
@@ -32,6 +39,8 @@ class Membership < ActiveRecord::Base
 
   def refuse
     update!(state: "001")
+    remove_activity('reject')
+    true
   end
 
   def refused?
@@ -40,6 +49,7 @@ class Membership < ActiveRecord::Base
 
   def kick
     update!(state: "010")
+    remove_activity('kick')
     group.remove_follower(user)
     group.touch
   end
@@ -50,6 +60,7 @@ class Membership < ActiveRecord::Base
 
   def leave
     update!(state: "100")
+    remove_activity('leave')
     user.unfollow(group)
     group.touch
   end
@@ -69,6 +80,7 @@ class Membership < ActiveRecord::Base
   # called if user deactivates his account
   # state needs to be preserved in this case
   def inactivate
+    remove_activity
     group.remove_follower(user)
     group.touch
     ts_soft_delete
@@ -110,30 +122,23 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private
-
-  def activity_is_valid?
-    super and active?
+  private def activity_is_valid?
+    super && @initiator
   end
 
-  def activity_target
+  private def activity_target
     group
   end
 
+  private def activity_actor
+    @initiator || user
+  end
+
   private def activity_foreign
-    group.owner
+    @initiator ? user : nil
   end
 
-  # The user who made the update
-  def activity_actor
-    user
-  end
-
-  private def activity_notify
-    []
-  end
-
-  def activity_action
-    'membership'
+  private def activity_action
+    @initiator ? 'membertag' : 'membership'
   end
 end

@@ -9,12 +9,6 @@
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
 
-# Pseudo-User for the webview
-User.create(username: 'webview',
-            role: 1,
-            email: 'webview@timeslot.com')
-# TS_SLOT_WEBSHARING needs the auth_token of this 'webview' user as env variable
-
 # Pseudo-User for the crawler data/slots aka sources
 User.create(username: 'Timeslot Official',
             role: 1,
@@ -29,3 +23,18 @@ User.create(username: 'moviepilot.de',
             email: 'moviepilot.crawler@timeslot.com',
             public_url: "http://moviepilot.de",
             picture: "http://www.goldenerwesten.net/neu/wp-content/uploads/2011/04/moviepilot_logo.jpg")
+User.create(username: 'tvspielfilm.de',
+            role: 2,
+            email: 'tv-spielfilm.crawler@timeslot.com',
+            public_url: "http://tvspielfilm.de",
+            picture: "https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.burda-news.de%2Fsites%2Fdefault%2Ffiles%2Fbilder%2FTVSpielfilm-Logo.jpg&sp=f6b3775130a04b171c78979d6f5f8f57")
+User.create(username: 'residentadvisor.net',
+            role: 2,
+            email: 'resident-advisor.crawler@timeslot.com',
+            public_url: "http://residentadvisor.net",
+            picture: "https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.technoparade.fr%2Fwp-content%2Fuploads%2F2013%2F08%2Fresident-advisor-logo1.jpg&sp=9a346e1f9e34e708110bce3dfc8d31cb")
+User.create(username: 'songkick.com',
+            role: 2,
+            email: 'songkick.crawler@timeslot.com',
+            public_url: "http://songkick.com",
+            picture: "https://ixquick-proxy.com/do/spg/show_picture.pl?l=english&rais=1&oiu=http%3A%2F%2Fwww.songkick.com%2Fblog%2Fwp-content%2Fuploads%2F2012%2F06%2FSK_badge.png&sp=64a28a9e0da93a57272f660599b8e66c")

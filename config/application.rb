@@ -35,6 +35,8 @@ module TsRailsBackend
     config.i18n.default_locale = :en
     # http://guides.rubyonrails.org/i18n.html
 
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
+
     # don't log passwords
     config.filter_parameters += [:password]
 
@@ -48,7 +50,7 @@ module TsRailsBackend
 
     logger = ActiveSupport::TaggedLogging.new(Logger.new(STDOUT))
     # should sucker punch run async?
-    if (ENV['INLINE_WORKERS'] == 'true')
+    if ENV['INLINE_WORKERS'] == 'true'
       require 'sucker_punch/testing/inline'
       logger.tagged('WORKER') { logger.info { 'workers not ASYNC' } }
     else
@@ -63,7 +65,7 @@ module TsRailsBackend
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins '*'
-        resource '*', :headers => :any, :methods => [:get, :post, :options]
+        resource '*', headers: :any, methods: [:get, :post, :options]
       end
     end
 

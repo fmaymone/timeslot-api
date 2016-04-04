@@ -48,8 +48,13 @@ Description : Location data for the slot
 Name : creator
 Description : User who created the slot
 
+Name : settings
+Description : Only included if it&#39;s a slot of the current User (created-/friend-/re-/groupslot),
+
+contains User specific settings for this slot (alerts)
+
 Name : visibility
-Description : Visibiltiy of the slot
+Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
@@ -59,9 +64,6 @@ Description : Likes for the slot
 
 Name : commentsCounter
 Description : Number of comments on the slot
-
-Name : reslotsCounter
-Description : Number of reslots for this slot
 
 Name : shareUrl
 Description : Share URL for this slot, nil if not yet shared
@@ -81,12 +83,6 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
-Name : image
-Description : URL of the user image
-
-Name : location
-Description : Home location of user
-
 Name : createdAt
 Description : Creation of user
 
@@ -96,11 +92,17 @@ Description : Latest update of user in db
 Name : deletedAt
 Description : Deletion of user
 
-Name : slotCount
-Description : Number of slots for this user
+Name : image
+Description : URL of the user image
 
-Name : reslotCount
-Description : Number of reslots for this user
+Name : location
+Description : Home location of user
+
+Name : slotCount
+Description : Number of visible slots for this user
+
+Name : calendarCount
+Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
@@ -110,7 +112,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Qw_aXQlLPZAVmnWY1Qh3mu4teaI
+Authorization: Token token=SGPbJ3Fvy8wfGTVGlzDJzkKhshg
 Host: example.org
 Cookie: </pre>
 
@@ -120,10 +122,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/feed/user&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Qw_aXQlLPZAVmnWY1Qh3mu4teaI&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=SGPbJ3Fvy8wfGTVGlzDJzkKhshg&quot;</pre>
 
 ### Response
 
@@ -133,12 +134,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e0963d20276b3fad7f5fa490574974c6&quot;
+ETag: W/&quot;388f7bbaaacdd77cdca9dade93d4569c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4fdb2e1d-b384-4ba1-9310-efdec6a0ab18
-X-Runtime: 0.018862
+X-Request-Id: b68c2dba-7b5c-4ecf-bc03-5ce65e10c0c0
+X-Runtime: 0.015506
 Vary: Origin
-Content-Length: 1903</pre>
+Content-Length: 1746</pre>
 
 #### Status
 
@@ -152,8 +153,8 @@ Content-Length: 1903</pre>
     "type" : "Slot",
     "target" : "1",
     "action" : "comment",
-    "time" : "2015-12-23T11:18:29.546Z",
-    "id" : "FCDFD765B952D95DB5168B5F92437CE1221C0A75",
+    "time" : "2016-04-04T20:50:20.986Z",
+    "id" : "BC708194474B0F59043E34673D7141508D7614FF",
     "actors" : [
       3
     ],
@@ -162,25 +163,19 @@ Content-Length: 1903</pre>
       "target" : {
         "id" : 1,
         "title" : "Slot title 21",
-        "startDate" : "2019-09-23T22:44:02.000Z",
-        "createdAt" : "2015-12-23T11:18:29.508Z",
-        "updatedAt" : "2015-12-23T11:18:29.553Z",
+        "startDate" : "2019-09-20T19:44:02.000Z",
+        "createdAt" : "2016-04-04T20:50:20.955Z",
+        "updatedAt" : "2016-04-04T20:50:20.991Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-23T22:44:02.000Z",
+        "endDate" : "2019-10-20T19:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 1,
-          "username" : "User 56",
-          "createdAt" : "2015-12-23T11:18:29.492Z",
-          "updatedAt" : "2015-12-23T11:18:29.492Z",
+          "username" : "User 51",
+          "createdAt" : "2016-04-04T20:50:20.926Z",
+          "updatedAt" : "2016-04-04T20:50:20.926Z",
           "deletedAt" : null,
-          "image" : {
-            "publicId" : null,
-            "localId" : null
-          },
-          "slotCount" : 0,
-          "reslotCount" : 0,
-          "friendsCount" : 0
+          "image" : ""
         },
         "notes" : [],
         "media" : [
@@ -190,7 +185,7 @@ Content-Length: 1903</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2015-12-23T11:18:29.534Z",
+            "createdAt" : "2016-04-04T20:50:20.980Z",
             "duration" : null,
             "title" : "Title 9"
           },
@@ -200,7 +195,7 @@ Content-Length: 1903</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-23T11:18:29.529Z",
+            "createdAt" : "2016-04-04T20:50:20.977Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -210,7 +205,7 @@ Content-Length: 1903</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2015-12-23T11:18:29.525Z",
+            "createdAt" : "2016-04-04T20:50:20.975Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -220,7 +215,7 @@ Content-Length: 1903</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-23T11:18:29.520Z"
+            "createdAt" : "2016-04-04T20:50:20.969Z"
           },
           {
             "mediaId" : 2,
@@ -228,7 +223,7 @@ Content-Length: 1903</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-23T11:18:29.517Z"
+            "createdAt" : "2016-04-04T20:50:20.964Z"
           },
           {
             "mediaId" : 1,
@@ -236,28 +231,23 @@ Content-Length: 1903</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2015-12-23T11:18:29.513Z"
+            "createdAt" : "2016-04-04T20:50:20.959Z"
           }
         ],
-        "reslotsCounter" : 0,
+        "settings" : {
+          "alerts" : "omitted"
+        },
         "visibility" : "public",
         "likes" : 0,
-        "commentsCounter" : 1,
-        "shareUrl" : null
+        "commentsCounter" : 1
       },
       "actor" : {
         "id" : 3,
-        "username" : "User 58",
-        "createdAt" : "2015-12-23T11:18:29.538Z",
-        "updatedAt" : "2015-12-23T11:18:29.538Z",
+        "username" : "User 53",
+        "createdAt" : "2016-04-04T20:50:20.982Z",
+        "updatedAt" : "2016-04-04T20:50:20.982Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        },
-        "slotCount" : 0,
-        "reslotCount" : 0,
-        "friendsCount" : 0
+        "image" : ""
       }
     }
   }

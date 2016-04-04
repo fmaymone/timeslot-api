@@ -10,11 +10,16 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:images) }
   it { is_expected.to respond_to(:audios) }
   it { is_expected.to respond_to(:videos) }
-  it { is_expected.to have_many(:media_items) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
-  it { is_expected.to belong_to(:shared_by) }
+  it { is_expected.to have_many(:containerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:slot_groups).inverse_of(:slots) }
+  it { is_expected.to have_many(:passengerships).inverse_of(:slot) }
+  it { is_expected.to have_many(:my_calendar_users)
+                       .inverse_of(:my_calendar_slots) }
+  it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
+  it { is_expected.to have_many(:comments).inverse_of(:slot) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
@@ -59,13 +64,6 @@ RSpec.describe BaseSlot, type: :model do
       }.to change(StdSlot.unscoped, :count).by 1
     end
 
-    it "creates a new GroupSlot" do
-      expect {
-        described_class.create_slot(meta: meta_param, group: group,
-                                    user: user)
-      }.to change(GroupSlot.unscoped, :count).by 1
-    end
-
     it "creates a new MetaSlot" do
       expect {
         described_class.create_slot(meta: meta_param, visibility: 'friends',
@@ -99,6 +97,60 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
+  describe :delete do
+    let(:slot) { create(:std_slot_private) }
+
+    it "sets deleted_at on itself" do
+      expect(slot.deleted_at?).to be false
+      slot.delete
+      expect(slot.deleted_at?).to be true
+    end
+
+    context "media", :vcr do
+      let(:slot) { create(:std_slot_private, :with_media) }
+
+      it "invalidates belonging media_items" do
+        slot.delete
+        expect(slot.media_items.first.deleted_at?).to be true
+        expect(slot.media_items.last.deleted_at?).to be true
+      end
+    end
+
+    context "notes" do
+      let(:slot) { create(:std_slot_private, :with_notes) }
+
+      it "deletes belonging notes" do
+        slot.delete
+        expect(slot.notes.first.deleted_at?).to be true
+        expect(slot.notes.last.deleted_at?).to be true
+      end
+    end
+
+    context "likes" do
+      let(:slot) { build(:std_slot_private, :with_likes) }
+      let!(:like) { create(:like, slot: slot) }
+
+      it "deletes belonging likes" do
+        slot.delete
+        like.reload
+        slot.reload
+        expect(like.deleted_at?).to be true
+        expect(slot.likes).to be_empty
+      end
+    end
+
+    context "containerships" do
+      let!(:containership) { create(:containership, slot: slot) }
+
+      it "deletes the slot from all slotGroups where it is contained" do
+        slot.delete
+        containership.reload
+        expect(containership.deleted_at?).to be true
+        expect(slot.containerships.first.deleted_at?).to be true
+      end
+    end
+  end
+
   describe :images do
     let(:std_slot) { create(:std_slot) }
     let!(:media) {
@@ -113,32 +165,16 @@ RSpec.describe BaseSlot, type: :model do
   end
 
   describe :get do
-    let(:std_slot) { create(:std_slot) }
+    let(:std_slot) { create(:std_slot_private) }
 
     it "returns the specific slot representation" do
       result = BaseSlot.get(std_slot.id)
-      expect(result.class).to eq StdSlot
+      expect(result.class).to eq std_slot.class
+      expect(result.class).to eq StdSlotPrivate
     end
 
     it "fails with ActiveRecord::RecordNotFound if invalid ID" do
       expect { BaseSlot.get('foo') }.to raise_error ActiveRecord::RecordNotFound
-    end
-  end
-
-  describe :get_many do
-    let(:std_slots) { create_list(:std_slot_private, 3) }
-    let(:group_slots) { create_list(:group_slot, 2) }
-    let(:other_slots) { create_list(:re_slot, 2) }
-
-    it "returns a list of specific slots" do
-      a = []
-      [std_slots, group_slots].each do |slots|
-        a << slots.collect(&:id)
-      end
-      result = BaseSlot.get_many(a.flatten)
-      expect(result).to include(*std_slots)
-      expect(result).to include(*group_slots)
-      expect(result).not_to include(*other_slots)
     end
   end
 
@@ -164,33 +200,6 @@ RSpec.describe BaseSlot, type: :model do
       expect(std_slot.errors.messages).to have_key :video
       expect(*std_slot.errors.messages[:video]).to have_key :public_id
       expect(*std_slot.errors.messages[:video][0][:public_id]).to include "blank"
-    end
-  end
-
-  describe :set_share_id do
-    let(:std_slot) { create(:std_slot_public) }
-    let(:user) { create(:user) }
-
-    it "adds a share url to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.share_id?).to be true
-    end
-
-    it "adds shared_by to the slot" do
-      std_slot.set_share_id(user)
-      std_slot.reload
-      expect(std_slot.shared_by_id).to eq user.id
-    end
-
-    context "existing share url" do
-      let(:std_slot) { create(:std_slot_public, share_id: '12345678') }
-
-      it "doesn't overwrite an existing share url" do
-        std_slot.set_share_id(user)
-        std_slot.reload
-        expect(std_slot.share_id).to eq '12345678'
-      end
     end
   end
 
@@ -265,7 +274,7 @@ RSpec.describe BaseSlot, type: :model do
     context "notifications" do
       it "notifies the slot owner if a new comment was made" do
         expect(Device).to receive(:notify_all).with(
-                            [std_slot.creator_id], anything)
+                            [std_slot.creator_id] - [user.id], anything)
         std_slot.create_comment(user, 'some content for the comment')
       end
 
@@ -275,42 +284,38 @@ RSpec.describe BaseSlot, type: :model do
 
         it "notifies previous commenters if a new comment was made" do
           expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] + commenters, anything)
+                              [std_slot.creator_id] + commenters - [user.id], anything)
           std_slot.create_comment(user, 'some content for the comment')
         end
       end
 
       context "existing likes" do
-        let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
-        let(:likers) { existing_likes.collect(&:user_id) }
-
-        it "notifies the slot likers if a new comment was made" do
+        it "notifies the slot creator if a new comment was made" do
           expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] + likers, anything)
+                              [std_slot.creator_id] - [user.id], anything)
           std_slot.create_comment(user, 'some content for the comment')
         end
 
         context "existing comments and likes" do
           let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
           let(:commenters) { existing_comments.collect(&:user_id) }
-          let!(:existing_likes) { create_list(:like, 3, slot: std_slot) }
-          let(:likers) { existing_likes.collect(&:user_id) }
-          let!(:liking_commenter) { create(:like, slot: std_slot,
-                                          user: existing_comments.first.user) }
 
           it "notifies the commenters and likers if a new comment was made" do
             expect(Device).to receive(:notify_all).with(
-                                [std_slot.creator_id] + commenters + likers,
+                                [std_slot.creator_id] + commenters - [user.id],
                                 anything)
             std_slot.create_comment(user, 'some content for the comment')
           end
 
           it "doesn't notify a commenter/liker twice" do
-            notified_ids = [std_slot.creator_id] + commenters + likers
-            notified_ids << liking_commenter.user_id
+            notified_ids = [std_slot.creator_id]
+            expect(Device).to receive(:notify_all).with(
+                                    notified_ids, anything)
+            std_slot.create_like(user)
+
             expect(Device).not_to receive(:notify_all).with(
                                     notified_ids, anything)
-            std_slot.create_comment(user, 'some content for the comment')
+            std_slot.create_like(user)
           end
         end
       end

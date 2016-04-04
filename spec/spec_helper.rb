@@ -74,17 +74,6 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-  if defined?(Bullet) && Bullet.enable?
-    config.before(:each) do
-      Bullet.start_request
-    end
-
-    config.after(:each) do
-      Bullet.perform_out_of_channel_notifications if Bullet.notification?
-      Bullet.end_request
-    end
-  end
-
   config.around(:each, :db) do |example|
     with_std_out_logger { example.run }
   end
@@ -96,6 +85,7 @@ RSpec.configure do |config|
 
   config.before(:each, :aws) do
     allow(Device).to receive(:create_client).and_return(Aws::SNS::Client.new(stub_responses: true))
+    allow(Share).to receive(:create_client).and_return(Aws::SES::Client.new(stub_responses: true))
   end
 
   config.before(:each, :async) do

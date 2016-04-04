@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'rails_helper'
 
 RSpec.describe "V1::Search", type: :request do
@@ -187,8 +188,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(response.status).to be(200)
       expect(json.length).to eq 1
       expect(json.first).to have_key('id')
-      expect(json.first).to have_key('upcomingCount')
-      expect(json.first['id']).to eq(group.id)
+      expect(json.first['id']).to eq(group.uuid)
     end
   end
 
@@ -202,7 +202,7 @@ RSpec.describe "V1::Search", type: :request do
       expect(json.length).to eq 1
       expect(json.first).to have_key('latitude')
       expect(json.first).to have_key('longitude')
-      expect(json.first['id']).to eq(ios_location.id)
+      expect(json.first['id']).to eq(ios_location.uuid)
     end
   end
 

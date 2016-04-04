@@ -98,9 +98,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
-	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
+	-H &quot;Content-Type: application/json&quot;</pre>
 
 ### Response
 
@@ -110,12 +109,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7eed85c175869629fcc4db244001e676&quot;
+ETag: W/&quot;71c7bb2a8f9eecf4fec2d3a6850fad2f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 03202645-0bb4-40cb-8baf-0a069fc1c877
-X-Runtime: 0.097859
+X-Request-Id: 38feab8e-4b36-4e11-a6ca-e8f4424ba4b2
+X-Runtime: 0.137976
 Vary: Origin
-Content-Length: 761</pre>
+Content-Length: 787</pre>
 
 #### Status
 
@@ -125,15 +124,15 @@ Content-Length: 761</pre>
 
 ```javascript
 {
-  "id" : 57,
+  "id" : 56,
   "username" : "Silvi O Ivlis",
-  "createdAt" : "2015-12-23T11:18:28.592Z",
-  "updatedAt" : "2015-12-23T11:18:28.592Z",
+  "createdAt" : "2016-04-04T20:50:20.133Z",
+  "updatedAt" : "2016-04-04T20:50:20.133Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "reslotCount" : 0,
+  "calendarCount" : 0,
   "friendsCount" : 0,
   "lang" : null,
   "email" : "alexpar@gmail.com",
@@ -142,18 +141,15 @@ Content-Length: 761</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "slotDefaultDuration" : null,
-  "slotDefaultLocationId" : null,
-  "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0000000000",
-  "defaultOwnFriendslotAlerts" : "0000000000",
-  "defaultOwnPublicAlerts" : "0000000000",
-  "defaultFriendsFriendslotAlerts" : "0000000000",
-  "defaultFriendsPublicAlerts" : "0000000000",
-  "defaultReslotAlerts" : "0000000000",
-  "defaultGroupAlerts" : "0000000000",
+  "myCalendarUuid" : "e5a91d49-ffa1-46b0-a848-86aae927b62f",
+  "friendsCalendarUuid" : "e5be000f-ac94-497d-b288-b960f3fe0814",
+  "allMySlotsUuid" : "cd4085c9-f8eb-4614-ac69-63e632af2176",
+  "myCreatedSlotsUuid" : "aebf56e8-7438-4252-8967-af9337e36cd8",
+  "myFriendSlotsUuid" : "d5502116-8e50-4ba8-9104-d3e845799add",
+  "myPublicSlotsUuid" : "3cbb63e6-6713-4cff-9b29-93d29cbc2b0e",
   "friendships" : [],
   "memberships" : [],
-  "authToken" : "61B0UpXU4u8uNfQYvjE3jQx9iWY"
+  "friendshipState" : "myself",
+  "authToken" : "yl76elKRfQ365lPr6oVLZ5k8Unc"
 }
 ```

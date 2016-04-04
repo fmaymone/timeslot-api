@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo
+Authorization: Token token=XcmqOvnEzi1x3kxlAW9tyYr3XrI
 Host: example.org
 Cookie: </pre>
 
@@ -62,10 +62,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/slot?query=timeslot+2015&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=A_3DhoeRuJzPWT1PgHFosMeVwSo&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=XcmqOvnEzi1x3kxlAW9tyYr3XrI&quot;</pre>
 
 ### Response
 
@@ -75,12 +74,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ee1ec3660f62c84565804710a722ae0f&quot;
+ETag: W/&quot;8dfb872a1d521e4316bc23272e733bcd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d36afece-0434-4eeb-9198-b157971e17d1
-X-Runtime: 0.012497
+X-Request-Id: 50c5ca60-b613-4902-8897-dc3988ef0419
+X-Runtime: 0.013701
 Vary: Origin
-Content-Length: 525</pre>
+Content-Length: 490</pre>
 
 #### Status
 
@@ -91,19 +90,19 @@ Content-Length: 525</pre>
 ```javascript
 [
   {
-    "id" : 29,
+    "id" : 27,
     "title" : "Timeslot Party Berlin 2015",
-    "startDate" : "2019-09-27T05:44:02.000Z",
-    "createdAt" : "2015-12-23T11:18:33.378Z",
-    "updatedAt" : "2015-12-23T11:18:33.378Z",
+    "startDate" : "2019-09-05T10:44:02.000Z",
+    "createdAt" : "2016-04-04T20:50:26.085Z",
+    "updatedAt" : "2016-04-04T20:50:26.085Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-27T05:44:02.000Z",
+    "endDate" : "2019-10-05T10:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 167,
-      "username" : "User 220",
-      "createdAt" : "2015-12-23T11:18:33.365Z",
-      "updatedAt" : "2015-12-23T11:18:33.365Z",
+      "id" : 112,
+      "username" : "User 259",
+      "createdAt" : "2016-04-04T20:50:26.068Z",
+      "updatedAt" : "2016-04-04T20:50:26.068Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -113,10 +112,8 @@ Content-Length: 525</pre>
       "alerts" : "omitted"
     },
     "visibility" : "public",
-    "reslotsCounter" : 0,
     "likes" : 0,
-    "commentsCounter" : 0,
-    "shareUrl" : null
+    "commentsCounter" : 0
   }
 ]
 ```

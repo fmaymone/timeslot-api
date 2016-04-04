@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe V1::UsersController, type: :routing do
   describe "routing" do
-
     it "routes to #show" do
       expect(get: "/v1/users/1")
         .to route_to("v1/users#show", id: "1", format: :json)
@@ -20,12 +19,22 @@ RSpec.describe V1::UsersController, type: :routing do
 
     it "routes to #media" do
       expect(get: "/v1/users/1/media")
-        .to route_to("v1/users#media_items", user_id: '1', format: :json)
+        .to route_to("v1/users#media_items", id: '1', format: :json)
     end
 
     it "routes to #slots" do
       expect(get: "/v1/users/1/slots")
-        .to route_to("v1/users#slots", user_id: "1", format: :json)
+        .to route_to("v1/users#slots", id: "1", format: :json)
+    end
+
+    it "routes to #friends" do
+      expect(get: "/v1/users/1/friends")
+        .to route_to("v1/users#friends", id: "1", format: :json)
+    end
+
+    it "routes to #calendars" do
+      expect(get: "/v1/users/1/calendars")
+        .to route_to("v1/users#calendars", id: "1", format: :json)
     end
   end
 end

@@ -1,7 +1,7 @@
 module Logging
   class CustomFormatter < Logger::Formatter
     SEVERITY_TO_COLOR_MAP = { 'DEBUG' => '0;37', 'INFO' => '32', 'WARN' => '33',
-                              'ERROR' => '31', 'FATAL' => '31', 'UNKNOWN' => '37' }
+                              'ERROR' => '31', 'FATAL' => '31', 'UNKNOWN' => '37' }.freeze
 
     def call(severity, time, _progname, msg)
       formatted_severity = format("%-5s", severity)

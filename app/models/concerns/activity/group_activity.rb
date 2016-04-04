@@ -1,15 +1,16 @@
 module GroupActivity
   include Activity
 
+  private def activity_is_valid?
+    super and active? #and !Rails.env.production?
+  end
+
   private def activity_type
     'Group'
   end
 
-  # The foreign id is required to find activities for
-  # changing we need the user here. If users changes their
-  # visiblity, we have to delete activities from stream.
   private def activity_foreign
-    activity_target.owner
+    activity_target.try(:owner)
   end
 
   # Add extra data to each activity. The data can be hide
@@ -18,8 +19,21 @@ module GroupActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.group(activity_target),
-      actor: JSONView.user(activity_actor)
+      target: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/groups/_group',
+          layout: false,
+          locals: {
+              :group => activity_target,
+              :current_user => activity_actor
+          }
+      )),
+      actor: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => activity_actor
+          }
+      ))
     }
   end
 
@@ -27,8 +41,8 @@ module GroupActivity
   # for the users activity feed
   private def activity_message_params
     {
-      USER: activity_actor.username,
-      TITLE: activity_target.name
+      ACTOR: activity_actor.username,
+      NAME: activity_target.name
     }
   end
 end

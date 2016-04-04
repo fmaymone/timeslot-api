@@ -28,12 +28,6 @@ Description : Username of the user
 Name : image
 Description : URL of the user image
 
-Name : location
-Description : Home location of user
-
-Name : push
-Description : Send push Notifications (true/false)
-
 Name : createdAt
 Description : Creation of user
 
@@ -43,21 +37,15 @@ Description : Latest update of user in db
 Name : deletedAt
 Description : Deletion of user
 
-Name : slotCount
-Description : Number of slots for this user
-
-Name : reslotCount
-Description : Number of reslots for this user
-
-Name : friendsCount
-Description : Number of friends for this user
+Name : friendshipState
+Description : The friendship relation to the current user
 
 ### Request
 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=l1Jf4G6194jS7zHhuST-rq-QWSk
+Authorization: Token token=EoKH_4vce-aa_ExcvwmH5-dAo0M
 Host: example.org
 Cookie: </pre>
 
@@ -72,10 +60,9 @@ method: metaphone</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/user?query=jon+do&amp;method=metaphone&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=l1Jf4G6194jS7zHhuST-rq-QWSk&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=EoKH_4vce-aa_ExcvwmH5-dAo0M&quot;</pre>
 
 ### Response
 
@@ -85,10 +72,10 @@ method: metaphone</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e82f256e98dafa7435a8b10f7d438f0f&quot;
+ETag: W/&quot;d023dc89e8ffd0b4063721082cb3dd9b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fd3de30e-41f1-493d-9cab-7c4f058e14eb
-X-Runtime: 0.012029
+X-Request-Id: 993ca699-a9d9-41f4-bad0-0b0b0821a325
+X-Runtime: 0.011977
 Vary: Origin
 Content-Length: 337</pre>
 
@@ -101,19 +88,19 @@ Content-Length: 337</pre>
 ```javascript
 [
   {
-    "id" : 164,
+    "id" : 106,
     "username" : "John Doe",
-    "createdAt" : "2015-12-23T11:18:33.334Z",
-    "updatedAt" : "2015-12-23T11:18:33.334Z",
+    "createdAt" : "2016-04-04T20:50:26.003Z",
+    "updatedAt" : "2016-04-04T20:50:26.003Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 165,
+    "id" : 107,
     "username" : "John Doh",
-    "createdAt" : "2015-12-23T11:18:33.337Z",
-    "updatedAt" : "2015-12-23T11:18:33.337Z",
+    "createdAt" : "2016-04-04T20:50:26.006Z",
+    "updatedAt" : "2016-04-04T20:50:26.006Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

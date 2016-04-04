@@ -10,8 +10,13 @@ resource "GlobalSlots" do
     header "Authorization", :auth_header
 
     parameter :predecessor, "'muid' of the global slot", required: true
+    parameter :slotSets,
+              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
+              "should be added to",
+              required: false
+    # TODO: response needs array with invalid slotset uuids
 
-    let(:predecessor) { '238a69a4-271c-f5cb-e60e-48952d805859' }
+    let(:predecessor) { attributes_for(:global_slot)[:slot_uuid] }
 
     example "Reslot global slot", document: :v1 do
       explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \
@@ -21,13 +26,13 @@ resource "GlobalSlots" do
 
       expect(response_status).to eq 201
       expect(json).to have_key("muid")
-      expect(json['muid']).to eq predecessor
+      # expect(json['muid']).to eq predecessor
       expect(json).to have_key("visibility")
       expect(json['visibility']).to eq 'public'
-      expect(json).to have_key("slotter")
-      expect(json['slotter']['id']).to eq current_user.id
-      expect(json['slotter']).to have_key("reslotCount")
-      expect(json['slotter']['reslotCount']).to eq 1
+      expect(json).not_to have_key("slotter")
+      # expect(json['slotter']['id']).to eq current_user.id
+      # expect(json['slotter']).to have_key("reslotCount")
+      # expect(json['slotter']['reslotCount']).to eq 1
     end
   end
 
@@ -41,8 +46,8 @@ resource "GlobalSlots" do
 
     describe "cinema" do
       let(:category) { 'cinema' }
-      let(:q) { 'James' }
-      let(:moment) { '2015-11-29T12:43:28.907Z'}
+      let(:q) { 'Love' }
+      let(:moment) { '2016-07-29T12:43:28.907Z' }
       let(:limit) { 10 }
 
       example "Cinema - Find global slots", document: :v1 do
@@ -83,17 +88,14 @@ resource "GlobalSlots" do
         expect(first).not_to have_key("likes")
         expect(first).not_to have_key("commentsCounter")
         expect(first).not_to have_key("reslotsCounter")
-        expect(first).not_to have_key("shareUrl")
         expect(first).not_to have_key("visibility")
       end
     end
 
     describe "football" do
       let(:category) { 'football' }
-      # The search service from data-team has some issues atm...
-      # let(:q) { 'Borussia' }
-      let(:q) { 'Dortmund' }
-      let(:moment) { '2015-07-05'}
+      let(:q) { 'Borussia' }
+      let(:moment) { '2016-07-05' }
       let(:limit) { 5 }
 
       example "Football - Find global slots", document: :v1 do
@@ -134,7 +136,6 @@ resource "GlobalSlots" do
         expect(first).not_to have_key("likes")
         expect(first).not_to have_key("commentsCounter")
         expect(first).not_to have_key("reslotsCounter")
-        expect(first).not_to have_key("shareUrl")
         expect(first).not_to have_key("visibility")
       end
     end

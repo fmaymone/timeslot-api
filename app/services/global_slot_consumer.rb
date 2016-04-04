@@ -12,20 +12,22 @@ class GlobalSlotConsumer
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    raw_result = fetch('locations', muid)
+    raw_result = {}
+    timespent_location_fetch = Benchmark.measure {
+      raw_result = fetch('locations', muid)
+    }
+    Rails.logger.warn {
+      "Fetching location for slot #{muid} has taken #{timespent_location_fetch}"
+    }
     CandyLocation.new(raw_result)
   end
 
-  def search(category, query)
-    if category == 'football'
-      # TMP FIX: football search is not working on the new ES endpoint,
-      # use the old one for now
-      uri = URI.parse('http://es.timeslot.rocks:56000/api/search_')
-    else
-      uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
+  def prepare_search(category = nil, query = nil)
+    uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
+    if category && query
+      uri.path += category
+      uri.query = URI.encode_www_form(query)
     end
-    uri.path += category
-    uri.query = URI.encode_www_form(query)
 
     user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
     pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
@@ -37,16 +39,27 @@ class GlobalSlotConsumer
   rescue => e
     raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
   else
-    result = Oj.load(raw_result)
-    crawler_slots = result['search-slots']
+    Oj.load(raw_result)
+  end
+
+  # TODO: rename to 'slots'
+  def search(category, query)
+    result = prepare_search(category, query)
+    crawler_slots = result['result']['slots']
     slots = []
     crawler_slots.each { |slot| slots << ElasticSearchSlot.new(slot) }
     slots
   end
 
+  def categories
+    result = prepare_search
+    result['_links'].keys
+  end
+
   private def fetch(resource_type, muid)
     uri = URI.parse(ENV['TS_DATA_MALL_URL'])
     uri.path += "#{resource_type}/#{muid}"
+
     user = ENV['TS_DATA_MALL_NAME']
     pw = ENV['TS_DATA_MALL_PASSWORD']
     auth = { http_basic_authentication: [user, pw] }
@@ -71,23 +84,22 @@ class GlobalSlotConsumer
     slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
   rescue ActiveRecord::RecordNotFound
     msg = "Couldn't find User for given Domain. Seed data loaded?"
-    opts = {}
-    opts[:parameters] = {
-      domain: result['domain'],
+    opts = {
+      domain: result['domains'].try(:first),
       muid: result['muid'],
       global_slot: msg }
     Airbrake.notify(ActionController::ParameterMissing, opts)
     raise ActionController::ParameterMissing, msg
   else
-    {
+    slot_data = {
       user: slot_source,
       meta: {
         title: result['title'],
-        start_date: result['start_timestamp'],
-        end_date: result['stop_timestamp'],
+        start_date: result['start_timestamptz'],
+        end_date: result['stop_timestamptz'],
         location_uid: result['location_muid']
       },
-      muid: result['muid'] || result['duid'] || result['cuid'],
+      muid: result['muid'],
       url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
       media: [
@@ -96,13 +108,16 @@ class GlobalSlotConsumer
           position: 1,
           media_type: "image"
         }
-      ],
-      notes: [
+      ]
+    }
+    if result['description']
+      slot_data[:notes] = [
         {
           title: 'Description',
           content: result['description']
         }
       ]
-    }
+    end
+    slot_data
   end
 end

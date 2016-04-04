@@ -14,6 +14,10 @@ FactoryGirl.define do
       location
     end
 
+    trait :with_picture do
+      picture 'www.looking.good'
+    end
+
     trait :with_phone do
       phone
     end
@@ -25,6 +29,12 @@ FactoryGirl.define do
     trait :with_device do
       after :create do |user|
         create :device, user: user
+      end
+    end
+
+    trait :with_3_friends do
+      after :create do |user|
+        create_list :friendship, 3, :established, user: user
       end
     end
 

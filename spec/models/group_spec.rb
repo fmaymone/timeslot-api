@@ -8,11 +8,13 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:owner) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:name) }
+  it { is_expected.to respond_to(:uuid) }
   it { is_expected.to respond_to(:members_can_post) }
   it { is_expected.to respond_to(:members_can_invite) }
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to belong_to(:owner).inverse_of(:own_groups) }
-  it { is_expected.to have_many(:group_slots).inverse_of(:group) }
+  it { is_expected.to have_many(:containerships).inverse_of(:group) }
+  it { is_expected.to have_many(:slots).inverse_of(:slot_groups) }
   it { is_expected.to have_many(:memberships).inverse_of(:group) }
   it { is_expected.to have_many(:related_users)
                        .class_name(User)
@@ -23,7 +25,6 @@ RSpec.describe Group, type: :model do
                        .class_name(User)
                        .through(:active_memberships)
                        .source(:user) }
-
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }
   it { is_expected.to respond_to(:follow) }
@@ -51,6 +52,15 @@ RSpec.describe Group, type: :model do
   describe "when name is too long" do
     before { group.name = "a" * 256 }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "when uuid is not present" do
+    let(:group) { create(:group) }
+    before { group.uuid = nil }
+
+    it "raises not_null constraint error" do
+      expect { group.save }.to raise_error ActiveRecord::StatementInvalid
+    end
   end
 
   describe :members do
@@ -112,18 +122,18 @@ RSpec.describe Group, type: :model do
       end
 
       it "sets an image if provided" do
-        group_params.merge!(image: image)
+        group_params[:image] = image
         Group.create_with_invitees(group_params: group_params)
         expect(Group.last.image).not_to be nil
         expect(Group.last.image).to eq image
       end
 
-      it "invites users to the group if provided" do
+      it "adds users to the group if provided" do
         Group.create_with_invitees(group_params: group_params,
                                    invitees: invitees)
         expect(Group.last.related_users).not_to be nil
         expect(Group.last.related_users.count).to eq 4
-        expect(Group.last.members.count).to eq 1
+        expect(Group.last.members.count).to eq 4
         expect(Group.last.members).to include owner
       end
     end

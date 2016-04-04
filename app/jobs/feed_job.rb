@@ -14,8 +14,7 @@ class FeedJob
       # 'Feed'.constantize.dispatch(params)
       Feed.dispatch(params)
     rescue => e
-      opts = {}
-      opts[:parameters] = {
+      opts = {
         actor: params[:actor],
         object: params[:object],
         target: params[:target],

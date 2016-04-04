@@ -135,7 +135,7 @@ RSpec.describe MetaSlot, type: :model do
 
       describe "ios_location" do
         let(:ios_location) { attributes_for(:ios_location) }
-        before(:each) { meta_params.merge!(ios_location: ios_location) }
+        before(:each) { meta_params[:ios_location] = ios_location }
 
         context "with new ios_location" do
           it "creates a new MetaSlot" do

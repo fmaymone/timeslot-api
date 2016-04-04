@@ -7,17 +7,15 @@ namespace :db do
     return if Rails.env == 'production'
 
     # delete db before start
-    [MediaItem, ReSlot, GroupSlot, StdSlot, BaseSlot, MetaSlot, SlotSetting,
-     User, Note, Like, Comment, Group, Membership, Friendship].each(&:delete_all)
+    [MediaItem, Note, Like, Comment, SlotSetting, StdSlot, BaseSlot, MetaSlot,
+     Membership, Friendship, Passengership, Containership, Group, User].each(&:delete_all)
 
     # start populate
-    (0..5).each do
+    (0..25).each do
 
       user = FactoryGirl.create(:user, :with_3_groups, username: Faker::Name.name)
-      #email: Faker::Number.number(5) + Faker::Internet.email
-      #password: Faker::Internet.password
 
-      (0..5).each do
+      (0..25).each do
 
         meta_slot = FactoryGirl.create(:meta_slot,
                                        creator: user,
@@ -28,8 +26,24 @@ namespace :db do
                                   :with_likes,
                                   :with_comments,
                                   :with_media,
-                                  owner: user,
+                                  creator: user,
                                   meta_slot: meta_slot)
+
+        group = FactoryGirl.create(:group, owner: user)
+        SlotsetManager.new(current_user: user).add!(slot, group)
+
+        tagged_user = FactoryGirl.create(:user, username: Faker::Name.name)
+        UsersToSlotTagger.new(slot).tag([tagged_user.id], user)
+
+        group_user = FactoryGirl.create(:user, username: Faker::Name.name)
+        group.invite_users([group_user.id])
+
+        slot.create_comment(user, 'This is a test comment.')
+        slot.create_like(user)
+        slot.create_comment(tagged_user, 'This is a test comment.')
+        slot.create_like(tagged_user)
+        slot.create_comment(group_user, 'This is a test comment.')
+        slot.create_like(group_user)
 
         FactoryGirl.create_list(:slot_image, 5, mediable: slot)
         FactoryGirl.create_list(:video, 2, mediable: slot)

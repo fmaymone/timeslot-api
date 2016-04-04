@@ -2,13 +2,13 @@
 
 ## Update data for existing group
 
-### PATCH /v1/groups/:group_id
+### PATCH /v1/groups/:group_uuid
 
 e.g. Change groupname
 
 returns 200 if the update was successful
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 returns 422 if parameters are missing
 
@@ -16,7 +16,7 @@ returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to update
 
 Name : name
@@ -66,13 +66,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tERv5DZCCjRYfBPbjjOdcqA4i_w
+Authorization: Token token=EJ7UItJyn8uUtvkCp_9HN3EyU_o
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/9</pre>
+<pre>PATCH /v1/groups/c67b6f48-6918-4f68-83d7-e085e77863e6</pre>
 
 #### Body
 ```javascript
@@ -86,10 +86,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/9&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/c67b6f48-6918-4f68-83d7-e085e77863e6&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tERv5DZCCjRYfBPbjjOdcqA4i_w&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=EJ7UItJyn8uUtvkCp_9HN3EyU_o&quot;</pre>
 
 ### Response
 
@@ -99,12 +98,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;878f8ffcc7421567d89cd307a3238a4a&quot;
+ETag: W/&quot;acc693cae0263e361c96577fa6e63741&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 76b2ae3b-0a37-4676-8417-554cfb0104cc
-X-Runtime: 0.008596
+X-Request-Id: 540c9a61-ed26-49d7-84bc-01d1bf4b8bbc
+X-Runtime: 0.011145
 Vary: Origin
-Content-Length: 345</pre>
+Content-Length: 444</pre>
 
 #### Status
 
@@ -114,22 +113,28 @@ Content-Length: 345</pre>
 
 ```javascript
 {
-  "id" : 9,
+  "id" : "c67b6f48-6918-4f68-83d7-e085e77863e6",
   "name" : "bar",
   "image" : "",
   "membersCanPost" : true,
   "membersCanInvite" : true,
-  "createdAt" : "2015-12-23T11:18:30.486Z",
-  "updatedAt" : "2015-12-23T11:18:30.495Z",
+  "public" : false,
+  "createdAt" : "2016-04-04T20:50:22.001Z",
+  "updatedAt" : "2016-04-04T20:50:22.010Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 11,
-    "username" : "User 77",
-    "createdAt" : "2015-12-23T11:18:30.483Z",
-    "updatedAt" : "2015-12-23T11:18:30.483Z",
+    "id" : 13,
+    "username" : "User 74",
+    "createdAt" : "2016-04-04T20:50:21.997Z",
+    "updatedAt" : "2016-04-04T20:50:21.997Z",
     "deletedAt" : null,
     "image" : ""
   },
+  "memberIds" : [
+    13
+  ],
+  "memberCount" : 1,
+  "slotCount" : 0,
   "membershipState" : "active"
 }
 ```

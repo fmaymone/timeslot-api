@@ -34,9 +34,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/media-signature&quot; -X GET \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/media-signature&quot; -X GET \
+	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
 
@@ -46,10 +45,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f3c5350c3ea70deba211a8276739f6f5&quot;
+ETag: W/&quot;17591c41b3d0c20b9cff927050354b74&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8ade47e9-dd47-43f4-bb9c-bc3bd9106a74
-X-Runtime: 0.024800
+X-Request-Id: e2c3deea-b035-43d0-9e34-125836b8a52b
+X-Runtime: 0.026159
 Vary: Origin
 Content-Length: 144</pre>
 
@@ -61,9 +60,9 @@ Content-Length: 144</pre>
 
 ```javascript
 {
-  "signature" : "bab44def3b83b07632c293b5f8218d66ce9a8a17",
+  "signature" : "7d017acf80557fd4c90888092209959fb5d698e3",
   "apiKey" : 255241985667644,
-  "publicId" : "sxlni2c61xg5jak5n9rm",
-  "timestamp" : "20151223111833"
+  "publicId" : "vg8k3lnwk8lent1txise",
+  "timestamp" : "20160404205025"
 }
 ```

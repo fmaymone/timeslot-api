@@ -56,21 +56,20 @@ Description : [pending active, pending passive, friend, stranger]
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=uNksC_DA500y68jgIG0sAoS68lY
+Authorization: Token token=EVrN_zvN-gSzGqgkWNGBC1ZBPYM
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/me/friendship/151</pre>
+<pre>POST /v1/me/friendship/92</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/friendship/151&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/friendship/92&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=uNksC_DA500y68jgIG0sAoS68lY&quot; \
-	-H &quot;Host: example.org&quot; \
+	-H &quot;Authorization: Token token=EVrN_zvN-gSzGqgkWNGBC1ZBPYM&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -81,12 +80,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8e7bfa44fc25352388fcf5fb21683c19&quot;
+ETag: W/&quot;938d8485456312cb7acf7b2db129ea14&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c99ea97b-8cfe-4c59-abfb-f1e8ee8a9c6a
-X-Runtime: 0.053503
+X-Request-Id: 561e8325-8783-4b92-b3eb-9d62e395339b
+X-Runtime: 0.048389
 Vary: Origin
-Content-Length: 232</pre>
+Content-Length: 233</pre>
 
 #### Status
 
@@ -96,15 +95,15 @@ Content-Length: 232</pre>
 
 ```javascript
 {
-  "id" : 151,
+  "id" : 92,
   "username" : "John",
-  "createdAt" : "2015-12-23T11:18:32.964Z",
-  "updatedAt" : "2015-12-23T11:18:32.964Z",
+  "createdAt" : "2016-04-04T20:50:25.571Z",
+  "updatedAt" : "2016-04-04T20:50:25.571Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "reslotCount" : 0,
+  "calendarCount" : 0,
   "friendsCount" : 0,
   "friendshipState" : "pending active"
 }

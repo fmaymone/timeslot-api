@@ -2,17 +2,17 @@
 
 ## Get group data for specific group
 
-### GET /v1/groups/:group_id
+### GET /v1/groups/:group_uuid
 
 returns data of specified group
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to get
 
 
@@ -53,20 +53,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=LaxVjJPnPibYjPSju5h4IKOlFBY
+Authorization: Token token=erxafiGBOny-ww6DgU2gCL_9XCk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/7</pre>
+<pre>GET /v1/groups/e45cff1b-99eb-450d-9f4b-7a2f678b2f5a</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/7&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/e45cff1b-99eb-450d-9f4b-7a2f678b2f5a&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LaxVjJPnPibYjPSju5h4IKOlFBY&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=erxafiGBOny-ww6DgU2gCL_9XCk&quot;</pre>
 
 ### Response
 
@@ -76,12 +75,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4224aee36c6b78c992e6d654fe4c390f&quot;
+ETag: W/&quot;bc427afe2176826c352b48b37324b753&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c61ea9f4-49d9-4366-9e20-7079c2b0fd4e
-X-Runtime: 0.009229
+X-Request-Id: f6e7ba73-092c-47c4-92b5-800ed80effa9
+X-Runtime: 0.033982
 Vary: Origin
-Content-Length: 355</pre>
+Content-Length: 460</pre>
 
 #### Status
 
@@ -91,22 +90,32 @@ Content-Length: 355</pre>
 
 ```javascript
 {
-  "id" : 7,
-  "name" : "Testgroup 12",
+  "id" : "e45cff1b-99eb-450d-9f4b-7a2f678b2f5a",
+  "name" : "Testgroup 4",
   "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2015-12-23T11:18:30.392Z",
-  "updatedAt" : "2015-12-23T11:18:30.392Z",
+  "public" : false,
+  "createdAt" : "2016-04-04T20:50:21.784Z",
+  "updatedAt" : "2016-04-04T20:50:21.784Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 6,
-    "username" : "User 72",
-    "createdAt" : "2015-12-23T11:18:30.391Z",
-    "updatedAt" : "2015-12-23T11:18:30.391Z",
+    "id" : 2,
+    "username" : "User 63",
+    "createdAt" : "2016-04-04T20:50:21.782Z",
+    "updatedAt" : "2016-04-04T20:50:21.782Z",
     "deletedAt" : null,
     "image" : ""
   },
+  "memberIds" : [
+    1,
+    5,
+    4,
+    3,
+    2
+  ],
+  "memberCount" : 5,
+  "slotCount" : 3,
   "membershipState" : "active"
 }
 ```

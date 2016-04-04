@@ -25,19 +25,18 @@ Description : containing comment content and creation date and details of the us
 
 #### Headers
 
-<pre>Authorization: Token token=etimA6OBSesucXD3UCYEXyrNuuE
+<pre>Authorization: Token token=ahfs_Ss-0sxcEk6onyCbOobf1jQ
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/20/comments</pre>
+<pre>GET /v1/slots/29/comments</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/slots/20/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=etimA6OBSesucXD3UCYEXyrNuuE&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/29/comments&quot; -X GET \
+	-H &quot;Authorization: Token token=ahfs_Ss-0sxcEk6onyCbOobf1jQ&quot;</pre>
 
 ### Response
 
@@ -47,12 +46,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b28b885be5db05f7a44026bc790c1b6b&quot;
+ETag: W/&quot;f4759e3ee434da5574dde26d73f937f0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3f6d132b-e6b9-4572-89f5-a1dae2e783bb
-X-Runtime: 0.018028
+X-Request-Id: 06d38666-d0f4-403b-b2b8-6463ed0848ad
+X-Runtime: 0.011556
 Vary: Origin
-Content-Length: 929</pre>
+Content-Length: 697</pre>
 
 #### Status
 
@@ -63,49 +62,37 @@ Content-Length: 929</pre>
 ```javascript
 [
   {
-    "createdAt" : "2015-12-23T11:18:35.683Z",
+    "createdAt" : "2016-04-04T20:50:32.967Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 56,
-      "username" : "User 347",
-      "createdAt" : "2015-12-23T11:18:35.681Z",
-      "updatedAt" : "2015-12-23T11:18:35.681Z",
+      "id" : 88,
+      "username" : "User 390",
+      "createdAt" : "2016-04-04T20:50:32.964Z",
+      "updatedAt" : "2016-04-04T20:50:32.964Z",
       "deletedAt" : null,
       "image" : ""
     }
   },
   {
-    "createdAt" : "2015-12-23T11:18:35.689Z",
+    "createdAt" : "2016-04-04T20:50:32.972Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 57,
-      "username" : "User 348",
-      "createdAt" : "2015-12-23T11:18:35.687Z",
-      "updatedAt" : "2015-12-23T11:18:35.687Z",
+      "id" : 89,
+      "username" : "User 391",
+      "createdAt" : "2016-04-04T20:50:32.970Z",
+      "updatedAt" : "2016-04-04T20:50:32.970Z",
       "deletedAt" : null,
       "image" : ""
     }
   },
   {
-    "createdAt" : "2015-12-23T11:18:35.695Z",
+    "createdAt" : "2016-04-04T20:50:32.978Z",
     "content" : "hate no one, love only a few",
     "commenter" : {
-      "id" : 58,
-      "username" : "User 349",
-      "createdAt" : "2015-12-23T11:18:35.692Z",
-      "updatedAt" : "2015-12-23T11:18:35.692Z",
-      "deletedAt" : null,
-      "image" : ""
-    }
-  },
-  {
-    "createdAt" : "2015-12-23T11:18:35.711Z",
-    "content" : "hate no one, love only a few",
-    "commenter" : {
-      "id" : 60,
-      "username" : "User 351",
-      "createdAt" : "2015-12-23T11:18:35.708Z",
-      "updatedAt" : "2015-12-23T11:18:35.708Z",
+      "id" : 90,
+      "username" : "User 392",
+      "createdAt" : "2016-04-04T20:50:32.975Z",
+      "updatedAt" : "2016-04-04T20:50:32.975Z",
       "deletedAt" : null,
       "image" : ""
     }

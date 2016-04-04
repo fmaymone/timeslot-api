@@ -4,11 +4,11 @@ class MetaSlot < ActiveRecord::Base
   # give 'openEnd' slots an end
   before_validation do |metaslot|
     if open_end || end_date.blank?
-      if start_date < start_date.to_datetime.at_middle_of_day
-        metaslot.end_date = start_date.to_datetime.at_end_of_day
-      else
-        metaslot.end_date = start_date.to_datetime.next_day.at_midday
-      end
+      metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
+                            start_date.to_datetime.at_end_of_day
+                          else
+                            start_date.to_datetime.next_day.at_midday
+                          end
       metaslot.open_end = true
     end
   end
@@ -25,11 +25,9 @@ class MetaSlot < ActiveRecord::Base
   validates :end_date, presence: true
   validate :enddate_is_after_startdate
 
+  # TODO: refactor this
   def location
-    GlobalSlotConsumer.new.location(location_uid)
-  rescue => e
-    Airbrake.notify(e)
-    nil
+    ios_location
   end
 
   def unregister
@@ -48,17 +46,28 @@ class MetaSlot < ActiveRecord::Base
 
   def self.find_or_add(meta_params)
     meta_id = meta_params[:meta_slot_id]
-    MetaSlot.where(id: meta_id).first_or_create do |meta_slot|
+    MetaSlot.includes(:creator).where(id: meta_id).first_or_create do |meta_slot|
       meta_slot.update(meta_params.except(:ios_location))
-      return meta_slot if meta_params[:ios_location].nil?
 
-      ios_params = meta_params[:ios_location]
-      if ios_params[:latitude].present? && ios_params[:longitude].present?
-        ios_location = IosLocation.find_by(
-          latitude: ios_params[:latitude], longitude: ios_params[:longitude])
-      end
-      ios_location ||= IosLocation.create(
-        ios_params.merge(creator: meta_params[:creator]))
+      return meta_slot if meta_params[:ios_location].nil? &&
+                          meta_params[:location_uid].nil?
+
+      ios_params = meta_params[:ios_location] ||
+                   GlobalSlotConsumer.new.location(meta_slot.location_uid)
+                     .as_json.symbolize_keys
+
+      # TODO: IosLocation.find_or_create(...)
+      ios_location = if ios_params[:latitude].present? &&
+                        ios_params[:longitude].present? &&
+                        known_location = IosLocation
+                                         .find_by(
+                                           latitude: ios_params[:latitude],
+                                           longitude: ios_params[:longitude])
+                       known_location
+                     else
+                       IosLocation.create(
+                         ios_params.merge(creator: meta_params[:creator]))
+                     end
       meta_slot.update(ios_location: ios_location)
     end
   end

@@ -55,6 +55,8 @@ ENV['PAGINATION_DEFAULT_FILTER'] = 'upcoming' # if not provided by client
 ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
 ENV['PAGINATION_MAX_LIMIT'] = '100'
 
+ENV['SUGGESTED_USER_EMAIL'] = 'kalirad@me.com' # the email for the user which is suggested as a friend if a user had no friends yet
+
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
 ```
@@ -74,35 +76,11 @@ ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
 ```
 ## Global Slot Retrieval Service
 
-Allows to get a Global Slot by its **muid**.
+Allows to get a Global Slot by its **muid** (slot_uuid).
 ```
 ENV['TS_DATA_MALL_URL'])
 ENV['TS_DATA_MALL_NAME'] || "tsgatekeeper"
 ENV['TS_DATA_MALL_PASSWORD'] || "***REMOVED***"
-```
-
-## Location DB
-
--> not used at the moment
-
-The Data Team provides a database based on OSM Location Data. This DB is
-transparently available for the backend. At the moment we use a ssh tunnel for
-connecting.
-
-```
-ENV['LOCATION_DB_URI'] # postgres uri of locations production db
-```
-
-## Location Search Service
-
--> not used at the moment
-
-The Data Team provides an elasticSearch - Location Search Interface for it's location data.
-
-```bash
-ENV['TS_LOCATION_SEARCH_SERVICE_NAME'] # username
-ENV['TS_LOCATION_SEARCH_SERVICE_PASSWORD'] # password
-ENV['TS_LOCATION_SEARCH_SERVICE_URL'] # search url
 ```
 
 # External Services

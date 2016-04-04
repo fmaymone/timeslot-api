@@ -2,17 +2,17 @@
 
 ## Get list of all users related to a group
 
-### GET /v1/groups/:group_id/related
+### GET /v1/groups/:group_uuid/related
 
 Also includes user with pending or refused invitations and inactive or kicked members.
 
 returns 200 &amp; list of all users related to this group
 
-returns 404 if ID is invalid
+returns 404 if UUID is invalid
 
 ### Parameters
 
-Name : group_id *- required -*
+Name : group_uuid *- required -*
 Description : ID of the group to get related users for
 
 
@@ -41,20 +41,19 @@ Description : Deletion date of membership
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Df7vEsS2gPIFxp2ylf5ch-FzY7Y
+Authorization: Token token=flQ-1YWzimZDX-eInzMjU1sh4ec
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/16/related</pre>
+<pre>GET /v1/groups/628cfdfa-f625-4181-9b7e-afda6663ac58/related</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/16/related&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/628cfdfa-f625-4181-9b7e-afda6663ac58/related&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Df7vEsS2gPIFxp2ylf5ch-FzY7Y&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=flQ-1YWzimZDX-eInzMjU1sh4ec&quot;</pre>
 
 ### Response
 
@@ -64,12 +63,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;334bb9e4e6e2b5670f17188718599543&quot;
+ETag: W/&quot;561319034eaeb68c401571a0d322d4a5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 91a91171-ec8f-47f5-a376-6d42b5b97075
-X-Runtime: 0.017233
+X-Request-Id: 6ebdee32-8593-49fd-ad6f-c65e9612ee82
+X-Runtime: 0.013843
 Vary: Origin
-Content-Length: 442</pre>
+Content-Length: 511</pre>
 
 #### Status
 
@@ -79,43 +78,48 @@ Content-Length: 442</pre>
 
 ```javascript
 {
-  "groupId" : 16,
-  "size" : 7,
+  "id" : "628cfdfa-f625-4181-9b7e-afda6663ac58",
+  "size" : 8,
   "related" : [
     {
-      "userId" : 44,
+      "id" : 47,
+      "state" : "active",
+      "deletedAt" : "2016-04-04T20:50:22.464Z"
+    },
+    {
+      "id" : 46,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 45,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 44,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 43,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "id" : 42,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "id" : 41,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 45,
+      "id" : 40,
       "state" : "active",
       "deletedAt" : null
-    },
-    {
-      "userId" : 46,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 47,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 48,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
-    },
-    {
-      "userId" : 49,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
-    },
-    {
-      "userId" : 50,
-      "state" : "invited",
-      "deletedAt" : "2015-12-23T11:18:27.365Z"
     }
   ]
 }

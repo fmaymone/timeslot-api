@@ -1,4 +1,11 @@
 class UserPolicy < ApplicationPolicy
+  attr_reader :current_user, :user
+
+  def initialize(current_user, other_user)
+    @current_user = current_user
+    @user = other_user
+  end
+
   # true if a user is logged in
   # TODO: also allow for visitors?
   def show?
@@ -25,6 +32,16 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  # true for logged in users
+  def friends?
+    current_user?
+  end
+
+  # true for logged in users
+  def calendars?
+    current_user?
+  end
+
   # no prerequisites
   def media_items?
     true
@@ -35,5 +52,11 @@ class UserPolicy < ApplicationPolicy
   # would already have returned a 404
   def reset_password?
     true
+  end
+
+  # true if the request is made by an existing crawler source
+  def global_group?
+    return true if current_user.crawler_source?
+    false
   end
 end

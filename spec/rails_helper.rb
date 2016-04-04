@@ -17,6 +17,11 @@ require 'rspec/rails'
 require 'shoulda/matchers'
 require "pundit/rspec"
 
+# Initialize the storage controller
+def storage
+  @storage ||= RedisStorage
+end
+
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
@@ -57,12 +62,12 @@ RSpec.configure do |config|
   config.include(FactoryGirl::Syntax::Methods,
                  type: :services,
                  file_path: %r{/spec\/services/}
-  )
+                )
 
   config.include(FactoryGirl::Syntax::Methods,
                  type: :query,
                  file_path: %r{/spec\/queries/}
-  )
+                )
 
   # to be able to use route helpers in specs
   config.include Rails.application.routes.url_helpers

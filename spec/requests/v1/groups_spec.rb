@@ -11,6 +11,11 @@ RSpec.describe "V1::Groups", type: :request do
   describe "POST /v1/groups" do
     let(:new_params) { { name: "bar" } }
 
+    it "returns 201 created" do
+      post "/v1/groups", new_params, auth_header
+      expect(response).to have_http_status :created
+    end
+
     it "creates a new group" do
       expect {
         post "/v1/groups", new_params, auth_header
@@ -35,29 +40,29 @@ RSpec.describe "V1::Groups", type: :request do
           invitees: create_list(:user, 3).collect(&:id) }
       end
 
-      it "creates memberships for all invitees" do
+      it "creates active memberships for all invitees" do
         expect {
           post "/v1/groups", new_params, auth_header
         }.to change(Membership, :count).by 4
-        expect(Membership.last.invited?).to be true
+        expect(Membership.last.active?).to be true
       end
     end
   end
 
   # update
-  describe "PATCH /v1/groups/:group_id" do
+  describe "PATCH /v1/groups/:group_uuid" do
     let(:new_params) { { name: "bar" } }
 
     describe "user is group owner" do
       let(:group) { create(:group, owner: current_user, name: "foo") }
 
       it "returns OK" do
-        patch "/v1/groups/#{group.id}", new_params, auth_header
+        patch "/v1/groups/#{group.uuid}", new_params, auth_header
         expect(response.status).to be(200)
       end
 
       it "updates group name" do
-        patch "/v1/groups/#{group.id}", new_params, auth_header
+        patch "/v1/groups/#{group.uuid}", new_params, auth_header
         group.reload
         expect(group.name).to eq "bar"
       end
@@ -67,12 +72,12 @@ RSpec.describe "V1::Groups", type: :request do
 
         describe "new" do
           it "returns OK" do
-            patch "/v1/groups/#{group.id}", img_params, auth_header
+            patch "/v1/groups/#{group.uuid}", img_params, auth_header
             expect(response.status).to be(200)
           end
 
           it "sets group image" do
-            patch "/v1/groups/#{group.id}", img_params, auth_header
+            patch "/v1/groups/#{group.uuid}", img_params, auth_header
             group.reload
             expect(group.image).to eq 'foobar'
           end
@@ -84,7 +89,7 @@ RSpec.describe "V1::Groups", type: :request do
           it "sets the new image" do
             expect(group.image).to eq 'sample'
 
-            patch "/v1/groups/#{group.id}", img_params, auth_header
+            patch "/v1/groups/#{group.uuid}", img_params, auth_header
 
             group.reload
             expect(response.status).to be(200)
@@ -98,13 +103,13 @@ RSpec.describe "V1::Groups", type: :request do
           # consider checking for nil on application level
 
           it "returns 422" do
-            patch "/v1/groups/#{group.id}", img_params, auth_header
+            patch "/v1/groups/#{group.uuid}", img_params, auth_header
             expect(response.status).to be(422)
           end
 
           it "doesn't set group image" do
             expect {
-              patch "/v1/groups/#{group.id}", img_params, auth_header
+              patch "/v1/groups/#{group.uuid}", img_params, auth_header
             }.not_to change(group, :image)
           end
         end
@@ -115,24 +120,24 @@ RSpec.describe "V1::Groups", type: :request do
       let(:group) { create(:group, name: "foo") }
 
       it "returns Forbidden" do
-        patch "/v1/groups/#{group.id}", new_params, auth_header
+        patch "/v1/groups/#{group.uuid}", new_params, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't change group name" do
         expect {
-          patch "/v1/groups/#{group.id}", new_params, auth_header
+          patch "/v1/groups/#{group.uuid}", new_params, auth_header
         }.not_to change(group, :name)
       end
     end
   end
 
   # delete
-  describe "DELETE /v1/groups/:group_id" do
+  describe "DELETE /v1/groups/:group_uuid" do
     let(:group) { create(:group, owner: current_user) }
 
     it "deletes the group" do
-      delete "/v1/groups/#{group.id}", {}, auth_header
+      delete "/v1/groups/#{group.uuid}", {}, auth_header
       group.reload
       expect(group.deleted_at?).to be true
     end
@@ -142,65 +147,121 @@ RSpec.describe "V1::Groups", type: :request do
 
       it "deletes all memberships" do
         group_memberships = group.memberships
-        delete "/v1/groups/#{group.id}", {}, auth_header
+        delete "/v1/groups/#{group.uuid}", {}, auth_header
         group_memberships.reload
         expect(group_memberships.first.deleted_at?).to be true
         expect(group_memberships.last.deleted_at?).to be true
       end
     end
 
-    context "group_slots" do
-      let!(:group_slots) { create_list(:group_slot, 3, group: group) }
+    context "slots in calendar" do
+      let(:group) {
+        create(:calendar, :with_3_slots, owner: current_user)
+      }
+      let!(:slot_in_schedule) {
+        create(:passengership, slot: group.slots.first, user: current_user,
+               show_in_my_schedule: true)
+      }
+      let!(:slot_in_schedule_and_other_calendar) {
+        shown_calendar = create(:calendar)
+        create(:membership, :show_in_schedule, user: current_user,
+               group: shown_calendar)
+        create(:containership, slot: group.slots.last, group: shown_calendar)
+        create(:passengership, slot: group.slots.last, user: current_user,
+               show_in_my_schedule: true)
+      }
 
-      it "deletes all group slots" do
-        g_slots = group.group_slots
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots.reload
-        expect(g_slots.first.deleted_at?).to be true
-        expect(g_slots.last.deleted_at?).to be true
+      it "hides the calendar slots from the users schedule" do
+        delete "/v1/groups/#{group.uuid}", {}, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be false
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
       end
 
-      it "deletes the metaslot of the group slots if no other reference" do
-        group_metaslot = group.group_slots.first.meta_slot
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        group_metaslot.reload
-        expect(group_metaslot.deleted_at?).to be true
+      it "hides the calendar slots from schedule if explicitly stated" do
+        delete "/v1/groups/#{group.uuid}",
+               { keepSlotsInSchedule: '0' }, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be false
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
+      end
+
+      it "keeps the calendar slots in schedule if explicitly stated" do
+        delete "/v1/groups/#{group.uuid}",
+               { keepSlotsInSchedule: '1' }, auth_header
+
+        slot_in_schedule.reload
+        expect(slot_in_schedule.show_in_my_schedule).to be true
+
+        slot_in_schedule_and_other_calendar.reload
+        expect(
+          slot_in_schedule_and_other_calendar.show_in_my_schedule
+        ).to be true
       end
     end
 
-    context "group_slots media" do
-      let!(:group_slots) {
-        create_list(:group_slot, 3, :with_media, group: group) }
+    # context "group_slots" do
+    #   let!(:group_slots) { create_list(:group_slot, 3, group: group) }
 
-      it "deletes all images on the group slots" do
-        g_slots_img_first = group.group_slots.first.images.first
-        g_slots_img_last = group.group_slots.first.images.last
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots_img_first.reload
-        g_slots_img_last.reload
-        expect(g_slots_img_first.deleted_at?).to be true
-        expect(g_slots_img_last.deleted_at?).to be true
-      end
-    end
+    #   it "deletes all group slots" do
+    #     g_slots = group.group_slots
+    #     delete "/v1/groups/#{group.uuid}", {}, auth_header
+    #     g_slots.reload
+    #     expect(g_slots.first.deleted_at?).to be true
+    #     expect(g_slots.last.deleted_at?).to be true
+    #   end
 
-    context "group_slots notes" do
-      let!(:group_slots) {
-        create_list(:group_slot, 3, :with_notes, group: group) }
+    #   it "deletes the metaslot of the group slots if no other reference" do
+    #     group_metaslot = group.group_slots.first.meta_slot
+    #     delete "/v1/groups/#{group.uuid}", {}, auth_header
+    #     group_metaslot.reload
+    #     expect(group_metaslot.deleted_at?).to be true
+    #   end
+    # end
 
-      it "deletes all notes on the group slots" do
-        g_slots_note_first = group.group_slots.first.notes.first
-        g_slots_note_last = group.group_slots.first.notes.last
-        delete "/v1/groups/#{group.id}", {}, auth_header
-        g_slots_note_first.reload
-        g_slots_note_last.reload
-        expect(g_slots_note_first.deleted_at?).to be true
-        expect(g_slots_note_last.deleted_at?).to be true
-      end
-    end
+    # context "group_slots media" do
+    #   let!(:group_slots) {
+    #     create_list(:group_slot, 3, :with_media, group: group) }
+
+    #   it "deletes all images on the group slots" do
+    #     g_slots_img_first = group.group_slots.first.images.first
+    #     g_slots_img_last = group.group_slots.first.images.last
+    #     delete "/v1/groups/#{group.uuid}", {}, auth_header
+    #     g_slots_img_first.reload
+    #     g_slots_img_last.reload
+    #     expect(g_slots_img_first.deleted_at?).to be true
+    #     expect(g_slots_img_last.deleted_at?).to be true
+    #   end
+    # end
+
+    # context "group_slots notes" do
+    #   let!(:group_slots) {
+    #     create_list(:group_slot, 3, :with_notes, group: group) }
+
+    #   it "deletes all notes on the group slots" do
+    #     g_slots_note_first = group.group_slots.first.notes.first
+    #     g_slots_note_last = group.group_slots.first.notes.last
+    #     delete "/v1/groups/#{group.uuid}", {}, auth_header
+    #     g_slots_note_first.reload
+    #     g_slots_note_last.reload
+    #     expect(g_slots_note_first.deleted_at?).to be true
+    #     expect(g_slots_note_last.deleted_at?).to be true
+    #   end
+    # end
   end
 
   # invite
-  describe "POST /v1/groups/:group_id/members" do
+  describe "POST /v1/groups/:group_uuid/members" do
     let(:other_users) { create_list(:user, 5) }
     let(:ids) { other_users.collect(&:id) }
 
@@ -208,23 +269,23 @@ RSpec.describe "V1::Groups", type: :request do
       let!(:group) { create(:group, owner: current_user) }
 
       it "returns created" do
-        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+        post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         expect(response.status).to be(201)
       end
 
       it "returns a list of all users related to that group" do
-        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+        post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         expect(json).to have_key "related"
         # group owner is automatically an active member too
         expect(json['related'].size).to eq 6
       end
 
-      it "creates new memberships with state 'invited' for all new members" do
+      it "creates new memberships with state 'active' for all new members" do
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size)
         other_users.each do |id|
-          expect(Membership.where(user_id: id).first.invited?).to be true
+          expect(Membership.where(user_id: id).first.active?).to be true
         end
       end
 
@@ -232,7 +293,7 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :invited, user: other_users.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 1)
       end
 
@@ -240,27 +301,27 @@ RSpec.describe "V1::Groups", type: :request do
         create(:membership, :active, user: other_users.first, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 1)
       end
 
-      it "re-invites users who had left the group or rejected a previous invitation" do
+      it "re-adds users who had left the group" do
         create(:membership, :left, user: other_users.first, group: group)
         create(:membership, :refused, user: other_users.last, group: group)
 
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.to change(Membership, :count).by(other_users.size - 2)
         membership1 = Membership.where(user_id: other_users.first).first
         membership2 = Membership.where(user_id: other_users.last).first
-        expect(membership1.invited?).to be true
-        expect(membership2.invited?).to be true
+        expect(membership1.active?).to be true
+        expect(membership2.active?).to be true
       end
 
-      it "doesn't add user to group" do
+      it "adds user to group" do
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
-        }.not_to change(group.members, :count)
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
+        }.to change(group.members, :count).by 5
       end
 
       describe "existing membership" do
@@ -269,13 +330,13 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, user: other_users.first, group: group)
           }
           it "returns ok" do
-            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+            post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { invitees: [ids.first] },
+              post "/v1/groups/#{group.uuid}/members", { invitees: [ids.first] },
                    auth_header
             }.not_to change(Membership, :count)
           end
@@ -286,7 +347,7 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :active, user: other_users.first, group: group)
           }
           it "returns OK" do
-            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+            post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
         end
@@ -296,21 +357,21 @@ RSpec.describe "V1::Groups", type: :request do
             create(:membership, :left, user: other_users.first, group: group)
           }
           it "returns Created" do
-            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+            post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
             expect(response.status).to be(201)
           end
 
           it "memberships are not (re-)created " do
             expect {
-              post "/v1/groups/#{group.id}/members", { invitees: [ids.first] },
+              post "/v1/groups/#{group.uuid}/members", { invitees: [ids.first] },
                    auth_header
             }.not_to change(Membership, :count)
           end
 
-          it "changes membership state to 'invited'" do
-            post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          it "changes membership state to 'active'" do
+            post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
             membership.reload
-            expect(membership.invited?).to be true
+            expect(membership.active?).to be true
           end
         end
       end
@@ -322,20 +383,20 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Forbidden" do
-        post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+        post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't create membership" do
         expect {
-          post "/v1/groups/#{group.id}/members", { invitees: ids }, auth_header
+          post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
         }.not_to change(Membership, :count)
       end
     end
   end
 
   # accept_invite
-  describe "POST /v1/groups/:group_id/accept" do
+  describe "POST /v1/groups/:group_uuid/accept" do
     let(:group) { create(:group) }
     let!(:membership) do
       create(:membership, :invited, user: current_user, group: group)
@@ -343,19 +404,19 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "existing invitation" do
       it "returns success" do
-        post "/v1/groups/#{group.id}/accept", {}, auth_header
+        post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to active" do
-        post "/v1/groups/#{group.id}/accept", {}, auth_header
+        post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         membership.reload
         expect(membership.active?).to be true
       end
 
       it "adds user to group" do
         expect {
-          post "/v1/groups/#{group.id}/accept", {}, auth_header
+          post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         }.to change(group.members, :count).by(1)
       end
     end
@@ -366,13 +427,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Forbidden" do
-        post "/v1/groups/#{group.id}/accept", {}, auth_header
+        post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
         expect {
-          post "/v1/groups/#{group.id}/accept", {}, auth_header
+          post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
@@ -381,14 +442,14 @@ RSpec.describe "V1::Groups", type: :request do
       let(:membership) {}
 
       it "returns Forbidden" do
-        post "/v1/groups/#{group.id}/accept", {}, auth_header
+        post "/v1/groups/#{group.uuid}/accept", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
     end
   end
 
   # refuse_invite
-  describe "POST /v1/groups/:group_id/refuse" do
+  describe "POST /v1/groups/:group_uuid/refuse" do
     let(:group) { create(:group) }
     let!(:membership) do
       create(:membership, :invited, user: current_user, group: group)
@@ -398,12 +459,12 @@ RSpec.describe "V1::Groups", type: :request do
       let(:params) { { group: { invite: 'refuse' } } }
 
       it "returns success" do
-        post "/v1/groups/#{group.id}/refuse", {}, auth_header
+        post "/v1/groups/#{group.uuid}/refuse", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to refused" do
-        post "/v1/groups/#{group.id}/refuse", {}, auth_header
+        post "/v1/groups/#{group.uuid}/refuse", {}, auth_header
         membership.reload
         expect(membership.refused?).to be true
       end
@@ -415,13 +476,13 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Forbidden" do
-        post "/v1/groups/#{group.id}/refuse", {}, auth_header
+        post "/v1/groups/#{group.uuid}/refuse", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
         expect {
-          post "/v1/groups/#{group.id}/refuse", {}, auth_header
+          post "/v1/groups/#{group.uuid}/refuse", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
@@ -430,14 +491,14 @@ RSpec.describe "V1::Groups", type: :request do
       let(:membership) {}
 
       it "returns Forbidden" do
-        post "/v1/groups/#{group.id}/refuse", {}, auth_header
+        post "/v1/groups/#{group.uuid}/refuse", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
     end
   end
 
   # leave
-  describe "DELETE /v1/groups/:group_id/members" do
+  describe "DELETE /v1/groups/:group_uuid/members" do
     let(:group) { create(:group, owner: create(:user)) }
 
     describe "membership active" do
@@ -446,14 +507,70 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns OK" do
-        delete "/v1/groups/#{group.id}/members", {}, auth_header
+        delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         expect(response.status).to be(200)
       end
 
       it "changes membership state to 'left'" do
-        delete "/v1/groups/#{group.id}/members", {}, auth_header
+        delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         membership.reload
         expect(membership.left?).to be true
+      end
+
+      context "slots in calendar" do
+        let(:group) {
+          create(:calendar, :with_3_slots, owner: create(:user))
+        }
+        let!(:slot_in_schedule) {
+          create(:passengership, slot: group.slots.first, user: current_user,
+                 show_in_my_schedule: true)
+        }
+        let!(:slot_in_schedule_and_other_calendar) {
+          shown_calendar = create(:calendar)
+          create(:membership, :show_in_schedule, user: current_user,
+                 group: shown_calendar)
+          create(:containership, slot: group.slots.last, group: shown_calendar)
+          create(:passengership, slot: group.slots.last, user: current_user,
+                 show_in_my_schedule: true)
+        }
+
+        it "hides the calendar slots from the users schedule" do
+          delete "/v1/groups/#{group.uuid}/members", {}, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be false
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
+
+        it "hides the calendar slots from schedule if explicitly stated" do
+          delete "/v1/groups/#{group.uuid}/members",
+                 { keepSlotsInSchedule: '0' }, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be false
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
+
+        it "keeps the calendar slots in schedule if explicitly stated" do
+          delete "/v1/groups/#{group.uuid}/members",
+                 { keepSlotsInSchedule: '1' }, auth_header
+
+          slot_in_schedule.reload
+          expect(slot_in_schedule.show_in_my_schedule).to be true
+
+          slot_in_schedule_and_other_calendar.reload
+          expect(
+            slot_in_schedule_and_other_calendar.show_in_my_schedule
+          ).to be true
+        end
       end
     end
 
@@ -463,27 +580,27 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Forbidden" do
-        delete "/v1/groups/#{group.id}/members", {}, auth_header
+        delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
         expect {
-          delete "/v1/groups/#{group.id}/members", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
 
     describe "no membership" do
       it "returns Forbidden" do
-        delete "/v1/groups/#{group.id}/members", {}, auth_header
+        delete "/v1/groups/#{group.uuid}/members", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
     end
   end
 
   # kick
-  describe "DELETE /v1/groups/:group_id/members/:user_id" do
+  describe "DELETE /v1/groups/:group_uuid/members/:user_id" do
     let(:member) { create(:user) }
     let(:group) { create(:group, owner: current_user) }
 
@@ -494,12 +611,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes membership state to 'kicked'" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
           membership.reload
           expect(membership.kicked?).to be true
         end
@@ -511,12 +628,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes membership state to 'kicked'" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
           membership.reload
           expect(membership.kicked?).to be true
         end
@@ -528,13 +645,13 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
           expect(response.status).to be(200)
         end
 
         it "doesn't changes membership state" do
           expect {
-            delete "/v1/groups/#{group.id}/members/#{member.id}"
+            delete "/v1/groups/#{group.uuid}/members/#{member.id}"
           }.not_to change(membership, :state)
         end
       end
@@ -547,27 +664,27 @@ RSpec.describe "V1::Groups", type: :request do
       end
 
       it "returns Forbidden" do
-        delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+        delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
         expect(response).to have_http_status :forbidden
       end
 
       it "doesn't changes membership state" do
         expect {
-          delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
+          delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
         }.not_to change(membership, :state)
       end
     end
 
     describe "no membership" do
-      it "returns Unprocessable Entity" do
-        delete "/v1/groups/#{group.id}/members/#{member.id}", {}, auth_header
-        expect(response.status).to be 422
+      it "returns OK" do
+        delete "/v1/groups/#{group.uuid}/members/#{member.id}", {}, auth_header
+        expect(response.status).to be 200
       end
     end
   end
 
   # settings
-  describe "PATCH /v1/groups/:group_id/members" do
+  describe "PATCH /v1/groups/:group_uuid/members" do
     let(:owner) { create(:user) }
     let(:group) { create(:group, owner: owner) }
     let(:params) { { settings: { notifications: 'false' } } }
@@ -580,12 +697,12 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns OK" do
-          patch "/v1/groups/#{group.id}/members", params, auth_header
+          patch "/v1/groups/#{group.uuid}/members", params, auth_header
           expect(response.status).to be(200)
         end
 
         it "changes notifications state" do
-          patch "/v1/groups/#{group.id}/members", params, auth_header
+          patch "/v1/groups/#{group.uuid}/members", params, auth_header
           membership.reload
           expect(membership.notifications).to be false
         end
@@ -598,13 +715,13 @@ RSpec.describe "V1::Groups", type: :request do
         end
 
         it "returns Forbidden" do
-          patch "/v1/groups/#{group.id}/members", params, auth_header
+          patch "/v1/groups/#{group.uuid}/members", params, auth_header
           expect(response).to have_http_status :forbidden
         end
 
         it "doesn't change notifications state" do
           expect {
-            patch "/v1/groups/#{group.id}/members", params, auth_header
+            patch "/v1/groups/#{group.uuid}/members", params, auth_header
           }.not_to change(membership, :notifications)
         end
       end
@@ -612,8 +729,94 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "current user not group member" do
       it "returns Forbidden" do
-        patch "/v1/groups/#{group.id}/members", params, auth_header
+        patch "/v1/groups/#{group.uuid}/members", params, auth_header
         expect(response).to have_http_status :forbidden
+      end
+    end
+  end
+
+  # global slot groups
+  describe "POST /v1/groups/global_group", :seed do
+    let(:group) { attributes_for(:group) }
+    let(:params) { { muid: group.uuid, name: 'Rephlex' } }
+    # let(:image) { "http://faster.pussycat" }
+    # let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
+    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+
+    describe "existing public group with different name" do
+      let(:group) { create(:group) }
+
+      it "returns error for non-matching group name" do
+        post "/v1/groups/global_group", { group: params }, auth_header
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
+    describe "existing global slot" do
+      let!(:global_slot) { create(:global_slot) }
+      let(:params) { { muid: group[:uuid],
+                       name: 'Rephlex',
+                       slots: [global_slot.slot_uuid] } }
+
+      it "adds the slot to the group" do
+        post "/v1/groups/global_group", { group: params }, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include global_slot
+      end
+    end
+
+    describe "no existing global slot, but existing location", :vcr do
+      let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
+      let!(:location) { create(:candy_location) }
+      let(:params) { { muid: group[:uuid],
+                       name: 'Rephlex',
+                       slots: slots } }
+
+      it "creates a new group" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.to change(Group, :count)
+      end
+
+      it "creates a new globalslot" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.to change(GlobalSlot, :count)
+      end
+
+      it "adds the slot to the group" do
+        post "/v1/groups/global_group", { group: params }, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include GlobalSlot.last
+      end
+
+      it "doesn't create a new location" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.not_to change(IosLocation, :count)
+      end
+    end
+
+    describe "global slot already in group" do
+      let(:group) { create(:group, public: true, owner: current_user) }
+      let(:global_slot) { create(:global_slot) }
+      let!(:containership) {
+        create(:containership, slot: global_slot, group: group) }
+      let(:params) { { muid: group.uuid,
+                       name: group.name,
+                       slots: [global_slot.slot_uuid] } }
+
+      it "adds the slot to the group" do
+        expect(Group.last.slots).to include global_slot
+        post "/v1/groups/global_group", { group: params }, auth_header
+        expect(response).to have_http_status :ok
+        expect(Group.last.slots).to include global_slot
+      end
+
+      it "doesn't create a new group" do
+        expect {
+          post "/v1/groups/global_group", { group: params }, auth_header
+        }.not_to change(Group, :count)
       end
     end
   end

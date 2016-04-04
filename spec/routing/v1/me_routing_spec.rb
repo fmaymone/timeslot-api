@@ -2,6 +2,7 @@ require "rails_helper"
 
 RSpec.describe V1::MeController, type: :routing do
   describe "routing" do
+    let(:uuid) { '04f7504b-3e96-4dbb-ac94-4998f1574bbe' }
 
     it "routes to #show" do
       expect(get: "/v1/me")
@@ -18,14 +19,31 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#update", format: :json)
     end
 
-    it "routes to #destroy" do
+    it "routes to #inactivate" do
       expect(delete: "/v1/me")
         .to route_to("v1/me#inactivate", format: :json)
     end
 
-    it "routes to #slots" do
+    it "routes to #my_slots" do
       expect(get: "/v1/me/slots")
         .to route_to("v1/me#my_slots", format: :json)
+    end
+
+    it "routes to #calendar" do
+      expect(get: "/v1/me/calendar")
+        .to route_to("v1/me#calendar", format: :json)
+    end
+
+    it "routes to #add_slotgroup_to_schedule" do
+      expect(post: "/v1/me/schedule/slotgroup/#{uuid}")
+        .to route_to("v1/me#add_slotgroup_to_schedule",
+                     uuid: uuid, format: :json)
+    end
+
+    it "routes to #remove_slotgroup_from_schedule" do
+      expect(delete: "/v1/me/schedule/slotgroup/#{uuid}")
+        .to route_to("v1/me#remove_slotgroup_from_schedule",
+                     uuid: uuid, format: :json)
     end
 
     it "routes to #slots_of_my_friends" do
@@ -36,6 +54,16 @@ RSpec.describe V1::MeController, type: :routing do
     it "routes to #media" do
       expect(get: "/v1/me/media")
         .to route_to("v1/me#my_media_items", format: :json)
+    end
+
+    it "routes to #suggested_users" do
+      expect(get: "/v1/me/suggested_users")
+        .to route_to("v1/me#suggested_users", format: :json)
+    end
+
+    it "routes to #my_groups" do
+      expect(get: "/v1/me/slotgroups")
+        .to route_to("v1/me#my_groups", format: :json)
     end
 
     it "routes to #add_friends" do

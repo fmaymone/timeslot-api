@@ -3,6 +3,41 @@
 ## upcoming
 
 
+## v0.9.2 (4.4.2016)
+
+- remove ReSlot Model
+- add Containership Model, to store relations between slots and slotgroups/lists/calendars
+- add Passengership Model, to store relations between slots and Users (My Schedule / MyCalendar)
+- support for automatic import of global-lists (created by data-team)
+- started migration to AWS elastic beanstalk
+- locations now work based on uuids
+- Gemfile:
+  - add immutable-struct (https://github.com/stitchfix/immutable-struct)
+  - remove rack-cors
+
+- and many other things...
+
+
+## v0.9.1 (unreleased)
+- this release needs MIGRATION
+- fix and improver follower model
+- ReSlots can have different visibilities now
+- Slots support user-tags, will create a reslot for the tagged user
+- allow searching through users friends
+- get list of potentially interesting users (suggested users)
+- update Gems, migrate Airbrake to 5.0
+- upgrade to Ruby 2.3.0
+- optimize several n+1 queries
+- reslot counter returns number based on visibility
+- use STI feature of Rails where DB-Type column has the class that gets loaded
+- FIX email addresses are matched case-insensitive now
+- several other fixes and optimizations
+- some updates for global slot locations
+- remove deprecated location and globalslots code
+- remove demoslots endpoint and DEMO_SLOTS_COUNT env var
+- remove webslots endpoint, will use new globalslot api in the future
+
+
 ## v0.9.0
 - this release needs MIGRATION, SEED, new ENV_VARs
 - Improvements for Activities (Remove, MultiLanguage)
@@ -19,7 +54,6 @@
 - several customisations for befriending (new routes which accept only one user)
 - don't renew auth_token on signin
 - more json changes for ios
-
 
 
 ## v0.8.2

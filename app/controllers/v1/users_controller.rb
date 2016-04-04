@@ -1,6 +1,7 @@
 module V1
   class UsersController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, except: :show
+    skip_before_action :authenticate_user_from_token!,
+                       except: [:show, :friends]
 
     # GET /v1/users/1
     def show
@@ -17,6 +18,7 @@ module V1
       @user = User.create_with_device(params: user_create_params,
                                       device: device_params(params[:device]))
       if @user.errors.empty?
+        @current_user = @user
         render :signup, status: :created
       else
         render json: { error: @user.errors },
@@ -31,6 +33,7 @@ module V1
       @user = User.sign_in(credentials)
 
       if @user
+        @current_user = @user
         render :signup
       else
         render json: { error: "email and password didn't match" },
@@ -52,7 +55,7 @@ module V1
     # returns all slots of the requested user visible for the current user
     def slots
       authorize :user
-      requested_user = User.find(params[:user_id])
+      requested_user = User.find(params[:id])
 
       collector = SlotsCollector.new(**slot_paging_params)
       @slots = collector.user_slots(current_user: current_user,
@@ -66,12 +69,35 @@ module V1
       end
     end
 
+    # GET /v1/users/1/calendars
+    # returns public calenders and non-public calenders where user and
+    # current_user are member
+    def calendars
+      authorize :user
+      user = User.find(params[:id])
+
+      calendar_service = CalendarCollector.new(current_user)
+      @groups = calendar_service.calendars_for(user)
+
+      render "v1/groups/index"
+    end
+
+    # GET /v1/users/1/friends
+    # returns all friends of a user
+    def friends
+      requested_user = User.find(params[:id])
+      authorize requested_user
+      @users = requested_user.friends
+
+      render "v1/users/list"
+    end
+
     # GET /v1/users/1/media
     # get all media items of the given user
     def media_items
       authorize :user
 
-      target_user = User.find(params[:user_id])
+      target_user = User.find(params[:id])
       collector = MediaCollector.new(current_user: current_user,
                                      other_user: target_user)
       @media_items = collector.retrieve
@@ -88,9 +114,8 @@ module V1
     end
 
     private def device_params(params)
-      return nil unless params && params[:deviceId].present?
-      params.permit(:deviceId, :system, :version, :token, :endpoint)
-        .transform_keys(&:underscore)
+      return nil unless params && params[:device_id].present?
+      params.permit(:device_id, :system, :version, :token, :endpoint)
         .symbolize_keys
     end
 
@@ -99,8 +124,7 @@ module V1
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
       params.permit(:email, :phone, :password,
-                    device: [:deviceId, :system, :version, :token])
-        .deep_transform_keys(&:underscore)
+                    device: [:device_id, :system, :version, :token])
         .deep_symbolize_keys
     end
   end

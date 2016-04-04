@@ -2,20 +2,23 @@ require 'rails_helper'
 
 RSpec.describe V1::SlotsController, type: :routing do
   describe "routing" do
-
     it "routes to #show" do
       expect(get: "/v1/slots/1")
         .to route_to("v1/slots#show", id: "1", format: :json)
     end
 
-    it "routes to #show_many" do
-      expect(post: "/v1/slots")
-        .to route_to("v1/slots#show_many", format: :json)
+    it "does not route to #show if invalid id format" do
+      expect(get: "/v1/slots/12foo").not_to be_routable
     end
 
-    it "routes to #show_last" do
-      expect(get: "/v1/slots/demo")
-        .to route_to("v1/slots#show_last", format: :json)
+    it "routes to #create" do
+      expect(post: "/v1/slots")
+        .to route_to("v1/slots#create", format: :json)
+    end
+
+    it "routes to #delete" do
+      expect(delete: "/v1/slots/1")
+        .to route_to("v1/slots#delete", id: "1", format: :json)
     end
 
     it "routes to #create_stdslot" do
@@ -23,59 +26,35 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#create_stdslot", format: :json)
     end
 
-    it "routes to #create_reslot" do
-      expect(post: "/v1/reslot")
-        .to route_to("v1/slots#create_reslot", format: :json)
-    end
-
-    it "routes to #create_groupslot" do
-      expect(post: "/v1/groupslot")
-        .to route_to("v1/slots#create_groupslot", format: :json)
-    end
-
-    it "routes to #update_metaslot via PATCH" do
+    it "routes to #update_metaslot" do
       expect(patch: "/v1/metaslot/1")
         .to route_to("v1/slots#update_metaslot", id: "1", format: :json)
     end
 
-    it "routes to #update_stdslot via PATCH" do
+    it "routes to #update_stdslot" do
       expect(patch: "/v1/stdslot/1")
         .to route_to("v1/slots#update_stdslot", id: "1", format: :json)
     end
 
-    it "routes to #update_groupslot via PATCH" do
-      expect(patch: "/v1/groupslot/1")
-        .to route_to("v1/slots#update_groupslot", id: "1", format: :json)
-    end
-
-    it "routes to #update_reslot via PATCH" do
-      expect(patch: "/v1/reslot/1")
-        .to route_to("v1/slots#update_reslot", id: "1", format: :json)
-    end
-
+    # TODO: remove this
     it "routes to #destroy_stdslot" do
       expect(delete: "/v1/stdslot/1")
-        .to route_to("v1/slots#destroy_stdslot", id: "1", format: :json)
+        .to route_to("v1/slots#delete", id: "1", format: :json)
     end
 
-    it "routes to #destroy_groupslot" do
-      expect(delete: "/v1/groupslot/1")
-        .to route_to("v1/slots#destroy_groupslot", id: "1", format: :json)
+    it "routes to #slotsets" do
+      expect(get: "/v1/slots/1/slotsets")
+        .to route_to("v1/slots#slotsets", id: "1", format: :json)
     end
 
-    it "routes to #destroy_reslot" do
-      expect(delete: "/v1/reslot/1")
-        .to route_to("v1/slots#destroy_reslot", id: "1", format: :json)
+    it "routes to #add_to_groups" do
+      expect(post: "/v1/slots/1/slotgroups")
+        .to route_to("v1/slots#add_to_groups", id: "1", format: :json)
     end
 
-    it "routes to #share_url" do
-      expect(get: "/v1/slots/1/share")
-        .to route_to("v1/slots#share_url", id: "1", format: :json)
-    end
-
-    it "routes to #share_data" do
-      expect(get: "/v1/slots/abcd1234/sharedata")
-        .to route_to("v1/slots#share_data", uid: "abcd1234", format: :json)
+    it "routes to #remove_from_groups" do
+      expect(delete: "/v1/slots/1/slotgroups")
+        .to route_to("v1/slots#remove_from_groups", id: "1", format: :json)
     end
 
     it "routes to #add_like" do
@@ -106,6 +85,21 @@ RSpec.describe V1::SlotsController, type: :routing do
     it "routes to #show_slotters" do
       expect(get: "/v1/slots/1/slotters")
         .to route_to("v1/slots#show_slotters", id: "1", format: :json)
+    end
+
+    it "routes to #tag_users" do
+      expect(post: "/v1/slots/1/user_tags")
+        .to route_to("v1/slots#tag_users", id: "1", format: :json)
+    end
+
+    it "routes to #show_tagged_users" do
+      expect(get: "/v1/slots/1/user_tags")
+        .to route_to("v1/slots#show_tagged_users", id: "1", format: :json)
+    end
+
+    it "routes to #add_to_groups" do
+      expect(post: "/v1/slots/1/slotgroups")
+        .to route_to("v1/slots#add_to_groups", id: "1", format: :json)
     end
 
     it "routes to #reslot_history" do

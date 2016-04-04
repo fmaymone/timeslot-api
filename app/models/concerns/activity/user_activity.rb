@@ -5,8 +5,8 @@ module UserActivity
     'User'
   end
 
-  private def activity_push
-    [ activity_target.id ]
+  private def activity_foreign
+    activity_target
   end
 
   # Add extra data to each activity. The data can be hide
@@ -15,8 +15,20 @@ module UserActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSONView.user(activity_target),
-      actor: JSONView.user(activity_actor)
+      target: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => activity_target
+          }
+      )),
+      actor: JSON.parse(ApplicationController.new.render_to_string(
+          template: 'v1/users/_user',
+          layout: false,
+          locals: {
+              :user => activity_actor
+          }
+      ))
     }
   end
 
@@ -24,8 +36,8 @@ module UserActivity
   # for the users activity feed
   private def activity_message_params
     {
-      USER: activity_target.username,
-      USER2: activity_actor.username
+      ACTOR: activity_target.username,
+      USER: activity_actor.username
     }
   end
 end

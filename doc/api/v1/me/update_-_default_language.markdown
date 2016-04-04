@@ -66,15 +66,6 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
-Name : image
-Description : URL of the user image
-
-Name : location
-Description : Home location of user
-
-Name : push
-Description : Send push Notifications (true/false)
-
 Name : createdAt
 Description : Creation of user
 
@@ -84,26 +75,41 @@ Description : Latest update of user in db
 Name : deletedAt
 Description : Deletion of user
 
-Name : slotCount
-Description : Number of slots for this user
+Name : image
+Description : URL of the user image
 
-Name : reslotCount
-Description : Number of reslots for this user
+Name : location
+Description : Home location of user
+
+Name : slotCount
+Description : Number of visible slots for this user
+
+Name : calendarCount
+Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
 
+Name : lang
+Description : Language code (ISO 639-1)
+
 Name : email
 Description : Email of user (max. 255 characters)
+
+Name : email_verified
+Description : User has confirmed Email (true/false)
 
 Name : phone
 Description : Phone number of user (max. 35 characters)
 
-Name : lang
-Description : Language code (ISO 639-1)
+Name : phone_verified
+Description : User has confirmed phone number (true/false)
 
 Name : publicUrl
 Description : Public URL for user on Timeslot (max. 255 chars)
+
+Name : push
+Description : Send push Notifications (true/false)
 
 Name : slotDefaultDuration
 Description : Default Slot Duration in seconds
@@ -135,6 +141,18 @@ Description : Default alerts for the reslots of this user
 Name : defaultGroupAlerts
 Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
 
+Name : all_my_slots_uuid
+Description : UUID to retrive all slots related to the user. (Needs further specification)
+
+Name : my_calendar_uuid
+Description : UUID to get/add or remove slots of the  users &#39;MyCalendar&#39;.
+
+Name : friend_slots_uuid
+Description : UUID for friend-visible slots of the user
+
+Name : public_slots_uuid
+Description : UUID for public slots of the current user
+
 Name : friendships
 Description : all connections to other users
 
@@ -149,7 +167,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=f7WBdT_JIi32ssBvULJ3OCZwseA
+Authorization: Token token=Oy0hHYy3uJGBPbUbdoYxTdhUF-U
 Host: example.org
 Cookie: </pre>
 
@@ -167,10 +185,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=f7WBdT_JIi32ssBvULJ3OCZwseA&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=Oy0hHYy3uJGBPbUbdoYxTdhUF-U&quot;</pre>
 
 ### Response
 
@@ -180,12 +197,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;12c857a9750b0f3c5d15216693a33b4e&quot;
+ETag: W/&quot;21c9685c71090137eacb23862fb1a6cb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6f37160b-4784-40bb-9ca6-0862cf7a613b
-X-Runtime: 0.016137
+X-Request-Id: b844694f-7bb0-40e7-9400-551d9079e384
+X-Runtime: 0.022826
 Vary: Origin
-Content-Length: 714</pre>
+Content-Length: 739</pre>
 
 #### Status
 
@@ -195,34 +212,31 @@ Content-Length: 714</pre>
 
 ```javascript
 {
-  "id" : 137,
-  "username" : "User 203",
-  "createdAt" : "2015-12-23T11:18:32.397Z",
-  "updatedAt" : "2015-12-23T11:18:32.406Z",
+  "id" : 78,
+  "username" : "User 240",
+  "createdAt" : "2016-04-04T20:50:24.903Z",
+  "updatedAt" : "2016-04-04T20:50:24.919Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "reslotCount" : 0,
+  "calendarCount" : 0,
   "friendsCount" : 0,
   "lang" : "de",
-  "email" : "user41@email.com",
+  "email" : "user49@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "slotDefaultDuration" : null,
-  "slotDefaultLocationId" : null,
-  "slotDefaultTypeId" : null,
-  "defaultPrivateAlerts" : "0000000000",
-  "defaultOwnFriendslotAlerts" : "0000000000",
-  "defaultOwnPublicAlerts" : "0000000000",
-  "defaultFriendsFriendslotAlerts" : "0000000000",
-  "defaultFriendsPublicAlerts" : "0000000000",
-  "defaultReslotAlerts" : "0000000000",
-  "defaultGroupAlerts" : "0000000000",
+  "myCalendarUuid" : "e7206970-7593-4adb-8287-82ad71b78184",
+  "friendsCalendarUuid" : "1c2ff9b2-b0bc-4c9d-812f-b75f2a037053",
+  "allMySlotsUuid" : "87338311-05d6-4596-a901-24f52c9458b3",
+  "myCreatedSlotsUuid" : "25a4c436-7103-46fa-b6de-8e488cf3414e",
+  "myFriendSlotsUuid" : "c28701e8-7685-4cd7-b227-e88cb04bdef9",
+  "myPublicSlotsUuid" : "377eb387-8d67-44e6-8a6d-af2a9028141b",
   "friendships" : [],
-  "memberships" : []
+  "memberships" : [],
+  "friendshipState" : "myself"
 }
 ```

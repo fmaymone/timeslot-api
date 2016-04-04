@@ -1,9 +1,14 @@
 require 'sucker_punch/testing/inline'
 
 namespace :feed do
-  desc "Seed redis with activities"
 
-  task :build => :environment do
+  desc "Clear redis from all activities"
+  task clear: :environment do
+    $redis.flushall
+  end
+
+  desc "Seed redis with activities"
+  task build: :environment do
 
     # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
     MAX_ACTIVITIES = 1000
@@ -24,42 +29,52 @@ namespace :feed do
 
       ## Re-Build Follower Model ##
 
-      Friendship.includes(:user, :friend).all.find_each do |relation|
+      Friendship.includes(:user, :friend).find_each do |relation|
         # friends follows each other
-        if relation.established?
+        if relation.established? && relation.deleted_at.nil?
           relation.user.add_follower(relation.friend)
           relation.friend.add_follower(relation.user)
         end
       end
 
-      Membership.includes(:group, :user).all.find_each do |relation|
-        if relation.active?
+      Membership.includes(:group, :user).find_each do |relation|
+        if relation.active? && relation.deleted_at.nil?
           relation.group.add_follower(relation.user)
         end
       end
 
-      ReSlot.includes(:slotter).all.find_each do |slot|
-        slot.add_follower(slot.slotter)
+      Containership.includes(:group, :slot).find_each do |relation|
+          relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
+      end
+
+      Passengership.includes(:slot, :user).find_each do |relation|
+          relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
       end
 
       ## Collect Activities ##
 
-      storage = MediaItem.all +
-                Note.all +
-                Like.all +
-                Comment.all +
-                StdSlot.all +
-                GroupSlot.all +
-                ReSlot.all +
-                Friendship.all +
-                Membership.all
+      storage = MediaItem.where(deleted_at: nil) +
+                Note.where(deleted_at: nil) +
+                Like.where(deleted_at: nil) +
+                Comment.where(deleted_at: nil) +
+                Friendship.where(deleted_at: nil) +
+                Membership.where(deleted_at: nil) +
+                Containership.where(deleted_at: nil) +
+                Passengership.where(deleted_at: nil) +
+                # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
+                StdSlot.all
+
+      # TODO: handle friendship date during re-build task
+      # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil
+      # (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
 
       ## Re-Build Activities ##
 
-      storage.uniq.sort_by!{|a| a[:updated_at]}.last(MAX_ACTIVITIES).each(&:create_activity)
+      storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each(&:create_activity)
 
-      puts "All feeds was build successfully."
-      puts "ACTIVITY COUNT: #{(User.all.count * storage.count)}"
+      puts "The follower model was successfully regenerated."
+      puts "All feeds was successfully regenerated."
+      puts "ACTIVITY OBJECTS: #{(storage.count)}"
     rescue
       #handle the error here
       puts "An error has occurred during the rebuilding process."

@@ -1,4 +1,5 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Feeds", :activity, :async do
   let(:json) { JSON.parse(response_body) }
@@ -6,41 +7,6 @@ resource "Feeds", :activity, :async do
   let(:owner) { create(:user) }
   let(:actor) { create(:user) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
-
-  shared_context "default slot response fields" do
-    response_field :id, "ID of the slot"
-    response_field :title, "Title of the slot"
-    response_field :startDate, "Startdate of the slot"
-    response_field :endDate, "Enddate of the slot"
-    response_field :openEnd, "OpenEnd Boolean Flag"
-    response_field :createdAt, "Creation of slot"
-    response_field :updatedAt, "Last update of slot"
-    response_field :deletedAt, "Delete date of slot or nil"
-    response_field :location, "Location data for the slot"
-    response_field :creator, "User who created the slot"
-    response_field :visibility, "Visibiltiy of the slot"
-    response_field :notes, "Notes on the slot"
-    response_field :likes, "Likes for the slot"
-    response_field :commentsCounter, "Number of comments on the slot"
-    response_field :reslotsCounter, "Number of reslots for this slot"
-    response_field :shareUrl, "Share URL for this slot, nil if not yet shared"
-    response_field :images, "Images for the slot"
-    response_field :audios, "Audio recordings for the slot"
-    response_field :videos, "Videos recordings for the slot"
-  end
-
-  shared_context "default user response fields" do
-    response_field :id, "ID of the user"
-    response_field :username, "Username of the user"
-    response_field :image, "URL of the user image"
-    response_field :location, "Home location of user"
-    response_field :createdAt, "Creation of user"
-    response_field :updatedAt, "Latest update of user in db"
-    response_field :deletedAt, "Deletion of user"
-    response_field :slotCount, "Number of slots for this user"
-    response_field :reslotCount, "Number of reslots for this user"
-    response_field :friendsCount, "Number of friends for this user"
-  end
 
   get "/v1/feed/user", :redis do
     header "Accept", "application/json"
@@ -110,7 +76,7 @@ resource "Feeds", :activity, :async do
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_activity_singular',
-                             USER: actor.username, TITLE: slot.title) }
+                             ACTOR: actor.username, TITLE: slot.title) }
 
       example "Get the feed of social related activities (aggregated)", document: :v1 do
         # Create a relationship
@@ -147,8 +113,7 @@ resource "Feeds", :activity, :async do
         expect(activity_slot).to have_key("notes")
         expect(activity_slot).to have_key("likes")
         expect(activity_slot).to have_key("commentsCounter")
-        expect(activity_slot).to have_key("reslotsCounter")
-        expect(activity_slot).to have_key("shareUrl")
+        # expect(activity_slot).to have_key("reslotsCounter")
         expect(activity_slot).to have_key("visibility")
         expect(activity_slot).to have_key("media")
         expect(activity_slot['creator']).to have_key("username")
@@ -159,9 +124,9 @@ resource "Feeds", :activity, :async do
         expect(activity_user).to have_key("id")
         expect(activity_user).to have_key("username")
         expect(activity_user).to have_key("image")
-        expect(activity_user).to have_key("friendsCount")
-        expect(activity_user).to have_key("reslotCount")
-        expect(activity_user).to have_key("slotCount")
+        # expect(activity_user).to have_key("friendsCount")
+        # expect(activity_user).to have_key("reslotCount")
+        # expect(activity_user).to have_key("slotCount")
         expect(activity_user['username']).to eq(actor.username)
 
         expect(activity['message']).to eq(message)
@@ -193,7 +158,7 @@ resource "Feeds", :activity, :async do
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
       let(:message) { I18n.t('slot_comment_notify_singular',
-                             USER: actor.username, TITLE: slot.title) }
+                             ACTOR: actor.username, TITLE: slot.title) }
 
       example "Get the feed of the current user notifications", document: :v1 do
         # Perform an activity

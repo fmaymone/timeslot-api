@@ -2,39 +2,36 @@ module V1
   require 'open-uri'
 
   class SearchController < ApplicationController
-    skip_before_action :authenticate_user_from_token!, only: :index
-
-    # GET /v1/search/?q=berghain&limit=10&timestamp=2015-08-08T12:00
-    # Global search through elastic search (crawler data)
-    def index
+    # GET /v1/search/categories
+    def categories
       authorize :search
+      categories = GlobalSlotConsumer.new.categories
 
-      user = ENV['TS_SEARCH_SERVICE_NAME']
-      pw = ENV['TS_SEARCH_SERVICE_PASSWORD']
-      auth = { http_basic_authentication: [user, pw] }
-
-      search_url = ENV['TS_SEARCH_SERVICE_URL']
-      time = page[:datetime] || Time.zone.now.strftime('%Y-%m-%dT%H:%M')
-
-      query = "#{search_url}?q=#{params.require(:query)}" \
-              "&size=#{page[:limit] || 10}&timestamp=#{time}"
-
-      begin
-        result = open(URI.escape(query), auth).read
-      rescue => e
-        Airbrake.notify(e)
-        return render json: { error: "Search Service Error: #{e}" },
-                      status: :service_unavailable
-      end
-      render json: result, status: :ok
+      render json: { categories: categories }
     end
 
     # GET /v1/search/user
-    # TODO: define and check allowed attributes for searching
     def user
       authorize :search
       return head 422 unless has_allowed_params?
       @users = Search.new(User, params[:attr] || 'username', query, page)
+
+      render "v1/users/list"
+    end
+
+    # GET /v1/search/friend
+    def friend
+      authorize :search
+      return head 422 unless has_allowed_params?
+      friends = current_user.friends_by_request_ids +
+                current_user.friends_by_offer_ids
+
+      if friends.any?
+        @users = Search.new(
+          User.where(id: friends), params[:attr] || 'username', query, page)
+      else
+        @users = []
+      end
 
       render "v1/users/list"
     end
@@ -75,6 +72,15 @@ module V1
       render "v1/groups/index"
     end
 
+    # GET /v1/search/calendars
+    def calendars
+      authorize :search
+      result = ClawMachine.new.search(category: 'calendars',
+                                      query_params: query_and_limit)
+
+      render body: result, content_type: "application/json"
+    end
+
     # GET /v1/search/location
     def location
       authorize :search
@@ -84,9 +90,20 @@ module V1
       render "v1/locations/index"
     end
 
+    private def query_and_limit
+      es_search_params = { q: "" }
+      es_search_params[:q] = params[:q]
+
+      if params[:limit].present?
+        limit = params[:limit]
+        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+      end
+      es_search_params
+    end
+
     private def query
       # if we need to store usernames/titles with specials signs then we have to
-      # save username/title transliterated as well to get better search results
+      # search through username/title transliterated as well to get better search results
       # http://apidock.com/rails/ActiveSupport/Inflector/transliterate
       ActiveSupport::Inflector
         .transliterate(params.require(:query))
@@ -104,7 +121,11 @@ module V1
     end
 
     private def page
-      params.permit(:datetime, :page, :limit, :method).symbolize_keys
+      params.permit(:page,
+                    :limit,
+                    :method,
+                    :include,
+                    :exclude).symbolize_keys
     end
 
     # Example rails sanitize:
