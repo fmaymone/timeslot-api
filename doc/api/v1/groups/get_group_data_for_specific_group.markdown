@@ -53,20 +53,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=FkUHYO6iUzOlOOzpmBwbDtls63Y
+Authorization: Token token=erxafiGBOny-ww6DgU2gCL_9XCk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee</pre>
+<pre>GET /v1/groups/e45cff1b-99eb-450d-9f4b-7a2f678b2f5a</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/e45cff1b-99eb-450d-9f4b-7a2f678b2f5a&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=FkUHYO6iUzOlOOzpmBwbDtls63Y&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=erxafiGBOny-ww6DgU2gCL_9XCk&quot;</pre>
 
 ### Response
 
@@ -76,12 +75,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;1ca571a6715dd6f33719f726965fdc1b&quot;
+ETag: W/&quot;bc427afe2176826c352b48b37324b753&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0c256499-7173-4d4c-99af-095b454f71f9
-X-Runtime: 0.011400
+X-Request-Id: f6e7ba73-092c-47c4-92b5-800ed80effa9
+X-Runtime: 0.033982
 Vary: Origin
-Content-Length: 392</pre>
+Content-Length: 460</pre>
 
 #### Status
 
@@ -91,22 +90,32 @@ Content-Length: 392</pre>
 
 ```javascript
 {
-  "id" : "cd2bf982-19d3-41dd-b8dc-9fbbe49ecdee",
-  "name" : "Testgroup 10",
+  "id" : "e45cff1b-99eb-450d-9f4b-7a2f678b2f5a",
+  "name" : "Testgroup 4",
   "image" : "",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2016-01-29T19:38:54.843Z",
-  "updatedAt" : "2016-01-29T19:38:54.843Z",
+  "public" : false,
+  "createdAt" : "2016-04-04T20:50:21.784Z",
+  "updatedAt" : "2016-04-04T20:50:21.784Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 6,
-    "username" : "User 84",
-    "createdAt" : "2016-01-29T19:38:54.841Z",
-    "updatedAt" : "2016-01-29T19:38:54.841Z",
+    "id" : 2,
+    "username" : "User 63",
+    "createdAt" : "2016-04-04T20:50:21.782Z",
+    "updatedAt" : "2016-04-04T20:50:21.782Z",
     "deletedAt" : null,
     "image" : ""
   },
+  "memberIds" : [
+    1,
+    5,
+    4,
+    3,
+    2
+  ],
+  "memberCount" : 5,
+  "slotCount" : 3,
   "membershipState" : "active"
 }
 ```

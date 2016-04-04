@@ -42,7 +42,7 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=LungRSOnJHIyJDXivw4l_G_daBw
+Authorization: Token token=2FzDO828Rx1WMOIlxGtL-9B3_Tc
 Host: example.org
 Cookie: </pre>
 
@@ -56,10 +56,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/search/friend?query=john&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/friend?query=john&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LungRSOnJHIyJDXivw4l_G_daBw&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=2FzDO828Rx1WMOIlxGtL-9B3_Tc&quot;</pre>
 
 ### Response
 
@@ -69,10 +68,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;4f432f2fcbddc161c5bdb3ebb2633d0e&quot;
+ETag: W/&quot;54b26144fb6df145ea317af5792aa80e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5c5de31f-6fd8-4076-bfb0-c8aa6a07df53
-X-Runtime: 0.015076
+X-Request-Id: 7e02c17e-5d06-44bb-bf3c-fdce9b5df924
+X-Runtime: 0.011331
 Vary: Origin
 Content-Length: 167</pre>
 
@@ -85,10 +84,10 @@ Content-Length: 167</pre>
 ```javascript
 [
   {
-    "id" : 166,
+    "id" : 110,
     "username" : "John Doe",
-    "createdAt" : "2016-01-29T19:39:03.016Z",
-    "updatedAt" : "2016-01-29T19:39:03.016Z",
+    "createdAt" : "2016-04-04T20:50:26.033Z",
+    "updatedAt" : "2016-04-04T20:50:26.033Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"

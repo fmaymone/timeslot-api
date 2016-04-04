@@ -41,20 +41,19 @@ Description : Deletion date of membership
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=UaC0cYP3YQkEWAddqkwEf1ZH-Wo
+Authorization: Token token=flQ-1YWzimZDX-eInzMjU1sh4ec
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/9d819e54-e925-44d5-a094-5a6521a0e7f1/related</pre>
+<pre>GET /v1/groups/628cfdfa-f625-4181-9b7e-afda6663ac58/related</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/9d819e54-e925-44d5-a094-5a6521a0e7f1/related&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/628cfdfa-f625-4181-9b7e-afda6663ac58/related&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=UaC0cYP3YQkEWAddqkwEf1ZH-Wo&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=flQ-1YWzimZDX-eInzMjU1sh4ec&quot;</pre>
 
 ### Response
 
@@ -64,12 +63,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;99f4be1eadd8ebb6d05be92d29a931d1&quot;
+ETag: W/&quot;561319034eaeb68c401571a0d322d4a5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5ded63d8-4c10-444e-a922-3b76f7c7cf52
-X-Runtime: 0.051124
+X-Request-Id: 6ebdee32-8593-49fd-ad6f-c65e9612ee82
+X-Runtime: 0.013843
 Vary: Origin
-Content-Length: 478</pre>
+Content-Length: 511</pre>
 
 #### Status
 
@@ -79,43 +78,48 @@ Content-Length: 478</pre>
 
 ```javascript
 {
-  "groupId" : "9d819e54-e925-44d5-a094-5a6521a0e7f1",
-  "size" : 7,
+  "id" : "628cfdfa-f625-4181-9b7e-afda6663ac58",
+  "size" : 8,
   "related" : [
     {
-      "userId" : 36,
+      "id" : 47,
+      "state" : "active",
+      "deletedAt" : "2016-04-04T20:50:22.464Z"
+    },
+    {
+      "id" : 46,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 45,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 44,
+      "state" : "invited",
+      "deletedAt" : "2016-04-04T20:50:18.806Z"
+    },
+    {
+      "id" : 43,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "id" : 42,
+      "state" : "invited",
+      "deletedAt" : null
+    },
+    {
+      "id" : 41,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "userId" : 37,
+      "id" : 40,
       "state" : "active",
       "deletedAt" : null
-    },
-    {
-      "userId" : 38,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 39,
-      "state" : "invited",
-      "deletedAt" : null
-    },
-    {
-      "userId" : 40,
-      "state" : "invited",
-      "deletedAt" : "2016-01-29T19:38:51.093Z"
-    },
-    {
-      "userId" : 41,
-      "state" : "invited",
-      "deletedAt" : "2016-01-29T19:38:51.093Z"
-    },
-    {
-      "userId" : 42,
-      "state" : "invited",
-      "deletedAt" : "2016-01-29T19:38:51.093Z"
     }
   ]
 }

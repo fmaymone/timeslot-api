@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=mzYp1gh3bW_xD_WdVdoKd_TEZ2o
+Authorization: Token token=9zFTzdO5esSjljFoDsD-UMR-J-w
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "deviceId" : "sn-223462873410834786765439522",
+  "deviceId" : "sn-283462873410834786765439528",
   "system" : "android",
   "version" : "5.0b",
   "token" : "a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee"
@@ -53,10 +53,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-223462873410834786765439522&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=mzYp1gh3bW_xD_WdVdoKd_TEZ2o&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=9zFTzdO5esSjljFoDsD-UMR-J-w&quot;</pre>
 
 ### Response
 
@@ -67,8 +66,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: 26ef90d3-e325-45bd-a31e-9c5009e91794
-X-Runtime: 0.008722
+X-Request-Id: 9f58ea20-d450-4ca1-8f84-4a2f5fc4db02
+X-Runtime: 0.006615
 Vary: Origin
 Content-Length: 0</pre>
 

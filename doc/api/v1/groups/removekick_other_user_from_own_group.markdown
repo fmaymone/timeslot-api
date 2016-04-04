@@ -28,20 +28,19 @@ Description : ID of the user to kick
 
 #### Headers
 
-<pre>Authorization: Token token=dmIzuNQt9dy9YtQCcAN7ltG503g
+<pre>Authorization: Token token=PNuEtRx7D56SyqUMHFL2rPO7td0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/02e9ee71-6459-4896-a83b-86775fe0fc43/members/71</pre>
+<pre>DELETE /v1/groups/25b6acb3-02bd-486f-8983-17db7f5b2dfc/members/86</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/02e9ee71-6459-4896-a83b-86775fe0fc43/members/71&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=dmIzuNQt9dy9YtQCcAN7ltG503g&quot; \
-	-H &quot;Host: example.org&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/25b6acb3-02bd-486f-8983-17db7f5b2dfc/members/86&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=PNuEtRx7D56SyqUMHFL2rPO7td0&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -53,8 +52,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: c85a19be-ee5d-4d95-83db-0c22cf61a2b9
-X-Runtime: 0.070745
+X-Request-Id: 65642926-abf5-4f07-82d7-0af8eafde947
+X-Runtime: 0.008997
 Vary: Origin
 Content-Length: 0</pre>
 

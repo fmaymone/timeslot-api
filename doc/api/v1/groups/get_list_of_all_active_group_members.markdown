@@ -39,20 +39,19 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=l3NozhaFN0gumtQ3tFikzAz6Zp0
+Authorization: Token token=_LsAxWGZptpngAKB_K8nxAV7yVc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/0f889799-3068-4646-a634-39079f647836/members</pre>
+<pre>GET /v1/groups/b47064aa-2baa-4d03-a851-21779deb6a23/members</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/0f889799-3068-4646-a634-39079f647836/members&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/b47064aa-2baa-4d03-a851-21779deb6a23/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=l3NozhaFN0gumtQ3tFikzAz6Zp0&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=_LsAxWGZptpngAKB_K8nxAV7yVc&quot;</pre>
 
 ### Response
 
@@ -62,12 +61,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7c9c12f834ee2f9f66e4b1d47ab774b6&quot;
+ETag: W/&quot;d4963a656c2272fea70ca5ba292ac139&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 478977b3-fa99-4878-8b43-e3976ccb9490
-X-Runtime: 0.078154
+X-Request-Id: c07f7e92-a960-4703-bb0c-6e87c02aec4e
+X-Runtime: 0.010869
 Vary: Origin
-Content-Length: 545</pre>
+Content-Length: 1052</pre>
 
 #### Status
 
@@ -77,38 +76,64 @@ Content-Length: 545</pre>
 
 ```javascript
 {
-  "groupId" : "0f889799-3068-4646-a634-39079f647836",
-  "size" : 6,
+  "id" : "b47064aa-2baa-4d03-a851-21779deb6a23",
+  "membersCounter" : 7,
   "members" : [
     {
-      "userId" : 29,
-      "username" : "User 107",
-      "userUrl" : "http://example.org/v1/users/29"
+      "id" : 31,
+      "username" : "User 92",
+      "createdAt" : "2016-04-04T20:50:22.320Z",
+      "updatedAt" : "2016-04-04T20:50:22.320Z",
+      "deletedAt" : null,
+      "image" : "www.looking.good"
     },
     {
-      "userId" : 30,
-      "username" : "User 108",
-      "userUrl" : "http://example.org/v1/users/30"
+      "id" : 32,
+      "username" : "User 93",
+      "createdAt" : "2016-04-04T20:50:22.324Z",
+      "updatedAt" : "2016-04-04T20:50:22.324Z",
+      "deletedAt" : null,
+      "image" : ""
     },
     {
-      "userId" : 31,
-      "username" : "User 109",
-      "userUrl" : "http://example.org/v1/users/31"
+      "id" : 33,
+      "username" : "User 94",
+      "createdAt" : "2016-04-04T20:50:22.334Z",
+      "updatedAt" : "2016-04-04T20:50:22.334Z",
+      "deletedAt" : null,
+      "image" : ""
     },
     {
-      "userId" : 32,
-      "username" : "User 110",
-      "userUrl" : "http://example.org/v1/users/32"
+      "id" : 34,
+      "username" : "User 95",
+      "createdAt" : "2016-04-04T20:50:22.338Z",
+      "updatedAt" : "2016-04-04T20:50:22.338Z",
+      "deletedAt" : null,
+      "image" : ""
     },
     {
-      "userId" : 33,
-      "username" : "User 111",
-      "userUrl" : "http://example.org/v1/users/33"
+      "id" : 35,
+      "username" : "User 96",
+      "createdAt" : "2016-04-04T20:50:22.342Z",
+      "updatedAt" : "2016-04-04T20:50:22.342Z",
+      "deletedAt" : null,
+      "image" : ""
     },
     {
-      "userId" : 35,
-      "username" : "User 113",
-      "userUrl" : "http://example.org/v1/users/35"
+      "id" : 36,
+      "username" : "User 97",
+      "createdAt" : "2016-04-04T20:50:22.347Z",
+      "updatedAt" : "2016-04-04T20:50:22.347Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    {
+      "id" : 39,
+      "username" : "User 100",
+      "createdAt" : "2016-04-04T20:50:22.381Z",
+      "updatedAt" : "2016-04-04T20:50:22.381Z",
+      "deletedAt" : null,
+      "image" : ""
     }
   ]
 }

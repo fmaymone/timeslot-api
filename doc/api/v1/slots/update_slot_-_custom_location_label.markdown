@@ -145,13 +145,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=fdlaTM9AaIr74KDeRusBDP_sg14
+Authorization: Token token=w28_Xl3mpUIuuyNU_GlKio5rZA8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/7</pre>
+<pre>PATCH /v1/stdslot/18</pre>
 
 #### Body
 ```javascript
@@ -167,10 +167,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot/7&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/18&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=fdlaTM9AaIr74KDeRusBDP_sg14&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=w28_Xl3mpUIuuyNU_GlKio5rZA8&quot;</pre>
 
 ### Response
 
@@ -180,12 +179,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9f6f8eebb852a235c399831569bf4c7e&quot;
+ETag: W/&quot;8fbee98da1218a1991386b143cb161eb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0c29fdc7-3e39-4274-8ea3-ef95f05cf373
-X-Runtime: 0.075939
+X-Request-Id: 8213405b-d6b7-43a8-9c18-0d3f75167fa8
+X-Runtime: 0.020546
 Vary: Origin
-Content-Length: 834</pre>
+Content-Length: 829</pre>
 
 #### Status
 
@@ -195,15 +194,15 @@ Content-Length: 834</pre>
 
 ```javascript
 {
-  "id" : 7,
-  "title" : "Slot title 89",
-  "startDate" : "2019-09-13T21:44:02.000Z",
-  "createdAt" : "2016-01-29T19:39:12.247Z",
-  "updatedAt" : "2016-01-29T19:39:12.247Z",
+  "id" : 18,
+  "title" : "Slot title 83",
+  "startDate" : "2019-09-06T14:44:02.000Z",
+  "createdAt" : "2016-04-04T20:50:32.117Z",
+  "updatedAt" : "2016-04-04T20:50:32.117Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-13T21:44:02.000Z",
+  "endDate" : "2019-10-06T14:44:02.000Z",
   "location" : {
-    "id" : 2,
+    "id" : "d70b20e0-199c-4348-83d0-f59634c270a8",
     "name" : "Soho House Custom",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -218,14 +217,13 @@ Content-Length: 834</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259,
-    "privateLocation" : false
+    "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 17,
-    "username" : "User 347",
-    "createdAt" : "2016-01-29T19:39:12.208Z",
-    "updatedAt" : "2016-01-29T19:39:12.208Z",
+    "id" : 43,
+    "username" : "User 345",
+    "createdAt" : "2016-04-04T20:50:32.109Z",
+    "updatedAt" : "2016-04-04T20:50:32.109Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -235,7 +233,6 @@ Content-Length: 834</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
   "commentsCounter" : 0
 }

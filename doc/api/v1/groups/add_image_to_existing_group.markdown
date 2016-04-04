@@ -54,13 +54,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Ibq0LXVauK774KJUE_1Pt01vFqc
+Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/bca0019e-f36e-4f9e-81d6-6e62968c61e6</pre>
+<pre>PATCH /v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1</pre>
 
 #### Body
 ```javascript
@@ -72,10 +72,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/bca0019e-f36e-4f9e-81d6-6e62968c61e6&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Ibq0LXVauK774KJUE_1Pt01vFqc&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw&quot;</pre>
 
 ### Response
 
@@ -85,12 +84,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;50e5a042b3e44609f6682b5b1d0f8e91&quot;
+ETag: W/&quot;54298f7153a1de8f1cfdb3024f968054&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ce6282bf-a455-470b-adbc-33da2ba4f5e3
-X-Runtime: 0.036456
+X-Request-Id: 333b8e2e-a29a-4719-8b61-8c8bf889ac3f
+X-Runtime: 0.011361
 Vary: Origin
-Content-Length: 418</pre>
+Content-Length: 480</pre>
 
 #### Status
 
@@ -100,22 +99,28 @@ Content-Length: 418</pre>
 
 ```javascript
 {
-  "id" : "bca0019e-f36e-4f9e-81d6-6e62968c61e6",
+  "id" : "9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1",
   "name" : "foo",
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
   "membersCanPost" : false,
   "membersCanInvite" : false,
-  "createdAt" : "2016-01-29T19:38:55.036Z",
-  "updatedAt" : "2016-01-29T19:38:55.076Z",
+  "public" : false,
+  "createdAt" : "2016-04-04T20:50:22.028Z",
+  "updatedAt" : "2016-04-04T20:50:22.039Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 12,
-    "username" : "User 90",
-    "createdAt" : "2016-01-29T19:38:55.020Z",
-    "updatedAt" : "2016-01-29T19:38:55.020Z",
+    "id" : 14,
+    "username" : "User 75",
+    "createdAt" : "2016-04-04T20:50:22.025Z",
+    "updatedAt" : "2016-04-04T20:50:22.025Z",
     "deletedAt" : null,
     "image" : ""
   },
+  "memberIds" : [
+    14
+  ],
+  "memberCount" : 1,
+  "slotCount" : 0,
   "membershipState" : "active"
 }
 ```

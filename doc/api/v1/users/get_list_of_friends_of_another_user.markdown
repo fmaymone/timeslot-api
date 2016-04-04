@@ -13,27 +13,26 @@ returns 404 if current user not friend with other user
 ### Parameters
 
 Name : id
-Description : ID of the user to get the friends of.
+Description : ID of the user to get the friends for.
 
 ### Request
 
 #### Headers
 
-<pre>Authorization: Token token=ghPqk_TK8YOBxW1ZdpCeTGfiJA0
+<pre>Authorization: Token token=gu6SHAkZ330mBMbckbPry0IGguA
 Accept: application/json
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/211/friends</pre>
+<pre>GET /v1/users/181/friends</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/users/211/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=ghPqk_TK8YOBxW1ZdpCeTGfiJA0&quot; \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/181/friends&quot; -X GET \
+	-H &quot;Authorization: Token token=gu6SHAkZ330mBMbckbPry0IGguA&quot; \
+	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
 
@@ -43,10 +42,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;5bebe8061b96bcba80c660fdf0f7983c&quot;
+ETag: W/&quot;8c84e10ebc10febb45bab05188195582&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 59f81281-f0c2-43c1-adfc-c2dba4615105
-X-Runtime: 0.020268
+X-Request-Id: b3f7bad3-d93a-4bb3-8e03-31d18ccdf312
+X-Runtime: 0.017760
 Vary: Origin
 Content-Length: 671</pre>
 
@@ -59,37 +58,37 @@ Content-Length: 671</pre>
 ```javascript
 [
   {
-    "id" : 212,
-    "username" : "User 542",
-    "createdAt" : "2016-01-29T19:39:19.778Z",
-    "updatedAt" : "2016-01-29T19:39:19.778Z",
+    "id" : 182,
+    "username" : "User 478",
+    "createdAt" : "2016-04-04T20:50:34.572Z",
+    "updatedAt" : "2016-04-04T20:50:34.572Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 213,
-    "username" : "User 543",
-    "createdAt" : "2016-01-29T19:39:19.787Z",
-    "updatedAt" : "2016-01-29T19:39:19.787Z",
+    "id" : 183,
+    "username" : "User 479",
+    "createdAt" : "2016-04-04T20:50:34.577Z",
+    "updatedAt" : "2016-04-04T20:50:34.577Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 214,
-    "username" : "User 544",
-    "createdAt" : "2016-01-29T19:39:19.796Z",
-    "updatedAt" : "2016-01-29T19:39:19.796Z",
+    "id" : 184,
+    "username" : "User 480",
+    "createdAt" : "2016-04-04T20:50:34.583Z",
+    "updatedAt" : "2016-04-04T20:50:34.583Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 215,
-    "username" : "User 545",
-    "createdAt" : "2016-01-29T19:39:19.807Z",
-    "updatedAt" : "2016-01-29T19:39:19.807Z",
+    "id" : 185,
+    "username" : "User 481",
+    "createdAt" : "2016-04-04T20:50:34.591Z",
+    "updatedAt" : "2016-04-04T20:50:34.591Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "myself"

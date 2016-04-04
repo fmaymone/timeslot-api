@@ -83,15 +83,6 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
-Name : image
-Description : URL of the user image
-
-Name : location
-Description : Home location of user
-
-Name : push
-Description : Send push Notifications (true/false)
-
 Name : createdAt
 Description : Creation of user
 
@@ -101,11 +92,17 @@ Description : Latest update of user in db
 Name : deletedAt
 Description : Deletion of user
 
-Name : slotCount
-Description : Number of slots for this user
+Name : image
+Description : URL of the user image
 
-Name : reslotCount
-Description : Number of reslots for this user
+Name : location
+Description : Home location of user
+
+Name : slotCount
+Description : Number of visible slots for this user
+
+Name : calendarCount
+Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
@@ -115,7 +112,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=nwCDJTqZ4mCYQV_IUlbmNonp-rY
+Authorization: Token token=SGPbJ3Fvy8wfGTVGlzDJzkKhshg
 Host: example.org
 Cookie: </pre>
 
@@ -125,10 +122,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/feed/user&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=nwCDJTqZ4mCYQV_IUlbmNonp-rY&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=SGPbJ3Fvy8wfGTVGlzDJzkKhshg&quot;</pre>
 
 ### Response
 
@@ -138,12 +134,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e9816b0fa112f58250819ff735662c48&quot;
+ETag: W/&quot;388f7bbaaacdd77cdca9dade93d4569c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1b654955-a840-43b0-833f-c3137f6a90e1
-X-Runtime: 0.015490
+X-Request-Id: b68c2dba-7b5c-4ecf-bc03-5ce65e10c0c0
+X-Runtime: 0.015506
 Vary: Origin
-Content-Length: 1887</pre>
+Content-Length: 1746</pre>
 
 #### Status
 
@@ -157,8 +153,8 @@ Content-Length: 1887</pre>
     "type" : "Slot",
     "target" : "1",
     "action" : "comment",
-    "time" : "2016-01-29T19:38:54.081Z",
-    "id" : "C50E32B525CFE384A361F33FCF64E583399FB9F5",
+    "time" : "2016-04-04T20:50:20.986Z",
+    "id" : "BC708194474B0F59043E34673D7141508D7614FF",
     "actors" : [
       3
     ],
@@ -167,25 +163,19 @@ Content-Length: 1887</pre>
       "target" : {
         "id" : 1,
         "title" : "Slot title 21",
-        "startDate" : "2019-09-02T04:44:02.000Z",
-        "createdAt" : "2016-01-29T19:38:54.048Z",
-        "updatedAt" : "2016-01-29T19:38:54.087Z",
+        "startDate" : "2019-09-20T19:44:02.000Z",
+        "createdAt" : "2016-04-04T20:50:20.955Z",
+        "updatedAt" : "2016-04-04T20:50:20.991Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-02T04:44:02.000Z",
+        "endDate" : "2019-10-20T19:44:02.000Z",
         "location" : null,
         "creator" : {
           "id" : 1,
-          "username" : "User 68",
-          "createdAt" : "2016-01-29T19:38:54.034Z",
-          "updatedAt" : "2016-01-29T19:38:54.034Z",
+          "username" : "User 51",
+          "createdAt" : "2016-04-04T20:50:20.926Z",
+          "updatedAt" : "2016-04-04T20:50:20.926Z",
           "deletedAt" : null,
-          "image" : {
-            "publicId" : null,
-            "localId" : null
-          },
-          "slotCount" : 0,
-          "reslotCount" : 0,
-          "friendsCount" : 0
+          "image" : ""
         },
         "notes" : [],
         "media" : [
@@ -195,7 +185,7 @@ Content-Length: 1887</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-01-29T19:38:54.071Z",
+            "createdAt" : "2016-04-04T20:50:20.980Z",
             "duration" : null,
             "title" : "Title 9"
           },
@@ -205,7 +195,7 @@ Content-Length: 1887</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-01-29T19:38:54.068Z",
+            "createdAt" : "2016-04-04T20:50:20.977Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -215,7 +205,7 @@ Content-Length: 1887</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-01-29T19:38:54.064Z",
+            "createdAt" : "2016-04-04T20:50:20.975Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -225,7 +215,7 @@ Content-Length: 1887</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-01-29T19:38:54.061Z"
+            "createdAt" : "2016-04-04T20:50:20.969Z"
           },
           {
             "mediaId" : 2,
@@ -233,7 +223,7 @@ Content-Length: 1887</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-01-29T19:38:54.057Z"
+            "createdAt" : "2016-04-04T20:50:20.964Z"
           },
           {
             "mediaId" : 1,
@@ -241,27 +231,23 @@ Content-Length: 1887</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-01-29T19:38:54.053Z"
+            "createdAt" : "2016-04-04T20:50:20.959Z"
           }
         ],
-        "reslotsCounter" : 0,
+        "settings" : {
+          "alerts" : "omitted"
+        },
         "visibility" : "public",
         "likes" : 0,
         "commentsCounter" : 1
       },
       "actor" : {
         "id" : 3,
-        "username" : "User 70",
-        "createdAt" : "2016-01-29T19:38:54.075Z",
-        "updatedAt" : "2016-01-29T19:38:54.075Z",
+        "username" : "User 53",
+        "createdAt" : "2016-04-04T20:50:20.982Z",
+        "updatedAt" : "2016-04-04T20:50:20.982Z",
         "deletedAt" : null,
-        "image" : {
-          "publicId" : null,
-          "localId" : null
-        },
-        "slotCount" : 0,
-        "reslotCount" : 0,
-        "friendsCount" : 0
+        "image" : ""
       }
     }
   }

@@ -17,6 +17,9 @@ returns 422 if required parameters are missing
 Name : visibility *- required -*
 Description : Visibility of the Slot (private/friends/foaf/public)
 
+Name : slotSets
+Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be added to
+
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -154,7 +157,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=E7zTaQMzvRSChgfKxU_AwBV1nC4
+Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI
 Host: example.org
 Cookie: </pre>
 
@@ -196,11 +199,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=E7zTaQMzvRSChgfKxU_AwBV1nC4&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI&quot;</pre>
 
 ### Response
 
@@ -210,12 +212,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f4701b0455351fe5dc235ab2d935ac27&quot;
+ETag: W/&quot;9bb10cd411f9264a79c7800ee454ff88&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 15cbbd88-94e7-4b15-abb8-7b22432c0785
-X-Runtime: 0.069359
+X-Request-Id: 48df7900-ccf6-4883-a014-61fdcb36c540
+X-Runtime: 0.051065
 Vary: Origin
-Content-Length: 1162</pre>
+Content-Length: 1187</pre>
 
 #### Status
 
@@ -225,15 +227,15 @@ Content-Length: 1162</pre>
 
 ```javascript
 {
-  "id" : 13,
+  "id" : 10,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-01-29T19:39:09.612Z",
-  "updatedAt" : "2016-01-29T19:39:09.612Z",
+  "createdAt" : "2016-04-04T20:50:31.577Z",
+  "updatedAt" : "2016-04-04T20:50:31.577Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : 1,
+    "id" : "e16429d4-9722-40c8-9de7-bfb66ff85d4c",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -248,35 +250,34 @@ Content-Length: 1162</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259,
-    "privateLocation" : false
+    "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 32,
-    "username" : "User 318",
-    "createdAt" : "2016-01-29T19:39:09.578Z",
-    "updatedAt" : "2016-01-29T19:39:09.578Z",
+    "id" : 24,
+    "username" : "User 326",
+    "createdAt" : "2016-04-04T20:50:31.558Z",
+    "updatedAt" : "2016-04-04T20:50:31.558Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
     "slotCount" : 1,
-    "reslotCount" : 0,
+    "calendarCount" : 0,
     "friendsCount" : 0
   },
   "notes" : [
     {
-      "id" : 8,
+      "id" : 10,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-01-29T19:39:09.625Z"
+      "createdAt" : "2016-04-04T20:50:31.586Z"
     },
     {
-      "id" : 7,
+      "id" : 9,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-01-29T19:39:09.619Z"
+      "createdAt" : "2016-04-04T20:50:31.582Z"
     }
   ],
   "media" : [],
@@ -284,8 +285,8 @@ Content-Length: 1162</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "unauthorizedSlotgroups" : []
 }
 ```

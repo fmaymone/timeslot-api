@@ -30,13 +30,13 @@ Description : set default alerts for slots in this group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=29kMsLC0mfFFmDUo0OVKfVMGExk
+Authorization: Token token=wsYE24OgruqQUPXedG68tKLGKM8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/3d736743-086b-4b67-9acf-3e2b710f452b/members</pre>
+<pre>PATCH /v1/groups/68feea96-92a2-4432-94bd-4b7213f999a1/members</pre>
 
 #### Body
 ```javascript
@@ -51,10 +51,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/groups/3d736743-086b-4b67-9acf-3e2b710f452b/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/68feea96-92a2-4432-94bd-4b7213f999a1/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=29kMsLC0mfFFmDUo0OVKfVMGExk&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=wsYE24OgruqQUPXedG68tKLGKM8&quot;</pre>
 
 ### Response
 
@@ -65,8 +64,8 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
 Cache-Control: no-cache
-X-Request-Id: f7c936ff-1a58-48b5-aa32-2a831eaf51bb
-X-Runtime: 0.034405
+X-Request-Id: 898a9ad5-5cb2-40c2-8353-95eadb9df794
+X-Runtime: 0.006806
 Vary: Origin
 Content-Length: 0</pre>
 

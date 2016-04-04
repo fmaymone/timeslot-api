@@ -4,7 +4,7 @@
 
 ### POST /v1/calendars/:slotgroup_uuid/subscribe
 
-Adds the given current user to the slotgroup/calendar. Calendar must be public.
+Adds the current user to the slotgroup/calendar. Calendar must be public.
 
 returns 201 if invite successfully created
 
@@ -20,19 +20,19 @@ Description : ID of the group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2tztd9rigT5U8geuhMXXNS0jWLk
+Authorization: Token token=DNfO6PsmlavnpuWaEaxxHUOERYE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/calendars/be256b24-e729-4981-b89f-8e590c7f14fb/subscribe</pre>
+<pre>POST /v1/calendars/b13c5f40-b348-431d-92e6-116c77b65c33/subscribe</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/calendars/be256b24-e729-4981-b89f-8e590c7f14fb/subscribe&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/calendars/b13c5f40-b348-431d-92e6-116c77b65c33/subscribe&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2tztd9rigT5U8geuhMXXNS0jWLk&quot;</pre>
+	-H &quot;Authorization: Token token=DNfO6PsmlavnpuWaEaxxHUOERYE&quot;</pre>
 
 ### Response
 
@@ -42,10 +42,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;3b833296dcaf24a9efef2f86b8e6e1b4&quot;
+ETag: W/&quot;5e9fa0abfec9703671eb9c2f6c31395b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5a27211a-03d9-4107-bcfb-bbe60319c375
-X-Runtime: 0.045714
+X-Request-Id: 956f4ad2-a964-4d02-9e2e-ab3c1e48e1b4
+X-Runtime: 0.027444
 Vary: Origin
 Content-Length: 154</pre>
 
@@ -57,16 +57,16 @@ Content-Length: 154</pre>
 
 ```javascript
 {
-  "id" : "be256b24-e729-4981-b89f-8e590c7f14fb",
+  "id" : "b13c5f40-b348-431d-92e6-116c77b65c33",
   "size" : 2,
   "related" : [
     {
-      "id" : 59,
+      "id" : 69,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "id" : 58,
+      "id" : 68,
       "state" : "active",
       "deletedAt" : null
     }

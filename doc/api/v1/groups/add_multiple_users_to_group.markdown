@@ -27,21 +27,21 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=BAzlha_Ks3DLtYmYScNpws6x3kg
+Authorization: Token token=K1znSYiCMiHE9WcBhUKf2L3pdwY
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/7529ace0-77f1-4987-a01b-0bc6765873f1/members</pre>
+<pre>POST /v1/groups/ab824ea4-4300-446f-88af-a58fc7358cca/members</pre>
 
 #### Body
 ```javascript
 {
   "invitees" : [
-    59,
-    60,
-    61
+    71,
+    72,
+    73
   ]
 }
 ```
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/7529ace0-77f1-4987-a01b-0bc6765873f1/members&quot; -d &#39;{&quot;invitees&quot;:[59,60,61]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/ab824ea4-4300-446f-88af-a58fc7358cca/members&quot; -d &#39;{&quot;invitees&quot;:[71,72,73]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=BAzlha_Ks3DLtYmYScNpws6x3kg&quot;</pre>
+	-H &quot;Authorization: Token token=K1znSYiCMiHE9WcBhUKf2L3pdwY&quot;</pre>
 
 ### Response
 
@@ -61,10 +61,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6ccaf37facd3220229e0048cdf083b7f&quot;
+ETag: W/&quot;47928c4984944172f4d8b82af29bf484&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b2232969-01bc-440f-af50-7bd779194b5c
-X-Runtime: 0.045289
+X-Request-Id: 588a5665-552b-475b-b370-44b2b7b1e9f8
+X-Runtime: 0.065108
 Vary: Origin
 Content-Length: 242</pre>
 
@@ -76,26 +76,26 @@ Content-Length: 242</pre>
 
 ```javascript
 {
-  "id" : "7529ace0-77f1-4987-a01b-0bc6765873f1",
+  "id" : "ab824ea4-4300-446f-88af-a58fc7358cca",
   "size" : 4,
   "related" : [
     {
-      "id" : 58,
+      "id" : 73,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "id" : 59,
+      "id" : 72,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "id" : 60,
+      "id" : 71,
       "state" : "active",
       "deletedAt" : null
     },
     {
-      "id" : 61,
+      "id" : 70,
       "state" : "active",
       "deletedAt" : null
     }

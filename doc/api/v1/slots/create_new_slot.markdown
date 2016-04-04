@@ -116,7 +116,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=8rhAAdCgmXFkXE5ef5OkdOMqYx8
+Authorization: Token token=-hsJvbHApQq1NZB7SlLIM4KmPG4
 Host: example.org
 Cookie: </pre>
 
@@ -145,11 +145,11 @@ Cookie: </pre>
   },
   "visibility" : "private",
   "slotGroups" : [
-    "5253b071-9c02-4264-836a-0f739fe2e9ec",
-    "b2dc4f14-4c60-4fd3-a93e-23c3a5748fa6",
-    "54004683-b2fd-4271-bf25-951ab9f2e9c5",
-    "c8200b27-23b5-4b55-bd04-094203c2072d",
-    "6679d254-74d3-4cce-a66c-429ab95d07b4"
+    "b9850057-0619-4b6c-8faf-67122592e949",
+    "99650221-1c16-48ba-8aa2-b6f12c268e2d",
+    "c7e5b3d6-76b3-4270-b0be-c48adbeb1cb3",
+    "91ddaf48-611c-4971-a50b-4115ef8af951",
+    "35748e6a-ad9b-411e-a26a-ef9160a85cf3"
   ]
 }
 ```
@@ -157,10 +157,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;5253b071-9c02-4264-836a-0f739fe2e9ec&quot;,&quot;b2dc4f14-4c60-4fd3-a93e-23c3a5748fa6&quot;,&quot;54004683-b2fd-4271-bf25-951ab9f2e9c5&quot;,&quot;c8200b27-23b5-4b55-bd04-094203c2072d&quot;,&quot;6679d254-74d3-4cce-a66c-429ab95d07b4&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;b9850057-0619-4b6c-8faf-67122592e949&quot;,&quot;99650221-1c16-48ba-8aa2-b6f12c268e2d&quot;,&quot;c7e5b3d6-76b3-4270-b0be-c48adbeb1cb3&quot;,&quot;91ddaf48-611c-4971-a50b-4115ef8af951&quot;,&quot;35748e6a-ad9b-411e-a26a-ef9160a85cf3&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=8rhAAdCgmXFkXE5ef5OkdOMqYx8&quot;</pre>
+	-H &quot;Authorization: Token token=-hsJvbHApQq1NZB7SlLIM4KmPG4&quot;</pre>
 
 ### Response
 
@@ -170,12 +170,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;183a10b56eee5e35bae584881f3ba69e&quot;
+ETag: W/&quot;f7cb8e8df3247f35935c6736c33a2dbc&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f2ce17d3-5b7d-4352-9c1a-18e1e60459f1
-X-Runtime: 0.116526
+X-Request-Id: b705c65d-0830-49fa-aeb8-2ec721c8891e
+X-Runtime: 0.135373
 Vary: Origin
-Content-Length: 877</pre>
+Content-Length: 895</pre>
 
 #### Status
 
@@ -188,20 +188,21 @@ Content-Length: 877</pre>
   "id" : 1,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-03-10T14:31:29.806Z",
-  "updatedAt" : "2016-03-10T14:31:29.806Z",
+  "createdAt" : "2016-04-04T20:50:30.980Z",
+  "updatedAt" : "2016-04-04T20:50:30.980Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
     "id" : 1,
-    "username" : "User 278",
-    "createdAt" : "2016-03-10T14:31:29.727Z",
-    "updatedAt" : "2016-03-10T14:31:29.727Z",
+    "username" : "User 296",
+    "createdAt" : "2016-04-04T20:50:30.917Z",
+    "updatedAt" : "2016-04-04T20:50:30.917Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
     "slotCount" : 1,
+    "calendarCount" : 3,
     "friendsCount" : 0
   },
   "notes" : [
@@ -210,14 +211,14 @@ Content-Length: 877</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-03-10T14:31:29.820Z"
+      "createdAt" : "2016-04-04T20:50:31.010Z"
     },
     {
       "id" : 1,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-03-10T14:31:29.816Z"
+      "createdAt" : "2016-04-04T20:50:31.007Z"
     }
   ],
   "media" : [],
@@ -228,8 +229,8 @@ Content-Length: 877</pre>
   "likes" : 0,
   "commentsCounter" : 0,
   "unauthorizedSlotgroups" : [
-    "c8200b27-23b5-4b55-bd04-094203c2072d",
-    "6679d254-74d3-4cce-a66c-429ab95d07b4"
+    "91ddaf48-611c-4971-a50b-4115ef8af951",
+    "35748e6a-ad9b-411e-a26a-ef9160a85cf3"
   ]
 }
 ```

@@ -8,6 +8,8 @@ Returns data of new slot.
 
 Missing unrequiered fields will be filled with default values.
 
+At the moment the slot is added to MySchedule by default. I think we&#39;ll change this so it&#39;s only added if the MySchedule UUID is provided in the slotGroups array. Additional slotGroups can be submitted and the slot will be added there too.
+
 returns 422 if parameters are invalid
 
 returns 422 if required parameters are missing
@@ -16,6 +18,9 @@ returns 422 if required parameters are missing
 
 Name : visibility *- required -*
 Description : Visibility of the Slot (private/friends/foaf/public)
+
+Name : slotSets
+Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be added to
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -112,7 +117,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=fS11CUtFJ9T69LVDp6iwmz7w-jo
+Authorization: Token token=zAgZ0cwtgj-e8Vaf6qu0_aMk_60
 Host: example.org
 Cookie: </pre>
 
@@ -146,11 +151,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://localhost:5000/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=fS11CUtFJ9T69LVDp6iwmz7w-jo&quot; \
-	-H &quot;Host: example.org&quot;</pre>
+	-H &quot;Authorization: Token token=zAgZ0cwtgj-e8Vaf6qu0_aMk_60&quot;</pre>
 
 ### Response
 
@@ -160,12 +164,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;231eb9082b0bcf00f2726e45da665f69&quot;
+ETag: W/&quot;0880e72b7ee8e7b2fffa09c6718f55f6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a75e0250-cd00-472c-87d9-7ddbc1706dff
-X-Runtime: 0.060170
+X-Request-Id: db671985-dd85-47b6-ba2e-4e20475eb394
+X-Runtime: 0.038961
 Vary: Origin
-Content-Length: 809</pre>
+Content-Length: 819</pre>
 
 #### Status
 
@@ -175,40 +179,40 @@ Content-Length: 809</pre>
 
 ```javascript
 {
-  "id" : 10,
+  "id" : 7,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-01-29T19:39:09.347Z",
-  "updatedAt" : "2016-01-29T19:39:09.347Z",
+  "createdAt" : "2016-04-04T20:50:31.407Z",
+  "updatedAt" : "2016-04-04T20:50:31.407Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 29,
-    "username" : "User 315",
-    "createdAt" : "2016-01-29T19:39:09.333Z",
-    "updatedAt" : "2016-01-29T19:39:09.333Z",
+    "id" : 21,
+    "username" : "User 323",
+    "createdAt" : "2016-04-04T20:50:31.394Z",
+    "updatedAt" : "2016-04-04T20:50:31.394Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
     "slotCount" : 1,
-    "reslotCount" : 0,
+    "calendarCount" : 0,
     "friendsCount" : 0
   },
   "notes" : [
     {
-      "id" : 2,
+      "id" : 4,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-01-29T19:39:09.358Z"
+      "createdAt" : "2016-04-04T20:50:31.418Z"
     },
     {
-      "id" : 1,
+      "id" : 3,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-01-29T19:39:09.353Z"
+      "createdAt" : "2016-04-04T20:50:31.414Z"
     }
   ],
   "media" : [],
@@ -216,8 +220,8 @@ Content-Length: 809</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
-  "reslotsCounter" : 0,
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "unauthorizedSlotgroups" : []
 }
 ```
