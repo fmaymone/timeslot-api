@@ -7,6 +7,17 @@ namespace :feed do
     $redis.flushall
   end
 
+  desc "Refresh redis cache from all feeds"
+  task refresh: :environment do
+
+    begin
+      Feed.refresh_feed_cache(User.all.collect(&:id))
+      puts "All feeds cache was successfully refreshed."
+    rescue
+      puts "An error has occurred during the refreshing process."
+    end
+  end
+
   desc "Seed redis with activities"
   task build: :environment do
 
