@@ -15,3 +15,8 @@ json.extract!(
 json.owner do
   json.partial! 'v1/users/user', user: group.owner
 end
+
+member_ids = group.member_ids
+json.member_ids member_ids
+json.member_count member_ids.count
+json.slot_count group.slots.count
