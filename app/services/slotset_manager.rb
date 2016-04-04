@@ -14,7 +14,7 @@ class SlotsetManager
       result = Containership.find_or_create_by(slot: slot, group: slotset)
       result.update(deleted_at: nil) if result.deleted_at?
       slot.follow(slotset)
-      result.initiator = @current_user
+      result.initiator = @current_user if @current_user != slot.creator
       result.create_activity
 
       put_into_schedule_of_members(slot, slotset)
@@ -25,7 +25,7 @@ class SlotsetManager
       result = Passengership.find_or_create_by(slot: slot, user: current_user)
       result.update(deleted_at: nil) if result.deleted_at?
       current_user.follow(slot)
-      result.initiator = @current_user
+      result.initiator = @current_user if @current_user != slot.creator
       result.create_activity
 
       # case slot_set
@@ -75,7 +75,7 @@ class SlotsetManager
       result.update(deleted_at: nil) if result.deleted_at?
       result.update(show_in_my_schedule: true) unless result.show_in_my_schedule?
       member.follow(slot)
-      result.initiator = @current_user
+      result.initiator = @current_user if @current_user != slot.creator
       result.create_activity # is it needed?
     end
   end
