@@ -1,0 +1,16 @@
+branch-defaults:
+  aws-eb-stage:
+    environment: tsinc-aws-stage
+  fix-calendar-counter:
+    environment: tsinc-aws-stage
+  globalslot-lists:
+    environment: tsinc-aws-stage
+  user-tagging-permissions:
+    environment: tsinc-aws-stage
+global:
+  application_name: TS_RAILS_BACKEND
+  default_ec2_keyname: aws-eb-ts-backend-stage
+  default_platform: 64bit Amazon Linux 2015.09 v2.0.6 running Ruby 2.2 (Puma)
+  default_region: eu-central-1
+  profile: eb-cli
+  sc: git
