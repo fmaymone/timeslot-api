@@ -511,16 +511,18 @@ resource "Me" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq current_user.active_groups.count
-      expect(json[0]).to have_key("id")
-      expect(json[0]).to have_key("name")
-      expect(json[0]).to have_key("image")
-      expect(json[0]).to have_key("owner")
-      expect(json[0]).to have_key("createdAt")
-      expect(json[0]).to have_key("updatedAt")
-      expect(json[0]).to have_key("deletedAt")
-      expect(json[0]).to have_key("public")
-      expect(json[0]).to have_key("showInSchedule")
+      expect(json).to have_key("calendars")
+      calendars = json['calendars']
+      expect(calendars.size).to eq current_user.active_groups.count
+      expect(calendars[0]).to have_key("id")
+      expect(calendars[0]).to have_key("name")
+      expect(calendars[0]).to have_key("image")
+      expect(calendars[0]).to have_key("owner")
+      expect(calendars[0]).to have_key("createdAt")
+      expect(calendars[0]).to have_key("updatedAt")
+      expect(calendars[0]).to have_key("deletedAt")
+      expect(calendars[0]).to have_key("public")
+      expect(calendars[0]).to have_key("showInSchedule")
     end
   end
 

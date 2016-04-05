@@ -1,4 +1,4 @@
-json.array!(@memberships) do |membership|
+json.calendars @memberships do |membership|
   json.id membership.group.uuid
   json.extract! membership.group,
                 :name, :image, :public, :created_at, :updated_at, :deleted_at
