@@ -148,8 +148,8 @@ describe GroupPolicy do
   end
 
   permissions :show?, :leave?, :slots?, :members?, :member_settings?,
-              :add_slot?, :remove_slot?, :add_slotgroup_to_schedule?,
-              :remove_slotgroup_from_schedule? do
+              :add_slot?, :remove_slot?, :add_calendar_to_schedule?,
+              :remove_calendar_from_schedule? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do
@@ -177,7 +177,7 @@ describe GroupPolicy do
         :show?, :leave?, :slots?, :members?, :member_settings?,
         :index?, :create?, :update?, :destroy?, :related?, :subscribe?,
         :invite?, :kick?, :accept_invite?, :refuse_invite?,
-        :add_slotgroup_to_schedule?, :remove_slotgroup_from_schedule?
+        :add_calendar_to_schedule?, :remove_calendar_from_schedule?
       ]
     }
     let(:user) { nil }

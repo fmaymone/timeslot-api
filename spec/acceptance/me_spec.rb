@@ -466,9 +466,15 @@ resource "Me" do
   get "/v1/me/friends" do
     header 'Authorization', :auth_header
 
-    let!(:friendship_1) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_2) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_3) { create(:friendship, :established, friend: create(:user), user: current_user) }
+    let!(:friendship_1) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_2) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_3) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
 
     response_field :array, "containing friends as a list of Users"
 
@@ -526,21 +532,21 @@ resource "Me" do
     end
   end
 
-  post "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  post "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+      create(:membership, :active, group: calendar, user: current_user) }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       containerships.collect(&:slot_id)
     end
 
-    example "Display Slotgroup/Calendar in mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup was successfully added to " \
+    example "Display Calendar in mySchedule", document: :v1 do
+      explanation "returns 200 if calendar was successfully added to " \
                   "schedule or has been part of it anyway."
       do_request
 
@@ -551,17 +557,17 @@ resource "Me" do
     end
   end
 
-  delete "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  delete "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user,
+      create(:membership, :active, group: calendar, user: current_user,
              show_slots_in_schedule: true) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       slot_ids = containerships.collect(&:slot_id)
       slots = BaseSlot.find(slot_ids)
       slots.each { |slot|
@@ -571,8 +577,8 @@ resource "Me" do
       slot_ids
     end
 
-    example "Hide Slotgroup/Calendar from mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup successfully removed from " \
+    example "Hide Calendar from mySchedule", document: :v1 do
+      explanation "returns 200 if calendar successfully removed from " \
                   "schedule or hasn't been part of it anyway."
 
       expect(current_user.my_calendar_slot_ids).to match_array slot_ids

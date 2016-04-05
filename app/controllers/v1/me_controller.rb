@@ -79,22 +79,22 @@ module V1
       render "v1/slots/index"
     end
 
-    # POST /v1/me/schedule/slotgroup/:uuid
-    def add_slotgroup_to_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # POST /v1/me/schedule/calendar/:uuid
+    def add_calendar_to_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).show(slotgroup)
+      CalendarInScheduleManager.new(current_user).show(calendar)
 
       head :ok
     end
 
-    # DELETE /v1/me/schedule/slotgroup/:uuid
-    def remove_slotgroup_from_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # DELETE /v1/me/schedule/calendar/:uuid
+    def remove_calendar_from_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).hide(slotgroup)
+      CalendarInScheduleManager.new(current_user).hide(calendar)
 
       head :ok
     end

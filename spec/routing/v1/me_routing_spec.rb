@@ -34,15 +34,15 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#schedule", format: :json)
     end
 
-    it "routes to #add_slotgroup_to_schedule" do
-      expect(post: "/v1/me/schedule/slotgroup/#{uuid}")
-        .to route_to("v1/me#add_slotgroup_to_schedule",
+    it "routes to #add_calendar_to_schedule" do
+      expect(post: "/v1/me/schedule/calendar/#{uuid}")
+        .to route_to("v1/me#add_calendar_to_schedule",
                      uuid: uuid, format: :json)
     end
 
-    it "routes to #remove_slotgroup_from_schedule" do
-      expect(delete: "/v1/me/schedule/slotgroup/#{uuid}")
-        .to route_to("v1/me#remove_slotgroup_from_schedule",
+    it "routes to #remove_calendar_from_schedule" do
+      expect(delete: "/v1/me/schedule/calendar/#{uuid}")
+        .to route_to("v1/me#remove_calendar_from_schedule",
                      uuid: uuid, format: :json)
     end
 
