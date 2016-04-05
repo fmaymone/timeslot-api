@@ -101,10 +101,10 @@ en:
   slot_reslot_notify_aggregate:	"%{ACTOR} and %{COUNT} others reslotted your Slot: %{TITLE}"
   slot_reslot_push_aggregate:	"%{ACTOR} and %{COUNT} others reslotted the Slot: %{TITLE}"
 
-  user_accept_me_singular:	"You accepted the friend request from %{USER}"
+  user_accept_me_singular:	""
   user_accept_activity_singular:	""
   user_accept_notify_singular:	"You and %{USER} are now friends"
-  user_accept_push_singular:	"%{ACTOR} has accepted your friend request"
+  user_accept_push_singular:	""
   user_accept_activity_plural:	""
   user_accept_notify_plural:	"%{ACTOR} and %{USER} are now friends"
   user_accept_push_plural:	"TODO-Plural-Push-1"
@@ -114,7 +114,7 @@ en:
 
   user_friendship_me_singular:	"You accepted the friend request from: %{USER}"
   user_friendship_activity_singular:	""
-  user_friendship_notify_singular:	"You and %{USER} are now friends"
+  user_friendship_notify_singular:	"You and %{ACTOR} are now friends"
   user_friendship_push_singular:	"%{ACTOR} has accepted your friend request"
   user_friendship_activity_plural:	""
   user_friendship_notify_plural:	"%{ACTOR} and %{USER} are now friends"
@@ -311,7 +311,7 @@ en:
   group_ungroup_push_aggregate:	""
 
   group_create_me_singular:	"You created the calendar: %{NAME}"
-  group_create_activity_singular:	""
+  group_create_activity_singular:	"%{ACTOR} created the calendar: %{NAME}"
   group_create_notify_singular:	""
   group_create_push_singular:	""
   group_create_activity_plural:	""

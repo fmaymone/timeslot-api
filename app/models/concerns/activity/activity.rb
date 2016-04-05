@@ -1,6 +1,6 @@
 module Activity
 
-  def create_activity(action = nil)
+  def create_activity(action = activity_action)
     if activity_is_valid?
       create_activity_feed(action)
       create_activity_push(action) if push_is_valid?
@@ -11,7 +11,7 @@ module Activity
     return self
   end
 
-  def forward_activity(action = nil, feed_fwd: [], push_fwd: [])
+  def forward_activity(action = activity_action, feed_fwd: [], push_fwd: [])
     if activity_is_valid?
       create_activity_feed(action, notify: nil, forward: feed_fwd)
       create_activity_push(action, notify: nil, forward: push_fwd) if push_is_valid?
@@ -22,7 +22,7 @@ module Activity
     return self
   end
 
-  def update_activity(action = nil)
+  def update_activity(action = activity_action)
     if activity_is_valid?
       update_activity_feed(action)
       update_activity_push(action) if push_is_valid?
@@ -79,7 +79,7 @@ module Activity
 
   ## Private Helpers ##
 
-  private def create_activity_feed(action, notify: nil, forward: nil, time: nil)
+  private def create_activity_feed(action = activity_action, notify: nil, forward: nil, time: nil)
     # FIX: Reload last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?
@@ -90,11 +90,11 @@ module Activity
       object: self.id.to_s,
       model: self.class.name,
       target: activity_target.id.to_s,
-      action: action || activity_action,
+      action: action,
       message: activity_message_params,
       foreign: activity_foreign.try(:id).try(:to_s),
       notify: notify || activity_notify,
-      forward: forward || activity_forward,
+      forward: forward || activity_forward(action),
       data: activity_extra_data,
       time: time || self.updated_at
     })
@@ -102,9 +102,8 @@ module Activity
     error_handler(error, "failed: initialize activity as worker job")
   end
 
-  private def create_activity_push(action, notify: nil, forward: nil)
-    notify = forward || notify || activity_push
-    action = action || activity_action
+  private def create_activity_push(action = activity_action, notify: nil, forward: nil)
+    notify = forward || notify || activity_push(action)
 
     # Remove creator from the push notification list
     notify.delete(activity_actor.id)
@@ -145,11 +144,12 @@ module Activity
   end
 
   private def remove_activity_feed(action, target: nil, user: nil)
+    forwards = activity_forward(action)
     # Add actor + foreign + forwarded users to the activity removal dispatcher
     notify = activity_notify || []
-    notify += activity_forward[:User] if activity_forward[:User]
-    notify += activity_forward[:News] if activity_forward[:News]
-    notify += activity_forward[:Notification] if activity_forward[:Notification]
+    notify += forwards[:User] if forwards[:User]
+    notify += forwards[:News] if forwards[:News]
+    notify += forwards[:Notification] if forwards[:Notification]
     notify << activity_actor.id.to_s
     notify << activity_foreign.id.to_s if activity_foreign
 
@@ -273,26 +273,28 @@ module Activity
   end
 
   # Returns an array of user which should be notified via push notification (AWS SNS)
-  private def activity_push
+  private def activity_push(action = activity_action)
     # Remove the user from the news feed who did the actual activity (actor)
-    get_recipients("#{activity_type.downcase}_#{activity_action}_push", remove_actor: true).map(&:to_i)
+    get_recipients("#{activity_type.downcase}_#{action}_push", remove_actor: true).map(&:to_i)
   end
 
   # Returns an array of user which should be notified via internal app notification (feed)
-  private def activity_forward
+  private def activity_forward(action = activity_action)
     {
       User:
-        get_recipients("#{activity_type.downcase}_#{activity_action}_me"),
+        get_recipients("#{activity_type.downcase}_#{action}_me"),
       News:
-        get_recipients("#{activity_type.downcase}_#{activity_action}_activity", remove_actor: true),
+        get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
       Notification:
-        get_recipients("#{activity_type.downcase}_#{activity_action}_notify", remove_actor: true)
+        get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
     }
   end
 
   private def get_recipients(context, remove_actor: false)
     # Determine social context from distribution map
     context = distribution_map[context.to_sym] || {}
+    # FIX: Do not remove creator if the creator was manually set in the context
+    remove_actor = false unless context.include?('creator')
     # Collect recipients through social context
     recipients = []
 
@@ -487,14 +489,14 @@ module Activity
         slot_reslot_notify: %w(creator),
         slot_reslot_push: %w(creator),
 
-        user_accept_me: %w(actor),
+        user_accept_me: [],
         user_accept_activity: [],
-        user_accept_notify: %w(requester),
-        user_accept_push: %w(user),
+        user_accept_notify: %w(actor),
+        user_accept_push: [],
 
         user_friendship_me: %w(actor),
         user_friendship_activity: [],
-        user_friendship_notify: %w(requestee),
+        user_friendship_notify: %w(user),
         user_friendship_push: %w(user),
 
         group_membership_me: %w(actor),
@@ -568,12 +570,12 @@ module Activity
         group_leave_push: [],
 
         group_containership_me: %w(actor),
-        group_containership_activity: %w(actor member),
+        group_containership_activity: %w(joiners),
         group_containership_notify: [],
         group_containership_push: %w(member),
 
         group_containertag_me: %w(actor),
-        group_containertag_activity: %w(actor member),
+        group_containertag_activity: %w(joiners),
         group_containertag_notify: %w(foreign),
         group_containertag_push: %w(user member),
 
@@ -583,7 +585,7 @@ module Activity
         group_ungroup_push: [],
 
         group_create_me: %w(actor),
-        group_create_activity: [],
+        group_create_activity: %w(joiners owner),
         group_create_notify: [],
         group_create_push: []
     }

@@ -121,7 +121,7 @@ module V1
     def subscribe
       group = Group.find_by!(uuid: params[:slotgroup_uuid])
       authorize group
-      group.invite_users([current_user.id], current_user)
+      group.invite_users([current_user.id])
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }

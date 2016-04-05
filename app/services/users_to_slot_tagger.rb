@@ -6,13 +6,13 @@ class UsersToSlotTagger
     @slot = slot
   end
 
-  def tag(user_ids, initiator)
+  def tag(user_ids, initiator = nil)
     users = User.find(user_ids)
     users.each do |user|
       ps = user.passengerships.find_or_create_by(slot: @slot)
       ps.update(add_media_permission: true)
       user.follow(@slot)
-      ps.initiator = initiator
+      ps.initiator = initiator if initiator
       ps.create_activity
     end
   end

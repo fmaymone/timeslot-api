@@ -1351,74 +1351,32 @@ RSpec.describe Feed, :activity, :async, type: :model do
   end
 
   context "Activity forwardings", :redis do
-    let(:user) { create(:user) }
-    let(:friend) { create(:user) }
+    let(:user) { create(:user, username: 'User') }
+    let(:friend) { create(:user, username: 'Friend') }
 
     context "Forward friend requests" do
       before(:each) do
         # Perform activity: request friendship
-        friend.initiate_friendship(user.id)
-      end
-
-      it "User Feed (me activities)" do
-        user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(0) # has no related activities
-
-        user_feed_friend = Feed.user_feed(friend.id).as_json
-        expect(user_feed_friend.count).to be(1) # +1 friendship offered
-        expect(user_feed_friend.first['type']).to eq('User')
-        expect(user_feed_friend.first['action']).to eq('request')
-        expect(user_feed_friend.first['data']['target']['id']).to be(user.id)
-        expect(user_feed_friend.first['data']['target']['friendshipState']).to be(nil)
-        expect(user_feed_friend.first['data']['actor']['id']).to be(friend.id)
-        expect(user_feed_friend.first['data']['actor']['friendshipState']).to eq('pending passive')
-        expect(user_feed_friend.first['message']).to eq(I18n.t('user_request_me_singular',
-                                                               {ACTOR: friend.username,
-                                                                USER: user.username}))
-      end
-
-      it "News Feed (aggregated public activities)" do
-        news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no related activities
-
-        news_feed_friend = Feed.news_feed(friend.id).as_json
-        expect(news_feed_friend.count).to be(0) # has no related activities
-      end
-
-      it "Notification Feed (activities to own content)" do
-        notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(1) # +1 friendship offered
-        expect(notification_feed.first['type']).to eq('User')
-        expect(notification_feed.first['action']).to eq('request')
-        expect(notification_feed.first['data']['target']['id']).to be(user.id)
-        expect(notification_feed.first['data']['target']['friendshipState']).to be(nil)
-        expect(notification_feed.first['data']['actor']['id']).to be(friend.id)
-        expect(notification_feed.first['data']['actor']['friendshipState']).to eq('pending passive')
-        expect(notification_feed.first['message']).to eq(I18n.t('user_request_notify_singular',
-                                                               {ACTOR: friend.username,
-                                                                USER: user.username}))
-
-        notification_feed_friend = Feed.notification_feed(friend.id).as_json
-        expect(notification_feed_friend.count).to be(0) # has no related activities
-      end
-    end
-
-    context "Forward accepted friend requests" do
-      before(:each) do
-        # Perform activity: request friendship
-        fs = friend.initiate_friendship(user.id)
-        # Perform activity: accept requested friendship
-        fs.accept
+        user.initiate_friendship(friend.id)
       end
 
       after(:each) do
         # FIX: Remove friendship state to prevent affecting other tests
-        user.friendship(friend.id).reject
+        friend.friendship(user.id).reject
       end
 
       it "User Feed (me activities)" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(0) # has no related activities
+        expect(user_feed.count).to be(1) # +1 friendship offered
+        expect(user_feed.first['type']).to eq('User')
+        expect(user_feed.first['action']).to eq('request')
+        expect(user_feed.first['data']['target']['id']).to be(friend.id)
+        expect(user_feed.first['data']['target']['friendshipState']).to eq('pending passive')
+        expect(user_feed.first['data']['actor']['id']).to be(user.id)
+        expect(user_feed.first['data']['actor']['friendshipState']).to eq('pending active')
+        expect(user_feed.first['message']).to eq(I18n.t('user_request_me_singular',
+                                                 {ACTOR: user.username,
+                                                  USER: friend.username}))
 
         user_feed_friend = Feed.user_feed(friend.id).as_json
         expect(user_feed_friend.count).to be(0) # has no related activities
@@ -1434,22 +1392,78 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "Notification Feed (activities to own content)" do
         notification_feed = Feed.notification_feed(user.id).as_json
-        expect(notification_feed.count).to be(1) # +1 friendship established
-        expect(notification_feed.first['type']).to eq('User')
-        expect(notification_feed.first['action']).to eq('friendship')
-        expect(notification_feed.first['data']['target']['id']).to be(friend.id)
-        expect(notification_feed.first['data']['target']['friendshipState']).to be(nil)
-        expect(notification_feed.first['data']['actor']['id']).to be(user.id)
-        expect(notification_feed.first['data']['actor']['friendshipState']).to eq('friend')
+        expect(notification_feed.count).to be(0) # has no related activities
 
         notification_feed_friend = Feed.notification_feed(friend.id).as_json
-        expect(notification_feed_friend.count).to be(1) # has no related activities
+        expect(notification_feed_friend.count).to be(1) # +1 friendship offered
+        expect(notification_feed_friend.first['type']).to eq('User')
+        expect(notification_feed_friend.first['action']).to eq('request')
+        expect(notification_feed_friend.first['data']['target']['id']).to be(friend.id)
+        expect(notification_feed_friend.first['data']['target']['friendshipState']).to eq('pending passive')
+        expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
+        expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('pending active')
+        expect(notification_feed_friend.first['message']).to eq(I18n.t('user_request_notify_singular',
+                                                                {ACTOR: user.username,
+                                                                 USER: friend.username}))
+      end
+    end
+
+    context "Forward accepted friend requests" do
+      before(:each) do
+        # Perform activity: request friendship
+        friend.initiate_friendship(user.id)
+        # Perform activity: accept requested friendship
+        user.friendship(friend.id).accept
+      end
+
+      after(:each) do
+        # FIX: Remove friendship state to prevent affecting other tests
+        user.friendship(friend.id).reject
+      end
+
+      it "User Feed (me activities)" do
+        user_feed = Feed.user_feed(user.id).as_json
+        expect(user_feed.count).to be(1) # +1 friendship accepted
+        expect(user_feed.first['message']).to eq(I18n.t('user_friendship_me_singular',
+                                                        {ACTOR: user.username,
+                                                         USER: friend.username}))
+
+        user_feed_friend = Feed.user_feed(friend.id).as_json
+        expect(user_feed_friend.count).to be(0) # has no related activities (request activity was removed after accept)
+      end
+
+      it "News Feed (aggregated public activities)" do
+        news_feed = Feed.news_feed(user.id).as_json
+        expect(news_feed.count).to be(0) # has no related activities
+
+        news_feed_friend = Feed.news_feed(friend.id).as_json
+        expect(news_feed_friend.count).to be(0) # has no related activities
+      end
+
+      it "Notification Feed (activities to own content)" do
+        notification_feed = Feed.notification_feed(user.id).as_json
+        expect(notification_feed.count).to be(1) # +1 friendship established
+        expect(notification_feed.first['type']).to eq('User')
+        expect(notification_feed.first['action']).to eq('accept')
+        expect(notification_feed.first['data']['target']['id']).to be(friend.id)
+        expect(notification_feed.first['data']['target']['friendshipState']).to eq('friend')
+        expect(notification_feed.first['data']['actor']['id']).to be(user.id)
+        expect(notification_feed.first['data']['actor']['friendshipState']).to eq('friend')
+        expect(notification_feed.first['message']).to eq(I18n.t('user_accept_notify_singular',
+                                                         {ACTOR: user.username,
+                                                          USER: friend.username}))
+
+        notification_feed_friend = Feed.notification_feed(friend.id).as_json
+        expect(notification_feed_friend.count).to be(1) # +1 friendship established
         expect(notification_feed_friend.first['type']).to eq('User')
         expect(notification_feed_friend.first['action']).to eq('friendship')
         expect(notification_feed_friend.first['data']['target']['id']).to be(friend.id)
-        expect(notification_feed_friend.first['data']['target']['friendshipState']).to be(nil)
+        expect(notification_feed_friend.first['data']['target']['friendshipState']).to eq('friend')
         expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('friend')
+        expect(notification_feed_friend.first['message']).to eq(I18n.t('user_friendship_notify_singular',
+                                                                {ACTOR: user.username,
+                                                                 USER: friend.username}))
       end
     end
 

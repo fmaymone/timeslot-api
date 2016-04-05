@@ -7,6 +7,18 @@ namespace :feed do
     $redis.flushall
   end
 
+  desc "Refresh redis cache from all feeds"
+  task refresh: :environment do
+
+    begin
+      Feed.update_shared_objects(User.all + StdSlot.all + Group.all)
+      Feed.refresh_feed_cache(User.all.collect(&:id))
+      puts "All feeds cache was successfully refreshed."
+    rescue
+      puts "An error has occurred during the refreshing process."
+    end
+  end
+
   desc "Seed redis with activities"
   task build: :environment do
 
@@ -70,7 +82,10 @@ namespace :feed do
 
       ## Re-Build Activities ##
 
-      storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each(&:create_activity)
+      storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each do |item|
+        item.create_activity
+        item.create_activity('accept') if item.activity_action == 'friendship'
+      end
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."

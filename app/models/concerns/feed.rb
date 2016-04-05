@@ -154,6 +154,30 @@ module Feed
       job_data
     end
 
+    def update_shared_objects(objects)
+      objects = [objects] unless objects.kind_of?(Array)
+
+      @storage.pipe do
+        objects.each do |object|
+          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(object))
+        end
+      end
+    end
+
+    def refresh_feed_cache(user_ids, time = Time.now.to_f)
+      user_ids = [user_ids] unless user_ids.kind_of?(Array)
+
+      @storage.pipe do
+        user_ids.each do |user_id|
+          %W(Feed:#{user_id}:News
+             Feed:#{user_id}:User
+             Feed:#{user_id}:Notification).each do |feed_index|
+            @storage.set("Status:#{feed_index}", time)
+          end
+        end
+      end
+    end
+
     private def remove_activity_from_feed(feed_key, time, notify)
       @storage.pipe do
         # Loop through all related user feeds through social relations
@@ -248,13 +272,14 @@ module Feed
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
         case activity['action']
           when 'request'
-            actor['friendshipState'] = 'pending passive'
-          when 'friendship'
+            actor['friendshipState'] = 'pending active'
+            target['friendshipState'] = 'pending passive'
+          when 'friendship', 'accept'
             actor['friendshipState'] = 'friend'
-            # FIX: delegate second user if friendship was accepted
-            activity['actors'] << activity['target'].to_i
+            target['friendshipState'] = 'friend'
           when 'unfriend'
             actor['friendshipState'] = 'stranger'
+            target['friendshipState'] = 'stranger'
         end
 
         # Update message params with enriched message
