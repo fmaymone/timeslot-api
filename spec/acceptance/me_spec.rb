@@ -490,12 +490,16 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
+    response_field :id, "UUID of the calendar"
+    response_field :name, "name of the calendar"
+    response_field :image, "URL of the calendar image"
+    response_field :public, "visibility of the calendar"
+    response_field :owner, "user details of the calendar owner"
+    # response_field :notifications, "does user get notifications for calendar"
+    response_field :showInSchedule, "are calendar slots shown in schedule"
+    response_field :createdAt, "Creation datetime of the calendar"
+    response_field :updatedAt, "Last update of the calendaar"
+    response_field :deletedAt, "Deletion datetime of the calendar"
 
     let!(:current_user) { create(:user, :with_email, :with_password,
                                  :with_3_groups, :with_3_own_groups) }
@@ -515,6 +519,8 @@ resource "Me" do
       expect(json[0]).to have_key("createdAt")
       expect(json[0]).to have_key("updatedAt")
       expect(json[0]).to have_key("deletedAt")
+      expect(json[0]).to have_key("public")
+      expect(json[0]).to have_key("showInSchedule")
     end
   end
 

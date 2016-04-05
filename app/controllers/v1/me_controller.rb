@@ -143,8 +143,8 @@ module V1
     # return all calendars where the current user is member/subscriber
     def calendars
       authorize :me
-      @groups = current_user.active_groups
-      render "v1/groups/index"
+      @memberships = current_user.active_memberships
+      render "v1/memberships/index"
     end
 
     # PATCH /v1/me/device
