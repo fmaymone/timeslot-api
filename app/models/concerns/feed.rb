@@ -160,14 +160,18 @@ module Feed
       @storage.pipe do
         objects.each do |object|
           json = render_shared_object(object)
-          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(json)) if json
+          activity_type = object.class.name
+          %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
+            activity_type.gsub!(replace, 'Slot')
+          end
+          @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
         end
       end
     end
 
     def render_shared_object(object)
       case object.class.name
-        when 'Slot'
+        when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
           json = JSON.parse(ApplicationController.new.render_to_string(
               template: 'v1/slots/_slot',
               layout: false,
