@@ -31,21 +31,8 @@ module SlotActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/slots/_slot',
-          layout: false,
-          locals: {
-              :slot => activity_target,
-              :current_user => activity_actor
-          }
-      )),
-      actor: JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/users/_user',
-          layout: false,
-          locals: {
-              :user => activity_actor
-          }
-      ))
+      target: update_shared_objects(activity_target),
+      actor: update_shared_objects(activity_actor)
     }
   end
 
