@@ -377,12 +377,10 @@ module Activity
     ## -- Distribution Keys: Mixed Context -- ##
 
     if context.include?('joiners')    # = friends + member (if: public group?)
-      recipients += activity_actor.followers
-      recipients += activity_target.followers
-
-      groups = activity_type == 'Group' ? [activity_target] : activity_target.activity_groups
+      groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += group.followers if group.try(:public)
+        recipients += group.followers
+        recipients += activity_actor.followers unless group.try(:public)
       end
     end
 

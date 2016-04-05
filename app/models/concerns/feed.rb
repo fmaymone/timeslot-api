@@ -159,7 +159,37 @@ module Feed
 
       @storage.pipe do
         objects.each do |object|
-          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(object))
+          case object.class.name
+            when 'Slot'
+              json = JSON.parse(ApplicationController.new.render_to_string(
+                  template: 'v1/slots/_slot',
+                  layout: false,
+                  locals: {
+                      :slot => object,
+                      :current_user => object.creator
+                  }
+              ))
+            when 'Group'
+              json = JSON.parse(ApplicationController.new.render_to_string(
+                  template: 'v1/groups/_group',
+                  layout: false,
+                  locals: {
+                      :group => object,
+                      :current_user => object.owner
+                  }
+              ))
+            when 'User'
+              json = JSON.parse(ApplicationController.new.render_to_string(
+                  template: 'v1/users/_user',
+                  layout: false,
+                  locals: {
+                      :user => object
+                  }
+              ))
+            else
+              json = nil
+          end
+          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(json)) if json
         end
       end
     end
