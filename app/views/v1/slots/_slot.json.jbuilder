@@ -37,5 +37,6 @@ json.visibility slot.visibility if slot.try(:visibility)
 # if we have a global slot, return the muid
 json.muid slot.reload.slot_uuid if slot.GlobalSlot?
 
+json.liker_ids slot.likes.pluck :user_id
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count

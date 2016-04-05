@@ -27,6 +27,7 @@ RSpec.shared_context "default slot response fields" do
   response_field :visibility,
                  "Visibiltiy of the slot (private/friend/foaf/public)"
   response_field :notes, "Notes on the slot"
+  response_field :likerIds, "Array with IDs of Users who like the slot"
   response_field :likes, "Likes for the slot"
   response_field :commentsCounter, "Number of comments on the slot"
   response_field :shareUrl, "Share URL for this slot, nil if not yet shared"

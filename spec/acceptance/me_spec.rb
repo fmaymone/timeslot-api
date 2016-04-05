@@ -106,18 +106,18 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/calendar" do
+  get "/v1/me/schedule" do
     header "Authorization", :auth_header
     let(:slot_1) { create(:std_slot_private) }
     let(:slot_2) { create(:std_slot_public) }
 
-    let!(:my_calendar_slots) do
+    let!(:my_schedule) do
       create(:passengership, slot: slot_1, user: current_user)
       create(:passengership, slot: slot_2, user: current_user)
     end
 
-    example "Get my Calendar slots", document: :v1 do
-      explanation "Returns array with all slots in users 'MyCalendar'."
+    example "Get my schedule", document: :v1 do
+      explanation "Returns array with all slots in users schedule."
 
       do_request
 
@@ -466,9 +466,15 @@ resource "Me" do
   get "/v1/me/friends" do
     header 'Authorization', :auth_header
 
-    let!(:friendship_1) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_2) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_3) { create(:friendship, :established, friend: create(:user), user: current_user) }
+    let!(:friendship_1) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_2) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_3) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
 
     response_field :array, "containing friends as a list of Users"
 
@@ -486,53 +492,61 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/slotgroups" do
+  get "/v1/me/calendars" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
+    response_field :id, "UUID of the calendar"
+    response_field :name, "name of the calendar"
+    response_field :image, "URL of the calendar image"
+    response_field :public, "visibility of the calendar"
+    response_field :owner, "user details of the calendar owner"
+    # response_field :notifications, "does user get notifications for calendar"
+    response_field :showInSchedule, "are calendar slots shown in schedule"
+    response_field :createdAt, "Creation datetime of the calendar"
+    response_field :updatedAt, "Last update of the calendaar"
+    response_field :deletedAt, "Deletion datetime of the calendar"
 
     let!(:current_user) { create(:user, :with_email, :with_password,
                                  :with_3_groups, :with_3_own_groups) }
 
-    example "Get all groups where current user is member or owner",
+    example "Get all calendars where current user is member or owner",
             document: :v1 do
-      explanation "returns an array of groups"
+      explanation "returns an array of calendars"
 
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq current_user.active_groups.count
-      expect(json[0]).to have_key("id")
-      expect(json[0]).to have_key("name")
-      expect(json[0]).to have_key("image")
-      expect(json[0]).to have_key("owner")
-      expect(json[0]).to have_key("createdAt")
-      expect(json[0]).to have_key("updatedAt")
-      expect(json[0]).to have_key("deletedAt")
+      expect(json).to have_key("result")
+      calendars = json['result']
+      expect(calendars.size).to eq current_user.active_groups.count
+      expect(calendars[0]).to have_key("id")
+      expect(calendars[0]).to have_key("name")
+      expect(calendars[0]).to have_key("image")
+      expect(calendars[0]).to have_key("owner")
+      expect(calendars[0]).to have_key("createdAt")
+      expect(calendars[0]).to have_key("updatedAt")
+      expect(calendars[0]).to have_key("deletedAt")
+      expect(calendars[0]).to have_key("public")
+      expect(calendars[0]).to have_key("showInSchedule")
     end
   end
 
-  post "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  post "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+      create(:membership, :active, group: calendar, user: current_user) }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       containerships.collect(&:slot_id)
     end
 
-    example "Display Slotgroup/Calendar in mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup was successfully added to " \
+    example "Display Calendar in mySchedule", document: :v1 do
+      explanation "returns 200 if calendar was successfully added to " \
                   "schedule or has been part of it anyway."
       do_request
 
@@ -543,17 +557,17 @@ resource "Me" do
     end
   end
 
-  delete "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  delete "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user,
+      create(:membership, :active, group: calendar, user: current_user,
              show_slots_in_schedule: true) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       slot_ids = containerships.collect(&:slot_id)
       slots = BaseSlot.find(slot_ids)
       slots.each { |slot|
@@ -563,8 +577,8 @@ resource "Me" do
       slot_ids
     end
 
-    example "Hide Slotgroup/Calendar from mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup successfully removed from " \
+    example "Hide Calendar from mySchedule", document: :v1 do
+      explanation "returns 200 if calendar successfully removed from " \
                   "schedule or hasn't been part of it anyway."
 
       expect(current_user.my_calendar_slot_ids).to match_array slot_ids

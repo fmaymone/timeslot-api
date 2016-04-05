@@ -110,14 +110,14 @@ class GroupPolicy < ApplicationPolicy
   end
 
   # true if current user is an active member of the group
-  def add_slotgroup_to_schedule?
+  def add_calendar_to_schedule?
     return false unless current_user?
     return true if current_user.active_member? group.id
     false
   end
 
   # true if current user is an active member of the group
-  def remove_slotgroup_from_schedule?
+  def remove_calendar_from_schedule?
     return false unless current_user?
     return true if current_user.active_member? group.id
     false

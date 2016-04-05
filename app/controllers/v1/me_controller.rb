@@ -71,7 +71,7 @@ module V1
 
     # GET /v1/me/calendar
     # returns all slots current user has in her calendar
-    def calendar
+    def schedule
       authorize :me
 
       @slots = current_user.my_calendar_slots
@@ -79,22 +79,22 @@ module V1
       render "v1/slots/index"
     end
 
-    # POST /v1/me/schedule/slotgroup/:uuid
-    def add_slotgroup_to_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # POST /v1/me/schedule/calendar/:uuid
+    def add_calendar_to_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).show(slotgroup)
+      CalendarInScheduleManager.new(current_user).show(calendar)
 
       head :ok
     end
 
-    # DELETE /v1/me/schedule/slotgroup/:uuid
-    def remove_slotgroup_from_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # DELETE /v1/me/schedule/calendar/:uuid
+    def remove_calendar_from_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).hide(slotgroup)
+      CalendarInScheduleManager.new(current_user).hide(calendar)
 
       head :ok
     end
@@ -139,12 +139,12 @@ module V1
       render "v1/users/list"
     end
 
-    # GET /v1/me/slotgroups
-    # return all groups where the current user is member
-    def my_groups
+    # GET /v1/me/calendars
+    # return all calendars where the current user is member/subscriber
+    def calendars
       authorize :me
-      @groups = current_user.active_groups
-      render "v1/groups/index"
+      @memberships = current_user.active_memberships
+      render "v1/memberships/index"
     end
 
     # PATCH /v1/me/device
