@@ -517,8 +517,8 @@ resource "Me" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to have_key("calendars")
-      calendars = json['calendars']
+      expect(json).to have_key("result")
+      calendars = json['result']
       expect(calendars.size).to eq current_user.active_groups.count
       expect(calendars[0]).to have_key("id")
       expect(calendars[0]).to have_key("name")
