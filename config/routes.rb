@@ -47,8 +47,6 @@ Rails.application.routes.draw do
 
       # currently unused
       get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
-      post ':id/copy', to: 'slots#copy', as: 'slot_copy'
-      post ':id/move', to: 'slots#move', as: 'slot_move'
     end
 
     scope :globalslots do
