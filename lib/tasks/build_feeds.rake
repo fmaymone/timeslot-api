@@ -11,6 +11,7 @@ namespace :feed do
   task refresh: :environment do
 
     begin
+      Feed.update_shared_objects(User.all + StdSlot.all + Group.all)
       Feed.refresh_feed_cache(User.all.collect(&:id))
       puts "All feeds cache was successfully refreshed."
     rescue

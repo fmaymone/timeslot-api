@@ -22,6 +22,7 @@ class Membership < ActiveRecord::Base
     user.follow(group)
     @initiator = initiator
     create_activity
+    Feed.update_shared_objects([user, group])
     Feed.refresh_feed_cache(initiator)
     group.touch
   end
@@ -52,6 +53,7 @@ class Membership < ActiveRecord::Base
     update!(state: "010")
     remove_activity('kick')
     group.remove_follower(user)
+    Feed.update_shared_objects([user, group])
     Feed.refresh_feed_cache(user)
     group.touch
   end
@@ -64,6 +66,7 @@ class Membership < ActiveRecord::Base
     update!(state: "100")
     remove_activity('leave')
     user.unfollow(group)
+    Feed.update_shared_objects([user, group])
     Feed.refresh_feed_cache(user)
     group.touch
   end

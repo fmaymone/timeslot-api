@@ -154,6 +154,16 @@ module Feed
       job_data
     end
 
+    def update_shared_objects(objects)
+      objects = [objects] unless objects.kind_of?(Array)
+
+      @storage.pipe do
+        objects.each do |object|
+          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(object))
+        end
+      end
+    end
+
     def refresh_feed_cache(user_ids, time = Time.now.to_f)
       user_ids = [user_ids] unless user_ids.kind_of?(Array)
 
