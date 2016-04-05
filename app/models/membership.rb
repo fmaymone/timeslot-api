@@ -22,6 +22,7 @@ class Membership < ActiveRecord::Base
     user.follow(group)
     @initiator = initiator
     create_activity
+    Feed.refresh_feed_cache(initiator)
     group.touch
   end
 
@@ -51,6 +52,7 @@ class Membership < ActiveRecord::Base
     update!(state: "010")
     remove_activity('kick')
     group.remove_follower(user)
+    Feed.refresh_feed_cache(user)
     group.touch
   end
 
@@ -62,6 +64,7 @@ class Membership < ActiveRecord::Base
     update!(state: "100")
     remove_activity('leave')
     user.unfollow(group)
+    Feed.refresh_feed_cache(user)
     group.touch
   end
 
@@ -121,10 +124,6 @@ class Membership < ActiveRecord::Base
   end
 
   ## Activity Methods ##
-
-  private def activity_is_valid?
-    super && @initiator
-  end
 
   private def activity_target
     group

@@ -37,10 +37,6 @@ class Containership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    super && @initiator
-  end
-
   private def activity_target
     group
   end

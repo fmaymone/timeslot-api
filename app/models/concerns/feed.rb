@@ -262,13 +262,14 @@ module Feed
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
         case activity['action']
           when 'request'
-            actor['friendshipState'] = 'pending passive'
-          when 'friendship'
+            actor['friendshipState'] = 'pending active'
+            target['friendshipState'] = 'pending passive'
+          when 'friendship', 'accept'
             actor['friendshipState'] = 'friend'
-            # FIX: delegate second user if friendship was accepted
-            activity['actors'] << activity['target'].to_i
+            target['friendshipState'] = 'friend'
           when 'unfriend'
             actor['friendshipState'] = 'stranger'
+            target['friendshipState'] = 'stranger'
         end
 
         # Update message params with enriched message

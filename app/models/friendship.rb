@@ -35,17 +35,8 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    forward_activity(
-        feed_fwd: {
-            Notification: [
-                activity_actor.id.to_s,
-                activity_target.id.to_s
-            ]
-        },
-        push_fwd: [
-            activity_target.id
-        ]
-    )
+    create_activity
+    create_activity('accept')
   end
 
   def established?
@@ -59,7 +50,6 @@ class Friendship < ActiveRecord::Base
   def reject
     if established?
       remove_activity('unfriend')
-      remove_activity
       user.unfollow(friend)
       friend.unfollow(user)
     else
@@ -132,19 +122,23 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_target
-    established? ? user : friend
-  end
-
   private def activity_actor
     established? ? friend : user
   end
 
+  private def activity_target
+    established? ? user : friend
+  end
+
   private def activity_foreign
-    activity_target
+    established? ? user : friend
   end
 
   private def activity_action
-    established? ? 'friendship' : (offered? ? 'request' : '')
+    if established?
+      'friendship'
+    elsif offered?
+      'request'
+    end
   end
 end
