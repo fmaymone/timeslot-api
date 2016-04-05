@@ -63,7 +63,7 @@ Rails.application.routes.draw do
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
-      get 'calendar', to: 'me#calendar', as: 'my_calendar'
+      get 'calendar', to: 'me#schedule', as: 'my_calendar'
       post 'schedule/slotgroup/:uuid', to: 'me#add_slotgroup_to_schedule'
       delete 'schedule/slotgroup/:uuid', to: 'me#remove_slotgroup_from_schedule'
       get 'friendslots', to: 'me#slots_of_my_friends'

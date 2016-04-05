@@ -71,7 +71,7 @@ module V1
 
     # GET /v1/me/calendar
     # returns all slots current user has in her calendar
-    def calendar
+    def schedule
       authorize :me
 
       @slots = current_user.my_calendar_slots

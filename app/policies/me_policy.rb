@@ -21,7 +21,7 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
-  def calendar?
+  def schedule?
     current_user?
   end
 

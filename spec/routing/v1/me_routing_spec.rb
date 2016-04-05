@@ -29,9 +29,9 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#my_slots", format: :json)
     end
 
-    it "routes to #calendar" do
+    it "routes to #schedule" do
       expect(get: "/v1/me/calendar")
-        .to route_to("v1/me#calendar", format: :json)
+        .to route_to("v1/me#schedule", format: :json)
     end
 
     it "routes to #add_slotgroup_to_schedule" do
