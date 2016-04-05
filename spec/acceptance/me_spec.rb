@@ -486,7 +486,7 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/slotgroups" do
+  get "/v1/me/calendars" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
@@ -500,9 +500,9 @@ resource "Me" do
     let!(:current_user) { create(:user, :with_email, :with_password,
                                  :with_3_groups, :with_3_own_groups) }
 
-    example "Get all groups where current user is member or owner",
+    example "Get all calendars where current user is member or owner",
             document: :v1 do
-      explanation "returns an array of groups"
+      explanation "returns an array of calendars"
 
       do_request
 

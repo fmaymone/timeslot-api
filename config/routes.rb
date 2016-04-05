@@ -71,7 +71,7 @@ Rails.application.routes.draw do
       get 'signout', to: 'me#signout', as: 'sign_me_out'
       get 'suggested_users', to: 'me#suggested_users'
       get 'friends', to: 'me#my_friends', as: 'my_friends'
-      get 'slotgroups', to: 'me#calendars'
+      get 'calendars', to: 'me#calendars'
       post 'add_friends', to: 'me#add_friends', as: 'add_friends'
       post 'remove_friends', to: 'me#remove_friends', as: 'remove_friends'
       post 'friendship/:user_id', to: 'me#befriend', as: 'befriend',

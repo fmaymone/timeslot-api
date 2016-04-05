@@ -139,7 +139,7 @@ module V1
       render "v1/users/list"
     end
 
-    # GET /v1/me/slotgroups
+    # GET /v1/me/calendars
     # return all calendars where the current user is member/subscriber
     def calendars
       authorize :me
