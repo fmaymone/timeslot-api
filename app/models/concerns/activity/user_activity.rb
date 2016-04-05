@@ -15,8 +15,8 @@ module UserActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: Feed.update_shared_objects(activity_target),
-      actor: Feed.update_shared_objects(activity_actor)
+      target: Feed.render_shared_object(activity_target),
+      actor: Feed.render_shared_object(activity_actor)
     }
   end
 
