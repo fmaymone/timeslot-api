@@ -140,8 +140,8 @@ module V1
     end
 
     # GET /v1/me/slotgroups
-    # return all groups where the current user is member
-    def my_groups
+    # return all calendars where the current user is member/subscriber
+    def calendars
       authorize :me
       @groups = current_user.active_groups
       render "v1/groups/index"

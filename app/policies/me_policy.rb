@@ -41,7 +41,7 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
-  def my_groups?
+  def calendars?
     current_user?
   end
 

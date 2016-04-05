@@ -61,9 +61,9 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#suggested_users", format: :json)
     end
 
-    it "routes to #my_groups" do
+    it "routes to #calendars" do
       expect(get: "/v1/me/slotgroups")
-        .to route_to("v1/me#my_groups", format: :json)
+        .to route_to("v1/me#calendars", format: :json)
     end
 
     it "routes to #add_friends" do
