@@ -135,8 +135,7 @@ module V1
     def invite
       group = Group.find_by!(uuid: params[:group_uuid])
       authorize group
-      initiator = (initiator != current_user ? current_user : nil)
-      group.invite_users(params.require(:invitees), initiator)
+      group.invite_users(params.require(:invitees), current_user)
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }
