@@ -19,21 +19,8 @@ module GroupActivity
     {
       # We store full slot data to the activity stream.
       # The backend needs no further request on the database.
-      target: JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/groups/_group',
-          layout: false,
-          locals: {
-              :group => activity_target,
-              :current_user => activity_actor
-          }
-      )),
-      actor: JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/users/_user',
-          layout: false,
-          locals: {
-              :user => activity_actor
-          }
-      ))
+      target: Feed.render_shared_object(activity_target),
+      actor: Feed.render_shared_object(activity_actor)
     }
   end
 

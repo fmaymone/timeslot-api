@@ -159,9 +159,48 @@ module Feed
 
       @storage.pipe do
         objects.each do |object|
-          @storage.set("#{object.class.name}:#{object.id}", gzip_cache(object))
+          json = render_shared_object(object)
+          activity_type = object.class.name
+          %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
+            activity_type.gsub!(replace, 'Slot')
+          end
+          @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
         end
       end
+    end
+
+    def render_shared_object(object)
+      case object.class.name
+        when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
+          json = JSON.parse(ApplicationController.new.render_to_string(
+              template: 'v1/slots/_slot',
+              layout: false,
+              locals: {
+                  :slot => object,
+                  :current_user => object.creator
+              }
+          ))
+        when 'Group'
+          json = JSON.parse(ApplicationController.new.render_to_string(
+              template: 'v1/groups/_group',
+              layout: false,
+              locals: {
+                  :group => object,
+                  :current_user => object.owner
+              }
+          ))
+        when 'User'
+          json = JSON.parse(ApplicationController.new.render_to_string(
+              template: 'v1/users/_user',
+              layout: false,
+              locals: {
+                  :user => object
+              }
+          ))
+        else
+          json = nil
+      end
+      json
     end
 
     def refresh_feed_cache(user_ids, time = Time.now.to_f)

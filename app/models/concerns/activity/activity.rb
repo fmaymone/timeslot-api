@@ -377,12 +377,9 @@ module Activity
     ## -- Distribution Keys: Mixed Context -- ##
 
     if context.include?('joiners')    # = friends + member (if: public group?)
-      recipients += activity_actor.followers
-      recipients += activity_target.followers
-
-      groups = activity_type == 'Group' ? [activity_target] : activity_target.activity_groups
+      groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += group.followers if group.try(:public)
+        recipients += activity_actor.followers if group.try(:public)
       end
     end
 
@@ -500,12 +497,12 @@ module Activity
         user_friendship_push: %w(user),
 
         group_membership_me: %w(actor),
-        group_membership_activity: %w(joiners),
+        group_membership_activity: %w(joiners member),
         group_membership_notify: [],
         group_membership_push: [],
 
         group_membertag_me: %w(actor),
-        group_membertag_activity: %w(joiners),
+        group_membertag_activity: %w(joiners member),
         group_membertag_notify: %w(foreign),
         group_membertag_push: %w(foreign),
 
@@ -570,12 +567,12 @@ module Activity
         group_leave_push: [],
 
         group_containership_me: %w(actor),
-        group_containership_activity: %w(joiners),
+        group_containership_activity: %w(joiners member),
         group_containership_notify: [],
         group_containership_push: %w(member),
 
         group_containertag_me: %w(actor),
-        group_containertag_activity: %w(joiners),
+        group_containertag_activity: %w(joiners member),
         group_containertag_notify: %w(foreign),
         group_containertag_push: %w(user member),
 
@@ -585,7 +582,7 @@ module Activity
         group_ungroup_push: [],
 
         group_create_me: %w(actor),
-        group_create_activity: %w(joiners owner),
+        group_create_activity: %w(joiners member),
         group_create_notify: [],
         group_create_push: []
     }
