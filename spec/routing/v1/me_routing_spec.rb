@@ -30,7 +30,7 @@ RSpec.describe V1::MeController, type: :routing do
     end
 
     it "routes to #schedule" do
-      expect(get: "/v1/me/calendar")
+      expect(get: "/v1/me/schedule")
         .to route_to("v1/me#schedule", format: :json)
     end
 

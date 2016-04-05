@@ -106,18 +106,18 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/calendar" do
+  get "/v1/me/schedule" do
     header "Authorization", :auth_header
     let(:slot_1) { create(:std_slot_private) }
     let(:slot_2) { create(:std_slot_public) }
 
-    let!(:my_calendar_slots) do
+    let!(:my_schedule) do
       create(:passengership, slot: slot_1, user: current_user)
       create(:passengership, slot: slot_2, user: current_user)
     end
 
-    example "Get my Calendar slots", document: :v1 do
-      explanation "Returns array with all slots in users 'MyCalendar'."
+    example "Get my schedule", document: :v1 do
+      explanation "Returns array with all slots in users schedule."
 
       do_request
 
