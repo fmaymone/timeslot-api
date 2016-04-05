@@ -235,25 +235,6 @@ module V1
       render :reslot_history
     end
 
-    # POST /v1/slots/1/copy
-    def copy
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-      @slot.copy_to(copy_params, current_user)
-
-      head :ok
-      # TODO: return the newly generated slots
-    end
-
-    # POST /v1/slots/1/move
-    def move
-      old_slot = BaseSlot.get(params[:id])
-      authorize old_slot
-      new_slot = old_slot.move_to(move_params, current_user)
-
-      render :show, locals: { slot: new_slot }
-    end
-
     private def enforce_visibility
       params.require :visibility
       visibility
@@ -324,18 +305,6 @@ module V1
 
     private def comment_param
       params.require(:content)
-    end
-
-    private def copy_params
-      target_params = [:slot_type, :group_id, :details]
-      params.require(:copy_to).map do |p|
-        t = ActionController::Parameters.new(p.to_hash).permit(target_params)
-        t.symbolize_keys
-      end
-    end
-
-    private def move_params
-      params.permit(:slot_type, :group_id, :details)
     end
   end
 end

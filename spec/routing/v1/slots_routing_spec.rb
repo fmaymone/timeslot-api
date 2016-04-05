@@ -107,16 +107,6 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#reslot_history", id: "1", format: :json)
     end
 
-    it "routes to #copy" do
-      expect(post: "/v1/slots/1/copy")
-        .to route_to("v1/slots#copy", id: "1", format: :json)
-    end
-
-    it "routes to #move" do
-      expect(post: "/v1/slots/1/move")
-        .to route_to("v1/slots#move", id: "1", format: :json)
-    end
-
     it "does not route to #new" do
       expect(get: "/v1/slots/new").not_to be_routable
     end
