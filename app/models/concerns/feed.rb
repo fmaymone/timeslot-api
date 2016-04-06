@@ -171,34 +171,34 @@ module Feed
 
     def render_shared_object(object)
       case object.class.name
-        when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
-          json = JSON.parse(ApplicationController.new.render_to_string(
-              template: 'v1/slots/_slot',
-              layout: false,
-              locals: {
-                  :slot => object,
-                  :current_user => object.creator
-              }
-          ))
-        when 'Group'
-          json = JSON.parse(ApplicationController.new.render_to_string(
-              template: 'v1/groups/_group',
-              layout: false,
-              locals: {
-                  :group => object,
-                  :current_user => object.owner
-              }
-          ))
-        when 'User'
-          json = JSON.parse(ApplicationController.new.render_to_string(
-              template: 'v1/users/_user',
-              layout: false,
-              locals: {
-                  :user => object
-              }
-          ))
-        else
-          json = nil
+      when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/slots/_slot',
+            layout: false,
+            locals: {
+                :slot => object,
+                :current_user => object.creator
+            }
+        ))
+      when 'Group'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/groups/_group',
+            layout: false,
+            locals: {
+                :group => object,
+                :current_user => object.owner
+            }
+        ))
+      when 'User'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/users/_user',
+            layout: false,
+            locals: {
+                :user => object
+            }
+        ))
+      else
+        json = nil
       end
       json
     end
@@ -307,18 +307,19 @@ module Feed
           next
         end
 
-        # iOs requires the friendshipstate (we use the type of action to determine state)
+        # Add individual data related to each users feed:
+        # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
         case activity['action']
-          when 'request'
-            actor['friendshipState'] = 'pending active'
-            target['friendshipState'] = 'pending passive'
-          when 'friendship', 'accept'
-            actor['friendshipState'] = 'friend'
-            target['friendshipState'] = 'friend'
-          when 'unfriend'
-            actor['friendshipState'] = 'stranger'
-            target['friendshipState'] = 'stranger'
+        when 'request'
+          actor['friendshipState'] = 'pending passive'
+          target['friendshipState'] = 'pending active'
+        when 'friendship', 'accept'
+          actor['friendshipState'] = 'friend'
+          target['friendshipState'] = 'friend'
+        when 'unfriend'
+          actor['friendshipState'] = 'stranger'
+          target['friendshipState'] = 'stranger'
         end
 
         # Update message params with enriched message

@@ -1371,9 +1371,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['type']).to eq('User')
         expect(user_feed.first['action']).to eq('request')
         expect(user_feed.first['data']['target']['id']).to be(friend.id)
-        expect(user_feed.first['data']['target']['friendshipState']).to eq('pending passive')
+        expect(user_feed.first['data']['target']['friendshipState']).to eq('pending active')
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
-        expect(user_feed.first['data']['actor']['friendshipState']).to eq('pending active')
+        expect(user_feed.first['data']['actor']['friendshipState']).to eq('pending passive')
         expect(user_feed.first['message']).to eq(I18n.t('user_request_me_singular',
                                                  {ACTOR: user.username,
                                                   USER: friend.username}))
@@ -1399,9 +1399,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['type']).to eq('User')
         expect(notification_feed_friend.first['action']).to eq('request')
         expect(notification_feed_friend.first['data']['target']['id']).to be(friend.id)
-        expect(notification_feed_friend.first['data']['target']['friendshipState']).to eq('pending passive')
+        expect(notification_feed_friend.first['data']['target']['friendshipState']).to eq('pending active')
         expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
-        expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('pending active')
+        expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('pending passive')
         expect(notification_feed_friend.first['message']).to eq(I18n.t('user_request_notify_singular',
                                                                 {ACTOR: user.username,
                                                                  USER: friend.username}))

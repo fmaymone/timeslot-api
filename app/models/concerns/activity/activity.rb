@@ -11,6 +11,25 @@ module Activity
     return self
   end
 
+  # The 'forward_activity' method provides a full customizable activity distribution on place.
+  # Example:
+  #
+  # self.forward_activity(
+  #     'like',
+  #     feed_fwd: {
+  #         User: [activity_actor.id.to_s],
+  #         News: [],
+  #         Notification: [activity_target.id.to_s]
+  #     },
+  #     push_fwd: [activity_target.id]
+  # )
+  #
+  # NOTES:
+  # If you do not pass an action as first parameter the default activity_action is used instead.
+  # A forwarded activity completely overrides/skip the default distribution context of this activity.
+  # The self.class.name + the activity_action give the activity/message key. This key is used
+  # by the message composer during aggregation/feed building to get the right translation.
+
   def forward_activity(action = activity_action, feed_fwd: [], push_fwd: [])
     if activity_is_valid?
       create_activity_feed(action, notify: nil, forward: feed_fwd)
@@ -80,9 +99,10 @@ module Activity
   ## Private Helpers ##
 
   private def create_activity_feed(action = activity_action, notify: nil, forward: nil, time: nil)
-    # FIX: Reload last modified data (strict mode throws exceptions)
+    # FIX: Solid save last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?
+
     # Initialize job worker
     FeedJob.perform_async({
       type: activity_type,
@@ -98,6 +118,9 @@ module Activity
       data: activity_extra_data,
       time: time || self.updated_at
     })
+
+    # Update actors feed + shared objects
+    activity_update_feed
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
   end
@@ -172,10 +195,14 @@ module Activity
 
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
+    # TODO: put this deletion activity to the new distribution mapper
     if activity_action == 'slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
       # Forward "deletion" action as an activity to the dispatcher
       forward_deletion(action)
     end
+
+    # Update actors feed + shared objects
+    activity_update_feed
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
   end
@@ -387,6 +414,12 @@ module Activity
     # Remove the user from the news feed who did the actual activity (actor)
     recipients.delete(activity_actor.id.to_s) if remove_actor
     recipients
+  end
+
+  private def activity_update_feed
+    # Update feed caches + shared objects
+    Feed.update_shared_objects([activity_actor, activity_target])
+    Feed.refresh_feed_cache(activity_actor)
   end
 
   # The groups which are related to the activity target object
