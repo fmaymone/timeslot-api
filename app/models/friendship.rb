@@ -134,7 +134,7 @@ class Friendship < ActiveRecord::Base
     established? ? user : friend
   end
 
-  private def activity_action
+  def activity_action
     if established?
       'friendship'
     elsif offered?

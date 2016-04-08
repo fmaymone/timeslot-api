@@ -134,7 +134,7 @@ class Membership < ActiveRecord::Base
     @initiator ? user : nil
   end
 
-  private def activity_action
+  def activity_action
     @initiator ? 'membertag' : 'membership'
   end
 end

@@ -49,7 +49,7 @@ class Containership < ActiveRecord::Base
     @initiator ? slot.creator : nil
   end
 
-  private def activity_action
+  def activity_action
     @initiator ? 'containertag' : 'containership'
   end
 end
