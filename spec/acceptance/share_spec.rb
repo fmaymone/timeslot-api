@@ -1,6 +1,7 @@
 require 'documentation_helper'
 
 share_id_webview = nil
+share_id_iframe = nil
 share_id_image = nil
 share_id_pdf = nil
 share_id_qrcode = nil
@@ -37,6 +38,34 @@ resource "Share", :keep_data do
         expect(json).to include('shareUrl')
         # Store share ID for further testings
         share_id_webview = json['shareId']
+      end
+    end
+  end
+
+  # Share Slot as iFrame
+  post "/v1/share/:id/iframe" do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "The id of the slot", required: true
+    response_field :shareId, "The plain share ID"
+    response_field :shareUrl, "The full share link including the share ID"
+
+    context "Share Slot as iFrame" do
+      let(:id) { share_id_user ||= slot.id }
+      let(:json) { JSON.parse(response_body) }
+
+      example "Share Slot as iFrame", document: :v1 do
+        explanation "returns 404 if slot was not found\n\n" \
+                    "returns 422 if slot could not be shared\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+
+        expect(json).to include('shareId')
+        expect(json).to include('shareUrl')
+        # Store share ID for further testings
+        share_id_iframe = json['shareId']
       end
     end
   end
@@ -157,7 +186,25 @@ resource "Share", :keep_data do
       example "Get Slot as Webview", document: false do
         do_request
         expect(response_status).to eq(200)
-        expect(response_body).to include('<!DOCTYPE HTML>')
+        expect(response_body).to include('<!DOCTYPE')
+        expect(response_body).to include('</html>')
+      end
+    end
+  end
+
+  # Get Shared View: iFrame
+  get "/v1/" do
+    header "Accept", "text/html"
+    parameter :id, "The id as a part of the share URL", required: true
+
+    context "Get Slot as iFrame" do
+      let(:id) { share_id_iframe }
+
+      example "Get Slot as iFrame", document: false do
+        do_request
+        expect(response_status).to eq(200)
+        expect(response_body).to include('<iframe')
+        expect(response_body).to include('</iframe>')
       end
     end
   end
@@ -239,6 +286,21 @@ resource "Share", :keep_data do
       let(:id) { share_id_webview }
 
       example "Do not get Slot as Webview", document: false do
+        do_request
+        expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  # Get Shared View: iFrame
+  get "/v1/" do
+    header "Accept", "text/html"
+    parameter :id, "The id as a part of the share URL", required: true
+
+    context "Get Slot as iFrame" do
+      let(:id) { share_id_iframe }
+
+      example "Do not get Slot as iFrame", document: false do
         do_request
         expect(response_status).to eq(404)
       end

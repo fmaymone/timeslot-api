@@ -14,6 +14,17 @@ module Convert
     )
   end
 
+  def self.url_to_iframe(share_url, style: 'portrait')
+    ApplicationController.new.render_to_string(
+        template: 'v1/share/iframe/index',
+        layout: false,
+        locals: {
+            :@url => share_url,
+            :@style => style.to_sym
+        }
+    )
+  end
+
   def self.html_to_image(html, type: 'jpeg', style: 'box', quality: 95)
     kit = IMGKit.new(html, quality: quality)
     kit.stylesheets << "app/views/v1/share/webview/css/all.css"

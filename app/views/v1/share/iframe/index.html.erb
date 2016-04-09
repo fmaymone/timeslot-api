@@ -1,0 +1,15 @@
+<%
+  sizes = {
+      portrait: {
+          width: 300,
+          height: 500
+      },
+      landscape: {
+          width: 500,
+          height: 300
+      }
+  }
+  width = sizes[@style][:width]
+  height = sizes[@style][:height]
+%>
+<iframe src="<%= @url %>" frameborder="0" marginheight="0" marginwidth="0" height="<%= width %>" width="<%= height %>"></iframe>

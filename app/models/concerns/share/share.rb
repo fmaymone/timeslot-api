@@ -11,12 +11,13 @@ module Share
           qrcode: 2,
           image: 3,
           pdf: 4,
-          intern: 5
+          intern: 5,
+          iframe: 6
       }
     end
 
     def share_types_index
-      %w(webview email qrcode image pdf intern)
+      %w(webview email qrcode image pdf intern iframe)
     end
 
     def share_webview(user, slot, params = nil)
@@ -27,10 +28,24 @@ module Share
                obj[:user],
                obj[:slot],
                style: 'portrait')
-      # Returns the share URL
       url = create_share_url(:webview, slot)
       path = 'store/share/webview'
       save_to_file(path, "#{url}.html", html)
+      # Returns the share URL
+      url
+    end
+
+    def share_iframe(user, slot, params = nil)
+      # Store shared objects
+      share_objects(user, slot)
+      # Generate HTML from slot/user data
+      share_url = share_webview(user, slot)
+      # Generate iFrame from given URL
+      iframe = Convert.url_to_iframe(share_url)
+
+      url = create_share_url(:iframe, slot)
+      path = 'store/share/iframe'
+      save_to_file(path, "#{url}.html", iframe)
       # Returns the share URL
       url
     end
@@ -148,6 +163,7 @@ module Share
 
     def unshare(slot)
       %W(store/share/webview/#{create_share_url(:webview, slot)}.html
+         store/share/iframe/#{create_share_url(:iframe, slot)}.html
          store/share/image/#{create_share_url(:image, slot)}.jpg
          store/share/qrcode/#{create_share_url(:qrcode, slot)}.png
          store/share/pdf/#{create_share_url(:pdf, slot)}.pdf).each do |file|
@@ -160,8 +176,7 @@ module Share
     ## -- HELPERS -- ##
 
     private def create_share_url(type, slot)
-      # Returns base64 without padding
-      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id || slot['id']}") #.gsub('=', '')
+      Base64.urlsafe_encode64("#{share_types_enum[type]}:#{slot.id || slot['id']}")
     end
 
     private def share_objects(user, slot)
