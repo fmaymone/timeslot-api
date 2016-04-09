@@ -51,6 +51,9 @@ gem 'wkhtmltopdf-binary'
 # Convert URL to QR-Code
 gem 'rqrcode'
 
+# iCalendar specification (RFC-2445)
+gem 'icalendar'
+
 group :development do
   gem 'rails-erd'
 
