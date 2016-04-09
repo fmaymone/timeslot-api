@@ -11,7 +11,12 @@ class ExportPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
-  def backup?
+  def timeslot?
+    current_user?
+  end
+
+  # true if a user is logged in
+  def outlook?
     current_user?
   end
 end

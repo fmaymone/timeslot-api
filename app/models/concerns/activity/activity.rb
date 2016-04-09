@@ -212,6 +212,7 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?
+    !Rails.application.config.SKIP_ACTIVITY &&
     self.deleted_at.nil? &&
     activity_actor.present? &&
     activity_target.present? &&
@@ -412,6 +413,9 @@ module Activity
   end
 
   private def activity_update_feed
+    # NOTE: It is possible that an action does'nt affect the actors feed,
+    # for this situation it is required to force the update of caches
+    # TODO: Check if mixed distributed activities to the same target has conflicts
     # TODO: simplify this
     # Update feed caches + shared objects
     Feed.update_shared_objects([activity_actor, activity_target])
