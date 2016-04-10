@@ -74,6 +74,9 @@ module TsRailsBackend
     # Use this global flag to skip distributing activities to feeds
     config.SKIP_ACTIVITY = false
 
+    # Set default encoding type
+    config.encoding = 'utf-8'
+
     # Enabling garbage collection instrumentation for NewRelic
     GC::Profiler.enable
   end
