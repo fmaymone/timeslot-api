@@ -33,7 +33,7 @@ class GlobalSlot < BaseSlot
 
   class << self
     private def load_from_candy_shop(muid)
-      attributes = GlobalSlotConsumer.new.slot(muid)
+      attributes = CandyShop.new.slot(muid)
       user_uuid = attributes.delete(:category_uuid)
       attributes[:user] = category_as_user(user_uuid)
       attributes
@@ -41,7 +41,7 @@ class GlobalSlot < BaseSlot
 
     private def category_as_user(user_uuid)
       category_user = User.find_by user_uuid: user_uuid
-      category_user ||= GlobalSlotConsumer.new.category(user_uuid)
+      category_user ||= CandyShop.new.category(user_uuid)
       category_user
     end
   end

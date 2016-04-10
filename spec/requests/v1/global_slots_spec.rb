@@ -38,7 +38,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       let(:gs_no_description_data) {
         attributes_for(:global_slot, :without_description) }
       let(:slot_group) { create(:group, owner: current_user) }
-      let(:raw_global_slot) { GlobalSlotConsumer.new.slot(gs_data[:slot_uuid]) }
+      let(:raw_global_slot) { CandyShop.new.slot(gs_data[:slot_uuid]) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",

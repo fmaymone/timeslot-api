@@ -9,7 +9,7 @@ namespace :globalslots do
     GlobalSlot.find_each.with_index do |slot, i|
       puts "#{i+1}/#{counter} fetch globalslot #{slot.id} (#{slot.title})"
       begin
-        candy_store_params = GlobalSlotConsumer.new.slot(slot.muid)
+        candy_store_params = CandyShop.new.slot(slot.muid)
       rescue ActiveRecord::RecordNotFound
         puts "slot not found #{slot.id} - #{slot.title}"
         next
@@ -21,7 +21,7 @@ namespace :globalslots do
         end
       ensure
         begin
-          location_params = GlobalSlotConsumer.new.location(location)
+          location_params = CandyShop.new.location(location)
         rescue ActiveRecord::RecordNotFound
           puts "--> location #{slot.location_uid} not found for slot #{slot.id}"
           next

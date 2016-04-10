@@ -53,7 +53,7 @@ class MetaSlot < ActiveRecord::Base
                           meta_params[:location_uid].nil?
 
       ios_params = meta_params[:ios_location] ||
-                   GlobalSlotConsumer.new.location(meta_slot.location_uid)
+                   CandyShop.new.location(meta_slot.location_uid)
                      .as_json.symbolize_keys
 
       # TODO: IosLocation.find_or_create(...)

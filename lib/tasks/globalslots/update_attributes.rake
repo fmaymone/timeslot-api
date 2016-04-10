@@ -9,7 +9,7 @@ namespace :globalslots do
     GlobalSlot.find_each.with_index do |slot, i|
       puts "#{i}/#{counter} fetch globalslot #{slot.id} (#{slot.title})"
       begin
-        candy_store_params = GlobalSlotConsumer.new.slot(slot.muid)
+        candy_store_params = CandyShop.new.slot(slot.muid)
       rescue ActiveRecord::RecordNotFound
         puts "not available anymore..."
         next
@@ -27,7 +27,7 @@ namespace :globalslots do
         end
         unless IosLocation.find_by(uuid: slot.location_uid)
           # ios_params = slot.location.as_json
-          ios_params = GlobalSlotConsumer.new.location(slot.location_uid).as_json
+          ios_params = CandyShop.new.location(slot.location_uid).as_json
 
           if ios_params[:latitude].present? && ios_params[:longitude].present?
             ios_location = IosLocation.find_by(
