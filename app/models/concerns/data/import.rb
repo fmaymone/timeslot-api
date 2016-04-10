@@ -10,7 +10,12 @@ module Import
       # Import each event
       events.each do |event|
 
-        next unless event[:title].valid_encoding?
+        # TODO: in some imported events from iCal there are text encoding issues
+        begin
+          next unless event[:title].encode('utf-8').valid_encoding?
+        rescue
+          next
+        end
 
         # Create User
         creator = find_or_create_user(event) || user

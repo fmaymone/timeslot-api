@@ -45,7 +45,7 @@ module V1
 
     private def get_slots_from_group
       if params[:group].present?
-        Group.find_by(params[:group]).slots.where(owner: current_user)
+        Group.find_by(params[:group]).slots.where(creator: current_user)
       else
         current_user.std_slots
       end

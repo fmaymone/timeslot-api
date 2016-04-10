@@ -1,22 +1,32 @@
 class ExportPolicy < ApplicationPolicy
+  attr_reader :current_user, :slot
 
-  # true if a user is logged in
+  def initialize(user, slot)
+    @current_user = user
+    @slot = slot
+  end
+
+  # true if the current user is the creator this slot
   def ical?
-    current_user?
+    user_is_creator?
   end
 
-  # true if a user is logged in
+  # true if the current user is the creator this slot
   def google?
-    current_user?
+    user_is_creator?
   end
 
-  # true if a user is logged in
+  # true if the current user is the creator this slot
   def timeslot?
-    current_user?
+    user_is_creator?
   end
 
-  # true if a user is logged in
+  # true if the current user is the creator this slot
   def outlook?
-    current_user?
+    user_is_creator?
+  end
+
+  private def user_is_creator?
+    current_user == slot.creator
   end
 end

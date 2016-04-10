@@ -50,7 +50,7 @@ class IcalAdapter < Adapter
     event.try(:dtstart).present?    # has start_date?
   end
 
-  private def import_file(freebusys: false, todos: false, journals: false)
+  private def import_file(freebusys: false, todos: true, journals: false)
     events = []
 
     Icalendar.parse(@file).each do |cal|
