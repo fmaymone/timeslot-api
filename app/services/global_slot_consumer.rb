@@ -93,18 +93,8 @@ class GlobalSlotConsumer
   end
 
   private def convert_mall_slot(result)
-    slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
-  rescue ActiveRecord::RecordNotFound
-    msg = "Couldn't find User for given Domain. Seed data loaded?"
-    opts = {
-      domain: result['domains'].try(:first),
-      muid: result['muid'],
-      global_slot: msg }
-    Airbrake.notify(ActionController::ParameterMissing, opts)
-    raise ActionController::ParameterMissing, msg
-  else
     slot_data = {
-      user: slot_source,
+      category_uuid: result['category_uuid'],
       meta: {
         title: result['title'],
         start_date: result['start_timestamptz'],
@@ -114,6 +104,7 @@ class GlobalSlotConsumer
       muid: result['muid'],
       url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
+      # domains: result['domains'], # currently unused
       media: [
         {
           public_id: result['images'].try(:first),

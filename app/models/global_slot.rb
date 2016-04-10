@@ -23,11 +23,26 @@ class GlobalSlot < BaseSlot
     global_slot = includes(:meta_slot).find_by(slot_uuid: muid)
     return global_slot if global_slot
 
-    attributes = GlobalSlotConsumer.new.slot(muid)
+    attributes = load_from_candy_shop(muid)
     create_slot(attributes)
   end
 
   def self.visibility
     'public'
+  end
+
+  class << self
+    private def load_from_candy_shop(muid)
+      attributes = GlobalSlotConsumer.new.slot(muid)
+      user_uuid = attributes.delete(:category_uuid)
+      attributes[:user] = category_as_user(user_uuid)
+      attributes
+    end
+
+    private def category_as_user(user_uuid)
+      category_user = User.find_by user_uuid: user_uuid
+      category_user ||= GlobalSlotConsumer.new.category(user_uuid)
+      category_user
+    end
   end
 end

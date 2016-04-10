@@ -5,7 +5,7 @@ resource "GlobalSlots" do
   let(:current_user) { create(:user, :with_email, :with_password, :with_device) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  post "/v1/globalslots/reslot", :vcr, :seed do
+  post "/v1/globalslots/reslot", :vcr do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
@@ -14,25 +14,22 @@ resource "GlobalSlots" do
               "Array with UUIDs of the SlotGroups and SlotSets the slot " \
               "should be added to",
               required: false
-    # TODO: response needs array with invalid slotset uuids
 
     let(:predecessor) { attributes_for(:global_slot)[:slot_uuid] }
 
     example "Reslot global slot", document: :v1 do
       explanation "Send the **muid** of the Global Slot to reslot it.\n\n " \
                   "Backend retrieves slot data from data team.\n\n" \
-                  "at the moment returns 503 if global slot can not be found."
+                  "returns 404 if no global slot can be found for given uuid"
       do_request
 
       expect(response_status).to eq 201
       expect(json).to have_key("muid")
-      # expect(json['muid']).to eq predecessor
+      expect(json['muid']).to eq predecessor
       expect(json).to have_key("visibility")
       expect(json['visibility']).to eq 'public'
-      expect(json).not_to have_key("slotter")
-      # expect(json['slotter']['id']).to eq current_user.id
-      # expect(json['slotter']).to have_key("reslotCount")
-      # expect(json['slotter']['reslotCount']).to eq 1
+      expect(json).to have_key("creator")
+      expect(json['creator']['image']).not_to be_nil
     end
   end
 

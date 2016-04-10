@@ -14,7 +14,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
         expect(slot[:meta]).to have_key :title
         expect(slot[:meta]).to have_key :start_date
         expect(slot[:meta]).to have_key :end_date
-        expect(slot).to have_key :user
+        expect(slot).to have_key :category_uuid
         expect(slot).to have_key :url
         expect(slot).to have_key :media
         expect(slot).to have_key :notes
@@ -22,15 +22,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
         expect(slot[:meta][:title]).not_to be_nil
         expect(slot[:meta][:start_date]).not_to be_nil
         expect(slot[:meta][:end_date]).not_to be_nil
-        expect(slot[:user]).not_to be_nil
-      end
-    end
-
-    context "invalid data" do
-      it "raises exception if globalslot domain has no matching backend user" do
-        expect {
-          described_class.new.slot(muid)
-        }.to raise_error ActionController::ParameterMissing
+        expect(slot[:category_uuid]).not_to be_nil
       end
     end
   end
