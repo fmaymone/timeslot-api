@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe ClawMachine, type: :service do
   describe "search", :vcr do
-    let(:query_params) { { q: 'tim', limit: 2 } }
+    let(:query_params) { { q: 'dort', limit: 2 } }
 
     context "calendars" do
       it "finds calendars with matching name" do
