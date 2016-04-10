@@ -71,6 +71,8 @@ module TsRailsBackend
 
     # Use this global flag to skip sending push notifications
     config.SKIP_PUSH_NOTIFICATION = false
+    # Use this global flag to skip distributing activities to feeds
+    config.SKIP_ACTIVITY = false
 
     # Enabling garbage collection instrumentation for NewRelic
     GC::Profiler.enable
