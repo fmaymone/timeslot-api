@@ -6,7 +6,6 @@ RSpec.describe V1::SlotsController, type: :controller do
     request.headers['Authorization'] = "Token token=#{current_user.auth_token}"
   }
   let(:current_user) { create(:user, :with_email, :with_password) }
-  let(:valid_session) { {} }
 
   describe "GET show" do
     let(:std_slot) { create(:std_slot_public) }
@@ -45,20 +44,20 @@ RSpec.describe V1::SlotsController, type: :controller do
 
       it "creates a new MetaSlot" do
         expect {
-          post :create_stdslot, valid_attributes, valid_session
+          post :create_stdslot, valid_attributes
         }.to change(MetaSlot, :count).by(1)
       end
 
       it "creates a new StdSlot" do
         expect {
-          post :create_stdslot, valid_attributes, valid_session
+          post :create_stdslot, valid_attributes
         }.to change(StdSlot.unscoped, :count).by(1)
       end
 
       it "creates a new SlotSetting" do
         expect {
           post :create_stdslot, valid_attributes.merge(
-                 settings: { alerts: '1110111010' }), valid_session
+                 settings: { alerts: '1110111010' })
         }.to change(SlotSetting, :count).by(1)
       end
     end
