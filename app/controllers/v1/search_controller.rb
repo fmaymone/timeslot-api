@@ -79,6 +79,41 @@ module V1
       render "v1/locations/index"
     end
 
+    # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
+    def global_slots
+      authorize :search
+      slots = ClawMachine.new.search(category: params.require(:category),
+                                     query_params: search_params)
+      render "v1/global_slots/index", locals: { slots: slots }
+    end
+
+    private def search_params
+      params.require(:q)
+      es_search_params = params.permit(:q)
+
+      # TODO: make helper for this or put in application_controller
+      if params[:moment].present?
+        moment = params[:moment]
+        begin
+          # not every invalid date fails, it might also just return nil
+          valid_date = Time.zone.parse(moment)
+        rescue
+          valid_date = nil
+        end
+        fail ParameterInvalid.new(:moment, moment) unless valid_date
+      end
+      es_search_params[:timestamp] = valid_date.as_json || Time.zone.now.as_json
+
+      if params[:limit].present?
+        limit = params[:limit]
+        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+      else
+        es_search_params[:limit] = 20
+      end
+      es_search_params
+    end
+
+
     private def query_and_limit
       es_search_params = { q: "" }
       es_search_params[:q] = params[:q]

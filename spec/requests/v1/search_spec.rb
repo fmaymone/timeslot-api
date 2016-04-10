@@ -206,4 +206,27 @@ RSpec.describe "V1::Search", type: :request do
 
   # maybe this can help us for testing bad user inputs:
   # https://github.com/minimaxir/big-list-of-naughty-strings
+
+  describe "POST /v1/globalslots/search" do
+    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
+
+    it "returns 200 and results", :vcr do
+      get "/v1/globalslots/search?#{query}", {}, auth_header
+
+      expect(response).to have_http_status :ok
+      expect(json).not_to be_empty
+    end
+
+    context "invalid search params" do
+      let(:invalid_query) { "q=Frei&category=foobar&moment=2015-12-18&limit=20" }
+
+      it "returns 422 for invalid category", :vcr do
+        get "/v1/globalslots/search?#{invalid_query}", {},
+            auth_header
+        expect(response).to have_http_status :unprocessable_entity
+        expect(response.body).to include "foobar is not a valid value for"
+        expect(response.body).to include "category"
+      end
+    end
+  end
 end

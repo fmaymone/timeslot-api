@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     end
 
     scope :globalslots do
-      get 'search', to: 'global_slots#search'
+      get 'search', to: 'search#global_slots'
       post 'reslot', to: 'global_slots#create_reslot', as: 'reslot_global_slot'
     end
 

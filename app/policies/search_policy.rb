@@ -7,6 +7,11 @@ class SearchPolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
+  def global_slots?
+    current_user?
+  end
+
+  # true if a user is logged in
   def user?
     current_user?
   end
