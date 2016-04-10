@@ -3,7 +3,7 @@ module V1
     # GET /v1/search/categories
     def categories
       authorize :search
-      categories = GlobalSlotConsumer.new.categories
+      categories = ClawMachine.new.categories
 
       render json: { categories: categories }
     end
@@ -82,14 +82,14 @@ module V1
     # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
     def global_slots
       authorize :search
-      slots = ClawMachine.new.search(category: params.require(:category),
-                                     query_params: search_params)
-      render "v1/global_slots/index", locals: { slots: slots }
+      result = ClawMachine.new.search(category: params.require(:category),
+                                      query_params: global_slot_search_params)
+
+      render body: result, content_type: "application/json"
     end
 
-    private def search_params
-      params.require(:q)
-      es_search_params = params.permit(:q)
+    private def global_slot_search_params
+      claw_search_params = query_and_limit
 
       # TODO: make helper for this or put in application_controller
       if params[:moment].present?
@@ -102,27 +102,19 @@ module V1
         end
         fail ParameterInvalid.new(:moment, moment) unless valid_date
       end
-      es_search_params[:timestamp] = valid_date.as_json || Time.zone.now.as_json
-
-      if params[:limit].present?
-        limit = params[:limit]
-        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
-      else
-        es_search_params[:limit] = 20
-      end
-      es_search_params
+      claw_search_params[:timestamp] = valid_date.as_json || Time.zone.now.as_json
+      claw_search_params
     end
 
-
     private def query_and_limit
-      es_search_params = { q: "" }
-      es_search_params[:q] = params[:q]
+      claw_search_params = {}
+      claw_search_params[:q] = params[:q] || ""
 
       if params[:limit].present?
         limit = params[:limit]
-        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+        claw_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
       end
-      es_search_params
+      claw_search_params
     end
 
     private def query

@@ -293,8 +293,8 @@ resource "Search" do
     describe "cinema" do
       let(:category) { 'cinema' }
       let(:q) { 'Love' }
-      let(:moment) { '2016-07-29T12:43:28.907Z' }
-      let(:limit) { 10 }
+      let(:moment) { '2016-04-29T12:43:28.907Z' }
+      let(:limit) { 7 }
 
       example "Cinema - Find global slots", document: :v1 do
         explanation "Forwards a search request to the Elastic Search Service " \
@@ -304,16 +304,17 @@ resource "Search" do
 
         expect(response_status).to eq(200)
         expect(json).to have_key("result")
+        expect(json['result']).to have_key("slots")
 
-        result = json['result']
+        result = json['result']['slots']
         expect(result.length).to eq limit
 
         first = result.first
         expect(first).to have_key("muid")
         expect(first).to have_key("title")
         expect(first).to have_key("startDate")
-        expect(first).to have_key("endDate")
-        expect(first).to have_key("image")
+        # expect(first).to have_key("endDate")
+        # expect(first).to have_key("image")
         expect(first).to have_key("location")
         expect(first['location']).to have_key("name")
         expect(first['location']).to have_key("thoroughfare")
@@ -341,7 +342,7 @@ resource "Search" do
     describe "football" do
       let(:category) { 'football' }
       let(:q) { 'Borussia' }
-      let(:moment) { '2016-07-05' }
+      let(:moment) { '2016-04-05' }
       let(:limit) { 5 }
 
       example "Football - Find global slots", document: :v1 do
@@ -352,16 +353,17 @@ resource "Search" do
 
         expect(response_status).to eq(200)
         expect(json).to have_key("result")
+        expect(json['result']).to have_key("slots")
 
-        result = json['result']
+        result = json['result']['slots']
         expect(result.length).to eq limit
 
         first = result.first
         expect(first).to have_key("muid")
         expect(first).to have_key("title")
         expect(first).to have_key("startDate")
-        expect(first).to have_key("endDate")
-        expect(first).to have_key("image")
+        # expect(first).to have_key("endDate")
+        # expect(first).to have_key("image")
         expect(first).to have_key("location")
         expect(first['location']).to have_key("name")
         expect(first['location']).to have_key("thoroughfare")
