@@ -26,8 +26,13 @@ module V1
         return head 422
       end
 
-      status = Import.handler(events, current_user, params[:group])
-      head status ? :ok : :err
+      # Asynchronous:
+      ImportJob.perform_async(events, current_user, params[:group])
+      head :ok
+
+      # Synchronous:
+      #status = Import.handler(events, current_user, params[:group])
+      #head status ? :ok : :err
     end
 
     ## HELPERS ##
