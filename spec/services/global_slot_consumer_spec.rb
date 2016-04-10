@@ -55,6 +55,26 @@ RSpec.describe GlobalSlotConsumer, type: :service do
     end
   end
 
+  describe 'category', :vcr do
+    let(:category_muid) { '4870f9d3-a629-9578-edcc-3e6c954baeba' }
+      # attributes_for(:slot, :with_candy_location)[:location_uid] }
+
+    it "returns a new user with role global_slot_category" do
+      category = described_class.new.category(category_muid)
+
+      expect(category.class).to eq User
+      expect(category.valid?).to be true
+      expect(category.user_uuid).to eq category_muid
+      expect(category.username).not_to be_nil
+      expect(category.picture).not_to be_nil
+      expect(category.global_slot_category?).to be true
+      expect(category.role).to eq 'global_slot_category'
+      expect(
+        category.email
+      ).to eq "#{category.username.downcase}.category@timeslot.com"
+    end
+  end
+
   describe 'search', :vcr do
     let(:search_term) { "baye" }
     let(:limit) { 6 }

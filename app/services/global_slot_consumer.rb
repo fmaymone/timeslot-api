@@ -22,6 +22,18 @@ class GlobalSlotConsumer
     CandyLocation.new(raw_result)
   end
 
+  # fetch a global slot category from TS_DATA_MALL
+  # and create a user with role 'global_slot_category'
+  def category(uuid)
+    raw_result = fetch('categories', uuid)
+    User.create(user_uuid: uuid,
+                username: raw_result['name'],
+                picture: raw_result['image'],
+                role: 'global_slot_category',
+                email: "#{raw_result['name'].downcase}.category@timeslot.com"
+               )
+  end
+
   def prepare_search(category = nil, query = nil)
     uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
     if category && query
