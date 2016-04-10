@@ -46,8 +46,8 @@ RSpec.describe GlobalSlot, type: :model do
     end
   end
 
-  describe "create_slot", :seed do
-    let(:user) { User.find_by(role: 2, username: 'dfb.de') }
+  describe "create_slot" do
+    let(:user) { create(:user, role: 'global_slot_category', username: 'Sport') }
     let(:meta_params) { attributes_for(:meta_slot) }
     let(:muid) { "e8fa3c76-75ac-852b-c81d-9c02b5f27c05" }
 
@@ -108,7 +108,7 @@ RSpec.describe GlobalSlot, type: :model do
     end
   end
 
-  describe "find_or_create", :seed do
+  describe "find_or_create" do
     context "existing global slot" do
       let!(:global_slot) { create(:global_slot) }
 

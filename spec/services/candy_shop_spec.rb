@@ -4,7 +4,7 @@ RSpec.describe CandyShop, type: :service do
   describe 'slot', :vcr do
     let(:muid) { attributes_for(:global_slot)[:slot_uuid] }
 
-    context "valid data", :seed do
+    context "valid data" do
       it "returns a global slot from TS_DATA_MALL" do
         slot = described_class.new.slot(muid)
 
