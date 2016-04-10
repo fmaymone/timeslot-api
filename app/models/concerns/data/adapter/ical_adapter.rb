@@ -6,7 +6,7 @@ class IcalAdapter < Adapter
       @event = event
       events << {
           uid: event.uid,
-          title: (event.summary.size > 60 ? event.summary[0..59] : event.summary), #.force_encoding('iso-8859-1'),
+          title: (event.summary.size > 60 ? event.summary[0..59] : event.summary), #.force_encoding('iso-8859-1').encode('utf-8'),
           start_date: event.dtstart.to_s,
           end_date: event.dtend.to_s,
           ios_location: import_event_location,
@@ -30,12 +30,12 @@ class IcalAdapter < Adapter
         e.dtend       = @slot.end_date ? Icalendar::Values::DateTime.new(@slot.end_date) : nil
         e.description = ""
         e.location    = export_event_location
-        # e.url        = 'https://example.com'
+        # e.url       = 'https://example.com'
         # TODO: alarm settings
         # e.alarm do |a|
-        #   a.action    = "DISPLAY" # by default
-        #   a.summary   = "Test Alarm Notification"
-        #   a.trigger   = "-P1DT0H0M0S" # 1 day before event starts
+        #   a.action  = "DISPLAY" # by default
+        #   a.summary = "Test Alarm Notification"
+        #   a.trigger = "-P1DT0H0M0S" # 1 day before event starts
         # end
       end
     end
@@ -47,8 +47,7 @@ class IcalAdapter < Adapter
 
   private def is_valid_event(event)
     event.try(:summary).present? && # has title?
-    event.try(:dtstart).present? && # has start_date?
-    event.try(:location).present?   # has location?
+    event.try(:dtstart).present?    # has start_date?
   end
 
   private def import_file(freebusys: false, todos: false, journals: false)
@@ -66,7 +65,7 @@ class IcalAdapter < Adapter
   end
 
   private def import_event_location
-    {
+    @event.location.present? ? {
         name: @event.location.gsub!("\n", ', ')
         #TODO: parse iCal location
         #thoroughfare: @event.location,
@@ -76,7 +75,7 @@ class IcalAdapter < Adapter
         #latitude: '52.527335',
         #longitude: '13.414259',
         #private_location: false
-    }
+    } : nil
   end
 
   private def import_event_media
@@ -84,7 +83,14 @@ class IcalAdapter < Adapter
   end
 
   private def import_event_notes
-    nil # TODO?
+    if @event.description.present?
+      [{
+          title: 'Description',
+          content: @event.description
+      }]
+    else
+      nil
+    end
   end
 
   private def import_event_alerts

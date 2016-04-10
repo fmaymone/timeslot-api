@@ -10,17 +10,18 @@ module Import
       # Import each event
       events.each do |event|
 
+        next unless event[:title].valid_encoding?
+
+        # Create User
+        creator = find_or_create_user(event) || user
+        status = creator.save && creator.errors.empty? if status
+
         start_date = event[:start_date]
         end_date = event[:end_date]
 
         # Normalize dates with time zone
-        unless start_date.kind_of?(Date) || start_date.kind_of?(Time)
-          start_date = Time.zone.parse(start_date) #.strftime('%Y-%m-%d %H:%I')
-        end
-
-        unless end_date.kind_of?(Date) || end_date.kind_of?(Time)
-          end_date = Time.zone.parse(end_date) if end_date.presence
-        end
+        start_date = Time.zone.parse(start_date) #.strftime('%Y-%m-%d %H:%I')
+        end_date = Time.zone.parse(end_date) if end_date.presence
 
         # Set default values if not imported:
         event[:visibility] ||= 'private'
@@ -30,7 +31,7 @@ module Import
           existing_slots = BaseSlot.where(slot_uuid: event[:uid])
         else
           existing_slots = BaseSlot.joins(:meta_slot)
-                                   .where('meta_slots.creator_id = ?', user.id)
+                                   .where('meta_slots.creator_id = ?', creator.id)
                                    .where('meta_slots.title = ?', event[:title].to_s)
                                    .where('meta_slots.start_date = ?', start_date)
         end
@@ -51,10 +52,6 @@ module Import
           slot.ios_location = event[:location] if event[:location]
           status = slot.save && slot.errors.empty? if status
         else
-          # Create User
-          creator = find_or_create_user(event) || user
-          status = creator.save && creator.errors.empty? if status
-
           # Create BaseSlot/MetaSlot
           slot = BaseSlot.create_slot(meta: event_meta,
                                       visibility: event[:visibility],
@@ -63,12 +60,10 @@ module Import
                                       alerts: event[:alerts],
                                       user: creator)
 
-          slot.ios_location = event[:location] if event[:location]
-          # TODO: Sometimes the type of slot is MetaSlot?!
-
+          # FIX: Reload slot to prevent returning a MetaSlot instead of a BaseSlot
           slot.reload
-          slot.update(slot_uuid: event[:uid]) if event[:uid].present? #&& slot.class.name != 'MetaSlot'
-
+          slot.ios_location = event[:location] if event[:location]
+          slot.update(slot_uuid: event[:uid]) if event[:uid].present?
           status = slot.save && slot.errors.empty? if status
 
           if status
@@ -78,18 +73,17 @@ module Import
 
             # Create Containership Association
             if status
-              containership = Containership.find_or_create_by(group: group,
-                                                              slot: slot)
+              containership = Containership.find_or_create_by(group: group, slot: slot)
               status = containership.errors.empty? if status
             end
           end
         end
-        break unless status
+        # TODO: collect error messages and return to client
+        # break unless status
       end
-      status
     rescue => error
-     error_handler(error, "failed: import from file")
-     status = false
+      error_handler(error, "failed: import from file")
+      status = false
     ensure
       Rails.application.config.SKIP_ACTIVITY = false
       status
