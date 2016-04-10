@@ -7,6 +7,11 @@ module Import
       # Holds the final status of the whole import job
       status = true
 
+      # NOTE: the import-admin-user is able to create Slots, Calendars and
+      # Users during one import, this feature requires a special security
+      # TODO: move to env
+      user_is_admin = user.email == 'import@timeslot.com'
+
       # Import each event
       events.each do |event|
 
@@ -18,7 +23,7 @@ module Import
         end
 
         # Create User
-        creator = find_or_create_user(event) || user
+        creator = user_is_admin ? find_or_create_user(event) || user : user
         status = creator.save && creator.errors.empty? if status
 
         start_date = event[:start_date]

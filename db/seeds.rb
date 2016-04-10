@@ -14,7 +14,7 @@ Provider.create(name: 'twitter')
 # User.create(username: 'Timeslot Import (Admin)',
 #             role: 0, # TODO: the user could not be used if the role is not 0
 #             email: 'import@timeslot.com',
-#             password: 'tmiktstmibig')
+#             password: 'tmiktstmibig') # TODO: move to env
 
 # Pseudo-User for the crawler data/slots aka sources
 User.create(username: 'Timeslot Official',
