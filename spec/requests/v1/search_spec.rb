@@ -179,19 +179,6 @@ RSpec.describe "V1::Search", type: :request do
     end
   end
 
-  describe "GET /v1/search/group" do
-    let(:group) { create(:group, :with_3_members, name: 'Timeslot Official') }
-    let(:query) {{ query: group.name }}
-
-    it "returns search results of groups" do
-      get "/v1/search/group", query, auth_header
-      expect(response.status).to be(200)
-      expect(json.length).to eq 1
-      expect(json.first).to have_key('id')
-      expect(json.first['id']).to eq(group.uuid)
-    end
-  end
-
   describe "GET /v1/search/location" do
     let!(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
     let(:query) {{ query: ios_location.name }}

@@ -1,6 +1,4 @@
 module V1
-  require 'open-uri'
-
   class SearchController < ApplicationController
     # GET /v1/search/categories
     def categories
@@ -61,15 +59,6 @@ module V1
       @slots = Search.new(MetaSlot, params[:attr] || 'title', query, page)
 
       render "v1/slots/index"
-    end
-
-    # GET /v1/search/group
-    def group
-      authorize :search
-      return head 422 unless has_allowed_params?
-      @groups = Search.new(Group, params[:attr] || 'name', query, page)
-
-      render "v1/groups/index"
     end
 
     # GET /v1/search/calendars

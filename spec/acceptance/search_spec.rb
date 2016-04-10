@@ -235,46 +235,6 @@ resource "Search" do
     end
   end
 
-  # search groups
-  get "/v1/search/group" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :query, "The query of the search", required: true
-
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
-
-    context "search by group name" do
-      let(:group) { create(:group, name: 'Timeslot Developer Group (Berlin)') }
-      let!(:membership) do
-        create(:membership, :active, user: current_user, group: group)
-      end
-
-      let(:query) { 'timeslot developer' }
-
-      example "Search by group name", document: :v1 do
-        explanation "returns 404 if query is invalid\n\n"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json.length).to be 1
-        expect(json.first).to have_key("id")
-        expect(json.first).to have_key("name")
-        expect(json.first).to have_key("image")
-        expect(json.first).to have_key("owner")
-        expect(json.first).to have_key("createdAt")
-        expect(json.first).to have_key("updatedAt")
-        expect(json.first).to have_key("deletedAt")
-        expect(json.first['name']).to eq("Timeslot Developer Group (Berlin)")
-      end
-    end
-  end
-
   # search locations
   get "/v1/search/location" do
     header "Accept", "application/json"
