@@ -12,6 +12,7 @@ resource "Groups" do
     response_field :membersCanPost, "Can subscribers add slots?"
     response_field :membersCanInvite, "Can subscribers invite friends?"
     response_field :image, "URL of the group image"
+    response_field :description, "The description of the group"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
@@ -48,6 +49,8 @@ resource "Groups" do
       expect(json['image']).to eq group.image
       expect(json).to have_key "public"
       expect(json['public']).to eq group.public
+      expect(json).to have_key "description"
+      expect(json['description']).to eq group.description
       expect(json).to have_key "membersCanPost"
       expect(json['membersCanPost']).to eq group.members_can_post
       expect(json).to have_key "membersCanInvite"
@@ -74,6 +77,7 @@ resource "Groups" do
 
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :image, "Image for the group"
+    parameter :description, "Description of the group (max. 255 characters)"
     parameter :public,
               "Is the group public? (true/false), default: 'false'"
     parameter :membersCanPost,
@@ -86,6 +90,7 @@ resource "Groups" do
 
     let(:name) { "foo" }
     let(:image) { "salvador dali" }
+    let(:description) { "This is a description." }
     let(:membersCanPost) { true }
     let(:membersCanInvite) { true }
     let(:public) { true }
@@ -108,6 +113,7 @@ resource "Groups" do
       expect(json["name"]).to eq name
       expect(json["image"]).to eq image
       expect(json["public"]).to eq public
+      expect(json["description"]).to eq description
       expect(json["membersCanPost"]).to eq membersCanPost
       expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
@@ -128,17 +134,19 @@ resource "Groups" do
     include_context "default group response fields"
 
     let(:group) do
-      create(:group, name: "foo", owner: current_user,
+      create(:group, :with_description, name: "foo", owner: current_user,
              members_can_invite: false, members_can_post: false)
     end
     let(:group_uuid) { group.uuid }
 
     describe "Update existing group" do
       parameter :name, "Updated name of group (max. 255 characters)"
+      parameter :description, "Updated description of group (max. 255 characters)"
       parameter :membersCanInvite, "Allows members to invite other users"
       parameter :membersCanPost, "Allows members to post new slots"
 
       let(:name) { "bar" }
+      let(:description) { "This is a new description." }
       let(:membersCanInvite) { true }
       let(:membersCanPost) { true }
 
@@ -159,6 +167,8 @@ resource "Groups" do
         expect(json['id']).to eq group.uuid
         expect(json).to have_key 'name'
         expect(json['name']).to eq name
+        expect(json).to have_key 'description'
+        expect(json['description']).to eq description
         expect(json).to have_key "membersCanPost"
         expect(json['membersCanPost']).to eq membersCanPost
         expect(json).to have_key "membersCanInvite"
@@ -751,6 +761,7 @@ resource "Groups" do
               required: true, scope: :group
     parameter :name, "Name of the group to add slots to",
               required: true, scope: :group
+    parameter :description, "The description of the group", scope: :group
     parameter :stringId, "String Identifier for the group", scope: :group
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
@@ -758,6 +769,7 @@ resource "Groups" do
     let(:muid) { attributes_for(:group)[:uuid] }
     let(:name) { "Autokino an der alten Eiche" }
     let(:image) { "http://faster.pussycat" }
+    let(:description) { "Bitte Autoradio nicht vergessen." }
     let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
     let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
 
@@ -788,6 +800,7 @@ resource "Groups" do
         expect(autokino.name).to eq name
         expect(autokino.public?).to be true
         expect(autokino.image).to eq image
+        expect(autokino.description).to eq description
         expect(autokino.string_id).to eq stringId
 
         expect(autokino.slots).not_to be_empty
