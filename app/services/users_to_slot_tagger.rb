@@ -9,11 +9,12 @@ class UsersToSlotTagger
   def tag(user_ids, initiator = nil)
     users = User.find(user_ids)
     users.each do |user|
-      ps = user.passengerships.find_or_create_by(slot: @slot)
+      ps = user.passengerships.find_or_initialize_by(slot: @slot)
+      new_instance = !ps.persisted? && ps.save
       ps.update(add_media_permission: true)
       user.follow(@slot)
       ps.initiator = initiator if initiator
-      ps.create_activity
+      ps.create_activity if new_instance
     end
   end
 end

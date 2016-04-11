@@ -41,6 +41,8 @@ class Group < ActiveRecord::Base
     muids.each do |muid|
       slot = GlobalSlot.find_or_create(muid)
       Containership.find_or_create_by(slot: slot, group: self)
+      # NOTE: no activity required,
+      # this method is only used to add global slots to a global group
     end
   end
 

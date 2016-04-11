@@ -11,11 +11,12 @@ class SlotsetManager
     if slotset.class == Group
       fail TSErrors::SlotGroupDeleted if slotset.deleted_at?
 
-      result = Containership.find_or_create_by(slot: slot, group: slotset)
+      result = Containership.find_or_initialize_by(slot: slot, group: slotset)
+      new_instance = (!result.persisted? && result.save) || result.deleted_at?
       result.update(deleted_at: nil) if result.deleted_at?
-      slot.follow(slotset)
+      #slot.follow(slotset) # actually not supported
       result.initiator = @current_user if @current_user != slot.creator
-      result.create_activity
+      result.create_activity if new_instance
 
       put_into_schedule_of_members(slot, slotset)
 
@@ -24,9 +25,11 @@ class SlotsetManager
       # current_user.my_calendar_slots << slot
       result = Passengership.find_or_create_by(slot: slot, user: current_user)
       result.update(deleted_at: nil) if result.deleted_at?
-      current_user.follow(slot)
-      result.initiator = @current_user if @current_user != slot.creator
-      result.create_activity
+
+      # TODO: ask stani if an activity should be triggered here?
+      #current_user.follow(slot)
+      #result.initiator = @current_user if @current_user != slot.creator
+      #result.create_activity if new_instance
 
       # case slot_set
       # when 'my_cal_uuid'
@@ -46,17 +49,15 @@ class SlotsetManager
       # next if slotset.deleted_at? # would be more graceful
 
       result = slot.containerships.find_by(group: slotset)
-      if result
-        result.delete unless result.deleted_at?
-        result.remove_activity
-      end
+      result.delete if result && result.deleted_at.nil?
 
       hide_from_schedule_of_members(slot, slotset)
 
     elsif current_user.slot_sets['my_cal_uuid'] == slotset
       result = current_user.passengerships.find_by(slot: slot)
       result.update(show_in_my_schedule: false) if result
-      result.remove_activity
+      # TODO: ask stani if an activity should be triggered here?
+      #result.remove_activity
     end
   end
 
@@ -74,9 +75,6 @@ class SlotsetManager
       result = Passengership.find_or_create_by(slot: slot, user: member)
       result.update(deleted_at: nil) if result.deleted_at?
       result.update(show_in_my_schedule: true) unless result.show_in_my_schedule?
-      member.follow(slot)
-      result.initiator = @current_user if @current_user != slot.creator
-      result.create_activity # is it needed?
     end
   end
 
@@ -94,7 +92,6 @@ class SlotsetManager
 
       result = Passengership.find_by(slot: slot, user: member)
       result.update(show_in_my_schedule: false) if result.show_in_my_schedule?
-      member.unfollow(slot) # is already following group, is it needed?
     end
   end
 end
