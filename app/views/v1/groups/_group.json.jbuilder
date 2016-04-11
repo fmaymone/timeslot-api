@@ -4,6 +4,7 @@ json.extract!(
   group,
   :name,
   :image,
+  :description,
   :members_can_post,
   :members_can_invite,
   :public,

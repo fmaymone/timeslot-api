@@ -20,6 +20,10 @@ FactoryGirl.define do
       image "sample"
     end
 
+    trait :with_description do
+      description "This is a description."
+    end
+
     trait :with_3_members do
       after :create do |group|
         create_list :membership, 3, :active, group: group
