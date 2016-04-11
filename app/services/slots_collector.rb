@@ -19,9 +19,15 @@ class SlotsCollector
     @direction = @after.nil? ? 'before' : 'after'
   end
 
-  # collects all std_slots and reslots of current_user
+  # collects all std_slots of current_user
   def my_slots(user:)
-    showables = [user.std_slots] #, user.re_slots]
+    showables = [user.std_slots]
+    consider_filter(showables, @filter)
+  end
+
+  # collects all passengerships of current_user
+  def my_schedule_slots(user:)
+    showables = [user.my_calendar_slots]
     consider_filter(showables, @filter)
   end
 
@@ -99,10 +105,10 @@ class SlotsCollector
                         relation.includes(
                           :notes, :media_items,
                           meta_slot: [:ios_location, :creator])
-                      elsif relation.table_name == ReSlot.table_name
-                        relation.includes(
-                          parent: [:notes, :media_items],
-                          meta_slot: [:ios_location, :creator])
+                      # elsif relation.table_name == ReSlot.table_name
+                      #   relation.includes(
+                      #     parent: [:notes, :media_items],
+                      #     meta_slot: [:ios_location, :creator])
                       else
                         # groupslots ...
                         relation
