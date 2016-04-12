@@ -15,6 +15,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:devices) }
+  it { is_expected.to respond_to(:user_uuid) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
   it { is_expected.to have_many(:my_calendar_slots)

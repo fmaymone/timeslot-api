@@ -215,18 +215,6 @@ class BaseSlot < ActiveRecord::Base
     remove_all_followers
   end
 
-  def copy_to(targets, user)
-    targets.each do |target|
-      BaseSlot.duplicate_slot(self, target, user)
-    end
-  end
-
-  def move_to(target, user)
-    new_slot = BaseSlot.duplicate_slot(self, target, user)
-    delete if new_slot.errors.empty?
-    new_slot
-  end
-
   ## private instance methods ##
 
   private def set_slot_type
@@ -323,36 +311,6 @@ class BaseSlot < ActiveRecord::Base
     end
 
     slot
-  end
-
-  def self.duplicate_slot(source, target, current_user)
-    visibility = target[:slot_type] if target[:slot_type]
-    # group = Group.find(target[:group_id]) if target[:group_id]
-    details = target[:details]
-    # YAML.load converts to boolean
-    with_details = details.present? ? YAML.load(details.to_s) : true
-
-    duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
-                                  visibility: visibility,
-                                  # group: group,
-                                  user: current_user)
-
-    duplicate_slot_details(source, duplicated_slot, current_user) if with_details
-    duplicated_slot
-  end
-
-  def self.duplicate_slot_details(old_slot, new_slot, user)
-    old_slot.media_items.reverse_each do |item|
-      attr = item.attributes
-      attr.delete('id')
-      new_slot.media_items.create(attr)
-    end
-
-    old_slot.notes.each do |note|
-      new_slot.notes.create(title: note.title,
-                            content: note.content,
-                            creator: user) # user => current_user
-    end
   end
 
   # takes an encoded_slot string and returns the matching slot

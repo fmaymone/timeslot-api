@@ -1,6 +1,7 @@
 #Changelog
 
 ## upcoming
+- remove slot copy and slot move routes and methods
 
 
 ## v0.9.2 (4.4.2016)

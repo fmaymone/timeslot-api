@@ -75,19 +75,6 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # will probably be removed
-  def copy?
-    current_user_has_read_access?
-  end
-
-  # will probably be removed
-  def move?
-    return false unless current_user?
-    return true if current_user == slot.try(:owner)
-    return true if current_user == slot.try(:slotter)
-    false
-  end
-
   # actions
 
   # FIX: remove when globalslot-reslot is updated
