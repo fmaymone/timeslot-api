@@ -1,7 +1,6 @@
 require 'open-uri'
 
-# this guy interacts with the data team
-class GlobalSlotConsumer
+class CandyShop
   include TSErrors
 
   # gets a global slot from the TS_DATA_MALL based on a muid
@@ -12,48 +11,20 @@ class GlobalSlotConsumer
 
   # gets a global slot location from TS_DATA_MALL, based on muid
   def location(muid)
-    raw_result = {}
-    timespent_location_fetch = Benchmark.measure {
-      raw_result = fetch('locations', muid)
-    }
-    Rails.logger.warn {
-      "Fetching location for slot #{muid} has taken #{timespent_location_fetch}"
-    }
+    raw_result = fetch('locations', muid)
     CandyLocation.new(raw_result)
   end
 
-  def prepare_search(category = nil, query = nil)
-    uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
-    if category && query
-      uri.path += category
-      uri.query = URI.encode_www_form(query)
-    end
-
-    user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
-    pw = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
-    auth = { http_basic_authentication: [user, pw] }
-
-    # Never pass unchecked URI to 'open'
-    # http://sakurity.com/blog/2015/02/28/openuri.html
-    raw_result = open(uri, auth).read
-  rescue => e
-    raise DataTeamServiceError.new('ELASTIC_SEARCH', e)
-  else
-    Oj.load(raw_result)
-  end
-
-  # TODO: rename to 'slots'
-  def search(category, query)
-    result = prepare_search(category, query)
-    crawler_slots = result['result']['slots']
-    slots = []
-    crawler_slots.each { |slot| slots << ElasticSearchSlot.new(slot) }
-    slots
-  end
-
-  def categories
-    result = prepare_search
-    result['_links'].keys
+  # fetch a global slot category from TS_DATA_MALL
+  # and create a user with role 'global_slot_category'
+  def category(uuid)
+    raw_result = fetch('categories', uuid)
+    User.create(user_uuid: uuid,
+                username: raw_result['name'],
+                picture: raw_result['image'],
+                role: 'global_slot_category',
+                email: "#{raw_result['name'].downcase}.category@timeslot.com"
+               )
   end
 
   private def fetch(resource_type, muid)
@@ -71,7 +42,7 @@ class GlobalSlotConsumer
     if e.class == OpenURI::HTTPError && e.io.status.first == '404'
       raise ActiveRecord::RecordNotFound
     else
-      raise DataTeamServiceError.new('DATA_MALL', e)
+      raise DataTeamServiceError.new('CANDY_SHOP', e)
     end
   else
     # I could also pass open(uri, auth) directly to Oj.load, it would then call
@@ -81,18 +52,8 @@ class GlobalSlotConsumer
   end
 
   private def convert_mall_slot(result)
-    slot_source = User.find_by!(role: 2, username: result['domains'].try(:first))
-  rescue ActiveRecord::RecordNotFound
-    msg = "Couldn't find User for given Domain. Seed data loaded?"
-    opts = {
-      domain: result['domains'].try(:first),
-      muid: result['muid'],
-      global_slot: msg }
-    Airbrake.notify(ActionController::ParameterMissing, opts)
-    raise ActionController::ParameterMissing, msg
-  else
     slot_data = {
-      user: slot_source,
+      category_uuid: result['category_uuid'],
       meta: {
         title: result['title'],
         start_date: result['start_timestamptz'],
@@ -102,6 +63,7 @@ class GlobalSlotConsumer
       muid: result['muid'],
       url: result['urls'].try(:first),
       # tags: result['tags'], # currently unused
+      # domains: result['domains'], # currently unused
       media: [
         {
           public_id: result['images'].try(:first),

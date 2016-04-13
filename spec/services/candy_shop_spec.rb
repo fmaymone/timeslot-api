@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe GlobalSlotConsumer, type: :service do
+RSpec.describe CandyShop, type: :service do
   describe 'slot', :vcr do
     let(:muid) { attributes_for(:global_slot)[:slot_uuid] }
 
-    context "valid data", :seed do
+    context "valid data" do
       it "returns a global slot from TS_DATA_MALL" do
         slot = described_class.new.slot(muid)
 
@@ -14,7 +14,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
         expect(slot[:meta]).to have_key :title
         expect(slot[:meta]).to have_key :start_date
         expect(slot[:meta]).to have_key :end_date
-        expect(slot).to have_key :user
+        expect(slot).to have_key :category_uuid
         expect(slot).to have_key :url
         expect(slot).to have_key :media
         expect(slot).to have_key :notes
@@ -22,15 +22,7 @@ RSpec.describe GlobalSlotConsumer, type: :service do
         expect(slot[:meta][:title]).not_to be_nil
         expect(slot[:meta][:start_date]).not_to be_nil
         expect(slot[:meta][:end_date]).not_to be_nil
-        expect(slot[:user]).not_to be_nil
-      end
-    end
-
-    context "invalid data" do
-      it "raises exception if globalslot domain has no matching backend user" do
-        expect {
-          described_class.new.slot(muid)
-        }.to raise_error ActionController::ParameterMissing
+        expect(slot[:category_uuid]).not_to be_nil
       end
     end
   end
@@ -55,26 +47,23 @@ RSpec.describe GlobalSlotConsumer, type: :service do
     end
   end
 
-  describe 'search', :vcr do
-    let(:search_term) { "baye" }
-    let(:limit) { 6 }
-    let(:timestamp) { "2016-07-29T12:43:28.907Z" }
-    let(:query) {
-      { "q" => search_term, "timestamp" => timestamp, "limit" => limit }
-    }
-    context 'football' do
-      it "returns array of elastic-search slots matching the search criteria" do
-        result = described_class.new.search('football', query)
-        expect(result.length).to eq limit
-        expect(result.first.title).to match(/baye/i)
-      end
-    end
+  describe 'category', :vcr do
+    let(:category_muid) { '4870f9d3-a629-9578-edcc-3e6c954baeba' }
+      # attributes_for(:slot, :with_candy_location)[:location_uid] }
 
-    context 'cinema' do
-      it "returns array of elastic-search slots matching the search criteria" do
-        result = described_class.new.search('cinema', query)
-        expect(result.length).to eq limit
-      end
+    it "returns a new user with role global_slot_category" do
+      category = described_class.new.category(category_muid)
+
+      expect(category.class).to eq User
+      expect(category.valid?).to be true
+      expect(category.user_uuid).to eq category_muid
+      expect(category.username).not_to be_nil
+      expect(category.picture).not_to be_nil
+      expect(category.global_slot_category?).to be true
+      expect(category.role).to eq 'global_slot_category'
+      expect(
+        category.email
+      ).to eq "#{category.username.downcase}.category@timeslot.com"
     end
   end
 end

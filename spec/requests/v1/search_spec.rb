@@ -179,19 +179,6 @@ RSpec.describe "V1::Search", type: :request do
     end
   end
 
-  describe "GET /v1/search/group" do
-    let(:group) { create(:group, :with_3_members, name: 'Timeslot Official') }
-    let(:query) {{ query: group.name }}
-
-    it "returns search results of groups" do
-      get "/v1/search/group", query, auth_header
-      expect(response.status).to be(200)
-      expect(json.length).to eq 1
-      expect(json.first).to have_key('id')
-      expect(json.first['id']).to eq(group.uuid)
-    end
-  end
-
   describe "GET /v1/search/location" do
     let!(:ios_location) { create(:ios_location, name: 'Alexanderplatz') }
     let(:query) {{ query: ios_location.name }}
@@ -219,4 +206,15 @@ RSpec.describe "V1::Search", type: :request do
 
   # maybe this can help us for testing bad user inputs:
   # https://github.com/minimaxir/big-list-of-naughty-strings
+
+  describe "POST /v1/globalslots/search" do
+    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
+
+    it "returns 200 and results", :vcr do
+      get "/v1/globalslots/search", query, auth_header
+
+      expect(response).to have_http_status :ok
+      expect(json).not_to be_empty
+    end
+  end
 end

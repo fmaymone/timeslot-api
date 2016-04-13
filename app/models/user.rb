@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  include TS_Role
+  include TSRole
   include Follow
 
   store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,

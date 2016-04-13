@@ -767,7 +767,7 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "no existing global slot, but existing location", :vcr do
       let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
-      let!(:location) { create(:candy_location) }
+      let!(:location) { create(:pier_2_bremen) }
       let(:params) { { muid: group[:uuid],
                        name: 'Rephlex',
                        slots: slots } }

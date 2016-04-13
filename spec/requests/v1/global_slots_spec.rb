@@ -7,41 +7,61 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  describe "POST /v1/globalslots/search" do
-    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
+  describe "POST /v1/globalslots/reslot" do
+    let!(:current_user) { create(:user, :with_email, :with_password) }
 
-    it "returns 200 and results", :vcr do
-      get "/v1/globalslots/search?#{query}", {}, auth_header
-
-      expect(response).to have_http_status :ok
-      expect(json).not_to be_empty
-    end
-
-    context "invalid search params" do
-      let(:invalid_query) { "q=Frei&category=foobar&moment=2015-12-18&limit=20" }
-
-      it "returns 422 for invalid category", :vcr do
-        get "/v1/globalslots/search?#{invalid_query}", {},
-            auth_header
-        expect(response).to have_http_status :unprocessable_entity
-        expect(response.body).to include "foobar is not a valid value for"
-        expect(response.body).to include "category"
-      end
-    end
-  end
-
-  describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
       let(:gs_data) { attributes_for(:global_slot) }
       let(:gs_no_description_data) {
         attributes_for(:global_slot, :without_description) }
       let(:slot_group) { create(:group, owner: current_user) }
+      let(:raw_global_slot) { CandyShop.new.slot(gs_data[:slot_uuid]) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
              { predecessor: gs_data[:slot_uuid] },
              auth_header
         expect(response).to have_http_status :created
+      end
+
+      it "creates a new slot", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(BaseSlot, :count).by 1
+      end
+
+      it "adds the category as a new user to the local db", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+        }.to change(User, :count).by 1
+        new_slot = GlobalSlot.last
+        new_user = User.last
+
+        expect(new_slot.creator_id).to eq new_user.id
+        expect(new_slot.creator.user_uuid).to eq raw_global_slot[:category_uuid]
+      end
+
+      context "category user known in backend" do
+        let!(:category_user) {
+          create(:user, role: 'global_slot_category',
+                 user_uuid: raw_global_slot[:category_uuid])
+        }
+
+        it "doesn't add a new user to the local db", :vcr do
+          expect {
+            post "/v1/globalslots/reslot",
+                 { predecessor: gs_data[:slot_uuid] },
+                 auth_header
+          }.not_to change(User, :count)
+          new_slot = GlobalSlot.last
+
+          expect(new_slot.creator_id).to eq category_user.id
+          expect(new_slot.creator.user_uuid).to eq raw_global_slot[:category_uuid]
+        end
       end
 
       it "adds the candy store location to the local db", :vcr do
@@ -99,13 +119,21 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     end
 
     context "global slot already in backend db" do
-      let(:global_slot) { create(:global_slot, :with_candy_location) }
+      let!(:global_slot) { create(:global_slot, :with_candy_location) }
 
       it "returns 201" do
         post "/v1/globalslots/reslot",
              { predecessor: global_slot.slot_uuid },
              auth_header
         expect(response).to have_http_status :created
+      end
+
+      it "doesn't create a new slot", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: global_slot.slot_uuid },
+               auth_header
+        }.not_to change(BaseSlot, :count)
       end
 
       it "returns details of slot with given id" do

@@ -751,6 +751,7 @@ resource "Groups" do
 
   # global slot groups
   post "/v1/groups/global_group", :seed do
+    # TODO: need other user here
     let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
 
     header "Content-Type", "application/json"
