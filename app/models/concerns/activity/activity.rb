@@ -143,11 +143,12 @@ module Activity
       if activity_type == 'Slot'
         params[:slot_id] = activity_target.id
       elsif activity_type == 'User'
-        if action == 'request'
-          params[:user_id] = activity_target.id
-        elsif action == 'friendship'
-          params[:friend_id] = activity_actor.id
-        end
+        # if action == 'request'
+        #   params[:user_id] = activity_target.id
+        # elsif action == 'friendship'
+        #   params[:friend_id] = activity_actor.id
+        # end
+        params[:user_id] = activity_target.id
       end
       Device.notify_all(notify, params)
     end
@@ -248,7 +249,7 @@ module Activity
                  activity_target.try(:parent).try(:visibility)
 
     # Additional check (only for security reason)
-    return [] if visibility == 'private'
+    #return [] if visibility == 'private'
 
     # Returns the array of users which should be notified through the distribution process
     user_ids = []
@@ -258,8 +259,8 @@ module Activity
     # 2. Actor related context:
     user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
     # 4. Containership related context:
-    activity_groups.each do |containership|
-      user_ids += containership.group.followers
+    activity_groups.each do |group|
+      user_ids += group.followers
     end
     # 5. Foreign related context (actually not active):
     #user_ids += activity_foreign.followers if activity_foreign
@@ -355,7 +356,7 @@ module Activity
       users = activity_target.likes.pluck(:user_id) || []
       recipients += users.map(&:to_s) if users.any?
     end
-    if context.include?('poster')  # = the users who adds content to the slot
+    if context.include?('poster')     # = the users who adds content to the slot
       # actually not supported
     end
 
@@ -365,8 +366,8 @@ module Activity
       if activity_type == 'Group'
         recipients += activity_target.followers
       elsif activity_type == 'Slot'
-        activity_groups.each do |containership|
-          recipients += containership.group.followers
+        activity_groups.each do |group|
+          recipients += group.followers
         end
       end
     end
@@ -392,21 +393,18 @@ module Activity
       recipients << activity_actor.id.to_s
     end
 
-    ## -- Distribution Keys: Indirect -- ##
+    ## -- Distribution Keys: Indirect Associations -- ##
 
     if context.include?('foreign')    # = the user who is involved indirectly
-      recipients << activity_target.id.to_s
-    end
-    if context.include?('invitee')    # = the user who is involved indirectly
-      recipients += activity_target.followers
+      recipients << activity_foreign.id.to_s if activity_foreign
     end
 
     ## -- Distribution Keys: Mixed Context -- ##
 
-    if context.include?('joiners')    # = friends + member (if: public group?)
+    if context.include?('joiners')    # = friends (if: public group?)
       groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += activity_actor.followers if group.try(:public)
+        recipients += activity_actor.followers if group.public
       end
     end
 
@@ -522,12 +520,12 @@ module Activity
         user_accept_me: [],
         user_accept_activity: [],
         user_accept_notify: %w(actor),
-        user_accept_push: [],
+        user_accept_push: %w(user),
 
         user_friendship_me: %w(actor),
         user_friendship_activity: [],
         user_friendship_notify: %w(user),
-        user_friendship_push: %w(user),
+        user_friendship_push: [],
 
         group_membership_me: %w(actor),
         group_membership_activity: %w(joiners member),
@@ -575,7 +573,7 @@ module Activity
         user_reject_push: [],
 
         slot_tagged_me: %w(actor),
-        slot_tagged_activity: [],
+        slot_tagged_activity: %w(friends followers member),
         slot_tagged_notify: %w(foreign),
         slot_tagged_push: %w(foreign),
 
@@ -595,19 +593,19 @@ module Activity
         group_kick_push: [],
 
         group_leave_me: %w(actor),
-        group_leave_activity: %w(owner),
-        group_leave_notify: [],
+        group_leave_activity: [],
+        group_leave_notify: %w(owner),
         group_leave_push: [],
 
         group_containership_me: %w(actor),
-        group_containership_activity: %w(joiners member),
-        group_containership_notify: [],
+        group_containership_activity: %w(joiners member creator),
+        group_containership_notify: %w(member),
         group_containership_push: %w(member),
 
         group_containertag_me: %w(actor),
-        group_containertag_activity: %w(joiners member),
+        group_containertag_activity: %w(joiners member creator),
         group_containertag_notify: %w(foreign),
-        group_containertag_push: %w(user member),
+        group_containertag_push: %w(user member creator),
 
         group_ungroup_me: %w(actor),
         group_ungroup_activity: [],

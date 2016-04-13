@@ -7,8 +7,8 @@ module Follow
   
   # Add the passed follower to the current object
   def add_follower(follower)
-    # Skip self and private targets
-    if (self != follower) and (self.try(:visibility) != 'private')
+    # Skip self and do not skip private targets
+    if self != follower #and (self.try(:visibility) != 'private')
       # Start redis transaction
       storage.transaction do
         storage.add_to_set(follower.redis_key(:following), self.id)

@@ -302,10 +302,10 @@ module Feed
         # target = JSONView.slot(BaseSlot.get(activity['target']))
 
         # Prepare filtering out private targets from feed + skip (this is an extra check)
-        if target.try(:visibility) == 'private'
-          activity['target'] = nil
-          next
-        end
+        # if target.try(:visibility) == 'private'
+        #   activity['target'] = nil
+        #   next
+        # end
 
         # Add individual data related to each users feed:
         # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)

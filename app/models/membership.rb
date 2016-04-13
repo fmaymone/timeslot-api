@@ -14,6 +14,8 @@ class Membership < ActiveRecord::Base
   validates :state, presence: true
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
+  attr_accessor :initiator
+
   @initiator = nil
 
   def activate(initiator = nil)
