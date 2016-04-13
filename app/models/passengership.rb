@@ -49,7 +49,7 @@ class Passengership < ActiveRecord::Base
   end
 
   private def activity_foreign
-    @initiator ? user : nil
+    @initiator ? user : super
   end
 
   def activity_action

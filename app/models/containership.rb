@@ -46,7 +46,7 @@ class Containership < ActiveRecord::Base
   end
 
   private def activity_foreign
-    @initiator ? slot.creator : nil
+    @initiator ? slot.creator : super
   end
 
   def activity_action

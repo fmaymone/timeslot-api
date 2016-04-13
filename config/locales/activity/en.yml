@@ -125,8 +125,8 @@ en:
 
   group_membership_me_singular:	"You joined the slot group: %{NAME}"
   group_membership_activity_singular:	"%{ACTOR} subscribed to the slot group %{NAME}."
-  group_membership_notify_singular:	""
-  group_membership_push_singular:	""
+  group_membership_notify_singular:	"%{ACTOR} subscribed to the slot group %{NAME}."
+  group_membership_push_singular:	"%{ACTOR} subscribed to the slot group %{NAME}."
   group_membership_activity_plural:	"%{ACTOR} and %{USER} subscribed to the slot group: %{NAME}."
   group_membership_notify_plural:	""
   group_membership_push_plural:	""
@@ -290,7 +290,7 @@ en:
 
   group_containertag_me_singular:	"You added a Slot to the slot group: %{NAME}"
   group_containertag_activity_singular:	"%{ACTOR} added a Slot to the slot group: %{NAME}"
-  group_containertag_notify_singular:	"%{ACTOR} added your Slot to the slot group: %{NAME}"
+  group_containertag_notify_singular:	"%{ACTOR} added a Slot to the slot group: %{NAME}"
   group_containertag_push_singular:	"%{ACTOR} added a Slot to the slot group: %{NAME}"
   group_containertag_activity_plural:	"%{ACTOR} and %{USER} added a Slot to the slot group: %{NAME}"
   group_containertag_notify_plural:	""

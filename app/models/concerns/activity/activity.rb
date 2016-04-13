@@ -52,15 +52,16 @@ module Activity
     return self
   end
 
-  def update_activity_objects
-    if activity_is_valid?
-      create_activity_feed('update', notify: [], forward: [])
-    end
-  rescue => error
-    error_handler(error, "failed: update shared object as worker job")
-  ensure
-    return self
-  end
+  # TODO: Rethink about this async strategy: distribute a dummy activity
+  # def update_activity_objects
+  #   if activity_is_valid?
+  #     create_activity_feed('update', notify: [], forward: [])
+  #   end
+  # rescue => error
+  #   error_handler(error, "failed: update shared object as worker job")
+  # ensure
+  #   return self
+  # end
 
   def remove_activity(action = 'delete')
     if activity_is_valid?
@@ -143,11 +144,6 @@ module Activity
       if activity_type == 'Slot'
         params[:slot_id] = activity_target.id
       elsif activity_type == 'User'
-        # if action == 'request'
-        #   params[:user_id] = activity_target.id
-        # elsif action == 'friendship'
-        #   params[:friend_id] = activity_actor.id
-        # end
         params[:user_id] = activity_target.id
       end
       Device.notify_all(notify, params)
@@ -401,10 +397,14 @@ module Activity
 
     ## -- Distribution Keys: Mixed Context -- ##
 
-    if context.include?('joiners')    # = friends (if: public group?)
+    if context.include?('joiners')    # = friends + creator (if: public group?)
       groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += activity_actor.followers if group.public
+        if group.public
+          recipients += activity_actor.followers
+          # NOTE: do not use 'activity_foreign' to get the creator
+          recipients << activity_target.creator.id.to_s if activity_type == 'Slot'
+        end
       end
     end
 
@@ -474,7 +474,7 @@ module Activity
     {
         slot_comment_me: %w(actor),
         slot_comment_activity: %w(friends follower creator member),
-        slot_comment_notify: %w(commenter creator follower),
+        slot_comment_notify: %w(commenter creator),
         slot_comment_push: %w(commenter creator follower),
 
         slot_like_me: %w(actor),
@@ -529,8 +529,8 @@ module Activity
 
         group_membership_me: %w(actor),
         group_membership_activity: %w(joiners member),
-        group_membership_notify: [],
-        group_membership_push: [],
+        group_membership_notify: %w(owner),
+        group_membership_push: %w(owner),
 
         group_membertag_me: %w(actor),
         group_membertag_activity: %w(joiners member),
@@ -557,7 +557,7 @@ module Activity
         slot_private_notify: %w(follower),
         slot_private_push: %w(follower),
 
-        slot_update_me: %w(actor),
+        slot_update_me: [],
         slot_update_activity: [],
         slot_update_notify: [],
         slot_update_push: [],
@@ -598,14 +598,14 @@ module Activity
         group_leave_push: [],
 
         group_containership_me: %w(actor),
-        group_containership_activity: %w(joiners member creator),
+        group_containership_activity: %w(joiners member),
         group_containership_notify: %w(member),
         group_containership_push: %w(member),
 
         group_containertag_me: %w(actor),
-        group_containertag_activity: %w(joiners member creator),
-        group_containertag_notify: %w(foreign),
-        group_containertag_push: %w(user member creator),
+        group_containertag_activity: %w(joiners member),
+        group_containertag_notify: %w(member),
+        group_containertag_push: %w(member),
 
         group_ungroup_me: %w(actor),
         group_ungroup_activity: [],
@@ -613,7 +613,7 @@ module Activity
         group_ungroup_push: [],
 
         group_create_me: %w(actor),
-        group_create_activity: %w(joiners member),
+        group_create_activity: %w(joiners actor),
         group_create_notify: [],
         group_create_push: []
     }
