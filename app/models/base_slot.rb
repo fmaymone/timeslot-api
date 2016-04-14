@@ -116,7 +116,11 @@ class BaseSlot < ActiveRecord::Base
     update_media(media, user.id) if media
     update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
-    update_activity_objects
+
+    # TODO: Simplify this
+    # Update Shared Objects + Refresh Feed Caches
+    Feed.update_shared_objects([self])
+    Feed.refresh_feed_cache(self.followers << (user || self.creator).id)
   end
 
   def add_media(item, creator_id)
@@ -360,7 +364,7 @@ class BaseSlot < ActiveRecord::Base
     creator
   end
 
-  def activity_action
+  private def activity_action
     'slot'
   end
 end

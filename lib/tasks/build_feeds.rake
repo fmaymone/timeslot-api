@@ -84,7 +84,7 @@ namespace :feed do
 
       storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each do |item|
         item.create_activity
-        item.create_activity('accept') if item.activity_action == 'friendship'
+        item.create_activity('accept') if item.class === Friendship && item.established?
       end
 
       puts "The follower model was successfully regenerated."

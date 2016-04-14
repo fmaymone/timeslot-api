@@ -74,7 +74,7 @@ class MediaItem < ActiveRecord::Base
     creator
   end
 
-  def activity_action
+  private def activity_action
     media_type
   end
 end

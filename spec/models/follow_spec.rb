@@ -162,32 +162,32 @@ RSpec.describe Follow, type: :model do
       end
     end
 
-    describe "User is not allowed to follow a private slot" do
+    describe "User is allowed to follow a private slot through a tag (indirect)" do
       let(:slot_private) { create(:std_slot_private) }
 
-      it "Slot has now followers" do
+      it "Slot has followers" do
         # Subscribe
         slot_private.add_follower(follower)
         slot_private.add_follower(follower2)
         # Test
-        expect(slot_private.followed_by?(follower)).to be(false)
-        expect(slot_private.followers).not_to include(follower.id.to_s)
-        expect(slot_private.followed_by?(follower2)).to be(false)
-        expect(slot_private.followers).not_to include(follower2.id.to_s)
-        expect(slot_private.followers_count).to be(0)
+        expect(slot_private.followed_by?(follower)).to be(true)
+        expect(slot_private.followers).to include(follower.id.to_s)
+        expect(slot_private.followed_by?(follower2)).to be(true)
+        expect(slot_private.followers).to include(follower2.id.to_s)
+        expect(slot_private.followers_count).to be(2)
       end
 
-      it "Slot has no followings" do
+      it "Slot has also followings" do
         # Subscribe
         slot_private.add_follower(follower)
         slot_private.add_follower(follower2)
         # Test
-        expect(follower.following?(slot_private)).to be(false)
-        expect(follower.followings.to_json).not_to include(slot_private.id.to_s)
-        expect(follower.followings_count).to be(0)
-        expect(follower2.following?(slot_private)).to be(false)
-        expect(follower2.followings.to_json).not_to include(slot_private.id.to_s)
-        expect(follower2.followings_count).to be(0)
+        expect(follower.following?(slot_private)).to be(true)
+        expect(follower.followings.to_json).to include(slot_private.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.following?(slot_private)).to be(true)
+        expect(follower2.followings.to_json).to include(slot_private.id.to_s)
+        expect(follower2.followings_count).to be(1)
       end
     end
   end

@@ -9,7 +9,7 @@ module Feed
       cache = get_from_cache(feed, params)
       return cache if cache
       page = paginate(feed, params)
-      result = enrich_feed(page, 'me')
+      result = enrich_feed(page, 'me', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -20,7 +20,7 @@ module Feed
       cache = get_from_cache(feed, params)
       return cache if cache
       page = paginate(feed, params)
-      result = enrich_feed(page, 'notify')
+      result = enrich_feed(page, 'notify', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -32,7 +32,7 @@ module Feed
       cache = get_from_cache(feed, params)
       return cache if cache
       page = aggregate_feed(feed, params)
-      result = enrich_feed(page, 'activity')
+      result = enrich_feed(page, 'activity', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -67,6 +67,10 @@ module Feed
       @storage.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
       # Store actor to its own index (shared objects)
       @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
+      # Store foreign user to its own index (shared objects)
+      @storage.set("User:#{params[:foreign]}", gzip_data_field(params, :foreign)) if params[:foreign].present?
+      # Remove foreign hash from params (it is not longer used)
+      params[:data].except!(:foreign)
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
@@ -170,6 +174,7 @@ module Feed
     end
 
     def render_shared_object(object)
+      return nil unless object.present?
       case object.class.name
       when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
         json = JSON.parse(ApplicationController.new.render_to_string(
@@ -286,7 +291,7 @@ module Feed
       }.as_json
     end
 
-    private def enrich_feed(feed, view)
+    private def enrich_feed(feed, view, viewer)
       feed.each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
@@ -323,7 +328,7 @@ module Feed
         end
 
         # Update message params with enriched message
-        activity['message'] = enrich_message(activity, actor, target, view) || ''
+        activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Remove special fields are not used by frontend
@@ -334,12 +339,11 @@ module Feed
       feed
     end
 
-    private def enrich_message(activity, actor, target, view)
+    private def enrich_message(activity, actor, target, view, viewer)
       actor_count = activity['actors'].count
       # Adds the first username and sets usercount to translation params
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
       i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
-      # TODO:
       # Add the targets field to the translation params holder (actually not in use)
       i18_params[:FIELD] = 'title'
       # Add the title to the translation params holder
@@ -356,12 +360,18 @@ module Feed
         # Get second actor (from shared objects)
         actor = get_shared_object("User:#{activity['foreign']}")
         # Add the second username to the translation params holder
-        i18_params[:USER] = actor['username'].presence if actor
+        i18_params[:USER] = actor['username'] if actor
       end
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
-      # Determine translation key
-      i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
+      # Determine translation key (personalized to the current user/viewer)
+      if (target['creator'] && viewer == target['creator']['id']) ||
+         (target['owner'] && viewer == target['owner']['id']) ||
+         (target['username'] && viewer == target['id'])
+        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}-to-owner_#{mode}"
+      else
+        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
+      end
       # Returns the message from translation index
       I18n.t(i18_key, i18_params)
     end
@@ -473,7 +483,6 @@ module Feed
 
     private def validate_cache(last_update, last_state)
       last_update.present? &&
-      last_state.present? &&
       last_update == last_state &&
       # FIX: Force refresh when last update is too close to the current request
       Time.now.to_f - last_update.to_f >= 1.0 # time in seconds (float)

@@ -139,8 +139,7 @@ module V1
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      initiator = (current_user == @slot.creator ? nil : current_user)
-      UsersToSlotTagger.new(@slot).tag(params[:user_tags], initiator)
+      UsersToSlotTagger.new(@slot).tag(params[:user_tags], current_user)
 
       head :ok
     end
