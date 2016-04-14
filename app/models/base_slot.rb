@@ -364,7 +364,7 @@ class BaseSlot < ActiveRecord::Base
     creator
   end
 
-  def activity_action
+  private def activity_action
     'slot'
   end
 end

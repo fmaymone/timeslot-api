@@ -52,7 +52,7 @@ class Passengership < ActiveRecord::Base
     @initiator ? user : super
   end
 
-  def activity_action
+  private def activity_action
     @initiator ? 'tagged' : 'reslot'
   end
 end

@@ -26,7 +26,7 @@ class Comment < ActiveRecord::Base
     user
   end
 
-  def activity_action
+  private def activity_action
     'comment'
   end
 end

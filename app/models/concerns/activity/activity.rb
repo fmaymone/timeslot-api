@@ -465,7 +465,7 @@ module Activity
   end
 
   # An activity tag as a action
-  def activity_action
+  private def activity_action
     raise NotImplementedError,
           "Subclasses must define the method 'activity_action'."
   end
