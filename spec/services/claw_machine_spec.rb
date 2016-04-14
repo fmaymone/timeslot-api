@@ -6,14 +6,16 @@ RSpec.describe ClawMachine, type: :service do
     let(:limit) { 6 }
 
     context "queries with timestamp" do
-      let(:timestamp) { "2016-07-29T12:43:28.907Z" }
+      let(:timestamp) { "2016-04-29T12:43:28.907Z" }
       let(:query_params) {
         { q: search_term, limit: limit, timestamp: timestamp }
       }
 
-      describe 'football' do
+      describe 'soccer' do
+        let(:category) { 'soccer' }
+
         it "returns array of slots matching the search criteria" do
-          result = described_class.new.search(category: 'football',
+          result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)
           expect(json).to have_key('result')

@@ -19,7 +19,7 @@ resource "Search" do
       expect(response_status).to eq(200)
       expect(json).to have_key("categories")
       categories = json['categories']
-      expect(categories.sort).to include "football"
+      # expect(categories.sort).to include "football"
       expect(categories.sort).to include "cinema"
       expect(categories.sort).to include "concerts"
       expect(categories.sort).to include "television"
@@ -284,7 +284,7 @@ resource "Search" do
 
     parameter :category,
               "Basic slot category to search in. Valid categories are eg.: " \
-              "[cinema, football, concerts, clubbing, television]",
+              "[cinema, soccer, concerts, clubbing, television]",
               required: true
     parameter :q, "String to search global slots for", required: true
     parameter :moment, "find results after this datetime, default: Time.now"
@@ -339,13 +339,13 @@ resource "Search" do
       end
     end
 
-    describe "football" do
-      let(:category) { 'football' }
+    describe "soccer" do
+      let(:category) { 'soccer' }
       let(:q) { 'Borussia' }
       let(:moment) { '2016-04-05' }
       let(:limit) { 5 }
 
-      example "Football - Find global slots", document: :v1 do
+      example "Soccer - Find global slots", document: :v1 do
         explanation "Forwards a search request to the Elastic Search Service " \
                     "for global slots from the data team.\n\n" \
                     "returns 422 if parameters invalid"
