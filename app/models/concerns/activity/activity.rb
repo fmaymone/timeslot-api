@@ -430,8 +430,7 @@ module Activity
 
   # The visibility which are related to the activity target object
   private def activity_visibility
-    activity_target.try(:visibility) ||
-    (activity_target.try(:public) ? 'public' : 'private')
+    nil
   end
 
   # The default redirection to where the user should be redirected by opening the activity

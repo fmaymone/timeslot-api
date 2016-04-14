@@ -128,14 +128,14 @@ RSpec.describe Device, type: :model do
 
   describe :notify, :vcr do
     let(:client) { double("client") }
-    let(:params) {{ message: { KEY: 'slot_like_notify_plural',
+    let(:params) {{ message: { KEY: 'slot_like_notify-to-owner_singular',
                                ACTOR: 'User1',
                                USER: 'User2',
                                TITLE: 'Titel'}}}
     let(:lang) { 'en' }
 
     it "sends a push notification message to the client" do
-      expect(client).to receive(:publish).with(hash_including(message: /User1 and User2 like your Slot: Titel/))
+      expect(client).to receive(:publish).with(hash_including(message: /User1 likes your Slot: Titel/))
       Device.notify(client, device, lang, params)
     end
   end

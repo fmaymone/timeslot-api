@@ -157,7 +157,7 @@ resource "Feeds", :activity, :async do
         create(:meta_slot, title: 'Slot title 23', creator: current_user) }
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
                           meta_slot: meta_slot) }
-      let(:message) { I18n.t('slot_comment_notify_singular',
+      let(:message) { I18n.t('slot_comment_notify-to-owner_singular',
                              ACTOR: actor.username, TITLE: slot.title) }
 
       example "Get the feed of the current user notifications", document: :v1 do
