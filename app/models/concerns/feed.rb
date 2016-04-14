@@ -69,6 +69,8 @@ module Feed
       @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
       # Store foreign user to its own index (shared objects)
       @storage.set("User:#{params[:foreign]}", gzip_data_field(params, :foreign)) if params[:foreign].present?
+      # Remove foreign hash from params (it is not longer used)
+      params[:data].except!(:foreign)
 
       ## -- Store Current Activity (Write-Opt) -- ##
 
