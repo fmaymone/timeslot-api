@@ -292,7 +292,7 @@ resource "Search" do
 
     describe "cinema" do
       let(:category) { 'cinema' }
-      let(:q) { 'Love' }
+      let(:q) { 'Man' }
       let(:moment) { '2016-04-29T12:43:28.907Z' }
       let(:limit) { 7 }
 
@@ -304,9 +304,10 @@ resource "Search" do
 
         expect(response_status).to eq(200)
         expect(json).to have_key("result")
-        expect(json['result']).to have_key("slots")
+        expect(json['result']).to have_key(category)
+        expect(json['result'][category]).to have_key("slots")
 
-        result = json['result']['slots']
+        result = json['result'][category]['slots']
         expect(result.length).to eq limit
 
         first = result.first
@@ -353,9 +354,10 @@ resource "Search" do
 
         expect(response_status).to eq(200)
         expect(json).to have_key("result")
-        expect(json['result']).to have_key("slots")
+        expect(json['result']).to have_key(category)
+        expect(json['result'][category]).to have_key("slots")
 
-        result = json['result']['slots']
+        result = json['result'][category]['slots']
         expect(result.length).to eq limit
 
         first = result.first

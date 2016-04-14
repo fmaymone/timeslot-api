@@ -19,20 +19,27 @@ RSpec.describe ClawMachine, type: :service do
                                               query_params: query_params)
           json = JSON.parse(result)
           expect(json).to have_key('result')
-          expect(json['result']).to have_key('slots')
-          expect(json['result']['slots'].length).to eq limit
-          expect(json['result']['slots'].first['title']).to match(/baye/i)
+          expect(json['result']).to have_key(category)
+          expect(json['result'][category]).to have_key('slots')
+          slots = json['result'][category]['slots']
+          expect(slots.length).to eq limit
+          expect(slots.first['title']).to match(/baye/i)
         end
       end
 
       describe 'cinema' do
+        let(:category) { 'cinema' }
+        let(:search_term) { "man" }
+
         it "returns array of slots matching the search criteria" do
-          result = described_class.new.search(category: 'cinema',
+          result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)
           expect(json).to have_key('result')
-          expect(json['result']).to have_key('slots')
-          expect(json['result']['slots'].length).to eq limit
+          expect(json['result']).to have_key(category)
+          expect(json['result'][category]).to have_key('slots')
+          slots = json['result'][category]['slots']
+          expect(slots.length).to eq limit
         end
       end
     end
@@ -46,11 +53,11 @@ RSpec.describe ClawMachine, type: :service do
                                               query_params: query_params)
           json = JSON.parse(result)
           expect(json).to have_key('result')
-          expect(json['result']).to have_key('calendars')
-          expect(json['result']['calendars'].first).to have_key('name')
-
-          name = json['result']['calendars'].first['name']
-          expect(name).to match /#{query_params[:q]}/i
+          expect(json['result']).to have_key('public')
+          expect(json['result']['public']).to have_key('calendars')
+          calendars = json['result']['public']['calendars']
+          expect(calendars.first).to have_key('name')
+          expect(calendars.first['name']).to match /#{query_params[:q]}/i
         end
       end
     end
