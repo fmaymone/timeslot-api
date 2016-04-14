@@ -20,10 +20,10 @@ module SlotActivity
 
   # This method should be overridden in the subclass
   # if custom validation is required
-  # private def activity_is_valid?
-  #   visibility = activity_target.try(:visibility)
-  #   super && (visibility.nil? || (visibility != 'private'))
-  # end
+  private def activity_is_valid?
+    visibility = activity_target.try(:visibility)
+    super && (visibility.nil? || (visibility != 'private'))
+  end
 
   # Add extra data to each activity. The data can be hide
   # from the output when the StreamRails::Enrich is not used.
