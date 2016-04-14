@@ -1,14 +1,43 @@
 # Social Activity
-Each activity has a:
-* Target (where the activity belongs to, e.g. "Slot" if someone likes the slot)
-* Action (the action of the activity, e.g. "comment" or "like")
-* Object (the activity objects model name, e.g. "Comment" or "Like")
 
-The most activities are also connected to an user (isn't required at all), called as:
+The whole system is divided into 4 parts:
+
+_WRITE_PROCESS_
+
+1. Activity Objects (is the internal representation of an activity)
+2. Distribution (distribute activities to feeds)
+
+_READ_PROCESS_
+
+3. Aggregation (collect and merge activities)
+4. Message Composing (create personalized & multi lingual messages)
+
+## Follower Model
+
+The Activity Distribution uses a bi-directional Follower Model which has generic capabilities (e.g. a group can follow a slot). These associations are used by the Social Context.
+
+## Social Context
+
+The Social Context determines all involved users to where the activity has to be distributed. This context consists of:
+
+1. Target related context (e.g. tagged users or reslotters of a slot)
+2. Actor related context (e.g. friends of the actor)
+3. Friend related context (e.g. friend of friends)
+4. Group related context (e.g. the members of group where the slot was tagged)
+5. Foreign related context (e.g. the creator of a slot or owner of a group)
+
+## Activity Object
+
+Each Activity Object has/requires a:
 * Actor (the user who makes the activity)
-* Foreign (the relationship target who belongs to the activity target, e.g. "Creator")
+* Target (where the activity belongs to, e.g. "Slot" if someone likes the slot)
+* Action (the action/verb of the activity, e.g. "comment" or "like")
 
-These 5 basic relations are the "meta data" of each activity.
+Each Activity Object can optionally also have a:
+* Foreign (a user who belongs to the activity target, e.g. "Creator" or "Owner")
+* Group (a group which belongs to the activity target)
+* Visibility (the visibility which belongs to the activity target)
+* Redirect (the target where the user is delegated when opening the activity)
 
 ## Re-Build: Topics, Follower, Followings, Activities, Feeds
 
