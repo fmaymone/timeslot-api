@@ -123,10 +123,11 @@ class GroupPolicy < ApplicationPolicy
     false
   end
 
-  # true if the group is public and belongs to
-  # the crawler source making the request
+  # true if the group is public and
+  # belongs to a global slot category
   def global_group?
-    return true if group.public? && group.owner == current_user
+    return false unless group.public?
+    return true if group.owner.global_slot_category?
     false
   end
 

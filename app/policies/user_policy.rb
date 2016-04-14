@@ -54,9 +54,9 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
-  # true if the request is made by an existing crawler source
+  # true if the request is made by a special user
   def global_group?
-    return true if current_user.crawler_source?
+    return true if current_user.curator?
     false
   end
 end

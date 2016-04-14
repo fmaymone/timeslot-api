@@ -751,12 +751,13 @@ resource "Groups" do
 
   # global slot groups
   post "/v1/groups/global_group", :seed do
-    # TODO: need other user here
-    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+    let(:current_user) { User.find_by email: 'global-importer@timeslot.com' }
 
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
+    parameter :categoryUuid, "UUID for the global slot category to which " \
+                              "the group/calendar belongs"
     parameter :group, "hash witch contains the payload", required: true
     parameter :muid, "UUID of the group to add slots to",
               required: true, scope: :group
@@ -767,10 +768,12 @@ resource "Groups" do
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
+    let(:categoryUuid) { create(:user, :gs_category)[:user_uuid] }
     let(:muid) { attributes_for(:group)[:uuid] }
     let(:name) { "Autokino an der alten Eiche" }
     let(:image) { "http://faster.pussycat" }
     let(:description) { "Bitte Autoradio nicht vergessen." }
+
     let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
     let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
 

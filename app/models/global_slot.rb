@@ -27,6 +27,12 @@ class GlobalSlot < BaseSlot
     create_slot(attributes)
   end
 
+  def self.category_as_user(user_uuid)
+    category_user = User.find_by user_uuid: user_uuid
+    category_user ||= CandyShop.new.category(user_uuid)
+    category_user
+  end
+
   def self.visibility
     'public'
   end
@@ -37,12 +43,6 @@ class GlobalSlot < BaseSlot
       user_uuid = attributes.delete(:category_uuid)
       attributes[:user] = category_as_user(user_uuid)
       attributes
-    end
-
-    private def category_as_user(user_uuid)
-      category_user = User.find_by user_uuid: user_uuid
-      category_user ||= CandyShop.new.category(user_uuid)
-      category_user
     end
   end
 end

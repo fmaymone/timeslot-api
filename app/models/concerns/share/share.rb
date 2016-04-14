@@ -90,6 +90,9 @@ module Share
     end
 
     def share_email(user, slot, params = nil)
+      destination = params['email'] || user.email
+      return unless destination
+
       # Store shared objects
       obj = share_objects(user, slot)
       # Generate HTML from slot/user data
@@ -97,32 +100,39 @@ module Share
                obj[:user],
                obj[:slot],
                style: 'box')
+      content = {
+        source: user.email || 'support@timeslot.com',
+        destination: {
+          to_addresses: [destination]
+        },
+        message: {
+          subject: {
+            data: "[Timeslot] #{user.username} shared the slot: '#{slot.title}'"
+            # charset: "Charset"
+          },
+          body: {
+            text: {
+              data: ''
+              # charset: "Charset"
+            },
+            html: {
+              data: html
+              # charset: "Charset"
+            }
+          }
+        },
+        reply_to_addresses: [destination],
+        return_path: 'invalid_email_address@timeslot.com'
+      }
+      # tmp hack to notify airbrake when an email gets send out
+      # TODO: improve
+      Airbrake.notify(StandardError, news: 'sending email via AWS SNS',
+                      mailtype: 'password forget',
+                      destination: destination,
+                      content: content)
       begin
         # Send as email
-        create_client.send_email(
-            source: user.email || 'support@timeslot.com',
-            destination: {
-                to_addresses: [params['email'] || user.email]
-            },
-            message: {
-                subject: {
-                    data: "[Timeslot] #{user.username} shared the slot: '#{slot.title}'"
-                    # charset: "Charset"
-                },
-                body: {
-                    text: {
-                        data: ''
-                        # charset: "Charset"
-                    },
-                    html: {
-                        data: html
-                        # charset: "Charset"
-                    }
-                }
-            },
-            reply_to_addresses: [params['email'] || user.email],
-            return_path: 'invalid_email_address@timeslot.com'
-        )
+        create_client.send_email(content)
       rescue Aws::SES::Errors::ServiceError => exception
         Rails.logger.error { exception }
         Airbrake.notify(exception)

@@ -14,8 +14,8 @@ namespace :feed do
       Feed.update_shared_objects(User.all + StdSlot.all + Group.all)
       Feed.refresh_feed_cache(User.all.collect(&:id))
       puts "All feeds cache was successfully refreshed."
-    rescue
-      puts "An error has occurred during the refreshing process."
+    rescue => e
+      puts "An error has occurred during the refreshing process: #{e}"
     end
   end
 
@@ -56,11 +56,11 @@ namespace :feed do
       end
 
       Containership.includes(:group, :slot).find_each do |relation|
-          relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
+        relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
       end
 
       Passengership.includes(:slot, :user).find_each do |relation|
-          relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
+        relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
       end
 
       ## Collect Activities ##
@@ -90,9 +90,9 @@ namespace :feed do
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."
       puts "ACTIVITY OBJECTS: #{(storage.count)}"
-    rescue
+    rescue => e
       #handle the error here
-      puts "An error has occurred during the rebuilding process."
+      puts "An error has occurred during the rebuilding process: #{e}"
     ensure
       # Turn on push notifications globally
       Rails.application.config.SKIP_PUSH_NOTIFICATION = false

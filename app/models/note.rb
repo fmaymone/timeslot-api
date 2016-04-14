@@ -35,7 +35,7 @@ class Note < ActiveRecord::Base
     creator
   end
 
-  private def activity_action
+  def activity_action
     'note'
   end
 end

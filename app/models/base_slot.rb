@@ -360,7 +360,7 @@ class BaseSlot < ActiveRecord::Base
     creator
   end
 
-  private def activity_action
+  def activity_action
     'slot'
   end
 end
