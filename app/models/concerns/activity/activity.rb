@@ -328,7 +328,8 @@ module Activity
       recipients << activity_actor.id.to_s
     end
     if context.include?('friends')    # = all friends of the actor (users follower)
-      recipients += activity_actor.followers
+      # FIX: here we cut the viral distribution through friend associations on non-public Slots/Groups
+      recipients += activity_actor.followers if activity_visibility == 'public'
     end
     if context.include?('myfoaf')     # = all friends of actors friend (actually unused)
       activity_actor.friendships.each do |friendship|
@@ -415,14 +416,27 @@ module Activity
   end
 
   private def activity_update_feed
+    # TODO: simplify this
     # Update feed caches + shared objects
     Feed.update_shared_objects([activity_actor, activity_target])
     Feed.refresh_feed_cache(activity_actor)
   end
 
+  # TODO:
   # The groups which are related to the activity target object
   private def activity_groups
     []
+  end
+
+  # The visibility which are related to the activity target object
+  private def activity_visibility
+    activity_target.try(:visibility) ||
+    (activity_target.try(:public) ? 'public' : 'private')
+  end
+
+  # The default redirection to where the user should be redirected by opening the activity
+  private def activity_redirect
+    nil
   end
 
   # The foreign id is required to find activities for
