@@ -6,6 +6,13 @@ FactoryGirl.define do
   factory :user, aliases: [:owner, :member, :creator] do
     username
 
+    trait :gs_category do
+      role 'global_slot_category'
+      username "Cinema"
+      picture "https://farm4.staticflickr.com/3779/12370592085_09577409bc_z.jpg"
+      user_uuid '4870f9d3-a629-9578-edcc-3e6c954baeba'
+    end
+
     trait :with_email do
       email
     end

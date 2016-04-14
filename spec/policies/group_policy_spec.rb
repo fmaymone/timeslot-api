@@ -200,23 +200,18 @@ describe GroupPolicy do
       context "current_user is group owner" do
         let(:group) { create(:group, public: true, owner: user) }
 
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+
+      context "global_slot category is group owner" do
+        let(:group) {
+          create(:group, public: true,
+                 owner: create(:user, role: 'global_slot_category'))
+        }
         it "allows access" do
           expect(subject).to permit(user, group)
-        end
-      end
-
-      context "current_user is group member" do
-        let!(:membership) {
-          create(:membership, :active, group: group, user: user)
-        }
-        it "denies access" do
-          expect(subject).not_to permit(user, group)
-        end
-      end
-
-      context "current_user is not group owner" do
-        it "denies access" do
-          expect(subject).not_to permit(user, group)
         end
       end
     end

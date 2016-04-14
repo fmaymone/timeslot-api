@@ -34,8 +34,8 @@ describe UserPolicy do
   end
 
   permissions :global_group? do
-    context "current_user has role 'crawler_source'", :seed do
-      let(:user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+    context "current_user has role 'curator'", :seed do
+      let(:user) { User.find_by email: 'global-importer@timeslot.com' }
 
       it "allows access" do
         expect(subject).to permit(user, User)
