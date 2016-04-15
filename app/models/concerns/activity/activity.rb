@@ -479,7 +479,7 @@ module Activity
   private def error_handler(error, activity, params = nil)
     Rails.logger.error { error }
     Airbrake.notify(error, activity: activity, params: params)
-    puts error unless Rails.env == 'production'
+    puts error
   end
 
   # The distribution map exported from the google spreadsheet

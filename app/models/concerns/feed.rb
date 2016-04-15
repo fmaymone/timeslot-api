@@ -544,7 +544,7 @@ module Feed
     private def error_handler(error, feed, params)
       Rails.logger.error { error }
       Airbrake.notify(error, feed: feed, params: params)
-      puts error unless Rails.env == 'production'
+      puts error
     end
   end
 end
