@@ -121,5 +121,6 @@ module Follow
   private def error_handler(error, message, params = nil)
     Rails.logger.error { error }
     Airbrake.notify(error, message: message, params: params)
+    puts error unless Rails.env == 'production'
   end
 end
