@@ -4,6 +4,6 @@ class AddDescriptionToGroup < ActiveRecord::Migration
   end
 
   def down
-    remove_column :groups, :title
+    remove_column :groups, :description
   end
 end
