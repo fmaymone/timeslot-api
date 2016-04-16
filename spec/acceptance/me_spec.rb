@@ -35,7 +35,7 @@ resource "Me" do
       # default user response fields
       expect(json).to have_key "location"
       expect(json).to have_key "slotCount"
-      # expect(json).to have_key "reslotCount"
+      expect(json).to have_key "calendarCount"
       expect(json).to have_key "friendsCount"
       # current user response fields
       expect(json).to have_key "lang"
@@ -63,6 +63,7 @@ resource "Me" do
       expect(json).to have_key "myCreatedSlotsUuid"
       expect(json).to have_key "myFriendSlotsUuid"
       expect(json).to have_key "myPublicSlotsUuid"
+      expect(json).to have_key "myPrivateSlotsUuid"
       # social relations
       expect(json).to have_key "friendships"
       expect(json).to have_key "memberships"
