@@ -33,6 +33,27 @@ describe GroupPolicy do
     end
   end
 
+  permissions :destroy? do
+    let(:user) { create(:user) }
+
+    context "special group/calendar" do
+      let(:my_public_slots_uuid) { user.slot_sets['my_public_slots_uuid'] }
+      let(:group) { create(:group, owner: user, uuid: my_public_slots_uuid) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+
+    context "normal group/calendar" do
+      let(:group) { create(:group, owner: user) }
+
+      it "allows access" do
+        expect(subject).to permit(user, group)
+      end
+    end
+  end
+
   permissions :accept_invite?, :refuse_invite? do
     let(:user) { create(:user) }
 
