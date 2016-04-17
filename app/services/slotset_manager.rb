@@ -14,6 +14,14 @@ class SlotsetManager
       result = Containership.find_or_initialize_by(slot: slot, group: slotset)
       new_instance = (!result.persisted? && result.save) || result.deleted_at?
       result.update(deleted_at: nil) if result.deleted_at?
+
+      if slotset.public? && !slot.StdSlotPublic?
+        # update 'type' column
+        slot.becomes!(StdSlotPublic) # this doesn't run the validations
+        # update 'slot_type' column
+        slot.StdSlotPublic!
+      end
+
       #slot.follow(slotset) # actually not supported
       result.initiator = @current_user if @current_user != slot.creator
       result.create_activity if new_instance
@@ -50,6 +58,13 @@ class SlotsetManager
 
       result = slot.containerships.find_by(group: slotset)
       result.delete if result && result.deleted_at.nil?
+
+      if slot.StdSlotPublic? && slot.slot_groups.public.empty?
+        # update 'type' column
+        slot.becomes!(StdSlotPrivate) # this doesn't run the validations
+        # update 'slot_type' column
+        slot.StdSlotPrivate!
+      end
 
       hide_from_schedule_of_members(slot, slotset)
 

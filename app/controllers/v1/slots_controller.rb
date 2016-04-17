@@ -202,6 +202,7 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
+    # DELETE /v1/slots/1/slotsets
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot

@@ -592,7 +592,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch with valid params" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
         }
@@ -607,7 +607,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch non-existing note" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
         }
@@ -621,7 +621,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch with invalid params" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "" }] }
         }
@@ -706,7 +706,7 @@ RSpec.describe "V1::Slots", type: :request do
           let(:media) { [{ public_id: "foo-image", media_type: "image" }] }
           let!(:std_slot) {
             create(:std_slot_private, :with_media, owner: current_user,
-                                                   creator: current_user)
+                   creator: current_user)
           }
 
           it "adds it" do
@@ -1097,6 +1097,67 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    context "visibility" do
+      describe "add to public slotgroups/calendars" do
+        let(:slot) { create(:std_slot_private, creator: current_user) }
+        let(:public_calendar) do
+          group = create(:group, public: true)
+          create(:membership, :active, user: current_user, group: group)
+          group
+        end
+
+        it "sets the slot visibility to 'public'" do
+          post "/v1/slots/#{slot.id}/slotgroups",
+               { slot_groups: [public_calendar.uuid] }, auth_header
+          # a bit strange, can not reload bc of STI, must pass the ID directly
+          slot_id = slot.id
+          slot = BaseSlot.find slot_id
+          expect(slot.visibility).to eq 'public'
+          expect(slot.StdSlotPublic?).to be true
+          expect(slot.class).to be StdSlotPublic
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      describe "remove from public slotgroups/calendars" do
+        let(:slot) { create(:std_slot_public) }
+        let(:public_calendar) do
+          group = create(:group, public: true)
+          create(:membership, :active, user: current_user, group: group)
+          create(:containership, slot: slot, group: group)
+          group
+        end
+
+        context "slot not in other public calendar" do
+          it "sets the slot visibility to 'private'" do
+            delete "/v1/slots/#{slot.id}/slotgroups",
+                 { slot_groups: [public_calendar.uuid] }, auth_header
+
+            # a bit strange, can not reload bc of STI, must pass the ID directly
+            slot_id = slot.id
+            slot = BaseSlot.find slot_id
+
+            expect(slot.visibility).to eq 'private'
+            expect(slot.StdSlotPrivate?).to be true
+          end
+        end
+
+        context "slot is also in other public calendar" do
+          let!(:in_other_public_calendar) {
+            create(:containership, slot: slot,
+                   group: create(:group, public: true))
+          }
+          it "keeps the slot visibility at 'public'" do
+            delete "/v1/slots/#{slot.id}/slotgroups",
+                 { slot_groups: [public_calendar.uuid] }, auth_header
+
+            expect(slot.visibility).to eq 'public'
+            expect(slot.StdSlotPublic?).to be true
+          end
+        end
+      end
+    end
+
     context "special slotsets" do
       it "adds the slot to myCalendar" do
         expect(current_user.reload.slot_sets).not_to be nil
@@ -1116,7 +1177,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           post "/v1/slots/#{slot.id}/slotgroups",
                { slot_groups: [current_user.slot_sets['my_cal_uuid'],
-                              group.uuid] },
+                               group.uuid] },
                auth_header
 
           current_user.reload
@@ -1184,8 +1245,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         delete "/v1/slots/#{slot.id}/slotgroups",
                { slot_groups: [group_1.uuid,
-                              current_user.slot_sets['my_cal_uuid'],
-                              group_2.uuid] },
+                               current_user.slot_sets['my_cal_uuid'],
+                               group_2.uuid] },
                auth_header
 
         current_user.reload
