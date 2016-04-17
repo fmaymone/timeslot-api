@@ -20,9 +20,9 @@ RSpec.describe StdSlot, type: :model do
   it { is_expected.to respond_to(:comments) }
   it { is_expected.to respond_to(:notes) }
   it { is_expected.to respond_to(:media_items) }
+  it { is_expected.to respond_to(:share_with_friends) }
   it { is_expected.to belong_to(:owner).inverse_of(:std_slots) }
   it { is_expected.to belong_to(:meta_slot) }
-  # it { is_expected.to have_many(:re_slots).inverse_of(:parent) }
 
   it { is_expected.to respond_to(:followers) }
   it { is_expected.to respond_to(:followings) }

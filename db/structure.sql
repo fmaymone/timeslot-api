@@ -758,7 +758,8 @@ CREATE TABLE std_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    owner_id bigint NOT NULL
+    owner_id bigint NOT NULL,
+    share_with_friends boolean DEFAULT false NOT NULL
 )
 INHERITS (base_slots);
 
@@ -1567,3 +1568,5 @@ INSERT INTO schema_migrations (version) VALUES ('20160405112204');
 INSERT INTO schema_migrations (version) VALUES ('20160411104513');
 
 INSERT INTO schema_migrations (version) VALUES ('20160416150256');
+
+INSERT INTO schema_migrations (version) VALUES ('20160417140125');
