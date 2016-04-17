@@ -15,8 +15,11 @@ module V1
     # POST /v1/users
     def create
       authorize :user
-      @user = User.create_with_device(params: user_create_params,
-                                      device: device_params(params[:device]))
+
+      service = NewUser.new(user_params: user_create_params,
+                            device_params: device_params(params[:device]))
+      @user = service.create_new_user
+
       if @user.errors.empty?
         @current_user = @user
         render :signup, status: :created

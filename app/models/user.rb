@@ -503,13 +503,6 @@ class User < ActiveRecord::Base
 
   ## class methods ##
 
-  def self.create_with_device(params:, device: nil)
-    new_user = create(params)
-    return new_user unless new_user.errors.empty?
-    Device.update_or_create(new_user, device) if device
-    new_user
-  end
-
   def self.create_or_signin_via_social(identity_params, social_params, device: nil)
     identity = Connect.find_by(social_id: identity_params[:social_id],
                                provider: identity_params[:provider])
