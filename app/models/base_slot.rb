@@ -61,7 +61,16 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
   # validates :slot_uuid, presence: true # let the db take care of it for now
+  validate :type_and_slot_type_in_sync
 
+  # custom validations
+
+  private def type_and_slot_type_in_sync
+    # because atm to different mechanism are used for inheritance
+    # (custom via 'slot_type' and rails STI via 'type' column),
+    # it should be ensured that they hold the same information
+    errors.add(:slot_type, "out-of-sync") unless type == slot_type
+  end
   # getter
 
   def visibility

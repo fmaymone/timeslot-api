@@ -40,6 +40,11 @@ RSpec.describe BaseSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when inheritance types are out of sync" do
+    before { base_slot.slot_type = 2 }
+    it { is_expected.to_not be_valid }
+  end
+
   describe "meta_slot attributes" do
     let(:meta_slot) { create(:meta_slot, title: "Timeslot") }
     let(:std_slot) { create(:std_slot, meta_slot: meta_slot) }
