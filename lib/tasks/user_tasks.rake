@@ -52,7 +52,7 @@ namespace :users do
     ensure
       # Turn on push notifications globally
       Rails.application.config.SKIP_PUSH_NOTIFICATION = false
-      puts "ENABLE PUSH: #{Rails.application.config.SKIP_PUSH_NOTIFICATION}"
+      puts "DISABLE PUSH: #{Rails.application.config.SKIP_PUSH_NOTIFICATION}"
     end
   end
 end

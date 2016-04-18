@@ -12,9 +12,11 @@ resource "Slots" do
     header "Authorization", :auth_header
 
     include_context "default slot parameter"
+    parameter :shareWithFriends,
+              "Post new slot in Activity Feed of Friends and allows them" \
+              " to see the slot."
     parameter :visibility,
-              "Visibility of the Slot (private/friends/foaf/public)",
-              required: true
+              "Deprecated: Visibility of the Slot (private/friends/foaf/public)"
     parameter :slotGroups,
               "Array with UUIDs of the SlotGroups slot should be added to"
 
@@ -36,6 +38,7 @@ resource "Slots" do
                        content: "more content here" }] }
       let(:alerts) { '0101010101' }
       let(:visibility) { 'private' }
+      let(:shareWithFriends) { 'true' }
 
       # additional slotgroups
       let(:group_1) { create(:group, owner: current_user) }
@@ -55,9 +58,26 @@ resource "Slots" do
                           deleted_group.uuid] }
 
       example "Create new slot", document: :v1 do
-        explanation "Creates new slot for user and adds it to the users" \
-                    " 'MyCalendar' and to all slotGroups which were given" \
-                    " additionally.\n\n" \
+        explanation "Creates new slot for the user.\n\n" \
+                    "If the 'MyCalendar' uuid is given it will be added to" \
+                    "the users schedule. Also it will be added to all given" \
+                    " slotGroups where the user has write permission." \
+                    "Default slot visibility is 'private' If the " \
+                    "'shareWithFriends'-flag is set to true, the slot will be" \
+                    " friend-visible.\n\n" \
+                    "If at least one public calendar is submitted where the" \
+                    " slot should be included it will be public-visible.\n\n" \
+                    "For some time the 'visibility' can be submitted. If it's" \
+                    "set to 'private', and no private calendar is submittet, " \
+                    "the slot is put in the users " \
+                    "'My Private Slots' Calendar. If visibility is " \
+                    "set to 'friends', the 'show_to_friend' flag will be set," \
+                    "but the slot is otherwise treated as a 'private' slot." \
+                    " If 'public' is submitted, but no accompanying public" \
+                    " calendar, the slot will be put into the" \
+                    " users 'My Public Slots' calendar.\n\n" \
+                    "If the submitted visiblity contradicts the visibility " \
+                    "resulting from the submitted calendars, the calendars win." \
                     "Returns data of new slot and array with unauthorized " \
                     "slotgroup UUIDs (User has no write access or slotgroup" \
                     " deleted).\n\n" \
