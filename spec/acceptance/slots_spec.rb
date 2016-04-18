@@ -851,7 +851,7 @@ resource "Slots" do
         create(:passengership, user: current_user, slot: slot,
                deleted_at: Time.zone.now) }
       let(:slotGroups) { [group_1.uuid,
-                          current_user.slot_sets['my_cal_uuid']]}
+                          current_user.slot_sets['my_cal_uuid']] }
 
       example "re-add to group", document: false do
         expect(group_1.slots).not_to include slot
@@ -864,6 +864,27 @@ resource "Slots" do
         current_user.reload
         expect(group_1.slots).to include slot
         expect(current_user.my_calendar_slots).to include slot
+      end
+    end
+
+    describe "Add Slot to Users Public Slot Calendar" do
+      let(:current_user) { create(:user, :with_default_calendars) }
+      let(:slotGroups) { [group_1.uuid,
+                          current_user.slot_sets['my_public_slots_uuid']] }
+
+      it "adds the slot to the public calendar" do
+        uuid = current_user.slot_sets['my_public_slots_uuid']
+        my_public_calendar = Group.find_by(uuid: uuid)
+
+        expect(my_public_calendar.slots).not_to include slot
+
+        do_request
+
+        expect(response_status).to eq 200
+        my_public_calendar.reload
+        expect(my_public_calendar.slots).to include slot
+        group_1.reload
+        expect(group_1.slots).to include slot
       end
     end
   end
