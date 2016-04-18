@@ -68,6 +68,10 @@ class BaseSlot < ActiveRecord::Base
     slot_type.constantize.try(:visibility)
   end
 
+  def visible_count
+    CounterService.new.number_of_users_who_can_view_the_slot(self).to_s
+  end
+
   def images
     media_items.image.order(:position)
   end

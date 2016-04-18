@@ -151,7 +151,7 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
-        # expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("visibleCount")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
         expect(json.except('media', 'location', 'likerIds'))
@@ -175,7 +175,7 @@ resource "Slots" do
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 # "reslotsCounter" => slot.re_slots_count
+                 "visibleCount" => slot.visible_count
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
