@@ -171,6 +171,21 @@ module Feed
           @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
         end
       end
+      # TODO: refresh feed cache through backtracking of the target object
+    end
+
+    def refresh_feed_cache(user_ids, time = Time.now.to_f)
+      user_ids = [user_ids] unless user_ids.kind_of?(Array)
+
+      @storage.pipe do
+        user_ids.each do |user_id|
+          %W(Feed:#{user_id}:News
+             Feed:#{user_id}:User
+             Feed:#{user_id}:Notification).each do |feed_index|
+            @storage.set("Update:#{feed_index}", time)
+          end
+        end
+      end
     end
 
     def render_shared_object(object)
@@ -206,20 +221,6 @@ module Feed
         json = nil
       end
       json
-    end
-
-    def refresh_feed_cache(user_ids, time = Time.now.to_f)
-      user_ids = [user_ids] unless user_ids.kind_of?(Array)
-
-      @storage.pipe do
-        user_ids.each do |user_id|
-          %W(Feed:#{user_id}:News
-             Feed:#{user_id}:User
-             Feed:#{user_id}:Notification).each do |feed_index|
-            @storage.set("Status:#{feed_index}", time)
-          end
-        end
-      end
     end
 
     private def remove_activity_from_feed(feed_key, time, notify)
@@ -543,6 +544,7 @@ module Feed
     private def error_handler(error, feed, params)
       Rails.logger.error { error }
       Airbrake.notify(error, feed: feed, params: params)
+      puts error
     end
   end
 end

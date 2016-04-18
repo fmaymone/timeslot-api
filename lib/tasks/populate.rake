@@ -11,11 +11,11 @@ namespace :db do
      Membership, Friendship, Passengership, Containership, Group, User].each(&:delete_all)
 
     # start populate
-    (0..25).each do
+    (0..5).each do
 
       user = FactoryGirl.create(:user, :with_3_groups, username: Faker::Name.name)
 
-      (0..25).each do
+      (0..5).each do
 
         meta_slot = FactoryGirl.create(:meta_slot,
                                        creator: user,
@@ -37,6 +37,10 @@ namespace :db do
 
         group_user = FactoryGirl.create(:user, username: Faker::Name.name)
         group.invite_users([group_user.id])
+
+        friend_user = FactoryGirl.create(:user, username: Faker::Name.name)
+        friend_user.initiate_friendship(user.id)
+        user.received_friendships.last.accept
 
         slot.create_comment(user, 'This is a test comment.')
         slot.create_like(user)

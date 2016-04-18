@@ -193,7 +193,7 @@ module Activity
     # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
     # BUT this should not trigger a new activity like an "unlike"
     # TODO: put this deletion activity to the new distribution mapper
-    if activity_action == 'slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
+    if activity_type == 'Slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
       # Forward "deletion" action as an activity to the dispatcher
       forward_deletion(action)
     end
@@ -479,6 +479,7 @@ module Activity
   private def error_handler(error, activity, params = nil)
     Rails.logger.error { error }
     Airbrake.notify(error, activity: activity, params: params)
+    puts error
   end
 
   # The distribution map exported from the google spreadsheet
@@ -495,10 +496,10 @@ module Activity
         slot_like_notify: %w(creator),
         slot_like_push: %w(creator),
 
-        slot_slot_me: %w(actor),
-        slot_slot_activity: %w(friends follower creator member),
-        slot_slot_notify: [],
-        slot_slot_push: [],
+        slot_create_me: %w(actor),
+        slot_create_activity: %w(friends follower creator member actor),
+        slot_create_notify: [],
+        slot_create_push: [],
 
         slot_image_me: %w(actor),
         slot_image_activity: %w(friends follower creator member),

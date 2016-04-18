@@ -111,7 +111,7 @@ module V1
 
       if slot_is_public(slot)
         # Delegate to the related share method
-        if (url = (Share.send("share_#{type}", current_user, slot, params)))
+        if (url = Share.send("share_#{type}", current_user, slot, params))
           # Check if a response has to be returned to the client
           if url == true
             head :ok
@@ -132,6 +132,7 @@ module V1
     private def error_handler(error, msg, params = {})
       Rails.logger.error { error }
       Airbrake.notify(msg, params.merge(error: error))
+      puts error
     end
   end
 end
