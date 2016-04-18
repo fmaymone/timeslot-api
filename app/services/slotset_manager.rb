@@ -32,6 +32,7 @@ class SlotsetManager
     elsif current_user.slot_sets['my_cal_uuid'] == slotset
       # current_user.my_calendar_slots << slot
       result = Passengership.find_or_create_by(slot: slot, user: current_user)
+      result.update(show_in_my_schedule: true) unless result.show_in_my_schedule?
       result.update(deleted_at: nil) if result.deleted_at?
 
       # TODO: ask stani if an activity should be triggered here?

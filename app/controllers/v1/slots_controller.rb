@@ -18,14 +18,12 @@ module V1
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
-      if params.key?(:slot_groups) && params[:slot_groups].any?
-        add_to_slotsets(@slot, params[:slot_groups])
+      if params.key? :visibility
+        # TODO
       end
 
-      # TODO: improve, write spec
-      # only show created slot in schedule if my_calendar_uuid is send
-      unless params[:slot_groups].include?(current_user.slot_sets['my_cal_uuid'])
-        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
+      if valid_slot_group_uuids?
+        add_to_slotsets(@slot, params[:slot_groups]) if params[:slot_groups].any?
       end
 
       if @slot.persisted?
@@ -305,6 +303,15 @@ module V1
 
     private def comment_param
       params.require(:content)
+    end
+
+    private def valid_slot_group_uuids?
+      return false unless params.key?(:slot_groups) &&
+                          params[:slot_groups].present?
+      params[:slot_groups].each do |uuid|
+        valid_uuid = !(uuid =~ /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i).nil?
+        fail ParameterInvalid.new(:slot_group, uuid) unless valid_uuid
+      end
     end
   end
 end

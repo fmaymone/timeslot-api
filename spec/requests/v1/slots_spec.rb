@@ -503,6 +503,38 @@ RSpec.describe "V1::Slots", type: :request do
         end
       end
 
+      describe "my schedule" do
+        let(:valid_slot) { attributes_for(:meta_slot) }
+
+        it "creates a new passengership" do
+          expect {
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(Passengership, :count).by 1
+        end
+
+        context "my_calendar_uuid submitted" do
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot)
+            params['slot_groups'] = [current_user.slot_sets['my_cal_uuid']]
+            params
+          }
+
+          it "adds the slot to the users schedule" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(current_user.my_calendar_slots).to include new_slot
+          end
+        end
+
+        context "my_calendar_uuid not submitted" do
+          it "doesn't add the slot to the users schedule" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(current_user.my_calendar_slots).not_to include new_slot
+          end
+        end
+      end
+
       describe "only private calendars submitted" do
         let(:valid_slot) {
           params = attributes_for(:meta_slot).merge(

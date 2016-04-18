@@ -13,8 +13,6 @@ RSpec.describe SlotsetManager, type: :service do
 
   describe "add to slotset" do
     context "my Schedule (myCalendar)" do
-      let(:target_user) { current_user }
-
       it "adds the slot" do
         manager.add!(slot, my_calendar)
         expect(current_user.my_calendar_slots).to include slot
@@ -25,6 +23,26 @@ RSpec.describe SlotsetManager, type: :service do
         expect {
           manager.add!(slot, my_calendar)
         }.not_to raise_error
+      end
+
+      describe "existing slot" do
+        let!(:passengership) {
+          create(:passengership, user: current_user, slot: slot,
+                 show_in_my_schedule: false, deleted_at: '2020-04-01') }
+
+        it "activates show_in_my_schedule" do
+          manager.add!(slot, my_calendar)
+          expect(current_user.my_calendar_slots).to include slot
+          passengership.reload
+          expect(passengership.show_in_my_schedule).to be true
+        end
+
+        it "undeletes the passengership" do
+          manager.add!(slot, my_calendar)
+          expect(current_user.my_calendar_slots).to include slot
+          passengership.reload
+          expect(passengership.deleted_at?).to be false
+        end
       end
     end
 
