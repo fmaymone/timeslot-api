@@ -6,16 +6,12 @@ module V1
     def create
       authorize :invitecode
 
-      params.require :user_id
-      params.require :relation
-      params.permit(:user_id, :relation)
-
-      @invitecode = Invitecode.create(user_id: params[:user_id],
-                                      relation: params[:relation])
-      if @invitecode.persisted?
-        render :create, status: :created, locals: { invitecode: @invitecode }
+      invitecode = Invitecode.create(user_id: params.require(:user_id),
+                                      relation: params.require(:relation))
+      if invitecode.persisted?
+        render :create, status: :created, locals: { invitecode: invitecode }
       else
-        render json: { error: @invitecode.errors },
+        render json: { error: invitecode.errors },
                status: :unprocessable_entity
       end
     end
@@ -24,17 +20,14 @@ module V1
     def show
       authorize :invitecode
 
-      params.require :code
-      params.permit(:code)
+      invitecode = Invitecode.find_by(code: params.require(:code))
 
-      @invitecode = Invitecode.find_by_code(params[:code])
-
-      if @invitecode.nil?
+      if invitecode.nil?
         head :not_found
-      elsif @invitecode.errors.empty?
-        render :show, locals: { invitecode: @invitecode }
+      elsif invitecode.errors.empty?
+        render :show, locals: { invitecode: invitecode }
       else
-        render json: { error: @invitecode.errors },
+        render json: { error: invitecode.errors },
                status: :not_found
       end
     end
