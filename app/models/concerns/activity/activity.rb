@@ -318,7 +318,7 @@ module Activity
     # Determine social context from distribution map
     context = distribution_map[context.to_sym] || {}
     # FIX: Do not remove creator if the creator was manually set in the context
-    remove_actor = false unless context.include?('actor')
+    remove_actor = false if context.include?('actor')
     # Collect recipients through social context
     recipients = []
 
@@ -398,14 +398,10 @@ module Activity
 
     ## -- Distribution Keys: Mixed Context -- ##
 
-    if context.include?('joiners')    # = friends + creator (if: public group?)
+    if context.include?('joiners')    # = friends (if: public group?)
       groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        if group.public
-          recipients += activity_actor.followers
-          # NOTE: do not use 'activity_foreign' to get the creator
-          recipients << activity_target.creator.id.to_s if activity_type == 'Slot'
-        end
+        recipients += activity_actor.followers if group.public
       end
     end
 
@@ -503,28 +499,28 @@ module Activity
 
         slot_image_me: %w(actor),
         slot_image_activity: %w(friends follower creator member),
-        slot_image_notify: %w(follower),
-        slot_image_push: %w(follower),
+        slot_image_notify: %w(follower creator),
+        slot_image_push: %w(follower creator),
 
         slot_video_me: %w(actor),
         slot_video_activity: %w(friends follower creator member),
-        slot_video_notify: %w(follower),
-        slot_video_push: %w(follower),
+        slot_video_notify: %w(follower creator),
+        slot_video_push: %w(follower creator),
 
         slot_audio_me: %w(actor),
         slot_audio_activity: %w(friends follower creator member),
-        slot_audio_notify: %w(follower),
-        slot_audio_push: %w(follower),
+        slot_audio_notify: %w(follower creator),
+        slot_audio_push: %w(follower creator),
 
         slot_note_me: %w(actor),
         slot_note_activity: %w(friends follower creator member),
-        slot_note_notify: %w(follower),
-        slot_note_push: %w(follower),
+        slot_note_notify: %w(follower creator),
+        slot_note_push: %w(follower creator),
 
         slot_media_me: %w(actor),
         slot_media_activity: %w(friends follower creator member),
-        slot_media_notify: %w(follower),
-        slot_media_push: %w(follower),
+        slot_media_notify: %w(follower creator),
+        slot_media_push: %w(follower creator),
 
         slot_reslot_me: %w(actor),
         slot_reslot_activity: %w(friends follower creator member),
@@ -548,7 +544,7 @@ module Activity
 
         group_membertag_me: %w(actor),
         group_membertag_activity: %w(joiners member),
-        group_membertag_notify: %w(foreign),
+        group_membertag_notify: %w(foreign owner),
         group_membertag_push: %w(foreign),
 
         slot_delete_me: %w(actor),
@@ -571,7 +567,7 @@ module Activity
         slot_private_notify: %w(follower),
         slot_private_push: %w(follower),
 
-        slot_update_me: [],
+        slot_update_me: %w(actor),
         slot_update_activity: [],
         slot_update_notify: [],
         slot_update_push: [],
@@ -587,8 +583,8 @@ module Activity
         user_reject_push: [],
 
         slot_tagged_me: %w(actor),
-        slot_tagged_activity: %w(friends followers member),
-        slot_tagged_notify: %w(foreign),
+        slot_tagged_activity: %w(friends followers member creator),
+        slot_tagged_notify: %w(foreign creator),
         slot_tagged_push: %w(foreign),
 
         group_request_me: %w(actor),
@@ -627,7 +623,7 @@ module Activity
         group_ungroup_push: [],
 
         group_create_me: %w(actor),
-        group_create_activity: %w(joiners actor),
+        group_create_activity: %w(joiners),
         group_create_notify: [],
         group_create_push: []
     }
