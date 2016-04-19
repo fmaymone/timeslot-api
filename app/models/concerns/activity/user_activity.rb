@@ -6,7 +6,7 @@ module UserActivity
   end
 
   private def activity_foreign
-    activity_target
+    nil
   end
 
   private def activity_visibility
