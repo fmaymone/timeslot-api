@@ -88,7 +88,7 @@ class SlotsetManager
       member = membership.user
       # don't hide slot from schedule if member has other calenders with
       # the same slot where 'show in my schedule' is 'true'
-      next if member.calendars_in_schedule.find(slot.slot_group_ids).any?
+      next if member.calendars_in_schedule.where(id: slot.slot_group_ids).any?
 
       result = Passengership.find_by(slot: slot, user: member)
       result.update(show_in_my_schedule: false) if result.show_in_my_schedule?
