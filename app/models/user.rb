@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Follow
 
   store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,
-                 :my_lib_uuid, :my_created_slots_uuid,
+                 :my_lib_uuid, :my_created_slots_uuid, :my_private_slots,
                  :my_friend_slots_uuid, :my_public_slots_uuid
 
   has_secure_password validations: false
@@ -212,6 +212,7 @@ class User < ActiveRecord::Base
       my_cal_uuid: SecureRandom.uuid,
       my_lib_uuid: SecureRandom.uuid,
       friends_cal_uuid: SecureRandom.uuid,
+      my_private_slots_uuid: SecureRandom.uuid,
       my_friend_slots_uuid: SecureRandom.uuid,
       my_public_slots_uuid: SecureRandom.uuid,
       my_created_slots_uuid: SecureRandom.uuid

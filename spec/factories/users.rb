@@ -41,9 +41,9 @@ FactoryGirl.define do
 
     trait :with_default_calendars do
       after :create do |user|
-        create :group, owner: user, public: false,
+        create :group, owner: user, public: false, name: 'Private',
                uuid: user.slot_sets['my_private_slots_uuid']
-        create :group, owner: user, public: true,
+        create :group, owner: user, public: true, name: 'Public',
                uuid: user.slot_sets['my_public_slots_uuid']
       end
     end
