@@ -97,6 +97,28 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    describe "GlobalSlot" do
+      let(:global_slot) { create(:global_slot) }
+
+      it "returns success" do
+        get "/v1/slots/#{global_slot.id}"
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns details of slot with given id" do
+        get "/v1/slots/#{global_slot.id}"
+        expect(json).to have_key('id')
+        expect(json).to have_key('muid')
+        expect(json).to have_key('title')
+        expect(json).to have_key('startDate')
+        expect(json).to have_key('endDate')
+        expect(json).to have_key('notes')
+        expect(json).to have_key('visibility')
+        expect(json).to have_key('createdAt')
+        expect(json).to have_key('updatedAt')
+      end
+    end
+
     describe "Slot in SlotGroup" do
       let(:slot) { create(:std_slot_private) }
       let(:group) { create(:group) }
