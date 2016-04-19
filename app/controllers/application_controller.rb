@@ -10,8 +10,12 @@ class ApplicationController < ActionController::API
   rescue_from PaginationError, with: :unprocessable_entity
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
 
-  rescue_from ActiveRecord::RecordNotFound do
-    head :not_found
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    if Rails.env.production?
+      head :not_found
+    else
+      render json: { error: e.message }, status: :not_found
+    end
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
@@ -75,10 +79,8 @@ class ApplicationController < ActionController::API
     slot_sets.each do |slot_set|
       if special_sets.key? slot_set
         case special_sets[slot_set]
-        when 'my_cal_uuid'
+        when 'my_cal_uuid', 'my_friend_slots_uuid'
           SlotsetManager.new(current_user: current_user).add!(slot, slot_set)
-        # when 'my_friends_slots_uuid'
-        #   slot.StdSlotFriends!
         when 'my_public_slots_uuid', 'my_private_slots_uuid'
           # for this uuids a real group exists
           calendar = Group.find_by uuid: slot_set

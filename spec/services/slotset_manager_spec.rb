@@ -288,4 +288,132 @@ RSpec.describe SlotsetManager, type: :service do
       end
     end
   end
+
+  describe "adjust_visibility" do
+    let(:current_user) { create(:user, :with_default_calendars) }
+    let(:slot) { create(:std_slot_private, creator: current_user) }
+    let(:users_private_group) {
+      Group.find_by uuid: current_user.slot_sets['my_private_slots_uuid'] }
+    let(:users_public_group) {
+      Group.find_by uuid: current_user.slot_sets['my_public_slots_uuid'] }
+
+    context 'private' do
+      let(:visibility) { 'private' }
+
+      describe 'no private group submitted' do
+        let(:slot_sets) { nil }
+
+        it "keeps the slot visibility set to 'private'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'private'
+          expect(updated_slot.StdSlotPrivate?).to be true
+        end
+
+        it "puts the slot into the users 'private' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          expect(users_private_group.slots).to include slot
+        end
+      end
+
+      describe 'at least one non-public group submitted' do
+        let(:private_group) { create(:group, public: false, owner: current_user) }
+        let(:slot_sets) { [private_group.uuid] }
+
+        it "keeps the slot visibility set to 'private'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'private'
+          expect(updated_slot.StdSlotPrivate?).to be true
+        end
+
+        it "doesn't put the slot into the users 'private' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          users_private_group.reload
+          expect(users_private_group.slots).not_to include slot
+        end
+      end
+    end
+
+    context 'friend-visible' do
+      let(:visibility) { 'friends' }
+
+      describe 'no private group submitted' do
+        let(:slot_sets) { nil }
+
+        it "sets the slot visibility to 'friends'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'friends'
+          expect(updated_slot.StdSlotFriends?).to be true
+        end
+
+        it "puts the slot into the users 'private' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          users_private_group.reload
+          expect(users_private_group.slots).to include slot
+        end
+      end
+
+      describe 'at least one non-public group submitted' do
+        let(:private_group) { create(:group, public: false, owner: current_user) }
+        let(:slot_sets) { [private_group.uuid] }
+
+        it "sets the slot visibility to 'friends'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'friends'
+          expect(updated_slot.StdSlotFriends?).to be true
+        end
+
+        it "doesn't put the slot into the users 'private' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          expect(users_private_group.slots).not_to include slot
+        end
+      end
+    end
+
+    context 'public' do
+      let(:visibility) { 'public' }
+
+      describe 'no public group submitted' do
+        let(:slot_sets) { nil }
+
+        it "sets the slot visibility to 'public'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'public'
+          expect(updated_slot.StdSlotPublic?).to be true
+        end
+
+        it "puts the slot into the users 'public' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          expect(users_public_group.slots).to include slot
+        end
+      end
+
+      describe 'at least one public group submitted' do
+        let(:public_group) { create(:group, public: true, owner: current_user) }
+        let(:slot_sets) { [public_group.uuid] }
+
+        it "sets the slot visibility to 'public'" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+
+          updated_slot = StdSlot.find(slot.id)
+          expect(updated_slot.visibility).to eq 'public'
+          expect(updated_slot.StdSlotPublic?).to be true
+        end
+
+        it "doesn't put the slot into the users 'public' group" do
+          manager.adjust_visibility(slot, visibility, slot_sets)
+          expect(users_public_group.slots).not_to include slot
+        end
+      end
+    end
+  end
 end
