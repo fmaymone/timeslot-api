@@ -342,6 +342,21 @@ module Feed
 
     private def enrich_message(activity, actor, target, view, viewer)
       actor_count = activity['actors'].count
+
+      # Collect further usernames for aggregated messages (actual we need 2 at maximum)
+      if actor_count > 1
+        # Get second actor (from shared objects)
+        target_user = get_shared_object("User:#{activity['actors'].second}")
+      elsif activity['foreign'].present?
+        # Get second actor (from shared objects)
+        target_user = get_shared_object("User:#{activity['foreign']}")
+      elsif activity['type'] == 'User'
+        # Get target user (from shared objects)
+        target_user = get_shared_object("User:#{activity['target']}")
+      else
+        target_user = nil
+      end
+
       # Adds the first username and sets usercount to translation params
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
       i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
@@ -351,20 +366,12 @@ module Feed
       i18_params[:TITLE] = target['title'] if target && target['title']
       # Add the name to the translation params holder
       i18_params[:NAME] = target['name'] if target && target['name']
-      # Collect further usernames for aggregated messages (actual we need 2 at maximum)
-      if actor_count > 1
-        # Get second actor (from shared objects)
-        actor = get_shared_object("User:#{activity['actors'].second}")
-        # Add the second username to the translation params holder
-        i18_params[:USER] = actor['username']
-      elsif activity['foreign'].present?
-        # Get second actor (from shared objects)
-        actor = get_shared_object("User:#{activity['foreign']}")
-        # Add the second username to the translation params holder
-        i18_params[:USER] = actor['username'] if actor
-      end
+      # Add the target username to the translation params holder
+      i18_params[:USER] = target_user['username'] if target_user
+
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
+
       # Determine translation key (personalized to the current user/viewer)
       if (target['creator'] && viewer == target['creator']['id']) ||
          (target['owner'] && viewer == target['owner']['id']) ||
@@ -373,6 +380,7 @@ module Feed
       else
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
       end
+
       # Returns the message from translation index
       I18n.t(i18_key, i18_params)
     end

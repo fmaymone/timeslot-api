@@ -31,7 +31,7 @@ class Friendship < ActiveRecord::Base
   end
 
   def accept
-    remove_activity
+    remove_activity('request')
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
@@ -127,10 +127,6 @@ class Friendship < ActiveRecord::Base
   end
 
   private def activity_target
-    established? ? user : friend
-  end
-
-  private def activity_foreign
     established? ? user : friend
   end
 

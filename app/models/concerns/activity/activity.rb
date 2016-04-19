@@ -318,7 +318,7 @@ module Activity
     # Determine social context from distribution map
     context = distribution_map[context.to_sym] || {}
     # FIX: Do not remove creator if the creator was manually set in the context
-    remove_actor = false unless context.include?('creator')
+    remove_actor = false unless context.include?('actor')
     # Collect recipients through social context
     recipients = []
 
