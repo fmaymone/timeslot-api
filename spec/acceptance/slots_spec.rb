@@ -65,19 +65,20 @@ resource "Slots" do
                     "Default slot visibility is 'private' If the " \
                     "'shareWithFriends'-flag is set to true, the slot will be" \
                     " friend-visible.\n\n" \
-                    "If at least one public calendar is submitted where the" \
-                    " slot should be included it will be public-visible.\n\n" \
-                    "For some time the 'visibility' can be submitted. If it's" \
-                    "set to 'private', and no private calendar is submittet, " \
+                    "If at least one public calendar is submitted where the " \
+                    "slot should be included, then slot will be 'public'.\n\n" \
+                    "For backwards compatibility the 'visibility' can still " \
+                    "be submitted. If **visibility** is set to 'private' or " \
+                    "'friends', but no private calendar is submitted, " \
                     "the slot is put in the users " \
-                    "'My Private Slots' Calendar. If visibility is " \
-                    "set to 'friends', the 'show_to_friend' flag will be set," \
-                    "but the slot is otherwise treated as a 'private' slot." \
+                    "'My Private Slots' Calendar. Also if visibility is " \
+                    "set to 'friends', the 'show_to_friend' flag will be set." \
                     " If 'public' is submitted, but no accompanying public" \
                     " calendar, the slot will be put into the" \
                     " users 'My Public Slots' calendar.\n\n" \
                     "If the submitted visiblity contradicts the visibility " \
-                    "resulting from the submitted calendars, the calendars win." \
+                    "resulting from the submitted calendars, the highest " \
+                    "visibility will win." \
                     "Returns data of new slot and array with unauthorized " \
                     "slotgroup UUIDs (User has no write access or slotgroup" \
                     " deleted).\n\n" \
