@@ -47,16 +47,16 @@ class NewUser
 
     Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
       calendar.owner = user
-      calendar.name = 'My Private Slots'
+      calendar.name = 'Private'
       calendar.public = false
-      # calendar.description = '...'
+      calendar.description = 'Slots are visible only to you.'
     end
 
     Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
       calendar.owner = user
-      calendar.name = 'My Public Slots'
+      calendar.name = 'Public'
       calendar.public = true
-      # calendar.description = '...'
+      calendar.description = 'Slots are visible for everybody.'
     end
   end
 
