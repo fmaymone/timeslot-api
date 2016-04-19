@@ -349,7 +349,8 @@ CREATE TABLE groups (
     image character varying(255) DEFAULT ''::character varying NOT NULL,
     uuid uuid NOT NULL,
     public boolean DEFAULT false NOT NULL,
-    string_id text DEFAULT ''::text NOT NULL
+    string_id text DEFAULT ''::text NOT NULL,
+    description character varying(255)
 );
 
 
@@ -1570,4 +1571,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160311110857');
 INSERT INTO schema_migrations (version) VALUES ('20160330140930');
 
 INSERT INTO schema_migrations (version) VALUES ('20160405112204');
+
+INSERT INTO schema_migrations (version) VALUES ('20160411104513');
 
