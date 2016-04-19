@@ -5,7 +5,7 @@ class Invitecode < ActiveRecord::Base
 
   def create_unique_code
     begin
-      self.code = SecureRandom.hex(6)
+      self.code = SecureRandom.hex(3)
     end while self.class.exists?(:code => code)
   end
 end
