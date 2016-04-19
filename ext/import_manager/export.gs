@@ -6,20 +6,20 @@
 function onOpen() {
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    var csvMenuEntries = [{name: "export as csv files", functionName: "saveAsCSV"}];
-    ss.addMenu("CSV Export", csvMenuEntries);
+    var menuEntries = [{name: "export as json files", functionName: "saveAsJSON"}];
+    ss.addMenu("JSON Export", menuEntries);
 }
 
 /**
  * Google Spreadsheet Script
  */
 
-function saveAsCSV() {
+function saveAsJSON() {
 
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheets = ss.getSheets();
     // create a folder from the name of the spreadsheet
-    var folder = DriveApp.createFolder(ss.getName().toLowerCase().replace(/ /g,'_') + '_csv_' + new Date().getTime());
+    var folder = DriveApp.createFolder(ss.getName().toLowerCase().replace(/ /g,'_') + '_json_' + new Date().getTime());
 
     /*
      for (var i = 0 ; i < sheets.length ; i++) {

@@ -239,6 +239,7 @@ module Activity
   # 4. Group related context
   # 5. Foreign related context
 
+  # TODO: Remove this method
   private def activity_notify
 
     # FIX: try to get parent visibility if predecessor has no visibility

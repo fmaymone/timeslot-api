@@ -4,13 +4,14 @@ module Import
     def handler(events, user, group_uuid = nil)
       # Turn of activity distribution
       Rails.application.config.SKIP_ACTIVITY = true
+      # Holds all error messages of the whole import job
+      failed = []
       # Holds the final status of the whole import job
       status = true
 
       # NOTE: the import-admin-user is able to create Slots, Calendars and
       # Users during one import, this feature requires a special security
-      # TODO: move to env
-      user_is_admin = user.email == 'import@timeslot.com'
+      user_is_admin = user.role == 4
 
       # Import each event
       events.each do |event|
@@ -19,6 +20,7 @@ module Import
         begin
           next unless event[:title].encode('utf-8').valid_encoding?
         rescue
+          failed << event
           next
         end
 
@@ -88,14 +90,14 @@ module Import
             end
           end
         end
-        # TODO: collect error messages and return to client
-        # break unless status
+        failed << event unless status
       end
     rescue => error
       error_handler(error, "failed: import from file")
       status = false
     ensure
       Rails.application.config.SKIP_ACTIVITY = false
+      puts failed
       status
     end
 
