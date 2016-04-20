@@ -7,7 +7,7 @@ module V1
       authorize :invitecode
 
       invitecode = Invitecode.create(user_id: params.require(:user_id),
-                                      relation: params.require(:relation))
+                                      context: params.require(:context))
       if invitecode.persisted?
         render :create, status: :created, locals: { invitecode: invitecode }
       else

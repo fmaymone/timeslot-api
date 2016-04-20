@@ -1,5 +1,5 @@
 json.extract!(invitecode,
               :id,
-              :relation,
+              :context,
               :user_id
 )

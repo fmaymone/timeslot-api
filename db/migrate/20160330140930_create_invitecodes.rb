@@ -1,8 +1,8 @@
 class CreateInvitecodes < ActiveRecord::Migration
   def change
     create_table :invitecodes do |t|
-      t.references :user, index: true, foreign_key: true
-      t.string :relation
+      t.bigint :user_id, index: true, null: false
+      t.string :context
       t.string :code
       t.datetime :deleted_at
       t.timestamps null: false

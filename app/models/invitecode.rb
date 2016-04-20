@@ -1,9 +1,9 @@
 class Invitecode < ActiveRecord::Base
   belongs_to :user, inverse_of: :invitecodes
 
-  validates :code, presence: true, uniqueness: true, on: :update
+  before_validation :create_unique_code
 
-  before_create :create_unique_code
+  validates :code, presence: true, uniqueness: true
 
   def create_unique_code
     begin

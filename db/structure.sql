@@ -379,8 +379,8 @@ ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
 
 CREATE TABLE invitecodes (
     id integer NOT NULL,
-    user_id integer,
-    relation character varying,
+    user_id bigint NOT NULL,
+    context character varying,
     code character varying,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone NOT NULL,
@@ -1332,14 +1332,6 @@ CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
 --
 
 CREATE UNIQUE INDEX unique_schema_migrations ON schema_migrations USING btree (version);
-
-
---
--- Name: fk_rails_481e9799eb; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY invitecodes
-    ADD CONSTRAINT fk_rails_481e9799eb FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --
