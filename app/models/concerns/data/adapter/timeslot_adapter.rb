@@ -25,10 +25,10 @@ class TimeslotAdapter < Adapter
   def export
     cal = []
     @slots.joins(:meta_slot).each do |slot|
-      @slot = slot
+      #slot.reload
       cal << {
           # Slot Meta Data
-          uid: slot.uid,
+          uid: slot.slot_uuid,
           title: slot.title,
           visibility: slot.visibility,
           start: slot.start_date,
@@ -43,9 +43,9 @@ class TimeslotAdapter < Adapter
               latitude: slot.ios_location.latitude || '',
               longitude: slot.ios_location.longitude || ''
           }
-      }.as_json
+      }
     end
-    cal
+    cal.to_json
   end
 
   ## -- IMPORT HELPERS -- ##
