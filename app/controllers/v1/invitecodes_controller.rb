@@ -6,7 +6,11 @@ module V1
     def create
       authorize :invitecode
 
-      invitecode = Invitecode.create(user_id: params.require(:user_id),
+      user_id = params.require(:user_id)
+
+      return head :unprocessable_entity if user_id != current_user.id
+
+      invitecode = Invitecode.create(user_id: user_id,
                                       context: params.require(:context))
       if invitecode.persisted?
         render :create, status: :created, locals: { invitecode: invitecode }
@@ -20,7 +24,7 @@ module V1
     def show
       authorize :invitecode
 
-      invitecode = Invitecode.find_by(code: params.require(:code))
+      invitecode = Invitecode.active.find_by(code: params.require(:code))
 
       if invitecode.nil?
         head :not_found

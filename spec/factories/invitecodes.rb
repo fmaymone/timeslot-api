@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :invitecode do
-    user nil
+    user
     context "MyString"
     code "MyString"
   end

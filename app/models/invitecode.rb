@@ -5,6 +5,8 @@ class Invitecode < ActiveRecord::Base
 
   validates :code, presence: true, uniqueness: true
 
+  scope :active, -> { where deleted_at: nil }
+
   def create_unique_code
     begin
       self.code = SecureRandom.hex(3)
