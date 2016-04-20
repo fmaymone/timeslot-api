@@ -1,7 +1,7 @@
 module V1
   class InvitecodesController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       except: [:create]
+                       only: [:show]
     # POST /v1/invitecodes/
     def create
       authorize :invitecode
