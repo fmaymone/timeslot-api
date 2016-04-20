@@ -318,14 +318,15 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
+    re_slots_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid
 )
@@ -348,7 +349,8 @@ CREATE TABLE groups (
     image character varying(255) DEFAULT ''::character varying NOT NULL,
     uuid uuid NOT NULL,
     public boolean DEFAULT false NOT NULL,
-    string_id text DEFAULT ''::text NOT NULL
+    string_id text DEFAULT ''::text NOT NULL,
+    description character varying(255)
 );
 
 
@@ -369,6 +371,40 @@ CREATE SEQUENCE groups_id_seq
 --
 
 ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+
+
+--
+-- Name: invitecodes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE invitecodes (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    context character varying,
+    code character varying,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: invitecodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE invitecodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invitecodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE invitecodes_id_seq OWNED BY invitecodes.id;
 
 
 --
@@ -843,6 +879,13 @@ ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
+ALTER TABLE ONLY invitecodes ALTER COLUMN id SET DEFAULT nextval('invitecodes_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
 ALTER TABLE ONLY ios_locations ALTER COLUMN id SET DEFAULT nextval('ios_locations_id_seq'::regclass);
 
 
@@ -991,6 +1034,14 @@ ALTER TABLE ONLY friendships
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invitecodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invitecodes
+    ADD CONSTRAINT invitecodes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1148,6 +1199,20 @@ CREATE INDEX index_groups_on_owner_id ON groups USING btree (owner_id);
 --
 
 CREATE UNIQUE INDEX index_groups_on_uuid ON groups USING btree (uuid);
+
+
+--
+-- Name: index_invitecodes_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_invitecodes_on_code ON invitecodes USING btree (code);
+
+
+--
+-- Name: index_invitecodes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_invitecodes_on_user_id ON invitecodes USING btree (user_id);
 
 
 --
@@ -1495,5 +1560,9 @@ INSERT INTO schema_migrations (version) VALUES ('20160309215254');
 
 INSERT INTO schema_migrations (version) VALUES ('20160311110857');
 
+INSERT INTO schema_migrations (version) VALUES ('20160330140930');
+
 INSERT INTO schema_migrations (version) VALUES ('20160405112204');
+
+INSERT INTO schema_migrations (version) VALUES ('20160411104513');
 

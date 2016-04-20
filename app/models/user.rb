@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
 
   has_many :slot_settings, inverse_of: :user
 
+  has_many :invitecodes, inverse_of: :user
+
   # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
 
