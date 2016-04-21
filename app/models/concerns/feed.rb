@@ -543,10 +543,26 @@ module Feed
     end
 
     private def unzip_json(json)
-      JSON.parse(
-        ActiveSupport::Gzip.decompress(
-          json
-      ))
+      uncompressed_json = ActiveSupport::Gzip.decompress(json)
+      decoded_json = JSON.parse(uncompressed_json)
+      # maybe we can solve the issue by using the Rails wrapper around
+      # the ruby JSON lib, it has support for additional objects
+      # see: https://simonecarletti.com/blog/2010/04/inside-ruby-on-rails-serializing-ruby-objects-with-json/
+      # ActiveSupport::JSON.decode(uncompressed_json)
+      # we would also need it on the encoding side I guess
+    rescue Oj::ParseError => exception
+      Airbrake.notify(exception, compressed_json: json,
+                      uncompressed_json: uncompressed_json)
+      Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
+                           "value: #{uncompressed_json}" }
+    rescue => exception
+      Airbrake.notify(exception, compressed_json: json,
+                      uncompressed_json: uncompressed_json)
+      Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
+                           "value: #{uncompressed_json}" }
+      uncompressed_json
+    else
+      decoded_json
     end
 
     private def error_handler(error, feed, params)
