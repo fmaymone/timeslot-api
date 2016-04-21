@@ -12,21 +12,17 @@ class CounterService
   end
 
   def number_of_users_who_can_view_the_slot(slot)
-    return 'all' if slot.StdSlotPublic?
+    return 'all' if slot.visibility == 'public'
 
     viewer_ids = [slot.owner_id]
-
-    # TODO: can also check the flag if other code is merged
-    # viewer_ids += slot.owner.friends_ids if slot.share_with_friends
     viewer_ids += slot.owner.friends_ids if slot.StdSlotFriends?
 
-    group_members = Membership.active.
-                    where(group_id: slot.slot_group_ids).
-                    pluck(:user_id)
+    group_members = Membership.active.where(group_id: slot.slot_group_ids)
+                              .pluck(:user_id)
     viewer_ids += group_members
 
-    # atm I'm counting all users with passengerships here, which means all
-    # users who were tagged or who put the slot in their schedule
+    # atm I'm counting all users with undeleted passengerships here, which means
+    # all users who were tagged or who have put the slot in their schedule
     tagged_users = Passengership.active.where(slot_id: slot.id).pluck(:user_id)
     viewer_ids += tagged_users
 

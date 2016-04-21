@@ -97,6 +97,28 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    describe "GlobalSlot" do
+      let(:global_slot) { create(:global_slot) }
+
+      it "returns success" do
+        get "/v1/slots/#{global_slot.id}"
+        expect(response).to have_http_status(200)
+      end
+
+      it "returns details of slot with given id" do
+        get "/v1/slots/#{global_slot.id}"
+        expect(json).to have_key('id')
+        expect(json).to have_key('muid')
+        expect(json).to have_key('title')
+        expect(json).to have_key('startDate')
+        expect(json).to have_key('endDate')
+        expect(json).to have_key('notes')
+        expect(json).to have_key('visibility')
+        expect(json).to have_key('createdAt')
+        expect(json).to have_key('updatedAt')
+      end
+    end
+
     describe "Slot in SlotGroup" do
       let(:slot) { create(:std_slot_private) }
       let(:group) { create(:group) }
@@ -123,8 +145,19 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "POST /v1/stdlot" do
-    context "StdSlot with valid params" do
+  describe "POST /v1/slots" do
+    let(:current_user) { create(:user, :with_default_calendars) }
+    let(:my_friend_slots) { current_user.slot_sets['my_friend_slots_uuid'] }
+    let(:my_private_slots) {
+      uuid = current_user.slot_sets['my_private_slots_uuid']
+      Group.find_by uuid: uuid
+    }
+    let(:my_public_slots) {
+      uuid = current_user.slot_sets['my_public_slots_uuid']
+      Group.find_by uuid: uuid
+    }
+
+    context "valid params" do
       let(:visibility) { 'private' }
       let(:valid_slot) {
         attributes_for(:meta_slot).merge(
@@ -132,37 +165,37 @@ RSpec.describe "V1::Slots", type: :request do
       }
 
       it "responds with Created (201)" do
-        post "/v1/stdslot/", valid_slot, auth_header
+        post "/v1/slots", valid_slot, auth_header
         expect(response).to have_http_status(:created)
       end
 
       it "adds a new StdSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", valid_slot, auth_header
+          post "/v1/slots", valid_slot, auth_header
         }.to change(StdSlot.unscoped, :count).by 1
       end
 
       it "adds a new MetaSlot entry to the DB" do
         expect {
-          post "/v1/stdslot/", valid_slot, auth_header
+          post "/v1/slots", valid_slot, auth_header
         }.to change(MetaSlot, :count).by 1
       end
 
       it "adds a new SlotSetting entry to the DB" do
         expect {
-          post "/v1/stdslot/", valid_slot, auth_header
+          post "/v1/slots", valid_slot, auth_header
         }.to change(SlotSetting, :count).by 1
       end
 
       it "returns the ID of the new slot" do
-        post "/v1/stdslot/", valid_slot, auth_header
+        post "/v1/slots", valid_slot, auth_header
         expect(json['id']).to eq(StdSlot.unscoped.last.id)
       end
 
       it "sets slot to 'open End' if empty end_date" do
         valid_slot[:start_date] = "2014-09-08 13:31:02"
         valid_slot[:end_date] = ""
-        post "/v1/stdslot/", valid_slot, auth_header
+        post "/v1/slots", valid_slot, auth_header
         expect(response).to have_http_status(:created)
         slot = StdSlot.unscoped.last
         # need to cast to_datetime bc of different millisecond precision
@@ -170,20 +203,505 @@ RSpec.describe "V1::Slots", type: :request do
           .to eq slot.start_date.to_datetime.next_day.at_midday
         expect(slot.open_end).to be true
       end
+    end
 
-      context "visibility" do
+    # to maintain backward compatibility
+    context "with visibility (deprecated)" do
+      let(:valid_slot) {
+        attributes_for(:meta_slot).merge(
+          visibility: visibility, settings: { alerts: '1110001100' })
+      }
+
+      describe 'private' do
+        let(:visibility) { 'private' }
+
+        it "creates slot with visibility 'private'" do
+          expect {
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(StdSlotPrivate, :count).by 1
+          expect(response).to have_http_status :created
+        end
+
+        context "no calendar at all submitted" do
+          # let!(:my_private_slots) {
+          #   uuid = current_user.slot_sets['my_private_slots_uuid']
+          #   create(:group, uuid: uuid)
+          # }
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(my_private_slots.slots).to include StdSlot.last
+            expect(response).to have_http_status :created
+          end
+        end
+
+        context "at least one private calendar submitted" do
+          let(:private_calendar) { create(:group, owner: current_user) }
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              visibility: visibility, settings: { alerts: '1110001100' })
+            params['slot_groups'] = [private_calendar.uuid]
+            params
+          }
+
+          it "puts the slot into the submitted private calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            private_calendar.reload
+            expect(private_calendar.slots).to include StdSlot.last
+          end
+
+          it "doesn't put the slot into 'My Private Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(my_private_slots.slots).not_to include StdSlot.last
+          end
+        end
+
+        context "at least one public calendar submitted" do
+          let!(:public_calendar) {
+            create(:group, public: true, owner: current_user)
+          }
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              visibility: visibility, settings: { alerts: '1110001100' })
+            params['slot_groups'] = [public_calendar.uuid]
+            params
+          }
+
+          it "creates slot with visibility 'public'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPublic, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "set 'share_with_friends' to false" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be false
+          end
+
+          it "puts the slot into submitted public calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count)
+            new_slot = StdSlotPublic.last
+            expect(public_calendar.slots).to include new_slot
+            expect(response).to have_http_status :created
+          end
+
+          it "doesn't put the slot into 'My Public Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(my_public_slots.slots).not_to include new_slot
+          end
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(my_private_slots.slots).to include new_slot
+          end
+        end
+      end
+
+      describe 'friends' do
+        let(:visibility) { 'friends' }
+        context "no calendar at all submitted" do
+          # let!(:my_private_slots) {
+          #   uuid = current_user.slot_sets['my_private_slots_uuid']
+          #   create(:group, uuid: uuid)
+          # }
+
+          it "creates slot with visibility 'friends'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotFriends, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "set 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlotFriends.last.share_with_friends).to be true
+          end
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(my_private_slots.slots).to include StdSlot.last
+            expect(response).to have_http_status :created
+          end
+        end
+
+        context "only private calendar submitted" do
+          let(:private_calendar) { create(:group, owner: current_user) }
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              visibility: visibility, settings: { alerts: '1110001100' })
+            params['slot_groups'] = [private_calendar.uuid]
+            params
+          }
+
+          it "creates slot with visibility 'friends'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotFriends, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "set 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlotFriends.last.share_with_friends).to be true
+          end
+
+          it "puts the slot into the submitted private calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(private_calendar.slots).to include StdSlot.last
+          end
+
+          it "doesn't put the slot into 'My Private Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(my_private_slots.slots).not_to include StdSlot.last
+          end
+        end
+
+        context "at least one public calendar submitted" do
+          let!(:public_calendar) {
+            create(:group, public: true, owner: current_user)
+          }
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              visibility: visibility, settings: { alerts: '1110001100' })
+            params['slot_groups'] = [public_calendar.uuid]
+            params
+          }
+
+          it "creates slot with visibility 'public'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPublic, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "set 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be true
+          end
+
+          it "puts the slot into submitted public calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count)
+            new_slot = StdSlotPublic.last
+            expect(public_calendar.slots).to include new_slot
+            expect(response).to have_http_status :created
+          end
+
+          it "doesn't put the slot into 'My Public Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlotPublic.last
+            expect(my_public_slots.slots).not_to include new_slot
+          end
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlotPublic.last
+            expect(my_private_slots.slots).to include new_slot
+          end
+        end
+      end
+
+      # not used
+      describe 'foaf' do
         let(:visibility) { 'foaf' }
 
         it "creates slot with visibility friends-of-friends" do
+          skip 'foaf not supported'
           expect {
-            post "/v1/stdslot/", valid_slot, auth_header
-          }.to change(StdSlotFoaf, :count)
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(StdSlotFoaf, :count).by 1
           expect(response).to have_http_status :created
+        end
+      end
+
+      describe 'public' do
+        let(:visibility) { 'public' }
+
+        it "creates slot with visibility 'public'" do
+          expect {
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(StdSlotPublic, :count).by 1
+          expect(response).to have_http_status :created
+        end
+
+        context "no public calendar submitted" do
+          it "puts the slot into 'My Public Slots' calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(my_public_slots.slots).to include StdSlotPublic.last
+            expect(response).to have_http_status :created
+          end
+        end
+
+        context "at least one public calendar submitted" do
+          let!(:public_calendar) {
+            create(:group, public: true, owner: current_user)
+          }
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              visibility: visibility, settings: { alerts: '1110001100' })
+            params['slot_groups'] = [public_calendar.uuid]
+            params
+          }
+
+          it "puts the slot into submitted public calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count)
+            new_slot = StdSlotPublic.last
+            expect(public_calendar.slots).to include new_slot
+            expect(response).to have_http_status :created
+          end
+
+          it "doesn't put the slot into 'My Public Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlotPublic.last
+            expect(my_public_slots.slots).not_to include new_slot
+          end
         end
       end
     end
 
-    context "with invalid params" do
+    context "without visibility" do
+      let(:valid_slot) {
+        attributes_for(:meta_slot).merge(settings: { alerts: '1110001100' })
+      }
+
+      describe "no calendar submitted" do
+        context "not shared with friends" do
+          it "responds with http status ok" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(response).to have_http_status :created
+          end
+
+          it "creates slot with visibility 'private'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPrivate, :count).by 1
+          end
+
+          it "sets 'share_with_friends' to false" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be false
+          end
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(my_private_slots.slots).to include StdSlotPrivate.last
+          end
+        end
+
+        context "shared with friends (friend-uuid submitted)" do
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              settings: { alerts: '1110001100' })
+            params['slot_groups'] = [my_friend_slots]
+            params
+          }
+
+          it "responds with http status ok" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(response).to have_http_status :created
+          end
+
+          it "creates slot with visibility 'friends'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotFriends, :count).by 1
+          end
+
+          it "sets 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be true
+          end
+
+          it "puts the slot into 'My Private Slots' calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(my_private_slots.slots).to include StdSlot.last
+          end
+        end
+      end
+
+      describe "my schedule" do
+        let(:valid_slot) { attributes_for(:meta_slot) }
+
+        it "creates a new passengership" do
+          expect {
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(Passengership, :count).by 1
+        end
+
+        context "my_calendar_uuid submitted" do
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot)
+            params['slot_groups'] = [current_user.slot_sets['my_cal_uuid']]
+            params
+          }
+
+          it "adds the slot to the users schedule" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(current_user.my_calendar_slots).to include new_slot
+          end
+        end
+
+        context "my_calendar_uuid not submitted" do
+          it "doesn't add the slot to the users schedule" do
+            post "/v1/slots", valid_slot, auth_header
+            new_slot = StdSlot.last
+            expect(current_user.my_calendar_slots).not_to include new_slot
+          end
+        end
+      end
+
+      describe "only private calendars submitted" do
+        let(:valid_slot) {
+          params = attributes_for(:meta_slot).merge(
+            settings: { alerts: '1110001100' })
+          params['slot_groups'] = [private_calendar.uuid]
+          params
+        }
+        let!(:private_calendar) {
+          create(:group, public: false, owner: current_user)
+        }
+
+        context "not shared with friends" do
+          it "responds with http status ok" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(response).to have_http_status :created
+          end
+
+          it "creates slot with visibility 'private'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPrivate, :count).by 1
+          end
+
+          it "sets 'share_with_friends' to false" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be false
+          end
+
+          it "puts the slot into the submitted private calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(private_calendar.slots).to include StdSlotPrivate.last
+          end
+
+          it "doesn't put the slot into 'My Private Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(my_private_slots.slots).not_to include StdSlotPrivate.last
+          end
+        end
+
+        context "shared with friends" do
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              settings: { alerts: '1110001100' })
+            params['slot_groups'] = [my_friend_slots, private_calendar.uuid]
+            params
+          }
+
+          it "creates slot with visibility 'friends'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotFriends, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "sets 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be true
+          end
+        end
+      end
+
+      describe "at least one public calendar submitted" do
+        let(:valid_slot) {
+          params = attributes_for(:meta_slot).merge(
+            settings: { alerts: '1110001100' })
+          params['slot_groups'] = [public_calendar.uuid]
+          params
+        }
+        let!(:public_calendar) {
+          create(:group, public: true, owner: current_user)
+        }
+
+        context "not shared with friends" do
+          it "responds with http status ok" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(response).to have_http_status :created
+          end
+
+          it "creates slot with visibility 'public'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPublic, :count).by 1
+          end
+
+          it "sets 'share_with_friends' to false" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be false
+          end
+
+          it "puts the slot into the submitted public calendar" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Containership, :count).by 1
+            expect(public_calendar.slots).to include StdSlotPublic.last
+          end
+
+          it "doesn't put the slot into 'My Public Slots' calendar" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(my_public_slots.slots).not_to include StdSlotPublic.last
+          end
+        end
+
+        context "shared with friends" do
+          let(:valid_slot) {
+            params = attributes_for(:meta_slot).merge(
+              settings: { alerts: '1110001100' })
+            params['slot_groups'] = [my_friend_slots, public_calendar.uuid]
+            params
+          }
+
+          it "creates slot with visibility 'public'" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(StdSlotPublic, :count).by 1
+            expect(response).to have_http_status :created
+          end
+
+          it "sets 'share_with_friends' to true" do
+            post "/v1/slots", valid_slot, auth_header
+            expect(StdSlot.last.share_with_friends).to be true
+          end
+        end
+      end
+    end
+
+    context "invalid params" do
+      skip
       let(:invalid_attributes) {
         attributes_for(:meta_slot).merge(visibility: 'private')
       }
@@ -191,7 +709,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty title" do
           invalid_attributes[:title] = nil
           expect {
-            post "/v1/stdslot/", invalid_attributes, auth_header
+            post "/v1/slots", invalid_attributes, auth_header
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('title')
         end
@@ -199,7 +717,7 @@ RSpec.describe "V1::Slots", type: :request do
         it "for empty start_date" do
           invalid_attributes[:start_date] = ""
           expect {
-            post "/v1/stdslot/", invalid_attributes, auth_header
+            post "/v1/slots", invalid_attributes, auth_header
           }.not_to change(MetaSlot, :count)
           expect(response.body).to include('start_date')
           expect(response).to have_http_status(:unprocessable_entity)
@@ -209,14 +727,14 @@ RSpec.describe "V1::Slots", type: :request do
       describe "responds with Unprocessable Entity (422)" do
         it "for empty title" do
           invalid_attributes[:title] = ""
-          post "/v1/stdslot/", invalid_attributes, auth_header
+          post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
 
         it "for invalid start_date" do
           invalid_attributes[:start_date] = "|$%^@wer"
-          post "/v1/stdslot/", invalid_attributes, auth_header
+          post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
         end
@@ -226,7 +744,7 @@ RSpec.describe "V1::Slots", type: :request do
                                 start_date: "2014-09-08 13:31:02",
                                 end_date: "2014-09-08 13:31:02")
 
-          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
+          post "/v1/slots", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
@@ -236,33 +754,27 @@ RSpec.describe "V1::Slots", type: :request do
                                 start_date: "2014-09-08 13:31:02",
                                 end_date: "2014-07-07 13:31:02")
 
-          post "/v1/stdslot/", slot.merge(visibility: 'public'), auth_header
+          post "/v1/slots", slot.merge(visibility: 'public'), auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('start_date')
         end
 
         it "for empty visibility" do
           invalid_attributes[:visibility] = ""
-          post "/v1/stdslot/", invalid_attributes, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it "for missing visibility" do
-          invalid_attributes.extract! :visibility
-          post "/v1/stdslot/", invalid_attributes, auth_header
+          post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
         end
 
         it "for invalid characters for visibility" do
           invalid_attributes[:visibility] = "$$"
-          post "/v1/stdslot/", invalid_attributes, auth_header
+          post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
         end
 
         it "if visibility has to much characters" do
           invalid_attributes[:visibility] = "101"
-          post "/v1/stdslot/", invalid_attributes, auth_header
+          post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include 'error'
         end
@@ -592,7 +1104,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch with valid params" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "something new" }] }
         }
@@ -607,7 +1119,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch non-existing note" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id + 1, title: "foo new" }] }
         }
@@ -621,7 +1133,7 @@ RSpec.describe "V1::Slots", type: :request do
 
       context "patch with invalid params" do
         let(:std_slot) { create(:std_slot_private, :with_note, owner: current_user,
-                                                               creator: current_user) }
+                                creator: current_user) }
         let(:changed_note) {
           { notes: [{ id: std_slot.notes.first.id, title: "" }] }
         }
@@ -706,7 +1218,7 @@ RSpec.describe "V1::Slots", type: :request do
           let(:media) { [{ public_id: "foo-image", media_type: "image" }] }
           let!(:std_slot) {
             create(:std_slot_private, :with_media, owner: current_user,
-                                                   creator: current_user)
+                   creator: current_user)
           }
 
           it "adds it" do
@@ -1097,6 +1609,67 @@ RSpec.describe "V1::Slots", type: :request do
       end
     end
 
+    context "visibility" do
+      describe "add to public slotgroups/calendars" do
+        let(:slot) { create(:std_slot_private, creator: current_user) }
+        let(:public_calendar) do
+          group = create(:group, public: true)
+          create(:membership, :active, user: current_user, group: group)
+          group
+        end
+
+        it "sets the slot visibility to 'public'" do
+          post "/v1/slots/#{slot.id}/slotgroups",
+               { slot_groups: [public_calendar.uuid] }, auth_header
+          # a bit strange, can not reload bc of STI, must pass the ID directly
+          slot_id = slot.id
+          slot = BaseSlot.find slot_id
+          expect(slot.visibility).to eq 'public'
+          expect(slot.StdSlotPublic?).to be true
+          expect(slot.class).to be StdSlotPublic
+          expect(response).to have_http_status :ok
+        end
+      end
+
+      describe "remove from public slotgroups/calendars" do
+        let(:slot) { create(:std_slot_public) }
+        let(:public_calendar) do
+          group = create(:group, public: true)
+          create(:membership, :active, user: current_user, group: group)
+          create(:containership, slot: slot, group: group)
+          group
+        end
+
+        context "slot not in other public calendar" do
+          it "sets the slot visibility to 'private'" do
+            delete "/v1/slots/#{slot.id}/slotgroups",
+                   { slot_groups: [public_calendar.uuid] }, auth_header
+
+            # a bit strange, can not reload bc of STI, must pass the ID directly
+            slot_id = slot.id
+            slot = BaseSlot.find slot_id
+
+            expect(slot.visibility).to eq 'private'
+            expect(slot.StdSlotPrivate?).to be true
+          end
+        end
+
+        context "slot is also in other public calendar" do
+          let!(:in_other_public_calendar) {
+            create(:containership, slot: slot,
+                   group: create(:group, public: true))
+          }
+          it "keeps the slot visibility at 'public'" do
+            delete "/v1/slots/#{slot.id}/slotgroups",
+                   { slot_groups: [public_calendar.uuid] }, auth_header
+
+            expect(slot.visibility).to eq 'public'
+            expect(slot.StdSlotPublic?).to be true
+          end
+        end
+      end
+    end
+
     context "special slotsets" do
       it "adds the slot to myCalendar" do
         expect(current_user.reload.slot_sets).not_to be nil
@@ -1116,7 +1689,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           post "/v1/slots/#{slot.id}/slotgroups",
                { slot_groups: [current_user.slot_sets['my_cal_uuid'],
-                              group.uuid] },
+                               group.uuid] },
                auth_header
 
           current_user.reload
@@ -1184,8 +1757,8 @@ RSpec.describe "V1::Slots", type: :request do
 
         delete "/v1/slots/#{slot.id}/slotgroups",
                { slot_groups: [group_1.uuid,
-                              current_user.slot_sets['my_cal_uuid'],
-                              group_2.uuid] },
+                               current_user.slot_sets['my_cal_uuid'],
+                               group_2.uuid] },
                auth_header
 
         current_user.reload

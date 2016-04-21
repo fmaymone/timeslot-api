@@ -4,9 +4,19 @@
 
 ### POST /v1/slots
 
-Creates new slot for user and adds it to the users &#39;MyCalendar&#39; and to all slotGroups which were given additionally.
+Creates a new slot for the user.
 
-Returns data of new slot and array with unauthorized slotgroup UUIDs (User has no write access or slotgroup deleted).
+If the &#39;MyCalendar&#39;-UUID is given the new slot will be added to the users schedule. Also it will be added to all given slotGroups where the user has write permission.
+
+Default slot visibility is *private*. If the &#39;shareWithFriends&#39;-UUID is submitted, the slot will be *friend-visible*.
+
+If at least **one public calendar** is submitted where the slot should be included, then the slot will be *public*.
+
+For backward compatibility the &#39;visibility&#39; can still be submitted. If **visibility** is set to *private* or *friends*, but no private calendar is submitted, the slot is put in the users &#39;MyPrivateSlots&#39; calendar. Also if visibility is set to *friends*, the **show_to_friend** flag will be set. If *public* is submitted, but no accompanying public calendar, the slot will be put into the users &#39;MyPublicSlots&#39; calendar.
+
+If the submitted visiblity contradicts the visibility resulting from the submitted calendars, the highest visibility will win.
+
+Returns data of new slot and array with unauthorized slotGroup UUIDs (User has no write access or slotgroup deleted).
 
 Returns 422 if parameters are invalid or missing.
 
@@ -36,8 +46,8 @@ Description : User specific settings for the slot (alerts)
 Name : alerts
 Description : Alerts for the Slot
 
-Name : visibility *- required -*
-Description : Visibility of the Slot (private/friends/foaf/public)
+Name : visibility
+Description : Deprecated: Visibility of the Slot (private/friends/foaf/public)
 
 Name : slotGroups
 Description : Array with UUIDs of the SlotGroups slot should be added to
@@ -86,6 +96,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -116,7 +129,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=-hsJvbHApQq1NZB7SlLIM4KmPG4
+Authorization: Token token=cWFiGDEoHSkuzz9PcEay8IMdzzU
 Host: example.org
 Cookie: </pre>
 
@@ -145,11 +158,11 @@ Cookie: </pre>
   },
   "visibility" : "private",
   "slotGroups" : [
-    "b9850057-0619-4b6c-8faf-67122592e949",
-    "99650221-1c16-48ba-8aa2-b6f12c268e2d",
-    "c7e5b3d6-76b3-4270-b0be-c48adbeb1cb3",
-    "91ddaf48-611c-4971-a50b-4115ef8af951",
-    "35748e6a-ad9b-411e-a26a-ef9160a85cf3"
+    "4ae71e34-e91c-42b7-bac7-8e815cc33d8c",
+    "5af3e5af-ed19-411f-b80c-dbf43871243e",
+    "89f6fefb-3780-4adc-b3b3-606fe4b00694",
+    "0654d725-35a3-4348-a3e8-8d277cff4bde",
+    "5a819be4-bae5-427b-9adf-7da92019498d"
   ]
 }
 ```
@@ -157,10 +170,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;b9850057-0619-4b6c-8faf-67122592e949&quot;,&quot;99650221-1c16-48ba-8aa2-b6f12c268e2d&quot;,&quot;c7e5b3d6-76b3-4270-b0be-c48adbeb1cb3&quot;,&quot;91ddaf48-611c-4971-a50b-4115ef8af951&quot;,&quot;35748e6a-ad9b-411e-a26a-ef9160a85cf3&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;4ae71e34-e91c-42b7-bac7-8e815cc33d8c&quot;,&quot;5af3e5af-ed19-411f-b80c-dbf43871243e&quot;,&quot;89f6fefb-3780-4adc-b3b3-606fe4b00694&quot;,&quot;0654d725-35a3-4348-a3e8-8d277cff4bde&quot;,&quot;5a819be4-bae5-427b-9adf-7da92019498d&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=-hsJvbHApQq1NZB7SlLIM4KmPG4&quot;</pre>
+	-H &quot;Authorization: Token token=cWFiGDEoHSkuzz9PcEay8IMdzzU&quot;</pre>
 
 ### Response
 
@@ -170,12 +183,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f7cb8e8df3247f35935c6736c33a2dbc&quot;
+ETag: W/&quot;ed95bd798d45308ac4f0b7c54d4b3f8c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b705c65d-0830-49fa-aeb8-2ec721c8891e
-X-Runtime: 0.135373
+X-Request-Id: 53826c24-3c07-47fa-91d5-c02468082f0d
+X-Runtime: 0.250935
 Vary: Origin
-Content-Length: 895</pre>
+Content-Length: 910</pre>
 
 #### Status
 
@@ -185,19 +198,19 @@ Content-Length: 895</pre>
 
 ```javascript
 {
-  "id" : 1,
+  "id" : 17,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-04-04T20:50:30.980Z",
-  "updatedAt" : "2016-04-04T20:50:30.980Z",
+  "createdAt" : "2016-04-19T23:13:26.227Z",
+  "updatedAt" : "2016-04-19T23:13:26.227Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 1,
-    "username" : "User 296",
-    "createdAt" : "2016-04-04T20:50:30.917Z",
-    "updatedAt" : "2016-04-04T20:50:30.917Z",
+    "id" : 48,
+    "username" : "User 46",
+    "createdAt" : "2016-04-19T23:13:26.131Z",
+    "updatedAt" : "2016-04-19T23:13:26.131Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -207,18 +220,18 @@ Content-Length: 895</pre>
   },
   "notes" : [
     {
-      "id" : 2,
+      "id" : 3,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.010Z"
+      "createdAt" : "2016-04-19T23:13:26.245Z"
     },
     {
-      "id" : 1,
+      "id" : 2,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.007Z"
+      "createdAt" : "2016-04-19T23:13:26.242Z"
     }
   ],
   "media" : [],
@@ -226,11 +239,12 @@ Content-Length: 895</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
   "unauthorizedSlotgroups" : [
-    "91ddaf48-611c-4971-a50b-4115ef8af951",
-    "35748e6a-ad9b-411e-a26a-ef9160a85cf3"
+    "0654d725-35a3-4348-a3e8-8d277cff4bde",
+    "5a819be4-bae5-427b-9adf-7da92019498d"
   ]
 }
 ```

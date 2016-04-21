@@ -10,30 +10,66 @@ module V1
       render :show, locals: { slot: @slot }
     end
 
+    # so this is getting funny
+    # a slot can be created by sending a visibility param (old way) or sending
+    # slotgroup/calendar uuids, which then would be used to evaluate the slot
+    # visibility (new way). If both parameters are send, 'public' wins, which
+    # means if visibility is submitted as 'public', but no public group uuid,
+    # the slot will be public anyway. Also if 'private' is submitted, but also
+    # a public group uuid, the slot will be public (intermediate way).
+    # A slot will always be put into a group. If none is submitted it will be
+    # put in the users 'private' or 'public' slots group. The my_cal_uuid and
+    # the my_friend_slots_uuid are not treated as valid groups, so the slot
+    # will be put into 'private' or 'public' also.
     # POST /v1/slots
     def create
       authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params,
-                                   visibility: enforce_visibility,
+      @slot = BaseSlot.create_slot(meta: meta_params, visibility: 'private',
                                    media: media_params, notes: note_param,
                                    alerts: alerts_param, user: current_user)
 
-      if params.key?(:slot_groups) && params[:slot_groups].any?
-        add_to_slotsets(@slot, params[:slot_groups])
-      end
-
-      # TODO: improve, write spec
-      # only show created slot in schedule if my_calendar_uuid is send
-      unless params[:slot_groups].include?(current_user.slot_sets['my_cal_uuid'])
-        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
-      end
-
       if @slot.persisted?
+        slot_visibility = visibility
+        slot_sets = valid_slotset_uuids
+
+        # take submitted visibility into account to maintain backward compatibility
+        adjust_slot_visibility(@slot, slot_visibility, slot_sets) if slot_visibility
+        add_to_slotsets(@slot, slot_sets) if slot_sets
+        add_to_default_slotgroups(@slot, slot_sets)
+
         render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
       end
+    end
+
+    private def add_to_default_slotgroups(slot, sets)
+      # in case the slot is not put into any group (or only my_calendar or
+      # my_friend_slots - which are no real groups) we want to put it in
+      # either the users public or private calendar.
+      # ASK: vielleicht soll der schedule auch als kalender gelten
+      real_groups = sets - [current_user.slot_sets['my_friend_slots_uuid'],
+                            current_user.slot_sets['my_cal_uuid']] if sets
+
+      return unless real_groups.blank?
+
+      service = SlotsetManager.new(current_user: current_user)
+
+      if slot.visibility == 'public'
+        uuid = current_user.slot_sets['my_public_slots_uuid']
+        public_group = Group.find_by uuid: uuid
+        service.add!(slot, public_group)
+      else
+        uuid = current_user.slot_sets['my_private_slots_uuid']
+        private_group = Group.find_by uuid: uuid
+        service.add!(slot, private_group)
+      end
+    end
+
+    private def adjust_slot_visibility(slot, visibility, sets)
+      service = SlotsetManager.new(current_user: current_user)
+      service.adjust_visibility(slot, visibility, sets)
     end
 
     # TODO: remove this
@@ -202,6 +238,7 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
+    # DELETE /v1/slots/1/slotsets
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
@@ -304,6 +341,21 @@ module V1
 
     private def comment_param
       params.require(:content)
+    end
+
+    # returns array of valid uuids or nil
+    private def valid_slotset_uuids
+      valid_slot_group_uuids? ? params[:slot_groups] : nil
+    end
+
+    # returns error for if array contains an invalid uuid
+    private def valid_slot_group_uuids?
+      return false unless params.key?(:slot_groups) &&
+                          params[:slot_groups].present?
+      params[:slot_groups].each do |uuid|
+        valid_uuid = !(uuid =~ /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i).nil?
+        fail ParameterInvalid.new(:slot_group, uuid) unless valid_uuid
+      end
     end
   end
 end

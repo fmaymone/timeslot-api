@@ -32,6 +32,8 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def destroy?
+    return false unless current_user?
+    return false if current_user.slot_sets.values.include? group.uuid
     update?
   end
 

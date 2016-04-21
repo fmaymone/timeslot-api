@@ -61,7 +61,16 @@ class BaseSlot < ActiveRecord::Base
 
   validates :meta_slot, presence: true
   # validates :slot_uuid, presence: true # let the db take care of it for now
+  validate :type_and_slot_type_in_sync
 
+  # custom validations
+
+  private def type_and_slot_type_in_sync
+    # because atm to different mechanism are used for inheritance
+    # (custom via 'slot_type' and rails STI via 'type' column),
+    # it should be ensured that they hold the same information
+    errors.add(:slot_type, "out-of-sync") unless type == slot_type
+  end
   # getter
 
   def visibility
@@ -70,6 +79,24 @@ class BaseSlot < ActiveRecord::Base
 
   def visible_count
     CounterService.new.number_of_users_who_can_view_the_slot(self).to_s
+  end
+
+  # TODO: add spec
+  def update_visibility(visibility)
+    case visibility
+    when 'private'
+      # update 'type' column
+      becomes!(StdSlotPrivate) # this doesn't run the validations
+      # update 'slot_type' column
+      self.StdSlotPrivate!
+    when 'friends'
+      becomes!(StdSlotFriends)
+      self.StdSlotFriends!
+      update(share_with_friends: true)
+    when 'public'
+      becomes!(StdSlotPublic)
+      self.StdSlotPublic!
+    end
   end
 
   def images

@@ -922,44 +922,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "create_with_device" do
-    let(:user_params) {
-      { params: attributes_for(:user, password: 'something') }
-    }
-    let(:device) { attributes_for(:device) }
-
-    context "valid params" do
-      it "creates a new user" do
-        expect {
-          User.create_with_device(user_params)
-        }.to change(User, :count).by 1
-      end
-
-      it "sets the default role for the user" do
-        User.create_with_device(user_params)
-        expect(User.last.role).to eq "basic"
-        expect(User.last.basic?).to be true
-        expect(User.last.webview?).to be false
-      end
-
-      it "sets a device if provided" do
-        user_params[:device] = device
-        expect {
-          User.create_with_device(user_params)
-        }.to change(Device, :count).by 1
-      end
-    end
-
-    context "invalid params" do
-      it "doesn't create a new user if username is nil" do
-        user_params[:params][:username] = nil
-        expect {
-          User.create_with_device(user_params)
-        }.not_to change(User, :count)
-      end
-    end
-  end
-
   describe "sign_in" do
     let(:user) { create(:user, :with_email, :with_password) }
 

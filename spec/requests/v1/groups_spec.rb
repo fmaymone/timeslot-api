@@ -47,6 +47,32 @@ RSpec.describe "V1::Groups", type: :request do
         expect(Membership.last.active?).to be true
       end
     end
+
+    context "non-public group/calendar" do
+      it "members are allowed to add content" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_post).to be true
+      end
+
+      it "only owner can add new members" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_invite).to be false
+      end
+    end
+
+    context "public group/calendar" do
+      let(:new_params) { { name: "public bar", public: true } }
+
+      it "members are not allowed to add content" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_post).to be false
+      end
+
+      it "strangers are allowed to subscribe" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_invite).to be true
+      end
+    end
   end
 
   # update

@@ -91,6 +91,13 @@ class Group < ActiveRecord::Base
     new_group = create(group_params)
     return new_group unless new_group.errors.empty?
 
+    # set defaults if not specified
+    if !new_group.public? && !(group_params.key? :members_can_post)
+      new_group.update(members_can_post: true)
+    elsif new_group.public? && !(group_params.key? :members_can_invite)
+      new_group.update(members_can_invite: true)
+    end
+
     new_group.invite_users(invitees, initiator) if invitees
     new_group
   end

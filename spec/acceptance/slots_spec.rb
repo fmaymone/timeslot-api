@@ -13,8 +13,7 @@ resource "Slots" do
 
     include_context "default slot parameter"
     parameter :visibility,
-              "Visibility of the Slot (private/friends/foaf/public)",
-              required: true
+              "Deprecated: Visibility of the Slot (private/friends/foaf/public)"
     parameter :slotGroups,
               "Array with UUIDs of the SlotGroups slot should be added to"
 
@@ -55,11 +54,30 @@ resource "Slots" do
                           deleted_group.uuid] }
 
       example "Create new slot", document: :v1 do
-        explanation "Creates new slot for user and adds it to the users" \
-                    " 'MyCalendar' and to all slotGroups which were given" \
-                    " additionally.\n\n" \
+        explanation "Creates a new slot for the user.\n\n" \
+                    "If the 'MyCalendar'-UUID is given the new slot will be " \
+                    "added to the users schedule. Also it will be added to all" \
+                    " given slotGroups where the user has write permission.\n\n" \
+                    "Default slot visibility is *private*. If the " \
+                    "'shareWithFriends'-UUID is submitted, the slot will be" \
+                    " *friend-visible*.\n\n" \
+                    "If at least **one public calendar** is submitted where " \
+                    "the slot should be included, then the slot will be " \
+                    "*public*.\n\n" \
+                    "For backward compatibility the 'visibility' can still " \
+                    "be submitted. If **visibility** is set to *private* or " \
+                    "*friends*, but no private calendar is submitted, " \
+                    "the slot is put in the users " \
+                    "'MyPrivateSlots' calendar. Also if visibility is " \
+                    "set to *friends*, the **show_to_friend** flag will be set." \
+                    " If *public* is submitted, but no accompanying public" \
+                    " calendar, the slot will be put into the" \
+                    " users 'MyPublicSlots' calendar.\n\n" \
+                    "If the submitted visiblity contradicts the visibility " \
+                    "resulting from the submitted calendars, the highest " \
+                    "visibility will win.\n\n" \
                     "Returns data of new slot and array with unauthorized " \
-                    "slotgroup UUIDs (User has no write access or slotgroup" \
+                    "slotGroup UUIDs (User has no write access or slotgroup" \
                     " deleted).\n\n" \
                     "Returns 422 if parameters are invalid or missing."
         do_request
@@ -831,7 +849,7 @@ resource "Slots" do
         create(:passengership, user: current_user, slot: slot,
                deleted_at: Time.zone.now) }
       let(:slotGroups) { [group_1.uuid,
-                          current_user.slot_sets['my_cal_uuid']]}
+                          current_user.slot_sets['my_cal_uuid']] }
 
       example "re-add to group", document: false do
         expect(group_1.slots).not_to include slot
@@ -844,6 +862,27 @@ resource "Slots" do
         current_user.reload
         expect(group_1.slots).to include slot
         expect(current_user.my_calendar_slots).to include slot
+      end
+    end
+
+    describe "Add Slot to Users Public Slot Calendar" do
+      let(:current_user) { create(:user, :with_default_calendars) }
+      let(:slotGroups) { [group_1.uuid,
+                          current_user.slot_sets['my_public_slots_uuid']] }
+
+      it "adds the slot to the public calendar" do
+        uuid = current_user.slot_sets['my_public_slots_uuid']
+        my_public_calendar = Group.find_by(uuid: uuid)
+
+        expect(my_public_calendar.slots).not_to include slot
+
+        do_request
+
+        expect(response_status).to eq 200
+        my_public_calendar.reload
+        expect(my_public_calendar.slots).to include slot
+        group_1.reload
+        expect(group_1.slots).to include slot
       end
     end
   end
