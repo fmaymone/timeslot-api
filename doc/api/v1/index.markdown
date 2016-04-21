@@ -10,6 +10,14 @@
 * [Sign in with twitter](connects/sign_in_with_twitter.markdown)
 * [Connect twitter account](connects/connect_twitter_account.markdown)
 
+## Data
+
+* [Export all created Slots of the current user to a file (iCalendar)](data/export_all_created_slots_of_the_current_user_to_a_file_(icalendar).markdown)
+* [Export all created Slots of the current user to a file (Google)](data/export_all_created_slots_of_the_current_user_to_a_file_(google).markdown)
+* [Export all created Slots of the current user to a file (Outlook)](data/export_all_created_slots_of_the_current_user_to_a_file_(outlook).markdown)
+* [Export all created Slots of the current user to a file (Timeslot)](data/export_all_created_slots_of_the_current_user_to_a_file_(timeslot).markdown)
+* [Import Slots from a file](data/import_slots_from_a_file.markdown)
+
 ## Feeds
 
 * [Get the feed of the current users activities](feeds/get_the_feed_of_the_current_users_activities.markdown)
@@ -40,6 +48,11 @@
 * [Remove/Kick other user from own group](groups/removekick_other_user_from_own_group.markdown)
 * [Update settings of joined group](groups/update_settings_of_joined_group.markdown)
 * [Add GlobalSlots to new or existing public group](groups/add_globalslots_to_new_or_existing_public_group.markdown)
+
+## Invitecode
+
+* [Try to get an invitecode object for a given invite code string](invitecode/try_to_get_an_invitecode_object_for_a_given_invite_code_string.markdown)
+* [Create an invitecode for a given inviting user id and invite context](invitecode/create_an_invitecode_for_a_given_inviting_user_id_and_invite_context.markdown)
 
 ## Me
 
@@ -89,6 +102,7 @@
 ## Share
 
 * [Share Slot as Webview](share/share_slot_as_webview.markdown)
+* [Share Slot as iFrame](share/share_slot_as_iframe.markdown)
 * [Share Slot as Image](share/share_slot_as_image.markdown)
 * [Share Slot as PDF](share/share_slot_as_pdf.markdown)
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
