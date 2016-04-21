@@ -27,6 +27,8 @@ module V1
             #render html: result.html_safe, content_type: "text/html"
             # Render from cached data ("Live Enrich"):
             data_handler(result.html_safe, 'text/html')
+          when 'iframe'
+            data_handler(result.html_safe, 'text/html')
           when 'qrcode'
             data_handler(result, 'image/png')
           when 'pdf'
@@ -47,6 +49,11 @@ module V1
     # POST /v1/share/1/webview
     def webview
       share_handler(:webview)
+    end
+
+    # POST /v1/share/1/iframe
+    def iframe
+      share_handler(:iframe)
     end
 
     # POST /v1/share/1/image
@@ -100,20 +107,21 @@ module V1
     end
 
     private def data_handler(result, type)
-      send_data(result, filename: "slot-#{params[:id]}.#{type.split('/')[1]}",
+      file_type = type.split('/')[1]
+      send_data(result, filename: "slot-#{params[:id]}.#{file_type}",
                         type: type,
                         disposition: 'inline')
     end
 
     private def share_handler(type)
-      slot = BaseSlot.get(params[:id])
       authorize :share
+      slot = BaseSlot.get(params[:id])
 
       if slot_is_public(slot)
         # Delegate to the related share method
         if (url = Share.send("share_#{type}", current_user, slot, params))
           # Check if a response has to be returned to the client
-          if url == true
+          if url == true # strict boolean check
             head :ok
           else
             render json: { shareId: url,

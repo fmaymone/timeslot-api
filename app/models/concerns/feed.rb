@@ -478,7 +478,7 @@ module Feed
       # Set initially timer if there are no actions
       if last_update.nil?
         last_update = Time.now.to_f
-        @storage.set("Update:#{feed}", last_update)
+        @storage.set("Update:#{feed}", last_update - 1)
       end
       # Set the current cache state
       @storage.set("Status:#{feed}", last_update)

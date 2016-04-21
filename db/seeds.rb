@@ -9,14 +9,15 @@
 Provider.create(name: 'facebook')
 Provider.create(name: 'twitter')
 
-# for sharing? not sure
+# Pseudo-User for the crawler data/slots aka sources
 User.create(username: 'Timeslot Official',
             role: 1,
             email: 'info@timeslot.com')
 # for imports via web-importer
 User.create(username: 'Web Importer',
             role: 4,
-            email: 'web-importer@timeslot.com')
+            email: 'web-importer@timeslot.com',
+            password: ENV['WEB_IMPORTER_PASSWORD'])
 # calendars with global slots
 User.create(username: 'Global Importer',
             role: 4,
