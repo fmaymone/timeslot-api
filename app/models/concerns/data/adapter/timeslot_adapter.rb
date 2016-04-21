@@ -25,7 +25,6 @@ class TimeslotAdapter < Adapter
   def export
     cal = []
     @slots.joins(:meta_slot).each do |slot|
-      #slot.reload
       cal << {
           # Slot Meta Data
           uid: slot.slot_uuid,
@@ -52,8 +51,9 @@ class TimeslotAdapter < Adapter
 
   private def is_valid_event(event)
     event['title'].present? &&
-    event['user'].present? || event['group'].present? &&
-    event['start_time'].present?
+    #event['user'].present? || event['group'].present? &&
+    event['uid'].present? &&
+    event['start'].present?
   end
 
   private def import_file

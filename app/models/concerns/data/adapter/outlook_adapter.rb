@@ -7,7 +7,7 @@ class OutlookAdapter < Adapter
     import_file.each do |event|
       @event = event
       events << {
-          uid: @event.uid.presence,
+          uid: @event['uid'].presence,
           title: event['Subject'].size > 60 ? event['Subject'][0..59] : event['Subject'],
           start_date: import_event_datetime("#{event['Start_Date']}T#{event['Start_Time']}"),
           end_date: import_event_datetime("#{event['End_Date']}T#{event['End_Time']}"),
@@ -22,33 +22,34 @@ class OutlookAdapter < Adapter
   end
 
   def export
-    # Add csv header
-    data = %w(Subject
-              Start_Date
-              Start_Time
-              End_Date
-              End_Time
-              All_Day_Event
-              Categories
-              Show_Time
-              Location
-              Description)
+    CSV.generate do |data|
+      # Add csv header
+      data << %w(Subject
+                 Start_Date
+                 Start_Time
+                 End_Date
+                 End_Time
+                 All_Day_Event
+                 Categories
+                 Show_Time
+                 Location
+                 Description)
 
-    @slots.joins(:meta_slot).each do |slot|
-      @slot = slot
-      # Collect and append csv data
-      data << %W(#{slot.title}
-                 #{slot.start_date.strftime('%Y-%m-%d')}
-                 #{slot.start_date.strftime('%H:%I')}
-                 #{slot.end_date.strftime('%Y-%m-%d')}
-                 #{slot.end_date.strftime('%H:%I')}
-                 FALSE
-                 Timeslot
-                 #{''}
-                 #{export_event_location}
-                 #{''})
+      @slots.joins(:meta_slot).each do |slot|
+        @slot = slot
+        # Collect and append csv data
+        data << %W(#{slot.title}
+                   #{slot.start_date.strftime('%Y-%m-%d')}
+                   #{slot.start_date.strftime('%H:%I')}
+                   #{slot.end_date.strftime('%Y-%m-%d')}
+                   #{slot.end_date.strftime('%H:%I')}
+                   FALSE
+                   Timeslot
+                   #{''}
+                   #{export_event_location}
+                   #{''})
+      end
     end
-    data
   end
 
   ## -- IMPORT HELPERS -- ##
@@ -86,8 +87,8 @@ class OutlookAdapter < Adapter
   end
 
   private def import_event_datetime(datetime)
-    Time.strptime(datetime, '%m/%d/%y %k:%M:%S')
-        .strftime('%Y-%m-%d %H:%I')
+    Time.zone.parse(datetime)
+             .strftime('%Y-%m-%d %H:%I')
   end
 
   private def import_event_location

@@ -7,11 +7,11 @@ module V1
     def handler
       authorize :import
 
-      # NOTE: Supported file format is binary or JSON
+      # NOTE: Supported file format is binary, JSON or String
       if params.require(:file).kind_of?(Array)
         file = params[:file].join('')
       else
-        file = params[:file].read
+        file = params[:file].try(:read) || params[:file]
       end
 
       #file = File.binread(params.require(:file).path)
@@ -49,12 +49,13 @@ module V1
     private def determine_type(file)
       if file.starts_with?('BEGIN:VCALENDAR')
         'ical'
-      elsif (file.include?('Subject') || file.include?('Subject')) &&
-            (file.include?('Start Date') || file.include?('Start Date'))
+      elsif file.starts_with?('Subject,Start_Date,Start_Time,End_Date,End_Time')
         'outlook'
       elsif file.include?('{') &&
-          file.include?('start_date') &&
-          file.include?('image_url') &&
+          file.include?('uid') &&
+          file.include?('start') &&
+          file.include?('visibility') &&
+          file.include?('location') &&
           file.include?('title') &&
           file.include?('}')
         'timeslot'

@@ -7,7 +7,7 @@ export_timeslot = nil
 
 ## -- TEST EXPORT SLOTS -- ##
 
-resource "Export" do
+resource "Data" do
   let!(:current_user) { create(:user, :with_email, :with_password) }
   let!(:slots) { create_list(:std_slot_public, 5, owner: current_user) } # creator doesn't work
   let!(:groups) { create_list(:group, 3, owner: current_user) }
@@ -25,7 +25,7 @@ resource "Export" do
                       "If the group uuid was not found, no Slot will be exported.", required: false
 
     context "Export all Slots without a given Group (All Slots)" do
-      example "Export all created Slots from the current user to the iCalendar format", document: :v1 do
+      example "Export all created Slots of the current user to a file (iCalendar)", document: :v1 do
         explanation "returns 404 if the group uuid was not found\n" \
                     "returns 422 if parameters are invalid or missing\n" \
                     "returns 500 if an error occurs during the export"
@@ -49,7 +49,7 @@ resource "Export" do
       let(:group) { groups[1].uuid }
 
       example "Export created Slots from the current user " \
-              "related to a given Group to the iCalendar format" do
+              "related to a given Group to the iCalendar format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -66,7 +66,7 @@ resource "Export" do
     context "Doesn't export Slots related to another Group" do
       let(:group) { groups[2].uuid }
 
-      example "Export Slots to the iCalendar Format" do
+      example "Export Slots to the iCalendar Format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -92,7 +92,7 @@ resource "Export" do
                       "If the group uuid was not found, no Slot will be exported.", required: false
 
     context "Export Slots without a given Group (All Slots)" do
-      example "Export all created Slots from the current user to the Google format", document: :v1 do
+      example "Export all created Slots of the current user to a file (Google)", document: :v1 do
         explanation "returns 404 if the group uuid was not found\n" \
                     "returns 422 if parameters are invalid or missing\n" \
                     "returns 500 if an error occurs during the export"
@@ -116,7 +116,7 @@ resource "Export" do
       let(:group) { groups[1].uuid }
 
       example "Export created Slots from the current user " \
-              "related to a given Group to the Google format" do
+              "related to a given Group to the Google format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -133,7 +133,7 @@ resource "Export" do
     context "Doesn't export Slots related to another Group" do
       let(:group) { groups[2].uuid }
 
-      example "Export Slots to the Google Format" do
+      example "Export Slots to the Google Format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -161,7 +161,7 @@ resource "Export" do
     context "Export Slots without a given Group (All Slots)" do
       #let(:json) { JSON.parse(response_body) }
 
-      example "Export all created Slots from the current user to the Outlook format", document: :v1 do
+      example "Export all created Slots of the current user to a file (Outlook)", document: :v1 do
         explanation "returns 404 if the group uuid was not found\n" \
                     "returns 422 if parameters are invalid or missing\n" \
                     "returns 500 if an error occurs during the export"
@@ -184,7 +184,7 @@ resource "Export" do
       let(:group) { groups[1].uuid }
 
       example "Export created Slots from the current user " \
-              "related to a given Group to the Outlook format" do
+              "related to a given Group to the Outlook format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -200,7 +200,7 @@ resource "Export" do
     context "Doesn't export Slots related to another Group" do
       let(:group) { groups[2].uuid }
 
-      example "Export Slots to the Outlook Format" do
+      example "Export Slots to the Outlook Format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -229,7 +229,7 @@ resource "Export" do
       let(:slot_titles) { slots.collect(&:title) }
       let(:slot_uuids) { slots.collect(&:slot_uuid) }
 
-      example "Export all created Slots from the current user to the Timeslot format", document: :v1 do
+      example "Export all created Slots of the current user to a file (Timeslot)", document: :v1 do
         explanation "returns 404 if the group uuid was not found\n" \
                     "returns 422 if parameters are invalid or missing\n" \
                     "returns 500 if an error occurs during the export"
@@ -259,7 +259,7 @@ resource "Export" do
       let(:group) { groups[1].uuid }
 
       example "Export created Slots from the current user " \
-              "related to a given Group to the Timeslot format" do
+              "related to a given Group to the Timeslot format", document: :false do
         do_request
         expect(response_status).to eq(200)
 
@@ -276,7 +276,7 @@ resource "Export" do
       let(:json) { JSON.parse(response_body) }
       let(:group) { groups[2].uuid }
 
-      example "Export Slots to the Timeslot Format" do
+      example "Export Slots to the Timeslot Format", document: :false do
         do_request
         expect(response_status).to eq(200)
         expect(json.length).to be(0)
@@ -287,11 +287,10 @@ end
 
 ## -- TEST IMPORT SLOTS -- ##
 
-resource "Import" do
+resource "Data" do
   let!(:current_user) { create(:user, :with_email, :with_password) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
 
-  # Import Slot from iCalendar
   post "/v1/import/" do
     header "Content-Type", "application/json"
     header "Accept", "text/plain"
@@ -309,6 +308,8 @@ resource "Import" do
                       "If the parameter group is missing, a default slot group " \
                       "with the name 'Imports' will used instead.\n" \
                       "If the group uuid was not found, no Slot will be imported.", required: false
+
+    # Import Slot from iCalendar
 
     context "Import Slots from a iCalendar file" do
       let(:file_contents) { export_ical }
@@ -352,7 +353,7 @@ resource "Import" do
         let!(:slot_group) { create(:group, owner: current_user) }
         let(:group) { slot_group.uuid }
 
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -370,6 +371,8 @@ resource "Import" do
         end
       end
     end
+
+    # Import Slot from Google
 
     context "Import Slots from a Google Calendar file" do
       let(:file_contents) { export_google }
@@ -387,7 +390,7 @@ resource "Import" do
       end
 
       context "Import Slots without a given Group" do
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -409,7 +412,7 @@ resource "Import" do
         let!(:slot_group) { create(:group, owner: current_user) }
         let(:group) { slot_group.uuid }
 
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -427,6 +430,8 @@ resource "Import" do
         end
       end
     end
+
+    # Import Slot from Outlook
 
     context "Import Slots from a Outlook Calendar file" do
       let(:file_contents) { export_outlook }
@@ -444,7 +449,7 @@ resource "Import" do
       end
 
       context "Import Slots without a given Group" do
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -466,7 +471,7 @@ resource "Import" do
         let!(:slot_group) { create(:group, owner: current_user) }
         let(:group) { slot_group.uuid }
 
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -485,6 +490,8 @@ resource "Import" do
       end
     end
 
+    # Import Slot from Timeslot
+
     context "Import Slots from a Timeslot Calendar file" do
       let(:file_contents) { export_timeslot }
       let(:file) do
@@ -501,7 +508,7 @@ resource "Import" do
       end
 
       context "Import Slots without a given Group" do
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
@@ -523,7 +530,7 @@ resource "Import" do
         let!(:slot_group) { create(:group, owner: current_user) }
         let(:group) { slot_group.uuid }
 
-        example "Import Slots from a file" do
+        example "Import Slots from a file", document: :false do
           # Before
           expect(current_user.std_slots.count).to be(0)
 
