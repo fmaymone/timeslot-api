@@ -21,26 +21,36 @@ namespace :users do
             next
           end
 
-          service = NewUser.new(user_params: 'unused')
-          result = service.create_default_calendars(user: user)
+          # service = NewUser.new(user_params: 'unused')
+          # result = service.create_default_calendars(user: user)
 
-          # private_cal_uuid = user.slot_sets['my_private_slots_uuid']
+          private_cal_uuid = user.slot_sets['my_private_slots_uuid']
+          public_cal_uuid = user.slot_sets['my_public_slots_uuid']
 
-          # priv_c = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
-          #   calendar.owner = user
-          #   calendar.name = 'Private'
-          #   calendar.public = false
-          # end
+          priv_c = Group.find_by(uuid: private_cal_uuid)
+          if priv_c
+            priv_c.update(name: 'Private')
+            priv_c.update(description: 'Slots are visible only to you.')
+          else
+            priv_c = Group.create(uuid: private_cal_uuid,
+                                  owner: user,
+                                  name: 'Private',
+                                  public: false)
+          end
 
-          # public_cal_uuid = user.slot_sets['my_public_slots_uuid']
+          pub_c = Group.find_by(uuid: public_cal_uuid)
+          if pub_c
+            pub_c.update(name: 'Public')
+            pub_c.update(description: 'Slots are visible for everybody.')
+          else
+            pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
+              calendar.owner = user
+              calendar.name = 'Public'
+              calendar.public = true
+            end
+          end
 
-          # pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
-          #   calendar.owner = user
-          #   calendar.name = 'Public'
-          #   calendar.public = true
-          # end
-
-          if result == true
+          if priv_c.save && pub_c.save
             puts "#{default_msg} calendars created successfully: " \
                  "private calendar: ID #{priv_c.id} - UUID #{priv_c.uuid}, " \
                  "public calendar: ID #{pub_c.id} - UUID #{pub_c.uuid}"
