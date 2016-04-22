@@ -3,6 +3,15 @@ class GlobalSlot < BaseSlot
 
   after_commit AuditLog
 
+  # FIXME: adding this until I have time to make sure this is never called for
+  # GlobalSlots, Silvio 22.4.2016
+  def update_visibility(visibility)
+    # do nothing, just track
+    Airbrake.notify(ParameterInvalid,
+                    message: "'update_visibility' called for GlobalSlot",
+                    visibility: visibility)
+  end
+
   def self.create_slot(meta:, user:, muid:, url: nil, media: nil, notes: nil,
                        _tags: nil)
 

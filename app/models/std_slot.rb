@@ -14,6 +14,24 @@ class StdSlot < BaseSlot
 
   validates :owner, presence: true
 
+  # TODO: add spec
+  def update_visibility(visibility)
+    case visibility
+    when 'private'
+      # update 'type' column
+      becomes!(StdSlotPrivate) # this doesn't run the validations
+      # update 'slot_type' column
+      self.StdSlotPrivate!
+    when 'friends'
+      becomes!(StdSlotFriends)
+      self.StdSlotFriends!
+      update(share_with_friends: true)
+    when 'public'
+      becomes!(StdSlotPublic)
+      self.StdSlotPublic!
+    end
+  end
+
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
     if visibility
