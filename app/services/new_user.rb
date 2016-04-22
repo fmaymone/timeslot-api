@@ -41,23 +41,29 @@ class NewUser
   #   end
   # end
 
-  private def create_default_calendars(user:)
+  def create_default_calendars(user:)
     private_cal_uuid = user.slot_sets['my_private_slots_uuid']
     public_cal_uuid = user.slot_sets['my_public_slots_uuid']
 
-    Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
+    private_group = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
       calendar.owner = user
       calendar.name = 'Private'
       calendar.public = false
       calendar.description = 'Slots are visible only to you.'
     end
 
-    Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
+    return private_group unless private_group.errors.empty?
+
+    public_group = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
       calendar.owner = user
       calendar.name = 'Public'
       calendar.public = true
       calendar.description = 'Slots are visible for everybody.'
     end
+
+    return public_group unless public_group.errors.empty?
+
+    true
   end
 
   private def create_device(new_user:, device:)

@@ -21,23 +21,26 @@ namespace :users do
             next
           end
 
-          private_cal_uuid = user.slot_sets['my_private_slots_uuid']
+          service = NewUser.new(user_params: 'unused')
+          result = service.create_default_calendars(user: user)
 
-          priv_c = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
-            calendar.owner = user
-            calendar.name = 'My Private Slots'
-            calendar.public = false
-          end
+          # private_cal_uuid = user.slot_sets['my_private_slots_uuid']
 
-          public_cal_uuid = user.slot_sets['my_public_slots_uuid']
+          # priv_c = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
+          #   calendar.owner = user
+          #   calendar.name = 'Private'
+          #   calendar.public = false
+          # end
 
-          pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
-            calendar.owner = user
-            calendar.name = 'My Public Slots'
-            calendar.public = true
-          end
+          # public_cal_uuid = user.slot_sets['my_public_slots_uuid']
 
-          if priv_c.save && pub_c.save
+          # pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
+          #   calendar.owner = user
+          #   calendar.name = 'Public'
+          #   calendar.public = true
+          # end
+
+          if result == true
             puts "#{default_msg} calendars created successfully: " \
                  "private calendar: ID #{priv_c.id} - UUID #{priv_c.uuid}, " \
                  "public calendar: ID #{pub_c.id} - UUID #{pub_c.uuid}"
