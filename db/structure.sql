@@ -318,15 +318,14 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    deleted_at timestamp without time zone,
     meta_slot_id bigint,
+    id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
-    re_slots_count integer DEFAULT 0,
-    deleted_at timestamp without time zone,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid
 )
@@ -1570,3 +1569,4 @@ INSERT INTO schema_migrations (version) VALUES ('20160411104513');
 INSERT INTO schema_migrations (version) VALUES ('20160416150256');
 
 INSERT INTO schema_migrations (version) VALUES ('20160417140125');
+
