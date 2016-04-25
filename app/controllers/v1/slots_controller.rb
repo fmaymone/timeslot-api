@@ -212,20 +212,28 @@ module V1
     end
 
     # GET /v1/slots/1/slotsets
+    # TODO: refactor
     def slotsets
       slot = BaseSlot.get(params[:id])
       authorize slot
 
       @slotgroups = current_user.groups & slot.slot_groups
 
-      if current_user.my_calendar_slots.include? slot
-        @my_cal_uuid = current_user.slot_sets['my_cal_uuid']
-      else
-        @my_cal_uuid = false
-      end
+      @my_cal_uuid = if current_user.my_calendar_slots.include? slot
+                       current_user.slot_sets['my_cal_uuid']
+                     else
+                       false
+                     end
+
+      @share_with_friends = if slot.share_with_friends?
+                              current_user.slot_sets['my_friend_slots_uuid']
+                            else
+                              false
+                            end
 
       render :slotsets, locals: { slot_groups: @slotgroups,
-                                  my_cal_uuid: @my_cal_uuid }
+                                  my_cal_uuid: @my_cal_uuid,
+                                  share_with_friends: @share_with_friends }
     end
 
     # POST /v1/slots/1/slotsets

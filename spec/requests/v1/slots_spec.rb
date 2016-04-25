@@ -1563,7 +1563,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user, creator: current_user) }
+    let!(:std_slot) {
+      create(:std_slot_private, owner: current_user, creator: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1592,6 +1593,23 @@ RSpec.describe "V1::Slots", type: :request do
     #     }.not_to change(StdSlot, :count)
     #   end
     # end
+  end
+
+  describe "GET /v1/slots/:id/slotgroups" do
+    let(:current_user) { create(:user, :with_3_friends) }
+    let(:std_slot_friends) {
+      create(:std_slot_friends, creator: current_user, owner: current_user) }
+
+    context "friend-visible" do
+      it "returns the my_friend_slots_uuid" do
+        get "/v1/slots/#{std_slot_friends.id}/slotsets", {}, auth_header
+
+        expect(json).to have_key 'slotSets'
+        expect(json['slotSets']).to have_key 'myFriendSlots'
+        uuid = current_user.slot_sets['my_friend_slots_uuid']
+        expect(json['slotSets']['myFriendSlots']).to eq uuid
+      end
+    end
   end
 
   describe "POST /v1/slots/:id/slotgroups" do
