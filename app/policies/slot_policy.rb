@@ -68,13 +68,6 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # false if no user is signed-in
-  # true, if the user has read access for the slot
-  # group permissions are checked per slotgroup
-  def remove_from_groups?
-    current_user_has_read_access?
-  end
-
   # actions
 
   # FIX: remove when globalslot-reslot is updated
@@ -95,6 +88,13 @@ class SlotPolicy < ApplicationPolicy
     # return true if slot.visibility == 'public'
     # return true if slot.class < StdSlot && slot.creator == current_user
     # false
+  end
+
+  # false if no user is signed-in
+  # true, if the user has read access for the slot
+  # group permissions are checked per slotgroup
+  def remove_from_groups?
+    current_user_has_read_access?
   end
 
   # helper
