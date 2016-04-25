@@ -1506,6 +1506,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
         expect(user_feed.first['data']['target']['title']).to eq('New Title')
+        expect(user_feed.first['data']['target']['likes']).to eq(1)
+        expect(user_feed.first['data']['target']['likerIds']).to include(user.id)
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
         expect(news_feed_follower.count).to be(1) # +1 public activity
@@ -1514,6 +1516,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
         expect(news_feed_follower.first['data']['target']['title']).to eq('New Title')
+        expect(news_feed_follower.first['data']['target']['likes']).to eq(1)
+        expect(news_feed_follower.first['data']['target']['likerIds']).to include(user.id)
 
         news_feed = Feed.news_feed(user.id).as_json
         expect(news_feed.count).to be(0) # +1 public activities
@@ -1521,6 +1525,18 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(Feed.notification_feed(user.id).as_json.count).to be(0)
         expect(Feed.user_feed(follower.id).as_json.count).to be(0)
         expect(Feed.notification_feed(follower.id).as_json.count).to be(0)
+      end
+
+      it "Feeds retrieved updates from shared objects also if not affected" do
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.first['data']['target']['likes']).to eq(1)
+        expect(news_feed_follower.first['data']['target']['likerIds']).to include(user.id)
+
+        slot.create_like(follower)
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.first['data']['target']['likes']).to eq(2)
+        expect(news_feed_follower.first['data']['target']['likerIds']).to include(user.id, follower.id)
       end
     end
   end
