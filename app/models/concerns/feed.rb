@@ -160,18 +160,32 @@ module Feed
 
     def update_shared_objects(objects)
       objects = [objects] unless objects.kind_of?(Array)
+      user_feeds = []
 
-      @storage.pipe do
-        objects.each do |object|
-          json = render_shared_object(object)
-          activity_type = object.class.name
-          %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
-            activity_type.gsub!(replace, 'Slot')
-          end
-          @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
+      objects.each do |object|
+        json = render_shared_object(object)
+        activity_type = object.class.name
+        # Normalize slot type
+        %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
+          activity_type.gsub!(replace, 'Slot')
+        end
+        # Update object data
+        @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
+
+        # Collect followers to update involved feeds
+        user_feeds += object.followers
+        case activity_type
+        when 'Slot'
+          user_feeds << object.creator.id
+        when 'Group'
+          user_feeds << object.owner.id
+        when 'User'
+          user_feeds << object.id
         end
       end
-      # TODO: refresh feed cache through backtracking of the target object
+
+      user_feeds.uniq!
+      refresh_feed_cache(user_feeds)
     end
 
     def refresh_feed_cache(user_ids, time = Time.now.to_f)

@@ -1484,7 +1484,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
   end
 
   context "Update Shared Objects", :redis do
-    let(:user) { create(:user) }
+    let(:user) { create(:user, :with_email, :with_password, picture: 'user.jpg') }
     let(:meta_slot) { create(:meta_slot, creator: user) }
     let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
@@ -1492,10 +1492,12 @@ RSpec.describe Feed, :activity, :async, type: :model do
       before(:each) do
         # Create relationships
         follower.follow(slot)
-        # Perform activities (User)
+        # Perform activities
         slot.create_like(user)
-        # Modify shared object
+        # Modify shared object (Slot)
         slot.update_from_params(meta: { title: 'New Title' })
+        # Modify shared object (User)
+        user.update(picture: 'test.jpg') and Feed.update_shared_objects([user])
       end
 
       it "Feeds retrieved updates from shared objects" do
@@ -1505,6 +1507,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['action']).to eq('like')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
+        expect(user_feed.first['data']['actor']['image']).to eq('test.jpg')
         expect(user_feed.first['data']['target']['title']).to eq('New Title')
         expect(user_feed.first['data']['target']['likes']).to eq(1)
         expect(user_feed.first['data']['target']['likerIds']).to include(user.id)
@@ -1515,6 +1518,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(news_feed_follower.first['action']).to eq('like')
         expect(news_feed_follower.first['data']['target']['id']).to be(slot.id)
         expect(news_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(news_feed_follower.first['data']['actor']['image']).to eq('test.jpg')
         expect(news_feed_follower.first['data']['target']['title']).to eq('New Title')
         expect(news_feed_follower.first['data']['target']['likes']).to eq(1)
         expect(news_feed_follower.first['data']['target']['likerIds']).to include(user.id)
