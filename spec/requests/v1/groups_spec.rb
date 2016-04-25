@@ -763,19 +763,23 @@ RSpec.describe "V1::Groups", type: :request do
 
   # global slot groups
   describe "POST /v1/groups/global_group", :seed do
-    let(:group) { attributes_for(:group) }
-    let(:params) { { muid: group.uuid, name: 'Rephlex' } }
+    let(:group) { attributes_for(:group, :global) }
+    let(:string_id) { "soccer_leagues:dfb.de:champions_league" }
+    let(:params) { { muid: group.uuid, name: 'Rephlex', string_id: string_id } }
     # let(:image) { "http://faster.pussycat" }
-    # let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
     let(:current_user) { User.find_by email: 'global-importer@timeslot.com' }
     let(:category_user) { create(:user, :gs_category) }
 
     describe "existing public group with different name" do
-      let(:group) { create(:group) }
+      let(:group) { create(:group, :global) }
 
-      it "returns error for non-matching group name" do
-        post "/v1/groups/global_group", { group: params }, auth_header
-        expect(response).to have_http_status :unprocessable_entity
+      it "uptdates group name if non-matching group name" do
+        post "/v1/groups/global_group",
+             { group: params },
+             auth_header
+        expect(response).to have_http_status :ok
+        group.reload
+        expect(group.name).to eq 'Rephlex'
       end
     end
 
@@ -784,12 +788,14 @@ RSpec.describe "V1::Groups", type: :request do
       let(:params) do
         { category_uuid: category_user[:user_uuid],
           group: { muid: group[:uuid],
+                   string_id: string_id,
                    name: 'Rephlex',
                    slots: [global_slot.slot_uuid] } }
       end
 
       it "adds the slot to the group" do
         post "/v1/groups/global_group", params, auth_header
+
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
@@ -801,6 +807,7 @@ RSpec.describe "V1::Groups", type: :request do
       let(:params) do
         { category_uuid: category_user[:user_uuid],
           group: { muid: group[:uuid],
+                   string_id: string_id,
                    name: 'Rephlex',
                    slots: slots } }
       end
@@ -831,13 +838,14 @@ RSpec.describe "V1::Groups", type: :request do
     end
 
     describe "global slot already in group" do
-      let(:group) { create(:group, public: true, owner: category_user) }
+      let(:group) { create(:group, :global, owner: category_user) }
       let(:global_slot) { create(:global_slot) }
       let!(:containership) {
         create(:containership, slot: global_slot, group: group) }
       let(:params) do
         { category_uuid: category_user[:user_uuid],
           group: { muid: group[:uuid],
+                   string_id: string_id,
                    name: group.name,
                    slots: [global_slot.slot_uuid] } }
       end
