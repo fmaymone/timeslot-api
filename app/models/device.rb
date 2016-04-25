@@ -177,7 +177,8 @@ class Device < ActiveRecord::Base
   def self.notify_all(user_ids, params)
     user_queue = []
 
-    User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
+    User.where(id: user_ids, push: true, deleted_at: nil)
+        .where.not(auth_token: nil).uniq.find_each do |user|
       device_queue = []
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
         device_queue.concat(devices)
