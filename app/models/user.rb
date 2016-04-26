@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
 
   # allows a user to be signed in after sign up
   before_create :set_auth_token, :set_slot_sets
+  before_validation :strip_whitespaces
   after_commit AuditLog
 
   ## associations ##
@@ -217,6 +218,11 @@ class User < ActiveRecord::Base
       my_public_slots_uuid: SecureRandom.uuid,
       my_created_slots_uuid: SecureRandom.uuid
     }
+  end
+
+  def strip_whitespaces
+    self.username.squish! if self.username
+    self.email.squish! if self.email
   end
 
   def inactivate

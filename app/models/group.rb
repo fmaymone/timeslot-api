@@ -8,6 +8,7 @@ class Group < ActiveRecord::Base
   before_create :set_uuid
   after_commit AuditLog
 
+  before_validation :strip_whitespaces
   after_create :add_owner_as_member, on: :create
 
   # scope :public is defined at class method, was not possible otherwise
@@ -82,6 +83,10 @@ class Group < ActiveRecord::Base
 
   private def add_owner_as_member
     Membership.create(group_id: id, user_id: owner.id, state: '111')
+  end
+
+  private def strip_whitespaces
+    self.name.squish! if self.name
   end
 
   private def set_uuid

@@ -60,6 +60,11 @@ RSpec.describe User, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when name contains whitespaces" do
+    before { user.username = " john \t doe " }
+    it { user.save and (expect(user.username).to eq("john doe")) }
+  end
+
   describe "email" do
     context "when email is not present" do
       before { user.email = nil }

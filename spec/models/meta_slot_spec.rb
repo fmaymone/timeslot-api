@@ -30,6 +30,11 @@ RSpec.describe MetaSlot, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when title contains whitespaces" do
+    before { meta_slot.title = " my \t slot " }
+    it { meta_slot.save and (expect(meta_slot.title).to eq("my slot")) }
+  end
+
   describe "when start_date is not present" do
     before { meta_slot.start_date = "" }
     it { is_expected.to_not be_valid }
