@@ -14,7 +14,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Create relationships
         follower.follow(user)
         follower2.follow(user)
-
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
         slot.create_like(user)
@@ -1353,6 +1352,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_friend = Feed.news_feed(friend.id).as_json
         expect(news_feed_friend.count).to be(0) # has no related activities
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(0) # has no related activities
       end
 
       it "Notification Feed (activities to own content)" do
@@ -1374,6 +1376,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
 
     context "Forward accepted friend requests" do
+      let!(:friendship) { create(:friendship, :established, user: user, friend: follower) }
+
       before(:each) do
         # Perform activity: request friendship
         friend.initiate_friendship(user.id)
@@ -1399,10 +1403,13 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no related activities
+        expect(news_feed.count).to be(1) # +1 user activity (new friendship)
 
         news_feed_friend = Feed.news_feed(friend.id).as_json
-        expect(news_feed_friend.count).to be(0) # has no related activities
+        expect(news_feed_friend.count).to be(1) # +1 user activity (new friendship)
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 user activity (new friendship of a friend)
       end
 
       it "Notification Feed (activities to own content)" do
@@ -1429,6 +1436,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['message']).to eq(I18n.t('user_friendship_notify_singular',
                                                                 {ACTOR: user.username,
                                                                  USER: friend.username}))
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(0) # has no related activities
       end
     end
 
