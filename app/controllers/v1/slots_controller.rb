@@ -72,7 +72,7 @@ module V1
       service.adjust_visibility(slot, visibility, sets)
     end
 
-    # TODO: remove this
+    # TODO: deprecated, remove this
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -102,7 +102,25 @@ module V1
       end
     end
 
-    # TODO: rename to /v1/slots/:id
+    # TODO: tell frontends to switch to this endpoint
+    # TODO: update acceptance specs
+    # PATCH /v1/slots/1
+    def update
+      @slot = current_user.std_slots.find(params[:id])
+      authorize @slot
+
+      @slot.update_from_params(meta: meta_params,
+                               media: media_params, notes: note_param,
+                               alerts: alerts_param, user: current_user)
+
+      if @slot.errors.empty?
+        render :show, locals: { slot: @slot }
+      else
+        render json: @slot.errors.messages, status: :unprocessable_entity
+      end
+    end
+
+    # TODO: deprecated, remove this at some point
     # PATCH /v1/stdslot/1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
