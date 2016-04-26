@@ -417,7 +417,7 @@ module Activity
     # NOTE: It is possible that an action does'nt affect the actors feed,
     # for this situation it is required to force the update of caches
     # TODO: Check if mixed distributed activities to the same target has conflicts
-    Feed.update_shared_objects([activity_actor, activity_target])
+    Feed.update_objects([activity_actor, activity_target])
   end
 
   # TODO:
@@ -481,7 +481,6 @@ module Activity
   end
 
   # The distribution map exported from the google spreadsheet
-  # NOTE: to beautify the code use: http://www.cleancss.com/ruby-beautify/
   private def distribution_map
     {
         slot_comment_me: %w(actor),
@@ -530,12 +529,12 @@ module Activity
         slot_reslot_push: %w(creator),
 
         user_accept_me: [],
-        user_accept_activity: %w(friends actor),
+        user_accept_activity: %w(friends),
         user_accept_notify: %w(actor),
         user_accept_push: %w(user),
 
         user_friendship_me: %w(actor),
-        user_friendship_activity: %w(foaf user),
+        user_friendship_activity: %w(foaf),
         user_friendship_notify: %w(user),
         user_friendship_push: [],
 
@@ -569,10 +568,15 @@ module Activity
         slot_private_notify: %w(follower),
         slot_private_push: %w(follower),
 
-        slot_update_me: %w(actor),
-        slot_update_activity: [],
-        slot_update_notify: [],
-        slot_update_push: [],
+        slot_start_me: %w(actor),
+        slot_start_activity: [],
+        slot_start_notify: %w(follower),
+        slot_start_push: %w(follower),
+
+        slot_location_me: %w(actor),
+        slot_location_activity: [],
+        slot_location_notify: %w(follower),
+        slot_location_push: %w(follower),
 
         user_unfriend_me: %w(actor),
         user_unfriend_activity: [],

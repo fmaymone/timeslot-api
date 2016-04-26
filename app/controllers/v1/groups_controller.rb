@@ -32,6 +32,7 @@ module V1
       authorize @group
 
       if @group.update(group_params)
+        Feed.update_objects(@group)
         render :show
       else
         render json: { error: @group.errors },

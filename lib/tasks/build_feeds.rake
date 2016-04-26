@@ -11,7 +11,7 @@ namespace :feed do
   task refresh: :environment do
 
     begin
-      Feed.refresh_feed_cache(User.all.collect(&:id))
+      Feed.refresh_cache(User.all.collect(&:id))
       puts "All feeds cache was successfully refreshed."
     rescue => e
       puts "An error has occurred during the refreshing process: #{e}"
@@ -22,7 +22,7 @@ namespace :feed do
   task update: :environment do
 
     begin
-      Feed.update_shared_objects(User.all + StdSlot.all + Group.all)
+      Feed.update_objects(User.all + StdSlot.all + Group.all)
       puts "All shared objects were successfully updated."
     rescue
       puts "An error has occurred during the updating process."
