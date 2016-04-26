@@ -55,6 +55,11 @@ RSpec.describe Group, type: :model do
     it { is_expected.to_not be_valid }
   end
 
+  describe "when name contains whitespaces" do
+    before { group.name = " my \t list " }
+    it { group.save and (expect(group.name).to eq("my list")) }
+  end
+
   describe "when uuid is not present" do
     let(:group) { create(:group) }
     before { group.uuid = nil }

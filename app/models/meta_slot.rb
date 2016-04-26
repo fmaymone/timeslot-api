@@ -11,6 +11,7 @@ class MetaSlot < ActiveRecord::Base
                           end
       metaslot.open_end = true
     end
+    strip_whitespaces(metaslot)
   end
 
   belongs_to :creator, class_name: User, inverse_of: :created_slots
@@ -71,5 +72,9 @@ class MetaSlot < ActiveRecord::Base
                      end
       meta_slot.update(ios_location: ios_location)
     end
+  end
+
+  private def strip_whitespaces(metaslot = self)
+    metaslot.title.squish! if metaslot.title
   end
 end
