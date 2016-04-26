@@ -225,7 +225,7 @@ module V1
                        false
                      end
 
-      @share_with_friends = if slot.share_with_friends?
+      @share_with_friends = if (slot.class < StdSlot) && slot.share_with_friends?
                               current_user.slot_sets['my_friend_slots_uuid']
                             else
                               false

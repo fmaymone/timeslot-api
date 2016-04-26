@@ -112,7 +112,8 @@ class SlotsCollector
                       else
                         # groupslots ...
                         relation
-      end
+                      end
+
       ### initialize query object
       query = SlotQuery::OwnSlots.new(relation: full_relation,
                                       direction: @direction)
