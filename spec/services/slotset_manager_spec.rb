@@ -10,6 +10,7 @@ RSpec.describe SlotsetManager, type: :service do
   let(:deleted_slot_group) {
     create(:group, owner: current_user, deleted_at: Time.zone.now) }
   let(:my_calendar) { current_user.slot_sets['my_cal_uuid'] }
+  let(:friends_calendar) { current_user.slot_sets['my_friend_slots_uuid'] }
 
   describe "add to slotset" do
     context "my Schedule (myCalendar)" do
@@ -43,6 +44,16 @@ RSpec.describe SlotsetManager, type: :service do
           passengership.reload
           expect(passengership.deleted_at?).to be false
         end
+      end
+    end
+
+    context "my friend slots" do
+      let(:slot) { create(:global_slot) }
+
+      it "does nothing for global slots (public anyway)" do
+        expect {
+          manager.add!(slot, friends_calendar)
+        }.not_to raise_error
       end
     end
 

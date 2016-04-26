@@ -81,24 +81,6 @@ class BaseSlot < ActiveRecord::Base
     CounterService.new.number_of_users_who_can_view_the_slot(self).to_s
   end
 
-  # TODO: add spec
-  def update_visibility(visibility)
-    case visibility
-    when 'private'
-      # update 'type' column
-      becomes!(StdSlotPrivate) # this doesn't run the validations
-      # update 'slot_type' column
-      self.StdSlotPrivate!
-    when 'friends'
-      becomes!(StdSlotFriends)
-      self.StdSlotFriends!
-      update(share_with_friends: true)
-    when 'public'
-      becomes!(StdSlotPublic)
-      self.StdSlotPublic!
-    end
-  end
-
   def images
     media_items.image.order(:position)
   end

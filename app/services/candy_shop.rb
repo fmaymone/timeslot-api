@@ -19,12 +19,21 @@ class CandyShop
   # and create a user with role 'global_slot_category'
   def category(uuid)
     raw_result = fetch('categories', uuid)
-    User.create(user_uuid: uuid,
-                username: raw_result['name'],
-                picture: raw_result['image'],
-                role: 'global_slot_category',
-                email: "#{raw_result['name'].downcase}.category@timeslot.com"
-               )
+    generated_email = "#{raw_result['string_id'].downcase}@timeslot.com"
+
+    if user = User.find_by(email: generated_email)
+      user.update(user_uuid: uuid)
+      user.update(username: raw_result['name'])
+      user.update(picture: raw_result['image'])
+      user.update(role: 'global_slot_category')
+    else
+      User.create(user_uuid: uuid,
+                  username: raw_result['name'],
+                  picture: raw_result['image'],
+                  role: 'global_slot_category',
+                  email: generated_email
+                 )
+    end
   end
 
   private def fetch(resource_type, muid)

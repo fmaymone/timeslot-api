@@ -48,7 +48,7 @@ RSpec.describe CandyShop, type: :service do
   end
 
   describe 'category', :vcr do
-    let(:category_muid) { '4870f9d3-a629-9578-edcc-3e6c954baeba' }
+    let(:category_muid) { 'b7a81461-68ed-218b-a2fa-526d981a759d' }
       # attributes_for(:slot, :with_candy_location)[:location_uid] }
 
     it "returns a new user with role global_slot_category" do
@@ -63,7 +63,7 @@ RSpec.describe CandyShop, type: :service do
       expect(category.role).to eq 'global_slot_category'
       expect(
         category.email
-      ).to eq "#{category.username.downcase}.category@timeslot.com"
+      ).to eq "category:#{category.username.downcase}@timeslot.com"
     end
   end
 end

@@ -42,7 +42,7 @@ class SlotsetManager
       #   Passengership.find_or_create_by(slot: slot,
       #                                   user: current_user).update(deleted_at: nil)
     when friend_slots_uuid
-      slot.update(share_with_friends: true)
+      slot.update(share_with_friends: true) if slot.StdSlot?
       slot.update_visibility('friends') if slot.StdSlotPrivate?
     end
   end

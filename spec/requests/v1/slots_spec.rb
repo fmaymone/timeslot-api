@@ -192,6 +192,16 @@ RSpec.describe "V1::Slots", type: :request do
         expect(json['id']).to eq(StdSlot.unscoped.last.id)
       end
 
+      # this is now possible, changed by thomas bc of icalendar
+      it "if start_date equals end_date" do
+        slot = attributes_for(:meta_slot,
+                              start_date: "2014-09-08 13:31:02",
+                              end_date: "2014-09-08 13:31:02")
+
+        post "/v1/slots", slot.merge(visibility: 'public'), auth_header
+        expect(response).to have_http_status(:created)
+      end
+
       it "sets slot to 'open End' if empty end_date" do
         valid_slot[:start_date] = "2014-09-08 13:31:02"
         valid_slot[:end_date] = ""
@@ -701,7 +711,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
 
     context "invalid params" do
-      skip
       let(:invalid_attributes) {
         attributes_for(:meta_slot).merge(visibility: 'private')
       }
@@ -737,16 +746,6 @@ RSpec.describe "V1::Slots", type: :request do
           post "/v1/slots", invalid_attributes, auth_header
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to include('blank')
-        end
-
-        it "if start_date equals end_date" do
-          slot = attributes_for(:meta_slot,
-                                start_date: "2014-09-08 13:31:02",
-                                end_date: "2014-09-08 13:31:02")
-
-          post "/v1/slots", slot.merge(visibility: 'public'), auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
         end
 
         it "if start_date after end_date"  do
@@ -817,6 +816,14 @@ RSpec.describe "V1::Slots", type: :request do
         expect(metaslot.open_end).to be false
       end
 
+      # this is now possible, changed by thomas bc of icalendar
+      it "updates end_date even if start_date equals end_date" do
+        metaslot.update(start_date: "2014-09-08 13:31:02")
+        patch "/v1/metaslot/#{metaslot.id}",
+              { end_date: "2014-09-08 13:31:02" }, auth_header
+        expect(response).to have_http_status(:no_content)
+      end
+
       it "sets slot to 'open End' if empty end_date" do
         metaslot.update(start_date: "2014-09-08 07:31:02")
         patch "/v1/metaslot/#{metaslot.id}", { end_date: "" }, auth_header
@@ -879,14 +886,6 @@ RSpec.describe "V1::Slots", type: :request do
           expect(response.body).to include('not a valid value')
         end
 
-        it "if start_date equals end_date" do
-          metaslot.update(start_date: "2014-09-08 13:31:02")
-          patch "/v1/metaslot/#{metaslot.id}",
-                { end_date: "2014-09-08 13:31:02" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
-        end
-
         it "if end_date before start_date" do
           metaslot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/metaslot/#{metaslot.id}",
@@ -941,6 +940,14 @@ RSpec.describe "V1::Slots", type: :request do
           std_slot.reload
           expect(std_slot.end_date).to eq("2019-12-11 13:31:02")
           expect(std_slot.open_end).to be false
+        end
+
+        # this is now possible, changed by thomas bc of icalendar
+        it "updates end_date even if start_date equals end_date" do
+          std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
+          patch "/v1/stdslot/#{std_slot.id}",
+                { end_date: "2014-09-08 13:31:02" }, auth_header
+          expect(response).to have_http_status(:ok)
         end
 
         it "sets slot to 'open End' if empty end_date" do
@@ -1034,14 +1041,6 @@ RSpec.describe "V1::Slots", type: :request do
                   { end_date: "|$%^@wer" }, auth_header
             expect(response).to have_http_status(:unprocessable_entity)
             expect(response.body).to include('not a valid value')
-          end
-
-          it "if start_date equals end_date" do
-            std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
-            patch "/v1/stdslot/#{std_slot.id}",
-                  { end_date: "2014-09-08 13:31:02" }, auth_header
-            expect(response).to have_http_status(:unprocessable_entity)
-            expect(response.body).to include('start_date')
           end
 
           it "if end_date before start_date" do
@@ -1564,7 +1563,8 @@ RSpec.describe "V1::Slots", type: :request do
   end
 
   describe "DELETE /v1/stdslot/:id" do
-    let!(:std_slot) { create(:std_slot_private, owner: current_user, creator: current_user) }
+    let!(:std_slot) {
+      create(:std_slot_private, owner: current_user, creator: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
@@ -1593,6 +1593,23 @@ RSpec.describe "V1::Slots", type: :request do
     #     }.not_to change(StdSlot, :count)
     #   end
     # end
+  end
+
+  describe "GET /v1/slots/:id/slotgroups" do
+    let(:current_user) { create(:user, :with_3_friends) }
+    let(:std_slot_friends) {
+      create(:std_slot_friends, creator: current_user, owner: current_user) }
+
+    context "friend-visible" do
+      it "returns the my_friend_slots_uuid" do
+        get "/v1/slots/#{std_slot_friends.id}/slotsets", {}, auth_header
+
+        expect(json).to have_key 'slotSets'
+        expect(json['slotSets']).to have_key 'myFriendSlots'
+        uuid = current_user.slot_sets['my_friend_slots_uuid']
+        expect(json['slotSets']['myFriendSlots']).to eq uuid
+      end
+    end
   end
 
   describe "POST /v1/slots/:id/slotgroups" do

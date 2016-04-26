@@ -21,20 +21,33 @@ namespace :users do
             next
           end
 
+          # service = NewUser.new(user_params: 'unused')
+          # result = service.create_default_calendars(user: user)
+
           private_cal_uuid = user.slot_sets['my_private_slots_uuid']
-
-          priv_c = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
-            calendar.owner = user
-            calendar.name = 'My Private Slots'
-            calendar.public = false
-          end
-
           public_cal_uuid = user.slot_sets['my_public_slots_uuid']
 
-          pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
-            calendar.owner = user
-            calendar.name = 'My Public Slots'
-            calendar.public = true
+          priv_c = Group.find_by(uuid: private_cal_uuid)
+          if priv_c
+            priv_c.update(name: 'Private')
+            priv_c.update(description: 'Slots are visible only to you.')
+          else
+            priv_c = Group.create(uuid: private_cal_uuid,
+                                  owner: user,
+                                  name: 'Private',
+                                  public: false)
+          end
+
+          pub_c = Group.find_by(uuid: public_cal_uuid)
+          if pub_c
+            pub_c.update(name: 'Public')
+            pub_c.update(description: 'Slots are visible for everybody.')
+          else
+            pub_c = Group.find_or_create_by(uuid: public_cal_uuid) do |calendar|
+              calendar.owner = user
+              calendar.name = 'Public'
+              calendar.public = true
+            end
           end
 
           if priv_c.save && pub_c.save
