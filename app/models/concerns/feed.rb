@@ -160,18 +160,32 @@ module Feed
 
     def update_shared_objects(objects)
       objects = [objects] unless objects.kind_of?(Array)
+      user_feeds = []
 
-      @storage.pipe do
-        objects.each do |object|
-          json = render_shared_object(object)
-          activity_type = object.class.name
-          %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
-            activity_type.gsub!(replace, 'Slot')
-          end
-          @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
+      objects.each do |object|
+        json = render_shared_object(object)
+        activity_type = object.class.name
+        # Normalize slot type
+        %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
+          activity_type.gsub!(replace, 'Slot')
+        end
+        # Update object data
+        @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
+
+        # Collect followers to update involved feeds
+        user_feeds += object.followers
+        case activity_type
+        when 'Slot'
+          user_feeds << object.creator.id
+        when 'Group'
+          user_feeds << object.owner.id
+        when 'User'
+          user_feeds << object.id
         end
       end
-      # TODO: refresh feed cache through backtracking of the target object
+
+      user_feeds.uniq!
+      refresh_feed_cache(user_feeds)
     end
 
     def refresh_feed_cache(user_ids, time = Time.now.to_f)
@@ -260,12 +274,17 @@ module Feed
     end
 
     private def paginate(feed_index, limit: 25, offset: 0, cursor: nil)
+      length = @storage.length(feed_index)
       # Get offset in reversed logic (LIFO), supports simple cursor fallback
       offset = cursor ? cursor.to_i : offset.to_i
-      # Catch MIN as MAX in reversed order
-      min = [offset + limit.to_i, @storage.length("Feed:#{feed_index}") - 1].min
+      # Determine start in reversed order
+      start = [length - offset - limit.to_i - 1, 0].max
+      start = length if offset >= length
+      # Determine range in reversed order
+      range = [length - offset - 1, limit.to_i].min
+      range = 0 if range < 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = @storage.range(feed_index, offset, min).reverse!
+      feed = @storage.range(feed_index, start, range).reverse!
       # Enrich target activities
       feed.map{ |a| enrich_activity(a) }
     end
@@ -402,7 +421,7 @@ module Feed
       # Also we use this counter to check on break condition if limit is reached
       feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = @storage.range(feed_index, 0, @storage.length("Feed:#{feed_index}") - offset - 1).reverse!
+      feed = @storage.range(feed_index, 0, @storage.length(feed_index) - offset - 1).reverse!
       # Loop through all feeds (has a break statement, offset is optional)
       feed.each do |post|
         # Enrich target activity

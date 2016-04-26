@@ -79,20 +79,20 @@ RSpec.describe "V1::Feed", :async, type: :request do
     describe "GET /v1/feed/notification" do
       let(:params) {{ limit: 2, offset: 2 }}
 
-      it "returns cursor-based paginated array of activities" do
+      it "returns offset-based paginated array of activities" do
         get "/v1/feed/notification", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(4) # 6 - 2 = 4.limit(2) = 2
+        expect(json.length).to be(2) # 6 - 2 = 4.limit(2) = 2
       end
     end
 
     describe "GET /v1/feed/notification" do
-      let(:params) {{ limit: 2, cursor: "2" }}
+      let(:params) {{ limit: 2, cursor: "5" }}
 
       it "returns cursor-based paginated array of activities" do
         get "/v1/feed/notification", params, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(4) # 6 - 4 = 2.limit(2) = 2
+        expect(json.length).to be(1) # 6 - 5 = 1.limit(2) = 1
       end
     end
   end

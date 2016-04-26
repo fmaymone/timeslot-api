@@ -23,7 +23,6 @@ namespace :feed do
 
     begin
       Feed.update_shared_objects(User.all + StdSlot.all + Group.all)
-      Feed.refresh_feed_cache(User.all.collect(&:id))
       puts "All shared objects were successfully updated."
     rescue
       puts "An error has occurred during the updating process."

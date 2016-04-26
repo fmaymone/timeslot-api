@@ -21,6 +21,7 @@ module V1
       end
 
       if current_user.update(user_params)
+        Feed.update_shared_objects([current_user])
         render :show, locals: { user: current_user }
       else
         render json: { error: current_user.errors },
