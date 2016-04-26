@@ -137,27 +137,27 @@ resource "Me" do
       parameter :moment, "A point in time. Query parameter to get slots " \
                          "relative to a specific moment. Must be UTC.\n" \
                          "Default is Time.zone.now (server time)."
-      parameter :filter, "Query parameter to filter slots relative to a " \
-                         "given **moment**. Must be one of:\n" \
-                         "- **past**: *start* before *moment*\n" \
-                         "- **upcoming**: *start* after or equal *moment*\n" \
-                         "- **ongoing**: *start* before & *end* after *moment*\n" \
-                         "- **finished**: *start* & *end* before *moment*\n" \
-                         "- **now**: *ongoing* & *upcoming* slots\n" \
-                         "- **around**: tba\n" \
-                         "- **all**: no restriction\n" \
-                         "Default is **upcoming**."
+      parameter :mode, "Query parameter to filter slots relative to a " \
+                       "given **moment**. Must be one of:\n" \
+                       "- **past**: *start* before *moment*\n" \
+                       "- **upcoming**: *start* after or equal *moment*\n" \
+                       "- **ongoing**: *start* before & *end* after *moment*\n" \
+                       "- **finished**: *start* & *end* before *moment*\n" \
+                       "- **now**: *ongoing* & *upcoming* slots\n" \
+                       "- **around**: tba\n" \
+                       "- **all**: no restriction\n" \
+                       "Default is **upcoming**."
       parameter :before, "Pagination cursor to retrieve slots which do happen" \
                          " BEFORE the slot " \
                          "represented by this cursor. If a cursor is " \
                          "send, **status** and **moment** are ignored."
       parameter :after, "Pagination cursor to retrieve slots which do happen" \
                         " AFTER the slot represented by this cursor. If a " \
-                        "cursor is send, **filter** and **moment** are ignored."
+                        "cursor is send, **mode** and **moment** are ignored."
 
       response_field :paging, "Hash containing relevant paging parameters."
       response_field :limit, "Maximum number of slots returned."
-      response_field :filter, "Types of slots which were requested."
+      response_field :mode, "Types of slots which were requested."
       response_field :moment, "Point-in-time which was used for the query."
       response_field :before, "Cursor that represents the first item in the " \
                               "response dataset."
@@ -166,7 +166,7 @@ resource "Me" do
       response_field :data, "Array containing the result dataset."
 
       describe "Get slots for current user - with pagination" do
-        let(:filter) { 'upcoming' }
+        let(:mode) { 'upcoming' }
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
 
@@ -183,7 +183,7 @@ resource "Me" do
                       "If there are more than **limit** results, '*paging*' " \
                       "has **before** and **after** cursors which can be used" \
                       " for subsequent requests. The first request should " \
-                      "always be made with **filter** '*upcoming*' to make " \
+                      "always be made with **mode** '*upcoming*' to make " \
                       "sure no results are skipped." \
                       "'*data*' contains an array which includes " \
                       "StandardSlots & ReSlots the current_user has made" \
@@ -230,10 +230,10 @@ resource "Me" do
           json = JSON.parse(response_body)
 
           expect(json).to have_key 'paging'
-          expect(json['paging']).to have_key('filter')
+          expect(json['paging']).to have_key('mode')
           expect(json['paging']).to have_key('after')
           expect(json['paging']).to have_key('limit')
-          expect(json['paging']['filter']).to be nil
+          expect(json['paging']['mode']).to be nil
           expect(json['paging']['after']).to be nil
           expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
           # expect(response_body).to include(re_slots.first.title)

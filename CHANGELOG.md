@@ -2,7 +2,10 @@
 
 ## upcoming
 - remove slot copy and slot move routes and methods
-
+- Pagination:
+  - rename parameter 'filter' to 'mode'
+  - rename PAGINATION_DEFAULT_FILTER to PAGINATION_DEFAULT_MODE
+  - add env var PAGINATION_DEFAULT_FILTER
 
 ## v0.9.2 (4.4.2016)
 

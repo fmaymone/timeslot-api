@@ -2,12 +2,12 @@ class SlotsCollector
   # because the defaults are not set if no pagination parameters are send,
   # I have to set them here again unfortunately
   def initialize(limit: PAGINATION_DEFAULT_LIMIT,
-                 filter: PAGINATION_DEFAULT_FILTER,
+                 mode: PAGINATION_DEFAULT_MODE,
                  moment: Time.zone.now,
                  after: nil,
                  before: nil)
-    @limit = filter == 'around' ? limit.to_i / 2 : limit.to_i
-    @filter = filter
+    @limit = mode == 'around' ? limit.to_i / 2 : limit.to_i
+    @mode = mode
     @moment = moment
     @before = before
     @after = after
@@ -22,13 +22,13 @@ class SlotsCollector
   # collects all std_slots of current_user
   def my_slots(user:)
     showables = [user.std_slots]
-    consider_filter(showables, @filter)
+    consider_mode(showables, @mode)
   end
 
   # collects all passengerships of current_user
   def my_schedule_slots(user:)
     showables = [user.my_calendar_slots]
-    consider_filter(showables, @filter)
+    consider_mode(showables, @mode)
   end
 
   # collects all slots current_user or visitor is allowed to see from
@@ -43,7 +43,7 @@ class SlotsCollector
     showables = PresentableSlots.call(relationship: relationship, user: user,
                                       current_user: current_user)
 
-    consider_filter(showables, @filter)
+    consider_mode(showables, @mode)
   end
 
   # collects all non-private slots from all friends of the current_user
@@ -54,7 +54,7 @@ class SlotsCollector
 
     showables = [StdSlot.where(owner: friends).unprivate]
                  # ReSlot.where(slotter: friends).unprivate]
-    consider_filter(showables, @filter)
+    consider_mode(showables, @mode)
   end
 
   # collects only active std_slots current_user or visitor is allowed to
@@ -74,18 +74,18 @@ class SlotsCollector
     counter
   end
 
-  private def consider_filter(relations, filter)
-    if filter == 'around'
-      around_filter_query(relations)
+  private def consider_mode(relations, mode)
+    if mode == 'around'
+      around_mode_query(relations)
     else
-      slots = query_data(relations, filter)
-      sort_result(slots, filter)
+      slots = query_data(relations, mode)
+      sort_result(slots, mode)
     end
   end
 
-  # the 'around' filter needs special treatmeant because he returns forward
+  # the 'around' mode needs special treatmeant because he returns forward
   # and backward facing data/slots (with regard to the 'moment')
-  private def around_filter_query(relations)
+  private def around_mode_query(relations)
     upcomings = query_data(relations, 'upcoming')
     sorted_upcomings = sort_result(upcomings, 'upcoming')
 
@@ -95,7 +95,7 @@ class SlotsCollector
     sorted_upcomings + sorted_pasts
   end
 
-  private def query_data(relations, filter)
+  private def query_data(relations, mode)
     data = []
 
     ### fetch slots
@@ -121,7 +121,7 @@ class SlotsCollector
       ### build and execute query
       # get [limit] slots from all collections, not efficient but simple
       # and definitly working, TODO: optimize when need is
-      slots = query.retrieve(filter: filter,
+      slots = query.retrieve(mode: mode,
                              moment: @moment,
                              cursor: @cursor).limit(@limit)
       data.concat(slots)
@@ -129,12 +129,12 @@ class SlotsCollector
     data
   end
 
-  private def sort_result(data, filter)
+  private def sort_result(data, mode)
     ### order retrieved slots by startdate, enddate and id
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
     ### and return the first/last [limit] slots from the collection
-    if @before || (filter == 'past') || (filter == 'finished')
+    if @before || (mode == 'past') || (mode == 'finished')
       data.last @limit
     else
       data.take @limit

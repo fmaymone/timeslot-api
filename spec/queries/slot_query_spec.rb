@@ -71,10 +71,10 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
       #        slotter: @current_user)
     end
 
-    describe "filter" do
+    describe "mode" do
       it "upcoming" do
         slots = described_class.new(relation: @current_user.std_slots)
-        result = slots.retrieve(filter: 'upcoming', moment: Time.zone.now)
+        result = slots.retrieve(mode: 'upcoming', moment: Time.zone.now)
         # result set contains StdSlots (but not StdSlotsPrivate etc.)
         # so in order to compare them I need to 'cast' my slot
         # Finally: this seems like a good case for ValueObjects
@@ -85,7 +85,7 @@ RSpec.describe SlotQuery::OwnSlots, type: :query do
       it "unknown" do
         slots = described_class.new(relation: @current_user.std_slots)
         expect {
-          slots.retrieve(filter: 'unknown', moment: Time.zone.now)
+          slots.retrieve(mode: 'unknown', moment: Time.zone.now)
         }.to raise_error ApplicationController::PaginationError
       end
     end

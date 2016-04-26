@@ -390,13 +390,13 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{friend.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "doesn't return private slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -406,7 +406,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).to include 'ongoing friendslot'
@@ -414,14 +414,14 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-of-friend visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'past' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).to include 'foaf past slot'
         end
 
         it "returns public slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           # expect(response.body).to include 'ongoing reslot'
@@ -445,7 +445,7 @@ RSpec.describe "V1::Users", type: :request do
         #     create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #     get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
         #         'Authorization' => "Token token=#{friend.auth_token}"
 
         #     expect(response.body).not_to include unshared_groupslot.title
@@ -467,13 +467,13 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{offa.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "doesn't return private slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -483,14 +483,14 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-of-friend visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'past' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           expect(response.body).to include 'foaf past slot'
         end
 
         it "returns public slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           # expect(response.body).to include 'ongoing reslot'
@@ -513,7 +513,7 @@ RSpec.describe "V1::Users", type: :request do
         #     create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #     get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
         #         'Authorization' => "Token token=#{offa.auth_token}"
 
         #     expect(response.body).not_to include unshared_groupslot.title
@@ -526,13 +526,13 @@ RSpec.describe "V1::Users", type: :request do
         let(:stranger) { create(:user) }
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'now',
+          get "/v1/users/#{@current_user.id}/slots", mode: 'now',
               'Authorization' => "Token token=#{stranger.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "only returns public slots" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'all',
+          get "/v1/users/#{@current_user.id}/slots", mode: 'all',
               'Authorization' => "Token token=#{stranger.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -556,7 +556,7 @@ RSpec.describe "V1::Users", type: :request do
         #   let!(:shared_groupslot) { create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{stranger.id}/slots", { filter: 'all' },
+        #     get "/v1/users/#{stranger.id}/slots", { mode: 'all' },
         #         'Authorization' => "Token token=#{@current_user.auth_token}"
 
         #     expect(response.body).to include shared_groupslot.title
@@ -570,12 +570,12 @@ RSpec.describe "V1::Users", type: :request do
         # there is no current_user, I just use the existing user object for the
         # request
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'now'
+          get "/v1/users/#{@current_user.id}/slots", mode: 'now'
           expect(response).to have_http_status :ok
         end
 
         it "only returns public slots" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'all'
+          get "/v1/users/#{@current_user.id}/slots", mode: 'all'
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
