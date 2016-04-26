@@ -530,12 +530,12 @@ module Activity
         slot_reslot_push: %w(creator),
 
         user_accept_me: [],
-        user_accept_activity: [],
+        user_accept_activity: %w(friends actor),
         user_accept_notify: %w(actor),
         user_accept_push: %w(user),
 
         user_friendship_me: %w(actor),
-        user_friendship_activity: [],
+        user_friendship_activity: %w(foaf user),
         user_friendship_notify: %w(user),
         user_friendship_push: [],
 
