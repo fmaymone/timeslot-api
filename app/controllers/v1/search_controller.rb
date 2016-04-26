@@ -118,12 +118,15 @@ module V1
     end
 
     private def query
+      # TODO: translitered strings has no Umlaute
       # if we need to store usernames/titles with specials signs then we have to
       # search through username/title transliterated as well to get better search results
       # http://apidock.com/rails/ActiveSupport/Inflector/transliterate
-      ActiveSupport::Inflector
-        .transliterate(params.require(:query))
-        .gsub(/[^a-zA-Z0-9\s@-_.]/, "")
+      #ActiveSupport::Inflector.transliterate(params.require(:query))
+      #I18n.transliterate(params.require(:query))
+
+      params.require(:query)
+        .gsub(/[^a-zA-Z0-9\s@-_.öäüÖÄÜß]/, '')
     end
 
     private def has_allowed_params?

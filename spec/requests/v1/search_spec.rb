@@ -8,14 +8,6 @@ RSpec.describe "V1::Search", type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  # WebSearch Endpoint (Elastic Search)
-  # describe "GET /v1/search/", :vcr do
-  #   it "returns 422 if action was missing" do
-  #     get "/v1/search/", {}, auth_header
-  #     expect(response.status).to be(422)
-  #   end
-  # end
-
   describe "GET /v1/search/user" do
     it "returns 422 if parameters was missing" do
       get "/v1/search/user", nil, auth_header
@@ -61,6 +53,22 @@ RSpec.describe "V1::Search", type: :request do
     let(:query) {{ query: 'péré ôlérencè' }}
 
     it "returns transliterated search results of users" do
+      skip 'allow transliterated search and keep german umlaute'
+
+      get "/v1/search/user", query, auth_header
+      expect(response.status).to be(200)
+      expect(json.length).to eq 1
+      expect(json.first).to have_key('username')
+      expect(json.first).to have_key('id')
+      expect(json.first['id']).to eq(user.id)
+    end
+  end
+
+  describe "GET /v1/search/user" do
+    let!(:user) { create(:user, username: 'Gerhard Öppäl') }
+    let(:query) {{ query: 'öppäl' }}
+
+    it "returns search results of users with Umlaute" do
       get "/v1/search/user", query, auth_header
       expect(response.status).to be(200)
       expect(json.length).to eq 1
