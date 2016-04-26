@@ -12,6 +12,12 @@ FactoryGirl.define do
       members_can_post true
     end
 
+    trait :global do
+      public true
+      string_id "soccer_leagues:dfb.de:champions_league"
+      association :owner, :gs_category, strategy: :build
+    end
+
     trait :members_can_invite do
       members_can_invite true
     end

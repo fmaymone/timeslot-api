@@ -757,39 +757,39 @@ resource "Groups" do
     header "Authorization", :auth_header
 
     parameter :categoryUuid, "UUID for the global slot category to which " \
-                              "the group/calendar belongs"
+                             "the group/calendar belongs", required: true
     parameter :group, "hash witch contains the payload", required: true
-    parameter :muid, "UUID of the group to add slots to",
-              required: true, scope: :group
-    parameter :name, "Name of the group to add slots to",
-              required: true, scope: :group
+    parameter :stringId, "String Identifier for the group", scope: :group,
+              required: true
+    parameter :muid, "UUID of the group to add slots to", scope: :group
+    parameter :name, "Name of the group to add slots to", scope: :group
     parameter :description, "The description of the group", scope: :group
-    parameter :stringId, "String Identifier for the group", scope: :group
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
-    let(:categoryUuid) { create(:user, :gs_category)[:user_uuid] }
-    let(:muid) { attributes_for(:group)[:uuid] }
-    let(:name) { "Autokino an der alten Eiche" }
-    let(:image) { "http://faster.pussycat" }
-    let(:description) { "Bitte Autoradio nicht vergessen." }
+    describe "create new global group and add GlobalSlots", :vcr do
+      let(:categoryUuid) { create(:user, :gs_category)[:user_uuid] }
+      let(:muid) { attributes_for(:group)[:uuid] }
+      let(:name) { "Autokino an der alten Eiche" }
+      let(:image) { "http://faster.pussycat" }
+      let(:description) { "Bitte Autoradio nicht vergessen." }
 
-    let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
-    let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
+      let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
+      let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
 
-    describe "create new public group and add GlobalSlots", :vcr do
       example "Add GlobalSlots to new or existing public group",
               document: :v1 do
-        explanation "If no public group with the given UUID exists, " \
+        explanation "If no global group with the given UUID exists, " \
                     "one is created and the name and image is set and the " \
                     "given GlobalSlots are added to the new group.\n\n" \
                     "If a public group with the UUID exists, this one " \
-                    "is used to add the given GlobalSlots to it.\n\n" \
+                    "is used to add the given GlobalSlots to it and " \
+                    "the group will be updated with new submitted values.\n\n" \
                     "The GlobalSlots which aren't yet in the backend db " \
                     "are loaded via the candy shop.\n\n" \
-                    "The User which is used to submit the data is set as " \
-                    "owner for created slotgroup/list. This user must be " \
-                    "a known GlobalSlot source in the backend.\n\n" \
+                    "The data must be submitted by the special **Global" \
+                    " Importer** User. The owner if the list must be " \
+                    "available via candy api via it's uuid.\n\n" \
                     "returns 200 if slots were successfully added.\n\n" \
                     "returns 422 if group with given UUID exists but " \
                     "name doesn't match.\n\n" \
@@ -804,6 +804,55 @@ resource "Groups" do
         expect(autokino.name).to eq name
         expect(autokino.public?).to be true
         expect(autokino.image).to eq image
+        expect(autokino.description).to eq description
+        expect(autokino.string_id).to eq stringId
+
+        expect(autokino.slots).not_to be_empty
+        gs = GlobalSlot.find_by slot_uuid: slots.first
+        expect(autokino.slots).to include gs
+
+        expect(response_status).to eq(200)
+      end
+    end
+
+    describe "update existing global group", :vcr do
+      let!(:global_group) do
+        create(:group, public: true,
+               owner: create(:user, role: 'global_slot_category'),
+               uuid: "d448ce44-cd5b-efac-ef95-b84a70001777",
+               name: "Brechreiz und Komplexe",
+               description: "Studenten erzaehlen aus ihrem Leben.",
+               string_id:
+                 "tu_berlin_classes:lsf.tu-berlin.de:0401 L 145:180786:373591",
+               image: "http://www.retrainer.eu/start/img/tuberlin.png")
+      end
+
+      let(:categoryUuid) { "74234fc9-5543-6b0f-bdb5-66ed52e2d787" }
+      let(:muid) { "d448ce44-cd5b-efac-ef95-b84a70001906" }
+      let(:name) { "Berechenbarkeit und Komplexitaet" }
+      let(:description) { "Vl. Mi 14:00 - 16:00, 0401 L 145, Raum: ER 270" }
+      let(:stringId) {
+        "tu_berlin_classes:lsf.tu-berlin.de:0401 L 145:180786:373591" }
+      let(:slots) { ["5b012024-e614-83cb-63a6-165d4716c892"] }
+      let(:domain) { "lsf.tu-berlin.de" } # this is ignored
+
+      example "Update existing global group", document: :v1 do
+        explanation "Check for existing global group via **string_id**, " \
+                    "If the global group is already known in the backend " \
+                    "it will be updated with the submitted group params.\n\n" \
+                    "returns 200 if slots were successfully added.\n\n" \
+                    "returns 422 if group with given UUID exists but " \
+                    "name doesn't match.\n\n" \
+                    "returns 422 if requiered parameters are missing or invalid."
+
+        group_counter = Group.count
+        do_request
+
+        expect(Group.count).to eq group_counter # no group created
+        autokino = Group.last
+        expect(autokino.uuid).to eq muid
+        expect(autokino.name).to eq name
+        expect(autokino.public?).to be true
         expect(autokino.description).to eq description
         expect(autokino.string_id).to eq stringId
 

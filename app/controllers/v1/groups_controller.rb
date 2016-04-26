@@ -199,16 +199,18 @@ module V1
     def global_group
       authorize current_user
 
-      owner = GlobalSlot.category_as_user(params.require(:category_uuid))
-      group = Group.find_or_create_by!(uuid: globalgroup[:muid],
-                                       name: globalgroup[:name]) do |new_group|
-        new_group.update(globalgroup.except(:muid, :slots))
-        new_group.owner = owner
-        new_group.public = true
+      string_id = params.require(:group).require(:string_id)
+      group = Group.find_by(string_id: string_id)
+
+      if group
+        group.update(globalgroup_params)
+      else
+        owner = GlobalSlot.category_as_user(params.require(:category_uuid))
+        group = Group.create(globalgroup_params.merge(owner: owner, public: true))
       end
 
       authorize group
-      group.add_slots globalgroup[:slots]
+      group.add_slots params[:group][:slots] if params[:group].key? :slots
 
       head :ok
     end
@@ -218,10 +220,11 @@ module V1
                     :members_can_post, :members_can_invite)
     end
 
-    private def globalgroup
+    private def globalgroup_params
       p = params.require(:group).permit(:name, :image, :description,
-                                        :muid, :string_id, slots: [])
-      p.transform_keys(&:underscore) if p
+                                        :muid, :string_id)
+      p[:uuid] = p.delete(:muid)
+      p
     end
 
     private def user_id
