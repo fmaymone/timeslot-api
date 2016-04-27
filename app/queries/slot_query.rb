@@ -34,6 +34,8 @@ module SlotQuery
           # class, which means, we are calling the method with the name of
           # the 'mode'
           @relation.where(send(mode, moment)).ordered
+        when 'between'
+          @relation.where(send(mode, earliest, latest)).ordered
         else
           error_string = "unknown pagination mode #{mode}"
           msg = { message: error_string }
@@ -68,6 +70,11 @@ module SlotQuery
 
     private def now(moment = nil)
       upcoming(moment).or ongoing(moment)
+    end
+
+    private def between(moment, latest)
+      meta_table[:start_date].lt(latest).and(
+        meta_table[:end_date].gt(moment))
     end
 
     private def after_cursor(cursor)
