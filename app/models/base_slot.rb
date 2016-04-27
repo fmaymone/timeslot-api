@@ -116,20 +116,29 @@ class BaseSlot < ActiveRecord::Base
         latitude: location[:latitude], longitude: location[:longitude])
     end
 
+    update_notification = new_location.present?
     new_location ||= IosLocation.create(location.merge(creator: creator))
 
     #update custom label for location (same geo-location can have several names)
     new_location[:name] = location[:name] unless location[:name].blank?
     meta_slot.update(ios_location: new_location)
+
+    create_activity('location') if update_notification
+    Feed.update_objects(self)
   end
 
   def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
+    # check if an update notification has to be send
+    update_notification = meta ? meta[:start_date] != start_date : false
+
     # statement order is important, otherwise added errors may be overwritten
     update(meta) if meta
     update_media(media, user.id) if media
     update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
-    Feed.update_shared_objects([self])
+
+    create_activity('start') if update_notification
+    Feed.update_objects(self)
   end
 
   def add_media(item, creator_id)

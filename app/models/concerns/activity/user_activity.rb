@@ -10,7 +10,7 @@ module UserActivity
   end
 
   private def activity_visibility
-    'friends' # currently not supported
+    'public' # currently not supported
   end
 
   # Add extra data to each activity. The data can be hide

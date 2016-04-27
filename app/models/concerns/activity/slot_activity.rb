@@ -46,8 +46,8 @@ module SlotActivity
     {
       ACTOR: activity_actor.username,
       TITLE: activity_target.meta_slot.title,
-      FIELD: action || activity_action,
-      USER: activity_foreign.username
+      USER: activity_foreign.username,
+      #FIELD: action || activity_action
     }
   end
 end

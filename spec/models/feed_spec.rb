@@ -14,7 +14,6 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Create relationships
         follower.follow(user)
         follower2.follow(user)
-
         # Perform activities (User)
         slot.create_comment(user, 'This is a test comment.')
         slot.create_like(user)
@@ -1353,6 +1352,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         news_feed_friend = Feed.news_feed(friend.id).as_json
         expect(news_feed_friend.count).to be(0) # has no related activities
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(0) # has no related activities
       end
 
       it "Notification Feed (activities to own content)" do
@@ -1374,6 +1376,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
 
     context "Forward accepted friend requests" do
+      let!(:friendship) { create(:friendship, :established, user: user, friend: follower) }
+
       before(:each) do
         # Perform activity: request friendship
         friend.initiate_friendship(user.id)
@@ -1399,10 +1403,13 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id).as_json
-        expect(news_feed.count).to be(0) # has no related activities
+        expect(news_feed.count).to be(1) # +1 user activity (new friendship)
 
         news_feed_friend = Feed.news_feed(friend.id).as_json
-        expect(news_feed_friend.count).to be(0) # has no related activities
+        expect(news_feed_friend.count).to be(1) # +1 user activity (new friendship)
+
+        news_feed_follower = Feed.news_feed(follower.id).as_json
+        expect(news_feed_follower.count).to be(1) # +1 user activity (new friendship of a friend)
       end
 
       it "Notification Feed (activities to own content)" do
@@ -1429,6 +1436,9 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['message']).to eq(I18n.t('user_friendship_notify_singular',
                                                                 {ACTOR: user.username,
                                                                  USER: friend.username}))
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(0) # has no related activities
       end
     end
 
@@ -1485,7 +1495,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Update Shared Objects", :redis do
     let(:user) { create(:user, :with_email, :with_password, picture: 'user.jpg') }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
+    let(:meta_slot) { create(:meta_slot, creator: user, start_date: Time.zone.yesterday) }
     let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
 
     context "User follows a slot" do
@@ -1495,22 +1505,30 @@ RSpec.describe Feed, :activity, :async, type: :model do
         # Perform activities
         slot.create_like(user)
         # Modify shared object (Slot)
-        slot.update_from_params(meta: { title: 'New Title' })
+        slot.update_from_params(meta: { title: 'New Title',
+                                        start_date: Time.zone.tomorrow })
+        slot.reload
         # Modify shared object (User)
-        user.update(picture: 'test.jpg') and Feed.update_shared_objects([user])
+        user.update(picture: 'test.jpg') and Feed.update_objects(user)
       end
 
       it "Feeds retrieved updates from shared objects" do
         user_feed = Feed.user_feed(user.id).as_json
-        expect(user_feed.count).to be(1) # +1 own activities
+        expect(user_feed.count).to be(2) # +2 own activities (+1 change start time)
         expect(user_feed.first['type']).to eq('Slot')
-        expect(user_feed.first['action']).to eq('like')
+        expect(user_feed.first['action']).to eq('start')
         expect(user_feed.first['data']['target']['id']).to be(slot.id)
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
-        expect(user_feed.first['data']['actor']['image']).to eq('test.jpg')
-        expect(user_feed.first['data']['target']['title']).to eq('New Title')
-        expect(user_feed.first['data']['target']['likes']).to eq(1)
-        expect(user_feed.first['data']['target']['likerIds']).to include(user.id)
+        expect(Time.zone.parse(user_feed.first['data']['target']['startDate'])).to eq(slot.start_date)
+
+        expect(user_feed.second['type']).to eq('Slot')
+        expect(user_feed.second['action']).to eq('like')
+        expect(user_feed.second['data']['target']['id']).to be(slot.id)
+        expect(user_feed.second['data']['actor']['id']).to be(user.id)
+        expect(user_feed.second['data']['actor']['image']).to eq('test.jpg')
+        expect(user_feed.second['data']['target']['title']).to eq('New Title')
+        expect(user_feed.second['data']['target']['likes']).to eq(1)
+        expect(user_feed.second['data']['target']['likerIds']).to include(user.id)
 
         news_feed_follower = Feed.news_feed(follower.id).as_json
         expect(news_feed_follower.count).to be(1) # +1 public activity
@@ -1528,7 +1546,14 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
         expect(Feed.notification_feed(user.id).as_json.count).to be(0)
         expect(Feed.user_feed(follower.id).as_json.count).to be(0)
-        expect(Feed.notification_feed(follower.id).as_json.count).to be(0)
+
+        notification_feed_follower = Feed.notification_feed(follower.id).as_json
+        expect(notification_feed_follower.count).to be(1) # +1 change start time
+        expect(notification_feed_follower.first['type']).to eq('Slot')
+        expect(notification_feed_follower.first['action']).to eq('start')
+        expect(notification_feed_follower.first['data']['target']['id']).to be(slot.id)
+        expect(notification_feed_follower.first['data']['actor']['id']).to be(user.id)
+        expect(Time.zone.parse(notification_feed_follower.first['data']['target']['startDate'])).to eq(slot.start_date)
       end
 
       it "Feeds retrieved updates from shared objects also if not affected" do

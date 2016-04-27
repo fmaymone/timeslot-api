@@ -158,7 +158,7 @@ module Feed
       job_data
     end
 
-    def update_shared_objects(objects)
+    def update_objects(objects)
       objects = [objects] unless objects.kind_of?(Array)
       user_feeds = []
 
@@ -185,10 +185,10 @@ module Feed
       end
 
       user_feeds.uniq!
-      refresh_feed_cache(user_feeds)
+      refresh_cache(user_feeds)
     end
 
-    def refresh_feed_cache(user_ids, time = Time.now.to_f)
+    def refresh_cache(user_ids, time = Time.now.to_f)
       user_ids = [user_ids] unless user_ids.kind_of?(Array)
 
       @storage.pipe do
@@ -380,7 +380,7 @@ module Feed
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
       i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
       # Add the targets field to the translation params holder (actually not in use)
-      i18_params[:FIELD] = 'title'
+      #i18_params[:FIELD] = 'title'
       # Add the title to the translation params holder
       i18_params[:TITLE] = target['title'] if target && target['title']
       # Add the name to the translation params holder
