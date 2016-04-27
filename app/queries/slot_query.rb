@@ -25,7 +25,7 @@ module SlotQuery
         # query without cursor
         case mode
         when nil
-        when 'all'
+        when 'all', 'none'
           @relation
         when 'finished'
           @relation.where(finished(moment)).ordered_rev

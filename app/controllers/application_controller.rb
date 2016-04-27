@@ -105,14 +105,14 @@ class ApplicationController < ActionController::API
     # set maximum for limit to 100 if higher
     p[:limit] = PAGINATION_MAX_LIMIT if p[:limit].to_i > PAGINATION_MAX_LIMIT
 
-    # if 'between' filter is used require earliest & latest
+    # if 'between' filter is used require earliest & latest and set default mode
     if p[:filter].present? && p[:filter] == 'between'
       params.require(:earliest)
       params.require(:latest)
-    end
-
+      p[:mode] = 'now' if p[:mode].nil?
+      p[:moment] = p[:earliest] if p[:moment].nil?
     # ignore mode & moment if a cursor is submitted
-    if p[:before].present? || p[:after].present?
+    elsif p[:before].present? || p[:after].present?
       p[:mode] = nil
       p[:moment] = nil
     else

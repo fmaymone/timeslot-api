@@ -158,4 +158,5 @@
 * [Get list of friends of another user](users/get_list_of_friends_of_another_user.markdown)
 * [Get list of calendars of another user](users/get_list_of_calendars_of_another_user.markdown)
 * [Reset password](users/reset_password.markdown)
+* [Get slots for Friend - with &#39;between&#39; pagination](users/get_slots_for_friend_-_with_&#39;between&#39;_pagination.markdown)
 
