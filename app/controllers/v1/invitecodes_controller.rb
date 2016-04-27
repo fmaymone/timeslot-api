@@ -11,7 +11,7 @@ module V1
       return head :unprocessable_entity if user_id != current_user.id
 
       invitecode = Invitecode.create(user_id: user_id,
-                                      context: params.require(:context))
+                                     context: params.require(:context))
       if invitecode.persisted?
         render :create, status: :created, locals: { invitecode: invitecode }
       else

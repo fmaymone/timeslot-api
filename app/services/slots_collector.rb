@@ -14,15 +14,15 @@ class SlotsCollector
     @filter = filter
     @moment = moment
     @before = before
-    @after = after
+    # @after = after
     @earliest = earliest
     @latest = latest
 
-    return self unless @after || @before
+    return self unless after || @before
 
-    encoded_cursor = (@after || @before)
+    encoded_cursor = (after || @before)
     @cursor = BaseSlot.from_paging_cursor encoded_cursor if encoded_cursor
-    @direction = @after.nil? ? 'before' : 'after'
+    @direction = after.nil? ? 'before' : 'after'
   end
 
   # collects all std_slots of current_user
