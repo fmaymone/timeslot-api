@@ -80,11 +80,31 @@ class SlotsCollector
     counter
   end
 
-  private def consider_mode(relations, mode)
-    if mode == 'around'
-      around_mode_query(relations)
+  # decreases the collection which is operated upon
+  private def apply_filter(relation, filter)
+    if filter == 'between'
+      query = SlotQuery::OwnSlots.new(relation: relation, direction: nil)
+      query.retrieve(mode: 'between', earliest: @earliest, latest: @latest)
     else
-      slots = query_data(relations, mode)
+      relation
+    end
+  end
+
+  private def consider_mode(relations, mode)
+    filtered_relations = []
+
+    if @filter
+      relations.each do |relation|
+        filtered_relations << apply_filter(relation, @filter)
+      end
+    else
+      filtered_relations = relations
+    end
+
+    if mode == 'around'
+      around_mode_query(filtered_relations)
+    else
+      slots = query_data(filtered_relations, mode)
       sort_result(slots, mode)
     end
   end

@@ -6,10 +6,14 @@ RSpec.describe SlotsCollector, type: :service do
 
     let(:current_user) { create(:user) }
 
-    let!(:public_stdslot) { create(:std_slot_public, owner: other, creator: other) }
-    let!(:foaf_stdslot) { create(:std_slot_foaf, owner: other, creator: other) }
-    let!(:friends_stdslot) { create(:std_slot_friends, owner: other, creator: other) }
-    let!(:private_stdslot) { create(:std_slot_private, owner: other, creator: other) }
+    let!(:public_stdslot) {
+      create(:std_slot_public, owner: other, creator: other) }
+    let!(:foaf_stdslot) {
+      create(:std_slot_foaf, owner: other, creator: other) }
+    let!(:friends_stdslot) {
+      create(:std_slot_friends, owner: other, creator: other) }
+    let!(:private_stdslot) {
+      create(:std_slot_private, owner: other, creator: other) }
 
     # let!(:public_reslot) { create(:re_slot_public, slotter: other) }
     # let!(:foaf_reslot) { create(:re_slot_foaf, slotter: other) }
@@ -130,6 +134,68 @@ RSpec.describe SlotsCollector, type: :service do
       # expect(slots).to include foaf_reslot
       # expect(slots).to include friends_reslot
       # expect(slots).not_to include private_reslot
+    end
+  end
+
+  describe 'filter' do
+    context "between" do
+      let(:user) { create(:user) }
+      let(:moment) { '2016-04-21T11:08:18.000Z' }
+      let(:earliest) { '2016-04-21T11:06:18.000Z' }
+      let(:latest) { '2016-04-21T19:06:18.000Z' }
+
+      let!(:between_slot) do
+        create(:std_slot_public, owner: user, title: 'in between',
+               start_date: '2016-04-21 15:06:18Z',
+               end_date: '2016-04-21 16:06:18Z'
+              )
+      end
+      let!(:overlap_earliest_slot) do
+        create(:std_slot_public, owner: user, title: 'overlap earliest',
+               start_date: '2016-04-21 03:06:18Z',
+               end_date: '2016-04-21 16:06:18Z'
+              )
+      end
+      let!(:overlap_latest_slot) do
+        create(:std_slot_public, owner: user, title: 'overlap latest',
+               start_date: '2016-04-21 15:06:18Z',
+               end_date: '2016-04-21 23:06:18Z'
+              )
+      end
+      let!(:overlap_both_slot) do
+        create(:std_slot_public, owner: user, title: 'overlap both',
+               start_date: '2016-04-21 05:06:18Z',
+               end_date: '2016-04-21 22:06:18Z'
+              )
+      end
+      let!(:before_slot) do
+        create(:std_slot_public, owner: user, title: 'before',
+               start_date: '2016-04-21 01:06:18Z',
+               end_date: '2016-04-21 03:06:18Z'
+              )
+      end
+      let!(:later_slot) do
+        create(:std_slot_public, owner: user, title: 'later',
+               start_date: '2016-04-21 20:06:18Z',
+               end_date: '2016-04-21 21:06:18Z'
+              )
+      end
+
+      it "returns slots after 'moment' from the filtered slotset" do
+        collector = SlotsCollector.new(mode: 'upcoming', moment: moment,
+                                       limit: 6, filter: 'between',
+                                       earliest: earliest, latest: latest)
+        result = collector.my_slots(user: user)
+
+        result.each do |slot|
+          expect(slot.start_date).to be >= moment
+          expect(slot.end_date).to be > earliest
+          expect(slot.start_date).to be < latest
+        end
+
+        expect(result).not_to include before_slot
+        expect(result).not_to include later_slot
+      end
     end
   end
 end
