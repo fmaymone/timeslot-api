@@ -41,6 +41,9 @@ class User < ActiveRecord::Base
   has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :slot,
            inverse_of: :my_calendar_users
+  has_many :tagged_slots, -> { merge Passengership.add_media_permitted },
+           through: :passengerships, source: :slot,
+           inverse_of: :tagged_users
 
   # group related
   has_many :own_groups, class_name: Group,

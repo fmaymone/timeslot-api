@@ -50,9 +50,9 @@ class BaseSlot < ActiveRecord::Base
   has_many :my_calendar_users, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :user,
            inverse_of: :my_calendar_slots
-
   has_many :tagged_users, -> { merge Passengership.add_media_permitted },
-           through: :passengerships, source: :user
+           through: :passengerships, source: :user,
+           inverse_of: :tagged_slots
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end,
