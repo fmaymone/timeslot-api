@@ -141,11 +141,16 @@ module Activity
         NAME: activity_target.try(:name)
       }
       params = { message: message_params }
-      if activity_type == 'Slot'
+
+      case activity_type
+      when 'Slot'
         params[:slot_id] = activity_target.id
-      elsif activity_type == 'User'
-        params[:user_id] = activity_target.id
+      when 'Group'
+        params[:group_id] = activity_target.id
+      when 'User'
+        params[:user_id] = activity_actor.id
       end
+
       Device.notify_all(notify, params)
     end
   end

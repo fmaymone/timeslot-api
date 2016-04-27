@@ -80,7 +80,7 @@ class Device < ActiveRecord::Base
 
   # push notification to APNS (apple push notification service)
   def self.notify_ios(client, device, lang, message:, sound: 'receive_message.wav',
-                      badge: 1, extra: {}, slot_id: nil, user_id: nil, friend_id: nil)
+                      badge: 1, extra: {}, slot_id: nil, user_id: nil, group_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     has_custom_language = lang.present? && lang != I18n.default_locale
@@ -108,7 +108,7 @@ class Device < ActiveRecord::Base
     }
     aps[:slot_id] = slot_id if slot_id
     aps[:user_id] = user_id if user_id
-    aps[:friend_id] = friend_id if friend_id
+    aps[:group_id] = group_id if group_id
 
     # Always includes the default message
     payload = { default: { message: message_push } }
