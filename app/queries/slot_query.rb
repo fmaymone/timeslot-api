@@ -13,7 +13,8 @@ module SlotQuery
     end
 
     # I don't like the split in direction and cursor because they belong together
-    def retrieve(mode: nil, moment: Time.zone.now, cursor: nil)
+    def retrieve(mode: nil, moment: Time.zone.now, cursor: nil,
+                 earliest: nil, latest: nil)
       # query with cursor
       case @direction
       when 'before'

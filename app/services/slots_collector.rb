@@ -3,14 +3,20 @@ class SlotsCollector
   # I have to set them here again unfortunately
   def initialize(limit: PAGINATION_DEFAULT_LIMIT,
                  mode: PAGINATION_DEFAULT_MODE,
+                 filter: PAGINATION_DEFAULT_FILTER,
                  moment: Time.zone.now,
                  after: nil,
-                 before: nil)
+                 before: nil,
+                 earliest: nil,
+                 latest: nil)
     @limit = mode == 'around' ? limit.to_i / 2 : limit.to_i
     @mode = mode
+    @filter = filter
     @moment = moment
     @before = before
     @after = after
+    @earliest = earliest
+    @latest = latest
 
     return self unless @after || @before
 

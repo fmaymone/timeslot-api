@@ -1,10 +1,15 @@
 class SlotPaginator < BasePaginator
-  attr_accessor :mode, :moment, :after, :before
+  attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest
 
-  def initialize(data:, limit:, mode: nil, moment: nil, after: nil, before: nil)
+  def initialize(data:, limit:, mode: nil, moment: nil,
+                 filter: nil, earliest: nil, latest: nil,
+                 after: nil, before: nil)
     super(limit: limit.to_i)
     @mode = mode # upcoming, ongoing, past, finished, now, around
     @moment = moment # a timestamp (point-in-time)
+    @filter = filter
+    @earliest = earliest # a timestamp (point-in-time)
+    @latest = latest # a timestamp (point-in-time)
     @result_collection_size = data.size
     @data = data
 
@@ -18,7 +23,7 @@ class SlotPaginator < BasePaginator
       @before = nil
     else # elsif @limit > @result_collection_size
       # we don't have enough items in the db to completely fulfill the query
-      if mode == 'around'
+      if @mode == 'around'
         upcomings = @data.count { |slot| slot.start_date >= moment }
         pasts = @data.count { |slot| slot.start_date < moment }
         @after = if upcomings == (@limit / 2)

@@ -93,7 +93,9 @@ class ApplicationController < ActionController::API
   end
 
   private def slot_paging_params
-    p = params.permit(:mode, :limit, :moment, :after, :before).symbolize_keys
+    p = params.permit(:mode, :limit, :moment,
+                      :filter, :earliest, :latest,
+                      :after, :before).symbolize_keys
 
     # are there any pagination params?
     return {} unless p.any?
@@ -102,6 +104,12 @@ class ApplicationController < ActionController::API
     p[:limit] = PAGINATION_DEFAULT_LIMIT if p[:limit].nil?
     # set maximum for limit to 100 if higher
     p[:limit] = PAGINATION_MAX_LIMIT if p[:limit].to_i > PAGINATION_MAX_LIMIT
+
+    # if 'between' filter is used require earliest & latest
+    if p[:filter].present? && p[:filter] == 'between'
+      params.require(:earliest)
+      params.require(:latest)
+    end
 
     # ignore mode & moment if a cursor is submitted
     if p[:before].present? || p[:after].present?
