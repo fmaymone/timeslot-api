@@ -79,5 +79,8 @@ module TsRailsBackend
 
     # Enabling garbage collection instrumentation for NewRelic
     GC::Profiler.enable
+
+    # TODO: check if compression could be done in a proxy
+    config.middleware.use Rack::Deflater
   end
 end
