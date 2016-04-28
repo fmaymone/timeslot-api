@@ -9,11 +9,6 @@ Rails.application.routes.draw do
     post 'tw-connect', to: 'connects#twitter_connect'
 
     scope constraints: { id: /\d+/ } do
-      post 'stdslot', to: 'slots#create_stdslot'
-
-      patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
-      patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-
       # share routes
       get '/', to: 'share#redirect', as: 'redirect'
       post 'share/:id/:action', to: 'share#:action', as: 'slot_share'
@@ -22,12 +17,16 @@ Rails.application.routes.draw do
       post 'import', to: 'import#handler', as: 'slot_import'
 
       # TODO: remove routes
+      post 'stdslot', to: 'slots#create_stdslot'
+      patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
       delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
+      patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
       get ':id', to: 'slots#show', as: 'slot'
       post '', to: 'slots#create', as: 'slot_create'
+      patch ':id', to: 'slots#update', as: 'slot_update'
       delete ':id', to: 'slots#delete', as: 'slot_delete'
 
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'

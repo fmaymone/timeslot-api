@@ -20,6 +20,8 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
   it { is_expected.to have_many(:my_calendar_slots)
                        .inverse_of(:my_calendar_users) }
+  it { is_expected.to have_many(:tagged_slots)
+                       .inverse_of(:tagged_users) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:active_memberships).inverse_of(:user) }

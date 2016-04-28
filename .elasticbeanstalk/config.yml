@@ -1,16 +1,17 @@
 branch-defaults:
-  aws-eb-stage:
+  ac-aws:
+    environment: ac-casino
+  develop:
     environment: tsinc-aws-stage
-  fix-calendar-counter:
-    environment: tsinc-aws-stage
-  globalslot-lists:
-    environment: tsinc-aws-stage
-  user-tagging-permissions:
+  minor-fixes:
+    environment: null
+    group_suffix: null
+  stage-aws:
     environment: tsinc-aws-stage
 global:
   application_name: TS_RAILS_BACKEND
   default_ec2_keyname: aws-eb-ts-backend-stage
-  default_platform: 64bit Amazon Linux 2015.09 v2.0.6 running Ruby 2.2 (Puma)
+  default_platform: 64bit Amazon Linux 2016.03 v2.1.0 running Ruby 2.3 (Puma)
   default_region: eu-central-1
   profile: eb-cli
   sc: git
