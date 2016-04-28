@@ -65,7 +65,16 @@ module V1
       @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
-      render :slots
+      collector = SlotsCollector.new(**slot_paging_params)
+      @slots = collector.group_slots(group: @group)
+
+      if slot_paging_params.blank?
+        render :slots
+      else
+        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
+
     end
 
     # GET /v1/groups/:group_uuid/members

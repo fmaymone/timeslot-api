@@ -80,6 +80,12 @@ class SlotsCollector
     counter
   end
 
+  # TODO: write specs
+  def group_slots(group:)
+    showables = [group.slots_with_associations]
+    consider_mode(showables, @mode)
+  end
+
   # decreases the collection which is operated upon
   private def apply_filter(relation, filter)
     if filter == 'between'
