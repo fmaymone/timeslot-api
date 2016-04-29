@@ -278,11 +278,10 @@ module Feed
       # Get offset in reversed logic (LIFO), supports simple cursor fallback
       offset = cursor ? cursor.to_i : offset.to_i
       # Determine start in reversed order
-      start = [length - offset - limit.to_i - 1, 0].max
+      start = [length - offset - limit.to_i, 0].max
       start = length if offset >= length
       # Determine range in reversed order
-      range = [length - offset - 1, limit.to_i].min
-      range = 0 if range < 0
+      range = [start + limit.to_i - 1, length - offset - 1].min
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
       feed = @storage.range(feed_index, start, range).reverse!
       # Enrich target activities
@@ -321,10 +320,6 @@ module Feed
         actor = get_shared_object("User:#{activity['actors'].first}")
         # Get target (from shared object)
         target = get_shared_object("#{activity['type']}:#{activity['target']}")
-
-        # FIX: This is temporary solution for syncing issues on iOS
-        # actor = JSONView.user(User.find(activity['actors'].first))
-        # target = JSONView.slot(BaseSlot.get(activity['target']))
 
         # Prepare filtering out private targets from feed + skip (this is an extra check)
         if target.try(:visibility) == 'private'
@@ -409,23 +404,23 @@ module Feed
     private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil, context: nil)
       # Get offset from cursor in reversed logic (LIFO), supports simple offset fallback
       offset = cursor ? cursor.to_i : offset.to_i
-      # Temporary holder to store the aggregation feed
+      # Temporary holder to store the final page of an aggregated feed
       aggregated_feed = []
       # The aggregation group index table
       groups = {}
       # We have to store the last activity of each activity group
       last_actions = {}
       # The index of the group index table
-      index = -1
+      group_index = -1
       # To determine the paging cursor we use a counter
       # Also we use this counter to check on break condition if limit is reached
       feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = @storage.range(feed_index, 0, @storage.length(feed_index) - offset - 1).reverse!
+      # NOTE: The pagination limit has to be calculated on the fly
+      # NOTE: Actually we use a maximum of 100 activities from the target-feed fo each aggregated page
+      feed = paginate(feed_index, limit: 100, offset: offset)
       # Loop through all feeds (has a break statement, offset is optional)
-      feed.each do |post|
-        # Enrich target activity
-        post = enrich_activity(post)
+      feed.each_with_index do |post, i|
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
         group = post['group'] = "group:#{post['target']}" ##{post['time']}
@@ -433,12 +428,12 @@ module Feed
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
         if groups.has_key?(group)
+          # Determine current aggregation group index
+          current = groups[group]
+          # Get current aggregation group feed
+          current_feed = aggregated_feed[current]
           # Skip this part if the aggregation action is not the same as the last one
           if last_actions[group] === post['action']
-            # Determine current aggregation group index
-            current = groups[group]
-            # Get current aggregation group feed
-            current_feed = aggregated_feed[current]
             # Update activity count
             current_feed['activityCount'] += 1
             # Collect actors as unique
@@ -446,12 +441,12 @@ module Feed
             # Get intersection of actors and the users social context
             current_feed['actors'] &= context if context
           end
-          # Skip counting for cursor and limits
-          next
         # If group does not exist, creates a new group for aggregations
         elsif feed_count < limit.to_i
+          # The feed count indicates the limit of an activity feed page
+          feed_count += 1
           # Increment index on each new group (starting from -1)
-          current = groups[group] = (index += 1)
+          current = groups[group] = (group_index += 1)
           # Keep the last action to skip other activities on the same aggregation group
           last_actions[group] = post['action']
           # Set the whole activity object on each new group
@@ -462,50 +457,51 @@ module Feed
           current_feed['actors'] = [actor]
           # Init activity counter
           current_feed['activityCount'] = 1
-          # Sets a generated feed id to prevent id conflicts with other activity views
-          current_feed['id'] = Digest::SHA1.hexdigest(group).upcase
         else
           # Breaks the aggregation process if limit is reached
           break
         end
-        # Set or update current feed next cursor (if the limit isn't reached)
-        current_feed['cursor'] = ((feed_count += 1) + offset).to_s
+        # Sets a generated feed id to prevent id conflicts with other activity views
+        current_feed['id'] = Digest::SHA1.hexdigest("#{group}#{post['time']}").upcase
+        # Set cursor position from current activity
+        current_feed['cursor'] = (i + offset + 1).to_s
       end
       aggregated_feed
     end
 
     ## Cache Helpers ##
 
-    private def get_from_cache(feed, params)
+    private def get_from_cache(feed_index, params)
       # Determine when the last feed update was happened
-      last_update = @storage.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed_index}")
       # Get the current cache state
-      last_state = @storage.get("Status:#{feed}")
+      last_state = @storage.get("Status:#{feed_index}")
       # Validated the cache state
       if validate_cache(last_update, last_state)
-        last_cache = get_cached_feed(feed)
+        last_cache = get_cached_feed(feed_index)
         cache_index = generate_index(params)
-        last_cache[cache_index] if last_cache
+        return last_cache[cache_index] if last_cache
       else
-        nil
+        @storage.del("Cache:#{feed_index}")
       end
+      nil
     end
 
-    private def set_to_cache(feed, params, result)
+    private def set_to_cache(feed_index, params, result)
       # Determine when the last feed update was happened
-      last_update = @storage.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed_index}")
       # Set initially timer if there are no actions
       if last_update.nil?
         last_update = Time.now.to_f
-        @storage.set("Update:#{feed}", last_update - 1)
+        @storage.set("Update:#{feed_index}", last_update - 1)
       end
       # Set the current cache state
-      @storage.set("Status:#{feed}", last_update)
+      @storage.set("Status:#{feed_index}", last_update)
       # Update cache
-      last_cache = get_cached_feed(feed) || {}
+      last_cache = get_cached_feed(feed_index) || {}
       cache_index = generate_index(params)
       last_cache[cache_index] = result
-      @storage.set("Cache:#{feed}", gzip_cache(last_cache))
+      @storage.set("Cache:#{feed_index}", gzip_cache(last_cache))
       result
     end
 
