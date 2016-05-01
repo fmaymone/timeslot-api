@@ -29,14 +29,14 @@ class SlotsCollector
 
   # collects all std_slots of current_user
   def my_slots(user:)
-    showables = [user.std_slots]
-    consider_mode(showables, @mode)
+    valid_collections = [user.std_slots]
+    consider_mode(valid_collections, @mode)
   end
 
   # collects all passengerships of current_user
   def my_schedule_slots(user:)
-    showables = [user.my_calendar_slots]
-    consider_mode(showables, @mode)
+    valid_collections = [user.my_calendar_slots]
+    consider_mode(valid_collections, @mode)
   end
 
   # collects all slots current_user or visitor is allowed to see from
@@ -48,10 +48,11 @@ class SlotsCollector
     return my_slots(user: current_user) if relationship == ME
 
     # get showable slot collections
-    showables = PresentableSlots.call(relationship: relationship, user: user,
-                                      current_user: current_user)
+    valid_collections = PresentableSlots.call(relationship: relationship,
+                                              user: user,
+                                              current_user: current_user)
 
-    consider_mode(showables, @mode)
+    consider_mode(valid_collections, @mode)
   end
 
   # collects all non-private slots from all friends of the current_user
@@ -60,9 +61,9 @@ class SlotsCollector
     # friends = UserQuery::Relationship.new(current_user.id).my_friends
     friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
-    showables = [StdSlot.where(owner: friends).unprivate]
-                 # ReSlot.where(slotter: friends).unprivate]
-    consider_mode(showables, @mode)
+    valid_collections = [StdSlot.where(owner: friends).unprivate]
+                         # ReSlot.where(slotter: friends).unprivate]
+    consider_mode(valid_collections, @mode)
   end
 
   # collects only active std_slots current_user or visitor is allowed to
@@ -72,20 +73,22 @@ class SlotsCollector
     rs = UserRelationship.call(current_user.try(:id), user.id)
 
     if slot_class == StdSlot
-      showables = PresentableSlots.std_slots(relationship: rs, user: user)
+      valid_collections = PresentableSlots.std_slots(relationship: rs,
+                                                     user: user)
     # elsif slot_class == ReSlot
-      # showables = PresentableSlots.re_slots(relationship: rs, user: user)
+      # valid_collections = PresentableSlots.re_slots(relationship: rs,
+      #                                               user: user)
     end
 
     counter = 0
-    showables.each { |relation| counter += relation.active.count }
+    valid_collections.each { |relation| counter += relation.active.count }
     counter
   end
 
   # TODO: write specs
   def group_slots(group:)
-    showables = [group.slots_with_associations]
-    consider_mode(showables, @mode)
+    valid_collections = [group.slots_with_associations]
+    consider_mode(valid_collections, @mode)
   end
 
   # decreases the collection which is operated upon

@@ -597,7 +597,6 @@ RSpec.describe "V1::Me", type: :request do
         let(:mode) { 'now' }
 
         it "by startdate, enddate, slotid" do
-
           get "/v1/me/slots",
               query_string, @auth_header
 
@@ -634,7 +633,6 @@ RSpec.describe "V1::Me", type: :request do
 
         context "all" do
           it "returns all slots" do
-
             get "/v1/me/slots",
                 { mode: 'all' }, @auth_header
 
@@ -655,7 +653,6 @@ RSpec.describe "V1::Me", type: :request do
           let(:mode) { 'upcoming' }
 
           it "returns slots where start_date is equal or after moment" do
-
             get "/v1/me/slots",
                 { mode: mode },
                 @auth_header
@@ -707,7 +704,6 @@ RSpec.describe "V1::Me", type: :request do
           let(:mode) { 'past' }
 
           it "returns slots where start_date is before moment" do
-
             get "/v1/me/slots",
                 { mode: mode },
                 @auth_header
@@ -733,7 +729,6 @@ RSpec.describe "V1::Me", type: :request do
 
         context "finished" do
           it "returns slots where start & end is before moment" do
-
             get "/v1/me/slots",
                 { mode: 'finished' },
                 @auth_header
@@ -751,7 +746,6 @@ RSpec.describe "V1::Me", type: :request do
 
         context "ongoing" do
           it "returns slots where start is before & end is after moment" do
-
             get "/v1/me/slots",
                 { mode: 'ongoing' },
                 @auth_header
@@ -770,7 +764,6 @@ RSpec.describe "V1::Me", type: :request do
 
         context "now" do
           it "returns ongoing and upcoming slots" do
-
             get "/v1/me/slots",
                 { mode: 'now', moment: Time.zone.now.as_json },
                 @auth_header
@@ -794,7 +787,6 @@ RSpec.describe "V1::Me", type: :request do
           let(:moment) { Time.zone.now }
 
           it "half of the slots before and half after moment" do
-
             get "/v1/me/slots",
                 { mode: mode, limit: limit, moment: moment },
                 @auth_header
