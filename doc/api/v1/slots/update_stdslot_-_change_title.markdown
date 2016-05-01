@@ -90,6 +90,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -113,13 +116,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw
+Authorization: Token token=5KPd3bv6Gq9dHVF93H4vyi9S1hQ
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/12</pre>
+<pre>PATCH /v1/stdslot/40</pre>
 
 #### Body
 ```javascript
@@ -131,9 +134,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/40&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw&quot;</pre>
+	-H &quot;Authorization: Token token=5KPd3bv6Gq9dHVF93H4vyi9S1hQ&quot;</pre>
 
 ### Response
 
@@ -143,12 +146,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2c57b48b12c0c69d786e0ef5ddac85a2&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;172d2787bdacabf4a3727fcf09f25631&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e86b932a-143c-49d5-bba0-6e92ea9a5599
-X-Runtime: 0.014287
-Vary: Origin
-Content-Length: 482</pre>
+X-Request-Id: 17566ebd-9001-4077-84bb-b511a9b75830
+X-Runtime: 0.036782
+Content-Length: 516</pre>
 
 #### Status
 
@@ -158,19 +161,19 @@ Content-Length: 482</pre>
 
 ```javascript
 {
-  "id" : 12,
+  "id" : 40,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-27T08:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.741Z",
-  "updatedAt" : "2016-04-04T20:50:31.741Z",
+  "startDate" : "2019-09-19T06:44:02.000Z",
+  "createdAt" : "2016-05-01T22:54:13.767Z",
+  "updatedAt" : "2016-05-01T22:54:13.767Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-27T08:44:02.000Z",
+  "endDate" : "2019-10-19T06:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 28,
-    "username" : "User 330",
-    "createdAt" : "2016-04-04T20:50:31.729Z",
-    "updatedAt" : "2016-04-04T20:50:31.729Z",
+    "id" : 153,
+    "username" : "User 463",
+    "createdAt" : "2016-05-01T22:54:13.753Z",
+    "updatedAt" : "2016-05-01T22:54:13.753Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -180,7 +183,9 @@ Content-Length: 482</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "visibleCount" : "1"
 }
 ```

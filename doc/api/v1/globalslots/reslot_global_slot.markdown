@@ -8,7 +8,7 @@ Send the **muid** of the Global Slot to reslot it.
 
  Backend retrieves slot data from data team.
 
-at the moment returns 503 if global slot can not be found.
+returns 404 if no global slot can be found for given uuid
 
 ### Parameters
 
@@ -23,7 +23,7 @@ Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=LZbXd1UXBUw0k7KRSCQuHvMfpVQ
+Authorization: Token token=qnBKp5zkdtCi2cMtR-nvTagpQSs
 Host: example.org
 Cookie: </pre>
 
@@ -34,16 +34,16 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessor" : "820304fe-a416-db0d-807e-90cb9ebd9f1b"
+  "predecessor" : "c4c59de8-83ca-8500-274b-fe16e5ef7a71"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/reslot&quot; -d &#39;{&quot;predecessor&quot;:&quot;820304fe-a416-db0d-807e-90cb9ebd9f1b&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/reslot&quot; -d &#39;{&quot;predecessor&quot;:&quot;c4c59de8-83ca-8500-274b-fe16e5ef7a71&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=LZbXd1UXBUw0k7KRSCQuHvMfpVQ&quot;</pre>
+	-H &quot;Authorization: Token token=qnBKp5zkdtCi2cMtR-nvTagpQSs&quot;</pre>
 
 ### Response
 
@@ -53,12 +53,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c74509439e3bf36060680d102d888dcb&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;f0c26ad73d646a4ea9073fed500a572b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: acc8705d-a790-4fef-ae76-0981ecd0e033
-X-Runtime: 0.191071
-Vary: Origin
-Content-Length: 1426</pre>
+X-Request-Id: 14c4d6cc-d486-49aa-880e-d18c86d4f837
+X-Runtime: 0.190715
+Content-Length: 1506</pre>
 
 #### Status
 
@@ -68,63 +68,64 @@ Content-Length: 1426</pre>
 
 ```javascript
 {
-  "id" : 4,
-  "title" : "Borussia Dortmund vs. FC Liverpool",
-  "startDate" : "2016-04-07T19:05:00.000Z",
-  "createdAt" : "2016-04-04T20:50:21.447Z",
-  "updatedAt" : "2016-04-04T20:50:21.447Z",
+  "id" : 104,
+  "title" : "VNV Nation",
+  "startDate" : "2020-02-06T05:45:00.000Z",
+  "createdAt" : "2016-05-01T22:54:07.999Z",
+  "updatedAt" : "2016-05-01T22:54:07.999Z",
   "deletedAt" : null,
-  "endDate" : "2016-04-07T21:05:00.000Z",
+  "endDate" : "2020-02-06T09:45:00.000Z",
   "location" : {
-    "id" : "411456d2-532a-b0cb-8dc6-c0ea5e8f9488",
-    "name" : "Signal Iduna Park",
-    "thoroughfare" : null,
+    "id" : "7ffd07c2-4969-8e41-5d47-cade82aac954",
+    "name" : "Pier 2",
+    "thoroughfare" : "Gröpelinger Fährweg 6",
     "subThoroughfare" : null,
-    "locality" : "Dortmund",
-    "subLocality" : "Mitte",
-    "administrativeArea" : "NW",
+    "locality" : "Bremen",
+    "subLocality" : "Walle",
+    "administrativeArea" : "HB",
     "subAdministrativeArea" : null,
-    "postalCode" : null,
+    "postalCode" : "28237",
     "country" : null,
     "isoCountryCode" : "DE",
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
-    "latitude" : 51.4940605163574,
-    "longitude" : 7.45179986953735
+    "latitude" : 53.1083112,
+    "longitude" : 8.7509019
   },
   "creator" : {
-    "id" : 12,
-    "username" : "dfb.de",
-    "createdAt" : "2016-04-04T20:50:21.330Z",
-    "updatedAt" : "2016-04-04T20:50:21.330Z",
+    "id" : 92,
+    "username" : "Concert",
+    "createdAt" : "2016-05-01T22:54:07.979Z",
+    "updatedAt" : "2016-05-01T22:54:07.979Z",
     "deletedAt" : null,
-    "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
+    "image" : "https://farm8.staticflickr.com/7428/9896148136_461a7a842a_k.jpg"
   },
   "notes" : [
     {
       "id" : 1,
       "title" : "Description",
-      "content" : "Europa League, 2015/2016, Viertelfinale",
+      "content" : "VNV Nation definitely knows how to put on a good show. Even in festival performances where sometimes bands hold back a little, they start off with a slow intro and some great lighting and effects. Once the music kicks …",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:21.479Z"
+      "createdAt" : "2016-05-01T22:54:08.036Z"
     }
   ],
   "media" : [
     {
       "mediaId" : 19,
-      "publicId" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+      "publicId" : "http://images.sk-static.com/images/media/img/col6/20091007-021050-312335.jpg",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:21.454Z"
+      "createdAt" : "2016-05-01T22:54:08.004Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "public",
-  "muid" : "820304fe-a416-db0d-807e-90cb9ebd9f1b",
+  "muid" : "c4c59de8-83ca-8500-274b-fe16e5ef7a71",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
   "unauthorizedSlotgroups" : []

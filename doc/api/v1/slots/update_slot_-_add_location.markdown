@@ -130,6 +130,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -153,13 +156,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=jP7ykTpnAA7SMxXjLZHC4n1UURg
+Authorization: Token token=f81MfSxcwrH8XdEE0_NkUksXWDk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/17</pre>
+<pre>PATCH /v1/stdslot/45</pre>
 
 #### Body
 ```javascript
@@ -183,9 +186,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/17&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/45&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=jP7ykTpnAA7SMxXjLZHC4n1UURg&quot;</pre>
+	-H &quot;Authorization: Token token=f81MfSxcwrH8XdEE0_NkUksXWDk&quot;</pre>
 
 ### Response
 
@@ -195,12 +198,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;986cefd5d2b359104affa73fe1826449&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;5bce0495109cb4b6a8844765cfe44fb6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: fe28308f-4491-4d04-87ca-f12e3de562d4
-X-Runtime: 0.024246
-Vary: Origin
-Content-Length: 847</pre>
+X-Request-Id: cc083c71-2568-46e8-b2ee-e610e41e140e
+X-Runtime: 0.027330
+Content-Length: 882</pre>
 
 #### Status
 
@@ -210,15 +213,15 @@ Content-Length: 847</pre>
 
 ```javascript
 {
-  "id" : 17,
-  "title" : "Slot title 82",
-  "startDate" : "2019-09-05T13:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:32.066Z",
-  "updatedAt" : "2016-04-04T20:50:32.066Z",
+  "id" : 45,
+  "title" : "Slot title 128",
+  "startDate" : "2019-09-24T11:44:02.000Z",
+  "createdAt" : "2016-05-01T22:54:14.056Z",
+  "updatedAt" : "2016-05-01T22:54:14.056Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-05T13:44:02.000Z",
+  "endDate" : "2019-10-24T11:44:02.000Z",
   "location" : {
-    "id" : "5b34b799-3f2d-49eb-88fb-3c7dc4dc203d",
+    "id" : "0c1b98ef-22c8-4dac-87ab-625bcdaa9f53",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : "1",
@@ -236,10 +239,10 @@ Content-Length: 847</pre>
     "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 41,
-    "username" : "User 343",
-    "createdAt" : "2016-04-04T20:50:32.050Z",
-    "updatedAt" : "2016-04-04T20:50:32.050Z",
+    "id" : 166,
+    "username" : "User 476",
+    "createdAt" : "2016-05-01T22:54:14.045Z",
+    "updatedAt" : "2016-05-01T22:54:14.045Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -249,7 +252,9 @@ Content-Length: 847</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "visibleCount" : "1"
 }
 ```

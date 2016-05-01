@@ -21,7 +21,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=6ZhpWa-8mZPLqoi5oDbIf1EywO8
+Authorization: Token token=kxNdSnrn7tIvKIghCEsMsnMo_9Q
 Host: example.org
 Cookie: </pre>
 
@@ -34,7 +34,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/ical&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=6ZhpWa-8mZPLqoi5oDbIf1EywO8&quot;</pre>
+	-H &quot;Authorization: Token token=kxNdSnrn7tIvKIghCEsMsnMo_9Q&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ Content-Disposition: attachment; filename=&quot;Timeslot-Export.ical&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
-ETag: W/&quot;78560dacbbbff2fbee61d8aa672a7cd1&quot;
-X-Request-Id: e8d89c6c-9165-48f5-b5b0-cfbb32bd728b
-X-Runtime: 0.045522
-Vary: Origin
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;a044a87877aaf93561858816f7daa314&quot;
+X-Request-Id: 87a8e23c-3a80-4f13-84a1-34e6142a7cef
+X-Runtime: 0.039096
 Content-Length: 1069</pre>
 
 #### Status
@@ -60,5 +60,56 @@ Content-Length: 1069</pre>
 #### Body
 
 ```javascript
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:icalendar-ruby
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+DTSTAMP:20160501T225404Z
+UID:12dc3fec-e492-4394-8f88-b7830778bad6
+DTSTART:20190924T234402
+DTEND:20191024T234402
+CLASS:PUBLIC
+DESCRIPTION:
+SUMMARY:Slot title 23
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20160501T225404Z
+UID:2fe14b18-f2cb-42e1-9c6c-deaae8da7c17
+DTSTART:20190923T224402
+DTEND:20191023T224402
+CLASS:PUBLIC
+DESCRIPTION:
+SUMMARY:Slot title 22
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20160501T225404Z
+UID:6cbdf125-1a53-4360-84c4-4f86ec920ae9
+DTSTART:20190922T214402
+DTEND:20191022T214402
+CLASS:PUBLIC
+DESCRIPTION:
+SUMMARY:Slot title 21
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20160501T225404Z
+UID:2520d02e-d8fd-4f40-92ea-b087e42d49ea
+DTSTART:20190921T204402
+DTEND:20191021T204402
+CLASS:PUBLIC
+DESCRIPTION:
+SUMMARY:Slot title 20
+END:VEVENT
+BEGIN:VEVENT
+DTSTAMP:20160501T225404Z
+UID:7f44c54f-fb8c-4e96-8449-b30d38ba54dd
+DTSTART:20190920T194402
+DTEND:20191020T194402
+CLASS:PUBLIC
+DESCRIPTION:
+SUMMARY:Slot title 19
+END:VEVENT
+END:VCALENDAR
 
 ```

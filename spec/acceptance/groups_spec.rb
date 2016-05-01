@@ -267,6 +267,8 @@ resource "Groups" do
     response_field :updatedAt, "Last update of the slot"
     response_field :deletedAt, "Deletion datetime of the slot"
 
+    include_context "slot pagination"
+
     let(:group) { create(:group, owner: current_user) }
     let(:group_uuid) { group.uuid }
     let!(:containerships) do
@@ -274,7 +276,8 @@ resource "Groups" do
     end
 
     example "Get slots in a slotgroup by UUID", document: :v1 do
-      explanation "returns 200 and a list of all slots\n\n" \
+      explanation "endpoint supports slot pagination\n\n" \
+                  "returns 200 and a list of slots\n\n" \
                   "returns 404 if UUID is invalid"
       do_request
 

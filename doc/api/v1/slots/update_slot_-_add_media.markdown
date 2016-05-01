@@ -107,6 +107,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -148,13 +151,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk
+Authorization: Token token=KEVByv82FxAZKkZZgV2OWgydRnA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/15</pre>
+<pre>PATCH /v1/stdslot/43</pre>
 
 #### Body
 ```javascript
@@ -173,9 +176,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/15&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/43&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk&quot;</pre>
+	-H &quot;Authorization: Token token=KEVByv82FxAZKkZZgV2OWgydRnA&quot;</pre>
 
 ### Response
 
@@ -185,12 +188,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;46353acd3e1793dcd0870497942ba285&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;19aa08826e0939403f768a11cd9c9c33&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6e6525f6-2d84-42a3-8b66-fc7812d456d5
-X-Runtime: 0.023683
-Vary: Origin
-Content-Length: 664</pre>
+X-Request-Id: 37b3425b-3053-4331-ac61-b186e547e8aa
+X-Runtime: 0.026385
+Content-Length: 700</pre>
 
 #### Status
 
@@ -200,38 +203,40 @@ Content-Length: 664</pre>
 
 ```javascript
 {
-  "id" : 15,
-  "title" : "Slot title 80",
-  "startDate" : "2019-09-03T11:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.896Z",
-  "updatedAt" : "2016-04-04T20:50:31.896Z",
+  "id" : 43,
+  "title" : "Slot title 126",
+  "startDate" : "2019-09-22T09:44:02.000Z",
+  "createdAt" : "2016-05-01T22:54:13.927Z",
+  "updatedAt" : "2016-05-01T22:54:13.927Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-03T11:44:02.000Z",
+  "endDate" : "2019-10-22T09:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 34,
-    "username" : "User 336",
-    "createdAt" : "2016-04-04T20:50:31.886Z",
-    "updatedAt" : "2016-04-04T20:50:31.886Z",
+    "id" : 159,
+    "username" : "User 469",
+    "createdAt" : "2016-05-01T22:54:13.920Z",
+    "updatedAt" : "2016-05-01T22:54:13.920Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [],
   "media" : [
     {
-      "mediaId" : 7,
+      "mediaId" : 26,
       "publicId" : "v1234567/dfhjghjkdisudgfds7sly.jpg",
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.912Z"
+      "createdAt" : "2016-05-01T22:54:13.939Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "visibleCount" : "1"
 }
 ```

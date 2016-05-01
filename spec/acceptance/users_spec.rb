@@ -401,60 +401,7 @@ resource "Users" do
     parameter :id, "ID of the user to get the slots for."
 
     context 'pagination' do
-      parameter :limit, "Maximum number of slots returned." \
-                        " Default is 40. Maximum is 100."
-      parameter :moment, "A point in time. Query parameter to get slots " \
-                         "relative to a specific moment. Must be UTC.\n" \
-                         "Default is Time.zone.now (server time)."
-      parameter :filter, "Query parameter to reduce the set of valid slots " \
-                         "which are taken into account for the db query. " \
-                         "Must be one of:\n" \
-                         "- **between**: takes 2 additional parameters: " \
-                         "*earliest* and *latest*. Will only return slots" \
-                         " which overlap with the specified time interval. " \
-                         "*Rule: startDate < latest AND endDate > earliest*." \
-                         " Default **mode** is 'now', default **moment** " \
-                         "== 'earliest.'\n" \
-                         "- **newer**: tba\n" \
-                         "Default is **none**."
-      parameter :mode, "Query parameter to request slots relative to a " \
-                       "given **moment**. Must be one of:\n" \
-                       "- **past**: *start* before *moment*\n" \
-                       "- **upcoming**: *start* after or equal *moment*\n" \
-                       "- **ongoing**: *start* before & *end* after *moment*\n" \
-                       "- **finished**: *start* & *end* before *moment*\n" \
-                       "- **now**: *ongoing* & *upcoming* slots\n" \
-                       "- **around**: limit/2 slots with *start* before " \
-                       "*moment* and limit/2 slots with *start* after " \
-                       "*moment*. This might miss ongoing slots.\n" \
-                       "- **all**: no restriction\n" \
-                       "Default is **upcoming**."
-      parameter :before, "Pagination cursor to retrieve slots which do happen" \
-                         " BEFORE the slot " \
-                         "represented by this cursor. If a cursor is " \
-                         "send, **mode** and **moment** are ignored."
-      parameter :after, "Pagination cursor to retrieve slots which do happen" \
-                        " AFTER the slot represented by this cursor. If a " \
-                        "cursor is send, **mode** and **moment** are ignored."
-      parameter :earliest, "A point in time. No results before this moment " \
-                           "will be returned. Only works with 'between' filter."
-      parameter :latest, "A point in time. No results after this moment " \
-                         "will be returned. Only works with 'between' filter."
-
-      response_field :paging, "Hash containing relevant paging parameters."
-      response_field :limit, "Maximum number of slots returned.",
-                     scope: :paging
-      response_field :mode, "Types of slots which were requested.",
-                     scope: :paging
-      response_field :filter, "Type of filter which was applied to initial data.",
-                     scope: :paging
-      response_field :moment, "Point-in-time which was used for the query.",
-                     scope: :paging
-      response_field :before, "Cursor that represents the first item in the " \
-                              "response dataset.", scope: :paging
-      response_field :after, "Cursor that represents the last item in the " \
-                             "response dataset.", scope: :paging
-      response_field :data, "Array containing the result dataset."
+      include_context "slot pagination"
 
       let(:friend) do
         friend = create(:user)

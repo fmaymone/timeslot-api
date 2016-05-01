@@ -88,6 +88,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -115,7 +118,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=imnwfxT9xJgTuZSuYvuX8u_2Bw0
+Authorization: Token token=86FuQDExKOHE3-eMJfJa_mtbc5Y
 Host: example.org
 Cookie: </pre>
 
@@ -152,7 +155,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=imnwfxT9xJgTuZSuYvuX8u_2Bw0&quot;</pre>
+	-H &quot;Authorization: Token token=86FuQDExKOHE3-eMJfJa_mtbc5Y&quot;</pre>
 
 ### Response
 
@@ -162,12 +165,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;13d3a7cac5783d77072197540735a869&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;2e7efba1a8fb6e3932591ad6fbfb47d1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e4bcec41-60cb-45fe-9f52-c227945ea289
-X-Runtime: 0.037927
-Vary: Origin
-Content-Length: 819</pre>
+X-Request-Id: d3427a56-3899-482d-8058-5fe8cbe4498c
+X-Runtime: 0.034397
+Content-Length: 835</pre>
 
 #### Status
 
@@ -177,19 +180,19 @@ Content-Length: 819</pre>
 
 ```javascript
 {
-  "id" : 8,
+  "id" : 36,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.461Z",
-  "updatedAt" : "2016-04-04T20:50:31.461Z",
+  "createdAt" : "2016-05-01T22:54:13.524Z",
+  "updatedAt" : "2016-05-01T22:54:13.524Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 22,
-    "username" : "User 324",
-    "createdAt" : "2016-04-04T20:50:31.446Z",
-    "updatedAt" : "2016-04-04T20:50:31.446Z",
+    "id" : 147,
+    "username" : "User 457",
+    "createdAt" : "2016-05-01T22:54:13.514Z",
+    "updatedAt" : "2016-05-01T22:54:13.514Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -203,14 +206,14 @@ Content-Length: 819</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.469Z"
+      "createdAt" : "2016-05-01T22:54:13.532Z"
     },
     {
       "id" : 5,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.466Z"
+      "createdAt" : "2016-05-01T22:54:13.529Z"
     }
   ],
   "media" : [],
@@ -218,6 +221,7 @@ Content-Length: 819</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
   "unauthorizedSlotgroups" : []

@@ -29,7 +29,7 @@ Description : Invitecode string
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=-Xh5wDpyNKD52odx4P4FZOciC2w
+Authorization: Token token=kzQPcGilm0UtiAZczmDRqyy9aYo
 Host: example.org
 Cookie: </pre>
 
@@ -39,7 +39,10 @@ Cookie: </pre>
 
 #### Body
 ```javascript
-
+{
+  "userId" : 3,
+  "context" : "SomeContext"
+}
 ```
 
 
@@ -48,7 +51,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes&quot; -d &#39;{&quot;userId&quot;:3,&quot;context&quot;:&quot;SomeContext&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=-Xh5wDpyNKD52odx4P4FZOciC2w&quot;</pre>
+	-H &quot;Authorization: Token token=kzQPcGilm0UtiAZczmDRqyy9aYo&quot;</pre>
 
 ### Response
 
@@ -58,11 +61,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6c77fe85fd0bbea6c33fcebf7d60335b&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;8d25e0fdd3e0978a22b5ea5af1d1cc99&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d90bf7e4-9ab1-4519-abe2-e5d0072da3b2
-X-Runtime: 0.031831
-Vary: Origin
+X-Request-Id: 70e40614-52c4-436e-9f43-d84a058df0b1
+X-Runtime: 0.012128
 Content-Length: 24</pre>
 
 #### Status
@@ -72,5 +75,8 @@ Content-Length: 24</pre>
 #### Body
 
 ```javascript
-
+{
+  "id" : 3,
+  "code" : "052815"
+}
 ```

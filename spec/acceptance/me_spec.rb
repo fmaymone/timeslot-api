@@ -117,8 +117,11 @@ resource "Me" do
       create(:passengership, slot: slot_2, user: current_user)
     end
 
+    include_context "slot pagination"
+
     example "Get my schedule", document: :v1 do
-      explanation "Returns array with all slots in users schedule."
+      explanation "endpoint supports slot pagination\n\n" \
+                  "Returns array with all slots in users schedule."
 
       do_request
 
@@ -132,38 +135,7 @@ resource "Me" do
     header "Authorization", :auth_header
 
     context 'pagination' do
-      parameter :limit, "Maximum number of slots returned." \
-                        " Default is 40. Maximum is 100."
-      parameter :moment, "A point in time. Query parameter to get slots " \
-                         "relative to a specific moment. Must be UTC.\n" \
-                         "Default is Time.zone.now (server time)."
-      parameter :mode, "Query parameter to filter slots relative to a " \
-                       "given **moment**. Must be one of:\n" \
-                       "- **past**: *start* before *moment*\n" \
-                       "- **upcoming**: *start* after or equal *moment*\n" \
-                       "- **ongoing**: *start* before & *end* after *moment*\n" \
-                       "- **finished**: *start* & *end* before *moment*\n" \
-                       "- **now**: *ongoing* & *upcoming* slots\n" \
-                       "- **around**: tba\n" \
-                       "- **all**: no restriction\n" \
-                       "Default is **upcoming**."
-      parameter :before, "Pagination cursor to retrieve slots which do happen" \
-                         " BEFORE the slot " \
-                         "represented by this cursor. If a cursor is " \
-                         "send, **status** and **moment** are ignored."
-      parameter :after, "Pagination cursor to retrieve slots which do happen" \
-                        " AFTER the slot represented by this cursor. If a " \
-                        "cursor is send, **mode** and **moment** are ignored."
-
-      response_field :paging, "Hash containing relevant paging parameters."
-      response_field :limit, "Maximum number of slots returned."
-      response_field :mode, "Types of slots which were requested."
-      response_field :moment, "Point-in-time which was used for the query."
-      response_field :before, "Cursor that represents the first item in the " \
-                              "response dataset."
-      response_field :after, "Cursor that represents the last item in the " \
-                             "response dataset."
-      response_field :data, "Array containing the result dataset."
+      include_context "slot pagination"
 
       describe "Get slots for current user - with pagination" do
         let(:mode) { 'upcoming' }
@@ -310,6 +282,8 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    include_context "slot pagination"
+
     response_field :id, "ID of the slot"
     response_field :title, "Title of the slot"
     response_field :startDate, "Startdate of the slot"
@@ -342,10 +316,8 @@ resource "Me" do
     }
 
     example "Get slots from friends", document: :v1 do
-      # TODO: fix wording
       explanation "Returns an array which includes all non-private " \
-                  "StandardSlots &" \
-                  " ReSlots from all friends of the current user.\n\n" \
+                  "StandardSlots from all friends of the current user.\n\n" \
                   "This endpoint supports pagination in the same style " \
                   "as the '/me/slots' route."
       do_request

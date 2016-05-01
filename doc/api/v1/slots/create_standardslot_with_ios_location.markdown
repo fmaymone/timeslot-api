@@ -130,6 +130,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -157,7 +160,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI
+Authorization: Token token=WYebJkzaHEqOYmu1C5uo9qC_COY
 Host: example.org
 Cookie: </pre>
 
@@ -202,7 +205,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI&quot;</pre>
+	-H &quot;Authorization: Token token=WYebJkzaHEqOYmu1C5uo9qC_COY&quot;</pre>
 
 ### Response
 
@@ -212,12 +215,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9bb10cd411f9264a79c7800ee454ff88&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;39f15bf65e601b88d1c91fb07cad41d9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 48df7900-ccf6-4883-a014-61fdcb36c540
-X-Runtime: 0.051065
-Vary: Origin
-Content-Length: 1187</pre>
+X-Request-Id: 56edb616-f841-4724-ad4b-fc19bc7d955c
+X-Runtime: 0.047613
+Content-Length: 1202</pre>
 
 #### Status
 
@@ -227,15 +230,15 @@ Content-Length: 1187</pre>
 
 ```javascript
 {
-  "id" : 10,
+  "id" : 38,
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.577Z",
-  "updatedAt" : "2016-04-04T20:50:31.577Z",
+  "createdAt" : "2016-05-01T22:54:13.634Z",
+  "updatedAt" : "2016-05-01T22:54:13.634Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : "e16429d4-9722-40c8-9de7-bfb66ff85d4c",
+    "id" : "88cbff2b-f138-4567-b5bd-0f356b2374e4",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -253,10 +256,10 @@ Content-Length: 1187</pre>
     "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 24,
-    "username" : "User 326",
-    "createdAt" : "2016-04-04T20:50:31.558Z",
-    "updatedAt" : "2016-04-04T20:50:31.558Z",
+    "id" : 149,
+    "username" : "User 459",
+    "createdAt" : "2016-05-01T22:54:13.618Z",
+    "updatedAt" : "2016-05-01T22:54:13.618Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -270,14 +273,14 @@ Content-Length: 1187</pre>
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.586Z"
+      "createdAt" : "2016-05-01T22:54:13.642Z"
     },
     {
       "id" : 9,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.582Z"
+      "createdAt" : "2016-05-01T22:54:13.639Z"
     }
   ],
   "media" : [],
@@ -285,6 +288,7 @@ Content-Length: 1187</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
   "unauthorizedSlotgroups" : []

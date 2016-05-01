@@ -20,6 +20,9 @@ Description : Name of group (max. 255 characters)
 Name : image
 Description : Image for the group
 
+Name : description
+Description : Description of the group (max. 255 characters)
+
 Name : public
 Description : Is the group public? (true/false), default: &#39;false&#39;
 
@@ -53,6 +56,9 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
 Name : createdAt
 Description : Creation of group
 
@@ -71,7 +77,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=DPW-kVPdPAspTjog41sXZF4vWR8
+Authorization: Token token=N1qUKfzCU_7Nub5_bh2CFzhTCCE
 Host: example.org
 Cookie: </pre>
 
@@ -84,13 +90,14 @@ Cookie: </pre>
 {
   "name" : "foo",
   "image" : "salvador dali",
+  "description" : "This is a description.",
   "public" : true,
   "membersCanPost" : true,
   "membersCanInvite" : true,
   "invitees" : [
-    9,
-    10,
-    11
+    101,
+    102,
+    103
   ]
 }
 ```
@@ -98,10 +105,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;image&quot;:&quot;salvador dali&quot;,&quot;public&quot;:true,&quot;membersCanPost&quot;:true,&quot;membersCanInvite&quot;:true,&quot;invitees&quot;:[9,10,11]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;image&quot;:&quot;salvador dali&quot;,&quot;description&quot;:&quot;This is a description.&quot;,&quot;public&quot;:true,&quot;membersCanPost&quot;:true,&quot;membersCanInvite&quot;:true,&quot;invitees&quot;:[101,102,103]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=DPW-kVPdPAspTjog41sXZF4vWR8&quot;</pre>
+	-H &quot;Authorization: Token token=N1qUKfzCU_7Nub5_bh2CFzhTCCE&quot;</pre>
 
 ### Response
 
@@ -111,12 +118,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b47b0e508b2cdcc4f2140e7c163d4d69&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;4922791cfc998098c46ba77694619b77&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ddd27fc6-1e00-4fa2-9e94-9526eaa4636b
-X-Runtime: 0.080494
-Vary: Origin
-Content-Length: 464</pre>
+X-Request-Id: ef122f4a-d0ee-4941-a667-d94035df3ec4
+X-Runtime: 0.091862
+Content-Length: 510</pre>
 
 #### Status
 
@@ -126,28 +133,29 @@ Content-Length: 464</pre>
 
 ```javascript
 {
-  "id" : "e392eaaf-ca4b-46a4-a615-d1c4b73b02a3",
+  "id" : "9cb9c4ca-6818-45f2-acf5-35a52353202d",
   "name" : "foo",
   "image" : "salvador dali",
+  "description" : "This is a description.",
   "membersCanPost" : true,
   "membersCanInvite" : true,
   "public" : true,
-  "createdAt" : "2016-04-04T20:50:21.905Z",
-  "updatedAt" : "2016-04-04T20:50:21.905Z",
+  "createdAt" : "2016-05-01T22:54:08.260Z",
+  "updatedAt" : "2016-05-01T22:54:08.260Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 12,
-    "username" : "User 73",
-    "createdAt" : "2016-04-04T20:50:21.899Z",
-    "updatedAt" : "2016-04-04T20:50:21.899Z",
+    "id" : 104,
+    "username" : "User 219",
+    "createdAt" : "2016-05-01T22:54:08.255Z",
+    "updatedAt" : "2016-05-01T22:54:08.255Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [
-    11,
-    10,
-    9,
-    12
+    101,
+    102,
+    103,
+    104
   ],
   "memberCount" : 4,
   "slotCount" : 0,
