@@ -3,6 +3,7 @@ class SlotPaginator < BasePaginator
 
   attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest
 
+  # TODO: this is a complete mess, needs refactoring
   def initialize(data:, limit:, mode: nil, moment: nil,
                  filter: nil, earliest: nil, latest: nil,
                  after: nil, before: nil)
@@ -33,7 +34,19 @@ class SlotPaginator < BasePaginator
         @after = @data.last.as_paging_cursor
         @before = @data.first.as_paging_cursor
       end
-    elsif @data.empty? # db has no results
+    elsif @data.empty? && (@datapool_size > 0)
+      # request is not fulfilled but db has valid items which could
+      # be paginated via cursor
+      if before || (mode == 'past') || (mode == 'finished') # backward
+        @after = moment_as_cursor(@moment)
+        @before = nil
+      else # forward
+        @after = nil
+        @before = moment_as_cursor(@moment)
+      end
+    elsif @result_collection_size == @datapool_size
+      # all valid data is returned
+    # elsif @datapool.empty? # db has no results
       @after = nil
       @before = nil
     # else # elsif @limit > @result_collection_size
@@ -69,5 +82,9 @@ class SlotPaginator < BasePaginator
       @after = nil
       @before = @data.first.as_paging_cursor
     end
+  end
+
+  private def moment_as_cursor(moment)
+    Base64.urlsafe_encode64("0%#{moment}%#{moment}")
   end
 end

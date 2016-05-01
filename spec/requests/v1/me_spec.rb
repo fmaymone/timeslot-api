@@ -678,6 +678,29 @@ RSpec.describe "V1::Me", type: :request do
             expect(response.status).to be(200)
             expect(json['paging']['after']).to be nil
           end
+
+          # the underlying set of valid slots is not filtered, so a cursor is
+          # feasable
+          describe "empty result and cursor" do
+            it "has a 'before' cursor if results exist before the moment" do
+              get "/v1/me/slots",
+                  { mode: mode, limit: 2, moment: '2017-11-11' },
+                  @auth_header
+              expect(response.status).to be(200)
+              expect(json['data']).to be_empty
+              expect(json['paging']['before']).not_to be nil
+            end
+
+            it "doesn't return 'before' cursor if no results exist before moment" do
+              get "/v1/me/slots",
+                  { mode: mode, limit: 2, moment: '2007-11-11' },
+                  'Authorization' => "Token token=#{create(:user).auth_token}"
+
+              expect(response.status).to be(200)
+              expect(json['data']).to be_empty
+              expect(json['paging']['before']).to be nil
+            end
+          end
         end
 
         context "past" do
