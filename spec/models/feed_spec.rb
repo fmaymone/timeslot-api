@@ -1556,7 +1556,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(Time.zone.parse(notification_feed_follower.first['data']['target']['startDate'])).to eq(slot.start_date)
       end
 
-      it "Feeds retrieved updates from shared objects also if not affected" do
+      it "Feeds retrieved updates from shared objects also if own feed has no new activities" do
         news_feed_follower = Feed.news_feed(follower.id).as_json
         expect(news_feed_follower.first['data']['target']['likes']).to eq(1)
         expect(news_feed_follower.first['data']['target']['likerIds']).to include(user.id)
