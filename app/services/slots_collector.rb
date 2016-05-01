@@ -1,4 +1,6 @@
 class SlotsCollector
+  Result = ImmutableStruct.new([:data], :pool_size, :error_messages)
+
   # because the defaults are not set if no pagination parameters are send,
   # I have to set them here again unfortunately
   def initialize(limit: PAGINATION_DEFAULT_LIMIT,
@@ -98,21 +100,24 @@ class SlotsCollector
 
   private def consider_mode(relations, mode)
     filtered_relations = []
+    pool_size = 0
 
-    if @filter
-      relations.each do |relation|
-        filtered_relations << apply_filter(relation, @filter)
-      end
-    else
-      filtered_relations = relations
+    relations.each do |relation|
+      filtered_relation = @filter ? apply_filter(relation, @filter) : relation
+      pool_size += filtered_relation.size
+      filtered_relations << filtered_relation
     end
+
+    # shortcut: if we don't have any valid slots, don't do the query
+    return Result.new(pool_size: 0) if pool_size == 0
 
     if mode == 'around'
-      around_mode_query(filtered_relations)
+      sorted_slots = around_mode_query(filtered_relations)
     else
       slots = query_data(filtered_relations, mode)
-      sort_result(slots, mode)
+      sorted_slots = sort_result(slots, mode)
     end
+    Result.new(data: sorted_slots, pool_size: pool_size)
   end
 
   # the 'around' mode needs special treatmeant because he returns forward

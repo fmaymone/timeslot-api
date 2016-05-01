@@ -1,4 +1,6 @@
 class SlotPaginator < BasePaginator
+  # prepares the values needed by the view
+
   attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest
 
   def initialize(data:, limit:, mode: nil, moment: nil,
@@ -10,8 +12,9 @@ class SlotPaginator < BasePaginator
     @filter = filter
     @earliest = earliest # a timestamp (point-in-time)
     @latest = latest # a timestamp (point-in-time)
-    @result_collection_size = data.size
-    @data = data
+    @result_collection_size = data.data.size
+    @data = data.data
+    @datapool_size = data.pool_size
 
     # db has enough items to fulfill request
     if @limit == @result_collection_size

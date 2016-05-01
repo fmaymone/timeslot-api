@@ -60,12 +60,13 @@ module V1
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.my_slots(user: current_user)
+      the_result = collector.my_slots(user: current_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end
@@ -79,12 +80,13 @@ module V1
       # @slots = current_user.my_calendar_slots
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.my_schedule_slots(user: current_user)
+      the_result = collector.my_schedule_slots(user: current_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end
@@ -115,12 +117,13 @@ module V1
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.slots_from_friends(user: current_user)
+      the_result = collector.slots_from_friends(user: current_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end

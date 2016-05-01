@@ -66,15 +66,15 @@ module V1
       authorize @group
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.group_slots(group: @group)
+      the_result = collector.group_slots(group: @group)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render :slots
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
-
     end
 
     # GET /v1/groups/:group_uuid/members

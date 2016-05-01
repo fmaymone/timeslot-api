@@ -61,13 +61,14 @@ module V1
       requested_user = User.find(params[:id])
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.user_slots(current_user: current_user,
+      the_result = collector.user_slots(current_user: current_user,
                                     user: requested_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end
