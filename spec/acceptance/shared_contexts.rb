@@ -189,7 +189,7 @@ RSpec.shared_context "slot pagination" do
                    "*moment* and limit/2 slots with *start* after " \
                    "*moment*. This might miss ongoing slots.\n" \
                    "- **all**: no restriction\n" \
-                   "Default is **upcoming**."
+                   "Default is **all**."
   parameter :before, "Pagination cursor to retrieve slots which do happen" \
                      " BEFORE the slot " \
                      "represented by this cursor. If a cursor is " \
@@ -207,9 +207,17 @@ RSpec.shared_context "slot pagination" do
                  scope: :paging
   response_field :mode, "Types of slots which were requested.",
                  scope: :paging
+  response_field :moment, "Point-in-time which was used for the query.",
+                 scope: :paging
   response_field :filter, "Type of filter which was applied to initial data.",
                  scope: :paging
-  response_field :moment, "Point-in-time which was used for the query.",
+  response_field :earliest,
+                 "If set, no Slots which have ended before this point-in-time" \
+                 " will be included in the result.",
+                 scope: :paging
+  response_field :latest,
+                 "If set, no Slots which are starting after this point-in-time" \
+                 " will be included in the result.",
                  scope: :paging
   response_field :before, "Cursor that represents the first item in the " \
                           "response dataset.", scope: :paging
