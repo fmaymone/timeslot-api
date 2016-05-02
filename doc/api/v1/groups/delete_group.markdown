@@ -41,6 +41,9 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
 Name : createdAt
 Description : Creation of group
 
@@ -57,19 +60,19 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=j4aMB9VkFHYqX5qhrtw1zVlsEAU
+<pre>Authorization: Token token=fWP3rFqeheRqvTTp3RUDx16UZzY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/fa174835-546d-407d-812b-b31c2e7ea7c8</pre>
+<pre>DELETE /v1/groups/51313010-a22d-4cf9-9955-27f2a3cc609c</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/fa174835-546d-407d-812b-b31c2e7ea7c8&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=j4aMB9VkFHYqX5qhrtw1zVlsEAU&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/51313010-a22d-4cf9-9955-27f2a3cc609c&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=fWP3rFqeheRqvTTp3RUDx16UZzY&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -80,12 +83,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;47f51268d31fc6e0a2b5233d3c1010d2&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;e685827d2956378e85c06916084574ea&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 75b869b1-0a26-46e7-bc4c-5920016dd2e8
-X-Runtime: 0.076292
-Vary: Origin
-Content-Length: 475</pre>
+X-Request-Id: ec591629-2053-431c-979a-1ed34be6910e
+X-Runtime: 0.098786
+Content-Length: 498</pre>
 
 #### Status
 
@@ -95,20 +98,21 @@ Content-Length: 475</pre>
 
 ```javascript
 {
-  "id" : "fa174835-546d-407d-812b-b31c2e7ea7c8",
-  "name" : "Testgroup 5",
+  "id" : "51313010-a22d-4cf9-9955-27f2a3cc609c",
+  "name" : "Testgroup 109",
   "image" : "",
+  "description" : null,
   "membersCanPost" : false,
   "membersCanInvite" : false,
   "public" : false,
-  "createdAt" : "2016-04-04T20:50:22.063Z",
-  "updatedAt" : "2016-04-04T20:50:22.157Z",
-  "deletedAt" : "2016-04-04T20:50:22.156Z",
+  "createdAt" : "2016-05-01T22:54:08.435Z",
+  "updatedAt" : "2016-05-01T22:54:08.554Z",
+  "deletedAt" : "2016-05-01T22:54:08.553Z",
   "owner" : {
-    "id" : 15,
-    "username" : "User 76",
-    "createdAt" : "2016-04-04T20:50:22.059Z",
-    "updatedAt" : "2016-04-04T20:50:22.110Z",
+    "id" : 107,
+    "username" : "User 222",
+    "createdAt" : "2016-05-01T22:54:08.429Z",
+    "updatedAt" : "2016-05-01T22:54:08.483Z",
     "deletedAt" : null,
     "image" : ""
   },

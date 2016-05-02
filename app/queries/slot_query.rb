@@ -13,7 +13,8 @@ module SlotQuery
     end
 
     # I don't like the split in direction and cursor because they belong together
-    def retrieve(filter: nil, moment: Time.zone.now, cursor: nil)
+    def retrieve(mode: nil, moment: Time.zone.now, cursor: nil,
+                 earliest: nil, latest: nil)
       # query with cursor
       case @direction
       when 'before'
@@ -22,26 +23,26 @@ module SlotQuery
         @relation.where(after_cursor(cursor)).ordered
       else
         # query without cursor
-        case filter
+        case mode
         when nil
-        when 'all'
+        when 'all', 'none'
           @relation
         when 'finished'
-          @relation.where(finished moment).ordered_rev
+          @relation.where(finished(moment)).ordered_rev
         when 'upcoming', 'ongoing', 'past', 'now'
-          # here we send the 'filter' as a message to this SlotQuery:OwnSlots
+          # here we send the 'mode' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
-          # the 'filter'
-          @relation.where(send filter, moment).ordered
+          # the 'mode'
+          @relation.where(send(mode, moment)).ordered
+        when 'between'
+          @relation.where(send(mode, earliest, latest)).ordered
         else
-          # TODO: make a helper for enriched airbrake error messages
-          error_string = "unknown pagination filter #{filter}"
+          error_string = "unknown pagination mode #{mode}"
           msg = { message: error_string }
           Rails.logger.error { error_string } unless Rails.env.test?
           Airbrake.notify(PaginationError, msg)
           fail PaginationError, msg if Rails.env.test? || Rails.env.development?
           # TODO: check if we should call 'new' for custom error classes? Why?
-          # fail PaginationError.new(msg) if Rails.env.test? || Rails.env.development?
         end
       end
     end
@@ -69,6 +70,11 @@ module SlotQuery
 
     private def now(moment = nil)
       upcoming(moment).or ongoing(moment)
+    end
+
+    private def between(moment, latest)
+      meta_table[:start_date].lt(latest).and(
+        meta_table[:end_date].gt(moment))
     end
 
     private def after_cursor(cursor)

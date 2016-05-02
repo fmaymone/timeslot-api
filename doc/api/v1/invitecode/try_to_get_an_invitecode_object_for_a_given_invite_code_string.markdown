@@ -33,11 +33,11 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/invitecodes/3a785c</pre>
+<pre>GET /v1/invitecodes/b76971</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes/3a785c&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes/b76971&quot; -X GET \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -48,11 +48,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding, Origin
 ETag: W/&quot;75e6f8fa8f27f23a79a1610a36e63ad5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e84718b6-6375-4555-b767-fc6e5ee5b297
-X-Runtime: 0.053899
-Vary: Origin
+X-Request-Id: 9f143e39-da20-40ae-ab90-c6f80b98b8b3
+X-Runtime: 0.023575
 Content-Length: 40</pre>
 
 #### Status
@@ -62,5 +62,9 @@ Content-Length: 40</pre>
 #### Body
 
 ```javascript
-
+{
+  "id" : 1,
+  "context" : "MyString",
+  "userId" : 1
+}
 ```

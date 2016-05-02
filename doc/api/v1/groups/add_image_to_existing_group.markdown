@@ -37,6 +37,9 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
 Name : createdAt
 Description : Creation of group
 
@@ -54,13 +57,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw
+Authorization: Token token=ZsnrZeA1ZB2lzF5SwZ8n9Q0N1Qg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1</pre>
+<pre>PATCH /v1/groups/7f880f41-bb3c-477d-8798-cd7c3b6d4e76</pre>
 
 #### Body
 ```javascript
@@ -72,9 +75,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/7f880f41-bb3c-477d-8798-cd7c3b6d4e76&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw&quot;</pre>
+	-H &quot;Authorization: Token token=ZsnrZeA1ZB2lzF5SwZ8n9Q0N1Qg&quot;</pre>
 
 ### Response
 
@@ -84,12 +87,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;54298f7153a1de8f1cfdb3024f968054&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;1525e9f12f49bfc010deae2c1f344c7a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 333b8e2e-a29a-4719-8b61-8c8bf889ac3f
-X-Runtime: 0.011361
-Vary: Origin
-Content-Length: 480</pre>
+X-Request-Id: 03c88326-3135-4b8f-a68a-da22ce64237a
+X-Runtime: 0.017340
+Content-Length: 522</pre>
 
 #### Status
 
@@ -99,25 +102,26 @@ Content-Length: 480</pre>
 
 ```javascript
 {
-  "id" : "9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1",
+  "id" : "7f880f41-bb3c-477d-8798-cd7c3b6d4e76",
   "name" : "foo",
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+  "description" : "This is a description.",
   "membersCanPost" : false,
   "membersCanInvite" : false,
   "public" : false,
-  "createdAt" : "2016-04-04T20:50:22.028Z",
-  "updatedAt" : "2016-04-04T20:50:22.039Z",
+  "createdAt" : "2016-05-01T22:54:08.396Z",
+  "updatedAt" : "2016-05-01T22:54:08.412Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 14,
-    "username" : "User 75",
-    "createdAt" : "2016-04-04T20:50:22.025Z",
-    "updatedAt" : "2016-04-04T20:50:22.025Z",
+    "id" : 106,
+    "username" : "User 221",
+    "createdAt" : "2016-05-01T22:54:08.393Z",
+    "updatedAt" : "2016-05-01T22:54:08.393Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [
-    14
+    106
   ],
   "memberCount" : 1,
   "slotCount" : 0,

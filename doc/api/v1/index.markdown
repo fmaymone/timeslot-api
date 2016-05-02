@@ -27,8 +27,6 @@
 ## GlobalSlots
 
 * [Reslot global slot](globalslots/reslot_global_slot.markdown)
-* [Cinema - Find global slots](globalslots/cinema_-_find_global_slots.markdown)
-* [Football - Find global slots](globalslots/football_-_find_global_slots.markdown)
 
 ## Groups
 
@@ -48,6 +46,7 @@
 * [Remove/Kick other user from own group](groups/removekick_other_user_from_own_group.markdown)
 * [Update settings of joined group](groups/update_settings_of_joined_group.markdown)
 * [Add GlobalSlots to new or existing public group](groups/add_globalslots_to_new_or_existing_public_group.markdown)
+* [Update existing global group](groups/update_existing_global_group.markdown)
 
 ## Invitecode
 
@@ -57,16 +56,16 @@
 ## Me
 
 * [Get complete User data](me/get_complete_user_data.markdown)
-* [Get my Calendar slots](me/get_my_calendar_slots.markdown)
+* [Get my schedule](me/get_my_schedule.markdown)
 * [Get slots - with pagination](me/get_slots_-_with_pagination.markdown)
 * [Get slots - no pagination](me/get_slots_-_no_pagination.markdown)
 * [Get slots from friends](me/get_slots_from_friends.markdown)
 * [Get media items](me/get_media_items.markdown)
 * [Get suggested Users](me/get_suggested_users.markdown)
 * [Get friends](me/get_friends.markdown)
-* [Get all groups where current user is member or owner](me/get_all_groups_where_current_user_is_member_or_owner.markdown)
-* [Display Slotgroup/Calendar in mySchedule](me/display_slotgroupcalendar_in_myschedule.markdown)
-* [Hide Slotgroup/Calendar from mySchedule](me/hide_slotgroupcalendar_from_myschedule.markdown)
+* [Get all calendars where current user is member or owner](me/get_all_calendars_where_current_user_is_member_or_owner.markdown)
+* [Display Calendar in mySchedule](me/display_calendar_in_myschedule.markdown)
+* [Hide Calendar from mySchedule](me/hide_calendar_from_myschedule.markdown)
 * [Update - username and default alerts](me/update_-_username_and_default_alerts.markdown)
 * [Update - password](me/update_-_password.markdown)
 * [Update - user image](me/update_-_user_image.markdown)
@@ -96,7 +95,6 @@
 * [Search friend by username](search/search_friend_by_username.markdown)
 * [Search by slot title](search/search_by_slot_title.markdown)
 * [Search by media title](search/search_by_media_title.markdown)
-* [Search by group name](search/search_by_group_name.markdown)
 * [Search by location name](search/search_by_location_name.markdown)
 
 ## Share
@@ -108,6 +106,8 @@
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
 * [Share Slot via Email](share/share_slot_via_email.markdown)
 * [Delete all shared content](share/delete_all_shared_content.markdown)
+* [Cinema - Find global slots](search/cinema_-_find_global_slots.markdown)
+* [Soccer - Find global slots](search/soccer_-_find_global_slots.markdown)
 
 ## Slots
 
@@ -135,8 +135,6 @@
 * [Get Slotters for Slot](slots/get_slotters_for_slot.markdown)
 * [Tagging users to a slot](slots/tagging_users_to_a_slot.markdown)
 * [Get all tagged users of a slot](slots/get_all_tagged_users_of_a_slot.markdown)
-* [Copy Slot to Friend Slots and into a group](slots/copy_slot_to_friend_slots_and_into_a_group.markdown)
-* [Move Slot from private Slots to Friend Slots](slots/move_slot_from_private_slots_to_friend_slots.markdown)
 
 ## Users
 
@@ -150,7 +148,8 @@
 * [Get media items for Friend-of-Friend](users/get_media_items_for_friend-of-friend.markdown)
 * [Get media items for Stranger](users/get_media_items_for_stranger.markdown)
 * [Get media items as Visitor](users/get_media_items_as_visitor.markdown)
-* [Get slots for Friend - with pagination](users/get_slots_for_friend_-_with_pagination.markdown)
+* [Get slots for Friend - with &#39;between&#39; pagination](users/get_slots_for_friend_-_with_&#39;between&#39;_pagination.markdown)
+* [Get slots for Friend - with &#39;upcoming&#39; pagination](users/get_slots_for_friend_-_with_&#39;upcoming&#39;_pagination.markdown)
 * [Get slots for Friend](users/get_slots_for_friend.markdown)
 * [Get slots for Friend-of-Friend](users/get_slots_for_friend-of-friend.markdown)
 * [Get slots for Stranger with common groups](users/get_slots_for_stranger_with_common_groups.markdown)

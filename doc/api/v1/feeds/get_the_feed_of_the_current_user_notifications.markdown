@@ -59,6 +59,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -112,7 +115,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=VNsdVgaZlC_w3wgTmZxTdOcdDhU
+Authorization: Token token=2rWzcIOFjIU4Xx9XOWYa1ZPcnVk
 Host: example.org
 Cookie: </pre>
 
@@ -124,7 +127,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=VNsdVgaZlC_w3wgTmZxTdOcdDhU&quot;</pre>
+	-H &quot;Authorization: Token token=2rWzcIOFjIU4Xx9XOWYa1ZPcnVk&quot;</pre>
 
 ### Response
 
@@ -134,12 +137,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e4dbee2b8da198c857bf8c4c5c00c5ca&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;420181206f18bd36731b906e1e79004d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 71d97f02-1051-4bc1-9ebf-f9ed7335b44d
-X-Runtime: 0.005874
-Vary: Origin
-Content-Length: 1765</pre>
+X-Request-Id: 37b8fb7e-c6dc-44dd-84d4-b5a0ae268a4b
+X-Runtime: 0.005277
+Content-Length: 1788</pre>
 
 #### Status
 
@@ -151,29 +154,29 @@ Content-Length: 1765</pre>
 [
   {
     "type" : "Slot",
-    "target" : "3",
+    "target" : "103",
     "action" : "comment",
-    "time" : "2016-04-04T20:50:21.262Z",
-    "id" : "62CFC3DA66F0C172290514380A5C7434095DCCF8",
+    "time" : "2016-05-01T22:54:07.878Z",
+    "id" : "36D8CA9A0D7160D625E113208E36A234A53EB2E7",
     "actors" : [
-      10
+      90
     ],
-    "message" : "User 60 commented on the Slot: Slot title 23",
+    "message" : "User 206 commented on your Slot: Slot title 23",
     "data" : {
       "target" : {
-        "id" : 3,
+        "id" : 103,
         "title" : "Slot title 23",
-        "startDate" : "2019-09-22T21:44:02.000Z",
-        "createdAt" : "2016-04-04T20:50:21.227Z",
-        "updatedAt" : "2016-04-04T20:50:21.272Z",
+        "startDate" : "2019-09-01T09:44:02.000Z",
+        "createdAt" : "2016-05-01T22:54:07.850Z",
+        "updatedAt" : "2016-05-01T22:54:07.881Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-22T21:44:02.000Z",
+        "endDate" : "2019-10-01T09:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 8,
-          "username" : "User 58",
-          "createdAt" : "2016-04-04T20:50:21.215Z",
-          "updatedAt" : "2016-04-04T20:50:21.215Z",
+          "id" : 88,
+          "username" : "User 203",
+          "createdAt" : "2016-05-01T22:54:07.839Z",
+          "updatedAt" : "2016-05-01T22:54:07.839Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -185,7 +188,7 @@ Content-Length: 1765</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-04-04T20:50:21.250Z",
+            "createdAt" : "2016-05-01T22:54:07.870Z",
             "duration" : null,
             "title" : "Title 21"
           },
@@ -195,7 +198,7 @@ Content-Length: 1765</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.244Z",
+            "createdAt" : "2016-05-01T22:54:07.865Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -205,7 +208,7 @@ Content-Length: 1765</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.242Z",
+            "createdAt" : "2016-05-01T22:54:07.862Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -215,7 +218,7 @@ Content-Length: 1765</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.239Z"
+            "createdAt" : "2016-05-01T22:54:07.859Z"
           },
           {
             "mediaId" : 14,
@@ -223,7 +226,7 @@ Content-Length: 1765</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.235Z"
+            "createdAt" : "2016-05-01T22:54:07.857Z"
           },
           {
             "mediaId" : 13,
@@ -231,21 +234,22 @@ Content-Length: 1765</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.231Z"
+            "createdAt" : "2016-05-01T22:54:07.854Z"
           }
         ],
         "settings" : {
           "alerts" : "omitted"
         },
         "visibility" : "public",
+        "likerIds" : [],
         "likes" : 0,
         "commentsCounter" : 1
       },
       "actor" : {
-        "id" : 10,
-        "username" : "User 60",
-        "createdAt" : "2016-04-04T20:50:21.253Z",
-        "updatedAt" : "2016-04-04T20:50:21.253Z",
+        "id" : 90,
+        "username" : "User 206",
+        "createdAt" : "2016-05-01T22:54:07.875Z",
+        "updatedAt" : "2016-05-01T22:54:07.875Z",
         "deletedAt" : null,
         "image" : ""
       }

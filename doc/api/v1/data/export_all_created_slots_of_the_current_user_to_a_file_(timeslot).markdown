@@ -21,7 +21,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=guxD2Wh5RWsU5oaMEdhfeDzeD1k
+Authorization: Token token=EN6PWcF0o37n4fHxCeWSCk9JF7E
 Host: example.org
 Cookie: </pre>
 
@@ -34,7 +34,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/timeslot&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=guxD2Wh5RWsU5oaMEdhfeDzeD1k&quot;</pre>
+	-H &quot;Authorization: Token token=EN6PWcF0o37n4fHxCeWSCk9JF7E&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ Content-Disposition: attachment; filename=&quot;Timeslot-Export.json&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/json
 Cache-Control: private
-ETag: W/&quot;522714c122c73de784ea84a593d6d936&quot;
-X-Request-Id: 8ec70807-5af2-4a0b-8689-b72e0c16b806
-X-Runtime: 0.013711
-Vary: Origin
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;4330c0d3e368a3436002e6e6fbf03ec3&quot;
+X-Request-Id: dab7a285-0273-4a14-9cf0-dbb502cce81d
+X-Runtime: 0.012443
 Content-Length: 886</pre>
 
 #### Status
@@ -60,5 +60,46 @@ Content-Length: 886</pre>
 #### Body
 
 ```javascript
-
+[
+  {
+    "uid" : "0845ce4a-fddc-4763-9b0b-a9b71b43027c",
+    "title" : "Slot title 68",
+    "visibility" : "public",
+    "start" : "2019-09-15T20:44:02.000Z",
+    "end" : "2019-10-15T20:44:02.000Z",
+    "location" : null
+  },
+  {
+    "uid" : "dea06f7b-3b54-4994-852f-5f0dcaf47a8c",
+    "title" : "Slot title 67",
+    "visibility" : "public",
+    "start" : "2019-09-14T19:44:02.000Z",
+    "end" : "2019-10-14T19:44:02.000Z",
+    "location" : null
+  },
+  {
+    "uid" : "add63601-b890-463c-9acf-1841c34c7782",
+    "title" : "Slot title 66",
+    "visibility" : "public",
+    "start" : "2019-09-13T18:44:02.000Z",
+    "end" : "2019-10-13T18:44:02.000Z",
+    "location" : null
+  },
+  {
+    "uid" : "b6649d08-7d7e-407a-9750-d38f4912a3e8",
+    "title" : "Slot title 65",
+    "visibility" : "public",
+    "start" : "2019-09-12T17:44:02.000Z",
+    "end" : "2019-10-12T17:44:02.000Z",
+    "location" : null
+  },
+  {
+    "uid" : "638b6626-1153-4f26-b2ad-94bf9652943c",
+    "title" : "Slot title 64",
+    "visibility" : "public",
+    "start" : "2019-09-11T16:44:02.000Z",
+    "end" : "2019-10-11T16:44:02.000Z",
+    "location" : null
+  }
+]
 ```

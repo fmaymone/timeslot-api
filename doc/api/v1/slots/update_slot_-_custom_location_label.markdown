@@ -122,6 +122,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 Name : notes
 Description : Notes on the slot
 
+Name : likerIds
+Description : Array with IDs of Users who like the slot
+
 Name : likes
 Description : Likes for the slot
 
@@ -145,13 +148,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=w28_Xl3mpUIuuyNU_GlKio5rZA8
+Authorization: Token token=FWfRuq2r3BVckkXIq4c_9UDLExI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/18</pre>
+<pre>PATCH /v1/stdslot/46</pre>
 
 #### Body
 ```javascript
@@ -167,9 +170,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/18&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/46&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=w28_Xl3mpUIuuyNU_GlKio5rZA8&quot;</pre>
+	-H &quot;Authorization: Token token=FWfRuq2r3BVckkXIq4c_9UDLExI&quot;</pre>
 
 ### Response
 
@@ -179,12 +182,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;8fbee98da1218a1991386b143cb161eb&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;4eceb1984effa812003a974573ea6d95&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8213405b-d6b7-43a8-9c18-0d3f75167fa8
-X-Runtime: 0.020546
-Vary: Origin
-Content-Length: 829</pre>
+X-Request-Id: 0ea7686e-d1b8-44e9-870e-f71a531bd912
+X-Runtime: 0.032857
+Content-Length: 864</pre>
 
 #### Status
 
@@ -194,15 +197,15 @@ Content-Length: 829</pre>
 
 ```javascript
 {
-  "id" : 18,
-  "title" : "Slot title 83",
-  "startDate" : "2019-09-06T14:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:32.117Z",
-  "updatedAt" : "2016-04-04T20:50:32.117Z",
+  "id" : 46,
+  "title" : "Slot title 129",
+  "startDate" : "2019-09-25T12:44:02.000Z",
+  "createdAt" : "2016-05-01T22:54:14.106Z",
+  "updatedAt" : "2016-05-01T22:54:14.106Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-06T14:44:02.000Z",
+  "endDate" : "2019-10-25T12:44:02.000Z",
   "location" : {
-    "id" : "d70b20e0-199c-4348-83d0-f59634c270a8",
+    "id" : "6fa37677-c927-4c28-bf45-231d0d2596fa",
     "name" : "Soho House Custom",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -220,10 +223,10 @@ Content-Length: 829</pre>
     "longitude" : 13.414259
   },
   "creator" : {
-    "id" : 43,
-    "username" : "User 345",
-    "createdAt" : "2016-04-04T20:50:32.109Z",
-    "updatedAt" : "2016-04-04T20:50:32.109Z",
+    "id" : 168,
+    "username" : "User 478",
+    "createdAt" : "2016-05-01T22:54:14.098Z",
+    "updatedAt" : "2016-05-01T22:54:14.098Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -233,7 +236,9 @@ Content-Length: 829</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "visibleCount" : "1"
 }
 ```

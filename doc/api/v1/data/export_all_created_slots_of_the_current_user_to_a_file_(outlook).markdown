@@ -21,7 +21,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=iu3yf3Kmg-aAo_zjSsjWoDd8BLQ
+Authorization: Token token=caN8VU3-Hx3yDrzGfJ6dOTBh_DE
 Host: example.org
 Cookie: </pre>
 
@@ -34,7 +34,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/outlook&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=iu3yf3Kmg-aAo_zjSsjWoDd8BLQ&quot;</pre>
+	-H &quot;Authorization: Token token=caN8VU3-Hx3yDrzGfJ6dOTBh_DE&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ Content-Disposition: attachment; filename=&quot;Timeslot-Export.csv&quot;
 Content-Transfer-Encoding: binary
 Content-Type: text/csv
 Cache-Control: private
-ETag: W/&quot;645f12afb64e4d31d27956203cedd207&quot;
-X-Request-Id: 29e436f1-526d-49f1-9f97-c140bb73a0fa
-X-Runtime: 0.027743
-Vary: Origin
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;a2a4e780d88910db817863c81d92379d&quot;
+X-Request-Id: 570577f1-33df-41e1-93d1-4088eebfcf35
+X-Runtime: 0.029596
 Content-Length: 464</pre>
 
 #### Status
@@ -60,5 +60,5 @@ Content-Length: 464</pre>
 #### Body
 
 ```javascript
-
+[binary data]
 ```

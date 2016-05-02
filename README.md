@@ -51,9 +51,10 @@ ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREA
 ENV['PG_EXPLAIN'] = 'true' # show output of pg EXPLAIN ANALYZE for all SELECT queries, use carefully
 
 # pagination
-ENV['PAGINATION_DEFAULT_FILTER'] = 'upcoming' # if not provided by client
+ENV['PAGINATION_DEFAULT_FILTER'] = none' # if not provided by client
+ENV['PAGINATION_DEFAULT_MODE'] = 'all' # if not provided by client
 ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
-ENV['PAGINATION_MAX_LIMIT'] = '100'
+ENV['PAGINATION_MAX_LIMIT'] = '100' # depends on the environment...
 
 ENV['SUGGESTED_USER_EMAIL'] = 'kalirad@me.com' # the email for the user which is suggested as a friend if a user had no friends yet
 
