@@ -1,42 +1,12 @@
 module Activity
 
-  def create_activity(action = activity_action)
-    if activity_is_valid?(action)
-      create_activity_feed(action)
-      create_activity_push(action) if push_is_valid?
-    end
-  rescue => error
-    error_handler(error, "failed: create '#{action}' activity")
-  ensure
-    return self
-  end
-
-  # The 'forward_activity' method provides a full customizable activity distribution on place.
-  # Example:
-  #
-  # self.forward_activity(
-  #     'like',
-  #     feed_fwd: {
-  #         User: [activity_actor.id.to_s],
-  #         News: [],
-  #         Notification: [activity_target.id.to_s]
-  #     },
-  #     push_fwd: [activity_target.id]
-  # )
-  #
-  # NOTES:
-  # If you do not pass an action as first parameter the default activity_action is used instead.
-  # A forwarded activity completely overrides/skip the default distribution context of this activity.
-  # The self.class.name + the activity_action give the activity/message key. This key is used
-  # by the message composer during aggregation/feed building to get the right translation.
-
-  def forward_activity(action = activity_action, feed_fwd: [], push_fwd: [])
+  def create_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
     if activity_is_valid?(action)
       create_activity_feed(action, forward: feed_fwd)
       create_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
-    error_handler(error, "failed: forward '#{action}' activity")
+    error_handler(error, "failed: create '#{action}' activity")
   ensure
     return self
   end
@@ -214,12 +184,12 @@ module Activity
   # Returns an array of user which should be notified via internal app notification (feed)
   private def activity_forward(action = activity_action)
     {
-        User:
-            get_recipients("#{activity_type.downcase}_#{action}_me"),
-        News:
-            get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
-        Notification:
-            get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
+      User:
+        get_recipients("#{activity_type.downcase}_#{action}_me"),
+      News:
+        get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
+      Notification:
+        get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
     }
   end
 
