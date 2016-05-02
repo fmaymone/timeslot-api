@@ -1,10 +1,6 @@
 module GroupActivity
   include Activity
 
-  private def activity_is_valid?
-    super and active? #and !Rails.env.production?
-  end
-
   private def activity_type
     'Group'
   end

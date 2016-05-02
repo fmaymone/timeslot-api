@@ -139,4 +139,8 @@ class Membership < ActiveRecord::Base
   private def activity_action
     @initiator ? 'membertag' : 'membership'
   end
+
+  private def activity_is_valid?(action)
+    super and active?
+  end
 end

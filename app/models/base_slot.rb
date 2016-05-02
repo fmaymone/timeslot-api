@@ -232,7 +232,7 @@ class BaseSlot < ActiveRecord::Base
     meta_slot.unregister
 
     # Forward deletion activity after 'deleted_at' was set:
-    forward_deletion
+    create_activity('delete')
     # NOTE: Remove follower relations at least!
     remove_all_followers
   end

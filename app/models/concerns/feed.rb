@@ -57,8 +57,8 @@ module Feed
 
     def dispatch(params)
 
-      # Generates and add activity id
-      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
+      # Generate and add activity id
+      #params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward, :message).to_json).upcase
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
@@ -69,10 +69,8 @@ module Feed
       @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
       # Store foreign user to its own index (shared objects)
       @storage.set("User:#{params[:foreign]}", gzip_data_field(params, :foreign)) if params[:foreign].present?
-      # Remove foreign hash from params (it is not longer used)
-      params[:data].except!(:foreign)
 
-      ## -- Store Current Activity (Write-Opt) -- ##
+      ## -- Store Current Activity to Context-based Feeds (Write-Opt) -- ##
 
       # Determine target key for redis set
       target_index = "#{params[:type]}:#{params[:target]}"
@@ -81,33 +79,17 @@ module Feed
       # Determine target index for hybrid "Write-Read-Opt"
       target_key = "#{target_index}:#{activity_index}"
 
-      ## -- Collect Activity Distribution -- ##
-
-      feed_register = { User: [], News: [], Notification: [] }
-
-      # NOTE: Actually we skip default distribution if custom forwardings was passed
-      if params[:forward].empty?
-        # Store own activities to feed (my activities)
-        feed_register[:User] << params[:actor]
-        # Send to other users through social relations ("Read-Opt" Strategy)
-        feed_register[:News] += params[:notify]
-        # Store activity to own notification feed (related to own content, filter out own activities)
-        feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
-      else
-        # Add all custom forwardings
-        params[:forward].each{ |index, users| feed_register[index] += users }
-      end
-
       ## -- Distribute Activities (Read-Opt) -- ##
 
-      distribute(target_key, feed_register)
+      distribute(target_key, forwarding: params[:forward])
     end
 
     # We using backtracking to improve performance by removing activities through all feeds
     # To backtrack activities from its corresponding target feed it is required to find the index which
-    # points to the target feed index, where the related activity is stored
+    # points to the target feed index, where the associated activity is stored
 
-    def remove_item_from_feed(object:, model:, target:, type:, notify:)
+    # Removes a specific activity from the recipients feeds (e.g. remove a like)
+    def remove_item_from_feed(target:, type:, object:, model:, recipients:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = @storage.range("Feed:#{target_key}", 0, -1)
@@ -118,42 +100,44 @@ module Feed
         activity = enrich_activity_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
+          # TODO: Deletes old activity (keep index)
+          #@storage.set_to_index("Feed:#{target_key}", index, nil)
           # Loop through all related user feeds through social relations
-          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, notify)
+          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, recipients)
           break
         end
       end
     end
 
-    def remove_target_from_feeds(target:, type:, notify:)
+    # Removes a target from the recipients feeds (e.g. remove all activities related to a slot)
+    def remove_target_from_feeds(target:, type:, recipients:)
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed_length = @storage.length("Feed:#{target_key}") - 1
       # The timestamp is used to validate the feed cache
-      current = Time.now.to_f
-      # Loop through all target activities via backtracking
+      current_time = Time.now.to_f
+      # Loop through all target activities stored in the target feed
       (0..target_feed_length).each do |index|
+        # TODO: Deletes old activity (keep index)
+        #@storage.set_to_index("Feed:#{target_key}", index, nil)
         # We do not delete the activity source, instead we remove the pointers to
         # this activity which was distributed to the users feeds
-        remove_activity_from_feed("#{target_key}:#{index}", current, notify)
+        remove_activity_from_feed("#{target_key}:#{index}", current_time, recipients)
       end
     end
 
-    def remove_user_from_feeds(user:, notify:)
-      # NOTE: For this step we need to fetch all related objects
-      targets = user.std_slots
-
+    def remove_user_from_feeds(user:, recipients:)
       # We collect job data here and pass this into the removal job worker
       job_data = []
-
-      targets.each do |target|
+      # NOTE: For this step we need to fetch all related objects from DB
+      user.std_slots.each do |slot|
         # Try to extend social context for each target
-        context = target.try(:followers)
-        context.merge!(notify).uniq if context
+        context = slot.try(:followers)
+        context.merge!(recipients).uniq if context
         # Collect job data (remove by target)
-        job_data << { target: target.id,
-                      type: target.activity_type,
-                      notify: context || notify }
+        job_data << { target: slot.id,
+                      type: slot.activity_type,
+                      recipients: context || recipients }
       end
       job_data
     end
@@ -237,15 +221,15 @@ module Feed
       json
     end
 
-    private def remove_activity_from_feed(feed_key, time, notify)
+    private def remove_activity_from_feed(activity, time, recipients)
       @storage.pipe do
         # Loop through all related user feeds through social relations
-        notify.each do |user_id|
+        recipients.each do |user_id|
           %W(Feed:#{user_id}:User
              Feed:#{user_id}:News
              Feed:#{user_id}:Notification).each do |feed_index|
             # Remove activity by object (removes a single pointer to an activity)
-            @storage.remove_all(feed_index, feed_key)
+            @storage.remove_all(feed_index, activity)
             # Store the feeds update time to force re-validation of the cache
             @storage.set("Update:#{feed_index}", time)
           end
@@ -253,16 +237,16 @@ module Feed
       end
     end
 
-    private def distribute(target_key, distributor)
+    private def distribute(target_key, forwarding:)
       # The timestamp is used to validate the feed cache
       current_time = Time.now.to_f
       # Distribute to all user feeds (including custom forwardings like friend requests, deletions, etc.)
-      distributor.each do |index, users|
+      forwarding.each do |index, user_ids|
         # Send to other users ("Read-Opt" Strategy)
-        if users.any?
+        if user_ids.any?
           @storage.pipe do
-            users.uniq.each do |user|
-              feed_index = "Feed:#{user}:#{index}"
+            user_ids.uniq.each do |user_id|
+              feed_index = "Feed:#{user_id}:#{index}"
               # Delegate activity to a feed
               @storage.push(feed_index, target_key)
               # Store the feeds update time to force re-validation of the cache
@@ -547,7 +531,7 @@ module Feed
 
     private def gzip_feed(params)
       ActiveSupport::Gzip.compress(
-          params.except(:data, :message, :notify, :forward).values.to_json
+          params.except(:data, :message, :forward).values.to_json
       )
     end
 

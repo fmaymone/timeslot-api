@@ -39,7 +39,8 @@ class StdSlot < BaseSlot
       # NOTE: Update feeds before changing the visibility of the model
       # TODO: Clarify Group Visibility VS. Slot Visibility !!!
       if visibility == 'private'
-        remove_all_activities('private', target: self)
+        remove_all_activities(target: self)
+        create_activity('private')
         remove_all_followers
       end
       slot_type = STD_SLOT_TYPES[visibility]

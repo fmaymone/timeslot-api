@@ -7,7 +7,7 @@ class RemoveJob
     if target
       Feed.remove_target_from_feeds(target: target['id'],
                                     type: params[:type],
-                                    notify: params[:notify])
+                                    recipients: params[:recipients])
     end
     if user_targets
       user_targets.each do |target|

@@ -30,11 +30,6 @@ class Containership < ActiveRecord::Base
     ts_soft_delete
   end
 
-  # we need this flag for the activity validation check for group-related activities
-  def active?
-    true
-  end
-
   ## Activity Methods ##
 
   private def activity_target

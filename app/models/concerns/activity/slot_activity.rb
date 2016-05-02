@@ -24,7 +24,7 @@ module SlotActivity
 
   # This method should be overridden in the subclass
   # if custom validation is required
-  private def activity_is_valid?
+  private def activity_is_valid?(action)
     super && activity_visibility != 'private'
   end
 
@@ -46,7 +46,7 @@ module SlotActivity
     {
       ACTOR: activity_actor.username,
       TITLE: activity_target.meta_slot.title,
-      USER: activity_foreign.username,
+      USER: activity_foreign.username
       #FIELD: action || activity_action
     }
   end
