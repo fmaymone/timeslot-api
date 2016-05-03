@@ -49,25 +49,25 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      ## Collect Activities ##
+      ## Collect Activities + Associations ##
 
-      storage = MediaItem.where(deleted_at: nil) +
-                Note.where(deleted_at: nil) +
-                Like.where(deleted_at: nil) +
-                Comment.where(deleted_at: nil) +
-                Friendship.includes(:user, :friend).where(deleted_at: nil) +
+      storage = Friendship.includes(:user, :friend).where(deleted_at: nil) +
                 Membership.includes(:group, :user).where(deleted_at: nil) +
                 Containership.includes(:group, :slot).where(deleted_at: nil) +
                 Passengership.includes(:slot, :user).where(deleted_at: nil) +
-                Group.where(deleted_at: nil) +
-                StdSlot.where(deleted_at: nil)
+                MediaItem.where(deleted_at: nil).last(MAX_ACTIVITIES / 5) +
+                Note.where(deleted_at: nil).last(MAX_ACTIVITIES / 5) +
+                Like.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
+                Comment.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
+                Group.where(deleted_at: nil).last(MAX_ACTIVITIES / 10) +
+                StdSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10)
 
       ## Re-Build Activities + Follower Model ##
 
       length = storage.count
 
-      storage.sort_by(&:created_at).each_with_index do |item, index| #.last(MAX_ACTIVITIES)
-        # determine limit (reversed)
+      storage.sort_by(&:created_at).each_with_index do |item, index|
+        # determine limit (reversed: starting from end)
         should_be_distributed = length - index < MAX_ACTIVITIES
 
         if item.deleted_at.nil?
