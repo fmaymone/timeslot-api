@@ -39,15 +39,4 @@ module SlotActivity
       foreign: Feed.render_shared_object(activity_foreign)
     }
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  private def activity_message_params(action = nil)
-    {
-      ACTOR: activity_actor.username,
-      TITLE: activity_target.meta_slot.title,
-      USER: activity_foreign.username
-      #FIELD: action || activity_action
-    }
-  end
 end

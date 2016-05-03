@@ -59,7 +59,6 @@ module Activity
       model: self.class.name,
       target: activity_target.id.to_s,
       action: action,
-      message: activity_message_params,
       foreign: activity_foreign.try(:id).try(:to_s),
       forward: forward || activity_forward(action),
       data: activity_extra_data,
@@ -192,6 +191,16 @@ module Activity
         get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
     }
   end
+
+  # Feed distribution through social relations
+  # The social context is differentiated by 6 types of associations:
+  #
+  # 1. Target related context
+  # 2. Actor related context
+  # 3. Friend related context
+  # 4. Group related context
+  # 5. Foreign related context
+  # 6. Public related context (is actually not supported)
 
   private def get_recipients(context, remove_actor: false)
     # Determine social context from distribution map
@@ -342,12 +351,6 @@ module Activity
   private def activity_action
     raise NotImplementedError,
           "Subclasses must define the method 'activity_action'."
-  end
-
-  # The message is used as a notification message
-  private def activity_message_params
-    raise NotImplementedError,
-          "Subclasses must define the method 'activity_message_params'."
   end
 
   private def error_handler(error, activity, params = nil)

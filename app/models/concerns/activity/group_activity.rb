@@ -24,14 +24,4 @@ module GroupActivity
       foreign: Feed.render_shared_object(activity_foreign)
     }
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  private def activity_message_params
-    {
-      ACTOR: activity_actor.username,
-      NAME: activity_target.name,
-      USER: activity_foreign.username
-    }
-  end
 end

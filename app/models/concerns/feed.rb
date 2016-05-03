@@ -58,7 +58,7 @@ module Feed
     def dispatch(params)
 
       # Generate and add activity id
-      #params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward, :message).to_json).upcase
+      #params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward).to_json).upcase
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
@@ -531,7 +531,7 @@ module Feed
 
     private def gzip_feed(params)
       ActiveSupport::Gzip.compress(
-          params.except(:data, :message, :forward).values.to_json
+          params.except(:data, :forward).values.to_json
       )
     end
 

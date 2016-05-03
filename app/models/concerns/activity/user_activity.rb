@@ -23,13 +23,4 @@ module UserActivity
       actor: Feed.render_shared_object(activity_actor)
     }
   end
-
-  # The message is used as a notification message
-  # for the users activity feed
-  private def activity_message_params
-    {
-      ACTOR: activity_target.username,
-      USER: activity_actor.username
-    }
-  end
 end
