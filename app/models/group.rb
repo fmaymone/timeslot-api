@@ -83,6 +83,7 @@ class Group < ActiveRecord::Base
 
   private def add_owner_as_member
     Membership.create(group_id: id, user_id: owner.id, state: '111')
+    self.add_follower(owner)
   end
 
   private def strip_whitespaces
