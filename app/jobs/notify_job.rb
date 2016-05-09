@@ -33,8 +33,4 @@ class NotifyJob
       }
     end
   end
-
-  # def perform_later(sec, devices, params)
-  #   after(sec) { perform(devices, params) }
-  # end
 end

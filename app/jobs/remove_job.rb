@@ -1,30 +1,22 @@
-class RemoveJob
-  include SuckerPunch::Job
-  workers ENV['NOTIFICATION_WORKERS'] || 5
+require 'sucker_punch/async_syntax'
 
-  def perform(params, target: nil, user_targets: nil)
-    Feed.remove_item_from_feed(params)
-    if target
-      Feed.remove_target_from_feeds(target: target['id'],
-                                    type: params[:type],
-                                    recipients: params[:recipients])
-    end
-    if user_targets
-      user_targets.each do |target|
-        Feed.remove_target_from_feeds(target)
-      end
+class RemoveJob < ActiveJob::Base
+  queue_as :dispatch #:default
+
+  def perform(activity: nil, target: nil, user: nil, friends: nil)
+    Rails.logger.warn { "SUCKER_PUNCH RemoveJob started" }
+    ActiveRecord::Base.connection_pool.with_connection do
+      Feed.remove_activity(activity) if activity
+      Feed.remove_target(target) if target
+      Feed.remove_user(user) if user
+      Feed.remove_friends(friends) if friends
     end
   rescue => e
-    opts = {
-      object: params[:object],
-      target: params[:target],
-      sucker_punch: "remove from feed failed"
-    }
     Rails.logger.error { e }
-    Airbrake.notify(e, opts)
+    Airbrake.notify(e)
+    puts e
+  ensure
+    ActiveRecord::Base.clear_active_connections!
+    Rails.logger.warn { "SUCKER_PUNCH RemoveJob done" }
   end
-
-  # def perform_later(sec, devices, params)
-  #   after(sec) { perform(devices, params) }
-  # end
 end
