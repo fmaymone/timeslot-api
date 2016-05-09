@@ -9,12 +9,14 @@ module GroupActivity
     activity_target.try(:owner)
   end
 
+  private def activity_groups
+    [activity_target]
+  end
+
   private def activity_visibility
     activity_target.try(:public) ? 'public' : 'private'
   end
 
-  # Add extra data to each activity. The data can be hide
-  # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
     {
       # We store full slot data to the activity stream.

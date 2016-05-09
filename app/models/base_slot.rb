@@ -214,14 +214,14 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
+    current_follower = followers
+
     likes.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
     containerships.each(&:delete)
     passengerships.each(&:delete)
-
-    remove_all_activities(target: self)
 
     related_users.each do |user|
       user.prepare_for_slot_deletion self
@@ -231,8 +231,18 @@ class BaseSlot < ActiveRecord::Base
     ts_soft_delete
     meta_slot.unregister
 
+    remove_activity
+
+    # TODO:
     # Forward deletion activity after 'deleted_at' was set:
-    create_activity('delete')
+    create_activity('delete',
+      feed_fwd: {
+        User: [creator.id.to_s],
+        Notification: current_follower
+      },
+      push_fwd: current_follower.map(&:to_i)
+    )
+
     # NOTE: Remove follower relations at least!
     remove_all_followers
   end
@@ -324,8 +334,6 @@ class BaseSlot < ActiveRecord::Base
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
-
-    #slot.create_activity
 
     if media || notes || alerts
       slot.update_from_params(media: media, notes: notes, alerts: alerts,

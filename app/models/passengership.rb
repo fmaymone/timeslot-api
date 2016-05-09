@@ -32,10 +32,12 @@ class Passengership < ActiveRecord::Base
   # when a slot is deleted
   def delete
     remove_activity
-    slot.remove_follower(user)
-    slot.touch
-    user.touch
-    ts_soft_delete
+    slot.reduce_distribution_by{
+      slot.remove_follower(user)
+      slot.touch
+      user.touch
+      ts_soft_delete
+    }
   end
 
   ## Activity Methods ##
@@ -45,14 +47,14 @@ class Passengership < ActiveRecord::Base
   end
 
   private def activity_actor
-    @initiator || user
+    @initiator || (add_media_permission ? slot.creator : user)
   end
 
   private def activity_foreign
-    @initiator ? user : super
+    @initiator || add_media_permission ? user : super
   end
 
   private def activity_action
-    @initiator ? 'tagged' : 'reslot'
+    @initiator || add_media_permission ? 'tagged' : 'reslot'
   end
 end

@@ -11,10 +11,10 @@ module Activity
     return self
   end
 
-  def update_activity(action = activity_action)
+  def update_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
     if activity_is_valid?(action)
-      update_activity_feed(action)
-      update_activity_push(action) if push_is_valid?
+      update_activity_feed(action, forward: feed_fwd)
+      update_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
     error_handler(error, "failed: update '#{action}' activity")
@@ -22,10 +22,10 @@ module Activity
     return self
   end
 
-  def remove_activity(action = 'delete')
+  def remove_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
     if activity_is_valid?(action)
-      remove_activity_feed(action)
-      remove_activity_push(action) if push_is_valid?
+      remove_activity_feed(action, forward: feed_fwd)
+      remove_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
     error_handler(error, "failed: remove '#{action}' activity")
@@ -33,26 +33,60 @@ module Activity
     return self
   end
 
-  def remove_all_activities(action = 'delete', target: nil, user: nil)
-    if activity_is_valid?(action)
-      remove_activity_feed(action, target: target, user: user)
-      remove_activity_push(action, target: target, user: user) if push_is_valid?
+  def reduce_distribution_by(async: true, &block)
+    # Execute code block (may change social associations)
+    yield(block) if block.present?
+    # Update actors feed + shared objects
+    Feed.update_objects([activity_actor, activity_target])
+    # Remove activities from target feeds
+    if async
+      # Start background job to remove distributed activities
+      RemoveJob.perform_later(
+        target: {
+          target: activity_target.id,
+          type: activity_type
+        }
+      )
+    else
+      # NOTE: use sync version to return reduced context
+      Feed.remove_target(target: activity_target.id, type: activity_type)
     end
-  rescue => error
-    error_handler(error, "failed: remove all activities")
-  ensure
-    return self
+  end
+
+  def activity_context(action = activity_action)
+    # Get current context
+    context = activity_forward(action).values
+    # Validates context if target visibility was set to 'private'
+    if activity_visibility == 'private'
+      # NOTE: do not use activity_foreign to determine creator/owner
+      case activity_type
+      when 'Slot'
+        context.map!{|a| a & (
+          activity_target.followers << activity_target.creator.id.to_s
+        )}
+      when 'Group'
+        context.map!{|a| a & (
+          activity_target.followers << activity_target.owner.id.to_s
+        )}
+      else # when 'User'
+        context.each(&:delete_all)
+      end
+    end
+    context
   end
 
   ## Private Helpers ##
 
-  private def create_activity_feed(action = activity_action, forward: nil, time: nil)
+  private def create_activity_feed(action, forward: nil, time: nil)
+    forward ||= activity_forward(action)
+    return unless forward.any?
+
     # FIX: Solid save last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?
 
     # Initialize job worker
-    FeedJob.perform_async({
+    FeedJob.perform_later({
       type: activity_type,
       actor: activity_actor.id.to_s,
       object: self.id.to_s,
@@ -60,21 +94,21 @@ module Activity
       target: activity_target.id.to_s,
       action: action,
       foreign: activity_foreign.try(:id).try(:to_s),
-      forward: forward || activity_forward(action),
+      forward: forward,
       data: activity_extra_data,
-      time: time || self.updated_at
+      time: (time || self.updated_at).to_f
     })
 
     # Update actors feed + shared objects
-    activity_update_feed
+    Feed.update_objects([activity_actor, activity_target])
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
   end
 
-  private def create_activity_push(action = activity_action, forward: nil)
+  private def create_activity_push(action, forward: nil)
     recipients = forward || activity_push(action)
 
-    # Remove creator from the push notification list
+    # Extra Check: Remove actor from the push notification list
     recipients.delete(activity_actor.id)
 
     if recipients.any?
@@ -100,72 +134,55 @@ module Activity
     end
   end
 
-  private def update_activity_feed(action)
+  private def update_activity_feed(action, forward: nil)
     # Actually we made updates simple in handy with a tiny performance impact
-    remove_activity(action)
-    create_activity(action)
+    remove_activity(action, feed_fwd: forward)
+    create_activity(action, feed_fwd: forward)
     # NOTE: this could be improved by a real update implementation (when it is required):
     # TODO: [TML-77]
   end
 
-  private def update_activity_push(action)
+  private def update_activity_push(action, forward: nil)
     # TODO: [TML-77]
     # TODO: [TML-71]
   end
 
-  private def remove_activity_feed(action, target: nil, user: nil)
-    forwards = activity_forward(action)
-    # Add actor + foreign + forwarded users to the activity removal dispatcher
-    recipients = []
-    recipients += forwards[:User] if forwards[:User]
-    recipients += forwards[:News] if forwards[:News]
-    recipients += forwards[:Notification] if forwards[:Notification]
-    recipients << activity_actor.id.to_s
-    recipients << activity_foreign.id.to_s if activity_foreign
-
-    recipients.uniq!
-
-    target = target.as_json if target
-    user_targets = user ? Feed.remove_user_from_feeds(user: user, recipients: recipients) : nil
-
+  private def remove_activity_feed(action, forward: nil)
     # Remove activities from target feeds:
-    RemoveJob.perform_async({
-        object: self.id.to_s,
-        model: self.class.name,
-        target: activity_target.id.to_s,
-        type: activity_type,
-        recipients: recipients
-      },
-      target: target,
-      user_targets: user_targets
+    RemoveJob.perform_later(
+        activity: {
+            object: self.id.to_s,
+            model: self.class.name,
+            target: activity_target.id.to_s,
+            type: activity_type,
+            forward: forward
+        }
     )
-
     # Update actors feed + shared objects
-    activity_update_feed
+    Feed.update_objects([activity_actor, activity_target])
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
   end
 
-  private def remove_activity_push(action, target: nil, user: nil)
+  private def remove_activity_push(action, forward: nil)
     # TODO: [TML-71]
-    # create_activity_push(action) if push_is_valid?
   end
 
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?(action = activity_action)
-    !Rails.application.config.SKIP_ACTIVITY &&
-    activity_actor.present? &&
-    activity_target.present? &&
-    action.present? &&
+    !Rails.application.config.SKIP_ACTIVITY and
+    activity_actor.present? and
+    activity_target.present? and
+    action.present? and
     # FIX: allow removal-related activities
-    (action.in?(%w(delete private unslot unshare unfriend ungroup reject kick leave)) || (
-        self.deleted_at.nil? &&
-        activity_actor.deleted_at.nil? &&
+    (action.in?(%w(delete private unslot unshare unfriend ungroup reject kick leave)) or (
+        self.deleted_at.nil? and
+        activity_actor.deleted_at.nil? and
         activity_target.deleted_at.nil?)
-    ) &&
+    ) and
     # FIX: only activities from "real users" are valid:
-    activity_actor.role != 1
+    (activity_actor.role != 1)
   end
 
   # This method should be overridden in the subclass
@@ -175,16 +192,17 @@ module Activity
   end
 
   # Returns an array of user which should be notified via push notification (AWS SNS)
-  private def activity_push(action = activity_action)
+  private def activity_push(action)
     # Remove the user from the news feed who did the actual activity (actor)
-    get_recipients("#{activity_type.downcase}_#{action}_push", remove_actor: true).map(&:to_i)
+    get_recipients("#{activity_type.downcase}_#{action}_push", remove_actor: true).map!(&:to_i)
   end
 
+
   # Returns an array of user which should be notified via internal app notification (feed)
-  private def activity_forward(action = activity_action)
+  private def activity_forward(action)
     {
       User:
-        get_recipients("#{activity_type.downcase}_#{action}_me"),
+        get_recipients("#{activity_type.downcase}_#{action}_me", remove_actor: false),
       News:
         get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
       Notification:
@@ -202,7 +220,7 @@ module Activity
   # 5. Foreign related context
   # 6. Public related context (is actually not supported)
 
-  private def get_recipients(context, remove_actor: false)
+  private def get_recipients(context, remove_actor:)
     # Determine social context from distribution map
     context = distribution_map[context.to_sym] || {}
     # FIX: Do not remove creator if the creator was manually set in the context
@@ -213,21 +231,23 @@ module Activity
     ## -- Distribution Keys: Related to Actor -- ##
 
     if context.include?('actor')      #  = the user who makes the action (initiator)
-      recipients << activity_actor.id.to_s
+      #if activity_visibility != 'private' || activity_actor == activity_foreign
+        recipients << activity_actor.id.to_s
+      #end
     end
     if context.include?('friends')    # = all friends of the actor (users follower)
       # FIX: here we cut the viral distribution through friend associations on non-public Slots/Groups
       recipients += activity_actor.followers if activity_visibility == 'public'
     end
     if context.include?('myfoaf')     # = all friends of actors friend (actually unused)
-      activity_actor.friendships.each do |friendship|
-        recipients += (friendship.user == activity_actor ? friendship.friend : friendship.user).followers
+      activity_actor.friendships.each do |fs|
+        recipients += (fs.user == activity_actor ? fs.friend : fs.user).followers
       end
     end
 
     ## -- Distribution Keys: Related to Slot-Target -- ##
 
-    if context.include?('follower')   # = slot followers (incl. group members)
+    if context.include?('follower')   # = slot followers
       recipients += activity_target.followers
     end
     if context.include?('creator')    # = the creator of the slot
@@ -235,11 +255,11 @@ module Activity
     end
     if context.include?('commenter')  # = the users who commented on the slot
       users = activity_target.comments.pluck(:user_id) || []
-      recipients += users.map(&:to_s) if users.any?
+      recipients += users.map!(&:to_s) if users.any?
     end
     if context.include?('liker')      # = the users who likes the slot
       users = activity_target.likes.pluck(:user_id) || []
-      recipients += users.map(&:to_s) if users.any?
+      recipients += users.map!(&:to_s) if users.any?
     end
     if context.include?('poster')     # = the users who adds content to the slot
       # actually not supported
@@ -247,7 +267,7 @@ module Activity
 
     ## -- Distribution Keys: Related to Group-Target -- ##
 
-    if context.include?('member')     # = members of a group (or slotgroups)
+    if context.include?('member')     # = members of a group
       if activity_type == 'Group'
         recipients += activity_target.followers
       elsif activity_type == 'Slot'
@@ -289,7 +309,10 @@ module Activity
     if context.include?('joiners')    # = friends (if: public group?)
       groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += activity_actor.followers if group.public
+        if group.public
+          recipients += activity_actor.followers
+          break
+        end
       end
     end
 
@@ -297,12 +320,6 @@ module Activity
     # Remove the user from the news feed who did the actual activity (actor)
     recipients.delete(activity_actor.id.to_s) if remove_actor
     recipients
-  end
-
-  private def activity_update_feed
-    # NOTE: It is possible that an action does'nt affect the actors feed,
-    # for this situation it is required to force the update of shared objects
-    Feed.update_objects([activity_actor, activity_target])
   end
 
   # TODO:

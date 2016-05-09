@@ -13,8 +13,6 @@ module UserActivity
     'public' # currently not supported
   end
 
-  # Add extra data to each activity. The data can be hide
-  # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
     {
       # We store full slot data to the activity stream.

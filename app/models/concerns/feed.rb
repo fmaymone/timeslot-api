@@ -49,31 +49,29 @@ module Feed
     #    related to the current users content
     # 3. Notification Feed (takes all activities which are related to the users content),
     #    own activities are not included here
-    #
-    # There are two different types of distributable lists:
-    #
-    # 1. Notify (includes all users which will be notified through social relations)
-    # 2. Forward (includes additional forwardings to specific user feeds)
 
     def dispatch(params)
-
       # Generate and add activity id
-      #params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward).to_json).upcase
+      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward).to_json).upcase
+      # Determine target key for redis set
+      target_index = "#{params[:type]}:#{params[:target]}"
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # Store target to its own index (shared objects)
+      # Store activity to context-based feed index (shared activity)
       # NOTE: Targets are generic and can have different types (e.g. Slot, User, Group)
-      @storage.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
+      @storage.set(target_index, gzip_json(params[:data][:target]))
       # Store actor to its own index (shared objects)
-      @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
+      @storage.set("User:#{params[:actor]}", gzip_json(params[:data][:actor]))
       # Store foreign user to its own index (shared objects)
-      @storage.set("User:#{params[:foreign]}", gzip_data_field(params, :foreign)) if params[:foreign].present?
+      @storage.set("User:#{params[:foreign]}", gzip_json(params[:data][:foreign])) if params[:foreign].present?
 
-      ## -- Store Current Activity to Context-based Feeds (Write-Opt) -- ##
+      ## -- Store social context to the activity object (Delete-Opt) -- ##
 
-      # Determine target key for redis set
-      target_index = "#{params[:type]}:#{params[:target]}"
+      @storage.push("Context:#{target_index}", params[:forward].values.to_json)
+
+      ## -- Store Current Activity to context-based feeds (Write-Opt) -- ##
+
       # Returns the position of added activity (required for asynchronous access)
       activity_index = @storage.push("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
@@ -89,59 +87,135 @@ module Feed
     # points to the target feed index, where the associated activity is stored
 
     # Removes a specific activity from the recipients feeds (e.g. remove a like)
-    def remove_item_from_feed(target:, type:, object:, model:, recipients:)
+    def remove_activity(target:, type:, object:, model:, forward: nil)
+      count = {}
+      removed_recipients = []
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = @storage.range("Feed:#{target_key}", 0, -1)
+      # Fetch distributed context from target feed (shared feed)
+      context = @storage.range("Context:#{target_key}")
       # Loop through all shared activities to find backtracking index
       # NOTE: This loop may can be skipped by using real redis pointers
       target_feed.each_with_index do |activity, index|
+        # Skip already deleted activities
+        next if context[index] == ''
         # Enrich target activity (to access original activity data)
         activity = enrich_activity_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
-          # TODO: Deletes old activity (keep index)
-          #@storage.set_to_index("Feed:#{target_key}", index, nil)
+          # Add distributed context to the recipients
+          recipients = forward || JSON.parse(context[index])
+          removed_recipients += recipients.flatten
+          # Deletes old activity pointer (keep index)
+          @storage.set_to_index("Feed:#{target_key}", index, nil)
+          @storage.set_to_index("Context:#{target_key}", index, nil)
           # Loop through all related user feeds through social relations
           remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, recipients)
-          break
+          # Break loop when activity was found
+          # NOTE: still repeat on combined activities (actually when a friendship was accepted)
+          # NOTE: the action friendship was set first, so we can also skip when the combined activity 'accept' occures
+          break unless activity['action'] == 'friendship' # || activity['action'] == 'accept'
         end
       end
+      removed_recipients.uniq!
+      removed_recipients
     end
 
+    # TODO: improve
     # Removes a target from the recipients feeds (e.g. remove all activities related to a slot)
-    def remove_target_from_feeds(target:, type:, recipients:)
+    def remove_target(target:, type:)
+      removed_recipients = []
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
-      target_feed_length = @storage.length("Feed:#{target_key}") - 1
+      feed_length = @storage.length("Feed:#{target_key}") - 1
+      # Fetch distributed context from target feed (shared feed)
+      context = @storage.range("Context:#{target_key}")
       # The timestamp is used to validate the feed cache
       current_time = Time.now.to_f
       # Loop through all target activities stored in the target feed
-      (0..target_feed_length).each do |index|
-        # TODO: Deletes old activity (keep index)
-        #@storage.set_to_index("Feed:#{target_key}", index, nil)
+      (0..feed_length).each do |index|
+        # Skip already deleted activities
+        next if context[index] == ''
+        # Enrich target activity (to access original activity data)
+        activity = enrich_activity_struct(unzip_json(@storage.index("Feed:#{target_key}", index)))
+        # TODO: improve by using a hybrid model
+        # Re-perform activity within the original context to get current distributions
+        model = activity['model'].constantize.find(activity['object'].to_i)
+        model.initiator = User.find(activity['actor'].to_i) if model.respond_to?(:initiator)
+
+        # Determine activity context
+        preserve = model.activity_context(activity['action'])
+        recipients = JSON.parse(context[index])
+
+        # FIX: Creator can always see activities to own content
+        if (activity['model'] == 'Slot' && model.creator.id.to_s == activity['foreign']) ||
+           (activity['model'] == 'Group' && model.owner.id.to_s == activity['foreign'])
+          preserve.map!{|a| a << activity['foreign']}
+        end
+
+        # Add distributed context to the recipients
+        recipients.map!.with_index{|a,i| a - preserve[i]}
+        removed_recipients += recipients.flatten
+
         # We do not delete the activity source, instead we remove the pointers to
         # this activity which was distributed to the users feeds
         remove_activity_from_feed("#{target_key}:#{index}", current_time, recipients)
+
+        # Update state of actual distributed context
+        if preserve.any?
+          @storage.set_to_index("Context:#{target_key}", index, preserve.to_json)
+        else
+          # Deletes old activity pointer (keep index)
+          @storage.set_to_index("Feed:#{target_key}", index, nil)
+          @storage.set_to_index("Context:#{target_key}", index, nil)
+        end
+      end
+      removed_recipients.uniq!
+      removed_recipients
+    end
+
+    # TODO: improve
+    def remove_user(user)
+      # Remove all distributed activities where the current user was actor
+      Like.where(user: user).find_each(&:remove_activity)
+      Comment.where(user: user).find_each(&:remove_activity)
+      MediaItem.where(creator: user).find_each(&:remove_activity)
+      Note.where(creator: user).find_each(&:remove_activity)
+      Group.where(owner: user).find_each(&:remove_activity)
+
+      # Remove all distributed activities where the current user was creator/owner
+      BaseSlot.joins(:meta_slot).where('creator_id = ?', user.id).find_each do |slot|
+        slot.containerships.each(&:remove_activity)
+        slot.passengerships.each(&:remove_activity)
+        slot.likes.each(&:remove_activity)
+        slot.comments.each(&:remove_activity)
+        slot.media_items.each(&:remove_activity)
+        slot.notes.each(&:remove_activity)
+        slot.remove_activity
       end
     end
 
-    def remove_user_from_feeds(user:, recipients:)
-      # We collect job data here and pass this into the removal job worker
-      job_data = []
-      # NOTE: For this step we need to fetch all related objects from DB
-      user.std_slots.each do |slot|
-        # Try to extend social context for each target
-        context = slot.try(:followers)
-        context.merge!(recipients).uniq if context
-        # Collect job data (remove by target)
-        job_data << { target: slot.id,
-                      type: slot.activity_type,
-                      recipients: context || recipients }
+    # TODO: improve
+    def remove_friends(users)
+      users = [users] unless users.kind_of?(Array)
+      users.each do |user|
+        # Remove all distributed activities where the current user was actor
+        Like.where(user: user).each(&:reduce_distribution_by)
+        Comment.where(user: user).each(&:reduce_distribution_by)
+        MediaItem.where(creator: user).each(&:reduce_distribution_by)
+        Note.where(creator: user).each(&:reduce_distribution_by)
+        Group.where(owner: user).each(&:reduce_distribution_by)
+
+        # Remove all distributed activities where the current user was creator/owner
+        user.std_slots.each(&:reduce_distribution_by)
+        user.passengerships.each(&:reduce_distribution_by)
+        user.memberships.each(&:reduce_distribution_by)
+        user.friendships.each(&:reduce_distribution_by)
       end
-      job_data
     end
 
+    # TODO: improve
     def update_objects(objects)
       objects = [objects] unless objects.kind_of?(Array)
       user_feeds = []
@@ -154,7 +228,7 @@ module Feed
           activity_type.gsub!(replace, 'Slot')
         end
         # Update object data
-        @storage.set("#{activity_type}:#{object.id}", gzip_cache(json)) if json
+        @storage.set("#{activity_type}:#{object.id}", gzip_json(json)) if json
 
         # Collect followers to update involved feeds
         user_feeds += object.followers
@@ -172,6 +246,7 @@ module Feed
       refresh_cache(user_feeds)
     end
 
+    # TODO: improve
     def refresh_cache(user_ids, time = Time.now.to_f)
       user_ids = [user_ids] unless user_ids.kind_of?(Array)
 
@@ -222,16 +297,17 @@ module Feed
     end
 
     private def remove_activity_from_feed(activity, time, recipients)
-      @storage.pipe do
-        # Loop through all related user feeds through social relations
-        recipients.each do |user_id|
-          %W(Feed:#{user_id}:User
-             Feed:#{user_id}:News
-             Feed:#{user_id}:Notification).each do |feed_index|
-            # Remove activity by object (removes a single pointer to an activity)
-            @storage.remove_all(feed_index, activity)
-            # Store the feeds update time to force re-validation of the cache
-            @storage.set("Update:#{feed_index}", time)
+      Async.new(db: false) do
+        @storage.pipe do
+          # Loop through all related user feeds through social relations
+          %w(User News Notification).each_with_index do |feed, index|
+            recipients[index].each do |user_id|
+              feed_index = "Feed:#{user_id}:#{feed}"
+              # Remove activity by object (removes a single pointer to an activity)
+              @storage.remove_all(feed_index, activity)
+              # Store the feeds update time to force re-validation of the cache
+              @storage.set("Update:#{feed_index}", time)
+            end
           end
         end
       end
@@ -244,13 +320,15 @@ module Feed
       forwarding.each do |index, user_ids|
         # Send to other users ("Read-Opt" Strategy)
         if user_ids.any?
-          @storage.pipe do
-            user_ids.uniq.each do |user_id|
-              feed_index = "Feed:#{user_id}:#{index}"
-              # Delegate activity to a feed
-              @storage.push(feed_index, target_key)
-              # Store the feeds update time to force re-validation of the cache
-              @storage.set("Update:#{feed_index}", current_time)
+          Async.new(db: false) do
+            @storage.pipe do
+              user_ids.each do |user_id|
+                feed_index = "Feed:#{user_id}:#{index}"
+                # Delegate activity to a feed
+                @storage.push(feed_index, target_key)
+                # Store the feeds update time to force re-validation of the cache
+                @storage.set("Update:#{feed_index}", current_time)
+              end
             end
           end
         end
@@ -289,7 +367,7 @@ module Feed
         target: feed[4],
         action: feed[5],
         foreign: feed[6],
-        time: feed[7],
+        time: Time.at(feed[7]),
         id: feed[8]
       }.as_json
     end
@@ -306,10 +384,10 @@ module Feed
         target = get_shared_object("#{activity['type']}:#{activity['target']}")
 
         # Prepare filtering out private targets from feed + skip (this is an extra check)
-        if target.try(:visibility) == 'private'
-          activity['target'] = nil
-          next
-        end
+        # if target.try(:visibility) == 'private'
+        #   activity['target'] = nil
+        #   next
+        # end
 
         # Add individual data related to each users feed:
         # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
@@ -331,10 +409,10 @@ module Feed
         # Enrich with custom activity data (shared objects)
         activity['data'] = { target: target, actor: actor }
         # Remove special fields are not used by frontend
-        remove_fields_from_activity(activity)
+        activity.except!(:group, :object, :model)
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed.delete_if { |activity| activity['target'].nil? || activity['message'].blank? }
+      feed.delete_if { |activity| activity['message'].blank? } # activity['target'].nil? ||
       feed
     end
 
@@ -445,7 +523,7 @@ module Feed
           # Breaks the aggregation process if limit is reached
           break
         end
-        # Sets a generated feed id to prevent id conflicts with other activity views
+        # Sets an aggregated feed id to prevent id conflicts with other activity views
         current_feed['id'] = Digest::SHA1.hexdigest("#{group}#{post['time']}").upcase
         # Set cursor position from current activity
         current_feed['cursor'] = (i + offset + 1).to_s
@@ -485,7 +563,7 @@ module Feed
       last_cache = get_cached_feed(feed_index) || {}
       cache_index = generate_index(params)
       last_cache[cache_index] = result
-      @storage.set("Cache:#{feed_index}", gzip_cache(last_cache))
+      @storage.set("Cache:#{feed_index}", gzip_json(last_cache))
       result
     end
 
@@ -497,13 +575,6 @@ module Feed
     end
 
     ## Helpers ##
-
-    private def remove_fields_from_activity(activity)
-      %w(group object foreign model).each do |field|
-        activity.delete(field)
-      end
-      activity
-    end
 
     private def get_shared_object(feed_index)
       obj = @storage.get(feed_index)
@@ -523,21 +594,23 @@ module Feed
       cache ? unzip_json(cache) : nil
     end
 
-    private def gzip_cache(cache)
-      ActiveSupport::Gzip.compress(
-          cache.to_json
-      )
+    private def gzip_json(json)
+      ActiveSupport::Gzip.compress(json.to_json)
     end
 
-    private def gzip_feed(params)
-      ActiveSupport::Gzip.compress(
-          params.except(:data, :forward).values.to_json
-      )
-    end
-
-    private def gzip_data_field(params, field)
-      ActiveSupport::Gzip.compress(
-          params[:data][field].to_json
+    private def gzip_feed(feed)
+      gzip_json(
+        feed.slice(
+          :type,
+          :actor,
+          :object,
+          :model,
+          :target,
+          :action,
+          :foreign,
+          :time,
+          :id
+        ).values
       )
     end
 
@@ -551,12 +624,12 @@ module Feed
       # we would also need it on the encoding side I guess
     rescue Oj::ParseError => exception
       Airbrake.notify(exception, compressed_json: json,
-                      uncompressed_json: uncompressed_json)
+                                 uncompressed_json: uncompressed_json)
       Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
                            "value: #{uncompressed_json}" }
     rescue => exception
       Airbrake.notify(exception, compressed_json: json,
-                      uncompressed_json: uncompressed_json)
+                                 uncompressed_json: uncompressed_json)
       Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
                            "value: #{uncompressed_json}" }
       uncompressed_json

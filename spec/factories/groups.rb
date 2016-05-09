@@ -7,7 +7,6 @@ FactoryGirl.define do
     uuid { SecureRandom.uuid }
     members_can_post false
     members_can_invite false
-    public true
 
     trait :members_can_post do
       members_can_post true

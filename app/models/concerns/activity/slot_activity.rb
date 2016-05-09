@@ -5,31 +5,23 @@ module SlotActivity
     'Slot'
   end
 
-  # The foreign user is required to find activities for
-  # changing we need the user here. If users changes their
-  # visiblity, we have to delete activities from stream.
   private def activity_foreign
     activity_target.try(:creator) ||
     activity_target.try(:owner)
   end
 
-  # The groups which are related to the activity target object
   private def activity_groups
-    activity_target.containerships.collect(&:group)
+    activity_target.containerships.active.collect(&:group)
   end
 
   private def activity_visibility
     activity_target.try(:visibility)
   end
 
-  # This method should be overridden in the subclass
-  # if custom validation is required
   private def activity_is_valid?(action)
-    super && activity_visibility != 'private'
+    super && (activity_visibility != 'private' || action == 'private')
   end
 
-  # Add extra data to each activity. The data can be hide
-  # from the output when the StreamRails::Enrich is not used.
   private def activity_extra_data
     {
       # We store full slot data to the activity stream.

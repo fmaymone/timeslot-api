@@ -24,10 +24,11 @@ class Containership < ActiveRecord::Base
   # when a slotgroup gets deleted
   def delete
     remove_activity
-    #slot.remove_follower(group) # actually not supported
-    slot.touch
-    group.touch
-    ts_soft_delete
+    slot.reduce_distribution_by{
+      slot.touch
+      group.touch
+      ts_soft_delete
+    }
   end
 
   ## Activity Methods ##
