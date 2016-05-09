@@ -459,12 +459,12 @@ module Activity
 
         user_unfriend_me: %w(actor),
         user_unfriend_activity: [],
-        user_unfriend_notify: [],
+        user_unfriend_notify: %w(user),
         user_unfriend_push: [],
 
         user_reject_me: %w(actor),
         user_reject_activity: [],
-        user_reject_notify: [],
+        user_reject_notify: %w(user),
         user_reject_push: [],
 
         slot_tagged_me: %w(actor),
@@ -474,17 +474,17 @@ module Activity
 
         group_request_me: %w(actor),
         group_request_activity: [],
-        group_request_notify: [],
-        group_request_push: [],
+        group_request_notify: %w(owner),
+        group_request_push: %w(owner),
 
         group_reject_me: %w(actor),
         group_reject_activity: [],
-        group_reject_notify: [],
+        group_reject_notify: %w(user),
         group_reject_push: [],
 
         group_kick_me: %w(actor),
         group_kick_activity: [],
-        group_kick_notify: [],
+        group_kick_notify: %w(user),
         group_kick_push: [],
 
         group_leave_me: %w(actor),
@@ -504,7 +504,7 @@ module Activity
 
         group_ungroup_me: %w(actor),
         group_ungroup_activity: [],
-        group_ungroup_notify: [],
+        group_ungroup_notify: %w(member),
         group_ungroup_push: [],
 
         group_create_me: %w(actor),
