@@ -322,6 +322,16 @@ module Activity
     recipients
   end
 
+  # We store full response data to the activity stream.
+  # The backend needs no further request on the database.
+  private def activity_extra_data
+    {
+      target: Feed.render_shared_object(activity_target),
+      actor: Feed.render_shared_object(activity_actor),
+      foreign: Feed.render_shared_object(activity_foreign)
+    }
+  end
+
   # TODO:
   # The groups which are related to the activity target object
   private def activity_groups
