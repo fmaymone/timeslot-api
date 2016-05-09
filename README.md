@@ -7,11 +7,10 @@
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 * [Social Activity](doc/social_activity.md)
+* [Activity Feed API](doc/feed_examples.md)
+* [Follower Model API](doc/follow_examples.md)
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
-
-# Data Flow Concept
-![Data Flow Concept](doc/backend_concept.png)
 
 # Notes
 

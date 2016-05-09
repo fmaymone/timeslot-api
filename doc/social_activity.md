@@ -1,4 +1,5 @@
 # Social Activity
+![Data Flow Concept](backend_concept.png)
 
 The whole system is divided into 4 parts:
 
@@ -12,13 +13,21 @@ _READ_PROCESS_
 3. Aggregation (collect and merge activities)
 4. Message Composing (create personalized & multi lingual messages)
 
-## Follower Model
+## The Follower Model
 
 The Activity Distribution uses a bi-directional Follower Model which has generic capabilities (e.g. a group can follow a slot). These associations are used by the Social Context.
 
-## Social Context
+## The Social Context
 
 The Social Context determines all involved users to where the activity has to be distributed. This context consists of:
+
+#### Context Types:
+
+1. Slot Context
+2. User Context
+3. Group Context
+
+#### Context Relations:
 
 1. Target related context (e.g. tagged users or reslotters of a slot)
 2. Actor related context (e.g. friends of the actor)
@@ -61,11 +70,34 @@ This will perform the following steps:
 2. Re-Build: Topics, Follower, Followings
 3. Re-Build: Activities, Feeds
 
+#### Overview Activity Feed Tasks:
+
+```bash
+# Refresh all feed caches
+rake feed:refresh
+```
+```bash
+# Update all shared objects + refresh caches
+rake feed:update
+```
+```bash
+# Rebuild follower model (social relations)
+rake feed:relink
+```
+```bash
+# Rebuild follower model + all feeds + shared objects
+rake feed:build
+```
+
 ##### Some redis commands for the rails console:
 
 ```bash
 $> $redis.keys     # list redis keys
+```
+```bash
 $> $redis.info     # show redis info
+```
+```bash
 $> $redis.flushall # fush redis data
 ```
 
@@ -102,9 +134,9 @@ Write-Opt: Stores all activities as unique to the target feed.
 
 Actual we are using the *Write-Read-Opt*-Strategy. Each activity will be stored respectively to its target feed index (unique). Furthermore activities will be dispatched through social relations and stores a "pointer" to the target feed index.
 
-A = Actors (Write)
+A = Actors
 
-F = Followers (Read)
+F = Followers (e.g. friends or members of a group)
 
 | | Read-Opt | Write-Opt | Write-Read-Opt (Bridge) |
 |----|----|----|----|
