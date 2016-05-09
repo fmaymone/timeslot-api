@@ -205,7 +205,7 @@ RSpec.describe Follow, type: :model do
         expect(group.followers).to include(follower.id.to_s)
         expect(group.followed_by?(follower2)).to be(true)
         expect(group.followers).to include(follower2.id.to_s)
-        expect(group.followers_count).to be(2)
+        expect(group.followers_count).to be(3) # owner also follows group
       end
 
       it "Group has followings" do
@@ -493,7 +493,7 @@ RSpec.describe Follow, type: :model do
         expect(group.followers).to include(follower.id.to_s)
         expect(group.followed_by?(follower2)).to be(true)
         expect(group.followers).to include(follower2.id.to_s)
-        expect(group.followers_count).to be(2)
+        expect(group.followers_count).to be(3) # owner also follows group
         # Test bi-directional relations
         expect(follower.followed_by?(group)).to be(false)
         expect(follower.followed_by?(follower2)).to be(false)

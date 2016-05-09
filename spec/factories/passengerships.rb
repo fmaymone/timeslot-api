@@ -6,5 +6,9 @@ FactoryGirl.define do
     trait :add_media_permitted do
       add_media_permission true
     end
+
+    after :create do |passengership|
+      passengership.user.follow(passengership.slot)
+    end
   end
 end
