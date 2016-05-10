@@ -81,10 +81,6 @@ rake feed:refresh
 rake feed:update
 ```
 ```bash
-# Rebuild follower model (social relations)
-rake feed:relink
-```
-```bash
 # Rebuild follower model + all feeds + shared objects
 rake feed:build
 ```

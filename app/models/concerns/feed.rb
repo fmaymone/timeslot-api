@@ -463,7 +463,7 @@ module Feed
 
     # NOTE: We can optimize this by aggregating feeds when storing into redis
     # NOTE: Actually we use "live aggregation" instead, so we are able to modify the aggregation logic on the fly
-    private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil, context: nil)
+    private def aggregate_feed(feed_index, limit: 100, offset: 0, cursor: nil, context: nil)
       # Get offset from cursor in reversed logic (LIFO), supports simple offset fallback
       offset = cursor ? cursor.to_i : offset.to_i
       # Temporary holder to store the final page of an aggregated feed
@@ -479,8 +479,8 @@ module Feed
       feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
       # NOTE: The pagination limit has to be calculated on the fly
-      # NOTE: Actually we use a maximum of 100 activities from the target-feed fo each aggregated page
-      feed = paginate(feed_index, limit: 100, offset: offset)
+      # NOTE: Actually we use a maximum of 1000 activities from the target-feed fo each aggregated page
+      feed = paginate(feed_index, limit: 1000, offset: offset)
       # Loop through all feeds (has a break statement, offset is optional)
       feed.each_with_index do |post, i|
         # Generates group tag (acts as the aggregation index)
