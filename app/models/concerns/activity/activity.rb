@@ -182,7 +182,11 @@ module Activity
         activity_target.deleted_at.nil?)
     ) and
     # FIX: only activities from "real users" are valid:
-    (activity_actor.role != 1)
+    activity_actor.basic? &&
+    activity_actor.deleted_at.nil? &&
+    activity_target.deleted_at.nil? &&
+    # FIX: skip if an activity has no action:
+    activity_action.present?
   end
 
   # This method should be overridden in the subclass

@@ -11,7 +11,7 @@ module Import
 
       # NOTE: the import-admin-user is able to create Slots, Calendars and
       # Users during one import, this feature requires a special security
-      user_is_admin = user.role == 4
+      user_is_admin = user.curator?
 
       # Import each event
       events.each do |event|
