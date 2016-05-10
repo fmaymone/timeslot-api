@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
             length: { maximum: 254 },
-            uniqueness: { case_sensitive: false },
+            uniqueness: { scope: :role, case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
             allow_nil: true # if: 'self.email'
 
@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
                             only_integer: true,
                             allow_nil: true
   validates :phone,
-            uniqueness: true,
+            uniqueness: { scope: :role },
             length: { maximum: 35 },
             allow_nil: true
 

@@ -8,7 +8,7 @@ class NewUser
     new_user = User.create(@user_params)
     return new_user unless new_user.errors.empty?
 
-    if new_user.basic?
+    if new_user.basic? || new_user.public_user?
       create_device(new_user: new_user, device: @device_params) if @device_params
       create_default_calendars(user: new_user)
     end
