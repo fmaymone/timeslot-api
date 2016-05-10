@@ -9,7 +9,7 @@ export_timeslot = nil
 
 resource "Data" do
   let!(:current_user) { create(:user, :with_email, :with_password) }
-  let!(:slots) { create_list(:std_slot_public, 5, owner: current_user) } # creator doesn't work
+  let!(:slots) { create_list(:std_slot_public, 5, :with_media, :with_notes, owner: current_user) }
   let!(:groups) { create_list(:group, 3, owner: current_user) }
   let!(:containership) { create(:containership, slot: slots[2], group: groups[1]) }
   let(:auth_header) { "Token token=#{current_user.auth_token}" }
@@ -225,6 +225,7 @@ resource "Data" do
                       "If the group uuid was not found, no Slot will be exported.", required: false
 
     context "Export Slots without a given Group (All Slots)" do
+      let(:location) { create(:ios_location) }
       let(:json) { JSON.parse(response_body) }
       let(:slot_titles) { slots.collect(&:title) }
       let(:slot_uuids) { slots.collect(&:slot_uuid) }
@@ -233,6 +234,10 @@ resource "Data" do
         explanation "returns 404 if the group uuid was not found\n" \
                     "returns 422 if parameters are invalid or missing\n" \
                     "returns 500 if an error occurs during the export"
+
+        slots.first.update(ios_location: location)
+        current_user.update_alerts(slots.first, '1010101010')
+
         do_request
         expect(response_status).to eq(200)
 
