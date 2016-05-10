@@ -35,4 +35,20 @@ class StdSlotPolicy < SlotPolicy
     return true if current_user == slot.creator
     false
   end
+
+  # true if the user is signed in and
+  # the user is slot owner
+  def delete_media?
+    return false unless current_user?
+    return true if current_user == slot.creator
+    false
+  end
+
+  # true if the user is signed in and
+  # the user is slot owner
+  def delete_notes?
+    return false unless current_user?
+    return true if current_user == slot.creator
+    false
+  end
 end

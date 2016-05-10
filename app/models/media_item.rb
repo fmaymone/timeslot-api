@@ -32,6 +32,20 @@ class MediaItem < ActiveRecord::Base
     Cloudinary::Uploader.add_tag("replaced", public_id)
     Cloudinary::Uploader.add_tag(
       "mediable_id:#{mediable.id}, mediable_type:#{mediable_type}", public_id)
+
+    if position == 0
+      case media_type
+      when 'image'
+        typed_medias = mediable.images
+      when 'audio'
+        typed_medias = mediable.audios
+      when 'video'
+        typed_medias = mediable.videos
+      end
+      self.update(position: -1)
+      typed_medias.last.update(position: 0) if typed_medias.count > 1
+    end
+
   rescue CloudinaryException => e
     msg = { image: self }
     msg[:cloudinary] = "adding tag for destroyed media_item failed."

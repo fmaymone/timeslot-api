@@ -733,6 +733,87 @@ resource "Slots" do
     end
   end
 
+  delete "/v1/slots/:id/media", :vcr do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Standard Slot where the media belongs to", required: true
+    parameter :media, "Array of the Media Items to delete", required: true
+
+    let!(:slot) {
+      create(:std_slot_public, :with_media, owner: current_user, creator: current_user)
+    }
+    let(:id) { slot.id }
+
+    describe "Delete Slot Media Item" do
+      let(:media) { slot.media_items.map{|media| media.slice(:id)} }
+
+      example "Delete MediaItem", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.media_items.count).to be(media.count)
+
+        do_request
+        slot.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.media_items.count).to be(0)
+      end
+    end
+
+    describe "Delete Slot Image + Reorder Position" do
+      let(:media) { [slot.images.first.slice(:id)] }
+
+      example "Delete MediaItem", document: false do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.images.first.position).to be(0)
+        expect(slot.images.last.position).to be(slot.images.count - 1)
+
+        last_id = slot.images.last[:id]
+
+        do_request
+        slot.images.last.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.images.first.position).to be(0)
+        expect(slot.images.first[:id]).to be(last_id)
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/notes", :vcr do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Standard Slot where the notes belongs to", required: true
+    parameter :notes, "Array of the Notes to delete", required: true
+
+    let!(:slot) {
+      create(:std_slot_public, :with_notes, owner: current_user, creator: current_user)
+    }
+
+    describe "Delete Slot Notes" do
+      let(:notes) { slot.notes.map{|note| note.slice(:id)} }
+      let(:id) { slot.id }
+
+      example "Delete Notes", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.notes.count).to be(notes.count)
+
+        do_request
+        slot.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.notes.count).to be(0)
+      end
+    end
+  end
+
   get "/v1/slots/:id/slotsets" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header

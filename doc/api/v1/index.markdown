@@ -124,6 +124,8 @@
 * [Update Slot - Add Location](slots/update_slot_-_add_location.markdown)
 * [Update Slot - Custom Location Label](slots/update_slot_-_custom_location_label.markdown)
 * [Delete StandardSlot](slots/delete_standardslot.markdown)
+* [Delete MediaItem](slots/delete_mediaitem.markdown)
+* [Delete Notes](slots/delete_notes.markdown)
 * [Add Slot to multiple SlotGroups](slots/add_slot_to_multiple_slotgroups.markdown)
 * [Add Slot to multiple SlotGroups](slots/add_slot_to_multiple_slotgroups.markdown)
 * [Remove Slot from multiple SlotGroups](slots/remove_slot_from_multiple_slotgroups.markdown)
