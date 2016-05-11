@@ -123,10 +123,13 @@ Rails.application.routes.draw do
       get ':action', to: 'search#:action'
     end
 
+    get 'discover', to: 'feed#discovery_feed'
+
     scope :feed do
       get 'user', to: 'feed#user_feed'
       get 'news', to: 'feed#news_feed'
       get 'notification', to: 'feed#notification_feed'
+      get 'discovery', to: 'feed#discovery_feed'
     end
 
     scope :invitecodes do

@@ -23,6 +23,7 @@
 * [Get the feed of the current users activities](feeds/get_the_feed_of_the_current_users_activities.markdown)
 * [Get the feed of social related activities (aggregated)](feeds/get_the_feed_of_social_related_activities_(aggregated).markdown)
 * [Get the feed of the current user notifications](feeds/get_the_feed_of_the_current_user_notifications.markdown)
+* [Get the public discovery feed](feeds/get_the_public_discovery_feed.markdown)
 
 ## GlobalSlots
 

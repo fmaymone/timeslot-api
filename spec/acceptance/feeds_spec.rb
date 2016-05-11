@@ -186,4 +186,60 @@ resource "Feeds", :activity, :async do
       end
     end
   end
+
+  get "/v1/feed/discovery", :redis do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :limit, "Maximum count of items which are included in the result"
+    parameter :offset, "The offset value how many result items should be skipped " \
+                         "before the limits start counting (or use cursor instead)"
+    parameter :cursor, "The ID of the activity to start loading from (not included) " \
+                         "(or use offset instead)"
+
+    describe "The discovery feed includes all public activities." do
+      include_context "default slot response fields"
+      include_context "default user response fields"
+
+      let!(:public_user) { create(:user, role: 'public_user') }
+      let!(:slots) { create_list(:std_slot_public, 3, creator: public_user) }
+      let!(:group) { create(:group, owner: public_user) }
+      let!(:auth_header) { nil }
+
+      example "Get the public discovery feed", document: :v1 do
+        # Perform activities
+        slots.each(&:create_activity)
+        group.create_activity('create')
+        slots[0].create_comment(actor, 'This is another test comment.')
+        slots[0].create_comment(public_user, 'This is another test comment.')
+
+        do_request
+        expect(response_status).to eq(200)
+        expect(json.length).to be(4)
+
+        json.reverse!.each_with_index do |activity, index|
+          expect(activity).to have_key("id")
+          expect(activity).to have_key("action")
+          expect(activity).to have_key("type")
+          expect(activity).to have_key("target")
+          expect(activity).to have_key("message")
+          expect(activity).to have_key("data")
+          expect(activity).to have_key("actors")
+          expect(activity).not_to have_key("actor")
+          # last action is a group activity
+          if index < json.length - 1
+            expect(activity['type']).to eq("Slot")
+            expect(activity['action']).to eq("create")
+            expect(activity['actors'].first.to_i).to eq(public_user.id)
+            expect(activity['target'].to_i).to eq(slots[index].id)
+          else
+            expect(activity['type']).to eq("Group")
+            expect(activity['action']).to eq("create")
+            expect(activity['actors'].first.to_i).to eq(public_user.id)
+            expect(activity['target'].to_i).to eq(group.id)
+          end
+        end
+      end
+    end
+  end
 end

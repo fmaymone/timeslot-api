@@ -23,10 +23,8 @@ module Activity
   end
 
   def remove_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
-    if activity_is_valid?(action)
-      remove_activity_feed(action, forward: feed_fwd)
-      remove_activity_push(action, forward: push_fwd) if push_is_valid?
-    end
+    remove_activity_feed(action, forward: feed_fwd)
+    remove_activity_push(action, forward: push_fwd)
   rescue => error
     error_handler(error, "failed: remove '#{action}' activity")
   ensure
@@ -182,7 +180,7 @@ module Activity
         activity_target.deleted_at.nil?)
     ) &&
     # FIX: only activities from "real users" are valid:
-    activity_actor.basic? &&
+    (activity_actor.basic? || activity_actor.public_user?) &&
     # FIX: skip if an activity has no action:
     activity_action.present?
   end
@@ -208,7 +206,10 @@ module Activity
       News:
         get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
       Notification:
-        get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
+        get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true),
+      Discovery:
+        action == 'create' && (activity_actor.public_user? ||
+                               activity_target.class.name == 'GlobalSlot') ? ['0'] : []
     }
   end
 
@@ -233,9 +234,7 @@ module Activity
     ## -- Distribution Keys: Related to Actor -- ##
 
     if context.include?('actor')      #  = the user who makes the action (initiator)
-      #if activity_visibility != 'private' || activity_actor == activity_foreign
-        recipients << activity_actor.id.to_s
-      #end
+      recipients << activity_actor.id.to_s
     end
     if context.include?('friends')    # = all friends of the actor (users follower)
       # FIX: here we cut the viral distribution through friend associations on non-public Slots/Groups

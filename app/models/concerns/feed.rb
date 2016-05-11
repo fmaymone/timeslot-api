@@ -4,6 +4,17 @@ module Feed
 
   class << self
 
+    def discovery_feed(user, params = {})
+      feed = 'Feed:0:Discovery'
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'activity', nil)
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
+    end
+
     def user_feed(user, params = {})
       feed = "Feed:#{user}:User"
       cache = get_from_cache(feed, params)
@@ -82,13 +93,8 @@ module Feed
       distribute(target_key, forwarding: params[:forward])
     end
 
-    # We using backtracking to improve performance by removing activities through all feeds
-    # To backtrack activities from its corresponding target feed it is required to find the index which
-    # points to the target feed index, where the associated activity is stored
-
     # Removes a specific activity from the recipients feeds (e.g. remove a like)
     def remove_activity(target:, type:, object:, model:, forward: nil)
-      count = {}
       removed_recipients = []
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
@@ -96,7 +102,7 @@ module Feed
       # Fetch distributed context from target feed (shared feed)
       context = @storage.range("Context:#{target_key}")
       # Loop through all shared activities to find backtracking index
-      # NOTE: This loop may can be skipped by using real redis pointers
+      # NOTE: This loop may can be skipped by using native redis pointers
       target_feed.each_with_index do |activity, index|
         # Skip already deleted activities
         next if context[index] == ''
@@ -107,6 +113,7 @@ module Feed
           # Add distributed context to the recipients
           recipients = forward || JSON.parse(context[index])
           removed_recipients += recipients.flatten
+
           # Deletes old activity pointer (keep index)
           @storage.set_to_index("Feed:#{target_key}", index, nil)
           @storage.set_to_index("Context:#{target_key}", index, nil)
@@ -258,6 +265,8 @@ module Feed
             @storage.set("Update:#{feed_index}", time)
           end
         end
+        # TODO: improve
+        @storage.set("Update:Feed:0:Discovery", time)
       end
     end
 
@@ -300,7 +309,7 @@ module Feed
       Async.new(db: false) do
         @storage.pipe do
           # Loop through all related user feeds through social relations
-          %w(User News Notification).each_with_index do |feed, index|
+          %w(User News Notification Discovery).each_with_index do |feed, index|
             recipients[index].each do |user_id|
               feed_index = "Feed:#{user_id}:#{feed}"
               # Remove activity by object (removes a single pointer to an activity)
@@ -449,9 +458,9 @@ module Feed
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
 
       # Determine translation key (personalized to the current user/viewer)
-      if (target['creator'] && viewer == target['creator']['id']) ||
-         (target['owner'] && viewer == target['owner']['id']) ||
-         (target['username'] && viewer == target['id'])
+      if (target['creator'] && (viewer == target['creator']['id'])) ||
+         (target['owner'] && (viewer == target['owner']['id'])) ||
+         (target['username'] && (viewer == target['id']))
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}-to-owner_#{mode}"
       else
         i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
