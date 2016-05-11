@@ -6,16 +6,16 @@ class TimeslotAdapter < Adapter
       @event = event
       events << {
           uid: event['uid'],
-          title: event['title'].size > 60 ? event['title'][0..59] : event['title'],
+          title: event['title'].first(60),
           start_date: event['start'],
           end_date: event['end'],
           location: import_event_location,
           visibility: import_event_visibility,
-          alerts: import_event_alerts,
+          settings: import_event_alerts,
           media: import_event_media,
           notes: import_event_notes,
           creator: import_event_creator,
-          group: import_event_group
+          groups: import_event_groups
       }
     end
     events
@@ -72,14 +72,14 @@ class TimeslotAdapter < Adapter
     } : {}
   end
 
-  private def import_event_group
+  private def import_event_groups
     group = @event['group']
     group ? {
         name: group['title'].presence,
         image: group['image_url'].presence || group['image'].presence,
         public: group['visibility'] == 'public',
         description: group['description'].presence
-    } : {}
+    } : @event['groups'].presence || {}
   end
 
   private def import_event_creator
@@ -147,11 +147,11 @@ class TimeslotAdapter < Adapter
 
   private def export_event_groups(slot)
     slot.slot_groups.where(owner: slot.creator).map{
-      |group| group.slice(:name, :image, :public, :description)
+      |group| group.slice(:uuid, :name, :image, :public, :description)
     }
   end
 
   private def export_event_visibility(slot)
-    slot.visibility.upcase
+    slot.visibility
   end
 end

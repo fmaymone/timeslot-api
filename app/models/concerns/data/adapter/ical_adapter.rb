@@ -6,7 +6,7 @@ class IcalAdapter < Adapter
       @event = event
       events << {
           uid: event.uid,
-          title: (event.summary.size > 60 ? event.summary[0..59] : event.summary), #.force_encoding('iso-8859-1').encode('utf-8'),
+          title: event.summary.first(60), #.force_encoding('iso-8859-1').encode('utf-8'),
           start_date: event.dtstart.to_s,
           end_date: event.dtend.to_s,
           ios_location: import_event_location,
