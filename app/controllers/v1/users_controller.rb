@@ -114,7 +114,8 @@ module V1
       params.require(:phone) unless params[:email].present?
       params.require(:password)
       params.require(:username)
-      params.permit(:username, :email, :phone, :password, :lang)
+      params.delete(:role) unless params[:role].in? %w(public_user)
+      params.permit(:username, :email, :phone, :password, :lang, :role)
     end
 
     private def device_params(params)
@@ -127,7 +128,8 @@ module V1
       params.require(:password)
       params.require(:email) unless params[:phone].present?
       params.require(:phone) unless params[:email].present?
-      params.permit(:email, :phone, :password,
+      params.delete(:role) unless params[:role].in? %w(public_user)
+      params.permit(:email, :phone, :password, :role,
                     device: [:device_id, :system, :version, :token])
         .deep_symbolize_keys
     end

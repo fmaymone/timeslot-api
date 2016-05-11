@@ -142,6 +142,7 @@
 
 * [Signup - Create user](users/signup_-_create_user.markdown)
 * [Signup - Create user with a specific device](users/signup_-_create_user_with_a_specific_device.markdown)
+* [Signup - Creates a public user profile](users/signup_-_creates_a_public_user_profile.markdown)
 * [Signin](users/signin.markdown)
 * [Signin with new device](users/signin_with_new_device.markdown)
 * [Signin with existing device](users/signin_with_existing_device.markdown)

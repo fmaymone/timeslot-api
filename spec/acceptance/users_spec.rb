@@ -80,6 +80,30 @@ resource "Users" do
         expect(json).to have_key 'push'
       end
     end
+
+    context "Signup and creates a public user profile" do
+      parameter :role,
+                "Must be define the users role: 'public_user'",
+                required: true
+
+      let(:role) { 'public_user' }
+      example "Signup - Creates a public user profile",
+              document: :v1 do
+        explanation "Either an email or phone number must be provided\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key 'id'
+        expect(json).to have_key 'username'
+        expect(json).to have_key 'email'
+        expect(json).to have_key 'authToken'
+        expect(json).to have_key 'push'
+
+        expect(User.last.reload.public_user?).to be(true)
+      end
+    end
   end
 
   post "/v1/users/signin", :vcr do
