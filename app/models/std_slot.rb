@@ -16,37 +16,50 @@ class StdSlot < BaseSlot
 
   # TODO: add spec
   def update_visibility(visibility)
-    case visibility
-    when 'private'
-      # update 'type' column
-      becomes!(StdSlotPrivate) # this doesn't run the validations
-      # update 'slot_type' column
-      self.StdSlotPrivate!
-    when 'friends'
-      becomes!(StdSlotFriends)
-      self.StdSlotFriends!
-      update(share_with_friends: true)
-    when 'public'
-      becomes!(StdSlotPublic)
-      self.StdSlotPublic!
+    current_follower = followers
+    reduce_distribution_by(async: false){
+      # Now with the change of the type this is a little bit... hmmm
+      # Because I (kind of) do change the class of a loaded instance...
+      slot_type = STD_SLOT_TYPES[visibility]
+      update(slot_type: SLOT_TYPES[slot_type], type: slot_type.to_s)
+      # Update slot visibility
+      case visibility
+      when 'private'
+        # update 'type' column
+        becomes!(StdSlotPrivate) # this doesn't run the validations
+        # update 'slot_type' column
+        self.StdSlotPrivate!
+        # update follower manually (may this is not required)
+        (passengerships.collect(&:user) - tagged_users).each do |user|
+          remove_follower(user)
+        end
+      when 'friends'
+        becomes!(StdSlotFriends)
+        self.StdSlotFriends!
+        update(share_with_friends: true)
+      when 'public'
+        becomes!(StdSlotPublic)
+        self.StdSlotPublic!
+      end
+    }
+    current_follower -= followers
+    # TODO: move this to the distribution definitions
+    if visibility == 'private' && current_follower.any?
+      # Forward unshare activity to followers (reslotter + tagged users)
+      create_activity('private',
+          feed_fwd: {
+              User: [creator.id.to_s],
+              Notification: current_follower
+          },
+          push_fwd: current_follower.map(&:to_i)
+      )
     end
   end
 
   def update_from_params(meta: nil, visibility: nil, media: nil,
                          notes: nil, alerts: nil, user: nil)
-    if visibility
-      # Update Follower + Feeds status if visibility change to private
-      # NOTE: Update feeds before changing the visibility of the model
-      # TODO: Clarify Group Visibility VS. Slot Visibility !!!
-      if visibility == 'private'
-        remove_all_activities('private', target: self)
-        remove_all_followers
-      end
-      slot_type = STD_SLOT_TYPES[visibility]
-      # Now with the change of the type this is a little bit... hmmm
-      # Because I (kind of) do change the class of a loaded instance...
-      update(slot_type: SLOT_TYPES[slot_type], type: slot_type.to_s)
-    end
+
+    update_visibility(visibility) if visibility
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
 

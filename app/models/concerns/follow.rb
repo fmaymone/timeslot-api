@@ -49,7 +49,7 @@ module Follow
 
   # Delegate helper method (inverted logic)
   def unfollow(target)
-    target.remove_follower(self)
+    target.remove_follower(self) # self => follower
   end
 
   # Remove all followings from the current object (self)

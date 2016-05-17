@@ -4,10 +4,10 @@ RSpec.describe UsersToSlotTagger, type: :service do
   let(:tagger) do
     described_class.new(slot)
   end
-  let(:slot) { create(:std_slot_public) }
+  let(:current_user) { create(:user) }
+  let(:slot) { create(:std_slot_public, creator: current_user) }
   let(:users) { create_list(:user, 3) }
   let(:user_ids) { users.collect(&:id) }
-  let(:current_user) { create(:user) }
 
   describe "tag users to slot" do
     context "no existing passengership" do

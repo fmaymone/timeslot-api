@@ -14,8 +14,7 @@ module V1
 
       @group = Group.create_with_invitees(
         group_params: group_params.merge(owner: current_user),
-        invitees: params[:invitees],
-        initiator: current_user)
+        invitees: params[:invitees])
 
       if @group.errors.empty?
         render :show, status: :created

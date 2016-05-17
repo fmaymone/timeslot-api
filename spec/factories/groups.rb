@@ -41,5 +41,9 @@ FactoryGirl.define do
         create_list :containership, 3, group: group
       end
     end
+
+    after :create do |group|
+      group.owner.follow(group)
+    end
   end
 end

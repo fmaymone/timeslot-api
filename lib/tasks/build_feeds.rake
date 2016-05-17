@@ -49,59 +49,56 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      ## Re-Build Follower Model ##
+      ## Collect Activities + Associations ##
 
-      Friendship.includes(:user, :friend).find_each do |relation|
-        # friends follows each other
-        if relation.established? && relation.deleted_at.nil?
-          relation.user.add_follower(relation.friend)
-          relation.friend.add_follower(relation.user)
+      storage = Friendship.includes(:user, :friend).where(deleted_at: nil) +
+                Membership.includes(:group, :user).where(deleted_at: nil) +
+                Containership.includes(:group, :slot).where(deleted_at: nil) +
+                Passengership.includes(:slot, :user).where(deleted_at: nil) +
+                MediaItem.where(deleted_at: nil).last(MAX_ACTIVITIES / 5) +
+                Note.where(deleted_at: nil).last(MAX_ACTIVITIES / 5) +
+                Like.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
+                Comment.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
+                Group.where(deleted_at: nil).last(MAX_ACTIVITIES / 10) +
+                StdSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10)
+
+      ## Re-Build Activities + Follower Model ##
+
+      length = storage.count
+
+      storage.sort_by(&:created_at).each_with_index do |item, index|
+        # determine limit (reversed: starting from end)
+        should_be_distributed = length - index < MAX_ACTIVITIES
+
+        if item.deleted_at.nil?
+          case item.class
+          when Friendship
+            if item.established?
+              # friends follows each other
+              item.user.add_follower(item.friend)
+              item.friend.add_follower(item.user)
+              item.create_activity('accept') if should_be_distributed
+            else
+              # restore all open friend requests also if max activities was reached
+              item.create_activity unless should_be_distributed
+            end
+          when Membership
+            item.group.add_follower(item.user) if item.active?
+          # when Containership
+          #   item.slot.add_follower(item.group) # actually not supported
+          when Passengership
+            item.slot.add_follower(item.user)
+          end
         end
-      end
 
-      Membership.includes(:group, :user).find_each do |relation|
-        if relation.active? && relation.deleted_at.nil?
-          relation.group.add_follower(relation.user)
-        end
-      end
-
-      Containership.includes(:group, :slot).find_each do |relation|
-        relation.slot.add_follower(relation.group) if relation.deleted_at.nil?
-      end
-
-      Passengership.includes(:slot, :user).find_each do |relation|
-        relation.slot.add_follower(relation.user) if relation.deleted_at.nil?
-      end
-
-      ## Collect Activities ##
-
-      storage = MediaItem.where(deleted_at: nil) +
-                Note.where(deleted_at: nil) +
-                Like.where(deleted_at: nil) +
-                Comment.where(deleted_at: nil) +
-                Friendship.where(deleted_at: nil) +
-                Membership.where(deleted_at: nil) +
-                Containership.where(deleted_at: nil) +
-                Passengership.where(deleted_at: nil) +
-                # Actually we are collecting all activities from slots (e.g. deletion, visibility change)
-                StdSlot.all
-
-      # TODO: handle friendship date during re-build task
-      # friendship = activity_foreign.present? ? activity_foreign.friendship(activity_actor.id) : nil
-      # (visibility != 'friends' || friendship.nil? || Time.zone.parse(self.updated_at.to_s) >= Time.zone.parse(friendship.updated_at.to_s))))
-
-      ## Re-Build Activities ##
-
-      storage.sort_by(&:created_at).last(MAX_ACTIVITIES).each do |item|
-        item.create_activity
-        item.create_activity('accept') if item.class === Friendship && item.established?
+        # restore activities unless max activity count was reached
+        item.create_activity if should_be_distributed
       end
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."
       puts "ACTIVITY OBJECTS: #{(storage.count)}"
     rescue => e
-      #handle the error here
       puts "An error has occurred during the rebuilding process: #{e}"
     ensure
       # Turn on push notifications globally

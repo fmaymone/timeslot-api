@@ -23,16 +23,12 @@ class Containership < ActiveRecord::Base
   # when a slot gets deleted or
   # when a slotgroup gets deleted
   def delete
-    remove_activity('leave')
-    #slot.remove_follower(group) # actually not supported
-    slot.touch
-    group.touch
-    ts_soft_delete
-  end
-
-  # we need this flag for the activity validation check for group-related activities
-  def active?
-    true
+    remove_activity
+    slot.reduce_distribution_by{
+      slot.touch
+      group.touch
+      ts_soft_delete
+    }
   end
 
   ## Activity Methods ##

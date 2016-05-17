@@ -61,7 +61,7 @@ class MediaItem < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
+  private def activity_is_valid?(action)
     super and belongs_to_slot?
   end
 

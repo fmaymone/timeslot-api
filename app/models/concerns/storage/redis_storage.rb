@@ -47,6 +47,12 @@ module RedisStorage
       $redis.lrange(index, offset, length)
     end
 
+    # Stores the passed value to the given index + custom position
+    def set_to_index(index, position, value)
+      $redis.lset(index, position, value)
+    end
+
+    # Returns the value stored at the given index + custom position
     def index(index, position)
       $redis.lindex(index, position)
     end

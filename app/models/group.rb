@@ -4,6 +4,7 @@
 require_dependency "Feed" if Rails.env.test?
 
 class Group < ActiveRecord::Base
+  include GroupActivity
   include Follow
   before_create :set_uuid
   after_commit AuditLog
@@ -71,11 +72,10 @@ class Group < ActiveRecord::Base
   end
 
   def delete
+    remove_activity
     owner.touch
-    memberships.includes(:user).each(&:delete)
-    # NOTE: Groups do not include Activity, but we can call feed methods directly:
-    Feed.remove_target_from_feeds(target: self, type: 'Group', notify: self.followers)
     containerships.each(&:delete)
+    memberships.includes(:user).each(&:delete)
     ts_soft_delete
     # NOTE: Remove follower relations at least!
     remove_all_followers
@@ -83,6 +83,7 @@ class Group < ActiveRecord::Base
 
   private def add_owner_as_member
     Membership.create(group_id: id, user_id: owner.id, state: '111')
+    self.add_follower(owner)
   end
 
   private def strip_whitespaces
@@ -97,7 +98,7 @@ class Group < ActiveRecord::Base
     SecureRandom.uuid
   end
 
-  def self.create_with_invitees(group_params:, invitees: nil, initiator: nil)
+  def self.create_with_invitees(group_params:, invitees: nil)
     new_group = create(group_params)
     return new_group unless new_group.errors.empty?
 
@@ -108,11 +109,26 @@ class Group < ActiveRecord::Base
       new_group.update(members_can_invite: true)
     end
 
-    new_group.invite_users(invitees, initiator) if invitees
+    new_group.invite_users(invitees, group_params[:owner]) if invitees
+    new_group.create_activity
     new_group
   end
 
   def self.public
     where(public: true)
+  end
+
+  ## Activity Methods ##
+
+  private def activity_target
+    self
+  end
+
+  private def activity_actor
+    owner
+  end
+
+  private def activity_action
+    'create'
   end
 end

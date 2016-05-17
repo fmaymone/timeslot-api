@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
     identity = Connect.find_by(social_id: identity_params[:social_id],
                                provider: identity_params[:provider])
 
-    user = User.find_by email: social_params[:email] if social_params[:email]
+    user = social_params[:email] ? User.find_by(email: social_params[:email]) : nil
 
     if identity
       msg = 'social account already connected to other timeslot account'
@@ -239,20 +239,22 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
-    # NOTE: User do not include Activity, but we can call feed methods directly:
-    user_targets = Feed.remove_user_from_feeds(user: self, notify: self.followers)
-    user_targets.each do |target|
-      Feed.remove_target_from_feeds(target)
-    end
-    # TODO: restore followers/followings when user re-activates?
-    remove_all_followers
-    unfollow_all
+    RemoveJob.perform_later(user: self)
 
-    slot_settings.each(&:delete)
-    friendships.each(&:inactivate)
-    memberships.each(&:inactivate)
-    devices.each(&:delete)
-    ts_soft_delete and return self
+    Async.new do
+      std_slots.each{|slot| slot.containerships.each(&:delete)}
+      passengerships.each(&:delete)
+      memberships.each(&:inactivate)
+      friendships.each{|fs| fs.inactivate(initiator: self)}
+      slot_settings.each(&:delete)
+      devices.each(&:delete)
+      # TODO: restore followers/followings when user re-activates?
+      remove_all_followers
+      unfollow_all
+      ts_soft_delete
+    end
+
+    self
   end
 
   # TODO: this is far from being finished, specification missing
@@ -352,7 +354,7 @@ class User < ActiveRecord::Base
 
   def initiate_friendship(user_id)
     # gibt es schon was zw uns beiden
-    if fs = friendship(user_id)
+    if (fs = friendship(user_id))
       # ja
       if fs.established?
         # alles tuti
@@ -377,7 +379,7 @@ class User < ActiveRecord::Base
   end
 
   def invalidate_friendship(user_id)
-    if existing_friendship = friendship(user_id)
+    if (existing_friendship = friendship(user_id))
       existing_friendship.reject
     end
     existing_friendship
@@ -420,17 +422,17 @@ class User < ActiveRecord::Base
 
   def accept_invite(group_id)
     membership = get_membership group_id
-    membership && membership.activate
+    membership&.activate
   end
 
   def refuse_invite(group_id)
     membership = get_membership group_id
-    membership && membership.refuse
+    membership&.refuse
   end
 
   def leave_group(group_id)
     membership = get_membership group_id
-    membership && membership.leave
+    membership&.leave
   end
 
   def update_member_settings(params, group_id)
@@ -542,7 +544,7 @@ class User < ActiveRecord::Base
   # user tries to log in with facebook and has this email verified in facebook,
   # the other user can not log in via facebook (gets 422)
   def self.detect_or_create(username, email)
-    user = User.find_by email: email if email
+    user = email ? User.find_by(email: email) : nil
     if user
       msg = "#{email} is already used by other timeslot user (unverified email)"
       Airbrake.notify(msg)
@@ -556,6 +558,8 @@ class User < ActiveRecord::Base
       user = User.find_by email: email
     elsif phone
       user = User.find_by phone: phone
+    else
+      user = nil
     end
     current_user = user.try(:authenticate, password)
     if current_user

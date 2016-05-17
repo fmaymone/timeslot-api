@@ -1,138 +1,117 @@
 module Activity
 
-  def create_activity(action = activity_action)
-    if activity_is_valid?
-      create_activity_feed(action)
-      create_activity_push(action) if push_is_valid?
+  def create_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
+    if activity_is_valid?(action)
+      create_activity_feed(action, forward: feed_fwd)
+      create_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
-    error_handler(error, "failed: create '#{action}' activity as worker job")
+    error_handler(error, "failed: create '#{action}' activity")
   ensure
     return self
   end
 
-  # The 'forward_activity' method provides a full customizable activity distribution on place.
-  # Example:
-  #
-  # self.forward_activity(
-  #     'like',
-  #     feed_fwd: {
-  #         User: [activity_actor.id.to_s],
-  #         News: [],
-  #         Notification: [activity_target.id.to_s]
-  #     },
-  #     push_fwd: [activity_target.id]
-  # )
-  #
-  # NOTES:
-  # If you do not pass an action as first parameter the default activity_action is used instead.
-  # A forwarded activity completely overrides/skip the default distribution context of this activity.
-  # The self.class.name + the activity_action give the activity/message key. This key is used
-  # by the message composer during aggregation/feed building to get the right translation.
-
-  def forward_activity(action = activity_action, feed_fwd: [], push_fwd: [])
-    if activity_is_valid?
-      create_activity_feed(action, notify: nil, forward: feed_fwd)
-      create_activity_push(action, notify: nil, forward: push_fwd) if push_is_valid?
+  def update_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
+    if activity_is_valid?(action)
+      update_activity_feed(action, forward: feed_fwd)
+      update_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
-    error_handler(error, "failed: forward '#{action}' activity as worker job")
+    error_handler(error, "failed: update '#{action}' activity")
   ensure
     return self
   end
 
-  def update_activity(action = activity_action)
-    if activity_is_valid?
-      update_activity_feed(action)
-      update_activity_push(action) if push_is_valid?
+  def remove_activity(action = activity_action, feed_fwd: nil, push_fwd: nil)
+    if activity_is_valid?(action)
+      remove_activity_feed(action, forward: feed_fwd)
+      remove_activity_push(action, forward: push_fwd) if push_is_valid?
     end
   rescue => error
-    error_handler(error, "failed: update '#{action}' activity as worker job")
+    error_handler(error, "failed: remove '#{action}' activity")
   ensure
     return self
   end
 
-  # TODO: Rethink about this async strategy: distribute a dummy activity
-  # def update_activity_objects
-  #   if activity_is_valid?
-  #     create_activity_feed('update', notify: [], forward: [])
-  #   end
-  # rescue => error
-  #   error_handler(error, "failed: update shared object as worker job")
-  # ensure
-  #   return self
-  # end
-
-  def remove_activity(action = 'delete')
-    if activity_is_valid?
-      remove_activity_feed(action)
-      remove_activity_push(action) if push_is_valid?
+  def reduce_distribution_by(async: true, &block)
+    # Execute code block (may change social associations)
+    yield(block) if block.present?
+    # Update actors feed + shared objects
+    Feed.update_objects([activity_actor, activity_target])
+    # Remove activities from target feeds
+    if async
+      # Start background job to remove distributed activities
+      RemoveJob.perform_later(
+        target: {
+          target: activity_target.id,
+          type: activity_type
+        }
+      )
+    else
+      # NOTE: use sync version to return reduced context
+      Feed.remove_target(target: activity_target.id, type: activity_type)
     end
-  rescue => error
-    error_handler(error, "failed: remove '#{action}' activity as worker job")
-  ensure
-    return self
   end
 
-  def remove_all_activities(action = 'delete', target: nil, user: nil)
-    if activity_is_valid?
-      remove_activity_feed(action, target: target, user: user)
-      remove_activity_push(action, target: target, user: user) if push_is_valid?
+  def activity_context(action = activity_action)
+    # Get current context
+    context = activity_forward(action).values
+    # Validates context if target visibility was set to 'private'
+    if activity_visibility == 'private'
+      # NOTE: do not use activity_foreign to determine creator/owner
+      case activity_type
+      when 'Slot'
+        context.map!{|a| a & (
+          activity_target.followers << activity_target.creator.id.to_s
+        )}
+      when 'Group'
+        context.map!{|a| a & (
+          activity_target.followers << activity_target.owner.id.to_s
+        )}
+      else # when 'User'
+        context.each(&:delete_all)
+      end
     end
-  rescue => error
-    error_handler(error, "failed: remove all activities as worker job")
-  ensure
-    return self
-  end
-
-  def forward_deletion(action = 'delete')
-    create_activity_feed(action, notify: nil, forward: {
-        User: [activity_actor.id.to_s],
-        Notification: activity_target.followers
-    })
-    create_activity_push(action, notify: nil, forward: activity_target.followers) if push_is_valid?
-  rescue => error
-    error_handler(error, "failed: forward 'deletion' activity as worker job")
-  ensure
-    return self
+    context
   end
 
   ## Private Helpers ##
 
-  private def create_activity_feed(action = activity_action, notify: nil, forward: nil, time: nil)
+  private def create_activity_feed(action, forward: nil, time: nil)
+    forward ||= activity_forward(action)
+    return unless forward.any?
+
     # FIX: Solid save last modified data (strict mode throws exceptions)
     activity_target.save! if activity_target.changed?
     activity_actor.save! if activity_actor.changed?
 
     # Initialize job worker
-    FeedJob.perform_async({
+    FeedJob.perform_later({
       type: activity_type,
       actor: activity_actor.id.to_s,
       object: self.id.to_s,
       model: self.class.name,
       target: activity_target.id.to_s,
       action: action,
-      message: activity_message_params,
       foreign: activity_foreign.try(:id).try(:to_s),
-      notify: notify || activity_notify,
-      forward: forward || activity_forward(action),
+      forward: forward,
       data: activity_extra_data,
-      time: time || self.updated_at
+      time: (time || self.updated_at).to_f
     })
 
     # Update actors feed + shared objects
-    activity_update_feed
+    Feed.update_objects([activity_actor, activity_target])
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
   end
 
-  private def create_activity_push(action = activity_action, notify: nil, forward: nil)
-    notify = forward || notify || activity_push(action)
+  private def create_activity_push(action, forward: nil)
+    recipients = forward || activity_push(action)
 
-    # Remove creator from the push notification list
-    notify.delete(activity_actor.id)
+    # Extra Check: Remove actor from the push notification list
+    recipients.delete(activity_actor.id)
 
-    if notify.any?
+    if recipients.any?
       message_params = {
         KEY: "#{activity_type.downcase}_#{action}_push_singular",
         ACTOR: activity_actor.username,
@@ -151,82 +130,59 @@ module Activity
         params[:user_id] = activity_actor.id
       end
 
-      Device.notify_all(notify, params)
+      Device.notify_all(recipients, params)
     end
   end
 
-  private def update_activity_feed(action)
+  private def update_activity_feed(action, forward: nil)
     # Actually we made updates simple in handy with a tiny performance impact
-    remove_activity(action)
-    create_activity(action)
+    remove_activity(action, feed_fwd: forward)
+    create_activity(action, feed_fwd: forward)
     # NOTE: this could be improved by a real update implementation (when it is required):
     # TODO: [TML-77]
   end
 
-  private def update_activity_push(action)
+  private def update_activity_push(action, forward: nil)
     # TODO: [TML-77]
     # TODO: [TML-71]
   end
 
-  private def remove_activity_feed(action, target: nil, user: nil)
-    forwards = activity_forward(action)
-    # Add actor + foreign + forwarded users to the activity removal dispatcher
-    notify = activity_notify || []
-    notify += forwards[:User] if forwards[:User]
-    notify += forwards[:News] if forwards[:News]
-    notify += forwards[:Notification] if forwards[:Notification]
-    notify << activity_actor.id.to_s
-    notify << activity_foreign.id.to_s if activity_foreign
-
-    notify.uniq!
-
-    target = target.as_json if target
-    user_targets = user ? Feed.remove_user_from_feeds(user: user, notify: notify) : nil
-
+  private def remove_activity_feed(action, forward: nil)
     # Remove activities from target feeds:
-    RemoveJob.perform_async({
-        object: self.id.to_s,
-        model: self.class.name,
-        target: activity_target.id.to_s,
-        type: activity_type,
-        notify: notify
-      },
-      target: target,
-      user_targets: user_targets
+    RemoveJob.perform_later(
+        activity: {
+            object: self.id.to_s,
+            model: self.class.name,
+            target: activity_target.id.to_s,
+            type: activity_type,
+            forward: forward
+        }
     )
-
-    # NOTE: If a slot was deleted all activities to its corresponding objects will be deleted too,
-    # BUT this should not trigger a new activity like an "unlike"
-    # TODO: put this deletion activity to the new distribution mapper
-    if activity_type == 'Slot' && action == 'private' && activity_is_valid? # || action == 'unslot'
-      # Forward "deletion" action as an activity to the dispatcher
-      forward_deletion(action)
-    end
-
     # Update actors feed + shared objects
-    activity_update_feed
+    Feed.update_objects([activity_actor, activity_target])
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
   end
 
-  private def remove_activity_push(action, target: nil, user: nil)
+  private def remove_activity_push(action, forward: nil)
     # TODO: [TML-71]
-    # create_activity_push(action) if push_is_valid?
   end
 
   # This method should be overridden in the subclass
   # if custom validation is required
-  private def activity_is_valid?
-    !Rails.application.config.SKIP_ACTIVITY &&
-    self.deleted_at.nil? &&
-    activity_actor.present? &&
-    activity_target.present? &&
+  private def activity_is_valid?(action = activity_action)
+    !Rails.application.config.SKIP_ACTIVITY and
+    activity_actor.present? and
+    activity_target.present? and
+    action.present? and
+    # FIX: allow removal-related activities
+    (action.in?(%w(delete private unslot unshare unfriend ungroup reject kick leave)) or (
+        self.deleted_at.nil? and
+        activity_actor.deleted_at.nil? and
+        activity_target.deleted_at.nil?)
+    ) and
     # FIX: only activities from "real users" are valid:
-    activity_actor.role != 1 &&
-    activity_actor.deleted_at.nil? &&
-    activity_target.deleted_at.nil? &&
-    # FIX: skip if an activity has no action:
-    activity_action.present?
+    (activity_actor.role != 1)
   end
 
   # This method should be overridden in the subclass
@@ -235,85 +191,18 @@ module Activity
     !Rails.application.config.SKIP_PUSH_NOTIFICATION
   end
 
-  # Feed distribution through social relations
-  # We differentiate 5 types of activities in dynamic social context:
-  #
-  # 1. Target related context
-  # 2. Actor related context
-  # 3. Friend related context (is handled same as User.followers actually)
-  # 4. Group related context
-  # 5. Foreign related context
-
-  # TODO: Remove this method
-  private def activity_notify
-
-    # FIX: try to get parent visibility if predecessor has no visibility
-    visibility = activity_target.try(:visibility) ||
-                 activity_target.try(:parent).try(:visibility)
-
-    # Additional check (only for security reason)
-    #return [] if visibility == 'private'
-
-    # Returns the array of users which should be notified through the distribution process
-    user_ids = []
-
-    # 1. Target related context (by default):
-    user_ids += activity_target.followers
-    # 2. Actor related context:
-    user_ids += activity_actor.followers if visibility == 'foaf' || visibility == 'public'
-    # 4. Containership related context:
-    activity_groups.each do |group|
-      user_ids += group.followers
-    end
-    # 5. Foreign related context (actually not active):
-    #user_ids += activity_foreign.followers if activity_foreign
-
-    # NOTE: Instead of distributing unrelated public slots we try to extend the social context
-    # 3. Friend related context:
-    # if visibility == 'public'
-    #   %W(#{activity_target}
-    #      #{activity_actor}
-    #      #{activity_foreign}).each do |context|
-    #       # Go deeper in dimension of social context to get more relations (through friends of friends/foreigns)
-    #       # NOTE: we can loop through followers here, but this has an additional fetching users from DB
-    #       # This can also be solved by adding friends of friends as a relation directly into the follower model
-    #       unless context.try(:friends).nil?
-    #         context.friends.each do |friend|
-    #           # Here we can fetch followers, change this into friends if further chaining is required
-    #           user_ids += friend.followers #friend.friends.collect(&:id)
-    #         end
-    #       end
-    #   end
-    # end
-
-    # Temporary fallback to simulate a "public-to-all-activity" feed
-    # user_ids = User.all.collect(&:id).map(&:to_s).as_json if Rails.env.test?
-
-    # Add the actor to the news feed distribution
-    user_ids << activity_actor.id.to_s
-
-    user_ids.uniq!
-
-    # NOTE: Actually we show activities to own contents in the creators news feed
-    # Remove the user who did the actual activity (actor)
-    user_ids.delete(activity_actor.id.to_s)
-    # Remove the foreign user
-    #user_ids.delete(activity_foreign.id.to_s) if activity_foreign
-
-    user_ids
-  end
-
   # Returns an array of user which should be notified via push notification (AWS SNS)
-  private def activity_push(action = activity_action)
+  private def activity_push(action)
     # Remove the user from the news feed who did the actual activity (actor)
-    get_recipients("#{activity_type.downcase}_#{action}_push", remove_actor: true).map(&:to_i)
+    get_recipients("#{activity_type.downcase}_#{action}_push", remove_actor: true).map!(&:to_i)
   end
+
 
   # Returns an array of user which should be notified via internal app notification (feed)
-  private def activity_forward(action = activity_action)
+  private def activity_forward(action)
     {
       User:
-        get_recipients("#{activity_type.downcase}_#{action}_me"),
+        get_recipients("#{activity_type.downcase}_#{action}_me", remove_actor: false),
       News:
         get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
       Notification:
@@ -321,7 +210,17 @@ module Activity
     }
   end
 
-  private def get_recipients(context, remove_actor: false)
+  # Feed distribution through social relations
+  # The social context is differentiated by 6 types of associations:
+  #
+  # 1. Target related context
+  # 2. Actor related context
+  # 3. Friend related context
+  # 4. Group related context
+  # 5. Foreign related context
+  # 6. Public related context (is actually not supported)
+
+  private def get_recipients(context, remove_actor:)
     # Determine social context from distribution map
     context = distribution_map[context.to_sym] || {}
     # FIX: Do not remove creator if the creator was manually set in the context
@@ -332,21 +231,23 @@ module Activity
     ## -- Distribution Keys: Related to Actor -- ##
 
     if context.include?('actor')      #  = the user who makes the action (initiator)
-      recipients << activity_actor.id.to_s
+      #if activity_visibility != 'private' || activity_actor == activity_foreign
+        recipients << activity_actor.id.to_s
+      #end
     end
     if context.include?('friends')    # = all friends of the actor (users follower)
       # FIX: here we cut the viral distribution through friend associations on non-public Slots/Groups
       recipients += activity_actor.followers if activity_visibility == 'public'
     end
     if context.include?('myfoaf')     # = all friends of actors friend (actually unused)
-      activity_actor.friendships.each do |friendship|
-        recipients += (friendship.user == activity_actor ? friendship.friend : friendship.user).followers
+      activity_actor.friendships.each do |fs|
+        recipients += (fs.user == activity_actor ? fs.friend : fs.user).followers
       end
     end
 
     ## -- Distribution Keys: Related to Slot-Target -- ##
 
-    if context.include?('follower')   # = slot followers (incl. group members)
+    if context.include?('follower')   # = slot followers
       recipients += activity_target.followers
     end
     if context.include?('creator')    # = the creator of the slot
@@ -354,11 +255,11 @@ module Activity
     end
     if context.include?('commenter')  # = the users who commented on the slot
       users = activity_target.comments.pluck(:user_id) || []
-      recipients += users.map(&:to_s) if users.any?
+      recipients += users.map!(&:to_s) if users.any?
     end
     if context.include?('liker')      # = the users who likes the slot
       users = activity_target.likes.pluck(:user_id) || []
-      recipients += users.map(&:to_s) if users.any?
+      recipients += users.map!(&:to_s) if users.any?
     end
     if context.include?('poster')     # = the users who adds content to the slot
       # actually not supported
@@ -366,7 +267,7 @@ module Activity
 
     ## -- Distribution Keys: Related to Group-Target -- ##
 
-    if context.include?('member')     # = members of a group (or slotgroups)
+    if context.include?('member')     # = members of a group
       if activity_type == 'Group'
         recipients += activity_target.followers
       elsif activity_type == 'Slot'
@@ -408,7 +309,10 @@ module Activity
     if context.include?('joiners')    # = friends (if: public group?)
       groups = activity_type == 'Group' ? [activity_target] : activity_groups
       groups.each do |group|
-        recipients += activity_actor.followers if group.public
+        if group.public
+          recipients += activity_actor.followers
+          break
+        end
       end
     end
 
@@ -418,11 +322,14 @@ module Activity
     recipients
   end
 
-  private def activity_update_feed
-    # NOTE: It is possible that an action does'nt affect the actors feed,
-    # for this situation it is required to force the update of caches
-    # TODO: Check if mixed distributed activities to the same target has conflicts
-    Feed.update_objects([activity_actor, activity_target])
+  # We store full response data to the activity stream.
+  # The backend needs no further request on the database.
+  private def activity_extra_data
+    {
+      target: Feed.render_shared_object(activity_target),
+      actor: Feed.render_shared_object(activity_actor),
+      foreign: Feed.render_shared_object(activity_foreign)
+    }
   end
 
   # TODO:
@@ -471,12 +378,6 @@ module Activity
   private def activity_action
     raise NotImplementedError,
           "Subclasses must define the method 'activity_action'."
-  end
-
-  # The message is used as a notification message
-  private def activity_message_params
-    raise NotImplementedError,
-          "Subclasses must define the method 'activity_message_params'."
   end
 
   private def error_handler(error, activity, params = nil)
@@ -585,12 +486,12 @@ module Activity
 
         user_unfriend_me: %w(actor),
         user_unfriend_activity: [],
-        user_unfriend_notify: [],
+        user_unfriend_notify: %w(user),
         user_unfriend_push: [],
 
         user_reject_me: %w(actor),
         user_reject_activity: [],
-        user_reject_notify: [],
+        user_reject_notify: %w(user),
         user_reject_push: [],
 
         slot_tagged_me: %w(actor),

@@ -11,7 +11,7 @@ class UsersToSlotTagger
     users.each do |user|
       ps = user.passengerships.find_or_initialize_by(slot: @slot)
       new_instance = !ps.persisted? && ps.save
-      ps.update(add_media_permission: true)
+      ps.update(add_media_permission: true) if initiator.nil? || (initiator == @slot.creator)
       user.follow(@slot)
       ps.initiator = initiator if initiator
       ps.create_activity if new_instance

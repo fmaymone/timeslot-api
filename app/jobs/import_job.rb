@@ -6,9 +6,10 @@ class ImportJob
     Rails.logger.warn {
       "SUCKER_PUNCH ImportJob started (User: #{current_user[:id]}, Group: #{group})"
     }
-    begin
+    ActiveRecord::Base.connection_pool.with_connection do
       Import.handler(events, current_user, group)
-    rescue => e
+    end
+  rescue => e
       opts = {
         user: current_user[:id],
         group: group,
@@ -16,13 +17,11 @@ class ImportJob
       }
       Rails.logger.error { e }
       Airbrake.notify(e, opts)
-    end
+      puts e
+  ensure
+    ActiveRecord::Base.clear_active_connections!
     Rails.logger.warn {
       "SUCKER_PUNCH ImportJob done (User: #{current_user[:id]}, Group: #{group})"
     }
   end
-
-  # def perform_later(sec, devices, params)
-  #   after(sec) { perform(devices, params) }
-  # end
 end
