@@ -37,6 +37,8 @@ module Import
 
         # Set default values if not imported:
         event[:visibility] ||= 'private'
+        # Prepare data
+        event[:settings] = event[:settings][0]['alerts'] if event[:settings].try(&:any?)
 
         # Check if slot already exist
         if event[:uid].present?
@@ -58,8 +60,7 @@ module Import
                                   visibility: event[:visibility],
                                   media: event[:media],
                                   notes: event[:notes],
-                                  alerts: event[:alerts],
-                                  user: slot.creator)
+                                  alerts: event[:settings])
 
           slot.ios_location = event[:location] if event[:location]
           status = slot.save && slot.errors.empty? if status
@@ -69,24 +70,26 @@ module Import
                                       visibility: event[:visibility],
                                       media: event[:media],
                                       notes: event[:notes],
-                                      alerts: event[:alerts],
+                                      alerts: event[:settings],
                                       user: creator)
 
           # FIX: Reload slot to prevent returning a MetaSlot instead of a BaseSlot
           slot.reload
           slot.ios_location = event[:location] if event[:location]
-          slot.update(slot_uuid: event[:uid]) if event[:uid].present?
+          slot.slot_uuid = event[:uid] if event[:uid].present?
           status = slot.save && slot.errors.empty? if status
 
           if status
-            # Create Group
-            group = find_or_create_group(event, creator, group_uuid)
-            status = group.save && group.errors.empty? if status
-
-            # Create Containership Association
-            if status
-              containership = Containership.find_or_create_by(group: group, slot: slot)
-              status = containership.errors.empty? if status
+            event[:groups] = [event[:groups]] unless event[:groups].kind_of?(Array)
+            event[:groups].each do |group|
+              # Create Group
+              group = find_or_create_group(creator.id, group || {}, group_uuid)
+              status = group.save && group.errors.empty? if status
+              # Create Containership Association
+              if status
+                containership = Containership.find_or_create_by(group: group, slot: slot)
+                status = containership.errors.empty? if status
+              end
             end
           end
         end
@@ -94,10 +97,11 @@ module Import
       end
     rescue => error
       error_handler(error, "failed: import from file")
+      puts error
       status = false
     ensure
       Rails.application.config.SKIP_ACTIVITY = false
-      puts failed
+      puts failed if failed.any?
       status
     end
 
@@ -121,26 +125,33 @@ module Import
       creator
     end
 
-    private def find_or_create_group(event, creator, group_uuid = nil)
+    private def find_or_create_group(creator_id, group_params, group_uuid)
+      group_params.symbolize_keys! if group_params
+
       # Find existing group by UID
-      group = group_uuid ? Group.find_by(uuid: group_uuid,
-                                         owner: creator) : nil
+      if group_uuid
+        group = Group.find_by(uuid: group_uuid, owner_id: creator_id)
+      elsif group_params[:uuid]
+        group = Group.find_by(uuid: group_params[:uuid], owner_id: creator_id)
+      else
+        group = nil
+      end
+
       # Find or create by meta params
       unless group
+        group_params.slice!(:uuid, :name, :image, :public, :description)
         # Find group by meta data
-        group_params = event[:group].presence
-        group = group_params ? Group.find_by(name: group_params[:name], owner: creator)
-                             : nil
+        group = group_params[:name] ? Group.find_by(name: group_params[:name], owner_id: creator_id)
+                                    : nil
         if group
           # Update existing group
-          group.update(group_params.slice(:name, :image, :public))
-        elsif group_params
+          group.update(group_params.except(:uuid))
+        elsif group_params[:name]
           # Create custom group
-          group = Group.create(owner: creator, **group_params)
+          group = Group.create(owner_id: creator_id, **group_params)
         else
           # Create default group
-          group = Group.find_or_create_by(owner: creator,
-                                          name: 'Imports')
+          group = Group.find_or_create_by(owner_id: creator_id, name: 'Imports')
         end
       end
       group
@@ -149,6 +160,7 @@ module Import
     private def error_handler(error, msg, params = {})
       Rails.logger.error { error }
       Airbrake.notify(msg, params.merge(error: error))
+      puts error
     end
   end
 end

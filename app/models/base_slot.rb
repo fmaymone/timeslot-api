@@ -55,7 +55,7 @@ class BaseSlot < ActiveRecord::Base
            inverse_of: :tagged_slots
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
-           :location, :ios_location_id, :ios_location, :open_end,
+           :location, :ios_location_id, :ios_location, :open_end, :slot_settings,
            :title=, :start_date=, :end_date=, :creator=, :location_uid=, :open_end=,
            to: :meta_slot
 

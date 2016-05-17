@@ -6,16 +6,16 @@ class TimeslotAdapter < Adapter
       @event = event
       events << {
           uid: event['uid'],
-          title: event['title'].size > 60 ? event['title'][0..59] : event['title'],
+          title: event['title'].first(60),
           start_date: event['start'],
           end_date: event['end'],
           location: import_event_location,
           visibility: import_event_visibility,
-          alerts: import_event_alerts,
+          settings: import_event_alerts,
           media: import_event_media,
           notes: import_event_notes,
           creator: import_event_creator,
-          group: import_event_group
+          groups: import_event_groups
       }
     end
     events
@@ -29,19 +29,17 @@ class TimeslotAdapter < Adapter
           # Slot Meta Data
           uid: slot.slot_uuid,
           title: slot.title,
-          visibility: slot.visibility,
+          visibility: export_event_visibility(slot),
           start: slot.start_date,
           end: slot.end_date || '',
+          # Slot Content
+          media: export_event_media(slot),
+          notes: export_event_notes(slot),
+          # Slot Settings
+          settings: export_event_alerts(slot),
+          groups: export_event_groups(slot),
           # Location Meta Data
-          location: slot.ios_location.nil? ? nil : {
-              name: slot.ios_location.name || '',
-              country: slot.ios_location.country || '',
-              postalcode: slot.ios_location.postal_code || '',
-              city: slot.ios_location.locality || '',
-              address: slot.ios_location.thoroughfare || '',
-              latitude: slot.ios_location.latitude || '',
-              longitude: slot.ios_location.longitude || ''
-          }
+          location: export_event_location(slot)
       }
     end
     cal.to_json
@@ -51,7 +49,6 @@ class TimeslotAdapter < Adapter
 
   private def is_valid_event(event)
     event['title'].present? &&
-    #event['user'].present? || event['group'].present? &&
     event['uid'].present? &&
     event['start'].present?
   end
@@ -75,13 +72,14 @@ class TimeslotAdapter < Adapter
     } : {}
   end
 
-  private def import_event_group
+  private def import_event_groups
     group = @event['group']
     group ? {
         name: group['title'].presence,
-        image: group['image_url'].presence,
+        image: group['image_url'].presence || group['image'].presence,
         public: group['visibility'] == 'public',
-    } : {}
+        description: group['description'].presence
+    } : @event['groups'].presence || {}
   end
 
   private def import_event_creator
@@ -95,8 +93,7 @@ class TimeslotAdapter < Adapter
   end
 
   private def import_event_media
-    # TODO: export all media items
-    [{
+    @event['media'].presence || [{
         public_id: @event['image_url'].presence,
         local_id: '',
         media_type: 'image',
@@ -109,7 +106,7 @@ class TimeslotAdapter < Adapter
   end
 
   private def import_event_alerts
-    nil # TODO
+    @event['settings'].presence || nil
   end
 
   private def import_event_visibility
@@ -118,23 +115,43 @@ class TimeslotAdapter < Adapter
 
   ## -- EXPORT HELPERS -- ##
 
-  private def export_event_location
-    @slot.ios_location.try(:name)
+  private def export_event_location(slot)
+    slot.ios_location.nil? ? nil : {
+        name: slot.ios_location.name || '',
+        country: slot.ios_location.country || '',
+        postalcode: slot.ios_location.postal_code || '',
+        city: slot.ios_location.locality || '',
+        address: slot.ios_location.thoroughfare || '',
+        latitude: slot.ios_location.latitude || '',
+        longitude: slot.ios_location.longitude || ''
+    }
   end
 
-  private def export_event_media
-    @slot.media_items
+  private def export_event_media(slot)
+    slot.media_items.map{
+      |media| media.slice(:public_id, :media_type, :position, :duration, :title)
+    }
   end
 
-  private def export_event_notes
-    @slot.notes
+  private def export_event_notes(slot)
+    slot.notes.map{
+      |note| note.slice(:title, :content)
+    }
   end
 
-  private def export_event_alerts
-    nil # TODO
+  private def export_event_alerts(slot)
+    slot.slot_settings.map{
+      |setting| setting.slice(:alerts)
+    }
   end
 
-  private def export_event_visibility
-    @slot.visibility.upcase
+  private def export_event_groups(slot)
+    slot.slot_groups.where(owner: slot.creator).map{
+      |group| group.slice(:uuid, :name, :image, :public, :description)
+    }
+  end
+
+  private def export_event_visibility(slot)
+    slot.visibility
   end
 end

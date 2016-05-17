@@ -50,8 +50,8 @@ module V1
     private def get_slots_from_group
       # NOTE: actually we return only owned Slot by the current user
       if params[:group].present?
-        group = Group.find_by(uuid: params[:group])
-        group ? group.slots_with_associations : []
+        group = Group.find_by(uuid: params[:group], owner: current_user)
+        group ? group.slots.where('creator_id = ?', current_user.id) : []
       else
         current_user.std_slots
       end

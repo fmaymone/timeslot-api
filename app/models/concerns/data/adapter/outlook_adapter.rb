@@ -8,7 +8,7 @@ class OutlookAdapter < Adapter
       @event = event
       events << {
           uid: @event['uid'].presence,
-          title: event['Subject'].size > 60 ? event['Subject'][0..59] : event['Subject'],
+          title: event['Subject'].first(60),
           start_date: import_event_datetime("#{event['Start_Date']}T#{event['Start_Time']}"),
           end_date: import_event_datetime("#{event['End_Date']}T#{event['End_Time']}"),
           ios_location: import_event_location,
