@@ -29,7 +29,9 @@ module SlotQuery
           @relation
         when 'finished'
           @relation.where(finished(moment)).ordered_rev
-        when 'upcoming', 'ongoing', 'past', 'now'
+        when 'past'
+          @relation.where(past(moment)).ordered_rev
+        when 'upcoming', 'ongoing', 'now'
           # here we send the 'mode' as a message to this SlotQuery:OwnSlots
           # class, which means, we are calling the method with the name of
           # the 'mode'

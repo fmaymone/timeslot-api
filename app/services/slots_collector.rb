@@ -132,7 +132,8 @@ class SlotsCollector
     pasts = query_data(relations, 'past')
     sorted_pasts = sort_result(pasts, 'past')
 
-    sorted_upcomings + sorted_pasts
+    # sorted_upcomings + sorted_pasts
+    sorted_pasts + sorted_upcomings
   end
 
   private def query_data(relations, mode)

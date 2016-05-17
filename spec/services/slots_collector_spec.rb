@@ -143,9 +143,44 @@ RSpec.describe SlotsCollector, type: :service do
   end
 
   describe 'filter' do
+    let(:user) { create(:user) }
+    let(:moment) { '2016-04-21T11:08:18.000Z' }
+
+    context "past" do
+      let!(:januar_slot) do
+        create(:std_slot_public, owner: user, title: 'im januar',
+               start_date: '2016-01-21 15:06:18Z',
+               end_date: '2016-04-21 16:06:18Z'
+              )
+      end
+      let!(:februar_slot) do
+        create(:std_slot_public, owner: user, title: 'im januar',
+               start_date: '2016-02-21 15:06:18Z',
+               end_date: '2016-04-21 16:06:18Z'
+              )
+      end
+      let!(:maerz_slot) do
+        create(:std_slot_public, owner: user, title: 'im januar',
+               start_date: '2016-03-21 15:06:18Z',
+               end_date: '2016-04-21 16:06:18Z'
+              )
+      end
+
+      it "returns slots descending from 'moment'" do
+        collector = SlotsCollector.new(mode: 'past', moment: moment, limit: 2)
+        result = collector.my_slots(user: user)
+        slots = result.data
+
+        slots.each do |slot|
+          expect(slot.start_date).to be < moment
+        end
+        expect(slots).to include maerz_slot
+        expect(slots).to include februar_slot
+        expect(slots).not_to include januar_slot
+      end
+    end
+
     context "between" do
-      let(:user) { create(:user) }
-      let(:moment) { '2016-04-21T11:08:18.000Z' }
       let(:earliest) { '2016-04-21T11:06:18.000Z' }
       let(:latest) { '2016-04-21T19:06:18.000Z' }
 
