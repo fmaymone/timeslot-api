@@ -29,6 +29,9 @@ Rails.application.routes.draw do
       patch ':id', to: 'slots#update', as: 'slot_update'
       delete ':id', to: 'slots#delete', as: 'slot_delete'
 
+      delete ':id/media', to: 'slots#delete_media', as: 'delete_media'
+      delete ':id/notes', to: 'slots#delete_notes', as: 'delete_notes'
+
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
       delete ':id/like', to: 'slots#unlike', as: 'slot_unlike'

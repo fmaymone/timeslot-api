@@ -152,6 +152,40 @@ module V1
       end
     end
 
+    # DELETE /v1/slot/1/media
+    def delete_media
+      slot_id = params.require(:id).to_i
+      media_ids = params.require(:media).map(&:values)
+      @slot = current_user.std_slots.find(slot_id)
+
+      authorize @slot
+      @slot.media_items.find(media_ids).each(&:delete)
+
+      if @slot.errors.empty?
+        head :ok
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /v1/slot/1/notes
+    def delete_notes
+      slot_id = params.require(:id).to_i
+      note_ids = params.require(:notes).map(&:values)
+      @slot = current_user.std_slots.find(slot_id)
+
+      authorize @slot
+      @slot.notes.find(note_ids).each(&:delete)
+
+      if @slot.errors.empty?
+        head :ok
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
+    end
+
     # POST /v1/slots/1/like
     def add_like
       @slot = BaseSlot.get(params[:id])

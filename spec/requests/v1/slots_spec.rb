@@ -1275,7 +1275,9 @@ RSpec.describe "V1::Slots", type: :request do
         let!(:media_item_2) {
           create(:slot_image, mediable: std_slot, position: 1) }
         let!(:media_item_3) {
-          create(:slot_image, mediable: std_slot, position: 2) }
+          create(:video, mediable: std_slot, position: 2) }
+        let!(:media_item_4) {
+          create(:slot_image, mediable: std_slot, position: 3) }
 
         context "with valid params" do
           let(:media_reordering) do
@@ -1286,7 +1288,7 @@ RSpec.describe "V1::Slots", type: :request do
                 { media_id: media_item_2.id,
                   media_type: 'image',
                   position: 0 },
-                { media_id: media_item_3.id,
+                { media_id: media_item_4.id,
                   media_type: 'image',
                   position: 1 }
               ] }
@@ -1302,13 +1304,28 @@ RSpec.describe "V1::Slots", type: :request do
             std_slot.reload
             expect(std_slot.media_items.find(media_item_1.id).position).to eq(2)
             expect(std_slot.media_items.find(media_item_2.id).position).to eq(0)
+            expect(std_slot.media_items.find(media_item_4.id).position).to eq(1)
+          end
+
+          it "reorders media items of different type" do
+            media_reordering[:media][1][:position] = 3 # media_item_2
+            media_reordering[:media][2][:position] = 0 # media_item_4
+            media_reordering[:media] << { media_id: media_item_3.id,
+                                          media_type: 'video',
+                                          position: 1 }
+
+            expect(MediaItem.valid_sorting?(media_reordering[:media])).to be(true)
+            patch "/v1/stdslot/#{std_slot.id}", media_reordering, auth_header
+            expect(std_slot.media_items.find(media_item_1.id).position).to eq(2)
+            expect(std_slot.media_items.find(media_item_2.id).position).to eq(3)
             expect(std_slot.media_items.find(media_item_3.id).position).to eq(1)
+            expect(std_slot.media_items.find(media_item_4.id).position).to eq(0)
           end
         end
 
         context "with invalid params" do
           describe "invalid mediaId" do
-            let(:invalid_id) { media_item_3.id + 1 }
+            let(:invalid_id) { media_item_4.id + 1 }
             let(:media_reordering) do
               { media: [
                   { media_id: media_item_1.id,
@@ -1339,7 +1356,7 @@ RSpec.describe "V1::Slots", type: :request do
                   { media_id: media_item_2.id,
                     media_type: 'image',
                     position: 0 },
-                  { media_id: media_item_3.id,
+                  { media_id: media_item_4.id,
                     media_type: 'image',
                     position: 1 }
                 ] }
