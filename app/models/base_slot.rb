@@ -343,36 +343,18 @@ class BaseSlot < ActiveRecord::Base
     slot
   end
 
-  # takes an encoded_slot string and returns the matching slot
+  # takes an encoded_slot string and returns the matching (pseudo) slot
   # see: BaseSlot.as_paging_cursor
-  # raises PaginationError if invalid cursor_string
   def self.from_paging_cursor(encoded_cursor_string)
     decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
   rescue ArgumentError
     raise ApplicationController::PaginationError
   else
-    # check for validity
-    # begin
     cursor_array = decoded_cursor_string.split('%')
     cursor = { id: cursor_array.first.to_i,
                startdate: cursor_array.second,
                enddate: cursor_array.third }
-    #   slot = get(cursor[:id])
-    # rescue ActiveRecord::RecordNotFound
-    #   raise PaginationError, "invalid pagination cursor"
-    # # the following is not really necessary, might be removed at some point
-    # # but for now it gives some useful info about the system
-    # else
-    #   if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
-    #      slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
-    #     opts = { cursor_id: cursor[:id],
-    #              cursor_startdate: cursor[:startdate],
-    #              cursor_enddate: cursor[:enddate] }
-    #     Airbrake.notify(ApplicationController::PaginationError, opts)
-    #     fail PaginationError, "cursor slot changed" if Rails.env.development?
-    #   end
     cursor
-    # end
   end
 
   # for Pundit
