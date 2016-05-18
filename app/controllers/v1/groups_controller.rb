@@ -76,6 +76,19 @@ module V1
       end
     end
 
+    # GET /v1/groups/:group_uuid/dates
+    def dates
+      @group = Group.find_by!(uuid: params[:group_uuid])
+      authorize @group
+
+      # collector = SlotsCollector.new(**slot_paging_params)
+      # the_result = collector.group_dates(group: @group)
+      # @dates = the_result.data
+      @dates = []
+
+      render :dates
+    end
+
     # GET /v1/groups/:group_uuid/members
     def members
       @group = Group.find_by!(uuid: params[:group_uuid])

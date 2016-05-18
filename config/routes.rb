@@ -101,6 +101,7 @@ Rails.application.routes.draw do
       patch ':group_uuid', to: 'groups#update', as: 'group_update'
       delete ':group_uuid', to: 'groups#destroy', as: 'group_delete'
       get ':group_uuid/slots', to: 'groups#slots', as: 'group_slots'
+      get ':group_uuid/dates', to: 'groups#dates'
       get ':group_uuid/members', to: 'groups#members', as: 'group_members'
       get ':group_uuid/related', to: 'groups#related', as: 'group_related'
       post ':group_uuid/members', to: 'groups#invite'

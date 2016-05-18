@@ -303,6 +303,41 @@ resource "Groups" do
     end
   end
 
+  # dates
+  get "/v1/groups/:group_uuid/dates", :focus do
+    header "accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_uuid, "ID of the group to get slots for", required: true
+
+    response_field :data, "Array with dates where a slot is happening, " \
+                          "(starting, ongoing or ending)"
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:group_uuid) { group.uuid }
+    let!(:containerships) do
+      five_days = create(:slot, start_date: '2016-01-01', end_date: '2016-01-05')
+      same_day1 = create(:slot, start_date: '2016-03-30', end_date: '2016-03-30')
+      same_day2 = create(:slot, start_date: '2016-03-30', end_date: '2016-03-30')
+      create(:containership, slot: five_days, group: group)
+      create(:containership, slot: same_day1, group: group)
+      create(:containership, slot: same_day2, group: group)
+      create_list(:containership, 4, group: group)
+    end
+
+    example "Get all dates where slots in a slotgroup happen", document: :v1 do
+      explanation "This is needed for the agenda picker to show the correct " \
+                  "color for dates with slots.\n\n" \
+                  "returns 200 and an array of dates\n\n" \
+                  "returns 404 if UUID is invalid"
+      do_request
+
+      expect(response_status).to eq(200)
+      expect(json).to have_key("data")
+      expect(json["data"].size).to be >= 7
+    end
+  end
+
   # members
   get "/v1/groups/:group_uuid/members" do
     header "accept", "application/json"

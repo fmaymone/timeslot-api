@@ -41,6 +41,10 @@ class GroupPolicy < ApplicationPolicy
     show?
   end
 
+  def dates?
+    show?
+  end
+
   def members?
     show?
   end
