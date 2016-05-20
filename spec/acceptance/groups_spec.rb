@@ -304,11 +304,14 @@ resource "Groups" do
   end
 
   # dates
-  get "/v1/groups/:group_uuid/dates", :focus do
+  get "/v1/groups/:group_uuid/dates" do
     header "accept", "application/json"
     header "Authorization", :auth_header
 
-    parameter :group_uuid, "ID of the group to get slots for", required: true
+    parameter :group_uuid,
+              "ID of the group to get slots for", required: true
+    parameter :timezone,
+              "Offset for the timezone as string ('+10:00'), default is UTC"
 
     response_field :data, "Array with dates where a slot is happening, " \
                           "(starting, ongoing or ending)"
@@ -316,13 +319,15 @@ resource "Groups" do
     let(:group) { create(:group, owner: current_user) }
     let(:group_uuid) { group.uuid }
     let!(:containerships) do
+      two_days = create(:slot, start_date: '2016-03-30', end_date: '2016-03-31')
       five_days = create(:slot, start_date: '2016-01-01', end_date: '2016-01-05')
-      same_day1 = create(:slot, start_date: '2016-03-30', end_date: '2016-03-30')
-      same_day2 = create(:slot, start_date: '2016-03-30', end_date: '2016-03-30')
+      est_timezone = create(:slot,
+                            start_date: "2016-05-18T07:59:58.554-05:00",
+                            end_date: "2016-05-18T023:59:58.554-05:00")
+
+      create(:containership, slot: two_days, group: group)
       create(:containership, slot: five_days, group: group)
-      create(:containership, slot: same_day1, group: group)
-      create(:containership, slot: same_day2, group: group)
-      create_list(:containership, 4, group: group)
+      create(:containership, slot: est_timezone, group: group)
     end
 
     example "Get all dates where slots in a slotgroup happen", document: :v1 do
@@ -334,7 +339,26 @@ resource "Groups" do
 
       expect(response_status).to eq(200)
       expect(json).to have_key("data")
-      expect(json["data"].size).to be >= 7
+      expect(json["data"]).to include '2016-01-01'
+      expect(json["data"]).to include '2016-01-02'
+      expect(json["data"]).to include '2016-01-03'
+      expect(json["data"]).to include '2016-01-04'
+      expect(json["data"]).to include '2016-01-05'
+      expect(json["data"]).to include '2016-03-30'
+      expect(json["data"]).to include '2016-03-31'
+      expect(json["data"]).to include '2016-05-18'
+      expect(json["data"]).to include '2016-05-19'
+    end
+
+    describe 'other timezone' do
+      let(:timezone) { '-05:00' }
+
+      example "Get all dates where slots happen in other timezone",
+              document: :v1 do
+        do_request
+        expect(json["data"]).to include '2016-05-18'
+        expect(json["data"]).not_to include '2016-05-19'
+      end
     end
   end
 

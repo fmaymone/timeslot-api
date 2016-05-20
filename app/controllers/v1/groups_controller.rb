@@ -81,10 +81,9 @@ module V1
       @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
-      # collector = SlotsCollector.new(**slot_paging_params)
-      # the_result = collector.group_dates(group: @group)
-      # @dates = the_result.data
-      @dates = []
+      collector = DatesCollector.new(timezone: params[:timezone])
+      slots = @group.slots.joins(:meta_slot)
+      @dates = collector.date_series_for_slots(slot_collection: slots)
 
       render :dates
     end
