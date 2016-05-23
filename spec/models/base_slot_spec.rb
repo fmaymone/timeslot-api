@@ -251,10 +251,10 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :create_comment, :aws, :async do
-    let(:creator) { create(:user) }
-    let(:user) { create(:user) }
-    let(:std_slot) { create(:std_slot, creator: creator) }
+  describe :create_comment, :aws, :async, :redis do
+    let!(:creator) { create(:user) }
+    let!(:user) { create(:user) }
+    let!(:std_slot) { create(:std_slot_public, creator: creator, owner: creator) }
     let!(:device) { create(:device, :with_endpoint, user: creator) }
 
     it "adds a new comment to the slot" do
@@ -286,31 +286,35 @@ RSpec.describe BaseSlot, type: :model do
       end
 
       context "existing comments" do
-        let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
-        let(:commenters) { existing_comments.collect(&:user_id) }
+        let!(:comments) { [create(:comment, slot: std_slot, user: user),
+                           create(:comment, slot: std_slot, user: creator),
+                           create(:comment, slot: std_slot, user: create(:user))] }
+        let(:commenters) { comments.map(&:user_id) }
+        let(:followers) { std_slot.followers.map(&:to_i) }
+        let(:recievers) { [std_slot.creator_id] + commenters + followers - [user.id] }
 
         it "notifies previous commenters if a new comment was made" do
-          expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] + commenters - [user.id], anything)
+          expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
           std_slot.create_comment(user, 'some content for the comment')
         end
       end
 
       context "existing likes" do
+        let(:recievers) { [std_slot.creator_id] - [user.id] }
+
         it "notifies the slot creator if a new comment was made" do
-          expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] - [user.id], anything)
-          std_slot.create_comment(user, 'some content for the comment')
+          expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
+          std_slot.create_like(user)
         end
 
         context "existing comments and likes" do
           let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
           let(:commenters) { existing_comments.collect(&:user_id) }
+          let(:followers) { std_slot.followers.map(&:to_i) }
+          let(:recievers) { [std_slot.creator_id] + commenters + followers - [user.id] }
 
           it "notifies the commenters and likers if a new comment was made" do
-            expect(Device).to receive(:notify_all).with(
-                                [std_slot.creator_id] + commenters - [user.id],
-                                anything)
+            expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
             std_slot.create_comment(user, 'some content for the comment')
           end
 
@@ -319,7 +323,7 @@ RSpec.describe BaseSlot, type: :model do
             expect(Device).to receive(:notify_all).with(
                                     notified_ids, anything)
             std_slot.create_like(user)
-
+            # Re-perform same action again
             expect(Device).not_to receive(:notify_all).with(
                                     notified_ids, anything)
             std_slot.create_like(user)
