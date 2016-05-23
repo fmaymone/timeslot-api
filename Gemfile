@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.3.1'
 
-gem 'rails', '4.2.5'
+gem 'rails', '4.2.6'
 
 gem 'rails-api', '0.4.0'
 
@@ -13,11 +13,11 @@ gem 'redis'
 gem 'bcrypt'
 
 # Authorization
-gem 'pundit', '1.0.1'
+gem 'pundit', '1.1.0'
 
 # JSON
-gem 'jbuilder', '2.4.0'
-gem 'oj', '2.14.3'
+gem 'jbuilder', '2.4.1'
+gem 'oj', '2.15.0'
 gem 'oj_mimic_json', '1.0.1'
 
 # ruby helper
