@@ -245,7 +245,14 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
-  describe "POST /v1/users/reset" do
+  describe "POST /v1/users/reset", :aws do
+
+    let(:current_user) do
+      create(:user,
+             email: 'success@simulator.amazonses.com',
+             password: "nottimeslot")
+    end
+
     context "valid params", :vcr do
       it "returns ok" do
         post "/v1/users/reset", { email: current_user.email }

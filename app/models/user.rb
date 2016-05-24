@@ -127,7 +127,7 @@ class User < ActiveRecord::Base
     update!(auth_token: nil)
   end
 
-  def create_client
+  def self.create_client
     # this client will be overridden by a stub for rspec testings
     Aws::SES::Client.new
   end
@@ -173,7 +173,7 @@ class User < ActiveRecord::Base
                     destination: email,
                     content: content)
     begin
-      create_client.send_email(content)
+      User.create_client.send_email(content)
     rescue Aws::SES::Errors::ServiceError => exception
       Rails.logger.error { exception }
       Airbrake.notify(exception)
