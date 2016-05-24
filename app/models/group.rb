@@ -1,8 +1,3 @@
-# trying to fix the following load error
-# Circular dependency detected while autoloading constant Feed (RuntimeError)
-# I guess it's only happening in tests, so limiting it until further need
-require_dependency "Feed" if Rails.env.test?
-
 class Group < ActiveRecord::Base
   include GroupActivity
   include Follow
