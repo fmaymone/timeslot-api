@@ -128,7 +128,7 @@ RSpec.describe Device, type: :model do
 
   describe :notify, :vcr do
     let(:client) { double("client") }
-    let(:params) {{ message: { key: 'slot_like_notify-to-owner_singular',
+    let(:params) {{ message: { key: 'slot_like_push-to-owner_singular',
                                actor: 'User1',
                                user: 'User2',
                                slot: 'Titel'}}}
