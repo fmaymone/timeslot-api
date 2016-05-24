@@ -66,8 +66,9 @@ module Activity
         context.map!{|a| a & (
           activity_target.followers << activity_target.owner.id.to_s
         )}
-      else # when 'User'
+      when 'User'
         context.each(&:delete_all)
+      else
       end
     end
     context
@@ -92,9 +93,10 @@ module Activity
       target: activity_target.id.to_s,
       action: action,
       foreign: activity_foreign.try(:id).try(:to_s),
+      group: activity_groups.last.try(:id).try(:to_s),
       forward: forward,
       data: activity_extra_data,
-      time: (time || self.updated_at).to_f
+      time: (time || self.created_at).to_f
     })
 
     # Update actors feed + shared objects
@@ -126,6 +128,7 @@ module Activity
         params[:group_id] = activity_target.id
       when 'User'
         params[:user_id] = activity_actor.id
+      else
       end
 
       Device.notify_all(recipients, params)
@@ -329,7 +332,9 @@ module Activity
     {
       target: Feed.render_shared_object(activity_target),
       actor: Feed.render_shared_object(activity_actor),
-      foreign: Feed.render_shared_object(activity_foreign)
+      foreign: Feed.render_shared_object(activity_foreign),
+      # NOTE: we only need last group for the actual aggregation
+      group: Feed.render_shared_object(activity_groups.last)
     }
   end
 

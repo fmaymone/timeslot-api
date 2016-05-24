@@ -33,24 +33,25 @@ resource "Feeds", :activity, :async do
         slot.create_comment(current_user, 'This is a test comment.')
 
         do_request
+        results = json['results']
         expect(response_status).to eq(200)
-        expect(json.length).to be(1)
+        expect(results.length).to be(1)
 
-        activity = json.first
+        activity = results.first
         expect(activity).to have_key("id")
-        expect(activity).to have_key("type")
+        #expect(activity).to have_key("type")
         expect(activity).to have_key("action")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).to have_key("data")
+        #expect(activity).to have_key("data")
         expect(activity).to have_key("actors")
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
         expect(activity['action']).to eq("comment")
-        expect(activity['actors'].first.to_i).to eq(current_user.id)
-        expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['type']).to eq("Slot")
+        expect(activity['actors'].first['id']).to eq(current_user.id)
+        expect(activity['target']).to eq('slot')
+        #expect(activity['type']).to eq("Slot")
       end
     end
   end
@@ -85,22 +86,23 @@ resource "Feeds", :activity, :async do
         slot.create_comment(actor, 'This is another test comment.')
 
         do_request
+        results = json['results']
         expect(response_status).to eq(200)
-        expect(json.length).to be(1)
+        expect(results.length).to be(1)
 
-        activity = json.first
+        activity = results.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("action")
-        expect(activity).to have_key("activityCount")
-        expect(activity).to have_key("type")
+        #expect(activity).to have_key("activityCount")
+        #expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("actors")
         expect(activity).to have_key("message")
-        expect(activity).to have_key("data")
-        expect(activity['data']).to have_key("target")
-        expect(activity['data']).to have_key("actor")
+        #expect(activity).to have_key("data")
+        #expect(activity['data']).to have_key("target")
+        #expect(activity['data']).to have_key("actor")
 
-        activity_slot = activity['data']["target"]
+        activity_slot = activity['slot']
         expect(activity_slot).to have_key("id")
         expect(activity_slot).to have_key("title")
         expect(activity_slot).to have_key("startDate")
@@ -120,7 +122,7 @@ resource "Feeds", :activity, :async do
         expect(activity_slot['media'].length).to eq(slot.media_items.length)
         expect(activity_slot['title']).to eq(slot.title)
 
-        activity_user = activity['data']['actor']
+        activity_user = activity['actors'].first
         expect(activity_user).to have_key("id")
         expect(activity_user).to have_key("username")
         expect(activity_user).to have_key("image")
@@ -131,9 +133,9 @@ resource "Feeds", :activity, :async do
 
         expect(activity['message']).to eq(message)
         expect(activity['action']).to eq("comment")
-        expect(activity['actors']).to eq([actor.id])
-        expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['type']).to eq("Slot")
+        expect(activity['actors'].first['id']).to eq(actor.id)
+        expect(activity['target']).to eq('slot')
+        #expect(activity['type']).to eq("Slot")
       end
     end
   end
@@ -165,24 +167,25 @@ resource "Feeds", :activity, :async do
         slot.create_comment(actor, 'This is another test comment.')
 
         do_request
+        results = json['results']
         expect(response_status).to eq(200)
-        expect(json.length).to be(1)
+        expect(results.length).to be(1)
 
-        activity = json.first
+        activity = results.first
         expect(activity).to have_key("id")
         expect(activity).to have_key("action")
-        expect(activity).to have_key("type")
+        #expect(activity).to have_key("type")
         expect(activity).to have_key("target")
         expect(activity).to have_key("message")
-        expect(activity).to have_key("data")
+        #expect(activity).to have_key("data")
         expect(activity).to have_key("actors")
         expect(activity).not_to have_key("actor")
 
         expect(activity['message']).to eq(message)
         expect(activity['action']).to eq("comment")
-        expect(activity['actors'].first.to_i).to eq(actor.id)
-        expect(activity['target'].to_i).to eq(slot.id)
-        expect(activity['type']).to eq("Slot")
+        expect(activity['actors'].first['id']).to eq(actor.id)
+        expect(activity['target']).to eq('slot')
+        #expect(activity['type']).to eq("Slot")
       end
     end
   end
