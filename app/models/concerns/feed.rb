@@ -444,15 +444,15 @@ module Feed
 
       # Adds the first username and sets usercount to translation params
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
-      i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
+      i18_params = { actor: actor['username'], count: actor_count > 2 ? actor_count - 1 : actor_count }
       # Add the targets field to the translation params holder (actually not in use)
-      #i18_params[:FIELD] = 'title'
+      #i18_params[:field] = 'title'
       # Add the title to the translation params holder
-      i18_params[:TITLE] = target['title'] if target && target['title']
+      i18_params[:slot] = target['title'] if target && target['title']
       # Add the name to the translation params holder
-      i18_params[:NAME] = target['name'] if target && target['name']
+      i18_params[:group] = target['name'] if target && target['name']
       # Add the target username to the translation params holder
-      i18_params[:USER] = target_user['username'] if target_user
+      i18_params[:user] = target_user['username'] if target_user
 
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')

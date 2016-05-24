@@ -111,11 +111,11 @@ module Activity
 
     if recipients.any?
       message_params = {
-        KEY: "#{activity_type.downcase}_#{action}_push_singular",
-        ACTOR: activity_actor.username,
-        USER: activity_target.try(:username),
-        TITLE: activity_target.try(:title),
-        NAME: activity_target.try(:name)
+        key: "#{activity_type.downcase}_#{action}_push_singular",
+        actor: activity_actor.username,
+        user: activity_target.try(:username),
+        slot: activity_target.try(:title),
+        group: activity_target.try(:name)
       }
       params = { message: message_params }
 

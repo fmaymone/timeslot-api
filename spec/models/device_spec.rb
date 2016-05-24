@@ -128,10 +128,10 @@ RSpec.describe Device, type: :model do
 
   describe :notify, :vcr do
     let(:client) { double("client") }
-    let(:params) {{ message: { KEY: 'slot_like_notify-to-owner_singular',
-                               ACTOR: 'User1',
-                               USER: 'User2',
-                               TITLE: 'Titel'}}}
+    let(:params) {{ message: { key: 'slot_like_notify-to-owner_singular',
+                               actor: 'User1',
+                               user: 'User2',
+                               slot: 'Titel'}}}
     let(:lang) { 'en' }
 
     it "sends a push notification message to the client" do
@@ -145,7 +145,7 @@ RSpec.describe Device, type: :model do
     let(:user2) { create(:user) }
     let!(:device1) { create(:device, :with_endpoint, user: user1) }
     let!(:device2) { create(:device, :with_endpoint, user: user2) }
-    let(:params) {{ message: { KEY: 'hello_world' }}}
+    let(:params) {{ message: { key: 'hello_world' }}}
 
     it "sends a push notification message to a collection of users" do
       Device.notify_all([user1, user2], params)

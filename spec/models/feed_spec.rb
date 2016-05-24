@@ -1279,8 +1279,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(user_feed.first['data']['actor']['id']).to be(user.id)
         expect(user_feed.first['data']['actor']['friendshipState']).to eq('pending passive')
         expect(user_feed.first['message']).to eq(I18n.t('user_request_me_singular',
-                                                        {ACTOR: user.username,
-                                                         USER: friend.username}))
+                                                        {actor: user.username,
+                                                         user: friend.username}))
 
         user_feed_friend = Feed.user_feed(friend.id).as_json
         expect(user_feed_friend.count).to be(0) # has no related activities
@@ -1310,8 +1310,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('pending passive')
         expect(notification_feed_friend.first['message']).to eq(I18n.t('user_request_notify_singular',
-                                                                       {ACTOR: user.username,
-                                                                        USER: friend.username}))
+                                                                       {actor: user.username,
+                                                                        user: friend.username}))
       end
     end
 
@@ -1334,8 +1334,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         user_feed = Feed.user_feed(user.id).as_json
         expect(user_feed.count).to be(1) # +1 friendship accepted
         expect(user_feed.first['message']).to eq(I18n.t('user_friendship_me_singular',
-                                                        {ACTOR: user.username,
-                                                         USER: friend.username}))
+                                                        {actor: user.username,
+                                                         user: friend.username}))
 
         user_feed_friend = Feed.user_feed(friend.id).as_json
         expect(user_feed_friend.count).to be(0) # has no related activities (request activity was removed after accept)
@@ -1362,8 +1362,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed.first['data']['actor']['friendshipState']).to eq('friend')
         expect(notification_feed.first['message']).to eq(I18n.t('user_accept_notify_singular',
-                                                                {ACTOR: user.username,
-                                                                 USER: friend.username}))
+                                                                {actor: user.username,
+                                                                 user: friend.username}))
 
         notification_feed_friend = Feed.notification_feed(friend.id).as_json
         expect(notification_feed_friend.count).to be(1) # +1 friendship established
@@ -1374,8 +1374,8 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(notification_feed_friend.first['data']['actor']['id']).to be(user.id)
         expect(notification_feed_friend.first['data']['actor']['friendshipState']).to eq('friend')
         expect(notification_feed_friend.first['message']).to eq(I18n.t('user_friendship_notify_singular',
-                                                                       {ACTOR: user.username,
-                                                                        USER: friend.username}))
+                                                                       {actor: user.username,
+                                                                        user: friend.username}))
 
         notification_feed_follower = Feed.notification_feed(follower.id).as_json
         expect(notification_feed_follower.count).to be(0) # has no related activities
