@@ -171,20 +171,18 @@ module Activity
   # This method should be overridden in the subclass
   # if custom validation is required
   private def activity_is_valid?(action = activity_action)
-    !Rails.application.config.SKIP_ACTIVITY and
-    activity_actor.present? and
-    activity_target.present? and
-    action.present? and
+    !Rails.application.config.SKIP_ACTIVITY &&
+    activity_actor.present? &&
+    activity_target.present? &&
+    action.present? &&
     # FIX: allow removal-related activities
-    (action.in?(%w(delete private unslot unshare unfriend ungroup reject kick leave)) or (
-        self.deleted_at.nil? and
-        activity_actor.deleted_at.nil? and
+    (action.in?(%w(delete private unslot unshare unfriend ungroup reject kick leave)) || (
+        self.deleted_at.nil? &&
+        activity_actor.deleted_at.nil? &&
         activity_target.deleted_at.nil?)
-    ) and
+    ) &&
     # FIX: only activities from "real users" are valid:
     activity_actor.basic? &&
-    activity_actor.deleted_at.nil? &&
-    activity_target.deleted_at.nil? &&
     # FIX: skip if an activity has no action:
     activity_action.present?
   end
