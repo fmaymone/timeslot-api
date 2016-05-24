@@ -883,7 +883,7 @@ resource "Users" do
     end
   end
 
-  post "/v1/users/reset", :vcr do
+  post "/v1/users/reset", :vcr, :aws do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 

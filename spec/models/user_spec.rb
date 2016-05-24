@@ -974,7 +974,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :reset_password, :vcr do
+  describe :reset_password, :vcr, :aws do
     context "valid params" do
       let!(:user) do
         create(:user,

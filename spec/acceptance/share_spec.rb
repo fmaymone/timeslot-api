@@ -162,11 +162,12 @@ resource "Share", :keep_data do
     context "Share Slot via Email" do
       let(:id) { share_id_user ||= slot.id }
       let(:json) { JSON.parse(response_body) }
-      let(:email) { 'test@timeslot.com' }
+      let(:email) { 'success@simulator.amazonses.com' }
 
       example "Share Slot via Email", document: :v1 do
         explanation "returns 404 if slot was not found\n\n" \
                     "returns 422 if slot could not be shared\n\n"
+
         do_request
         expect(response_status).to eq(200)
       end
