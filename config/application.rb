@@ -57,14 +57,6 @@ module TsRailsBackend
       logger.tagged('WORKER') { logger.info { 'workers are ASYNC' } }
     end
 
-    # logger for worker threads from sucker_punch
-    # SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
-
-    # setup default queue adapter for active jobs
-    config.active_job.queue_adapter = :sucker_punch
-    config.active_job.queue_name_prefix = Rails.env
-    config.active_job.queue_name_delimiter = '.'
-
     # Enable CORS
     # https://github.com/cyu/rack-cors
     config.middleware.insert_before 0, "Rack::Cors" do
