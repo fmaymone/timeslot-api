@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
                             only_integer: true,
                             allow_nil: true
   validates :phone,
-            uniqueness: { scope: :role },
+            uniqueness: { if: :basic? },
             length: { maximum: 35 },
             allow_nil: true
 
@@ -545,7 +545,7 @@ class User < ActiveRecord::Base
   # user tries to log in with facebook and has this email verified in facebook,
   # the other user can not log in via facebook (gets 422)
   def self.detect_or_create(username, email, role = 'basic')
-    user = User.find_by(email: email, role: role)
+    user = User.find_by(email: email, role: role) if email
     if user
       msg = "#{email} is already used by other timeslot user (unverified email)"
       Airbrake.notify(msg)

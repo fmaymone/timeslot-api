@@ -1,7 +1,7 @@
 module V1
   class UsersController < ApplicationController
     skip_before_action :authenticate_user_from_token!,
-                       except: [:show, :friends]
+                       except: [:show, :friends, :create_public]
 
     # GET /v1/users/1
     def show
@@ -15,10 +15,38 @@ module V1
     # POST /v1/users
     def create
       authorize :user
+      params.delete(:role)
+      create_user
+    end
 
+    # POST /v1/users_public
+    def create_public
+      authorize :user
+
+      if !params[:role].in? %w(public_user)
+        render json: { error: 'invalid user role' },
+               status: :unprocessable_entity
+      elsif current_user.email.nil?
+        render json: { error: 'no email available for this user' },
+               status: :forbidden
+      else
+        copy_user_password = params[:password].nil?
+        params[:email] = current_user.email
+        params[:username] ||= current_user.username
+        params[:password] ||= SecureRandom.urlsafe_base64(8)
+        create_user(public_user: true, copy_password: copy_user_password)
+      end
+    end
+
+    private def create_user(public_user: false, copy_password: false)
       service = NewUser.new(user_params: user_create_params,
                             device_params: device_params(params[:device]))
       @user = service.create_new_user
+
+      if public_user && copy_password
+        @user.update(auth_token: current_user.auth_token,
+                     password_digest: current_user.password_digest)
+      end
 
       if @user.errors.empty?
         @current_user = @user

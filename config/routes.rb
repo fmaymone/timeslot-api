@@ -84,6 +84,7 @@ Rails.application.routes.draw do
     scope :users, constraints: { id: /\d+/ } do
       get ':id', to: 'users#show', as: 'user'
       post '', to: 'users#create', as: 'user_create'
+      post 'public', to: 'users#create_public', as: 'user_create_public'
       post 'signin', to: 'users#signin', as: 'signin'
       post 'reset', to: 'users#reset_password', as: 'reset_password'
       get ':id/slots', to: 'users#slots', as: 'user_slots'
