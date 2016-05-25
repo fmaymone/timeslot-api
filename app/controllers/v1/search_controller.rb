@@ -1,9 +1,10 @@
+# coding: utf-8
 module V1
   class SearchController < ApplicationController
     # GET /v1/search/categories
     def categories
       authorize :search
-      categories = ClawMachine.new.categories
+      categories = ClawMachine.new(current_user).categories
 
       render json: { categories: categories }
     end
@@ -64,8 +65,9 @@ module V1
     # GET /v1/search/calendars
     def calendars
       authorize :search
-      result = ClawMachine.new.search(category: 'calendars',
-                                      query_params: query_and_limit)
+      result = ClawMachine.new(current_user).search(
+        category: 'calendars',
+        query_params: query_and_limit)
 
       render body: result, content_type: "application/json"
     end
@@ -82,8 +84,9 @@ module V1
     # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
     def global_slots
       authorize :search
-      result = ClawMachine.new.search(category: params.require(:category),
-                                      query_params: global_slot_search_params)
+      result = ClawMachine.new(current_user).search(
+        category: params.require(:category),
+        query_params: global_slot_search_params)
 
       render body: result, content_type: "application/json"
     end

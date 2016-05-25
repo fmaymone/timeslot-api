@@ -367,7 +367,7 @@ module Feed
         target: feed[4],
         action: feed[5],
         foreign: feed[6],
-        time: Time.at(feed[7]),
+        time: Time.zone.at(feed[7]),
         id: feed[8]
       }.as_json
     end

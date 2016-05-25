@@ -164,7 +164,8 @@ class User < ActiveRecord::Base
         }
       },
       reply_to_addresses: ["passwords@timeslot.com"],
-      return_path: "invalid_email_address@timeslot.com"
+      # bounce and complain notifications are forwarded by aws to this address:
+      return_path: "email_monitoring@timeslot.rocks"
     }
     # tmp hack to notify airbrake when an email gets send out
     # TODO: improve

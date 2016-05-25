@@ -4,11 +4,12 @@ class MetaSlot < ActiveRecord::Base
   # give 'openEnd' slots an end
   before_validation do |metaslot|
     if open_end || end_date.blank?
-      metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
-                            start_date.to_datetime.at_end_of_day
-                          else
-                            start_date.to_datetime.next_day.at_midday
-                          end
+      metaslot.end_date = start_date.to_datetime.at_end_of_day
+      # metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
+      #                       start_date.to_datetime.at_end_of_day
+      #                     else
+      #                       start_date.to_datetime.next_day.at_midday
+      #                     end
       metaslot.open_end = true
     end
     strip_whitespaces(metaslot)

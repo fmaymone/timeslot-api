@@ -136,13 +136,14 @@ module Share
             }
           }
         },
-        reply_to_addresses: [destination],
-        return_path: 'invalid_email_address@timeslot.com'
+        reply_to_addresses: [user.email], # what do we do if no address is set?
+        # bounce and complain notifications are forwarded by aws to this address:
+        return_path: 'email_monitoring@timeslot.rocks'
       }
       # tmp hack to notify airbrake when an email gets send out
       # TODO: improve
       Airbrake.notify(StandardError, news: 'sending email via AWS SNS',
-                      mailtype: 'password forget',
+                      mailtype: 'share email',
                       destination: destination,
                       content: content)
       begin

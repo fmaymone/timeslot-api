@@ -4,10 +4,15 @@ class ClawMachine
   # forwards search queries to the 'Claw Machine' (ElasticSearch Service)
   include TSErrors
 
-  def search(category: nil, query_params: nil)
+  def initialize(current_user = nil)
+    @current_user = current_user
+  end
+
+  def search(category: nil, query_params: [])
     uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
 
     uri.path += category if category
+    query_params[:userId] = @current_user.id if @current_user
     uri.query = URI.encode_www_form(query_params) if query_params
 
     user = ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME']
@@ -31,4 +36,8 @@ class ClawMachine
     result = Oj.load(search)
     result['_links'].keys
   end
+
+  private
+
+  attr_reader :current_user
 end
