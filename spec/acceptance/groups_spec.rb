@@ -1,4 +1,5 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
