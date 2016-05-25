@@ -1510,6 +1510,95 @@ RSpec.describe Feed, :activity, :async, type: :model do
     end
   end
 
+  context "Public Activity (Discovery)", :redis do
+    let!(:user) { create(:user) }
+
+    context "Discover activities from public users" do
+      let!(:public_user) { create(:user, role: 'public_user') }
+      let!(:slots) { [create(:std_slot_public, :with_likes, :with_ios_location,
+                             creator: public_user),
+                      create(:std_slot_public, :with_likes, :with_comments,
+                             creator: public_user),
+                      create(:std_slot_public, :with_likes, :with_notes,
+                             creator: public_user)] }
+      let!(:group) { create(:group, owner: public_user) }
+
+      before(:each) do
+        # Perform an activities
+        slots.each{|slot| slot.create_activity('create') }
+        group.create_activity('create')
+        slots.last.create_like(user)
+      end
+
+      it "Feeds retrieves creation of slots and groups" do
+        expect(Feed.user_feed(user.id).as_json.count).to be(1)
+
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(4) # +4 public activities
+        expect(discovery_feed.first['type']).to eq('Group')
+        expect(discovery_feed.first['action']).to eq('create')
+        expect(discovery_feed.first['data']['target']['id']).to eq(group.uuid)
+        expect(discovery_feed.first['data']['actor']['id']).to be(public_user.id)
+        expect(discovery_feed.last['type']).to eq('Slot')
+        expect(discovery_feed.last['action']).to eq('create')
+        expect(discovery_feed.last['data']['target']['id']).to be(slots.first.id)
+        expect(discovery_feed.last['data']['actor']['id']).to be(public_user.id)
+
+        slots[0].delete
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(3) # +4-1 public activities
+
+        slots[1].delete
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(2) # +4-2 public activities
+
+        group.delete
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(1) # +4-3 public activities
+
+        slots[2].delete
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(0) # +4-4 public activities
+
+        expect(Feed.user_feed(user.id).as_json.count).to be(0)
+      end
+    end
+
+    context "Discover activities from Global Slots" do
+      let!(:global_user) { create(:user) }
+      let!(:slots) { create_list(:global_slot, 3, creator: global_user) }
+      before(:each) do
+        # Perform activities
+        slots.each(&:create_activity)
+      end
+
+      it "Feeds retrieves creation of slots and groups" do
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(3) # +3 public activities
+        expect(discovery_feed.first['type']).to eq('Slot')
+        expect(discovery_feed.first['action']).to eq('create')
+        expect(discovery_feed.first['data']['target']['id']).to eq(slots.last.id)
+        expect(discovery_feed.first['data']['actor']['id']).to be(global_user.id)
+        expect(discovery_feed.last['type']).to eq('Slot')
+        expect(discovery_feed.last['action']).to eq('create')
+        expect(discovery_feed.last['data']['target']['id']).to be(slots.first.id)
+        expect(discovery_feed.last['data']['actor']['id']).to be(global_user.id)
+
+        slots[0].remove_activity
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(2) # +3-1 public activities
+
+        slots[1].remove_activity
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(1) # +3-2 public activities
+
+        slots[2].remove_activity
+        discovery_feed = Feed.discovery_feed(user.id).as_json
+        expect(discovery_feed.count).to be(0) # +3-3 public activities
+      end
+    end
+  end
+
   context "Remove Activities based on Dynamic Social Context", :redis do
     let!(:creator) { create(:user) }
     let!(:friend) { create(:user) }

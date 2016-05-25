@@ -33,7 +33,7 @@ namespace :feed do
   task build: :environment do
 
     # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
-    MAX_ACTIVITIES = 1000
+    MAX_ACTIVITIES = 2000
 
     # Turn off push notifications globally
     Rails.application.config.SKIP_PUSH_NOTIFICATION = true
@@ -48,6 +48,10 @@ namespace :feed do
 
       # Empty redis storage before start
       $redis.flushall
+
+      ## Distribute Public Activities ##
+
+      GlobalSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10).each(&:create_activity)
 
       ## Collect Activities + Associations ##
 
@@ -70,25 +74,23 @@ namespace :feed do
         # determine limit (reversed: starting from end)
         should_be_distributed = length - index < MAX_ACTIVITIES
 
-        if item.deleted_at.nil?
-          case item.class
-          when Friendship
-            if item.established?
-              # friends follows each other
-              item.user.add_follower(item.friend)
-              item.friend.add_follower(item.user)
-              item.create_activity('accept') if should_be_distributed
-            else
-              # restore all open friend requests also if max activities was reached
-              item.create_activity unless should_be_distributed
-            end
-          when Membership
-            item.group.add_follower(item.user) if item.active?
-          # when Containership
-          #   item.slot.add_follower(item.group) # actually not supported
-          when Passengership
-            item.slot.add_follower(item.user)
+        case item.class
+        when Friendship
+          if item.established?
+            # friends follows each other
+            item.user.add_follower(item.friend)
+            item.friend.add_follower(item.user)
+            item.create_activity('accept') if should_be_distributed
+          else
+            # restore all open friend requests also if max activities was reached
+            item.create_activity unless should_be_distributed
           end
+        when Membership
+          item.group.add_follower(item.user) if item.active?
+        # when Containership
+        #   item.slot.add_follower(item.group) # actually not supported
+        when Passengership
+          item.slot.add_follower(item.user)
         end
 
         # restore activities unless max activity count was reached
