@@ -49,10 +49,6 @@ namespace :feed do
       # Empty redis storage before start
       $redis.flushall
 
-      ## Distribute Public Activities ##
-
-      GlobalSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10).each(&:create_activity)
-
       ## Collect Activities + Associations ##
 
       storage = Friendship.includes(:user, :friend).where(deleted_at: nil) +
@@ -64,13 +60,17 @@ namespace :feed do
                 Like.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
                 Comment.where(deleted_at: nil).last(MAX_ACTIVITIES / 2) +
                 Group.where(deleted_at: nil).last(MAX_ACTIVITIES / 10) +
-                StdSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10)
+                StdSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10) +
+                GlobalSlot.where(deleted_at: nil).last(MAX_ACTIVITIES / 10)
 
       ## Re-Build Activities + Follower Model ##
 
       length = storage.count
+      distribution_count = 0
 
       storage.sort_by(&:created_at).each_with_index do |item, index|
+        puts "[#{index}/#{length}] Create Activity: #{item.class.name}@#{item.id}"
+
         # determine limit (reversed: starting from end)
         should_be_distributed = length - index < MAX_ACTIVITIES
 
@@ -95,11 +95,13 @@ namespace :feed do
 
         # restore activities unless max activity count was reached
         item.create_activity if should_be_distributed
+        distribution_count += item.activity_context.flatten.count
       end
 
       puts "The follower model was successfully regenerated."
       puts "All feeds was successfully regenerated."
-      puts "ACTIVITY OBJECTS: #{(storage.count)}"
+      puts "ACTIVITY OBJECTS: #{length}"
+      puts "ACTIVITY RECIPIENTS: #{distribution_count}"
     rescue => e
       puts "An error has occurred during the rebuilding process: #{e}"
     ensure

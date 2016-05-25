@@ -364,7 +364,7 @@ module Feed
           next: nil,
           prev: nil,
           results: feed
-      }
+      }.as_json
     end
 
     private def enrich_activity(target_key, index = nil)
@@ -391,7 +391,7 @@ module Feed
     end
 
     private def enrich_feed(feed, view, viewer)
-      feed[:results].each do |activity|
+      feed['results'].each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
         # Get the first actor (from shared objects)
@@ -411,17 +411,17 @@ module Feed
         # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
 
-        # case activity['action']
-        # when 'request'
-        #   actor['friendshipState'] = 'pending passive'
-        #   target['friendshipState'] = 'pending active'
-        # when 'friendship', 'accept'
-        #   actor['friendshipState'] = 'friend'
-        #   target['friendshipState'] = 'friend'
-        # when 'unfriend'
-        #   actor['friendshipState'] = 'stranger'
-        #   target['friendshipState'] = 'stranger'
-        # end
+        case activity['action']
+        when 'request'
+          actor['friendshipState'] = 'pending passive'
+          target['friendshipState'] = 'pending active'
+        when 'friendship', 'accept'
+          actor['friendshipState'] = 'friend'
+          target['friendshipState'] = 'friend'
+        when 'unfriend'
+          actor['friendshipState'] = 'stranger'
+          target['friendshipState'] = 'stranger'
+        end
 
         # Update message params with enriched message
         activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
@@ -457,7 +457,7 @@ module Feed
         )
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed[:results].delete_if { |activity| activity['message'].blank? } # || activity['target'].nil?
+      feed['results'].delete_if { |activity| activity['message'].blank? } # || activity['target'].nil?
       feed
     end
 
@@ -527,7 +527,7 @@ module Feed
       # NOTE: Actually we use a maximum of 1000 activities from the target-feed fo each aggregated page
       feed = paginate(feed_index, limit: 1000, offset: offset)
       # Loop through all feeds (has a break statement, offset is optional)
-      feed[:results].each_with_index do |post, i|
+      feed['results'].each_with_index do |post, i|
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
         group = post['group'] = "group:#{post['target']}" ##{post['time']}
@@ -578,7 +578,7 @@ module Feed
           next: aggregated_feed.any? ? aggregated_feed.last['cursor'].to_s : nil,
           prev: nil,
           results: aggregated_feed
-      }
+      }.as_json
     end
 
     ## Cache Helpers ##
