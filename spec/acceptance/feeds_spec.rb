@@ -217,29 +217,30 @@ resource "Feeds", :activity, :async do
         slots[0].create_comment(public_user, 'This is another test comment.')
 
         do_request
+        results = json['results']
         expect(response_status).to eq(200)
-        expect(json.length).to be(4)
+        expect(results.length).to be(4)
 
-        json.reverse!.each_with_index do |activity, index|
+        results.reverse!.each_with_index do |activity, index|
           expect(activity).to have_key("id")
           expect(activity).to have_key("action")
-          expect(activity).to have_key("type")
+          #expect(activity).to have_key("type")
           expect(activity).to have_key("target")
           expect(activity).to have_key("message")
-          expect(activity).to have_key("data")
+          expect(activity).to have_key("group")
           expect(activity).to have_key("actors")
           expect(activity).not_to have_key("actor")
           # last action is a group activity
-          if index < json.length - 1
-            expect(activity['type']).to eq("Slot")
+          if index < results.length - 1
+            #expect(activity['type']).to eq("Slot")
             expect(activity['action']).to eq("create")
-            expect(activity['actors'].first.to_i).to eq(public_user.id)
-            expect(activity['target'].to_i).to eq(slots[index].id)
+            expect(activity['actors'].first['id']).to eq(public_user.id)
+            expect(activity['target']).to eq('slot')
           else
-            expect(activity['type']).to eq("Group")
+            #expect(activity['type']).to eq("Group")
             expect(activity['action']).to eq("create")
-            expect(activity['actors'].first.to_i).to eq(public_user.id)
-            expect(activity['target'].to_i).to eq(group.id)
+            expect(activity['actors'].first['id']).to eq(public_user.id)
+            expect(activity['target']).to eq('group')
           end
         end
       end
