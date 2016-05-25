@@ -55,10 +55,10 @@ RSpec.describe MetaSlot, type: :model do
     context "start_date after noon" do
       before { meta_slot.update(start_date: "2014-09-28T15:31:02Z") }
 
-      it "sets the enddate to noon of next day" do
+      it "sets the enddate to end of start day" do
         meta_slot.update(end_date: nil)
         expect(meta_slot.end_date)
-          .to eq meta_slot.start_date.to_datetime.next_day.at_midday
+          .to eq meta_slot.start_date.to_datetime.at_end_of_day
       end
     end
 
