@@ -2,9 +2,13 @@
 
 ## Signup - Creates a public user profile
 
-### POST /v1/users
+### POST /v1/users/public
 
 Either an email or phone number must be provided
+
+returns 401 if user is not logged in
+
+returns 403 if user account has no email
 
 returns 422 if parameters are missing
 
@@ -12,7 +16,7 @@ returns 422 if parameters are invalid
 
 ### Parameters
 
-Name : username *- required -*
+Name : username
 Description : Username of user (max. 50 characters)
 
 Name : email
@@ -24,7 +28,7 @@ Description : Phone number of user (max. 35 characters)
 Name : lang
 Description : Language of user (2 characters, ISO 639-1)
 
-Name : password *- required -*
+Name : password
 Description : Password for user (min. 5 &amp; max. 72 characters)
 
 Name : role *- required -*
@@ -144,24 +148,32 @@ Description : Authentication Token for the user to be set as a HTTP header in su
 
 <pre>Content-Type: application/json
 Accept: application/json
+Authorization: Token token=9TaZ8Fc_Vh-kZcS7tcoORtXf7ic
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/users</pre>
+<pre>POST /v1/users/public</pre>
 
 #### Body
 ```javascript
-
+{
+  "username" : "foo",
+  "email" : "someone@timeslot.com",
+  "lang" : "de",
+  "password" : "secret-thing",
+  "role" : "public_user"
+}
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;role&quot;:&quot;public_user&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/public&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;role&quot;:&quot;public_user&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Accept: application/json&quot;</pre>
+	-H &quot;Accept: application/json&quot; \
+	-H &quot;Authorization: Token token=9TaZ8Fc_Vh-kZcS7tcoORtXf7ic&quot;</pre>
 
 ### Response
 
@@ -172,11 +184,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;a3900aff77da003b452cc4500bc073a9&quot;
+ETag: W/&quot;7adc65f565298c43c022193698e9fb66&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: feb7aedc-76cf-4a9b-91da-32d2a0704f6f
-X-Runtime: 0.128480
-Content-Length: 946</pre>
+X-Request-Id: 895a1ed6-e1de-4122-ad81-7cace964e71b
+X-Runtime: 0.023669
+Content-Length: 943</pre>
 
 #### Status
 
@@ -185,5 +197,45 @@ Content-Length: 946</pre>
 #### Body
 
 ```javascript
-
+{
+  "id" : 124,
+  "username" : "foo",
+  "createdAt" : "2016-05-25T10:18:06.415Z",
+  "updatedAt" : "2016-05-25T10:18:06.415Z",
+  "deletedAt" : null,
+  "image" : "",
+  "location" : null,
+  "slotCount" : 0,
+  "calendarCount" : 2,
+  "friendsCount" : 0,
+  "lang" : "de",
+  "email" : "user145@email.com",
+  "emailVerified" : false,
+  "phone" : null,
+  "phoneVerified" : false,
+  "publicUrl" : null,
+  "push" : true,
+  "myCalendarUuid" : "8f8bf696-32e1-459c-a230-25df494a4376",
+  "friendsCalendarUuid" : "cf87b4cb-7fb0-479a-afda-85109e484dde",
+  "allMySlotsUuid" : "e6a04dc2-d354-46be-9363-50df06e5c91e",
+  "myCreatedSlotsUuid" : "4cc33ca6-d260-4d45-8b63-ad28a2e0784d",
+  "myPrivateSlotsUuid" : "1a938920-e16b-4ceb-b460-8de142051112",
+  "myFriendSlotsUuid" : "58393843-3754-48a6-bdf3-99a4e76ccfae",
+  "myPublicSlotsUuid" : "deb73a7c-64f7-4940-972b-c87e708568d7",
+  "friendships" : [],
+  "memberships" : [
+    {
+      "groupId" : 25,
+      "state" : "active",
+      "notifications" : true
+    },
+    {
+      "groupId" : 26,
+      "state" : "active",
+      "notifications" : true
+    }
+  ],
+  "friendshipState" : "myself",
+  "authToken" : "FNzoOFCT1h9wmhsZ5pAN4xVM9zs"
+}
 ```

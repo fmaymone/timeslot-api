@@ -21,7 +21,7 @@ Description : Array of the Media Items to delete
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=aX9KRF161wObppMcOzLl_eEFFCo
+Authorization: Token token=OoNfmOd3c2LcsfIed9Ge_kcOSOQ
 Host: example.org
 Cookie: </pre>
 
@@ -31,7 +31,28 @@ Cookie: </pre>
 
 #### Body
 ```javascript
-
+{
+  "media" : [
+    {
+      "id" : 16
+    },
+    {
+      "id" : 15
+    },
+    {
+      "id" : 14
+    },
+    {
+      "id" : 13
+    },
+    {
+      "id" : 12
+    },
+    {
+      "id" : 11
+    }
+  ]
+}
 ```
 
 
@@ -39,7 +60,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/21/media&quot; -d &#39;{&quot;media&quot;:[{&quot;id&quot;:16},{&quot;id&quot;:15},{&quot;id&quot;:14},{&quot;id&quot;:13},{&quot;id&quot;:12},{&quot;id&quot;:11}]}&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=aX9KRF161wObppMcOzLl_eEFFCo&quot;</pre>
+	-H &quot;Authorization: Token token=OoNfmOd3c2LcsfIed9Ge_kcOSOQ&quot;</pre>
 
 ### Response
 
@@ -51,8 +72,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: d8887518-3a7a-4c08-9bb2-ac2ab6cb4991
-X-Runtime: 0.955209
+X-Request-Id: ac79e80f-874b-4c7b-92c6-bf54b5863a65
+X-Runtime: 0.210273
 Content-Length: 0</pre>
 
 #### Status
