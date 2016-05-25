@@ -82,6 +82,89 @@ resource "Users" do
     end
   end
 
+  post "/v1/users/public" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :username, "Username of user (max. 50 characters)",
+              required: false
+    parameter :email, "Email of user (max. 254 characters)"
+    parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
+    parameter :password, "Password for user (min. 5 & max. 72 characters)",
+              required: false
+
+    include_context "current user response fields"
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
+    let(:username) { "foo" }
+    let(:email) { "someone@timeslot.com" }
+    let(:password) { "secret-thing" }
+    let(:lang) { "de" }
+
+    context "Signup and creates a public user profile" do
+      parameter :role,
+                "Must be define the users role: 'public_user'",
+                required: true
+
+      let(:role) { 'public_user' }
+
+      example "Signup - Creates a public user profile",
+              document: :v1 do
+        explanation "Either an email or phone number must be provided\n\n" \
+                    "returns 401 if user is not logged in\n\n" \
+                    "returns 403 if user account has no email\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key 'id'
+        expect(json).to have_key 'username'
+        expect(json).to have_key 'email'
+        expect(json).to have_key 'authToken'
+        expect(json).to have_key 'push'
+        expect(json['email']).not_to eq('someone@timeslot.com')
+        expect(json['email']).to eq(current_user.email)
+
+        expect(User.last.reload.public_user?).to be(true)
+      end
+
+      context "Validates creation of a public user profile" do
+        let(:auth_header) { nil }
+
+        example "Signup - Doesn't creates a public user profile if user is not logged in",
+                document: false do
+          explanation "Either an email or phone number must be provided\n\n" \
+                      "returns 401 if user is not logged in\n\n" \
+                      "returns 403 if user account has no email\n\n" \
+                      "returns 422 if parameters are missing\n\n" \
+                      "returns 422 if parameters are invalid"
+          do_request
+
+          expect(response_status).to eq(401)
+        end
+      end
+
+      context "Validates creation of a public user profile" do
+        let!(:current_user) { create(:user, :with_password, email: nil) }
+
+        example "Signup - Doesn't creates a public user profile if user has no email",
+                document: false do
+          explanation "Either an email or phone number must be provided\n\n" \
+                      "returns 401 if user is not logged in\n\n" \
+                      "returns 403 if user account has no email\n\n" \
+                      "returns 422 if parameters are missing\n\n" \
+                      "returns 422 if parameters are invalid"
+          do_request
+
+          expect(response_status).to eq(403)
+        end
+      end
+    end
+  end
+
   post "/v1/users/signin", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"

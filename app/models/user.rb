@@ -99,7 +99,7 @@ class User < ActiveRecord::Base
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
             length: { maximum: 254 },
-            uniqueness: { case_sensitive: false },
+            uniqueness: { if: :basic?, case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
             allow_nil: true # if: 'self.email'
 
@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
                             only_integer: true,
                             allow_nil: true
   validates :phone,
-            uniqueness: true,
+            uniqueness: { if: :basic? },
             length: { maximum: 35 },
             allow_nil: true
 
@@ -544,23 +544,21 @@ class User < ActiveRecord::Base
   # If there is a timeslot account with an unverified email address and another
   # user tries to log in with facebook and has this email verified in facebook,
   # the other user can not log in via facebook (gets 422)
-  def self.detect_or_create(username, email)
-    user = email ? User.find_by(email: email) : nil
+  def self.detect_or_create(username, email, role = 'basic')
+    user = User.find_by(email: email, role: role) if email
     if user
       msg = "#{email} is already used by other timeslot user (unverified email)"
       Airbrake.notify(msg)
       fail ActiveRecord::StatementInvalid, msg unless user.email_verified
     end
-    user || User.create(username: username, email: email)
+    user || User.create(username: username, email: email, role: role)
   end
 
-  def self.sign_in(email: nil, phone: nil, device: nil, password:)
+  def self.sign_in(email: nil, phone: nil, role: 'basic', device: nil, password:)
     if email
-      user = User.find_by email: email
+      user = User.find_by(email: email, role: role)
     elsif phone
-      user = User.find_by phone: phone
-    else
-      user = nil
+      user = User.find_by(phone: phone, role: role)
     end
     current_user = user.try(:authenticate, password)
     if current_user

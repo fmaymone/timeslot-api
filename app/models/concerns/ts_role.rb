@@ -4,11 +4,12 @@ module TSRole
     base.enum role:
                 {
                   basic: 0, # real humans
-                  webview: 1, # for content sharing
+                  public_user: 1, # public users
                   crawler_source: 2, # will be removed / changed
                   global_slot_category: 3,
                   curator: 4, # adds moderated content to timeslot
                   timeslot_calendar: 5 # for calendars created by curators
+                  #webview: 6, # for content sharing
                 }
     base.after_initialize :set_default_role, if: :new_record?
   end

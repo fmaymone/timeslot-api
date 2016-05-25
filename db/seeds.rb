@@ -6,19 +6,20 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Provider.create(name: 'facebook')
-Provider.create(name: 'twitter')
+Provider.find_or_create_by(name: 'facebook')
+Provider.find_or_create_by(name: 'twitter')
 
-# Pseudo-User for the crawler data/slots aka sources
-User.create(username: 'Timeslot Official',
-            role: 1,
-            email: 'info@timeslot.com')
 # for imports via web-importer
-User.create(username: 'Web Importer',
-            role: 4,
-            email: 'web-importer@timeslot.com',
-            password: ENV['WEB_IMPORTER_PASSWORD'])
+begin
+  User.create(username: 'Web Importer',
+              role: 4,
+              email: 'web-importer@timeslot.com',
+              password: ENV['WEB_IMPORTER_PASSWORD'])
+rescue ActiveRecord::RecordNotUnique
+end
+
 # calendars with global slots
-User.create(username: 'Global Importer',
-            role: 4,
-            email: 'global-importer@timeslot.com')
+User.find_or_create_by(
+    username: 'Global Importer',
+    role: 4,
+    email: 'global-importer@timeslot.com')

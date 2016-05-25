@@ -27,7 +27,12 @@ class Friendship < ActiveRecord::Base
     # if the second user is (re-) initiating a broken friendship again
     # TODO: I wan't to do a major upgrade on the friendships (TML-152)
     update!(friend: user, user: active_user) if active_user == friend
-    create_activity('request')
+    # Accept friendship automatically if user profile is public
+    if friend.public_user?
+      accept
+    else
+      create_activity
+    end
   end
 
   def offered?

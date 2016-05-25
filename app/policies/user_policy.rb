@@ -17,6 +17,11 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  # true if a user is logged in
+  def create_public?
+    current_user?
+  end
+
   # true if a user with this email exists
   # however, if this wouldn't be the case the API
   # would already have returned a 404
