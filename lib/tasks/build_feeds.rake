@@ -69,8 +69,6 @@ namespace :feed do
       distribution_count = 0
 
       storage.sort_by(&:created_at).each_with_index do |item, index|
-        puts "[#{index}/#{length}] Create Activity: #{item.class.name}@#{item.id}"
-
         # determine limit (reversed: starting from end)
         should_be_distributed = length - index < MAX_ACTIVITIES
 
@@ -94,8 +92,13 @@ namespace :feed do
         end
 
         # restore activities unless max activity count was reached
-        item.create_activity if should_be_distributed
-        distribution_count += item.activity_context.flatten.count
+        if should_be_distributed
+          item.create_activity
+          distribution_count += item.activity_context.flatten.count
+          puts "[#{index}/#{length}] Create Activity: #{item.class.name}@#{item.id}"
+        else
+          puts "[#{index}/#{length}] Skip Activity"
+        end
       end
 
       puts "The follower model was successfully regenerated."
