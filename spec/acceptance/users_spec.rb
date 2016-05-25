@@ -125,6 +125,8 @@ resource "Users" do
         expect(json).to have_key 'email'
         expect(json).to have_key 'authToken'
         expect(json).to have_key 'push'
+        expect(json['email']).not_to eq('someone@timeslot.com')
+        expect(json['email']).to eq(current_user.email)
 
         expect(User.last.reload.public_user?).to be(true)
       end

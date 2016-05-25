@@ -35,8 +35,7 @@ RSpec.describe NewUser, type: :service do
         # create public profile
 
         user_params[:role] = 'public_user'
-
-        expect { service.create_new_user }.to change(User, :count)
+        expect { service.create_new_user }.to change(User, :count).by 1
         expect(User.last.role).to eq "public_user"
         expect(User.last.public_user?).to be true
         expect(User.last.email).to eq(User.last(2)[0].email)
@@ -47,6 +46,21 @@ RSpec.describe NewUser, type: :service do
         expect { service.create_new_user }.not_to change(User, :count)
         expect(User.last.role).not_to eq "basic"
         expect(User.last.basic?).to be false
+
+        # allow further public profile with another username (check constraint)
+
+        user_params[:role] = 'public_user'
+        user_params[:username] = 'Public User'
+        expect { service.create_new_user }.to change(User, :count).by 1
+        expect(User.last.role).to eq "public_user"
+        expect(User.last.basic?).to be false
+        expect(User.last.email).to eq(User.last(2)[0].email)
+
+        # do not allow further public profile with same username (check constraint)
+
+        user_params[:role] = 'public_user'
+        user_params[:username] = 'Public User'
+        expect { service.create_new_user }.to raise_error(ActiveRecord::RecordNotUnique)
       end
 
       it "doesn't add a new device to the database" do
