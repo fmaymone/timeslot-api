@@ -58,6 +58,8 @@ class User < ActiveRecord::Base
   has_many :calendars_in_schedule, -> { merge Membership.show_slots },
            through: :memberships, source: :group
 
+  # has_many :group_slots, through: :active_groups, source: :slots
+
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, -> { includes :friend },
            class_name: Friendship, inverse_of: :user
@@ -271,9 +273,11 @@ class User < ActiveRecord::Base
     # slots.push(*group_slots.active.where(meta_slot: meta_slot))
   end
 
-  # def shared_group_slots(user)
-  #   group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
-  # end
+  def shared_group_slots(user)
+    groups = user.active_groups.where(id: active_group_ids)
+    slot_ids = Containership.select(:slot_id).where(group_id: groups)
+    BaseSlot.where(id: slot_ids)
+  end
 
   def visible_slots_counter(user, slot_class)
     SlotsCollector.new.active_slots_count(current_user: user, user: self,
