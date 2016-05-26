@@ -112,6 +112,42 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
 
+    context "json preview slots" do
+      let!(:user) { create(:user, :with_public_slot) }
+      let(:past_1) { create(:std_slot_public, title: 'past 1', owner: user,
+                            start_date: Time.zone.now.last_year.last_month) }
+      let(:future_1) { create(:std_slot_public, title: 'future 1', owner: user,
+                              start_date: Time.zone.tomorrow) }
+      let(:future_2) { create(:std_slot_public, title: 'future 2', owner: user,
+                              start_date: Time.zone.tomorrow.next_week) }
+      let(:future_3) { create(:std_slot_public, title: 'future 3', owner: user,
+                              start_date: Time.zone.tomorrow.next_month) }
+      let(:future_4) { create(:std_slot_public, title: 'future 4', owner: user,
+                              start_date: Time.zone.tomorrow.next_year) }
+      let(:future_5) { create(:std_slot_public, title: 'future 5', owner: user,
+                              start_date: Time.zone.now.next_year.next_month) }
+
+      let!(:passengerships) do
+        create(:passengership, user: user, slot: future_1)
+        create(:passengership, user: user, slot: future_2)
+        create(:passengership, user: user, slot: future_3)
+        create(:passengership, user: user, slot: future_4)
+        create(:passengership, user: user, slot: future_5)
+        create(:passengership, user: user, slot: past_1)
+      end
+
+      it "returns up to 4 upcoming slots for the user" do
+        get "/v1/users/#{user.id}", {}, auth_header
+
+        expect(json).to have_key('previewSlots')
+        expect(json['previewSlots'].length).to eq 4
+        expect(response.body).to include future_1.title
+        expect(response.body).to include future_2.title
+        expect(response.body).to include future_3.title
+        expect(response.body).to include future_4.title
+      end
+    end
+
     context "return group membership via json" do
       let!(:membership) { create(:membership, :active, user: current_user) }
       let!(:other_membership) { create(:membership, :active) }
@@ -320,11 +356,6 @@ RSpec.describe "V1::Users", type: :request do
         get "/v1/users/#{current_user.id}/slots", {}, auth_header
         expect(json.length).to eq slots.size
       end
-
-      # it "excludes groupslots of the current_user" do
-      #   get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      #   expect(response.body).not_to include group_slot.title
-      # end
     end
 
     context "with pagination", :keep_data do

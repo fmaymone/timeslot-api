@@ -6,10 +6,14 @@ module V1
     # GET /v1/users/1
     def show
       authorize :user
-      @user = User.find(params[:id])
-      friendship = @user.friendship(current_user)
+      user = User.find(params[:id])
+      friendship = user.friendship(current_user)
 
-      render :show, locals: { user: @user, friendship: friendship }
+      collector = SlotsCollector.new(mode: 'upcoming', limit: 4)
+      slots = collector.user_preview_slots(current_user: current_user,
+                                           user: user)
+
+      render :show, locals: { user: user, friendship: friendship, slots: slots }
     end
 
     # POST /v1/users

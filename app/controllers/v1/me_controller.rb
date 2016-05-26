@@ -177,7 +177,8 @@ module V1
       friendship = current_user.initiate_friendship new_friend.id
 
       render "v1/users/show", locals: { user: new_friend,
-                                        friendship: friendship }
+                                        friendship: friendship,
+                                        slots: []}
     end
 
     # DELETE /v1/me/friendship/1
@@ -190,7 +191,8 @@ module V1
       friendship = current_user.invalidate_friendship no_friend.id
 
       render "v1/users/show", locals: { user: no_friend,
-                                        friendship: friendship }
+                                        friendship: friendship,
+                                        slots: []}
     end
 
     # POST /v1/me/add_friends
