@@ -29,6 +29,8 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # scope :publics, -> { where slot_type: [3, 15] }
+
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 

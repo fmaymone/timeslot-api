@@ -9,7 +9,7 @@ Rails.application.configure do
 
   # FIX: Circular dependency detected while autoloading constant Feed (RuntimeError)
   # http://stackoverflow.com/questions/18013055/circular-dependency-detected-while-autoloading-constant-user
-  config.reload_classes_only_on_change = false
+  # config.reload_classes_only_on_change = false
 
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
