@@ -41,7 +41,7 @@ class Group < ActiveRecord::Base
 
   def preview_slots
     latest_slots = slots.joins(:meta_slot).order("start_date DESC").first(4)
-    slots.upcoming.count > 2 ? slots.upcoming.first(4) : latest_slots
+    slots.upcoming.count > 3 ? slots.upcoming.first(4) : latest_slots
   end
 
   def add_slots(muids)

@@ -963,8 +963,9 @@ resource "Users" do
       expect(response_body).to include shared_nonpublic_calendar.name
       expect(response_body).
         not_to include user_with_calendars.groups.non_public.first.name
-      expect(json.length).to eq 4
-      expect(json.first).to have_key('previewSlots')
+      expect(json).to have_key('result')
+      expect(json['result'].first).to have_key('previewSlots')
+      expect(json['result'].length).to eq 4
       expect(response_body).to include public_group.slots.first.title
     end
   end

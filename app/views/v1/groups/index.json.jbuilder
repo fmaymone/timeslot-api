@@ -1,4 +1,4 @@
-json.array!(@groups) do |group|
+json.result @groups do |group|
   json.partial! 'v1/groups/group', group: group
 
   json.preview_slots group.preview_slots do |slot|
