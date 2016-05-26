@@ -39,6 +39,11 @@ class Group < ActiveRecord::Base
                     notes: [:creator]])
   end
 
+  def preview_slots
+    latest_slots = slots.joins(:meta_slot).order("start_date DESC").first(4)
+    slots.upcoming.count > 2 ? slots.upcoming.first(4) : latest_slots
+  end
+
   def add_slots(muids)
     muids.each do |muid|
       slot = GlobalSlot.find_or_create(muid)

@@ -685,4 +685,102 @@ RSpec.describe "V1::Users", type: :request do
       end
     end
   end
+
+  describe "GET /v1/users/:id/calendars" do
+    let(:user_with_calendar) { create(:user) }
+    let!(:public_group) do
+      public_group = create(:group, public: true)
+      create(:membership, :active, group: public_group, user: user_with_calendar)
+      public_group
+    end
+
+    let(:past_1) { create(:std_slot_public, start_date: Time.zone.yesterday,
+                          title: 'past 1') }
+    let(:past_2) { create(:std_slot_public, title: 'past 2',
+                          start_date: Time.zone.yesterday.last_week) }
+    let(:past_3) { create(:std_slot_public, title: 'past 3',
+                          start_date: Time.zone.yesterday.last_month) }
+    let(:past_4) { create(:std_slot_public, title: 'past 4',
+                          start_date: Time.zone.yesterday.last_year) }
+    let(:past_5) { create(:std_slot_public, title: 'past 5',
+                          start_date: Time.zone.now.last_year.last_month) }
+    let(:future_1) { create(:std_slot_public, title: 'future 1 slot',
+                            start_date: Time.zone.tomorrow) }
+    let(:future_2) { create(:std_slot_public, title: 'future 2 slot',
+                            start_date: Time.zone.tomorrow.next_week) }
+    let(:future_3) { create(:std_slot_public, title: 'future 3 slot',
+                            start_date: Time.zone.tomorrow.next_month) }
+    let(:future_4) { create(:std_slot_public, title: 'future 4 slot',
+                            start_date: Time.zone.tomorrow.next_year) }
+    let(:future_5) { create(:std_slot_public, title: 'future 5 slot',
+                            start_date: Time.zone.now.next_year.next_month) }
+    let!(:basic_containerships) do
+      create(:containership, group: public_group, slot: past_1)
+      create(:containership, group: public_group, slot: past_2)
+      create(:containership, group: public_group, slot: past_3)
+      create(:containership, group: public_group, slot: past_4)
+      create(:containership, group: public_group, slot: past_5)
+    end
+
+    let(:id) { user_with_calendars.id }
+
+    context "more than 3 upcoming slots" do
+      let!(:containerships) do
+        create(:containership, group: public_group, slot: future_1)
+        create(:containership, group: public_group, slot: future_2)
+        create(:containership, group: public_group, slot: future_3)
+        create(:containership, group: public_group, slot: future_4)
+        create(:containership, group: public_group, slot: future_5)
+      end
+
+      it "returns 4 preview slots for every group" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include future_1.title
+        expect(res).to include future_2.title
+        expect(res).to include future_3.title
+        expect(res).to include future_4.title
+        expect(res).not_to include future_5.title
+        expect(res).not_to include past_1.title
+      end
+    end
+
+    context "less than 4 upcoming slots" do
+      let!(:containerships) do
+        create(:containership, group: public_group, slot: future_3)
+        create(:containership, group: public_group, slot: future_5)
+      end
+
+      it "returns 4 preview slots" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include future_3.title
+        expect(res).to include future_5.title
+        expect(res).to include past_1.title
+        expect(res).to include past_2.title
+        expect(res).not_to include past_3.title
+      end
+    end
+
+    context "no upcoming slots" do
+      it "returns 4 preview slots" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include past_1.title
+        expect(res).to include past_2.title
+        expect(res).to include past_3.title
+        expect(res).to include past_4.title
+        expect(res).not_to include past_5.title
+      end
+    end
+  end
 end
