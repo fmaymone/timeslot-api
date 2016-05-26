@@ -300,6 +300,7 @@ resource "Search" do
         explanation "Forwards a search request to the Elastic Search Service " \
                     "for global slots from the data team.\n\n" \
                     "returns 422 if parameters invalid"
+        skip 'movie pilot is having issues'
         do_request
 
         expect(response_status).to eq(200)
@@ -340,13 +341,13 @@ resource "Search" do
       end
     end
 
-    describe "soccer" do
-      let(:category) { 'soccer' }
-      let(:q) { 'Borussia' }
+    describe "concerts" do
+      let(:category) { 'concerts' }
+      let(:q) { 'proje' }
       let(:moment) { '2016-04-05' }
       let(:limit) { 5 }
 
-      example "Soccer - Find global slots", document: :v1 do
+      example "Concerts - Find global slots", document: :v1 do
         explanation "Forwards a search request to the Elastic Search Service " \
                     "for global slots from the data team.\n\n" \
                     "returns 422 if parameters invalid"

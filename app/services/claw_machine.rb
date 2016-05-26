@@ -8,7 +8,7 @@ class ClawMachine
     @current_user = current_user
   end
 
-  def search(category: nil, query_params: [])
+  def search(category: nil, query_params: {})
     uri = URI.parse(ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL'])
 
     uri.path += category if category

@@ -345,7 +345,7 @@ resource "Slots" do
           expect(response_status).to eq(201)
           new_slot = StdSlot.unscoped.last
           expect(new_slot.end_date)
-            .to eq new_slot.start_date.to_datetime.next_day.at_noon
+            .to eq new_slot.start_date.to_datetime.at_end_of_day
           expect(json).to have_key("id")
           expect(json).to have_key("title")
           expect(json['endDate']).to be nil

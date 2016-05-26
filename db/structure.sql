@@ -1321,10 +1321,17 @@ CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
+-- Name: unique_index_through_basic_user_email_accounts; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+CREATE UNIQUE INDEX unique_index_through_basic_user_email_accounts ON users USING btree (email) WHERE ((role = 0) AND (email IS NOT NULL));
+
+
+--
+-- Name: unique_index_through_public_user_email_accounts; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_index_through_public_user_email_accounts ON users USING btree (email, username) WHERE ((role > 0) AND (email IS NOT NULL));
 
 
 --
@@ -1569,4 +1576,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160411104513');
 INSERT INTO schema_migrations (version) VALUES ('20160416150256');
 
 INSERT INTO schema_migrations (version) VALUES ('20160417140125');
+
+INSERT INTO schema_migrations (version) VALUES ('20160510125032');
 

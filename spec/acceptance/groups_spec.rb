@@ -1,4 +1,5 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
@@ -848,6 +849,7 @@ resource "Groups" do
                     "name doesn't match.\n\n" \
                     "returns 422 if requiered parameters are missing or invalid."
 
+        skip 'no TU slots anymore???'
         group_counter = Group.count
         do_request
 
