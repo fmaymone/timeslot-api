@@ -267,15 +267,21 @@ class User < ActiveRecord::Base
 
   ## slot related ##
 
+  # TODO: I think this needs an update, add reslots and groupslots
   def active_slots(meta_slot)
-    slots = []
-    slots.push(*std_slots.active.where(meta_slot: meta_slot))
-    # slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    std_slots.active.where(meta_slot: meta_slot)
   end
 
   def shared_group_slots(user)
     groups = user.active_groups.where(id: active_group_ids)
     slot_ids = Containership.select(:slot_id).where(group_id: groups)
+    BaseSlot.where(id: slot_ids)
+  end
+
+  # TODO: write spec
+  def public_group_slots
+    groups = active_groups.public
+    slot_ids = Containership.where(group_id: groups)
     BaseSlot.where(id: slot_ids)
   end
 

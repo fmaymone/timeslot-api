@@ -314,9 +314,12 @@ RSpec.describe "V1::Me", type: :request do
       # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
-        slots.push create(:std_slot_private, owner: current_user, creator: current_user)
-        slots.push create(:std_slot_friends, owner: current_user, creator: current_user)
-        slots.push create(:std_slot_public, owner: current_user, creator: current_user)
+        slots.push create(:std_slot_private, owner: current_user,
+                          creator: current_user)
+        slots.push create(:std_slot_friends, owner: current_user,
+                          creator: current_user)
+        slots.push create(:std_slot_public, owner: current_user,
+                          creator: current_user)
         # slots.push(*create_list(:re_slot_public, 2, slotter: current_user))
         # slots.push create(:re_slot_foaf, slotter: current_user)
         # slots.push create(:re_slot_friends, slotter: current_user)
