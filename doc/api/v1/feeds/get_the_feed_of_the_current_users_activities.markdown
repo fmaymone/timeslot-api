@@ -115,7 +115,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=1DhGZZfR8kgotfWhTjBRosYv8Yk
+Authorization: Token token=w-BH5ow7iXKSV2IUjvCKlGB33_k
 Host: example.org
 Cookie: </pre>
 
@@ -127,7 +127,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=1DhGZZfR8kgotfWhTjBRosYv8Yk&quot;</pre>
+	-H &quot;Authorization: Token token=w-BH5ow7iXKSV2IUjvCKlGB33_k&quot;</pre>
 
 ### Response
 
@@ -138,11 +138,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;2e228503d7fafe9afd87547f8d45ce1e&quot;
+ETag: W/&quot;0440632d855c6ebe74fe40ac99236fb1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2e962315-a84f-4db1-ad4c-665e59f370a0
-X-Runtime: 0.017252
-Content-Length: 1769</pre>
+X-Request-Id: 2c37fbcb-33aa-4f2b-9a98-8ee5f8c96f2c
+X-Runtime: 0.011609
+Content-Length: 1815</pre>
 
 #### Status
 
@@ -151,90 +151,100 @@ Content-Length: 1769</pre>
 #### Body
 
 ```javascript
-[
-  {
-    "type" : "Slot",
-    "target" : "101",
-    "action" : "comment",
-    "time" : "2016-05-01T22:54:07.637Z",
-    "id" : "70BB0884982F471829EBE0F5DA935042E20B707D",
-    "actors" : [
-      83
-    ],
-    "message" : "You commented on the Slot: Slot title 21",
-    "data" : {
-      "target" : {
-        "id" : 101,
+{
+  "cursor" : 0,
+  "next" : null,
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "slot",
+      "action" : "comment",
+      "time" : "2016-05-25T10:47:37.505Z",
+      "id" : "043D15FEE97BCAB7BE1CAF4AA345E846DB7B345D",
+      "message" : "You commented on the Slot: {slot}",
+      "actors" : [
+        {
+          "id" : 265,
+          "username" : "User 379",
+          "createdAt" : "2016-05-25T10:47:37.501Z",
+          "updatedAt" : "2016-05-25T10:47:37.501Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
+        "id" : 106,
         "title" : "Slot title 21",
         "startDate" : "2019-09-26T07:44:02.000Z",
-        "createdAt" : "2016-05-01T22:54:07.609Z",
-        "updatedAt" : "2016-05-01T22:54:07.645Z",
+        "createdAt" : "2016-05-25T10:47:37.481Z",
+        "updatedAt" : "2016-05-25T10:47:37.511Z",
         "deletedAt" : null,
         "endDate" : "2019-10-26T07:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 81,
-          "username" : "User 194",
-          "createdAt" : "2016-05-01T22:54:07.587Z",
-          "updatedAt" : "2016-05-01T22:54:07.587Z",
+          "id" : 263,
+          "username" : "User 376",
+          "createdAt" : "2016-05-25T10:47:37.472Z",
+          "updatedAt" : "2016-05-25T10:47:37.472Z",
           "deletedAt" : null,
           "image" : ""
         },
         "notes" : [],
         "media" : [
           {
-            "mediaId" : 6,
-            "publicId" : "dfhjghjkdisudgfds7iy9",
+            "mediaId" : 456,
+            "publicId" : "dfhjghjkdisudgfds7iy369",
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-05-01T22:54:07.628Z",
+            "createdAt" : "2016-05-25T10:47:37.499Z",
             "duration" : null,
-            "title" : "Title 9"
+            "title" : "Title 369"
           },
           {
-            "mediaId" : 5,
-            "publicId" : "dfhjghjkdisudgfds7iy8",
+            "mediaId" : 455,
+            "publicId" : "dfhjghjkdisudgfds7iy368",
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-01T22:54:07.625Z",
+            "createdAt" : "2016-05-25T10:47:37.497Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 4,
-            "publicId" : "dfhjghjkdisudgfds7iy7",
+            "mediaId" : 454,
+            "publicId" : "dfhjghjkdisudgfds7iy367",
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-01T22:54:07.623Z",
+            "createdAt" : "2016-05-25T10:47:37.495Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 3,
-            "publicId" : "dfhjghjkdisudgfds7iy6",
+            "mediaId" : 453,
+            "publicId" : "dfhjghjkdisudgfds7iy366",
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.620Z"
+            "createdAt" : "2016-05-25T10:47:37.492Z"
           },
           {
-            "mediaId" : 2,
-            "publicId" : "dfhjghjkdisudgfds7iy5",
+            "mediaId" : 452,
+            "publicId" : "dfhjghjkdisudgfds7iy365",
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.617Z"
+            "createdAt" : "2016-05-25T10:47:37.490Z"
           },
           {
-            "mediaId" : 1,
-            "publicId" : "dfhjghjkdisudgfds7iy4",
+            "mediaId" : 451,
+            "publicId" : "dfhjghjkdisudgfds7iy364",
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.614Z"
+            "createdAt" : "2016-05-25T10:47:37.487Z"
           }
         ],
         "settings" : {
@@ -244,16 +254,8 @@ Content-Length: 1769</pre>
         "likerIds" : [],
         "likes" : 0,
         "commentsCounter" : 1
-      },
-      "actor" : {
-        "id" : 83,
-        "username" : "User 197",
-        "createdAt" : "2016-05-01T22:54:07.630Z",
-        "updatedAt" : "2016-05-01T22:54:07.630Z",
-        "deletedAt" : null,
-        "image" : ""
       }
     }
-  }
-]
+  ]
+}
 ```

@@ -85,13 +85,13 @@ class Device < ActiveRecord::Base
 
     has_custom_language = lang.present? && lang != I18n.default_locale
 
-    unless message[:KEY].nil?
+    unless message[:key].nil?
       I18n.locale = lang if has_custom_language
-      message_push = I18n.t(message[:KEY], message.except(:KEY))
+      message_push = I18n.t(message[:key], message.except(:key))
       if has_custom_language
         I18n.locale = I18n.default_locale
         # Default language fallback if custom language fails
-        message_push ||= I18n.t(message[:KEY], message.except(:KEY))
+        message_push ||= I18n.t(message[:key], message.except(:key))
       end
     else
       message_push = nil

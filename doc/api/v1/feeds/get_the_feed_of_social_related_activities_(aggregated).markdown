@@ -118,7 +118,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=I6xhFQmcpGGTvqg0yqIoC7fioNo
+Authorization: Token token=go_mU6hNn72Mx1eYs27CDQyEp74
 Host: example.org
 Cookie: </pre>
 
@@ -130,7 +130,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=I6xhFQmcpGGTvqg0yqIoC7fioNo&quot;</pre>
+	-H &quot;Authorization: Token token=go_mU6hNn72Mx1eYs27CDQyEp74&quot;</pre>
 
 ### Response
 
@@ -141,11 +141,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;c1e97e2719e65e6498ed59fb901e417f&quot;
+ETag: W/&quot;298fc47634adb22c873cc366ebf9b090&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 541f14d6-fd78-4851-929a-45222bc34665
-X-Runtime: 0.004740
-Content-Length: 1802</pre>
+X-Request-Id: 0d2fd4e5-bb5b-49ad-a363-635ae2c944d2
+X-Runtime: 0.004871
+Content-Length: 1827</pre>
 
 #### Status
 
@@ -154,92 +154,101 @@ Content-Length: 1802</pre>
 #### Body
 
 ```javascript
-[
-  {
-    "type" : "Slot",
-    "target" : "102",
-    "action" : "comment",
-    "time" : "2016-05-01T22:54:07.786Z",
-    "id" : "D13F741E22020FF1ACF474B09B7D42DD8F225954",
-    "actors" : [
-      87
-    ],
-    "activityCount" : 1,
-    "cursor" : "1",
-    "message" : "User 202 commented on this Slot.",
-    "data" : {
-      "target" : {
-        "id" : 102,
+{
+  "cursor" : "0",
+  "next" : "1",
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "slot",
+      "action" : "comment",
+      "time" : "2016-05-25T10:47:37.600Z",
+      "id" : "6EC189AD0D0787B54E28A7CD6C3C2929F48A6DE4",
+      "message" : "{actor} commented on this Slot.",
+      "cursor" : "1",
+      "actors" : [
+        {
+          "id" : 269,
+          "username" : "User 384",
+          "createdAt" : "2016-05-25T10:47:37.597Z",
+          "updatedAt" : "2016-05-25T10:47:37.597Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
+        "id" : 107,
         "title" : "Slot title 22",
         "startDate" : "2019-09-27T08:44:02.000Z",
-        "createdAt" : "2016-05-01T22:54:07.762Z",
-        "updatedAt" : "2016-05-01T22:54:07.790Z",
+        "createdAt" : "2016-05-25T10:47:37.579Z",
+        "updatedAt" : "2016-05-25T10:47:37.606Z",
         "deletedAt" : null,
         "endDate" : "2019-10-27T08:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 85,
-          "username" : "User 199",
-          "createdAt" : "2016-05-01T22:54:07.752Z",
-          "updatedAt" : "2016-05-01T22:54:07.752Z",
+          "id" : 267,
+          "username" : "User 381",
+          "createdAt" : "2016-05-25T10:47:37.570Z",
+          "updatedAt" : "2016-05-25T10:47:37.570Z",
           "deletedAt" : null,
           "image" : ""
         },
         "notes" : [],
         "media" : [
           {
-            "mediaId" : 12,
-            "publicId" : "dfhjghjkdisudgfds7iy15",
+            "mediaId" : 462,
+            "publicId" : "dfhjghjkdisudgfds7iy375",
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-05-01T22:54:07.779Z",
+            "createdAt" : "2016-05-25T10:47:37.594Z",
             "duration" : null,
-            "title" : "Title 15"
+            "title" : "Title 375"
           },
           {
-            "mediaId" : 11,
-            "publicId" : "dfhjghjkdisudgfds7iy14",
+            "mediaId" : 461,
+            "publicId" : "dfhjghjkdisudgfds7iy374",
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-01T22:54:07.776Z",
+            "createdAt" : "2016-05-25T10:47:37.592Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 10,
-            "publicId" : "dfhjghjkdisudgfds7iy13",
+            "mediaId" : 460,
+            "publicId" : "dfhjghjkdisudgfds7iy373",
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-01T22:54:07.773Z",
+            "createdAt" : "2016-05-25T10:47:37.590Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 9,
-            "publicId" : "dfhjghjkdisudgfds7iy12",
+            "mediaId" : 459,
+            "publicId" : "dfhjghjkdisudgfds7iy372",
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.771Z"
+            "createdAt" : "2016-05-25T10:47:37.587Z"
           },
           {
-            "mediaId" : 8,
-            "publicId" : "dfhjghjkdisudgfds7iy11",
+            "mediaId" : 458,
+            "publicId" : "dfhjghjkdisudgfds7iy371",
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.768Z"
+            "createdAt" : "2016-05-25T10:47:37.584Z"
           },
           {
-            "mediaId" : 7,
-            "publicId" : "dfhjghjkdisudgfds7iy10",
+            "mediaId" : 457,
+            "publicId" : "dfhjghjkdisudgfds7iy370",
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-01T22:54:07.766Z"
+            "createdAt" : "2016-05-25T10:47:37.582Z"
           }
         ],
         "settings" : {
@@ -249,16 +258,8 @@ Content-Length: 1802</pre>
         "likerIds" : [],
         "likes" : 0,
         "commentsCounter" : 1
-      },
-      "actor" : {
-        "id" : 87,
-        "username" : "User 202",
-        "createdAt" : "2016-05-01T22:54:07.782Z",
-        "updatedAt" : "2016-05-01T22:54:07.782Z",
-        "deletedAt" : null,
-        "image" : ""
       }
     }
-  }
-]
+  ]
+}
 ```

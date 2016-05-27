@@ -54,7 +54,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of current user activities" do
         get "/v1/feed/user", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(0)
+        expect(json['results'].length).to be(0)
       end
     end
 
@@ -62,7 +62,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of aggregated user activities" do
         get "/v1/feed/news", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(1) # activities on own content
+        expect(json['results'].length).to be(1) # activities on own content
       end
 
       context "cursor-based pagination" do
@@ -77,7 +77,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
           end
           # Determine pages
           get "/v1/feed/news", {}, auth_header
-          JSON.parse(response.body)
+          JSON.parse(response.body)['results']
         end
         let(:ids) { pages.map{|hash| hash['id']} }
         let(:cursors) { pages.map{|hash| hash['cursor']} }
@@ -88,9 +88,9 @@ RSpec.describe "V1::Feed", :async, type: :request do
           it "returns cursor-based paginated array of activities" do
             get "/v1/feed/news", params, auth_header
             expect(response.status).to be(200)
-            expect(json.length).to be(6) # 6 - 0 = 6.limit(10) = 6
+            expect(json['results'].length).to be(6) # 6 - 0 = 6.limit(10) = 6
 
-            json_str = json.to_json
+            json_str = json['results'].to_json
             expect(json_str).to include(ids[0])
             expect(json_str).to include(ids[1])
             expect(json_str).to include(ids[2])
@@ -106,9 +106,9 @@ RSpec.describe "V1::Feed", :async, type: :request do
           it "returns cursor-based paginated array of activities" do
             get "/v1/feed/news", params, auth_header
             expect(response.status).to be(200)
-            expect(json.length).to be(2) # 6 - 3 = 3.limit(2) = 2
+            expect(json['results'].length).to be(2) # 6 - 3 = 3.limit(2) = 2
 
-            json_str = json.to_json
+            json_str = json['results'].to_json
             expect(json_str).to include(ids[3])
             expect(json_str).to include(ids[4])
           end
@@ -120,7 +120,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
           it "returns empty array of activities" do
             get "/v1/feed/news", params, auth_header
             expect(response.status).to be(200)
-            expect(json.length).to be(0) # 6 - 6 = 0.limit(2) = 0
+            expect(json['results'].length).to be(0) # 6 - 6 = 0.limit(2) = 0
           end
         end
       end
@@ -130,7 +130,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
       it "returns array of users notifications" do
         get "/v1/feed/notification", nil, auth_header
         expect(response.status).to be(200)
-        expect(json.length).to be(6)
+        expect(json['results'].length).to be(6)
       end
 
       context "offset-based pagination" do
@@ -139,7 +139,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
         it "returns offset-based paginated array of activities" do
           get "/v1/feed/notification", params, auth_header
           expect(response.status).to be(200)
-          expect(json.length).to be(2) # 6 - 2 = 4.limit(2) = 2
+          expect(json['results'].length).to be(2) # 6 - 2 = 4.limit(2) = 2
         end
       end
 
@@ -149,7 +149,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
         it "returns cursor-based-to-offset paginated array of activities (fallback)" do
           get "/v1/feed/notification", params, auth_header
           expect(response.status).to be(200)
-          expect(json.length).to be(1) # 6 - 5 = 1.limit(2) = 1
+          expect(json['results'].length).to be(1) # 6 - 5 = 1.limit(2) = 1
         end
       end
     end

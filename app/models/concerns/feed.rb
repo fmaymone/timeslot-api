@@ -76,6 +76,8 @@ module Feed
       @storage.set("User:#{params[:actor]}", gzip_json(params[:data][:actor]))
       # Store foreign user to its own index (shared objects)
       @storage.set("User:#{params[:foreign]}", gzip_json(params[:data][:foreign])) if params[:foreign].present?
+      # Store corresponding group to its own index (shared objects)
+      @storage.set("Group:#{params[:group]}", gzip_json(params[:data][:group])) if params[:group].present?
 
       ## -- Store social context to the activity object (Delete-Opt) -- ##
 
@@ -356,7 +358,13 @@ module Feed
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
       feed = @storage.range(feed_index, start, range).reverse!
       # Enrich target activities
-      feed.map{ |a| enrich_activity(a) }
+      feed.map!{ |a| enrich_activity(a) }
+      {
+          cursor: offset,
+          next: nil,
+          prev: nil,
+          results: feed
+      }.as_json
     end
 
     private def enrich_activity(target_key, index = nil)
@@ -376,21 +384,22 @@ module Feed
         target: feed[4],
         action: feed[5],
         foreign: feed[6],
-        time: Time.zone.at(feed[7]),
-        id: feed[8]
+        group: feed[7],
+        time: Time.zone.at(feed[8]),
+        id: feed[9]
       }.as_json
     end
 
     private def enrich_feed(feed, view, viewer)
-      feed.each do |activity|
+      feed['results'].each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
-        # In handy we remove the single field 'actor' on aggregated feeds
-        activity.delete('actor')
         # Get the first actor (from shared objects)
-        actor = get_shared_object("User:#{activity['actors'].first}")
+        actor = get_shared_object("User:#{activity['actor']}")
         # Get target (from shared object)
         target = get_shared_object("#{activity['type']}:#{activity['target']}")
+        # Get group (from shared object)
+        activity['group'] = get_shared_object("Group:#{activity['group']}")
 
         # Prepare filtering out private targets from feed + skip (this is an extra check)
         # if target.try(:visibility) == 'private'
@@ -401,6 +410,7 @@ module Feed
         # Add individual data related to each users feed:
         # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+
         case activity['action']
         when 'request'
           actor['friendshipState'] = 'pending passive'
@@ -415,13 +425,39 @@ module Feed
 
         # Update message params with enriched message
         activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
+        # Enrich actors as full objects
+        activity['actors'].map!{|user| get_shared_object("User:#{user}")}
         # Enrich with custom activity data (shared objects)
-        activity['data'] = { target: target, actor: actor }
-        # Remove special fields are not used by frontend
-        activity.except!(:group, :object, :model)
+        case activity['type']
+        when 'Slot'
+          activity['slot'] = target
+          activity['target'] = 'slot'
+        when 'User'
+          activity['user'] = target
+          activity['target'] = 'user'
+        when 'Group'
+          activity['group'] = target
+          activity['target'] = 'group'
+        else
+        end
+        activity['actor'] = actor
+
+        # Removes all special fields are not used by frontend + sort hashes
+        activity.slice!(
+          'target',
+          'action',
+          'time',
+          'id',
+          'message',
+          'cursor',
+          'actors',
+          'group',
+          'slot',
+          'user'
+        )
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed.delete_if { |activity| activity['message'].blank? } # activity['target'].nil? ||
+      feed['results'].delete_if { |activity| activity['message'].blank? } # || activity['target'].nil?
       feed
     end
 
@@ -444,15 +480,15 @@ module Feed
 
       # Adds the first username and sets usercount to translation params
       # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
-      i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
+      i18_params = { actor: actor['username'], count: actor_count > 2 ? actor_count - 1 : actor_count }
       # Add the targets field to the translation params holder (actually not in use)
-      #i18_params[:FIELD] = 'title'
+      #i18_params[:field] = 'title'
       # Add the title to the translation params holder
-      i18_params[:TITLE] = target['title'] if target && target['title']
+      i18_params[:slot] = target['title'] if target && target['title']
       # Add the name to the translation params holder
-      i18_params[:NAME] = target['name'] if target && target['name']
+      i18_params[:group] = target['name'] if target && target['name']
       # Add the target username to the translation params holder
-      i18_params[:USER] = target_user['username'] if target_user
+      i18_params[:user] = target_user['username'] if target_user
 
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
@@ -491,7 +527,7 @@ module Feed
       # NOTE: Actually we use a maximum of 1000 activities from the target-feed fo each aggregated page
       feed = paginate(feed_index, limit: 1000, offset: offset)
       # Loop through all feeds (has a break statement, offset is optional)
-      feed.each_with_index do |post, i|
+      feed['results'].each_with_index do |post, i|
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
         group = post['group'] = "group:#{post['target']}" ##{post['time']}
@@ -537,7 +573,12 @@ module Feed
         # Set cursor position from current activity
         current_feed['cursor'] = (i + offset + 1).to_s
       end
-      aggregated_feed
+      {
+          cursor: offset.to_s,
+          next: aggregated_feed.any? ? aggregated_feed.last['cursor'].to_s : nil,
+          prev: nil,
+          results: aggregated_feed
+      }.as_json
     end
 
     ## Cache Helpers ##
@@ -617,6 +658,7 @@ module Feed
           :target,
           :action,
           :foreign,
+          :group,
           :time,
           :id
         ).values
