@@ -78,6 +78,8 @@ module Feed
       @storage.set("User:#{params[:foreign]}", gzip_json(params[:data][:foreign])) if params[:foreign].present?
       # Store corresponding group to its own index (shared objects)
       @storage.set("Group:#{params[:group]}", gzip_json(params[:data][:group])) if params[:group].present?
+      # Store corresponding group to its own index (shared objects)
+      @storage.set("Slot:#{params[:slot]}", gzip_json(params[:data][:slot])) if params[:slot].present?
 
       ## -- Store social context to the activity object (Delete-Opt) -- ##
 
@@ -385,8 +387,9 @@ module Feed
         action: feed[5],
         foreign: feed[6],
         group: feed[7],
-        time: Time.zone.at(feed[8]),
-        id: feed[9]
+        slot: feed[8],
+        time: Time.zone.at(feed[9]),
+        id: feed[10]
       }.as_json
     end
 
@@ -398,8 +401,6 @@ module Feed
         actor = get_shared_object("User:#{activity['actor']}")
         # Get target (from shared object)
         target = get_shared_object("#{activity['type']}:#{activity['target']}")
-        # Get group (from shared object)
-        activity['group'] = get_shared_object("Group:#{activity['group']}")
 
         # Prepare filtering out private targets from feed + skip (this is an extra check)
         # if target.try(:visibility) == 'private'
@@ -410,7 +411,6 @@ module Feed
         # Add individual data related to each users feed:
         # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
         # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-
         case activity['action']
         when 'request'
           actor['friendshipState'] = 'pending passive'
@@ -427,17 +427,26 @@ module Feed
         activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
         # Enrich actors as full objects
         activity['actors'].map!{|user| get_shared_object("User:#{user}")}
+
         # Enrich with custom activity data (shared objects)
         case activity['type']
         when 'Slot'
           activity['slot'] = target
           activity['target'] = 'slot'
+          # Get foreign user (from shared object)
+          activity['foreign'] = get_shared_object("User:#{activity['foreign']}")
+          # Get group (from shared object)
+          activity['group'] = get_shared_object("Group:#{activity['group']}")
         when 'User'
           activity['user'] = target
           activity['target'] = 'user'
         when 'Group'
           activity['group'] = target
           activity['target'] = 'group'
+          # Get foreign user (from shared object)
+          activity['foreign'] = get_shared_object("User:#{activity['foreign']}")
+          # Get group (from shared object)
+          activity['slot'] = get_shared_object("Slot:#{activity['slot']}")
         else
         end
         activity['actor'] = actor
@@ -659,6 +668,7 @@ module Feed
           :action,
           :foreign,
           :group,
+          :slot,
           :time,
           :id
         ).values

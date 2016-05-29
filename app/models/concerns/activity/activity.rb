@@ -93,9 +93,10 @@ module Activity
       target: activity_target.id.to_s,
       action: action,
       foreign: activity_foreign.try(:id).try(:to_s),
-      group: activity_groups.last.try(:id).try(:to_s),
+      group: activity_group.try(:id).try(:to_s),
+      slot: activity_slot.try(:id).try(:to_s),
       forward: forward,
-      data: activity_extra_data,
+      data: activity_data,
       time: (time || self.created_at).to_f
     })
 
@@ -328,13 +329,13 @@ module Activity
 
   # We store full response data to the activity stream.
   # The backend needs no further request on the database.
-  private def activity_extra_data
+  private def activity_data
     {
       target: Feed.render_shared_object(activity_target),
       actor: Feed.render_shared_object(activity_actor),
       foreign: Feed.render_shared_object(activity_foreign),
-      # NOTE: we only need last group for the actual aggregation
-      group: Feed.render_shared_object(activity_groups.last)
+      group: Feed.render_shared_object(activity_group),
+      slot: Feed.render_shared_object(activity_slot)
     }
   end
 
@@ -342,6 +343,16 @@ module Activity
   # The groups which are related to the activity target object
   private def activity_groups
     []
+  end
+
+  # The group which are related to an activity target slot/user
+  private def activity_group
+    nil
+  end
+
+  # The slot which are related to an activity target group
+  private def activity_slot
+    nil
   end
 
   # The visibility which are related to the activity target object

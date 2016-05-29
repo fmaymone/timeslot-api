@@ -18,7 +18,7 @@ module SlotActivity
     activity_target.try(:visibility)
   end
 
-  private def activity_is_valid?(action)
-    super && (activity_visibility != 'private' || action == 'private')
-  end
+  # private def activity_is_valid?(action)
+  #   super && (activity_visibility != 'private' || action == 'private')
+  # end
 end
