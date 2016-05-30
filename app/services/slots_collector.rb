@@ -58,7 +58,7 @@ class SlotsCollector
   # get 4 upcoming slots from user which current_user is allowed to see
   # if not enough upcoming slots, also use past slots
   def user_preview_slots(current_user: nil, user:)
-    # determine relation to current_user
+    # determine relation between user and current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
 
     return [] if relationship == ME
@@ -70,9 +70,13 @@ class SlotsCollector
 
     slots = query_data(valid_collections, 'upcoming')
     count = slots.count
-    slots += query_data(valid_collections, 'past', 4 - count) if count < 4
-    # sort_result(slots, 'upcoming')
-    slots
+    # if we don't get enough upcoming slots, add some slots from the past
+    if count < 4
+      past_slots = query_data(valid_collections, 'past', 4 - count)
+      limited_past_slots = sort_result(past_slots, 'past')
+      slots += limited_past_slots
+    end
+    sort_result(slots, 'upcoming')
   end
 
   # collects all non-private slots from all friends of the current_user
@@ -188,6 +192,9 @@ class SlotsCollector
   end
 
   private def sort_result(data, mode)
+    ### remove duplicates, because the same slot can be in multiple collections
+    data.uniq!
+
     ### order retrieved slots by startdate, enddate and id
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 
