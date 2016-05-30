@@ -434,7 +434,7 @@ module Feed
           activity['slot'] = target
           activity['target'] = 'slot'
           # Get foreign user (from shared object)
-          activity['foreign'] = get_shared_object("User:#{activity['foreign']}")
+          activity['user'] = get_shared_object("User:#{activity['foreign']}")
           # Get group (from shared object)
           activity['group'] = get_shared_object("Group:#{activity['group']}")
         when 'User'
@@ -444,7 +444,7 @@ module Feed
           activity['group'] = target
           activity['target'] = 'group'
           # Get foreign user (from shared object)
-          activity['foreign'] = get_shared_object("User:#{activity['foreign']}")
+          activity['user'] = get_shared_object("User:#{activity['foreign']}")
           # Get group (from shared object)
           activity['slot'] = get_shared_object("Slot:#{activity['slot']}")
         else
