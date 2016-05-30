@@ -129,6 +129,7 @@ Rails.application.routes.draw do
       get 'user', to: 'feed#user_feed'
       get 'news', to: 'feed#news_feed'
       get 'notification', to: 'feed#notification_feed'
+      get 'request', to: 'feed#request_feed'
       get 'discovery', to: 'feed#discovery_feed'
     end
 

@@ -44,6 +44,15 @@ module V1
       render_feed(feed)
     end
 
+    # GET /v1/feed/request
+    # This feed shows pending requests.
+    def request_feed
+      authorize :feed
+      return head 422 unless has_allowed_params?
+      feed = Feed.request_feed(current_user.id, page_params)
+      render_feed(feed)
+    end
+
     private def render_feed(feed)
       if feed == true # if redis is down
         render json: { error: "No access to the redis server." },

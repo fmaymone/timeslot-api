@@ -190,6 +190,61 @@ resource "Feeds", :activity, :async do
     end
   end
 
+  get "/v1/feed/request", :redis do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :limit, "Maximum count of items which are included in the result"
+    parameter :offset, "The offset value how many result items should be skipped " \
+                         "before the limits start counting (or use cursor instead)"
+    parameter :cursor, "The ID of the activity to start loading from (not included) " \
+                         "(or use offset instead)"
+
+    describe "The request feed includes all pending requests" do
+      include_context "default user response fields"
+
+      let!(:friends) { [create(:user, username: 'Friend A'),
+                        create(:user, username: 'Friend B'),
+                        create(:user, username: 'Friend C')] }
+      let(:message) { I18n.t('user_request_notify-to-owner_singular') }
+
+      before(:each) do
+        # Perform activity: request friendship
+        friends[0].initiate_friendship(current_user.id)
+        friends[1].initiate_friendship(current_user.id)
+        friends[2].initiate_friendship(current_user.id)
+      end
+
+      after(:each) do
+        # FIX: Remove friendship state to prevent affecting other tests
+        friends[0].friendship(current_user.id).reject
+        friends[1].friendship(current_user.id).reject
+        friends[2].friendship(current_user.id).reject
+      end
+
+      example "Get the feed of the current user pending requests", document: :v1 do
+        do_request
+        results = json['results']
+        expect(response_status).to eq(200)
+        expect(results.length).to be(3)
+
+        results.reverse!.each_with_index do |activity, index|
+          expect(activity).to have_key("id")
+          expect(activity).to have_key("action")
+          expect(activity).to have_key("target")
+          expect(activity).to have_key("message")
+          expect(activity).to have_key("actors")
+          expect(activity).to have_key("user")
+          expect(activity).not_to have_key("actor")
+          expect(activity['message']).to eq(message)
+          expect(activity['action']).to eq("request")
+          expect(activity['actors'].first['id']).to eq(friends[index].id)
+          expect(activity['target']).to eq('user')
+        end
+      end
+    end
+  end
+
   get "/v1/feed/discovery", :redis do
     header "Accept", "application/json"
     header "Authorization", :auth_header

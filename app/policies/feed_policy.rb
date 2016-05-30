@@ -19,4 +19,9 @@ class FeedPolicy < ApplicationPolicy
   def notification_feed?
     current_user?
   end
+
+  # true if a user is logged in
+  def request_feed?
+    current_user?
+  end
 end
