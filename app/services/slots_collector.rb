@@ -40,7 +40,7 @@ class SlotsCollector
   end
 
   # collects all slots current_user or visitor is allowed to see from
-  # requested_user including std_slots, reslots and shared group_slots
+  # requested_user including std_slots public group slots and shared group slots
   def user_slots(current_user: nil, user:)
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
@@ -53,6 +53,28 @@ class SlotsCollector
                                               current_user: current_user)
 
     consider_mode(valid_collections, @mode)
+  end
+
+  # get 4 upcoming slots from user which current_user is allowed to see
+  # if not enough upcoming slots, also use past slots
+  def user_preview_slots(current_user: nil, user:)
+    # determine relation between user and current_user
+    relationship = UserRelationship.call(current_user.try(:id), user.id)
+
+    # get showable slot collections
+    valid_collections = PresentableSlots.call(relationship: relationship,
+                                              user: user,
+                                              current_user: current_user)
+
+    slots = query_data(valid_collections, 'upcoming')
+    count = slots.count
+    # if we don't get enough upcoming slots, add some slots from the past
+    if count < 4
+      past_slots = query_data(valid_collections, 'past', 4 - count)
+      limited_past_slots = sort_result(past_slots, 'past')
+      slots += limited_past_slots
+    end
+    sort_result(slots, 'upcoming')
   end
 
   # collects all non-private slots from all friends of the current_user
@@ -102,6 +124,7 @@ class SlotsCollector
   end
 
   private def consider_mode(relations, mode)
+    # pool size: number of valid results, is need to know when to send a cursor
     filtered_relations = []
     pool_size = 0
 
@@ -135,22 +158,19 @@ class SlotsCollector
     sorted_pasts + sorted_upcomings
   end
 
-  private def query_data(relations, mode)
+  private def query_data(relations, mode, limit = @limit)
     data = []
 
     ### fetch slots
     relations.each do |relation|
       next unless relation
-      full_relation = if relation.table_name == StdSlot.table_name
+      # try to eager load relations needed for view rendering
+      full_relation = if relation.model <= BaseSlot
                         relation.includes(
                           :notes, :media_items,
-                          meta_slot: [:ios_location, :creator])
-                      # elsif relation.table_name == ReSlot.table_name
-                      #   relation.includes(
-                      #     parent: [:notes, :media_items],
-                      #     meta_slot: [:ios_location, :creator])
+                          meta_slot: [:ios_location, :creator]
+                        )
                       else
-                        # groupslots ...
                         relation
                       end
 
@@ -170,6 +190,9 @@ class SlotsCollector
   end
 
   private def sort_result(data, mode)
+    ### remove duplicates, because the same slot can be in multiple collections
+    data.uniq!
+
     ### order retrieved slots by startdate, enddate and id
     data.sort_by! { |slot| [slot.start_date, slot.end_date, slot.id] }
 

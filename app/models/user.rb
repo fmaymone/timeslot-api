@@ -38,6 +38,9 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :passengerships, foreign_key: :user_id, inverse_of: :user
+  # related slots = created slots, schedule slots, slots where user is tagged
+  has_many :related_slots, -> { merge Passengership.active },
+           through: :passengerships, source: :slot
   has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :slot,
            inverse_of: :my_calendar_users
@@ -57,6 +60,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships, source: :group
   has_many :calendars_in_schedule, -> { merge Membership.show_slots },
            through: :memberships, source: :group
+
+  has_many :group_slots, through: :active_groups, source: :slots
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, -> { includes :friend },
@@ -265,15 +270,23 @@ class User < ActiveRecord::Base
 
   ## slot related ##
 
+  # TODO: I think this needs an update, add reslots and groupslots
   def active_slots(meta_slot)
-    slots = []
-    slots.push(*std_slots.active.where(meta_slot: meta_slot))
-    # slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    std_slots.active.where(meta_slot: meta_slot)
   end
 
-  # def shared_group_slots(user)
-  #   group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
-  # end
+  def shared_group_slots(user)
+    groups = user.active_groups.where(id: active_group_ids)
+    slot_ids = Containership.select(:slot_id).where(group_id: groups)
+    BaseSlot.where(id: slot_ids)
+  end
+
+  # TODO: write spec
+  def public_group_slots
+    groups = active_groups.public
+    slot_ids = Containership.where(group_id: groups)
+    BaseSlot.where(id: slot_ids)
+  end
 
   def visible_slots_counter(user, slot_class)
     SlotsCollector.new.active_slots_count(current_user: user, user: self,

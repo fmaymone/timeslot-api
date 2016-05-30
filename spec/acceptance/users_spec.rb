@@ -930,9 +930,9 @@ resource "Users" do
       create_list(:group, 3, public: false, owner: requestee)
       requestee
     end
+    let(:public_group) { create(:group, :with_3_slots, public: true) }
     let!(:public_calendars) do
       calendars = create_list(:group, 2, public: true, owner: user_with_calendars)
-      public_group = create(:group, public: true)
       create(:membership, :active, group: public_group, user: user_with_calendars)
       calendars + [public_group]
     end
@@ -951,7 +951,8 @@ resource "Users" do
       explanation "Includes all public calendars of this user and " \
                   "non-public calendars where user and current user " \
                   "are members.\n\n" \
-                  "returns array of calendars\n\n" \
+                  "returns array of calendars with up to 4 preview slots per" \
+                  " calendar\n\n" \
                   "returns 404 if current user not friend with other user"
       do_request
 
@@ -962,7 +963,10 @@ resource "Users" do
       expect(response_body).to include shared_nonpublic_calendar.name
       expect(response_body).
         not_to include user_with_calendars.groups.non_public.first.name
-      expect(json.length).to eq 4
+      expect(json).to have_key('result')
+      expect(json['result'].first).to have_key('previewSlots')
+      expect(json['result'].length).to eq 4
+      expect(response_body).to include public_group.slots.first.title
     end
   end
 

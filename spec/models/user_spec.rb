@@ -18,6 +18,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:user_uuid) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
+  it { is_expected.to have_many(:related_slots) }
   it { is_expected.to have_many(:my_calendar_slots)
                        .inverse_of(:my_calendar_users) }
   it { is_expected.to have_many(:tagged_slots)
@@ -27,6 +28,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:active_memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
   it { is_expected.to have_many(:active_groups).through(:active_memberships) }
+  it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_private).inverse_of(:owner) }
@@ -232,28 +234,52 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # describe :shared_group_slots do
-  #   let(:user) { create(:user) }
-  #   let(:bob) { create(:user) }
+  describe :shared_group_slots do
+    let(:user) { create(:user) }
+    let(:bob) { create(:user) }
 
-  #   let!(:slot_1) { create(:group_slot) }
-  #   let!(:slot_2) { create(:group_slot) }
-  #   let!(:slot_3) { create(:group_slot) }
+    let!(:common_group_public) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: user)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
 
-  #   let!(:memberships) {
-  #     create(:membership, :active, group: slot_1.group, user: user)
-  #     create(:membership, :active, group: slot_1.group, user: bob)
-  #     create(:membership, :active, group: slot_2.group, user: user)
-  #     create(:membership, :active, group: slot_2.group, user: bob)
-  #     create(:membership, :active, group: slot_3.group, user: bob)
-  #   }
+    let!(:common_group_private) do
+      group = create(:group, :with_3_slots, public: false)
+      create(:membership, :active, group: group, user: user)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
 
-  #   it "returns slots from common groups but not from other groups" do
-  #     result = user.shared_group_slots(bob)
-  #     expect(result).to include slot_1
-  #     expect(result).not_to include slot_3
-  #   end
-  # end
+    let!(:group_from_bob) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
+
+    let!(:group_from_user) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: user)
+      group
+    end
+
+    it "returns all slots from common groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).to include common_group_public.slots.first
+      expect(result).to include common_group_public.slots.last
+      expect(result).to include common_group_private.slots.first
+      expect(result).to include common_group_private.slots.last
+    end
+
+    it "doesn't return slots from uncommon groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).not_to include group_from_bob.slots.first
+      expect(result).not_to include group_from_bob.slots.last
+      expect(result).not_to include group_from_user.slots.first
+      expect(result).not_to include group_from_user.slots.last
+    end
+  end
 
   describe :friends_count do
     let(:user) { create(:user)}
