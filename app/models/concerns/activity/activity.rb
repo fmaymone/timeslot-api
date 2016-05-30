@@ -210,7 +210,11 @@ module Activity
       News:
         get_recipients("#{activity_type.downcase}_#{action}_activity", remove_actor: true),
       Notification:
-        get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true),
+        action != 'request' ? get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: true)
+                            : [],
+      Request:
+        action == 'request' ? get_recipients("#{activity_type.downcase}_#{action}_notify", remove_actor: false)
+                            : [],
       Discovery:
         action == 'create' && (activity_actor.public_user? ||
                                activity_target.class.name == 'GlobalSlot') ? ['0'] : []
@@ -483,7 +487,7 @@ module Activity
 
         user_request_me: %w(actor),
         user_request_activity: [],
-        user_request_notify: %w(user),
+        user_request_notify: %w(user actor),
         user_request_push: %w(user),
 
         slot_private_me: %w(actor),

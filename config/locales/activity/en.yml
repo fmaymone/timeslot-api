@@ -199,7 +199,7 @@ en:
 
   user_request_me_singular:	"You sent a friend request to {user}"
   user_request_activity_singular:	""
-  user_request_notify_singular:	"{actor} sent a friend request to you"
+  user_request_notify_singular:	"You sent a friend request to {user}"
   user_request_push_singular:	"%{actor} sent a friend request to you"
   user_request_activity_plural:	""
   user_request_activity_aggregate:	""

@@ -37,6 +37,17 @@ module Feed
       error_handler(error, feed, params)
     end
 
+    def request_feed(user, params = {})
+      feed = "Feed:#{user}:Request"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'notify', user)
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
+    end
+
     def news_feed(user, params = {}, context = nil)
       feed = "Feed:#{user}:News"
       params.merge!(context: context) if context
@@ -60,6 +71,8 @@ module Feed
     #    related to the current users content
     # 3. Notification Feed (takes all activities which are related to the users content),
     #    own activities are not included here
+    # 4. Request Feed (takes all requests which are related to the user),
+    #    own request activities are also included here
 
     def dispatch(params)
       # Generate and add activity id
@@ -265,7 +278,8 @@ module Feed
         user_ids.each do |user_id|
           %W(Feed:#{user_id}:News
              Feed:#{user_id}:User
-             Feed:#{user_id}:Notification).each do |feed_index|
+             Feed:#{user_id}:Notification
+             Feed:#{user_id}:Request).each do |feed_index|
             @storage.set("Update:#{feed_index}", time)
           end
         end
@@ -313,7 +327,7 @@ module Feed
       Async.new(db: false) do
         @storage.pipe do
           # Loop through all related user feeds through social relations
-          %w(User News Notification Discovery).each_with_index do |feed, index|
+          %w(User News Notification Request Discovery).each_with_index do |feed, index|
             recipients[index].each do |user_id|
               feed_index = "Feed:#{user_id}:#{feed}"
               # Remove activity by object (removes a single pointer to an activity)
