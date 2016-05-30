@@ -18,6 +18,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:user_uuid) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
+  it { is_expected.to have_many(:related_slots) }
   it { is_expected.to have_many(:my_calendar_slots)
                        .inverse_of(:my_calendar_users) }
   it { is_expected.to have_many(:tagged_slots)
@@ -27,6 +28,7 @@ RSpec.describe User, type: :model do
   it { is_expected.to have_many(:active_memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
   it { is_expected.to have_many(:active_groups).through(:active_memberships) }
+  it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_private).inverse_of(:owner) }

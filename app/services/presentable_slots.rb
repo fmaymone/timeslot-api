@@ -3,6 +3,8 @@ class PresentableSlots
   # user depending on their specific relationship
   def self.call(relationship:, user:, current_user: nil)
     case relationship
+    when ME
+      [user.related_slots, user.group_slots]
     when FRIEND
       # includes public, friend-visible and friend-of-friend (foaf) visible
       # std_slots, slots from public groups and

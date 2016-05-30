@@ -38,6 +38,9 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :passengerships, foreign_key: :user_id, inverse_of: :user
+  # related slots = created slots, schedule slots, slots where user is tagged
+  has_many :related_slots, -> { merge Passengership.active },
+           through: :passengerships, source: :slot
   has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :slot,
            inverse_of: :my_calendar_users
@@ -58,7 +61,7 @@ class User < ActiveRecord::Base
   has_many :calendars_in_schedule, -> { merge Membership.show_slots },
            through: :memberships, source: :group
 
-  # has_many :group_slots, through: :active_groups, source: :slots
+  has_many :group_slots, through: :active_groups, source: :slots
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, -> { includes :friend },

@@ -47,7 +47,7 @@ module V1
         render json: { error: current_user.errors.messages },
                status: :unprocessable_entity
       else
-        render 'v1/users/show', locals: { user: current_user }
+        render 'v1/me/show', locals: { user: current_user }
       end
     end
 

@@ -61,8 +61,6 @@ class SlotsCollector
     # determine relation between user and current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
 
-    return [] if relationship == ME
-
     # get showable slot collections
     valid_collections = PresentableSlots.call(relationship: relationship,
                                               user: user,

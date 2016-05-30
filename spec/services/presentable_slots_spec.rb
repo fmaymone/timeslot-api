@@ -10,6 +10,14 @@ RSpec.describe PresentableSlots, type: :service do
       create(:membership, :active, group: common_group, user: user)
     }
 
+    it "for me" do
+      expect(
+        described_class.call(relationship: ME, user: user,
+                             current_user: current_user)
+      ).to eq_sql_query_for [user.related_slots,
+                             user.group_slots]
+    end
+
     it "for a friend" do
       expect(
         described_class.call(relationship: FRIEND, user: user,
