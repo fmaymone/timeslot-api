@@ -721,7 +721,8 @@ resource "Users" do
           expect(json['paging']).to have_key('limit')
           expect(json['paging']['mode']).to be nil
           expect(json['paging']['after']).to be nil
-          expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to be <= PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to eq PAGINATION_DEFAULT_LIMIT
           # expect(response_body).to include(re_slots.first.title)
           # expect(response_body).to include(re_slots.last.title)
 
