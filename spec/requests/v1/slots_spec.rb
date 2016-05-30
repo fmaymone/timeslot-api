@@ -95,6 +95,60 @@ RSpec.describe "V1::Slots", type: :request do
           end
         end
       end
+
+      describe "StdSlot first group" do
+        let!(:private_group_1) do
+          group = create(:group, :private, name: 'Private Group 1')
+          create(:containership, group: group, slot: std_slot,
+                 created_at: '2011-01-01')
+          group
+        end
+        let!(:private_group_2) do
+          group = create(:group, :private, name: 'Private Group 2')
+          create(:containership, group: group, slot: std_slot,
+                 created_at: '2012-01-01')
+          group
+        end
+        let!(:public_group) do
+          group = create(:group, :public, name: 'Public Group')
+          create(:containership, group: group, slot: std_slot,
+                 created_at: '2016-01-01')
+          group
+        end
+
+        context 'user member of all groups' do
+          let!(:membership) {
+            create(:membership, :active, group: private_group_1,
+                   user: current_user)
+            create(:membership, :active, group: private_group_2,
+                   user: current_user)
+            create(:membership, :active, group: public_group,
+                   user: current_user)
+          }
+          it "shows first group of slot where current user has read access" do
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(json['firstGroup']['name']).to eq private_group_1.name
+          end
+        end
+
+        context 'user member of second private group' do
+          let!(:memberships) {
+            create(:membership, :active, group: private_group_2,
+                   user: current_user)
+          }
+          it "shows first group of slot where current user has read access" do
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(json['firstGroup']['name']).to eq private_group_2.name
+          end
+        end
+
+        context 'user not member of any group' do
+          it "returns public group" do
+            get "/v1/slots/#{std_slot.id}", {}, auth_header
+            expect(json['firstGroup']['name']).to eq public_group.name
+          end
+        end
+      end
     end
 
     describe "GlobalSlot" do
