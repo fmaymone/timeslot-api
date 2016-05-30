@@ -6,13 +6,13 @@ module Share
 
     def share_types_enum
       {
-          webview: 0,
-          email: 1,
-          qrcode: 2,
-          image: 3,
-          pdf: 4,
-          intern: 5,
-          iframe: 6
+        webview: 0,
+        email: 1,
+        qrcode: 2,
+        image: 3,
+        pdf: 4,
+        intern: 5,
+        iframe: 6
       }
     end
 
@@ -25,9 +25,9 @@ module Share
       obj = share_objects(user, slot)
       # Generate HTML from slot/user data
       html = Convert.slot_to_html(
-               obj[:user],
-               obj[:slot],
-               style: 'portrait')
+        obj[:user],
+        obj[:slot],
+        style: 'portrait')
       url = create_share_url(:webview, slot)
       path = 'store/share/webview'
       save_to_file(path, "#{url}.html", html)
@@ -55,10 +55,10 @@ module Share
       obj = share_objects(user, slot)
       # Generate Image from slot/user data
       image = Convert.html_to_image(
-              Convert.slot_to_html(
-                obj[:user],
-                obj[:slot],
-                style: 'box'))
+        Convert.slot_to_html(
+        obj[:user],
+        obj[:slot],
+        style: 'box'))
 
       url = create_share_url(:image, slot)
       path = 'store/share/image'
@@ -72,10 +72,10 @@ module Share
       obj = share_objects(user, slot)
       # Generate HTML from slot/user data
       pdf = Convert.html_to_pdf(
-            Convert.slot_to_html(
-              obj[:user],
-              obj[:slot],
-              style: 'pdf'))
+        Convert.slot_to_html(
+        obj[:user],
+        obj[:slot],
+        style: 'pdf'))
 
       url = create_share_url(:pdf, slot)
       path = 'store/share/pdf'
@@ -112,9 +112,9 @@ module Share
       obj = share_objects(user, slot)
       # Generate HTML from slot/user data
       html = Convert.slot_to_html(
-               obj[:user],
-               obj[:slot],
-               style: 'box')
+        obj[:user],
+        obj[:slot],
+        style: 'box')
       content = {
         source: user.email || 'support@timeslot.com',
         destination: {
@@ -181,31 +181,27 @@ module Share
     end
 
     private def share_objects(user, slot)
-      user = JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/users/_user',
-          layout: false,
-          locals: {
-              :user => user
-          }
-      ))
-      slot = JSON.parse(ApplicationController.new.render_to_string(
-          template: 'v1/slots/_slot',
-          layout: false,
-          locals: {
-              :slot => slot,
-              :current_user => user
-          }
-      ))
-      @storage.set("User:#{user['id']}", gzip_content(user.to_json))
-      @storage.set("Slot:#{slot['id']}", gzip_content(slot.to_json))
-      {
-          user: user,
-          slot: slot
-      }
+      user_string = ApplicationController.new.render_to_string(
+        template: 'v1/users/_user',
+        layout: false,
+        locals: { user: user }
+      )
+
+      slot_string = ApplicationController.new.render_to_string(
+        template: 'v1/slots/_slot',
+        layout: false,
+        locals: { slot: slot, current_user: user }
+      )
+
+      @storage.set("User:#{user['id']}", gzip_content(user_string))
+      @storage.set("Slot:#{slot['id']}", gzip_content(slot_string))
+
+      { user: JSON.parse(user_string),
+        slot: JSON.parse(slot_string) }
     end
 
     private def save_to_file(path, filepath, file)
-      FileUtils.mkdir_p(path) unless File.exists?(path)
+      FileUtils.mkdir_p(path) unless File.exist?(path)
       File.open("#{path}/#{filepath}", 'wb') do |f|
         f.write(gzip_content(file))
       end
