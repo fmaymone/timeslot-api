@@ -29,6 +29,7 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
   # scope :publics, -> { where slot_type: [3, 15] }
 
   # there are additonal scopes defined as class method (upcoming, past)
@@ -330,6 +331,10 @@ class BaseSlot < ActiveRecord::Base
 
   def self.next
     upcoming.order('meta_slots.start_date').first
+  end
+
+  def self.public
+    where slot_type: [3, 15]
   end
 
   def self.create_slot(meta:, visibility: nil, group: nil, media: nil,

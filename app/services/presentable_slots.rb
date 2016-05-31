@@ -10,6 +10,7 @@ class PresentableSlots
       # std_slots, slots from public groups and
       # slots from shared groups (between user and current_user)
       [user.std_slots.unprivate,
+       user.my_calendar_slots.unprivate,
        user.public_group_slots,
        current_user.shared_group_slots(user)]
     when FOAF # not used
@@ -18,18 +19,20 @@ class PresentableSlots
       # slots from shared groups (between user and current_user)
       [user.std_slots_public,
        user.std_slots_foaf,
+       user.my_calendar_slots.public,
        user.public_group_slots,
        current_user.shared_group_slots(user)]
     when STRANGER
       # includes public std_slots created by user, slots in public groups
       # and slots from common groups of user and current_user
       [user.std_slots_public,
-       # user.my_calendar_slots.publics,
+       user.my_calendar_slots.public,
        user.public_group_slots,
        current_user.shared_group_slots(user)]
     when VISITOR
       # includes public std_slots created by user and slots from public groups
       [user.std_slots_public,
+       user.my_calendar_slots.public,
        user.public_group_slots]
     end
   end

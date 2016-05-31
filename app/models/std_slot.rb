@@ -8,8 +8,6 @@ class StdSlot < BaseSlot
                      'public' => :StdSlotPublic
                    }.freeze
 
-  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
-
   belongs_to :owner, class_name: User, inverse_of: :std_slots
 
   validates :owner, presence: true
