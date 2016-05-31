@@ -896,6 +896,49 @@ resource "Users" do
     end
   end
 
+  get "/v1/users/:id/dates" do
+    header "Authorization", :auth_header
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to get the slot dates for."
+
+    let(:user) { create(:user) }
+
+    let!(:private_slot) {
+      create(:std_slot_private, owner: user, start_date: '2015-01-01',
+             end_date: '2015-01-02')
+    }
+    let!(:public_slot) {
+      create(:std_slot_public, owner: user, start_date: '2016-02-02',
+             end_date: '2016-02-04')
+
+    }
+    let!(:public_calendar_slot) do
+      slot = create(:std_slot_public, start_date: '2017-03-03',
+                    end_date: '2017-03-03')
+      create(:passengership, user: user, slot: slot)
+      slot
+    end
+    let(:id) { user.id }
+
+    example "Get list of dates when slots of another user are happening",
+            document: :v1 do
+      explanation "Returns all dates where a slot returned by " \
+                  "GET /users/:id/slots is happening.\n\n" \
+                  "returns 404 if user doesn't exist"
+      do_request
+
+      expect(response_status).to eq(200)
+
+      expect(response_body).to include public_slot.start_date.to_date.as_json
+      expect(response_body).to include public_slot.end_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.start_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.end_date.to_date.as_json
+      expect(response_body).not_to include private_slot.start_date.to_date.as_json
+      expect(response_body).not_to include private_slot.end_date.to_date.as_json
+    end
+  end
+
   get "/v1/users/:id/friends" do
     header "Authorization", :auth_header
     header "Accept", "application/json"

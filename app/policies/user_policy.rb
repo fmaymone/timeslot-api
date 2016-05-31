@@ -47,6 +47,11 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true for logged in users
+  def dates?
+    current_user?
+  end
+
   # no prerequisites
   def media_items?
     true

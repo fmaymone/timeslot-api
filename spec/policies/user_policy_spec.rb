@@ -13,7 +13,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :show?, :friends?, :calendars? do
+  permissions :show?, :friends?, :calendars?, :dates? do
     context "for a user" do
       let(:user) { create(:user) }
 

@@ -91,6 +91,7 @@ Rails.application.routes.draw do
       get ':id/media', to: 'users#media_items', as: 'user_media'
       get ':id/friends', to: 'users#friends', as: 'user_friends'
       get ':id/calendars', to: 'users#calendars'
+      get ':id/dates', to: 'users#dates'
     end
 
     scope :groups,
