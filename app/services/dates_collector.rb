@@ -5,6 +5,11 @@ class DatesCollector
     @timezone = timezone || Time.zone.now.utc.formatted_offset
   end
 
+  def group_slot_dates(group:)
+    collection = group.slots
+    date_series_for_slots(slot_collection: collection)
+  end
+
   # returns the dates for the slots which are returned by /v1/users/:id/slots
   def user_slot_dates(user:)
     relationship = UserRelationship.call(@current_user.try(:id), user.id)

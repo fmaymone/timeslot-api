@@ -82,10 +82,9 @@ module V1
       authorize @group
 
       collector = DatesCollector.new(timezone: params[:timezone])
-      slots = @group.slots
-      @dates = collector.date_series_for_slots(slot_collection: slots)
+      @dates = collector.group_slot_dates(group: @group)
 
-      render :dates
+      render "v1/slots/dates"
     end
 
     # GET /v1/groups/:group_uuid/members

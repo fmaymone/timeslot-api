@@ -338,16 +338,16 @@ resource "Groups" do
       do_request
 
       expect(response_status).to eq(200)
-      expect(json).to have_key("data")
-      expect(json["data"]).to include '2016-01-01'
-      expect(json["data"]).to include '2016-01-02'
-      expect(json["data"]).to include '2016-01-03'
-      expect(json["data"]).to include '2016-01-04'
-      expect(json["data"]).to include '2016-01-05'
-      expect(json["data"]).to include '2016-03-30'
-      expect(json["data"]).to include '2016-03-31'
-      expect(json["data"]).to include '2016-05-18'
-      expect(json["data"]).to include '2016-05-19'
+      expect(json).to have_key("result")
+      expect(json["result"]).to include '2016-01-01'
+      expect(json["result"]).to include '2016-01-02'
+      expect(json["result"]).to include '2016-01-03'
+      expect(json["result"]).to include '2016-01-04'
+      expect(json["result"]).to include '2016-01-05'
+      expect(json["result"]).to include '2016-03-30'
+      expect(json["result"]).to include '2016-03-31'
+      expect(json["result"]).to include '2016-05-18'
+      expect(json["result"]).to include '2016-05-19'
     end
 
     describe 'other timezone' do
@@ -356,8 +356,8 @@ resource "Groups" do
       example "Get all dates where slots happen in other timezone",
               document: :v1 do
         do_request
-        expect(json["data"]).to include '2016-05-18'
-        expect(json["data"]).not_to include '2016-05-19'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).not_to include '2016-05-19'
       end
     end
   end
