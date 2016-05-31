@@ -1326,7 +1326,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
         expect(request_feed_friend.first['target']).to eq('user')
         expect(request_feed_friend.first['action']).to eq('request')
         expect(request_feed_friend.first['user']['id']).to be(friend.id)
-        expect(request_feed_friend.first['user']['friendshipState']).to eq('pending active')
+        expect(request_feed_friend.first['user']['friendshipState']).to eq('pending passive')
         expect(request_feed_friend.first['actors'].first['id']).to be(user.id)
         #expect(request_feed_friend.first['actors'].first['friendshipState']).to eq('pending passive')
         expect(request_feed_friend.first['message']).to eq(I18n.t('user_request_notify-to-owner_singular',
@@ -1370,12 +1370,15 @@ RSpec.describe Feed, :activity, :async, type: :model do
       it "News Feed (aggregated public activities)" do
         news_feed = Feed.news_feed(user.id)['results'].as_json
         expect(news_feed.count).to be(1) # +1 user activity (new friendship)
+        expect(news_feed.first['user']['friendshipState']).to eq('friend')
 
         news_feed_friend = Feed.news_feed(friend.id)['results'].as_json
         expect(news_feed_friend.count).to be(1) # +1 user activity (new friendship)
+        expect(news_feed_friend.first['user']['friendshipState']).to eq('friend')
 
         news_feed_follower = Feed.news_feed(follower.id)['results'].as_json
         expect(news_feed_follower.count).to be(1) # +1 user activity (new friendship of a friend)
+        expect(news_feed_follower.first['user']['friendshipState']).to eq('stranger') # personal state
       end
 
       it "Notification Feed (activities to own content)" do

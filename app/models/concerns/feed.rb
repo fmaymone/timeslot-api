@@ -423,19 +423,7 @@ module Feed
         # end
 
         # Add individual data related to each users feed:
-        # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
-        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-        case activity['action']
-        when 'request'
-          actor['friendshipState'] = 'pending passive'
-          target['friendshipState'] = 'pending active'
-        when 'friendship', 'accept'
-          actor['friendshipState'] = 'friend'
-          target['friendshipState'] = 'friend'
-        when 'unfriend'
-          actor['friendshipState'] = 'stranger'
-          target['friendshipState'] = 'stranger'
-        end
+        enrich_personal_data(activity, actor, target, viewer)
 
         # Update message params with enriched message
         activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
@@ -482,6 +470,59 @@ module Feed
       # Filter out private targets from feed (removed targets from preparation)
       feed['results'].delete_if { |activity| activity['message'].blank? } # || activity['target'].nil?
       feed
+    end
+
+    private def enrich_personal_data(activity, actor, target, viewer)
+      # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
+      # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+      if activity['type'] == 'User'
+        if viewer == actor['id'] || viewer == target['id']
+          case activity['action']
+          when 'request'
+            if viewer == actor['id']
+              actor['friendshipState'] = 'pending passive'
+              target['friendshipState'] = 'pending active'
+            else
+              actor['friendshipState'] = 'pending active'
+              target['friendshipState'] = 'pending passive'
+            end
+          when 'friendship', 'accept'
+            actor['friendshipState'] = 'friend'
+            target['friendshipState'] = 'friend'
+          when 'unfriend'
+            actor['friendshipState'] = 'stranger'
+            target['friendshipState'] = 'stranger'
+          else
+          end
+        else
+          # TODO: we have to fetch the personalized friendship-state from DB
+          fs = Friendship.find_by(user_id: viewer, friend_id: target['id'])
+          if fs
+            case fs.state
+            when OFFERED
+              target['friendshipState'] = 'pending passive'
+            when ESTABLISHED
+              target['friendshipState'] = 'friend'
+            else
+              target['friendshipState'] = 'stranger'
+            end
+          else
+            fs = Friendship.find_by(user_id: target['id'], friend_id: viewer)
+            if fs
+              case fs.state
+              when OFFERED
+                target['friendshipState'] = 'pending active'
+              when ESTABLISHED
+                target['friendshipState'] = 'friend'
+              else
+                target['friendshipState'] = 'stranger'
+              end
+            else
+              target['friendshipState'] = 'stranger'
+            end
+          end
+        end
+      end
     end
 
     private def enrich_message(activity, actor, target, view, viewer)
