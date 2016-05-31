@@ -82,7 +82,7 @@ module V1
       authorize @group
 
       collector = DatesCollector.new(timezone: params[:timezone])
-      slots = @group.slots.joins(:meta_slot)
+      slots = @group.slots
       @dates = collector.date_series_for_slots(slot_collection: slots)
 
       render :dates

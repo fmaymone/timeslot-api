@@ -124,8 +124,9 @@ module V1
       authorize :user
       user = User.find(params[:id])
 
-      collector = DatesCollector.new(timezone: params[:timezone])
-      @dates = collector.user_slot_dates(current_user: current_user, user: user)
+      collector = DatesCollector.new(current_user: current_user,
+                                     timezone: params[:timezone])
+      @dates = collector.user_slot_dates(user: user)
 
       render "v1/slots/dates"
     end
