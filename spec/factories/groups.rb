@@ -8,6 +8,14 @@ FactoryGirl.define do
     members_can_post false
     members_can_invite false
 
+    trait :public do
+      public true
+    end
+
+    trait :private do
+      public false
+    end
+
     trait :members_can_post do
       members_can_post true
     end

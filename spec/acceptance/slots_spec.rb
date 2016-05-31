@@ -172,11 +172,13 @@ resource "Slots" do
         expect(json).to have_key("visibleCount")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
+        expect(json).to have_key("firstGroup")
         expect(json.except('media', 'location', 'likerIds'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
+                 "firstGroup" => nil,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at.as_json,

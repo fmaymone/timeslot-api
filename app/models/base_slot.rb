@@ -29,6 +29,8 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  # scope :publics, -> { where slot_type: [3, 15] }
+
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
@@ -99,6 +101,16 @@ class BaseSlot < ActiveRecord::Base
 
   def comments_with_details
     comments.includes([:user])
+  end
+
+  # returns the first group, where the slots was in, which has read acces for
+  # the given user. Using the public groups of the slot is safe in any case...
+  def first_group(user)
+    group_ids = slot_groups.public.pluck(:id)
+    group_ids |= user.active_group_ids if user
+
+    containership = containerships.active.where(group_id: group_ids).first
+    Group.where(id: containership.try(:group_id)).first
   end
 
   def as_paging_cursor
