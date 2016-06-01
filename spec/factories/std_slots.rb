@@ -1,6 +1,22 @@
 FactoryGirl.define do
   factory :std_slot, class: StdSlot, parent: :slot do
     association :owner, factory: :user, strategy: :build
+
+    transient do
+      show_in_calendar true
+      tag_user nil
+    end
+
+    after :create do |slot, factory|
+      create :passengership, slot: slot, user: slot.owner,
+             show_in_my_schedule: factory.show_in_calendar,
+             add_media_permission: false
+      if factory.tag_user
+        create :passengership, slot: slot, user: factory.tag_user,
+               show_in_my_schedule: factory.show_in_calendar,
+               add_media_permission: true
+      end
+    end
   end
 
   factory :std_slot_private, class: StdSlotPrivate, parent: :std_slot do

@@ -5,7 +5,7 @@ RSpec.describe SlotsetManager, type: :service do
     described_class.new(current_user: current_user)
   end
   let(:current_user) { create(:user) }
-  let(:slot) { create(:std_slot_public) }
+  let!(:slot) { create(:std_slot_public) }
   let(:slot_group) { create(:group, owner: current_user) }
   let(:deleted_slot_group) {
     create(:group, owner: current_user, deleted_at: Time.zone.now) }

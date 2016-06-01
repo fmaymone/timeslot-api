@@ -55,8 +55,7 @@ RSpec.describe CounterService, type: :service do
       it "counts all my created, tagged at, my_calendar and group slots" do
         result = described_class.new.active_slots(user: user,
                                                   current_user: user)
-        count = user.std_slots.count +
-                user.related_slots.count +
+        count = user.related_slots.count +
                 user.group_slots.count - 1 # subtract 1 duplicate slot
         expect(result).to eq count
       end
@@ -66,9 +65,7 @@ RSpec.describe CounterService, type: :service do
       it "returns the correct slot count" do
         result = described_class.new.active_slots(user: user,
                                                   current_user: friend)
-        count = user.std_slots_public.count +
-                user.std_slots_friends.count +
-                user.my_calendar_slots.unprivate.count +
+        count = user.related_slots.unprivate.count +
                 public_group.slots.count +
                 shared_group.slots.count - 1 # subtract 1 duplicate slot
         expect(result).to eq count
@@ -79,8 +76,7 @@ RSpec.describe CounterService, type: :service do
       it "returns the correct slot count" do
         result = described_class.new.active_slots(user: user,
                                                   current_user: stranger)
-        count = user.std_slots_public.count +
-                user.my_calendar_slots.public.count +
+        count = user.related_slots.public.count +
                 public_group.slots.count +
                 shared_group.slots.count - 1 # subtract 1 duplicate slot
         expect(result).to eq count
@@ -90,8 +86,7 @@ RSpec.describe CounterService, type: :service do
     context 'for a visiter' do
       it "returns the correct slot count" do
         result = described_class.new.active_slots(user: user, current_user: nil)
-        count = user.std_slots_public.count +
-                user.my_calendar_slots.public.count +
+        count = user.related_slots.public.count +
                 public_group.slots.count - 1 # subtract 1 duplicate slot
         expect(result).to eq count
       end

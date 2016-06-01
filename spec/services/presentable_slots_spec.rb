@@ -22,8 +22,7 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: FRIEND, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots.unprivate,
-                             user.my_calendar_slots.unprivate,
+      ).to eq_sql_query_for [user.related_slots.unprivate,
                              user.public_group_slots,
                              current_user.shared_group_slots(user)]
     end
@@ -43,8 +42,7 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: STRANGER, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots_public,
-                             user.my_calendar_slots.public,
+      ).to eq_sql_query_for [user.related_slots.public,
                              user.public_group_slots,
                              current_user.shared_group_slots(user)]
     end
@@ -53,8 +51,7 @@ RSpec.describe PresentableSlots, type: :service do
       expect(
         described_class.call(relationship: VISITOR, user: user,
                              current_user: current_user)
-      ).to eq_sql_query_for [user.std_slots_public,
-                             user.my_calendar_slots.public,
+      ).to eq_sql_query_for [user.related_slots.public,
                              user.public_group_slots]
     end
   end

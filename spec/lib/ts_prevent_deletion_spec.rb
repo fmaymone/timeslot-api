@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'ts_prevent_deletion'
 
 describe TSPreventDeletion do
-  let(:slot) { FactoryGirl.create(:std_slot) }
+  let(:slot) { FactoryGirl.create(:global_slot) }
   let(:slot_with_media) { FactoryGirl.create(:std_slot_private, :with_note) }
 
   it "doesn't fail if all objects with references to" \

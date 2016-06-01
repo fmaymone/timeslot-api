@@ -35,7 +35,7 @@ RSpec.configure do |config|
   # keep some tables intact during testruns
   config.before(:all, :keep_data) do
     DatabaseCleaner.strategy = :truncation, {
-      except: %w(meta_slots base_slots std_slots users friendships) }
+      except: %w(meta_slots base_slots std_slots users friendships passengerships) }
   end
 
   config.after(:all, :keep_data) do

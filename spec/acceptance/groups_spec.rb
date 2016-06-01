@@ -374,20 +374,15 @@ resource "Groups" do
 
     describe 'my calendar slots dates' do
       let!(:created_slot_not_in_calendar) do
-        slot = create(:std_slot_public, creator: current_user,
-                      owner: current_user, start_date: '2010-03-30',
-                      end_date: '2010-03-31')
-        create(:passengership, slot: slot, user: current_user,
-               show_in_my_schedule: false)
-        slot
+        create(:std_slot_public, creator: current_user,
+               owner: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
       end
       let!(:created_private_slot_in_calendar) do
-        slot = create(:std_slot_private, creator: current_user,
-                      owner: current_user, start_date: '2011-03-30',
-                      end_date: '2011-03-31')
-        create(:passengership, slot: slot, user: current_user,
-               show_in_my_schedule: true)
-        slot
+        create(:std_slot_private, creator: current_user,
+               owner: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
       end
       let!(:passengerships) do
         create(:passengership, slot: two_days, user: current_user)
@@ -423,22 +418,15 @@ resource "Groups" do
     end
 
     describe 'my library slots dates' do
-      let!(:public_slot) do
-        slot = create(:std_slot_public, creator: current_user,
-                      owner: current_user, start_date: '2010-03-30',
-                      end_date: '2010-03-31')
-        create(:passengership, slot: slot, user: current_user,
-               show_in_my_schedule: false)
-        slot
-      end
-      let!(:private_slot) do
-        slot = create(:std_slot_private, creator: current_user,
-                      owner: current_user, start_date: '2011-03-30',
-                      end_date: '2011-03-31')
-        create(:passengership, slot: slot, user: current_user,
-               show_in_my_schedule: true)
-        slot
-      end
+      let!(:public_slot) {
+        create(:std_slot_public, owner: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
+      }
+      let!(:private_slot) {
+       create(:std_slot_private, owner: current_user, start_date: '2011-03-30',
+              end_date: '2011-03-31')
+      }
       let!(:passengerships) do
         create(:passengership, slot: two_days, user: current_user,
                show_in_my_schedule: true)

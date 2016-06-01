@@ -19,14 +19,11 @@ RSpec.describe DatesCollector, type: :service do
 
   describe :my_calendar_dates do
     let(:current_user) { create(:user) }
-    let!(:private_slot) do
-      slot = create(:std_slot_private, creator: current_user,
-                    owner: current_user, start_date: '2011-03-30',
-                    end_date: '2011-03-31')
-      create(:passengership, slot: slot, user: current_user,
-             show_in_my_schedule: true)
-      slot
-    end
+    let!(:private_slot) {
+      create(:std_slot_private, creator: current_user,
+             owner: current_user,
+             start_date: '2011-03-30', end_date: '2011-03-31')
+    }
     let!(:passengerships) do
       create(:passengership, slot: two_day_slot, user: current_user)
       create(:passengership, slot: five_day_slot, user: current_user)
@@ -52,14 +49,11 @@ RSpec.describe DatesCollector, type: :service do
     let(:current_user) { create(:user) }
 
     context 'created slots' do
-      let!(:private_slot) do
-        slot = create(:std_slot_private, creator: current_user,
-                      owner: current_user, start_date: '2011-03-30',
-                      end_date: '2011-03-31')
-        create(:passengership, slot: slot, user: current_user,
-               show_in_my_schedule: true)
-        slot
-      end
+      let!(:private_slot) {
+        create(:std_slot_private, creator: current_user,
+               owner: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
+      }
 
       it "returns the dates" do
         collector = DatesCollector.new(current_user: current_user)

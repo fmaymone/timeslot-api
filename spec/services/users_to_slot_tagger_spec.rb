@@ -5,7 +5,7 @@ RSpec.describe UsersToSlotTagger, type: :service do
     described_class.new(slot)
   end
   let(:current_user) { create(:user) }
-  let(:slot) { create(:std_slot_public, creator: current_user) }
+  let!(:slot) { create(:std_slot_public, creator: current_user) }
   let(:users) { create_list(:user, 3) }
   let(:user_ids) { users.collect(&:id) }
 
