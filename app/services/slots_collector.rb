@@ -87,25 +87,6 @@ class SlotsCollector
     consider_mode(valid_collections, @mode)
   end
 
-  # collects only active std_slots current_user or visitor is allowed to
-  # see from requested_user, currently this is only used for counting, so
-  # I skip the pagination functionality
-  def active_slots_count(current_user: nil, user:, slot_class: StdSlot)
-    rs = UserRelationship.call(current_user.try(:id), user.id)
-
-    if slot_class == StdSlot
-      valid_collections = PresentableSlots.std_slots(relationship: rs,
-                                                     user: user)
-    # elsif slot_class == ReSlot
-      # valid_collections = PresentableSlots.re_slots(relationship: rs,
-      #                                               user: user)
-    end
-
-    counter = 0
-    valid_collections.each { |relation| counter += relation.active.count }
-    counter
-  end
-
   # TODO: write specs
   def group_slots(group:)
     valid_collections = [group.slots_with_associations]

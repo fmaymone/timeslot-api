@@ -1,6 +1,20 @@
 class CounterService
   # a service for counting objects in the database
 
+  # counts the slots current_user or visitor is allowed to
+  # see from requested_user
+  # (corresponds to the number of slots returned by 'users/:id/slots')
+  # -> wegen potentieller duplicates kann man sich nicht auf das count
+  #    der datenbank verlassen. ich muss alle slot ids einsammeln und zaehlen
+  def active_slots(current_user: nil, user:)
+    relationship = UserRelationship.call(current_user.try(:id), user.id)
+    collections = PresentableSlots.call(relationship: relationship,
+                                        user: user, current_user: current_user)
+    slot_ids = []
+    collections.each { |slots| slot_ids |= slots.active.pluck(:id) }
+    slot_ids.count
+  end
+
   def active_visible_calendars(asker: , requestee:)
     return requestee.active_groups.count if asker == requestee
 

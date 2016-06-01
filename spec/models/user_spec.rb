@@ -316,9 +316,9 @@ RSpec.describe User, type: :model do
     end
 
     it "returns the number of stdslots current_user can see from other user" do
-      expect(friend.visible_slots_counter(current_user, StdSlot)).to eq 3
-      expect(foaf.visible_slots_counter(current_user, StdSlot)).to eq 2
-      expect(stranger.visible_slots_counter(current_user, StdSlot)).to eq 1
+      expect(friend.visible_slots_counter(current_user)).to eq 3
+      expect(foaf.visible_slots_counter(current_user)).to eq 2
+      expect(stranger.visible_slots_counter(current_user)).to eq 1
     end
   end
 

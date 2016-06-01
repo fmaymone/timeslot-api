@@ -284,13 +284,12 @@ class User < ActiveRecord::Base
   # TODO: write spec
   def public_group_slots
     groups = active_groups.public
-    slot_ids = Containership.where(group_id: groups)
+    slot_ids = Containership.where(group_id: groups).pluck(:slot_id)
     BaseSlot.where(id: slot_ids)
   end
 
-  def visible_slots_counter(user, slot_class)
-    SlotsCollector.new.active_slots_count(current_user: user, user: self,
-                                          slot_class: slot_class)
+  def visible_slots_counter(current_user)
+    CounterService.new.active_slots(user: self, current_user: current_user)
   end
 
   def visible_calendars_counter(user)
