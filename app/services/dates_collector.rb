@@ -5,18 +5,19 @@ class DatesCollector
     @timezone = timezone || Time.zone.now.utc.formatted_offset
   end
 
-  def my_special_slots_dates(uuid: uuid)
+  def special_set_slots_dates(uuid:)
     return [] unless @current_user
     special_sets = @current_user.slot_sets.invert
 
     case special_sets[uuid]
     when 'my_cal_uuid'
-      collection = @current_user.my_calendar_slots
+      collections = [@current_user.my_calendar_slots]
     when 'my_lib_uuid'
+      collections = PresentableSlots.call(relationship: ME, user: @current_user)
     when 'friends_cal_uuid'
     end
 
-    date_series_for_slots(slot_collection: collection)
+    collect_dates(collections)
   end
 
   def group_slot_dates(group:)
@@ -41,7 +42,7 @@ class DatesCollector
     dates
   end
 
-  # takes the timezone of the client into account
+  # takes the timezone send by the client into account
   def date_series_for_slots(slot_collection:)
     query = slot_collection.joins(:meta_slot).select(
       "(generate_series(

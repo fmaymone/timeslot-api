@@ -85,7 +85,7 @@ module V1
                                      timezone: params[:timezone])
 
       if current_user.slot_sets.values.include? uuid
-        @dates = collector.my_special_slots_dates(uuid: uuid)
+        @dates = collector.special_set_slots_dates(uuid: uuid)
       else
         group = Group.find_by!(uuid: uuid)
         authorize group
