@@ -98,11 +98,11 @@ RSpec.describe CounterService, type: :service do
     end
   end
 
-  describe "active_visible_calendars" do
+  describe "active_calendars" do
     let(:user_with_calendars) do
-      requestee = create(:user)
-      create_list(:group, 3, public: false, owner: requestee)
-      requestee
+      user = create(:user)
+      create_list(:group, 3, public: false, owner: user)
+      user
     end
     let!(:public_calendar_count) do
       create_list(:group, 2, public: true, owner: user_with_calendars)
@@ -113,16 +113,16 @@ RSpec.describe CounterService, type: :service do
 
     context 'for me' do
       it "adds the number of non-public calendars" do
-        count = described_class.new.active_visible_calendars(
-          asker: user_with_calendars, requestee: user_with_calendars)
+        count = described_class.new.active_calendars(
+          current_user: user_with_calendars, user: user_with_calendars)
         expect(count).to eq user_with_calendars.active_memberships.count
       end
     end
 
     context 'for user without shared non-public calendars' do
       it "only returns the number of public calendars" do
-        count = described_class.new.active_visible_calendars(
-          asker: user, requestee: user_with_calendars)
+        count = described_class.new.active_calendars(
+          current_user: user, user: user_with_calendars)
         expect(count).to eq public_calendar_count
       end
     end
@@ -138,9 +138,17 @@ RSpec.describe CounterService, type: :service do
       end
 
       it "adds the number of shared non-public calendars" do
-        count = described_class.new.active_visible_calendars(
-          asker: user, requestee: user_with_calendars)
+        count = described_class.new.active_calendars(
+          current_user: user, user: user_with_calendars)
         expect(count).to eq public_calendar_count + 1
+      end
+    end
+
+    context 'for visitors' do
+      it "only returns the number of public calendars" do
+        count = described_class.new.active_calendars(
+          current_user: nil, user: user_with_calendars)
+        expect(count).to eq public_calendar_count
       end
     end
   end

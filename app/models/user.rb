@@ -293,7 +293,7 @@ class User < ActiveRecord::Base
   end
 
   def visible_calendars_counter(user)
-    CounterService.new.active_visible_calendars(asker: user, requestee: self)
+    CounterService.new.active_calendars(current_user: user, user: self)
   end
 
   def prepare_for_slot_deletion(slot)

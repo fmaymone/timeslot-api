@@ -15,14 +15,15 @@ class CounterService
     slot_ids.count
   end
 
-  def active_visible_calendars(asker: , requestee:)
-    return requestee.active_groups.count if asker == requestee
+  def active_calendars(current_user: nil, user:)
+    public_calendars = user.active_groups.where(public: true)
+    return public_calendars.count unless current_user
+    return user.active_groups.count if user == current_user
 
-    public_calendars = requestee.active_groups.where(public: true).count
-    my_groups = asker.active_group_ids
-    shared_nonpublic_calendars = requestee.active_groups.where(id: my_groups,
-                                                               public: false).count
-    public_calendars + shared_nonpublic_calendars
+    my_group_ids = current_user.active_group_ids
+    shared_nonpublic_calendars = user.active_groups.where(id: my_group_ids,
+                                                          public: false)
+    public_calendars.count + shared_nonpublic_calendars.count
   end
 
   def number_of_users_who_can_view_the_slot(slot)
