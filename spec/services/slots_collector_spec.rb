@@ -168,7 +168,7 @@ RSpec.describe SlotsCollector, type: :service do
 
       it "returns slots descending from 'moment'" do
         collector = SlotsCollector.new(mode: 'past', moment: moment, limit: 2)
-        result = collector.my_slots(user: user)
+        result = collector.my_library_slots(user: user)
         slots = result.data
 
         slots.each do |slot|
@@ -225,7 +225,7 @@ RSpec.describe SlotsCollector, type: :service do
         collector = SlotsCollector.new(mode: 'upcoming', moment: moment,
                                        limit: 6, filter: 'between',
                                        earliest: earliest, latest: latest)
-        result = collector.my_slots(user: user)
+        result = collector.my_library_slots(user: user)
         slots = result.data
 
         slots.each do |slot|

@@ -27,9 +27,10 @@ class SlotsCollector
     @direction = after.nil? ? 'before' : 'after'
   end
 
-  # collects all std_slots of current_user
-  def my_slots(user:)
-    valid_collections = [user.std_slots]
+  # collects all created by, tagged to, in my_calendar
+  # or in a group of current_user
+  def my_library_slots(user:)
+    valid_collections = PresentableSlots.call(relationship: ME, user: user)
     consider_mode(valid_collections, @mode)
   end
 
@@ -44,8 +45,6 @@ class SlotsCollector
   def user_slots(current_user: nil, user:)
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
-
-    return my_slots(user: current_user) if relationship == ME
 
     # get showable slot collections
     valid_collections = PresentableSlots.call(relationship: relationship,

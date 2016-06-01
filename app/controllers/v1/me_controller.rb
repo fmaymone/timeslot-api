@@ -55,12 +55,13 @@ module V1
     end
 
     # GET /v1/me/slots
-    # returns all std_slots of the current user
+    # returns all slots created by, tagged to, in my_calendar
+    # or in a group of the current_user
     def my_slots
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      the_result = collector.my_slots(user: current_user)
+      the_result = collector.my_library_slots(user: current_user)
       @slots = the_result.data
 
       if slot_paging_params.blank?

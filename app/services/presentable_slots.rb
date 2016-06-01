@@ -4,7 +4,15 @@ class PresentableSlots
   def self.call(relationship:, user:, current_user: nil)
     case relationship
     when ME
-      [user.related_slots, user.group_slots]
+      # Eigentlich kann man sich 'user.std_slots' sparen, denn
+      # fuer jeden slot, den ein user erzeugt, wird ein passengership
+      # erzeugt, welches in 'user.related_slots' enthalten ist.
+      # Die specs muessen aber noch aktualisiert werden und da duplicates
+      # gefiltert werden, aendert sich das Resultat nicht, kostet jedoch mehr.
+      [user.std_slots, # checkt den owner, besser waere es, den metaslot
+       # creator zu checken, aber kommt momentan aufs gleiche raus
+       user.related_slots,
+       user.group_slots]
     when FRIEND
       # includes public, friend-visible and friend-of-friend (foaf) visible
       # std_slots, slots from public groups and
