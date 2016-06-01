@@ -78,11 +78,19 @@ module V1
 
     # GET /v1/groups/:group_uuid/dates
     def dates
-      @group = Group.find_by!(uuid: params[:group_uuid])
-      authorize @group
+      authorize current_user
 
-      collector = DatesCollector.new(timezone: params[:timezone])
-      @dates = collector.group_slot_dates(group: @group)
+      uuid = params[:group_uuid]
+      collector = DatesCollector.new(current_user: current_user,
+                                     timezone: params[:timezone])
+
+      if current_user.slot_sets.values.include? uuid
+        @dates = collector.my_special_slots_dates(uuid: uuid)
+      else
+        group = Group.find_by!(uuid: uuid)
+        authorize group
+        @dates = collector.group_slot_dates(group: group)
+      end
 
       render "v1/slots/dates"
     end

@@ -316,48 +316,107 @@ resource "Groups" do
     response_field :data, "Array with dates where a slot is happening, " \
                           "(starting, ongoing or ending)"
 
-    let(:group) { create(:group, owner: current_user) }
-    let(:group_uuid) { group.uuid }
-    let!(:containerships) do
-      two_days = create(:slot, start_date: '2016-03-30', end_date: '2016-03-31')
-      five_days = create(:slot, start_date: '2016-01-01', end_date: '2016-01-05')
-      est_timezone = create(:slot,
-                            start_date: "2016-05-18T07:59:58.554-05:00",
-                            end_date: "2016-05-18T023:59:58.554-05:00")
+    context 'real group' do
+      let(:group) { create(:group, owner: current_user) }
+      let(:group_uuid) { group.uuid }
+      let!(:containerships) do
+        two_days = create(:slot, start_date: '2016-03-30', end_date: '2016-03-31')
+        five_days = create(:slot, start_date: '2016-01-01', end_date: '2016-01-05')
+        est_timezone = create(:slot,
+                              start_date: "2016-05-18T07:59:58.554-05:00",
+                              end_date: "2016-05-18T023:59:58.554-05:00")
 
-      create(:containership, slot: two_days, group: group)
-      create(:containership, slot: five_days, group: group)
-      create(:containership, slot: est_timezone, group: group)
-    end
+        create(:containership, slot: two_days, group: group)
+        create(:containership, slot: five_days, group: group)
+        create(:containership, slot: est_timezone, group: group)
+      end
 
-    example "Get all dates where slots in a slotgroup happen", document: :v1 do
-      explanation "This is needed for the agenda picker to show the correct " \
-                  "color for dates with slots.\n\n" \
-                  "returns 200 and an array of dates\n\n" \
-                  "returns 404 if UUID is invalid"
-      do_request
-
-      expect(response_status).to eq(200)
-      expect(json).to have_key("result")
-      expect(json["result"]).to include '2016-01-01'
-      expect(json["result"]).to include '2016-01-02'
-      expect(json["result"]).to include '2016-01-03'
-      expect(json["result"]).to include '2016-01-04'
-      expect(json["result"]).to include '2016-01-05'
-      expect(json["result"]).to include '2016-03-30'
-      expect(json["result"]).to include '2016-03-31'
-      expect(json["result"]).to include '2016-05-18'
-      expect(json["result"]).to include '2016-05-19'
-    end
-
-    describe 'other timezone' do
-      let(:timezone) { '-05:00' }
-
-      example "Get all dates where slots happen in other timezone",
-              document: :v1 do
+      example "Get all dates where slots in a slotgroup happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
         do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-01-01'
+        expect(json["result"]).to include '2016-01-02'
+        expect(json["result"]).to include '2016-01-03'
+        expect(json["result"]).to include '2016-01-04'
+        expect(json["result"]).to include '2016-01-05'
+        expect(json["result"]).to include '2016-03-30'
+        expect(json["result"]).to include '2016-03-31'
         expect(json["result"]).to include '2016-05-18'
-        expect(json["result"]).not_to include '2016-05-19'
+        expect(json["result"]).to include '2016-05-19'
+      end
+
+      describe 'other timezone' do
+        let(:timezone) { '-05:00' }
+
+        example "Get all dates where slots happen in other timezone",
+                document: :v1 do
+          do_request
+          expect(json["result"]).to include '2016-05-18'
+          expect(json["result"]).not_to include '2016-05-19'
+        end
+      end
+    end
+
+    describe 'my calendar slots dates' do
+      let!(:created_slot_not_in_calendar) do
+        slot = create(:std_slot_public, creator: current_user,
+                      owner: current_user, start_date: '2010-03-30',
+                      end_date: '2010-03-31')
+        create(:passengership, slot: slot, user: current_user,
+               show_in_my_schedule: false)
+        slot
+      end
+      let!(:created_private_slot_in_calendar) do
+        slot = create(:std_slot_private, creator: current_user,
+                      owner: current_user, start_date: '2011-03-30',
+                      end_date: '2011-03-31')
+        create(:passengership, slot: slot, user: current_user,
+               show_in_my_schedule: true)
+        slot
+      end
+      let!(:passengerships) do
+        two_days = create(:std_slot_public, start_date: '2017-03-30',
+                          end_date: '2017-03-31')
+        five_days = create(:std_slot_public, start_date: '2017-01-01',
+                           end_date: '2017-01-05')
+        est_timezone = create(:std_slot_public,
+                              start_date: "2017-05-18T07:59:58.554-05:00",
+                              end_date: "2017-05-18T023:59:58.554-05:00")
+
+        create(:passengership, slot: two_days, user: current_user)
+        create(:passengership, slot: five_days, user: current_user)
+        create(:passengership, slot: est_timezone, user: current_user)
+      end
+      let(:group_uuid) { current_user.my_cal_uuid }
+
+      example "Get all dates where slots in a slotgroup happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2017-01-01'
+        expect(json["result"]).to include '2017-01-02'
+        expect(json["result"]).to include '2017-01-03'
+        expect(json["result"]).to include '2017-01-04'
+        expect(json["result"]).to include '2017-01-05'
+        expect(json["result"]).to include '2017-03-30'
+        expect(json["result"]).to include '2017-03-31'
+        expect(json["result"]).to include '2017-05-18'
+        expect(json["result"]).to include '2017-05-19'
+        expect(json["result"]).to include '2011-03-30'
+        expect(json["result"]).to include '2011-03-31'
+        expect(json["result"]).not_to include '2010-03-30'
+        expect(json["result"]).not_to include '2010-03-31'
       end
     end
   end

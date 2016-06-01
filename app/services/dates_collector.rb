@@ -5,6 +5,20 @@ class DatesCollector
     @timezone = timezone || Time.zone.now.utc.formatted_offset
   end
 
+  def my_special_slots_dates(uuid: uuid)
+    return [] unless @current_user
+    special_sets = @current_user.slot_sets.invert
+
+    case special_sets[uuid]
+    when 'my_cal_uuid'
+      collection = @current_user.my_calendar_slots
+    when 'my_lib_uuid'
+    when 'friends_cal_uuid'
+    end
+
+    date_series_for_slots(slot_collection: collection)
+  end
+
   def group_slot_dates(group:)
     collection = group.slots
     date_series_for_slots(slot_collection: collection)
