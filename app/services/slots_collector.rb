@@ -83,7 +83,7 @@ class SlotsCollector
     friends = UserQuery::Relationship.new(user.id).my_friends.to_a
 
     valid_collections = [StdSlot.where(owner: friends).unprivate]
-                         # ReSlot.where(slotter: friends).unprivate]
+
     consider_mode(valid_collections, @mode)
   end
 
