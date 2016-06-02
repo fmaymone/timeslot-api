@@ -14,8 +14,7 @@ class DatesCollector
     when 'my_lib_uuid'
       collections = PresentableSlots.call(relationship: ME, user: @current_user)
     when 'friends_cal_uuid'
-      friends = UserQuery::Relationship.new(@current_user.id).my_friends.to_a
-      collections = [StdSlot.where(owner: friends).unprivate]
+      collections = PresentableSlots.friends_slots(user: @current_user)
     end
 
     collect_dates(collections)

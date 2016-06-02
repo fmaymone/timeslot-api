@@ -48,16 +48,24 @@ class PresentableSlots
     end
   end
 
-  def self.std_slots(relationship:, user:)
-    case relationship
-    when ME
-      [user.std_slots]
-    when FRIEND
-      [user.std_slots.unprivate]
-    when FOAF
-      [user.std_slots_public, user.std_slots_foaf]
-    when STRANGER, VISITOR
-      [user.std_slots_public]
-    end
+  def self.friends_slots(user:)
+    # ALTERNATIVE: to join on the db level:
+    # friends = UserQuery::Relationship.new(current_user.id).my_friends
+    friends = UserQuery::Relationship.new(user.id).my_friends.to_a
+    [StdSlot.where(owner: friends).unprivate]
   end
- end
+
+  # unused
+  # def self.std_slots(relationship:, user:)
+  #   case relationship
+  #   when ME
+  #     [user.std_slots]
+  #   when FRIEND
+  #     [user.std_slots.unprivate]
+  #   when FOAF
+  #     [user.std_slots_public, user.std_slots_foaf]
+  #   when STRANGER, VISITOR
+  #     [user.std_slots_public]
+  #   end
+  # end
+end

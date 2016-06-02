@@ -78,12 +78,7 @@ class SlotsCollector
 
   # collects all non-private slots from all friends of the current_user
   def slots_from_friends(user:)
-    # ALTERNATIVE: to join on the db level:
-    # friends = UserQuery::Relationship.new(current_user.id).my_friends
-    friends = UserQuery::Relationship.new(user.id).my_friends.to_a
-
-    valid_collections = [StdSlot.where(owner: friends).unprivate]
-
+    valid_collections = PresentableSlots.friends_slots(user: user)
     consider_mode(valid_collections, @mode)
   end
 
