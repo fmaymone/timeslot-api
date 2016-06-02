@@ -1379,6 +1379,21 @@ RSpec.describe Feed, :activity, :async, type: :model do
         news_feed_follower = Feed.news_feed(follower.id)['results'].as_json
         expect(news_feed_follower.count).to be(1) # +1 user activity (new friendship of a friend)
         expect(news_feed_follower.first['user']['friendshipState']).to eq('stranger') # personal state
+
+        # Stranger makes a friend request from the activity message
+        follower.initiate_friendship(friend.id)
+
+        news_feed_follower = Feed.news_feed(follower.id)['results'].as_json
+        expect(news_feed_follower.count).to be(1) # +1 user activity (new friendship of a friend)
+        expect(news_feed_follower.first['user']['friendshipState']).to eq('pending active') # personal state
+
+        # Perform activity: accept requested friendship
+        friend.friendship(follower.id).accept
+
+        news_feed_follower = Feed.news_feed(follower.id)['results'].as_json
+        expect(news_feed_follower.count).to be(2) # +1 user activity (new friendship of a friend)
+        expect(news_feed_follower[0]['user']['friendshipState']).to eq('friend') # personal state
+        expect(news_feed_follower[1]['user']['friendshipState']).to eq('friend') # personal state
       end
 
       it "Notification Feed (activities to own content)" do
