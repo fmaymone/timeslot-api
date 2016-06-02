@@ -42,8 +42,8 @@ class NewUser
   # end
 
   def create_default_calendars(user:)
-    private_cal_uuid = user.slot_sets['my_private_slots_uuid']
-    public_cal_uuid = user.slot_sets['my_public_slots_uuid']
+    private_cal_uuid = user.my_private_slots_uuid
+    public_cal_uuid = user.my_public_slots_uuid
 
     private_group = Group.find_or_create_by(uuid: private_cal_uuid) do |calendar|
       calendar.owner = user

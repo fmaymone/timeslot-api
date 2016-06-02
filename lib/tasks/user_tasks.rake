@@ -24,8 +24,8 @@ namespace :users do
           # service = NewUser.new(user_params: 'unused')
           # result = service.create_default_calendars(user: user)
 
-          private_cal_uuid = user.slot_sets['my_private_slots_uuid']
-          public_cal_uuid = user.slot_sets['my_public_slots_uuid']
+          private_cal_uuid = user.my_private_slots_uuid
+          public_cal_uuid = user.my_public_slots_uuid
 
           priv_c = Group.find_by(uuid: private_cal_uuid)
           if priv_c

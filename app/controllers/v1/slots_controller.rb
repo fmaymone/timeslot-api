@@ -49,19 +49,19 @@ module V1
       # my_friend_slots - which are no real groups) we want to put it in
       # either the users public or private calendar.
       # ASK: vielleicht soll der schedule auch als kalender gelten
-      real_groups = sets - [current_user.slot_sets['my_friend_slots_uuid'],
-                            current_user.slot_sets['my_cal_uuid']] if sets
+      real_groups = sets - [current_user.my_friend_slots_uuid,
+                            current_user.my_cal_uuid] if sets
 
       return unless real_groups.blank?
 
       service = SlotsetManager.new(current_user: current_user)
 
       if slot.visibility == 'public'
-        uuid = current_user.slot_sets['my_public_slots_uuid']
+        uuid = current_user.my_public_slots_uuid
         public_group = Group.find_by uuid: uuid
         service.add!(slot, public_group)
       else
-        uuid = current_user.slot_sets['my_private_slots_uuid']
+        uuid = current_user.my_private_slots_uuid
         private_group = Group.find_by uuid: uuid
         service.add!(slot, private_group)
       end
@@ -272,13 +272,13 @@ module V1
       @slotgroups = current_user.groups & slot.slot_groups
 
       @my_cal_uuid = if current_user.my_calendar_slots.include? slot
-                       current_user.slot_sets['my_cal_uuid']
+                       current_user.my_cal_uuid
                      else
                        false
                      end
 
       @share_with_friends = if (slot.class < StdSlot) && slot.share_with_friends?
-                              current_user.slot_sets['my_friend_slots_uuid']
+                              current_user.my_friend_slots_uuid
                             else
                               false
                             end
@@ -304,7 +304,7 @@ module V1
       authorize @slot
 
       # TODO: update spec
-      if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
+      if params[:slot_groups].delete(current_user.my_cal_uuid)
         # current_user.passengerships.find_by(slot: @slot).try(:delete)
         current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end

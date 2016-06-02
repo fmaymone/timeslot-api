@@ -203,7 +203,7 @@ RSpec.describe "V1::Slots", type: :request do
     let(:current_user) { create(:user, :with_default_calendars) }
     let(:my_friend_slots) { current_user.slot_sets['my_friend_slots_uuid'] }
     let(:my_private_slots) {
-      uuid = current_user.slot_sets['my_private_slots_uuid']
+      uuid = current_user.my_private_slots_uuid
       Group.find_by uuid: uuid
     }
     let(:my_public_slots) {
