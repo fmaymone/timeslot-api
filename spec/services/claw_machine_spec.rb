@@ -54,7 +54,6 @@ RSpec.describe ClawMachine, type: :service do
         let(:search_term) { "zdf" }
 
         it "returns array of slots matching the search criteria" do
-          skip 'television also not working ??!!'
           result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)

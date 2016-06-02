@@ -1,5 +1,4 @@
 class DatesCollector
-
   def initialize(current_user: nil, timezone: nil)
     @current_user = current_user
     @timezone = timezone || Time.zone.now.utc.formatted_offset
@@ -15,6 +14,7 @@ class DatesCollector
     when 'my_lib_uuid'
       collections = PresentableSlots.call(relationship: ME, user: @current_user)
     when 'friends_cal_uuid'
+
     end
 
     collect_dates(collections)

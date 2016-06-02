@@ -173,6 +173,7 @@ resource "Slots" do
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
         expect(json).to have_key("firstGroup")
+        slot.reload
         expect(json.except('media', 'location', 'likerIds'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
