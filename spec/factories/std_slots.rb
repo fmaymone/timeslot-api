@@ -1,6 +1,7 @@
 FactoryGirl.define do
   factory :std_slot, class: StdSlot, parent: :slot do
-    association :owner, factory: :user, strategy: :build
+    # association :owner, factory: :user, strategy: :build
+    owner { creator } # so far, owner and creator are always the same
 
     transient do
       show_in_calendar true
@@ -8,9 +9,12 @@ FactoryGirl.define do
     end
 
     after :create do |slot, factory|
+      # create passengership for the slot creator by default
       create :passengership, slot: slot, user: slot.owner,
              show_in_my_schedule: factory.show_in_calendar,
              add_media_permission: false
+
+      # allows easy tagging of a user to a slot
       if factory.tag_user
         create :passengership, slot: slot, user: factory.tag_user,
                show_in_my_schedule: factory.show_in_calendar,

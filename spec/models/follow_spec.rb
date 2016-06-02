@@ -259,7 +259,7 @@ RSpec.describe Follow, type: :model do
 
       before(:each) do
         # Perform activities
-        UsersToSlotTagger.new(slot).tag([follower.id], user)
+        UsersToSlotTagger.new(slot).tag([follower.id])
         UsersToSlotTagger.new(reslot).tag([follower2.id], follower2) # aka 'reslot'
       end
 
@@ -296,7 +296,7 @@ RSpec.describe Follow, type: :model do
         expect(user.followings_count).to be(0)
         # Default Test Follower 1
         expect(follower.following?(slot)).to be(true)
-        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings).to include(slot.id.to_s)
         expect(follower.followings_count).to be(1)
         # Default Test Follower 2
         expect(follower2.following?(slot)).to be(false)

@@ -63,7 +63,7 @@ RSpec.describe "V1::Slots", type: :request do
 
           it "is visible to the owner" do
             get "/v1/slots/#{std_slot.id}", {},
-                'Authorization' => "Token token=#{std_slot.creator.auth_token}"
+                'Authorization' => "Token token=#{std_slot.owner.auth_token}"
             expect(response).to have_http_status :ok
           end
 
@@ -78,7 +78,7 @@ RSpec.describe "V1::Slots", type: :request do
             create(:friendship, :established, user: current_user,
                    friend: common_friend)
             create(:friendship, :established, user: common_friend,
-                   friend: std_slot.creator)
+                   friend: std_slot.owner)
 
             get "/v1/slots/#{std_slot.id}", {}, auth_header
             expect(response).to have_http_status :ok

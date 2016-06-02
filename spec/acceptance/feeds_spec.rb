@@ -14,18 +14,16 @@ resource "Feeds", :activity, :async do
 
     parameter :limit, "Maximum count of items which are included in the result"
     parameter :offset, "The offset value how many result items should be skipped " \
-                         "before the limits start counting (or use cursor instead)"
+                       "before the limits start counting (or use cursor instead)"
     parameter :cursor, "The ID of the activity to start loading from (not included) " \
-                         "(or use offset instead)"
+                       "(or use offset instead)"
 
     describe "Get the users activity feed" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) { create(:meta_slot,
-                               title: 'Slot title 21', creator: owner) }
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
-                          meta_slot: meta_slot) }
+                          title: 'Slot title 21', creator: owner) }
       let(:message) { I18n.t('slot_comment_me_singular', slot: slot.title) }
 
       example "Get the feed of the current users activities", document: :v1 do
@@ -63,19 +61,17 @@ resource "Feeds", :activity, :async do
     parameter :style, "Style of the news activity feed ('flat' or 'aggregated')"
     parameter :limit, "Maximum count of items which are included in the result"
     parameter :offset, "The offset value how many result items should be skipped " \
-                         "before the limits start counting (or use cursor instead)"
+                       "before the limits start counting (or use cursor instead)"
     parameter :cursor, "The ID of the activity to start loading from (not included) " \
-                         "(or use offset instead)"
+                       "(or use offset instead)"
 
     describe "Get an aggregated activity feed" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
       let(:user) { create(:user) }
-      let(:meta_slot) {
-        create(:meta_slot, title: 'Slot title 22', creator: user) }
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
-                          meta_slot: meta_slot) }
+                          title: 'Slot title 22', creator: user) }
       let(:message) { I18n.t('slot_comment_activity_singular',
                              actor: actor.username, slot: slot.title) }
 
@@ -146,19 +142,17 @@ resource "Feeds", :activity, :async do
 
     parameter :limit, "Maximum count of items which are included in the result"
     parameter :offset, "The offset value how many result items should be skipped " \
-                         "before the limits start counting (or use cursor instead)"
+                       "before the limits start counting (or use cursor instead)"
     parameter :cursor, "The ID of the activity to start loading from (not included) " \
-                         "(or use offset instead)"
+                       "(or use offset instead)"
 
     describe "The notification feed includes all In-App-Notifications " \
              "(only activities on content which the user owns, filter out own user activities)" do
       include_context "default slot response fields"
       include_context "default user response fields"
 
-      let(:meta_slot) {
-        create(:meta_slot, title: 'Slot title 23', creator: current_user) }
       let(:slot) { create(:std_slot_public, :with_media, :with_ios_location,
-                          meta_slot: meta_slot) }
+                          title: 'Slot title 23', creator: current_user) }
       let(:message) { I18n.t('slot_comment_notify-to-owner_singular',
                              actor: actor.username, slot: slot.title) }
 
@@ -196,9 +190,9 @@ resource "Feeds", :activity, :async do
 
     parameter :limit, "Maximum count of items which are included in the result"
     parameter :offset, "The offset value how many result items should be skipped " \
-                         "before the limits start counting (or use cursor instead)"
+                       "before the limits start counting (or use cursor instead)"
     parameter :cursor, "The ID of the activity to start loading from (not included) " \
-                         "(or use offset instead)"
+                       "(or use offset instead)"
 
     describe "The request feed includes all pending requests" do
       include_context "default user response fields"
@@ -251,9 +245,9 @@ resource "Feeds", :activity, :async do
 
     parameter :limit, "Maximum count of items which are included in the result"
     parameter :offset, "The offset value how many result items should be skipped " \
-                         "before the limits start counting (or use cursor instead)"
+                       "before the limits start counting (or use cursor instead)"
     parameter :cursor, "The ID of the activity to start loading from (not included) " \
-                         "(or use offset instead)"
+                       "(or use offset instead)"
 
     describe "The discovery feed includes all public activities." do
       include_context "default slot response fields"

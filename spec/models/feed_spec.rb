@@ -6,8 +6,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "User feeds", :redis do
     let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User follows another user" do
       before(:each) do
@@ -153,8 +152,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Slot feeds", :redis do
     let!(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User follows a slot" do
       before(:each) do
@@ -709,8 +707,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Mixed feeds & Aggregation", :redis do
     let!(:user) { create(:user) }
-    let!(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
     let!(:group) { create(:group, public: true, owner: user) }
     let!(:group_slot) { create(:std_slot_public, creator: user) }
     let!(:containership) { create(:containership, slot: group_slot, group: group) }
@@ -908,8 +905,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Delete Activities (Object Delete)", :redis do
     let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User delete the account" do
       before(:each) do
@@ -1036,8 +1032,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Delete Activities (Visibility Change Slot)", :redis do
     let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User change visibility of a slot" do
       before(:each) do
@@ -1131,8 +1126,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Delete Activities (Remove Activity)", :redis do
     let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User delete an activity" do
       before(:each) do
@@ -1194,8 +1188,7 @@ RSpec.describe Feed, :activity, :async, type: :model do
 
   context "Re-Activate Activities (e.g. ReLike)", :redis do
     let(:user) { create(:user) }
-    let(:meta_slot) { create(:meta_slot, creator: user) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let!(:slot) { create(:std_slot_public, creator: user) }
 
     context "User delete an activity" do
       before(:each) do
@@ -1489,9 +1482,10 @@ RSpec.describe Feed, :activity, :async, type: :model do
   end
 
   context "Update Shared Objects", :redis do
-    let(:user) { create(:user, :with_email, :with_password, picture: 'user.jpg') }
-    let(:meta_slot) { create(:meta_slot, creator: user, start_date: Time.zone.yesterday) }
-    let!(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+    let(:user) {
+      create(:user, :with_email, :with_password, picture: 'user.jpg') }
+    let!(:slot) {
+      create(:std_slot_public, creator: user, start_date: Time.zone.yesterday) }
 
     context "User follows a slot" do
       before(:each) do
