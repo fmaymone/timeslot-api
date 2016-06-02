@@ -496,22 +496,22 @@ module Feed
           end
         else
           # TODO: we have to fetch the personalized friendship-state from DB
-          fs = Friendship.find_by(user_id: viewer, friend_id: target['id'])
+          fs = Friendship.distinct.select(:state).find_by(user_id: viewer, friend_id: target['id'])
           if fs
             case fs.state
             when OFFERED
-              target['friendshipState'] = 'pending passive'
+              target['friendshipState'] = 'pending active'
             when ESTABLISHED
               target['friendshipState'] = 'friend'
             else
               target['friendshipState'] = 'stranger'
             end
           else
-            fs = Friendship.find_by(user_id: target['id'], friend_id: viewer)
+            fs = Friendship.distinct.select(:state).find_by(user_id: target['id'], friend_id: viewer)
             if fs
               case fs.state
               when OFFERED
-                target['friendshipState'] = 'pending active'
+                target['friendshipState'] = 'pending passive'
               when ESTABLISHED
                 target['friendshipState'] = 'friend'
               else
