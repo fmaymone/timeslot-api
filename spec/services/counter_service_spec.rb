@@ -162,7 +162,7 @@ RSpec.describe CounterService, type: :service do
       let(:owner) { create(:user, :with_3_friends) }
       let(:duplicate_user) { create(:user) }
       let(:duplicate_member) { create(:user) }
-      let(:slot) { create(:std_slot_friends, owner: owner) }
+      let(:slot) { create(:std_slot_friends, creator: owner) }
 
       let!(:group_1) do
         group_1 = create(:group, :with_3_members)

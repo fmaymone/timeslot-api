@@ -148,19 +148,19 @@ RSpec.describe SlotsCollector, type: :service do
 
     context "past" do
       let!(:januar_slot) do
-        create(:std_slot_public, owner: user, title: 'im januar',
+        create(:std_slot_public, creator: user, title: 'im januar',
                start_date: '2016-01-21 15:06:18Z',
                end_date: '2016-04-21 16:06:18Z'
               )
       end
       let!(:februar_slot) do
-        create(:std_slot_public, owner: user, title: 'im januar',
+        create(:std_slot_public, creator: user, title: 'im januar',
                start_date: '2016-02-21 15:06:18Z',
                end_date: '2016-04-21 16:06:18Z'
               )
       end
       let!(:maerz_slot) do
-        create(:std_slot_public, owner: user, title: 'im januar',
+        create(:std_slot_public, creator: user, title: 'im januar',
                start_date: '2016-03-21 15:06:18Z',
                end_date: '2016-04-21 16:06:18Z'
               )
@@ -185,37 +185,37 @@ RSpec.describe SlotsCollector, type: :service do
       let(:latest) { '2016-04-21T19:06:18.000Z' }
 
       let!(:between_slot) do
-        create(:std_slot_public, owner: user, title: 'in between',
+        create(:std_slot_public, creator: user, title: 'in between',
                start_date: '2016-04-21 15:06:18Z',
                end_date: '2016-04-21 16:06:18Z'
               )
       end
       let!(:overlap_earliest_slot) do
-        create(:std_slot_public, owner: user, title: 'overlap earliest',
+        create(:std_slot_public, creator: user, title: 'overlap earliest',
                start_date: '2016-04-21 03:06:18Z',
                end_date: '2016-04-21 16:06:18Z'
               )
       end
       let!(:overlap_latest_slot) do
-        create(:std_slot_public, owner: user, title: 'overlap latest',
+        create(:std_slot_public, creator: user, title: 'overlap latest',
                start_date: '2016-04-21 15:06:18Z',
                end_date: '2016-04-21 23:06:18Z'
               )
       end
       let!(:overlap_both_slot) do
-        create(:std_slot_public, owner: user, title: 'overlap both',
+        create(:std_slot_public, creator: user, title: 'overlap both',
                start_date: '2016-04-21 05:06:18Z',
                end_date: '2016-04-21 22:06:18Z'
               )
       end
       let!(:before_slot) do
-        create(:std_slot_public, owner: user, title: 'before',
+        create(:std_slot_public, creator: user, title: 'before',
                start_date: '2016-04-21 01:06:18Z',
                end_date: '2016-04-21 03:06:18Z'
               )
       end
       let!(:later_slot) do
-        create(:std_slot_public, owner: user, title: 'later',
+        create(:std_slot_public, creator: user, title: 'later',
                start_date: '2016-04-21 20:06:18Z',
                end_date: '2016-04-21 21:06:18Z'
               )

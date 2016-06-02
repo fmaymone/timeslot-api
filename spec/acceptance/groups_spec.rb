@@ -419,13 +419,13 @@ resource "Groups" do
 
     describe 'my library slots dates' do
       let!(:public_slot) {
-        create(:std_slot_public, owner: current_user,
+        create(:std_slot_public, creator: current_user,
                start_date: '2010-03-30', end_date: '2010-03-31',
                show_in_calendar: false)
       }
       let!(:private_slot) {
-       create(:std_slot_private, owner: current_user, start_date: '2011-03-30',
-              end_date: '2011-03-31')
+        create(:std_slot_private, creator: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
       }
       let!(:passengerships) do
         create(:passengership, slot: two_days, user: current_user,

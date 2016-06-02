@@ -311,7 +311,7 @@ RSpec.describe User, type: :model do
     let!(:stranger) do
       stranger = create(:user, :with_private_slot, :with_friend_slot,
                         :with_foaf_slot, :with_public_slot)
-      create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
+      create(:std_slot_public, creator: stranger, deleted_at: "12-05-2015")
       stranger
     end
 
