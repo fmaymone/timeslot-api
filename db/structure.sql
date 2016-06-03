@@ -117,7 +117,8 @@ CREATE TABLE base_slots (
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     type text NOT NULL,
-    slot_uuid uuid DEFAULT uuid_generate_v4()
+    slot_uuid uuid DEFAULT uuid_generate_v4(),
+    description character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -869,6 +870,13 @@ ALTER TABLE ONLY global_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v
 
 
 --
+-- Name: description; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY global_slots ALTER COLUMN description SET DEFAULT ''::character varying;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -971,6 +979,13 @@ ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4();
+
+
+--
+-- Name: description; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN description SET DEFAULT ''::character varying;
 
 
 --
@@ -1578,4 +1593,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160416150256');
 INSERT INTO schema_migrations (version) VALUES ('20160417140125');
 
 INSERT INTO schema_migrations (version) VALUES ('20160510125032');
+
+INSERT INTO schema_migrations (version) VALUES ('20160603103055');
 

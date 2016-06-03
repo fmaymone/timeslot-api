@@ -63,6 +63,7 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+  validates :description, length: { maximum: 500 }
   # validates :slot_uuid, presence: true # let the db take care of it for now
   validate :type_and_slot_type_in_sync
 

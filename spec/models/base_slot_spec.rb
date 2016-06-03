@@ -10,6 +10,7 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:images) }
   it { is_expected.to respond_to(:audios) }
   it { is_expected.to respond_to(:videos) }
+  it { is_expected.to respond_to(:description) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:containerships).inverse_of(:slot) }
   it { is_expected.to have_many(:slot_groups).inverse_of(:slots) }
@@ -44,6 +45,11 @@ RSpec.describe BaseSlot, type: :model do
 
   describe "when inheritance types are out of sync" do
     before { base_slot.slot_type = 2 }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when description is too long" do
+    before { base_slot.description = "a" * 501 }
     it { is_expected.to_not be_valid }
   end
 
