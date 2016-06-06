@@ -4,10 +4,10 @@ class SlotsetManager
 
   def initialize(current_user:)
     @current_user = current_user
-    @private_slots_uuid = current_user.slot_sets['my_private_slots_uuid']
-    @friend_slots_uuid = current_user.slot_sets['my_friend_slots_uuid']
-    @public_slots_uuid = current_user.slot_sets['my_public_slots_uuid']
-    @my_cal_uuid = current_user.slot_sets['my_cal_uuid']
+    @private_slots_uuid = current_user.my_private_slots_uuid
+    @friend_slots_uuid = current_user.my_friend_slots_uuid
+    @public_slots_uuid = current_user.my_public_slots_uuid
+    @my_cal_uuid = current_user.my_cal_uuid
   end
 
   def add!(slot, slotset)

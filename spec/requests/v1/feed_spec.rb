@@ -4,8 +4,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
   let(:json) { JSON.parse(response.body) }
   let(:current_user) { create(:user) }
   let(:actors) { create_list(:user, 3) }
-  let(:meta_slot) { create(:meta_slot, creator: current_user) }
-  let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+  let(:slot) { create(:std_slot_public, creator: current_user) }
   let(:auth_header) do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
@@ -32,7 +31,7 @@ RSpec.describe "V1::Feed", :async, type: :request do
           # Perform activity:
           post "/v1/slots/#{slot.id}/user_tags",
                {
-                   user_tags: actors.collect(&:id)
+                 user_tags: actors.collect(&:id)
                },
                auth_header
         }.not_to raise_error

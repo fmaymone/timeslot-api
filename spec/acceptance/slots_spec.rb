@@ -173,6 +173,7 @@ resource "Slots" do
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
         expect(json).to have_key("firstGroup")
+        slot.reload
         expect(json.except('media', 'location', 'likerIds'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
@@ -1196,7 +1197,7 @@ resource "Slots" do
     response_field :array,
                    "list of all users who added the slot to their 'MyCalendar'"
 
-    let(:parent) { create(:std_slot_public) }
+    let(:parent) { create(:std_slot_public, show_in_calendar: false) }
     let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do
@@ -1212,7 +1213,6 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json.length).to eq 2
         expect(json.first).to have_key "slotter"
-        # expect(json.first).to have_key "createdAt"
         expect(json.first["slotter"]).to have_key "id"
         expect(json.first["slotter"]).to have_key "image"
         expect(response_body).to include reslots.first.user.username

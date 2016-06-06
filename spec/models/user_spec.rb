@@ -311,14 +311,14 @@ RSpec.describe User, type: :model do
     let!(:stranger) do
       stranger = create(:user, :with_private_slot, :with_friend_slot,
                         :with_foaf_slot, :with_public_slot)
-      create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
+      create(:std_slot_public, creator: stranger, deleted_at: "12-05-2015")
       stranger
     end
 
     it "returns the number of stdslots current_user can see from other user" do
-      expect(friend.visible_slots_counter(current_user, StdSlot)).to eq 3
-      expect(foaf.visible_slots_counter(current_user, StdSlot)).to eq 2
-      expect(stranger.visible_slots_counter(current_user, StdSlot)).to eq 1
+      expect(friend.visible_slots_counter(current_user)).to eq 3
+      expect(foaf.visible_slots_counter(current_user)).to eq 2
+      expect(stranger.visible_slots_counter(current_user)).to eq 1
     end
   end
 

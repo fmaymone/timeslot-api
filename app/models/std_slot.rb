@@ -8,8 +8,6 @@ class StdSlot < BaseSlot
                      'public' => :StdSlotPublic
                    }.freeze
 
-  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
-
   belongs_to :owner, class_name: User, inverse_of: :std_slots
 
   validates :owner, presence: true
@@ -46,12 +44,13 @@ class StdSlot < BaseSlot
     # TODO: move this to the distribution definitions
     if visibility == 'private' && current_follower.any?
       # Forward unshare activity to followers (reslotter + tagged users)
-      create_activity('private',
-          feed_fwd: {
-              User: [creator.id.to_s],
-              Notification: current_follower
-          },
-          push_fwd: current_follower.map(&:to_i)
+      create_activity(
+        'private',
+        feed_fwd: {
+          User: [creator.id.to_s],
+          Notification: current_follower
+        },
+        push_fwd: current_follower.map(&:to_i)
       )
     end
   end

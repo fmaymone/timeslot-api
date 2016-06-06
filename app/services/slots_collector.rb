@@ -27,9 +27,10 @@ class SlotsCollector
     @direction = after.nil? ? 'before' : 'after'
   end
 
-  # collects all std_slots of current_user
-  def my_slots(user:)
-    valid_collections = [user.std_slots]
+  # collects all created by, tagged to, in my_calendar
+  # or in a group of current_user
+  def my_library_slots(user:)
+    valid_collections = PresentableSlots.call(relationship: ME, user: user)
     consider_mode(valid_collections, @mode)
   end
 
@@ -44,8 +45,6 @@ class SlotsCollector
   def user_slots(current_user: nil, user:)
     # determine relation to current_user
     relationship = UserRelationship.call(current_user.try(:id), user.id)
-
-    return my_slots(user: current_user) if relationship == ME
 
     # get showable slot collections
     valid_collections = PresentableSlots.call(relationship: relationship,
@@ -79,32 +78,8 @@ class SlotsCollector
 
   # collects all non-private slots from all friends of the current_user
   def slots_from_friends(user:)
-    # ALTERNATIVE: to join on the db level:
-    # friends = UserQuery::Relationship.new(current_user.id).my_friends
-    friends = UserQuery::Relationship.new(user.id).my_friends.to_a
-
-    valid_collections = [StdSlot.where(owner: friends).unprivate]
-                         # ReSlot.where(slotter: friends).unprivate]
+    valid_collections = PresentableSlots.friends_slots(user: user)
     consider_mode(valid_collections, @mode)
-  end
-
-  # collects only active std_slots current_user or visitor is allowed to
-  # see from requested_user, currently this is only used for counting, so
-  # I skip the pagination functionality
-  def active_slots_count(current_user: nil, user:, slot_class: StdSlot)
-    rs = UserRelationship.call(current_user.try(:id), user.id)
-
-    if slot_class == StdSlot
-      valid_collections = PresentableSlots.std_slots(relationship: rs,
-                                                     user: user)
-    # elsif slot_class == ReSlot
-      # valid_collections = PresentableSlots.re_slots(relationship: rs,
-      #                                               user: user)
-    end
-
-    counter = 0
-    valid_collections.each { |relation| counter += relation.active.count }
-    counter
   end
 
   # TODO: write specs

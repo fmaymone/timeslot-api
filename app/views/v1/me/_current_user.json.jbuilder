@@ -20,13 +20,13 @@ json.extract!(user,
               # :default_group_alerts
              )
 
-json.my_calendar_uuid user.slot_sets['my_cal_uuid']
-json.friends_calendar_uuid user.slot_sets['friends_cal_uuid']
-json.all_my_slots_uuid user.slot_sets['my_lib_uuid']
-json.my_created_slots_uuid user.slot_sets['my_created_slots_uuid']
-json.my_private_slots_uuid user.slot_sets['my_private_slots_uuid']
-json.my_friend_slots_uuid user.slot_sets['my_friend_slots_uuid']
-json.my_public_slots_uuid user.slot_sets['my_public_slots_uuid']
+json.my_calendar_uuid user.my_cal_uuid
+json.friends_calendar_uuid user.friends_cal_uuid
+json.all_my_slots_uuid user.my_lib_uuid
+json.my_created_slots_uuid user.my_created_slots_uuid
+json.my_private_slots_uuid user.my_private_slots_uuid
+json.my_friend_slots_uuid user.my_friend_slots_uuid
+json.my_public_slots_uuid user.my_public_slots_uuid
 
 tmp = []
 

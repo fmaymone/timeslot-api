@@ -303,6 +303,174 @@ resource "Groups" do
     end
   end
 
+  # dates
+  get "/v1/groups/:group_uuid/dates" do
+    header "accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_uuid,
+              "ID of the group to get slots for", required: true
+    parameter :timezone,
+              "Offset for the timezone as string ('+10:00'), default is UTC"
+
+    response_field :data, "Array with dates where a slot is happening, " \
+                          "(starting, ongoing or ending)"
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:two_days) { create(:slot, title: 'two days',
+                                start_date: '2016-02-01', end_date: '2016-02-02')
+    }
+    let(:three_days) { create(:slot, title: 'three days',
+                                  start_date: '2016-03-01', end_date: '2016-03-03') }
+    let(:five_days) { create(:slot, title: 'five days',
+                                 start_date: '2016-01-01', end_date: '2016-01-05') }
+    let(:same_day1) { create(:slot, title: 'same day 1',
+                             start_date: '2016-03-30', end_date: '2016-03-30') }
+    let(:same_day2) { create(:slot, title: 'same day 2',
+                             start_date: '2016-03-30',
+                             end_date: '2016-03-30T23:59:59') }
+    let(:est_timezone) { create(:slot, title: 'est timezone sameday',
+                                start_date: "2016-05-18T07:59:58.554-05:00",
+                                end_date: "2016-05-18T023:59:58.554-05:00") }
+
+    context 'real group' do
+      let!(:containerships) do
+        create(:containership, slot: two_days, group: group)
+        create(:containership, slot: five_days, group: group)
+        create(:containership, slot: est_timezone, group: group)
+      end
+
+      let(:group_uuid) { group.uuid }
+
+      example "Get all dates when slots in a slotgroup happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-01-01'
+        expect(json["result"]).to include '2016-01-02'
+        expect(json["result"]).to include '2016-01-03'
+        expect(json["result"]).to include '2016-01-04'
+        expect(json["result"]).to include '2016-01-05'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+      end
+
+      describe 'other timezone' do
+        let(:timezone) { '-05:00' }
+
+        example "Get all dates when slots happen in other timezone",
+                document: :v1 do
+          do_request
+          expect(json["result"]).to include '2016-05-18'
+          expect(json["result"]).not_to include '2016-05-19'
+        end
+      end
+    end
+
+    describe 'my calendar slots dates' do
+      let!(:created_slot_not_in_calendar) do
+        create(:std_slot_public, creator: current_user,
+               owner: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
+      end
+      let!(:created_private_slot_in_calendar) do
+        create(:std_slot_private, creator: current_user,
+               owner: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
+      end
+      let!(:passengerships) do
+        create(:passengership, slot: two_days, user: current_user)
+        create(:passengership, slot: five_days, user: current_user)
+        create(:passengership, slot: est_timezone, user: current_user)
+      end
+      let!(:containerships) do
+        create(:containership, slot: three_days, group: group)
+        create(:containership, slot: same_day1, group: group)
+      end
+
+      let(:group_uuid) { current_user.my_cal_uuid }
+
+      example "Get all dates when slots in my_schedule happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-01-01'
+        expect(json["result"]).to include '2016-01-02'
+        expect(json["result"]).to include '2016-01-03'
+        expect(json["result"]).to include '2016-01-04'
+        expect(json["result"]).to include '2016-01-05'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+        expect(json["result"]).not_to include '2016-03-30'
+        expect(json["result"]).not_to include '2016-03-31'
+      end
+    end
+
+    describe 'my library slots dates' do
+      let!(:public_slot) {
+        create(:std_slot_public, creator: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
+      }
+      let!(:private_slot) {
+        create(:std_slot_private, creator: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
+      }
+      let!(:passengerships) do
+        create(:passengership, slot: two_days, user: current_user,
+               show_in_my_schedule: true)
+        create(:passengership, slot: est_timezone, user: current_user,
+               add_media_permission: true)
+      end
+      let!(:containerships) do
+        create(:containership, slot: three_days, group: group)
+        create(:containership, slot: same_day1, group: group)
+      end
+
+      let(:group_uuid) { current_user.my_lib_uuid }
+
+      example "Get all dates when slots in my library happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-03-01'
+        expect(json["result"]).to include '2016-03-02'
+        expect(json["result"]).to include '2016-03-03'
+        expect(json["result"]).to include '2016-03-30'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+
+        dates = json['result']
+        expect(dates).to include private_slot.start_date.to_date.as_json
+        expect(dates).to include private_slot.end_date.to_date.as_json
+        expect(dates).to include public_slot.start_date.to_date.as_json
+        expect(dates).to include public_slot.end_date.to_date.as_json
+        expect(dates).to include two_days.start_date.to_date.as_json
+        expect(dates).to include two_days.end_date.to_date.as_json
+        expect(dates).to include three_days.start_date.to_date.as_json
+        expect(dates).to include three_days.end_date.to_date.as_json
+        expect(dates).to include est_timezone.start_date.to_date.as_json
+        expect(dates).to include est_timezone.end_date.to_date.as_json
+      end
+    end
+  end
+
   # members
   get "/v1/groups/:group_uuid/members" do
     header "accept", "application/json"
@@ -346,7 +514,7 @@ resource "Groups" do
       expect(response_body).to include(active_member.updated_at.as_json)
       expect(response_body).not_to include(deactivated_user.user.username)
       # expect(response_body)
-        # .to include(v1_user_url(group.members.first, format: :json))
+      # .to include(v1_user_url(group.members.first, format: :json))
     end
   end
 

@@ -5,7 +5,7 @@ RSpec.describe SlotsetManager, type: :service do
     described_class.new(current_user: current_user)
   end
   let(:current_user) { create(:user) }
-  let(:slot) { create(:std_slot_public) }
+  let!(:slot) { create(:std_slot_public) }
   let(:slot_group) { create(:group, owner: current_user) }
   let(:deleted_slot_group) {
     create(:group, owner: current_user, deleted_at: Time.zone.now) }
@@ -304,7 +304,7 @@ RSpec.describe SlotsetManager, type: :service do
     let(:current_user) { create(:user, :with_default_calendars) }
     let(:slot) { create(:std_slot_private, creator: current_user) }
     let(:users_private_group) {
-      Group.find_by uuid: current_user.slot_sets['my_private_slots_uuid'] }
+      Group.find_by uuid: current_user.my_private_slots_uuid }
     let(:users_public_group) {
       Group.find_by uuid: current_user.slot_sets['my_public_slots_uuid'] }
 

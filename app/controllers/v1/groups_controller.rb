@@ -76,6 +76,25 @@ module V1
       end
     end
 
+    # GET /v1/groups/:group_uuid/dates
+    def dates
+      authorize current_user
+
+      uuid = params[:group_uuid]
+      collector = DatesCollector.new(current_user: current_user,
+                                     timezone: params[:timezone])
+
+      if current_user.slot_sets.values.include? uuid
+        @dates = collector.special_set_slots_dates(uuid: uuid)
+      else
+        group = Group.find_by!(uuid: uuid)
+        authorize group
+        @dates = collector.group_slot_dates(group: group)
+      end
+
+      render "v1/slots/dates"
+    end
+
     # GET /v1/groups/:group_uuid/members
     def members
       @group = Group.find_by!(uuid: params[:group_uuid])
@@ -91,12 +110,6 @@ module V1
 
       render :related, locals: { memberships: group.related_memberships }
     end
-
-    # GET /v1/groups/:group_id/members/:user_id
-    # return if the specified user is an activated member of the specified group
-    # or return the state of the specified user regarding the specified group
-    # def membership_state
-    # end
 
     # POST /v1/groups/:group_uuid/accept
     def accept_invite

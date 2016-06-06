@@ -343,13 +343,13 @@ resource "Users" do
     let(:id) { user.id }
 
     let!(:slot_public) {
-      create(:std_slot_public, :with_media, owner: user, creator: user) }
+      create(:std_slot_public, :with_media, creator: user) }
     let!(:slot_foaf) {
-      create(:std_slot_foaf, :with_media, owner: user, creator: user) }
+      create(:std_slot_foaf, :with_media, creator: user) }
     let!(:slot_friend) {
-      create(:std_slot_friends, :with_media, owner: user, creator: user) }
+      create(:std_slot_friends, :with_media, creator: user) }
     let!(:slot_private) {
-      create(:std_slot_private, :with_media, owner: user, creator: user) }
+      create(:std_slot_private, :with_media, creator: user) }
     # let!(:shared_group) do
     #   gs = create(:group_slot, :with_media, creator: user)
     #   create(:membership, :active, group: gs.group, user: current_user)
@@ -500,42 +500,42 @@ resource "Users" do
         let(:latest) { '2016-04-21T19:06:18.000Z' }
 
         let!(:slots) do
-          [create(:std_slot_public, owner: friend, title: 'in between',
+          [create(:std_slot_public, creator: friend, title: 'in between',
                   start_date: '2016-04-21 15:06:18Z',
                   end_date: '2016-04-21 16:06:18Z'
                  ),
-           create(:std_slot_public, owner: friend, title: 'overlap earliest',
+           create(:std_slot_public, creator: friend, title: 'overlap earliest',
                   start_date: '2016-04-21 03:06:18Z',
                   end_date: '2016-04-21 16:06:18Z'
                  ),
-           create(:std_slot_public, owner: friend, title: 'overlap latest',
+           create(:std_slot_public, creator: friend, title: 'overlap latest',
                   start_date: '2016-04-21 15:06:18Z',
                   end_date: '2016-04-21 23:06:18Z'
                  ),
-           create(:std_slot_public, owner: friend, title: 'overlap both',
+           create(:std_slot_public, creator: friend, title: 'overlap both',
                   start_date: '2016-04-21 05:06:18Z',
                   end_date: '2016-04-21 22:06:18Z'
                  ),
-           create(:std_slot_public, owner: friend, title: 'starts near end',
+           create(:std_slot_public, creator: friend, title: 'starts near end',
                   start_date: '2016-04-21 19:06:17Z',
                   end_date: '2016-04-21 22:06:18Z'
                  )
           ]
         end
         let!(:before_slot) do
-          create(:std_slot_public, owner: friend, title: 'before',
+          create(:std_slot_public, creator: friend, title: 'before',
                  start_date: '2016-04-21 01:06:18Z',
                  end_date: '2016-04-21 03:06:18Z'
                 )
         end
         let!(:problematic_before_slot) do
-          create(:std_slot_public, owner: friend, title: 'problematic before',
+          create(:std_slot_public, creator: friend, title: 'problematic before',
                  start_date: '2016-04-21 06:06:18Z',
                  end_date: '2016-04-21 07:06:18Z'
                 )
         end
         let!(:later_slot) do
-          create(:std_slot_public, owner: friend, title: 'later',
+          create(:std_slot_public, creator: friend, title: 'later',
                  start_date: '2016-04-21 22:06:18Z',
                  end_date: '2016-04-21 23:06:18Z'
                 )
@@ -646,16 +646,16 @@ resource "Users" do
         let(:limit) { 3 }
 
         let!(:std_slot_private) {
-          create(:std_slot_private, owner: friend,
+          create(:std_slot_private, creator: friend,
                  start_date: Time.zone.tomorrow.next_week) }
         let!(:std_slot_friend) {
-          create(:std_slot_friends, owner: friend,
+          create(:std_slot_friends, creator: friend,
                  start_date: Time.zone.today.next_week) }
         let!(:std_slot_foaf) {
-          create(:std_slot_friends, owner: friend,
+          create(:std_slot_friends, creator: friend,
                  start_date: Time.zone.today.next_week) }
         let!(:std_slot_public) {
-          create(:std_slot_public, owner: friend,
+          create(:std_slot_public, creator: friend,
                  start_date: Time.zone.tomorrow) }
         # let!(:re_slots) { create_list(:re_slot, 2, slotter: friend) }
 
@@ -756,10 +756,10 @@ resource "Users" do
         let(:joe) { create(:user, username: "Joe") }
         let(:id) { joe.id }
 
-        let!(:std_slot_secret) { create(:std_slot_private, owner: joe) }
-        let!(:std_slot_friend) { create(:std_slot_friends, owner: joe) }
-        let!(:std_slot_foaf) { create(:std_slot_foaf, owner: joe) }
-        let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
+        let!(:std_slot_secret) { create(:std_slot_private, creator: joe) }
+        let!(:std_slot_friend) { create(:std_slot_friends, creator: joe) }
+        let!(:std_slot_foaf) { create(:std_slot_foaf, creator: joe) }
+        let!(:std_slot_public) { create(:std_slot_public, creator: joe) }
         # let!(:re_slots) { create(:re_slot, slotter: joe) }
         # let(:incommon_groupslot) { create(:group_slot) }
 
@@ -893,6 +893,49 @@ resource "Users" do
           end
         end
       end
+    end
+  end
+
+  get "/v1/users/:id/dates" do
+    header "Authorization", :auth_header
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to get the slot dates for."
+
+    let(:user) { create(:user) }
+
+    let!(:private_slot) {
+      create(:std_slot_private, creator: user, start_date: '2015-01-01',
+             end_date: '2015-01-02')
+    }
+    let!(:public_slot) {
+      create(:std_slot_public, creator: user, start_date: '2016-02-02',
+             end_date: '2016-02-04')
+
+    }
+    let!(:public_calendar_slot) do
+      slot = create(:std_slot_public, start_date: '2017-03-03',
+                    end_date: '2017-03-03')
+      create(:passengership, user: user, slot: slot)
+      slot
+    end
+    let(:id) { user.id }
+
+    example "Get list of dates when slots of another user are happening",
+            document: :v1 do
+      explanation "Returns all dates where a slot returned by " \
+                  "GET /users/:id/slots is happening.\n\n" \
+                  "returns 404 if user doesn't exist"
+      do_request
+
+      expect(response_status).to eq(200)
+
+      expect(response_body).to include public_slot.start_date.to_date.as_json
+      expect(response_body).to include public_slot.end_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.start_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.end_date.to_date.as_json
+      expect(response_body).not_to include private_slot.start_date.to_date.as_json
+      expect(response_body).not_to include private_slot.end_date.to_date.as_json
     end
   end
 

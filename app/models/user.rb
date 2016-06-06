@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
   include Follow
 
   store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,
-                 :my_lib_uuid, :my_created_slots_uuid, :my_private_slots,
+                 :my_lib_uuid, :my_created_slots_uuid, :my_private_slots_uuid,
                  :my_friend_slots_uuid, :my_public_slots_uuid
 
   has_secure_password validations: false
@@ -284,17 +284,16 @@ class User < ActiveRecord::Base
   # TODO: write spec
   def public_group_slots
     groups = active_groups.public
-    slot_ids = Containership.where(group_id: groups)
+    slot_ids = Containership.where(group_id: groups).pluck(:slot_id)
     BaseSlot.where(id: slot_ids)
   end
 
-  def visible_slots_counter(user, slot_class)
-    SlotsCollector.new.active_slots_count(current_user: user, user: self,
-                                          slot_class: slot_class)
+  def visible_slots_counter(current_user)
+    CounterService.new.active_slots(user: self, current_user: current_user)
   end
 
   def visible_calendars_counter(user)
-    CounterService.new.active_visible_calendars(asker: user, requestee: self)
+    CounterService.new.active_calendars(current_user: user, user: self)
   end
 
   def prepare_for_slot_deletion(slot)

@@ -42,9 +42,9 @@ FactoryGirl.define do
     trait :with_default_calendars do
       after :create do |user|
         create :group, owner: user, public: false, name: 'Private',
-               uuid: user.slot_sets['my_private_slots_uuid']
+               uuid: user.my_private_slots_uuid
         create :group, owner: user, public: true, name: 'Public',
-               uuid: user.slot_sets['my_public_slots_uuid']
+               uuid: user.my_public_slots_uuid
       end
     end
 
@@ -68,25 +68,25 @@ FactoryGirl.define do
 
     trait :with_private_slot do
       after :create do |user|
-        create :std_slot_private, owner: user
+        create :std_slot_private, owner: user, creator: user
       end
     end
 
     trait :with_friend_slot do
       after :create do |user|
-        create :std_slot_friends, owner: user
+        create :std_slot_friends, owner: user, creator: user
       end
     end
 
     trait :with_foaf_slot do
       after :create do |user|
-        create :std_slot_foaf, owner: user
+        create :std_slot_foaf, owner: user, creator: user
       end
     end
 
     trait :with_public_slot do
       after :create do |user|
-        create :std_slot_public, owner: user
+        create :std_slot_public, owner: user, creator: user
       end
     end
   end

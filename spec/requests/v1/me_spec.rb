@@ -50,8 +50,8 @@ RSpec.describe "V1::Me", type: :request do
     context "json std_slots counter" do
       let(:stranger) { create(:user, :with_public_slot) }
       let!(:my_slots) do
-        create(:std_slot_private, owner: current_user, creator: current_user)
-        create(:std_slot_public, owner: current_user, creator: current_user)
+        create(:std_slot_private, creator: current_user)
+        create(:std_slot_public, creator: current_user)
       end
       let!(:not_my_slot) { create(:std_slot_public) }
 
@@ -314,7 +314,7 @@ RSpec.describe "V1::Me", type: :request do
       # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
-        slots.push create(:std_slot_private, owner: current_user,
+        slots.push create(:std_slot_private, creator: current_user,
                           creator: current_user)
         slots.push create(:std_slot_friends, owner: current_user,
                           creator: current_user)
@@ -361,26 +361,22 @@ RSpec.describe "V1::Me", type: :request do
           :std_slot_private,
           start_date: Time.zone.tomorrow,
           title: 'upcoming slot',
-          owner: @current_user,
           creator: @current_user)
         @private_upcoming_slot_a = create(
           :std_slot_private,
           start_date: Time.zone.today.next_week.end_of_day,
           end_date: Time.zone.today.next_week.next_month,
           title: 'upcoming slot A',
-          owner: @current_user,
           creator: @current_user)
         @private_upcoming_slot_b = create(
           :std_slot_private,
           start_date: Time.zone.today.next_week.end_of_day,
           end_date: Time.zone.today.next_week.next_month,
           title: 'upcoming slot B',
-          owner: @current_user,
           creator: @current_user)
         @private_upcoming_slots = create_list(
           :std_slot_private, 3,
           start_date: Time.zone.tomorrow,
-          owner: @current_user,
           creator: @current_user)
         # @upcoming_reslot = create(
         #   :re_slot,
@@ -401,14 +397,12 @@ RSpec.describe "V1::Me", type: :request do
           start_date: Time.zone.yesterday,
           end_date: Time.zone.tomorrow,
           title: 'ongoing slot',
-          owner: @current_user,
           creator: @current_user)
         @friends_ongoing_slots = create_list(
           :std_slot_friends, 12,
           start_date: Time.zone.yesterday,
           end_date: Time.zone.tomorrow,
           title: 'ongoing slots',
-          owner: @current_user,
           creator: @current_user)
         # @private_ongoing_reslot = create(
         #   :re_slot_private,
@@ -423,28 +417,24 @@ RSpec.describe "V1::Me", type: :request do
           start_date: Time.zone.yesterday.last_year,
           end_date: Time.zone.today.last_year,
           title: 'long ago slot',
-          owner: @current_user,
           creator: @current_user)
         @foaf_past_slot = create(
           :std_slot_foaf,
           start_date: Time.zone.yesterday.last_year,
           end_date: Time.zone.today.last_year,
           title: 'foaf past slot',
-          owner: @current_user,
           creator: @current_user)
         @private_past_slot = create(
           :std_slot_public,
           start_date: Time.zone.yesterday.at_midday,
           end_date: Time.zone.yesterday.end_of_day,
           title: 'private past slot',
-          owner: @current_user,
           creator: @current_user)
         @public_past_slots = create_list(
           :std_slot_public, 13,
           start_date: Time.zone.yesterday.at_midday,
           end_date: Time.zone.yesterday.end_of_day,
           title: 'past slots',
-          owner: @current_user,
           creator: @current_user)
         # @public_past_reslot = create(
         #   :re_slot_public,
@@ -828,12 +818,12 @@ RSpec.describe "V1::Me", type: :request do
       end
 
       let!(:bob_slots) do
-        create(:std_slot_private, owner: bob, title: 'private_slot')
-        create(:std_slot_friends, owner: bob, title: 'friendslot_upcoming',
+        create(:std_slot_private, creator: bob, title: 'private_slot')
+        create(:std_slot_friends, creator: bob, title: 'friendslot_upcoming',
                start_date: Time.zone.tomorrow.next_day)
-        create(:std_slot_friends, owner: bob, title: 'friendslot_ongoing',
+        create(:std_slot_friends, creator: bob, title: 'friendslot_ongoing',
                start_date: Time.zone.yesterday, end_date: Time.zone.tomorrow)
-        create(:std_slot_friends, owner: bob, title: 'friendslot_past',
+        create(:std_slot_friends, creator: bob, title: 'friendslot_past',
                start_date: Time.zone.yesterday.last_week,
                end_date: Time.zone.yesterday)
         # create(:re_slot_public, slotter: bob, title: 'public_reslot')
@@ -892,23 +882,19 @@ RSpec.describe "V1::Me", type: :request do
         create(:std_slot_private,
                start_date: Time.zone.tomorrow,
                title: 'private upcoming slot',
-               owner: @bob,
                creator: @bob)
         create(:std_slot_foaf,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'foaf upcoming slot A',
-               owner: @bob,
                creator: @bob)
         create(:std_slot_friends,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'friends upcoming slot B',
-               owner: @bob,
                creator: @bob)
         create_list(:std_slot_friends, 3,
                     start_date: Time.zone.tomorrow,
-                    owner: @bob,
                     creator: @bob)
         # create(:re_slot,
         #        start_date: Time.zone.tomorrow.midday,
@@ -920,13 +906,11 @@ RSpec.describe "V1::Me", type: :request do
                start_date: Time.zone.yesterday,
                end_date: Time.zone.tomorrow,
                title: 'ongoing slot',
-               owner: @bob,
                creator: @bob)
         create_list(:std_slot_friends, 12,
                     start_date: Time.zone.yesterday,
                     end_date: Time.zone.tomorrow,
                     title: 'ongoing slots',
-                    owner: @bob,
                     creator: @bob)
         # create(:re_slot,
         #        start_date: Time.zone.yesterday,
@@ -938,25 +922,21 @@ RSpec.describe "V1::Me", type: :request do
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'long ago slot',
-               owner: @bob,
                creator: @bob)
         create(:std_slot_foaf,
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'foaf past slot',
-               owner: @bob,
                creator: @bob)
         create(:std_slot_public,
                start_date: Time.zone.yesterday.at_midday,
                end_date: Time.zone.yesterday.end_of_day,
                title: 'past slot',
-               owner: @bob,
                creator: @bob)
         create_list(:std_slot_public, 13,
                     start_date: Time.zone.yesterday.at_midday,
                     end_date: Time.zone.yesterday.end_of_day,
                     title: 'past slots',
-                    owner: @bob,
                     creator: @bob)
         # create(:re_slot,
         #        start_date: Time.zone.yesterday.last_month,

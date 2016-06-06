@@ -94,7 +94,7 @@ module V1
 
       collector = SlotsCollector.new(**slot_paging_params)
       the_result = collector.user_slots(current_user: current_user,
-                                    user: requested_user)
+                                        user: requested_user)
       @slots = the_result.data
 
       if slot_paging_params.blank?
@@ -116,6 +116,19 @@ module V1
       @groups = calendar_service.calendars_for(user)
 
       render "v1/groups/index"
+    end
+
+    # GET /v1/users/1/dates
+    # returns a list of all dates where the slots of this user start
+    def dates
+      authorize :user
+      user = User.find(params[:id])
+
+      collector = DatesCollector.new(current_user: current_user,
+                                     timezone: params[:timezone])
+      @dates = collector.user_slot_dates(user: user)
+
+      render "v1/slots/dates"
     end
 
     # GET /v1/users/1/friends

@@ -58,9 +58,9 @@ RSpec.describe "V1::Users", type: :request do
 
       context "current_user" do
         let!(:my_slots) do
-          create(:std_slot_private, owner: current_user)
-          create(:std_slot_public, owner: current_user)
-          create(:std_slot_friends, owner: current_user,
+          create(:std_slot_private, creator: current_user)
+          create(:std_slot_public, creator: current_user)
+          create(:std_slot_friends, creator: current_user,
                  deleted_at: '2015-08-08T12:00')
         end
 
@@ -74,7 +74,7 @@ RSpec.describe "V1::Users", type: :request do
       context "stranger" do
         let(:stranger) do
           stranger = create(:user, :with_public_slot)
-          create(:std_slot_public, owner: stranger,
+          create(:std_slot_public, creator: stranger,
                  deleted_at: '2015-08-08T12:00')
           stranger
         end
@@ -113,28 +113,19 @@ RSpec.describe "V1::Users", type: :request do
     end
 
     context "json preview slots" do
-      let!(:user) { create(:user, :with_public_slot) }
-      let(:past_1) { create(:std_slot_public, title: 'past 1', owner: user,
-                            start_date: Time.zone.now.last_year.last_month) }
-      let(:future_1) { create(:std_slot_public, title: 'future 1', owner: user,
-                              start_date: Time.zone.tomorrow) }
-      let(:future_2) { create(:std_slot_public, title: 'future 2', owner: user,
-                              start_date: Time.zone.tomorrow.next_week) }
-      let(:future_3) { create(:std_slot_public, title: 'future 3', owner: user,
-                              start_date: Time.zone.tomorrow.next_month) }
-      let(:future_4) { create(:std_slot_public, title: 'future 4', owner: user,
-                              start_date: Time.zone.tomorrow.next_year) }
-      let(:future_5) { create(:std_slot_public, title: 'future 5', owner: user,
-                              start_date: Time.zone.now.next_year.next_month) }
-
-      let!(:passengerships) do
-        create(:passengership, user: user, slot: future_1)
-        create(:passengership, user: user, slot: future_2)
-        create(:passengership, user: user, slot: future_3)
-        create(:passengership, user: user, slot: future_4)
-        create(:passengership, user: user, slot: future_5)
-        create(:passengership, user: user, slot: past_1)
-      end
+      let!(:user) { create(:user) }
+      let!(:past_1) { create(:std_slot_public, title: 'past 1', creator: user,
+                             start_date: Time.zone.now.last_year.last_month) }
+      let!(:future_1) { create(:std_slot_public, title: 'future 1', creator: user,
+                               start_date: Time.zone.tomorrow) }
+      let!(:future_2) { create(:std_slot_public, title: 'future 2', creator: user,
+                               start_date: Time.zone.tomorrow.next_week) }
+      let!(:future_3) { create(:std_slot_public, title: 'future 3', creator: user,
+                               start_date: Time.zone.tomorrow.next_month) }
+      let!(:future_4) { create(:std_slot_public, title: 'future 4', creator: user,
+                               start_date: Time.zone.tomorrow.next_year) }
+      let!(:future_5) { create(:std_slot_public, title: 'future 5', creator: user,
+                               start_date: Time.zone.now.next_year.next_month) }
 
       it "returns up to 4 upcoming slots for the user" do
         get "/v1/users/#{user.id}", {}, auth_header
@@ -341,9 +332,9 @@ RSpec.describe "V1::Users", type: :request do
       # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
-        slots.push create(:std_slot_private, owner: current_user)
-        slots.push create(:std_slot_friends, owner: current_user)
-        slots.push create(:std_slot_public, owner: current_user)
+        slots.push create(:std_slot_private, creator: current_user)
+        slots.push create(:std_slot_friends, creator: current_user)
+        slots.push create(:std_slot_public, creator: current_user)
         # slots.push(*create_list(:re_slot, 2, slotter: current_user))
       end
 
@@ -371,52 +362,52 @@ RSpec.describe "V1::Users", type: :request do
         create(:std_slot_private,
                start_date: Time.zone.tomorrow,
                title: 'upcoming private slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_private,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'upcoming private slot A',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_private,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'upcoming private slot B',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_private, 3,
                     start_date: Time.zone.tomorrow,
-                    owner: @current_user)
+                    creator: @current_user)
         # ongoing slots
         create(:std_slot_friends,
                start_date: Time.zone.yesterday,
                end_date: Time.zone.tomorrow,
                title: 'ongoing friendslot',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_friends, 12,
                     start_date: Time.zone.yesterday,
                     end_date: Time.zone.tomorrow,
                     title: 'ongoing friendslots',
-                    owner: @current_user)
+                    creator: @current_user)
         # past slots
         create(:std_slot_public,
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'long ago public slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_foaf,
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'foaf past slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_public,
                start_date: Time.zone.yesterday.at_midday,
                end_date: Time.zone.yesterday.end_of_day,
                title: 'past public slot',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_public, 13,
                     start_date: Time.zone.yesterday.at_midday,
                     end_date: Time.zone.yesterday.end_of_day,
                     title: 'past public slots',
-                    owner: @current_user)
+                    creator: @current_user)
       end
 
       describe "GET slots for befriended user" do
@@ -469,7 +460,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: friend) }
+        #   let(:unshared_group) { create(:group, creator: friend) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -537,7 +528,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: offa) }
+        #   let(:unshared_group) { create(:group, creator: offa) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -581,7 +572,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: stranger) }
+        #   let(:unshared_group) { create(:group, creator: stranger) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -626,10 +617,10 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "GET /v1/users/:id/media" do
     let!(:target_user) { create(:user) }
-    let!(:slot_public) { create(:std_slot_public, :with_media,
-                                owner: target_user, creator: target_user) }
-    let!(:slot_private) { create(:std_slot_private, :with_media,
-                                 owner: target_user, creator: target_user) }
+    let!(:slot_public) {
+      create(:std_slot_public, :with_media, creator: target_user) }
+    let!(:slot_private) {
+      create(:std_slot_private, :with_media, creator: target_user) }
 
     context "for current_user" do
       it "returns array which includes all media items of user" do
@@ -671,7 +662,7 @@ RSpec.describe "V1::Users", type: :request do
     context "for friend" do
       let!(:friend) { target_user }
       let!(:slot_friend) {
-        create(:std_slot_friends, :with_media, owner: friend, creator: friend) }
+        create(:std_slot_friends, :with_media, creator: friend) }
       let!(:friendship) {
         create(:friendship, :established, user: current_user, friend: friend) }
 

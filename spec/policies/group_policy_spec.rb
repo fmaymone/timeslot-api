@@ -168,7 +168,7 @@ describe GroupPolicy do
     end
   end
 
-  permissions :show?, :leave?, :slots?, :members?, :member_settings?,
+  permissions :show?, :leave?, :slots?, :dates?, :members?, :member_settings?,
               :add_slot?, :remove_slot?, :add_calendar_to_schedule?,
               :remove_calendar_from_schedule? do
     let(:user) { create(:user) }
@@ -195,7 +195,7 @@ describe GroupPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :leave?, :slots?, :members?, :member_settings?,
+        :show?, :leave?, :slots?, :dates?, :members?, :member_settings?,
         :index?, :create?, :update?, :destroy?, :related?, :subscribe?,
         :invite?, :kick?, :accept_invite?, :refuse_invite?,
         :add_calendar_to_schedule?, :remove_calendar_from_schedule?

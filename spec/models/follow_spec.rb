@@ -119,7 +119,7 @@ RSpec.describe Follow, type: :model do
         expect(slot.followers).to include(follower.id.to_s)
         expect(slot.followed_by?(follower2)).to be(true)
         expect(slot.followers).to include(follower2.id.to_s)
-        expect(slot.followers_count).to be(2)
+        expect(slot.followers_count).to be(3) # includes creator
       end
 
       it "Slot has followings" do
@@ -174,7 +174,7 @@ RSpec.describe Follow, type: :model do
         expect(slot_private.followers).to include(follower.id.to_s)
         expect(slot_private.followed_by?(follower2)).to be(true)
         expect(slot_private.followers).to include(follower2.id.to_s)
-        expect(slot_private.followers_count).to be(2)
+        expect(slot_private.followers_count).to be(3) # includes creator
       end
 
       it "Slot has also followings" do
@@ -259,7 +259,7 @@ RSpec.describe Follow, type: :model do
 
       before(:each) do
         # Perform activities
-        UsersToSlotTagger.new(slot).tag([follower.id], user)
+        UsersToSlotTagger.new(slot).tag([follower.id])
         UsersToSlotTagger.new(reslot).tag([follower2.id], follower2) # aka 'reslot'
       end
 
@@ -267,7 +267,8 @@ RSpec.describe Follow, type: :model do
         # Default Test
         expect(slot.followers).to include(follower.id.to_s)
         expect(slot.followers).not_to include(follower2.id.to_s)
-        expect(slot.followers_count).to be(1) # slot has 1 follower from reslot
+        # slot has 1 follower from reslot and 1 follower is the creator
+        expect(slot.followers_count).to be(2)
         expect(follower.follows?(slot)).to be(true)
         expect(follower2.follows?(slot)).to be(false)
         # Test bi-directional relations
@@ -284,7 +285,8 @@ RSpec.describe Follow, type: :model do
         # Test Follower
         expect(reslot.followers).to include(follower2.id.to_s)
         expect(reslot.followers).not_to include(follower.id.to_s)
-        expect(reslot.followers_count).to be(1) # slot has 1 follower from reslot
+        # slot has 1 follower from reslot and 1 follower is the creator
+        expect(reslot.followers_count).to be(2)
       end
 
       it "User has followings" do
@@ -294,7 +296,7 @@ RSpec.describe Follow, type: :model do
         expect(user.followings_count).to be(0)
         # Default Test Follower 1
         expect(follower.following?(slot)).to be(true)
-        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings).to include(slot.id.to_s)
         expect(follower.followings_count).to be(1)
         # Default Test Follower 2
         expect(follower2.following?(slot)).to be(false)

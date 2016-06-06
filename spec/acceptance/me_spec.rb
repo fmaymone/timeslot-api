@@ -142,12 +142,12 @@ resource "Me" do
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
 
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user,
+        let!(:std_slot_1) { create(:std_slot_private, creator: current_user,
                                    start_date: Time.zone.tomorrow.next_week) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user,
+        let!(:std_slot_2) { create(:std_slot_friends, creator: current_user,
                                    start_date: Time.zone.today.next_week) }
         # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
-        let!(:upcoming_slot) { create(:std_slot_private, owner: current_user,
+        let!(:upcoming_slot) { create(:std_slot_private, creator: current_user,
                                       start_date: Time.zone.tomorrow) }
 
         example "Get slots - with pagination", document: :v1 do
@@ -239,9 +239,8 @@ resource "Me" do
       response_field :deletedAt, "Deletion datetime of the slot"
 
       describe "Get slots" do
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
-        # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+        let!(:std_slot_1) { create(:std_slot_private, creator: current_user) }
+        let!(:std_slot_2) { create(:std_slot_friends, creator: current_user) }
 
         example "Get slots - no pagination", document: :v1 do
           # TODO: fix wording
@@ -254,7 +253,7 @@ resource "Me" do
 
           expect(response_status).to eq(200)
           slot_count = current_user.std_slots.count
-                       # current_user.re_slots.count
+
           expect(json.length).to eq slot_count
           expect(json.first).to have_key("id")
           expect(json.first).to have_key("title")
@@ -273,7 +272,6 @@ resource "Me" do
           expect(json.first).to have_key("media")
           expect(response_body).to include(std_slot_1.title)
           expect(response_body).to include(std_slot_2.title)
-          # expect(response_body).to include(re_slots.first.title)
         end
       end
     end

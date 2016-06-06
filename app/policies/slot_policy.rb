@@ -115,6 +115,7 @@ class SlotPolicy < ApplicationPolicy
     return true if (slot.slot_groups & current_user.groups).any?
     if slot.StdSlotFriends? || slot.StdSlotFoaf?
       return true if current_user.friend_with?(slot.creator)
+      return true if current_user.friend_with?(slot.owner)
     end
     # combined check determines if read access to foaf slot
     return false unless slot.StdSlotFoaf?
