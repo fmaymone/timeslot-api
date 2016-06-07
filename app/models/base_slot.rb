@@ -30,7 +30,6 @@ class BaseSlot < ActiveRecord::Base
 
   scope :active, -> { where deleted_at: nil }
   scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
-  # scope :publics, -> { where slot_type: [3, 15] }
 
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
@@ -184,7 +183,7 @@ class BaseSlot < ActiveRecord::Base
     new_notes.each do |note|
       if note.key? :id
         notes.find(note[:id]).update(note.permit(:title, :content)
-                         .merge!(creator_id: creator_id))
+                                      .merge!(creator_id: creator_id))
       else
         notes.create(note.merge!(creator_id: creator_id)).create_activity
       end
@@ -338,10 +337,8 @@ class BaseSlot < ActiveRecord::Base
     where slot_type: [3, 15]
   end
 
-  def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
-                       notes: nil, alerts: nil, user: nil)
-    fail unless visibility
-
+  def self.create_slot(meta:, user:, visibility:, group: nil, media: nil,
+                       notes: nil, alerts: nil, description: nil)
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
@@ -353,10 +350,9 @@ class BaseSlot < ActiveRecord::Base
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
-    if media || notes || alerts
-      slot.update_from_params(media: media, notes: notes, alerts: alerts,
-                              user: user)
-    end
+    slot.update_media(media, user.id) if media
+    slot.update_notes(notes, user.id) if notes
+    user.update_alerts(slot, alerts) if alerts
 
     slot
   end
