@@ -337,15 +337,15 @@ class BaseSlot < ActiveRecord::Base
     where slot_type: [3, 15]
   end
 
-  def self.create_slot(meta:, user:, visibility:, group: nil, media: nil,
+  def self.create_slot(meta:, user:, visibility:, media: nil,
                        notes: nil, alerts: nil, description: nil)
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    slot = StdSlot.create_slot(meta_slot: meta_slot,
-                               visibility: visibility,
-                               user: user)
+    slot_params = { meta_slot: meta_slot, owner: user }
+    slot_params[:description] = description if description
+    slot = StdSlot.create_slot(slot_params: slot_params, visibility: visibility)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
