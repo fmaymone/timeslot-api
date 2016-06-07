@@ -18,6 +18,7 @@ RSpec.shared_context "default slot response fields" do
   response_field :createdAt, "Creation of slot"
   response_field :updatedAt, "Last update of slot"
   response_field :deletedAt, "Delete date of slot or nil"
+  response_field :description, "Description for the slot"
   response_field :location, "Location data for the slot"
   response_field :creator, "User who created the slot"
   response_field :settings,
@@ -47,11 +48,6 @@ RSpec.shared_context "reslot response fields" do
   response_field :parent, "contains ID of the original slot that was reslottet"
 end
 
-RSpec.shared_context "group slot response fields" do
-  include_context "default slot response fields"
-  response_field :groupId, "ID of the group the slot belongs to"
-end
-
 RSpec.shared_context "default slot parameter" do
   parameter :title, "Title of slot (max. 60 characters)",
             required: true
@@ -64,6 +60,7 @@ RSpec.shared_context "default slot parameter" do
   # parameter :openEnd,
   #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
   #          required: true
+  parameter :description, "Description for the slot (max. 500 characters)"
   parameter :location, "Location associated with this slot (see example)"
   parameter :media, "Media items (image/audio/video) of to the Slot " \
                     "(see example)"

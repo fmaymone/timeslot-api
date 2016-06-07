@@ -179,6 +179,17 @@ class BaseSlot < ActiveRecord::Base
     new_media.create_activity
   end
 
+  def update_media(items, creator_id)
+    # check if existing media items, if yes, assume reordering
+    if items.first.key? :media_id
+      unless MediaItem.reorder_media items
+        errors.add(:media_items, 'invalid ordering')
+      end
+    else
+      add_media_items(items, creator_id)
+    end
+  end
+
   def update_notes(new_notes, creator_id)
     new_notes.each do |note|
       if note.key? :id
@@ -264,17 +275,6 @@ class BaseSlot < ActiveRecord::Base
 
   private def set_slot_type
     self.slot_type ||= self.class.to_s.to_sym
-  end
-
-  private def update_media(items, creator_id)
-    # check if existing media items, if yes, assume reordering
-    if items.first.key? :media_id
-      unless MediaItem.reorder_media items
-        errors.add(:media_items, 'invalid ordering')
-      end
-    else
-      add_media_items(items, creator_id)
-    end
   end
 
   private def add_media_items(items, creator_id)

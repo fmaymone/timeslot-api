@@ -29,6 +29,7 @@ resource "Slots" do
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       #let(:openEnd) { false }
+      let(:description) { "One day it will all make sense." }
       let(:notes) { [{ title: "revolutionizing the calendar",
                        content: "this is content" },
                      { title: "and another title",
@@ -100,6 +101,8 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("description")
+        expect(json['description']).to eq "One day it will all make sense."
         expect(json).to have_key("location")
         # expect(json.last['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -158,6 +161,7 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
+        expect(json).to have_key("description")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
@@ -193,6 +197,7 @@ resource "Slots" do
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
                  "visibility" => slot.visibility,
+                 "description" => slot.description,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,

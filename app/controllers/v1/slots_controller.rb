@@ -26,6 +26,7 @@ module V1
       authorize :stdSlot
       @slot = BaseSlot.create_slot(meta: meta_params, visibility: 'private',
                                    media: media_params, notes: note_param,
+                                   description: params[:description],
                                    alerts: alerts_param, user: current_user)
 
       if @slot.persisted?
