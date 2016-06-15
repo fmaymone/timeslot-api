@@ -314,7 +314,7 @@ RSpec.describe "V1::Me", type: :request do
       # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
-        slots.push create(:std_slot_private, creator: current_user,
+        slots.push create(:std_slot_private, owner: current_user,
                           creator: current_user)
         slots.push create(:std_slot_friends, owner: current_user,
                           creator: current_user)

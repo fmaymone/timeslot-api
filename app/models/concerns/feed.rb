@@ -522,6 +522,11 @@ module Feed
             end
           end
         end
+      elsif activity['type'] == 'Group' && target['previewSlots'].nil?
+        target['previewSlots'] = Group.find_by(uuid: target['id']).preview_slots
+      elsif activity['type'] == 'Slot' && target['firstGroup'].nil?
+        user = User.find(actor['id'])
+        target['firstGroup'] = BaseSlot.find_by(id: target['id']).first_group(user)
       end
     end
 
