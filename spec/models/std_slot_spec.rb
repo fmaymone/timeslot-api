@@ -63,47 +63,58 @@ RSpec.describe StdSlot, type: :model do
   describe "create_slot" do
     let!(:meta_slot) { create(:meta_slot) }
     let(:user) { create(:user) }
+    let(:slot_params) { { meta_slot: meta_slot, owner: user } }
 
     it "creates a new StdSlotPrivate" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot, visibility: 'private',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: 'private')
+        # described_class.create_slot(meta_slot: meta_slot, visibility: 'private',
+                                    # user: user)
       }.to change(StdSlotPrivate, :count).by 1
     end
 
     it "creates a new StdSlotFriends" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot, visibility: 'friends',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: 'friends')
       }.to change(StdSlotFriends, :count).by 1
     end
 
     it "creates a new StdSlotFoaf (visibility friend-of-a-friend)" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot,
-                                    visibility: 'foaf',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: 'foaf')
       }.to change(StdSlotFoaf, :count).by 1
     end
 
     it "creates a new StdSlotPublic" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot, visibility: 'public',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: 'public')
       }.to change(StdSlotPublic, :count).by 1
+    end
+
+    it "saves the description" do
+      slot_params = { meta_slot: meta_slot,
+                      owner: user,
+                      description: 'Jakari' }
+      slot = described_class.create_slot(slot_params: slot_params,
+                                         visibility: 'public')
+      expect(slot.description).to eq 'Jakari'
     end
 
     it "does not create a new StdSlot if visibility is invalid" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot, visibility: 'unknown',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: 'unknown')
       }.not_to change(StdSlotPublic, :count)
     end
 
     it "does not create a new StdSlot if visibility is empty" do
       expect {
-        described_class.create_slot(meta_slot: meta_slot, visibility: '',
-                                    user: user)
+        described_class.create_slot(slot_params: slot_params,
+                                    visibility: '')
       }.not_to change(StdSlotPublic, :count)
     end
   end

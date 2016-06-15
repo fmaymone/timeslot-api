@@ -26,6 +26,7 @@ module V1
       authorize :stdSlot
       @slot = BaseSlot.create_slot(meta: meta_params, visibility: 'private',
                                    media: media_params, notes: note_param,
+                                   description: params[:description],
                                    alerts: alerts_param, user: current_user)
 
       if @slot.persisted?
@@ -102,8 +103,6 @@ module V1
       end
     end
 
-    # TODO: tell frontends to switch to this endpoint
-    # TODO: update acceptance specs
     # PATCH /v1/slots/1
     def update
       @slot = current_user.std_slots.find(params[:id])
@@ -111,6 +110,7 @@ module V1
 
       @slot.update_from_params(meta: meta_params,
                                media: media_params, notes: note_param,
+                               description: params[:description],
                                alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?

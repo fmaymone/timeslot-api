@@ -29,6 +29,7 @@ resource "Slots" do
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       #let(:openEnd) { false }
+      let(:description) { "One day it will all make sense." }
       let(:notes) { [{ title: "revolutionizing the calendar",
                        content: "this is content" },
                      { title: "and another title",
@@ -100,6 +101,8 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("description")
+        expect(json['description']).to eq "One day it will all make sense."
         expect(json).to have_key("location")
         # expect(json.last['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -158,6 +161,7 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
+        expect(json).to have_key("description")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
@@ -193,6 +197,7 @@ resource "Slots" do
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
                  "visibility" => slot.visibility,
+                 "description" => slot.description,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
@@ -458,13 +463,11 @@ resource "Slots" do
     end
   end
 
-  patch "/v1/stdslot/:id" do
+  patch "/v1/slots/:id" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
-    parameter :visibility, "Visibility of the Slot to update " \
-                           "(private/friends/foaf/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
@@ -486,29 +489,6 @@ resource "Slots" do
         expect(response_status).to eq(200)
         std_slot.reload
         expect(std_slot.title).to eq title
-      end
-    end
-
-    describe "Change visibility of an existing StdSlot" do
-      let(:visibility) { 'friends' }
-
-      example "Update StdSlot - change visibility", document: :v1 do
-        explanation "Update visibility of StdSlot.\n\n" \
-                    "User must be owner of StdSlot.\n\n" \
-                    "returns 200 and slot data if update succeded \n\n" \
-                    "returns 404 if User not owner or ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid"
-
-        expect(std_slot.visibility).to eq 'private'
-        expect(std_slot.type).to eq 'StdSlotPrivate'
-
-        do_request
-
-        expect(response_status).to eq(200)
-        slot = BaseSlot.last
-        expect(slot.id).to eq std_slot.id
-        expect(slot.visibility).to eq 'friends'
-        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 

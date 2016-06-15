@@ -30,7 +30,6 @@ class BaseSlot < ActiveRecord::Base
 
   scope :active, -> { where deleted_at: nil }
   scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
-  # scope :publics, -> { where slot_type: [3, 15] }
 
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
@@ -63,6 +62,7 @@ class BaseSlot < ActiveRecord::Base
            to: :meta_slot
 
   validates :meta_slot, presence: true
+  validates :description, length: { maximum: 500 }
   # validates :slot_uuid, presence: true # let the db take care of it for now
   validate :type_and_slot_type_in_sync
 
@@ -179,11 +179,22 @@ class BaseSlot < ActiveRecord::Base
     new_media.create_activity
   end
 
+  def update_media(items, creator_id)
+    # check if existing media items, if yes, assume reordering
+    if items.first.key? :media_id
+      unless MediaItem.reorder_media items
+        errors.add(:media_items, 'invalid ordering')
+      end
+    else
+      add_media_items(items, creator_id)
+    end
+  end
+
   def update_notes(new_notes, creator_id)
     new_notes.each do |note|
       if note.key? :id
         notes.find(note[:id]).update(note.permit(:title, :content)
-                         .merge!(creator_id: creator_id))
+                                      .merge!(creator_id: creator_id))
       else
         notes.create(note.merge!(creator_id: creator_id)).create_activity
       end
@@ -266,17 +277,6 @@ class BaseSlot < ActiveRecord::Base
     self.slot_type ||= self.class.to_s.to_sym
   end
 
-  private def update_media(items, creator_id)
-    # check if existing media items, if yes, assume reordering
-    if items.first.key? :media_id
-      unless MediaItem.reorder_media items
-        errors.add(:media_items, 'invalid ordering')
-      end
-    else
-      add_media_items(items, creator_id)
-    end
-  end
-
   private def add_media_items(items, creator_id)
     items.each do |item_hash|
       item = ActionController::Parameters.new(item_hash)
@@ -337,25 +337,22 @@ class BaseSlot < ActiveRecord::Base
     where slot_type: [3, 15]
   end
 
-  def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
-                       notes: nil, alerts: nil, user: nil)
-    fail unless visibility
-
+  def self.create_slot(meta:, user:, visibility:, media: nil,
+                       notes: nil, alerts: nil, description: nil)
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    slot = StdSlot.create_slot(meta_slot: meta_slot,
-                               visibility: visibility,
-                               user: user)
+    slot_params = { meta_slot: meta_slot, owner: user }
+    slot_params[:description] = description if description
+    slot = StdSlot.create_slot(slot_params: slot_params, visibility: visibility)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
-    if media || notes || alerts
-      slot.update_from_params(media: media, notes: notes, alerts: alerts,
-                              user: user)
-    end
+    slot.update_media(media, user.id) if media
+    slot.update_notes(notes, user.id) if notes
+    user.update_alerts(slot, alerts) if alerts
 
     slot
   end

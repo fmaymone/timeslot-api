@@ -74,22 +74,22 @@ module V1
 
     # GET /v1/me/schedule
     # returns all slots current user has in schedule
-    # TODO: write tests for pagination
+    # disabled pagination as frontend needs all schedule slots
     def schedule
       authorize :me
 
-      # @slots = current_user.my_calendar_slots
+      @slots = current_user.my_calendar_slots
 
-      collector = SlotsCollector.new(**slot_paging_params)
-      the_result = collector.my_schedule_slots(user: current_user)
-      @slots = the_result.data
+      # collector = SlotsCollector.new(**slot_paging_params)
+      # the_result = collector.my_schedule_slots(user: current_user)
+      # @slots = the_result.data
 
-      if slot_paging_params.blank?
-        render "v1/slots/index"
-      else
-        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
-        render "v1/paginated/slots"
-      end
+      # if slot_paging_params.blank?
+      render "v1/slots/index"
+      # else
+      #   @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+      #   render "v1/paginated/slots"
+      # end
     end
 
     # POST /v1/me/schedule/calendar/:uuid
