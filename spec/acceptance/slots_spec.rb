@@ -463,13 +463,11 @@ resource "Slots" do
     end
   end
 
-  patch "/v1/stdslot/:id" do
+  patch "/v1/slots/:id" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
-    parameter :visibility, "Visibility of the Slot to update " \
-                           "(private/friends/foaf/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
@@ -491,29 +489,6 @@ resource "Slots" do
         expect(response_status).to eq(200)
         std_slot.reload
         expect(std_slot.title).to eq title
-      end
-    end
-
-    describe "Change visibility of an existing StdSlot" do
-      let(:visibility) { 'friends' }
-
-      example "Update StdSlot - change visibility", document: :v1 do
-        explanation "Update visibility of StdSlot.\n\n" \
-                    "User must be owner of StdSlot.\n\n" \
-                    "returns 200 and slot data if update succeded \n\n" \
-                    "returns 404 if User not owner or ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid"
-
-        expect(std_slot.visibility).to eq 'private'
-        expect(std_slot.type).to eq 'StdSlotPrivate'
-
-        do_request
-
-        expect(response_status).to eq(200)
-        slot = BaseSlot.last
-        expect(slot.id).to eq std_slot.id
-        expect(slot.visibility).to eq 'friends'
-        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 

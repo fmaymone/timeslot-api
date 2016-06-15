@@ -103,8 +103,6 @@ module V1
       end
     end
 
-    # TODO: tell frontends to switch to this endpoint
-    # TODO: update acceptance specs
     # PATCH /v1/slots/1
     def update
       @slot = current_user.std_slots.find(params[:id])
