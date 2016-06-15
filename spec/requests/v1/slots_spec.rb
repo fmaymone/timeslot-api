@@ -1653,6 +1653,14 @@ RSpec.describe "V1::Slots", type: :request do
           expect(std_slot.title).to eq("New title")
         end
 
+        it "updates the description of a given StdSlot" do
+          std_slot.description = "Old description"
+          patch "/v1/slots/#{std_slot.id}",
+                { description: "New description" }, auth_header
+          std_slot.reload
+          expect(std_slot.description).to eq("New description")
+        end
+
         it "updates the start_date of a given StdSlot" do
           std_slot.meta_slot.update(start_date: "2014-09-08 13:31:02")
           patch "/v1/slots/#{std_slot.id}",

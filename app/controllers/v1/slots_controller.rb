@@ -112,6 +112,7 @@ module V1
 
       @slot.update_from_params(meta: meta_params,
                                media: media_params, notes: note_param,
+                               description: params[:description],
                                alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?

@@ -56,9 +56,12 @@ class StdSlot < BaseSlot
   end
 
   def update_from_params(meta: nil, visibility: nil, media: nil,
-                         notes: nil, alerts: nil, user: nil)
+                         notes: nil, alerts: nil, user: nil, description: nil)
 
     update_visibility(visibility) if visibility
+    update(description: description) if description
+    return unless meta || media || notes || alerts
+
     super(meta: meta, media: media, notes: notes, alerts: alerts, user: user)
   end
 
