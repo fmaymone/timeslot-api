@@ -35,7 +35,7 @@ module Activity
     # Execute code block (may change social associations)
     yield(block) if block.present?
     # Update actors feed + shared objects
-    Feed.update_objects([activity_actor, activity_target])
+    Feed.update_objects([activity_actor, activity_target, activity_group])
     # Remove activities from target feeds
     if async
       # Start background job to remove distributed activities
@@ -101,7 +101,7 @@ module Activity
     })
 
     # Update actors feed + shared objects
-    Feed.update_objects([activity_actor, activity_target])
+    Feed.update_objects([activity_actor, activity_target, activity_group])
   rescue => error
     error_handler(error, "failed: initialize activity as worker job")
   end
@@ -161,7 +161,7 @@ module Activity
         }
     )
     # Update actors feed + shared objects
-    Feed.update_objects([activity_actor, activity_target])
+    Feed.update_objects([activity_actor, activity_target, activity_group])
   rescue => error
     error_handler(error, "failed: remove activity as worker job")
   end

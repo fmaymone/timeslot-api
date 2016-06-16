@@ -245,6 +245,7 @@ module Feed
       user_feeds = []
 
       objects.each do |object|
+        next unless object
         json = render_shared_object(object)
         activity_type = object.class.name
         # Normalize slot type
@@ -302,10 +303,10 @@ module Feed
         ))
       when 'Group'
         json = JSON.parse(ApplicationController.new.render_to_string(
-            template: 'v1/groups/_group',
+            template: 'v1/groups/index',
             layout: false,
             locals: {
-                :group => object,
+                :groups => [object],
                 :current_user => object.owner
             }
         ))
@@ -522,11 +523,11 @@ module Feed
             end
           end
         end
-      elsif activity['type'] == 'Group' && target['previewSlots'].nil?
-        target['previewSlots'] = Group.find_by(uuid: target['id']).preview_slots
-      elsif activity['type'] == 'Slot' && target['firstGroup'].nil?
-        user = User.find(actor['id'])
-        target['firstGroup'] = BaseSlot.find_by(id: target['id']).first_group(user)
+      # elsif activity['type'] == 'Group' && target['previewSlots'].nil?
+      #   target['previewSlots'] = Group.find_by(uuid: target['id']).preview_slots
+      # elsif activity['type'] == 'Slot' && target['firstGroup'].nil?
+      #   user = User.find(actor['id'])
+      #   target['firstGroup'] = BaseSlot.find_by(id: target['id']).first_group(user)
       end
     end
 
