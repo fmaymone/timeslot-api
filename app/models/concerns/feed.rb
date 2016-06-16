@@ -303,7 +303,7 @@ module Feed
         ))
       when 'Group'
         json = JSON.parse(ApplicationController.new.render_to_string(
-            template: 'v1/groups/_group',
+            template: 'v1/groups/index',
             layout: false,
             locals: {
                 :group => object,
