@@ -21,3 +21,7 @@ member_ids = group.member_ids
 json.member_ids member_ids
 json.member_count member_ids.count
 json.slot_count group.slots.count
+
+json.preview_slots group.preview_slots do |slot|
+  json.partial! 'v1/slots/slot_basics', slot: slot
+end

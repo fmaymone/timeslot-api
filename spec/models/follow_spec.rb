@@ -250,7 +250,7 @@ RSpec.describe Follow, type: :model do
   end
 
   context "Test auto-following through social relations", :redis do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
 
     describe "Test reslots (as slot follow)" do
       let(:meta_slot) { create(:meta_slot, creator: user) }
@@ -291,9 +291,9 @@ RSpec.describe Follow, type: :model do
 
       it "User has followings" do
         # Default Test User
-        expect(user.following?(slot)).to be(false)
-        expect(user.followings.to_json).not_to include(slot.id.to_s)
-        expect(user.followings_count).to be(0)
+        expect(user.following?(slot)).to be(true)
+        expect(user.followings.to_json).to include(slot.id.to_s)
+        expect(user.followings_count).to be(2)
         # Default Test Follower 1
         expect(follower.following?(slot)).to be(true)
         expect(follower.followings).to include(slot.id.to_s)
