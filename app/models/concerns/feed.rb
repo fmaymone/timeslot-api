@@ -306,7 +306,7 @@ module Feed
             template: 'v1/groups/index',
             layout: false,
             locals: {
-                :group => object,
+                :groups => [object],
                 :current_user => object.owner
             }
         ))
