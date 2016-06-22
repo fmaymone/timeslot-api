@@ -297,8 +297,8 @@ module Feed
             template: 'v1/slots/_slot',
             layout: false,
             locals: {
-                :slot => object,
-                :current_user => object.creator
+                slot: object,
+                current_user: object.creator
             }
         ))
       when 'Group'
@@ -306,16 +306,17 @@ module Feed
             template: 'v1/groups/index',
             layout: false,
             locals: {
-                :groups => [object],
-                :current_user => object.owner
+                groups: [object],
+                current_user: object.owner
             }
         ))
+        json = json['result'][0] if json.has_key?('result')
       when 'User'
         json = JSON.parse(ApplicationController.new.render_to_string(
             template: 'v1/users/_user',
             layout: false,
             locals: {
-                :user => object
+                user: object
             }
         ))
       else
