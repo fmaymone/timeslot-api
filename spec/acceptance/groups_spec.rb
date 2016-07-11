@@ -103,6 +103,7 @@ resource "Groups" do
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :image, "Image for the group"
     parameter :description, "Description of the group (max. 255 characters)"
+    parameter :defaultColor, "Default color of the group (6 characters)"
     parameter :public,
               "Is the group public? (true/false), default: 'false'"
     parameter :membersCanPost,
@@ -116,6 +117,7 @@ resource "Groups" do
     let(:name) { "foo" }
     let(:image) { "salvador dali" }
     let(:description) { "This is a description." }
+    let(:defaultColor) { "123ABD" }
     let(:membersCanPost) { true }
     let(:membersCanInvite) { true }
     let(:public) { true }
@@ -133,16 +135,19 @@ resource "Groups" do
       expect(json).to have_key("id")
       expect(json).to have_key("name")
       expect(json).to have_key("public")
+      expect(json).to have_key("defaultColor")
       expect(json).to have_key("membersCanPost")
       expect(json).to have_key("membersCanInvite")
       expect(json["name"]).to eq name
       expect(json["image"]).to eq image
       expect(json["public"]).to eq public
+      expect(json["defaultColor"]).to eq defaultColor
       expect(json["description"]).to eq description
       expect(json["membersCanPost"]).to eq membersCanPost
       expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
       expect(group.owner).to eq current_user
+      expect(group.default_color).to eq defaultColor
       expect(group.members).to include current_user
       expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
       expect(Membership.last.active?).to be true

@@ -8,6 +8,7 @@ RSpec.describe Group, type: :model do
   it { is_expected.to respond_to(:owner) }
   it { is_expected.to respond_to(:image) }
   it { is_expected.to respond_to(:description) }
+  it { is_expected.to respond_to(:default_color) }
   it { is_expected.to respond_to(:name) }
   it { is_expected.to respond_to(:uuid) }
   it { is_expected.to respond_to(:members_can_post) }

@@ -26,6 +26,7 @@ class Group < ActiveRecord::Base
   has_many :members, through: :active_memberships, source: :user
 
   validates :name, presence: true, length: { maximum: 255 }
+  validates :default_color, length: { maximum: 6 }
   validates :owner, presence: true
 
   def related_memberships

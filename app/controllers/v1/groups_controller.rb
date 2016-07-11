@@ -238,7 +238,7 @@ module V1
     end
 
     private def group_params
-      params.permit(:name, :image, :description, :public,
+      params.permit(:name, :image, :description, :public, :default_color,
                     :members_can_post, :members_can_invite)
     end
 
