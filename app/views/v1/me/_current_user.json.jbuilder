@@ -49,6 +49,7 @@ json.friendships tmp
 json.memberships user.memberships.each do |membership|
   json.group_id membership.group_id
   json.state membership.humanize
+  json.color membership.color
   json.notifications membership.notifications
 end
 

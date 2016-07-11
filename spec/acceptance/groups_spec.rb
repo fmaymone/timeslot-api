@@ -14,6 +14,8 @@ resource "Groups" do
     response_field :membersCanInvite, "Can subscribers invite friends?"
     response_field :image, "URL of the group image"
     response_field :description, "The description of the group"
+    response_field :defaultColor,
+                   "default color of the group, can be overwritten per member"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
@@ -29,19 +31,15 @@ resource "Groups" do
 
     include_context "default group response fields"
 
-    let(:group) { create(:group, :with_3_members, :with_3_slots) }
+    let(:group) { create(:group, :public, :with_3_members, :with_3_slots) }
     let(:group_uuid) { group.uuid }
-    let!(:membership) do
-      create(:membership, :active, user: current_user, group: group)
-    end
 
-    example "Get group data for specific group", document: :v1 do
+    example "Get group data for specific group, not member", document: :v1 do
       explanation "returns data of specified group\n\n" \
                   "returns 404 if UUID is invalid\n\n"
       do_request
 
       expect(response_status).to eq(200)
-      group.reload
       expect(json).to have_key 'id'
       expect(json['id']).to eq group.uuid
       expect(json).to have_key 'name'
@@ -52,6 +50,8 @@ resource "Groups" do
       expect(json['public']).to eq group.public
       expect(json).to have_key "description"
       expect(json['description']).to eq group.description
+      expect(json).to have_key "defaultColor"
+      expect(json['defaultColor']).to eq group.default_color
       expect(json).to have_key "membersCanPost"
       expect(json['membersCanPost']).to eq group.members_can_post
       expect(json).to have_key "membersCanInvite"
@@ -67,6 +67,30 @@ resource "Groups" do
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
+      expect(json).to have_key "membershipState"
+      expect(json['membershipState']).to eq 'undefined'
+      expect(json).not_to have_key "color"
+    end
+
+    describe 'show group to active member' do
+      let!(:membership) do
+        create(:membership, :active, user: current_user, group: group,
+               color: 'AA12CC')
+      end
+
+      example "Get group data for an active group member", document: :v1 do
+        explanation "returns data of specified group\n\n" \
+                    "returns 404 if UUID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key 'id'
+        expect(json).to have_key "membershipState"
+        expect(json['membershipState']).to eq 'active'
+        expect(json).to have_key "color"
+        expect(json['color']).to eq membership.color
+        expect(json['color']).to eq 'AA12CC'
+      end
     end
   end
 

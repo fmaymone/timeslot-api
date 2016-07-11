@@ -3,7 +3,7 @@
 --
 
 -- Dumped from database version 9.5.2
--- Dumped by pg_dump version 9.5.2
+-- Dumped by pg_dump version 9.5.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -350,7 +350,8 @@ CREATE TABLE groups (
     uuid uuid NOT NULL,
     public boolean DEFAULT false NOT NULL,
     string_id text DEFAULT ''::text NOT NULL,
-    description character varying(255)
+    description character varying(255),
+    default_color character varying DEFAULT '000000'::character varying NOT NULL
 );
 
 
@@ -543,7 +544,8 @@ CREATE TABLE memberships (
     deleted_at timestamp without time zone,
     state bit(3) DEFAULT B'011'::"bit",
     default_alerts bit(10),
-    show_slots_in_schedule boolean DEFAULT false NOT NULL
+    show_slots_in_schedule boolean DEFAULT false NOT NULL,
+    color character varying DEFAULT '000000'::character varying NOT NULL
 );
 
 
@@ -1595,4 +1597,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160417140125');
 INSERT INTO schema_migrations (version) VALUES ('20160510125032');
 
 INSERT INTO schema_migrations (version) VALUES ('20160603103055');
+
+INSERT INTO schema_migrations (version) VALUES ('20160711102234');
 
