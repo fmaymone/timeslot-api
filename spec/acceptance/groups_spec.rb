@@ -379,12 +379,12 @@ resource "Groups" do
 
     let(:group) { create(:group, owner: current_user) }
     let(:two_days) { create(:slot, title: 'two days',
-                                start_date: '2016-02-01', end_date: '2016-02-02')
+                            start_date: '2016-02-01', end_date: '2016-02-02')
     }
     let(:three_days) { create(:slot, title: 'three days',
-                                  start_date: '2016-03-01', end_date: '2016-03-03') }
+                              start_date: '2016-03-01', end_date: '2016-03-03') }
     let(:five_days) { create(:slot, title: 'five days',
-                                 start_date: '2016-01-01', end_date: '2016-01-05') }
+                             start_date: '2016-01-01', end_date: '2016-01-05') }
     let(:same_day1) { create(:slot, title: 'same day 1',
                              start_date: '2016-03-30', end_date: '2016-03-30') }
     let(:same_day2) { create(:slot, title: 'same day 2',
@@ -902,6 +902,7 @@ resource "Groups" do
 
     parameter :group_uuid, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
+    parameter :color, "color of the group for this member", scope: :settings
     parameter :defaultAlerts, "set default alerts for slots in this group",
               scope: :settings
 
@@ -910,6 +911,7 @@ resource "Groups" do
 
     let(:group_uuid) { group.uuid }
     let(:notifications) { "false" }
+    let(:color) { "WWW222" }
     let(:defaultAlerts) { "1111100000" }
 
     describe "membership active" do
@@ -919,7 +921,7 @@ resource "Groups" do
       end
 
       example "Update settings of joined group", document: :v1 do
-        explanation "Change notifications and default alerts for group\n\n" \
+        explanation "Change notifications, color, default alerts for group\n\n" \
                     "returns 200 if setting was successfully updated\n\n" \
                     "returns 403 if user not active group member\n\n" \
                     "returns 404 if group UUID is invalid\n\n" \
@@ -929,6 +931,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.notifications).to eq false
+        expect(membership.color).to eq color
         expect(membership.default_alerts).to eq defaultAlerts
       end
 

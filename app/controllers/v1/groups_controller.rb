@@ -254,7 +254,7 @@ module V1
     end
 
     private def setting_params
-      params.require(:settings).permit(:notifications, :default_alerts)
+      params.require(:settings).permit(:notifications, :default_alerts, :color)
     end
   end
 end
