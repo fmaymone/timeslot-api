@@ -228,6 +228,38 @@ resource "Groups" do
         expect(json["image"]).to eq image
       end
     end
+
+    describe "Change default color of group" do
+      parameter :defaultColor, "new default color", required: true
+      let(:defaultColor) { "12AB67" }
+
+      context "group owner permitted" do
+        example "Change default color of group", document: :v1 do
+          expect(group.default_color).not_to eq defaultColor
+          do_request
+
+          expect(response_status).to eq(200)
+          group.reload
+          expect(group.default_color).to eq defaultColor
+          expect(json).to have_key("defaultColor")
+          expect(json["defaultColor"]).to eq defaultColor
+        end
+      end
+
+      context "group member not permitted" do
+        let(:group) do
+          group = create(:group, :with_description, name: "foo",
+                 members_can_invite: false, members_can_post: false)
+          create(:membership, :active, group: group, user: current_user)
+          group
+        end
+
+        example "Change default color of group", document: :false do
+          do_request
+          expect(response_status).to eq 403
+        end
+      end
+    end
   end
 
   # destroy
