@@ -292,7 +292,7 @@ RSpec.describe "V1::Groups", type: :request do
     let(:ids) { other_users.collect(&:id) }
 
     describe "user can invite" do
-      let!(:group) { create(:group, owner: current_user) }
+      let!(:group) { create(:group, owner: current_user, default_color: '888FFF') }
 
       it "returns created" do
         post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
@@ -313,6 +313,12 @@ RSpec.describe "V1::Groups", type: :request do
         other_users.each do |id|
           expect(Membership.where(user_id: id).first.active?).to be true
         end
+      end
+
+      it "sets the group color for the new member to the groups default color" do
+        post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
+        expect(Membership.last.color).to eq group.default_color
+        expect(Membership.first.color).to eq group.default_color # owner
       end
 
       it "doesn't create new memberships for already invited members" do

@@ -61,7 +61,8 @@ class Group < ActiveRecord::Base
 
       # allow to re-invite kicked/refused/left members:
       membership = invitee.get_membership self
-      membership ||= Membership.new(group_id: id, user_id: invitee.id)
+      membership ||= Membership.new(group_id: id, user_id: invitee.id,
+                                    color: default_color)
       membership.activate(initiator) && membership.save
     end
   end
@@ -83,7 +84,8 @@ class Group < ActiveRecord::Base
   end
 
   private def add_owner_as_member
-    Membership.create(group_id: id, user_id: owner.id, state: '111')
+    Membership.create(group_id: id, user_id: owner.id, state: '111',
+                      color: default_color)
     self.add_follower(owner)
   end
 
