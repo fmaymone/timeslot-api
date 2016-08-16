@@ -37,6 +37,7 @@ module V1
         adjust_slot_visibility(@slot, slot_visibility, slot_sets) if slot_visibility
         add_to_slotsets(@slot, slot_sets) if slot_sets
         add_to_default_slotgroups(@slot, slot_sets)
+        @slot.create_activity
 
         render :create, status: :created, locals: { slot: @slot }
       else

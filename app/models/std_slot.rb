@@ -83,7 +83,8 @@ class StdSlot < BaseSlot
     slot = slot_type.create(slot_params)
     Passengership.create(slot: slot, user: slot_params[:owner],
                          show_in_my_schedule: false)
-    slot.create_activity
+    # slot.create_activity
+    slot
   end
 
   # for Pundit

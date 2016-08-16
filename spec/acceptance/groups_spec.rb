@@ -14,6 +14,8 @@ resource "Groups" do
     response_field :membersCanInvite, "Can subscribers invite friends?"
     response_field :image, "URL of the group image"
     response_field :description, "The description of the group"
+    response_field :defaultColor,
+                   "default color of the group, can be overwritten per member"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
@@ -29,19 +31,15 @@ resource "Groups" do
 
     include_context "default group response fields"
 
-    let(:group) { create(:group, :with_3_members, :with_3_slots) }
+    let(:group) { create(:group, :public, :with_3_members, :with_3_slots) }
     let(:group_uuid) { group.uuid }
-    let!(:membership) do
-      create(:membership, :active, user: current_user, group: group)
-    end
 
-    example "Get group data for specific group", document: :v1 do
+    example "Get group data for specific group, not member", document: :v1 do
       explanation "returns data of specified group\n\n" \
                   "returns 404 if UUID is invalid\n\n"
       do_request
 
       expect(response_status).to eq(200)
-      group.reload
       expect(json).to have_key 'id'
       expect(json['id']).to eq group.uuid
       expect(json).to have_key 'name'
@@ -52,6 +50,8 @@ resource "Groups" do
       expect(json['public']).to eq group.public
       expect(json).to have_key "description"
       expect(json['description']).to eq group.description
+      expect(json).to have_key "defaultColor"
+      expect(json['defaultColor']).to eq group.default_color
       expect(json).to have_key "membersCanPost"
       expect(json['membersCanPost']).to eq group.members_can_post
       expect(json).to have_key "membersCanInvite"
@@ -67,6 +67,30 @@ resource "Groups" do
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
+      expect(json).to have_key "membershipState"
+      expect(json['membershipState']).to eq 'undefined'
+      expect(json).not_to have_key "color"
+    end
+
+    describe 'show group to active member' do
+      let!(:membership) do
+        create(:membership, :active, user: current_user, group: group,
+               color: 'AA12CC')
+      end
+
+      example "Get group data for an active group member", document: :v1 do
+        explanation "returns data of specified group\n\n" \
+                    "returns 404 if UUID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key 'id'
+        expect(json).to have_key "membershipState"
+        expect(json['membershipState']).to eq 'active'
+        expect(json).to have_key "color"
+        expect(json['color']).to eq membership.color
+        expect(json['color']).to eq 'AA12CC'
+      end
     end
   end
 
@@ -79,6 +103,7 @@ resource "Groups" do
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :image, "Image for the group"
     parameter :description, "Description of the group (max. 255 characters)"
+    parameter :defaultColor, "Default color of the group (6 characters)"
     parameter :public,
               "Is the group public? (true/false), default: 'false'"
     parameter :membersCanPost,
@@ -92,6 +117,7 @@ resource "Groups" do
     let(:name) { "foo" }
     let(:image) { "salvador dali" }
     let(:description) { "This is a description." }
+    let(:defaultColor) { "123ABD" }
     let(:membersCanPost) { true }
     let(:membersCanInvite) { true }
     let(:public) { true }
@@ -109,16 +135,19 @@ resource "Groups" do
       expect(json).to have_key("id")
       expect(json).to have_key("name")
       expect(json).to have_key("public")
+      expect(json).to have_key("defaultColor")
       expect(json).to have_key("membersCanPost")
       expect(json).to have_key("membersCanInvite")
       expect(json["name"]).to eq name
       expect(json["image"]).to eq image
       expect(json["public"]).to eq public
+      expect(json["defaultColor"]).to eq defaultColor
       expect(json["description"]).to eq description
       expect(json["membersCanPost"]).to eq membersCanPost
       expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
       expect(group.owner).to eq current_user
+      expect(group.default_color).to eq defaultColor
       expect(group.members).to include current_user
       expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
       expect(Membership.last.active?).to be true
@@ -197,6 +226,38 @@ resource "Groups" do
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
         expect(json["image"]).to eq image
+      end
+    end
+
+    describe "Change default color of group" do
+      parameter :defaultColor, "new default color", required: true
+      let(:defaultColor) { "12AB67" }
+
+      context "group owner permitted" do
+        example "Change default color of group", document: :v1 do
+          expect(group.default_color).not_to eq defaultColor
+          do_request
+
+          expect(response_status).to eq(200)
+          group.reload
+          expect(group.default_color).to eq defaultColor
+          expect(json).to have_key("defaultColor")
+          expect(json["defaultColor"]).to eq defaultColor
+        end
+      end
+
+      context "group member not permitted" do
+        let(:group) do
+          group = create(:group, :with_description, name: "foo",
+                 members_can_invite: false, members_can_post: false)
+          create(:membership, :active, group: group, user: current_user)
+          group
+        end
+
+        example "Change default color of group", document: :false do
+          do_request
+          expect(response_status).to eq 403
+        end
       end
     end
   end
@@ -318,12 +379,12 @@ resource "Groups" do
 
     let(:group) { create(:group, owner: current_user) }
     let(:two_days) { create(:slot, title: 'two days',
-                                start_date: '2016-02-01', end_date: '2016-02-02')
+                            start_date: '2016-02-01', end_date: '2016-02-02')
     }
     let(:three_days) { create(:slot, title: 'three days',
-                                  start_date: '2016-03-01', end_date: '2016-03-03') }
+                              start_date: '2016-03-01', end_date: '2016-03-03') }
     let(:five_days) { create(:slot, title: 'five days',
-                                 start_date: '2016-01-01', end_date: '2016-01-05') }
+                             start_date: '2016-01-01', end_date: '2016-01-05') }
     let(:same_day1) { create(:slot, title: 'same day 1',
                              start_date: '2016-03-30', end_date: '2016-03-30') }
     let(:same_day2) { create(:slot, title: 'same day 2',
@@ -841,6 +902,7 @@ resource "Groups" do
 
     parameter :group_uuid, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
+    parameter :color, "color of the group for this member", scope: :settings
     parameter :defaultAlerts, "set default alerts for slots in this group",
               scope: :settings
 
@@ -849,6 +911,7 @@ resource "Groups" do
 
     let(:group_uuid) { group.uuid }
     let(:notifications) { "false" }
+    let(:color) { "WWW222" }
     let(:defaultAlerts) { "1111100000" }
 
     describe "membership active" do
@@ -858,7 +921,7 @@ resource "Groups" do
       end
 
       example "Update settings of joined group", document: :v1 do
-        explanation "Change notifications and default alerts for group\n\n" \
+        explanation "Change notifications, color, default alerts for group\n\n" \
                     "returns 200 if setting was successfully updated\n\n" \
                     "returns 403 if user not active group member\n\n" \
                     "returns 404 if group UUID is invalid\n\n" \
@@ -868,6 +931,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.notifications).to eq false
+        expect(membership.color).to eq color
         expect(membership.default_alerts).to eq defaultAlerts
       end
 
