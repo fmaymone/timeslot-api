@@ -56,6 +56,7 @@ class GroupPolicy < ApplicationPolicy
   # true if the current user is an active member of the group
   def add_slot?
     return false unless current_user?
+    return true if current_user == group.owner
     return true if current_user.active_member? group
     false
   end
