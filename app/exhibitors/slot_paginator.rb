@@ -38,7 +38,13 @@ class SlotPaginator < BasePaginator
     elsif @data.empty? && (@datapool_size > 0)
       # request is not fulfilled but db has valid items which could
       # be paginated via cursor
-      if before || (mode == 'past') || (mode == 'finished') # backward
+      if before
+        @after = before
+        @before = nil
+      elsif after
+        @after = nil
+        @before = after
+      elsif (mode == 'past') || (mode == 'finished') # backward
         @after = moment_as_cursor(@moment)
         @before = nil
       else # forward
