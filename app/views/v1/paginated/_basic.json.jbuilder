@@ -7,4 +7,5 @@ json.paging do
   json.latest paging_info.latest
   json.before paging_info.before
   json.after paging_info.after
+  json.pool_size paging_info.datapool_size
 end

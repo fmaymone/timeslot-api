@@ -1,7 +1,8 @@
 class SlotPaginator < BasePaginator
   # prepares the values needed by the view
 
-  attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest
+  attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest,
+                :datapool_size
 
   # TODO: this is a complete mess, needs refactoring
   def initialize(data:, limit:, mode: nil, moment: nil,
