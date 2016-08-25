@@ -1,7 +1,8 @@
 class SlotPaginator < BasePaginator
   # prepares the values needed by the view
 
-  attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest
+  attr_accessor :mode, :moment, :after, :before, :filter, :earliest, :latest,
+                :datapool_size
 
   # TODO: this is a complete mess, needs refactoring
   def initialize(data:, limit:, mode: nil, moment: nil,
@@ -37,7 +38,13 @@ class SlotPaginator < BasePaginator
     elsif @data.empty? && (@datapool_size > 0)
       # request is not fulfilled but db has valid items which could
       # be paginated via cursor
-      if before || (mode == 'past') || (mode == 'finished') # backward
+      if before
+        @after = before
+        @before = nil
+      elsif after
+        @after = nil
+        @before = after
+      elsif (mode == 'past') || (mode == 'finished') # backward
         @after = moment_as_cursor(@moment)
         @before = nil
       else # forward
