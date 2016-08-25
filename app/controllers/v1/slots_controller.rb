@@ -415,7 +415,7 @@ module V1
                           params[:slot_groups].present?
       params[:slot_groups].each do |uuid|
         valid_uuid = !(uuid =~ /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i).nil?
-        fail ParameterInvalid.new(:slot_group, uuid) unless valid_uuid
+        raise ParameterInvalid.new(:slot_group, uuid) unless valid_uuid
       end
     end
   end

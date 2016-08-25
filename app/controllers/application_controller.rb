@@ -56,7 +56,7 @@ class ApplicationController < ActionController::API
     valid_values = %w(private friends foaf public)
 
     unless valid_values.include? visibility
-      fail ActionController::ParameterMissing,
+      raise ActionController::ParameterMissing,
            "visibility must be one of #{valid_values}"
     end
     visibility
