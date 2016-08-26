@@ -17,5 +17,6 @@ else
   json.areas_of_interest location_data.areas_of_interest
   json.latitude location_data.latitude
   json.longitude location_data.longitude
+  json.place_id location_data.place_id
   # json.private_location location_data.private_location # not used so far
 end

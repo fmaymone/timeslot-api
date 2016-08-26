@@ -626,6 +626,7 @@ resource "Slots" do
       # apple 52.527335,13.414259
       let(:latitude) { '52.527335' }
       let(:longitude) { '13.414259' }
+      let(:placeId) { 'ChIJrTLr-GyuEmsRBfy61i59si0' }
       let(:privateLocation) { true }
 
       example "Update Slot - Add Location", document: :v1 do
@@ -650,6 +651,7 @@ resource "Slots" do
         expect(location['subLocality']).to eq 'Mitte'
         expect(location['country']).to eq 'Germany'
         expect(location['isoCountryCode']).to eq 'GER'
+        expect(location['placeId']).to eq 'ChIJrTLr-GyuEmsRBfy61i59si0'
         # expect(location['privateLocation']).to be true
       end
     end

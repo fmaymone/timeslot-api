@@ -350,7 +350,8 @@ module V1
                            :locality, :sub_locality, :administrative_area,
                            :sub_administrative_area, :postal_code, :country,
                            :iso_country_code, :in_land_water, :ocean, :latitude,
-                           :longitude, :private_location, :areas_of_interest])
+                           :longitude, :private_location, :areas_of_interest,
+                           :place_id])
       # sets iosLocation to the content of params['location']
       p[:ios_location] = p.delete(:location) if params[:location].present?
 

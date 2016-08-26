@@ -92,6 +92,7 @@ RSpec.shared_context "ios location params" do
             scope: :location
   parameter :latitude, "Latitude", scope: :location
   parameter :longitude, "Longitude", scope: :location
+  parameter :placeId, "Google Place ID", scope: :location
   parameter :privateLocation,
             "private location for this user (true/false) [not yet " \
             "sure what it will mean technically] -> default: false",
