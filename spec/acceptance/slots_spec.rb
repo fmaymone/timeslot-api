@@ -177,6 +177,7 @@ resource "Slots" do
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
         expect(json).to have_key("firstGroup")
+        expect(json).to have_key("slotGroupUuids")
         slot.reload
         expect(json.except('media', 'location', 'likerIds'))
           .to eq("id" => slot.id,
@@ -201,7 +202,8 @@ resource "Slots" do
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 "visibleCount" => slot.visible_count
+                 "visibleCount" => slot.visible_count,
+                 "slotGroupUuids" => slot.slot_groups.pluck(:uuid)
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
