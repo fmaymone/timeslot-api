@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.2
--- Dumped by pg_dump version 9.5.3
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -433,7 +433,8 @@ CREATE TABLE ios_locations (
     private_location boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    uuid uuid DEFAULT uuid_generate_v4()
+    uuid uuid DEFAULT uuid_generate_v4() NOT NULL,
+    place_id character varying
 );
 
 
@@ -799,7 +800,11 @@ CREATE TABLE users (
     lang character varying(8),
     picture character varying(255) DEFAULT ''::character varying NOT NULL,
     slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_private_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL,
-    user_uuid uuid DEFAULT uuid_generate_v4() NOT NULL
+    user_uuid uuid DEFAULT uuid_generate_v4() NOT NULL,
+    first_name text,
+    middle_name text,
+    last_name text,
+    gender text
 );
 
 
@@ -1240,6 +1245,13 @@ CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON io
 
 
 --
+-- Name: index_ios_locations_on_place_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ios_locations_on_place_id ON ios_locations USING btree (place_id);
+
+
+--
 -- Name: index_likes_on_user_id_and_base_slot_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1599,4 +1611,8 @@ INSERT INTO schema_migrations (version) VALUES ('20160510125032');
 INSERT INTO schema_migrations (version) VALUES ('20160603103055');
 
 INSERT INTO schema_migrations (version) VALUES ('20160711102234');
+
+INSERT INTO schema_migrations (version) VALUES ('20160826225331');
+
+INSERT INTO schema_migrations (version) VALUES ('20160829092803');
 

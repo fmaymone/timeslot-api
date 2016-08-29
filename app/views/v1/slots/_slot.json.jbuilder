@@ -26,3 +26,5 @@ json.first_group do
     json.nil!
   end
 end
+
+json.slot_group_uuids slot.slot_groups.pluck(:uuid)

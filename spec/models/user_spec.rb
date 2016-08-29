@@ -6,6 +6,10 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:middle_name) }
+  it { is_expected.to respond_to(:last_name) }
+  it { is_expected.to respond_to(:gender) }
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:auth_token) }
   it { is_expected.to respond_to(:image) }

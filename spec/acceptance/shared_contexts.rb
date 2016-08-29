@@ -92,15 +92,52 @@ RSpec.shared_context "ios location params" do
             scope: :location
   parameter :latitude, "Latitude", scope: :location
   parameter :longitude, "Longitude", scope: :location
+  parameter :placeId, "Google Place ID", scope: :location
   parameter :privateLocation,
             "private location for this user (true/false) [not yet " \
             "sure what it will mean technically] -> default: false",
             scope: :location
 end
 
+RSpec.shared_context "user params" do
+  parameter :username, "Updated username of user (max. 50 characters)"
+  parameter :firstName, "Updated firstname of user (max. 50 characters)"
+  parameter :middleName, "Updated middlename of user (max. 50 characters)"
+  parameter :lastName, "Updated lastname of user (max. 50 characters)"
+  parameter :gender, "Updated gender of user (max. 50 characters)"
+  parameter :email, "Email of user (max. 255 characters)"
+  parameter :lang, "Language of user (2 characters, ISO 639-1)"
+  parameter :phone, "Phone number of user (max. 35 characters)"
+  parameter :image, "URL of the user image"
+  parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
+  parameter :push, "Send push Notifications (true/false)"
+  parameter :slotDefaultDuration, "Default Slot Duration in seconds"
+  parameter :slotDefaultTypeId, "Default Slot Type - WIP"
+  parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
+  parameter :defaultPrivateAlerts,
+            "Default alerts for private slots of this user"
+  parameter :defaultOwnFriendslotAlerts,
+            "Default alerts for the friendslots of this user"
+  parameter :defaultOwnPublicAlerts,
+            "Default alerts for the public slots of this user"
+  parameter :defaultFriendsFriendslotAlerts,
+            "Default alerts for the friendslots from friends of this user"
+  parameter :defaultFriendsPublicAlerts,
+            "Default alerts for the public slots from friends of this user"
+  parameter :defaultReslotAlerts,
+            "Default alerts for the reslots of this user"
+  parameter :defaultGroupAlerts,
+            "Default alerts for all groupslots of this user" \
+            " where no specific alert is set. Groupslots" \
+            " may also have their own default alerts per group"
+end
+
 RSpec.shared_context "default user response fields" do
   response_field :id, "ID of the user"
   response_field :username, "Username of the user"
+  response_field :firstName, "First name of the user"
+  response_field :middleName, "Middle name of the user"
+  response_field :lastName, "Last name of the user"
   response_field :createdAt, "Creation of user"
   response_field :updatedAt, "Latest update of user in db"
   response_field :deletedAt, "Deletion of user"
@@ -116,8 +153,8 @@ end
 RSpec.shared_context "current user response fields" do
   include_context "default user response fields"
 
+  response_field :gender, "Gender of user (non-binary to allow transgender types)"
   response_field :lang, "Language code (ISO 639-1)"
-
   response_field :email, "Email of user (max. 255 characters)"
   response_field :email_verified, "User has confirmed Email (true/false)"
   response_field :phone, "Phone number of user (max. 35 characters)"

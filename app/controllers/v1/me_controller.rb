@@ -228,8 +228,8 @@ module V1
     end
 
     private def user_params
-      p = params.permit(:username,
-                        :lang,
+      p = params.permit(:username, :first_name, :middle_name, :last_name,
+                        :gender, :lang,
                         :email,
                         :phone,
                         :password,
