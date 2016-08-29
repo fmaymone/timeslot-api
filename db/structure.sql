@@ -800,7 +800,11 @@ CREATE TABLE users (
     lang character varying(8),
     picture character varying(255) DEFAULT ''::character varying NOT NULL,
     slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_private_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL,
-    user_uuid uuid DEFAULT uuid_generate_v4() NOT NULL
+    user_uuid uuid DEFAULT uuid_generate_v4() NOT NULL,
+    first_name text,
+    middle_name text,
+    last_name text,
+    gender text
 );
 
 
@@ -1609,4 +1613,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160603103055');
 INSERT INTO schema_migrations (version) VALUES ('20160711102234');
 
 INSERT INTO schema_migrations (version) VALUES ('20160826225331');
+
+INSERT INTO schema_migrations (version) VALUES ('20160829092803');
 
