@@ -1,6 +1,7 @@
 json.partial! 'v1/users/full_user', user: user
 
 json.extract!(user,
+              :gender,
               :lang,
               :email,
               :email_verified,

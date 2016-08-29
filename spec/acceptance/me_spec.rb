@@ -10,6 +10,7 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    include_context "user params"
     include_context "current user response fields"
 
     let(:current_user) do
@@ -28,6 +29,9 @@ resource "Me" do
       # basic user response fields
       expect(json).to have_key "id"
       expect(json).to have_key "username"
+      expect(json).to have_key "firstName"
+      expect(json).to have_key "middleName"
+      expect(json).to have_key "lastName"
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
@@ -38,6 +42,7 @@ resource "Me" do
       expect(json).to have_key "calendarCount"
       expect(json).to have_key "friendsCount"
       # current user response fields
+      expect(json).to have_key "gender"
       expect(json).to have_key "lang"
       expect(json).to have_key "email"
       expect(json).to have_key "emailVerified"
@@ -587,40 +592,16 @@ resource "Me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
+    include_context "user params"
     include_context "current user response fields"
-
-    parameter :username, "Updated username of user (max. 50 characters)"
-    parameter :email, "Email of user (max. 255 characters)"
-    parameter :lang, "Language of user (2 characters, ISO 639-1)"
-    parameter :phone, "Phone number of user (max. 35 characters)"
-    parameter :image, "URL of the user image"
-    parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-    parameter :push, "Send push Notifications (true/false)"
-    parameter :slotDefaultDuration, "Default Slot Duration in seconds"
-    parameter :slotDefaultTypeId, "Default Slot Type - WIP"
-    parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
-    parameter :defaultPrivateAlerts,
-              "Default alerts for private slots of this user"
-    parameter :defaultOwnFriendslotAlerts,
-              "Default alerts for the friendslots of this user"
-    parameter :defaultOwnPublicAlerts,
-              "Default alerts for the public slots of this user"
-    parameter :defaultFriendsFriendslotAlerts,
-              "Default alerts for the friendslots from friends of this user"
-    parameter :defaultFriendsPublicAlerts,
-              "Default alerts for the public slots from friends of this user"
-    parameter :defaultReslotAlerts,
-              "Default alerts for the reslots of this user"
-    parameter :defaultGroupAlerts,
-              "Default alerts for all groupslots of this user" \
-              " where no specific alert is set. Groupslots" \
-              " may also have their own default alerts per group"
 
     describe "Update current users data" do
       let(:username) { "bar" }
-      let(:defaultPrivateAlerts) { '0111011100' }
+      let(:firstName) { "Barack" }
+      let(:gender) { "male" }
+      # let(:defaultPrivateAlerts) { '0111011100' }
 
-      example "Update - username and default alerts",
+      example "Update - username, firstname and gender",
               document: :v1 do
         explanation "E.g, change username and set default alerts\n\n" \
                     "returns user data\n\n" \
@@ -631,9 +612,13 @@ resource "Me" do
 
         current_user.reload
         expect(current_user.username).to eq "bar"
+        expect(current_user.first_name).to eq "Barack"
+        expect(current_user.gender).to eq "male"
         expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(json["username"]).to eq current_user.username
+        expect(json["firstName"]).to eq current_user.first_name
+        expect(json["gender"]).to eq current_user.gender
         # expect(json["defaultPrivateAlerts"]).to eq current_user.default_private_alerts
       end
     end
