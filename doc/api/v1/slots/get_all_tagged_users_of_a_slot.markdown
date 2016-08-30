@@ -24,19 +24,19 @@ Description : containing a list of users
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=7Dmq6MxkFlae2iVwOt9e4rZrgY8
+Authorization: Token token=CEcGXHLSxf-4xufXFIcN7X1abSw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/32/user_tags</pre>
+<pre>GET /v1/slots/35/user_tags</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/32/user_tags&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/35/user_tags&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=7Dmq6MxkFlae2iVwOt9e4rZrgY8&quot;</pre>
+	-H &quot;Authorization: Token token=CEcGXHLSxf-4xufXFIcN7X1abSw&quot;</pre>
 
 ### Response
 
@@ -46,12 +46,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;577a0b9f37e620ac903d50889e493932&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6e8c278b83108a34bdbae1f6dff4566c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 08baefe8-a043-45cf-93ef-834480dfcad3
-X-Runtime: 0.014991
-Vary: Origin
-Content-Length: 505</pre>
+X-Request-Id: dbd143cd-fa81-447b-9e43-8c9d16328859
+X-Runtime: 0.014684
+Content-Length: 655</pre>
 
 #### Status
 
@@ -62,28 +62,37 @@ Content-Length: 505</pre>
 ```javascript
 [
   {
-    "id" : 105,
-    "username" : "User 407",
-    "createdAt" : "2016-04-04T20:50:33.144Z",
-    "updatedAt" : "2016-04-04T20:50:33.144Z",
+    "id" : 97,
+    "username" : "User 816",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:10.596Z",
+    "updatedAt" : "2016-08-30T09:51:10.596Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 106,
-    "username" : "User 408",
-    "createdAt" : "2016-04-04T20:50:33.149Z",
-    "updatedAt" : "2016-04-04T20:50:33.149Z",
+    "id" : 98,
+    "username" : "User 817",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:10.601Z",
+    "updatedAt" : "2016-08-30T09:51:10.601Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"
   },
   {
-    "id" : 107,
-    "username" : "User 409",
-    "createdAt" : "2016-04-04T20:50:33.153Z",
-    "updatedAt" : "2016-04-04T20:50:33.153Z",
+    "id" : 99,
+    "username" : "User 818",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:10.606Z",
+    "updatedAt" : "2016-08-30T09:51:10.606Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

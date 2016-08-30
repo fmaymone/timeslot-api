@@ -31,22 +31,22 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=0BHi7nHxl708haDtdfk4kbk64eg
+Authorization: Token token=FoWvsIVIl15dybjAtxIdlbrzSao
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/22/slotgroups</pre>
+<pre>POST /v1/slots/24/slotgroups</pre>
 
 #### Body
 ```javascript
 {
   "slotGroups" : [
-    "6748cccb-d85b-4d72-9e61-b53632eedde4",
-    "a5b0feee-558d-4dad-807f-ccad1f0d5662",
-    "74eec819-9597-4547-9618-af947bf4469a",
-    "193f19c6-8ff5-4972-9714-2933863d622a"
+    "1d80d46e-795f-47f8-b528-95486daa3a22",
+    "fa9934c1-d4e1-4188-a7ec-6a1acc742b9d",
+    "810f10b8-848c-4f62-abcf-c7c23896d261",
+    "0ec08130-7164-400a-88b7-8cd13b554d41"
   ]
 }
 ```
@@ -54,9 +54,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/22/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;6748cccb-d85b-4d72-9e61-b53632eedde4&quot;,&quot;a5b0feee-558d-4dad-807f-ccad1f0d5662&quot;,&quot;74eec819-9597-4547-9618-af947bf4469a&quot;,&quot;193f19c6-8ff5-4972-9714-2933863d622a&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/24/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;1d80d46e-795f-47f8-b528-95486daa3a22&quot;,&quot;fa9934c1-d4e1-4188-a7ec-6a1acc742b9d&quot;,&quot;810f10b8-848c-4f62-abcf-c7c23896d261&quot;,&quot;0ec08130-7164-400a-88b7-8cd13b554d41&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=0BHi7nHxl708haDtdfk4kbk64eg&quot;</pre>
+	-H &quot;Authorization: Token token=FoWvsIVIl15dybjAtxIdlbrzSao&quot;</pre>
 
 ### Response
 
@@ -66,11 +66,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;68953a5820b9795cbb15de32b879631c&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;f72ec486d038b46fe7e5ce0082333ebe&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a7161893-4f2d-477d-aeeb-cb721bd5edf9
-X-Runtime: 0.045121
-Vary: Origin
+X-Request-Id: d3c86f32-7df1-4094-9c6c-fa68163b4db8
+X-Runtime: 0.114833
 Content-Length: 106</pre>
 
 #### Status
@@ -82,8 +82,8 @@ Content-Length: 106</pre>
 ```javascript
 {
   "unauthorizedSlotgroups" : [
-    "74eec819-9597-4547-9618-af947bf4469a",
-    "193f19c6-8ff5-4972-9714-2933863d622a"
+    "810f10b8-848c-4f62-abcf-c7c23896d261",
+    "0ec08130-7164-400a-88b7-8cd13b554d41"
   ]
 }
 ```

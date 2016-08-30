@@ -10,20 +10,20 @@ returns 200 if calendar was successfully added to schedule or has been part of i
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=cvxnc_bDYyXFjIi3UEtRqB6IkVc
+Authorization: Token token=LureHm8EA-MxdtpmcSguRXLoGPs
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/me/schedule/calendar/eb15fba5-230c-4510-b2aa-f91695b0dedb</pre>
+<pre>POST /v1/me/schedule/calendar/9bcb3dce-818a-4979-9f16-1d428aff16bc</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/schedule/calendar/eb15fba5-230c-4510-b2aa-f91695b0dedb&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/schedule/calendar/9bcb3dce-818a-4979-9f16-1d428aff16bc&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=cvxnc_bDYyXFjIi3UEtRqB6IkVc&quot; \
+	-H &quot;Authorization: Token token=LureHm8EA-MxdtpmcSguRXLoGPs&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -36,8 +36,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 46c25620-ce54-4dea-aa08-06856a664bfc
-X-Runtime: 0.022138
+X-Request-Id: 78064d65-62e5-458a-98e7-5feca078c50d
+X-Runtime: 0.021516
 Content-Length: 0</pre>
 
 #### Status

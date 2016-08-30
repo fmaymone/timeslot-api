@@ -16,19 +16,19 @@ Description : ID of the Slot to like
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=GIRgfekWHTiWGcdpPER0N11n5AU
+Authorization: Token token=oWkMj-3ALyU8O9m3b3dR66lIsUc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/25/like</pre>
+<pre>POST /v1/slots/28/like</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/25/like&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/28/like&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=GIRgfekWHTiWGcdpPER0N11n5AU&quot;</pre>
+	-H &quot;Authorization: Token token=oWkMj-3ALyU8O9m3b3dR66lIsUc&quot;</pre>
 
 ### Response
 
@@ -38,10 +38,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 3f89f60d-7931-4166-ae14-5a3fa035e492
-X-Runtime: 0.037076
-Vary: Origin
+X-Request-Id: 1ca84969-5d7c-48cc-aa41-2a10f87dfd62
+X-Runtime: 0.069023
 Content-Length: 0</pre>
 
 #### Status

@@ -42,6 +42,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -85,6 +88,15 @@ Description : ID of the user
 
 Name : username
 Description : Username of the user
+
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
 
 Name : createdAt
 Description : Creation of user
@@ -138,11 +150,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;7e228f797c396d264dc2f48d200e7576&quot;
+ETag: W/&quot;443f41bfb9f56a80553af7cd9de7bfb2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e0558790-8e60-48c0-8418-1e8d676fcf60
-X-Runtime: 0.007679
-Content-Length: 3561</pre>
+X-Request-Id: 8ab26124-c32d-40c4-aa92-75c08468278f
+X-Runtime: 0.008260
+Content-Length: 4699</pre>
 
 #### Status
 
@@ -151,84 +163,111 @@ Content-Length: 3561</pre>
 #### Body
 
 ```javascript
-[
-  {
-    "type" : "Group",
-    "object" : "64",
-    "model" : "Group",
-    "target" : "64",
-    "action" : "create",
-    "foreign" : "273",
-    "time" : "2016-05-25T11:08:26.182Z",
-    "id" : "DE706E3BBF25C1C03A6F031A136E68D9BA25E96B",
-    "actors" : [
-      273
-    ],
-    "message" : "User 389 created the slot group: Testgroup 123.",
-    "data" : {
-      "target" : {
-        "id" : "9f06547f-95e7-49bd-b091-95bec514344c",
+{
+  "cursor" : 0,
+  "next" : null,
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "group",
+      "action" : "create",
+      "time" : "2016-08-30T09:50:49.237Z",
+      "id" : "9A60092B5EE5B5F1B3E715FF69ACA2074C4A3F1F",
+      "message" : "{actor} created the slot group: {group}.",
+      "actors" : [
+        {
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : {
+        "id" : "01d4f21a-6cd8-4a56-9b44-0f81bb191373",
         "name" : "Testgroup 123",
         "image" : "",
         "description" : null,
+        "defaultColor" : "000000",
         "membersCanPost" : false,
         "membersCanInvite" : false,
         "public" : false,
-        "createdAt" : "2016-05-25T11:08:26.182Z",
-        "updatedAt" : "2016-05-25T11:08:26.182Z",
+        "createdAt" : "2016-08-30T09:50:49.237Z",
+        "updatedAt" : "2016-08-30T09:50:49.237Z",
         "deletedAt" : null,
         "owner" : {
-          "id" : 273,
-          "username" : "User 389",
-          "createdAt" : "2016-05-25T11:08:26.152Z",
-          "updatedAt" : "2016-05-25T11:08:26.152Z",
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
           "deletedAt" : null,
           "image" : ""
         },
         "memberIds" : [
-          273
+          280
         ],
         "memberCount" : 1,
-        "slotCount" : 0
+        "slotCount" : 0,
+        "previewSlots" : []
       },
-      "actor" : {
-        "id" : 273,
-        "username" : "User 389",
-        "createdAt" : "2016-05-25T11:08:26.152Z",
-        "updatedAt" : "2016-05-25T11:08:26.152Z",
+      "slot" : null,
+      "user" : {
+        "id" : 280,
+        "username" : "User 388",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:49.169Z",
+        "updatedAt" : "2016-08-30T09:50:49.169Z",
         "deletedAt" : null,
         "image" : ""
       }
-    }
-  },
-  {
-    "type" : "Slot",
-    "object" : "111",
-    "model" : "StdSlotPublic",
-    "target" : "111",
-    "action" : "create",
-    "foreign" : "273",
-    "time" : "2016-05-25T11:08:26.179Z",
-    "id" : "6D9F55CFF19D11192870CA4B275B9B1C8EE74AA1",
-    "actors" : [
-      273
-    ],
-    "message" : "User 389 creates this Slot.",
-    "data" : {
-      "target" : {
+    },
+    {
+      "target" : "slot",
+      "action" : "create",
+      "time" : "2016-08-30T09:50:49.213Z",
+      "id" : "6A32DFF982F8F9C75CC69CE01EA82E52F0387D08",
+      "message" : "{actor} creates this Slot.",
+      "actors" : [
+        {
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
         "id" : 111,
-        "title" : "Slot title 81",
+        "title" : "Slot title 84",
+        "description" : "",
         "startDate" : "2019-09-04T12:44:02.000Z",
-        "createdAt" : "2016-05-25T11:08:26.179Z",
-        "updatedAt" : "2016-05-25T11:08:26.179Z",
+        "createdAt" : "2016-08-30T09:50:49.213Z",
+        "updatedAt" : "2016-08-30T09:50:49.213Z",
         "deletedAt" : null,
         "endDate" : "2019-10-04T12:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 273,
-          "username" : "User 389",
-          "createdAt" : "2016-05-25T11:08:26.152Z",
-          "updatedAt" : "2016-05-25T11:08:26.152Z",
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -240,46 +279,60 @@ Content-Length: 3561</pre>
         "visibility" : "public",
         "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 0
+        "commentsCounter" : 0,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
       },
-      "actor" : {
-        "id" : 273,
-        "username" : "User 389",
-        "createdAt" : "2016-05-25T11:08:26.152Z",
-        "updatedAt" : "2016-05-25T11:08:26.152Z",
+      "user" : {
+        "id" : 280,
+        "username" : "User 388",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:49.169Z",
+        "updatedAt" : "2016-08-30T09:50:49.169Z",
         "deletedAt" : null,
         "image" : ""
       }
-    }
-  },
-  {
-    "type" : "Slot",
-    "object" : "110",
-    "model" : "StdSlotPublic",
-    "target" : "110",
-    "action" : "create",
-    "foreign" : "273",
-    "time" : "2016-05-25T11:08:26.171Z",
-    "id" : "734268AECEAD2ED1CB32AC37866A11E0AE2C356B",
-    "actors" : [
-      273
-    ],
-    "message" : "User 389 creates this Slot.",
-    "data" : {
-      "target" : {
+    },
+    {
+      "target" : "slot",
+      "action" : "create",
+      "time" : "2016-08-30T09:50:49.200Z",
+      "id" : "9BE2A9500F5D1D12EE0D20BDC26AC505DCBBEF6A",
+      "message" : "{actor} creates this Slot.",
+      "actors" : [
+        {
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
         "id" : 110,
-        "title" : "Slot title 80",
+        "title" : "Slot title 83",
+        "description" : "",
         "startDate" : "2019-09-03T11:44:02.000Z",
-        "createdAt" : "2016-05-25T11:08:26.171Z",
-        "updatedAt" : "2016-05-25T11:08:26.171Z",
+        "createdAt" : "2016-08-30T09:50:49.200Z",
+        "updatedAt" : "2016-08-30T09:50:49.200Z",
         "deletedAt" : null,
         "endDate" : "2019-10-03T11:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 273,
-          "username" : "User 389",
-          "createdAt" : "2016-05-25T11:08:26.152Z",
-          "updatedAt" : "2016-05-25T11:08:26.152Z",
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -291,46 +344,60 @@ Content-Length: 3561</pre>
         "visibility" : "public",
         "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 0
+        "commentsCounter" : 0,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
       },
-      "actor" : {
-        "id" : 273,
-        "username" : "User 389",
-        "createdAt" : "2016-05-25T11:08:26.152Z",
-        "updatedAt" : "2016-05-25T11:08:26.152Z",
+      "user" : {
+        "id" : 280,
+        "username" : "User 388",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:49.169Z",
+        "updatedAt" : "2016-08-30T09:50:49.169Z",
         "deletedAt" : null,
         "image" : ""
       }
-    }
-  },
-  {
-    "type" : "Slot",
-    "object" : "109",
-    "model" : "StdSlotPublic",
-    "target" : "109",
-    "action" : "create",
-    "foreign" : "273",
-    "time" : "2016-05-25T11:08:26.160Z",
-    "id" : "E5F1041C4D6524F4DEB03CC369F0C4BECB4D2FA5",
-    "actors" : [
-      273
-    ],
-    "message" : "User 389 creates this Slot.",
-    "data" : {
-      "target" : {
+    },
+    {
+      "target" : "slot",
+      "action" : "create",
+      "time" : "2016-08-30T09:50:49.180Z",
+      "id" : "0BA7F4D7E7B7EE80BDAF86E9EDD623E260694CDA",
+      "message" : "{actor} creates this Slot.",
+      "actors" : [
+        {
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
         "id" : 109,
-        "title" : "Slot title 79",
+        "title" : "Slot title 82",
+        "description" : "",
         "startDate" : "2019-09-02T10:44:02.000Z",
-        "createdAt" : "2016-05-25T11:08:26.160Z",
-        "updatedAt" : "2016-05-25T11:08:26.302Z",
+        "createdAt" : "2016-08-30T09:50:49.180Z",
+        "updatedAt" : "2016-08-30T09:50:49.468Z",
         "deletedAt" : null,
         "endDate" : "2019-10-02T10:44:02.000Z",
         "location" : null,
         "creator" : {
-          "id" : 273,
-          "username" : "User 389",
-          "createdAt" : "2016-05-25T11:08:26.152Z",
-          "updatedAt" : "2016-05-25T11:08:26.152Z",
+          "id" : 280,
+          "username" : "User 388",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:49.169Z",
+          "updatedAt" : "2016-08-30T09:50:49.169Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -342,17 +409,22 @@ Content-Length: 3561</pre>
         "visibility" : "public",
         "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 2
+        "commentsCounter" : 2,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
       },
-      "actor" : {
-        "id" : 273,
-        "username" : "User 389",
-        "createdAt" : "2016-05-25T11:08:26.152Z",
-        "updatedAt" : "2016-05-25T11:08:26.152Z",
+      "user" : {
+        "id" : 280,
+        "username" : "User 388",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:49.169Z",
+        "updatedAt" : "2016-08-30T09:50:49.169Z",
         "deletedAt" : null,
         "image" : ""
       }
     }
-  }
-]
+  ]
+}
 ```

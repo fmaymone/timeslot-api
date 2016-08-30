@@ -31,7 +31,7 @@ Description : Query parameter to request slots relative to a given **moment**. M
 - **now**: *ongoing* &amp; *upcoming* slots
 - **around**: limit/2 slots with *start* before *moment* and limit/2 slots with *start* after *moment*. This might miss ongoing slots.
 - **all**: no restriction
-Default is **upcoming**.
+Default is **all**.
 
 Name : before
 Description : Pagination cursor to retrieve slots which do happen BEFORE the slot represented by this cursor. If a cursor is send, **mode** and **moment** are ignored.
@@ -57,11 +57,17 @@ Description : Maximum number of slots returned.
 Name : mode
 Description : Types of slots which were requested.
 
+Name : moment
+Description : Point-in-time which was used for the query.
+
 Name : filter
 Description : Type of filter which was applied to initial data.
 
-Name : moment
-Description : Point-in-time which was used for the query.
+Name : earliest
+Description : If set, no Slots which have ended before this point-in-time will be included in the result.
+
+Name : latest
+Description : If set, no Slots which are starting after this point-in-time will be included in the result.
 
 Name : before
 Description : Cursor that represents the first item in the response dataset.
@@ -76,13 +82,13 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU
+<pre>Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/49/slots?limit=2&amp;filter=between&amp;earliest=2016-04-21T09%3A06%3A18.000Z&amp;latest=2016-04-21T19%3A06%3A18.000Z</pre>
+<pre>GET /v1/users/136/slots?limit=2&amp;filter=between&amp;earliest=2016-04-21T09%3A06%3A18.000Z&amp;latest=2016-04-21T19%3A06%3A18.000Z</pre>
 
 #### Query Parameters
 
@@ -93,8 +99,8 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/49/slots?limit=2&amp;filter=between&amp;earliest=2016-04-21T09%3A06%3A18.000Z&amp;latest=2016-04-21T19%3A06%3A18.000Z&quot; -X GET \
-	-H &quot;Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/136/slots?limit=2&amp;filter=between&amp;earliest=2016-04-21T09%3A06%3A18.000Z&amp;latest=2016-04-21T19%3A06%3A18.000Z&quot; -X GET \
+	-H &quot;Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM&quot;</pre>
 
 ### Response
 
@@ -104,12 +110,12 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;35a927a48d220bb5806a87ad4ddf80fa&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6d4c647407d6b52a55784ca405b5d334&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6101bf5d-542b-4a86-971b-7c4ad780486d
-X-Runtime: 0.146701
-Vary: Origin
-Content-Length: 1338</pre>
+X-Request-Id: 1655ddcc-6732-45ba-8682-2c9c996879a9
+X-Runtime: 0.047465
+Content-Length: 1567</pre>
 
 #### Status
 
@@ -127,23 +133,28 @@ Content-Length: 1338</pre>
     "earliest" : "2016-04-21T09:06:18.000Z",
     "latest" : "2016-04-21T19:06:18.000Z",
     "before" : null,
-    "after" : "MjAlMjAxNi0wNC0yMSAwNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA="
+    "after" : "NTUlMjAxNi0wNC0yMSAwNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA=",
+    "poolSize" : 5
   },
   "data" : [
     {
-      "id" : 18,
+      "id" : 53,
       "title" : "overlap earliest",
+      "description" : "",
       "startDate" : "2016-04-21T03:06:18.000Z",
-      "createdAt" : "2016-04-27T22:51:21.285Z",
-      "updatedAt" : "2016-04-27T22:51:21.285Z",
+      "createdAt" : "2016-08-30T09:51:11.704Z",
+      "updatedAt" : "2016-08-30T09:51:11.704Z",
       "deletedAt" : null,
       "endDate" : "2016-04-21T16:06:18.000Z",
       "location" : null,
       "creator" : {
-        "id" : 52,
-        "username" : "User 51",
-        "createdAt" : "2016-04-27T22:51:21.279Z",
-        "updatedAt" : "2016-04-27T22:51:21.279Z",
+        "id" : 136,
+        "username" : "User 856",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.650Z",
+        "updatedAt" : "2016-08-30T09:51:11.650Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -156,22 +167,28 @@ Content-Length: 1338</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/18"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/53"
     },
     {
-      "id" : 20,
+      "id" : 55,
       "title" : "overlap both",
+      "description" : "",
       "startDate" : "2016-04-21T05:06:18.000Z",
-      "createdAt" : "2016-04-27T22:51:21.311Z",
-      "updatedAt" : "2016-04-27T22:51:21.311Z",
+      "createdAt" : "2016-08-30T09:51:11.739Z",
+      "updatedAt" : "2016-08-30T09:51:11.739Z",
       "deletedAt" : null,
       "endDate" : "2016-04-21T22:06:18.000Z",
       "location" : null,
       "creator" : {
-        "id" : 54,
-        "username" : "User 55",
-        "createdAt" : "2016-04-27T22:51:21.303Z",
-        "updatedAt" : "2016-04-27T22:51:21.303Z",
+        "id" : 136,
+        "username" : "User 856",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.650Z",
+        "updatedAt" : "2016-08-30T09:51:11.650Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -184,7 +201,9 @@ Content-Length: 1338</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/20"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/55"
     }
   ]
 }
@@ -193,17 +212,17 @@ Content-Length: 1338</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU
+<pre>Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/49/slots</pre>
+<pre>GET /v1/users/136/slots</pre>
 
 #### Query Parameters
 
-<pre>after: MjAlMjAxNi0wNC0yMSAwNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA=
+<pre>after: NTUlMjAxNi0wNC0yMSAwNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA=
 filter: between
 limit: 2
 earliest: 2016-04-21T09:06:18.000Z
@@ -211,8 +230,8 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/49/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/136/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM&quot;</pre>
 
 ### Response
 
@@ -222,12 +241,12 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;910d539f3ea159f429816a03b1c7cb17&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;51fa40d3dc48d6cbc679ea72a4d72061&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 90d9e962-4f6a-4a34-a332-deefb6dbfc98
-X-Runtime: 0.033832
-Vary: Origin
-Content-Length: 1416</pre>
+X-Request-Id: 2b1239bc-6b55-4651-b703-c9a244f76dff
+X-Runtime: 0.043077
+Content-Length: 1645</pre>
 
 #### Status
 
@@ -244,24 +263,29 @@ Content-Length: 1416</pre>
     "filter" : "between",
     "earliest" : "2016-04-21T09:06:18.000Z",
     "latest" : "2016-04-21T19:06:18.000Z",
-    "before" : "MTclMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAxNjowNjoxOC4wMDAwMDAwMDA=",
-    "after" : "MTklMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMzowNjoxOC4wMDAwMDAwMDA="
+    "before" : "NTIlMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAxNjowNjoxOC4wMDAwMDAwMDA=",
+    "after" : "NTQlMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMzowNjoxOC4wMDAwMDAwMDA=",
+    "poolSize" : 5
   },
   "data" : [
     {
-      "id" : 17,
+      "id" : 52,
       "title" : "in between",
+      "description" : "",
       "startDate" : "2016-04-21T15:06:18.000Z",
-      "createdAt" : "2016-04-27T22:51:21.274Z",
-      "updatedAt" : "2016-04-27T22:51:21.274Z",
+      "createdAt" : "2016-08-30T09:51:11.669Z",
+      "updatedAt" : "2016-08-30T09:51:11.669Z",
       "deletedAt" : null,
       "endDate" : "2016-04-21T16:06:18.000Z",
       "location" : null,
       "creator" : {
-        "id" : 51,
-        "username" : "User 49",
-        "createdAt" : "2016-04-27T22:51:21.262Z",
-        "updatedAt" : "2016-04-27T22:51:21.262Z",
+        "id" : 136,
+        "username" : "User 856",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.650Z",
+        "updatedAt" : "2016-08-30T09:51:11.650Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -274,22 +298,28 @@ Content-Length: 1416</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/17"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/52"
     },
     {
-      "id" : 19,
+      "id" : 54,
       "title" : "overlap latest",
+      "description" : "",
       "startDate" : "2016-04-21T15:06:18.000Z",
-      "createdAt" : "2016-04-27T22:51:21.298Z",
-      "updatedAt" : "2016-04-27T22:51:21.298Z",
+      "createdAt" : "2016-08-30T09:51:11.725Z",
+      "updatedAt" : "2016-08-30T09:51:11.725Z",
       "deletedAt" : null,
       "endDate" : "2016-04-21T23:06:18.000Z",
       "location" : null,
       "creator" : {
-        "id" : 53,
-        "username" : "User 53",
-        "createdAt" : "2016-04-27T22:51:21.290Z",
-        "updatedAt" : "2016-04-27T22:51:21.290Z",
+        "id" : 136,
+        "username" : "User 856",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.650Z",
+        "updatedAt" : "2016-08-30T09:51:11.650Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -302,7 +332,9 @@ Content-Length: 1416</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/19"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/54"
     }
   ]
 }
@@ -311,17 +343,17 @@ Content-Length: 1416</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU
+<pre>Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/49/slots</pre>
+<pre>GET /v1/users/136/slots</pre>
 
 #### Query Parameters
 
-<pre>after: MTklMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMzowNjoxOC4wMDAwMDAwMDA=
+<pre>after: NTQlMjAxNi0wNC0yMSAxNTowNjoxOC4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMzowNjoxOC4wMDAwMDAwMDA=
 filter: between
 limit: 2
 earliest: 2016-04-21T09:06:18.000Z
@@ -329,8 +361,8 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/49/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=f1ukAxo-_hI6X9A34pftVcl_aLU&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/136/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=Njj7DCgtfbNXkBr2Qi4ZiiFxYtM&quot;</pre>
 
 ### Response
 
@@ -340,12 +372,12 @@ latest: 2016-04-21T19:06:18.000Z</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;03ac305eded2910b5a9bce37800433b9&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;297eda46b02791447ff25753093c7530&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a3113bd-d7f3-46b5-b637-7027acceae50
-X-Runtime: 0.024809
-Vary: Origin
-Content-Length: 811</pre>
+X-Request-Id: e0e5598d-63f9-492f-bcd5-9f3dd1dff8b9
+X-Runtime: 0.037729
+Content-Length: 932</pre>
 
 #### Status
 
@@ -362,24 +394,29 @@ Content-Length: 811</pre>
     "filter" : "between",
     "earliest" : "2016-04-21T09:06:18.000Z",
     "latest" : "2016-04-21T19:06:18.000Z",
-    "before" : "MjElMjAxNi0wNC0yMSAxOTowNjoxNy4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA=",
-    "after" : null
+    "before" : "NTYlMjAxNi0wNC0yMSAxOTowNjoxNy4wMDAwMDAwMDAlMjAxNi0wNC0yMSAyMjowNjoxOC4wMDAwMDAwMDA=",
+    "after" : null,
+    "poolSize" : 5
   },
   "data" : [
     {
-      "id" : 21,
+      "id" : 56,
       "title" : "starts near end",
+      "description" : "",
       "startDate" : "2016-04-21T19:06:17.000Z",
-      "createdAt" : "2016-04-27T22:51:21.323Z",
-      "updatedAt" : "2016-04-27T22:51:21.323Z",
+      "createdAt" : "2016-08-30T09:51:11.751Z",
+      "updatedAt" : "2016-08-30T09:51:11.751Z",
       "deletedAt" : null,
       "endDate" : "2016-04-21T22:06:18.000Z",
       "location" : null,
       "creator" : {
-        "id" : 55,
-        "username" : "User 57",
-        "createdAt" : "2016-04-27T22:51:21.316Z",
-        "updatedAt" : "2016-04-27T22:51:21.316Z",
+        "id" : 136,
+        "username" : "User 856",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.650Z",
+        "updatedAt" : "2016-08-30T09:51:11.650Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -392,7 +429,9 @@ Content-Length: 811</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/21"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/56"
     }
   ]
 }

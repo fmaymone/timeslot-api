@@ -16,19 +16,19 @@ Description : ID of the Slot to unlike
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zcAq5xxZmhvj8OU9hRZfTOtlhgM
+Authorization: Token token=9MNHX2wK9HlFFZpbZXyvfYtsd4I
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/slots/26/like</pre>
+<pre>DELETE /v1/slots/29/like</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/26/like&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/29/like&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zcAq5xxZmhvj8OU9hRZfTOtlhgM&quot;</pre>
+	-H &quot;Authorization: Token token=9MNHX2wK9HlFFZpbZXyvfYtsd4I&quot;</pre>
 
 ### Response
 
@@ -38,10 +38,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 5ba763be-13b2-4eea-ba3f-0b3c857eda4d
-X-Runtime: 0.025108
-Vary: Origin
+X-Request-Id: 231e4654-460b-4050-9f70-6def460d62db
+X-Runtime: 0.033454
 Content-Length: 0</pre>
 
 #### Status

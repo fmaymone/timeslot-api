@@ -24,6 +24,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -53,7 +62,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=vkhFlmZVp2AhUlt7dsPiBGbNV2Y
+Authorization: Token token=dD7ypU4G--CK0gM-uA-gsCqiSyI
 Host: example.org
 Cookie: </pre>
 
@@ -65,7 +74,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/request&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=vkhFlmZVp2AhUlt7dsPiBGbNV2Y&quot;</pre>
+	-H &quot;Authorization: Token token=dD7ypU4G--CK0gM-uA-gsCqiSyI&quot;</pre>
 
 ### Response
 
@@ -76,11 +85,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e29e0dd04cb8b628bfc0f973105ac19f&quot;
+ETag: W/&quot;939694bfb9bffb5aa4d65106ed4b91b8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9287315f-6dfa-44e0-9078-a2604607c519
-X-Runtime: 0.006327
-Content-Length: 1620</pre>
+X-Request-Id: 2a65f000-2bf4-4420-8fff-d637c2ba7834
+X-Runtime: 0.006570
+Content-Length: 1929</pre>
 
 #### Status
 
@@ -89,5 +98,113 @@ Content-Length: 1620</pre>
 #### Body
 
 ```javascript
-
+{
+  "cursor" : 0,
+  "next" : null,
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "user",
+      "action" : "request",
+      "time" : "2016-08-30T09:50:49.057Z",
+      "id" : "60227A945EDCAB0A9E3BA3A926835C429696060C",
+      "message" : "{actor} sent a friend request to you",
+      "actors" : [
+        {
+          "id" : 278,
+          "username" : "Friend C",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.973Z",
+          "updatedAt" : "2016-08-30T09:50:48.973Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : null,
+      "user" : {
+        "id" : 279,
+        "username" : "User 387",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.978Z",
+        "updatedAt" : "2016-08-30T09:50:48.978Z",
+        "deletedAt" : null,
+        "image" : "",
+        "friendshipState" : "pending passive"
+      }
+    },
+    {
+      "target" : "user",
+      "action" : "request",
+      "time" : "2016-08-30T09:50:49.028Z",
+      "id" : "458C4F369622CC360A3AB89D17A4DC93AE7CAE04",
+      "message" : "{actor} sent a friend request to you",
+      "actors" : [
+        {
+          "id" : 277,
+          "username" : "Friend B",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.970Z",
+          "updatedAt" : "2016-08-30T09:50:48.970Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : null,
+      "user" : {
+        "id" : 279,
+        "username" : "User 387",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.978Z",
+        "updatedAt" : "2016-08-30T09:50:48.978Z",
+        "deletedAt" : null,
+        "image" : "",
+        "friendshipState" : "pending passive"
+      }
+    },
+    {
+      "target" : "user",
+      "action" : "request",
+      "time" : "2016-08-30T09:50:48.988Z",
+      "id" : "5D87EA6EE9EC085D0B2E88CDFC72028F1C8A50D4",
+      "message" : "{actor} sent a friend request to you",
+      "actors" : [
+        {
+          "id" : 276,
+          "username" : "Friend A",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.967Z",
+          "updatedAt" : "2016-08-30T09:50:48.967Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : null,
+      "user" : {
+        "id" : 279,
+        "username" : "User 387",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.978Z",
+        "updatedAt" : "2016-08-30T09:50:48.978Z",
+        "deletedAt" : null,
+        "image" : "",
+        "friendshipState" : "pending passive"
+      }
+    }
+  ]
+}
 ```

@@ -55,6 +55,9 @@ Description : URL of the group image
 Name : description
 Description : The description of the group
 
+Name : defaultColor
+Description : default color of the group, can be overwritten per member
+
 Name : createdAt
 Description : Creation of group
 
@@ -72,13 +75,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Ln_lBMpgZ5WTmzd9rSqkpCtz6cY
+Authorization: Token token=cP61YxmWueKzXEPJj7n1nmEDQvI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/e887e887-9c66-4949-9c50-b6add562628e</pre>
+<pre>PATCH /v1/groups/06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33</pre>
 
 #### Body
 ```javascript
@@ -93,9 +96,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/e887e887-9c66-4949-9c50-b6add562628e&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;description&quot;:&quot;This is a new description.&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;description&quot;:&quot;This is a new description.&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Ln_lBMpgZ5WTmzd9rSqkpCtz6cY&quot;</pre>
+	-H &quot;Authorization: Token token=cP61YxmWueKzXEPJj7n1nmEDQvI&quot;</pre>
 
 ### Response
 
@@ -106,11 +109,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;7617e6ba544970517035c55510515faf&quot;
+ETag: W/&quot;f7fd3f26c5fa3eb9d46f8f385c8b9294&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7ebef8c0-1d16-4f82-a0da-8e910db836d6
-X-Runtime: 0.015493
-Content-Length: 490</pre>
+X-Request-Id: 833399e0-5828-48b5-82da-d30dc8d1a0da
+X-Runtime: 0.018741
+Content-Length: 582</pre>
 
 #### Status
 
@@ -120,29 +123,34 @@ Content-Length: 490</pre>
 
 ```javascript
 {
-  "id" : "e887e887-9c66-4949-9c50-b6add562628e",
+  "id" : "06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33",
   "name" : "bar",
   "image" : "",
   "description" : "This is a new description.",
+  "defaultColor" : "000000",
   "membersCanPost" : true,
   "membersCanInvite" : true,
   "public" : false,
-  "createdAt" : "2016-05-01T22:54:08.365Z",
-  "updatedAt" : "2016-05-01T22:54:08.373Z",
+  "createdAt" : "2016-08-30T09:50:50.287Z",
+  "updatedAt" : "2016-08-30T09:50:50.299Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 105,
-    "username" : "User 220",
-    "createdAt" : "2016-05-01T22:54:08.361Z",
-    "updatedAt" : "2016-05-01T22:54:08.361Z",
+    "id" : 309,
+    "username" : "User 419",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:50.283Z",
+    "updatedAt" : "2016-08-30T09:50:50.283Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [
-    105
+    309
   ],
   "memberCount" : 1,
   "slotCount" : 0,
-  "membershipState" : "active"
+  "membershipState" : "active",
+  "color" : "000000"
 }
 ```

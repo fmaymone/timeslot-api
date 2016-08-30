@@ -43,6 +43,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -66,6 +75,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -148,7 +160,7 @@ Description : Authentication Token for the user to be set as a HTTP header in su
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=9TaZ8Fc_Vh-kZcS7tcoORtXf7ic
+Authorization: Token token=Imro7zwPt6WN6PrrGuf4uY5niMs
 Host: example.org
 Cookie: </pre>
 
@@ -173,7 +185,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/public&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;role&quot;:&quot;public_user&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9TaZ8Fc_Vh-kZcS7tcoORtXf7ic&quot;</pre>
+	-H &quot;Authorization: Token token=Imro7zwPt6WN6PrrGuf4uY5niMs&quot;</pre>
 
 ### Response
 
@@ -184,11 +196,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;7adc65f565298c43c022193698e9fb66&quot;
+ETag: W/&quot;fca80b91b41465afcc4c7d54517b5e4d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 895a1ed6-e1de-4122-ad81-7cace964e71b
-X-Runtime: 0.023669
-Content-Length: 943</pre>
+X-Request-Id: a87ecda4-24fe-4079-be22-f5c45e99473f
+X-Runtime: 0.043009
+Content-Length: 1042</pre>
 
 #### Status
 
@@ -198,44 +210,50 @@ Content-Length: 943</pre>
 
 ```javascript
 {
-  "id" : 124,
+  "id" : 104,
   "username" : "foo",
-  "createdAt" : "2016-05-25T10:18:06.415Z",
-  "updatedAt" : "2016-05-25T10:18:06.415Z",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:51:10.783Z",
+  "updatedAt" : "2016-08-30T09:51:10.783Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 2,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : "de",
-  "email" : "user145@email.com",
+  "email" : "user150@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "8f8bf696-32e1-459c-a230-25df494a4376",
-  "friendsCalendarUuid" : "cf87b4cb-7fb0-479a-afda-85109e484dde",
-  "allMySlotsUuid" : "e6a04dc2-d354-46be-9363-50df06e5c91e",
-  "myCreatedSlotsUuid" : "4cc33ca6-d260-4d45-8b63-ad28a2e0784d",
-  "myPrivateSlotsUuid" : "1a938920-e16b-4ceb-b460-8de142051112",
-  "myFriendSlotsUuid" : "58393843-3754-48a6-bdf3-99a4e76ccfae",
-  "myPublicSlotsUuid" : "deb73a7c-64f7-4940-972b-c87e708568d7",
+  "myCalendarUuid" : "2ee69a96-6a10-4000-80cb-99fa19573236",
+  "friendsCalendarUuid" : "8c1282c2-4d4d-4c27-aeef-57b103c61bde",
+  "allMySlotsUuid" : "548933dd-bb00-46b2-8c66-1bc015e3027d",
+  "myCreatedSlotsUuid" : "94804977-f133-4d48-8441-77cf1e574236",
+  "myPrivateSlotsUuid" : "a7b532ba-7d68-406d-abac-359edb286008",
+  "myFriendSlotsUuid" : "e1d5478e-f0b2-458a-ba24-bb73fd9349bb",
+  "myPublicSlotsUuid" : "2292be6c-989d-4ecb-b71f-d8f4cd894984",
   "friendships" : [],
   "memberships" : [
     {
       "groupId" : 25,
       "state" : "active",
+      "color" : "000000",
       "notifications" : true
     },
     {
       "groupId" : 26,
       "state" : "active",
+      "color" : "000000",
       "notifications" : true
     }
   ],
   "friendshipState" : "myself",
-  "authToken" : "FNzoOFCT1h9wmhsZ5pAN4xVM9zs"
+  "authToken" : "yFTi7iGuZnwSeySXVY1337om9Po"
 }
 ```

@@ -8,7 +8,9 @@
 
 Name : group
 Description : Holds the uuid of the slot group which should be exported.
+
 If the parameter group is missing, all Slot will be exported.
+
 If the group uuid was not found, no Slot will be exported.
 
 ### Request
@@ -17,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=rMo-OtXSBxqPhosygZbLJgAyf6Y
+Authorization: Token token=a1Q7zM9KS2H2lwuXpgJw4gTyUBs
 Host: example.org
 Cookie: </pre>
 
@@ -28,17 +30,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "group" : "ede62f43-8b3c-4c25-965b-322fa7ba3ddb"
+  "group" : "1c725d58-526c-4777-a168-30a73b951912"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;ede62f43-8b3c-4c25-965b-322fa7ba3ddb&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;1c725d58-526c-4777-a168-30a73b951912&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=rMo-OtXSBxqPhosygZbLJgAyf6Y&quot;</pre>
+	-H &quot;Authorization: Token token=a1Q7zM9KS2H2lwuXpgJw4gTyUBs&quot;</pre>
 
 ### Response
 
@@ -47,14 +49,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;ede62f43-8b3c-4c25-965b-322fa7ba3ddb.ical&quot;
+Content-Disposition: attachment; filename=&quot;1c725d58-526c-4777-a168-30a73b951912.ical&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;efcef2533c1297d2d77b3ce0018964c0&quot;
-X-Request-Id: 8f712d92-a553-4e32-8f84-87e1f3b1d74b
-X-Runtime: 0.006082
+X-Request-Id: 59a5709e-7d58-4f0e-9e9b-ee7feee5f25d
+X-Runtime: 0.005870
 Content-Length: 104</pre>
 
 #### Status

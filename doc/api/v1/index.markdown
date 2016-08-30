@@ -32,12 +32,18 @@
 
 ## Groups
 
-* [Get group data for specific group](groups/get_group_data_for_specific_group.markdown)
+* [Get group data for specific group, not member](groups/get_group_data_for_specific_group,_not_member.markdown)
+* [Get group data for an active group member](groups/get_group_data_for_an_active_group_member.markdown)
 * [Create a new group](groups/create_a_new_group.markdown)
 * [Update data for existing group](groups/update_data_for_existing_group.markdown)
 * [Add image to existing group](groups/add_image_to_existing_group.markdown)
+* [Change default color of group](groups/change_default_color_of_group.markdown)
 * [Delete group](groups/delete_group.markdown)
 * [Get slots in a slotgroup by UUID](groups/get_slots_in_a_slotgroup_by_uuid.markdown)
+* [Get all dates when slots in a slotgroup happen](groups/get_all_dates_when_slots_in_a_slotgroup_happen.markdown)
+* [Get all dates when slots happen in other timezone](groups/get_all_dates_when_slots_happen_in_other_timezone.markdown)
+* [Get all dates when slots in my_schedule happen](groups/get_all_dates_when_slots_in_my_schedule_happen.markdown)
+* [Get all dates when slots in my library happen](groups/get_all_dates_when_slots_in_my_library_happen.markdown)
 * [Get list of all active group members](groups/get_list_of_all_active_group_members.markdown)
 * [Get list of all users related to a group](groups/get_list_of_all_users_related_to_a_group.markdown)
 * [Accept Invitation and add invited user to group](groups/accept_invitation_and_add_invited_user_to_group.markdown)
@@ -68,7 +74,7 @@
 * [Get all calendars where current user is member or owner](me/get_all_calendars_where_current_user_is_member_or_owner.markdown)
 * [Display Calendar in mySchedule](me/display_calendar_in_myschedule.markdown)
 * [Hide Calendar from mySchedule](me/hide_calendar_from_myschedule.markdown)
-* [Update - username and default alerts](me/update_-_username_and_default_alerts.markdown)
+* [Update - username, firstname and gender](me/update_-_username,_firstname_and_gender.markdown)
 * [Update - password](me/update_-_password.markdown)
 * [Update - user image](me/update_-_user_image.markdown)
 * [Update - location](me/update_-_location.markdown)
@@ -98,6 +104,7 @@
 * [Search by slot title](search/search_by_slot_title.markdown)
 * [Search by media title](search/search_by_media_title.markdown)
 * [Search by location name](search/search_by_location_name.markdown)
+* [Concerts - Find global slots](search/concerts_-_find_global_slots.markdown)
 
 ## Share
 
@@ -109,7 +116,6 @@
 * [Share Slot via Email](share/share_slot_via_email.markdown)
 * [Delete all shared content](share/delete_all_shared_content.markdown)
 * [Cinema - Find global slots](search/cinema_-_find_global_slots.markdown)
-* [Soccer - Find global slots](search/soccer_-_find_global_slots.markdown)
 
 ## Slots
 
@@ -119,7 +125,6 @@
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
 * [Update MetaSlot](slots/update_metaslot.markdown)
 * [Update StdSlot - change title](slots/update_stdslot_-_change_title.markdown)
-* [Update StdSlot - change visibility](slots/update_stdslot_-_change_visibility.markdown)
 * [Update Slot - Add notes](slots/update_slot_-_add_notes.markdown)
 * [Update Slot - Add media](slots/update_slot_-_add_media.markdown)
 * [Update Slot - Reorder media items](slots/update_slot_-_reorder_media_items.markdown)
@@ -159,6 +164,7 @@
 * [Get slots for Friend-of-Friend](users/get_slots_for_friend-of-friend.markdown)
 * [Get slots for Stranger with common groups](users/get_slots_for_stranger_with_common_groups.markdown)
 * [Get slots for Stranger](users/get_slots_for_stranger.markdown)
+* [Get list of dates when slots of another user are happening](users/get_list_of_dates_when_slots_of_another_user_are_happening.markdown)
 * [Get list of friends of another user](users/get_list_of_friends_of_another_user.markdown)
 * [Get list of calendars of another user](users/get_list_of_calendars_of_another_user.markdown)
 * [Reset password](users/reset_password.markdown)

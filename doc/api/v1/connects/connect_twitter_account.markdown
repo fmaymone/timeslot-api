@@ -39,7 +39,7 @@ Description : URL of the user image
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=YflJeZUQOaOw_ZNRd6sd5tNJh1k
+Authorization: Token token=a0JyRGhb4D-XMSagySihucI_WS8
 Host: example.org
 Cookie: </pre>
 
@@ -62,7 +62,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=YflJeZUQOaOw_ZNRd6sd5tNJh1k&quot;</pre>
+	-H &quot;Authorization: Token token=a0JyRGhb4D-XMSagySihucI_WS8&quot;</pre>
 
 ### Response
 
@@ -72,12 +72,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2a8639919eff8d9548b8513b170d7cef&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;724ad4bdb520c471075e03ca9c241925&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 24c0dd2e-4311-4b5a-813a-17c1e9951e8e
-X-Runtime: 0.015756
-Vary: Origin
-Content-Length: 737</pre>
+X-Request-Id: 41ca74df-b102-49fc-a426-25040eaac66a
+X-Runtime: 0.021193
+Content-Length: 861</pre>
 
 #### Status
 
@@ -87,16 +87,20 @@ Content-Length: 737</pre>
 
 ```javascript
 {
-  "id" : 10,
-  "username" : "User 50",
-  "createdAt" : "2016-04-04T20:50:20.836Z",
-  "updatedAt" : "2016-04-04T20:50:20.836Z",
+  "id" : 7,
+  "username" : "User 48",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:42.109Z",
+  "updatedAt" : "2016-08-30T09:50:42.109Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
   "email" : "user3@email.com",
   "emailVerified" : false,
@@ -104,12 +108,13 @@ Content-Length: 737</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "4811d337-7a69-45dd-9126-0b0602cfd71f",
-  "friendsCalendarUuid" : "5c87eb17-da21-45ef-9a7b-16c54c98a626",
-  "allMySlotsUuid" : "3ce50c1a-6bf6-4c8a-9150-5f22285dc792",
-  "myCreatedSlotsUuid" : "933f5bd8-7ebf-406a-a5e1-460c179016ca",
-  "myFriendSlotsUuid" : "22fd4f7a-c471-4b14-a57b-dc6de37aa505",
-  "myPublicSlotsUuid" : "a24dfc14-ba45-47c7-a2da-84df3d6d7d8e",
+  "myCalendarUuid" : "0bccd7a8-ab5b-4975-a670-28ce5fce86e0",
+  "friendsCalendarUuid" : "ab39399d-d5e3-40e3-9115-063f7600e3cc",
+  "allMySlotsUuid" : "e0eeca79-dae9-48a7-b440-fdf0b666e9e5",
+  "myCreatedSlotsUuid" : "c41418b2-fa18-4410-ba5a-39a29cda1158",
+  "myPrivateSlotsUuid" : "cfe06998-f7b9-4c54-a00c-5e5d19c671ba",
+  "myFriendSlotsUuid" : "9a0e4992-3224-4eaf-8467-5c38fa61dd5b",
+  "myPublicSlotsUuid" : "f34c848a-c107-4591-9760-735ae0ba6e90",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself"

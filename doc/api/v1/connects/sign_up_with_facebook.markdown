@@ -109,12 +109,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;71c7bb2a8f9eecf4fec2d3a6850fad2f&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;d3a87224d25c9b54261a881d02b7f1f2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 38feab8e-4b36-4e11-a6ca-e8f4424ba4b2
-X-Runtime: 0.137976
-Vary: Origin
-Content-Length: 787</pre>
+X-Request-Id: e9f0fabb-1b66-4db0-b73e-b39cd1153ec7
+X-Runtime: 0.145848
+Content-Length: 912</pre>
 
 #### Status
 
@@ -124,16 +124,20 @@ Content-Length: 787</pre>
 
 ```javascript
 {
-  "id" : 56,
+  "id" : 45,
   "username" : "Silvi O Ivlis",
-  "createdAt" : "2016-04-04T20:50:20.133Z",
-  "updatedAt" : "2016-04-04T20:50:20.133Z",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:41.633Z",
+  "updatedAt" : "2016-08-30T09:50:41.633Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
   "email" : "alexpar@gmail.com",
   "emailVerified" : false,
@@ -141,15 +145,16 @@ Content-Length: 787</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "e5a91d49-ffa1-46b0-a848-86aae927b62f",
-  "friendsCalendarUuid" : "e5be000f-ac94-497d-b288-b960f3fe0814",
-  "allMySlotsUuid" : "cd4085c9-f8eb-4614-ac69-63e632af2176",
-  "myCreatedSlotsUuid" : "aebf56e8-7438-4252-8967-af9337e36cd8",
-  "myFriendSlotsUuid" : "d5502116-8e50-4ba8-9104-d3e845799add",
-  "myPublicSlotsUuid" : "3cbb63e6-6713-4cff-9b29-93d29cbc2b0e",
+  "myCalendarUuid" : "b4556a81-8322-4b96-818c-2edb0b37477a",
+  "friendsCalendarUuid" : "8ed8ac86-0f8f-4985-ad06-1718006de24d",
+  "allMySlotsUuid" : "651d276f-fe1b-433f-8ee5-7cdb8a1a8c63",
+  "myCreatedSlotsUuid" : "19d1cf47-f684-42f8-9910-382377a1cd53",
+  "myPrivateSlotsUuid" : "b53a355d-0f07-4fec-b519-b1626470b87b",
+  "myFriendSlotsUuid" : "2378c35c-244a-4991-81a0-f89ac480b251",
+  "myPublicSlotsUuid" : "dc9d2e4e-4151-4671-b120-fcb106b44f79",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself",
-  "authToken" : "yl76elKRfQ365lPr6oVLZ5k8Unc"
+  "authToken" : "G2zIo57vVEMRx7ohu9Yz5C3lfs8"
 }
 ```

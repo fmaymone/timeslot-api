@@ -6,6 +6,72 @@
 
 shows all User data.
 
+### Parameters
+
+Name : username
+Description : Updated username of user (max. 50 characters)
+
+Name : firstName
+Description : Updated firstname of user (max. 50 characters)
+
+Name : middleName
+Description : Updated middlename of user (max. 50 characters)
+
+Name : lastName
+Description : Updated lastname of user (max. 50 characters)
+
+Name : gender
+Description : Updated gender of user (max. 50 characters)
+
+Name : email
+Description : Email of user (max. 255 characters)
+
+Name : lang
+Description : Language of user (2 characters, ISO 639-1)
+
+Name : phone
+Description : Phone number of user (max. 35 characters)
+
+Name : image
+Description : URL of the user image
+
+Name : publicUrl
+Description : Public URL for user on Timeslot (max. 255 chars)
+
+Name : push
+Description : Send push Notifications (true/false)
+
+Name : slotDefaultDuration
+Description : Default Slot Duration in seconds
+
+Name : slotDefaultTypeId
+Description : Default Slot Type - WIP
+
+Name : slotDefaultLocationId
+Description : Default Slot Location ID - WIP
+
+Name : defaultPrivateAlerts
+Description : Default alerts for private slots of this user
+
+Name : defaultOwnFriendslotAlerts
+Description : Default alerts for the friendslots of this user
+
+Name : defaultOwnPublicAlerts
+Description : Default alerts for the public slots of this user
+
+Name : defaultFriendsFriendslotAlerts
+Description : Default alerts for the friendslots from friends of this user
+
+Name : defaultFriendsPublicAlerts
+Description : Default alerts for the public slots from friends of this user
+
+Name : defaultReslotAlerts
+Description : Default alerts for the reslots of this user
+
+Name : defaultGroupAlerts
+Description : Default alerts for all groupslots of this user where no specific alert is set. Groupslots may also have their own default alerts per group
+
+
 ### Response Fields
 
 Name : id
@@ -13,6 +79,15 @@ Description : ID of the user
 
 Name : username
 Description : Username of the user
+
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
 
 Name : createdAt
 Description : Creation of user
@@ -37,6 +112,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -115,7 +193,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=0y_TLoL8jNI4dS_46ZDasnaC3JA
+Authorization: Token token=TkkB19HhZyLEO27u2Y3TKMTGyjI
 Host: example.org
 Cookie: </pre>
 
@@ -127,7 +205,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=0y_TLoL8jNI4dS_46ZDasnaC3JA&quot;</pre>
+	-H &quot;Authorization: Token token=TkkB19HhZyLEO27u2Y3TKMTGyjI&quot;</pre>
 
 ### Response
 
@@ -137,12 +215,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;40e64ec73e0b4df2af2461d7248e7b3b&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;1ad0580bad2a38af4944877fb0f1933d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ef3466d3-13b2-4748-9407-e06e98ad8532
-X-Runtime: 0.036877
-Vary: Origin
-Content-Length: 1404</pre>
+X-Request-Id: e7cf3882-87db-4d30-a8a4-4bd5c0995702
+X-Runtime: 0.039485
+Content-Length: 1598</pre>
 
 #### Status
 
@@ -152,14 +230,17 @@ Content-Length: 1404</pre>
 
 ```javascript
 {
-  "id" : 2,
-  "username" : "User 163",
-  "createdAt" : "2016-04-04T20:50:23.608Z",
-  "updatedAt" : "2016-04-04T20:50:23.697Z",
+  "id" : 7,
+  "username" : "User 542",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:53.169Z",
+  "updatedAt" : "2016-08-30T09:50:53.281Z",
   "deletedAt" : null,
   "image" : "www.looking.good",
   "location" : {
-    "id" : "722e3bda-61f4-4e64-880f-171b4c14d2e5",
+    "id" : "6190f717-d0e2-4dbb-a277-4ca2cc6fcc67",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -174,55 +255,61 @@ Content-Length: 1404</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 51.234,
-    "longitude" : -11.993
+    "longitude" : -11.993,
+    "placeId" : null
   },
   "slotCount" : 2,
   "calendarCount" : 0,
   "friendsCount" : 3,
+  "gender" : null,
   "lang" : null,
-  "email" : "user32@email.com",
+  "email" : "user62@email.com",
   "emailVerified" : false,
   "phone" : "12431",
   "phoneVerified" : false,
   "publicUrl" : "www.foo.bar",
   "push" : true,
-  "myCalendarUuid" : "e610eb8e-09a6-4278-b592-7e32e12ca98f",
-  "friendsCalendarUuid" : "69b100bf-1f49-4712-8eea-71c54c1d8cae",
-  "allMySlotsUuid" : "7bbf821e-2cc5-45a4-a0a4-60875105ab4a",
-  "myCreatedSlotsUuid" : "92514a48-1edb-4519-b479-880643a8dc6a",
-  "myFriendSlotsUuid" : "ca814e4c-f2d2-4135-8227-db8fc888a4cb",
-  "myPublicSlotsUuid" : "fc5ac279-7c18-4ae7-9a55-5e967f6a6540",
+  "myCalendarUuid" : "3eacc15c-0b86-4ff9-a5c8-65ff7fb7b7c7",
+  "friendsCalendarUuid" : "f7fb8e68-f0b5-43e9-83ee-0f48db045671",
+  "allMySlotsUuid" : "780a5b88-4490-4adb-8c30-d5a95d3c66eb",
+  "myCreatedSlotsUuid" : "0b969e60-9742-410d-bdd6-eb92640b7d82",
+  "myPrivateSlotsUuid" : "c5cd443c-d046-415c-b589-4857b3706d60",
+  "myFriendSlotsUuid" : "94d7f1a2-5b48-4032-a0fe-cd4ff0551099",
+  "myPublicSlotsUuid" : "68fbe440-857c-4bc8-9fc8-c39d0313e2f1",
   "friendships" : [
     {
-      "friend_id" : 5,
+      "friend_id" : 10,
       "state" : "friend",
-      "initiator" : 2
+      "initiator" : 7
     },
     {
-      "friend_id" : 6,
+      "friend_id" : 11,
       "state" : "friend",
-      "initiator" : 2
+      "initiator" : 7
     },
     {
-      "friend_id" : 7,
+      "friend_id" : 12,
       "state" : "friend",
-      "initiator" : 2
+      "initiator" : 7
     }
   ],
   "memberships" : [
     {
       "groupId" : 1,
       "state" : "invited",
+      "color" : "000000",
       "notifications" : true
     },
     {
       "groupId" : 2,
       "state" : "invited",
+      "color" : "000000",
       "notifications" : true
     },
     {
       "groupId" : 3,
       "state" : "invited",
+      "color" : "000000",
       "notifications" : true
     }
   ],

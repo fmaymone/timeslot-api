@@ -27,7 +27,7 @@ Description : name of the location
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Qu7EZw5PrzWPjH3EyE4VJAmSFt0
+Authorization: Token token=RBLQ_-wnMq8pHgjb4398WBY57dw
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/location?query=timeslot+berlin&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Qu7EZw5PrzWPjH3EyE4VJAmSFt0&quot;</pre>
+	-H &quot;Authorization: Token token=RBLQ_-wnMq8pHgjb4398WBY57dw&quot;</pre>
 
 ### Response
 
@@ -53,12 +53,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;acdc8b946e447c7bc333a19c4e812843&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;071e03ea66dc648163840b519794e216&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 902278f9-62ab-4345-8acf-9ba75d47e8ec
-X-Runtime: 0.009692
-Vary: Origin
-Content-Length: 376</pre>
+X-Request-Id: b966256a-b4c4-4c98-8d03-57425f24252f
+X-Runtime: 0.010359
+Content-Length: 391</pre>
 
 #### Status
 
@@ -69,7 +69,7 @@ Content-Length: 376</pre>
 ```javascript
 [
   {
-    "id" : "3c25fe8d-3baf-4f99-9da4-265cd0a32662",
+    "id" : "4b1b69a5-c890-4356-a5ea-52e0209a3ad2",
     "name" : "Timeslot Friedrichstraße 110 (Berlin)",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -84,7 +84,8 @@ Content-Length: 376</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 51.234,
-    "longitude" : -11.993
+    "longitude" : -11.993,
+    "placeId" : null
   }
 ]
 ```

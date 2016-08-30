@@ -8,7 +8,9 @@
 
 Name : group
 Description : Holds the uuid of the slot group which should be exported.
+
 If the parameter group is missing, all Slot will be exported.
+
 If the group uuid was not found, no Slot will be exported.
 
 ### Request
@@ -17,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=pyxyOMZvkGDxhaGNEGtmQQMEiMg
+Authorization: Token token=WMDviVKOqqqWullQExerxRhsZeY
 Host: example.org
 Cookie: </pre>
 
@@ -28,17 +30,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "group" : "1650bf92-2388-44a2-8c99-ddbe6415b686"
+  "group" : "22dab74b-96e0-4d42-98d0-4e7dee7b1096"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;1650bf92-2388-44a2-8c99-ddbe6415b686&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;22dab74b-96e0-4d42-98d0-4e7dee7b1096&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=pyxyOMZvkGDxhaGNEGtmQQMEiMg&quot;</pre>
+	-H &quot;Authorization: Token token=WMDviVKOqqqWullQExerxRhsZeY&quot;</pre>
 
 ### Response
 
@@ -47,14 +49,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;1650bf92-2388-44a2-8c99-ddbe6415b686.ical&quot;
+Content-Disposition: attachment; filename=&quot;22dab74b-96e0-4d42-98d0-4e7dee7b1096.ical&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;354701beba1d9f17ed5c71f96bd3581a&quot;
-X-Request-Id: 4e991ac9-5360-41e9-8cee-baa8b53971ba
-X-Runtime: 0.028567
+ETag: W/&quot;e95e77a5eb4d774fc4018cb9871acffd&quot;
+X-Request-Id: 2bae720a-3660-4fc9-a25f-4fd4b3968201
+X-Runtime: 0.008713
 Content-Length: 297</pre>
 
 #### Status
@@ -70,8 +72,8 @@ PRODID:icalendar-ruby
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-DTSTAMP:20160501T225405Z
-UID:5d7d3502-47ca-4c34-b6d1-0dd31d9a99ea
+DTSTAMP:20160830T095042Z
+UID:bb713b20-c744-41bd-a0f1-91362c707de5
 DTSTART:20190927T024402
 DTEND:20191027T024402
 CLASS:PUBLIC

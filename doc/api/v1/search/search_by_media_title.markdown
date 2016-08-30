@@ -33,7 +33,7 @@ Description : API Key
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=WFnMrRtAOlZtDYW8Ezco2_HSM1k
+Authorization: Token token=12iFIHC3EE6Tcsng1GhIXFBpf8c
 Host: example.org
 Cookie: </pre>
 
@@ -49,7 +49,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/media?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=WFnMrRtAOlZtDYW8Ezco2_HSM1k&quot;</pre>
+	-H &quot;Authorization: Token token=12iFIHC3EE6Tcsng1GhIXFBpf8c&quot;</pre>
 
 ### Response
 
@@ -59,12 +59,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;918d37df84a516deb6ca8a3b65825b0c&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;8210a0a3e4fd176c6b3d2bdf2fd966e8&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a8d1b0ce-71d5-4768-9fb3-7ffdcff3ade2
-X-Runtime: 0.007968
-Vary: Origin
-Content-Length: 172</pre>
+X-Request-Id: b348a2dd-f867-4213-9bd7-153efb2a93ff
+X-Runtime: 0.014520
+Content-Length: 173</pre>
 
 #### Status
 
@@ -76,11 +76,11 @@ Content-Length: 172</pre>
 [
   {
     "mediaId" : 19,
-    "publicId" : "dfhjghjkdisudgfds7iy40",
+    "publicId" : "dfhjghjkdisudgfds7iy400",
     "position" : 0,
     "localId" : null,
     "mediaType" : "video",
-    "createdAt" : "2016-04-04T20:50:26.126Z",
+    "createdAt" : "2016-08-30T09:50:56.234Z",
     "duration" : null,
     "thumbnail" : null
   }

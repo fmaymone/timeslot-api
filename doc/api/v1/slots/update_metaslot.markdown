@@ -33,7 +33,7 @@ Description : Updated Enddate and Time of the Slot (startdate + duration)
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=v4OKN70htZSAGiyPJ4wD60NlXKM
+Authorization: Token token=nyFSUXfBr7C5YQ1k-xPIZseN_Ig
 Host: example.org
 Cookie: </pre>
 
@@ -53,7 +53,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/metaslot/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=v4OKN70htZSAGiyPJ4wD60NlXKM&quot;</pre>
+	-H &quot;Authorization: Token token=nyFSUXfBr7C5YQ1k-xPIZseN_Ig&quot;</pre>
 
 ### Response
 
@@ -63,8 +63,8 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Cache-Control: no-cache
-X-Request-Id: 919cc6be-4b66-428e-988c-44218bd230a0
-X-Runtime: 0.011245
+X-Request-Id: 58513e60-0676-43a7-bb03-a85f788dce5e
+X-Runtime: 0.013958
 Vary: Origin</pre>
 
 #### Status

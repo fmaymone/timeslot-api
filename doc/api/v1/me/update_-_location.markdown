@@ -9,6 +9,18 @@
 Name : username
 Description : Updated username of user (max. 50 characters)
 
+Name : firstName
+Description : Updated firstname of user (max. 50 characters)
+
+Name : middleName
+Description : Updated middlename of user (max. 50 characters)
+
+Name : lastName
+Description : Updated lastname of user (max. 50 characters)
+
+Name : gender
+Description : Updated gender of user (max. 50 characters)
+
 Name : email
 Description : Email of user (max. 255 characters)
 
@@ -111,6 +123,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -134,6 +155,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -212,7 +236,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=Q1Fv_V_FBZ6xzwvOPtSTw2xlVJs
+Authorization: Token token=DNmt9Xqo8TzAD1pT_bczEiVR5uM
 Host: example.org
 Cookie: </pre>
 
@@ -234,7 +258,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Acapulco&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=Q1Fv_V_FBZ6xzwvOPtSTw2xlVJs&quot;</pre>
+	-H &quot;Authorization: Token token=DNmt9Xqo8TzAD1pT_bczEiVR5uM&quot;</pre>
 
 ### Response
 
@@ -244,12 +268,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;f7bcda1d5b8f7acd4e9087948174fcba&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;588a993b208091a5a1e36b53154a4deb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 620519b5-0bd6-412b-a74e-6fff26a75542
-X-Runtime: 0.027758
-Vary: Origin
-Content-Length: 1074</pre>
+X-Request-Id: ab8e4297-c3bd-4410-99b9-79e92be21d4c
+X-Runtime: 0.033725
+Content-Length: 1214</pre>
 
 #### Status
 
@@ -260,13 +284,16 @@ Content-Length: 1074</pre>
 ```javascript
 {
   "id" : 77,
-  "username" : "User 239",
-  "createdAt" : "2016-04-04T20:50:24.853Z",
-  "updatedAt" : "2016-04-04T20:50:24.874Z",
+  "username" : "User 618",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:54.620Z",
+  "updatedAt" : "2016-08-30T09:50:54.636Z",
   "deletedAt" : null,
   "image" : "",
   "location" : {
-    "id" : "c89f5ee2-3324-439a-a146-04a9ad3c26cd",
+    "id" : "e2383861-5628-40c2-8eed-07da6f405527",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -281,24 +308,27 @@ Content-Length: 1074</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : null,
-    "longitude" : null
+    "longitude" : null,
+    "placeId" : null
   },
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
-  "email" : "user48@email.com",
+  "email" : "user78@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "267ab35d-95ed-4211-b3cf-af17691d849d",
-  "friendsCalendarUuid" : "64defdbc-677a-486e-a55a-42a819a50c54",
-  "allMySlotsUuid" : "e65cdbe4-9bff-4769-9c4e-0cbb23a9dd58",
-  "myCreatedSlotsUuid" : "d8132c44-ea74-45e3-a9a0-44a6fd08341d",
-  "myFriendSlotsUuid" : "07818261-4ae9-451f-a0d8-e62fd4f4dccc",
-  "myPublicSlotsUuid" : "c3c65504-d20d-4470-abc6-d43ae5207734",
+  "myCalendarUuid" : "f9a00bcf-c56d-4512-9abb-4eaad717271d",
+  "friendsCalendarUuid" : "d8d1495b-2dab-4a79-99e1-6508d4bd9603",
+  "allMySlotsUuid" : "afb88025-1864-4869-8090-6bfdd37ea640",
+  "myCreatedSlotsUuid" : "261e0c68-20ff-4b75-9e88-aff2c9373b39",
+  "myPrivateSlotsUuid" : "177e5dd5-784a-4961-91e8-e93edd9a4ddb",
+  "myFriendSlotsUuid" : "ab54a63c-583f-41fd-8a7f-73c3ae2fdcf2",
+  "myPublicSlotsUuid" : "03591eb0-67d5-425a-98c5-29caf346e9bb",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself"

@@ -39,19 +39,19 @@ Description : URL for member
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_LsAxWGZptpngAKB_K8nxAV7yVc
+Authorization: Token token=ouK05fvppzBNz-8ko5Ig6UWb530
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/b47064aa-2baa-4d03-a851-21779deb6a23/members</pre>
+<pre>GET /v1/groups/bd0472a6-2a9a-4b4b-a6b7-8747c2c47b61/members</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/b47064aa-2baa-4d03-a851-21779deb6a23/members&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/bd0472a6-2a9a-4b4b-a6b7-8747c2c47b61/members&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_LsAxWGZptpngAKB_K8nxAV7yVc&quot;</pre>
+	-H &quot;Authorization: Token token=ouK05fvppzBNz-8ko5Ig6UWb530&quot;</pre>
 
 ### Response
 
@@ -61,12 +61,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;d4963a656c2272fea70ca5ba292ac139&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;989254d2c73df1db47c4b8bb0f321ca0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c07f7e92-a960-4703-bb0c-6e87c02aec4e
-X-Runtime: 0.010869
-Vary: Origin
-Content-Length: 1052</pre>
+X-Request-Id: b1fa9982-739b-4ddf-b274-98dd1cdd5867
+X-Runtime: 0.012528
+Content-Length: 1065</pre>
 
 #### Status
 
@@ -76,62 +76,62 @@ Content-Length: 1052</pre>
 
 ```javascript
 {
-  "id" : "b47064aa-2baa-4d03-a851-21779deb6a23",
+  "id" : "bd0472a6-2a9a-4b4b-a6b7-8747c2c47b61",
   "membersCounter" : 7,
   "members" : [
     {
-      "id" : 31,
-      "username" : "User 92",
-      "createdAt" : "2016-04-04T20:50:22.320Z",
-      "updatedAt" : "2016-04-04T20:50:22.320Z",
+      "id" : 354,
+      "username" : "User 466",
+      "createdAt" : "2016-08-30T09:50:51.249Z",
+      "updatedAt" : "2016-08-30T09:50:51.249Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    {
+      "id" : 353,
+      "username" : "User 465",
+      "createdAt" : "2016-08-30T09:50:51.245Z",
+      "updatedAt" : "2016-08-30T09:50:51.245Z",
       "deletedAt" : null,
       "image" : "www.looking.good"
     },
     {
-      "id" : 32,
-      "username" : "User 93",
-      "createdAt" : "2016-04-04T20:50:22.324Z",
-      "updatedAt" : "2016-04-04T20:50:22.324Z",
+      "id" : 355,
+      "username" : "User 467",
+      "createdAt" : "2016-08-30T09:50:51.261Z",
+      "updatedAt" : "2016-08-30T09:50:51.261Z",
       "deletedAt" : null,
       "image" : ""
     },
     {
-      "id" : 33,
-      "username" : "User 94",
-      "createdAt" : "2016-04-04T20:50:22.334Z",
-      "updatedAt" : "2016-04-04T20:50:22.334Z",
+      "id" : 356,
+      "username" : "User 468",
+      "createdAt" : "2016-08-30T09:50:51.266Z",
+      "updatedAt" : "2016-08-30T09:50:51.266Z",
       "deletedAt" : null,
       "image" : ""
     },
     {
-      "id" : 34,
-      "username" : "User 95",
-      "createdAt" : "2016-04-04T20:50:22.338Z",
-      "updatedAt" : "2016-04-04T20:50:22.338Z",
+      "id" : 357,
+      "username" : "User 469",
+      "createdAt" : "2016-08-30T09:50:51.271Z",
+      "updatedAt" : "2016-08-30T09:50:51.271Z",
       "deletedAt" : null,
       "image" : ""
     },
     {
-      "id" : 35,
-      "username" : "User 96",
-      "createdAt" : "2016-04-04T20:50:22.342Z",
-      "updatedAt" : "2016-04-04T20:50:22.342Z",
+      "id" : 358,
+      "username" : "User 470",
+      "createdAt" : "2016-08-30T09:50:51.279Z",
+      "updatedAt" : "2016-08-30T09:50:51.279Z",
       "deletedAt" : null,
       "image" : ""
     },
     {
-      "id" : 36,
-      "username" : "User 97",
-      "createdAt" : "2016-04-04T20:50:22.347Z",
-      "updatedAt" : "2016-04-04T20:50:22.347Z",
-      "deletedAt" : null,
-      "image" : ""
-    },
-    {
-      "id" : 39,
-      "username" : "User 100",
-      "createdAt" : "2016-04-04T20:50:22.381Z",
-      "updatedAt" : "2016-04-04T20:50:22.381Z",
+      "id" : 361,
+      "username" : "User 473",
+      "createdAt" : "2016-08-30T09:50:51.307Z",
+      "updatedAt" : "2016-08-30T09:50:51.307Z",
       "deletedAt" : null,
       "image" : ""
     }
