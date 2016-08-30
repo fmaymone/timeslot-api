@@ -44,6 +44,9 @@ Description : URL of the group image
 Name : description
 Description : The description of the group
 
+Name : defaultColor
+Description : default color of the group, can be overwritten per member
+
 Name : createdAt
 Description : Creation of group
 
@@ -60,19 +63,19 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=fWP3rFqeheRqvTTp3RUDx16UZzY
+<pre>Authorization: Token token=DwHGqkPL9wI8U8DZg6dcbRoqHI8
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/51313010-a22d-4cf9-9955-27f2a3cc609c</pre>
+<pre>DELETE /v1/groups/fcfc983a-605c-4ea3-afd4-f8fbb12303a0</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/51313010-a22d-4cf9-9955-27f2a3cc609c&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=fWP3rFqeheRqvTTp3RUDx16UZzY&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/fcfc983a-605c-4ea3-afd4-f8fbb12303a0&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=DwHGqkPL9wI8U8DZg6dcbRoqHI8&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -84,11 +87,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e685827d2956378e85c06916084574ea&quot;
+ETag: W/&quot;24abab24af4d53fbeb429ff6af8d12e4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ec591629-2053-431c-979a-1ed34be6910e
-X-Runtime: 0.098786
-Content-Length: 498</pre>
+X-Request-Id: badae91c-5701-4147-80d3-b7277f95af89
+X-Runtime: 0.189803
+Content-Length: 590</pre>
 
 #### Status
 
@@ -98,27 +101,32 @@ Content-Length: 498</pre>
 
 ```javascript
 {
-  "id" : "51313010-a22d-4cf9-9955-27f2a3cc609c",
-  "name" : "Testgroup 109",
+  "id" : "fcfc983a-605c-4ea3-afd4-f8fbb12303a0",
+  "name" : "Testgroup 130",
   "image" : "",
   "description" : null,
+  "defaultColor" : "000000",
   "membersCanPost" : false,
   "membersCanInvite" : false,
   "public" : false,
-  "createdAt" : "2016-05-01T22:54:08.435Z",
-  "updatedAt" : "2016-05-01T22:54:08.554Z",
-  "deletedAt" : "2016-05-01T22:54:08.553Z",
+  "createdAt" : "2016-08-30T09:50:50.448Z",
+  "updatedAt" : "2016-08-30T09:50:50.654Z",
+  "deletedAt" : "2016-08-30T09:50:50.653Z",
   "owner" : {
-    "id" : 107,
-    "username" : "User 222",
-    "createdAt" : "2016-05-01T22:54:08.429Z",
-    "updatedAt" : "2016-05-01T22:54:08.483Z",
+    "id" : 314,
+    "username" : "User 424",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:50.445Z",
+    "updatedAt" : "2016-08-30T09:50:50.510Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [],
   "memberCount" : 0,
   "slotCount" : 0,
-  "membershipState" : "deleted"
+  "membershipState" : "deleted",
+  "color" : "000000"
 }
 ```

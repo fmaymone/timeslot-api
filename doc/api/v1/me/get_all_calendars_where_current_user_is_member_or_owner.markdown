@@ -40,7 +40,7 @@ Description : Deletion datetime of the calendar
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=LB_B3WkUqznGEzphiFxam_2aW98
+Authorization: Token token=PaLvKVFffrBXguGKJgcPOrZ3qSU
 Host: example.org
 Cookie: </pre>
 
@@ -52,7 +52,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/calendars&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LB_B3WkUqznGEzphiFxam_2aW98&quot;</pre>
+	-H &quot;Authorization: Token token=PaLvKVFffrBXguGKJgcPOrZ3qSU&quot;</pre>
 
 ### Response
 
@@ -63,11 +63,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;fcca5d1f6960a554117b79fa7e7bd274&quot;
+ETag: W/&quot;c148bee22b52ede2658651b6b92132d1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e2bbea9a-0a4b-4743-85cd-057ee2020bb2
-X-Runtime: 0.019809
-Content-Length: 1431</pre>
+X-Request-Id: 7209885b-0fa0-4413-ba05-7e0c38df5380
+X-Runtime: 0.020495
+Content-Length: 1656</pre>
 
 #### Status
 
@@ -79,78 +79,90 @@ Content-Length: 1431</pre>
 {
   "result" : [
     {
-      "id" : "d466d358-c44b-42d4-8f8a-c6d63edeaf00",
-      "name" : "Testgroup 145",
+      "id" : "927a55e2-c202-4287-aa8f-989b818dc7de",
+      "name" : "Testgroup 172",
       "image" : "",
       "description" : null,
+      "defaultColor" : "000000",
       "membersCanPost" : false,
       "membersCanInvite" : false,
       "public" : false,
-      "createdAt" : "2016-05-01T22:54:11.087Z",
-      "updatedAt" : "2016-05-01T22:54:11.087Z",
+      "createdAt" : "2016-08-30T09:50:54.153Z",
+      "updatedAt" : "2016-08-30T09:50:54.153Z",
       "deletedAt" : null,
       "owner" : {
-        "id" : 59,
-        "username" : "User 373",
-        "createdAt" : "2016-05-01T22:54:11.055Z",
-        "updatedAt" : "2016-05-01T22:54:11.055Z",
+        "id" : 54,
+        "username" : "User 595",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:54.109Z",
+        "updatedAt" : "2016-08-30T09:50:54.109Z",
         "deletedAt" : null,
         "image" : ""
       },
       "memberIds" : [
-        59
+        54
       ],
       "memberCount" : 1,
       "slotCount" : 0,
       "showInSchedule" : false
     },
     {
-      "id" : "a7104ce3-739d-4044-ba1e-7d784bf7050b",
-      "name" : "Testgroup 146",
+      "id" : "1fd54b39-d738-4722-ba6a-b9c5c53efab7",
+      "name" : "Testgroup 173",
       "image" : "",
       "description" : null,
+      "defaultColor" : "000000",
       "membersCanPost" : false,
       "membersCanInvite" : false,
       "public" : false,
-      "createdAt" : "2016-05-01T22:54:11.095Z",
-      "updatedAt" : "2016-05-01T22:54:11.095Z",
+      "createdAt" : "2016-08-30T09:50:54.162Z",
+      "updatedAt" : "2016-08-30T09:50:54.162Z",
       "deletedAt" : null,
       "owner" : {
-        "id" : 59,
-        "username" : "User 373",
-        "createdAt" : "2016-05-01T22:54:11.055Z",
-        "updatedAt" : "2016-05-01T22:54:11.055Z",
+        "id" : 54,
+        "username" : "User 595",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:54.109Z",
+        "updatedAt" : "2016-08-30T09:50:54.109Z",
         "deletedAt" : null,
         "image" : ""
       },
       "memberIds" : [
-        59
+        54
       ],
       "memberCount" : 1,
       "slotCount" : 0,
       "showInSchedule" : false
     },
     {
-      "id" : "b8045019-58aa-4399-a5e4-bce5046cf700",
-      "name" : "Testgroup 147",
+      "id" : "708862bb-a532-4508-b34c-73e8ba40ff28",
+      "name" : "Testgroup 174",
       "image" : "",
       "description" : null,
+      "defaultColor" : "000000",
       "membersCanPost" : false,
       "membersCanInvite" : false,
       "public" : false,
-      "createdAt" : "2016-05-01T22:54:11.104Z",
-      "updatedAt" : "2016-05-01T22:54:11.104Z",
+      "createdAt" : "2016-08-30T09:50:54.168Z",
+      "updatedAt" : "2016-08-30T09:50:54.168Z",
       "deletedAt" : null,
       "owner" : {
-        "id" : 59,
-        "username" : "User 373",
-        "createdAt" : "2016-05-01T22:54:11.055Z",
-        "updatedAt" : "2016-05-01T22:54:11.055Z",
+        "id" : 54,
+        "username" : "User 595",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:54.109Z",
+        "updatedAt" : "2016-08-30T09:50:54.109Z",
         "deletedAt" : null,
         "image" : ""
       },
       "memberIds" : [
-        59
+        54
       ],
       "memberCount" : 1,
       "slotCount" : 0,

@@ -45,7 +45,7 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=Ak0YMeh7tqAMY7rod2hZ7_uV-Es
+Authorization: Token token=RkVUjUln5aKLvvRX0IFt8sDmUnM
 Host: example.org
 Cookie: </pre>
 
@@ -62,7 +62,7 @@ attr: email</pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/search/user?query=john_doe%40email.com&amp;attr=email&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Ak0YMeh7tqAMY7rod2hZ7_uV-Es&quot;</pre>
+	-H &quot;Authorization: Token token=RkVUjUln5aKLvvRX0IFt8sDmUnM&quot;</pre>
 
 ### Response
 
@@ -72,12 +72,12 @@ attr: email</pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;6b9536bcb8002cc61c8a325d128564cd&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;963f1b05591f1ad9568cba033baabc56&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3037d4db-1d9e-4bf7-aa74-6ce134746dda
-X-Runtime: 0.008008
-Vary: Origin
-Content-Length: 169</pre>
+X-Request-Id: 3348d41f-d38d-47a5-be6e-d90af2fe3bc9
+X-Runtime: 0.009265
+Content-Length: 220</pre>
 
 #### Status
 
@@ -90,8 +90,11 @@ Content-Length: 169</pre>
   {
     "id" : 104,
     "username" : "John Doe",
-    "createdAt" : "2016-04-04T20:50:25.983Z",
-    "updatedAt" : "2016-04-04T20:50:25.983Z",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:56.059Z",
+    "updatedAt" : "2016-08-30T09:50:56.059Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "stranger"

@@ -1,6 +1,6 @@
 # Me API
 
-## Update - username and default alerts
+## Update - username, firstname and gender
 
 ### PATCH /v1/me
 
@@ -18,6 +18,18 @@ returns 422 if parameters are invalid
 
 Name : username
 Description : Updated username of user (max. 50 characters)
+
+Name : firstName
+Description : Updated firstname of user (max. 50 characters)
+
+Name : middleName
+Description : Updated middlename of user (max. 50 characters)
+
+Name : lastName
+Description : Updated lastname of user (max. 50 characters)
+
+Name : gender
+Description : Updated gender of user (max. 50 characters)
 
 Name : email
 Description : Email of user (max. 255 characters)
@@ -76,6 +88,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -99,6 +120,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -177,7 +201,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=JMfra_JCTyBJWe-CAGlNsO79dmU
+Authorization: Token token=PeKVWNel6qbPifje8k_31eN1-5A
 Host: example.org
 Cookie: </pre>
 
@@ -189,16 +213,17 @@ Cookie: </pre>
 ```javascript
 {
   "username" : "bar",
-  "defaultPrivateAlerts" : "0111011100"
+  "firstName" : "Barack",
+  "gender" : "male"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;defaultPrivateAlerts&quot;:&quot;0111011100&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;firstName&quot;:&quot;Barack&quot;,&quot;gender&quot;:&quot;male&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=JMfra_JCTyBJWe-CAGlNsO79dmU&quot;</pre>
+	-H &quot;Authorization: Token token=PeKVWNel6qbPifje8k_31eN1-5A&quot;</pre>
 
 ### Response
 
@@ -208,12 +233,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;87c74c1a8ed9e142c472c210834beae9&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;63131f3ec68ba83506b4e3d35ec29731&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4525f9df-9b18-4f59-8d6c-717e2b74458f
-X-Runtime: 0.017146
-Vary: Origin
-Content-Length: 734</pre>
+X-Request-Id: b775f13d-86d6-4b87-8662-1652b2a77dd9
+X-Runtime: 0.022901
+Content-Length: 865</pre>
 
 #### Status
 
@@ -225,27 +250,32 @@ Content-Length: 734</pre>
 {
   "id" : 74,
   "username" : "bar",
-  "createdAt" : "2016-04-04T20:50:24.742Z",
-  "updatedAt" : "2016-04-04T20:50:24.752Z",
+  "firstName" : "Barack",
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:54.481Z",
+  "updatedAt" : "2016-08-30T09:50:54.493Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : "male",
   "lang" : null,
-  "email" : "user45@email.com",
+  "email" : "user75@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "85be1e94-d6cf-49e4-95d2-0510afa344ec",
-  "friendsCalendarUuid" : "39734c7c-9eb1-4bd5-852c-3c1a292252dd",
-  "allMySlotsUuid" : "e93678a8-26db-4ed3-9b2e-9bbdfbd381b8",
-  "myCreatedSlotsUuid" : "6903cd9d-600b-4a8b-a42e-5170bfa63f33",
-  "myFriendSlotsUuid" : "d394882e-f5fc-4d32-88f9-281d5654e2b3",
-  "myPublicSlotsUuid" : "ed785b13-848f-467a-a62e-69b6dbedd09b",
+  "myCalendarUuid" : "74cdb19a-54a8-4af6-b441-3f0cc20c96bf",
+  "friendsCalendarUuid" : "d9464e25-a2f7-4a24-87a2-60ca1d56e44f",
+  "allMySlotsUuid" : "7537f9f8-6d30-47ae-8cc3-0ed9b663e591",
+  "myCreatedSlotsUuid" : "d4220658-2bbc-4206-a058-6463a9b6e5c0",
+  "myPrivateSlotsUuid" : "ed18f48e-98e2-4d46-8306-0f30d1b23ebd",
+  "myFriendSlotsUuid" : "1f627d0e-dcd6-4c30-bce0-05d90f15a89c",
+  "myPublicSlotsUuid" : "e71610b1-208a-47fe-968b-0c3cb434e6ca",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself"

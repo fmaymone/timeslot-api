@@ -71,18 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=0A7gnq8i_N6zH1Op7ko_FCfcaaw
+<pre>Authorization: Token token=IUcZ73zVrWDe4jXQCyGyf0P2J68
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/175/slots</pre>
+<pre>GET /v1/users/171/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/175/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=0A7gnq8i_N6zH1Op7ko_FCfcaaw&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/171/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=IUcZ73zVrWDe4jXQCyGyf0P2J68&quot;</pre>
 
 ### Response
 
@@ -92,12 +92,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0215234a781ed8385383d3f05511dd2a&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6cd201866de21a8534f829593b3e7e4a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4737f615-a29b-40f0-aa6d-ed1a7b277b25
-X-Runtime: 0.023929
-Vary: Origin
-Content-Length: 478</pre>
+X-Request-Id: 020270cf-f5b1-4381-9c52-1beece34627d
+X-Runtime: 0.034363
+Content-Length: 593</pre>
 
 #### Status
 
@@ -108,19 +108,23 @@ Content-Length: 478</pre>
 ```javascript
 [
   {
-    "id" : 72,
-    "title" : "Slot title 135",
-    "startDate" : "2019-09-04T18:44:02.000Z",
-    "createdAt" : "2016-04-04T20:50:34.521Z",
-    "updatedAt" : "2016-04-04T20:50:34.521Z",
+    "id" : 79,
+    "title" : "Slot title 235",
+    "description" : "",
+    "startDate" : "2019-09-20T19:44:02.000Z",
+    "createdAt" : "2016-08-30T09:51:12.479Z",
+    "updatedAt" : "2016-08-30T09:51:12.479Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-04T18:44:02.000Z",
+    "endDate" : "2019-10-20T19:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 179,
-      "username" : "User 475",
-      "createdAt" : "2016-04-04T20:50:34.515Z",
-      "updatedAt" : "2016-04-04T20:50:34.515Z",
+      "id" : 171,
+      "username" : "Joe",
+      "firstName" : null,
+      "middleName" : null,
+      "lastName" : null,
+      "createdAt" : "2016-08-30T09:51:12.442Z",
+      "updatedAt" : "2016-08-30T09:51:12.442Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -130,8 +134,11 @@ Content-Length: 478</pre>
       "alerts" : "omitted"
     },
     "visibility" : "public",
+    "likerIds" : [],
     "likes" : 0,
-    "commentsCounter" : 0
+    "commentsCounter" : 0,
+    "firstGroup" : null,
+    "slotGroupUuids" : []
   }
 ]
 ```

@@ -31,6 +31,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : description
+Description : Description for the slot (max. 500 characters)
+
 Name : location
 Description : Location associated with this slot (see example)
 
@@ -72,6 +75,9 @@ Description : Last update of slot
 
 Name : deletedAt
 Description : Delete date of slot or nil
+
+Name : description
+Description : Description for the slot
 
 Name : location
 Description : Location data for the slot
@@ -120,7 +126,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=IqCI6ygpwGD2Hgmalw0mCpRE3c0
+Authorization: Token token=6I5jJ1-trQAv6YWtYhFXGfLxwi8
 Host: example.org
 Cookie: </pre>
 
@@ -157,7 +163,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=IqCI6ygpwGD2Hgmalw0mCpRE3c0&quot;</pre>
+	-H &quot;Authorization: Token token=6I5jJ1-trQAv6YWtYhFXGfLxwi8&quot;</pre>
 
 ### Response
 
@@ -168,11 +174,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;70644fff8ecf52461df984507efcf63f&quot;
+ETag: W/&quot;282d483705c50795a2870f3fa1388a54&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 674cafe4-91e7-4621-ab37-456176e1ad52
-X-Runtime: 0.041335
-Content-Length: 835</pre>
+X-Request-Id: 06bee1db-dbe2-4338-9d24-6da8d61fb273
+X-Runtime: 0.104836
+Content-Length: 939</pre>
 
 #### Status
 
@@ -182,19 +188,23 @@ Content-Length: 835</pre>
 
 ```javascript
 {
-  "id" : 35,
+  "id" : 7,
   "title" : "Time for a Slot",
+  "description" : "",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-05-01T22:54:13.472Z",
-  "updatedAt" : "2016-05-01T22:54:13.472Z",
+  "createdAt" : "2016-08-30T09:51:07.081Z",
+  "updatedAt" : "2016-08-30T09:51:07.081Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : null,
   "creator" : {
-    "id" : 146,
-    "username" : "User 456",
-    "createdAt" : "2016-05-01T22:54:13.462Z",
-    "updatedAt" : "2016-05-01T22:54:13.462Z",
+    "id" : 16,
+    "username" : "User 722",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.070Z",
+    "updatedAt" : "2016-08-30T09:51:07.070Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -204,18 +214,18 @@ Content-Length: 835</pre>
   },
   "notes" : [
     {
-      "id" : 4,
-      "title" : "and another title",
-      "content" : "more content here",
-      "localId" : null,
-      "createdAt" : "2016-05-01T22:54:13.481Z"
-    },
-    {
       "id" : 3,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-05-01T22:54:13.478Z"
+      "createdAt" : "2016-08-30T09:51:07.089Z"
+    },
+    {
+      "id" : 4,
+      "title" : "and another title",
+      "content" : "more content here",
+      "localId" : null,
+      "createdAt" : "2016-08-30T09:51:07.131Z"
     }
   ],
   "media" : [],
@@ -226,6 +236,8 @@ Content-Length: 835</pre>
   "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "unauthorizedSlotgroups" : []
 }
 ```

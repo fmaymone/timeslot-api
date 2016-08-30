@@ -29,7 +29,7 @@ Description : The full share link including the share ID
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=EdCZ8clNTHo9xI-81CW8I12kQdI
+Authorization: Token token=j79-LGTGlkTW4mukjCE3psuagZQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -42,7 +42,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29/iframe&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=EdCZ8clNTHo9xI-81CW8I12kQdI&quot; \
+	-H &quot;Authorization: Token token=j79-LGTGlkTW4mukjCE3psuagZQ&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -53,12 +53,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;91d87348b762ef389e931f2753da9f9b&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;7a81d8c7641665de844af9c49f8a63e2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c62ca449-704a-4d88-8940-a1b47326b234
-X-Runtime: 0.033707
-Vary: Origin
-Content-Length: 73</pre>
+X-Request-Id: 70ed25b2-e501-4e4b-bbfc-af8c27ddb007
+X-Runtime: 0.055221
+Content-Length: 52</pre>
 
 #### Status
 
@@ -67,5 +67,8 @@ Content-Length: 73</pre>
 #### Body
 
 ```javascript
-
+{
+  "shareId" : "NjoyOQ==",
+  "shareUrl" : "/v1/?id=NjoyOQ=="
+}
 ```

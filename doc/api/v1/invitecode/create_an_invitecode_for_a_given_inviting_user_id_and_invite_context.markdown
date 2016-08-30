@@ -29,7 +29,7 @@ Description : Invitecode string
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=kzQPcGilm0UtiAZczmDRqyy9aYo
+Authorization: Token token=GaZ0_2iftiyYpWgMXi7M1Cfe29A
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes&quot; -d &#39;{&quot;userId&quot;:3,&quot;context&quot;:&quot;SomeContext&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=kzQPcGilm0UtiAZczmDRqyy9aYo&quot;</pre>
+	-H &quot;Authorization: Token token=GaZ0_2iftiyYpWgMXi7M1Cfe29A&quot;</pre>
 
 ### Response
 
@@ -62,10 +62,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;8d25e0fdd3e0978a22b5ea5af1d1cc99&quot;
+ETag: W/&quot;a18ce98b671750ce0ca77440dd833943&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70e40614-52c4-436e-9f43-d84a058df0b1
-X-Runtime: 0.012128
+X-Request-Id: 4eb87fb2-8ada-4c8c-9092-1ecc02c5c292
+X-Runtime: 0.009530
 Content-Length: 24</pre>
 
 #### Status
@@ -77,6 +77,6 @@ Content-Length: 24</pre>
 ```javascript
 {
   "id" : 3,
-  "code" : "052815"
+  "code" : "daf9ae"
 }
 ```

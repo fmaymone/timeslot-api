@@ -33,11 +33,11 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/invitecodes/b76971</pre>
+<pre>GET /v1/invitecodes/6923bb</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes/b76971&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/invitecodes/6923bb&quot; -X GET \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -51,8 +51,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;75e6f8fa8f27f23a79a1610a36e63ad5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9f143e39-da20-40ae-ab90-c6f80b98b8b3
-X-Runtime: 0.023575
+X-Request-Id: 3a422fb1-9cf2-4630-a2df-864f9ff83463
+X-Runtime: 0.023853
 Content-Length: 40</pre>
 
 #### Status

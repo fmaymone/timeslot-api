@@ -8,7 +8,9 @@
 
 Name : group
 Description : Holds the uuid of the slot group which should be exported.
+
 If the parameter group is missing, all Slot will be exported.
+
 If the group uuid was not found, no Slot will be exported.
 
 ### Request
@@ -17,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=2QWeHBuSviVzX3AOF4TcjST81CA
+Authorization: Token token=NA6beKWlv_z8ML_jRQfGt4p06FQ
 Host: example.org
 Cookie: </pre>
 
@@ -28,17 +30,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "group" : "1027133b-96af-4fad-a93f-60cec5b9df62"
+  "group" : "0025ae6d-0dc0-465d-a38e-94efed1bca43"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/google&quot; -d &#39;{&quot;group&quot;:&quot;1027133b-96af-4fad-a93f-60cec5b9df62&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/google&quot; -d &#39;{&quot;group&quot;:&quot;0025ae6d-0dc0-465d-a38e-94efed1bca43&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=2QWeHBuSviVzX3AOF4TcjST81CA&quot;</pre>
+	-H &quot;Authorization: Token token=NA6beKWlv_z8ML_jRQfGt4p06FQ&quot;</pre>
 
 ### Response
 
@@ -47,14 +49,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;1027133b-96af-4fad-a93f-60cec5b9df62.ical&quot;
+Content-Disposition: attachment; filename=&quot;0025ae6d-0dc0-465d-a38e-94efed1bca43.ical&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;efcef2533c1297d2d77b3ce0018964c0&quot;
-X-Request-Id: 354fd41e-357f-45c7-bab3-69a12733623f
-X-Runtime: 0.005866
+X-Request-Id: da017d2a-e753-4784-a84d-bf5d4ca27748
+X-Runtime: 0.005836
 Content-Length: 104</pre>
 
 #### Status

@@ -42,6 +42,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -86,6 +89,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -115,7 +127,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=w-BH5ow7iXKSV2IUjvCKlGB33_k
+Authorization: Token token=d_lSIq6R1XvgQfMphELuc0jGXro
 Host: example.org
 Cookie: </pre>
 
@@ -127,7 +139,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=w-BH5ow7iXKSV2IUjvCKlGB33_k&quot;</pre>
+	-H &quot;Authorization: Token token=d_lSIq6R1XvgQfMphELuc0jGXro&quot;</pre>
 
 ### Response
 
@@ -138,11 +150,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;0440632d855c6ebe74fe40ac99236fb1&quot;
+ETag: W/&quot;1f3dd88c563fba4ebd117344bb7a4da3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2c37fbcb-33aa-4f2b-9a98-8ee5f8c96f2c
-X-Runtime: 0.011609
-Content-Length: 1815</pre>
+X-Request-Id: 2203232b-806b-476d-8d36-b4c86385867c
+X-Runtime: 0.014498
+Content-Length: 2524</pre>
 
 #### Status
 
@@ -159,15 +171,18 @@ Content-Length: 1815</pre>
     {
       "target" : "slot",
       "action" : "comment",
-      "time" : "2016-05-25T10:47:37.505Z",
-      "id" : "043D15FEE97BCAB7BE1CAF4AA345E846DB7B345D",
+      "time" : "2016-08-30T09:50:48.565Z",
+      "id" : "8A15165CC2C84E0926C825474FE486BBD809621A",
       "message" : "You commented on the Slot: {slot}",
       "actors" : [
         {
-          "id" : 265,
-          "username" : "User 379",
-          "createdAt" : "2016-05-25T10:47:37.501Z",
-          "updatedAt" : "2016-05-25T10:47:37.501Z",
+          "id" : 266,
+          "username" : "User 375",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.561Z",
+          "updatedAt" : "2016-08-30T09:50:48.561Z",
           "deletedAt" : null,
           "image" : ""
         }
@@ -176,17 +191,39 @@ Content-Length: 1815</pre>
       "slot" : {
         "id" : 106,
         "title" : "Slot title 21",
+        "description" : "",
         "startDate" : "2019-09-26T07:44:02.000Z",
-        "createdAt" : "2016-05-25T10:47:37.481Z",
-        "updatedAt" : "2016-05-25T10:47:37.511Z",
+        "createdAt" : "2016-08-30T09:50:48.529Z",
+        "updatedAt" : "2016-08-30T09:50:48.573Z",
         "deletedAt" : null,
         "endDate" : "2019-10-26T07:44:02.000Z",
-        "location" : null,
+        "location" : {
+          "id" : "3cb2dbde-0948-4794-88fc-af04494e2efe",
+          "name" : "Acapulco",
+          "thoroughfare" : null,
+          "subThoroughfare" : null,
+          "locality" : null,
+          "subLocality" : null,
+          "administrativeArea" : null,
+          "subAdministrativeArea" : null,
+          "postalCode" : null,
+          "country" : null,
+          "isoCountryCode" : null,
+          "inLandWater" : null,
+          "ocean" : null,
+          "areasOfInterest" : null,
+          "latitude" : 51.234,
+          "longitude" : -11.993,
+          "placeId" : null
+        },
         "creator" : {
           "id" : 263,
-          "username" : "User 376",
-          "createdAt" : "2016-05-25T10:47:37.472Z",
-          "updatedAt" : "2016-05-25T10:47:37.472Z",
+          "username" : "User 371",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.495Z",
+          "updatedAt" : "2016-08-30T09:50:48.495Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -198,7 +235,7 @@ Content-Length: 1815</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-05-25T10:47:37.499Z",
+            "createdAt" : "2016-08-30T09:50:48.559Z",
             "duration" : null,
             "title" : "Title 369"
           },
@@ -208,7 +245,7 @@ Content-Length: 1815</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-25T10:47:37.497Z",
+            "createdAt" : "2016-08-30T09:50:48.553Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -218,7 +255,7 @@ Content-Length: 1815</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-05-25T10:47:37.495Z",
+            "createdAt" : "2016-08-30T09:50:48.547Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -228,7 +265,7 @@ Content-Length: 1815</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-25T10:47:37.492Z"
+            "createdAt" : "2016-08-30T09:50:48.544Z"
           },
           {
             "mediaId" : 452,
@@ -236,7 +273,7 @@ Content-Length: 1815</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-25T10:47:37.490Z"
+            "createdAt" : "2016-08-30T09:50:48.540Z"
           },
           {
             "mediaId" : 451,
@@ -244,7 +281,7 @@ Content-Length: 1815</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-05-25T10:47:37.487Z"
+            "createdAt" : "2016-08-30T09:50:48.537Z"
           }
         ],
         "settings" : {
@@ -253,7 +290,20 @@ Content-Length: 1815</pre>
         "visibility" : "public",
         "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 1
+        "commentsCounter" : 1,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
+      },
+      "user" : {
+        "id" : 263,
+        "username" : "User 371",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.495Z",
+        "updatedAt" : "2016-08-30T09:50:48.495Z",
+        "deletedAt" : null,
+        "image" : ""
       }
     }
   ]

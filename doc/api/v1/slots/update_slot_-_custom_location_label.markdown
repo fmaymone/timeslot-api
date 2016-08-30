@@ -2,15 +2,12 @@
 
 ## Update Slot - Custom Location Label
 
-### PATCH /v1/stdslot/:id
+### PATCH /v1/slots/:id
 
 ### Parameters
 
 Name : id *- required -*
 Description : ID of the slot to update
-
-Name : visibility
-Description : Visibility of the Slot to update (private/friends/foaf/public)
 
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
@@ -20,6 +17,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : description
+Description : Description for the slot (max. 500 characters)
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -75,6 +75,9 @@ Description : Latitude
 Name : longitude
 Description : Longitude
 
+Name : placeId
+Description : Google Place ID
+
 Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
@@ -104,6 +107,9 @@ Description : Last update of slot
 
 Name : deletedAt
 Description : Delete date of slot or nil
+
+Name : description
+Description : Description for the slot
 
 Name : location
 Description : Location data for the slot
@@ -148,13 +154,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=FWfRuq2r3BVckkXIq4c_9UDLExI
+Authorization: Token token=gqnI8uobf7RxDCzbvcfdRhePIiw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/46</pre>
+<pre>PATCH /v1/slots/17</pre>
 
 #### Body
 ```javascript
@@ -170,9 +176,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/46&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/17&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=FWfRuq2r3BVckkXIq4c_9UDLExI&quot;</pre>
+	-H &quot;Authorization: Token token=gqnI8uobf7RxDCzbvcfdRhePIiw&quot;</pre>
 
 ### Response
 
@@ -183,11 +189,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;4eceb1984effa812003a974573ea6d95&quot;
+ETag: W/&quot;52def160ac29507940d3990ff09727de&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0ea7686e-d1b8-44e9-870e-f71a531bd912
-X-Runtime: 0.032857
-Content-Length: 864</pre>
+X-Request-Id: aec5df42-1562-442c-a234-7dca97c07437
+X-Runtime: 0.070821
+Content-Length: 984</pre>
 
 #### Status
 
@@ -197,15 +203,16 @@ Content-Length: 864</pre>
 
 ```javascript
 {
-  "id" : 46,
-  "title" : "Slot title 129",
-  "startDate" : "2019-09-25T12:44:02.000Z",
-  "createdAt" : "2016-05-01T22:54:14.106Z",
-  "updatedAt" : "2016-05-01T22:54:14.106Z",
+  "id" : 17,
+  "title" : "Slot title 173",
+  "description" : "",
+  "startDate" : "2019-09-12T05:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:08.211Z",
+  "updatedAt" : "2016-08-30T09:51:08.211Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-25T12:44:02.000Z",
+  "endDate" : "2019-10-12T05:44:02.000Z",
   "location" : {
-    "id" : "6fa37677-c927-4c28-bf45-231d0d2596fa",
+    "id" : "6660c8e5-46f3-4ef8-a203-a2e577d36a05",
     "name" : "Soho House Custom",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -220,13 +227,17 @@ Content-Length: 864</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259
+    "longitude" : 13.414259,
+    "placeId" : null
   },
   "creator" : {
-    "id" : 168,
-    "username" : "User 478",
-    "createdAt" : "2016-05-01T22:54:14.098Z",
-    "updatedAt" : "2016-05-01T22:54:14.098Z",
+    "id" : 36,
+    "username" : "User 742",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:08.202Z",
+    "updatedAt" : "2016-08-30T09:51:08.202Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -239,6 +250,8 @@ Content-Length: 864</pre>
   "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "visibleCount" : "1"
 }
 ```

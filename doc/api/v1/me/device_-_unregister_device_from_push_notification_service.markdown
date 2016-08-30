@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=B29dzjGRTFJI_Nm98JUOhrGD_U4
+Authorization: Token token=Zvl3MkCmGJJhNyr_eD6qm-8Y_1A
 Host: example.org
 Cookie: </pre>
 
@@ -54,7 +54,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-263462873410834786765439526&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2e1&quot;,&quot;endpoint&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=B29dzjGRTFJI_Nm98JUOhrGD_U4&quot;</pre>
+	-H &quot;Authorization: Token token=Zvl3MkCmGJJhNyr_eD6qm-8Y_1A&quot;</pre>
 
 ### Response
 
@@ -64,10 +64,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 12b2f4b7-8154-49f0-a48b-1336740a4c7f
-X-Runtime: 0.008028
-Vary: Origin
+X-Request-Id: 6e728f16-574f-4930-a124-f9f80790c9d7
+X-Runtime: 0.012485
 Content-Length: 0</pre>
 
 #### Status

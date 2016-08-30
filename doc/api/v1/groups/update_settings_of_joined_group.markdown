@@ -4,7 +4,7 @@
 
 ### PATCH /v1/groups/:group_uuid/members
 
-Change notifications and default alerts for group
+Change notifications, color, default alerts for group
 
 returns 200 if setting was successfully updated
 
@@ -22,6 +22,9 @@ Description : ID of the group to delete
 Name : notifications
 Description : receive notifications?
 
+Name : color
+Description : color of the group for this member
+
 Name : defaultAlerts
 Description : set default alerts for slots in this group
 
@@ -30,19 +33,20 @@ Description : set default alerts for slots in this group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=wsYE24OgruqQUPXedG68tKLGKM8
+Authorization: Token token=64t4t-eum79o7oVwqBMQwAljuR8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/68feea96-92a2-4432-94bd-4b7213f999a1/members</pre>
+<pre>PATCH /v1/groups/35b76ce1-059d-43ee-b2bc-d1b29245d8ba/members</pre>
 
 #### Body
 ```javascript
 {
   "settings" : {
     "notifications" : "false",
+    "color" : "WWW222",
     "defaultAlerts" : "1111100000"
   }
 }
@@ -51,9 +55,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/68feea96-92a2-4432-94bd-4b7213f999a1/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/35b76ce1-059d-43ee-b2bc-d1b29245d8ba/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;color&quot;:&quot;WWW222&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=wsYE24OgruqQUPXedG68tKLGKM8&quot;</pre>
+	-H &quot;Authorization: Token token=64t4t-eum79o7oVwqBMQwAljuR8&quot;</pre>
 
 ### Response
 
@@ -63,10 +67,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 898a9ad5-5cb2-40c2-8353-95eadb9df794
-X-Runtime: 0.006806
-Vary: Origin
+X-Request-Id: 60c6b070-00a8-4aa5-8466-0235e355a21d
+X-Runtime: 0.006933
 Content-Length: 0</pre>
 
 #### Status

@@ -13,6 +13,18 @@ returns 200 and the users data if the password was successfully updated
 Name : username
 Description : Updated username of user (max. 50 characters)
 
+Name : firstName
+Description : Updated firstname of user (max. 50 characters)
+
+Name : middleName
+Description : Updated middlename of user (max. 50 characters)
+
+Name : lastName
+Description : Updated lastname of user (max. 50 characters)
+
+Name : gender
+Description : Updated gender of user (max. 50 characters)
+
 Name : email
 Description : Email of user (max. 255 characters)
 
@@ -76,6 +88,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -99,6 +120,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -177,7 +201,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zVF0T47NKrOOwi1iOrnSVCnr8P4
+Authorization: Token token=yNOGaLiXcedaNZdTFoTLLGhmyIY
 Host: example.org
 Cookie: </pre>
 
@@ -198,7 +222,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;password&quot;:&quot;slimetot&quot;,&quot;old_password&quot;:&quot;timeslot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zVF0T47NKrOOwi1iOrnSVCnr8P4&quot;</pre>
+	-H &quot;Authorization: Token token=yNOGaLiXcedaNZdTFoTLLGhmyIY&quot;</pre>
 
 ### Response
 
@@ -208,12 +232,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;7fb7f1ae0494be6803e7c3d02589bb11&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;843bb6f46306acafac83ad083fa2a8b3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e1110e82-2eef-460a-8a5a-2ba406b48f67
-X-Runtime: 0.024323
-Vary: Origin
-Content-Length: 739</pre>
+X-Request-Id: da70619f-2b9f-4f75-8f40-b48b7465aa16
+X-Runtime: 0.033756
+Content-Length: 864</pre>
 
 #### Status
 
@@ -224,28 +248,33 @@ Content-Length: 739</pre>
 ```javascript
 {
   "id" : 75,
-  "username" : "User 237",
-  "createdAt" : "2016-04-04T20:50:24.771Z",
-  "updatedAt" : "2016-04-04T20:50:24.788Z",
+  "username" : "User 616",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:54.518Z",
+  "updatedAt" : "2016-08-30T09:50:54.533Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
-  "email" : "user46@email.com",
+  "email" : "user76@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "92884b31-e64a-4752-bc60-cdcc34aab55b",
-  "friendsCalendarUuid" : "e9105f91-861f-4e06-aa0c-b05cdacf32f3",
-  "allMySlotsUuid" : "c73d4363-af83-4728-b4e4-d2abbf0357e4",
-  "myCreatedSlotsUuid" : "4d99e414-3482-4764-aced-954d0da77836",
-  "myFriendSlotsUuid" : "20420651-e3b1-4ab1-85ac-8454c7e3032c",
-  "myPublicSlotsUuid" : "00a53e3e-cb6c-41da-a3fb-0a593caf7d59",
+  "myCalendarUuid" : "1bc2afd1-aef3-4f1f-97a6-50023158d978",
+  "friendsCalendarUuid" : "db08573e-36ba-4efa-828b-c4d8c8ccd2cb",
+  "allMySlotsUuid" : "fd7c9cef-2da5-4ca6-8c81-5b39a2c7790a",
+  "myCreatedSlotsUuid" : "cc53da6f-5679-4c09-bf5f-3378c6340a6e",
+  "myPrivateSlotsUuid" : "6f02cf78-0699-4517-88b9-d5b39dc83807",
+  "myFriendSlotsUuid" : "4d935153-e071-47e9-963b-2f44c6768938",
+  "myPublicSlotsUuid" : "1e5584df-7fcc-4358-ade4-663f3083db34",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself"

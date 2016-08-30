@@ -40,6 +40,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -82,19 +85,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=gd5D4aghg7Ot2IZgmFDc_S1r9aQ
+<pre>Authorization: Token token=1Gm33FG0i_-_dy7XAl-mHfE3pps
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/slots/47</pre>
+<pre>DELETE /v1/slots/18</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/47&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=gd5D4aghg7Ot2IZgmFDc_S1r9aQ&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/18&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=1Gm33FG0i_-_dy7XAl-mHfE3pps&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -106,11 +109,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;b6bd8d7aec366351785d164f1e000206&quot;
+ETag: W/&quot;3cd4dac5623feb9d40da9c38de0f0f64&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 50e77529-cfb3-44a0-9a98-9f64887e9210
-X-Runtime: 0.048889
-Content-Length: 606</pre>
+X-Request-Id: 7bac7153-a717-4bfc-9387-1bd21ca561b2
+X-Runtime: 0.122229
+Content-Length: 711</pre>
 
 #### Status
 
@@ -120,19 +123,23 @@ Content-Length: 606</pre>
 
 ```javascript
 {
-  "id" : 47,
-  "title" : "Slot title 130",
-  "startDate" : "2019-09-26T13:44:02.000Z",
-  "createdAt" : "2016-05-01T22:54:14.157Z",
-  "updatedAt" : "2016-05-01T22:54:14.171Z",
-  "deletedAt" : "2016-05-01T22:54:14.170Z",
-  "endDate" : "2019-10-26T13:44:02.000Z",
+  "id" : 18,
+  "title" : "Slot title 174",
+  "description" : "",
+  "startDate" : "2019-09-13T06:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:08.305Z",
+  "updatedAt" : "2016-08-30T09:51:08.363Z",
+  "deletedAt" : "2016-08-30T09:51:08.362Z",
+  "endDate" : "2019-10-13T06:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 170,
-    "username" : "User 480",
-    "createdAt" : "2016-05-01T22:54:14.148Z",
-    "updatedAt" : "2016-05-01T22:54:14.148Z",
+    "id" : 38,
+    "username" : "User 744",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:08.296Z",
+    "updatedAt" : "2016-08-30T09:51:08.296Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -149,6 +156,8 @@ Content-Length: 606</pre>
   "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "unauthorizedSlotgroups" : []
 }
 ```

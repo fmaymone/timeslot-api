@@ -19,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=9v1tqFiNhT3WQv0bJXxNPzItEAI
+Authorization: Token token=hSLvI5QvRb6yNvTNGH3T2J-vmTM
 Host: example.org
 Cookie: </pre>
 
@@ -30,17 +30,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "group" : "96c040c7-2616-489f-9136-ff383424ce48"
+  "group" : "92294975-d015-4bad-9b2a-75d0d43b2c39"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/timeslot&quot; -d &#39;{&quot;group&quot;:&quot;96c040c7-2616-489f-9136-ff383424ce48&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/timeslot&quot; -d &#39;{&quot;group&quot;:&quot;92294975-d015-4bad-9b2a-75d0d43b2c39&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9v1tqFiNhT3WQv0bJXxNPzItEAI&quot;</pre>
+	-H &quot;Authorization: Token token=hSLvI5QvRb6yNvTNGH3T2J-vmTM&quot;</pre>
 
 ### Response
 
@@ -49,14 +49,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;96c040c7-2616-489f-9136-ff383424ce48.json&quot;
+Content-Disposition: attachment; filename=&quot;92294975-d015-4bad-9b2a-75d0d43b2c39.json&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/json
 Cache-Control: private
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e36f1b663b55f07134fa27a415dd49f4&quot;
-X-Request-Id: 1c323b5e-fe15-42f4-922f-9579ce6ccfdd
-X-Runtime: 0.010024
+ETag: W/&quot;1687f7724a415142587b2755b43b7898&quot;
+X-Request-Id: 44d27ba6-6a82-4dd9-b465-1e1754a6cb9e
+X-Runtime: 0.014018
 Content-Length: 1233</pre>
 
 #### Status
@@ -68,7 +68,7 @@ Content-Length: 1233</pre>
 ```javascript
 [
   {
-    "uid" : "ee025736-4f99-4280-b772-cf0afb75a27d",
+    "uid" : "8d53b03b-3a23-4051-8f09-3f45ea7f0713",
     "title" : "Slot title 71",
     "visibility" : "public",
     "start" : "2019-09-18T23:44:02.000Z",
@@ -134,7 +134,7 @@ Content-Length: 1233</pre>
     "settings" : [],
     "groups" : [
       {
-        "uuid" : "96c040c7-2616-489f-9136-ff383424ce48",
+        "uuid" : "92294975-d015-4bad-9b2a-75d0d43b2c39",
         "name" : "Testgroup 101",
         "image" : "",
         "public" : false,

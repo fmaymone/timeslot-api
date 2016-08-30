@@ -22,19 +22,19 @@ Description : ID of the group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=PUvhOsl-HYD2vqCPpbd175S2PW0
+Authorization: Token token=dn6qelJR8n578J1tzGZUIcXuw9k
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/7f247549-1f93-4c63-b38e-52695e65417c/accept</pre>
+<pre>POST /v1/groups/d092d2c1-8209-4ae9-bf47-8f40c8bafeca/accept</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/7f247549-1f93-4c63-b38e-52695e65417c/accept&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/d092d2c1-8209-4ae9-bf47-8f40c8bafeca/accept&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=PUvhOsl-HYD2vqCPpbd175S2PW0&quot;</pre>
+	-H &quot;Authorization: Token token=dn6qelJR8n578J1tzGZUIcXuw9k&quot;</pre>
 
 ### Response
 
@@ -44,10 +44,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 746af3df-61d6-4963-b1d6-d142c113ae51
-X-Runtime: 0.008945
-Vary: Origin
+X-Request-Id: 80a02012-ad87-4d8d-adfe-d59913e004c9
+X-Runtime: 0.072130
 Content-Length: 0</pre>
 
 #### Status

@@ -8,7 +8,9 @@
 
 Name : group
 Description : Holds the uuid of the slot group which should be exported.
+
 If the parameter group is missing, all Slot will be exported.
+
 If the group uuid was not found, no Slot will be exported.
 
 ### Request
@@ -17,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=HHx4M3WP-2PjnrbHdtoBGS9ZFoA
+Authorization: Token token=U39Tr4237B4YLejuyy0wZ7iO5wY
 Host: example.org
 Cookie: </pre>
 
@@ -28,17 +30,17 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "group" : "42eba142-9ba4-4a88-ae17-8974679145d7"
+  "group" : "7ac446c5-4e8f-4010-b433-b22857de8f5a"
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/outlook&quot; -d &#39;{&quot;group&quot;:&quot;42eba142-9ba4-4a88-ae17-8974679145d7&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/export/outlook&quot; -d &#39;{&quot;group&quot;:&quot;7ac446c5-4e8f-4010-b433-b22857de8f5a&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=HHx4M3WP-2PjnrbHdtoBGS9ZFoA&quot;</pre>
+	-H &quot;Authorization: Token token=U39Tr4237B4YLejuyy0wZ7iO5wY&quot;</pre>
 
 ### Response
 
@@ -47,14 +49,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;42eba142-9ba4-4a88-ae17-8974679145d7.csv&quot;
+Content-Disposition: attachment; filename=&quot;7ac446c5-4e8f-4010-b433-b22857de8f5a.csv&quot;
 Content-Transfer-Encoding: binary
 Content-Type: text/csv
 Cache-Control: private
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;746744fb5bb84e418089cb061f631bc5&quot;
-X-Request-Id: ebc3b7e2-1f81-44f0-ad61-6e6e72cc945e
-X-Runtime: 0.014203
+X-Request-Id: 26bf8b64-2a10-4da2-bcbc-0b4dda4bf29b
+X-Runtime: 0.007224
 Content-Length: 176</pre>
 
 #### Status

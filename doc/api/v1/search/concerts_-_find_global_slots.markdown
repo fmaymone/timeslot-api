@@ -1,6 +1,6 @@
 # Search API
 
-## Soccer - Find global slots
+## Concerts - Find global slots
 
 ### GET /v1/globalslots/search
 
@@ -27,26 +27,26 @@ Description : maximum number of results, default: 20
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_siacmTVwcx16JUhd4tzpNjb8NU
+Authorization: Token token=a9Ro5UEqXm3N_J7Vmhyg9xndjSA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/globalslots/search?category=soccer&amp;q=Borussia&amp;moment=2016-04-05&amp;limit=5</pre>
+<pre>GET /v1/globalslots/search?category=concerts&amp;q=proje&amp;moment=2016-04-05&amp;limit=5</pre>
 
 #### Query Parameters
 
-<pre>category: soccer
-q: Borussia
+<pre>category: concerts
+q: proje
 moment: 2016-04-05
 limit: 5</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/search?category=soccer&amp;q=Borussia&amp;moment=2016-04-05&amp;limit=5&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/search?category=concerts&amp;q=proje&amp;moment=2016-04-05&amp;limit=5&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_siacmTVwcx16JUhd4tzpNjb8NU&quot;</pre>
+	-H &quot;Authorization: Token token=a9Ro5UEqXm3N_J7Vmhyg9xndjSA&quot;</pre>
 
 ### Response
 
@@ -57,11 +57,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5b987f4fb95ab32052bbdc37ca971b04&quot;
+ETag: W/&quot;e5a5ccbd505aea9a8c5644ca39768ff3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3828bb22-d04c-4c52-be5a-e518d8edc078
-X-Runtime: 0.013524
-Content-Length: 5664</pre>
+X-Request-Id: c9f880d6-134d-449f-92ca-4e7192f496e7
+X-Runtime: 0.009661
+Content-Length: 6570</pre>
 
 #### Status
 

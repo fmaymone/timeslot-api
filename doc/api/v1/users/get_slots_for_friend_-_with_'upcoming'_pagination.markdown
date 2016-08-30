@@ -38,7 +38,7 @@ Description : Query parameter to request slots relative to a given **moment**. M
 - **now**: *ongoing* &amp; *upcoming* slots
 - **around**: limit/2 slots with *start* before *moment* and limit/2 slots with *start* after *moment*. This might miss ongoing slots.
 - **all**: no restriction
-Default is **upcoming**.
+Default is **all**.
 
 Name : before
 Description : Pagination cursor to retrieve slots which do happen BEFORE the slot represented by this cursor. If a cursor is send, **mode** and **moment** are ignored.
@@ -64,11 +64,17 @@ Description : Maximum number of slots returned.
 Name : mode
 Description : Types of slots which were requested.
 
+Name : moment
+Description : Point-in-time which was used for the query.
+
 Name : filter
 Description : Type of filter which was applied to initial data.
 
-Name : moment
-Description : Point-in-time which was used for the query.
+Name : earliest
+Description : If set, no Slots which have ended before this point-in-time will be included in the result.
+
+Name : latest
+Description : If set, no Slots which are starting after this point-in-time will be included in the result.
 
 Name : before
 Description : Cursor that represents the first item in the response dataset.
@@ -83,24 +89,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=6AiEQdREuZ-OlxsXlMkRe0-lU-0
+<pre>Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/279/slots?limit=3&amp;moment=2016-05-01T22%3A54%3A16.326Z&amp;mode=upcoming</pre>
+<pre>GET /v1/users/146/slots?limit=3&amp;moment=2016-08-30T09%3A51%3A11.987Z&amp;mode=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2016-05-01T22:54:16.326Z
+moment: 2016-08-30T09:51:11.987Z
 mode: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/279/slots?limit=3&amp;moment=2016-05-01T22%3A54%3A16.326Z&amp;mode=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=6AiEQdREuZ-OlxsXlMkRe0-lU-0&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/146/slots?limit=3&amp;moment=2016-08-30T09%3A51%3A11.987Z&amp;mode=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g&quot;</pre>
 
 ### Response
 
@@ -111,11 +117,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e69299d977822ba1e1b5003a2619861f&quot;
+ETag: W/&quot;d99578ae3b8d774ee34837b7a7974a45&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ea89ca79-c80a-4edb-b07c-1f2aac1c6fa0
-X-Runtime: 0.027895
-Content-Length: 1912</pre>
+X-Request-Id: f5b95ebf-0298-4b61-b61e-2144963939c4
+X-Runtime: 0.052487
+Content-Length: 2243</pre>
 
 #### Status
 
@@ -128,84 +134,33 @@ Content-Length: 1912</pre>
   "paging" : {
     "limit" : 3,
     "mode" : "upcoming",
-    "moment" : "2016-05-01T22:54:16.326Z",
+    "moment" : "2016-08-30T09:51:11.987Z",
     "filter" : null,
     "earliest" : null,
     "latest" : null,
-    "before" : "ODclMjAxNi0wNS0wMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0xMiAwNTo0NDowMi4wMDAwMDAwMDA=",
-    "after" : "ODklMjAxNi0wNS0wMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0xNCAwNzo0NDowMi4wMDAwMDAwMDA="
+    "before" : "NjMlMjAxNi0wOC0zMSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wNCAwMzo0NDowMi4wMDAwMDAwMDA=",
+    "after" : "NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=",
+    "poolSize" : 3
   },
   "data" : [
     {
-      "id" : 87,
-      "title" : "Slot title 170",
-      "startDate" : "2016-05-02T00:00:00.000Z",
-      "createdAt" : "2016-05-01T22:54:16.310Z",
-      "updatedAt" : "2016-05-01T22:54:16.310Z",
+      "id" : 63,
+      "title" : "Slot title 219",
+      "description" : "",
+      "startDate" : "2016-08-31T00:00:00.000Z",
+      "createdAt" : "2016-08-30T09:51:11.979Z",
+      "updatedAt" : "2016-08-30T09:51:11.979Z",
       "deletedAt" : null,
-      "endDate" : "2019-10-12T05:44:02.000Z",
+      "endDate" : "2019-10-04T03:44:02.000Z",
       "location" : null,
       "creator" : {
-        "id" : 282,
-        "username" : "User 612",
-        "createdAt" : "2016-05-01T22:54:16.305Z",
-        "updatedAt" : "2016-05-01T22:54:16.305Z",
-        "deletedAt" : null,
-        "image" : ""
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "omitted"
-      },
-      "visibility" : "friends",
-      "likerIds" : [],
-      "likes" : 0,
-      "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/87"
-    },
-    {
-      "id" : 88,
-      "title" : "Slot title 171",
-      "startDate" : "2016-05-02T00:00:00.000Z",
-      "createdAt" : "2016-05-01T22:54:16.317Z",
-      "updatedAt" : "2016-05-01T22:54:16.317Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-13T06:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 283,
-        "username" : "User 613",
-        "createdAt" : "2016-05-01T22:54:16.312Z",
-        "updatedAt" : "2016-05-01T22:54:16.312Z",
-        "deletedAt" : null,
-        "image" : ""
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "omitted"
-      },
-      "visibility" : "friends",
-      "likerIds" : [],
-      "likes" : 0,
-      "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/88"
-    },
-    {
-      "id" : 89,
-      "title" : "Slot title 172",
-      "startDate" : "2016-05-02T00:00:00.000Z",
-      "createdAt" : "2016-05-01T22:54:16.324Z",
-      "updatedAt" : "2016-05-01T22:54:16.324Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-14T07:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 284,
-        "username" : "User 614",
-        "createdAt" : "2016-05-01T22:54:16.319Z",
-        "updatedAt" : "2016-05-01T22:54:16.319Z",
+        "id" : 146,
+        "username" : "User 874",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.930Z",
+        "updatedAt" : "2016-08-30T09:51:11.930Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -218,7 +173,77 @@ Content-Length: 1912</pre>
       "likerIds" : [],
       "likes" : 0,
       "commentsCounter" : 0,
-      "url" : "http://example.org/v1/slots/89"
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/63"
+    },
+    {
+      "id" : 61,
+      "title" : "Slot title 217",
+      "description" : "",
+      "startDate" : "2016-09-05T00:00:00.000Z",
+      "createdAt" : "2016-08-30T09:51:11.959Z",
+      "updatedAt" : "2016-08-30T09:51:11.959Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-02T01:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 146,
+        "username" : "User 874",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.930Z",
+        "updatedAt" : "2016-08-30T09:51:11.930Z",
+        "deletedAt" : null,
+        "image" : ""
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "omitted"
+      },
+      "visibility" : "friends",
+      "likerIds" : [],
+      "likes" : 0,
+      "commentsCounter" : 0,
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/61"
+    },
+    {
+      "id" : 62,
+      "title" : "Slot title 218",
+      "description" : "",
+      "startDate" : "2016-09-05T00:00:00.000Z",
+      "createdAt" : "2016-08-30T09:51:11.968Z",
+      "updatedAt" : "2016-08-30T09:51:11.968Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-03T02:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 146,
+        "username" : "User 874",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:51:11.930Z",
+        "updatedAt" : "2016-08-30T09:51:11.930Z",
+        "deletedAt" : null,
+        "image" : ""
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "omitted"
+      },
+      "visibility" : "friends",
+      "likerIds" : [],
+      "likes" : 0,
+      "commentsCounter" : 0,
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/62"
     }
   ]
 }
@@ -227,22 +252,22 @@ Content-Length: 1912</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=6AiEQdREuZ-OlxsXlMkRe0-lU-0
+<pre>Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/279/slots</pre>
+<pre>GET /v1/users/146/slots</pre>
 
 #### Query Parameters
 
-<pre>after: ODklMjAxNi0wNS0wMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0xNCAwNzo0NDowMi4wMDAwMDAwMDA=</pre>
+<pre>after: NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/279/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=6AiEQdREuZ-OlxsXlMkRe0-lU-0&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/146/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g&quot;</pre>
 
 ### Response
 
@@ -253,11 +278,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;63e09dc675781e6749785dee24ad7c04&quot;
+ETag: W/&quot;555f9fd6fbf215ff957e76067d2f0a1b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ba793a0d-b91e-47d5-a040-3547fddb5df8
-X-Runtime: 0.013887
-Content-Length: 133</pre>
+X-Request-Id: 3d1c10e5-e675-4c5d-b0ad-a67b8cc605bc
+X-Runtime: 0.020749
+Content-Length: 225</pre>
 
 #### Status
 
@@ -268,14 +293,15 @@ Content-Length: 133</pre>
 ```javascript
 {
   "paging" : {
-    "limit" : 100,
+    "limit" : 40,
     "mode" : null,
     "moment" : null,
     "filter" : null,
     "earliest" : null,
     "latest" : null,
-    "before" : "MCUl",
-    "after" : null
+    "before" : "NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=",
+    "after" : null,
+    "poolSize" : 3
   },
   "data" : []
 }

@@ -49,7 +49,7 @@ Description : Array with muid&#39;s of GlobalSlots
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=JJdDO4gCtjOPgPkySfzn1cOAUn8
+Authorization: Token token=j-gxZEBvh_juM12HaZ_7TQjPlg4
 Host: example.org
 Cookie: </pre>
 
@@ -63,7 +63,7 @@ Cookie: </pre>
   "categoryUuid" : "4870f9d3-a629-9578-edcc-3e6c954baeba",
   "group" : {
     "stringId" : "soccer_leagues:dfb.de:champions_league",
-    "muid" : "41dd7dcc-b93d-4ae1-874b-4f346db49c70",
+    "muid" : "f6704a00-a657-4ede-8baf-4db1f94e0c7b",
     "name" : "Autokino an der alten Eiche",
     "description" : "Bitte Autoradio nicht vergessen.",
     "image" : "http://faster.pussycat",
@@ -77,9 +77,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/global_group&quot; -d &#39;{&quot;categoryUuid&quot;:&quot;4870f9d3-a629-9578-edcc-3e6c954baeba&quot;,&quot;group&quot;:{&quot;stringId&quot;:&quot;soccer_leagues:dfb.de:champions_league&quot;,&quot;muid&quot;:&quot;41dd7dcc-b93d-4ae1-874b-4f346db49c70&quot;,&quot;name&quot;:&quot;Autokino an der alten Eiche&quot;,&quot;description&quot;:&quot;Bitte Autoradio nicht vergessen.&quot;,&quot;image&quot;:&quot;http://faster.pussycat&quot;,&quot;slots&quot;:[&quot;c4c59de8-83ca-8500-274b-fe16e5ef7a71&quot;]}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/global_group&quot; -d &#39;{&quot;categoryUuid&quot;:&quot;4870f9d3-a629-9578-edcc-3e6c954baeba&quot;,&quot;group&quot;:{&quot;stringId&quot;:&quot;soccer_leagues:dfb.de:champions_league&quot;,&quot;muid&quot;:&quot;f6704a00-a657-4ede-8baf-4db1f94e0c7b&quot;,&quot;name&quot;:&quot;Autokino an der alten Eiche&quot;,&quot;description&quot;:&quot;Bitte Autoradio nicht vergessen.&quot;,&quot;image&quot;:&quot;http://faster.pussycat&quot;,&quot;slots&quot;:[&quot;c4c59de8-83ca-8500-274b-fe16e5ef7a71&quot;]}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=JJdDO4gCtjOPgPkySfzn1cOAUn8&quot;</pre>
+	-H &quot;Authorization: Token token=j-gxZEBvh_juM12HaZ_7TQjPlg4&quot;</pre>
 
 ### Response
 
@@ -91,8 +91,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 8f4612d1-bd1f-431d-8eae-cd0d08f07b93
-X-Runtime: 0.142845
+X-Request-Id: f6a76465-fb3f-4416-a9b9-d8a41d41e122
+X-Runtime: 0.081955
 Content-Length: 0</pre>
 
 #### Status

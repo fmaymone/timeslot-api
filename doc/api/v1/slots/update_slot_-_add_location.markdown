@@ -2,7 +2,7 @@
 
 ## Update Slot - Add Location
 
-### PATCH /v1/stdslot/:id
+### PATCH /v1/slots/:id
 
 Returns data of new slot.
 
@@ -17,9 +17,6 @@ returns 422 if required parameters are missing
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : visibility
-Description : Visibility of the Slot to update (private/friends/foaf/public)
-
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -28,6 +25,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : description
+Description : Description for the slot (max. 500 characters)
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -83,6 +83,9 @@ Description : Latitude
 Name : longitude
 Description : Longitude
 
+Name : placeId
+Description : Google Place ID
+
 Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
@@ -112,6 +115,9 @@ Description : Last update of slot
 
 Name : deletedAt
 Description : Delete date of slot or nil
+
+Name : description
+Description : Description for the slot
 
 Name : location
 Description : Location data for the slot
@@ -156,13 +162,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=f81MfSxcwrH8XdEE0_NkUksXWDk
+Authorization: Token token=vi27UWef8hp3aBClIWHUaCAHzqk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/45</pre>
+<pre>PATCH /v1/slots/16</pre>
 
 #### Body
 ```javascript
@@ -178,6 +184,7 @@ Cookie: </pre>
     "isoCountryCode" : "GER",
     "latitude" : "52.527335",
     "longitude" : "13.414259",
+    "placeId" : "ChIJrTLr-GyuEmsRBfy61i59si0",
     "privateLocation" : true
   }
 }
@@ -186,9 +193,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/45&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/16&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;placeId&quot;:&quot;ChIJrTLr-GyuEmsRBfy61i59si0&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=f81MfSxcwrH8XdEE0_NkUksXWDk&quot;</pre>
+	-H &quot;Authorization: Token token=vi27UWef8hp3aBClIWHUaCAHzqk&quot;</pre>
 
 ### Response
 
@@ -199,11 +206,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5bce0495109cb4b6a8844765cfe44fb6&quot;
+ETag: W/&quot;86441241a10a6baf6ada95d584e4a771&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cc083c71-2568-46e8-b2ee-e610e41e140e
-X-Runtime: 0.027330
-Content-Length: 882</pre>
+X-Request-Id: 7fe60acd-cafb-4664-9503-6b34dc3a4121
+X-Runtime: 0.072830
+Content-Length: 1027</pre>
 
 #### Status
 
@@ -213,15 +220,16 @@ Content-Length: 882</pre>
 
 ```javascript
 {
-  "id" : 45,
-  "title" : "Slot title 128",
-  "startDate" : "2019-09-24T11:44:02.000Z",
-  "createdAt" : "2016-05-01T22:54:14.056Z",
-  "updatedAt" : "2016-05-01T22:54:14.056Z",
+  "id" : 16,
+  "title" : "Slot title 172",
+  "description" : "",
+  "startDate" : "2019-09-11T04:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:08.113Z",
+  "updatedAt" : "2016-08-30T09:51:08.113Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-24T11:44:02.000Z",
+  "endDate" : "2019-10-11T04:44:02.000Z",
   "location" : {
-    "id" : "0c1b98ef-22c8-4dac-87ab-625bcdaa9f53",
+    "id" : "2dff5a11-f645-4e6c-801d-f41deba0a570",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : "1",
@@ -236,13 +244,17 @@ Content-Length: 882</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259
+    "longitude" : 13.414259,
+    "placeId" : "ChIJrTLr-GyuEmsRBfy61i59si0"
   },
   "creator" : {
-    "id" : 166,
-    "username" : "User 476",
-    "createdAt" : "2016-05-01T22:54:14.045Z",
-    "updatedAt" : "2016-05-01T22:54:14.045Z",
+    "id" : 34,
+    "username" : "User 740",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:08.104Z",
+    "updatedAt" : "2016-08-30T09:51:08.104Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -255,6 +267,8 @@ Content-Length: 882</pre>
   "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "visibleCount" : "1"
 }
 ```

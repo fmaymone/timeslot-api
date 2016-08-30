@@ -19,7 +19,7 @@ Description : Array of User IDs for whom to refuse/destroy a friendship
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=BPuuFb4yT_kQJbJdQshrergjdAg
+Authorization: Token token=DBD_AVeWCSFDwdjPm_PJvm3J8yM
 Host: example.org
 Cookie: </pre>
 
@@ -45,7 +45,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/remove_friends&quot; -d &#39;{&quot;ids&quot;:[98,99,100,97]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BPuuFb4yT_kQJbJdQshrergjdAg&quot;</pre>
+	-H &quot;Authorization: Token token=DBD_AVeWCSFDwdjPm_PJvm3J8yM&quot;</pre>
 
 ### Response
 
@@ -55,10 +55,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: cdb203b0-ef66-49da-b80c-dba2411a9d87
-X-Runtime: 0.031627
-Vary: Origin
+X-Request-Id: 1efa7409-2e33-41aa-8ce8-a655abefbf28
+X-Runtime: 0.142986
 Content-Length: 0</pre>
 
 #### Status
