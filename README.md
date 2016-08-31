@@ -99,10 +99,25 @@ ENV['AWS_REGION']
 
 ### We use the following services
 
+* [AWS ElasticBeanstalk](http://aws.amazon.com/documentation/elasticbeanstalk/)
+    - Backend Rails App Deployment
+    - Heroku-like Service that uses EC2, VPC and other things
+* [AWS RDS](http://aws.amazon.com/documentation/rds/)
+    - Postgres Database
+* [AWS ElastiCache](http://aws.amazon.com/documentation/elasticache/)
+    - Redis
 * [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
     - Apple Push Notifications
 * [AWS Simple Email Service](http://aws.amazon.com/documentation/ses/)
     - Password Reset Email
+* [AWS Route53](http://aws.amazon.com/documentation/route53/)
+    - DNS Management
+* [AWS S3](http://aws.amazon.com/documentation/s3/)
+    - Stores Configuration Files for ElasticBeanstalk
+* [AWS Workmail](http://aws.amazon.com/documentation/route53/)
+    - Email Address Management for Email Addresses used to register at other external services
+* AWS IAM - AWS Account and Access Management
+* AWS Certificate Manager - Create Certificates for HTTPS
 
 ```bash
 ENV['AWS_PLATFORM_APPLICATION_IOS'] # aws arn endpoint (iOS)
