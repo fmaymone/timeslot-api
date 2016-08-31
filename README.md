@@ -147,25 +147,14 @@ Password is in LastPass Company Account.
 For ease of use install [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
 
 
-## New Relic
-
-via Heroku Addon
-
 # More Tools
 
-## Webserver
+## Webserver (Puma)
 
 * Start default rails dev server (s=server)
 
 ```bash
 rails s
-```
-
-or use foreman:
-
-```bash
-gem install foreman
-foreman start
 ```
 
 ## Specs / Tests
