@@ -138,7 +138,14 @@ for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Gith
 
 ## Papertrail
 
-for logging, via Heroku Addon, [Docs](https://papertrailapp.com/) | [Heroku Docs](https://devcenter.heroku.com/articles/papertrail)
+Log management service, collects logs from AWS Instances via [remote_syslog2](https://github.com/papertrail/remote_syslog2)
+deamon, which gets installed on all EC2 instances via [ebextensions config](https://github.com/papertrail/remote_syslog2/pull/157).
+
+Papertrail Account is registered with email **papertrail@timeslot.rocks**,
+Password is in LastPass Company Account.
+
+For ease of use install [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
+
 
 ## New Relic
 
