@@ -15,6 +15,10 @@ class Friendship < ActiveRecord::Base
   validates :friend, presence: true
   validates :state, presence: true
 
+  attr_accessor :initiator
+
+  @initiator = nil
+
   def offer(active_user = nil)
     update!(state: OFFERED) unless deleted_at?
     # temporary fix:
@@ -23,7 +27,12 @@ class Friendship < ActiveRecord::Base
     # if the second user is (re-) initiating a broken friendship again
     # TODO: I wan't to do a major upgrade on the friendships (TML-152)
     update!(friend: user, user: active_user) if active_user == friend
-    create_activity
+    # Accept friendship automatically if user profile is public
+    if friend.public_user?
+      accept
+    else
+      create_activity
+    end
   end
 
   def offered?
@@ -35,17 +44,8 @@ class Friendship < ActiveRecord::Base
     update!(state: ESTABLISHED)
     user.follow(friend)
     friend.follow(user)
-    forward_activity(
-        feed_fwd: {
-            Notification: [
-                activity_actor.id.to_s,
-                activity_target.id.to_s
-            ]
-        },
-        push_fwd: [
-            activity_target.id
-        ]
-    )
+    create_activity('friendship')
+    create_activity('accept')
   end
 
   def established?
@@ -56,14 +56,15 @@ class Friendship < ActiveRecord::Base
   # - break established friendship
   # - cancel open friend request (from me to someone else)
   # - refuse open friend request (from someone else to me)
-  def reject
+  def reject(initiator: nil)
     if established?
-      remove_activity('unfriend')
-      remove_activity
       user.unfollow(friend)
       friend.unfollow(user)
+      RemoveJob.perform_later(friends: [user, friend])
+      @initiator = initiator if initiator
+      update_activity('unfriend')
     else
-      remove_activity
+      update_activity('reject')
     end
     update!(state: REJECTED) unless deleted_at?
   end
@@ -78,11 +79,13 @@ class Friendship < ActiveRecord::Base
   # if a user inactivates his account, because otherwise all
   # canceled friendships would be re-enabled when the user
   # reactivates his profile.
-  def inactivate
-    remove_activity('unfriend')
+  def inactivate(initiator: nil)
     user.unfollow(friend)
     friend.unfollow(user)
     friend.touch
+    RemoveJob.perform_later(friends: [user, friend])
+    @initiator = initiator if initiator
+    update_activity('inactivate')
     ts_soft_delete
   end
 
@@ -90,9 +93,10 @@ class Friendship < ActiveRecord::Base
     return if friend.deleted_at?
     update!(deleted_at: nil)
     friend.touch
-    user.follow(friend)
-    friend.follow(user)
-    create_activity
+    if established?
+      user.follow(friend)
+      friend.follow(user)
+    end
   end
 
   private def check_duplicate
@@ -132,19 +136,23 @@ class Friendship < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_target
-    established? ? user : friend
-  end
-
   private def activity_actor
-    established? ? friend : user
+    @initiator || (established? ? friend : user)
   end
 
-  private def activity_foreign
-    activity_target
+  private def activity_target
+    if @initiator
+      @initiator == user ? friend : user
+    else
+      established? ? user : friend
+    end
   end
 
   private def activity_action
-    established? ? 'friendship' : (offered? ? 'request' : '')
+    if established?
+      'friendship'
+    elsif offered?
+      'request'
+    end
   end
 end

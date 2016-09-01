@@ -58,9 +58,9 @@ RSpec.describe "V1::Users", type: :request do
 
       context "current_user" do
         let!(:my_slots) do
-          create(:std_slot_private, owner: current_user)
-          create(:std_slot_public, owner: current_user)
-          create(:std_slot_friends, owner: current_user,
+          create(:std_slot_private, creator: current_user)
+          create(:std_slot_public, creator: current_user)
+          create(:std_slot_friends, creator: current_user,
                  deleted_at: '2015-08-08T12:00')
         end
 
@@ -74,7 +74,7 @@ RSpec.describe "V1::Users", type: :request do
       context "stranger" do
         let(:stranger) do
           stranger = create(:user, :with_public_slot)
-          create(:std_slot_public, owner: stranger,
+          create(:std_slot_public, creator: stranger,
                  deleted_at: '2015-08-08T12:00')
           stranger
         end
@@ -109,6 +109,33 @@ RSpec.describe "V1::Users", type: :request do
         get "/v1/users/#{user_with_calendars.id}", {}, auth_header
         expect(json).to have_key('calendarCount')
         expect(json['calendarCount']).to eq 4
+      end
+    end
+
+    context "json preview slots" do
+      let!(:user) { create(:user) }
+      let!(:past_1) { create(:std_slot_public, title: 'past 1', creator: user,
+                             start_date: Time.zone.now.last_year.last_month) }
+      let!(:future_1) { create(:std_slot_public, title: 'future 1', creator: user,
+                               start_date: Time.zone.tomorrow) }
+      let!(:future_2) { create(:std_slot_public, title: 'future 2', creator: user,
+                               start_date: Time.zone.tomorrow.next_week) }
+      let!(:future_3) { create(:std_slot_public, title: 'future 3', creator: user,
+                               start_date: Time.zone.tomorrow.next_month) }
+      let!(:future_4) { create(:std_slot_public, title: 'future 4', creator: user,
+                               start_date: Time.zone.tomorrow.next_year) }
+      let!(:future_5) { create(:std_slot_public, title: 'future 5', creator: user,
+                               start_date: Time.zone.now.next_year.next_month) }
+
+      it "returns up to 4 upcoming slots for the user" do
+        get "/v1/users/#{user.id}", {}, auth_header
+
+        expect(json).to have_key('previewSlots')
+        expect(json['previewSlots'].length).to eq 4
+        expect(response.body).to include future_1.title
+        expect(response.body).to include future_2.title
+        expect(response.body).to include future_3.title
+        expect(response.body).to include future_4.title
       end
     end
 
@@ -245,7 +272,14 @@ RSpec.describe "V1::Users", type: :request do
     end
   end
 
-  describe "POST /v1/users/reset" do
+  describe "POST /v1/users/reset", :aws do
+
+    let(:current_user) do
+      create(:user,
+             email: 'success@simulator.amazonses.com',
+             password: "nottimeslot")
+    end
+
     context "valid params", :vcr do
       it "returns ok" do
         post "/v1/users/reset", { email: current_user.email }
@@ -298,9 +332,9 @@ RSpec.describe "V1::Users", type: :request do
       # let!(:group_slot) { create(:group_slot, group: group_member.group) }
       let!(:slots) do
         slots = []
-        slots.push create(:std_slot_private, owner: current_user)
-        slots.push create(:std_slot_friends, owner: current_user)
-        slots.push create(:std_slot_public, owner: current_user)
+        slots.push create(:std_slot_private, creator: current_user)
+        slots.push create(:std_slot_friends, creator: current_user)
+        slots.push create(:std_slot_public, creator: current_user)
         # slots.push(*create_list(:re_slot, 2, slotter: current_user))
       end
 
@@ -313,11 +347,6 @@ RSpec.describe "V1::Users", type: :request do
         get "/v1/users/#{current_user.id}/slots", {}, auth_header
         expect(json.length).to eq slots.size
       end
-
-      # it "excludes groupslots of the current_user" do
-      #   get "/v1/users/#{current_user.id}/slots", {}, auth_header
-      #   expect(response.body).not_to include group_slot.title
-      # end
     end
 
     context "with pagination", :keep_data do
@@ -333,52 +362,52 @@ RSpec.describe "V1::Users", type: :request do
         create(:std_slot_private,
                start_date: Time.zone.tomorrow,
                title: 'upcoming private slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_private,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'upcoming private slot A',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_private,
                start_date: Time.zone.today.next_week.end_of_day,
                end_date: Time.zone.today.next_week.next_month,
                title: 'upcoming private slot B',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_private, 3,
                     start_date: Time.zone.tomorrow,
-                    owner: @current_user)
+                    creator: @current_user)
         # ongoing slots
         create(:std_slot_friends,
                start_date: Time.zone.yesterday,
                end_date: Time.zone.tomorrow,
                title: 'ongoing friendslot',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_friends, 12,
                     start_date: Time.zone.yesterday,
                     end_date: Time.zone.tomorrow,
                     title: 'ongoing friendslots',
-                    owner: @current_user)
+                    creator: @current_user)
         # past slots
         create(:std_slot_public,
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'long ago public slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_foaf,
                start_date: Time.zone.yesterday.last_year,
                end_date: Time.zone.today.last_year,
                title: 'foaf past slot',
-               owner: @current_user)
+               creator: @current_user)
         create(:std_slot_public,
                start_date: Time.zone.yesterday.at_midday,
                end_date: Time.zone.yesterday.end_of_day,
                title: 'past public slot',
-               owner: @current_user)
+               creator: @current_user)
         create_list(:std_slot_public, 13,
                     start_date: Time.zone.yesterday.at_midday,
                     end_date: Time.zone.yesterday.end_of_day,
                     title: 'past public slots',
-                    owner: @current_user)
+                    creator: @current_user)
       end
 
       describe "GET slots for befriended user" do
@@ -390,13 +419,13 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{friend.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "doesn't return private slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -406,7 +435,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).to include 'ongoing friendslot'
@@ -414,14 +443,14 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-of-friend visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'past' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           expect(response.body).to include 'foaf past slot'
         end
 
         it "returns public slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{friend.auth_token}"
 
           # expect(response.body).to include 'ongoing reslot'
@@ -431,7 +460,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: friend) }
+        #   let(:unshared_group) { create(:group, creator: friend) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -445,7 +474,7 @@ RSpec.describe "V1::Users", type: :request do
         #     create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #     get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
         #         'Authorization' => "Token token=#{friend.auth_token}"
 
         #     expect(response.body).not_to include unshared_groupslot.title
@@ -467,13 +496,13 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
               'Authorization' => "Token token=#{offa.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "doesn't return private slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -483,14 +512,14 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         it "returns friend-of-friend visible slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'past' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'past' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           expect(response.body).to include 'foaf past slot'
         end
 
         it "returns public slots of user" do
-          get "/v1/users/#{@current_user.id}/slots", { filter: 'all' },
+          get "/v1/users/#{@current_user.id}/slots", { mode: 'all' },
               'Authorization' => "Token token=#{offa.auth_token}"
 
           # expect(response.body).to include 'ongoing reslot'
@@ -499,7 +528,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: offa) }
+        #   let(:unshared_group) { create(:group, creator: offa) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -513,7 +542,7 @@ RSpec.describe "V1::Users", type: :request do
         #     create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{@current_user.id}/slots", { filter: 'now' },
+        #     get "/v1/users/#{@current_user.id}/slots", { mode: 'now' },
         #         'Authorization' => "Token token=#{offa.auth_token}"
 
         #     expect(response.body).not_to include unshared_groupslot.title
@@ -526,13 +555,13 @@ RSpec.describe "V1::Users", type: :request do
         let(:stranger) { create(:user) }
 
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'now',
+          get "/v1/users/#{@current_user.id}/slots", mode: 'now',
               'Authorization' => "Token token=#{stranger.auth_token}"
           expect(response).to have_http_status :ok
         end
 
         it "only returns public slots" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'all',
+          get "/v1/users/#{@current_user.id}/slots", mode: 'all',
               'Authorization' => "Token token=#{stranger.auth_token}"
 
           expect(response.body).not_to include 'not my upcoming private slot'
@@ -543,7 +572,7 @@ RSpec.describe "V1::Users", type: :request do
         end
 
         # context "group slots" do
-        #   let(:unshared_group) { create(:group, owner: stranger) }
+        #   let(:unshared_group) { create(:group, creator: stranger) }
         #   let!(:unshared_groupslot) {
         #     create(:group_slot, group: unshared_group) }
 
@@ -556,7 +585,7 @@ RSpec.describe "V1::Users", type: :request do
         #   let!(:shared_groupslot) { create(:group_slot, group: shared_group) }
 
         #   it "returns shared group slots" do
-        #     get "/v1/users/#{stranger.id}/slots", { filter: 'all' },
+        #     get "/v1/users/#{stranger.id}/slots", { mode: 'all' },
         #         'Authorization' => "Token token=#{@current_user.auth_token}"
 
         #     expect(response.body).to include shared_groupslot.title
@@ -570,12 +599,12 @@ RSpec.describe "V1::Users", type: :request do
         # there is no current_user, I just use the existing user object for the
         # request
         it "returns ok" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'now'
+          get "/v1/users/#{@current_user.id}/slots", mode: 'now'
           expect(response).to have_http_status :ok
         end
 
         it "only returns public slots" do
-          get "/v1/users/#{@current_user.id}/slots", filter: 'all'
+          get "/v1/users/#{@current_user.id}/slots", mode: 'all'
           expect(response.body).not_to include 'not my upcoming private slot'
           expect(response.body).not_to include 'upcoming private slot'
           expect(response.body).not_to include 'ongoing friendslot'
@@ -588,10 +617,10 @@ RSpec.describe "V1::Users", type: :request do
 
   describe "GET /v1/users/:id/media" do
     let!(:target_user) { create(:user) }
-    let!(:slot_public) { create(:std_slot_public, :with_media,
-                                owner: target_user, creator: target_user) }
-    let!(:slot_private) { create(:std_slot_private, :with_media,
-                                 owner: target_user, creator: target_user) }
+    let!(:slot_public) {
+      create(:std_slot_public, :with_media, creator: target_user) }
+    let!(:slot_private) {
+      create(:std_slot_private, :with_media, creator: target_user) }
 
     context "for current_user" do
       it "returns array which includes all media items of user" do
@@ -633,7 +662,7 @@ RSpec.describe "V1::Users", type: :request do
     context "for friend" do
       let!(:friend) { target_user }
       let!(:slot_friend) {
-        create(:std_slot_friends, :with_media, owner: friend, creator: friend) }
+        create(:std_slot_friends, :with_media, creator: friend) }
       let!(:friendship) {
         create(:friendship, :established, user: current_user, friend: friend) }
 
@@ -675,6 +704,104 @@ RSpec.describe "V1::Users", type: :request do
       it "returns 404 for unknown user ID" do
         get "/v1/users/#{User.count}/media", {}, auth_header
         expect(response).to have_http_status :not_found
+      end
+    end
+  end
+
+  describe "GET /v1/users/:id/calendars" do
+    let(:user_with_calendar) { create(:user) }
+    let!(:public_group) do
+      public_group = create(:group, public: true)
+      create(:membership, :active, group: public_group, user: user_with_calendar)
+      public_group
+    end
+
+    let(:past_1) { create(:std_slot_public, start_date: Time.zone.yesterday,
+                          title: 'past 1') }
+    let(:past_2) { create(:std_slot_public, title: 'past 2',
+                          start_date: Time.zone.yesterday.last_week) }
+    let(:past_3) { create(:std_slot_public, title: 'past 3',
+                          start_date: Time.zone.yesterday.last_month) }
+    let(:past_4) { create(:std_slot_public, title: 'past 4',
+                          start_date: Time.zone.yesterday.last_year) }
+    let(:past_5) { create(:std_slot_public, title: 'past 5',
+                          start_date: Time.zone.now.last_year.last_month) }
+    let(:future_1) { create(:std_slot_public, title: 'future 1 slot',
+                            start_date: Time.zone.tomorrow) }
+    let(:future_2) { create(:std_slot_public, title: 'future 2 slot',
+                            start_date: Time.zone.tomorrow.next_week) }
+    let(:future_3) { create(:std_slot_public, title: 'future 3 slot',
+                            start_date: Time.zone.tomorrow.next_month) }
+    let(:future_4) { create(:std_slot_public, title: 'future 4 slot',
+                            start_date: Time.zone.tomorrow.next_year) }
+    let(:future_5) { create(:std_slot_public, title: 'future 5 slot',
+                            start_date: Time.zone.now.next_year.next_month) }
+    let!(:basic_containerships) do
+      create(:containership, group: public_group, slot: past_1)
+      create(:containership, group: public_group, slot: past_2)
+      create(:containership, group: public_group, slot: past_3)
+      create(:containership, group: public_group, slot: past_4)
+      create(:containership, group: public_group, slot: past_5)
+    end
+
+    let(:id) { user_with_calendars.id }
+
+    context "more than 3 upcoming slots" do
+      let!(:containerships) do
+        create(:containership, group: public_group, slot: future_1)
+        create(:containership, group: public_group, slot: future_2)
+        create(:containership, group: public_group, slot: future_3)
+        create(:containership, group: public_group, slot: future_4)
+        create(:containership, group: public_group, slot: future_5)
+      end
+
+      it "returns 4 preview slots for every group" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include future_1.title
+        expect(res).to include future_2.title
+        expect(res).to include future_3.title
+        expect(res).to include future_4.title
+        expect(res).not_to include future_5.title
+        expect(res).not_to include past_1.title
+      end
+    end
+
+    context "less than 4 upcoming slots" do
+      let!(:containerships) do
+        create(:containership, group: public_group, slot: future_3)
+        create(:containership, group: public_group, slot: future_5)
+      end
+
+      it "returns 4 preview slots" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include future_3.title
+        expect(res).to include future_5.title
+        expect(res).to include past_1.title
+        expect(res).to include past_2.title
+        expect(res).not_to include past_3.title
+      end
+    end
+
+    context "no upcoming slots" do
+      it "returns 4 preview slots" do
+        get "/v1/users/#{user_with_calendar.id}/calendars", {},
+            'Authorization' => "Token token=#{current_user.auth_token}"
+
+        expect(response).to have_http_status(:ok)
+        res = response.body
+        expect(res).to include past_1.title
+        expect(res).to include past_2.title
+        expect(res).to include past_3.title
+        expect(res).to include past_4.title
+        expect(res).not_to include past_5.title
       end
     end
   end

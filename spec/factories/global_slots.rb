@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :global_slot, class: GlobalSlot, parent: :slot do
-    slot_uuid '820304fe-a416-db0d-807e-90cb9ebd9f1b'
+    slot_uuid 'c4c59de8-83ca-8500-274b-fe16e5ef7a71'
 
     trait :with_details do
       url "http://www.dfb.de/europa-league/saisonplan?spieledb_path=matches32"
@@ -17,7 +17,7 @@ FactoryGirl.define do
     end
 
     trait :without_description do
-      slot_uuid 'c3c5ccd4-d1e4-8c16-49fc-aaa31c438eaf'
+      slot_uuid '6edd205c-0b54-d9dd-0fcd-ab08eef9aee8'
     end
   end
 end

@@ -23,7 +23,7 @@ Description : Array of User IDs to create a friendship for
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=h0mV1be05GuFRpImAkdLx8-k0Rs
+Authorization: Token token=-rdkK7On9vhfx_naJDSYH0GLdP0
 Host: example.org
 Cookie: </pre>
 
@@ -51,7 +51,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/add_friends&quot; -d &#39;{&quot;ids&quot;:[85,87,91,88,89,90]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=h0mV1be05GuFRpImAkdLx8-k0Rs&quot;</pre>
+	-H &quot;Authorization: Token token=-rdkK7On9vhfx_naJDSYH0GLdP0&quot;</pre>
 
 ### Response
 
@@ -61,10 +61,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 8e4f14c6-06c6-4090-92a1-727878c31f9a
-X-Runtime: 0.092705
-Vary: Origin
+X-Request-Id: 301f9b09-51be-4e0b-9ef1-020ae54b9acf
+X-Runtime: 0.200582
 Content-Length: 0</pre>
 
 #### Status

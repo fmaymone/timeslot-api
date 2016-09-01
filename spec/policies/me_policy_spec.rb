@@ -4,8 +4,8 @@ describe MePolicy do
   subject { described_class }
 
   permissions :show?, :update?, :inactivate?, :signout?, :suggested_users?,
-              :my_slots?, :calendar?, :slots_of_my_friends?, :my_media_items?,
-              :my_groups?, :add_friends?, :remove_friends?, :update_device? do
+              :my_slots?, :schedule?, :slots_of_my_friends?, :my_media_items?,
+              :calendars?, :add_friends?, :remove_friends?, :update_device? do
     context "for a user" do
       let(:user) { create(:user) }
 
@@ -19,8 +19,8 @@ describe MePolicy do
     let(:permissions) {
       [
         :show?, :update?, :inactivate?, :signout?, :suggested_users?,
-        :my_slots?, :calendar?, :slots_of_my_friends?, :my_media_items?,
-        :my_groups?, :add_friends?, :remove_friends?, :update_device?
+        :my_slots?, :schedule?, :slots_of_my_friends?, :my_media_items?,
+        :calendars?, :add_friends?, :remove_friends?, :update_device?
       ]
     }
     let(:user) { nil }

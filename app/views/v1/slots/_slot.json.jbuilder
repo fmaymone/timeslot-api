@@ -1,26 +1,4 @@
-json.extract!(slot,
-              :id,
-              :title,
-              :start_date,
-              :created_at,
-              :updated_at,
-              :deleted_at
-             )
-
-json.end_date slot.end_date if slot.open_end == false
-
-# TODO: simplify, rename 'ios_locaton' to 'location'
-json.location do
-  if slot.ios_location_id.nil?
-    json.nil!
-  else
-    json.partial! 'v1/locations/show', location_data: slot.ios_location
-  end
-end
-
-json.creator do
-  json.partial! 'v1/users/user', user: slot.creator
-end
+json.partial! 'v1/slots/slot_basics', slot: slot
 
 json.notes slot.notes, partial: 'v1/slots/note', as: :note
 
@@ -37,5 +15,16 @@ json.visibility slot.visibility if slot.try(:visibility)
 # if we have a global slot, return the muid
 json.muid slot.reload.slot_uuid if slot.GlobalSlot?
 
+json.liker_ids slot.likes.pluck :user_id
 json.likes slot.likes_count
 json.commentsCounter slot.comments_count
+
+json.first_group do
+  if first_group = slot.first_group(current_user)
+    json.partial! 'v1/groups/group', group: first_group
+  else
+    json.nil!
+  end
+end
+
+json.slot_group_uuids slot.slot_groups.pluck(:uuid)

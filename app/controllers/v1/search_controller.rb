@@ -1,11 +1,10 @@
+# coding: utf-8
 module V1
-  require 'open-uri'
-
   class SearchController < ApplicationController
     # GET /v1/search/categories
     def categories
       authorize :search
-      categories = GlobalSlotConsumer.new.categories
+      categories = ClawMachine.new(current_user).categories
 
       render json: { categories: categories }
     end
@@ -63,20 +62,12 @@ module V1
       render "v1/slots/index"
     end
 
-    # GET /v1/search/group
-    def group
-      authorize :search
-      return head 422 unless has_allowed_params?
-      @groups = Search.new(Group, params[:attr] || 'name', query, page)
-
-      render "v1/groups/index"
-    end
-
     # GET /v1/search/calendars
     def calendars
       authorize :search
-      result = ClawMachine.new.search(category: 'calendars',
-                                      query_params: query_and_limit)
+      result = ClawMachine.new(current_user).search(
+        category: 'calendars',
+        query_params: query_and_limit)
 
       render body: result, content_type: "application/json"
     end
@@ -90,24 +81,55 @@ module V1
       render "v1/locations/index"
     end
 
+    # GET /v1/globalslots/search?q=Trash&timestamp=2015-07-05&size=20
+    def global_slots
+      authorize :search
+      result = ClawMachine.new(current_user).search(
+        category: params.require(:category),
+        query_params: global_slot_search_params)
+
+      render body: result, content_type: "application/json"
+    end
+
+    private def global_slot_search_params
+      claw_search_params = query_and_limit
+
+      # TODO: make helper for this or put in application_controller
+      if params[:moment].present?
+        moment = params[:moment]
+        begin
+          # not every invalid date fails, it might also just return nil
+          valid_date = Time.zone.parse(moment)
+        rescue
+          valid_date = nil
+        end
+        fail ParameterInvalid.new(:moment, moment) unless valid_date
+      end
+      claw_search_params[:timestamp] = valid_date.as_json || Time.zone.now.as_json
+      claw_search_params
+    end
+
     private def query_and_limit
-      es_search_params = { q: "" }
-      es_search_params[:q] = params[:q]
+      claw_search_params = {}
+      claw_search_params[:q] = params[:q] || ""
 
       if params[:limit].present?
         limit = params[:limit]
-        es_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
+        claw_search_params[:limit] = limit.to_i > 100 ? 100 : limit.to_i
       end
-      es_search_params
+      claw_search_params
     end
 
     private def query
+      # TODO: translitered strings has no Umlaute
       # if we need to store usernames/titles with specials signs then we have to
       # search through username/title transliterated as well to get better search results
       # http://apidock.com/rails/ActiveSupport/Inflector/transliterate
-      ActiveSupport::Inflector
-        .transliterate(params.require(:query))
-        .gsub(/[^a-zA-Z0-9\s@-_.]/, "")
+      #ActiveSupport::Inflector.transliterate(params.require(:query))
+      #I18n.transliterate(params.require(:query))
+
+      params.require(:query)
+        .gsub(/[^a-zA-Z0-9\s@-_.öäüÖÄÜß]/, '')
     end
 
     private def has_allowed_params?

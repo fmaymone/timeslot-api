@@ -22,6 +22,9 @@ Description : ID of the group to update
 Name : name
 Description : Updated name of group (max. 255 characters)
 
+Name : description
+Description : Updated description of group (max. 255 characters)
+
 Name : membersCanInvite
 Description : Allows members to invite other users
 
@@ -49,6 +52,12 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
+Name : defaultColor
+Description : default color of the group, can be overwritten per member
+
 Name : createdAt
 Description : Creation of group
 
@@ -66,18 +75,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=EJ7UItJyn8uUtvkCp_9HN3EyU_o
+Authorization: Token token=cP61YxmWueKzXEPJj7n1nmEDQvI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/c67b6f48-6918-4f68-83d7-e085e77863e6</pre>
+<pre>PATCH /v1/groups/06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33</pre>
 
 #### Body
 ```javascript
 {
   "name" : "bar",
+  "description" : "This is a new description.",
   "membersCanInvite" : true,
   "membersCanPost" : true
 }
@@ -86,9 +96,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/c67b6f48-6918-4f68-83d7-e085e77863e6&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;description&quot;:&quot;This is a new description.&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=EJ7UItJyn8uUtvkCp_9HN3EyU_o&quot;</pre>
+	-H &quot;Authorization: Token token=cP61YxmWueKzXEPJj7n1nmEDQvI&quot;</pre>
 
 ### Response
 
@@ -98,12 +108,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;acc693cae0263e361c96577fa6e63741&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;f7fd3f26c5fa3eb9d46f8f385c8b9294&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 540c9a61-ed26-49d7-84bc-01d1bf4b8bbc
-X-Runtime: 0.011145
-Vary: Origin
-Content-Length: 444</pre>
+X-Request-Id: 833399e0-5828-48b5-82da-d30dc8d1a0da
+X-Runtime: 0.018741
+Content-Length: 582</pre>
 
 #### Status
 
@@ -113,28 +123,34 @@ Content-Length: 444</pre>
 
 ```javascript
 {
-  "id" : "c67b6f48-6918-4f68-83d7-e085e77863e6",
+  "id" : "06a1a2f1-ab1c-4902-b621-aa6ce9b7ca33",
   "name" : "bar",
   "image" : "",
+  "description" : "This is a new description.",
+  "defaultColor" : "000000",
   "membersCanPost" : true,
   "membersCanInvite" : true,
   "public" : false,
-  "createdAt" : "2016-04-04T20:50:22.001Z",
-  "updatedAt" : "2016-04-04T20:50:22.010Z",
+  "createdAt" : "2016-08-30T09:50:50.287Z",
+  "updatedAt" : "2016-08-30T09:50:50.299Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 13,
-    "username" : "User 74",
-    "createdAt" : "2016-04-04T20:50:21.997Z",
-    "updatedAt" : "2016-04-04T20:50:21.997Z",
+    "id" : 309,
+    "username" : "User 419",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:50.283Z",
+    "updatedAt" : "2016-08-30T09:50:50.283Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [
-    13
+    309
   ],
   "memberCount" : 1,
   "slotCount" : 0,
-  "membershipState" : "active"
+  "membershipState" : "active",
+  "color" : "000000"
 }
 ```

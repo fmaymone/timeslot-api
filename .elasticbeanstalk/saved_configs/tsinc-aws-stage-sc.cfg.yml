@@ -1,0 +1,60 @@
+EnvironmentConfigurationMetadata:
+  Description: Configuration created from the EB CLI using "eb config save".
+  DateCreated: '1458649218000'
+  DateModified: '1458649218000'
+SolutionStack: 64bit Amazon Linux 2015.09 v2.0.6 running Ruby 2.2 (Puma)
+OptionSettings:
+  aws:elasticbeanstalk:command:
+    BatchSize: '30'
+    BatchSizeType: Percentage
+  aws:elb:policies:
+    ConnectionDrainingEnabled: true
+  aws:elasticbeanstalk:application:environment:
+    TS_GLOBALSLOTS_SEARCH_SERVICE_NAME: es-user
+    TS_DATA_MALL_PASSWORD: ***REMOVED***
+    SUGGESTED_USER_EMAIL: steffen@timeslot.com
+    AWS_REGION: us-west-2
+    BUNDLE_WITHOUT: test:development:herokutest
+    PAGINATION_DEFAULT_FILTER: all
+    AIRBRAKE_PROJECT_ID: '115412'
+    AWS_SECRET_ACCESS_KEY: ***REMOVED***
+    AIRBRAKE_API_KEY: 977b8a633a2648fd54ddec593ec6989f
+    TS_DATA_MALL_NAME: tsgatekeeper
+    TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD: ***REMOVED***
+    AWS_PLATFORM_APPLICATION_IOS: arn:aws:sns:us-west-2:293488554927:app/APNS_SANDBOX/Timeslot-Dev-Development
+    TS_GLOBALSLOTS_SEARCH_SERVICE_URL: http://ac.claw.timeslot.rocks:56000/api/v0/
+    AWS_ACCESS_KEY_ID: ***REMOVED***
+    CLOUDINARY_URL: cloudinary://628921522599727:gD86Jcc3GCtUR9RnBnVaUIJ7FIs@hsid61cyf
+    AWS_SECRET_KEY: ***REMOVED***
+    PUSH_APNS: false
+    LOG_LEVEL: DEBUG
+    SECRET_KEY_BASE: a7c4635bd50951471e7ad4f429e9cb8d67524abf3c3dce01e4e8772113287ea74bd4ff872c6a8f2f4189e8ed20e928e27b22590cbe5a7ce30d4e97eac0347651
+    TS_DATA_MALL_URL: http://datamall.timeslot.rocks:50100/api/v0/
+    REDIS_URL: redis://stage-test-redis-001.aimwb0.0001.euc1.cache.amazonaws.com
+  aws:elb:loadbalancer:
+    CrossZone: true
+  aws:elasticbeanstalk:environment:
+    ServiceRole: aws-elasticbeanstalk-service-role
+  aws:elasticbeanstalk:healthreporting:system:
+    AWSEBHealthdGroupId: 56d71891-e966-4ffa-9b1e-a8c777a25272
+    SystemType: enhanced
+  aws:autoscaling:launchconfiguration:
+    IamInstanceProfile: aws-elasticbeanstalk-ec2-role
+    InstanceType: t2.medium
+    EC2KeyName: aws-eb-ts-backend-stage
+  aws:rds:dbinstance:
+    DBPassword: timeslot
+    DBEngine: postgres
+    DBUser: ebroot
+    DBDeletionPolicy: Snapshot
+  aws:autoscaling:updatepolicy:rollingupdate:
+    RollingUpdateType: Health
+    RollingUpdateEnabled: true
+EnvironmentTier:
+  Type: Standard
+  Name: WebServer
+Extensions:
+  RdsExtensionEB:
+    Order: 10000
+    SourceLocation: https://s3.amazonaws.com/elasticbeanstalk-env-resources-eu-central-1/eb_snippets/rds/rds.json
+AWSConfigurationTemplateVersion: 1.1.0.0

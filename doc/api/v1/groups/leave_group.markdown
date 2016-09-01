@@ -26,19 +26,19 @@ Description : Set to true to prevent the removal of the calendar slots from the 
 
 #### Headers
 
-<pre>Authorization: Token token=eAWt4he8kUvIclDXsPOLZ8gywrM
+<pre>Authorization: Token token=ZoePQyh-4n0Zeo4cKEc0Ieemg-4
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/a4a83e15-25b4-4390-bb2d-76685e57f61e/members</pre>
+<pre>DELETE /v1/groups/1813caa4-db7a-429c-a073-1ccfc66492bf/members</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/a4a83e15-25b4-4390-bb2d-76685e57f61e/members&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=eAWt4he8kUvIclDXsPOLZ8gywrM&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/1813caa4-db7a-429c-a073-1ccfc66492bf/members&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=ZoePQyh-4n0Zeo4cKEc0Ieemg-4&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -49,10 +49,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 367ee706-bec7-4032-a938-c7c294c5b1ec
-X-Runtime: 0.014613
-Vary: Origin
+X-Request-Id: 467186b2-66d1-4c44-851b-c9ec47f442fe
+X-Runtime: 0.068252
 Content-Length: 0</pre>
 
 #### Status

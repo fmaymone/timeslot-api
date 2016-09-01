@@ -80,18 +80,18 @@ class Device < ActiveRecord::Base
 
   # push notification to APNS (apple push notification service)
   def self.notify_ios(client, device, lang, message:, sound: 'receive_message.wav',
-                      badge: 1, extra: {}, slot_id: nil, user_id: nil, friend_id: nil)
+                      badge: 1, extra: {}, slot_id: nil, user_id: nil, group_id: nil)
     Rails.logger.warn { "SUCKER_PUNCH Notify IOS device #{device['id']} started." }
 
     has_custom_language = lang.present? && lang != I18n.default_locale
 
-    unless message[:KEY].nil?
+    unless message[:key].nil?
       I18n.locale = lang if has_custom_language
-      message_push = I18n.t(message[:KEY], message.except(:KEY))
+      message_push = I18n.t(message[:key], message.except(:key))
       if has_custom_language
         I18n.locale = I18n.default_locale
         # Default language fallback if custom language fails
-        message_push ||= I18n.t(message[:KEY], message.except(:KEY))
+        message_push ||= I18n.t(message[:key], message.except(:key))
       end
     else
       message_push = nil
@@ -108,7 +108,7 @@ class Device < ActiveRecord::Base
     }
     aps[:slot_id] = slot_id if slot_id
     aps[:user_id] = user_id if user_id
-    aps[:friend_id] = friend_id if friend_id
+    aps[:group_id] = group_id if group_id
 
     # Always includes the default message
     payload = { default: { message: message_push } }
@@ -177,7 +177,8 @@ class Device < ActiveRecord::Base
   def self.notify_all(user_ids, params)
     user_queue = []
 
-    User.where(id: user_ids, push: true, deleted_at: nil).uniq.find_each do |user|
+    User.where(id: user_ids, push: true, deleted_at: nil)
+        .where.not(auth_token: nil).uniq.find_each do |user|
       device_queue = []
       user.devices.where.not(endpoint: nil).find_in_batches do |devices|
         device_queue.concat(devices)

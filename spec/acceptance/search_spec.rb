@@ -19,7 +19,7 @@ resource "Search" do
       expect(response_status).to eq(200)
       expect(json).to have_key("categories")
       categories = json['categories']
-      expect(categories.sort).to include "football"
+      # expect(categories.sort).to include "football"
       expect(categories.sort).to include "cinema"
       expect(categories.sort).to include "concerts"
       expect(categories.sort).to include "television"
@@ -235,46 +235,6 @@ resource "Search" do
     end
   end
 
-  # search groups
-  get "/v1/search/group" do
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :query, "The query of the search", required: true
-
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
-
-    context "search by group name" do
-      let(:group) { create(:group, name: 'Timeslot Developer Group (Berlin)') }
-      let!(:membership) do
-        create(:membership, :active, user: current_user, group: group)
-      end
-
-      let(:query) { 'timeslot developer' }
-
-      example "Search by group name", document: :v1 do
-        explanation "returns 404 if query is invalid\n\n"
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(json.length).to be 1
-        expect(json.first).to have_key("id")
-        expect(json.first).to have_key("name")
-        expect(json.first).to have_key("image")
-        expect(json.first).to have_key("owner")
-        expect(json.first).to have_key("createdAt")
-        expect(json.first).to have_key("updatedAt")
-        expect(json.first).to have_key("deletedAt")
-        expect(json.first['name']).to eq("Timeslot Developer Group (Berlin)")
-      end
-    end
-  end
-
   # search locations
   get "/v1/search/location" do
     header "Accept", "application/json"
@@ -314,6 +274,120 @@ resource "Search" do
         expect(json.first).to have_key("longitude")
         # expect(json.first).to have_key("privateLocation")
         expect(json.first['name']).to eq("Timeslot Friedrichstraße 110 (Berlin)")
+      end
+    end
+  end
+
+  get "/v1/globalslots/search", :vcr do
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :category,
+              "Basic slot category to search in. Valid categories are eg.: " \
+              "[cinema, soccer, concerts, clubbing, television]",
+              required: true
+    parameter :q, "String to search global slots for", required: true
+    parameter :moment, "find results after this datetime, default: Time.now"
+    parameter :limit, "maximum number of results, default: 20"
+
+    describe "cinema" do
+      let(:category) { 'cinema' }
+      let(:q) { 'Man' }
+      let(:moment) { '2016-04-29T12:43:28.907Z' }
+      let(:limit) { 7 }
+
+      example "Cinema - Find global slots", document: :v1 do
+        explanation "Forwards a search request to the Elastic Search Service " \
+                    "for global slots from the data team.\n\n" \
+                    "returns 422 if parameters invalid"
+        skip 'movie pilot is having issues'
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json['result']).to have_key(category)
+        expect(json['result'][category]).to have_key("slots")
+
+        result = json['result'][category]['slots']
+        expect(result.length).to eq limit
+
+        first = result.first
+        expect(first).to have_key("muid")
+        expect(first).to have_key("title")
+        expect(first).to have_key("startDate")
+        # expect(first).to have_key("endDate")
+        # expect(first).to have_key("image")
+        expect(first).to have_key("location")
+        expect(first['location']).to have_key("name")
+        expect(first['location']).to have_key("thoroughfare")
+        expect(first['location']).to have_key("locality")
+        expect(first['location']).to have_key("country")
+        expect(first['location']).to have_key("latitude")
+        expect(first['location']).to have_key("longitude")
+        expect(first).to have_key("sources")
+        expect(first['sources'].first).to have_key("name")
+        expect(first['sources'].first).to have_key("url")
+        expect(first['sources'].first).to have_key("image")
+
+        expect(first).not_to have_key("id")
+        expect(first).not_to have_key("settings")
+        expect(first).not_to have_key("createdAt")
+        expect(first).not_to have_key("updatedAt")
+        expect(first).not_to have_key("deletedAt")
+        expect(first).not_to have_key("likes")
+        expect(first).not_to have_key("commentsCounter")
+        expect(first).not_to have_key("reslotsCounter")
+        expect(first).not_to have_key("visibility")
+      end
+    end
+
+    describe "concerts" do
+      let(:category) { 'concerts' }
+      let(:q) { 'proje' }
+      let(:moment) { '2016-04-05' }
+      let(:limit) { 5 }
+
+      example "Concerts - Find global slots", document: :v1 do
+        explanation "Forwards a search request to the Elastic Search Service " \
+                    "for global slots from the data team.\n\n" \
+                    "returns 422 if parameters invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json['result']).to have_key(category)
+        expect(json['result'][category]).to have_key("slots")
+
+        result = json['result'][category]['slots']
+        expect(result.length).to eq limit
+
+        first = result.first
+        expect(first).to have_key("muid")
+        expect(first).to have_key("title")
+        expect(first).to have_key("startDate")
+        # expect(first).to have_key("endDate")
+        # expect(first).to have_key("image")
+        expect(first).to have_key("location")
+        expect(first['location']).to have_key("name")
+        expect(first['location']).to have_key("thoroughfare")
+        expect(first['location']).to have_key("locality")
+        expect(first['location']).to have_key("country")
+        expect(first['location']).to have_key("latitude")
+        expect(first['location']).to have_key("longitude")
+        expect(first).to have_key("sources")
+        expect(first['sources'].first).to have_key("name")
+        expect(first['sources'].first).to have_key("url")
+        expect(first['sources'].first).to have_key("image")
+
+        expect(first).not_to have_key("id")
+        expect(first).not_to have_key("settings")
+        expect(first).not_to have_key("createdAt")
+        expect(first).not_to have_key("updatedAt")
+        expect(first).not_to have_key("deletedAt")
+        expect(first).not_to have_key("likes")
+        expect(first).not_to have_key("commentsCounter")
+        expect(first).not_to have_key("reslotsCounter")
+        expect(first).not_to have_key("visibility")
       end
     end
   end

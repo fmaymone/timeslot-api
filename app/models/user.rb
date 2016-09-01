@@ -1,15 +1,16 @@
 class User < ActiveRecord::Base
-  include TS_Role
+  include TSRole
   include Follow
 
   store_accessor :slot_sets, :my_cal_uuid, :friends_cal_uuid,
-                 :my_lib_uuid, :my_created_slots_uuid,
+                 :my_lib_uuid, :my_created_slots_uuid, :my_private_slots_uuid,
                  :my_friend_slots_uuid, :my_public_slots_uuid
 
   has_secure_password validations: false
 
   # allows a user to be signed in after sign up
   before_create :set_auth_token, :set_slot_sets
+  before_validation :strip_whitespaces
   after_commit AuditLog
 
   ## associations ##
@@ -21,6 +22,8 @@ class User < ActiveRecord::Base
            foreign_key: :creator_id, inverse_of: :creator
 
   has_many :slot_settings, inverse_of: :user
+
+  has_many :invitecodes, inverse_of: :user
 
   # also returns deleted slots
   has_many :std_slots, foreign_key: :owner_id, inverse_of: :owner
@@ -35,9 +38,15 @@ class User < ActiveRecord::Base
            foreign_key: :owner_id, inverse_of: :owner
 
   has_many :passengerships, foreign_key: :user_id, inverse_of: :user
+  # related slots = created slots, schedule slots, slots where user is tagged
+  has_many :related_slots, -> { merge Passengership.active },
+           through: :passengerships, source: :slot
   has_many :my_calendar_slots, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :slot,
            inverse_of: :my_calendar_users
+  has_many :tagged_slots, -> { merge Passengership.add_media_permitted },
+           through: :passengerships, source: :slot,
+           inverse_of: :tagged_users
 
   # group related
   has_many :own_groups, class_name: Group,
@@ -51,6 +60,8 @@ class User < ActiveRecord::Base
   has_many :groups, through: :memberships, source: :group
   has_many :calendars_in_schedule, -> { merge Membership.show_slots },
            through: :memberships, source: :group
+
+  has_many :group_slots, through: :active_groups, source: :slots
 
   # all friendships (regardless state & deleted_at)
   has_many :initiated_friendships, -> { includes :friend },
@@ -93,7 +104,7 @@ class User < ActiveRecord::Base
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,
             length: { maximum: 254 },
-            uniqueness: { case_sensitive: false },
+            uniqueness: { if: :basic?, case_sensitive: false },
             format: { with: /.+@.+\..{1,63}/, message: "invalid email address" },
             allow_nil: true # if: 'self.email'
 
@@ -104,7 +115,7 @@ class User < ActiveRecord::Base
                             only_integer: true,
                             allow_nil: true
   validates :phone,
-            uniqueness: true,
+            uniqueness: { if: :basic? },
             length: { maximum: 35 },
             allow_nil: true
 
@@ -121,40 +132,54 @@ class User < ActiveRecord::Base
     update!(auth_token: nil)
   end
 
+  def self.create_client
+    # this client will be overridden by a stub for rspec testings
+    Aws::SES::Client.new
+  end
+
   # TODO: move email stuff into async job
   def reset_password
+    return unless email # atm we can not pw-reset if user email is missing
+
     new_password = SecureRandom.urlsafe_base64(6)
     update(password: new_password)
     set_auth_token
     save
 
-    begin
-      ses = Aws::SES::Client.new
-      ses.send_email(
-        source: "support@timeslot.com",
-        destination: {
-          to_addresses: [email]
+    content = {
+      source: "support@timeslot.com",
+      destination: {
+        to_addresses: [email]
+      },
+      message: {
+        subject: {
+          data: "Your new Password for Timeslot",
+          # charset: "Charset",
         },
-        message: {
-          subject: {
-            data: "Your new Password for Timeslot",
+        body: {
+          text: {
+            data: "Your new timeslot password: #{new_password}",
             # charset: "Charset",
           },
-          body: {
-            text: {
-              data: "Your new timeslot password: #{new_password}",
-              # charset: "Charset",
-            },
-            html: {
-              data: "<h3>Your new timeslot password</h3>" \
-                    "<p>#{new_password}</p>",
-              # charset: "Charset",
-            }
+          html: {
+            data: "<h3>Your new timeslot password</h3>" \
+                  "<p>#{new_password}</p>",
+            # charset: "Charset",
           }
-        },
-        reply_to_addresses: ["passwords@timeslot.com"],
-        return_path: "invalid_email_address@timeslot.com"
-      )
+        }
+      },
+      reply_to_addresses: ["passwords@timeslot.com"],
+      # bounce and complain notifications are forwarded by aws to this address:
+      return_path: "email_monitoring@timeslot.rocks"
+    }
+    # tmp hack to notify airbrake when an email gets send out
+    # TODO: improve
+    Airbrake.notify(StandardError, news: 'sending email via AWS SNS',
+                    mailtype: 'password forget',
+                    destination: email,
+                    content: content)
+    begin
+      User.create_client.send_email(content)
     rescue Aws::SES::Errors::ServiceError => exception
       Rails.logger.error { exception }
       Airbrake.notify(exception)
@@ -166,7 +191,7 @@ class User < ActiveRecord::Base
     identity = Connect.find_by(social_id: identity_params[:social_id],
                                provider: identity_params[:provider])
 
-    user = User.find_by email: social_params[:email] if social_params[:email]
+    user = social_params[:email] ? User.find_by(email: social_params[:email]) : nil
 
     if identity
       msg = 'social account already connected to other timeslot account'
@@ -197,10 +222,16 @@ class User < ActiveRecord::Base
       my_cal_uuid: SecureRandom.uuid,
       my_lib_uuid: SecureRandom.uuid,
       friends_cal_uuid: SecureRandom.uuid,
+      my_private_slots_uuid: SecureRandom.uuid,
       my_friend_slots_uuid: SecureRandom.uuid,
       my_public_slots_uuid: SecureRandom.uuid,
       my_created_slots_uuid: SecureRandom.uuid
     }
+  end
+
+  def strip_whitespaces
+    self.username.squish! if self.username
+    self.email.squish! if self.email
   end
 
   def inactivate
@@ -214,20 +245,22 @@ class User < ActiveRecord::Base
     # StdSlots
     # ReSlots
 
-    # NOTE: User do not include Activity, but we can call feed methods directly:
-    user_targets = Feed.remove_user_from_feeds(user: self, notify: self.followers)
-    user_targets.each do |target|
-      Feed.remove_target_from_feeds(target)
-    end
-    # TODO: restore followers/followings when user re-activates?
-    remove_all_followers
-    unfollow_all
+    RemoveJob.perform_later(user: self)
 
-    slot_settings.each(&:delete)
-    friendships.each(&:inactivate)
-    memberships.each(&:inactivate)
-    devices.each(&:delete)
-    ts_soft_delete and return self
+    Async.new do
+      std_slots.each{|slot| slot.containerships.each(&:delete)}
+      passengerships.each(&:delete)
+      memberships.each(&:inactivate)
+      friendships.each{|fs| fs.inactivate(initiator: self)}
+      slot_settings.each(&:delete)
+      devices.each(&:delete)
+      # TODO: restore followers/followings when user re-activates?
+      remove_all_followers
+      unfollow_all
+      ts_soft_delete
+    end
+
+    self
   end
 
   # TODO: this is far from being finished, specification missing
@@ -237,23 +270,30 @@ class User < ActiveRecord::Base
 
   ## slot related ##
 
+  # TODO: I think this needs an update, add reslots and groupslots
   def active_slots(meta_slot)
-    slots = []
-    slots.push(*std_slots.active.where(meta_slot: meta_slot))
-    # slots.push(*group_slots.active.where(meta_slot: meta_slot))
+    std_slots.active.where(meta_slot: meta_slot)
   end
 
-  # def shared_group_slots(user)
-  #   group_slots.merge(groups.where('groups.id IN (?)', user.active_groups.ids))
-  # end
+  def shared_group_slots(user)
+    groups = user.active_groups.where(id: active_group_ids)
+    slot_ids = Containership.select(:slot_id).where(group_id: groups)
+    BaseSlot.where(id: slot_ids)
+  end
 
-  def visible_slots_counter(user, slot_class)
-    SlotsCollector.new.active_slots_count(current_user: user, user: self,
-                                          slot_class: slot_class)
+  # TODO: write spec
+  def public_group_slots
+    groups = active_groups.public
+    slot_ids = Containership.where(group_id: groups).pluck(:slot_id)
+    BaseSlot.where(id: slot_ids)
+  end
+
+  def visible_slots_counter(current_user)
+    CounterService.new.active_slots(user: self, current_user: current_user)
   end
 
   def visible_calendars_counter(user)
-    CounterService.new.active_visible_calendars(asker: user, requestee: self)
+    CounterService.new.active_calendars(current_user: user, user: self)
   end
 
   def prepare_for_slot_deletion(slot)
@@ -327,7 +367,7 @@ class User < ActiveRecord::Base
 
   def initiate_friendship(user_id)
     # gibt es schon was zw uns beiden
-    if fs = friendship(user_id)
+    if (fs = friendship(user_id))
       # ja
       if fs.established?
         # alles tuti
@@ -352,7 +392,7 @@ class User < ActiveRecord::Base
   end
 
   def invalidate_friendship(user_id)
-    if existing_friendship = friendship(user_id)
+    if (existing_friendship = friendship(user_id))
       existing_friendship.reject
     end
     existing_friendship
@@ -395,17 +435,17 @@ class User < ActiveRecord::Base
 
   def accept_invite(group_id)
     membership = get_membership group_id
-    membership && membership.activate
+    membership&.activate
   end
 
   def refuse_invite(group_id)
     membership = get_membership group_id
-    membership && membership.refuse
+    membership&.refuse
   end
 
   def leave_group(group_id)
     membership = get_membership group_id
-    membership && membership.leave
+    membership&.leave
   end
 
   def update_member_settings(params, group_id)
@@ -488,13 +528,6 @@ class User < ActiveRecord::Base
 
   ## class methods ##
 
-  def self.create_with_device(params:, device: nil)
-    new_user = create(params)
-    return new_user unless new_user.errors.empty?
-    Device.update_or_create(new_user, device) if device
-    new_user
-  end
-
   def self.create_or_signin_via_social(identity_params, social_params, device: nil)
     identity = Connect.find_by(social_id: identity_params[:social_id],
                                provider: identity_params[:provider])
@@ -523,21 +556,21 @@ class User < ActiveRecord::Base
   # If there is a timeslot account with an unverified email address and another
   # user tries to log in with facebook and has this email verified in facebook,
   # the other user can not log in via facebook (gets 422)
-  def self.detect_or_create(username, email)
-    user = User.find_by email: email if email
+  def self.detect_or_create(username, email, role = 'basic')
+    user = User.find_by(email: email, role: role) if email
     if user
       msg = "#{email} is already used by other timeslot user (unverified email)"
       Airbrake.notify(msg)
       fail ActiveRecord::StatementInvalid, msg unless user.email_verified
     end
-    user || User.create(username: username, email: email)
+    user || User.create(username: username, email: email, role: role)
   end
 
-  def self.sign_in(email: nil, phone: nil, device: nil, password:)
+  def self.sign_in(email: nil, phone: nil, role: 'basic', device: nil, password:)
     if email
-      user = User.find_by email: email
+      user = User.find_by(email: email, role: role)
     elsif phone
-      user = User.find_by phone: phone
+      user = User.find_by(phone: phone, role: role)
     end
     current_user = user.try(:authenticate, password)
     if current_user

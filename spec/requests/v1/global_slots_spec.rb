@@ -7,47 +7,68 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     { 'Authorization' => "Token token=#{current_user.auth_token}" }
   end
 
-  describe "POST /v1/globalslots/search" do
-    let(:query) { "q=Love&category=cinema&moment=2016-07-18&limit=20" }
+  describe "POST /v1/globalslots/reslot" do
+    let!(:current_user) { create(:user, :with_email, :with_password) }
+    let(:gs_data) { attributes_for(:global_slot) }
+    let(:group_1) { create(:group, owner: current_user, name: 'owned group') }
 
-    it "returns 200 and results", :vcr do
-      get "/v1/globalslots/search?#{query}", {}, auth_header
-
-      expect(response).to have_http_status :ok
-      expect(json).not_to be_empty
-    end
-
-    context "invalid search params" do
-      let(:invalid_query) { "q=Frei&category=foobar&moment=2015-12-18&limit=20" }
-
-      it "returns 422 for invalid category", :vcr do
-        get "/v1/globalslots/search?#{invalid_query}", {},
-            auth_header
-        expect(response).to have_http_status :unprocessable_entity
-        expect(response.body).to include "foobar is not a valid value for"
-        expect(response.body).to include "category"
-      end
-    end
-  end
-
-  describe "POST /v1/globalslots/reslot", :seed do
     context "global slot not in backend db" do
-      let(:gs_data) { attributes_for(:global_slot) }
       let(:gs_no_description_data) {
         attributes_for(:global_slot, :without_description) }
       let(:slot_group) { create(:group, owner: current_user) }
+      let(:raw_global_slot) { CandyShop.new.slot(gs_data[:slot_uuid]) }
 
       it "returns 201", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: gs_data[:slot_uuid] },
+             { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
              auth_header
         expect(response).to have_http_status :created
+      end
+
+      it "creates a new slot", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
+               auth_header
+        }.to change(BaseSlot, :count).by 1
+      end
+
+      it "adds the category as a new user to the local db", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
+               auth_header
+        }.to change(User, :count).by 1
+        new_slot = GlobalSlot.last
+        new_user = User.last
+
+        expect(new_slot.creator_id).to eq new_user.id
+        expect(new_slot.creator.user_uuid).to eq raw_global_slot[:category_uuid]
+      end
+
+      context "category user known in backend" do
+        let!(:category_user) {
+          create(:user, role: 'global_slot_category',
+                 user_uuid: raw_global_slot[:category_uuid])
+        }
+
+        it "doesn't add a new user to the local db", :vcr do
+          expect {
+            post "/v1/globalslots/reslot",
+                 { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
+                 auth_header
+          }.not_to change(User, :count)
+          new_slot = GlobalSlot.last
+
+          expect(new_slot.creator_id).to eq category_user.id
+          expect(new_slot.creator.user_uuid).to eq raw_global_slot[:category_uuid]
+        end
       end
 
       it "adds the candy store location to the local db", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:slot_uuid] },
+               { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
                auth_header
         }.to change(IosLocation, :count)
         new_slot = GlobalSlot.last
@@ -60,7 +81,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       it "adds a note to the slot with the description", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:slot_uuid] },
+               { predecessor: gs_data[:slot_uuid], slot_groups: [group_1.uuid] },
                auth_header
         }.to change(Note, :count)
 
@@ -71,26 +92,18 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       it "doesn't add a note if the slot has no description", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_no_description_data[:slot_uuid] },
+               { predecessor: gs_no_description_data[:slot_uuid],
+                 slot_groups: [group_1.uuid] },
                auth_header
         }.not_to change(Note, :count)
         expect(response).to have_http_status :created
       end
 
-      it "adds the slot to the users' MyCalendar", :vcr do
-        expect {
-          post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:slot_uuid] },
-               auth_header
-        }.to change(Passengership, :count)
-        new_slot = GlobalSlot.last
-        expect(current_user.my_calendar_slots).to include new_slot
-      end
-
       it "adds the slot to other given slotgroups", :vcr do
         expect {
           post "/v1/globalslots/reslot",
-               { predecessor: gs_data[:slot_uuid], slot_groups: [slot_group.uuid] },
+               { predecessor: gs_data[:slot_uuid],
+                 slot_groups: [slot_group.uuid] },
                auth_header
         }.to change(Containership, :count)
         new_slot = GlobalSlot.last
@@ -99,18 +112,29 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     end
 
     context "global slot already in backend db" do
-      let(:global_slot) { create(:global_slot, :with_candy_location) }
+      let!(:global_slot) { create(:global_slot, :with_candy_location) }
 
       it "returns 201" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.slot_uuid },
+             { predecessor: global_slot.slot_uuid,
+               slot_groups: [group_1.uuid] },
              auth_header
         expect(response).to have_http_status :created
       end
 
+      it "doesn't create a new slot", :vcr do
+        expect {
+          post "/v1/globalslots/reslot",
+               { predecessor: global_slot.slot_uuid,
+                 slot_groups: [group_1.uuid] },
+               auth_header
+        }.not_to change(BaseSlot, :count)
+      end
+
       it "returns details of slot with given id" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.slot_uuid },
+             { predecessor: global_slot.slot_uuid,
+               slot_groups: [group_1.uuid] },
              auth_header
         expect(json).to have_key('id')
         expect(json).to have_key('muid')
@@ -125,7 +149,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns the candy store location", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.slot_uuid },
+             { predecessor: global_slot.slot_uuid, slot_groups: [group_1.uuid] },
              auth_header
 
         expect(json).to have_key 'location'
@@ -143,7 +167,7 @@ RSpec.describe "V1::GlobalSlots", type: :request do
 
       it "returns a note with a description" do
         post "/v1/globalslots/reslot",
-             { predecessor: global_slot.slot_uuid },
+             { predecessor: global_slot.slot_uuid, slot_groups: [group_1.uuid] },
              auth_header
         expect(json).to have_key('notes')
         expect(json['notes']).not_to be_empty
@@ -157,7 +181,8 @@ RSpec.describe "V1::GlobalSlots", type: :request do
     context "invalid muid" do
       it "returns 404 if no globalslot can be found for muid", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: 'e8fa3c76-75ac-852b-c81d-9c02b5f27c03' },
+             { predecessor: 'e8fa3c76-75ac-852b-c81d-9c02b5f27c03',
+               slot_groups: [group_1.uuid] },
              auth_header
         expect(response).to have_http_status :not_found
       end
@@ -165,10 +190,60 @@ RSpec.describe "V1::GlobalSlots", type: :request do
       # TODO: would be nicer to return a 422, but not worth it atm
       it "returns 503 if muid invalid", :vcr do
         post "/v1/globalslots/reslot",
-             { predecessor: 'I-thought-I-was-an-alien' },
+             { predecessor: 'I-thought-I-was-an-alien',
+               slot_groups: [group_1.uuid] },
              auth_header
         expect(response).to have_http_status :service_unavailable
         expect(response.body).to include "Invalid input parameter 'muid'"
+      end
+    end
+
+    context "slotgroup uuids" do
+      let!(:group_2) do
+        group = create(:group, members_can_post: true, name: 'joined group')
+        create(:membership, :active, group: group, user: current_user)
+        group
+      end
+      let!(:unauthorized_group) { create(:group, name: 'unathorized group') }
+      let!(:deleted_group) { create(:group, owner: current_user,
+                                    name: 'deleted group',
+                                    deleted_at: '2014-09-08T13:31:02.000Z') }
+      context "missing slotgroup uuid" do
+        it "returns 422 if key for slotgroup uuids is missing", :vcr do
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid] },
+               auth_header
+          expect(response).to have_http_status :unprocessable_entity
+        end
+
+        it "returns 422 if no slotgroup uuid was submitted", :vcr do
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid],
+                 slot_groups: [] },
+               auth_header
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context "invalid slotgroup uuid" do
+        it "returns 422 if key for slotgroup uuids is missing", :vcr do
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid],
+                 slot_groups: [unauthorized_group.uuid, deleted_group.uuid] },
+               auth_header
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context "valid slotgroup uuid" do
+        it "returns 201 if at least one valid slotgroup uuid was send", :vcr do
+          post "/v1/globalslots/reslot",
+               { predecessor: gs_data[:slot_uuid],
+                 slot_groups: [
+                   unauthorized_group.uuid, deleted_group.uuid, group_2.uuid] },
+               auth_header
+          expect(response).to have_http_status :created
+        end
       end
     end
   end

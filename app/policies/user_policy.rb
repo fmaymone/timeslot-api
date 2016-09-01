@@ -17,6 +17,11 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
+  # true if a user is logged in
+  def create_public?
+    current_user?
+  end
+
   # true if a user with this email exists
   # however, if this wouldn't be the case the API
   # would already have returned a 404
@@ -42,6 +47,11 @@ class UserPolicy < ApplicationPolicy
     current_user?
   end
 
+  # true for logged in users
+  def dates?
+    current_user?
+  end
+
   # no prerequisites
   def media_items?
     true
@@ -54,9 +64,9 @@ class UserPolicy < ApplicationPolicy
     true
   end
 
-  # true if the request is made by an existing crawler source
+  # true if the request is made by a special user
   def global_group?
-    return true if current_user.crawler_source?
+    return true if current_user.curator?
     false
   end
 end

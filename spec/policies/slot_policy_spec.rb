@@ -38,7 +38,7 @@ describe SlotPolicy do
   end
 
   permissions :show?, :show_likes?, :show_comments?, :unlike?, :slotsets?,
-              :add_like?, :copy?, :add_comment?, :show_slotters?,
+              :add_like?, :add_comment?, :show_slotters?,
               :remove_from_groups?, :show_tagged_users? do
 
     let(:user) { create(:user) }
@@ -151,59 +151,9 @@ describe SlotPolicy do
     end
   end
 
-  permissions :move? do
-    context "own private slot" do
-      let(:slot) { create(:std_slot_private, owner: user, creator: user) }
-
-      context "for a user" do
-        let(:user) { create(:user) }
-
-        it "allows access" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-    end
-
-    context "own friendslot" do
-      let(:slot) { create(:std_slot_friends, owner: user, creator: user) }
-
-      context "for a user" do
-        let(:user) { create(:user) }
-
-        it "allows access if target is public_slots" do
-          expect(subject).to permit(user, slot)
-        end
-      end
-    end
-
-    context "own public slot" do
-      let(:slot) { create(:std_slot_public, owner: user, creator: user) }
-      let(:user) { create(:user) }
-
-      # should a public stdslot be allowed to be moved to a public group?
-      # visibility would stay the same...
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-
-    # context "group_slot" do
-    #   let(:slot) { create(:group_slot) }
-
-    #   context "for a user" do
-    #     let(:user) { create(:user) }
-
-    #     it "denies access, even if user is group member" do
-    #       create(:membership, :active, group: slot.group, user: user)
-    #       expect(subject).not_to permit(user, slot)
-    #     end
-    #   end
-    # end
-  end
-
   describe 'public std_slot for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:slotsets?, :add_like?, :add_comment?, :copy?, :move?,
+      [:slotsets?, :add_like?, :add_comment?,
        :unlike?, :tag_users?, :show_slotters?, :show_tagged_users?
       ]
     }
@@ -223,7 +173,7 @@ describe SlotPolicy do
     let(:permissions) {
       [
         :show?, :show_likes?, :show_comments?, :slotsets?,
-        :add_like?, :add_comment?, :copy?, :move?,
+        :add_like?, :add_comment?,
         :unlike?, :tag_users?, :show_slotters?, :show_tagged_users?
       ]
     }
@@ -264,18 +214,6 @@ describe SlotPolicy do
         end
       end
     end
-
-    # context "group_public" do
-    #   let(:slot) { create(:group_slot) }
-
-    #   it "raises MissingCurrentUserError" do
-    #     permissions.each do |permission|
-    #       expect {
-    #         subject.new(user, slot).public_send(permission)
-    #       }.to raise_error TSErrors::MissingCurrentUserError
-    #     end
-    #   end
-    # end
   end
 
   permissions :add_to_groups? do

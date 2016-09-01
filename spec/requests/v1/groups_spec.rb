@@ -47,6 +47,32 @@ RSpec.describe "V1::Groups", type: :request do
         expect(Membership.last.active?).to be true
       end
     end
+
+    context "non-public group/calendar" do
+      it "members are allowed to add content" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_post).to be true
+      end
+
+      it "only owner can add new members" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_invite).to be false
+      end
+    end
+
+    context "public group/calendar" do
+      let(:new_params) { { name: "public bar", public: true } }
+
+      it "members are not allowed to add content" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_post).to be false
+      end
+
+      it "strangers are allowed to subscribe" do
+        post "/v1/groups", new_params, auth_header
+        expect(Group.last.members_can_invite).to be true
+      end
+    end
   end
 
   # update
@@ -266,7 +292,7 @@ RSpec.describe "V1::Groups", type: :request do
     let(:ids) { other_users.collect(&:id) }
 
     describe "user can invite" do
-      let!(:group) { create(:group, owner: current_user) }
+      let!(:group) { create(:group, owner: current_user, default_color: '888FFF') }
 
       it "returns created" do
         post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
@@ -287,6 +313,12 @@ RSpec.describe "V1::Groups", type: :request do
         other_users.each do |id|
           expect(Membership.where(user_id: id).first.active?).to be true
         end
+      end
+
+      it "sets the group color for the new member to the groups default color" do
+        post "/v1/groups/#{group.uuid}/members", { invitees: ids }, auth_header
+        expect(Membership.last.color).to eq group.default_color
+        expect(Membership.first.color).to eq group.default_color # owner
       end
 
       it "doesn't create new memberships for already invited members" do
@@ -737,29 +769,39 @@ RSpec.describe "V1::Groups", type: :request do
 
   # global slot groups
   describe "POST /v1/groups/global_group", :seed do
-    let(:group) { attributes_for(:group) }
-    let(:params) { { muid: group.uuid, name: 'Rephlex' } }
+    let(:group) { attributes_for(:group, :global) }
+    let(:string_id) { "soccer_leagues:dfb.de:champions_league" }
+    let(:params) { { muid: group.uuid, name: 'Rephlex', string_id: string_id } }
     # let(:image) { "http://faster.pussycat" }
-    # let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
-    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+    let(:current_user) { User.find_by email: 'global-importer@timeslot.com' }
+    let(:category_user) { create(:user, :gs_category) }
 
     describe "existing public group with different name" do
-      let(:group) { create(:group) }
+      let(:group) { create(:group, :global) }
 
-      it "returns error for non-matching group name" do
-        post "/v1/groups/global_group", { group: params }, auth_header
-        expect(response).to have_http_status :unprocessable_entity
+      it "uptdates group name if non-matching group name" do
+        post "/v1/groups/global_group",
+             { group: params },
+             auth_header
+        expect(response).to have_http_status :ok
+        group.reload
+        expect(group.name).to eq 'Rephlex'
       end
     end
 
     describe "existing global slot" do
       let!(:global_slot) { create(:global_slot) }
-      let(:params) { { muid: group[:uuid],
-                       name: 'Rephlex',
-                       slots: [global_slot.slot_uuid] } }
+      let(:params) do
+        { category_uuid: category_user[:user_uuid],
+          group: { muid: group[:uuid],
+                   string_id: string_id,
+                   name: 'Rephlex',
+                   slots: [global_slot.slot_uuid] } }
+      end
 
       it "adds the slot to the group" do
-        post "/v1/groups/global_group", { group: params }, auth_header
+        post "/v1/groups/global_group", params, auth_header
+
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
@@ -767,55 +809,63 @@ RSpec.describe "V1::Groups", type: :request do
 
     describe "no existing global slot, but existing location", :vcr do
       let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
-      let!(:location) { create(:candy_location) }
-      let(:params) { { muid: group[:uuid],
-                       name: 'Rephlex',
-                       slots: slots } }
+      let!(:location) { create(:pier_2_bremen) }
+      let(:params) do
+        { category_uuid: category_user[:user_uuid],
+          group: { muid: group[:uuid],
+                   string_id: string_id,
+                   name: 'Rephlex',
+                   slots: slots } }
+      end
 
       it "creates a new group" do
         expect {
-          post "/v1/groups/global_group", { group: params }, auth_header
+          post "/v1/groups/global_group", params, auth_header
         }.to change(Group, :count)
       end
 
       it "creates a new globalslot" do
         expect {
-          post "/v1/groups/global_group", { group: params }, auth_header
+          post "/v1/groups/global_group", params, auth_header
         }.to change(GlobalSlot, :count)
       end
 
       it "adds the slot to the group" do
-        post "/v1/groups/global_group", { group: params }, auth_header
+        post "/v1/groups/global_group", params, auth_header
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include GlobalSlot.last
       end
 
       it "doesn't create a new location" do
         expect {
-          post "/v1/groups/global_group", { group: params }, auth_header
+          post "/v1/groups/global_group", params, auth_header
         }.not_to change(IosLocation, :count)
       end
     end
 
     describe "global slot already in group" do
-      let(:group) { create(:group, public: true, owner: current_user) }
+      let(:group) { create(:group, :global, owner: category_user) }
       let(:global_slot) { create(:global_slot) }
       let!(:containership) {
         create(:containership, slot: global_slot, group: group) }
-      let(:params) { { muid: group.uuid,
-                       name: group.name,
-                       slots: [global_slot.slot_uuid] } }
+      let(:params) do
+        { category_uuid: category_user[:user_uuid],
+          group: { muid: group[:uuid],
+                   string_id: string_id,
+                   name: group.name,
+                   slots: [global_slot.slot_uuid] } }
+      end
 
       it "adds the slot to the group" do
         expect(Group.last.slots).to include global_slot
-        post "/v1/groups/global_group", { group: params }, auth_header
+        post "/v1/groups/global_group", params, auth_header
         expect(response).to have_http_status :ok
         expect(Group.last.slots).to include global_slot
       end
 
       it "doesn't create a new group" do
         expect {
-          post "/v1/groups/global_group", { group: params }, auth_header
+          post "/v1/groups/global_group", params, auth_header
         }.not_to change(Group, :count)
       end
     end

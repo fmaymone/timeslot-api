@@ -2,7 +2,7 @@
 
 ## Update Slot - Reorder media items
 
-### PATCH /v1/stdslot/:id
+### PATCH /v1/slots/:id
 
 An array with the media_item keys and corresponding position/ordering number (starting from 0) for all images of the slot must be send.
 
@@ -17,9 +17,6 @@ returns 200 and slot details on success
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : visibility
-Description : Visibility of the Slot to update (private/friends/foaf/public)
-
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -28,6 +25,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : description
+Description : Description for the slot (max. 500 characters)
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -80,6 +80,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -96,6 +99,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -120,13 +126,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=UQGYva0ybc2hddQfaQaCu5Qn7Bw
+Authorization: Token token=4H19Z49frp3uSvIl9fQ0T5SQKFk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/16</pre>
+<pre>PATCH /v1/slots/15</pre>
 
 #### Body
 ```javascript
@@ -154,9 +160,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/16&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/15&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=UQGYva0ybc2hddQfaQaCu5Qn7Bw&quot;</pre>
+	-H &quot;Authorization: Token token=4H19Z49frp3uSvIl9fQ0T5SQKFk&quot;</pre>
 
 ### Response
 
@@ -166,12 +172,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;94cb159c8211e5a79b65fb9d8c6838de&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;8117358339939a095f75e1a0f624cd46&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e878e3eb-4023-4b73-8778-6bac9e62ef60
-X-Runtime: 0.040090
-Vary: Origin
-Content-Length: 886</pre>
+X-Request-Id: dfcafcc1-edc6-4bb0-a95f-31f786d2a8b4
+X-Runtime: 0.080844
+Content-Length: 1029</pre>
 
 #### Status
 
@@ -181,19 +187,23 @@ Content-Length: 886</pre>
 
 ```javascript
 {
-  "id" : 16,
-  "title" : "Slot title 81",
-  "startDate" : "2019-09-04T12:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.960Z",
-  "updatedAt" : "2016-04-04T20:50:31.960Z",
+  "id" : 15,
+  "title" : "Slot title 171",
+  "description" : "",
+  "startDate" : "2019-09-10T03:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:07.987Z",
+  "updatedAt" : "2016-08-30T09:51:07.987Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-04T12:44:02.000Z",
+  "endDate" : "2019-10-10T03:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 36,
-    "username" : "User 338",
-    "createdAt" : "2016-04-04T20:50:31.945Z",
-    "updatedAt" : "2016-04-04T20:50:31.945Z",
+    "id" : 29,
+    "username" : "User 735",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.979Z",
+    "updatedAt" : "2016-08-30T09:51:07.979Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -201,34 +211,38 @@ Content-Length: 886</pre>
   "media" : [
     {
       "mediaId" : 10,
-      "publicId" : "dfhjghjkdisudgfds7iy56",
+      "publicId" : "dfhjghjkdisudgfds7iy416",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.991Z"
+      "createdAt" : "2016-08-30T09:51:08.010Z"
     },
     {
       "mediaId" : 9,
-      "publicId" : "dfhjghjkdisudgfds7iy55",
+      "publicId" : "dfhjghjkdisudgfds7iy415",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.978Z"
+      "createdAt" : "2016-08-30T09:51:08.005Z"
     },
     {
       "mediaId" : 8,
-      "publicId" : "dfhjghjkdisudgfds7iy54",
+      "publicId" : "dfhjghjkdisudgfds7iy414",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.969Z"
+      "createdAt" : "2016-08-30T09:51:07.998Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
+  "visibleCount" : "1"
 }
 ```

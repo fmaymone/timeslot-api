@@ -82,6 +82,89 @@ resource "Users" do
     end
   end
 
+  post "/v1/users/public" do
+    header "Content-Type", "application/json"
+    header "Accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :username, "Username of user (max. 50 characters)",
+              required: false
+    parameter :email, "Email of user (max. 254 characters)"
+    parameter :phone, "Phone number of user (max. 35 characters)"
+    parameter :lang, "Language of user (2 characters, ISO 639-1)"
+    parameter :password, "Password for user (min. 5 & max. 72 characters)",
+              required: false
+
+    include_context "current user response fields"
+    response_field :authToken, "Authentication Token for the user to be set" \
+                               " as a HTTP header in subsequent requests"
+    let(:username) { "foo" }
+    let(:email) { "someone@timeslot.com" }
+    let(:password) { "secret-thing" }
+    let(:lang) { "de" }
+
+    context "Signup and creates a public user profile" do
+      parameter :role,
+                "Must be define the users role: 'public_user'",
+                required: true
+
+      let(:role) { 'public_user' }
+
+      example "Signup - Creates a public user profile",
+              document: :v1 do
+        explanation "Either an email or phone number must be provided\n\n" \
+                    "returns 401 if user is not logged in\n\n" \
+                    "returns 403 if user account has no email\n\n" \
+                    "returns 422 if parameters are missing\n\n" \
+                    "returns 422 if parameters are invalid"
+        do_request
+
+        expect(response_status).to eq(201)
+        expect(json).to have_key 'id'
+        expect(json).to have_key 'username'
+        expect(json).to have_key 'email'
+        expect(json).to have_key 'authToken'
+        expect(json).to have_key 'push'
+        expect(json['email']).not_to eq('someone@timeslot.com')
+        expect(json['email']).to eq(current_user.email)
+
+        expect(User.last.reload.public_user?).to be(true)
+      end
+
+      context "Validates creation of a public user profile" do
+        let(:auth_header) { nil }
+
+        example "Signup - Doesn't creates a public user profile if user is not logged in",
+                document: false do
+          explanation "Either an email or phone number must be provided\n\n" \
+                      "returns 401 if user is not logged in\n\n" \
+                      "returns 403 if user account has no email\n\n" \
+                      "returns 422 if parameters are missing\n\n" \
+                      "returns 422 if parameters are invalid"
+          do_request
+
+          expect(response_status).to eq(401)
+        end
+      end
+
+      context "Validates creation of a public user profile" do
+        let!(:current_user) { create(:user, :with_password, email: nil) }
+
+        example "Signup - Doesn't creates a public user profile if user has no email",
+                document: false do
+          explanation "Either an email or phone number must be provided\n\n" \
+                      "returns 401 if user is not logged in\n\n" \
+                      "returns 403 if user account has no email\n\n" \
+                      "returns 422 if parameters are missing\n\n" \
+                      "returns 422 if parameters are invalid"
+          do_request
+
+          expect(response_status).to eq(403)
+        end
+      end
+    end
+  end
+
   post "/v1/users/signin", :vcr do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
@@ -260,13 +343,13 @@ resource "Users" do
     let(:id) { user.id }
 
     let!(:slot_public) {
-      create(:std_slot_public, :with_media, owner: user, creator: user) }
+      create(:std_slot_public, :with_media, creator: user) }
     let!(:slot_foaf) {
-      create(:std_slot_foaf, :with_media, owner: user, creator: user) }
+      create(:std_slot_foaf, :with_media, creator: user) }
     let!(:slot_friend) {
-      create(:std_slot_friends, :with_media, owner: user, creator: user) }
+      create(:std_slot_friends, :with_media, creator: user) }
     let!(:slot_private) {
-      create(:std_slot_private, :with_media, owner: user, creator: user) }
+      create(:std_slot_private, :with_media, creator: user) }
     # let!(:shared_group) do
     #   gs = create(:group_slot, :with_media, creator: user)
     #   create(:membership, :active, group: gs.group, user: current_user)
@@ -401,73 +484,191 @@ resource "Users" do
     parameter :id, "ID of the user to get the slots for."
 
     context 'pagination' do
-      parameter :limit, "Maximum number of slots returned." \
-                        " Default is 40. Maximum is 100."
-      parameter :moment, "A point in time. Query parameter to get slots " \
-                         "relative to a specific moment. Must be UTC.\n" \
-                         "Default is Time.zone.now (server time)."
-      parameter :filter, "Query parameter to filter slots relative to a " \
-                         "given **moment**. Must be one of:\n" \
-                         "- **past**: *start* before *moment*\n" \
-                         "- **upcoming**: *start* after or equal *moment*\n" \
-                         "- **ongoing**: *start* before & *end* after *moment*\n" \
-                         "- **finished**: *start* & *end* before *moment*\n" \
-                         "- **now**: *ongoing* & *upcoming* slots\n" \
-                         "- **around**: tba\n" \
-                         "- **all**: no restriction\n" \
-                         "Default is **upcoming**."
-      parameter :before, "Pagination cursor to retrieve slots which do happen" \
-                         " BEFORE the slot " \
-                         "represented by this cursor. If a cursor is " \
-                         "send, **status** and **moment** are ignored."
-      parameter :after, "Pagination cursor to retrieve slots which do happen" \
-                        " AFTER the slot represented by this cursor. If a " \
-                        "cursor is send, **filter** and **moment** are ignored."
+      include_context "slot pagination"
 
-      response_field :paging, "Hash containing relevant paging parameters."
-      response_field :limit, "Maximum number of slots returned."
-      response_field :filter, "Types of slots which were requested."
-      response_field :moment, "Point-in-time which was used for the query."
-      response_field :before, "Cursor that represents the first item in the " \
-                              "response dataset."
-      response_field :after, "Cursor that represents the last item in the " \
-                             "response dataset."
-      response_field :data, "Array containing the result dataset."
+      let(:friend) do
+        friend = create(:user)
+        create(:friendship, :established, user: current_user, friend: friend)
+        friend
+      end
+      let(:id) { friend.id }
 
-      describe "Get slots for Friend - with pagination" do
-        let(:friend) do
-          friend = create(:user)
-          create(:friendship, :established, user: current_user, friend: friend)
-          friend
+      describe "Get slots for friend - with 'between' pagination" do
+        let(:filter) { 'between' }
+        let(:limit) { 2 }
+        let(:earliest) { '2016-04-21T09:06:18.000Z' }
+        let(:latest) { '2016-04-21T19:06:18.000Z' }
+
+        let!(:slots) do
+          [create(:std_slot_public, creator: friend, title: 'in between',
+                  start_date: '2016-04-21 15:06:18Z',
+                  end_date: '2016-04-21 16:06:18Z'
+                 ),
+           create(:std_slot_public, creator: friend, title: 'overlap earliest',
+                  start_date: '2016-04-21 03:06:18Z',
+                  end_date: '2016-04-21 16:06:18Z'
+                 ),
+           create(:std_slot_public, creator: friend, title: 'overlap latest',
+                  start_date: '2016-04-21 15:06:18Z',
+                  end_date: '2016-04-21 23:06:18Z'
+                 ),
+           create(:std_slot_public, creator: friend, title: 'overlap both',
+                  start_date: '2016-04-21 05:06:18Z',
+                  end_date: '2016-04-21 22:06:18Z'
+                 ),
+           create(:std_slot_public, creator: friend, title: 'starts near end',
+                  start_date: '2016-04-21 19:06:17Z',
+                  end_date: '2016-04-21 22:06:18Z'
+                 )
+          ]
         end
-        let(:id) { friend.id }
-        let(:filter) { 'upcoming' }
+        let!(:before_slot) do
+          create(:std_slot_public, creator: friend, title: 'before',
+                 start_date: '2016-04-21 01:06:18Z',
+                 end_date: '2016-04-21 03:06:18Z'
+                )
+        end
+        let!(:problematic_before_slot) do
+          create(:std_slot_public, creator: friend, title: 'problematic before',
+                 start_date: '2016-04-21 06:06:18Z',
+                 end_date: '2016-04-21 07:06:18Z'
+                )
+        end
+        let!(:later_slot) do
+          create(:std_slot_public, creator: friend, title: 'later',
+                 start_date: '2016-04-21 22:06:18Z',
+                 end_date: '2016-04-21 23:06:18Z'
+                )
+        end
+
+        example "Get slots for Friend - with 'between' pagination",
+                document: :v1 do
+          do_request
+
+          # first request without a cursor
+          expect(response_status).to eq(200)
+
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('mode')
+          expect(json['paging']['mode']).to eq 'now'
+          expect(json['paging']).to have_key('filter')
+          expect(json['paging']['filter']).to eq 'between'
+          expect(json['paging']).to have_key('earliest')
+          expect(json['paging']).to have_key('latest')
+          expect(json['paging']).to have_key('before')
+          expect(json['paging']['before']).to be nil
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']['after']).not_to be nil
+          after_cursor = json['paging']['after']
+          expect(json).to have_key 'data'
+          expect(json['data'].first).to have_key("id")
+
+          returned_slots = json['data']
+
+          returned_slots.each do |slot|
+            expect(slot['endDate']).to be > earliest.as_json
+            expect(slot['startDate']).to be < latest.as_json
+          end
+
+          # make a subsequent request based on 'after' cursor
+          client.get "/v1/users/#{friend.id}/slots",
+                     { after: after_cursor, filter: filter, limit: limit,
+                       earliest: earliest, latest: latest }, headers
+
+          expect(response_status).to eq(200)
+
+          json = JSON.parse(response_body)
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('mode')
+          expect(json['paging']['mode']).to eq 'now'
+          expect(json['paging']).to have_key('before')
+          expect(json['paging']['before']).not_to be nil
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']['after']).not_to be nil
+          expect(json['paging']).to have_key('limit')
+          expect(json['paging']['limit']).to eq limit
+          expect(json['paging']).to have_key('filter')
+          expect(json['paging']['filter']).to eq 'between'
+
+          # expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
+
+          after_cursor = json['paging']['after']
+
+          expect(json).to have_key 'data'
+
+          second_slots = json['data']
+          second_slots.each do |slot|
+            expect(slot['endDate']).to be > earliest.as_json
+            expect(slot['startDate']).to be < latest.as_json
+          end
+
+          returned_slots << second_slots
+
+          # make a subsequent request based on 'after' cursor
+          client.get "/v1/users/#{friend.id}/slots",
+                     { after: after_cursor, filter: filter, limit: limit,
+                       earliest: earliest, latest: latest }, headers
+
+          expect(response_status).to eq(200)
+
+          json = JSON.parse(response_body)
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('mode')
+          expect(json['paging']).to have_key('before')
+          expect(json['paging']['before']).not_to be nil
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']['after']).to be nil
+          expect(json['paging']).to have_key('limit')
+          expect(json['paging']).to have_key('filter')
+          expect(json['paging']['filter']).to eq 'between'
+
+          third_slots = json['data']
+          third_slots.each do |slot|
+            expect(slot['endDate']).to be > earliest.as_json
+            expect(slot['startDate']).to be < latest.as_json
+          end
+
+          returned_slots << third_slots
+
+          expect(returned_slots.to_s).to include slots.first.title
+          expect(returned_slots.to_s).to include slots.second.title
+          expect(returned_slots.to_s).to include slots.third.title
+          expect(returned_slots.to_s).to include slots.last.title
+          expect(returned_slots.to_s).not_to include before_slot.title
+          expect(returned_slots.to_s).not_to include later_slot.title
+          expect(returned_slots.to_s).not_to include problematic_before_slot.title
+        end
+      end
+
+      describe "Get slots for Friend - with 'upcoming' pagination" do
+        let(:mode) { 'upcoming' }
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
 
         let!(:std_slot_private) {
-          create(:std_slot_private, owner: friend,
+          create(:std_slot_private, creator: friend,
                  start_date: Time.zone.tomorrow.next_week) }
         let!(:std_slot_friend) {
-          create(:std_slot_friends, owner: friend,
+          create(:std_slot_friends, creator: friend,
                  start_date: Time.zone.today.next_week) }
         let!(:std_slot_foaf) {
-          create(:std_slot_friends, owner: friend,
+          create(:std_slot_friends, creator: friend,
                  start_date: Time.zone.today.next_week) }
         let!(:std_slot_public) {
-          create(:std_slot_public, owner: friend,
+          create(:std_slot_public, creator: friend,
                  start_date: Time.zone.tomorrow) }
         # let!(:re_slots) { create_list(:re_slot, 2, slotter: friend) }
 
-        example "Get slots for Friend - with pagination", document: :v1 do
+        example "Get slots for Friend - with 'upcoming' pagination",
+                document: :v1 do
           explanation "Response contains '*paging*' hash & '*data*' array.\n" \
                       "If there are more than **limit** results, '*paging*' " \
                       "has **before** and **after** cursors which can be used" \
                       " for subsequent requests. The first request should " \
-                      "always be made with **filter** '*upcoming*' to make " \
+                      "always be made with **mode** '*upcoming*' to make " \
                       "sure no results are skipped." \
                       "'*data*' contains an array which includes " \
-                      "StandardSlots & ReSlots\n\n" \
+                      "StandardSlots.\n\n" \
                       "If a user is authenticated the slot settings" \
                       " (alerts) will be included.\n\n" \
                       "The returned slots are ordered by startdate, enddate, id."
@@ -515,12 +716,13 @@ resource "Users" do
           json = JSON.parse(response_body)
 
           expect(json).to have_key 'paging'
-          expect(json['paging']).to have_key('filter')
+          expect(json['paging']).to have_key('mode')
           expect(json['paging']).to have_key('after')
           expect(json['paging']).to have_key('limit')
-          expect(json['paging']['filter']).to be nil
+          expect(json['paging']['mode']).to be nil
           expect(json['paging']['after']).to be nil
-          expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to be <= PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to eq PAGINATION_DEFAULT_LIMIT
           # expect(response_body).to include(re_slots.first.title)
           # expect(response_body).to include(re_slots.last.title)
 
@@ -554,10 +756,10 @@ resource "Users" do
         let(:joe) { create(:user, username: "Joe") }
         let(:id) { joe.id }
 
-        let!(:std_slot_secret) { create(:std_slot_private, owner: joe) }
-        let!(:std_slot_friend) { create(:std_slot_friends, owner: joe) }
-        let!(:std_slot_foaf) { create(:std_slot_foaf, owner: joe) }
-        let!(:std_slot_public) { create(:std_slot_public, owner: joe) }
+        let!(:std_slot_secret) { create(:std_slot_private, creator: joe) }
+        let!(:std_slot_friend) { create(:std_slot_friends, creator: joe) }
+        let!(:std_slot_foaf) { create(:std_slot_foaf, creator: joe) }
+        let!(:std_slot_public) { create(:std_slot_public, creator: joe) }
         # let!(:re_slots) { create(:re_slot, slotter: joe) }
         # let(:incommon_groupslot) { create(:group_slot) }
 
@@ -694,6 +896,49 @@ resource "Users" do
     end
   end
 
+  get "/v1/users/:id/dates" do
+    header "Authorization", :auth_header
+    header "Accept", "application/json"
+
+    parameter :id, "ID of the user to get the slot dates for."
+
+    let(:user) { create(:user) }
+
+    let!(:private_slot) {
+      create(:std_slot_private, creator: user, start_date: '2015-01-01',
+             end_date: '2015-01-02')
+    }
+    let!(:public_slot) {
+      create(:std_slot_public, creator: user, start_date: '2016-02-02',
+             end_date: '2016-02-04')
+
+    }
+    let!(:public_calendar_slot) do
+      slot = create(:std_slot_public, start_date: '2017-03-03',
+                    end_date: '2017-03-03')
+      create(:passengership, user: user, slot: slot)
+      slot
+    end
+    let(:id) { user.id }
+
+    example "Get list of dates when slots of another user are happening",
+            document: :v1 do
+      explanation "Returns all dates where a slot returned by " \
+                  "GET /users/:id/slots is happening.\n\n" \
+                  "returns 404 if user doesn't exist"
+      do_request
+
+      expect(response_status).to eq(200)
+
+      expect(response_body).to include public_slot.start_date.to_date.as_json
+      expect(response_body).to include public_slot.end_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.start_date.to_date.as_json
+      expect(response_body).to include public_calendar_slot.end_date.to_date.as_json
+      expect(response_body).not_to include private_slot.start_date.to_date.as_json
+      expect(response_body).not_to include private_slot.end_date.to_date.as_json
+    end
+  end
+
   get "/v1/users/:id/friends" do
     header "Authorization", :auth_header
     header "Accept", "application/json"
@@ -729,9 +974,9 @@ resource "Users" do
       create_list(:group, 3, public: false, owner: requestee)
       requestee
     end
+    let(:public_group) { create(:group, :with_3_slots, public: true) }
     let!(:public_calendars) do
       calendars = create_list(:group, 2, public: true, owner: user_with_calendars)
-      public_group = create(:group, public: true)
       create(:membership, :active, group: public_group, user: user_with_calendars)
       calendars + [public_group]
     end
@@ -750,7 +995,8 @@ resource "Users" do
       explanation "Includes all public calendars of this user and " \
                   "non-public calendars where user and current user " \
                   "are members.\n\n" \
-                  "returns array of calendars\n\n" \
+                  "returns array of calendars with up to 4 preview slots per" \
+                  " calendar\n\n" \
                   "returns 404 if current user not friend with other user"
       do_request
 
@@ -761,11 +1007,14 @@ resource "Users" do
       expect(response_body).to include shared_nonpublic_calendar.name
       expect(response_body).
         not_to include user_with_calendars.groups.non_public.first.name
-      expect(json.length).to eq 4
+      expect(json).to have_key('result')
+      expect(json['result'].first).to have_key('previewSlots')
+      expect(json['result'].length).to eq 4
+      expect(response_body).to include public_group.slots.first.title
     end
   end
 
-  post "/v1/users/reset", :vcr do
+  post "/v1/users/reset", :vcr, :aws do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 

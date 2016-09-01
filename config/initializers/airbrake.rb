@@ -40,14 +40,14 @@ Airbrake.configure do |c|
   # https://github.com/airbrake/airbrake-ruby#ignore_environments
   c.ignore_environments = %w(test)
   # c.ignore_environments = %w(development test)
+
+  c.blacklist_keys = [:password, /credit/i]
 end
 
 # send environment information
 # Airbrake.add_filter do |notice|
   # notice[:environment] = ENV
 # end
-
-Airbrake.blacklist_keys([:credit_card_number, :password])
 
 # If Airbrake doesn't send any expected exceptions, we suggest to uncomment the
 # line below. It might simplify debugging of background Airbrake workers, which

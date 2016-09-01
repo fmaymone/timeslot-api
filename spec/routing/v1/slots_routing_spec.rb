@@ -21,19 +21,27 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#delete", id: "1", format: :json)
     end
 
+    # TODO: remove this
     it "routes to #create_stdslot" do
       expect(post: "/v1/stdslot")
         .to route_to("v1/slots#create_stdslot", format: :json)
     end
 
+    # TODO: remove this
     it "routes to #update_metaslot" do
       expect(patch: "/v1/metaslot/1")
         .to route_to("v1/slots#update_metaslot", id: "1", format: :json)
     end
 
+    # TODO: remove this
     it "routes to #update_stdslot" do
       expect(patch: "/v1/stdslot/1")
         .to route_to("v1/slots#update_stdslot", id: "1", format: :json)
+    end
+
+    it "routes to #update" do
+      expect(patch: "/v1/slots/1")
+        .to route_to("v1/slots#update", id: "1", format: :json)
     end
 
     # TODO: remove this
@@ -105,16 +113,6 @@ RSpec.describe V1::SlotsController, type: :routing do
     it "routes to #reslot_history" do
       expect(get: "/v1/slots/1/history")
         .to route_to("v1/slots#reslot_history", id: "1", format: :json)
-    end
-
-    it "routes to #copy" do
-      expect(post: "/v1/slots/1/copy")
-        .to route_to("v1/slots#copy", id: "1", format: :json)
-    end
-
-    it "routes to #move" do
-      expect(post: "/v1/slots/1/move")
-        .to route_to("v1/slots#move", id: "1", format: :json)
     end
 
     it "does not route to #new" do

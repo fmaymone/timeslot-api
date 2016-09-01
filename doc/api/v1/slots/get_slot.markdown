@@ -40,6 +40,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -56,6 +59,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -83,7 +89,7 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=_WQ034nXltuEwoIs6dJRbLLOeJs
+Authorization: Token token=qn1pwgKSZr5x_p11Lgi0pcc3Bzg
 Host: example.org
 Cookie: </pre>
 
@@ -95,7 +101,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/2&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=_WQ034nXltuEwoIs6dJRbLLOeJs&quot;</pre>
+	-H &quot;Authorization: Token token=qn1pwgKSZr5x_p11Lgi0pcc3Bzg&quot;</pre>
 
 ### Response
 
@@ -105,12 +111,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;b6d62eaba0850184971cd69eebd94666&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;0b31259fc506c7a03269e82a58a9429f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d32b25c4-5135-4591-b3d0-0c64152ab596
-X-Runtime: 0.024043
-Vary: Origin
-Content-Length: 1734</pre>
+X-Request-Id: b9a47de6-3b09-4ba6-b4ae-b9a0fd12cb60
+X-Runtime: 0.060345
+Content-Length: 1903</pre>
 
 #### Status
 
@@ -121,14 +127,15 @@ Content-Length: 1734</pre>
 ```javascript
 {
   "id" : 2,
-  "title" : "Slot title 71",
-  "startDate" : "2019-09-21T02:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.157Z",
-  "updatedAt" : "2016-04-04T20:50:31.157Z",
+  "title" : "Slot title 162",
+  "description" : "",
+  "startDate" : "2019-09-01T18:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:06.737Z",
+  "updatedAt" : "2016-08-30T09:51:06.737Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-21T02:44:02.000Z",
+  "endDate" : "2019-10-01T18:44:02.000Z",
   "location" : {
-    "id" : "4065f530-5f35-44bf-8d93-64e2855ebadf",
+    "id" : "0a7ed54c-cd64-411e-b28d-174c6c2a6e6b",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -143,13 +150,17 @@ Content-Length: 1734</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 51.234,
-    "longitude" : -11.993
+    "longitude" : -11.993,
+    "placeId" : null
   },
   "creator" : {
     "id" : 5,
-    "username" : "User 300",
-    "createdAt" : "2016-04-04T20:50:31.134Z",
-    "updatedAt" : "2016-04-04T20:50:31.134Z",
+    "username" : "User 701",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:06.722Z",
+    "updatedAt" : "2016-08-30T09:51:06.722Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -157,64 +168,72 @@ Content-Length: 1734</pre>
   "media" : [
     {
       "mediaId" : 6,
-      "publicId" : "dfhjghjkdisudgfds7iy46",
+      "publicId" : "dfhjghjkdisudgfds7iy406",
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2016-04-04T20:50:31.186Z",
+      "createdAt" : "2016-08-30T09:51:06.762Z",
       "duration" : null,
-      "title" : "Title 45"
+      "title" : "Title 405"
     },
     {
       "mediaId" : 5,
-      "publicId" : "dfhjghjkdisudgfds7iy45",
+      "publicId" : "dfhjghjkdisudgfds7iy405",
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-04-04T20:50:31.183Z",
+      "createdAt" : "2016-08-30T09:51:06.760Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 4,
-      "publicId" : "dfhjghjkdisudgfds7iy44",
+      "publicId" : "dfhjghjkdisudgfds7iy404",
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-04-04T20:50:31.178Z",
+      "createdAt" : "2016-08-30T09:51:06.758Z",
       "duration" : null,
       "thumbnail" : null
     },
     {
       "mediaId" : 3,
-      "publicId" : "dfhjghjkdisudgfds7iy43",
+      "publicId" : "dfhjghjkdisudgfds7iy403",
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.171Z"
+      "createdAt" : "2016-08-30T09:51:06.752Z"
     },
     {
       "mediaId" : 2,
-      "publicId" : "dfhjghjkdisudgfds7iy42",
+      "publicId" : "dfhjghjkdisudgfds7iy402",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.167Z"
+      "createdAt" : "2016-08-30T09:51:06.746Z"
     },
     {
       "mediaId" : 1,
-      "publicId" : "dfhjghjkdisudgfds7iy41",
+      "publicId" : "dfhjghjkdisudgfds7iy401",
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.162Z"
+      "createdAt" : "2016-08-30T09:51:06.744Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "public",
+  "likerIds" : [
+    7,
+    8,
+    9
+  ],
   "likes" : 3,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
+  "visibleCount" : "all"
 }
 ```

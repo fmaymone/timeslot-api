@@ -32,6 +32,17 @@ class MediaItem < ActiveRecord::Base
     Cloudinary::Uploader.add_tag("replaced", public_id)
     Cloudinary::Uploader.add_tag(
       "mediable_id:#{mediable.id}, mediable_type:#{mediable_type}", public_id)
+
+    if position == 0 && mediable.images.count > 1
+      last_item = mediable.media_items.sort_by(&:position).last
+      last_image = mediable.images.sort_by(&:position).last
+      old_position = last_image.position
+      last_image.update(position: 0)
+      last_item.update(position: old_position) if last_item != last_image
+    end
+
+    self.update(position: -1)
+
   rescue CloudinaryException => e
     msg = { image: self }
     msg[:cloudinary] = "adding tag for destroyed media_item failed."
@@ -47,7 +58,13 @@ class MediaItem < ActiveRecord::Base
     return false unless self.valid_sorting? media_items
 
     media_items.each do |item|
-      MediaItem.find(item[:media_id]).update(position: item[:position])
+      media_item = MediaItem.find(item[:media_id])
+      next unless media_item
+      if item[:position] != media_item[:position]
+        replace_media = media_item.mediable.media_items.find_by(position: item[:position])
+        replace_media.update(position: media_item[:position]) if replace_media
+        media_item.update(position: item[:position])
+      end
     end
     true
   end
@@ -61,7 +78,7 @@ class MediaItem < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
+  private def activity_is_valid?(action)
     super and belongs_to_slot?
   end
 

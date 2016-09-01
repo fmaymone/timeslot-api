@@ -29,7 +29,7 @@ Description : The full share link including the share ID
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=4L2MTofqbO5TNy9qje75dEoV6ys
+Authorization: Token token=-POwtyUQvp59NfIz4tLMVHBGxOs
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -42,7 +42,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29/qrcode&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=4L2MTofqbO5TNy9qje75dEoV6ys&quot; \
+	-H &quot;Authorization: Token token=-POwtyUQvp59NfIz4tLMVHBGxOs&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -53,11 +53,11 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
+Vary: Accept-Encoding, Origin
 ETag: W/&quot;ca499aa70146a0b0b418d4d6f8935550&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 37ddb223-eec1-4c87-bc1f-d4f53bcb6ff4
-X-Runtime: 0.176138
-Vary: Origin
+X-Request-Id: 956ce52c-903d-4dda-b97f-0f16e3b83b47
+X-Runtime: 0.217474
 Content-Length: 52</pre>
 
 #### Status

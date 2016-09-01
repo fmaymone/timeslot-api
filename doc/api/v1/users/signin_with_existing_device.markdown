@@ -31,6 +31,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -54,6 +63,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -146,11 +158,11 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "email" : "user119@email.com",
+  "email" : "user153@email.com",
   "password" : "timeslot",
   "device" : {
     "device" : {
-      "device_id" : "sn-353462873410834786765439535",
+      "device_id" : "sn-363462873410834786765439536",
       "system" : "ios",
       "version" : "6.0"
     }
@@ -161,7 +173,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user119@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-353462873410834786765439535&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user153@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-363462873410834786765439536&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -173,12 +185,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;ea13913024a63c392a85aefde6b484a9&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;0eb9f4315d6cd9d2a803a943248d44f0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2648cd15-0e61-42bc-8792-155d8c455669
-X-Runtime: 0.019445
-Vary: Origin
-Content-Length: 783</pre>
+X-Request-Id: 9c047f08-8f05-4086-9a7e-3a19171f0afa
+X-Runtime: 0.030996
+Content-Length: 908</pre>
 
 #### Status
 
@@ -188,32 +200,37 @@ Content-Length: 783</pre>
 
 ```javascript
 {
-  "id" : 122,
-  "username" : "User 422",
-  "createdAt" : "2016-04-04T20:50:33.477Z",
-  "updatedAt" : "2016-04-04T20:50:33.477Z",
+  "id" : 108,
+  "username" : "User 824",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:51:10.914Z",
+  "updatedAt" : "2016-08-30T09:51:10.914Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
-  "email" : "user119@email.com",
+  "email" : "user153@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "e58df9ad-3aa2-496e-92de-a07b6df5b858",
-  "friendsCalendarUuid" : "f01c0e07-b891-4958-aef0-5c55f9a54e22",
-  "allMySlotsUuid" : "63409144-261c-45d6-ace0-a9379f2376ba",
-  "myCreatedSlotsUuid" : "b35542fd-3c3f-44c4-9781-ae7e912eb1ea",
-  "myFriendSlotsUuid" : "210b962c-df67-4bdd-9842-60bbeedf7f4b",
-  "myPublicSlotsUuid" : "e3244aba-3c71-4f35-b35d-a66b7db1b41a",
+  "myCalendarUuid" : "1dcdbd76-cab8-4ba1-9a4c-fca17d0a7008",
+  "friendsCalendarUuid" : "3d4f97ad-3e2f-4847-b7eb-ab4f10c827fd",
+  "allMySlotsUuid" : "23e935b4-34aa-4189-8a08-f64dbc11afd2",
+  "myCreatedSlotsUuid" : "51bfb254-cb60-4d6a-bf71-8c7446dca2e4",
+  "myPrivateSlotsUuid" : "ee0a7343-daa8-4ade-8a67-96c5427d42d0",
+  "myFriendSlotsUuid" : "43c94a11-97ca-482c-b277-532717c68c49",
+  "myPublicSlotsUuid" : "a9bf033e-9b34-4fbf-9bdf-1aa22dba37c6",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself",
-  "authToken" : "bAb8Sh76AY0TQ98TTTxRmGrIusw"
+  "authToken" : "bxNevp56GbUvGgKnudolYaQbFFQ"
 }
 ```

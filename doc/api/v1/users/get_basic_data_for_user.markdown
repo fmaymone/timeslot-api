@@ -22,6 +22,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -51,19 +60,19 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=MkhIm9mpOHgrC53jDX-uEdU1_B8
+Authorization: Token token=-9D0lzIxaMJvgQ7gqhmRFtNJXnE
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/124</pre>
+<pre>GET /v1/users/110</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/124&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/110&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=MkhIm9mpOHgrC53jDX-uEdU1_B8&quot;</pre>
+	-H &quot;Authorization: Token token=-9D0lzIxaMJvgQ7gqhmRFtNJXnE&quot;</pre>
 
 ### Response
 
@@ -73,12 +82,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fed8f77cb99b8f849dba4888434a05c5&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6fc99b1d2d7caf86b2fd7e34e0931e2c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f174be30-7944-4985-b139-b43d041346a3
-X-Runtime: 0.028124
-Vary: Origin
-Content-Length: 572</pre>
+X-Request-Id: 05685e7c-11b4-452a-abea-85feb3959bbd
+X-Runtime: 0.061997
+Content-Length: 656</pre>
 
 #### Status
 
@@ -88,14 +97,17 @@ Content-Length: 572</pre>
 
 ```javascript
 {
-  "id" : 124,
-  "username" : "User 423",
-  "createdAt" : "2016-04-04T20:50:33.514Z",
-  "updatedAt" : "2016-04-04T20:50:33.514Z",
+  "id" : 110,
+  "username" : "User 825",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:51:10.959Z",
+  "updatedAt" : "2016-08-30T09:51:10.959Z",
   "deletedAt" : null,
   "image" : "",
   "location" : {
-    "id" : "488588dd-6f2c-4d24-bbc3-e3ac818b5654",
+    "id" : "79fc6123-3ec3-4f86-bdc4-cee7c3e4fe09",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -110,11 +122,13 @@ Content-Length: 572</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 51.234,
-    "longitude" : -11.993
+    "longitude" : -11.993,
+    "placeId" : null
   },
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
-  "friendshipState" : "stranger"
+  "friendshipState" : "stranger",
+  "previewSlots" : []
 }
 ```

@@ -10,6 +10,7 @@ resource "Me" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
+    include_context "user params"
     include_context "current user response fields"
 
     let(:current_user) do
@@ -28,6 +29,9 @@ resource "Me" do
       # basic user response fields
       expect(json).to have_key "id"
       expect(json).to have_key "username"
+      expect(json).to have_key "firstName"
+      expect(json).to have_key "middleName"
+      expect(json).to have_key "lastName"
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
@@ -35,9 +39,10 @@ resource "Me" do
       # default user response fields
       expect(json).to have_key "location"
       expect(json).to have_key "slotCount"
-      # expect(json).to have_key "reslotCount"
+      expect(json).to have_key "calendarCount"
       expect(json).to have_key "friendsCount"
       # current user response fields
+      expect(json).to have_key "gender"
       expect(json).to have_key "lang"
       expect(json).to have_key "email"
       expect(json).to have_key "emailVerified"
@@ -63,6 +68,7 @@ resource "Me" do
       expect(json).to have_key "myCreatedSlotsUuid"
       expect(json).to have_key "myFriendSlotsUuid"
       expect(json).to have_key "myPublicSlotsUuid"
+      expect(json).to have_key "myPrivateSlotsUuid"
       # social relations
       expect(json).to have_key "friendships"
       expect(json).to have_key "memberships"
@@ -106,18 +112,21 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/calendar" do
+  get "/v1/me/schedule" do
     header "Authorization", :auth_header
     let(:slot_1) { create(:std_slot_private) }
     let(:slot_2) { create(:std_slot_public) }
 
-    let!(:my_calendar_slots) do
+    let!(:my_schedule) do
       create(:passengership, slot: slot_1, user: current_user)
       create(:passengership, slot: slot_2, user: current_user)
     end
 
-    example "Get my Calendar slots", document: :v1 do
-      explanation "Returns array with all slots in users 'MyCalendar'."
+    include_context "slot pagination"
+
+    example "Get my schedule", document: :v1 do
+      explanation "endpoint supports slot pagination\n\n" \
+                  "Returns array with all slots in users schedule."
 
       do_request
 
@@ -131,50 +140,19 @@ resource "Me" do
     header "Authorization", :auth_header
 
     context 'pagination' do
-      parameter :limit, "Maximum number of slots returned." \
-                        " Default is 40. Maximum is 100."
-      parameter :moment, "A point in time. Query parameter to get slots " \
-                         "relative to a specific moment. Must be UTC.\n" \
-                         "Default is Time.zone.now (server time)."
-      parameter :filter, "Query parameter to filter slots relative to a " \
-                         "given **moment**. Must be one of:\n" \
-                         "- **past**: *start* before *moment*\n" \
-                         "- **upcoming**: *start* after or equal *moment*\n" \
-                         "- **ongoing**: *start* before & *end* after *moment*\n" \
-                         "- **finished**: *start* & *end* before *moment*\n" \
-                         "- **now**: *ongoing* & *upcoming* slots\n" \
-                         "- **around**: tba\n" \
-                         "- **all**: no restriction\n" \
-                         "Default is **upcoming**."
-      parameter :before, "Pagination cursor to retrieve slots which do happen" \
-                         " BEFORE the slot " \
-                         "represented by this cursor. If a cursor is " \
-                         "send, **status** and **moment** are ignored."
-      parameter :after, "Pagination cursor to retrieve slots which do happen" \
-                        " AFTER the slot represented by this cursor. If a " \
-                        "cursor is send, **filter** and **moment** are ignored."
-
-      response_field :paging, "Hash containing relevant paging parameters."
-      response_field :limit, "Maximum number of slots returned."
-      response_field :filter, "Types of slots which were requested."
-      response_field :moment, "Point-in-time which was used for the query."
-      response_field :before, "Cursor that represents the first item in the " \
-                              "response dataset."
-      response_field :after, "Cursor that represents the last item in the " \
-                             "response dataset."
-      response_field :data, "Array containing the result dataset."
+      include_context "slot pagination"
 
       describe "Get slots for current user - with pagination" do
-        let(:filter) { 'upcoming' }
+        let(:mode) { 'upcoming' }
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
 
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user,
+        let!(:std_slot_1) { create(:std_slot_private, creator: current_user,
                                    start_date: Time.zone.tomorrow.next_week) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user,
+        let!(:std_slot_2) { create(:std_slot_friends, creator: current_user,
                                    start_date: Time.zone.today.next_week) }
         # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
-        let!(:upcoming_slot) { create(:std_slot_private, owner: current_user,
+        let!(:upcoming_slot) { create(:std_slot_private, creator: current_user,
                                       start_date: Time.zone.tomorrow) }
 
         example "Get slots - with pagination", document: :v1 do
@@ -182,7 +160,7 @@ resource "Me" do
                       "If there are more than **limit** results, '*paging*' " \
                       "has **before** and **after** cursors which can be used" \
                       " for subsequent requests. The first request should " \
-                      "always be made with **filter** '*upcoming*' to make " \
+                      "always be made with **mode** '*upcoming*' to make " \
                       "sure no results are skipped." \
                       "'*data*' contains an array which includes " \
                       "StandardSlots & ReSlots the current_user has made" \
@@ -229,12 +207,13 @@ resource "Me" do
           json = JSON.parse(response_body)
 
           expect(json).to have_key 'paging'
-          expect(json['paging']).to have_key('filter')
+          expect(json['paging']).to have_key('mode')
           expect(json['paging']).to have_key('after')
           expect(json['paging']).to have_key('limit')
-          expect(json['paging']['filter']).to be nil
+          expect(json['paging']['mode']).to be nil
           expect(json['paging']['after']).to be nil
-          expect(json['paging']['limit']).to eq PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to be <= PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to eq PAGINATION_DEFAULT_LIMIT
           # expect(response_body).to include(re_slots.first.title)
           # expect(response_body).to include(re_slots.last.title)
 
@@ -265,9 +244,8 @@ resource "Me" do
       response_field :deletedAt, "Deletion datetime of the slot"
 
       describe "Get slots" do
-        let!(:std_slot_1) { create(:std_slot_private, owner: current_user) }
-        let!(:std_slot_2) { create(:std_slot_friends, owner: current_user) }
-        # let!(:re_slots) { create_list(:re_slot, 2, slotter: current_user) }
+        let!(:std_slot_1) { create(:std_slot_private, creator: current_user) }
+        let!(:std_slot_2) { create(:std_slot_friends, creator: current_user) }
 
         example "Get slots - no pagination", document: :v1 do
           # TODO: fix wording
@@ -280,7 +258,7 @@ resource "Me" do
 
           expect(response_status).to eq(200)
           slot_count = current_user.std_slots.count
-                       # current_user.re_slots.count
+
           expect(json.length).to eq slot_count
           expect(json.first).to have_key("id")
           expect(json.first).to have_key("title")
@@ -299,7 +277,6 @@ resource "Me" do
           expect(json.first).to have_key("media")
           expect(response_body).to include(std_slot_1.title)
           expect(response_body).to include(std_slot_2.title)
-          # expect(response_body).to include(re_slots.first.title)
         end
       end
     end
@@ -308,6 +285,8 @@ resource "Me" do
   get "/v1/me/friendslots" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
+
+    include_context "slot pagination"
 
     response_field :id, "ID of the slot"
     response_field :title, "Title of the slot"
@@ -341,10 +320,8 @@ resource "Me" do
     }
 
     example "Get slots from friends", document: :v1 do
-      # TODO: fix wording
       explanation "Returns an array which includes all non-private " \
-                  "StandardSlots &" \
-                  " ReSlots from all friends of the current user.\n\n" \
+                  "StandardSlots from all friends of the current user.\n\n" \
                   "This endpoint supports pagination in the same style " \
                   "as the '/me/slots' route."
       do_request
@@ -466,9 +443,15 @@ resource "Me" do
   get "/v1/me/friends" do
     header 'Authorization', :auth_header
 
-    let!(:friendship_1) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_2) { create(:friendship, :established, friend: create(:user), user: current_user) }
-    let!(:friendship_3) { create(:friendship, :established, friend: create(:user), user: current_user) }
+    let!(:friendship_1) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_2) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
+    let!(:friendship_3) {
+      create(:friendship, :established, friend: create(:user),
+             user: current_user) }
 
     response_field :array, "containing friends as a list of Users"
 
@@ -486,53 +469,61 @@ resource "Me" do
     end
   end
 
-  get "/v1/me/slotgroups" do
+  get "/v1/me/calendars" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    response_field :id, "ID of the group"
-    response_field :name, "name of the group"
-    response_field :upcomingCount, "Number of upcoming group slots"
-    response_field :next, "Start date and Time of the next upcoming slot"
-    response_field :image, "URL of the group image"
-    response_field :url, "ressource URL for the group"
+    response_field :id, "UUID of the calendar"
+    response_field :name, "name of the calendar"
+    response_field :image, "URL of the calendar image"
+    response_field :public, "visibility of the calendar"
+    response_field :owner, "user details of the calendar owner"
+    # response_field :notifications, "does user get notifications for calendar"
+    response_field :showInSchedule, "are calendar slots shown in schedule"
+    response_field :createdAt, "Creation datetime of the calendar"
+    response_field :updatedAt, "Last update of the calendaar"
+    response_field :deletedAt, "Deletion datetime of the calendar"
 
     let!(:current_user) { create(:user, :with_email, :with_password,
                                  :with_3_groups, :with_3_own_groups) }
 
-    example "Get all groups where current user is member or owner",
+    example "Get all calendars where current user is member or owner",
             document: :v1 do
-      explanation "returns an array of groups"
+      explanation "returns an array of calendars"
 
       do_request
 
       expect(response_status).to eq(200)
-      expect(json.size).to eq current_user.active_groups.count
-      expect(json[0]).to have_key("id")
-      expect(json[0]).to have_key("name")
-      expect(json[0]).to have_key("image")
-      expect(json[0]).to have_key("owner")
-      expect(json[0]).to have_key("createdAt")
-      expect(json[0]).to have_key("updatedAt")
-      expect(json[0]).to have_key("deletedAt")
+      expect(json).to have_key("result")
+      calendars = json['result']
+      expect(calendars.size).to eq current_user.active_groups.count
+      expect(calendars[0]).to have_key("id")
+      expect(calendars[0]).to have_key("name")
+      expect(calendars[0]).to have_key("image")
+      expect(calendars[0]).to have_key("owner")
+      expect(calendars[0]).to have_key("createdAt")
+      expect(calendars[0]).to have_key("updatedAt")
+      expect(calendars[0]).to have_key("deletedAt")
+      expect(calendars[0]).to have_key("public")
+      expect(calendars[0]).to have_key("showInSchedule")
     end
   end
 
-  post "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  post "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+      create(:membership, :active, group: calendar, user: current_user) }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       containerships.collect(&:slot_id)
     end
 
-    example "Display Slotgroup/Calendar in mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup was successfully added to " \
+    example "Display Calendar in mySchedule", document: :v1 do
+      explanation "returns 200 if calendar was successfully added to " \
                   "schedule or has been part of it anyway."
       do_request
 
@@ -543,17 +534,17 @@ resource "Me" do
     end
   end
 
-  delete "/v1/me/schedule/slotgroup/:slotgroup_uuid" do
+  delete "/v1/me/schedule/calendar/:calendar_uuid" do
     header "Accept", "application/json"
     header "Authorization", :auth_header
 
-    let(:slotgroup) { create(:group) }
+    let(:calendar) { create(:group) }
     let!(:membership) {
-      create(:membership, :active, group: slotgroup, user: current_user,
+      create(:membership, :active, group: calendar, user: current_user,
              show_slots_in_schedule: true) }
-    let(:slotgroup_uuid) { slotgroup.uuid }
+    let(:calendar_uuid) { calendar.uuid }
     let!(:slot_ids) do
-      containerships = create_list(:containership, 3, group: slotgroup)
+      containerships = create_list(:containership, 3, group: calendar)
       slot_ids = containerships.collect(&:slot_id)
       slots = BaseSlot.find(slot_ids)
       slots.each { |slot|
@@ -563,8 +554,8 @@ resource "Me" do
       slot_ids
     end
 
-    example "Hide Slotgroup/Calendar from mySchedule", document: :v1 do
-      explanation "returns 200 if slotgroup successfully removed from " \
+    example "Hide Calendar from mySchedule", document: :v1 do
+      explanation "returns 200 if calendar successfully removed from " \
                   "schedule or hasn't been part of it anyway."
 
       expect(current_user.my_calendar_slot_ids).to match_array slot_ids
@@ -601,40 +592,16 @@ resource "Me" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
+    include_context "user params"
     include_context "current user response fields"
-
-    parameter :username, "Updated username of user (max. 50 characters)"
-    parameter :email, "Email of user (max. 255 characters)"
-    parameter :lang, "Language of user (2 characters, ISO 639-1)"
-    parameter :phone, "Phone number of user (max. 35 characters)"
-    parameter :image, "URL of the user image"
-    parameter :publicUrl, "Public URL for user on Timeslot (max. 255 chars)"
-    parameter :push, "Send push Notifications (true/false)"
-    parameter :slotDefaultDuration, "Default Slot Duration in seconds"
-    parameter :slotDefaultTypeId, "Default Slot Type - WIP"
-    parameter :slotDefaultLocationId, "Default Slot Location ID - WIP"
-    parameter :defaultPrivateAlerts,
-              "Default alerts for private slots of this user"
-    parameter :defaultOwnFriendslotAlerts,
-              "Default alerts for the friendslots of this user"
-    parameter :defaultOwnPublicAlerts,
-              "Default alerts for the public slots of this user"
-    parameter :defaultFriendsFriendslotAlerts,
-              "Default alerts for the friendslots from friends of this user"
-    parameter :defaultFriendsPublicAlerts,
-              "Default alerts for the public slots from friends of this user"
-    parameter :defaultReslotAlerts,
-              "Default alerts for the reslots of this user"
-    parameter :defaultGroupAlerts,
-              "Default alerts for all groupslots of this user" \
-              " where no specific alert is set. Groupslots" \
-              " may also have their own default alerts per group"
 
     describe "Update current users data" do
       let(:username) { "bar" }
-      let(:defaultPrivateAlerts) { '0111011100' }
+      let(:firstName) { "Barack" }
+      let(:gender) { "male" }
+      # let(:defaultPrivateAlerts) { '0111011100' }
 
-      example "Update - username and default alerts",
+      example "Update - username, firstname and gender",
               document: :v1 do
         explanation "E.g, change username and set default alerts\n\n" \
                     "returns user data\n\n" \
@@ -645,9 +612,13 @@ resource "Me" do
 
         current_user.reload
         expect(current_user.username).to eq "bar"
-        expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
+        expect(current_user.first_name).to eq "Barack"
+        expect(current_user.gender).to eq "male"
+        # expect(current_user.default_private_alerts).to eq defaultPrivateAlerts
         expect(response_status).to eq(200)
         expect(json["username"]).to eq current_user.username
+        expect(json["firstName"]).to eq current_user.first_name
+        expect(json["gender"]).to eq current_user.gender
         # expect(json["defaultPrivateAlerts"]).to eq current_user.default_private_alerts
       end
     end

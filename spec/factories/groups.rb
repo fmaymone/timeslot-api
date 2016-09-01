@@ -8,8 +8,22 @@ FactoryGirl.define do
     members_can_post false
     members_can_invite false
 
+    trait :public do
+      public true
+    end
+
+    trait :private do
+      public false
+    end
+
     trait :members_can_post do
       members_can_post true
+    end
+
+    trait :global do
+      public true
+      string_id "soccer_leagues:dfb.de:champions_league"
+      association :owner, :gs_category, strategy: :build
     end
 
     trait :members_can_invite do
@@ -18,6 +32,10 @@ FactoryGirl.define do
 
     trait :with_image do
       image "sample"
+    end
+
+    trait :with_description do
+      description "This is a description."
     end
 
     trait :with_3_members do
@@ -30,6 +48,10 @@ FactoryGirl.define do
       after :create do |group|
         create_list :containership, 3, group: group
       end
+    end
+
+    after :create do |group|
+      group.owner.follow(group)
     end
   end
 end

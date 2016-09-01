@@ -10,25 +10,35 @@ module V1
       render :show, locals: { slot: @slot }
     end
 
+    # so this is getting funny
+    # a slot can be created by sending a visibility param (old way) or sending
+    # slotgroup/calendar uuids, which then would be used to evaluate the slot
+    # visibility (new way). If both parameters are send, 'public' wins, which
+    # means if visibility is submitted as 'public', but no public group uuid,
+    # the slot will be public anyway. Also if 'private' is submitted, but also
+    # a public group uuid, the slot will be public (intermediate way).
+    # A slot will always be put into a group. If none is submitted it will be
+    # put in the users 'private' or 'public' slots group. The my_cal_uuid and
+    # the my_friend_slots_uuid are not treated as valid groups, so the slot
+    # will be put into 'private' or 'public' also.
     # POST /v1/slots
     def create
       authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params,
-                                   visibility: enforce_visibility,
+      @slot = BaseSlot.create_slot(meta: meta_params, visibility: 'private',
                                    media: media_params, notes: note_param,
+                                   description: params[:description],
                                    alerts: alerts_param, user: current_user)
 
-      if params.key?(:slot_groups) && params[:slot_groups].any?
-        add_to_slotsets(@slot, params[:slot_groups])
-      end
-
-      # TODO: improve, write spec
-      # only show created slot in schedule if my_calendar_uuid is send
-      unless params[:slot_groups].include?(current_user.slot_sets['my_cal_uuid'])
-        current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
-      end
-
       if @slot.persisted?
+        slot_visibility = visibility
+        slot_sets = valid_slotset_uuids
+
+        # take submitted visibility into account to maintain backward compatibility
+        adjust_slot_visibility(@slot, slot_visibility, slot_sets) if slot_visibility
+        add_to_slotsets(@slot, slot_sets) if slot_sets
+        add_to_default_slotgroups(@slot, slot_sets)
+        @slot.create_activity
+
         render :create, status: :created, locals: { slot: @slot }
       else
         render json: { error: @slot.errors },
@@ -36,7 +46,35 @@ module V1
       end
     end
 
-    # TODO: remove this
+    private def add_to_default_slotgroups(slot, sets)
+      # in case the slot is not put into any group (or only my_calendar or
+      # my_friend_slots - which are no real groups) we want to put it in
+      # either the users public or private calendar.
+      # ASK: vielleicht soll der schedule auch als kalender gelten
+      real_groups = sets - [current_user.my_friend_slots_uuid,
+                            current_user.my_cal_uuid] if sets
+
+      return unless real_groups.blank?
+
+      service = SlotsetManager.new(current_user: current_user)
+
+      if slot.visibility == 'public'
+        uuid = current_user.my_public_slots_uuid
+        public_group = Group.find_by uuid: uuid
+        service.add!(slot, public_group)
+      else
+        uuid = current_user.my_private_slots_uuid
+        private_group = Group.find_by uuid: uuid
+        service.add!(slot, private_group)
+      end
+    end
+
+    private def adjust_slot_visibility(slot, visibility, sets)
+      service = SlotsetManager.new(current_user: current_user)
+      service.adjust_visibility(slot, visibility, sets)
+    end
+
+    # TODO: deprecated, remove this
     # POST /v1/stdslot
     def create_stdslot
       authorize :stdSlot
@@ -66,7 +104,24 @@ module V1
       end
     end
 
-    # TODO: rename to /v1/slots/:id
+    # PATCH /v1/slots/1
+    def update
+      @slot = current_user.std_slots.find(params[:id])
+      authorize @slot
+
+      @slot.update_from_params(meta: meta_params,
+                               media: media_params, notes: note_param,
+                               description: params[:description],
+                               alerts: alerts_param, user: current_user)
+
+      if @slot.errors.empty?
+        render :show, locals: { slot: @slot }
+      else
+        render json: @slot.errors.messages, status: :unprocessable_entity
+      end
+    end
+
+    # TODO: deprecated, remove this at some point
     # PATCH /v1/stdslot/1
     def update_stdslot
       @slot = current_user.std_slots.find(params[:id])
@@ -92,6 +147,40 @@ module V1
 
       if @slot.delete
         render :create, locals: { slot: @slot }
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /v1/slot/1/media
+    def delete_media
+      slot_id = params.require(:id).to_i
+      media_ids = params.require(:media).map(&:values)
+      @slot = current_user.std_slots.find(slot_id)
+
+      authorize @slot
+      @slot.media_items.find(media_ids).each(&:delete)
+
+      if @slot.errors.empty?
+        head :ok
+      else
+        render json: { error: @slot.errors },
+               status: :unprocessable_entity
+      end
+    end
+
+    # DELETE /v1/slot/1/notes
+    def delete_notes
+      slot_id = params.require(:id).to_i
+      note_ids = params.require(:notes).map(&:values)
+      @slot = current_user.std_slots.find(slot_id)
+
+      authorize @slot
+      @slot.notes.find(note_ids).each(&:delete)
+
+      if @slot.errors.empty?
+        head :ok
       else
         render json: { error: @slot.errors },
                status: :unprocessable_entity
@@ -176,20 +265,28 @@ module V1
     end
 
     # GET /v1/slots/1/slotsets
+    # TODO: refactor
     def slotsets
       slot = BaseSlot.get(params[:id])
       authorize slot
 
       @slotgroups = current_user.groups & slot.slot_groups
 
-      if current_user.my_calendar_slots.include? slot
-        @my_cal_uuid = current_user.slot_sets['my_cal_uuid']
-      else
-        @my_cal_uuid = false
-      end
+      @my_cal_uuid = if current_user.my_calendar_slots.include? slot
+                       current_user.my_cal_uuid
+                     else
+                       false
+                     end
+
+      @share_with_friends = if (slot.class < StdSlot) && slot.share_with_friends?
+                              current_user.my_friend_slots_uuid
+                            else
+                              false
+                            end
 
       render :slotsets, locals: { slot_groups: @slotgroups,
-                                  my_cal_uuid: @my_cal_uuid }
+                                  my_cal_uuid: @my_cal_uuid,
+                                  share_with_friends: @share_with_friends }
     end
 
     # POST /v1/slots/1/slotsets
@@ -202,12 +299,13 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
+    # DELETE /v1/slots/1/slotsets
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
       # TODO: update spec
-      if params[:slot_groups].delete(current_user.slot_sets['my_cal_uuid'])
+      if params[:slot_groups].delete(current_user.my_cal_uuid)
         # current_user.passengerships.find_by(slot: @slot).try(:delete)
         current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end
@@ -234,25 +332,6 @@ module V1
       render :reslot_history
     end
 
-    # POST /v1/slots/1/copy
-    def copy
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-      @slot.copy_to(copy_params, current_user)
-
-      head :ok
-      # TODO: return the newly generated slots
-    end
-
-    # POST /v1/slots/1/move
-    def move
-      old_slot = BaseSlot.get(params[:id])
-      authorize old_slot
-      new_slot = old_slot.move_to(move_params, current_user)
-
-      render :show, locals: { slot: new_slot }
-    end
-
     private def enforce_visibility
       params.require :visibility
       visibility
@@ -271,7 +350,8 @@ module V1
                            :locality, :sub_locality, :administrative_area,
                            :sub_administrative_area, :postal_code, :country,
                            :iso_country_code, :in_land_water, :ocean, :latitude,
-                           :longitude, :private_location, :areas_of_interest])
+                           :longitude, :private_location, :areas_of_interest,
+                           :place_id])
       # sets iosLocation to the content of params['location']
       p[:ios_location] = p.delete(:location) if params[:location].present?
 
@@ -325,16 +405,19 @@ module V1
       params.require(:content)
     end
 
-    private def copy_params
-      target_params = [:slot_type, :group_id, :details]
-      params.require(:copy_to).map do |p|
-        t = ActionController::Parameters.new(p.to_hash).permit(target_params)
-        t.symbolize_keys
-      end
+    # returns array of valid uuids or nil
+    private def valid_slotset_uuids
+      valid_slot_group_uuids? ? params[:slot_groups] : nil
     end
 
-    private def move_params
-      params.permit(:slot_type, :group_id, :details)
+    # returns error for if array contains an invalid uuid
+    private def valid_slot_group_uuids?
+      return false unless params.key?(:slot_groups) &&
+                          params[:slot_groups].present?
+      params[:slot_groups].each do |uuid|
+        valid_uuid = !(uuid =~ /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/i).nil?
+        raise ParameterInvalid.new(:slot_group, uuid) unless valid_uuid
+      end
     end
   end
 end

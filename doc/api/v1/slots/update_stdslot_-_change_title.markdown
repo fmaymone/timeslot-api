@@ -2,7 +2,7 @@
 
 ## Update StdSlot - change title
 
-### PATCH /v1/stdslot/:id
+### PATCH /v1/slots/:id
 
 Update content of StdSlot.
 
@@ -19,9 +19,6 @@ returns 422 if parameters are invalid
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : visibility
-Description : Visibility of the Slot to update (private/friends/foaf/public)
-
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -30,6 +27,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : description
+Description : Description for the slot (max. 500 characters)
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -73,6 +73,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -89,6 +92,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -113,13 +119,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw
+Authorization: Token token=RcW2IaUw3FU-ugDtho8enSwLhTU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/12</pre>
+<pre>PATCH /v1/slots/12</pre>
 
 #### Body
 ```javascript
@@ -131,9 +137,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=tgdiQ1ZlHg2oSac3nC9msVF63hw&quot;</pre>
+	-H &quot;Authorization: Token token=RcW2IaUw3FU-ugDtho8enSwLhTU&quot;</pre>
 
 ### Response
 
@@ -143,12 +149,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;2c57b48b12c0c69d786e0ef5ddac85a2&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6cd82eda0c365e3936f3589c02640606&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e86b932a-143c-49d5-bba0-6e92ea9a5599
-X-Runtime: 0.014287
-Vary: Origin
-Content-Length: 482</pre>
+X-Request-Id: 4b10e771-1f03-4729-b0e5-132f63576122
+X-Runtime: 0.067026
+Content-Length: 621</pre>
 
 #### Status
 
@@ -160,17 +166,21 @@ Content-Length: 482</pre>
 {
   "id" : 12,
   "title" : "New title for a Slot",
-  "startDate" : "2019-09-27T08:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.741Z",
-  "updatedAt" : "2016-04-04T20:50:31.741Z",
+  "description" : "",
+  "startDate" : "2019-09-07T00:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:07.623Z",
+  "updatedAt" : "2016-08-30T09:51:07.623Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-27T08:44:02.000Z",
+  "endDate" : "2019-10-07T00:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 28,
-    "username" : "User 330",
-    "createdAt" : "2016-04-04T20:50:31.729Z",
-    "updatedAt" : "2016-04-04T20:50:31.729Z",
+    "id" : 23,
+    "username" : "User 729",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.615Z",
+    "updatedAt" : "2016-08-30T09:51:07.615Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -180,7 +190,11 @@ Content-Length: 482</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
+  "visibleCount" : "1"
 }
 ```

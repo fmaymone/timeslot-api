@@ -162,7 +162,7 @@ resource "Connects" do
       end
 
       context "sign in" do
-        let(:user) { create(:user) }
+        let!(:user) { create(:user) }
         let!(:identity) do
           create(:connect, user: user, social_id: socialId)
         end

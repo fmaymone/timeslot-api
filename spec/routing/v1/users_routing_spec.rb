@@ -36,5 +36,10 @@ RSpec.describe V1::UsersController, type: :routing do
       expect(get: "/v1/users/1/calendars")
         .to route_to("v1/users#calendars", id: "1", format: :json)
     end
+
+    it "routes to #dates" do
+      expect(get: "/v1/users/1/dates")
+        .to route_to("v1/users#dates", id: "1", format: :json)
+    end
   end
 end

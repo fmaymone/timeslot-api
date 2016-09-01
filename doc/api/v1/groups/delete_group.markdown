@@ -41,6 +41,12 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
+Name : defaultColor
+Description : default color of the group, can be overwritten per member
+
 Name : createdAt
 Description : Creation of group
 
@@ -57,19 +63,19 @@ Description : Membership state for current user
 
 #### Headers
 
-<pre>Authorization: Token token=j4aMB9VkFHYqX5qhrtw1zVlsEAU
+<pre>Authorization: Token token=DwHGqkPL9wI8U8DZg6dcbRoqHI8
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/fa174835-546d-407d-812b-b31c2e7ea7c8</pre>
+<pre>DELETE /v1/groups/fcfc983a-605c-4ea3-afd4-f8fbb12303a0</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/fa174835-546d-407d-812b-b31c2e7ea7c8&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=j4aMB9VkFHYqX5qhrtw1zVlsEAU&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/fcfc983a-605c-4ea3-afd4-f8fbb12303a0&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=DwHGqkPL9wI8U8DZg6dcbRoqHI8&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -80,12 +86,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;47f51268d31fc6e0a2b5233d3c1010d2&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;24abab24af4d53fbeb429ff6af8d12e4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 75b869b1-0a26-46e7-bc4c-5920016dd2e8
-X-Runtime: 0.076292
-Vary: Origin
-Content-Length: 475</pre>
+X-Request-Id: badae91c-5701-4147-80d3-b7277f95af89
+X-Runtime: 0.189803
+Content-Length: 590</pre>
 
 #### Status
 
@@ -95,26 +101,32 @@ Content-Length: 475</pre>
 
 ```javascript
 {
-  "id" : "fa174835-546d-407d-812b-b31c2e7ea7c8",
-  "name" : "Testgroup 5",
+  "id" : "fcfc983a-605c-4ea3-afd4-f8fbb12303a0",
+  "name" : "Testgroup 130",
   "image" : "",
+  "description" : null,
+  "defaultColor" : "000000",
   "membersCanPost" : false,
   "membersCanInvite" : false,
   "public" : false,
-  "createdAt" : "2016-04-04T20:50:22.063Z",
-  "updatedAt" : "2016-04-04T20:50:22.157Z",
-  "deletedAt" : "2016-04-04T20:50:22.156Z",
+  "createdAt" : "2016-08-30T09:50:50.448Z",
+  "updatedAt" : "2016-08-30T09:50:50.654Z",
+  "deletedAt" : "2016-08-30T09:50:50.653Z",
   "owner" : {
-    "id" : 15,
-    "username" : "User 76",
-    "createdAt" : "2016-04-04T20:50:22.059Z",
-    "updatedAt" : "2016-04-04T20:50:22.110Z",
+    "id" : 314,
+    "username" : "User 424",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:50.445Z",
+    "updatedAt" : "2016-08-30T09:50:50.510Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [],
   "memberCount" : 0,
   "slotCount" : 0,
-  "membershipState" : "deleted"
+  "membershipState" : "deleted",
+  "color" : "000000"
 }
 ```

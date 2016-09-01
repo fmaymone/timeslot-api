@@ -73,12 +73,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;685792419d76b1e419ec5a0a5a76dae8&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;5b131330aed7bb024359923daa05a1de&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8deafb1f-4635-43ce-9520-8ade3d4c23f1
-X-Runtime: 0.023694
-Vary: Origin
-Content-Length: 771</pre>
+X-Request-Id: a1b39882-ea55-402c-b890-d7042622a78c
+X-Runtime: 0.032888
+Content-Length: 896</pre>
 
 #### Status
 
@@ -88,16 +88,20 @@ Content-Length: 771</pre>
 
 ```javascript
 {
-  "id" : 9,
+  "id" : 6,
   "username" : "alexandrospar",
-  "createdAt" : "2016-04-04T20:50:20.808Z",
-  "updatedAt" : "2016-04-04T20:50:20.808Z",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:42.072Z",
+  "updatedAt" : "2016-08-30T09:50:42.072Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
   "email" : null,
   "emailVerified" : false,
@@ -105,15 +109,16 @@ Content-Length: 771</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "c4cd0d34-03e9-4d76-9f04-6840db914924",
-  "friendsCalendarUuid" : "eea9bdb9-9868-47eb-8984-1416a5d07901",
-  "allMySlotsUuid" : "cc42fd7f-9ac9-4ce4-8b76-93e8766c4992",
-  "myCreatedSlotsUuid" : "76f85c5e-43af-49b2-8281-a6dd8438d5ad",
-  "myFriendSlotsUuid" : "dafbf964-5a48-4d12-a0d2-bccda31ea086",
-  "myPublicSlotsUuid" : "9308c7ef-43bd-4f1a-92a7-65e58be1f374",
+  "myCalendarUuid" : "92a0390f-6fbf-4b89-ae61-9a68c0766f92",
+  "friendsCalendarUuid" : "c237c962-7eaa-40f4-a28e-ec3be871b8c8",
+  "allMySlotsUuid" : "b44170bc-6796-46d0-b3c7-a42c931c1fa1",
+  "myCreatedSlotsUuid" : "a23a1335-1bfa-41f4-961f-24f6646d9957",
+  "myPrivateSlotsUuid" : "5df477b3-a96f-49fb-a00d-0e2ec5375a70",
+  "myFriendSlotsUuid" : "f0094ff2-8867-4bec-b7cc-7ab7c2c62533",
+  "myPublicSlotsUuid" : "0b3f7a19-817a-4bf6-bb40-a5c12daef511",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself",
-  "authToken" : "ydJLhBAZr9d1035O-n_CSXhzUY4"
+  "authToken" : "1SQiNe0UVuUUi7RFnNSKNy-0SzA"
 }
 ```

@@ -33,6 +33,27 @@ describe GroupPolicy do
     end
   end
 
+  permissions :destroy? do
+    let(:user) { create(:user) }
+
+    context "special group/calendar" do
+      let(:my_public_slots_uuid) { user.slot_sets['my_public_slots_uuid'] }
+      let(:group) { create(:group, owner: user, uuid: my_public_slots_uuid) }
+
+      it "denies access" do
+        expect(subject).not_to permit(user, group)
+      end
+    end
+
+    context "normal group/calendar" do
+      let(:group) { create(:group, owner: user) }
+
+      it "allows access" do
+        expect(subject).to permit(user, group)
+      end
+    end
+  end
+
   permissions :accept_invite?, :refuse_invite? do
     let(:user) { create(:user) }
 
@@ -147,9 +168,9 @@ describe GroupPolicy do
     end
   end
 
-  permissions :show?, :leave?, :slots?, :members?, :member_settings?,
-              :add_slot?, :remove_slot?, :add_slotgroup_to_schedule?,
-              :remove_slotgroup_from_schedule? do
+  permissions :show?, :leave?, :slots?, :dates?, :members?, :member_settings?,
+              :add_slot?, :remove_slot?, :add_calendar_to_schedule?,
+              :remove_calendar_from_schedule? do
     let(:user) { create(:user) }
 
     context "current_user is active group member" do
@@ -174,10 +195,10 @@ describe GroupPolicy do
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
       [
-        :show?, :leave?, :slots?, :members?, :member_settings?,
+        :show?, :leave?, :slots?, :dates?, :members?, :member_settings?,
         :index?, :create?, :update?, :destroy?, :related?, :subscribe?,
         :invite?, :kick?, :accept_invite?, :refuse_invite?,
-        :add_slotgroup_to_schedule?, :remove_slotgroup_from_schedule?
+        :add_calendar_to_schedule?, :remove_calendar_from_schedule?
       ]
     }
     let(:user) { nil }
@@ -200,23 +221,18 @@ describe GroupPolicy do
       context "current_user is group owner" do
         let(:group) { create(:group, public: true, owner: user) }
 
+        it "denies access" do
+          expect(subject).not_to permit(user, group)
+        end
+      end
+
+      context "global_slot category is group owner" do
+        let(:group) {
+          create(:group, public: true,
+                 owner: create(:user, role: 'global_slot_category'))
+        }
         it "allows access" do
           expect(subject).to permit(user, group)
-        end
-      end
-
-      context "current_user is group member" do
-        let!(:membership) {
-          create(:membership, :active, group: group, user: user)
-        }
-        it "denies access" do
-          expect(subject).not_to permit(user, group)
-        end
-      end
-
-      context "current_user is not group owner" do
-        it "denies access" do
-          expect(subject).not_to permit(user, group)
         end
       end
     end

@@ -6,6 +6,10 @@ RSpec.describe User, type: :model do
   subject { user }
 
   it { is_expected.to respond_to(:username) }
+  it { is_expected.to respond_to(:first_name) }
+  it { is_expected.to respond_to(:middle_name) }
+  it { is_expected.to respond_to(:last_name) }
+  it { is_expected.to respond_to(:gender) }
   it { is_expected.to respond_to(:email) }
   it { is_expected.to respond_to(:auth_token) }
   it { is_expected.to respond_to(:image) }
@@ -15,15 +19,20 @@ RSpec.describe User, type: :model do
   it { is_expected.to respond_to(:deleted_at) }
   it { is_expected.to respond_to(:std_slots) }
   it { is_expected.to respond_to(:devices) }
+  it { is_expected.to respond_to(:user_uuid) }
   it { is_expected.to have_many(:created_slots).inverse_of(:creator) }
   it { is_expected.to have_many(:passengerships).inverse_of(:user) }
+  it { is_expected.to have_many(:related_slots) }
   it { is_expected.to have_many(:my_calendar_slots)
                        .inverse_of(:my_calendar_users) }
+  it { is_expected.to have_many(:tagged_slots)
+                       .inverse_of(:tagged_users) }
   it { is_expected.to have_many(:own_groups).inverse_of(:owner) }
   it { is_expected.to have_many(:memberships).inverse_of(:user) }
   it { is_expected.to have_many(:active_memberships).inverse_of(:user) }
   it { is_expected.to have_many(:groups).through(:memberships) }
   it { is_expected.to have_many(:active_groups).through(:active_memberships) }
+  it { is_expected.to have_many(:group_slots).through(:active_groups) }
   it { is_expected.to have_many(:slot_settings).inverse_of(:user) }
   it { is_expected.to have_many(:std_slots).inverse_of(:owner) }
   it { is_expected.to have_many(:std_slots_private).inverse_of(:owner) }
@@ -57,6 +66,11 @@ RSpec.describe User, type: :model do
   describe "when name is too long" do
     before { user.username = "a" * 51 }
     it { is_expected.to_not be_valid }
+  end
+
+  describe "when name contains whitespaces" do
+    before { user.username = " john \t doe " }
+    it { user.save and (expect(user.username).to eq("john doe")) }
   end
 
   describe "email" do
@@ -224,28 +238,52 @@ RSpec.describe User, type: :model do
     end
   end
 
-  # describe :shared_group_slots do
-  #   let(:user) { create(:user) }
-  #   let(:bob) { create(:user) }
+  describe :shared_group_slots do
+    let(:user) { create(:user) }
+    let(:bob) { create(:user) }
 
-  #   let!(:slot_1) { create(:group_slot) }
-  #   let!(:slot_2) { create(:group_slot) }
-  #   let!(:slot_3) { create(:group_slot) }
+    let!(:common_group_public) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: user)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
 
-  #   let!(:memberships) {
-  #     create(:membership, :active, group: slot_1.group, user: user)
-  #     create(:membership, :active, group: slot_1.group, user: bob)
-  #     create(:membership, :active, group: slot_2.group, user: user)
-  #     create(:membership, :active, group: slot_2.group, user: bob)
-  #     create(:membership, :active, group: slot_3.group, user: bob)
-  #   }
+    let!(:common_group_private) do
+      group = create(:group, :with_3_slots, public: false)
+      create(:membership, :active, group: group, user: user)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
 
-  #   it "returns slots from common groups but not from other groups" do
-  #     result = user.shared_group_slots(bob)
-  #     expect(result).to include slot_1
-  #     expect(result).not_to include slot_3
-  #   end
-  # end
+    let!(:group_from_bob) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: bob)
+      group
+    end
+
+    let!(:group_from_user) do
+      group = create(:group, :with_3_slots, public: true)
+      create(:membership, :active, group: group, user: user)
+      group
+    end
+
+    it "returns all slots from common groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).to include common_group_public.slots.first
+      expect(result).to include common_group_public.slots.last
+      expect(result).to include common_group_private.slots.first
+      expect(result).to include common_group_private.slots.last
+    end
+
+    it "doesn't return slots from uncommon groups" do
+      result = user.shared_group_slots(bob)
+      expect(result).not_to include group_from_bob.slots.first
+      expect(result).not_to include group_from_bob.slots.last
+      expect(result).not_to include group_from_user.slots.first
+      expect(result).not_to include group_from_user.slots.last
+    end
+  end
 
   describe :friends_count do
     let(:user) { create(:user)}
@@ -277,14 +315,14 @@ RSpec.describe User, type: :model do
     let!(:stranger) do
       stranger = create(:user, :with_private_slot, :with_friend_slot,
                         :with_foaf_slot, :with_public_slot)
-      create(:std_slot_public, owner: stranger, deleted_at: "12-05-2015")
+      create(:std_slot_public, creator: stranger, deleted_at: "12-05-2015")
       stranger
     end
 
     it "returns the number of stdslots current_user can see from other user" do
-      expect(friend.visible_slots_counter(current_user, StdSlot)).to eq 3
-      expect(foaf.visible_slots_counter(current_user, StdSlot)).to eq 2
-      expect(stranger.visible_slots_counter(current_user, StdSlot)).to eq 1
+      expect(friend.visible_slots_counter(current_user)).to eq 3
+      expect(foaf.visible_slots_counter(current_user)).to eq 2
+      expect(stranger.visible_slots_counter(current_user)).to eq 1
     end
   end
 
@@ -921,44 +959,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe "create_with_device" do
-    let(:user_params) {
-      { params: attributes_for(:user, password: 'something') }
-    }
-    let(:device) { attributes_for(:device) }
-
-    context "valid params" do
-      it "creates a new user" do
-        expect {
-          User.create_with_device(user_params)
-        }.to change(User, :count).by 1
-      end
-
-      it "sets the default role for the user" do
-        User.create_with_device(user_params)
-        expect(User.last.role).to eq "basic"
-        expect(User.last.basic?).to be true
-        expect(User.last.webview?).to be false
-      end
-
-      it "sets a device if provided" do
-        user_params[:device] = device
-        expect {
-          User.create_with_device(user_params)
-        }.to change(Device, :count).by 1
-      end
-    end
-
-    context "invalid params" do
-      it "doesn't create a new user if username is nil" do
-        user_params[:params][:username] = nil
-        expect {
-          User.create_with_device(user_params)
-        }.not_to change(User, :count)
-      end
-    end
-  end
-
   describe "sign_in" do
     let(:user) { create(:user, :with_email, :with_password) }
 
@@ -1004,7 +1004,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  describe :reset_password, :vcr do
+  describe :reset_password, :vcr, :aws do
     context "valid params" do
       let!(:user) do
         create(:user,

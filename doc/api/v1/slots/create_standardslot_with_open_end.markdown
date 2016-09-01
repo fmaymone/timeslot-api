@@ -29,6 +29,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : description
+Description : Description for the slot (max. 500 characters)
+
 Name : location
 Description : Location associated with this slot (see example)
 
@@ -71,6 +74,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -87,6 +93,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -115,7 +124,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=9tA_7BT14QdN_zEN4UKZjG2q_Sw
+Authorization: Token token=M4fAtRToD3_z10BVNSsa6aektBc
 Host: example.org
 Cookie: </pre>
 
@@ -152,7 +161,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=9tA_7BT14QdN_zEN4UKZjG2q_Sw&quot;</pre>
+	-H &quot;Authorization: Token token=M4fAtRToD3_z10BVNSsa6aektBc&quot;</pre>
 
 ### Response
 
@@ -162,12 +171,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;fe492c2fce9c85ae21d01277e8b0e30f&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;bc537e2d8e1645f661d156777fff5c1b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d96160b3-611d-4784-81af-ad383c146a2f
-X-Runtime: 0.033860
-Vary: Origin
-Content-Length: 782</pre>
+X-Request-Id: 2a05e84f-4d91-4808-b693-32d4b5358995
+X-Runtime: 0.101409
+Content-Length: 902</pre>
 
 #### Status
 
@@ -179,16 +188,20 @@ Content-Length: 782</pre>
 {
   "id" : 9,
   "title" : "Time for a Slot",
+  "description" : "",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.512Z",
-  "updatedAt" : "2016-04-04T20:50:31.512Z",
+  "createdAt" : "2016-08-30T09:51:07.312Z",
+  "updatedAt" : "2016-08-30T09:51:07.312Z",
   "deletedAt" : null,
   "location" : null,
   "creator" : {
-    "id" : 23,
-    "username" : "User 325",
-    "createdAt" : "2016-04-04T20:50:31.501Z",
-    "updatedAt" : "2016-04-04T20:50:31.501Z",
+    "id" : 18,
+    "username" : "User 724",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.301Z",
+    "updatedAt" : "2016-08-30T09:51:07.301Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -198,18 +211,18 @@ Content-Length: 782</pre>
   },
   "notes" : [
     {
-      "id" : 8,
-      "title" : "and another title",
-      "content" : "more content here",
-      "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.520Z"
-    },
-    {
       "id" : 7,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.517Z"
+      "createdAt" : "2016-08-30T09:51:07.317Z"
+    },
+    {
+      "id" : 8,
+      "title" : "and another title",
+      "content" : "more content here",
+      "localId" : null,
+      "createdAt" : "2016-08-30T09:51:07.360Z"
     }
   ],
   "media" : [],
@@ -217,8 +230,11 @@ Content-Length: 782</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "unauthorizedSlotgroups" : []
 }
 ```

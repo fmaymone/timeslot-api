@@ -25,18 +25,18 @@ Description : list of all users who added the slot to their &#39;MyCalendar&#39;
 
 #### Headers
 
-<pre>Authorization: Token token=jGWiaacDShjiMi2tTpDEMVwczxM
+<pre>Authorization: Token token=qZkFWGUzZ2X7N8H9DmtAMxuZ-tw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/30/slotters</pre>
+<pre>GET /v1/slots/33/slotters</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/30/slotters&quot; -X GET \
-	-H &quot;Authorization: Token token=jGWiaacDShjiMi2tTpDEMVwczxM&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/33/slotters&quot; -X GET \
+	-H &quot;Authorization: Token token=qZkFWGUzZ2X7N8H9DmtAMxuZ-tw&quot;</pre>
 
 ### Response
 
@@ -46,12 +46,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c78e9a171b482c1f495527914785b2ab&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;d1b788e0bfb795587c8722a42f7bfff7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6ae44f43-e9b4-44a1-a0e9-c42c19e64693
-X-Runtime: 0.011486
-Vary: Origin
-Content-Length: 301</pre>
+X-Request-Id: 95adf2d6-de8f-489f-9c32-8147e59dd9e6
+X-Runtime: 0.011260
+Content-Length: 403</pre>
 
 #### Status
 
@@ -63,20 +63,26 @@ Content-Length: 301</pre>
 [
   {
     "slotter" : {
-      "id" : 94,
-      "username" : "User 396",
-      "createdAt" : "2016-04-04T20:50:33.019Z",
-      "updatedAt" : "2016-04-04T20:50:33.019Z",
+      "id" : 88,
+      "username" : "User 805",
+      "firstName" : null,
+      "middleName" : null,
+      "lastName" : null,
+      "createdAt" : "2016-08-30T09:51:10.395Z",
+      "updatedAt" : "2016-08-30T09:51:10.395Z",
       "deletedAt" : null,
       "image" : ""
     }
   },
   {
     "slotter" : {
-      "id" : 95,
-      "username" : "User 397",
-      "createdAt" : "2016-04-04T20:50:33.024Z",
-      "updatedAt" : "2016-04-04T20:50:33.024Z",
+      "id" : 89,
+      "username" : "User 806",
+      "firstName" : null,
+      "middleName" : null,
+      "lastName" : null,
+      "createdAt" : "2016-08-30T09:51:10.400Z",
+      "updatedAt" : "2016-08-30T09:51:10.400Z",
       "deletedAt" : null,
       "image" : ""
     }

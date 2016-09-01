@@ -32,10 +32,16 @@ class GroupPolicy < ApplicationPolicy
   end
 
   def destroy?
+    return false unless current_user?
+    return false if current_user.slot_sets.values.include? group.uuid
     update?
   end
 
   def slots?
+    show?
+  end
+
+  def dates?
     show?
   end
 
@@ -50,6 +56,7 @@ class GroupPolicy < ApplicationPolicy
   # true if the current user is an active member of the group
   def add_slot?
     return false unless current_user?
+    return true if current_user == group.owner
     return true if current_user.active_member? group
     false
   end
@@ -110,23 +117,24 @@ class GroupPolicy < ApplicationPolicy
   end
 
   # true if current user is an active member of the group
-  def add_slotgroup_to_schedule?
+  def add_calendar_to_schedule?
     return false unless current_user?
     return true if current_user.active_member? group.id
     false
   end
 
   # true if current user is an active member of the group
-  def remove_slotgroup_from_schedule?
+  def remove_calendar_from_schedule?
     return false unless current_user?
     return true if current_user.active_member? group.id
     false
   end
 
-  # true if the group is public and belongs to
-  # the crawler source making the request
+  # true if the group is public and
+  # belongs to a global slot category
   def global_group?
-    return true if group.public? && group.owner == current_user
+    return false unless group.public?
+    return true if group.owner.global_slot_category?
     false
   end
 

@@ -42,6 +42,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -58,6 +61,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -82,6 +88,15 @@ Description : ID of the user
 
 Name : username
 Description : Username of the user
+
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
 
 Name : createdAt
 Description : Creation of user
@@ -112,7 +127,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=VNsdVgaZlC_w3wgTmZxTdOcdDhU
+Authorization: Token token=enkqayJABCJTIkc_gc9L_Nj1CR8
 Host: example.org
 Cookie: </pre>
 
@@ -124,7 +139,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/notification&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=VNsdVgaZlC_w3wgTmZxTdOcdDhU&quot;</pre>
+	-H &quot;Authorization: Token token=enkqayJABCJTIkc_gc9L_Nj1CR8&quot;</pre>
 
 ### Response
 
@@ -134,12 +149,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;e4dbee2b8da198c857bf8c4c5c00c5ca&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;f5cef04d2b39e0061b52e64b9c1ab671&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 71d97f02-1051-4bc1-9ebf-f9ed7335b44d
-X-Runtime: 0.005874
-Vary: Origin
-Content-Length: 1765</pre>
+X-Request-Id: 7075827d-6906-4377-b85c-219a2252a0f1
+X-Runtime: 0.005603
+Content-Length: 2529</pre>
 
 #### Status
 
@@ -148,108 +163,149 @@ Content-Length: 1765</pre>
 #### Body
 
 ```javascript
-[
-  {
-    "type" : "Slot",
-    "target" : "3",
-    "action" : "comment",
-    "time" : "2016-04-04T20:50:21.262Z",
-    "id" : "62CFC3DA66F0C172290514380A5C7434095DCCF8",
-    "actors" : [
-      10
-    ],
-    "message" : "User 60 commented on the Slot: Slot title 23",
-    "data" : {
-      "target" : {
-        "id" : 3,
+{
+  "cursor" : 0,
+  "next" : null,
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "slot",
+      "action" : "comment",
+      "time" : "2016-08-30T09:50:48.901Z",
+      "id" : "07D85BAE1A558A3DF0FA591EC61F97E79CED0CAF",
+      "message" : "{actor} commented on your Slot: {slot}",
+      "actors" : [
+        {
+          "id" : 275,
+          "username" : "User 386",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.897Z",
+          "updatedAt" : "2016-08-30T09:50:48.897Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
+        "id" : 108,
         "title" : "Slot title 23",
-        "startDate" : "2019-09-22T21:44:02.000Z",
-        "createdAt" : "2016-04-04T20:50:21.227Z",
-        "updatedAt" : "2016-04-04T20:50:21.272Z",
+        "description" : "",
+        "startDate" : "2019-09-01T09:44:02.000Z",
+        "createdAt" : "2016-08-30T09:50:48.864Z",
+        "updatedAt" : "2016-08-30T09:50:48.907Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-22T21:44:02.000Z",
-        "location" : null,
+        "endDate" : "2019-10-01T09:44:02.000Z",
+        "location" : {
+          "id" : "d65a93a4-64e0-40ba-a8fe-380b04a33a97",
+          "name" : "Acapulco",
+          "thoroughfare" : null,
+          "subThoroughfare" : null,
+          "locality" : null,
+          "subLocality" : null,
+          "administrativeArea" : null,
+          "subAdministrativeArea" : null,
+          "postalCode" : null,
+          "country" : null,
+          "isoCountryCode" : null,
+          "inLandWater" : null,
+          "ocean" : null,
+          "areasOfInterest" : null,
+          "latitude" : 51.234,
+          "longitude" : -11.993,
+          "placeId" : null
+        },
         "creator" : {
-          "id" : 8,
-          "username" : "User 58",
-          "createdAt" : "2016-04-04T20:50:21.215Z",
-          "updatedAt" : "2016-04-04T20:50:21.215Z",
+          "id" : 272,
+          "username" : "User 382",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.849Z",
+          "updatedAt" : "2016-08-30T09:50:48.849Z",
           "deletedAt" : null,
           "image" : ""
         },
         "notes" : [],
         "media" : [
           {
-            "mediaId" : 18,
-            "publicId" : "dfhjghjkdisudgfds7iy21",
+            "mediaId" : 468,
+            "publicId" : "dfhjghjkdisudgfds7iy381",
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-04-04T20:50:21.250Z",
+            "createdAt" : "2016-08-30T09:50:48.894Z",
             "duration" : null,
-            "title" : "Title 21"
+            "title" : "Title 381"
           },
           {
-            "mediaId" : 17,
-            "publicId" : "dfhjghjkdisudgfds7iy20",
+            "mediaId" : 467,
+            "publicId" : "dfhjghjkdisudgfds7iy380",
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.244Z",
+            "createdAt" : "2016-08-30T09:50:48.889Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 16,
-            "publicId" : "dfhjghjkdisudgfds7iy19",
+            "mediaId" : 466,
+            "publicId" : "dfhjghjkdisudgfds7iy379",
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.242Z",
+            "createdAt" : "2016-08-30T09:50:48.882Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 15,
-            "publicId" : "dfhjghjkdisudgfds7iy18",
+            "mediaId" : 465,
+            "publicId" : "dfhjghjkdisudgfds7iy378",
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.239Z"
+            "createdAt" : "2016-08-30T09:50:48.878Z"
           },
           {
-            "mediaId" : 14,
-            "publicId" : "dfhjghjkdisudgfds7iy17",
+            "mediaId" : 464,
+            "publicId" : "dfhjghjkdisudgfds7iy377",
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.235Z"
+            "createdAt" : "2016-08-30T09:50:48.874Z"
           },
           {
-            "mediaId" : 13,
-            "publicId" : "dfhjghjkdisudgfds7iy16",
+            "mediaId" : 463,
+            "publicId" : "dfhjghjkdisudgfds7iy376",
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.231Z"
+            "createdAt" : "2016-08-30T09:50:48.871Z"
           }
         ],
         "settings" : {
           "alerts" : "omitted"
         },
         "visibility" : "public",
+        "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 1
+        "commentsCounter" : 1,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
       },
-      "actor" : {
-        "id" : 10,
-        "username" : "User 60",
-        "createdAt" : "2016-04-04T20:50:21.253Z",
-        "updatedAt" : "2016-04-04T20:50:21.253Z",
+      "user" : {
+        "id" : 272,
+        "username" : "User 382",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.849Z",
+        "updatedAt" : "2016-08-30T09:50:48.849Z",
         "deletedAt" : null,
         "image" : ""
       }
     }
-  }
-]
+  ]
+}
 ```

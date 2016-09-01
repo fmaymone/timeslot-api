@@ -10,12 +10,15 @@ RSpec.describe BaseSlot, type: :model do
   it { is_expected.to respond_to(:images) }
   it { is_expected.to respond_to(:audios) }
   it { is_expected.to respond_to(:videos) }
+  it { is_expected.to respond_to(:description) }
   it { is_expected.to belong_to(:meta_slot).inverse_of(:slots) }
   it { is_expected.to have_many(:containerships).inverse_of(:slot) }
   it { is_expected.to have_many(:slot_groups).inverse_of(:slots) }
   it { is_expected.to have_many(:passengerships).inverse_of(:slot) }
   it { is_expected.to have_many(:my_calendar_users)
                        .inverse_of(:my_calendar_slots) }
+  it { is_expected.to have_many(:tagged_users)
+                       .inverse_of(:tagged_slots) }
   it { is_expected.to have_many(:media_items) }
   it { is_expected.to have_many(:notes).inverse_of(:slot) }
   it { is_expected.to have_many(:likes).inverse_of(:slot) }
@@ -37,6 +40,16 @@ RSpec.describe BaseSlot, type: :model do
 
   describe "when MetaSlot is not present" do
     before { base_slot.meta_slot = nil }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when inheritance types are out of sync" do
+    before { base_slot.slot_type = 2 }
+    it { is_expected.to_not be_valid }
+  end
+
+  describe "when description is too long" do
+    before { base_slot.description = "a" * 501 }
     it { is_expected.to_not be_valid }
   end
 
@@ -244,10 +257,10 @@ RSpec.describe BaseSlot, type: :model do
     end
   end
 
-  describe :create_comment, :aws, :async do
-    let(:creator) { create(:user) }
-    let(:user) { create(:user) }
-    let(:std_slot) { create(:std_slot, creator: creator) }
+  describe :create_comment, :aws, :async, :redis do
+    let!(:creator) { create(:user) }
+    let!(:user) { create(:user) }
+    let!(:std_slot) { create(:std_slot_public, creator: creator, owner: creator) }
     let!(:device) { create(:device, :with_endpoint, user: creator) }
 
     it "adds a new comment to the slot" do
@@ -279,31 +292,35 @@ RSpec.describe BaseSlot, type: :model do
       end
 
       context "existing comments" do
-        let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
-        let(:commenters) { existing_comments.collect(&:user_id) }
+        let!(:comments) { [create(:comment, slot: std_slot, user: user),
+                           create(:comment, slot: std_slot, user: creator),
+                           create(:comment, slot: std_slot, user: create(:user))] }
+        let(:commenters) { comments.map(&:user_id) }
+        let(:followers) { std_slot.followers.map(&:to_i) }
+        let(:recievers) { [std_slot.creator_id] + commenters + followers - [user.id] }
 
         it "notifies previous commenters if a new comment was made" do
-          expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] + commenters - [user.id], anything)
+          expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
           std_slot.create_comment(user, 'some content for the comment')
         end
       end
 
       context "existing likes" do
+        let(:recievers) { [std_slot.creator_id] - [user.id] }
+
         it "notifies the slot creator if a new comment was made" do
-          expect(Device).to receive(:notify_all).with(
-                              [std_slot.creator_id] - [user.id], anything)
-          std_slot.create_comment(user, 'some content for the comment')
+          expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
+          std_slot.create_like(user)
         end
 
         context "existing comments and likes" do
           let!(:existing_comments) { create_list(:comment, 3, slot: std_slot) }
           let(:commenters) { existing_comments.collect(&:user_id) }
+          let(:followers) { std_slot.followers.map(&:to_i) }
+          let(:recievers) { [std_slot.creator_id] + commenters + followers - [user.id] }
 
           it "notifies the commenters and likers if a new comment was made" do
-            expect(Device).to receive(:notify_all).with(
-                                [std_slot.creator_id] + commenters - [user.id],
-                                anything)
+            expect(Device).to receive(:notify_all).with(recievers.uniq, anything)
             std_slot.create_comment(user, 'some content for the comment')
           end
 
@@ -312,7 +329,7 @@ RSpec.describe BaseSlot, type: :model do
             expect(Device).to receive(:notify_all).with(
                                     notified_ids, anything)
             std_slot.create_like(user)
-
+            # Re-perform same action again
             expect(Device).not_to receive(:notify_all).with(
                                     notified_ids, anything)
             std_slot.create_like(user)
@@ -346,29 +363,17 @@ RSpec.describe BaseSlot, type: :model do
         .to eq std_slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N')
     end
 
-    it "notifies airbrake if start_date of slot has changed" do
-      std_slot.update(start_date: std_slot.start_date.yesterday.noon)
-      expect(Airbrake).to receive(:notify)
-      described_class.from_paging_cursor(encoded_slot)
-    end
-
-    it "notifies airbrake if end_date of slot has changed" do
-      std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
-      expect(Airbrake).to receive(:notify)
-      described_class.from_paging_cursor(encoded_slot)
-    end
-
     it "raises error if cursor string invalid" do
       std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
       expect {
-        described_class.from_paging_cursor('something_wrong')
+        described_class.from_paging_cursor('**something_wrong')
       }.to raise_error ApplicationController::PaginationError
     end
 
     it "raises error if cursor contains invalid slot.id" do
       std_slot.update(end_date: std_slot.end_date.tomorrow.midnight)
       expect {
-        described_class.from_paging_cursor(encoded_slot.slice(2, 8))
+        described_class.from_paging_cursor(encoded_slot.slice(2, 9))
       }.to raise_error ApplicationController::PaginationError
     end
   end

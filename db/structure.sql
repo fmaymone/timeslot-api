@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.0
--- Dumped by pg_dump version 9.5.0
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -117,7 +117,8 @@ CREATE TABLE base_slots (
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
     type text NOT NULL,
-    slot_uuid uuid DEFAULT uuid_generate_v4()
+    slot_uuid uuid DEFAULT uuid_generate_v4(),
+    description character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -348,7 +349,9 @@ CREATE TABLE groups (
     image character varying(255) DEFAULT ''::character varying NOT NULL,
     uuid uuid NOT NULL,
     public boolean DEFAULT false NOT NULL,
-    string_id text DEFAULT ''::text NOT NULL
+    string_id text DEFAULT ''::text NOT NULL,
+    description character varying(255),
+    default_color character varying DEFAULT '000000'::character varying NOT NULL
 );
 
 
@@ -369,6 +372,40 @@ CREATE SEQUENCE groups_id_seq
 --
 
 ALTER SEQUENCE groups_id_seq OWNED BY groups.id;
+
+
+--
+-- Name: invitecodes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE invitecodes (
+    id integer NOT NULL,
+    user_id bigint NOT NULL,
+    context character varying,
+    code character varying,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: invitecodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE invitecodes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: invitecodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE invitecodes_id_seq OWNED BY invitecodes.id;
 
 
 --
@@ -396,7 +433,8 @@ CREATE TABLE ios_locations (
     private_location boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    uuid uuid DEFAULT uuid_generate_v4()
+    uuid uuid DEFAULT uuid_generate_v4() NOT NULL,
+    place_id character varying
 );
 
 
@@ -507,7 +545,8 @@ CREATE TABLE memberships (
     deleted_at timestamp without time zone,
     state bit(3) DEFAULT B'011'::"bit",
     default_alerts bit(10),
-    show_slots_in_schedule boolean DEFAULT false NOT NULL
+    show_slots_in_schedule boolean DEFAULT false NOT NULL,
+    color character varying DEFAULT '000000'::character varying NOT NULL
 );
 
 
@@ -722,7 +761,8 @@ CREATE TABLE std_slots (
     updated_at timestamp without time zone,
     deleted_at timestamp without time zone,
     meta_slot_id bigint,
-    owner_id bigint NOT NULL
+    owner_id bigint NOT NULL,
+    share_with_friends boolean DEFAULT false NOT NULL
 )
 INHERITS (base_slots);
 
@@ -759,7 +799,12 @@ CREATE TABLE users (
     email_verified boolean DEFAULT false NOT NULL,
     lang character varying(8),
     picture character varying(255) DEFAULT ''::character varying NOT NULL,
-    slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL
+    slot_sets hstore DEFAULT hstore(ARRAY[ARRAY['my_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['friends_cal_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_lib_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_created_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_friend_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_private_slots_uuid'::text, (uuid_generate_v4())::text], ARRAY['my_public_slots_uuid'::text, (uuid_generate_v4())::text]]) NOT NULL,
+    user_uuid uuid DEFAULT uuid_generate_v4() NOT NULL,
+    first_name text,
+    middle_name text,
+    last_name text,
+    gender text
 );
 
 
@@ -832,10 +877,24 @@ ALTER TABLE ONLY global_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v
 
 
 --
+-- Name: description; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY global_slots ALTER COLUMN description SET DEFAULT ''::character varying;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invitecodes ALTER COLUMN id SET DEFAULT nextval('invitecodes_id_seq'::regclass);
 
 
 --
@@ -930,6 +989,13 @@ ALTER TABLE ONLY std_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4()
 
 
 --
+-- Name: description; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY std_slots ALTER COLUMN description SET DEFAULT ''::character varying;
+
+
+--
 -- Name: id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -990,6 +1056,14 @@ ALTER TABLE ONLY friendships
 
 ALTER TABLE ONLY groups
     ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: invitecodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY invitecodes
+    ADD CONSTRAINT invitecodes_pkey PRIMARY KEY (id);
 
 
 --
@@ -1150,10 +1224,31 @@ CREATE UNIQUE INDEX index_groups_on_uuid ON groups USING btree (uuid);
 
 
 --
+-- Name: index_invitecodes_on_code; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_invitecodes_on_code ON invitecodes USING btree (code);
+
+
+--
+-- Name: index_invitecodes_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_invitecodes_on_user_id ON invitecodes USING btree (user_id);
+
+
+--
 -- Name: index_ios_locations_on_name_and_latitude_and_longitude; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE UNIQUE INDEX index_ios_locations_on_name_and_latitude_and_longitude ON ios_locations USING btree (name, latitude, longitude);
+
+
+--
+-- Name: index_ios_locations_on_place_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_ios_locations_on_place_id ON ios_locations USING btree (place_id);
 
 
 --
@@ -1255,10 +1350,17 @@ CREATE UNIQUE INDEX index_users_on_auth_token ON users USING btree (auth_token);
 
 
 --
--- Name: index_users_on_email; Type: INDEX; Schema: public; Owner: -
+-- Name: unique_index_through_basic_user_email_accounts; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE UNIQUE INDEX index_users_on_email ON users USING btree (email);
+CREATE UNIQUE INDEX unique_index_through_basic_user_email_accounts ON users USING btree (email) WHERE ((role = 0) AND (email IS NOT NULL));
+
+
+--
+-- Name: unique_index_through_public_user_email_accounts; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_index_through_public_user_email_accounts ON users USING btree (email, username) WHERE ((role > 0) AND (email IS NOT NULL));
 
 
 --
@@ -1493,4 +1595,24 @@ INSERT INTO schema_migrations (version) VALUES ('20160303174854');
 INSERT INTO schema_migrations (version) VALUES ('20160309215254');
 
 INSERT INTO schema_migrations (version) VALUES ('20160311110857');
+
+INSERT INTO schema_migrations (version) VALUES ('20160330140930');
+
+INSERT INTO schema_migrations (version) VALUES ('20160405112204');
+
+INSERT INTO schema_migrations (version) VALUES ('20160411104513');
+
+INSERT INTO schema_migrations (version) VALUES ('20160416150256');
+
+INSERT INTO schema_migrations (version) VALUES ('20160417140125');
+
+INSERT INTO schema_migrations (version) VALUES ('20160510125032');
+
+INSERT INTO schema_migrations (version) VALUES ('20160603103055');
+
+INSERT INTO schema_migrations (version) VALUES ('20160711102234');
+
+INSERT INTO schema_migrations (version) VALUES ('20160826225331');
+
+INSERT INTO schema_migrations (version) VALUES ('20160829092803');
 

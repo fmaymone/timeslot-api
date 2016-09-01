@@ -29,20 +29,20 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#my_slots", format: :json)
     end
 
-    it "routes to #calendar" do
-      expect(get: "/v1/me/calendar")
-        .to route_to("v1/me#calendar", format: :json)
+    it "routes to #schedule" do
+      expect(get: "/v1/me/schedule")
+        .to route_to("v1/me#schedule", format: :json)
     end
 
-    it "routes to #add_slotgroup_to_schedule" do
-      expect(post: "/v1/me/schedule/slotgroup/#{uuid}")
-        .to route_to("v1/me#add_slotgroup_to_schedule",
+    it "routes to #add_calendar_to_schedule" do
+      expect(post: "/v1/me/schedule/calendar/#{uuid}")
+        .to route_to("v1/me#add_calendar_to_schedule",
                      uuid: uuid, format: :json)
     end
 
-    it "routes to #remove_slotgroup_from_schedule" do
-      expect(delete: "/v1/me/schedule/slotgroup/#{uuid}")
-        .to route_to("v1/me#remove_slotgroup_from_schedule",
+    it "routes to #remove_calendar_from_schedule" do
+      expect(delete: "/v1/me/schedule/calendar/#{uuid}")
+        .to route_to("v1/me#remove_calendar_from_schedule",
                      uuid: uuid, format: :json)
     end
 
@@ -61,9 +61,9 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#suggested_users", format: :json)
     end
 
-    it "routes to #my_groups" do
-      expect(get: "/v1/me/slotgroups")
-        .to route_to("v1/me#my_groups", format: :json)
+    it "routes to #calendars" do
+      expect(get: "/v1/me/calendars")
+        .to route_to("v1/me#calendars", format: :json)
     end
 
     it "routes to #add_friends" do

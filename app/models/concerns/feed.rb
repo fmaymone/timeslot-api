@@ -4,12 +4,23 @@ module Feed
 
   class << self
 
+    def discovery_feed(user, params = {})
+      feed = 'Feed:0:Discovery'
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'activity', nil)
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
+    end
+
     def user_feed(user, params = {})
       feed = "Feed:#{user}:User"
       cache = get_from_cache(feed, params)
       return cache if cache
       page = paginate(feed, params)
-      result = enrich_feed(page, 'me')
+      result = enrich_feed(page, 'me', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -20,7 +31,18 @@ module Feed
       cache = get_from_cache(feed, params)
       return cache if cache
       page = paginate(feed, params)
-      result = enrich_feed(page, 'notify')
+      result = enrich_feed(page, 'notify', user)
+      set_to_cache(feed, params, result)
+    rescue => error
+      error_handler(error, feed, params)
+    end
+
+    def request_feed(user, params = {})
+      feed = "Feed:#{user}:Request"
+      cache = get_from_cache(feed, params)
+      return cache if cache
+      page = paginate(feed, params)
+      result = enrich_feed(page, 'notify', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -32,7 +54,7 @@ module Feed
       cache = get_from_cache(feed, params)
       return cache if cache
       page = aggregate_feed(feed, params)
-      result = enrich_feed(page, 'activity')
+      result = enrich_feed(page, 'activity', user)
       set_to_cache(feed, params, result)
     rescue => error
       error_handler(error, feed, params)
@@ -49,141 +71,293 @@ module Feed
     #    related to the current users content
     # 3. Notification Feed (takes all activities which are related to the users content),
     #    own activities are not included here
-    #
-    # There are two different types of distributable lists:
-    #
-    # 1. Notify (includes all users which will be notified through social relations)
-    # 2. Forward (includes additional forwardings to specific user feeds)
+    # 4. Request Feed (takes all requests which are related to the user),
+    #    own request activities are also included here
 
     def dispatch(params)
-
-      # Generates and add activity id
-      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :notify, :forward, :message).to_json).upcase
+      # Generate and add activity id
+      params[:id] = Digest::SHA1.hexdigest(params.except(:data, :forward).to_json).upcase
+      # Determine target key for redis set
+      target_index = "#{params[:type]}:#{params[:target]}"
 
       ## -- Store Shared Objects (Write-Opt) -- ##
 
-      # Store target to its own index (shared objects)
+      # Store activity to context-based feed index (shared activity)
       # NOTE: Targets are generic and can have different types (e.g. Slot, User, Group)
-      @storage.set("#{params[:type]}:#{params[:target]}", gzip_data_field(params, :target))
+      @storage.set(target_index, gzip_json(params[:data][:target]))
       # Store actor to its own index (shared objects)
-      @storage.set("User:#{params[:actor]}", gzip_data_field(params, :actor))
+      @storage.set("User:#{params[:actor]}", gzip_json(params[:data][:actor]))
+      # Store foreign user to its own index (shared objects)
+      @storage.set("User:#{params[:foreign]}", gzip_json(params[:data][:foreign])) if params[:foreign].present?
+      # Store corresponding group to its own index (shared objects)
+      @storage.set("Group:#{params[:group]}", gzip_json(params[:data][:group])) if params[:group].present?
+      # Store corresponding group to its own index (shared objects)
+      @storage.set("Slot:#{params[:slot]}", gzip_json(params[:data][:slot])) if params[:slot].present?
 
-      ## -- Store Current Activity (Write-Opt) -- ##
+      ## -- Store social context to the activity object (Delete-Opt) -- ##
 
-      # Determine target key for redis set
-      target_index = "#{params[:type]}:#{params[:target]}"
+      @storage.push("Context:#{target_index}", params[:forward].values.to_json)
+
+      ## -- Store Current Activity to context-based feeds (Write-Opt) -- ##
+
       # Returns the position of added activity (required for asynchronous access)
       activity_index = @storage.push("Feed:#{target_index}", gzip_feed(params)) - 1
       # Determine target index for hybrid "Write-Read-Opt"
       target_key = "#{target_index}:#{activity_index}"
 
-      ## -- Collect Activity Distribution -- ##
-
-      feed_register = { User: [], News: [], Notification: [] }
-
-      # NOTE: Actually we skip default distribution if custom forwardings was passed
-      if params[:forward].empty?
-        # Store own activities to feed (my activities)
-        feed_register[:User] << params[:actor]
-        # Send to other users through social relations ("Read-Opt" Strategy)
-        feed_register[:News] += params[:notify]
-        # Store activity to own notification feed (related to own content, filter out own activities)
-        feed_register[:Notification] << params[:foreign] if params[:foreign].present? && (params[:actor] != params[:foreign])
-      else
-        # Add all custom forwardings
-        params[:forward].each{ |index, users| feed_register[index] += users }
-      end
-
       ## -- Distribute Activities (Read-Opt) -- ##
 
-      distribute(target_key, feed_register)
+      distribute(target_key, forwarding: params[:forward])
     end
 
-    # We using backtracking to improve performance by removing activities through all feeds
-    # To backtrack activities from its corresponding target feed it is required to find the index which
-    # points to the target feed index, where the related activity is stored
-
-    def remove_item_from_feed(object:, model:, target:, type:, notify:)
+    # Removes a specific activity from the recipients feeds (e.g. remove a like)
+    def remove_activity(target:, type:, object:, model:, forward: nil)
+      removed_recipients = []
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
       target_feed = @storage.range("Feed:#{target_key}", 0, -1)
+      # Fetch distributed context from target feed (shared feed)
+      context = @storage.range("Context:#{target_key}")
       # Loop through all shared activities to find backtracking index
-      # NOTE: This loop may can be skipped by using real redis pointers
+      # NOTE: This loop may can be skipped by using native redis pointers
       target_feed.each_with_index do |activity, index|
+        # Skip already deleted activities
+        next if context[index] == ''
         # Enrich target activity (to access original activity data)
         activity = enrich_activity_struct(unzip_json(activity))
         # Identify single activity
         if (activity['object'] == object) && (activity['model'] == model)
+          # Add distributed context to the recipients
+          recipients = forward || JSON.parse(context[index])
+          removed_recipients += recipients.flatten
+
+          # Deletes old activity pointer (keep index)
+          @storage.set_to_index("Feed:#{target_key}", index, nil)
+          @storage.set_to_index("Context:#{target_key}", index, nil)
           # Loop through all related user feeds through social relations
-          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, notify)
-          break
+          remove_activity_from_feed("#{target_key}:#{index}", Time.now.to_f, recipients)
+          # Break loop when activity was found
+          # NOTE: still repeat on combined activities (actually when a friendship was accepted)
+          # NOTE: the action friendship was set first, so we can also skip when the combined activity 'accept' occures
+          break unless activity['action'] == 'friendship' # || activity['action'] == 'accept'
         end
       end
+      removed_recipients.uniq!
+      removed_recipients
     end
 
-    def remove_target_from_feeds(target:, type:, notify:)
+    # TODO: improve
+    # Removes a target from the recipients feeds (e.g. remove all activities related to a slot)
+    def remove_target(target:, type:)
+      removed_recipients = []
       target_key = "#{type}:#{target}"
       # Fetch all activities from target feed (shared feed)
-      target_feed_length = @storage.length("Feed:#{target_key}") - 1
+      feed_length = @storage.length("Feed:#{target_key}") - 1
+      # Fetch distributed context from target feed (shared feed)
+      context = @storage.range("Context:#{target_key}")
       # The timestamp is used to validate the feed cache
-      current = Time.now.to_f
-      # Loop through all target activities via backtracking
-      (0..target_feed_length).each do |index|
+      current_time = Time.now.to_f
+      # Loop through all target activities stored in the target feed
+      (0..feed_length).each do |index|
+        # Skip already deleted activities
+        next if context[index] == ''
+        # Enrich target activity (to access original activity data)
+        activity = enrich_activity_struct(unzip_json(@storage.index("Feed:#{target_key}", index)))
+        # TODO: improve by using a hybrid model
+        # Re-perform activity within the original context to get current distributions
+        model = activity['model'].constantize.find(activity['object'].to_i)
+        model.initiator = User.find(activity['actor'].to_i) if model.respond_to?(:initiator)
+
+        # Determine activity context
+        preserve = model.activity_context(activity['action'])
+        recipients = JSON.parse(context[index])
+
+        # FIX: Creator can always see activities to own content
+        if (activity['model'] == 'Slot' && model.creator.id.to_s == activity['foreign']) ||
+           (activity['model'] == 'Group' && model.owner.id.to_s == activity['foreign'])
+          preserve.map!{|a| a << activity['foreign']}
+        end
+
+        # Add distributed context to the recipients
+        recipients.map!.with_index{|a,i| a - preserve[i]}
+        removed_recipients += recipients.flatten
+
         # We do not delete the activity source, instead we remove the pointers to
         # this activity which was distributed to the users feeds
-        remove_activity_from_feed("#{target_key}:#{index}", current, notify)
+        remove_activity_from_feed("#{target_key}:#{index}", current_time, recipients)
+
+        # Update state of actual distributed context
+        if preserve.any?
+          @storage.set_to_index("Context:#{target_key}", index, preserve.to_json)
+        else
+          # Deletes old activity pointer (keep index)
+          @storage.set_to_index("Feed:#{target_key}", index, nil)
+          @storage.set_to_index("Context:#{target_key}", index, nil)
+        end
+      end
+      removed_recipients.uniq!
+      removed_recipients
+    end
+
+    # TODO: improve
+    def remove_user(user)
+      # Remove all distributed activities where the current user was actor
+      Like.where(user: user).find_each(&:remove_activity)
+      Comment.where(user: user).find_each(&:remove_activity)
+      MediaItem.where(creator: user).find_each(&:remove_activity)
+      Note.where(creator: user).find_each(&:remove_activity)
+      Group.where(owner: user).find_each(&:remove_activity)
+
+      # Remove all distributed activities where the current user was creator/owner
+      BaseSlot.joins(:meta_slot).where('creator_id = ?', user.id).find_each do |slot|
+        slot.containerships.each(&:remove_activity)
+        slot.passengerships.each(&:remove_activity)
+        slot.likes.each(&:remove_activity)
+        slot.comments.each(&:remove_activity)
+        slot.media_items.each(&:remove_activity)
+        slot.notes.each(&:remove_activity)
+        slot.remove_activity
       end
     end
 
-    def remove_user_from_feeds(user:, notify:)
-      # NOTE: For this step we need to fetch all related objects
-      targets = user.std_slots
+    # TODO: improve
+    def remove_friends(users)
+      users = [users] unless users.kind_of?(Array)
+      users.each do |user|
+        # Remove all distributed activities where the current user was actor
+        Like.where(user: user).each(&:reduce_distribution_by)
+        Comment.where(user: user).each(&:reduce_distribution_by)
+        MediaItem.where(creator: user).each(&:reduce_distribution_by)
+        Note.where(creator: user).each(&:reduce_distribution_by)
+        Group.where(owner: user).each(&:reduce_distribution_by)
 
-      # We collect job data here and pass this into the removal job worker
-      job_data = []
-
-      targets.each do |target|
-        # Try to extend social context for each target
-        context = target.try(:followers)
-        context.merge!(notify).uniq if context
-        # Collect job data (remove by target)
-        job_data << { target: target.id,
-                      type: target.activity_type,
-                      notify: context || notify }
+        # Remove all distributed activities where the current user was creator/owner
+        user.std_slots.each(&:reduce_distribution_by)
+        user.passengerships.each(&:reduce_distribution_by)
+        user.memberships.each(&:reduce_distribution_by)
+        user.friendships.each(&:reduce_distribution_by)
       end
-      job_data
     end
 
-    private def remove_activity_from_feed(feed_key, time, notify)
+    # TODO: improve
+    def update_objects(objects)
+      objects = [objects] unless objects.kind_of?(Array)
+      user_feeds = []
+
+      objects.each do |object|
+        next unless object
+        json = render_shared_object(object)
+        activity_type = object.class.name
+        # Normalize slot type
+        %w(StdSlotPrivate StdSlotFriends StdSlotPublic StdSlotFoaf GlobalSlot StdSlot).each do |replace|
+          activity_type.gsub!(replace, 'Slot')
+        end
+        # Update object data
+        @storage.set("#{activity_type}:#{object.id}", gzip_json(json)) if json
+
+        # Collect followers to update involved feeds
+        user_feeds += object.followers
+        case activity_type
+        when 'Slot'
+          user_feeds << object.creator.id
+        when 'Group'
+          user_feeds << object.owner.id
+        when 'User'
+          user_feeds << object.id
+        end
+      end
+
+      user_feeds.uniq!
+      refresh_cache(user_feeds)
+    end
+
+    # TODO: improve
+    def refresh_cache(user_ids, time = Time.now.to_f)
+      user_ids = [user_ids] unless user_ids.kind_of?(Array)
+
       @storage.pipe do
-        # Loop through all related user feeds through social relations
-        notify.each do |user_id|
-          %W(Feed:#{user_id}:User
-             Feed:#{user_id}:News
-             Feed:#{user_id}:Notification).each do |feed_index|
-            # Remove activity by object (removes a single pointer to an activity)
-            @storage.remove_all(feed_index, feed_key)
-            # Store the feeds update time to force re-validation of the cache
+        user_ids.each do |user_id|
+          %W(Feed:#{user_id}:News
+             Feed:#{user_id}:User
+             Feed:#{user_id}:Notification
+             Feed:#{user_id}:Request).each do |feed_index|
             @storage.set("Update:#{feed_index}", time)
+          end
+        end
+        # TODO: improve
+        @storage.set("Update:Feed:0:Discovery", time)
+      end
+    end
+
+    def render_shared_object(object)
+      return nil unless object.present?
+      case object.class.name
+      when 'StdSlotPrivate', 'StdSlotFriends', 'StdSlotPublic', 'StdSlotFoaf', 'GlobalSlot', 'StdSlot'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/slots/_slot',
+            layout: false,
+            locals: {
+                slot: object,
+                current_user: object.creator
+            }
+        ))
+      when 'Group'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/groups/index',
+            layout: false,
+            locals: {
+                groups: [object],
+                current_user: object.owner
+            }
+        ))
+        json = json['result'][0] if json.has_key?('result')
+      when 'User'
+        json = JSON.parse(ApplicationController.new.render_to_string(
+            template: 'v1/users/_user',
+            layout: false,
+            locals: {
+                user: object
+            }
+        ))
+      else
+        json = nil
+      end
+      json
+    end
+
+    private def remove_activity_from_feed(activity, time, recipients)
+      Async.new(db: false) do
+        @storage.pipe do
+          # Loop through all related user feeds through social relations
+          %w(User News Notification Request Discovery).each_with_index do |feed, index|
+            recipients[index].each do |user_id|
+              feed_index = "Feed:#{user_id}:#{feed}"
+              # Remove activity by object (removes a single pointer to an activity)
+              @storage.remove_all(feed_index, activity)
+              # Store the feeds update time to force re-validation of the cache
+              @storage.set("Update:#{feed_index}", time)
+            end
           end
         end
       end
     end
 
-    private def distribute(target_key, distributor)
+    private def distribute(target_key, forwarding:)
       # The timestamp is used to validate the feed cache
       current_time = Time.now.to_f
       # Distribute to all user feeds (including custom forwardings like friend requests, deletions, etc.)
-      distributor.each do |index, users|
+      forwarding.each do |index, user_ids|
         # Send to other users ("Read-Opt" Strategy)
-        if users.any?
-          @storage.pipe do
-            users.uniq.each do |user|
-              feed_index = "Feed:#{user}:#{index}"
-              # Delegate activity to a feed
-              @storage.push(feed_index, target_key)
-              # Store the feeds update time to force re-validation of the cache
-              @storage.set("Update:#{feed_index}", current_time)
+        if user_ids.any?
+          Async.new(db: false) do
+            @storage.pipe do
+              user_ids.each do |user_id|
+                feed_index = "Feed:#{user_id}:#{index}"
+                # Delegate activity to a feed
+                @storage.push(feed_index, target_key)
+                # Store the feeds update time to force re-validation of the cache
+                @storage.set("Update:#{feed_index}", current_time)
+              end
             end
           end
         end
@@ -191,14 +365,24 @@ module Feed
     end
 
     private def paginate(feed_index, limit: 25, offset: 0, cursor: nil)
+      length = @storage.length(feed_index)
       # Get offset in reversed logic (LIFO), supports simple cursor fallback
       offset = cursor ? cursor.to_i : offset.to_i
-      # Catch MIN as MAX in reversed order
-      min = [offset + limit.to_i, @storage.length("Feed:#{feed_index}") - 1].min
+      # Determine start in reversed order
+      start = [length - offset - limit.to_i, 0].max
+      start = length if offset >= length
+      # Determine range in reversed order
+      range = [start + limit.to_i - 1, length - offset - 1].min
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = @storage.range(feed_index, offset, min).reverse!
+      feed = @storage.range(feed_index, start, range).reverse!
       # Enrich target activities
-      feed.map{ |a| enrich_activity(a) }
+      feed.map!{ |a| enrich_activity(a) }
+      {
+          cursor: offset,
+          next: nil,
+          prev: nil,
+          results: feed
+      }.as_json
     end
 
     private def enrich_activity(target_key, index = nil)
@@ -218,111 +402,203 @@ module Feed
         target: feed[4],
         action: feed[5],
         foreign: feed[6],
-        time: feed[7],
-        id: feed[8]
+        group: feed[7],
+        slot: feed[8],
+        time: Time.zone.at(feed[9]),
+        id: feed[10]
       }.as_json
     end
 
-    private def enrich_feed(feed, view)
-      feed.each do |activity|
+    private def enrich_feed(feed, view, viewer)
+      feed['results'].each do |activity|
         # Set single actors to array to simplify enrichment process
         activity['actors'] ||= [activity['actor'].to_i] if activity['actor']
-        # In handy we remove the single field 'actor' on aggregated feeds
-        activity.delete('actor')
         # Get the first actor (from shared objects)
-        actor = get_shared_object("User:#{activity['actors'].first}")
+        actor = get_shared_object("User:#{activity['actor']}")
         # Get target (from shared object)
         target = get_shared_object("#{activity['type']}:#{activity['target']}")
 
-        # FIX: This is temporary solution for syncing issues on iOS
-        # actor = JSONView.user(User.find(activity['actors'].first))
-        # target = JSONView.slot(BaseSlot.get(activity['target']))
-
         # Prepare filtering out private targets from feed + skip (this is an extra check)
-        if target.try(:visibility) == 'private'
-          activity['target'] = nil
-          next
-        end
+        # if target.try(:visibility) == 'private'
+        #   activity['target'] = nil
+        #   next
+        # end
 
-        # iOs requires the friendshipstate (we use the type of action to determine state)
-        # NOTE: the friendship state cannot be stored to shared objects, it is individual!
-        case activity['action']
-          when 'request'
-            actor['friendshipState'] = 'pending passive'
-          when 'friendship'
-            actor['friendshipState'] = 'friend'
-            # FIX: delegate second user if friendship was accepted
-            activity['actors'] << activity['target'].to_i
-          when 'unfriend'
-            actor['friendshipState'] = 'stranger'
-        end
+        # Add individual data related to each users feed:
+        enrich_personal_data(activity, actor, target, viewer)
 
         # Update message params with enriched message
-        activity['message'] = enrich_message(activity, actor, target, view) || ''
+        activity['message'] = enrich_message(activity, actor, target, view, viewer) || ''
+        # Enrich actors as full objects
+        activity['actors'].map!{|user| get_shared_object("User:#{user}")}
+
         # Enrich with custom activity data (shared objects)
-        activity['data'] = { target: target, actor: actor }
-        # Remove special fields are not used by frontend
-        remove_fields_from_activity(activity)
+        case activity['type']
+        when 'Slot'
+          activity['slot'] = target
+          activity['target'] = 'slot'
+          # Get foreign user (from shared object)
+          activity['user'] = get_shared_object("User:#{activity['foreign']}")
+          # Get group (from shared object)
+          activity['group'] = get_shared_object("Group:#{activity['group']}")
+        when 'User'
+          activity['user'] = target
+          activity['target'] = 'user'
+        when 'Group'
+          activity['group'] = target
+          activity['target'] = 'group'
+          # Get foreign user (from shared object)
+          activity['user'] = get_shared_object("User:#{activity['foreign']}")
+          # Get group (from shared object)
+          activity['slot'] = get_shared_object("Slot:#{activity['slot']}")
+        else
+        end
+        activity['actor'] = actor
+
+        # Removes all special fields are not used by frontend + sort hashes
+        activity.slice!(
+          'target',
+          'action',
+          'time',
+          'id',
+          'message',
+          'cursor',
+          'actors',
+          'group',
+          'slot',
+          'user'
+        )
       end
       # Filter out private targets from feed (removed targets from preparation)
-      feed.delete_if { |activity| activity['target'].nil? || activity['message'].blank? }
+      feed['results'].delete_if { |activity| activity['message'].blank? } # || activity['target'].nil?
       feed
     end
 
-    private def enrich_message(activity, actor, target, view)
+    private def enrich_personal_data(activity, actor, target, viewer)
+      # iOs requires the friendshipstate (we use the type of action to determine bi-directional state)
+      # NOTE: the friendship state cannot be stored to shared objects, it is individual!
+      if activity['type'] == 'User'
+        if viewer == actor['id'] || viewer == target['id']
+          case activity['action']
+          when 'request'
+            if viewer == actor['id']
+              actor['friendshipState'] = 'pending passive'
+              target['friendshipState'] = 'pending active'
+            else
+              actor['friendshipState'] = 'pending active'
+              target['friendshipState'] = 'pending passive'
+            end
+          when 'friendship', 'accept'
+            actor['friendshipState'] = 'friend'
+            target['friendshipState'] = 'friend'
+          when 'unfriend'
+            actor['friendshipState'] = 'stranger'
+            target['friendshipState'] = 'stranger'
+          else
+          end
+        else
+          # TODO: we have to fetch the personalized friendship-state from DB
+          fs = Friendship.distinct.select(:state).find_by(user_id: viewer, friend_id: target['id'])
+          if fs
+            case fs.state
+            when OFFERED
+              target['friendshipState'] = 'pending active'
+            when ESTABLISHED
+              target['friendshipState'] = 'friend'
+            else
+              target['friendshipState'] = 'stranger'
+            end
+          else
+            fs = Friendship.distinct.select(:state).find_by(user_id: target['id'], friend_id: viewer)
+            if fs
+              case fs.state
+              when OFFERED
+                target['friendshipState'] = 'pending passive'
+              when ESTABLISHED
+                target['friendshipState'] = 'friend'
+              else
+                target['friendshipState'] = 'stranger'
+              end
+            else
+              target['friendshipState'] = 'stranger'
+            end
+          end
+        end
+      # elsif activity['type'] == 'Group' && target['previewSlots'].nil?
+      #   target['previewSlots'] = Group.find_by(uuid: target['id']).preview_slots
+      # elsif activity['type'] == 'Slot' && target['firstGroup'].nil?
+      #   user = User.find(actor['id'])
+      #   target['firstGroup'] = BaseSlot.find_by(id: target['id']).first_group(user)
+      end
+    end
+
+    private def enrich_message(activity, actor, target, view, viewer)
       actor_count = activity['actors'].count
-      # Adds the first username and sets usercount to translation params
-      # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
-      i18_params = { ACTOR: actor['username'], COUNT: actor_count > 2 ? actor_count - 1 : actor_count }
-      # TODO:
-      # Add the targets field to the translation params holder (actually not in use)
-      i18_params[:FIELD] = 'title'
-      # Add the title to the translation params holder
-      i18_params[:TITLE] = target['title'] if target && target['title']
-      # Add the name to the translation params holder
-      i18_params[:NAME] = target['name'] if target && target['name']
+
       # Collect further usernames for aggregated messages (actual we need 2 at maximum)
       if actor_count > 1
         # Get second actor (from shared objects)
-        actor = get_shared_object("User:#{activity['actors'].second}")
-        # Add the second username to the translation params holder
-        i18_params[:USER] = actor['username']
+        target_user = get_shared_object("User:#{activity['actors'].second}")
       elsif activity['foreign'].present?
         # Get second actor (from shared objects)
-        actor = get_shared_object("User:#{activity['foreign']}")
-        # Add the second username to the translation params holder
-        i18_params[:USER] = actor['username'].presence if actor
+        target_user = get_shared_object("User:#{activity['foreign']}")
+      elsif activity['type'] == 'User'
+        # Get target user (from shared objects)
+        target_user = get_shared_object("User:#{activity['target']}")
+      else
+        target_user = nil
       end
+
+      # Adds the first username and sets usercount to translation params
+      # FIX: decrease usercount by one if greater than 2 (e.g. 'User1 and 2 others ...')
+      i18_params = { actor: actor['username'], count: actor_count > 2 ? actor_count - 1 : actor_count }
+      # Add the targets field to the translation params holder (actually not in use)
+      #i18_params[:field] = 'title'
+      # Add the title to the translation params holder
+      i18_params[:slot] = target['title'] if target && target['title']
+      # Add the name to the translation params holder
+      i18_params[:group] = target['name'] if target && target['name']
+      # Add the target username to the translation params holder
+      i18_params[:user] = target_user['username'] if target_user
+
       # Determine pluralization
       mode = actor_count > 2 ? 'aggregate' : (actor_count > 1 ? 'plural' : 'singular')
-      # Determine translation key
-      i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
+
+      # Determine translation key (personalized to the current user/viewer)
+      if (target['creator'] && (viewer == target['creator']['id'])) ||
+         (target['owner'] && (viewer == target['owner']['id'])) ||
+         (target['username'] && (viewer == target['id']))
+        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}-to-owner_#{mode}"
+      else
+        i18_key = "#{activity['type'].downcase}_#{activity['action']}_#{view}_#{mode}"
+      end
+
       # Returns the message from translation index
       I18n.t(i18_key, i18_params)
     end
 
     # NOTE: We can optimize this by aggregating feeds when storing into redis
     # NOTE: Actually we use "live aggregation" instead, so we are able to modify the aggregation logic on the fly
-    private def aggregate_feed(feed_index, limit: 25, offset: 0, cursor: nil, context: nil)
+    private def aggregate_feed(feed_index, limit: 100, offset: 0, cursor: nil, context: nil)
       # Get offset from cursor in reversed logic (LIFO), supports simple offset fallback
       offset = cursor ? cursor.to_i : offset.to_i
-      # Temporary holder to store the aggregation feed
+      # Temporary holder to store the final page of an aggregated feed
       aggregated_feed = []
       # The aggregation group index table
       groups = {}
       # We have to store the last activity of each activity group
       last_actions = {}
       # The index of the group index table
-      index = -1
+      group_index = -1
       # To determine the paging cursor we use a counter
       # Also we use this counter to check on break condition if limit is reached
       feed_count = 0
       # NOTE: Feeds are retrieved in reversed order to apply LIFO (=> reversed logic)
-      feed = @storage.range(feed_index, 0, @storage.length("Feed:#{feed_index}") - offset - 1).reverse!
+      # NOTE: The pagination limit has to be calculated on the fly
+      # NOTE: Actually we use a maximum of 1000 activities from the target-feed fo each aggregated page
+      feed = paginate(feed_index, limit: 1000, offset: offset)
       # Loop through all feeds (has a break statement, offset is optional)
-      feed.each do |post|
-        # Enrich target activity
-        post = enrich_activity(post)
+      feed['results'].each_with_index do |post, i|
         # Generates group tag (acts as the aggregation index)
         # NOTE: Currently we aggregate only activities which has the same type as the last activity (on the same target)
         group = post['group'] = "group:#{post['target']}" ##{post['time']}
@@ -330,12 +606,12 @@ module Feed
         actor = post['actor'].to_i
         # If group exist on this page then aggregate to this group
         if groups.has_key?(group)
+          # Determine current aggregation group index
+          current = groups[group]
+          # Get current aggregation group feed
+          current_feed = aggregated_feed[current]
           # Skip this part if the aggregation action is not the same as the last one
           if last_actions[group] === post['action']
-            # Determine current aggregation group index
-            current = groups[group]
-            # Get current aggregation group feed
-            current_feed = aggregated_feed[current]
             # Update activity count
             current_feed['activityCount'] += 1
             # Collect actors as unique
@@ -343,12 +619,12 @@ module Feed
             # Get intersection of actors and the users social context
             current_feed['actors'] &= context if context
           end
-          # Skip counting for cursor and limits
-          next
         # If group does not exist, creates a new group for aggregations
         elsif feed_count < limit.to_i
+          # The feed count indicates the limit of an activity feed page
+          feed_count += 1
           # Increment index on each new group (starting from -1)
-          current = groups[group] = (index += 1)
+          current = groups[group] = (group_index += 1)
           # Keep the last action to skip other activities on the same aggregation group
           last_actions[group] = post['action']
           # Set the whole activity object on each new group
@@ -359,69 +635,67 @@ module Feed
           current_feed['actors'] = [actor]
           # Init activity counter
           current_feed['activityCount'] = 1
-          # Sets a generated feed id to prevent id conflicts with other activity views
-          current_feed['id'] = Digest::SHA1.hexdigest(group).upcase
         else
           # Breaks the aggregation process if limit is reached
           break
         end
-        # Set or update current feed next cursor (if the limit isn't reached)
-        current_feed['cursor'] = ((feed_count += 1) + offset).to_s
+        # Sets an aggregated feed id to prevent id conflicts with other activity views
+        current_feed['id'] = Digest::SHA1.hexdigest("#{group}#{post['time']}").upcase
+        # Set cursor position from current activity
+        current_feed['cursor'] = (i + offset + 1).to_s
       end
-      aggregated_feed
+      {
+          cursor: offset.to_s,
+          next: aggregated_feed.any? ? aggregated_feed.last['cursor'].to_s : nil,
+          prev: nil,
+          results: aggregated_feed
+      }.as_json
     end
 
     ## Cache Helpers ##
 
-    private def get_from_cache(feed, params)
+    private def get_from_cache(feed_index, params)
       # Determine when the last feed update was happened
-      last_update = @storage.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed_index}")
       # Get the current cache state
-      last_state = @storage.get("Status:#{feed}")
+      last_state = @storage.get("Status:#{feed_index}")
       # Validated the cache state
       if validate_cache(last_update, last_state)
-        last_cache = get_cached_feed(feed)
+        last_cache = get_cached_feed(feed_index)
         cache_index = generate_index(params)
-        last_cache[cache_index] if last_cache
+        return last_cache[cache_index] if last_cache
       else
-        nil
+        @storage.del("Cache:#{feed_index}")
       end
+      nil
     end
 
-    private def set_to_cache(feed, params, result)
+    private def set_to_cache(feed_index, params, result)
       # Determine when the last feed update was happened
-      last_update = @storage.get("Update:#{feed}")
+      last_update = @storage.get("Update:#{feed_index}")
       # Set initially timer if there are no actions
       if last_update.nil?
         last_update = Time.now.to_f
-        @storage.set("Update:#{feed}", last_update)
+        @storage.set("Update:#{feed_index}", last_update - 1)
       end
       # Set the current cache state
-      @storage.set("Status:#{feed}", last_update)
+      @storage.set("Status:#{feed_index}", last_update)
       # Update cache
-      last_cache = get_cached_feed(feed) || {}
+      last_cache = get_cached_feed(feed_index) || {}
       cache_index = generate_index(params)
       last_cache[cache_index] = result
-      @storage.set("Cache:#{feed}", gzip_cache(last_cache))
+      @storage.set("Cache:#{feed_index}", gzip_json(last_cache))
       result
     end
 
     private def validate_cache(last_update, last_state)
       last_update.present? &&
-      last_state.present? &&
       last_update == last_state &&
       # FIX: Force refresh when last update is too close to the current request
       Time.now.to_f - last_update.to_f >= 1.0 # time in seconds (float)
     end
 
     ## Helpers ##
-
-    private def remove_fields_from_activity(activity)
-      %w(group object foreign model).each do |field|
-        activity.delete(field)
-      end
-      activity
-    end
 
     private def get_shared_object(feed_index)
       obj = @storage.get(feed_index)
@@ -441,34 +715,55 @@ module Feed
       cache ? unzip_json(cache) : nil
     end
 
-    private def gzip_cache(cache)
-      ActiveSupport::Gzip.compress(
-          cache.to_json
-      )
+    private def gzip_json(json)
+      ActiveSupport::Gzip.compress(json.to_json)
     end
 
-    private def gzip_feed(params)
-      ActiveSupport::Gzip.compress(
-          params.except(:data, :message, :notify, :forward).values.to_json
-      )
-    end
-
-    private def gzip_data_field(params, field)
-      ActiveSupport::Gzip.compress(
-          params[:data][field].to_json
+    private def gzip_feed(feed)
+      gzip_json(
+        feed.slice(
+          :type,
+          :actor,
+          :object,
+          :model,
+          :target,
+          :action,
+          :foreign,
+          :group,
+          :slot,
+          :time,
+          :id
+        ).values
       )
     end
 
     private def unzip_json(json)
-      JSON.parse(
-        ActiveSupport::Gzip.decompress(
-          json
-      ))
+      uncompressed_json = ActiveSupport::Gzip.decompress(json)
+      decoded_json = JSON.parse(uncompressed_json)
+      # maybe we can solve the issue by using the Rails wrapper around
+      # the ruby JSON lib, it has support for additional objects
+      # see: https://simonecarletti.com/blog/2010/04/inside-ruby-on-rails-serializing-ruby-objects-with-json/
+      # ActiveSupport::JSON.decode(uncompressed_json)
+      # we would also need it on the encoding side I guess
+    rescue Oj::ParseError => exception
+      Airbrake.notify(exception, compressed_json: json,
+                                 uncompressed_json: uncompressed_json)
+      Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
+                           "value: #{uncompressed_json}" }
+    rescue => exception
+      Airbrake.notify(exception, compressed_json: json,
+                                 uncompressed_json: uncompressed_json)
+      Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
+                           "value: #{uncompressed_json}" }
+      uncompressed_json
+    else
+      decoded_json
     end
 
     private def error_handler(error, feed, params)
       Rails.logger.error { error }
       Airbrake.notify(error, feed: feed, params: params)
+      puts error
     end
   end
 end

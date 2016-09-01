@@ -1,8 +1,18 @@
 module V1
   class FeedController < ApplicationController
+    skip_before_action :authenticate_user_from_token!, only: :discovery_feed
 
     # Set users locale for translations
     before_action :set_locale
+
+    # GET /v1/discover
+    # GET /v1/feed/discovery
+    def discovery_feed
+      authorize :feed
+      return head 422 unless has_allowed_params?
+      feed = Feed.discovery_feed(page_params)
+      render_feed(feed)
+    end
 
     # GET /v1/feed/user
     # The user feed stores all activities for a user.
@@ -31,6 +41,15 @@ module V1
       authorize :feed
       return head 422 unless has_allowed_params?
       feed = Feed.notification_feed(current_user.id, page_params)
+      render_feed(feed)
+    end
+
+    # GET /v1/feed/request
+    # This feed shows pending requests.
+    def request_feed
+      authorize :feed
+      return head 422 unless has_allowed_params?
+      feed = Feed.request_feed(current_user.id, page_params)
       render_feed(feed)
     end
 

@@ -7,11 +7,10 @@
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 * [Social Activity](doc/social_activity.md)
+* [Activity Feed API](doc/feed_examples.md)
+* [Follower Model API](doc/follow_examples.md)
 * [Links to Some Useful Extra Information](doc/useful_links.md)
 * [Deployment Process](doc/deployment_process.md)
-
-# Data Flow Concept
-![Data Flow Concept](doc/backend_concept.png)
 
 # Notes
 
@@ -33,8 +32,6 @@ We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```a
 # Environment
 
 We develop on OSX and Ubuntu.
-So far we use Heroku to deploy our backend.
-We use Jenkins to test all commits to the timeslotinc github repo, usually PRs.
 
 ## Env Variables
 
@@ -51,9 +48,10 @@ ENV['DB_POOL'] # number of available database connections, defaults to MAX_THREA
 ENV['PG_EXPLAIN'] = 'true' # show output of pg EXPLAIN ANALYZE for all SELECT queries, use carefully
 
 # pagination
-ENV['PAGINATION_DEFAULT_FILTER'] = 'upcoming' # if not provided by client
+ENV['PAGINATION_DEFAULT_FILTER'] = none' # if not provided by client
+ENV['PAGINATION_DEFAULT_MODE'] = 'all' # if not provided by client
 ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
-ENV['PAGINATION_MAX_LIMIT'] = '100'
+ENV['PAGINATION_MAX_LIMIT'] = '100' # depends on the environment...
 
 ENV['SUGGESTED_USER_EMAIL'] = 'kalirad@me.com' # the email for the user which is suggested as a friend if a user had no friends yet
 
@@ -99,10 +97,25 @@ ENV['AWS_REGION']
 
 ### We use the following services
 
+* [AWS ElasticBeanstalk](http://aws.amazon.com/documentation/elasticbeanstalk/)
+    - Backend Rails App Deployment
+    - Heroku-like Service that uses EC2, VPC and other things
+* [AWS RDS](http://aws.amazon.com/documentation/rds/)
+    - Postgres Database
+* [AWS ElastiCache](http://aws.amazon.com/documentation/elasticache/)
+    - Redis
 * [AWS Simple Notification Service](http://aws.amazon.com/documentation/sns/)
     - Apple Push Notifications
 * [AWS Simple Email Service](http://aws.amazon.com/documentation/ses/)
     - Password Reset Email
+* [AWS Route53](http://aws.amazon.com/documentation/route53/)
+    - DNS Management
+* [AWS S3](http://aws.amazon.com/documentation/s3/)
+    - Stores Configuration Files for ElasticBeanstalk
+* [AWS Workmail](http://aws.amazon.com/documentation/route53/)
+    - Email Address Management for Email Addresses used to register at other external services
+* AWS IAM - AWS Account and Access Management
+* AWS Certificate Manager - Create Certificates for HTTPS
 
 ```bash
 ENV['AWS_PLATFORM_APPLICATION_IOS'] # aws arn endpoint (iOS)
@@ -138,27 +151,23 @@ for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Gith
 
 ## Papertrail
 
-for logging, via Heroku Addon, [Docs](https://papertrailapp.com/) | [Heroku Docs](https://devcenter.heroku.com/articles/papertrail)
+Log management service, collects logs from AWS Instances via [remote_syslog2](https://github.com/papertrail/remote_syslog2)
+deamon, which gets installed on all EC2 instances via [ebextensions config](https://github.com/papertrail/remote_syslog2/pull/157).
 
-## New Relic
+Papertrail Account for Dev environments is registered with email **casino-dev@timeslot.rocks**,
+Password is in LastPass Company Account.
 
-via Heroku Addon
+For ease of use check out [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
+
 
 # More Tools
 
-## Webserver
+## Webserver (Puma)
 
 * Start default rails dev server (s=server)
 
 ```bash
 rails s
-```
-
-or use foreman:
-
-```bash
-gem install foreman
-foreman start
 ```
 
 ## Specs / Tests
@@ -320,6 +329,7 @@ However, this is likely to change sooner or later... The JIRA-Github integration
 * [PGCommander](https://eggerapps.at/pgcommander/)
 * [Navicat Essentials for POSTGRESQL](https://itunes.apple.com/de/app/navicat-essentials-for-postgresql/id466725643?l=en&mt=12)
 * [PGAdmin](http://www.pgadmin.org/download/macosx.php) - not so fancy but free
+* [Redis Desktop Manager](https://redisdesktop.com)
 
 #### Markdown viewers/editors for Mac
 

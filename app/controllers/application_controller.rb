@@ -10,8 +10,12 @@ class ApplicationController < ActionController::API
   rescue_from PaginationError, with: :unprocessable_entity
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
 
-  rescue_from ActiveRecord::RecordNotFound do
-    head :not_found
+  rescue_from ActiveRecord::RecordNotFound do |e|
+    if Rails.env.production?
+      head :not_found
+    else
+      render json: { error: e.message }, status: :not_found
+    end
   end
 
   rescue_from ActiveRecord::StatementInvalid do |exception|
@@ -52,7 +56,7 @@ class ApplicationController < ActionController::API
     valid_values = %w(private friends foaf public)
 
     unless valid_values.include? visibility
-      fail ActionController::ParameterMissing,
+      raise ActionController::ParameterMissing,
            "visibility must be one of #{valid_values}"
     end
     visibility
@@ -74,7 +78,14 @@ class ApplicationController < ActionController::API
 
     slot_sets.each do |slot_set|
       if special_sets.key? slot_set
-        SlotsetManager.new(current_user: current_user).add!(slot, slot_set)
+        case special_sets[slot_set]
+        when 'my_cal_uuid', 'my_friend_slots_uuid'
+          SlotsetManager.new(current_user: current_user).add!(slot, slot_set)
+        when 'my_public_slots_uuid', 'my_private_slots_uuid'
+          # for this uuids a real group exists
+          calendar = Group.find_by uuid: slot_set
+          SlotsetManager.new(current_user: current_user).add!(slot, calendar)
+        end
       else
         add_to_slotgroup(slot, slot_set)
       end
@@ -82,7 +93,9 @@ class ApplicationController < ActionController::API
   end
 
   private def slot_paging_params
-    p = params.permit(:filter, :moment, :limit, :after, :before).symbolize_keys
+    p = params.permit(:mode, :limit, :moment,
+                      :filter, :earliest, :latest,
+                      :after, :before).symbolize_keys
 
     # are there any pagination params?
     return {} unless p.any?
@@ -92,13 +105,19 @@ class ApplicationController < ActionController::API
     # set maximum for limit to 100 if higher
     p[:limit] = PAGINATION_MAX_LIMIT if p[:limit].to_i > PAGINATION_MAX_LIMIT
 
-    # ignore filter & moment if a cursor is submitted
-    if p[:before].present? || p[:after].present?
-      p[:filter] = nil
+    # if 'between' filter is used require earliest & latest and set default mode
+    if p[:filter].present? && p[:filter] == 'between'
+      params.require(:earliest)
+      params.require(:latest)
+      p[:mode] = 'now' if p[:mode].nil?
+      p[:moment] = p[:earliest] if p[:moment].nil?
+    # ignore mode & moment if a cursor is submitted
+    elsif p[:before].present? || p[:after].present?
+      p[:mode] = nil
       p[:moment] = nil
     else
-      # set default filter and moment if not provided
-      p[:filter] = PAGINATION_DEFAULT_FILTER if p[:filter].nil?
+      # set default mode and moment if not provided
+      p[:mode] = PAGINATION_DEFAULT_MODE if p[:mode].nil?
       p[:moment] = Time.zone.now.to_s if p[:moment].nil?
     end
     p

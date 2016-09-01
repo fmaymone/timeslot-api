@@ -36,6 +36,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -59,6 +68,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -173,12 +185,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;aff7e41e70823ccc79b0a8d74904df13&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;3f6a6cd6f1c827f0daf3852d9aca1754&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4c63dfa9-3669-4661-9f9c-6ee96edf4b6e
-X-Runtime: 0.017549
-Vary: Origin
-Content-Length: 781</pre>
+X-Request-Id: 3d2ab260-c719-4073-8598-f1c43571235f
+X-Runtime: 0.045153
+Content-Length: 1045</pre>
 
 #### Status
 
@@ -188,16 +200,20 @@ Content-Length: 781</pre>
 
 ```javascript
 {
-  "id" : 118,
+  "id" : 101,
   "username" : "foo",
-  "createdAt" : "2016-04-04T20:50:33.365Z",
-  "updatedAt" : "2016-04-04T20:50:33.365Z",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:51:10.649Z",
+  "updatedAt" : "2016-08-30T09:51:10.649Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
-  "calendarCount" : 0,
+  "calendarCount" : 2,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : "de",
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
@@ -205,15 +221,29 @@ Content-Length: 781</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "feeda721-160b-4266-ad1f-6f4806c5259e",
-  "friendsCalendarUuid" : "6b0cefd1-6cc2-42ce-9538-d89707cfcb4b",
-  "allMySlotsUuid" : "b289519e-ad11-4713-a4ae-85d4222b8adf",
-  "myCreatedSlotsUuid" : "2ad696c5-a2b0-4bee-9f8b-3aef35d14620",
-  "myFriendSlotsUuid" : "44b00f81-c988-4d65-a005-d47cb10ad5fe",
-  "myPublicSlotsUuid" : "247b7334-1890-4cf0-9d18-42a26047b50b",
+  "myCalendarUuid" : "91ba5ff4-a939-42c1-abc3-d0c1855d3f5b",
+  "friendsCalendarUuid" : "df469ae0-1e24-4bb4-92b5-385ebf2622bc",
+  "allMySlotsUuid" : "ec28ee09-f658-439c-abcc-7cd3a77f343e",
+  "myCreatedSlotsUuid" : "3c6f7fe8-670d-48b1-aa6a-fd6431054696",
+  "myPrivateSlotsUuid" : "cafc2b10-c237-442e-aaa6-c463b1927e30",
+  "myFriendSlotsUuid" : "3272bc58-a22b-40a1-88bb-57e1e1525db9",
+  "myPublicSlotsUuid" : "a8e5a79f-a909-4e7a-9bf6-5ae57e3e5a9f",
   "friendships" : [],
-  "memberships" : [],
+  "memberships" : [
+    {
+      "groupId" : 21,
+      "state" : "active",
+      "color" : "000000",
+      "notifications" : true
+    },
+    {
+      "groupId" : 22,
+      "state" : "active",
+      "color" : "000000",
+      "notifications" : true
+    }
+  ],
   "friendshipState" : "myself",
-  "authToken" : "ofqLe-JtAFW2Ie6baKnM2Y1Xv6U"
+  "authToken" : "eI7MtpiAq4k1VoByyrQolMseeBw"
 }
 ```

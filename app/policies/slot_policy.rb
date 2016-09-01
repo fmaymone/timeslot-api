@@ -68,26 +68,6 @@ class SlotPolicy < ApplicationPolicy
     current_user_has_read_access?
   end
 
-  # false if no user is signed-in
-  # true, if the user has read access for the slot
-  # group permissions are checked per slotgroup
-  def remove_from_groups?
-    current_user_has_read_access?
-  end
-
-  # will probably be removed
-  def copy?
-    current_user_has_read_access?
-  end
-
-  # will probably be removed
-  def move?
-    return false unless current_user?
-    return true if current_user == slot.try(:owner)
-    return true if current_user == slot.try(:slotter)
-    false
-  end
-
   # actions
 
   # FIX: remove when globalslot-reslot is updated
@@ -110,6 +90,13 @@ class SlotPolicy < ApplicationPolicy
     # false
   end
 
+  # false if no user is signed-in
+  # true, if the user has read access for the slot
+  # group permissions are checked per slotgroup
+  def remove_from_groups?
+    current_user_has_read_access?
+  end
+
   # helper
 
   # true if it's a public slot
@@ -128,6 +115,7 @@ class SlotPolicy < ApplicationPolicy
     return true if (slot.slot_groups & current_user.groups).any?
     if slot.StdSlotFriends? || slot.StdSlotFoaf?
       return true if current_user.friend_with?(slot.creator)
+      return true if current_user.friend_with?(slot.owner)
     end
     # combined check determines if read access to foaf slot
     return false unless slot.StdSlotFoaf?

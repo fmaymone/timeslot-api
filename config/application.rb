@@ -10,7 +10,7 @@ module TsRailsBackend
   class Application < Rails::Application
     # http://blog.arkency.com/2014/11/dont-forget-about-eager-load-when-extending-autoload/
     config.eager_load_paths << Rails.root.join('lib')
-    config.eager_load_paths += Dir[Rails.root.join('app', 'models', 'concerns', '**/')]
+    config.eager_load_paths += Dir[Rails.root.join('app', 'models', 'concerns', '**/**/')]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -57,22 +57,27 @@ module TsRailsBackend
       logger.tagged('WORKER') { logger.info { 'workers are ASYNC' } }
     end
 
-    # logger for worker threads from sucker_punch
-    # SuckerPunch.logger = Logger.new("#{Rails.root}/log/sucker_punch.log")
-
     # Enable CORS
     # https://github.com/cyu/rack-cors
     config.middleware.insert_before 0, "Rack::Cors" do
       allow do
         origins '*'
-        resource '*', headers: :any, methods: [:get, :post, :options]
+        resource '*', headers: :any, methods: [:get, :post, :options, :delete, :patch]
       end
     end
 
     # Use this global flag to skip sending push notifications
     config.SKIP_PUSH_NOTIFICATION = false
+    # Use this global flag to skip distributing activities to feeds
+    config.SKIP_ACTIVITY = false
+
+    # Set default encoding type
+    config.encoding = 'utf-8'
 
     # Enabling garbage collection instrumentation for NewRelic
     GC::Profiler.enable
+
+    # TODO: check if compression could be done in a proxy
+    config.middleware.use Rack::Deflater
   end
 end

@@ -45,6 +45,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -61,6 +64,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -85,6 +91,15 @@ Description : ID of the user
 
 Name : username
 Description : Username of the user
+
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
 
 Name : createdAt
 Description : Creation of user
@@ -115,7 +130,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=cGW3m9QrGh_KEwK_k8EoZaGMwlk
+Authorization: Token token=dy6iRAsNqNeQm0AFzTQeJn-tMvU
 Host: example.org
 Cookie: </pre>
 
@@ -127,7 +142,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=cGW3m9QrGh_KEwK_k8EoZaGMwlk&quot;</pre>
+	-H &quot;Authorization: Token token=dy6iRAsNqNeQm0AFzTQeJn-tMvU&quot;</pre>
 
 ### Response
 
@@ -137,12 +152,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;0022cdc174e042e264a087aa5112ca79&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;19a54a202584235060aef232abbc2b63&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 06866ba0-34e0-426a-b68d-89c9e0405a3d
-X-Runtime: 0.005902
-Vary: Origin
-Content-Length: 1778</pre>
+X-Request-Id: 6e48aad4-47a8-4c3b-9fdb-55d546fbe6dd
+X-Runtime: 0.005468
+Content-Length: 2536</pre>
 
 #### Status
 
@@ -151,110 +166,150 @@ Content-Length: 1778</pre>
 #### Body
 
 ```javascript
-[
-  {
-    "type" : "Slot",
-    "target" : "2",
-    "action" : "comment",
-    "time" : "2016-04-04T20:50:21.169Z",
-    "id" : "7C56142B288100A23EC4A8B4A55FAD5E7762E6ED",
-    "actors" : [
-      7
-    ],
-    "activityCount" : 1,
-    "cursor" : "1",
-    "message" : "User 57 commented on this Slot.",
-    "data" : {
-      "target" : {
-        "id" : 2,
+{
+  "cursor" : "0",
+  "next" : "1",
+  "prev" : null,
+  "results" : [
+    {
+      "target" : "slot",
+      "action" : "comment",
+      "time" : "2016-08-30T09:50:48.779Z",
+      "id" : "939FBC0E59837BB9ED51437A907A9889D4911F4A",
+      "message" : "{actor} commented on this Slot.",
+      "cursor" : "1",
+      "actors" : [
+        {
+          "id" : 271,
+          "username" : "User 381",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.775Z",
+          "updatedAt" : "2016-08-30T09:50:48.775Z",
+          "deletedAt" : null,
+          "image" : ""
+        }
+      ],
+      "group" : null,
+      "slot" : {
+        "id" : 107,
         "title" : "Slot title 22",
-        "startDate" : "2019-09-21T20:44:02.000Z",
-        "createdAt" : "2016-04-04T20:50:21.125Z",
-        "updatedAt" : "2016-04-04T20:50:21.174Z",
+        "description" : "",
+        "startDate" : "2019-09-27T08:44:02.000Z",
+        "createdAt" : "2016-08-30T09:50:48.746Z",
+        "updatedAt" : "2016-08-30T09:50:48.785Z",
         "deletedAt" : null,
-        "endDate" : "2019-10-21T20:44:02.000Z",
-        "location" : null,
+        "endDate" : "2019-10-27T08:44:02.000Z",
+        "location" : {
+          "id" : "88f9c050-c6d0-4373-ad55-551079f38def",
+          "name" : "Acapulco",
+          "thoroughfare" : null,
+          "subThoroughfare" : null,
+          "locality" : null,
+          "subLocality" : null,
+          "administrativeArea" : null,
+          "subAdministrativeArea" : null,
+          "postalCode" : null,
+          "country" : null,
+          "isoCountryCode" : null,
+          "inLandWater" : null,
+          "ocean" : null,
+          "areasOfInterest" : null,
+          "latitude" : 51.234,
+          "longitude" : -11.993,
+          "placeId" : null
+        },
         "creator" : {
-          "id" : 5,
-          "username" : "User 55",
-          "createdAt" : "2016-04-04T20:50:21.117Z",
-          "updatedAt" : "2016-04-04T20:50:21.117Z",
+          "id" : 268,
+          "username" : "User 377",
+          "firstName" : null,
+          "middleName" : null,
+          "lastName" : null,
+          "createdAt" : "2016-08-30T09:50:48.719Z",
+          "updatedAt" : "2016-08-30T09:50:48.719Z",
           "deletedAt" : null,
           "image" : ""
         },
         "notes" : [],
         "media" : [
           {
-            "mediaId" : 12,
-            "publicId" : "dfhjghjkdisudgfds7iy15",
+            "mediaId" : 462,
+            "publicId" : "dfhjghjkdisudgfds7iy375",
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-04-04T20:50:21.158Z",
+            "createdAt" : "2016-08-30T09:50:48.772Z",
             "duration" : null,
-            "title" : "Title 15"
+            "title" : "Title 375"
           },
           {
-            "mediaId" : 11,
-            "publicId" : "dfhjghjkdisudgfds7iy14",
+            "mediaId" : 461,
+            "publicId" : "dfhjghjkdisudgfds7iy374",
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.156Z",
+            "createdAt" : "2016-08-30T09:50:48.769Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 10,
-            "publicId" : "dfhjghjkdisudgfds7iy13",
+            "mediaId" : 460,
+            "publicId" : "dfhjghjkdisudgfds7iy373",
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-04-04T20:50:21.153Z",
+            "createdAt" : "2016-08-30T09:50:48.767Z",
             "duration" : null,
             "thumbnail" : null
           },
           {
-            "mediaId" : 9,
-            "publicId" : "dfhjghjkdisudgfds7iy12",
+            "mediaId" : 459,
+            "publicId" : "dfhjghjkdisudgfds7iy372",
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.149Z"
+            "createdAt" : "2016-08-30T09:50:48.765Z"
           },
           {
-            "mediaId" : 8,
-            "publicId" : "dfhjghjkdisudgfds7iy11",
+            "mediaId" : 458,
+            "publicId" : "dfhjghjkdisudgfds7iy371",
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.146Z"
+            "createdAt" : "2016-08-30T09:50:48.762Z"
           },
           {
-            "mediaId" : 7,
-            "publicId" : "dfhjghjkdisudgfds7iy10",
+            "mediaId" : 457,
+            "publicId" : "dfhjghjkdisudgfds7iy370",
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-04-04T20:50:21.143Z"
+            "createdAt" : "2016-08-30T09:50:48.760Z"
           }
         ],
         "settings" : {
           "alerts" : "omitted"
         },
         "visibility" : "public",
+        "likerIds" : [],
         "likes" : 0,
-        "commentsCounter" : 1
+        "commentsCounter" : 1,
+        "firstGroup" : null,
+        "slotGroupUuids" : []
       },
-      "actor" : {
-        "id" : 7,
-        "username" : "User 57",
-        "createdAt" : "2016-04-04T20:50:21.161Z",
-        "updatedAt" : "2016-04-04T20:50:21.161Z",
+      "user" : {
+        "id" : 268,
+        "username" : "User 377",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-08-30T09:50:48.719Z",
+        "updatedAt" : "2016-08-30T09:50:48.719Z",
         "deletedAt" : null,
         "image" : ""
       }
     }
-  }
-]
+  ]
+}
 ```

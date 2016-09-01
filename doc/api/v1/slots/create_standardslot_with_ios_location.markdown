@@ -29,6 +29,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : description
+Description : Description for the slot (max. 500 characters)
+
 Name : location
 Description : Location associated with this slot (see example)
 
@@ -83,6 +86,9 @@ Description : Latitude
 Name : longitude
 Description : Longitude
 
+Name : placeId
+Description : Google Place ID
+
 Name : privateLocation
 Description : private location for this user (true/false) [not yet sure what it will mean technically] -&gt; default: false
 
@@ -113,6 +119,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -129,6 +138,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -157,7 +169,7 @@ Description : Number of reslots for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI
+Authorization: Token token=RH8km7MByyylqy6pbruXhBWYbhY
 Host: example.org
 Cookie: </pre>
 
@@ -202,7 +214,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=8pGr9HZSdmvcpp5C5hNXZXH27PI&quot;</pre>
+	-H &quot;Authorization: Token token=RH8km7MByyylqy6pbruXhBWYbhY&quot;</pre>
 
 ### Response
 
@@ -212,12 +224,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;9bb10cd411f9264a79c7800ee454ff88&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;5d95b1b7f5a3ccce34a92d45be9d73ba&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 48df7900-ccf6-4883-a014-61fdcb36c540
-X-Runtime: 0.051065
-Vary: Origin
-Content-Length: 1187</pre>
+X-Request-Id: cd13d7a3-4474-4d90-8029-840562193d1b
+X-Runtime: 0.117041
+Content-Length: 1322</pre>
 
 #### Status
 
@@ -229,13 +241,14 @@ Content-Length: 1187</pre>
 {
   "id" : 10,
   "title" : "Time for a Slot",
+  "description" : "",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.577Z",
-  "updatedAt" : "2016-04-04T20:50:31.577Z",
+  "createdAt" : "2016-08-30T09:51:07.436Z",
+  "updatedAt" : "2016-08-30T09:51:07.436Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : "e16429d4-9722-40c8-9de7-bfb66ff85d4c",
+    "id" : "740e4821-8b04-464a-812c-208ecaca4102",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -250,13 +263,17 @@ Content-Length: 1187</pre>
     "ocean" : null,
     "areasOfInterest" : null,
     "latitude" : 52.527335,
-    "longitude" : 13.414259
+    "longitude" : 13.414259,
+    "placeId" : null
   },
   "creator" : {
-    "id" : 24,
-    "username" : "User 326",
-    "createdAt" : "2016-04-04T20:50:31.558Z",
-    "updatedAt" : "2016-04-04T20:50:31.558Z",
+    "id" : 19,
+    "username" : "User 725",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.416Z",
+    "updatedAt" : "2016-08-30T09:51:07.416Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
@@ -266,18 +283,18 @@ Content-Length: 1187</pre>
   },
   "notes" : [
     {
-      "id" : 10,
-      "title" : "and another title",
-      "content" : "more content here",
-      "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.586Z"
-    },
-    {
       "id" : 9,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:31.582Z"
+      "createdAt" : "2016-08-30T09:51:07.442Z"
+    },
+    {
+      "id" : 10,
+      "title" : "and another title",
+      "content" : "more content here",
+      "localId" : null,
+      "createdAt" : "2016-08-30T09:51:07.484Z"
     }
   ],
   "media" : [],
@@ -285,8 +302,11 @@ Content-Length: 1187</pre>
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
   "unauthorizedSlotgroups" : []
 }
 ```

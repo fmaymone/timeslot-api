@@ -15,7 +15,7 @@ Description : containing friends as a list of Users
 
 #### Headers
 
-<pre>Authorization: Token token=0XHm_V3MedOWTRFfECptIIxjyX4
+<pre>Authorization: Token token=_fnYLLyDQYDt3SV2GrNxdl0Yjbg
 Host: example.org
 Cookie: </pre>
 
@@ -26,7 +26,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=0XHm_V3MedOWTRFfECptIIxjyX4&quot;</pre>
+	-H &quot;Authorization: Token token=_fnYLLyDQYDt3SV2GrNxdl0Yjbg&quot;</pre>
 
 ### Response
 
@@ -36,12 +36,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;38dd04b7bd2dfbca9f0a917e0ac88c5c&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;98f46b23ef2d35b565ca5679a94a186f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3fb95850-c2b4-4d46-8eeb-528046dd2198
-X-Runtime: 0.022320
-Vary: Origin
-Content-Length: 496</pre>
+X-Request-Id: 26d38cbf-c0e0-4139-889f-0852123f7f22
+X-Runtime: 0.027129
+Content-Length: 649</pre>
 
 #### Status
 
@@ -53,27 +53,36 @@ Content-Length: 496</pre>
 [
   {
     "id" : 50,
-    "username" : "User 212",
-    "createdAt" : "2016-04-04T20:50:24.340Z",
-    "updatedAt" : "2016-04-04T20:50:24.340Z",
+    "username" : "User 591",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:54.049Z",
+    "updatedAt" : "2016-08-30T09:50:54.049Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"
   },
   {
     "id" : 52,
-    "username" : "User 214",
-    "createdAt" : "2016-04-04T20:50:24.354Z",
-    "updatedAt" : "2016-04-04T20:50:24.354Z",
+    "username" : "User 593",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:54.062Z",
+    "updatedAt" : "2016-08-30T09:50:54.062Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"
   },
   {
     "id" : 53,
-    "username" : "User 215",
-    "createdAt" : "2016-04-04T20:50:24.360Z",
-    "updatedAt" : "2016-04-04T20:50:24.360Z",
+    "username" : "User 594",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:54.069Z",
+    "updatedAt" : "2016-08-30T09:50:54.069Z",
     "deletedAt" : null,
     "image" : "",
     "friendshipState" : "friend"

@@ -1,4 +1,5 @@
 require 'documentation_helper'
+require 'acceptance/shared_contexts'
 
 resource "Groups" do
   let(:json) { JSON.parse(response_body) }
@@ -12,6 +13,9 @@ resource "Groups" do
     response_field :membersCanPost, "Can subscribers add slots?"
     response_field :membersCanInvite, "Can subscribers invite friends?"
     response_field :image, "URL of the group image"
+    response_field :description, "The description of the group"
+    response_field :defaultColor,
+                   "default color of the group, can be overwritten per member"
     response_field :createdAt, "Creation of group"
     response_field :updatedAt, "Latest update of group in db"
     response_field :deletedAt, "Deletion of group"
@@ -27,19 +31,15 @@ resource "Groups" do
 
     include_context "default group response fields"
 
-    let(:group) { create(:group, :with_3_members, :with_3_slots) }
+    let(:group) { create(:group, :public, :with_3_members, :with_3_slots) }
     let(:group_uuid) { group.uuid }
-    let!(:membership) do
-      create(:membership, :active, user: current_user, group: group)
-    end
 
-    example "Get group data for specific group", document: :v1 do
+    example "Get group data for specific group, not member", document: :v1 do
       explanation "returns data of specified group\n\n" \
                   "returns 404 if UUID is invalid\n\n"
       do_request
 
       expect(response_status).to eq(200)
-      group.reload
       expect(json).to have_key 'id'
       expect(json['id']).to eq group.uuid
       expect(json).to have_key 'name'
@@ -48,6 +48,10 @@ resource "Groups" do
       expect(json['image']).to eq group.image
       expect(json).to have_key "public"
       expect(json['public']).to eq group.public
+      expect(json).to have_key "description"
+      expect(json['description']).to eq group.description
+      expect(json).to have_key "defaultColor"
+      expect(json['defaultColor']).to eq group.default_color
       expect(json).to have_key "membersCanPost"
       expect(json['membersCanPost']).to eq group.members_can_post
       expect(json).to have_key "membersCanInvite"
@@ -63,6 +67,30 @@ resource "Groups" do
       expect(json).to have_key "createdAt"
       expect(json).to have_key "updatedAt"
       expect(json).to have_key "deletedAt"
+      expect(json).to have_key "membershipState"
+      expect(json['membershipState']).to eq 'undefined'
+      expect(json).not_to have_key "color"
+    end
+
+    describe 'show group to active member' do
+      let!(:membership) do
+        create(:membership, :active, user: current_user, group: group,
+               color: 'AA12CC')
+      end
+
+      example "Get group data for an active group member", document: :v1 do
+        explanation "returns data of specified group\n\n" \
+                    "returns 404 if UUID is invalid\n\n"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key 'id'
+        expect(json).to have_key "membershipState"
+        expect(json['membershipState']).to eq 'active'
+        expect(json).to have_key "color"
+        expect(json['color']).to eq membership.color
+        expect(json['color']).to eq 'AA12CC'
+      end
     end
   end
 
@@ -74,6 +102,8 @@ resource "Groups" do
 
     parameter :name, "Name of group (max. 255 characters)", required: true
     parameter :image, "Image for the group"
+    parameter :description, "Description of the group (max. 255 characters)"
+    parameter :defaultColor, "Default color of the group (6 characters)"
     parameter :public,
               "Is the group public? (true/false), default: 'false'"
     parameter :membersCanPost,
@@ -86,6 +116,8 @@ resource "Groups" do
 
     let(:name) { "foo" }
     let(:image) { "salvador dali" }
+    let(:description) { "This is a description." }
+    let(:defaultColor) { "123ABD" }
     let(:membersCanPost) { true }
     let(:membersCanInvite) { true }
     let(:public) { true }
@@ -103,15 +135,19 @@ resource "Groups" do
       expect(json).to have_key("id")
       expect(json).to have_key("name")
       expect(json).to have_key("public")
+      expect(json).to have_key("defaultColor")
       expect(json).to have_key("membersCanPost")
       expect(json).to have_key("membersCanInvite")
       expect(json["name"]).to eq name
       expect(json["image"]).to eq image
       expect(json["public"]).to eq public
+      expect(json["defaultColor"]).to eq defaultColor
+      expect(json["description"]).to eq description
       expect(json["membersCanPost"]).to eq membersCanPost
       expect(json["membersCanInvite"]).to eq membersCanInvite
       group = Group.last
       expect(group.owner).to eq current_user
+      expect(group.default_color).to eq defaultColor
       expect(group.members).to include current_user
       expect(Membership.count).to eq invitees.length + 1 # 1 is the owner
       expect(Membership.last.active?).to be true
@@ -128,17 +164,19 @@ resource "Groups" do
     include_context "default group response fields"
 
     let(:group) do
-      create(:group, name: "foo", owner: current_user,
+      create(:group, :with_description, name: "foo", owner: current_user,
              members_can_invite: false, members_can_post: false)
     end
     let(:group_uuid) { group.uuid }
 
     describe "Update existing group" do
       parameter :name, "Updated name of group (max. 255 characters)"
+      parameter :description, "Updated description of group (max. 255 characters)"
       parameter :membersCanInvite, "Allows members to invite other users"
       parameter :membersCanPost, "Allows members to post new slots"
 
       let(:name) { "bar" }
+      let(:description) { "This is a new description." }
       let(:membersCanInvite) { true }
       let(:membersCanPost) { true }
 
@@ -159,6 +197,8 @@ resource "Groups" do
         expect(json['id']).to eq group.uuid
         expect(json).to have_key 'name'
         expect(json['name']).to eq name
+        expect(json).to have_key 'description'
+        expect(json['description']).to eq description
         expect(json).to have_key "membersCanPost"
         expect(json['membersCanPost']).to eq membersCanPost
         expect(json).to have_key "membersCanInvite"
@@ -186,6 +226,38 @@ resource "Groups" do
         expect(response_status).to eq(200)
         expect(json).to have_key("image")
         expect(json["image"]).to eq image
+      end
+    end
+
+    describe "Change default color of group" do
+      parameter :defaultColor, "new default color", required: true
+      let(:defaultColor) { "12AB67" }
+
+      context "group owner permitted" do
+        example "Change default color of group", document: :v1 do
+          expect(group.default_color).not_to eq defaultColor
+          do_request
+
+          expect(response_status).to eq(200)
+          group.reload
+          expect(group.default_color).to eq defaultColor
+          expect(json).to have_key("defaultColor")
+          expect(json["defaultColor"]).to eq defaultColor
+        end
+      end
+
+      context "group member not permitted" do
+        let(:group) do
+          group = create(:group, :with_description, name: "foo",
+                 members_can_invite: false, members_can_post: false)
+          create(:membership, :active, group: group, user: current_user)
+          group
+        end
+
+        example "Change default color of group", document: :false do
+          do_request
+          expect(response_status).to eq 403
+        end
       end
     end
   end
@@ -257,6 +329,8 @@ resource "Groups" do
     response_field :updatedAt, "Last update of the slot"
     response_field :deletedAt, "Deletion datetime of the slot"
 
+    include_context "slot pagination"
+
     let(:group) { create(:group, owner: current_user) }
     let(:group_uuid) { group.uuid }
     let!(:containerships) do
@@ -264,7 +338,8 @@ resource "Groups" do
     end
 
     example "Get slots in a slotgroup by UUID", document: :v1 do
-      explanation "returns 200 and a list of all slots\n\n" \
+      explanation "endpoint supports slot pagination\n\n" \
+                  "returns 200 and a list of slots\n\n" \
                   "returns 404 if UUID is invalid"
       do_request
 
@@ -286,6 +361,174 @@ resource "Groups" do
       expect(json["slots"].first).to have_key("settings")
       expect(json["slots"].first).to have_key("media")
       expect(response_body).to include(containerships.first.slot.title)
+    end
+  end
+
+  # dates
+  get "/v1/groups/:group_uuid/dates" do
+    header "accept", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :group_uuid,
+              "ID of the group to get slots for", required: true
+    parameter :timezone,
+              "Offset for the timezone as string ('+10:00'), default is UTC"
+
+    response_field :data, "Array with dates where a slot is happening, " \
+                          "(starting, ongoing or ending)"
+
+    let(:group) { create(:group, owner: current_user) }
+    let(:two_days) { create(:slot, title: 'two days',
+                            start_date: '2016-02-01', end_date: '2016-02-02')
+    }
+    let(:three_days) { create(:slot, title: 'three days',
+                              start_date: '2016-03-01', end_date: '2016-03-03') }
+    let(:five_days) { create(:slot, title: 'five days',
+                             start_date: '2016-01-01', end_date: '2016-01-05') }
+    let(:same_day1) { create(:slot, title: 'same day 1',
+                             start_date: '2016-03-30', end_date: '2016-03-30') }
+    let(:same_day2) { create(:slot, title: 'same day 2',
+                             start_date: '2016-03-30',
+                             end_date: '2016-03-30T23:59:59') }
+    let(:est_timezone) { create(:slot, title: 'est timezone sameday',
+                                start_date: "2016-05-18T07:59:58.554-05:00",
+                                end_date: "2016-05-18T023:59:58.554-05:00") }
+
+    context 'real group' do
+      let!(:containerships) do
+        create(:containership, slot: two_days, group: group)
+        create(:containership, slot: five_days, group: group)
+        create(:containership, slot: est_timezone, group: group)
+      end
+
+      let(:group_uuid) { group.uuid }
+
+      example "Get all dates when slots in a slotgroup happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-01-01'
+        expect(json["result"]).to include '2016-01-02'
+        expect(json["result"]).to include '2016-01-03'
+        expect(json["result"]).to include '2016-01-04'
+        expect(json["result"]).to include '2016-01-05'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+      end
+
+      describe 'other timezone' do
+        let(:timezone) { '-05:00' }
+
+        example "Get all dates when slots happen in other timezone",
+                document: :v1 do
+          do_request
+          expect(json["result"]).to include '2016-05-18'
+          expect(json["result"]).not_to include '2016-05-19'
+        end
+      end
+    end
+
+    describe 'my calendar slots dates' do
+      let!(:created_slot_not_in_calendar) do
+        create(:std_slot_public, creator: current_user,
+               owner: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
+      end
+      let!(:created_private_slot_in_calendar) do
+        create(:std_slot_private, creator: current_user,
+               owner: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
+      end
+      let!(:passengerships) do
+        create(:passengership, slot: two_days, user: current_user)
+        create(:passengership, slot: five_days, user: current_user)
+        create(:passengership, slot: est_timezone, user: current_user)
+      end
+      let!(:containerships) do
+        create(:containership, slot: three_days, group: group)
+        create(:containership, slot: same_day1, group: group)
+      end
+
+      let(:group_uuid) { current_user.my_cal_uuid }
+
+      example "Get all dates when slots in my_schedule happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-01-01'
+        expect(json["result"]).to include '2016-01-02'
+        expect(json["result"]).to include '2016-01-03'
+        expect(json["result"]).to include '2016-01-04'
+        expect(json["result"]).to include '2016-01-05'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+        expect(json["result"]).not_to include '2016-03-30'
+        expect(json["result"]).not_to include '2016-03-31'
+      end
+    end
+
+    describe 'my library slots dates' do
+      let!(:public_slot) {
+        create(:std_slot_public, creator: current_user,
+               start_date: '2010-03-30', end_date: '2010-03-31',
+               show_in_calendar: false)
+      }
+      let!(:private_slot) {
+        create(:std_slot_private, creator: current_user,
+               start_date: '2011-03-30', end_date: '2011-03-31')
+      }
+      let!(:passengerships) do
+        create(:passengership, slot: two_days, user: current_user,
+               show_in_my_schedule: true)
+        create(:passengership, slot: est_timezone, user: current_user,
+               add_media_permission: true)
+      end
+      let!(:containerships) do
+        create(:containership, slot: three_days, group: group)
+        create(:containership, slot: same_day1, group: group)
+      end
+
+      let(:group_uuid) { current_user.my_lib_uuid }
+
+      example "Get all dates when slots in my library happen", document: :v1 do
+        explanation "This is needed for the agenda picker to show the correct " \
+                    "color for dates with slots.\n\n" \
+                    "returns 200 and an array of dates\n\n" \
+                    "returns 404 if UUID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json).to have_key("result")
+        expect(json["result"]).to include '2016-03-01'
+        expect(json["result"]).to include '2016-03-02'
+        expect(json["result"]).to include '2016-03-03'
+        expect(json["result"]).to include '2016-03-30'
+        expect(json["result"]).to include '2016-05-18'
+        expect(json["result"]).to include '2016-05-19'
+
+        dates = json['result']
+        expect(dates).to include private_slot.start_date.to_date.as_json
+        expect(dates).to include private_slot.end_date.to_date.as_json
+        expect(dates).to include public_slot.start_date.to_date.as_json
+        expect(dates).to include public_slot.end_date.to_date.as_json
+        expect(dates).to include two_days.start_date.to_date.as_json
+        expect(dates).to include two_days.end_date.to_date.as_json
+        expect(dates).to include three_days.start_date.to_date.as_json
+        expect(dates).to include three_days.end_date.to_date.as_json
+        expect(dates).to include est_timezone.start_date.to_date.as_json
+        expect(dates).to include est_timezone.end_date.to_date.as_json
+      end
     end
   end
 
@@ -332,7 +575,7 @@ resource "Groups" do
       expect(response_body).to include(active_member.updated_at.as_json)
       expect(response_body).not_to include(deactivated_user.user.username)
       # expect(response_body)
-        # .to include(v1_user_url(group.members.first, format: :json))
+      # .to include(v1_user_url(group.members.first, format: :json))
     end
   end
 
@@ -659,6 +902,7 @@ resource "Groups" do
 
     parameter :group_uuid, "ID of the group to delete", required: true
     parameter :notifications, "receive notifications?", scope: :settings
+    parameter :color, "color of the group for this member", scope: :settings
     parameter :defaultAlerts, "set default alerts for slots in this group",
               scope: :settings
 
@@ -667,6 +911,7 @@ resource "Groups" do
 
     let(:group_uuid) { group.uuid }
     let(:notifications) { "false" }
+    let(:color) { "WWW222" }
     let(:defaultAlerts) { "1111100000" }
 
     describe "membership active" do
@@ -676,7 +921,7 @@ resource "Groups" do
       end
 
       example "Update settings of joined group", document: :v1 do
-        explanation "Change notifications and default alerts for group\n\n" \
+        explanation "Change notifications, color, default alerts for group\n\n" \
                     "returns 200 if setting was successfully updated\n\n" \
                     "returns 403 if user not active group member\n\n" \
                     "returns 404 if group UUID is invalid\n\n" \
@@ -686,6 +931,7 @@ resource "Groups" do
         expect(response_status).to eq(200)
         membership.reload
         expect(membership.notifications).to eq false
+        expect(membership.color).to eq color
         expect(membership.default_alerts).to eq defaultAlerts
       end
 
@@ -741,39 +987,45 @@ resource "Groups" do
 
   # global slot groups
   post "/v1/groups/global_group", :seed do
-    let(:current_user) { User.find_by email: 'dfb.crawler@timeslot.com' }
+    let(:current_user) { User.find_by email: 'global-importer@timeslot.com' }
 
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
+    parameter :categoryUuid, "UUID for the global slot category to which " \
+                             "the group/calendar belongs", required: true
     parameter :group, "hash witch contains the payload", required: true
-    parameter :muid, "UUID of the group to add slots to",
-              required: true, scope: :group
-    parameter :name, "Name of the group to add slots to",
-              required: true, scope: :group
-    parameter :stringId, "String Identifier for the group", scope: :group
+    parameter :stringId, "String Identifier for the group", scope: :group,
+              required: true
+    parameter :muid, "UUID of the group to add slots to", scope: :group
+    parameter :name, "Name of the group to add slots to", scope: :group
+    parameter :description, "The description of the group", scope: :group
     parameter :image, "Image URL for the group image", scope: :group
     parameter :slots, "Array with muid's of GlobalSlots", scope: :group
 
-    let(:muid) { attributes_for(:group)[:uuid] }
-    let(:name) { "Autokino an der alten Eiche" }
-    let(:image) { "http://faster.pussycat" }
-    let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
-    let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
+    describe "create new global group and add GlobalSlots", :vcr do
+      let(:categoryUuid) { create(:user, :gs_category)[:user_uuid] }
+      let(:muid) { attributes_for(:group)[:uuid] }
+      let(:name) { "Autokino an der alten Eiche" }
+      let(:image) { "http://faster.pussycat" }
+      let(:description) { "Bitte Autoradio nicht vergessen." }
 
-    describe "create new public group and add GlobalSlots", :vcr do
+      let(:stringId) { "soccer_leagues:dfb.de:champions_league" }
+      let(:slots) { [attributes_for(:global_slot)[:slot_uuid]] }
+
       example "Add GlobalSlots to new or existing public group",
               document: :v1 do
-        explanation "If no public group with the given UUID exists, " \
+        explanation "If no global group with the given UUID exists, " \
                     "one is created and the name and image is set and the " \
                     "given GlobalSlots are added to the new group.\n\n" \
                     "If a public group with the UUID exists, this one " \
-                    "is used to add the given GlobalSlots to it.\n\n" \
+                    "is used to add the given GlobalSlots to it and " \
+                    "the group will be updated with new submitted values.\n\n" \
                     "The GlobalSlots which aren't yet in the backend db " \
                     "are loaded via the candy shop.\n\n" \
-                    "The User which is used to submit the data is set as " \
-                    "owner for created slotgroup/list. This user must be " \
-                    "a known GlobalSlot source in the backend.\n\n" \
+                    "The data must be submitted by the special **Global" \
+                    " Importer** User. The owner if the list must be " \
+                    "available via candy api via it's uuid.\n\n" \
                     "returns 200 if slots were successfully added.\n\n" \
                     "returns 422 if group with given UUID exists but " \
                     "name doesn't match.\n\n" \
@@ -788,6 +1040,57 @@ resource "Groups" do
         expect(autokino.name).to eq name
         expect(autokino.public?).to be true
         expect(autokino.image).to eq image
+        expect(autokino.description).to eq description
+        expect(autokino.string_id).to eq stringId
+
+        expect(autokino.slots).not_to be_empty
+        gs = GlobalSlot.find_by slot_uuid: slots.first
+        expect(autokino.slots).to include gs
+
+        expect(response_status).to eq(200)
+      end
+    end
+
+    describe "update existing global group", :vcr do
+      let!(:global_group) do
+        create(:group, public: true,
+               owner: create(:user, role: 'global_slot_category'),
+               uuid: "d448ce44-cd5b-efac-ef95-b84a70001777",
+               name: "Brechreiz und Komplexe",
+               description: "Studenten erzaehlen aus ihrem Leben.",
+               string_id:
+                 "tu_berlin_classes:lsf.tu-berlin.de:0401 L 145:180786:373591",
+               image: "http://www.retrainer.eu/start/img/tuberlin.png")
+      end
+
+      let(:categoryUuid) { "74234fc9-5543-6b0f-bdb5-66ed52e2d787" }
+      let(:muid) { "d448ce44-cd5b-efac-ef95-b84a70001906" }
+      let(:name) { "Berechenbarkeit und Komplexitaet" }
+      let(:description) { "Vl. Mi 14:00 - 16:00, 0401 L 145, Raum: ER 270" }
+      let(:stringId) {
+        "tu_berlin_classes:lsf.tu-berlin.de:0401 L 145:180786:373591" }
+      let(:slots) { ["5b012024-e614-83cb-63a6-165d4716c892"] }
+      let(:domain) { "lsf.tu-berlin.de" } # this is ignored
+
+      example "Update existing global group", document: :v1 do
+        explanation "Check for existing global group via **string_id**, " \
+                    "If the global group is already known in the backend " \
+                    "it will be updated with the submitted group params.\n\n" \
+                    "returns 200 if slots were successfully added.\n\n" \
+                    "returns 422 if group with given UUID exists but " \
+                    "name doesn't match.\n\n" \
+                    "returns 422 if requiered parameters are missing or invalid."
+
+        skip 'no TU slots anymore???'
+        group_counter = Group.count
+        do_request
+
+        expect(Group.count).to eq group_counter # no group created
+        autokino = Group.last
+        expect(autokino.uuid).to eq muid
+        expect(autokino.name).to eq name
+        expect(autokino.public?).to be true
+        expect(autokino.description).to eq description
         expect(autokino.string_id).to eq stringId
 
         expect(autokino.slots).not_to be_empty

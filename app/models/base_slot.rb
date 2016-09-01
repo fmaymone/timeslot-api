@@ -29,6 +29,8 @@ class BaseSlot < ActiveRecord::Base
   after_initialize :set_slot_type, if: :new_record?
 
   scope :active, -> { where deleted_at: nil }
+  scope :unprivate, -> { where.not(slot_type: SLOT_TYPES[:StdSlotPrivate]) }
+
   # there are additonal scopes defined as class method (upcoming, past)
   # there is also a default scope defined as class method
 
@@ -50,22 +52,36 @@ class BaseSlot < ActiveRecord::Base
   has_many :my_calendar_users, -> { merge Passengership.in_schedule },
            through: :passengerships, source: :user,
            inverse_of: :my_calendar_slots
-
   has_many :tagged_users, -> { merge Passengership.add_media_permitted },
-           through: :passengerships, source: :user
+           through: :passengerships, source: :user,
+           inverse_of: :tagged_slots
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
-           :location, :ios_location_id, :ios_location, :open_end,
+           :location, :ios_location_id, :ios_location, :open_end, :slot_settings,
            :title=, :start_date=, :end_date=, :creator=, :location_uid=, :open_end=,
            to: :meta_slot
 
   validates :meta_slot, presence: true
+  validates :description, length: { maximum: 500 }
   # validates :slot_uuid, presence: true # let the db take care of it for now
+  validate :type_and_slot_type_in_sync
 
+  # custom validations
+
+  private def type_and_slot_type_in_sync
+    # because atm to different mechanism are used for inheritance
+    # (custom via 'slot_type' and rails STI via 'type' column),
+    # it should be ensured that they hold the same information
+    errors.add(:slot_type, "out-of-sync") unless type == slot_type
+  end
   # getter
 
   def visibility
     slot_type.constantize.try(:visibility)
+  end
+
+  def visible_count
+    CounterService.new.number_of_users_who_can_view_the_slot(self).to_s
   end
 
   def images
@@ -88,6 +104,16 @@ class BaseSlot < ActiveRecord::Base
     comments.includes([:user])
   end
 
+  # returns the first group, where the slots was in, which has read acces for
+  # the given user. Using the public groups of the slot is safe in any case...
+  def first_group(user)
+    group_ids = slot_groups.public.pluck(:id)
+    group_ids |= user.active_group_ids if user
+
+    containership = containerships.active.where(group_id: group_ids).first
+    Group.where(id: containership.try(:group_id)).first
+  end
+
   def as_paging_cursor
     # make sure we use the full resolution of datetime
     startdate = start_date.strftime('%Y-%m-%d %H:%M:%S.%N')
@@ -103,20 +129,29 @@ class BaseSlot < ActiveRecord::Base
         latitude: location[:latitude], longitude: location[:longitude])
     end
 
-    new_location ||= IosLocation.create(location.merge(creator: owner))
+    update_notification = new_location.present?
+    new_location ||= IosLocation.create(location.merge(creator: creator))
 
     #update custom label for location (same geo-location can have several names)
     new_location[:name] = location[:name] unless location[:name].blank?
     meta_slot.update(ios_location: new_location)
+
+    create_activity('location') if update_notification
+    Feed.update_objects(self)
   end
 
   def update_from_params(meta: nil, media: nil, notes: nil, alerts: nil, user: nil)
+    # check if an update notification has to be send
+    update_notification = meta ? meta[:start_date] != start_date : false
+
     # statement order is important, otherwise added errors may be overwritten
     update(meta) if meta
     update_media(media, user.id) if media
     update_notes(notes, user.id) if notes
     user.update_alerts(self, alerts) if alerts
-    update_activity_objects
+
+    create_activity('start') if update_notification
+    Feed.update_objects(self)
   end
 
   def add_media(item, creator_id)
@@ -144,11 +179,22 @@ class BaseSlot < ActiveRecord::Base
     new_media.create_activity
   end
 
+  def update_media(items, creator_id)
+    # check if existing media items, if yes, assume reordering
+    if items.first.key? :media_id
+      unless MediaItem.reorder_media items
+        errors.add(:media_items, 'invalid ordering')
+      end
+    else
+      add_media_items(items, creator_id)
+    end
+  end
+
   def update_notes(new_notes, creator_id)
     new_notes.each do |note|
       if note.key? :id
         notes.find(note[:id]).update(note.permit(:title, :content)
-                         .merge!(creator_id: creator_id))
+                                      .merge!(creator_id: creator_id))
       else
         notes.create(note.merge!(creator_id: creator_id)).create_activity
       end
@@ -192,14 +238,14 @@ class BaseSlot < ActiveRecord::Base
   end
 
   def delete
+    current_follower = followers
+
     likes.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
     containerships.each(&:delete)
     passengerships.each(&:delete)
-
-    remove_all_activities(target: self)
 
     related_users.each do |user|
       user.prepare_for_slot_deletion self
@@ -209,39 +255,26 @@ class BaseSlot < ActiveRecord::Base
     ts_soft_delete
     meta_slot.unregister
 
+    remove_activity
+
+    # TODO:
     # Forward deletion activity after 'deleted_at' was set:
-    forward_deletion
+    create_activity('delete',
+      feed_fwd: {
+        User: [creator.id.to_s],
+        Notification: current_follower
+      },
+      push_fwd: current_follower.map(&:to_i)
+    )
+
     # NOTE: Remove follower relations at least!
     remove_all_followers
-  end
-
-  def copy_to(targets, user)
-    targets.each do |target|
-      BaseSlot.duplicate_slot(self, target, user)
-    end
-  end
-
-  def move_to(target, user)
-    new_slot = BaseSlot.duplicate_slot(self, target, user)
-    delete if new_slot.errors.empty?
-    new_slot
   end
 
   ## private instance methods ##
 
   private def set_slot_type
     self.slot_type ||= self.class.to_s.to_sym
-  end
-
-  private def update_media(items, creator_id)
-    # check if existing media items, if yes, assume reordering
-    if items.first.key? :media_id
-      unless MediaItem.reorder_media items
-        errors.add(:media_items, 'invalid ordering')
-      end
-    else
-      add_media_items(items, creator_id)
-    end
   end
 
   private def add_media_items(items, creator_id)
@@ -300,91 +333,42 @@ class BaseSlot < ActiveRecord::Base
     upcoming.order('meta_slots.start_date').first
   end
 
-  def self.create_slot(meta:, visibility: nil, group: nil, media: nil,
-                       notes: nil, alerts: nil, user: nil)
-    fail unless visibility
+  def self.public
+    where slot_type: [3, 15]
+  end
 
+  def self.create_slot(meta:, user:, visibility:, media: nil,
+                       notes: nil, alerts: nil, description: nil)
     meta_slot = MetaSlot.find_or_add(meta.merge(creator: user))
     # TODO: fail instead of return here, fail in the find_or_add method
     return meta_slot unless meta_slot.errors.empty?
 
-    slot = StdSlot.create_slot(meta_slot: meta_slot,
-                               visibility: visibility,
-                               user: user)
+    slot_params = { meta_slot: meta_slot, owner: user }
+    slot_params[:description] = description if description
+    slot = StdSlot.create_slot(slot_params: slot_params, visibility: visibility)
 
     # TODO: fail instead of return here or even better, fail in the create_slot
     return slot unless slot.errors.empty?
 
-    #slot.create_activity
-
-    if media || notes || alerts
-      slot.update_from_params(media: media, notes: notes, alerts: alerts,
-                              user: user)
-    end
+    slot.update_media(media, user.id) if media
+    slot.update_notes(notes, user.id) if notes
+    user.update_alerts(slot, alerts) if alerts
 
     slot
   end
 
-  def self.duplicate_slot(source, target, current_user)
-    visibility = target[:slot_type] if target[:slot_type]
-    # group = Group.find(target[:group_id]) if target[:group_id]
-    details = target[:details]
-    # YAML.load converts to boolean
-    with_details = details.present? ? YAML.load(details.to_s) : true
-
-    duplicated_slot = create_slot(meta: { meta_slot_id: source.meta_slot_id },
-                                  visibility: visibility,
-                                  # group: group,
-                                  user: current_user)
-
-    duplicate_slot_details(source, duplicated_slot, current_user) if with_details
-    duplicated_slot
-  end
-
-  def self.duplicate_slot_details(old_slot, new_slot, user)
-    old_slot.media_items.reverse_each do |item|
-      attr = item.attributes
-      attr.delete('id')
-      new_slot.media_items.create(attr)
-    end
-
-    old_slot.notes.each do |note|
-      new_slot.notes.create(title: note.title,
-                            content: note.content,
-                            creator: user) # user => current_user
-    end
-  end
-
-  # takes an encoded_slot string and returns the matching slot
+  # takes an encoded_slot string and returns the matching (pseudo) slot
   # see: BaseSlot.as_paging_cursor
-  # raises PaginationError if invalid cursor_string
   def self.from_paging_cursor(encoded_cursor_string)
     decoded_cursor_string = Base64.urlsafe_decode64(encoded_cursor_string)
   rescue ArgumentError
     raise ApplicationController::PaginationError
   else
-    # check for validity
-    begin
-      cursor_array = decoded_cursor_string.split('%')
-      cursor = { id: cursor_array.first.to_i,
-                startdate: cursor_array.second,
-                enddate: cursor_array.third }
-      slot = get(cursor[:id])
-    rescue ActiveRecord::RecordNotFound
-      raise PaginationError, "invalid pagination cursor"
-    # the following is not really necessary, might be removed at some point
-    # but for now it gives some useful info about the system
-    else
-      if slot.start_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:startdate] ||
-         slot.end_date.strftime('%Y-%m-%d %H:%M:%S.%N') != cursor[:enddate]
-        opts = { cursor_id: cursor[:id],
-                 cursor_startdate: cursor[:startdate],
-                 cursor_enddate: cursor[:enddate] }
-        Airbrake.notify(ApplicationController::PaginationError, opts)
-        fail PaginationError, "cursor slot changed" if Rails.env.development?
-      end
-      cursor
-    end
+    cursor_array = decoded_cursor_string.split('%')
+    cursor = { id: cursor_array.first.to_i,
+               startdate: cursor_array.second,
+               enddate: cursor_array.third }
+    cursor
   end
 
   # for Pundit
@@ -403,6 +387,6 @@ class BaseSlot < ActiveRecord::Base
   end
 
   private def activity_action
-    'slot'
+    'create'
   end
 end

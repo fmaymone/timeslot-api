@@ -37,6 +37,12 @@ Description : Can subscribers invite friends?
 Name : image
 Description : URL of the group image
 
+Name : description
+Description : The description of the group
+
+Name : defaultColor
+Description : default color of the group, can be overwritten per member
+
 Name : createdAt
 Description : Creation of group
 
@@ -54,13 +60,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw
+Authorization: Token token=2mR4MF1BBlmT27pyG_x5y7PbBEM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1</pre>
+<pre>PATCH /v1/groups/97f56b57-83fa-4dee-a484-6a9a4166a831</pre>
 
 #### Body
 ```javascript
@@ -72,9 +78,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/groups/97f56b57-83fa-4dee-a484-6a9a4166a831&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/dfhjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=J5-jtRDQiUc8Bh1Lag8f0VQ9rsw&quot;</pre>
+	-H &quot;Authorization: Token token=2mR4MF1BBlmT27pyG_x5y7PbBEM&quot;</pre>
 
 ### Response
 
@@ -84,12 +90,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;54298f7153a1de8f1cfdb3024f968054&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;8c8b0ee4233542a52ab08efbcfd5769f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 333b8e2e-a29a-4719-8b61-8c8bf889ac3f
-X-Runtime: 0.011361
-Vary: Origin
-Content-Length: 480</pre>
+X-Request-Id: 2d8573dc-a511-4311-9bae-add9fc476e68
+X-Runtime: 0.024121
+Content-Length: 614</pre>
 
 #### Status
 
@@ -99,28 +105,34 @@ Content-Length: 480</pre>
 
 ```javascript
 {
-  "id" : "9bc06d21-1f53-4fb7-ab7b-cae5882cb1e1",
+  "id" : "97f56b57-83fa-4dee-a484-6a9a4166a831",
   "name" : "foo",
   "image" : "v1234567/dfhjghjkdisudgfds7iyf.jpg",
+  "description" : "This is a description.",
+  "defaultColor" : "000000",
   "membersCanPost" : false,
   "membersCanInvite" : false,
   "public" : false,
-  "createdAt" : "2016-04-04T20:50:22.028Z",
-  "updatedAt" : "2016-04-04T20:50:22.039Z",
+  "createdAt" : "2016-08-30T09:50:50.325Z",
+  "updatedAt" : "2016-08-30T09:50:50.337Z",
   "deletedAt" : null,
   "owner" : {
-    "id" : 14,
-    "username" : "User 75",
-    "createdAt" : "2016-04-04T20:50:22.025Z",
-    "updatedAt" : "2016-04-04T20:50:22.025Z",
+    "id" : 310,
+    "username" : "User 420",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:50.321Z",
+    "updatedAt" : "2016-08-30T09:50:50.321Z",
     "deletedAt" : null,
     "image" : ""
   },
   "memberIds" : [
-    14
+    310
   ],
   "memberCount" : 1,
   "slotCount" : 0,
-  "membershipState" : "active"
+  "membershipState" : "active",
+  "color" : "000000"
 }
 ```

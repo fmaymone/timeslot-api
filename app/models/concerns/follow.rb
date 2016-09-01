@@ -7,8 +7,8 @@ module Follow
   
   # Add the passed follower to the current object
   def add_follower(follower)
-    # Skip self and private targets
-    if (self != follower) and (self.try(:visibility) != 'private')
+    # Skip self and do not skip private targets
+    if self != follower #and (self.try(:visibility) != 'private')
       # Start redis transaction
       storage.transaction do
         storage.add_to_set(follower.redis_key(:following), self.id)
@@ -49,7 +49,7 @@ module Follow
 
   # Delegate helper method (inverted logic)
   def unfollow(target)
-    target.remove_follower(self)
+    target.remove_follower(self) # self => follower
   end
 
   # Remove all followings from the current object (self)
@@ -121,5 +121,6 @@ module Follow
   private def error_handler(error, message, params = nil)
     Rails.logger.error { error }
     Airbrake.notify(error, message: message, params: params)
+    puts error
   end
 end

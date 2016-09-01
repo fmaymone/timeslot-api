@@ -14,6 +14,8 @@ class Membership < ActiveRecord::Base
   validates :state, presence: true
   validates :notifications, inclusion: [true, false] # makes sure it's not nil
 
+  attr_accessor :initiator
+
   @initiator = nil
 
   def activate(initiator = nil)
@@ -39,7 +41,7 @@ class Membership < ActiveRecord::Base
 
   def refuse
     update!(state: "001")
-    remove_activity('reject')
+    update_activity('reject')
     true
   end
 
@@ -48,9 +50,12 @@ class Membership < ActiveRecord::Base
   end
 
   def kick
-    update!(state: "010")
-    remove_activity('kick')
-    group.remove_follower(user)
+    update_activity('kick')
+    reduce_distribution_by{
+      update!(state: "010")
+      group.remove_follower(user)
+    }
+    group.slots.each(&:reduce_distribution_by)
     group.touch
   end
 
@@ -59,9 +64,12 @@ class Membership < ActiveRecord::Base
   end
 
   def leave
-    update!(state: "100")
-    remove_activity('leave')
-    user.unfollow(group)
+    update_activity('leave')
+    reduce_distribution_by{
+      update!(state: "100")
+      user.unfollow(group)
+    }
+    group.slots.each(&:reduce_distribution_by)
     group.touch
   end
 
@@ -81,9 +89,13 @@ class Membership < ActiveRecord::Base
   # state needs to be preserved in this case
   def inactivate
     remove_activity
-    group.remove_follower(user)
-    group.touch
-    ts_soft_delete
+    reduce_distribution_by{
+      group.remove_follower(user)
+      group.touch
+      ts_soft_delete
+    }
+    group.slots.each(&:reduce_distribution_by)
+    true
   end
 
   # group still existing
@@ -96,11 +108,15 @@ class Membership < ActiveRecord::Base
   # and thus don't need the state
   def delete
     remove_activity
-    update!(state: "000")
-    group.remove_follower(user)
-    user.touch
-    group.touch unless group.deleted_at?
-    ts_soft_delete
+    reduce_distribution_by{
+      update!(state: "000")
+      group.remove_follower(user)
+      user.touch
+      group.touch unless group.deleted_at?
+      ts_soft_delete
+    }
+    group.slots.each(&:reduce_distribution_by)
+    true
   end
 
   # def deleted?
@@ -122,10 +138,6 @@ class Membership < ActiveRecord::Base
 
   ## Activity Methods ##
 
-  private def activity_is_valid?
-    super && @initiator
-  end
-
   private def activity_target
     group
   end
@@ -135,10 +147,14 @@ class Membership < ActiveRecord::Base
   end
 
   private def activity_foreign
-    @initiator ? user : nil
+    @initiator ? user : super
   end
 
   private def activity_action
     @initiator ? 'membertag' : 'membership'
+  end
+
+  private def activity_is_valid?(action)
+    super and active?
   end
 end

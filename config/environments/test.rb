@@ -7,6 +7,10 @@ Rails.application.configure do
   # and recreated between test runs. Don't rely on the data there!
   config.cache_classes = true
 
+  # FIX: Circular dependency detected while autoloading constant Feed (RuntimeError)
+  # http://stackoverflow.com/questions/18013055/circular-dependency-detected-while-autoloading-constant-user
+  # config.reload_classes_only_on_change = false
+
   # Do not eager load code on boot. This avoids loading your whole application
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.

@@ -28,21 +28,21 @@ Description : Array of users ids which should be tagged for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=jYJSjGZoWbrJ009FO3zrQyP6EAA
+Authorization: Token token=1bSYpLWqjDWFFTQSG4vqxaQnVZM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/slots/31/user_tags</pre>
+<pre>POST /v1/slots/34/user_tags</pre>
 
 #### Body
 ```javascript
 {
   "user_tags" : [
-    100,
-    101,
-    102
+    93,
+    94,
+    95
   ]
 }
 ```
@@ -50,10 +50,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/31/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[100,101,102]}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/34/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[93,94,95]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=jYJSjGZoWbrJ009FO3zrQyP6EAA&quot;</pre>
+	-H &quot;Authorization: Token token=1bSYpLWqjDWFFTQSG4vqxaQnVZM&quot;</pre>
 
 ### Response
 
@@ -63,10 +63,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: a6c1bcc5-c3fb-44c4-b58e-1e895327cfb1
-X-Runtime: 0.046516
-Vary: Origin
+X-Request-Id: 7a958fa5-b9b4-44cf-bb84-d9a939a22487
+X-Runtime: 0.115897
 Content-Length: 0</pre>
 
 #### Status

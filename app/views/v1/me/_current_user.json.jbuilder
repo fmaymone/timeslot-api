@@ -1,6 +1,7 @@
 json.partial! 'v1/users/full_user', user: user
 
 json.extract!(user,
+              :gender,
               :lang,
               :email,
               :email_verified,
@@ -20,12 +21,13 @@ json.extract!(user,
               # :default_group_alerts
              )
 
-json.my_calendar_uuid user.slot_sets['my_cal_uuid']
-json.friends_calendar_uuid user.slot_sets['friends_cal_uuid']
-json.all_my_slots_uuid user.slot_sets['my_lib_uuid']
-json.my_created_slots_uuid user.slot_sets['my_created_slots_uuid']
-json.my_friend_slots_uuid user.slot_sets['my_friend_slots_uuid']
-json.my_public_slots_uuid user.slot_sets['my_public_slots_uuid']
+json.my_calendar_uuid user.my_cal_uuid
+json.friends_calendar_uuid user.friends_cal_uuid
+json.all_my_slots_uuid user.my_lib_uuid
+json.my_created_slots_uuid user.my_created_slots_uuid
+json.my_private_slots_uuid user.my_private_slots_uuid
+json.my_friend_slots_uuid user.my_friend_slots_uuid
+json.my_public_slots_uuid user.my_public_slots_uuid
 
 tmp = []
 
@@ -48,6 +50,7 @@ json.friendships tmp
 json.memberships user.memberships.each do |membership|
   json.group_id membership.group_id
   json.state membership.humanize
+  json.color membership.color
   json.notifications membership.notifications
 end
 

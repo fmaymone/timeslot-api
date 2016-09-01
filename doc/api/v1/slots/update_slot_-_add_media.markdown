@@ -2,7 +2,7 @@
 
 ## Update Slot - Add media
 
-### PATCH /v1/stdslot/:id
+### PATCH /v1/slots/:id
 
 First a cloudinary signature needs to be fetched by the client from the API. After uploading the image to cloudinary client updates the slot with the image information.
 
@@ -15,9 +15,6 @@ returns 200 and slot details including the new mediaID
 Name : id *- required -*
 Description : ID of the slot to update
 
-Name : visibility
-Description : Visibility of the Slot to update (private/friends/foaf/public)
-
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -26,6 +23,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : description
+Description : Description for the slot (max. 500 characters)
 
 Name : location
 Description : Location associated with this slot (see example)
@@ -90,6 +90,9 @@ Description : Last update of slot
 Name : deletedAt
 Description : Delete date of slot or nil
 
+Name : description
+Description : Description for the slot
+
 Name : location
 Description : Location data for the slot
 
@@ -106,6 +109,9 @@ Description : Visibiltiy of the slot (private/friend/foaf/public)
 
 Name : notes
 Description : Notes on the slot
+
+Name : likerIds
+Description : Array with IDs of Users who like the slot
 
 Name : likes
 Description : Likes for the slot
@@ -148,13 +154,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk
+Authorization: Token token=y7NVTvISTbKhSUMfZodIGs-N2LA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/stdslot/15</pre>
+<pre>PATCH /v1/slots/14</pre>
 
 #### Body
 ```javascript
@@ -173,9 +179,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot/15&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/14&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=mNEYNJ2sGDsuCj7wQpYHE8h9YFk&quot;</pre>
+	-H &quot;Authorization: Token token=y7NVTvISTbKhSUMfZodIGs-N2LA&quot;</pre>
 
 ### Response
 
@@ -185,12 +191,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;46353acd3e1793dcd0870497942ba285&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;4624c9f2b46fc960f8eaef0ef09a2c72&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 6e6525f6-2d84-42a3-8b66-fc7812d456d5
-X-Runtime: 0.023683
-Vary: Origin
-Content-Length: 664</pre>
+X-Request-Id: 40dd15ce-5a07-48ad-98e4-1302c9c0b2fb
+X-Runtime: 0.094372
+Content-Length: 804</pre>
 
 #### Status
 
@@ -200,19 +206,23 @@ Content-Length: 664</pre>
 
 ```javascript
 {
-  "id" : 15,
-  "title" : "Slot title 80",
-  "startDate" : "2019-09-03T11:44:02.000Z",
-  "createdAt" : "2016-04-04T20:50:31.896Z",
-  "updatedAt" : "2016-04-04T20:50:31.896Z",
+  "id" : 14,
+  "title" : "Slot title 170",
+  "description" : "",
+  "startDate" : "2019-09-09T02:44:02.000Z",
+  "createdAt" : "2016-08-30T09:51:07.868Z",
+  "updatedAt" : "2016-08-30T09:51:07.868Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-03T11:44:02.000Z",
+  "endDate" : "2019-10-09T02:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 34,
-    "username" : "User 336",
-    "createdAt" : "2016-04-04T20:50:31.886Z",
-    "updatedAt" : "2016-04-04T20:50:31.886Z",
+    "id" : 27,
+    "username" : "User 733",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:51:07.860Z",
+    "updatedAt" : "2016-08-30T09:51:07.860Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -224,14 +234,18 @@ Content-Length: 664</pre>
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:31.912Z"
+      "createdAt" : "2016-08-30T09:51:07.886Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "private",
+  "likerIds" : [],
   "likes" : 0,
-  "commentsCounter" : 0
+  "commentsCounter" : 0,
+  "firstGroup" : null,
+  "slotGroupUuids" : [],
+  "visibleCount" : "1"
 }
 ```

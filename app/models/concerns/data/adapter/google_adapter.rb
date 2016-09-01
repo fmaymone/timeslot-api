@@ -1,0 +1,2 @@
+class GoogleAdapter < IcalAdapter
+end

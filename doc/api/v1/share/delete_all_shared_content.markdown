@@ -20,7 +20,7 @@ Description : The id of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=ltxgyskFgO7oARJWNkpgf_BrnSQ
+Authorization: Token token=u2DRqImnXdy64xAsAjMU_YsiieQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -33,7 +33,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/share/29&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=ltxgyskFgO7oARJWNkpgf_BrnSQ&quot; \
+	-H &quot;Authorization: Token token=u2DRqImnXdy64xAsAjMU_YsiieQ&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -44,10 +44,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 96ca359b-b071-46df-a2da-8a33f00b8012
-X-Runtime: 0.004221
-Vary: Origin
+X-Request-Id: 9a1306cc-a366-487c-860b-68865eda43f3
+X-Runtime: 0.007440
 Content-Length: 0</pre>
 
 #### Status

@@ -13,6 +13,18 @@ returns 200 and the users data if the image was successfully added or updated
 Name : username
 Description : Updated username of user (max. 50 characters)
 
+Name : firstName
+Description : Updated firstname of user (max. 50 characters)
+
+Name : middleName
+Description : Updated middlename of user (max. 50 characters)
+
+Name : lastName
+Description : Updated lastname of user (max. 50 characters)
+
+Name : gender
+Description : Updated gender of user (max. 50 characters)
+
 Name : email
 Description : Email of user (max. 255 characters)
 
@@ -73,6 +85,15 @@ Description : ID of the user
 Name : username
 Description : Username of the user
 
+Name : firstName
+Description : First name of the user
+
+Name : middleName
+Description : Middle name of the user
+
+Name : lastName
+Description : Last name of the user
+
 Name : createdAt
 Description : Creation of user
 
@@ -96,6 +117,9 @@ Description : Number of visible calendars for this user
 
 Name : friendsCount
 Description : Number of friends for this user
+
+Name : gender
+Description : Gender of user (non-binary to allow transgender types)
 
 Name : lang
 Description : Language code (ISO 639-1)
@@ -174,7 +198,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=P1f0fEysWqZXsQMzuv_2C3hqf3w
+Authorization: Token token=GclbL_Cf12T91yeTnJd8wvLSjJo
 Host: example.org
 Cookie: </pre>
 
@@ -194,7 +218,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me&quot; -d &#39;{&quot;image&quot;:&quot;v1234567/xcvjghjkdisudgfds7iyf.jpg&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=P1f0fEysWqZXsQMzuv_2C3hqf3w&quot;</pre>
+	-H &quot;Authorization: Token token=GclbL_Cf12T91yeTnJd8wvLSjJo&quot;</pre>
 
 ### Response
 
@@ -204,12 +228,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;a24622434f3f9070b2982881b94e2d7f&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;6bfb3a7f88936856a4ff0fa195784b88&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 9328a352-05c2-4548-b65f-cd0d013dd9e8
-X-Runtime: 0.022002
-Vary: Origin
-Content-Length: 773</pre>
+X-Request-Id: c59d0f66-7cb7-4f5f-9c69-de01236240cf
+X-Runtime: 0.040147
+Content-Length: 898</pre>
 
 #### Status
 
@@ -220,28 +244,33 @@ Content-Length: 773</pre>
 ```javascript
 {
   "id" : 76,
-  "username" : "User 238",
-  "createdAt" : "2016-04-04T20:50:24.810Z",
-  "updatedAt" : "2016-04-04T20:50:24.820Z",
+  "username" : "User 617",
+  "firstName" : null,
+  "middleName" : null,
+  "lastName" : null,
+  "createdAt" : "2016-08-30T09:50:54.566Z",
+  "updatedAt" : "2016-08-30T09:50:54.596Z",
   "deletedAt" : null,
   "image" : "v1234567/xcvjghjkdisudgfds7iyf.jpg",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 0,
   "friendsCount" : 0,
+  "gender" : null,
   "lang" : null,
-  "email" : "user47@email.com",
+  "email" : "user77@email.com",
   "emailVerified" : false,
   "phone" : null,
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "c2a80494-9294-4e1e-b78e-0ffce9f341d0",
-  "friendsCalendarUuid" : "e73c9387-b5c5-48f5-a1e3-e0138f743317",
-  "allMySlotsUuid" : "22e0193d-b232-4a5c-b7dc-ef2ca07d68d6",
-  "myCreatedSlotsUuid" : "79a2d91a-0385-4e33-a0dc-9684eae2a046",
-  "myFriendSlotsUuid" : "f8771ed8-c29f-4e0e-9d4c-cda2df9ea68b",
-  "myPublicSlotsUuid" : "5dee355f-4825-4f29-96d4-858bc462d171",
+  "myCalendarUuid" : "b84e60fc-388c-4861-ad99-25483e84e4ad",
+  "friendsCalendarUuid" : "a3b0c10d-fa3f-4db2-a3d5-e6e899d29e9e",
+  "allMySlotsUuid" : "320396f1-02be-4f82-bfce-1f780f5aca5c",
+  "myCreatedSlotsUuid" : "24096033-e6af-4cf2-9e69-1f5bc129c21e",
+  "myPrivateSlotsUuid" : "48f98134-929f-4c30-814b-5159fcb33295",
+  "myFriendSlotsUuid" : "71849ce8-93ba-46ec-a405-503706e903ec",
+  "myPublicSlotsUuid" : "02bb3c57-23fd-4cb2-855f-f7425eb8e5e7",
   "friendships" : [],
   "memberships" : [],
   "friendshipState" : "myself"

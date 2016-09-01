@@ -13,8 +13,7 @@ resource "Slots" do
 
     include_context "default slot parameter"
     parameter :visibility,
-              "Visibility of the Slot (private/friends/foaf/public)",
-              required: true
+              "Deprecated: Visibility of the Slot (private/friends/foaf/public)"
     parameter :slotGroups,
               "Array with UUIDs of the SlotGroups slot should be added to"
 
@@ -30,6 +29,7 @@ resource "Slots" do
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
       #let(:openEnd) { false }
+      let(:description) { "One day it will all make sense." }
       let(:notes) { [{ title: "revolutionizing the calendar",
                        content: "this is content" },
                      { title: "and another title",
@@ -55,11 +55,30 @@ resource "Slots" do
                           deleted_group.uuid] }
 
       example "Create new slot", document: :v1 do
-        explanation "Creates new slot for user and adds it to the users" \
-                    " 'MyCalendar' and to all slotGroups which were given" \
-                    " additionally.\n\n" \
+        explanation "Creates a new slot for the user.\n\n" \
+                    "If the 'MyCalendar'-UUID is given the new slot will be " \
+                    "added to the users schedule. Also it will be added to all" \
+                    " given slotGroups where the user has write permission.\n\n" \
+                    "Default slot visibility is *private*. If the " \
+                    "'shareWithFriends'-UUID is submitted, the slot will be" \
+                    " *friend-visible*.\n\n" \
+                    "If at least **one public calendar** is submitted where " \
+                    "the slot should be included, then the slot will be " \
+                    "*public*.\n\n" \
+                    "For backward compatibility the 'visibility' can still " \
+                    "be submitted. If **visibility** is set to *private* or " \
+                    "*friends*, but no private calendar is submitted, " \
+                    "the slot is put in the users " \
+                    "'MyPrivateSlots' calendar. Also if visibility is " \
+                    "set to *friends*, the **show_to_friend** flag will be set." \
+                    " If *public* is submitted, but no accompanying public" \
+                    " calendar, the slot will be put into the" \
+                    " users 'MyPublicSlots' calendar.\n\n" \
+                    "If the submitted visiblity contradicts the visibility " \
+                    "resulting from the submitted calendars, the highest " \
+                    "visibility will win.\n\n" \
                     "Returns data of new slot and array with unauthorized " \
-                    "slotgroup UUIDs (User has no write access or slotgroup" \
+                    "slotGroup UUIDs (User has no write access or slotgroup" \
                     " deleted).\n\n" \
                     "Returns 422 if parameters are invalid or missing."
         do_request
@@ -82,6 +101,8 @@ resource "Slots" do
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
         expect(json).to have_key("endDate")
+        expect(json).to have_key("description")
+        expect(json['description']).to eq "One day it will all make sense."
         expect(json).to have_key("location")
         # expect(json.last['location']).to have_key("name")
         expect(json).to have_key("creator")
@@ -140,6 +161,7 @@ resource "Slots" do
         expect(json).to have_key("startDate")
         expect(json).to have_key("endDate")
         expect(json).to have_key("location")
+        expect(json).to have_key("description")
         # expect(json['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
@@ -151,19 +173,26 @@ resource "Slots" do
         expect(json).to have_key("notes")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
-        # expect(json).to have_key("reslotsCounter")
+        expect(json).to have_key("visibleCount")
         expect(json).to have_key("visibility")
         expect(json).to have_key("media")
-        expect(json.except('media', 'location'))
+        expect(json).to have_key("firstGroup")
+        expect(json).to have_key("slotGroupUuids")
+        slot.reload
+        expect(json.except('media', 'location', 'likerIds'))
           .to eq("id" => slot.id,
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
+                 "firstGroup" => nil,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
                  "deletedAt" => deleted_at.as_json,
                  "creator" => { "id" => slot.creator.id,
                                 "username" => slot.creator.username,
+                                "firstName" => slot.creator.first_name,
+                                "middleName" => slot.creator.middle_name,
+                                "lastName" => slot.creator.last_name,
                                 "createdAt" => slot.creator.created_at.as_json,
                                 "updatedAt" => slot.creator.updated_at.as_json,
                                 "deletedAt" => nil,
@@ -172,10 +201,12 @@ resource "Slots" do
                  # "settings" => { 'alerts' => '1110001100' },
                  "settings" => { 'alerts' => 'omitted' },
                  "visibility" => slot.visibility,
+                 "description" => slot.description,
                  "notes" => slot.notes,
                  "likes" => slot.likes.count,
                  "commentsCounter" => slot.comments.count,
-                 # "reslotsCounter" => slot.re_slots_count
+                 "visibleCount" => slot.visible_count,
+                 "slotGroupUuids" => slot.slot_groups.pluck(:uuid)
                 )
         expect(json["media"].length).to eq(slot.media_items.length)
         expect(response_body).to include slot.images.first.public_id
@@ -327,7 +358,7 @@ resource "Slots" do
           expect(response_status).to eq(201)
           new_slot = StdSlot.unscoped.last
           expect(new_slot.end_date)
-            .to eq new_slot.start_date.to_datetime.next_day.at_noon
+            .to eq new_slot.start_date.to_datetime.at_end_of_day
           expect(json).to have_key("id")
           expect(json).to have_key("title")
           expect(json['endDate']).to be nil
@@ -437,13 +468,11 @@ resource "Slots" do
     end
   end
 
-  patch "/v1/stdslot/:id" do
+  patch "/v1/slots/:id" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header
 
     parameter :id, "ID of the slot to update", required: true
-    parameter :visibility, "Visibility of the Slot to update " \
-                           "(private/friends/foaf/public)"
     include_context "default slot parameter"
     include_context "default slot response fields"
 
@@ -465,29 +494,6 @@ resource "Slots" do
         expect(response_status).to eq(200)
         std_slot.reload
         expect(std_slot.title).to eq title
-      end
-    end
-
-    describe "Change visibility of an existing StdSlot" do
-      let(:visibility) { 'friends' }
-
-      example "Update StdSlot - change visibility", document: :v1 do
-        explanation "Update visibility of StdSlot.\n\n" \
-                    "User must be owner of StdSlot.\n\n" \
-                    "returns 200 and slot data if update succeded \n\n" \
-                    "returns 404 if User not owner or ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid"
-
-        expect(std_slot.visibility).to eq 'private'
-        expect(std_slot.type).to eq 'StdSlotPrivate'
-
-        do_request
-
-        expect(response_status).to eq(200)
-        slot = BaseSlot.last
-        expect(slot.id).to eq std_slot.id
-        expect(slot.visibility).to eq 'friends'
-        expect(slot.type).to eq 'StdSlotFriends'
       end
     end
 
@@ -623,6 +629,7 @@ resource "Slots" do
       # apple 52.527335,13.414259
       let(:latitude) { '52.527335' }
       let(:longitude) { '13.414259' }
+      let(:placeId) { 'ChIJrTLr-GyuEmsRBfy61i59si0' }
       let(:privateLocation) { true }
 
       example "Update Slot - Add Location", document: :v1 do
@@ -647,6 +654,7 @@ resource "Slots" do
         expect(location['subLocality']).to eq 'Mitte'
         expect(location['country']).to eq 'Germany'
         expect(location['isoCountryCode']).to eq 'GER'
+        expect(location['placeId']).to eq 'ChIJrTLr-GyuEmsRBfy61i59si0'
         # expect(location['privateLocation']).to be true
       end
     end
@@ -711,6 +719,87 @@ resource "Slots" do
         skip 'needs fix'
         do_request
         expect(response_status).to eq(404)
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/media", :vcr do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Standard Slot where the media belongs to", required: true
+    parameter :media, "Array of the Media Items to delete", required: true
+
+    let!(:slot) {
+      create(:std_slot_public, :with_media, owner: current_user, creator: current_user)
+    }
+    let(:id) { slot.id }
+
+    describe "Delete Slot Media Item" do
+      let(:media) { slot.media_items.map{|media| media.slice(:id)} }
+
+      example "Delete MediaItem", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.media_items.count).to be(media.count)
+
+        do_request
+        slot.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.media_items.count).to be(0)
+      end
+    end
+
+    describe "Delete Slot Image + Reorder Position" do
+      let(:media) { [slot.images.first.slice(:id)] }
+
+      example "Delete MediaItem", document: false do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.images.first.position).to be(0)
+        expect(slot.images.last.position).to be(slot.images.count - 1)
+
+        last_id = slot.images.last[:id]
+
+        do_request
+        slot.images.last.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.images.first.position).to be(0)
+        expect(slot.images.first[:id]).to be(last_id)
+      end
+    end
+  end
+
+  delete "/v1/slots/:id/notes", :vcr do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Standard Slot where the notes belongs to", required: true
+    parameter :notes, "Array of the Notes to delete", required: true
+
+    let!(:slot) {
+      create(:std_slot_public, :with_notes, owner: current_user, creator: current_user)
+    }
+
+    describe "Delete Slot Notes" do
+      let(:notes) { slot.notes.map{|note| note.slice(:id)} }
+      let(:id) { slot.id }
+
+      example "Delete Notes", document: :v1 do
+        explanation "returns 404 if ID is invalid\n\n" \
+                    "returns 422 if parameter was missing or is invalid"
+
+        expect(slot.notes.count).to be(notes.count)
+
+        do_request
+        slot.reload
+
+        expect(response_status).to eq(200)
+        expect(slot.notes.count).to be(0)
       end
     end
   end
@@ -831,7 +920,7 @@ resource "Slots" do
         create(:passengership, user: current_user, slot: slot,
                deleted_at: Time.zone.now) }
       let(:slotGroups) { [group_1.uuid,
-                          current_user.slot_sets['my_cal_uuid']]}
+                          current_user.slot_sets['my_cal_uuid']] }
 
       example "re-add to group", document: false do
         expect(group_1.slots).not_to include slot
@@ -844,6 +933,27 @@ resource "Slots" do
         current_user.reload
         expect(group_1.slots).to include slot
         expect(current_user.my_calendar_slots).to include slot
+      end
+    end
+
+    describe "Add Slot to Users Public Slot Calendar" do
+      let(:current_user) { create(:user, :with_default_calendars) }
+      let(:slotGroups) { [group_1.uuid,
+                          current_user.slot_sets['my_public_slots_uuid']] }
+
+      it "adds the slot to the public calendar" do
+        uuid = current_user.slot_sets['my_public_slots_uuid']
+        my_public_calendar = Group.find_by(uuid: uuid)
+
+        expect(my_public_calendar.slots).not_to include slot
+
+        do_request
+
+        expect(response_status).to eq 200
+        my_public_calendar.reload
+        expect(my_public_calendar.slots).to include slot
+        group_1.reload
+        expect(group_1.slots).to include slot
       end
     end
   end
@@ -1074,7 +1184,7 @@ resource "Slots" do
     response_field :array,
                    "list of all users who added the slot to their 'MyCalendar'"
 
-    let(:parent) { create(:std_slot_public) }
+    let(:parent) { create(:std_slot_public, show_in_calendar: false) }
     let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do
@@ -1090,7 +1200,6 @@ resource "Slots" do
         expect(response_status).to eq(200)
         expect(json.length).to eq 2
         expect(json.first).to have_key "slotter"
-        # expect(json.first).to have_key "createdAt"
         expect(json.first["slotter"]).to have_key "id"
         expect(json.first["slotter"]).to have_key "image"
         expect(response_body).to include reslots.first.user.username
@@ -1160,98 +1269,6 @@ resource "Slots" do
 
       expect(response_status).to eq(200)
       expect(json.size).to eq(3)
-    end
-  end
-
-  post "/v1/slots/:id/copy" do
-    header "Content-Type", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :copyTo, "contains an array of the copy targets",
-              required: true
-    parameter :slotType, "Type of slot to copy to. Must be own of " \
-                         "[private/friends/public]",
-              scope: :copyTo
-    # parameter :groupId, "ID of the group to copy to, user must be allowed " \
-    # "to post to this group",
-    # scope: :copyTo
-    parameter :details, "Duplicate all media data and notes " \
-                        "on the copied slots. Defaults to 'true'.\n\n" \
-                        "Must be one of [true/false]",
-              scope: :copyTo
-
-    let(:slot) { create(:std_slot_public, :with_notes) }
-    let(:group) { create(:group, :members_can_post) }
-    let!(:membership) do
-      create(:membership, :active, user: current_user, group: group)
-    end
-
-    describe "Copy Slot into one (not several) target" do
-      let(:id) { slot.id }
-      let(:target_1) { { slotType: 'friends',
-                         details: 'true' } }
-      # let(:target_2) { { groupId: group.id } }
-
-      let(:copyTo) { [target_1] }
-
-      example "Copy Slot to Friend Slots and into a group", document: :v1 do
-        explanation "Several new slot instances can be created which share " \
-                    "the same Metadata as the copy source. If details is " \
-                    "set to 'true' all media items and notes will " \
-                    "be duplicated."
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(BaseSlot.count).to eq 2
-        new_stdslotfriends = StdSlotFriends.last
-        expect(new_stdslotfriends.title).to eq slot.title
-        expect(new_stdslotfriends.end_date).to eq slot.end_date
-        expect(new_stdslotfriends.notes.length).to eq slot.notes.length
-        # new_groupslot = GroupSlot.unscoped.last
-        # expect(new_groupslot.title).to eq slot.title
-        # expect(new_groupslot.end_date).to eq slot.end_date
-        # expect(new_groupslot.notes.length).to eq slot.notes.length
-      end
-    end
-  end
-
-  post "/v1/slots/:id/move" do
-    header "Content-Type", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :slotType, "Type of slot to move to. Must be own of " \
-                         "[private/friends/public]"
-    parameter :groupId, "Contains the group ID if moving into a group" \
-                        " User must be allowed to post to this group"
-    parameter :details, "Move all media data and notes to the new " \
-                        " slot. Otherwise they will be deleted.\n\n" \
-                        "Defaults to 'true', must be one of [true/false]"
-
-    include_context "group slot response fields"
-
-    let(:slot) { create(:std_slot_private, owner: current_user) }
-
-    describe "Move Slot from private to friends" do
-      let(:id) { slot.id }
-      let(:slotType) { 'friends' }
-      let(:details) { 'true' }
-
-      example "Move Slot from private Slots to Friend Slots", document: :v1 do
-        explanation "A new slot will be created with  " \
-                    "the same Metadata as it's source. Either slotType or " \
-                    "groupId must be provided! If details is " \
-                    "set to 'true' all media items and notes will " \
-                    "be duplicated. The source will be deleted afterwards " \
-                    "and with it all comments and likes.\n\n" \
-                    "Returns 200 and the data of the new slot."
-        do_request
-
-        expect(response_status).to eq(200)
-        expect(BaseSlot.all.length).to eq 2
-        expect(StdSlot.unscoped.last.StdSlotFriends?).to be true
-        expect(StdSlot.unscoped.last.title).to eq slot.title
-        expect(StdSlot.unscoped.last.end_date).to eq slot.end_date
-      end
     end
   end
 end

@@ -6,25 +6,24 @@ describe MetaSlotPolicy do
   let(:slot) { create(:std_slot) }
 
   permissions :update_metaslot? do
-    context "for the slot creator" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, creator: user) }
+    let(:owner) { create(:user) }
+    let(:creator) { create(:user) }
+    let(:slot) {
+      create(:std_slot_private, owner: owner, creator: creator) }
 
+    context "for the slot creator" do
       it "allows access" do
-        expect(subject).to permit(user, slot)
+        expect(subject).to permit(creator, slot)
       end
     end
 
     context "for the slot owner" do
-      let(:user) { create(:user) }
-      let(:slot) { create(:std_slot_private, owner: user) }
-
       it "denies access" do
-        expect(subject).not_to permit(user, slot)
+        expect(subject).not_to permit(owner, slot)
       end
     end
 
-    context "for a user" do
+    context "for another user" do
       let(:user) { create(:user) }
 
       it "denies access" do

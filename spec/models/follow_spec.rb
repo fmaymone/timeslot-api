@@ -119,7 +119,7 @@ RSpec.describe Follow, type: :model do
         expect(slot.followers).to include(follower.id.to_s)
         expect(slot.followed_by?(follower2)).to be(true)
         expect(slot.followers).to include(follower2.id.to_s)
-        expect(slot.followers_count).to be(2)
+        expect(slot.followers_count).to be(3) # includes creator
       end
 
       it "Slot has followings" do
@@ -162,32 +162,32 @@ RSpec.describe Follow, type: :model do
       end
     end
 
-    describe "User is not allowed to follow a private slot" do
+    describe "User is allowed to follow a private slot through a tag (indirect)" do
       let(:slot_private) { create(:std_slot_private) }
 
-      it "Slot has now followers" do
+      it "Slot has followers" do
         # Subscribe
         slot_private.add_follower(follower)
         slot_private.add_follower(follower2)
         # Test
-        expect(slot_private.followed_by?(follower)).to be(false)
-        expect(slot_private.followers).not_to include(follower.id.to_s)
-        expect(slot_private.followed_by?(follower2)).to be(false)
-        expect(slot_private.followers).not_to include(follower2.id.to_s)
-        expect(slot_private.followers_count).to be(0)
+        expect(slot_private.followed_by?(follower)).to be(true)
+        expect(slot_private.followers).to include(follower.id.to_s)
+        expect(slot_private.followed_by?(follower2)).to be(true)
+        expect(slot_private.followers).to include(follower2.id.to_s)
+        expect(slot_private.followers_count).to be(3) # includes creator
       end
 
-      it "Slot has no followings" do
+      it "Slot has also followings" do
         # Subscribe
         slot_private.add_follower(follower)
         slot_private.add_follower(follower2)
         # Test
-        expect(follower.following?(slot_private)).to be(false)
-        expect(follower.followings.to_json).not_to include(slot_private.id.to_s)
-        expect(follower.followings_count).to be(0)
-        expect(follower2.following?(slot_private)).to be(false)
-        expect(follower2.followings.to_json).not_to include(slot_private.id.to_s)
-        expect(follower2.followings_count).to be(0)
+        expect(follower.following?(slot_private)).to be(true)
+        expect(follower.followings.to_json).to include(slot_private.id.to_s)
+        expect(follower.followings_count).to be(1)
+        expect(follower2.following?(slot_private)).to be(true)
+        expect(follower2.followings.to_json).to include(slot_private.id.to_s)
+        expect(follower2.followings_count).to be(1)
       end
     end
   end
@@ -205,7 +205,7 @@ RSpec.describe Follow, type: :model do
         expect(group.followers).to include(follower.id.to_s)
         expect(group.followed_by?(follower2)).to be(true)
         expect(group.followers).to include(follower2.id.to_s)
-        expect(group.followers_count).to be(2)
+        expect(group.followers_count).to be(3) # owner also follows group
       end
 
       it "Group has followings" do
@@ -250,145 +250,116 @@ RSpec.describe Follow, type: :model do
   end
 
   context "Test auto-following through social relations", :redis do
-    let(:user) { create(:user) }
+    let!(:user) { create(:user) }
 
-    # describe "Test reslots (as slot follow)" do
-    #   let(:meta_slot) { create(:meta_slot, creator: user) }
-    #   let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
-    #   let!(:reslot_1) { create(:re_slot, slotter: follower,
-    #                                      predecessor: slot,
-    #                                      meta_slot: meta_slot) }
-    #   let!(:reslot_2) { create(:re_slot, slotter: follower2,
-    #                                      predecessor: reslot_1,
-    #                                      meta_slot: meta_slot) }
-    #   it "Slot has follower" do
-    #     # Default Test
-    #     expect(slot.followers).to include(follower.id.to_s)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     expect(slot.followers_count).to be(1) # slot has 1 follower from reslot
-    #     expect(follower.follows?(slot)).to be(true)
-    #     expect(follower2.follows?(slot)).to be(false)
-    #     # Test bi-directional relations
-    #     expect(slot.followed_by?(follower)).to be(true)
-    #     expect(slot.followed_by?(follower2)).to be(false)
-    #     expect(slot.follows?(follower)).to be(false)
-    #     expect(slot.follows?(follower2)).to be(false)
-    #     # Test relations outside parents/predecessors scope (e.g. the ReSlot itself)
-    #     expect(follower.follows?(reslot_1)).to be(false)
-    #     expect(follower2.follows?(reslot_1)).to be(true)
-    #     expect(follower.follows?(reslot_2)).to be(false)
-    #     expect(follower2.follows?(reslot_2)).to be(false)
-    #     # Test bi-directional relations
-    #     expect(reslot_1.followed_by?(follower)).to be(false)
-    #     expect(reslot_1.followed_by?(follower2)).to be(true)
-    #     expect(reslot_2.followed_by?(follower)).to be(false)
-    #     expect(reslot_2.followed_by?(follower2)).to be(false)
-    #     # Test Follower
-    #     expect(reslot_1.followers).to include(follower2.id.to_s)
-    #     expect(reslot_1.followers).not_to include(follower.id.to_s)
-    #     expect(reslot_1.followers_count).to be(1) # slot has 1 follower from reslot
-    #     expect(reslot_2.followers_count).to be(0) # slot has no reslot
-    #   end
+    describe "Test reslots (as slot follow)" do
+      let(:meta_slot) { create(:meta_slot, creator: user) }
+      let(:slot) { create(:std_slot_public, meta_slot: meta_slot) }
+      let(:reslot) { create(:std_slot_public, meta_slot: meta_slot) }
 
-    #   it "User has followings" do
-    #     # Default Test User
-    #     expect(user.following?(slot)).to be(false)
-    #     expect(user.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(user.followings_count).to be(0)
-    #     # Default Test Follower 1
-    #     expect(follower.following?(slot)).to be(true)
-    #     expect(follower.followings.to_json).to include(slot.id.to_s)
-    #     expect(follower.followings_count).to be(1)
-    #     # Default Test Follower 2
-    #     expect(follower2.following?(slot)).to be(false)
-    #     expect(follower2.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower2.following?(reslot_1)).to be(true)
-    #     expect(follower2.followings.to_json).to include(reslot_1.id.to_s)
-    #     expect(follower2.followings_count).to be(1)
-    #   end
+      before(:each) do
+        # Perform activities
+        UsersToSlotTagger.new(slot).tag([follower.id])
+        UsersToSlotTagger.new(reslot).tag([follower2.id], follower2) # aka 'reslot'
+      end
 
-    #   it "Unsubscribe from a slot if it was removed" do
-    #     # Pre Testing
-    #     expect(slot.followed_by?(follower)).to be(true)
-    #     expect(reslot_1.followed_by?(follower2)).to be(true)
-    #     # Remove Slots
-    #     reslot_1.delete
-    #     reslot_2.delete
-    #     # Test Follower
-    #     expect(slot.followed_by?(follower)).to be(false)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers_count).to be(0)
-    #     # Test bi-directional relations
-    #     expect(follower.follows?(slot)).to be(false)
-    #     expect(follower.following?(slot)).to be(false)
-    #     expect(follower.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower.followings_count).to be(0)
-    #     # Test Follower 2
-    #     expect(slot.followed_by?(follower2)).to be(false)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     # Test bi-directional relations
-    #     expect(follower2.follows?(slot)).to be(false)
-    #     expect(follower2.following?(slot)).to be(false)
-    #     expect(follower2.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower2.followings_count).to be(0)
-    #   end
+      it "Slot has follower" do
+        # Default Test
+        expect(slot.followers).to include(follower.id.to_s)
+        expect(slot.followers).not_to include(follower2.id.to_s)
+        # slot has 1 follower from reslot and 1 follower is the creator
+        expect(slot.followers_count).to be(2)
+        expect(follower.follows?(slot)).to be(true)
+        expect(follower2.follows?(slot)).to be(false)
+        # Test bi-directional relations
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(slot.followed_by?(follower2)).to be(false)
+        expect(slot.follows?(follower)).to be(false)
+        expect(slot.follows?(follower2)).to be(false)
+        # Test relations outside parents/predecessors scope (e.g. the ReSlot itself)
+        expect(follower.follows?(reslot)).to be(false)
+        expect(follower2.follows?(reslot)).to be(true)
+        # Test bi-directional relations
+        expect(reslot.followed_by?(follower)).to be(false)
+        expect(reslot.followed_by?(follower2)).to be(true)
+        # Test Follower
+        expect(reslot.followers).to include(follower2.id.to_s)
+        expect(reslot.followers).not_to include(follower.id.to_s)
+        # slot has 1 follower from reslot and 1 follower is the creator
+        expect(reslot.followers_count).to be(2)
+      end
 
-    #   it "Unsubscribe from a reslot if parent slot was removed" do
-    #     # Pre Testing
-    #     expect(slot.followed_by?(follower)).to be(true)
-    #     expect(reslot_1.followed_by?(follower2)).to be(true)
-    #     # Remove ReSlots
-    #     slot.delete
-    #     # Test Follower
-    #     expect(slot.followed_by?(follower)).to be(false)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers_count).to be(0)
-    #     # Test bi-directional relations
-    #     expect(follower.follows?(slot)).to be(false)
-    #     expect(follower.following?(slot)).to be(false)
-    #     expect(follower.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower.followings_count).to be(0)
-    #     # Test Follower 2
-    #     expect(slot.followed_by?(follower2)).to be(false)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     # Test bi-directional relations
-    #     expect(follower2.follows?(slot)).to be(false)
-    #     expect(follower2.following?(slot)).to be(false)
-    #     expect(follower2.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower2.followings_count).to be(0)
-    #   end
+      it "User has followings" do
+        # Default Test User
+        expect(user.following?(slot)).to be(true)
+        expect(user.followings.to_json).to include(slot.id.to_s)
+        expect(user.followings_count).to be(2)
+        # Default Test Follower 1
+        expect(follower.following?(slot)).to be(true)
+        expect(follower.followings).to include(slot.id.to_s)
+        expect(follower.followings_count).to be(1)
+        # Default Test Follower 2
+        expect(follower2.following?(slot)).to be(false)
+        expect(follower2.followings.to_json).not_to include(slot.id.to_s)
+        expect(follower2.following?(reslot)).to be(true)
+        expect(follower2.followings.to_json).to include(reslot.id.to_s)
+        expect(follower2.followings_count).to be(1)
+      end
 
-    #   it "Unsubscribe from a slot if the visibility has changed" do
-    #     # Pre Testing
-    #     expect(slot.followed_by?(follower)).to be(true)
-    #     expect(reslot_1.followed_by?(follower2)).to be(true)
-    #     # Remove ReSlots
-    #     slot.update_from_params(visibility: 'private')
-    #     # Test Follower
-    #     expect(slot.followed_by?(follower)).to be(false)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers).not_to include(follower.id.to_s)
-    #     expect(slot.followers_count).to be(0)
-    #     # Test bi-directional relations
-    #     expect(follower.follows?(slot)).to be(false)
-    #     expect(follower.following?(slot)).to be(false)
-    #     expect(follower.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower.followings_count).to be(0)
-    #     # Test Follower 2
-    #     expect(slot.followed_by?(follower2)).to be(false)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     expect(slot.followers).not_to include(follower2.id.to_s)
-    #     # Test bi-directional relations
-    #     expect(follower2.follows?(slot)).to be(false)
-    #     expect(follower2.following?(slot)).to be(false)
-    #     expect(follower2.followings.to_json).not_to include(slot.id.to_s)
-    #     expect(follower2.followings_count).to be(0)
-    #   end
-    # end
+      it "Unsubscribe from a slot if it was removed" do
+        # Pre Testing
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(reslot.followed_by?(follower2)).to be(true)
+        # Remove Slots
+        slot.delete
+        reslot.delete
+        # Test Follower
+        expect(slot.followed_by?(follower)).to be(false)
+        expect(slot.followers).not_to include(follower.id.to_s)
+        expect(slot.followers_count).to be(0)
+        # Test bi-directional relations
+        expect(follower.follows?(slot)).to be(false)
+        expect(follower.following?(slot)).to be(false)
+        expect(follower.followings.to_json).not_to include(slot.id.to_s)
+        expect(follower.followings_count).to be(0)
+        # Test Follower 2
+        expect(reslot.followed_by?(follower2)).to be(false)
+        expect(reslot.followers).not_to include(follower2.id.to_s)
+        expect(reslot.followers_count).to be(0)
+        # Test bi-directional relations
+        expect(follower2.follows?(reslot)).to be(false)
+        expect(follower2.following?(reslot)).to be(false)
+        expect(follower2.followings.to_json).not_to include(reslot.id.to_s)
+        expect(follower2.followings_count).to be(0)
+      end
+
+      it "Unsubscribe from a slot if the visibility has changed" do
+        # Pre Testing
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(reslot.followed_by?(follower2)).to be(true)
+        # Remove ReSlots
+        slot.update_from_params(visibility: 'private')
+        reslot.update_from_params(visibility: 'private')
+        # Test Follower
+        expect(slot.followed_by?(follower)).to be(true)
+        expect(slot.followers).to include(follower.id.to_s)
+        expect(slot.followers_count).to be(1)
+        # Test bi-directional relations
+        expect(follower.follows?(slot)).to be(true)
+        expect(follower.following?(slot)).to be(true)
+        expect(follower.followings.to_json).to include(slot.id.to_s)
+        expect(follower.followings_count).to be(1)
+        # Test Follower 2
+        expect(reslot.followed_by?(follower2)).to be(false)
+        expect(reslot.followers).not_to include(follower2.id.to_s)
+        expect(reslot.followers_count).to be(0)
+        # Test bi-directional relations
+        expect(follower2.follows?(reslot)).to be(false)
+        expect(follower2.following?(reslot)).to be(false)
+        expect(follower2.followings.to_json).not_to include(reslot.id.to_s)
+        expect(follower2.followings_count).to be(0)
+      end
+    end
 
     describe "Test friendships (as user follow" do
       before(:each) do
@@ -492,7 +463,7 @@ RSpec.describe Follow, type: :model do
         expect(group.followers).to include(follower.id.to_s)
         expect(group.followed_by?(follower2)).to be(true)
         expect(group.followers).to include(follower2.id.to_s)
-        expect(group.followers_count).to be(2)
+        expect(group.followers_count).to be(3) # owner also follows group
         # Test bi-directional relations
         expect(follower.followed_by?(group)).to be(false)
         expect(follower.followed_by?(follower2)).to be(false)
@@ -521,6 +492,27 @@ RSpec.describe Follow, type: :model do
         # Remove membership
         follower.leave_group(group.id)
         follower2.leave_group(group.id)
+        # Test Follower
+        expect(group.followed_by?(follower)).to be(false)
+        expect(group.followers).not_to include(follower.id.to_s)
+        expect(group.followers).not_to include(follower.id.to_s)
+        expect(follower.follows?(group)).to be(false)
+        expect(follower.following?(group)).to be(false)
+        expect(follower.followings.to_json).not_to include(group.id.to_s)
+        expect(follower.followings_count).to be(0)
+        # Test Follower 2
+        expect(group.followed_by?(follower2)).to be(false)
+        expect(group.followers).not_to include(follower2.id.to_s)
+        expect(group.followers).not_to include(follower2.id.to_s)
+        expect(follower2.follows?(group)).to be(false)
+        expect(follower2.following?(group)).to be(false)
+        expect(follower2.followings.to_json).not_to include(group.id.to_s)
+        expect(follower2.followings_count).to be(0)
+      end
+
+      it "Unsubscribe from group if group was removed" do
+        # Delete Group
+        group.delete
         # Test Follower
         expect(group.followed_by?(follower)).to be(false)
         expect(group.followers).not_to include(follower.id.to_s)

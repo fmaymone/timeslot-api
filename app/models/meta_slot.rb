@@ -4,13 +4,15 @@ class MetaSlot < ActiveRecord::Base
   # give 'openEnd' slots an end
   before_validation do |metaslot|
     if open_end || end_date.blank?
-      metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
-                            start_date.to_datetime.at_end_of_day
-                          else
-                            start_date.to_datetime.next_day.at_midday
-                          end
+      metaslot.end_date = start_date.to_datetime.at_end_of_day
+      # metaslot.end_date = if start_date < start_date.to_datetime.at_middle_of_day
+      #                       start_date.to_datetime.at_end_of_day
+      #                     else
+      #                       start_date.to_datetime.next_day.at_midday
+      #                     end
       metaslot.open_end = true
     end
+    strip_whitespaces(metaslot)
   end
 
   belongs_to :creator, class_name: User, inverse_of: :created_slots
@@ -40,7 +42,8 @@ class MetaSlot < ActiveRecord::Base
 
   private def enddate_is_after_startdate
     return false if end_date.blank? || start_date.blank?
-    return true if start_date.to_i < end_date.to_i
+    # FIX: the end_date can be equal to the start_date
+    return true if start_date.to_i <= end_date.to_i
     errors.add(:end_date, "can't be before start_date")
   end
 
@@ -53,7 +56,7 @@ class MetaSlot < ActiveRecord::Base
                           meta_params[:location_uid].nil?
 
       ios_params = meta_params[:ios_location] ||
-                   GlobalSlotConsumer.new.location(meta_slot.location_uid)
+                   CandyShop.new.location(meta_slot.location_uid)
                      .as_json.symbolize_keys
 
       # TODO: IosLocation.find_or_create(...)
@@ -70,5 +73,9 @@ class MetaSlot < ActiveRecord::Base
                      end
       meta_slot.update(ios_location: ios_location)
     end
+  end
+
+  private def strip_whitespaces(metaslot = self)
+    metaslot.title.squish! if metaslot.title
   end
 end

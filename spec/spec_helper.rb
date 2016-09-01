@@ -86,6 +86,7 @@ RSpec.configure do |config|
   config.before(:each, :aws) do
     allow(Device).to receive(:create_client).and_return(Aws::SNS::Client.new(stub_responses: true))
     allow(Share).to receive(:create_client).and_return(Aws::SES::Client.new(stub_responses: true))
+    allow(User).to receive(:create_client).and_return(Aws::SES::Client.new(stub_responses: true))
   end
 
   config.before(:each, :async) do

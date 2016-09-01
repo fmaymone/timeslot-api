@@ -4,26 +4,28 @@
 
 ### POST /v1/globalslots/reslot
 
-Send the **muid** of the Global Slot to reslot it.
+Send the **muid** of the Global Slot and at least one  valid SlotGroup/Calendar UUID where the slot should be  added to.
 
  Backend retrieves slot data from data team.
 
-at the moment returns 503 if global slot can not be found.
+Returns data of new slot and array with unauthorized slotGroup UUIDs (User has no write access or slotgroup deleted).
+
+Returns 404 if no global slot can be found for given uuid.
 
 ### Parameters
 
 Name : predecessor *- required -*
 Description : &#39;muid&#39; of the global slot
 
-Name : slotSets
-Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be added to
+Name : slotGroups *- required -*
+Description : Array with UUIDs of the SlotGroups the slot should be added to
 
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=LZbXd1UXBUw0k7KRSCQuHvMfpVQ
+Authorization: Token token=kERkBCCXDiL4TEAYxjitvheg1LQ
 Host: example.org
 Cookie: </pre>
 
@@ -34,16 +36,23 @@ Cookie: </pre>
 #### Body
 ```javascript
 {
-  "predecessor" : "820304fe-a416-db0d-807e-90cb9ebd9f1b"
+  "predecessor" : "c4c59de8-83ca-8500-274b-fe16e5ef7a71",
+  "slotGroups" : [
+    "9fb7b049-ce82-45b7-9ae1-be554ddbf259",
+    "042736b9-fc8f-4e91-8a8a-06333b9e4ec3",
+    "933d4f29-17ec-4591-a032-c9b9ce489499",
+    "d2e9132d-88b0-4e6c-a841-eb7b82c8a516",
+    "8f620b93-3b9c-4280-b679-8c07a2760209"
+  ]
 }
 ```
 
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/reslot&quot; -d &#39;{&quot;predecessor&quot;:&quot;820304fe-a416-db0d-807e-90cb9ebd9f1b&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/globalslots/reslot&quot; -d &#39;{&quot;predecessor&quot;:&quot;c4c59de8-83ca-8500-274b-fe16e5ef7a71&quot;,&quot;slotGroups&quot;:[&quot;9fb7b049-ce82-45b7-9ae1-be554ddbf259&quot;,&quot;042736b9-fc8f-4e91-8a8a-06333b9e4ec3&quot;,&quot;933d4f29-17ec-4591-a032-c9b9ce489499&quot;,&quot;d2e9132d-88b0-4e6c-a841-eb7b82c8a516&quot;,&quot;8f620b93-3b9c-4280-b679-8c07a2760209&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=LZbXd1UXBUw0k7KRSCQuHvMfpVQ&quot;</pre>
+	-H &quot;Authorization: Token token=kERkBCCXDiL4TEAYxjitvheg1LQ&quot;</pre>
 
 ### Response
 
@@ -53,12 +62,12 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
-ETag: W/&quot;c74509439e3bf36060680d102d888dcb&quot;
+Vary: Accept-Encoding, Origin
+ETag: W/&quot;b60e4578dacbd984b9211620b169ce01&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: acc8705d-a790-4fef-ae76-0981ecd0e033
-X-Runtime: 0.191071
-Vary: Origin
-Content-Length: 1426</pre>
+X-Request-Id: 5f2d6b8b-999a-43dd-bf75-4e2c0e34fd6d
+X-Runtime: 0.276881
+Content-Length: 2307</pre>
 
 #### Status
 
@@ -68,65 +77,107 @@ Content-Length: 1426</pre>
 
 ```javascript
 {
-  "id" : 4,
-  "title" : "Borussia Dortmund vs. FC Liverpool",
-  "startDate" : "2016-04-07T19:05:00.000Z",
-  "createdAt" : "2016-04-04T20:50:21.447Z",
-  "updatedAt" : "2016-04-04T20:50:21.447Z",
+  "id" : 112,
+  "title" : "VNV Nation",
+  "description" : "",
+  "startDate" : "2020-02-06T05:45:00.000Z",
+  "createdAt" : "2016-08-30T09:50:49.635Z",
+  "updatedAt" : "2016-08-30T09:50:49.635Z",
   "deletedAt" : null,
-  "endDate" : "2016-04-07T21:05:00.000Z",
+  "endDate" : "2020-02-06T09:45:00.000Z",
   "location" : {
-    "id" : "411456d2-532a-b0cb-8dc6-c0ea5e8f9488",
-    "name" : "Signal Iduna Park",
-    "thoroughfare" : null,
+    "id" : "7ffd07c2-4969-8e41-5d47-cade82aac954",
+    "name" : "Pier 2",
+    "thoroughfare" : "Gröpelinger Fährweg 6",
     "subThoroughfare" : null,
-    "locality" : "Dortmund",
-    "subLocality" : "Mitte",
-    "administrativeArea" : "NW",
+    "locality" : "Bremen",
+    "subLocality" : "Walle",
+    "administrativeArea" : "HB",
     "subAdministrativeArea" : null,
-    "postalCode" : null,
+    "postalCode" : "28237",
     "country" : null,
     "isoCountryCode" : "DE",
     "inLandWater" : null,
     "ocean" : null,
     "areasOfInterest" : null,
-    "latitude" : 51.4940605163574,
-    "longitude" : 7.45179986953735
+    "latitude" : 53.1083112,
+    "longitude" : 8.7509019,
+    "placeId" : null
   },
   "creator" : {
-    "id" : 12,
-    "username" : "dfb.de",
-    "createdAt" : "2016-04-04T20:50:21.330Z",
-    "updatedAt" : "2016-04-04T20:50:21.330Z",
+    "id" : 288,
+    "username" : "Concert",
+    "firstName" : null,
+    "middleName" : null,
+    "lastName" : null,
+    "createdAt" : "2016-08-30T09:50:49.617Z",
+    "updatedAt" : "2016-08-30T09:50:49.617Z",
     "deletedAt" : null,
-    "image" : "https://upload.wikimedia.org/wikipedia/de/thumb/a/a9/Deutscher_Fu%C3%9Fball-Bund_logo.svg/600px-Deutscher_Fu%C3%9Fball-Bund_logo.svg.png"
+    "image" : "https://farm8.staticflickr.com/7428/9896148136_461a7a842a_k.jpg"
   },
   "notes" : [
     {
-      "id" : 1,
+      "id" : 226,
       "title" : "Description",
-      "content" : "Europa League, 2015/2016, Viertelfinale",
+      "content" : "VNV Nation definitely knows how to put on a good show. Even in festival performances where sometimes bands hold back a little, they start off with a slow intro and some great lighting and effects. Once the music kicks …",
       "localId" : null,
-      "createdAt" : "2016-04-04T20:50:21.479Z"
+      "createdAt" : "2016-08-30T09:50:49.646Z"
     }
   ],
   "media" : [
     {
-      "mediaId" : 19,
-      "publicId" : "http://assets.dfb.de/public/uploads/707f77798166ee1206a408c8967a75bfaa9136b55acd155c6680f739aaac",
+      "mediaId" : 469,
+      "publicId" : "http://images.sk-static.com/images/media/img/col6/20091007-021050-312335.jpg",
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-04-04T20:50:21.454Z"
+      "createdAt" : "2016-08-30T09:50:49.640Z"
     }
   ],
   "settings" : {
     "alerts" : "omitted"
   },
   "visibility" : "public",
-  "muid" : "820304fe-a416-db0d-807e-90cb9ebd9f1b",
+  "muid" : "c4c59de8-83ca-8500-274b-fe16e5ef7a71",
+  "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
-  "unauthorizedSlotgroups" : []
+  "firstGroup" : {
+    "id" : "042736b9-fc8f-4e91-8a8a-06333b9e4ec3",
+    "name" : "Testgroup 124",
+    "image" : "",
+    "description" : null,
+    "defaultColor" : "000000",
+    "membersCanPost" : false,
+    "membersCanInvite" : false,
+    "public" : false,
+    "createdAt" : "2016-08-30T09:50:49.537Z",
+    "updatedAt" : "2016-08-30T09:50:49.537Z",
+    "deletedAt" : null,
+    "owner" : {
+      "id" : 285,
+      "username" : "User 396",
+      "firstName" : null,
+      "middleName" : null,
+      "lastName" : null,
+      "createdAt" : "2016-08-30T09:50:49.531Z",
+      "updatedAt" : "2016-08-30T09:50:49.531Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "memberIds" : [
+      285
+    ],
+    "memberCount" : 1,
+    "slotCount" : 1
+  },
+  "slotGroupUuids" : [
+    "042736b9-fc8f-4e91-8a8a-06333b9e4ec3",
+    "933d4f29-17ec-4591-a032-c9b9ce489499"
+  ],
+  "unauthorizedSlotgroups" : [
+    "d2e9132d-88b0-4e6c-a841-eb7b82c8a516",
+    "8f620b93-3b9c-4280-b679-8c07a2760209"
+  ]
 }
 ```

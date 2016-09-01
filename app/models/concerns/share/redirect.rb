@@ -8,12 +8,7 @@ module Redirect
     end
 
     def decode_share_url(base64)
-      # Determine base64 padding (multiple of 4 bytes)
-      padding = ''
-      # TODO: handle padding manually
-      # (base64.length % 4).times{ padding << '=' }
-      # Decode and apply padding
-      Base64.urlsafe_decode64("#{base64}#{padding}")
+      Base64.urlsafe_decode64(base64)
     end
 
     ## -- REDIRECTS -- ##
@@ -30,6 +25,10 @@ module Redirect
 
       # Get from Cache:
       get_content(url, 'webview', '.html')
+    end
+
+    private def show_iframe(url)
+      get_content(url, 'iframe', '.html')
     end
 
     private def show_image(url)

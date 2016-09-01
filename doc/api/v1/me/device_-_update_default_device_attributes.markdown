@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=9zFTzdO5esSjljFoDsD-UMR-J-w
+Authorization: Token token=1jncX8FxYRYy_q5IfgSXb81TcAA
 Host: example.org
 Cookie: </pre>
 
@@ -55,7 +55,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=9zFTzdO5esSjljFoDsD-UMR-J-w&quot;</pre>
+	-H &quot;Authorization: Token token=1jncX8FxYRYy_q5IfgSXb81TcAA&quot;</pre>
 
 ### Response
 
@@ -65,10 +65,10 @@ Cookie: </pre>
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json
+Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 9f58ea20-d450-4ca1-8f84-4a2f5fc4db02
-X-Runtime: 0.006615
-Vary: Origin
+X-Request-Id: 3477390e-8835-4421-aed0-85b95cfd3fcc
+X-Runtime: 0.009113
 Content-Length: 0</pre>
 
 #### Status

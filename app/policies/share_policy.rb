@@ -11,6 +11,11 @@ class SharePolicy < ApplicationPolicy
   end
 
   # true if a user is logged in
+  def iframe?
+    current_user?
+  end
+
+  # true if a user is logged in
   def image?
     current_user?
   end

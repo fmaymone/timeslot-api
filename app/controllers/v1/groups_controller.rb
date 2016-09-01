@@ -14,8 +14,7 @@ module V1
 
       @group = Group.create_with_invitees(
         group_params: group_params.merge(owner: current_user),
-        invitees: params[:invitees],
-        initiator: current_user)
+        invitees: params[:invitees])
 
       if @group.errors.empty?
         render :show, status: :created
@@ -32,6 +31,7 @@ module V1
       authorize @group
 
       if @group.update(group_params)
+        Feed.update_objects(@group)
         render :show
       else
         render json: { error: @group.errors },
@@ -64,7 +64,35 @@ module V1
       @group = Group.find_by!(uuid: params[:group_uuid])
       authorize @group
 
-      render :slots
+      collector = SlotsCollector.new(**slot_paging_params)
+      the_result = collector.group_slots(group: @group)
+      @slots = the_result.data
+
+      if slot_paging_params.blank?
+        render :slots
+      else
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
+    end
+
+    # GET /v1/groups/:group_uuid/dates
+    def dates
+      authorize current_user
+
+      uuid = params[:group_uuid]
+      collector = DatesCollector.new(current_user: current_user,
+                                     timezone: params[:timezone])
+
+      if current_user.slot_sets.values.include? uuid
+        @dates = collector.special_set_slots_dates(uuid: uuid)
+      else
+        group = Group.find_by!(uuid: uuid)
+        authorize group
+        @dates = collector.group_slot_dates(group: group)
+      end
+
+      render "v1/slots/dates"
     end
 
     # GET /v1/groups/:group_uuid/members
@@ -82,12 +110,6 @@ module V1
 
       render :related, locals: { memberships: group.related_memberships }
     end
-
-    # GET /v1/groups/:group_id/members/:user_id
-    # return if the specified user is an activated member of the specified group
-    # or return the state of the specified user regarding the specified group
-    # def membership_state
-    # end
 
     # POST /v1/groups/:group_uuid/accept
     def accept_invite
@@ -121,7 +143,7 @@ module V1
     def subscribe
       group = Group.find_by!(uuid: params[:slotgroup_uuid])
       authorize group
-      group.invite_users([current_user.id], current_user)
+      group.invite_users([current_user.id])
 
       render :related, status: :created,
              locals: { memberships: group.related_memberships }
@@ -195,30 +217,36 @@ module V1
     end
 
     # POST /v1/groups/global_group
+    # TODO: move logic somewhere else
     def global_group
       authorize current_user
 
-      group = Group.find_or_create_by!(uuid: globalgroup[:muid],
-                                       name: globalgroup[:name]) do |new_group|
-        new_group.update(globalgroup.except(:muid, :slots))
-        new_group.owner = current_user
-        new_group.public = true
+      string_id = params.require(:group).require(:string_id)
+      group = Group.find_by(string_id: string_id)
+
+      if group
+        group.update(globalgroup_params)
+      else
+        owner = GlobalSlot.category_as_user(params.require(:category_uuid))
+        group = Group.create(globalgroup_params.merge(owner: owner, public: true))
       end
 
       authorize group
-      group.add_slots globalgroup[:slots]
+      group.add_slots params[:group][:slots] if params[:group].key? :slots
 
       head :ok
     end
 
     private def group_params
-      params.permit(:name, :image, :public, :members_can_post, :members_can_invite)
+      params.permit(:name, :image, :description, :public, :default_color,
+                    :members_can_post, :members_can_invite)
     end
 
-    private def globalgroup
-      p = params.require(:group)
-          .permit(:name, :image, :muid, :string_id, slots: [])
-      p.transform_keys(&:underscore) if p
+    private def globalgroup_params
+      p = params.require(:group).permit(:name, :image, :description,
+                                        :muid, :string_id)
+      p[:uuid] = p.delete(:muid)
+      p
     end
 
     private def user_id
@@ -226,7 +254,7 @@ module V1
     end
 
     private def setting_params
-      params.require(:settings).permit(:notifications, :default_alerts)
+      params.require(:settings).permit(:notifications, :default_alerts, :color)
     end
   end
 end

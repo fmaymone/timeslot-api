@@ -4,6 +4,8 @@ json.extract!(
   group,
   :name,
   :image,
+  :description,
+  :default_color,
   :members_can_post,
   :members_can_invite,
   :public,

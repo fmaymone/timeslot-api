@@ -1,5 +1,27 @@
 namespace :slots do
 
+  desc "Set 'share_with_friends' on existing StdSlots accordingly."
+  task stdslot_set_share_with_friends: :environment do
+    puts "Going through all stdslots and set share_with_friends true on " \
+         "friend-visible slots..."
+
+    ActiveRecord::Base.transaction do
+      slot_count = StdSlot.count
+
+      StdSlot.find_each.with_index do |slot, index|
+        default_msg = "#{index + 1}/#{slot_count} - #{slot.title}," \
+                      " #{slot.class} - #{slot.id}"
+
+        if slot.StdSlotFriends?
+          slot.update(share_with_friends: true)
+          puts "friend-visible slot updated, #{default_msg}"
+        else
+          puts "checking next slot, #{default_msg}"
+        end
+      end
+    end
+  end
+
   desc "Convert StdSlots to passengerships."
   task convert_stdslot: :environment do
     puts "Going through all stdslots and create new passengership..."

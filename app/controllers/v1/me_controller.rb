@@ -21,6 +21,7 @@ module V1
       end
 
       if current_user.update(user_params)
+        Feed.update_objects(current_user)
         render :show, locals: { user: current_user }
       else
         render json: { error: current_user.errors },
@@ -54,47 +55,59 @@ module V1
     end
 
     # GET /v1/me/slots
-    # returns all std_slots of the current user
+    # returns all slots created by, tagged to, in my_calendar
+    # or in a group of the current_user
     def my_slots
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.my_slots(user: current_user)
+      the_result = collector.my_library_slots(user: current_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end
 
-    # GET /v1/me/calendar
-    # returns all slots current user has in her calendar
-    def calendar
+    # GET /v1/me/schedule
+    # returns all slots current user has in schedule
+    # disabled pagination as frontend needs all schedule slots
+    def schedule
       authorize :me
 
       @slots = current_user.my_calendar_slots
 
+      # collector = SlotsCollector.new(**slot_paging_params)
+      # the_result = collector.my_schedule_slots(user: current_user)
+      # @slots = the_result.data
+
+      # if slot_paging_params.blank?
       render "v1/slots/index"
+      # else
+      #   @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+      #   render "v1/paginated/slots"
+      # end
     end
 
-    # POST /v1/me/schedule/slotgroup/:uuid
-    def add_slotgroup_to_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # POST /v1/me/schedule/calendar/:uuid
+    def add_calendar_to_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).show(slotgroup)
+      CalendarInScheduleManager.new(current_user).show(calendar)
 
       head :ok
     end
 
-    # DELETE /v1/me/schedule/slotgroup/:uuid
-    def remove_slotgroup_from_schedule
-      slotgroup = Group.find_by(uuid: params[:uuid])
-      authorize slotgroup
+    # DELETE /v1/me/schedule/calendar/:uuid
+    def remove_calendar_from_schedule
+      calendar = Group.find_by(uuid: params[:uuid])
+      authorize calendar
 
-      CalendarInScheduleManager.new(current_user).hide(slotgroup)
+      CalendarInScheduleManager.new(current_user).hide(calendar)
 
       head :ok
     end
@@ -105,12 +118,13 @@ module V1
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      @slots = collector.slots_from_friends(user: current_user)
+      the_result = collector.slots_from_friends(user: current_user)
+      @slots = the_result.data
 
       if slot_paging_params.blank?
         render "v1/slots/index"
       else
-        @result = SlotPaginator.new(data: @slots, **slot_paging_params)
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
         render "v1/paginated/slots"
       end
     end
@@ -139,12 +153,12 @@ module V1
       render "v1/users/list"
     end
 
-    # GET /v1/me/slotgroups
-    # return all groups where the current user is member
-    def my_groups
+    # GET /v1/me/calendars
+    # return all calendars where the current user is member/subscriber
+    def calendars
       authorize :me
-      @groups = current_user.active_groups
-      render "v1/groups/index"
+      @memberships = current_user.active_memberships
+      render "v1/memberships/index"
     end
 
     # PATCH /v1/me/device
@@ -164,7 +178,8 @@ module V1
       friendship = current_user.initiate_friendship new_friend.id
 
       render "v1/users/show", locals: { user: new_friend,
-                                        friendship: friendship }
+                                        friendship: friendship,
+                                        slots: []}
     end
 
     # DELETE /v1/me/friendship/1
@@ -177,7 +192,8 @@ module V1
       friendship = current_user.invalidate_friendship no_friend.id
 
       render "v1/users/show", locals: { user: no_friend,
-                                        friendship: friendship }
+                                        friendship: friendship,
+                                        slots: []}
     end
 
     # POST /v1/me/add_friends
@@ -212,8 +228,8 @@ module V1
     end
 
     private def user_params
-      p = params.permit(:username,
-                        :lang,
+      p = params.permit(:username, :first_name, :middle_name, :last_name,
+                        :gender, :lang,
                         :email,
                         :phone,
                         :password,
