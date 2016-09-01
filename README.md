@@ -32,8 +32,6 @@ We use [Pundit](https://github.com/elabs/pundit) for Authentication. In the ```a
 # Environment
 
 We develop on OSX and Ubuntu.
-So far we use Heroku to deploy our backend.
-We use Jenkins to test all commits to the timeslotinc github repo, usually PRs.
 
 ## Env Variables
 
@@ -156,10 +154,10 @@ for exception monitoring, via Heroku Addon, [Docs](https://airbrake.io/) | [Gith
 Log management service, collects logs from AWS Instances via [remote_syslog2](https://github.com/papertrail/remote_syslog2)
 deamon, which gets installed on all EC2 instances via [ebextensions config](https://github.com/papertrail/remote_syslog2/pull/157).
 
-Papertrail Account is registered with email **papertrail@timeslot.rocks**,
+Papertrail Account for Dev environments is registered with email **casino-dev@timeslot.rocks**,
 Password is in LastPass Company Account.
 
-For ease of use install [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
+For ease of use check out [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
 
 
 # More Tools
@@ -331,6 +329,7 @@ However, this is likely to change sooner or later... The JIRA-Github integration
 * [PGCommander](https://eggerapps.at/pgcommander/)
 * [Navicat Essentials for POSTGRESQL](https://itunes.apple.com/de/app/navicat-essentials-for-postgresql/id466725643?l=en&mt=12)
 * [PGAdmin](http://www.pgadmin.org/download/macosx.php) - not so fancy but free
+* [Redis Desktop Manager](https://redisdesktop.com)
 
 #### Markdown viewers/editors for Mac
 
