@@ -64,6 +64,8 @@ group :development do
   gem 'rubocop'
 
   gem 'rubocop-rspec'
+
+  gem 'papertrail'
 end
 
 group :test do
