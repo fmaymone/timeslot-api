@@ -344,7 +344,7 @@ module V1
 
       # Check validity of date format
       # metaSlotId is (IMHO only) requiered for copy slot
-      p = params.permit(:title, :start_date, :end_date, :meta_slot_id,
+      p = params.permit(:title, :start_date, :end_date, :rrule, :meta_slot_id,
                         location:
                           [:name, :thoroughfare, :sub_thoroughfare,
                            :locality, :sub_locality, :administrative_area,

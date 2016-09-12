@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
+-- Dumped from database version 9.5.4
 -- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
@@ -584,7 +584,8 @@ CREATE TABLE meta_slots (
     updated_at timestamp without time zone,
     ios_location_id bigint,
     open_end boolean DEFAULT false NOT NULL,
-    location_uid uuid
+    location_uid uuid,
+    rrule character varying DEFAULT ''::character varying NOT NULL
 );
 
 
@@ -1615,4 +1616,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160711102234');
 INSERT INTO schema_migrations (version) VALUES ('20160826225331');
 
 INSERT INTO schema_migrations (version) VALUES ('20160829092803');
+
+INSERT INTO schema_migrations (version) VALUES ('20160912100726');
 

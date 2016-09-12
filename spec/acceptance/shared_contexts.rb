@@ -14,6 +14,7 @@ RSpec.shared_context "default slot response fields" do
   response_field :title, "Title of the slot"
   response_field :startDate, "Startdate of the slot"
   response_field :endDate, "Enddate of the slot"
+  response_field :rrule, "Repeating Rule for the slot"
   response_field :openEnd, "OpenEnd Boolean Flag"
   response_field :createdAt, "Creation of slot"
   response_field :updatedAt, "Last update of slot"
@@ -57,6 +58,8 @@ RSpec.shared_context "default slot parameter" do
   parameter :endDate,
             "Enddate and Time of the Slot (startdate + duration).",
             required: true
+  parameter :rrule,
+            "Repeating Rule for the Slot."
   # parameter :openEnd,
   #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
   #          required: true
