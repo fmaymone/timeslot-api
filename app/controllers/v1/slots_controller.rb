@@ -289,23 +289,23 @@ module V1
                                   share_with_friends: @share_with_friends }
     end
 
-    # POST /v1/slots/1/slotsets
+    # POST /v1/slots/1/slotgroups
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      add_to_slotsets(@slot, params[:slot_groups])
+      add_to_slotsets(@slot, params.require(:slot_groups))
 
       render :slotgroups, locals: { slot: @slot }
     end
 
-    # DELETE /v1/slots/1/slotsets
+    # DELETE /v1/slots/1/slotgroups
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
       # TODO: update spec
-      if params[:slot_groups].delete(current_user.my_cal_uuid)
+      if params.require(:slot_groups).delete(current_user.my_cal_uuid)
         # current_user.passengerships.find_by(slot: @slot).try(:delete)
         current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end
