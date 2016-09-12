@@ -28,6 +28,7 @@ resource "Slots" do
       let(:title) { "Time for a Slot" }
       let(:startDate) { "2014-09-08T13:31:02.000Z" }
       let(:endDate) { "2014-09-13T22:03:24.000Z" }
+      let(:rrule) { "RRULE:FREQ=WEEKLY;BYDAY=TH" }
       #let(:openEnd) { false }
       let(:description) { "One day it will all make sense." }
       let(:notes) { [{ title: "revolutionizing the calendar",
@@ -97,10 +98,12 @@ resource "Slots" do
         expect(json["id"]).to eq new_slot.id
         expect(json).to have_key("title")
         expect(json).to have_key("startDate")
+        expect(json).to have_key("endDate")
+        expect(json).to have_key("rrule")
+        expect(json["rrule"]).to eq("RRULE:FREQ=WEEKLY;BYDAY=TH")
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
-        expect(json).to have_key("endDate")
         expect(json).to have_key("description")
         expect(json['description']).to eq "One day it will all make sense."
         expect(json).to have_key("location")

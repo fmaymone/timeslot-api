@@ -8,6 +8,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:title) }
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
+  it { is_expected.to respond_to(:rrule) }
   it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:creator) }
   it { is_expected.to respond_to(:location_uid) }
