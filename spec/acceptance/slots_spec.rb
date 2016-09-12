@@ -187,6 +187,7 @@ resource "Slots" do
                  "title" => slot.title,
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
+                 "rrule" => slot.rrule,
                  "firstGroup" => nil,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,
