@@ -1,4 +1,4 @@
-# TS RAILS BACKEND
+# Casino - Timeslot Rails Backend
 
 * [CHANGELOG](CHANGELOG.md)
 * [Api Endpoint Documentation](doc/api/v1/index.markdown)
@@ -8,6 +8,10 @@
 * [Social Activity](doc/social_activity.md)
 * [Activity Feed API](doc/feed_examples.md)
 * [Follower Model API](doc/follow_examples.md)
+
+# Architecture
+
+![Casino diagram](doc/images/cloudcraft-Casino-API_Backend.png)
 
 # Notes
 
