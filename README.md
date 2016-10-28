@@ -1,16 +1,17 @@
-# TS RAILS BACKEND
+# Casino - Timeslot Rails Backend
 
 * [CHANGELOG](CHANGELOG.md)
 * [Api Endpoint Documentation](doc/api/v1/index.markdown)
-* [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
 * [App-Specification](https://docs.google.com/a/timeslot.com/document/d/12MZDzthoK6RrKhuJKfERfI6xpvZi_DP6ri0VWbZmnPc/edit?usp=sharing) (google docs), [old app spec](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 * [Social Activity](doc/social_activity.md)
 * [Activity Feed API](doc/feed_examples.md)
 * [Follower Model API](doc/follow_examples.md)
-* [Links to Some Useful Extra Information](doc/useful_links.md)
-* [Deployment Process](doc/deployment_process.md)
+
+# Architecture
+
+![Casino diagram](doc/images/cloudcraft-Casino-API_Backend.png)
 
 # Notes
 
