@@ -10,8 +10,16 @@ resource "Users" do
     header "Content-Type", "application/json"
     header "Accept", "application/json"
 
-    parameter :username, "Username of user (max. 50 characters)",
+    parameter :username, "Username of user (3-50 characters)",
               required: true
+    parameter :firstName, "First name of user (2-50 characters)",
+              required: false
+    parameter :middleName, "Middle name of user (2-50 characters)",
+              required: false
+    parameter :lastName, "Last name of user (2-50 characters)",
+              required: false
+    parameter :gender, "Gender of the user (male, female, other)",
+              required: false
     parameter :email, "Email of user (max. 254 characters)"
     parameter :phone, "Phone number of user (max. 35 characters)"
     parameter :lang, "Language of user (2 characters, ISO 639-1)"
@@ -22,9 +30,13 @@ resource "Users" do
     response_field :authToken, "Authentication Token for the user to be set" \
                                " as a HTTP header in subsequent requests"
     let(:username) { "foo" }
+    let(:firstName) { "Lana" }
+    let(:middleName) { "Del" }
+    let(:lastName) { "Rey" }
     let(:email) { "someone@timeslot.com" }
     let(:password) { "secret-thing" }
     let(:lang) { "de" }
+    let(:gender) { "female" }
 
     example "Signup - Create user", document: :v1 do
       explanation "Either an email or phone number must be provided\n\n" \
@@ -36,10 +48,18 @@ resource "Users" do
       expect(json).to have_key 'id'
       expect(json).to have_key 'username'
       expect(json['username']).to eq 'foo'
+      expect(json).to have_key 'firstName'
+      expect(json['firstName']).to eq 'Lana'
+      expect(json).to have_key 'middleName'
+      expect(json['middleName']).to eq 'Del'
+      expect(json).to have_key 'lastName'
+      expect(json['lastName']).to eq 'Rey'
       expect(json).to have_key 'email'
       expect(json['email']).to eq 'someone@timeslot.com'
       expect(json).to have_key 'lang'
       expect(json['lang']).to eq 'de'
+      expect(json).to have_key 'gender'
+      expect(json['gender']).to eq 'female'
       expect(json).to have_key 'authToken'
       expect(json['authToken']).not_to be nil
     end

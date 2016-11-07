@@ -160,7 +160,8 @@ module V1
       params.require(:password)
       params.require(:username)
       params.delete(:role) unless params[:role].in? %w(public_user)
-      params.permit(:username, :email, :phone, :password, :lang, :role)
+      params.permit(:username, :first_name, :middle_name, :last_name,
+                    :email, :phone, :password, :lang, :role, :gender)
     end
 
     private def device_params(params)
