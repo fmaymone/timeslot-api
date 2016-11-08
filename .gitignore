@@ -26,7 +26,6 @@ db/*.sqlite3
 *.sassc
 .redcar/
 .sass-cache
-/aws-secret-configs
 /config/config.yml
 #/config/database.yml
 /coverage.data
@@ -83,6 +82,8 @@ pickle-email-*.html
 .powenv
 .rbenv-gemsets
 config/app_environment_variables.rb
+/aws-secret-configs
+.elasticbeanstalk/saved_configs
 
 # ignore vcr cassettes
 /spec/cassettes/
