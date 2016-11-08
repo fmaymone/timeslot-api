@@ -10,16 +10,24 @@ Provider.find_or_create_by(name: 'facebook')
 Provider.find_or_create_by(name: 'twitter')
 
 # for imports via web-importer
-begin
-  User.create(username: 'Web Importer',
-              role: 4,
-              email: 'web-importer@timeslot.com',
-              password: ENV['WEB_IMPORTER_PASSWORD'])
-rescue ActiveRecord::RecordNotUnique
-end
+User.find_or_create_by(
+  username: 'Web Importer',
+  role: 4,
+  email: 'web-importer@timeslot.com',
+  password: ENV['WEB_IMPORTER_PASSWORD']
+)
 
 # calendars with global slots
 User.find_or_create_by(
-    username: 'Global Importer',
-    role: 4,
-    email: 'global-importer@timeslot.com')
+  username: 'Global Importer',
+  role: 4,
+  email: 'global-importer@timeslot.com'
+)
+
+# apple itunes review account
+User.find_or_create_by(
+  username: 'John Appleseed',
+  role: 0,
+  email: 'john@appleseed.com',
+  password: 'appleseed'
+)
