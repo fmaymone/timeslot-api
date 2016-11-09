@@ -1,6 +1,7 @@
 #Changelog
 
 ## upcoming
+- improve suggested users, get rid of default suggested user, use newest instead
 - add new healthcheck endpoint
 - add endpoint for client version checks
 - allow setting of users firstName, middleName, lastName, gender

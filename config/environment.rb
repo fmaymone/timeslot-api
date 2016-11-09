@@ -34,7 +34,5 @@ PAGINATION_MAX_LIMIT = ENV.fetch('PAGINATION_MAX_LIMIT', 100).to_i
 PAGINATION_DEFAULT_FILTER = ENV.fetch('PAGINATION_DEFAULT_FILTER', 'none')
 PAGINATION_DEFAULT_MODE = ENV.fetch('PAGINATION_DEFAULT_MODE', 'all')
 
-SUGGESTED_USER_EMAIL = ENV.fetch('SUGGESTED_USER_EMAIL', 'kalirad@me.com')
-
 # Initialize the Rails application.
 Rails.application.initialize!

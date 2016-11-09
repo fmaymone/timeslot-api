@@ -54,8 +54,6 @@ ENV['PAGINATION_DEFAULT_MODE'] = 'all' # if not provided by client
 ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
 ENV['PAGINATION_MAX_LIMIT'] = '100' # depends on the environment...
 
-ENV['SUGGESTED_USER_EMAIL'] = 'kalirad@me.com' # the email for the user which is suggested as a friend if a user had no friends yet
-
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['WEB_IMPORTER_PASSWORD'] = 'Q8NUwaR4' # password used by web-import service
 ENV['WEB_CONCURRENCY] = ???
