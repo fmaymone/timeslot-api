@@ -142,6 +142,7 @@ Rails.application.routes.draw do
 
     scope :maintenance do
       get '', to: 'maintenances#health'
+      get 'clientversions', to: 'maintenances#clientversions'
     end
 
     if ENV['ENABLE_IOS_DB_CLEAN']

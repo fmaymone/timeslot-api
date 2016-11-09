@@ -8,5 +8,10 @@ module V1
     def health
       head :ok
     end
+
+    # GET /v1/maintenance/clientversions
+    def clientversions
+      render 'v1/maintenances/versions'
+    end
   end
 end

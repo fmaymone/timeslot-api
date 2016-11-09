@@ -1,14 +1,24 @@
 #Changelog
 
 ## upcoming
+- add new healthcheck endpoint
+- add endpoint for client version checks
+- allow setting of users firstName, middleName, lastName, gender
+- cleanup elastic beanstalk configs
+- add papertrail logging for elastic beanstalk
+- add aws architecture diagram
+- load elastic beanstalk configs from s3
+
+
+## v0.9.3 (unreleased)
 - remove slot copy and slot move routes and methods
 - Pagination:
   - rename parameter 'filter' to 'mode'
   - rename PAGINATION_DEFAULT_FILTER to PAGINATION_DEFAULT_MODE
   - add env var PAGINATION_DEFAULT_FILTER
 
-## v0.9.2 (4.4.2016)
 
+## v0.9.2 (4.4.2016)
 - remove ReSlot Model
 - add Containership Model, to store relations between slots and slotgroups/lists/calendars
 - add Passengership Model, to store relations between slots and Users (My Schedule / MyCalendar)
