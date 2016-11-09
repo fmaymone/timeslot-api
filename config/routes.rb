@@ -140,6 +140,10 @@ Rails.application.routes.draw do
       get ':code', to: 'invitecodes#show'
     end
 
+    scope :maintenance do
+      get '', to: 'maintenances#health'
+    end
+
     if ENV['ENABLE_IOS_DB_CLEAN']
       get 'ios/clean-db', to: 'ios#clean_db'
     end
