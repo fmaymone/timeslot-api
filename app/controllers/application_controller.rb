@@ -45,6 +45,11 @@ class ApplicationController < ActionController::API
     render json: { error: exception.message }, status: :service_unavailable
   end
 
+  # GET /
+  def root
+    head :unauthorized
+  end
+
   private def unprocessable_entity(exception)
     render json: { error: exception.message }, status: :unprocessable_entity
   end

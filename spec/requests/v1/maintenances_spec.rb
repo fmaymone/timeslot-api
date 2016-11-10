@@ -3,6 +3,13 @@ require 'rails_helper'
 RSpec.describe "V1::Maintenances", type: :request do
   let(:json) { JSON.parse(response.body) }
 
+  describe "GET /" do
+    it "returns 401" do
+      get "/"
+      expect(response).to have_http_status :unauthorized
+    end
+  end
+
   describe "GET /v1/maintenance" do
     it "returns 200 OK" do
       get "/v1/maintenance"
