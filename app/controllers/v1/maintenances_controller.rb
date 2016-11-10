@@ -13,5 +13,15 @@ module V1
     def clientversions
       render 'v1/maintenances/versions'
     end
+
+    # GET /v1/maintenance/clean-db
+    def clean_db
+      if !Rails.env.production? && (ENV['ENABLE_IOS_DB_CLEAN'] == 'true')
+        DatabaseCleaner.clean
+        head :ok
+      else
+        head :unauthorized
+      end
+    end
   end
 end
