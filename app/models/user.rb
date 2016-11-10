@@ -98,8 +98,12 @@ class User < ActiveRecord::Base
 
   ## validations ##
 
-  validates :username, presence: true, length: { maximum: 50 }
+  validates :username, presence: true, length: { in: 3...50 }
+  validates :first_name, length: { in: 2..50 }, allow_nil: true
+  validates :middle_name, length: { in: 2..50 }, allow_nil: true
+  validates :last_name, length: { in: 2..50 }, allow_nil: true
   validates :lang, length: { is: 2 }, allow_nil: true
+  validates :gender, inclusion: %w(male female other), allow_nil: true
 
   # http://davidcel.is/blog/2012/09/06/stop-validating-email-addresses-with-regex/
   validates :email,

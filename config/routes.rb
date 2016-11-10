@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'application#root'
+
   namespace :v1, defaults: { format: :json } do
     # TODO: rename connect routes
     # scope :connect do
@@ -59,7 +61,7 @@ Rails.application.routes.draw do
     get 'media-signature', to: 'media#create_signature'
 
     scope :me do
-      get '', to: 'me#show', as: 'show_me'
+      root 'me#show', as: 'show_me'
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
@@ -140,8 +142,10 @@ Rails.application.routes.draw do
       get ':code', to: 'invitecodes#show'
     end
 
-    if ENV['ENABLE_IOS_DB_CLEAN']
-      get 'ios/clean-db', to: 'ios#clean_db'
+    scope :maintenance do
+      root 'maintenances#health'
+      get 'clientversions', to: 'maintenances#clientversions'
+      get 'clean-db', to: 'maintenances#clean_db' if ENV['ENABLE_IOS_DB_CLEAN'] == 'true'
     end
   end
 

@@ -1,6 +1,7 @@
 class RemoveReslotTable < ActiveRecord::Migration
   def up
     remove_column :base_slots, :re_slots_count
+    remove_column :global_slots, :re_slots_count
     drop_table :re_slots
   end
 

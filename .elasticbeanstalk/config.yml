@@ -1,4 +1,6 @@
 branch-defaults:
+  unislot-casino:
+    environment: unislot-casino
   ac-aws:
     environment: ac-casino
   develop:
@@ -11,7 +13,7 @@ branch-defaults:
 global:
   application_name: TS_RAILS_BACKEND
   default_ec2_keyname: aws-eb-ts-backend-stage
-  default_platform: 64bit Amazon Linux 2016.03 v2.1.0 running Ruby 2.3 (Puma)
+  # default_platform: 64bit Amazon Linux 2016.03 v2.1.0 running Ruby 2.3 (Puma)
   default_region: eu-central-1
   profile: eb-cli
   sc: git

@@ -33,7 +33,7 @@ namespace :feed do
   task build: :environment do
 
     # NOTE: Since the redis free plan has a limit of 25 Mb we only rebuild the last 1000 activities
-    MAX_ACTIVITIES = 1000
+    MAX_ACTIVITIES = 5000
 
     # Turn off push notifications globally
     Rails.application.config.SKIP_PUSH_NOTIFICATION = true
