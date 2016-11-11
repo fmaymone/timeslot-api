@@ -1032,6 +1032,21 @@ resource "Users" do
       expect(json['result'].length).to eq 4
       expect(response_body).to include public_group.slots.first.title
     end
+
+    describe "preview slots" do
+      let(:user_with_calendar) do
+        requestee = create(:user)
+        create(:group, :with_3_slots, public: true, owner: requestee)
+        requestee
+      end
+
+      let(:id) { user_with_calendar.id }
+
+      example "Get calendar with preview slots", document: :false do
+        do_request
+        expect(json['result'].first['previewSlots'].first).to have_key('media')
+      end
+    end
   end
 
   post "/v1/users/reset", :vcr, :aws do
