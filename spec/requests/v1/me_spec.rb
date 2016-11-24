@@ -1400,6 +1400,16 @@ RSpec.describe "V1::Me", type: :request do
     end
   end
 
+  describe "POST /v1/me/friendship/:user_id" do
+
+    context "befriending yourself" do
+      it "does nothing, maybe return error here?" do
+        post "/v1/me/friendship/#{current_user.id}", {}, auth_header
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+  end
+
   describe "DELETE /v1/me/friendship/:user_id" do
     let(:john) { create(:user, username: "John") }
 
