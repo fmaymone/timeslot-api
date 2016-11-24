@@ -1401,11 +1401,71 @@ RSpec.describe "V1::Me", type: :request do
   end
 
   describe "POST /v1/me/friendship/:user_id" do
+    let(:john) { create(:user, username: "John") }
 
     context "befriending yourself" do
-      it "does nothing, maybe return error here?" do
+      it "returns unprocessable entity error" do
         post "/v1/me/friendship/#{current_user.id}", {}, auth_header
         expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
+    context "invalid friend ID" do
+      it "returns not found error" do
+        post "/v1/me/friendship/99999999", {}, auth_header
+        expect(response).to have_http_status :not_found
+      end
+    end
+
+    context "no offer" do
+      it "creates a friend request" do
+        expect(john.friendships.count).to eq 0
+        post "/v1/me/friendship/#{john.id}", {}, auth_header
+
+        expect(john.friendships.count).to eq 1
+        expect(john.offered_friends).to include current_user
+        expect(current_user.requested_friends).to include john
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "existing open offer from friend" do
+      let!(:friendship) {
+        create(:friendship, user: john, friend: current_user)
+      }
+      it "establishes friendship" do
+        expect(friendship.established?).to be false
+        post "/v1/me/friendship/#{john.id}", {}, auth_header
+        friendship.reload
+        expect(friendship.established?).to be true
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "existing open offer from current user" do
+      let!(:friendship) {
+        create(:friendship, user: current_user, friend: john)
+      }
+      it "does nothing" do
+        expect(friendship.established?).to be false
+        post "/v1/me/friendship/#{john.id}", {}, auth_header
+        friendship.reload
+        expect(friendship.established?).to be false
+        expect(friendship.offered?).to be true
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "previously rejected friendship" do
+      let!(:friendship) {
+        create(:friendship, :rejected, user: john, friend: current_user)
+      }
+      it "does nothing, returns ok (idempotence)" do
+        expect(friendship.rejected?).to be true
+        delete "/v1/me/friendship/#{john.id}", {}, auth_header
+        expect(response).to have_http_status :ok
+        friendship.reload
+        expect(friendship.rejected?).to be true
       end
     end
   end
