@@ -32,12 +32,6 @@ RSpec.describe V1::SlotsController, type: :routing do
         .to route_to("v1/slots#update", id: "1", format: :json)
     end
 
-    # TODO: remove this
-    it "routes to #destroy_stdslot" do
-      expect(delete: "/v1/stdslot/1")
-        .to route_to("v1/slots#delete", id: "1", format: :json)
-    end
-
     it "routes to #slotsets" do
       expect(get: "/v1/slots/1/slotsets")
         .to route_to("v1/slots#slotsets", id: "1", format: :json)
