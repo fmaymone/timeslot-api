@@ -107,7 +107,6 @@ resource "Slots" do
         expect(json).to have_key("description")
         expect(json['description']).to eq "One day it will all make sense."
         expect(json).to have_key("location")
-        # expect(json.last['location']).to have_key("name")
         expect(json).to have_key("creator")
         expect(json['creator']).to have_key("username")
         expect(json['creator']['username']).to eq current_user.username
@@ -117,12 +116,101 @@ resource "Slots" do
         expect(json['settings']).to have_key("alerts")
         expect(json).to have_key("visibility")
         expect(json["visibility"]).to eq visibility
-        # expect(json).to have_key("reslotsCounter")
         expect(json).to have_key("likes")
         expect(json).to have_key("commentsCounter")
         expect(json).to have_key("unauthorizedSlotgroups")
         expect(json['unauthorizedSlotgroups']).to include unauthorized_group.uuid
         expect(json['unauthorizedSlotgroups']).to include deleted_group.uuid
+      end
+
+      context "slot with open End" do
+        let(:endDate) { '' }
+
+        example "Create StandardSlot with open End", document: :v1 do
+          explanation "Returns data of new slot.\n\n" \
+                      "The empty endDate will internally be set to the end of" \
+                      " the start day but will not be returned in json.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          expect(response_status).to eq(201)
+          new_slot = BaseSlot.unscoped.last
+          expect(new_slot.end_date)
+            .to eq new_slot.start_date.to_datetime.at_end_of_day
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+          expect(json['endDate']).to be nil
+        end
+      end
+
+      context "slot with location" do
+        include_context "ios location params"
+
+        let(:name) { 'Soho House' }
+        let(:thoroughfare) { 'Torstrasse 1' }
+        let(:locality) { 'Berlin' }
+        let(:postal_code) { '10119' }
+        let(:country) { 'Germany' }
+        # google 52.527654, 13.415670
+        # apple 52.527335,13.414259
+        let(:latitude) { '52.527335' }
+        let(:longitude) { '13.414259' }
+        let(:private_location) { false }
+
+        example "Create Slot with Location", document: :false do
+          explanation "Returns data of new slot.\n\n" \
+                      "Missing unrequiered fields will be filled" \
+                      " with default values.\n\n" \
+                      "returns 422 if parameters are invalid\n\n" \
+                      "returns 422 if required parameters are missing"
+          do_request
+
+          slot = BaseSlot.last
+          expect(slot.ios_location_id).not_to be nil
+          expect(response_status).to eq(201)
+          expect(json).to have_key("id")
+          expect(json).to have_key("location")
+          location = json['location']
+          expect(location['name']).to eq 'Soho House'
+        end
+      end
+    end
+
+    describe "Create slot with invalid params" do
+      response_field :error, "Explanation which param couldn't be saved"
+
+      let(:title) { "Time for a Slot" }
+      let(:startDate) { "2014-09-08T13:31:02.000Z" }
+      let(:endDate) { "2014-09-10T13:31:02.000Z" }
+      let(:visibility) { 'private' }
+      let(:alerts) { "oh no" }
+
+      example "Create slot with invalid params returns 422 & failure details",
+              document: false do
+        explanation "Parameters that can not be written to db will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("error")
+      end
+    end
+
+    describe "Create slot with missing requiered params" do
+      response_field :error, "Contains Error message"
+
+      let(:title) { "Time for a Slot" }
+      let(:endDate) { "2014-09-08T13:31:02.000Z" }
+      let(:visibility) { 'private' }
+
+      example "Create std slot with missing requiered params returns 422" \
+              " & failure details", document: false do
+        explanation "Missing requiered fields will be returned."
+        do_request
+
+        expect(response_status).to eq 422
+        expect(json).to have_key("error")
+        expect(response_body).to include "start_date"
       end
     end
   end
@@ -288,157 +376,6 @@ resource "Slots" do
 
     include_context "default slot parameter"
 
-    describe "Create new standard slot" do
-      include_context "stdslot response fields"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-13T22:03:24.000Z" }
-      #let(:openEnd) { false }
-      let(:notes) { [{ title: "revolutionizing the calendar",
-                       content: "this is content" },
-                     { title: "and another title",
-                       content: "more content here" }] }
-      let(:alerts) { '0101010101' }
-      let(:visibility) { 'private' }
-
-      context "slot without location" do
-        example "Create StandardSlot", document: :v1 do
-          explanation "Returns data of new slot.\n\n" \
-                      "Missing unrequiered fields will be filled" \
-                      " with default values.\n\n" \
-                      "At the moment the slot is added to MySchedule by " \
-                      "default. I think we'll change this so it's only added " \
-                      "if the MySchedule UUID is provided in the slotGroups " \
-                      "array. Additional slotGroups can be submitted and the " \
-                      "slot will be added there too.\n\n" \
-                      "returns 422 if parameters are invalid\n\n" \
-                      "returns 422 if required parameters are missing"
-          do_request
-
-          expect(response_status).to eq(201)
-          expect(json).to have_key("id")
-          expect(json).to have_key("title")
-          expect(json).to have_key("startDate")
-          expect(json).to have_key("endDate")
-          expect(json).to have_key("creator")
-          expect(json).to have_key("notes")
-          expect(json).to have_key("visibility")
-          expect(json["notes"].length).to eq(notes.length)
-        end
-      end
-
-      context "slot with default location" do
-        let(:locationId) { 200_719_253 }
-
-        example "Create StandardSlot with default location", document: :false do
-          explanation "Returns data of new slot.\n\n" \
-                      "Missing unrequiered fields will be filled" \
-                      " with default values.\n\n" \
-                      "returns 422 if parameters are invalid\n\n" \
-                      "returns 422 if required parameters are missing"
-          do_request
-
-          expect(response_status).to eq(201)
-          expect(json).to have_key("id")
-          expect(json).to have_key("title")
-          expect(json).to have_key("location")
-          # expect(json['location']).not_to be nil
-          #expect(json['openEnd']).to be false
-        end
-      end
-
-      context "slot with open End" do
-        let(:endDate) { '' }
-
-        example "Create StandardSlot with open End", document: :v1 do
-          explanation "Returns data of new slot.\n\n" \
-                      "The empty endDate will internally be set to the end of" \
-                      " the start day but will not be returned in json.\n\n" \
-                      "returns 422 if parameters are invalid\n\n" \
-                      "returns 422 if required parameters are missing"
-          do_request
-
-          expect(response_status).to eq(201)
-          new_slot = StdSlot.unscoped.last
-          expect(new_slot.end_date)
-            .to eq new_slot.start_date.to_datetime.at_end_of_day
-          expect(json).to have_key("id")
-          expect(json).to have_key("title")
-          expect(json['endDate']).to be nil
-        end
-      end
-
-      context "slot with IOS location" do
-        include_context "ios location params"
-
-        let(:name) { 'Soho House' }
-        let(:thoroughfare) { 'Torstrasse 1' }
-        let(:locality) { 'Berlin' }
-        let(:postal_code) { '10119' }
-        let(:country) { 'Germany' }
-        # google 52.527654, 13.415670
-        # apple 52.527335,13.414259
-        let(:latitude) { '52.527335' }
-        let(:longitude) { '13.414259' }
-        let(:private_location) { false }
-
-        example "Create StandardSlot with IOS Location", document: :false do
-          explanation "Returns data of new slot.\n\n" \
-                      "Missing unrequiered fields will be filled" \
-                      " with default values.\n\n" \
-                      "returns 422 if parameters are invalid\n\n" \
-                      "returns 422 if required parameters are missing"
-          do_request
-
-          slot = StdSlotPrivate.last
-          expect(slot.ios_location_id).not_to be nil
-          expect(response_status).to eq(201)
-          expect(json).to have_key("id")
-          expect(json).to have_key("location")
-          location = json['location']
-          expect(location['name']).to eq 'Soho House'
-        end
-      end
-    end
-
-    describe "Create std slot with invalid params" do
-      response_field :error, "Explanation which param couldn't be saved"
-
-      let(:title) { "Time for a Slot" }
-      let(:startDate) { "2014-09-08T13:31:02.000Z" }
-      let(:endDate) { "2014-09-10T13:31:02.000Z" }
-      #let(:openEnd) { false }
-      let(:visibility) { 'private' }
-      let(:alerts) { "oh no" }
-
-      example "Create std slot with invalid params returns 422 & failure details",
-              document: false do
-        explanation "Parameters that can not be written to db will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-      end
-    end
-
-    describe "Create std slot with missing requiered params" do
-      response_field :error, "Contains Error message"
-
-      let(:title) { "Time for a Slot" }
-      let(:endDate) { "2014-09-08T13:31:02.000Z" }
-      let(:visibility) { 'private' }
-
-      example "Create std slot with missing requiered params returns 422" \
-              " & failure details", document: false do
-        explanation "Missing requiered fields will be returned."
-        do_request
-
-        expect(response_status).to eq 422
-        expect(json).to have_key("error")
-        expect(response_body).to include "start_date"
-      end
-    end
   end
 
   patch "/v1/metaslot/:id" do

@@ -22,12 +22,6 @@ RSpec.describe V1::SlotsController, type: :routing do
     end
 
     # TODO: remove this
-    it "routes to #create_stdslot" do
-      expect(post: "/v1/stdslot")
-        .to route_to("v1/slots#create_stdslot", format: :json)
-    end
-
-    # TODO: remove this
     it "routes to #update_metaslot" do
       expect(patch: "/v1/metaslot/1")
         .to route_to("v1/slots#update_metaslot", id: "1", format: :json)

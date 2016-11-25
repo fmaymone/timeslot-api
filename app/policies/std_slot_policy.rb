@@ -1,9 +1,4 @@
 class StdSlotPolicy < SlotPolicy
-  # true if the user is signed in
-  def create_stdslot?
-    current_user?
-  end
-
   # TODO: write spec
   def slotsets?
     current_user_has_read_access?

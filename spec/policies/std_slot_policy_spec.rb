@@ -5,16 +5,6 @@ describe StdSlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :create_stdslot? do
-    context "for a user" do
-      let(:user) { create(:user) }
-
-      it "allows access" do
-        expect(subject).to permit(user, slot)
-      end
-    end
-  end
-
   permissions :update?, :update_stdslot?, :delete? do
     let(:owner) { create(:user) }
     let(:creator) { create(:user) }
@@ -47,7 +37,7 @@ describe StdSlotPolicy do
 
   describe 'for a visitor / invalid or missing auth_token' do
     let(:permissions) {
-      [:create_stdslot?, :update?, :update_stdslot?]
+      [:update?, :update_stdslot?]
     }
     let(:user) { nil }
 

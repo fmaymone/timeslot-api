@@ -74,23 +74,6 @@ module V1
       service.adjust_visibility(slot, visibility, sets)
     end
 
-    # TODO: deprecated, remove this
-    # POST /v1/stdslot
-    def create_stdslot
-      authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params,
-                                   visibility: enforce_visibility,
-                                   media: media_params, notes: note_param,
-                                   alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :create, status: :created, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/metaslot/1
     # TODO: Do we want to keep this?
     def update_metaslot
