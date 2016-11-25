@@ -42,9 +42,6 @@ Rails.application.routes.draw do
       get ':id/slotsets', to: 'slots#slotsets'
       post ':id/slotgroups', to: 'slots#add_to_groups'
       delete ':id/slotgroups', to: 'slots#remove_from_groups'
-
-      # TODO: remove endpoint
-      get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
     end
 
     scope :globalslots do

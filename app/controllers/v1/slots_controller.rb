@@ -277,14 +277,6 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
-    # GET /v1/slots/1/history
-    def reslot_history
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-
-      render :reslot_history
-    end
-
     private def enforce_visibility
       params.require :visibility
       visibility
