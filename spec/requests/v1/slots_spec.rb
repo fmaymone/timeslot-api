@@ -835,122 +835,6 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "PATCH /v1/metaslot/:id" do
-    let(:metaslot) { create(:meta_slot, creator: current_user) }
-
-    context "with valid params" do
-      it "responds with No Content (204)" do
-        patch "/v1/metaslot/#{metaslot.id}",
-              { title: "Something" }, auth_header
-        expect(response).to have_http_status(:no_content)
-      end
-
-      it "updates the title of a given metaslot" do
-        metaslot.update(title: "Old title")
-        patch "/v1/metaslot/#{metaslot.id}",
-              { title: "New title" }, auth_header
-        metaslot.reload
-        expect(metaslot.title).to eq("New title")
-      end
-
-      it "updates the start_date of a given metaslot" do
-        metaslot.update(start_date: "2014-09-08 13:31:02")
-        patch "/v1/metaslot/#{metaslot.id}",
-              { start_date: "2014-07-07 13:31:02" }, auth_header
-        metaslot.reload
-        expect(metaslot.start_date).to eq("2014-07-07 13:31:02")
-      end
-
-      it "updates the end_date of a given metaslot" do
-        metaslot.update(end_date: "2019-09-09 13:31:02")
-        patch "/v1/metaslot/#{metaslot.id}",
-              { end_date: "2019-12-11 13:31:02" }, auth_header
-        metaslot.reload
-        expect(metaslot.end_date).to eq("2019-12-11 13:31:02")
-        expect(metaslot.open_end).to be false
-      end
-
-      # this is now possible, changed by thomas bc of icalendar
-      it "updates end_date even if start_date equals end_date" do
-        metaslot.update(start_date: "2014-09-08 13:31:02")
-        patch "/v1/metaslot/#{metaslot.id}",
-              { end_date: "2014-09-08 13:31:02" }, auth_header
-        expect(response).to have_http_status(:no_content)
-      end
-
-      it "sets slot to 'open End' if empty end_date" do
-        metaslot.update(start_date: "2014-09-08 07:31:02")
-        patch "/v1/metaslot/#{metaslot.id}", { end_date: "" }, auth_header
-        expect(response).to have_http_status(:no_content)
-        metaslot.reload
-        # need to cast to_datetime bc of different millisecond precision
-        expect(metaslot.end_date)
-          .to eq metaslot.start_date.to_datetime.at_end_of_day
-        expect(metaslot.open_end).to be true
-      end
-    end
-
-    context "with invalid params" do
-      describe "User not creator of MetaSlot" do
-        let(:creator) { create(:user) }
-        let(:metaslot) { create(:meta_slot, creator: creator) }
-
-        it "responds with Not Found (404)" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { title: "Something" }, auth_header
-          expect(response).to have_http_status(:not_found)
-        end
-      end
-
-      describe "for invalid ID" do
-        it "responds with Not Found (404)" do
-          wrong_id = metaslot.id + 1
-          patch "/v1/metaslot/#{wrong_id}",
-                { title: "Something" }, auth_header
-          expect(response).to have_http_status(:not_found)
-        end
-      end
-
-      describe "responds with Unprocessable Entity (422)" do
-        it "for empty title" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { title: "" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for empty start_date" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { start_date: "" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for invalid start_date" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { start_date: "|$%^@wer" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('blank')
-        end
-
-        it "for invalid end_date" do
-          patch "/v1/metaslot/#{metaslot.id}",
-                { end_date: "|$%^@wer" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('not a valid value')
-        end
-
-        it "if end_date before start_date" do
-          metaslot.update(start_date: "2014-09-08 13:31:02")
-          patch "/v1/metaslot/#{metaslot.id}",
-                { end_date: "2014-07-07 13:31:02" }, auth_header
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to include('start_date')
-        end
-      end
-    end
-  end
-
   describe "PATCH /v1/slots/:id" do
     let!(:std_slot) {
       create(:std_slot_private, owner: current_user, creator: current_user) }
@@ -1602,37 +1486,37 @@ RSpec.describe "V1::Slots", type: :request do
     end
   end
 
-  describe "DELETE /v1/stdslot/:id" do
+  describe "DELETE /v1/slots/:id" do
     let!(:std_slot) {
       create(:std_slot_private, owner: current_user, creator: current_user) }
 
     context "with a valid ID" do
       it "returns success" do
-        delete "/v1/stdslot/#{std_slot.id}", {}, auth_header
+        delete "/v1/slots/#{std_slot.id}", {}, auth_header
         expect(response).to have_http_status(:ok)
       end
 
       it "doesn't destroy the std_slot" do
         expect {
-          delete "/v1/stdslot/#{std_slot.id}", {}, auth_header
-        }.not_to change(StdSlot, :count)
+          delete "/v1/slots/#{std_slot.id}", {}, auth_header
+        }.not_to change(BaseSlot, :count)
       end
     end
 
-    # context "with an invalid ID" do
-    #   let(:wrong_id) { std_slot.id + 1 }
+    context "with an invalid ID" do
+      let(:wrong_id) { std_slot.id + 1 }
 
-    #   it "responds with Not Found" do
-    #     delete "/v1/stdslot/#{wrong_id}", {}, auth_header
-    #     expect(response).to have_http_status(:not_found)
-    #   end
+      it "responds with Not Found" do
+        delete "/v1/slots/#{wrong_id}", {}, auth_header
+        expect(response).to have_http_status(:not_found)
+      end
 
-    #   it "does not remove an entry from the DB" do
-    #     expect {
-    #       delete "/v1/stdslot/#{wrong_id}", {}, auth_header
-    #     }.not_to change(StdSlot, :count)
-    #   end
-    # end
+      it "does not remove an entry from the DB" do
+        expect {
+          delete "/v1/slots/#{wrong_id}", {}, auth_header
+        }.not_to change(StdSlot, :count)
+      end
+    end
   end
 
   describe "GET /v1/slots/:id/slotgroups" do

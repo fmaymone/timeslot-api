@@ -74,19 +74,6 @@ module V1
       service.adjust_visibility(slot, visibility, sets)
     end
 
-    # PATCH /v1/metaslot/1
-    # TODO: Do we want to keep this?
-    def update_metaslot
-      @meta_slot = current_user.created_slots.find(params[:id])
-      authorize @meta_slot
-
-      if @meta_slot.update(meta_params)
-        head :no_content
-      else
-        render json: @meta_slot.errors, status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/slots/1
     def update
       @slot = current_user.std_slots.find(params[:id])

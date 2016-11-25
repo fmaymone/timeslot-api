@@ -17,9 +17,6 @@ Rails.application.routes.draw do
       delete 'share/:id', to: 'share#delete', as: 'share_delete'
       post 'export/:action', to: 'export#:action', as: 'slot_export'
       post 'import', to: 'import#handler', as: 'slot_import'
-
-      # TODO: remove routes
-      patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
@@ -46,7 +43,7 @@ Rails.application.routes.draw do
       post ':id/slotgroups', to: 'slots#add_to_groups'
       delete ':id/slotgroups', to: 'slots#remove_from_groups'
 
-      # currently unused
+      # TODO: remove endpoint
       get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
     end
 

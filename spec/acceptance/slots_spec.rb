@@ -360,55 +360,6 @@ resource "Slots" do
     end
   end
 
-  post "/v1/stdslot" do
-    header "Content-Type", "application/json"
-    header "Accept", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :visibility,
-              "Visibility of the Slot (private/friends/foaf/public)",
-              required: true
-    parameter :slotSets,
-              "Array with UUIDs of the SlotGroups and SlotSets the slot " \
-              "should be added to",
-              required: false
-    # TODO: response needs array with invalid slotset uuids
-
-    include_context "default slot parameter"
-
-  end
-
-  patch "/v1/metaslot/:id" do
-    header "Content-Type", "application/json"
-    header "Authorization", :auth_header
-
-    parameter :id, "ID of the slot to update", required: true
-
-    describe "Update an existing MetaSlot" do
-      parameter :title, "Updated title of slot"
-      parameter :startDate, "Updated Startdate and Time of the Slot"
-      parameter :endDate, "Updated Enddate and Time of the Slot (startdate + duration)"
-      #parameter :openEnd, "Updated OpenEnd Boolean Flag"
-
-      let!(:meta_slot) { create(:meta_slot, creator: current_user) }
-      let(:id) { meta_slot.id }
-      let(:title) { "New title for a Slot" }
-
-      example "Update MetaSlot", document: :v1 do
-        explanation "Update content of MetaSlot.\n\n" \
-                    "User must be creator of MetaSlot.\n\n" \
-                    "returns 204 if update succeded \n\n" \
-                    "returns 404 if User not creator or ID is invalid\n\n" \
-                    "returns 422 if parameters are invalid"
-        do_request
-
-        expect(response_status).to eq(204)
-        expect(response_body).to eq("")
-        expect(MetaSlot.last.title).to eq title
-      end
-    end
-  end
-
   patch "/v1/slots/:id" do
     header "Content-Type", "application/json"
     header "Authorization", :auth_header

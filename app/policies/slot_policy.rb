@@ -70,7 +70,7 @@ class SlotPolicy < ApplicationPolicy
 
   # actions
 
-  # FIX: remove when globalslot-reslot is updated
+  # TODO: remove when globalslot-reslot is updated
   def create_reslot?
     return false if slot.StdSlotPrivate?
     current_user_has_read_access?
