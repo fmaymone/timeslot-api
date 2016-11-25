@@ -1,6 +1,8 @@
 #Changelog
 
 ## upcoming
+- remove depricated endpoints
+- update gems
 - group preview slots now contain media items
 - improve suggested users, get rid of default suggested user, use newest instead
 - add new healthcheck endpoint
@@ -10,6 +12,7 @@
 - add papertrail logging for elastic beanstalk
 - add aws architecture diagram
 - load elastic beanstalk configs from s3
+- add apple test user to database seed
 
 
 ## v0.9.3 (unreleased)
