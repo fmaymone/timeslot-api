@@ -608,7 +608,6 @@ resource "Slots" do
 
       example "Delete StdSlot with invalid ID returns Not found",
               document: false do
-        skip 'needs fix'
         do_request
         expect(response_status).to eq(404)
       end
