@@ -19,7 +19,6 @@ Rails.application.routes.draw do
       post 'import', to: 'import#handler', as: 'slot_import'
 
       # TODO: remove routes
-      patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
       delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
       patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     end

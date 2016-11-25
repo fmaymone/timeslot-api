@@ -104,23 +104,6 @@ module V1
       end
     end
 
-    # TODO: deprecated, remove this at some point
-    # PATCH /v1/stdslot/1
-    def update_stdslot
-      @slot = current_user.std_slots.find(params[:id])
-      authorize @slot
-
-      @slot.update_from_params(meta: meta_params, visibility: visibility,
-                               media: media_params, notes: note_param,
-                               alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
     # DELETE /v1/slot/1
     def delete
       slot_id = params[:id].to_i

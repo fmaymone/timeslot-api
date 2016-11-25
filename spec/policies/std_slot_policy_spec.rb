@@ -5,7 +5,7 @@ describe StdSlotPolicy do
 
   let(:slot) { create(:std_slot) }
 
-  permissions :update?, :update_stdslot?, :delete? do
+  permissions :update?, :delete? do
     let(:owner) { create(:user) }
     let(:creator) { create(:user) }
 
@@ -36,9 +36,7 @@ describe StdSlotPolicy do
   end
 
   describe 'for a visitor / invalid or missing auth_token' do
-    let(:permissions) {
-      [:update?, :update_stdslot?]
-    }
+    let(:permissions) { [:update?] }
     let(:user) { nil }
 
     it "raises MissingCurrentUserError" do
