@@ -1,6 +1,7 @@
 #Changelog
 
 ## upcoming
+- users default calendars are shown in schedule now
 - load papertrail config from env vars
 - remove depricated endpoints
 - update gems

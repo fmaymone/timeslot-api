@@ -11,6 +11,7 @@ class NewUser
     if new_user.basic? || new_user.public_user?
       create_device(new_user: new_user, device: @device_params) if @device_params
       create_default_calendars(user: new_user)
+      show_default_calendars_in_schedule(user: new_user)
     end
     new_user
   end
@@ -64,6 +65,12 @@ class NewUser
     return public_group unless public_group.errors.empty?
 
     true
+  end
+
+  private def show_default_calendars_in_schedule(user:)
+    user.memberships.each do |ms|
+      ms.update(show_slots_in_schedule: true)
+    end
   end
 
   private def create_device(new_user:, device:)
