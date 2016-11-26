@@ -1,6 +1,7 @@
 #Changelog
 
 ## upcoming
+- load papertrail config from env vars
 - remove depricated endpoints
 - update gems
 - group preview slots now contain media items
