@@ -1,6 +1,9 @@
 #Changelog
 
 ## upcoming
+
+
+## v0.9.4 (27.11.2016)
 - users default calendars are shown in schedule now
 - load papertrail config from env vars
 - remove depricated endpoints
@@ -8,7 +11,7 @@
 - group preview slots now contain media items
 - improve suggested users, get rid of default suggested user, use newest instead
 - add new healthcheck endpoint
-- add endpoint for client version checks
+- add endpoint for client version checks, new ENV_VARS
 - allow setting of users firstName, middleName, lastName, gender
 - cleanup elastic beanstalk configs
 - add papertrail logging for elastic beanstalk
@@ -34,7 +37,6 @@
 - locations now work based on uuids
 - Gemfile:
   - add immutable-struct (https://github.com/stitchfix/immutable-struct)
-  - remove rack-cors
 
 - and many other things...
 
