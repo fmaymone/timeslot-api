@@ -37,6 +37,7 @@ We develop on OSX and Ubuntu.
 ## Env Variables
 
 Setting environment variables can be done e.g. via ```.env``` or with [another approach](http://stackoverflow.com/a/11765775/531439) which we use atm, but we'll might switch to Rails ```secrets.yaml```.
+If deploying to AWS with ElasticBeanstalk the secret environment variables like database credentials are fetched from an S3 Bucket (                      "https://s3.eu-central-1.amazonaws.com/timeslot.casino.beanstalk.configs/") and are expected to be defined in a file called '{ELASTICBEANSTALK_ENVIRONMENT_NAME}_config_variables.rb'. In this file the variables are defined in the same way as below.
 
 
 ```bash
@@ -56,7 +57,7 @@ ENV['PAGINATION_MAX_LIMIT'] = '100' # depends on the environment...
 
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
 ENV['WEB_IMPORTER_PASSWORD'] = 'Q8NUwaR4' # password used by web-import service
-ENV['WEB_CONCURRENCY] = ???
+ENV['WEB_CONCURRENCY] = 2 # number of puma workers
 
 # maintenance
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
