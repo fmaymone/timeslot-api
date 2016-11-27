@@ -79,16 +79,17 @@ The Data Team provides an elasticSearch - Slot Search Interface for it's crawler
 ```bash
 ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_URL']) # elastic search url
 ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_NAME'] # username
-ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD']
+ENV['TS_GLOBALSLOTS_SEARCH_SERVICE_PASSWORD'] # password
 
 ```
 ## Global Slot Retrieval Service
 
 Allows to get a Global Slot by its **muid** (slot_uuid).
-```
-ENV['TS_DATA_MALL_URL'])
-ENV['TS_DATA_MALL_NAME'] || "tsgatekeeper"
-ENV['TS_DATA_MALL_PASSWORD'] || "***REMOVED***"
+
+```bash
+ENV['TS_DATA_MALL_URL']) # data mall url
+ENV['TS_DATA_MALL_NAME'] # username
+ENV['TS_DATA_MALL_PASSWORD'] # password
 ```
 
 # External Services
