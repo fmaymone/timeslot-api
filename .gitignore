@@ -81,8 +81,7 @@ pickle-email-*.html
 .env.test
 .powenv
 .rbenv-gemsets
-config/app_environment_variables.rb
-/aws-secret-configs
+/secret-configs
 .elasticbeanstalk/saved_configs
 
 # ignore vcr cassettes

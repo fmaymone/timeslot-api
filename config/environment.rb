@@ -6,7 +6,7 @@ require File.expand_path('../application', __FILE__)
 # so that they are loaded before environments/*.rb
 # http://stackoverflow.com/a/11765775/531439
 if Rails.env.test? || Rails.env.development?
-  app_env_vars = File.join(Rails.root, 'config', 'app_environment_variables.rb')
+  app_env_vars = File.join(Rails.root, 'secret-configs', 'app_environment_variables.rb')
   load(app_env_vars) if File.exist?(app_env_vars)
 # also use this on aws to load env vars from S3
 # works in conjunction with .ebextensions/database.config
