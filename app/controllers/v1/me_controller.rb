@@ -172,6 +172,9 @@ module V1
       authorize :me
       new_friend = User.find params[:user_id]
 
+      # can not befriend yourself
+      return head :unprocessable_entity if current_user.id == new_friend.id
+
       friendship = current_user.initiate_friendship new_friend.id
 
       render "v1/users/show", locals: { user: new_friend,

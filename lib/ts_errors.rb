@@ -31,4 +31,8 @@ module TSErrors
 
   # Raised when a slot should be added to a deleted SlotGroup
   class SlotGroupDeleted < StandardError; end
+
+  # Raised when a user is already befriended with another user or tries
+  # to befriend himself
+  class DuplicateEntry < StandardError; end
 end

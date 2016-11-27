@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
 
   rescue_from ParameterInvalid, with: :unprocessable_entity
   rescue_from PaginationError, with: :unprocessable_entity
+  rescue_from DuplicateEntry, with: :unprocessable_entity
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
 
   rescue_from ActiveRecord::RecordNotFound do |e|

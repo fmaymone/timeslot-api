@@ -25,41 +25,4 @@ RSpec.describe V1::SlotsController, type: :controller do
       expect(response).to render_template("show")
     end
   end
-
-  describe "POST create_stdslot" do
-    describe "with valid params" do
-      let(:valid_attributes) {
-        attributes_for(:meta_slot, creator: current_user).merge(
-          visibility: 'private')
-      }
-      it "responds with http status Created (201)" do
-        post :create_stdslot, valid_attributes
-        expect(response).to have_http_status(:created)
-      end
-
-      it "renders the create template" do
-        post :create_stdslot, valid_attributes
-        expect(response).to render_template("create")
-      end
-
-      it "creates a new MetaSlot" do
-        expect {
-          post :create_stdslot, valid_attributes
-        }.to change(MetaSlot, :count).by(1)
-      end
-
-      it "creates a new StdSlot" do
-        expect {
-          post :create_stdslot, valid_attributes
-        }.to change(StdSlot.unscoped, :count).by(1)
-      end
-
-      it "creates a new SlotSetting" do
-        expect {
-          post :create_stdslot, valid_attributes.merge(
-                 settings: { alerts: '1110111010' })
-        }.to change(SlotSetting, :count).by(1)
-      end
-    end
-  end
 end

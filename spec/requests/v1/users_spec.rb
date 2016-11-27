@@ -173,6 +173,37 @@ RSpec.describe "V1::Users", type: :request do
           expect(json).to have_key('id')
         end
       end
+
+      context "default calendars" do
+        let(:valid_attributes) {
+          attributes_for(:user, :with_email, :with_password, username: "Enio")
+        }
+        it "creates a private calendar for the user" do
+          post "/v1/users", valid_attributes
+          new_user = User.last
+          expect(new_user.username).to eq "Enio"
+          expect(new_user.own_groups.non_public.count).to eq 1
+        end
+
+        it "creates a public calendar for the user" do
+          post "/v1/users", valid_attributes
+          new_user = User.last
+          expect(new_user.username).to eq "Enio"
+          expect(new_user.own_groups.public.count).to eq 1
+        end
+
+        it "shows the default calendars in the users schedule" do
+          post "/v1/users", valid_attributes
+          new_user = User.last
+          expect(new_user.username).to eq "Enio"
+          expect(new_user.own_groups.count).to eq 2
+          expect(new_user.active_memberships.count).to eq 2
+          expect(new_user.active_memberships.first.show_slots_in_schedule)
+            .to eq true
+          expect(new_user.active_memberships.second.show_slots_in_schedule)
+            .to eq true
+        end
+      end
     end
 
     describe "with invalid params" do

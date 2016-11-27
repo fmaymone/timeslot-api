@@ -1,6 +1,11 @@
 #Changelog
 
 ## upcoming
+- users default calendars are shown in schedule now
+- load papertrail config from env vars
+- remove depricated endpoints
+- update gems
+- group preview slots now contain media items
 - improve suggested users, get rid of default suggested user, use newest instead
 - add new healthcheck endpoint
 - add endpoint for client version checks
@@ -9,6 +14,7 @@
 - add papertrail logging for elastic beanstalk
 - add aws architecture diagram
 - load elastic beanstalk configs from s3
+- add apple test user to database seed
 
 
 ## v0.9.3 (unreleased)
