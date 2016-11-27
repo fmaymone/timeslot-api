@@ -1,7 +1,6 @@
 class Friendship < ActiveRecord::Base
   include UserActivity
-
-  class DuplicateEntry < StandardError; end
+  include TSErrors
 
   after_commit AuditLog
   before_create :check_duplicate
@@ -105,7 +104,7 @@ class Friendship < ActiveRecord::Base
       msg = "reverse friendship from #{user_id} to #{friend_id} already exists"
       Rails.logger.warn {{ duplicate_friendship: msg }}
       Airbrake.notify(DuplicateEntry, duplicate_friendship: msg)
-      fail DuplicateEntry, duplicate_friendship: msg
+      raise DuplicateEntry, duplicate_friendship: msg
     end
   end
 

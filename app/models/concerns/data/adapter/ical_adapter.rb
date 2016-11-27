@@ -53,7 +53,7 @@ class IcalAdapter < Adapter
   private def import_file(freebusys: false, todos: true, journals: false)
     events = []
 
-    Icalendar.parse(@file).each do |cal|
+    Icalendar::Calendar.parse(@file).each do |cal|
       events += cal.events    # by default
       events += cal.freebusys if(freebusys)
       events += cal.todos     if(todos)

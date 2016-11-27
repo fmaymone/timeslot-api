@@ -8,6 +8,11 @@ require File.expand_path('../application', __FILE__)
 if Rails.env.test? || Rails.env.development?
   app_env_vars = File.join(Rails.root, 'config', 'app_environment_variables.rb')
   load(app_env_vars) if File.exist?(app_env_vars)
+# also use this on aws to load env vars from S3
+# works in conjunction with .ebextensions/database.config
+elsif Rails.env.production?
+  app_env_vars = File.join('/tmp', 'app_environment_variables.rb')
+  load(app_env_vars) if File.exist?(app_env_vars)
 end
 
 # some timeslot variables, put them here until we need a better place
@@ -28,8 +33,6 @@ PAGINATION_DEFAULT_LIMIT = ENV['PAGINATION_DEFAULT_LIMIT'].try(:to_i) || 40
 PAGINATION_MAX_LIMIT = ENV.fetch('PAGINATION_MAX_LIMIT', 100).to_i
 PAGINATION_DEFAULT_FILTER = ENV.fetch('PAGINATION_DEFAULT_FILTER', 'none')
 PAGINATION_DEFAULT_MODE = ENV.fetch('PAGINATION_DEFAULT_MODE', 'all')
-
-SUGGESTED_USER_EMAIL = ENV.fetch('SUGGESTED_USER_EMAIL', 'kalirad@me.com')
 
 # Initialize the Rails application.
 Rails.application.initialize!

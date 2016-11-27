@@ -74,36 +74,6 @@ module V1
       service.adjust_visibility(slot, visibility, sets)
     end
 
-    # TODO: deprecated, remove this
-    # POST /v1/stdslot
-    def create_stdslot
-      authorize :stdSlot
-      @slot = BaseSlot.create_slot(meta: meta_params,
-                                   visibility: enforce_visibility,
-                                   media: media_params, notes: note_param,
-                                   alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :create, status: :created, locals: { slot: @slot }
-      else
-        render json: { error: @slot.errors },
-               status: :unprocessable_entity
-      end
-    end
-
-    # PATCH /v1/metaslot/1
-    # TODO: Do we want to keep this?
-    def update_metaslot
-      @meta_slot = current_user.created_slots.find(params[:id])
-      authorize @meta_slot
-
-      if @meta_slot.update(meta_params)
-        head :no_content
-      else
-        render json: @meta_slot.errors, status: :unprocessable_entity
-      end
-    end
-
     # PATCH /v1/slots/1
     def update
       @slot = current_user.std_slots.find(params[:id])
@@ -112,23 +82,6 @@ module V1
       @slot.update_from_params(meta: meta_params,
                                media: media_params, notes: note_param,
                                description: params[:description],
-                               alerts: alerts_param, user: current_user)
-
-      if @slot.errors.empty?
-        render :show, locals: { slot: @slot }
-      else
-        render json: @slot.errors.messages, status: :unprocessable_entity
-      end
-    end
-
-    # TODO: deprecated, remove this at some point
-    # PATCH /v1/stdslot/1
-    def update_stdslot
-      @slot = current_user.std_slots.find(params[:id])
-      authorize @slot
-
-      @slot.update_from_params(meta: meta_params, visibility: visibility,
-                               media: media_params, notes: note_param,
                                alerts: alerts_param, user: current_user)
 
       if @slot.errors.empty?
@@ -289,23 +242,23 @@ module V1
                                   share_with_friends: @share_with_friends }
     end
 
-    # POST /v1/slots/1/slotsets
+    # POST /v1/slots/1/slotgroups
     def add_to_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
-      add_to_slotsets(@slot, params[:slot_groups])
+      add_to_slotsets(@slot, params.require(:slot_groups))
 
       render :slotgroups, locals: { slot: @slot }
     end
 
-    # DELETE /v1/slots/1/slotsets
+    # DELETE /v1/slots/1/slotgroups
     def remove_from_groups
       @slot = BaseSlot.get(params[:id])
       authorize @slot
 
       # TODO: update spec
-      if params[:slot_groups].delete(current_user.my_cal_uuid)
+      if params.require(:slot_groups).delete(current_user.my_cal_uuid)
         # current_user.passengerships.find_by(slot: @slot).try(:delete)
         current_user.passengerships.find_by(slot: @slot).hide_from_my_schedule
       end
@@ -324,14 +277,6 @@ module V1
       render :slotgroups, locals: { slot: @slot }
     end
 
-    # GET /v1/slots/1/history
-    def reslot_history
-      @slot = BaseSlot.get(params[:id])
-      authorize @slot
-
-      render :reslot_history
-    end
-
     private def enforce_visibility
       params.require :visibility
       visibility
@@ -344,7 +289,7 @@ module V1
 
       # Check validity of date format
       # metaSlotId is (IMHO only) requiered for copy slot
-      p = params.permit(:title, :start_date, :end_date, :meta_slot_id,
+      p = params.permit(:title, :start_date, :end_date, :rrule, :meta_slot_id,
                         location:
                           [:name, :thoroughfare, :sub_thoroughfare,
                            :locality, :sub_locality, :administrative_area,

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'application#root'
+
   namespace :v1, defaults: { format: :json } do
     # TODO: rename connect routes
     # scope :connect do
@@ -15,12 +17,6 @@ Rails.application.routes.draw do
       delete 'share/:id', to: 'share#delete', as: 'share_delete'
       post 'export/:action', to: 'export#:action', as: 'slot_export'
       post 'import', to: 'import#handler', as: 'slot_import'
-
-      # TODO: remove routes
-      post 'stdslot', to: 'slots#create_stdslot'
-      patch 'stdslot/:id', to: 'slots#update_stdslot', as: 'stdslot_update'
-      delete 'stdslot/:id', to: 'slots#delete', as: 'stdslot_delete'
-      patch 'metaslot/:id', to: 'slots#update_metaslot', as: 'metaslot_update'
     end
 
     scope :slots, constraints: { id: /\d+/ } do
@@ -46,9 +42,6 @@ Rails.application.routes.draw do
       get ':id/slotsets', to: 'slots#slotsets'
       post ':id/slotgroups', to: 'slots#add_to_groups'
       delete ':id/slotgroups', to: 'slots#remove_from_groups'
-
-      # currently unused
-      get ':id/history', to: 'slots#reslot_history', as: 'reslot_history'
     end
 
     scope :globalslots do
@@ -59,7 +52,7 @@ Rails.application.routes.draw do
     get 'media-signature', to: 'media#create_signature'
 
     scope :me do
-      get '', to: 'me#show', as: 'show_me'
+      root 'me#show', as: 'show_me'
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
@@ -140,8 +133,10 @@ Rails.application.routes.draw do
       get ':code', to: 'invitecodes#show'
     end
 
-    if ENV['ENABLE_IOS_DB_CLEAN']
-      get 'ios/clean-db', to: 'ios#clean_db'
+    scope :maintenance do
+      root 'maintenances#health'
+      get 'clientversions', to: 'maintenances#clientversions'
+      get 'clean-db', to: 'maintenances#clean_db' if ENV['ENABLE_IOS_DB_CLEAN'] == 'true'
     end
   end
 

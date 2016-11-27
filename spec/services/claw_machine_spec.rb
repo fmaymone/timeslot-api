@@ -17,7 +17,6 @@ RSpec.describe ClawMachine, type: :service do
         let(:search_term) { "baye" }
 
         it "returns array of slots matching the search criteria" do
-          skip 'not enough football slots in the claw machine atm'
 
           result = described_class.new.search(category: category,
                                               query_params: query_params)
@@ -36,7 +35,6 @@ RSpec.describe ClawMachine, type: :service do
         let(:search_term) { "lov" }
 
         it "returns array of slots matching the search criteria" do
-          skip 'movie pilot is having issues'
           result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)
@@ -54,6 +52,7 @@ RSpec.describe ClawMachine, type: :service do
         let(:search_term) { "zdf" }
 
         it "returns array of slots matching the search criteria" do
+          skip 'no television slots in data mall atm'
           result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)
@@ -71,6 +70,7 @@ RSpec.describe ClawMachine, type: :service do
         let(:search_term) { "Tresor" }
 
         it "returns array of slots matching the search criteria" do
+          skip 'no clubbing slots in data mall atm'
           result = described_class.new.search(category: category,
                                               query_params: query_params)
           json = JSON.parse(result)

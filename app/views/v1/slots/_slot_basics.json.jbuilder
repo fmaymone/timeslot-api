@@ -3,6 +3,7 @@ json.extract!(slot,
               :title,
               :description,
               :start_date,
+              :rrule,
               :created_at,
               :updated_at,
               :deleted_at

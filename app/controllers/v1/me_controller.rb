@@ -139,10 +139,7 @@ module V1
     # GET /v1/me/suggested_users
     def suggested_users
       authorize :me
-
-      @users = User.find some_foafs
-      @users = [User.find_by(email: SUGGESTED_USER_EMAIL)] if @users.empty?
-
+      @users = User.find suggested_user_ids
       render "v1/users/suggesties"
     end
 
@@ -175,11 +172,14 @@ module V1
       authorize :me
       new_friend = User.find params[:user_id]
 
+      # can not befriend yourself
+      return head :unprocessable_entity if current_user.id == new_friend.id
+
       friendship = current_user.initiate_friendship new_friend.id
 
       render "v1/users/show", locals: { user: new_friend,
                                         friendship: friendship,
-                                        slots: []}
+                                        slots: [] }
     end
 
     # DELETE /v1/me/friendship/1
@@ -193,7 +193,7 @@ module V1
 
       render "v1/users/show", locals: { user: no_friend,
                                         friendship: friendship,
-                                        slots: []}
+                                        slots: [] }
     end
 
     # POST /v1/me/add_friends
@@ -214,6 +214,7 @@ module V1
       head :ok
     end
 
+    # find 10 friends of friends
     private def some_foafs
       foaf_ids = []
       current_user.friends.each do |friend|
@@ -222,9 +223,19 @@ module V1
       # current_user.friends_ids.each do |friend|
       #   foaf_ids += UserQuery::Relationship.new(friend).my_friends.pluck(:id)
       # end
-      foaf_ids.delete(current_user.id) # remove me
       foaf_ids -= current_user.contacts_ids # remove my friends & requested friends
       foaf_ids.uniq.sample(10) # take 10 random users
+    end
+
+    # take 5 of the newest 15 users
+    private def newest_users
+      User.where(role: 0).reverse_order.pluck(:id).take(15).sample(5)
+    end
+
+    private def suggested_user_ids
+      suggested_ids = (some_foafs | newest_users)
+      suggested_ids.delete(current_user.id) # remove me
+      suggested_ids - current_user.contacts_ids # remove my friends & requested friends
     end
 
     private def user_params

@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
 
   rescue_from ParameterInvalid, with: :unprocessable_entity
   rescue_from PaginationError, with: :unprocessable_entity
+  rescue_from DuplicateEntry, with: :unprocessable_entity
   rescue_from ActionController::ParameterMissing, with: :unprocessable_entity
 
   rescue_from ActiveRecord::RecordNotFound do |e|
@@ -43,6 +44,11 @@ class ApplicationController < ActionController::API
   rescue_from DataTeamServiceError do |exception|
     Airbrake.notify(exception, current_user: current_user, params: params)
     render json: { error: exception.message }, status: :service_unavailable
+  end
+
+  # GET /
+  def root
+    head :unauthorized
   end
 
   private def unprocessable_entity(exception)

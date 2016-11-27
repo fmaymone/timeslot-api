@@ -70,10 +70,8 @@ class SlotPolicy < ApplicationPolicy
 
   # actions
 
-  # FIX: remove when globalslot-reslot is updated
   def create_reslot?
-    return false if slot.StdSlotPrivate?
-    current_user_has_read_access?
+    true
   end
 
   # TODO: non-public reslots can be added to private slot_groups, but not to

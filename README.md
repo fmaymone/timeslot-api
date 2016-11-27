@@ -1,16 +1,17 @@
-# TS RAILS BACKEND
+# Casino - Timeslot Rails Backend
 
 * [CHANGELOG](CHANGELOG.md)
 * [Api Endpoint Documentation](doc/api/v1/index.markdown)
-* [Project's Agile Jira Work Board](https://timeslot.atlassian.net/projects/BKD/summary)
 * [App-Specification](https://docs.google.com/a/timeslot.com/document/d/12MZDzthoK6RrKhuJKfERfI6xpvZi_DP6ri0VWbZmnPc/edit?usp=sharing) (google docs), [old app spec](https://timeslotapi.hackpad.com/IfMfC58g3jd#Timeslot-APP) (Hackpad)
 * [Entity Relationship Diagram](doc/erd_adv-3.6.15.pdf) [[2](doc/erd_adv.pdf)] [[3](doc/erd.pdf)]
 * [How-To Setup Development Environment](doc/setup_devenv.md)
 * [Social Activity](doc/social_activity.md)
 * [Activity Feed API](doc/feed_examples.md)
 * [Follower Model API](doc/follow_examples.md)
-* [Links to Some Useful Extra Information](doc/useful_links.md)
-* [Deployment Process](doc/deployment_process.md)
+
+# Architecture
+
+![Casino diagram](doc/images/cloudcraft-Casino-API_Backend.png)
 
 # Notes
 
@@ -36,6 +37,7 @@ We develop on OSX and Ubuntu.
 ## Env Variables
 
 Setting environment variables can be done e.g. via ```.env``` or with [another approach](http://stackoverflow.com/a/11765775/531439) which we use atm, but we'll might switch to Rails ```secrets.yaml```.
+If deploying to AWS with ElasticBeanstalk the secret environment variables like database credentials are fetched from an S3 Bucket (                      "https://s3.eu-central-1.amazonaws.com/timeslot.casino.beanstalk.configs/") and are expected to be defined in a file called '{ELASTICBEANSTALK_ENVIRONMENT_NAME}_config_variables.rb'. In this file the variables are defined in the same way as below.
 
 
 ```bash
@@ -53,10 +55,18 @@ ENV['PAGINATION_DEFAULT_MODE'] = 'all' # if not provided by client
 ENV['PAGINATION_DEFAULT_LIMIT'] = '40' # if not provided by client
 ENV['PAGINATION_MAX_LIMIT'] = '100' # depends on the environment...
 
-ENV['SUGGESTED_USER_EMAIL'] = 'kalirad@me.com' # the email for the user which is suggested as a friend if a user had no friends yet
-
 ENV['TS_SLOT_WEBSHARING_URL'] = 'http://timesl.ot/' # domain name for the slot websharing service app, given we have one
+ENV['WEB_IMPORTER_PASSWORD'] = 'Q8NUwaR4' # password used by web-import service
+ENV['WEB_CONCURRENCY] = 2 # number of puma workers
+
+# maintenance
 ENV['ENABLE_IOS_DB_CLEAN'] = 'true' # to enable the endpoint for db cleaning
+
+# let the frontend know if it needs to update itself
+ENV['IOS_CURRENT_CLIENT_VERSION'] = '1.000'
+ENV['IOS_MINIMUM_CLIENT_VERSION'] = '1.000'
+ENV['ANDROID_CURRENT_CLIENT_VERSION'] = '1.000'
+ENV['ANDROID_MINIMUM_CLIENT_VERSION'] = '1.000'
 ```
 
 

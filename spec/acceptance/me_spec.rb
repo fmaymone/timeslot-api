@@ -432,7 +432,9 @@ resource "Me" do
         expect(response_body).not_to include current_user.username
         expect(response_body).to include friendship_1.friend.username
         expect(response_body).to include friendship_2.friend.username
-        expect(response_body).not_to include friendship_3.friend.username
+        # expect(response_body).not_to include friendship_3.friend.username
+        # after changing the algorithm it's okay to have unrelated users as
+        # suggestion
         expect(response_body).not_to include kaweh.username
         expect(response_body).not_to include friend.username
         expect(response_body).not_to include pending.username
