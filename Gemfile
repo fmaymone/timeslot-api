@@ -89,6 +89,8 @@ group :development, :test do
 
   gem 'guard-puma'
 
+  gem 'terminal-notifier'
+
   gem 'terminal-notifier-guard'
 
   gem 'rb-fsevent'
