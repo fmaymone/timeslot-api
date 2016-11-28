@@ -38,6 +38,7 @@ We develop on OSX and Ubuntu.
 
 Setting environment variables can be done e.g. via ```.env``` or with [another approach](http://stackoverflow.com/a/11765775/531439) which we use atm, but we'll might switch to Rails ```secrets.yaml```.
 If deploying to AWS with ElasticBeanstalk the secret environment variables like database credentials are fetched from an S3 Bucket (                      "https://s3.eu-central-1.amazonaws.com/timeslot.casino.beanstalk.configs/") and are expected to be defined in a file called '{ELASTICBEANSTALK_ENVIRONMENT_NAME}_config_variables.rb'. In this file the variables are defined in the same way as below.
+On a local machine the configs are expected at ```secret-configs`` folder, which is not checked into version control.
 
 
 ```bash

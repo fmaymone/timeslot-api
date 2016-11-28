@@ -45,7 +45,7 @@ sudo ./install_server.sh
 ```
 Configure Redis locally (do not set this on production environment!):
 ```bash
-redis-cli 
+redis-cli
 CONFIG SET requirepass false
 ```
 
@@ -92,8 +92,8 @@ redis-cli PING
 
 * install ruby:
 ```bash
-rbenv install 2.1.6
-rbenv global 2.1.6
+rbenv install 2.3.1
+rbenv global 2.3.1
 ruby -v
 ```
 
@@ -131,11 +131,10 @@ rake db:migrate
 
 ## Start server
 
-* prepare local server and test env
+* start local server and tests
 
 ```bash
-gem install foreman
-foreman start
+rails s
 ```
 
 

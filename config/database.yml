@@ -27,6 +27,12 @@ default: &default
 
 development:
   <<: *default
+  # unislot db
+  # database: unislot_dev_db
+  # username: unislot_dbuser
+  # password: dvbV8hC0j$w&nlrApDz71XPmOrBBJu
+  # host: unislot-development-db.cdbraqbrossn.eu-central-1.rds.amazonaws.com
+
   database: <%= ENV['DEVELOPMENT_DATABASE'] || 'ts_rails_backend_development' %>
 
   # The specified database role being used to connect to postgres.
@@ -45,7 +51,7 @@ development:
 
   # The TCP port the server listens on. Defaults to 5432.
   # If your server runs on a different port number, change accordingly.
-  #port: 5432
+  # port: 5432
 
   # Schema search path. The server defaults to $user,public
   #schema_search_path: myapp,sharedapp,public
