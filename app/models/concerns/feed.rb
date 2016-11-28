@@ -142,6 +142,9 @@ module Feed
           break unless activity['action'] == 'friendship' # || activity['action'] == 'accept'
         end
       end
+    rescue => error
+      error_handler(error, target, context)
+    else
       removed_recipients.uniq!
       removed_recipients
     end
@@ -330,12 +333,16 @@ module Feed
         @storage.pipe do
           # Loop through all related user feeds through social relations
           %w(User News Notification Request Discovery).each_with_index do |feed, index|
-            recipients[index].each do |user_id|
-              feed_index = "Feed:#{user_id}:#{feed}"
-              # Remove activity by object (removes a single pointer to an activity)
-              @storage.remove_all(feed_index, activity)
-              # Store the feeds update time to force re-validation of the cache
-              @storage.set("Update:#{feed_index}", time)
+            begin
+              recipients[index].each do |user_id|
+                feed_index = "Feed:#{user_id}:#{feed}"
+                # Remove activity by object (removes a single pointer to an activity)
+                @storage.remove_all(feed_index, activity)
+                # Store the feeds update time to force re-validation of the cache
+                @storage.set("Update:#{feed_index}", time)
+              end
+            rescue => error
+              error_handler(error, feed, [index, recipients])
             end
           end
         end
@@ -753,7 +760,7 @@ module Feed
     rescue => exception
       Airbrake.notify(exception, compressed_json: json,
                                  uncompressed_json: uncompressed_json)
-      Rails.logger.error { "Error parsing Json from Redis #{exception}, " \
+      Rails.logger.error { "Error 2 parsing Json from Redis #{exception}, " \
                            "value: #{uncompressed_json}" }
       uncompressed_json
     else
