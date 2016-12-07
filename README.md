@@ -171,6 +171,8 @@ Password is in LastPass Company Account.
 
 For ease of use check out [Papertrail CLI](https://github.com/papertrail/papertrail-cli#quick-start).
 
+- sometimes the rsyslog deamon stops working on the ec2 instance
+- to restart ssh into ec2 & ```sudo /sbin/service remote_syslog restart```
 
 # More Tools
 

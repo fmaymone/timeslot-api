@@ -832,7 +832,7 @@ resource "Slots" do
       let(:slotGroups) { [group_1.uuid,
                           current_user.slot_sets['my_public_slots_uuid']] }
 
-      it "adds the slot to the public calendar" do
+      example "adds the slot to the public calendar", document: false do
         uuid = current_user.slot_sets['my_public_slots_uuid']
         my_public_calendar = Group.find_by(uuid: uuid)
 
@@ -896,7 +896,7 @@ resource "Slots" do
 
       example "Remove Slot from multiple SlotGroups", document: :v1 do
         explanation "Send an array of slotGroup UUIDs and the slot will be " \
-                    "added to those slotGroups.\n\n" \
+                    "removed from those slotGroups.\n\n" \
                     "returns 404 if ID is invalid\n\n" \
                     "returns ???"
         expect(group_1.slots).to include slot
