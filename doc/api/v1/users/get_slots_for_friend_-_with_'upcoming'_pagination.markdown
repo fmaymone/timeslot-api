@@ -89,24 +89,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g
+<pre>Authorization: Token token=n9oeYTAvVyKgPAkm3-ZOJiWfQkM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/146/slots?limit=3&amp;moment=2016-08-30T09%3A51%3A11.987Z&amp;mode=upcoming</pre>
+<pre>GET /v1/users/147/slots?limit=3&amp;moment=2016-12-11T19%3A54%3A41.624Z&amp;mode=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2016-08-30T09:51:11.987Z
+moment: 2016-12-11T19:54:41.624Z
 mode: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/146/slots?limit=3&amp;moment=2016-08-30T09%3A51%3A11.987Z&amp;mode=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/147/slots?limit=3&amp;moment=2016-12-11T19%3A54%3A41.624Z&amp;mode=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=n9oeYTAvVyKgPAkm3-ZOJiWfQkM&quot;</pre>
 
 ### Response
 
@@ -117,11 +117,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;d99578ae3b8d774ee34837b7a7974a45&quot;
+ETag: W/&quot;f85a0ba5e5818cbeb1d345b311cea756&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f5b95ebf-0298-4b61-b61e-2144963939c4
-X-Runtime: 0.052487
-Content-Length: 2243</pre>
+X-Request-Id: 6cfd731e-cffb-4397-b8cd-cea71d9ce9f1
+X-Runtime: 0.050308
+Content-Length: 2276</pre>
 
 #### Status
 
@@ -134,33 +134,104 @@ Content-Length: 2243</pre>
   "paging" : {
     "limit" : 3,
     "mode" : "upcoming",
-    "moment" : "2016-08-30T09:51:11.987Z",
+    "moment" : "2016-12-11T19:54:41.624Z",
     "filter" : null,
     "earliest" : null,
     "latest" : null,
-    "before" : "NjMlMjAxNi0wOC0zMSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wNCAwMzo0NDowMi4wMDAwMDAwMDA=",
-    "after" : "NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=",
+    "before" : "NTklMjAxNi0xMi0xMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wNyAwNjo0NDowMi4wMDAwMDAwMDA=",
+    "after" : "NjElMjAxNi0xMi0xMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wOSAwODo0NDowMi4wMDAwMDAwMDA=",
     "poolSize" : 3
   },
   "data" : [
     {
-      "id" : 63,
-      "title" : "Slot title 219",
+      "id" : 59,
+      "title" : "Slot title 222",
       "description" : "",
-      "startDate" : "2016-08-31T00:00:00.000Z",
-      "createdAt" : "2016-08-30T09:51:11.979Z",
-      "updatedAt" : "2016-08-30T09:51:11.979Z",
+      "startDate" : "2016-12-12T00:00:00.000Z",
+      "rrule" : "",
+      "createdAt" : "2016-12-11T19:54:41.593Z",
+      "updatedAt" : "2016-12-11T19:54:41.593Z",
       "deletedAt" : null,
-      "endDate" : "2019-10-04T03:44:02.000Z",
+      "endDate" : "2019-10-07T06:44:02.000Z",
       "location" : null,
       "creator" : {
-        "id" : 146,
-        "username" : "User 874",
+        "id" : 147,
+        "username" : "User 883",
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:51:11.930Z",
-        "updatedAt" : "2016-08-30T09:51:11.930Z",
+        "createdAt" : "2016-12-11T19:54:41.559Z",
+        "updatedAt" : "2016-12-11T19:54:41.559Z",
+        "deletedAt" : null,
+        "image" : ""
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "omitted"
+      },
+      "visibility" : "friends",
+      "likerIds" : [],
+      "likes" : 0,
+      "commentsCounter" : 0,
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/59"
+    },
+    {
+      "id" : 60,
+      "title" : "Slot title 223",
+      "description" : "",
+      "startDate" : "2016-12-12T00:00:00.000Z",
+      "rrule" : "",
+      "createdAt" : "2016-12-11T19:54:41.610Z",
+      "updatedAt" : "2016-12-11T19:54:41.610Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-08T07:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 147,
+        "username" : "User 883",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-12-11T19:54:41.559Z",
+        "updatedAt" : "2016-12-11T19:54:41.559Z",
+        "deletedAt" : null,
+        "image" : ""
+      },
+      "notes" : [],
+      "media" : [],
+      "settings" : {
+        "alerts" : "omitted"
+      },
+      "visibility" : "friends",
+      "likerIds" : [],
+      "likes" : 0,
+      "commentsCounter" : 0,
+      "firstGroup" : null,
+      "slotGroupUuids" : [],
+      "url" : "http://example.org/v1/slots/60"
+    },
+    {
+      "id" : 61,
+      "title" : "Slot title 224",
+      "description" : "",
+      "startDate" : "2016-12-12T00:00:00.000Z",
+      "rrule" : "",
+      "createdAt" : "2016-12-11T19:54:41.620Z",
+      "updatedAt" : "2016-12-11T19:54:41.620Z",
+      "deletedAt" : null,
+      "endDate" : "2019-10-09T08:44:02.000Z",
+      "location" : null,
+      "creator" : {
+        "id" : 147,
+        "username" : "User 883",
+        "firstName" : null,
+        "middleName" : null,
+        "lastName" : null,
+        "createdAt" : "2016-12-11T19:54:41.559Z",
+        "updatedAt" : "2016-12-11T19:54:41.559Z",
         "deletedAt" : null,
         "image" : ""
       },
@@ -175,75 +246,7 @@ Content-Length: 2243</pre>
       "commentsCounter" : 0,
       "firstGroup" : null,
       "slotGroupUuids" : [],
-      "url" : "http://example.org/v1/slots/63"
-    },
-    {
-      "id" : 61,
-      "title" : "Slot title 217",
-      "description" : "",
-      "startDate" : "2016-09-05T00:00:00.000Z",
-      "createdAt" : "2016-08-30T09:51:11.959Z",
-      "updatedAt" : "2016-08-30T09:51:11.959Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-02T01:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 146,
-        "username" : "User 874",
-        "firstName" : null,
-        "middleName" : null,
-        "lastName" : null,
-        "createdAt" : "2016-08-30T09:51:11.930Z",
-        "updatedAt" : "2016-08-30T09:51:11.930Z",
-        "deletedAt" : null,
-        "image" : ""
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "omitted"
-      },
-      "visibility" : "friends",
-      "likerIds" : [],
-      "likes" : 0,
-      "commentsCounter" : 0,
-      "firstGroup" : null,
-      "slotGroupUuids" : [],
       "url" : "http://example.org/v1/slots/61"
-    },
-    {
-      "id" : 62,
-      "title" : "Slot title 218",
-      "description" : "",
-      "startDate" : "2016-09-05T00:00:00.000Z",
-      "createdAt" : "2016-08-30T09:51:11.968Z",
-      "updatedAt" : "2016-08-30T09:51:11.968Z",
-      "deletedAt" : null,
-      "endDate" : "2019-10-03T02:44:02.000Z",
-      "location" : null,
-      "creator" : {
-        "id" : 146,
-        "username" : "User 874",
-        "firstName" : null,
-        "middleName" : null,
-        "lastName" : null,
-        "createdAt" : "2016-08-30T09:51:11.930Z",
-        "updatedAt" : "2016-08-30T09:51:11.930Z",
-        "deletedAt" : null,
-        "image" : ""
-      },
-      "notes" : [],
-      "media" : [],
-      "settings" : {
-        "alerts" : "omitted"
-      },
-      "visibility" : "friends",
-      "likerIds" : [],
-      "likes" : 0,
-      "commentsCounter" : 0,
-      "firstGroup" : null,
-      "slotGroupUuids" : [],
-      "url" : "http://example.org/v1/slots/62"
     }
   ]
 }
@@ -252,22 +255,22 @@ Content-Length: 2243</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g
+<pre>Authorization: Token token=n9oeYTAvVyKgPAkm3-ZOJiWfQkM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/146/slots</pre>
+<pre>GET /v1/users/147/slots</pre>
 
 #### Query Parameters
 
-<pre>after: NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=</pre>
+<pre>after: NjElMjAxNi0xMi0xMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wOSAwODo0NDowMi4wMDAwMDAwMDA=</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/146/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=STacmYmvZ9rHh11uiOspmQl-M6g&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/147/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=n9oeYTAvVyKgPAkm3-ZOJiWfQkM&quot;</pre>
 
 ### Response
 
@@ -278,10 +281,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;555f9fd6fbf215ff957e76067d2f0a1b&quot;
+ETag: W/&quot;51727c5d839db454f002c36837fd0822&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3d1c10e5-e675-4c5d-b0ad-a67b8cc605bc
-X-Runtime: 0.020749
+X-Request-Id: 3c65b9a3-9a7f-4fba-841f-4e55adfb7965
+X-Runtime: 0.021965
 Content-Length: 225</pre>
 
 #### Status
@@ -299,7 +302,7 @@ Content-Length: 225</pre>
     "filter" : null,
     "earliest" : null,
     "latest" : null,
-    "before" : "NjIlMjAxNi0wOS0wNSAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wMyAwMjo0NDowMi4wMDAwMDAwMDA=",
+    "before" : "NjElMjAxNi0xMi0xMiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wOSAwODo0NDowMi4wMDAwMDAwMDA=",
     "after" : null,
     "poolSize" : 3
   },

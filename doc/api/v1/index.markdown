@@ -122,10 +122,8 @@
 ## Slots
 
 * [Create new slot](slots/create_new_slot.markdown)
-* [Get slot](slots/get_slot.markdown)
-* [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
-* [Update MetaSlot](slots/update_metaslot.markdown)
+* [Get slot](slots/get_slot.markdown)
 * [Update StdSlot - change title](slots/update_stdslot_-_change_title.markdown)
 * [Update Slot - Add notes](slots/update_slot_-_add_notes.markdown)
 * [Update Slot - Add media](slots/update_slot_-_add_media.markdown)

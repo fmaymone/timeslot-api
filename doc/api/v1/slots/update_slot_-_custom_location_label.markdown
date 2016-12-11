@@ -18,6 +18,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -96,6 +99,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -154,13 +160,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=gqnI8uobf7RxDCzbvcfdRhePIiw
+Authorization: Token token=9rjY2XA2PUbBD_C6FDBMiKVeE6I
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/17</pre>
+<pre>PATCH /v1/slots/15</pre>
 
 #### Body
 ```javascript
@@ -176,9 +182,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/17&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/15&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=gqnI8uobf7RxDCzbvcfdRhePIiw&quot;</pre>
+	-H &quot;Authorization: Token token=9rjY2XA2PUbBD_C6FDBMiKVeE6I&quot;</pre>
 
 ### Response
 
@@ -189,11 +195,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;52def160ac29507940d3990ff09727de&quot;
+ETag: W/&quot;06ae5c9fc2cc6e62fca7772542bf3cf9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: aec5df42-1562-442c-a234-7dca97c07437
-X-Runtime: 0.070821
-Content-Length: 984</pre>
+X-Request-Id: b44ef9f8-59ee-4980-b66b-167960257799
+X-Runtime: 0.114562
+Content-Length: 995</pre>
 
 #### Status
 
@@ -203,16 +209,17 @@ Content-Length: 984</pre>
 
 ```javascript
 {
-  "id" : 17,
-  "title" : "Slot title 173",
+  "id" : 15,
+  "title" : "Slot title 178",
   "description" : "",
-  "startDate" : "2019-09-12T05:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:08.211Z",
-  "updatedAt" : "2016-08-30T09:51:08.211Z",
+  "startDate" : "2019-09-17T10:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:37.275Z",
+  "updatedAt" : "2016-12-11T19:54:37.275Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-12T05:44:02.000Z",
+  "endDate" : "2019-10-17T10:44:02.000Z",
   "location" : {
-    "id" : "6660c8e5-46f3-4ef8-a203-a2e577d36a05",
+    "id" : "6423d566-97b5-4a7c-bd1d-e601201c8a73",
     "name" : "Soho House Custom",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -231,13 +238,13 @@ Content-Length: 984</pre>
     "placeId" : null
   },
   "creator" : {
-    "id" : 36,
-    "username" : "User 742",
+    "id" : 37,
+    "username" : "User 751",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:08.202Z",
-    "updatedAt" : "2016-08-30T09:51:08.202Z",
+    "createdAt" : "2016-12-11T19:54:37.259Z",
+    "updatedAt" : "2016-12-11T19:54:37.259Z",
     "deletedAt" : null,
     "image" : ""
   },

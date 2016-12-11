@@ -30,6 +30,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -127,7 +130,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=d_lSIq6R1XvgQfMphELuc0jGXro
+Authorization: Token token=wALN7UhlulqDV-aTbQ0garM2MMk
 Host: example.org
 Cookie: </pre>
 
@@ -139,7 +142,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/feed/user&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=d_lSIq6R1XvgQfMphELuc0jGXro&quot;</pre>
+	-H &quot;Authorization: Token token=wALN7UhlulqDV-aTbQ0garM2MMk&quot;</pre>
 
 ### Response
 
@@ -150,11 +153,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;1f3dd88c563fba4ebd117344bb7a4da3&quot;
+ETag: W/&quot;3ab8f6176e2a17b1e351de80402268fa&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2203232b-806b-476d-8d36-b4c86385867c
-X-Runtime: 0.014498
-Content-Length: 2524</pre>
+X-Request-Id: 4912ebab-2197-4318-927c-2f25f569ff03
+X-Runtime: 0.022280
+Content-Length: 2535</pre>
 
 #### Status
 
@@ -171,8 +174,8 @@ Content-Length: 2524</pre>
     {
       "target" : "slot",
       "action" : "comment",
-      "time" : "2016-08-30T09:50:48.565Z",
-      "id" : "8A15165CC2C84E0926C825474FE486BBD809621A",
+      "time" : "2016-12-11T19:54:17.567Z",
+      "id" : "FC36E6A818607687D535BC6957585AAB85E1D017",
       "message" : "You commented on the Slot: {slot}",
       "actors" : [
         {
@@ -181,8 +184,8 @@ Content-Length: 2524</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:48.561Z",
-          "updatedAt" : "2016-08-30T09:50:48.561Z",
+          "createdAt" : "2016-12-11T19:54:17.558Z",
+          "updatedAt" : "2016-12-11T19:54:17.558Z",
           "deletedAt" : null,
           "image" : ""
         }
@@ -193,12 +196,13 @@ Content-Length: 2524</pre>
         "title" : "Slot title 21",
         "description" : "",
         "startDate" : "2019-09-26T07:44:02.000Z",
-        "createdAt" : "2016-08-30T09:50:48.529Z",
-        "updatedAt" : "2016-08-30T09:50:48.573Z",
+        "rrule" : "",
+        "createdAt" : "2016-12-11T19:54:17.516Z",
+        "updatedAt" : "2016-12-11T19:54:17.574Z",
         "deletedAt" : null,
         "endDate" : "2019-10-26T07:44:02.000Z",
         "location" : {
-          "id" : "3cb2dbde-0948-4794-88fc-af04494e2efe",
+          "id" : "dc9dd7ff-02c3-429f-9017-31ab2d0f1f3b",
           "name" : "Acapulco",
           "thoroughfare" : null,
           "subThoroughfare" : null,
@@ -222,8 +226,8 @@ Content-Length: 2524</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:48.495Z",
-          "updatedAt" : "2016-08-30T09:50:48.495Z",
+          "createdAt" : "2016-12-11T19:54:17.487Z",
+          "updatedAt" : "2016-12-11T19:54:17.487Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -235,7 +239,7 @@ Content-Length: 2524</pre>
             "position" : 5,
             "localId" : null,
             "mediaType" : "audio",
-            "createdAt" : "2016-08-30T09:50:48.559Z",
+            "createdAt" : "2016-12-11T19:54:17.555Z",
             "duration" : null,
             "title" : "Title 369"
           },
@@ -245,7 +249,7 @@ Content-Length: 2524</pre>
             "position" : 4,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-08-30T09:50:48.553Z",
+            "createdAt" : "2016-12-11T19:54:17.552Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -255,7 +259,7 @@ Content-Length: 2524</pre>
             "position" : 3,
             "localId" : null,
             "mediaType" : "video",
-            "createdAt" : "2016-08-30T09:50:48.547Z",
+            "createdAt" : "2016-12-11T19:54:17.543Z",
             "duration" : null,
             "thumbnail" : null
           },
@@ -265,7 +269,7 @@ Content-Length: 2524</pre>
             "position" : 2,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-08-30T09:50:48.544Z"
+            "createdAt" : "2016-12-11T19:54:17.534Z"
           },
           {
             "mediaId" : 452,
@@ -273,7 +277,7 @@ Content-Length: 2524</pre>
             "position" : 1,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-08-30T09:50:48.540Z"
+            "createdAt" : "2016-12-11T19:54:17.525Z"
           },
           {
             "mediaId" : 451,
@@ -281,7 +285,7 @@ Content-Length: 2524</pre>
             "position" : 0,
             "localId" : null,
             "mediaType" : "image",
-            "createdAt" : "2016-08-30T09:50:48.537Z"
+            "createdAt" : "2016-12-11T19:54:17.522Z"
           }
         ],
         "settings" : {
@@ -300,8 +304,8 @@ Content-Length: 2524</pre>
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:50:48.495Z",
-        "updatedAt" : "2016-08-30T09:50:48.495Z",
+        "createdAt" : "2016-12-11T19:54:17.487Z",
+        "updatedAt" : "2016-12-11T19:54:17.487Z",
         "deletedAt" : null,
         "image" : ""
       }

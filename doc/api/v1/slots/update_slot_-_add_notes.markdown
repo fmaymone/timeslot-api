@@ -18,6 +18,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -62,6 +65,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : rrule
+Description : Repeating Rule for the slot
 
 Name : openEnd
 Description : OpenEnd Boolean Flag
@@ -121,13 +127,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=trpuK0g1pfLY-uQXM98bDlWPR3k
+Authorization: Token token=-Uc0fsiDMZGbLDmgw-fmjRJ9imM
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/13</pre>
+<pre>PATCH /v1/slots/11</pre>
 
 #### Body
 ```javascript
@@ -149,9 +155,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/13&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 182&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 183&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/11&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 182&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 183&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=trpuK0g1pfLY-uQXM98bDlWPR3k&quot;</pre>
+	-H &quot;Authorization: Token token=-Uc0fsiDMZGbLDmgw-fmjRJ9imM&quot;</pre>
 
 ### Response
 
@@ -162,11 +168,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;4e94a9111a0e1d24ffeebba755b016c6&quot;
+ETag: W/&quot;9210957d747b8a94751633b3a0a5453a&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f5e2072a-2833-4d58-96b4-eedeffd9de13
-X-Runtime: 0.116455
-Content-Length: 894</pre>
+X-Request-Id: 52eca1fa-d8c6-4fa5-84e0-e2be018d265b
+X-Runtime: 0.142059
+Content-Length: 903</pre>
 
 #### Status
 
@@ -176,40 +182,41 @@ Content-Length: 894</pre>
 
 ```javascript
 {
-  "id" : 13,
-  "title" : "Slot title 169",
+  "id" : 11,
+  "title" : "Slot title 174",
   "description" : "",
-  "startDate" : "2019-09-08T01:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:07.727Z",
-  "updatedAt" : "2016-08-30T09:51:07.727Z",
+  "startDate" : "2019-09-13T06:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:36.657Z",
+  "updatedAt" : "2016-12-11T19:54:36.657Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-08T01:44:02.000Z",
+  "endDate" : "2019-10-13T06:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 25,
-    "username" : "User 731",
+    "id" : 26,
+    "username" : "User 740",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:07.707Z",
-    "updatedAt" : "2016-08-30T09:51:07.707Z",
+    "createdAt" : "2016-12-11T19:54:36.649Z",
+    "updatedAt" : "2016-12-11T19:54:36.649Z",
     "deletedAt" : null,
     "image" : ""
   },
   "notes" : [
     {
-      "id" : 11,
+      "id" : 7,
       "title" : "Title for Note 182",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : "123321",
-      "createdAt" : "2016-08-30T09:51:07.744Z"
+      "createdAt" : "2016-12-11T19:54:36.674Z"
     },
     {
-      "id" : 12,
+      "id" : 8,
       "title" : "Title for Note 183",
       "content" : "Liebe ist ein Kind der Freiheit!",
       "localId" : null,
-      "createdAt" : "2016-08-30T09:51:07.786Z"
+      "createdAt" : "2016-12-11T19:54:36.720Z"
     }
   ],
   "media" : [],

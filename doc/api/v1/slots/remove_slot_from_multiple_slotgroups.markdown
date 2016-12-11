@@ -4,7 +4,7 @@
 
 ### DELETE /v1/slots/:id/slotgroups
 
-Send an array of slotGroup UUIDs and the slot will be added to those slotGroups.
+Send an array of slotGroup UUIDs and the slot will be removed from those slotGroups.
 
 returns 404 if ID is invalid
 

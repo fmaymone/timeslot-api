@@ -13,7 +13,19 @@ returns 422 if parameters are invalid
 ### Parameters
 
 Name : username *- required -*
-Description : Username of user (max. 50 characters)
+Description : Username of user (3-50 characters)
+
+Name : firstName
+Description : First name of user (2-50 characters)
+
+Name : middleName
+Description : Middle name of user (2-50 characters)
+
+Name : lastName
+Description : Last name of user (2-50 characters)
+
+Name : gender
+Description : Gender of the user (male, female, other)
 
 Name : email
 Description : Email of user (max. 254 characters)
@@ -164,6 +176,10 @@ Cookie: </pre>
 ```javascript
 {
   "username" : "foo",
+  "firstName" : "Lana",
+  "middleName" : "Del",
+  "lastName" : "Rey",
+  "gender" : "female",
   "email" : "someone@timeslot.com",
   "lang" : "de",
   "password" : "secret-thing"
@@ -173,7 +189,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -186,11 +202,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;3f6a6cd6f1c827f0daf3852d9aca1754&quot;
+ETag: W/&quot;8b2e15e9ec5b2dc6bedbd74a9dc1903f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3d2ab260-c719-4073-8598-f1c43571235f
-X-Runtime: 0.045153
-Content-Length: 1045</pre>
+X-Request-Id: 4f492345-2acd-4e9d-8ed3-f3462bdade5d
+X-Runtime: 0.042363
+Content-Length: 1053</pre>
 
 #### Status
 
@@ -200,20 +216,20 @@ Content-Length: 1045</pre>
 
 ```javascript
 {
-  "id" : 101,
+  "id" : 102,
   "username" : "foo",
-  "firstName" : null,
-  "middleName" : null,
-  "lastName" : null,
-  "createdAt" : "2016-08-30T09:51:10.649Z",
-  "updatedAt" : "2016-08-30T09:51:10.649Z",
+  "firstName" : "Lana",
+  "middleName" : "Del",
+  "lastName" : "Rey",
+  "createdAt" : "2016-12-11T19:54:40.242Z",
+  "updatedAt" : "2016-12-11T19:54:40.242Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 2,
   "friendsCount" : 0,
-  "gender" : null,
+  "gender" : "female",
   "lang" : "de",
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
@@ -221,29 +237,29 @@ Content-Length: 1045</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "91ba5ff4-a939-42c1-abc3-d0c1855d3f5b",
-  "friendsCalendarUuid" : "df469ae0-1e24-4bb4-92b5-385ebf2622bc",
-  "allMySlotsUuid" : "ec28ee09-f658-439c-abcc-7cd3a77f343e",
-  "myCreatedSlotsUuid" : "3c6f7fe8-670d-48b1-aa6a-fd6431054696",
-  "myPrivateSlotsUuid" : "cafc2b10-c237-442e-aaa6-c463b1927e30",
-  "myFriendSlotsUuid" : "3272bc58-a22b-40a1-88bb-57e1e1525db9",
-  "myPublicSlotsUuid" : "a8e5a79f-a909-4e7a-9bf6-5ae57e3e5a9f",
+  "myCalendarUuid" : "661b6f70-1b84-473f-a69d-4ed88d7930f3",
+  "friendsCalendarUuid" : "ddeaea8b-59cd-4ea1-8d9f-68608e762ef2",
+  "allMySlotsUuid" : "f1e0012a-b4b2-4e0c-97ca-2fd93b370354",
+  "myCreatedSlotsUuid" : "250f2001-bba2-4dcf-a467-8debd99ac104",
+  "myPrivateSlotsUuid" : "45c5ddd1-c2d4-430a-a80c-184746c2eb46",
+  "myFriendSlotsUuid" : "e37da4e7-5ee9-4149-876b-4e1dcd09e697",
+  "myPublicSlotsUuid" : "d4eac7ac-fad1-458b-a561-846adac29802",
   "friendships" : [],
   "memberships" : [
     {
-      "groupId" : 21,
+      "groupId" : 29,
       "state" : "active",
       "color" : "000000",
       "notifications" : true
     },
     {
-      "groupId" : 22,
+      "groupId" : 30,
       "state" : "active",
       "color" : "000000",
       "notifications" : true
     }
   ],
   "friendshipState" : "myself",
-  "authToken" : "eI7MtpiAq4k1VoByyrQolMseeBw"
+  "authToken" : "wPqqr3nFoTbrBaXQ0_wE2XRtzD8"
 }
 ```
