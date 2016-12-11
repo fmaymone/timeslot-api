@@ -7,6 +7,7 @@ FactoryGirl.define do
     transient do
       show_in_calendar true
       tag_user nil
+      in_calendar nil
     end
 
     after :create do |slot, factory|
@@ -20,6 +21,11 @@ FactoryGirl.define do
         create :passengership, slot: slot, user: factory.tag_user,
                show_in_my_schedule: factory.show_in_calendar,
                add_media_permission: true
+      end
+
+      # allows puting slot in a calendar
+      if factory.in_calendar
+        create :containership, slot: slot, group: factory.in_calendar
       end
     end
   end
