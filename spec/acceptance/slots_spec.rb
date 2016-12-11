@@ -126,7 +126,7 @@ resource "Slots" do
       context "slot with open End" do
         let(:endDate) { '' }
 
-        example "Create StandardSlot with open End", document: :v1 do
+        example "Create Slot with open End", document: :v1 do
           explanation "Returns data of new slot.\n\n" \
                       "The empty endDate will internally be set to the end of" \
                       " the start day but will not be returned in json.\n\n" \

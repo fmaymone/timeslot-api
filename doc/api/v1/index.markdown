@@ -54,7 +54,6 @@
 * [Remove/Kick other user from own group](groups/removekick_other_user_from_own_group.markdown)
 * [Update settings of joined group](groups/update_settings_of_joined_group.markdown)
 * [Add GlobalSlots to new or existing public group](groups/add_globalslots_to_new_or_existing_public_group.markdown)
-* [Update existing global group](groups/update_existing_global_group.markdown)
 
 ## Invitecode
 
@@ -117,7 +116,6 @@
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
 * [Share Slot via Email](share/share_slot_via_email.markdown)
 * [Delete all shared content](share/delete_all_shared_content.markdown)
-* [Cinema - Find global slots](search/cinema_-_find_global_slots.markdown)
 
 ## Slots
 
@@ -168,4 +166,3 @@
 * [Get list of friends of another user](users/get_list_of_friends_of_another_user.markdown)
 * [Get list of calendars of another user](users/get_list_of_calendars_of_another_user.markdown)
 * [Reset password](users/reset_password.markdown)
-

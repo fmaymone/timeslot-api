@@ -344,7 +344,7 @@ resource "Search" do
     describe "concerts" do
       let(:category) { 'concerts' }
       let(:q) { 'proje' }
-      let(:moment) { '2016-04-05' }
+      let(:moment) { '2016-11-11' }
       let(:limit) { 5 }
 
       example "Concerts - Find global slots", document: :v1 do
