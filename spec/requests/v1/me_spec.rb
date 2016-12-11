@@ -309,37 +309,111 @@ RSpec.describe "V1::Me", type: :request do
   end
 
   describe "GET /v1/me/slots" do
+    let(:current_user) { create(:user, :with_default_calendars) }
+    let!(:tagged_slot) { create(:std_slot_private, tag_user: current_user) }
+    let!(:schedule_slot) { create(:std_slot_private, creator: current_user) }
+    let!(:created_slot) {
+      create(:std_slot_private, owner: current_user,
+             in_calendar: current_user.default_private_calendar)
+    }
+    let(:group_member) { create(:membership, :active, user: current_user) }
+    let!(:group_slot) { create(:std_slot, in_calendar: group_member.group) }
+
+    it "returns success" do
+      get "/v1/me/slots", {}, auth_header
+      expect(response.status).to be(200)
+    end
+
+    it "returns slots the current_user is tagged to" do
+      get "/v1/me/slots", {}, auth_header
+      expect(response.body).to include(tagged_slot.title)
+    end
+
+    it "returns slots the current_user has in its default calendars" do
+      get "/v1/me/slots", {}, auth_header
+      expect(response.body).to include(created_slot.title)
+    end
+
+    it "returns slots from calendars the current_user is subscribed to" do
+      get "/v1/me/slots", {}, auth_header
+      expect(response.body).to include(group_slot.title)
+    end
+
+    it "excludes slots which are only in schedule, but not in calendars" do
+      get "/v1/me/slots", {}, auth_header
+      expect(response.body).not_to include schedule_slot.title
+    end
+  end
+
+  describe "GET /v1/me/schedule" do
     context "no pagination" do
-      let(:group_member) { create(:membership, user: current_user) }
-      # let!(:group_slot) { create(:group_slot, group: group_member.group) }
-      let!(:slots) do
-        slots = []
-        slots.push create(:std_slot_private, owner: current_user,
-                          creator: current_user)
-        slots.push create(:std_slot_friends, owner: current_user,
-                          creator: current_user)
-        slots.push create(:std_slot_public, owner: current_user,
-                          creator: current_user)
-        # slots.push(*create_list(:re_slot_public, 2, slotter: current_user))
-        # slots.push create(:re_slot_foaf, slotter: current_user)
-        # slots.push create(:re_slot_friends, slotter: current_user)
-        # slots.push create(:re_slot_private, slotter: current_user)
-      end
+      let!(:tagged_slot) { create(:std_slot_private, tag_user: current_user,
+                                  show_in_schedule: false) }
+      let!(:created_slot) {
+        create(:std_slot_private, creator: current_user,
+               in_calendar: current_user.default_private_calendar)
+      }
+      let(:group_member) { create(:membership, :active, user: current_user) }
+      let!(:group_slot) { create(:std_slot, in_calendar: group_member.group) }
 
       it "returns success" do
-        get "/v1/me/slots", {}, auth_header
+        get "/v1/me/schedule", {}, auth_header
         expect(response.status).to be(200)
       end
 
-      it "returns all stdslots & reslots for the current_user" do
-        get "/v1/me/slots", {}, auth_header
-        expect(json.length).to eq slots.size
+      it "returns all slots the current_user has in its schedule" do
+        get "/v1/me/schedule", {}, auth_header
+        expect(response.body).to include created_slot.title
       end
 
-      # it "excludes groupslots of the current_user" do
-      #   get "/v1/me/slots", {}, auth_header
-      #   expect(response.body).not_to include group_slot.title
-      # end
+      it "excludes slots the user is tagged to which are not in schedule" do
+        get "/v1/me/schedule", {}, auth_header
+        expect(response.body).not_to include tagged_slot.title
+      end
+
+      it "excludes slots from subscribed calendars which are not in schedule" do
+        get "/v1/me/schedule", {}, auth_header
+        expect(response.body).not_to include group_slot.title
+      end
+    end
+  end
+
+  describe "GET /v1/me/library" do
+    context "no pagination" do
+      let(:current_user) { create(:user, :with_default_calendars) }
+      let!(:tagged_slot) { create(:std_slot_private, tag_user: current_user) }
+      let!(:schedule_slot) { create(:std_slot_private, creator: current_user) }
+      let!(:created_slot) {
+        create(:std_slot_private, owner: current_user,
+               in_calendar: current_user.default_private_calendar)
+      }
+      let(:group_member) { create(:membership, :active, user: current_user) }
+      let!(:group_slot) { create(:std_slot, in_calendar: group_member.group) }
+
+      it "returns success" do
+        get "/v1/me/library", {}, auth_header
+        expect(response.status).to be(200)
+      end
+
+      it "returns all slots the current_user has in its schedule" do
+        get "/v1/me/library", {}, auth_header
+        expect(response.body).to include created_slot.title
+      end
+
+      it "returns slots the current_user is tagged to" do
+        get "/v1/me/library", {}, auth_header
+        expect(response.body).to include(tagged_slot.title)
+      end
+
+      it "returns slots the current_user has in its default calendars" do
+        get "/v1/me/library", {}, auth_header
+        expect(response.body).to include(created_slot.title)
+      end
+
+      it "returns slots from calendars the current_user is subscribed to" do
+        get "/v1/me/library", {}, auth_header
+        expect(response.body).to include(group_slot.title)
+      end
     end
 
     context "with pagination", :keep_data do
@@ -457,7 +531,7 @@ RSpec.describe "V1::Me", type: :request do
 
           it "returns all slots after 'moment'" do
             # first request without a cursor
-            get "/v1/me/slots", query_string,
+            get "/v1/me/library", query_string,
                 @auth_header
 
             expect(response.status).to be(200)
@@ -472,7 +546,7 @@ RSpec.describe "V1::Me", type: :request do
 
             while cursor
               # paginate through the result
-              get "/v1/me/slots",
+              get "/v1/me/library",
                   { mode: mode, after: cursor, limit: limit },
                   @auth_header
 
@@ -519,7 +593,7 @@ RSpec.describe "V1::Me", type: :request do
 
           it "returns all slots before 'moment'" do
             # first request without a cursor
-            get "/v1/me/slots", query_string,
+            get "/v1/me/library", query_string,
                 @auth_header
 
             expect(response.status).to be(200)
@@ -535,7 +609,7 @@ RSpec.describe "V1::Me", type: :request do
 
             while cursor
               # paginate through the result
-              get "/v1/me/slots",
+              get "/v1/me/library",
                   { mode: mode, before: cursor, limit: limit },
                   @auth_header
 
@@ -590,7 +664,7 @@ RSpec.describe "V1::Me", type: :request do
         let(:mode) { 'now' }
 
         it "by startdate, enddate, slotid" do
-          get "/v1/me/slots",
+          get "/v1/me/library",
               query_string, @auth_header
 
           expect(response.status).to be(200)
@@ -617,7 +691,7 @@ RSpec.describe "V1::Me", type: :request do
           let(:mode) { 'past' }
 
           it "doesn't use default mode if explicitly overwritten" do
-            get "/v1/me/slots", { mode: mode }, @auth_header
+            get "/v1/me/library", { mode: mode }, @auth_header
 
             expect(response.status).to be(200)
             expect(json['paging']['mode']).to eq mode
@@ -626,7 +700,7 @@ RSpec.describe "V1::Me", type: :request do
 
         context "all" do
           it "returns all slots" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: 'all' }, @auth_header
 
             expect(response.status).to be(200)
@@ -646,7 +720,7 @@ RSpec.describe "V1::Me", type: :request do
           let(:mode) { 'upcoming' }
 
           it "returns slots where start_date is equal or after moment" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode },
                 @auth_header
 
@@ -662,7 +736,7 @@ RSpec.describe "V1::Me", type: :request do
           end
 
           it "doesn't return 'after' cursor if no more results" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode, limit: over_limit },
                 @auth_header
             expect(response.status).to be(200)
@@ -673,7 +747,7 @@ RSpec.describe "V1::Me", type: :request do
           # feasable
           describe "empty result and cursor" do
             it "has a 'before' cursor if results exist before the moment" do
-              get "/v1/me/slots",
+              get "/v1/me/library",
                   { mode: mode, limit: 2, moment: '2017-11-11' },
                   @auth_header
               expect(response.status).to be(200)
@@ -682,7 +756,7 @@ RSpec.describe "V1::Me", type: :request do
             end
 
             it "doesn't return 'before' cursor if no results exist before moment" do
-              get "/v1/me/slots",
+              get "/v1/me/library",
                   { mode: mode, limit: 2, moment: '2007-11-11' },
                   'Authorization' => "Token token=#{create(:user).auth_token}"
 
@@ -697,7 +771,7 @@ RSpec.describe "V1::Me", type: :request do
           let(:mode) { 'past' }
 
           it "returns slots where start_date is before moment" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode },
                 @auth_header
 
@@ -712,7 +786,7 @@ RSpec.describe "V1::Me", type: :request do
           end
 
           it "doesn't return 'before' cursor if no more results" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode, limit: over_limit },
                 @auth_header
             expect(response.status).to be(200)
@@ -722,7 +796,7 @@ RSpec.describe "V1::Me", type: :request do
 
         context "finished" do
           it "returns slots where start & end is before moment" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: 'finished' },
                 @auth_header
 
@@ -739,7 +813,7 @@ RSpec.describe "V1::Me", type: :request do
 
         context "ongoing" do
           it "returns slots where start is before & end is after moment" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: 'ongoing' },
                 @auth_header
 
@@ -757,7 +831,7 @@ RSpec.describe "V1::Me", type: :request do
 
         context "now" do
           it "returns ongoing and upcoming slots" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: 'now', moment: Time.zone.now.as_json },
                 @auth_header
 
@@ -780,7 +854,7 @@ RSpec.describe "V1::Me", type: :request do
           let(:moment) { Time.zone.now }
 
           it "half of the slots before and half after moment" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode, limit: limit, moment: moment },
                 @auth_header
 
@@ -797,7 +871,7 @@ RSpec.describe "V1::Me", type: :request do
           end
 
           it "doesn't return cursors if not enough slots" do
-            get "/v1/me/slots",
+            get "/v1/me/library",
                 { mode: mode, limit: over_limit },
                 @auth_header
             expect(response.status).to be(200)
