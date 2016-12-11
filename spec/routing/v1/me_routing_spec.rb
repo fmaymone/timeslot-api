@@ -24,6 +24,11 @@ RSpec.describe V1::MeController, type: :routing do
         .to route_to("v1/me#inactivate", format: :json)
     end
 
+    it "routes to #library" do
+      expect(get: "/v1/me/library")
+        .to route_to("v1/me#my_slot_library", format: :json)
+    end
+
     it "routes to #my_slots" do
       expect(get: "/v1/me/slots")
         .to route_to("v1/me#my_slots", format: :json)

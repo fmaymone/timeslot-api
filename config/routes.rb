@@ -55,6 +55,7 @@ Rails.application.routes.draw do
       root 'me#show', as: 'show_me'
       patch '', to: 'me#update', as: 'update_me'
       delete '', to: 'me#inactivate', as: 'inactivate_me'
+      get 'library', to: 'me#my_slot_library'
       get 'slots', to: 'me#my_slots', as: 'my_slots'
       get 'schedule', to: 'me#schedule'
       post 'schedule/calendar/:uuid', to: 'me#add_calendar_to_schedule'
