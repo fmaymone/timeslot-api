@@ -54,14 +54,32 @@ module V1
       head :ok
     end
 
-    # GET /v1/me/slots
+    # GET /v1/me/library
     # returns all slots created by, tagged to, in my_calendar
+    # or in a group of the current_user
+    def my_slot_library
+      authorize :me
+
+      collector = SlotsCollector.new(**slot_paging_params)
+      the_result = collector.my_library_slots(user: current_user)
+      @slots = the_result.data
+
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
+    end
+
+    # GET /v1/me/slots
+    # returns all slots created by, tagged to,
     # or in a group of the current_user
     def my_slots
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
-      the_result = collector.my_library_slots(user: current_user)
+      the_result = collector.my_active_slots(user: current_user)
       @slots = the_result.data
 
       if slot_paging_params.blank?

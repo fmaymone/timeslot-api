@@ -138,11 +138,172 @@ resource "Me" do
 
   get "/v1/me/slots" do
     header "Authorization", :auth_header
+    let(:current_user) {
+      create(:user, :with_email, :with_password, :with_default_calendars) }
 
     context 'pagination' do
       include_context "slot pagination"
 
-      describe "Get slots for current user - with pagination" do
+      describe "Get active slots for current user - with pagination" do
+        let(:mode) { 'upcoming' }
+        let(:moment) { Time.zone.now.as_json }
+        let(:limit) { 3 }
+
+        let!(:std_slot_1) {
+          create(:std_slot_private, creator: current_user,
+                 in_calendar: current_user.default_private_calendar,
+                 start_date: Time.zone.tomorrow.next_week) }
+        let!(:std_slot_2) {
+          create(:std_slot_friends, creator: current_user,
+                 in_calendar: current_user.default_private_calendar,
+                 start_date: Time.zone.today.next_week) }
+        let!(:upcoming_slot) {
+          create(:std_slot_private, creator: current_user,
+                 in_calendar: current_user.default_private_calendar,
+                 start_date: Time.zone.tomorrow) }
+
+        example "Get active slots - with pagination", document: :v1 do
+          explanation "Returns all Slots the current user is tagged to " \
+                      "or which are in a calendar the current " \
+                      "user is subscribed to.\n\n" \
+                      "Response contains '*paging*' hash & '*data*' array.\n" \
+                      "If there are more than **limit** results, '*paging*' " \
+                      "has **before** and **after** cursors which can be used" \
+                      " for subsequent requests. The first request should " \
+                      "always be made with **mode** '*upcoming*' to make " \
+                      "sure no results are skipped." \
+                      "'*data*' contains an array which includes the slots.\n\n" \
+                      "The slots are ordered by startdate, enddate, id."
+
+          do_request
+
+          # first request without a cursor
+          expect(response_status).to eq(200)
+          slot_count = current_user.std_slots.count
+                       # current_user.re_slots.count
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('after')
+
+          expect(json['paging']['after']).not_to be nil
+          after_cursor = json['paging']['after']
+
+          expect(json).to have_key 'data'
+          response_slot_count = json['data'].length
+          expect(json['data'].first).to have_key("id")
+          expect(json['data'].first).to have_key("title")
+          expect(json['data'].first).to have_key("location")
+          expect(json['data'].first).to have_key("startDate")
+          expect(json['data'].first).to have_key("endDate")
+          expect(json['data'].first).to have_key("settings")
+          expect(json['data'].first).to have_key("createdAt")
+          expect(json['data'].first).to have_key("updatedAt")
+          expect(json['data'].first).to have_key("deletedAt")
+          expect(json['data'].first).to have_key("creator")
+          expect(json['data'].first).to have_key("notes")
+          expect(json['data'].first).to have_key("likes")
+          expect(json['data'].first).to have_key("commentsCounter")
+          expect(json['data'].first).to have_key("visibility")
+          expect(json['data'].first).to have_key("media")
+          expect(json['data'].first).to have_key("url")
+          expect(response_body).to include(std_slot_1.title)
+          expect(response_body).to include(std_slot_2.title)
+
+          # make a subsequent request based on 'after' cursor
+          client.get "/v1/users/#{current_user.id}/slots",
+                     { after: after_cursor }, headers
+
+          expect(response_status).to eq(200)
+          json = JSON.parse(response_body)
+
+          expect(json).to have_key 'paging'
+          expect(json['paging']).to have_key('mode')
+          expect(json['paging']).to have_key('after')
+          expect(json['paging']).to have_key('limit')
+          expect(json['paging']['mode']).to be nil
+          expect(json['paging']['after']).to be nil
+          expect(json['paging']['limit']).to be <= PAGINATION_MAX_LIMIT
+          expect(json['paging']['limit']).to eq PAGINATION_DEFAULT_LIMIT
+
+          expect(json).to have_key 'data'
+          response_slot_count += json['data'].length
+          expect(response_slot_count).to eq slot_count
+        end
+      end
+    end
+
+    context 'no pagination' do
+      response_field :id, "ID of the slot"
+      response_field :title, "Title of the slot"
+      response_field :startDate, "Startdate of the slot"
+      response_field :endDate, "Enddate of the slot"
+      response_field :creatorId, "ID of the User who created the slot"
+      response_field :alerts, "Alerts for the slot for the current user"
+      response_field :notes, "A list of all notes on the slot"
+      response_field :likes, "Number of likes for the slot"
+      response_field :commentsCounter, "Number of comments on the slot"
+      response_field :images, "Images for the slot"
+      response_field :audios, "Audio recordings for the slot"
+      response_field :videos, "Videos for the slot"
+      response_field :url, "direct url to fetch the slot"
+      response_field :visibility, "Visibility if it's a StandardSlot"
+      response_field :createdAt, "Creation datetime of the slot"
+      response_field :updatedAt, "Last update of the slot"
+      response_field :deletedAt, "Deletion datetime of the slot"
+
+      describe "Get active slots - no pagination" do
+        let!(:std_slot_1) {
+          create(:std_slot_private, owner: current_user,
+                 in_calendar: current_user.default_private_calendar)
+        }
+        let!(:std_slot_2) {
+          create(:std_slot_friends, owner: current_user,
+                 in_calendar: current_user.default_private_calendar)
+        }
+        let!(:tagged_slot) { create(:std_slot_private, tag_user: current_user) }
+
+        example "Get active slots - no pagination", document: :v1 do
+          explanation "Returns an array which includes all Slots the current " \
+                      "user is tagged to or which are in a calendar the " \
+                      "current user is subscribed to.\n\n" \
+                      "The slots are ordered by startdate, enddate, ID."
+
+          do_request
+
+          expect(response_status).to eq(200)
+          slot_count = current_user.group_slots.count +
+                       current_user.tagged_slots.count
+
+          expect(json.length).to eq slot_count
+          expect(json.first).to have_key("id")
+          expect(json.first).to have_key("title")
+          expect(json.first).to have_key("location")
+          expect(json.first).to have_key("startDate")
+          expect(json.first).to have_key("endDate")
+          expect(json.first).to have_key("settings")
+          expect(json.first).to have_key("createdAt")
+          expect(json.first).to have_key("updatedAt")
+          expect(json.first).to have_key("deletedAt")
+          expect(json.first).to have_key("creator")
+          expect(json.first).to have_key("notes")
+          expect(json.first).to have_key("likes")
+          expect(json.first).to have_key("commentsCounter")
+          expect(json.first).to have_key("visibility")
+          expect(json.first).to have_key("media")
+          expect(response_body).to include(std_slot_1.title)
+          expect(response_body).to include(std_slot_2.title)
+          expect(response_body).to include(tagged_slot.title)
+        end
+      end
+    end
+  end
+
+  get "/v1/me/library" do
+    header "Authorization", :auth_header
+
+    context 'pagination' do
+      include_context "slot pagination"
+
+      describe "Get slot library for current user - with pagination" do
         let(:mode) { 'upcoming' }
         let(:moment) { Time.zone.now.as_json }
         let(:limit) { 3 }
@@ -155,16 +316,19 @@ resource "Me" do
         let!(:upcoming_slot) { create(:std_slot_private, creator: current_user,
                                       start_date: Time.zone.tomorrow) }
 
-        example "Get slots - with pagination", document: :v1 do
-          explanation "Response contains '*paging*' hash & '*data*' array.\n" \
+        example "Get slot library - with pagination", document: :v1 do
+          explanation "Returns all Slots the current user has created, " \
+                      "was or is tagged to and all slots from  " \
+                      "calendars the current users has subscribed to.\n\n" \
+                      "Also slots which the current user had once in his " \
+                      "schedule but removed them are included.\n\n" \
+                      "Response contains '*paging*' hash & '*data*' array.\n" \
                       "If there are more than **limit** results, '*paging*' " \
                       "has **before** and **after** cursors which can be used" \
                       " for subsequent requests. The first request should " \
                       "always be made with **mode** '*upcoming*' to make " \
                       "sure no results are skipped." \
-                      "'*data*' contains an array which includes " \
-                      "StandardSlots & ReSlots the current_user has made" \
-                      " including the slot settings (alerts).\n\n" \
+                      "'*data*' contains an array which includes the slots.\n\n" \
                       "The slots are ordered by startdate, enddate, id."
 
           do_request
@@ -243,15 +407,16 @@ resource "Me" do
       response_field :updatedAt, "Last update of the slot"
       response_field :deletedAt, "Deletion datetime of the slot"
 
-      describe "Get slots" do
+      describe "Get slot library - no pagination" do
         let!(:std_slot_1) { create(:std_slot_private, creator: current_user) }
         let!(:std_slot_2) { create(:std_slot_friends, creator: current_user) }
 
-        example "Get slots - no pagination", document: :v1 do
-          # TODO: fix wording
-          explanation "Returns an array which includes all StandardSlots &" \
-                      " ReSlots the current_user has created including" \
-                      " the slot settings (alerts).\n\n" \
+        example "Get slot library - no pagination", document: :v1 do
+          explanation "Returns an array which includes all Slots the current " \
+                      "user has created, was or is tagged to and all slots " \
+                      "from calendars the current users has subscribed to.\n\n" \
+                      "Also slots which the current user had once in his " \
+                      "schedule but removed them are included.\n\n" \
                       "The slots are ordered by startdate, enddate, ID."
 
           do_request
