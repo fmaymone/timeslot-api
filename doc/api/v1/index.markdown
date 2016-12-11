@@ -65,8 +65,10 @@
 
 * [Get complete User data](me/get_complete_user_data.markdown)
 * [Get my schedule](me/get_my_schedule.markdown)
-* [Get slots - with pagination](me/get_slots_-_with_pagination.markdown)
-* [Get slots - no pagination](me/get_slots_-_no_pagination.markdown)
+* [Get active slots - with pagination](me/get_active_slots_-_with_pagination.markdown)
+* [Get active slots - no pagination](me/get_active_slots_-_no_pagination.markdown)
+* [Get slot library - with pagination](me/get_slot_library_-_with_pagination.markdown)
+* [Get slot library - no pagination](me/get_slot_library_-_no_pagination.markdown)
 * [Get slots from friends](me/get_slots_from_friends.markdown)
 * [Get media items](me/get_media_items.markdown)
 * [Get suggested Users](me/get_suggested_users.markdown)
