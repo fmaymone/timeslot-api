@@ -1,8 +1,8 @@
 # Slots API
 
-## Create StandardSlot with IOS Location
+## Create Slot with Location
 
-### POST /v1/stdslot
+### POST /v1/slots
 
 Returns data of new slot.
 
@@ -14,12 +14,6 @@ returns 422 if required parameters are missing
 
 ### Parameters
 
-Name : visibility *- required -*
-Description : Visibility of the Slot (private/friends/foaf/public)
-
-Name : slotSets
-Description : Array with UUIDs of the SlotGroups and SlotSets the slot should be added to
-
 Name : title *- required -*
 Description : Title of slot (max. 60 characters)
 
@@ -28,6 +22,9 @@ Description : Startdate and Time of the Slot
 
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
+
+Name : rrule
+Description : Repeating Rule for the Slot.
 
 Name : description
 Description : Description for the slot (max. 500 characters)
@@ -46,6 +43,12 @@ Description : User specific settings for the slot (alerts)
 
 Name : alerts
 Description : Alerts for the Slot
+
+Name : visibility
+Description : Deprecated: Visibility of the Slot (private/friends/foaf/public)
+
+Name : slotGroups
+Description : Array with UUIDs of the SlotGroups slot should be added to
 
 Name : name
 Description : Name of the location, eg. Timeslot Inc. (255 chars)
@@ -107,6 +110,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -163,27 +169,31 @@ Description : Videos recordings for the slot
 Name : reslotsCounter
 Description : Number of reslots for this slot
 
+Name : unauthorizedSlotgroups
+Description : Array of Slotgroup UUIDs where the current_user has no write access or Slotgroup was deleted. Will be empty if all worked fine.
+
 ### Request
 
 #### Headers
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=RH8km7MByyylqy6pbruXhBWYbhY
+Authorization: Token token=7odhcKAJoI-Xd16UCE9_lc0s0YY
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/stdslot</pre>
+<pre>POST /v1/slots</pre>
 
 #### Body
 ```javascript
 {
-  "visibility" : "private",
   "title" : "Time for a Slot",
   "startDate" : "2014-09-08T13:31:02.000Z",
   "endDate" : "2014-09-13T22:03:24.000Z",
+  "rrule" : "RRULE:FREQ=WEEKLY;BYDAY=TH",
+  "description" : "One day it will all make sense.",
   "notes" : [
     {
       "title" : "revolutionizing the calendar",
@@ -197,6 +207,14 @@ Cookie: </pre>
   "settings" : {
     "alerts" : "0101010101"
   },
+  "visibility" : "private",
+  "slotGroups" : [
+    "6d3c5232-77b4-48d0-a461-2e07534e7342",
+    "23f9f5d4-2bbc-44ec-b449-56e9e705031b",
+    "ce9c23f3-d53f-4332-bdb2-951edc3ae426",
+    "c17562db-51b9-4ce7-ad8f-552e337ad98f",
+    "47a3ba36-aeae-4285-b293-a8fe47eab151"
+  ],
   "location" : {
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
@@ -211,10 +229,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/stdslot&quot; -d &#39;{&quot;visibility&quot;:&quot;private&quot;,&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;rrule&quot;:&quot;RRULE:FREQ=WEEKLY;BYDAY=TH&quot;,&quot;description&quot;:&quot;One day it will all make sense.&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;6d3c5232-77b4-48d0-a461-2e07534e7342&quot;,&quot;23f9f5d4-2bbc-44ec-b449-56e9e705031b&quot;,&quot;ce9c23f3-d53f-4332-bdb2-951edc3ae426&quot;,&quot;c17562db-51b9-4ce7-ad8f-552e337ad98f&quot;,&quot;47a3ba36-aeae-4285-b293-a8fe47eab151&quot;],&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=RH8km7MByyylqy6pbruXhBWYbhY&quot;</pre>
+	-H &quot;Authorization: Token token=7odhcKAJoI-Xd16UCE9_lc0s0YY&quot;</pre>
 
 ### Response
 
@@ -225,11 +243,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5d95b1b7f5a3ccce34a92d45be9d73ba&quot;
+ETag: W/&quot;89d3442cfa10059889371c928215904d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cd13d7a3-4474-4d90-8029-840562193d1b
-X-Runtime: 0.117041
-Content-Length: 1322</pre>
+X-Request-Id: 490e49a9-fd6a-4772-9bfd-a370dff94fb8
+X-Runtime: 0.290450
+Content-Length: 2059</pre>
 
 #### Status
 
@@ -239,16 +257,17 @@ Content-Length: 1322</pre>
 
 ```javascript
 {
-  "id" : 10,
+  "id" : 3,
   "title" : "Time for a Slot",
-  "description" : "",
+  "description" : "One day it will all make sense.",
   "startDate" : "2014-09-08T13:31:02.000Z",
-  "createdAt" : "2016-08-30T09:51:07.436Z",
-  "updatedAt" : "2016-08-30T09:51:07.436Z",
+  "rrule" : "RRULE:FREQ=WEEKLY;BYDAY=TH",
+  "createdAt" : "2016-12-11T19:54:35.844Z",
+  "updatedAt" : "2016-12-11T19:54:35.844Z",
   "deletedAt" : null,
   "endDate" : "2014-09-13T22:03:24.000Z",
   "location" : {
-    "id" : "740e4821-8b04-464a-812c-208ecaca4102",
+    "id" : "e6a6281c-2afd-4fcc-a167-04e4ff513927",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : null,
@@ -267,34 +286,34 @@ Content-Length: 1322</pre>
     "placeId" : null
   },
   "creator" : {
-    "id" : 19,
-    "username" : "User 725",
+    "id" : 7,
+    "username" : "User 711",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:07.416Z",
-    "updatedAt" : "2016-08-30T09:51:07.416Z",
+    "createdAt" : "2016-12-11T19:54:35.782Z",
+    "updatedAt" : "2016-12-11T19:54:35.782Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,
     "slotCount" : 1,
-    "calendarCount" : 0,
+    "calendarCount" : 3,
     "friendsCount" : 0
   },
   "notes" : [
     {
-      "id" : 9,
+      "id" : 5,
       "title" : "revolutionizing the calendar",
       "content" : "this is content",
       "localId" : null,
-      "createdAt" : "2016-08-30T09:51:07.442Z"
+      "createdAt" : "2016-12-11T19:54:35.849Z"
     },
     {
-      "id" : 10,
+      "id" : 6,
       "title" : "and another title",
       "content" : "more content here",
       "localId" : null,
-      "createdAt" : "2016-08-30T09:51:07.484Z"
+      "createdAt" : "2016-12-11T19:54:35.889Z"
     }
   ],
   "media" : [],
@@ -305,8 +324,42 @@ Content-Length: 1322</pre>
   "likerIds" : [],
   "likes" : 0,
   "commentsCounter" : 0,
-  "firstGroup" : null,
-  "slotGroupUuids" : [],
-  "unauthorizedSlotgroups" : []
+  "firstGroup" : {
+    "id" : "23f9f5d4-2bbc-44ec-b449-56e9e705031b",
+    "name" : "Testgroup 205",
+    "image" : "",
+    "description" : null,
+    "defaultColor" : "000000",
+    "membersCanPost" : false,
+    "membersCanInvite" : false,
+    "public" : false,
+    "createdAt" : "2016-12-11T19:54:35.786Z",
+    "updatedAt" : "2016-12-11T19:54:35.786Z",
+    "deletedAt" : null,
+    "owner" : {
+      "id" : 7,
+      "username" : "User 711",
+      "firstName" : null,
+      "middleName" : null,
+      "lastName" : null,
+      "createdAt" : "2016-12-11T19:54:35.782Z",
+      "updatedAt" : "2016-12-11T19:54:35.782Z",
+      "deletedAt" : null,
+      "image" : ""
+    },
+    "memberIds" : [
+      7
+    ],
+    "memberCount" : 1,
+    "slotCount" : 1
+  },
+  "slotGroupUuids" : [
+    "23f9f5d4-2bbc-44ec-b449-56e9e705031b",
+    "ce9c23f3-d53f-4332-bdb2-951edc3ae426"
+  ],
+  "unauthorizedSlotgroups" : [
+    "c17562db-51b9-4ce7-ad8f-552e337ad98f",
+    "47a3ba36-aeae-4285-b293-a8fe47eab151"
+  ]
 }
 ```

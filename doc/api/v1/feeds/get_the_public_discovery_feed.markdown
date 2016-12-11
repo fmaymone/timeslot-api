@@ -30,6 +30,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -150,11 +153,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;443f41bfb9f56a80553af7cd9de7bfb2&quot;
+ETag: W/&quot;6fa0fb711d2ec64b59069c97fd1239ef&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8ab26124-c32d-40c4-aa92-75c08468278f
-X-Runtime: 0.008260
-Content-Length: 4699</pre>
+X-Request-Id: 43ba1d49-2ba1-4bcf-980c-4b56b405765f
+X-Runtime: 0.008289
+Content-Length: 4730</pre>
 
 #### Status
 
@@ -171,9 +174,9 @@ Content-Length: 4699</pre>
     {
       "target" : "group",
       "action" : "create",
-      "time" : "2016-08-30T09:50:49.237Z",
-      "id" : "9A60092B5EE5B5F1B3E715FF69ACA2074C4A3F1F",
-      "message" : "{actor} created the slot group: {group}.",
+      "time" : "2016-12-11T19:54:18.257Z",
+      "id" : "F3A22EE1B4ED7F980858A7308BC79BABF4569D05",
+      "message" : "{actor} created the calendar: {group}.",
       "actors" : [
         {
           "id" : 280,
@@ -181,14 +184,14 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         }
       ],
       "group" : {
-        "id" : "01d4f21a-6cd8-4a56-9b44-0f81bb191373",
+        "id" : "1b6c3cf0-b4de-4953-8c8a-bdffee4d3fe4",
         "name" : "Testgroup 123",
         "image" : "",
         "description" : null,
@@ -196,8 +199,8 @@ Content-Length: 4699</pre>
         "membersCanPost" : false,
         "membersCanInvite" : false,
         "public" : false,
-        "createdAt" : "2016-08-30T09:50:49.237Z",
-        "updatedAt" : "2016-08-30T09:50:49.237Z",
+        "createdAt" : "2016-12-11T19:54:18.257Z",
+        "updatedAt" : "2016-12-11T19:54:18.257Z",
         "deletedAt" : null,
         "owner" : {
           "id" : 280,
@@ -205,8 +208,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -224,8 +227,8 @@ Content-Length: 4699</pre>
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:50:49.169Z",
-        "updatedAt" : "2016-08-30T09:50:49.169Z",
+        "createdAt" : "2016-12-11T19:54:18.200Z",
+        "updatedAt" : "2016-12-11T19:54:18.200Z",
         "deletedAt" : null,
         "image" : ""
       }
@@ -233,8 +236,8 @@ Content-Length: 4699</pre>
     {
       "target" : "slot",
       "action" : "create",
-      "time" : "2016-08-30T09:50:49.213Z",
-      "id" : "6A32DFF982F8F9C75CC69CE01EA82E52F0387D08",
+      "time" : "2016-12-11T19:54:18.236Z",
+      "id" : "9B63772BD0845BEC809CEEFFC1632A571FA7D202",
       "message" : "{actor} creates this Slot.",
       "actors" : [
         {
@@ -243,8 +246,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         }
@@ -255,8 +258,9 @@ Content-Length: 4699</pre>
         "title" : "Slot title 84",
         "description" : "",
         "startDate" : "2019-09-04T12:44:02.000Z",
-        "createdAt" : "2016-08-30T09:50:49.213Z",
-        "updatedAt" : "2016-08-30T09:50:49.213Z",
+        "rrule" : "",
+        "createdAt" : "2016-12-11T19:54:18.236Z",
+        "updatedAt" : "2016-12-11T19:54:18.236Z",
         "deletedAt" : null,
         "endDate" : "2019-10-04T12:44:02.000Z",
         "location" : null,
@@ -266,8 +270,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -289,8 +293,8 @@ Content-Length: 4699</pre>
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:50:49.169Z",
-        "updatedAt" : "2016-08-30T09:50:49.169Z",
+        "createdAt" : "2016-12-11T19:54:18.200Z",
+        "updatedAt" : "2016-12-11T19:54:18.200Z",
         "deletedAt" : null,
         "image" : ""
       }
@@ -298,8 +302,8 @@ Content-Length: 4699</pre>
     {
       "target" : "slot",
       "action" : "create",
-      "time" : "2016-08-30T09:50:49.200Z",
-      "id" : "9BE2A9500F5D1D12EE0D20BDC26AC505DCBBEF6A",
+      "time" : "2016-12-11T19:54:18.221Z",
+      "id" : "8BA0DEDC9D74D0CDCFD0365CD83776C14C79E0DD",
       "message" : "{actor} creates this Slot.",
       "actors" : [
         {
@@ -308,8 +312,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         }
@@ -320,8 +324,9 @@ Content-Length: 4699</pre>
         "title" : "Slot title 83",
         "description" : "",
         "startDate" : "2019-09-03T11:44:02.000Z",
-        "createdAt" : "2016-08-30T09:50:49.200Z",
-        "updatedAt" : "2016-08-30T09:50:49.200Z",
+        "rrule" : "",
+        "createdAt" : "2016-12-11T19:54:18.221Z",
+        "updatedAt" : "2016-12-11T19:54:18.221Z",
         "deletedAt" : null,
         "endDate" : "2019-10-03T11:44:02.000Z",
         "location" : null,
@@ -331,8 +336,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -354,8 +359,8 @@ Content-Length: 4699</pre>
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:50:49.169Z",
-        "updatedAt" : "2016-08-30T09:50:49.169Z",
+        "createdAt" : "2016-12-11T19:54:18.200Z",
+        "updatedAt" : "2016-12-11T19:54:18.200Z",
         "deletedAt" : null,
         "image" : ""
       }
@@ -363,8 +368,8 @@ Content-Length: 4699</pre>
     {
       "target" : "slot",
       "action" : "create",
-      "time" : "2016-08-30T09:50:49.180Z",
-      "id" : "0BA7F4D7E7B7EE80BDAF86E9EDD623E260694CDA",
+      "time" : "2016-12-11T19:54:18.210Z",
+      "id" : "D27191CA4BCF869A39B307A23C8BD05A7F9F17A6",
       "message" : "{actor} creates this Slot.",
       "actors" : [
         {
@@ -373,8 +378,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         }
@@ -385,8 +390,9 @@ Content-Length: 4699</pre>
         "title" : "Slot title 82",
         "description" : "",
         "startDate" : "2019-09-02T10:44:02.000Z",
-        "createdAt" : "2016-08-30T09:50:49.180Z",
-        "updatedAt" : "2016-08-30T09:50:49.468Z",
+        "rrule" : "",
+        "createdAt" : "2016-12-11T19:54:18.210Z",
+        "updatedAt" : "2016-12-11T19:54:18.478Z",
         "deletedAt" : null,
         "endDate" : "2019-10-02T10:44:02.000Z",
         "location" : null,
@@ -396,8 +402,8 @@ Content-Length: 4699</pre>
           "firstName" : null,
           "middleName" : null,
           "lastName" : null,
-          "createdAt" : "2016-08-30T09:50:49.169Z",
-          "updatedAt" : "2016-08-30T09:50:49.169Z",
+          "createdAt" : "2016-12-11T19:54:18.200Z",
+          "updatedAt" : "2016-12-11T19:54:18.200Z",
           "deletedAt" : null,
           "image" : ""
         },
@@ -419,8 +425,8 @@ Content-Length: 4699</pre>
         "firstName" : null,
         "middleName" : null,
         "lastName" : null,
-        "createdAt" : "2016-08-30T09:50:49.169Z",
-        "updatedAt" : "2016-08-30T09:50:49.169Z",
+        "createdAt" : "2016-12-11T19:54:18.200Z",
+        "updatedAt" : "2016-12-11T19:54:18.200Z",
         "deletedAt" : null,
         "image" : ""
       }

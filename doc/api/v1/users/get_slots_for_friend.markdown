@@ -71,18 +71,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=MLXCd-bln-tncl8zCFYrXRobfpQ
+<pre>Authorization: Token token=P6pDu_vsaRPA4FaOnuan_p5Wc6s
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/152/slots</pre>
+<pre>GET /v1/users/153/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/152/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=MLXCd-bln-tncl8zCFYrXRobfpQ&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users/153/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=P6pDu_vsaRPA4FaOnuan_p5Wc6s&quot;</pre>
 
 ### Response
 
@@ -93,11 +93,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;932a27277fd947d2f5c92fd2fc1d76bf&quot;
+ETag: W/&quot;692f5e2f615c391b78cd1f1420bfb221&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 46eb8e77-9de0-467e-9b4c-a41c8c810cd6
-X-Runtime: 0.062412
-Content-Length: 1776</pre>
+X-Request-Id: 43e57a14-6ad1-487c-9ea2-9d656920704f
+X-Runtime: 0.047173
+Content-Length: 1809</pre>
 
 #### Status
 
@@ -108,23 +108,24 @@ Content-Length: 1776</pre>
 ```javascript
 [
   {
-    "id" : 65,
-    "title" : "Slot title 221",
+    "id" : 63,
+    "title" : "Slot title 226",
     "description" : "",
-    "startDate" : "2019-09-06T05:44:02.000Z",
-    "createdAt" : "2016-08-30T09:51:12.095Z",
-    "updatedAt" : "2016-08-30T09:51:12.095Z",
+    "startDate" : "2019-09-11T10:44:02.000Z",
+    "rrule" : "",
+    "createdAt" : "2016-12-11T19:54:41.734Z",
+    "updatedAt" : "2016-12-11T19:54:41.734Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-06T05:44:02.000Z",
+    "endDate" : "2019-10-11T10:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 152,
+      "id" : 153,
       "username" : "Joe",
       "firstName" : null,
       "middleName" : null,
       "lastName" : null,
-      "createdAt" : "2016-08-30T09:51:12.077Z",
-      "updatedAt" : "2016-08-30T09:51:12.077Z",
+      "createdAt" : "2016-12-11T19:54:41.711Z",
+      "updatedAt" : "2016-12-11T19:54:41.711Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -141,23 +142,24 @@ Content-Length: 1776</pre>
     "slotGroupUuids" : []
   },
   {
-    "id" : 66,
-    "title" : "Slot title 222",
+    "id" : 64,
+    "title" : "Slot title 227",
     "description" : "",
-    "startDate" : "2019-09-07T06:44:02.000Z",
-    "createdAt" : "2016-08-30T09:51:12.105Z",
-    "updatedAt" : "2016-08-30T09:51:12.105Z",
+    "startDate" : "2019-09-12T11:44:02.000Z",
+    "rrule" : "",
+    "createdAt" : "2016-12-11T19:54:41.750Z",
+    "updatedAt" : "2016-12-11T19:54:41.750Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-07T06:44:02.000Z",
+    "endDate" : "2019-10-12T11:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 152,
+      "id" : 153,
       "username" : "Joe",
       "firstName" : null,
       "middleName" : null,
       "lastName" : null,
-      "createdAt" : "2016-08-30T09:51:12.077Z",
-      "updatedAt" : "2016-08-30T09:51:12.077Z",
+      "createdAt" : "2016-12-11T19:54:41.711Z",
+      "updatedAt" : "2016-12-11T19:54:41.711Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -174,23 +176,24 @@ Content-Length: 1776</pre>
     "slotGroupUuids" : []
   },
   {
-    "id" : 67,
-    "title" : "Slot title 223",
+    "id" : 65,
+    "title" : "Slot title 228",
     "description" : "",
-    "startDate" : "2019-09-08T07:44:02.000Z",
-    "createdAt" : "2016-08-30T09:51:12.114Z",
-    "updatedAt" : "2016-08-30T09:51:12.114Z",
+    "startDate" : "2019-09-13T12:44:02.000Z",
+    "rrule" : "",
+    "createdAt" : "2016-12-11T19:54:41.760Z",
+    "updatedAt" : "2016-12-11T19:54:41.760Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-08T07:44:02.000Z",
+    "endDate" : "2019-10-13T12:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 152,
+      "id" : 153,
       "username" : "Joe",
       "firstName" : null,
       "middleName" : null,
       "lastName" : null,
-      "createdAt" : "2016-08-30T09:51:12.077Z",
-      "updatedAt" : "2016-08-30T09:51:12.077Z",
+      "createdAt" : "2016-12-11T19:54:41.711Z",
+      "updatedAt" : "2016-12-11T19:54:41.711Z",
       "deletedAt" : null,
       "image" : ""
     },

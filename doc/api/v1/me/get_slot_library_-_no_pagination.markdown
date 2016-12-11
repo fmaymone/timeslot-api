@@ -1,10 +1,12 @@
 # Me API
 
-## Get slots - no pagination
+## Get slot library - no pagination
 
-### GET /v1/me/slots
+### GET /v1/me/library
 
-Returns an array which includes all StandardSlots &amp; ReSlots the current_user has created including the slot settings (alerts).
+Returns an array which includes all Slots the current user has created, was or is tagged to and all slots from calendars the current users has subscribed to.
+
+Also slots which the current user had once in his schedule but removed them are included.
 
 The slots are ordered by startdate, enddate, ID.
 
@@ -65,18 +67,18 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=J0lcuyeVjNIDpRb7Z5xh56c9Dcw
+<pre>Authorization: Token token=3CjJ4cqU2Of7GSzdpaKbRvVxflc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/me/slots</pre>
+<pre>GET /v1/me/library</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=J0lcuyeVjNIDpRb7Z5xh56c9Dcw&quot;</pre>
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/me/library&quot; -X GET \
+	-H &quot;Authorization: Token token=3CjJ4cqU2Of7GSzdpaKbRvVxflc&quot;</pre>
 
 ### Response
 
@@ -87,11 +89,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;b4086415ec7daa81cfecb92204cf1f48&quot;
+ETag: W/&quot;95b43be81fb8f8e65cf55f556d6e1165&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1a7f9626-b94f-465f-a81c-848c81b5dbe7
-X-Runtime: 0.038095
-Content-Length: 1193</pre>
+X-Request-Id: 5072c6d6-7dd3-44a8-aad2-7ac159a52099
+X-Runtime: 0.040487
+Content-Length: 1213</pre>
 
 #### Status
 
@@ -102,23 +104,24 @@ Content-Length: 1193</pre>
 ```javascript
 [
   {
-    "id" : 8,
-    "title" : "Slot title 124",
+    "id" : 26,
+    "title" : "Slot title 28",
     "description" : "",
-    "startDate" : "2019-09-17T04:44:02.000Z",
-    "createdAt" : "2016-08-30T09:50:53.566Z",
-    "updatedAt" : "2016-08-30T09:50:53.566Z",
+    "startDate" : "2019-09-02T04:44:02.000Z",
+    "rrule" : "",
+    "createdAt" : "2016-12-11T19:48:27.515Z",
+    "updatedAt" : "2016-12-11T19:48:27.515Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-17T04:44:02.000Z",
+    "endDate" : "2019-10-02T04:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 23,
-      "username" : "User 561",
+      "id" : 56,
+      "username" : "User 54",
       "firstName" : null,
       "middleName" : null,
       "lastName" : null,
-      "createdAt" : "2016-08-30T09:50:53.556Z",
-      "updatedAt" : "2016-08-30T09:50:53.556Z",
+      "createdAt" : "2016-12-11T19:48:27.503Z",
+      "updatedAt" : "2016-12-11T19:48:27.503Z",
       "deletedAt" : null,
       "image" : ""
     },
@@ -135,23 +138,24 @@ Content-Length: 1193</pre>
     "slotGroupUuids" : []
   },
   {
-    "id" : 9,
-    "title" : "Slot title 125",
+    "id" : 27,
+    "title" : "Slot title 29",
     "description" : "",
-    "startDate" : "2019-09-18T05:44:02.000Z",
-    "createdAt" : "2016-08-30T09:50:53.577Z",
-    "updatedAt" : "2016-08-30T09:50:53.577Z",
+    "startDate" : "2019-09-03T05:44:02.000Z",
+    "rrule" : "",
+    "createdAt" : "2016-12-11T19:48:27.526Z",
+    "updatedAt" : "2016-12-11T19:48:27.526Z",
     "deletedAt" : null,
-    "endDate" : "2019-10-18T05:44:02.000Z",
+    "endDate" : "2019-10-03T05:44:02.000Z",
     "location" : null,
     "creator" : {
-      "id" : 23,
-      "username" : "User 561",
+      "id" : 56,
+      "username" : "User 54",
       "firstName" : null,
       "middleName" : null,
       "lastName" : null,
-      "createdAt" : "2016-08-30T09:50:53.556Z",
-      "updatedAt" : "2016-08-30T09:50:53.556Z",
+      "createdAt" : "2016-12-11T19:48:27.503Z",
+      "updatedAt" : "2016-12-11T19:48:27.503Z",
       "deletedAt" : null,
       "image" : ""
     },

@@ -17,6 +17,10 @@ class MePolicy < ApplicationPolicy
     current_user?
   end
 
+  def my_slot_library?
+    current_user?
+  end
+
   def my_slots?
     current_user?
   end

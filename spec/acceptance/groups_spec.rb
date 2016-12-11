@@ -438,7 +438,7 @@ resource "Groups" do
         create(:std_slot_public, creator: current_user,
                owner: current_user,
                start_date: '2010-03-30', end_date: '2010-03-31',
-               show_in_calendar: false)
+               show_in_schedule: false)
       end
       let!(:created_private_slot_in_calendar) do
         create(:std_slot_private, creator: current_user,
@@ -482,7 +482,7 @@ resource "Groups" do
       let!(:public_slot) {
         create(:std_slot_public, creator: current_user,
                start_date: '2010-03-30', end_date: '2010-03-31',
-               show_in_calendar: false)
+               show_in_schedule: false)
       }
       let!(:private_slot) {
         create(:std_slot_private, creator: current_user,

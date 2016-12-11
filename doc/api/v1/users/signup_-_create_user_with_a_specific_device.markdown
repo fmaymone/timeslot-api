@@ -13,7 +13,19 @@ returns 422 if parameters are invalid
 ### Parameters
 
 Name : username *- required -*
-Description : Username of user (max. 50 characters)
+Description : Username of user (3-50 characters)
+
+Name : firstName
+Description : First name of user (2-50 characters)
+
+Name : middleName
+Description : Middle name of user (2-50 characters)
+
+Name : lastName
+Description : Last name of user (2-50 characters)
+
+Name : gender
+Description : Gender of the user (male, female, other)
 
 Name : email
 Description : Email of user (max. 254 characters)
@@ -176,6 +188,10 @@ Cookie: </pre>
 ```javascript
 {
   "username" : "foo",
+  "firstName" : "Lana",
+  "middleName" : "Del",
+  "lastName" : "Rey",
+  "gender" : "female",
   "email" : "someone@timeslot.com",
   "lang" : "de",
   "password" : "secret-thing",
@@ -192,7 +208,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-333462873410834786765439533&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-333462873410834786765439533&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -205,11 +221,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;448bff65ba78ea7bc20701ed00bf9680&quot;
+ETag: W/&quot;07829b77656d0f6e44a57fbc45c9650f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3515bb25-fdc9-430b-be84-f80769cb944a
-X-Runtime: 0.067345
-Content-Length: 1045</pre>
+X-Request-Id: 77a16881-cb23-4704-9b52-638e4df83344
+X-Runtime: 0.046908
+Content-Length: 1053</pre>
 
 #### Status
 
@@ -219,20 +235,20 @@ Content-Length: 1045</pre>
 
 ```javascript
 {
-  "id" : 102,
+  "id" : 103,
   "username" : "foo",
-  "firstName" : null,
-  "middleName" : null,
-  "lastName" : null,
-  "createdAt" : "2016-08-30T09:51:10.700Z",
-  "updatedAt" : "2016-08-30T09:51:10.700Z",
+  "firstName" : "Lana",
+  "middleName" : "Del",
+  "lastName" : "Rey",
+  "createdAt" : "2016-12-11T19:54:40.291Z",
+  "updatedAt" : "2016-12-11T19:54:40.291Z",
   "deletedAt" : null,
   "image" : "",
   "location" : null,
   "slotCount" : 0,
   "calendarCount" : 2,
   "friendsCount" : 0,
-  "gender" : null,
+  "gender" : "female",
   "lang" : "de",
   "email" : "someone@timeslot.com",
   "emailVerified" : false,
@@ -240,29 +256,29 @@ Content-Length: 1045</pre>
   "phoneVerified" : false,
   "publicUrl" : null,
   "push" : true,
-  "myCalendarUuid" : "cc48ab1b-4dd2-402d-a1ed-914b90e8c27a",
-  "friendsCalendarUuid" : "27ce70e9-65f7-43b1-ba0a-d2b03549e32c",
-  "allMySlotsUuid" : "3d037568-b36b-4952-a337-73742d934300",
-  "myCreatedSlotsUuid" : "90266442-09c1-4a92-b6fe-21cfbdf4f19f",
-  "myPrivateSlotsUuid" : "4a067fe8-4c16-4228-bfa3-b2544a9789e8",
-  "myFriendSlotsUuid" : "ae550445-db3a-4228-873e-da48bd3dbe9e",
-  "myPublicSlotsUuid" : "d34ccee0-b9f3-4744-91f1-aaef9b43d8c9",
+  "myCalendarUuid" : "a90d6a82-1a54-4d30-a376-687f12c7e7ba",
+  "friendsCalendarUuid" : "e9e5420f-8196-4b93-ae49-0a88930b1afd",
+  "allMySlotsUuid" : "6951c2ba-679b-4065-aeb8-d38b6c5b86fd",
+  "myCreatedSlotsUuid" : "749c82d3-4981-4d95-9b8f-1b51b92b5d27",
+  "myPrivateSlotsUuid" : "f23fbd87-2130-4699-9f36-6c1c9b7ad7c1",
+  "myFriendSlotsUuid" : "f98b51a8-d66e-4371-9586-555429cce569",
+  "myPublicSlotsUuid" : "71ce4d86-b407-40d9-a7f2-f0f13f995fa5",
   "friendships" : [],
   "memberships" : [
     {
-      "groupId" : 23,
+      "groupId" : 31,
       "state" : "active",
       "color" : "000000",
       "notifications" : true
     },
     {
-      "groupId" : 24,
+      "groupId" : 32,
       "state" : "active",
       "color" : "000000",
       "notifications" : true
     }
   ],
   "friendshipState" : "myself",
-  "authToken" : "0oah9SmqF4YfUN5RMjde1rY5PFc"
+  "authToken" : "Ggtcn4Yr-V20ntIvRyLbtts8hNE"
 }
 ```

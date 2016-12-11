@@ -28,6 +28,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -60,6 +63,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : rrule
+Description : Repeating Rule for the slot
 
 Name : openEnd
 Description : OpenEnd Boolean Flag
@@ -119,13 +125,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=RcW2IaUw3FU-ugDtho8enSwLhTU
+Authorization: Token token=pYiiMbNe4Ig8bn4aySCDco7usuk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/12</pre>
+<pre>PATCH /v1/slots/10</pre>
 
 #### Body
 ```javascript
@@ -137,9 +143,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/12&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/10&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=RcW2IaUw3FU-ugDtho8enSwLhTU&quot;</pre>
+	-H &quot;Authorization: Token token=pYiiMbNe4Ig8bn4aySCDco7usuk&quot;</pre>
 
 ### Response
 
@@ -150,11 +156,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;6cd82eda0c365e3936f3589c02640606&quot;
+ETag: W/&quot;6ff543a1399f0ddc5ab06cd88ebd35bd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 4b10e771-1f03-4729-b0e5-132f63576122
-X-Runtime: 0.067026
-Content-Length: 621</pre>
+X-Request-Id: eb13c479-3cf9-4068-b233-e8b563067c5f
+X-Runtime: 0.063859
+Content-Length: 632</pre>
 
 #### Status
 
@@ -164,23 +170,24 @@ Content-Length: 621</pre>
 
 ```javascript
 {
-  "id" : 12,
+  "id" : 10,
   "title" : "New title for a Slot",
   "description" : "",
-  "startDate" : "2019-09-07T00:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:07.623Z",
-  "updatedAt" : "2016-08-30T09:51:07.623Z",
+  "startDate" : "2019-09-12T05:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:36.570Z",
+  "updatedAt" : "2016-12-11T19:54:36.570Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-07T00:44:02.000Z",
+  "endDate" : "2019-10-12T05:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 23,
-    "username" : "User 729",
+    "id" : 24,
+    "username" : "User 738",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:07.615Z",
-    "updatedAt" : "2016-08-30T09:51:07.615Z",
+    "createdAt" : "2016-12-11T19:54:36.555Z",
+    "updatedAt" : "2016-12-11T19:54:36.555Z",
     "deletedAt" : null,
     "image" : ""
   },

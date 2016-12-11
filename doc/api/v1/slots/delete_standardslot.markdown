@@ -28,6 +28,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -85,19 +88,19 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=1Gm33FG0i_-_dy7XAl-mHfE3pps
+<pre>Authorization: Token token=65cOprvzbcFVlxNQunn1bJ3Q2xE
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/slots/18</pre>
+<pre>DELETE /v1/slots/16</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/18&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=1Gm33FG0i_-_dy7XAl-mHfE3pps&quot; \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/16&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=65cOprvzbcFVlxNQunn1bJ3Q2xE&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -109,11 +112,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;3cd4dac5623feb9d40da9c38de0f0f64&quot;
+ETag: W/&quot;36ee5ce613fb27141b757f522aa7c3e5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7bac7153-a717-4bfc-9387-1bd21ca561b2
-X-Runtime: 0.122229
-Content-Length: 711</pre>
+X-Request-Id: 7eb9c62c-80ba-4c2f-8a66-76a005a8726a
+X-Runtime: 0.163292
+Content-Length: 722</pre>
 
 #### Status
 
@@ -123,23 +126,24 @@ Content-Length: 711</pre>
 
 ```javascript
 {
-  "id" : 18,
-  "title" : "Slot title 174",
+  "id" : 16,
+  "title" : "Slot title 179",
   "description" : "",
-  "startDate" : "2019-09-13T06:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:08.305Z",
-  "updatedAt" : "2016-08-30T09:51:08.363Z",
-  "deletedAt" : "2016-08-30T09:51:08.362Z",
-  "endDate" : "2019-10-13T06:44:02.000Z",
+  "startDate" : "2019-09-18T11:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:37.417Z",
+  "updatedAt" : "2016-12-11T19:54:37.502Z",
+  "deletedAt" : "2016-12-11T19:54:37.501Z",
+  "endDate" : "2019-10-18T11:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 38,
-    "username" : "User 744",
+    "id" : 39,
+    "username" : "User 753",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:08.296Z",
-    "updatedAt" : "2016-08-30T09:51:08.296Z",
+    "createdAt" : "2016-12-11T19:54:37.407Z",
+    "updatedAt" : "2016-12-11T19:54:37.407Z",
     "deletedAt" : null,
     "image" : "",
     "location" : null,

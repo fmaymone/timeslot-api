@@ -26,6 +26,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -67,6 +70,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : rrule
+Description : Repeating Rule for the slot
 
 Name : openEnd
 Description : OpenEnd Boolean Flag
@@ -126,13 +132,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4H19Z49frp3uSvIl9fQ0T5SQKFk
+Authorization: Token token=pnZQBm6QIbzfBn7SKDl0gkiL_nI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/15</pre>
+<pre>PATCH /v1/slots/13</pre>
 
 #### Body
 ```javascript
@@ -160,9 +166,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/15&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/13&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4H19Z49frp3uSvIl9fQ0T5SQKFk&quot;</pre>
+	-H &quot;Authorization: Token token=pnZQBm6QIbzfBn7SKDl0gkiL_nI&quot;</pre>
 
 ### Response
 
@@ -173,11 +179,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;8117358339939a095f75e1a0f624cd46&quot;
+ETag: W/&quot;7565017355dc2c54fe38797911d2d528&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dfcafcc1-edc6-4bb0-a95f-31f786d2a8b4
-X-Runtime: 0.080844
-Content-Length: 1029</pre>
+X-Request-Id: 1a25bba4-c37b-4015-9e95-7c100539e490
+X-Runtime: 0.106001
+Content-Length: 1040</pre>
 
 #### Status
 
@@ -187,23 +193,24 @@ Content-Length: 1029</pre>
 
 ```javascript
 {
-  "id" : 15,
-  "title" : "Slot title 171",
+  "id" : 13,
+  "title" : "Slot title 176",
   "description" : "",
-  "startDate" : "2019-09-10T03:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:07.987Z",
-  "updatedAt" : "2016-08-30T09:51:07.987Z",
+  "startDate" : "2019-09-15T08:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:36.975Z",
+  "updatedAt" : "2016-12-11T19:54:36.975Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-10T03:44:02.000Z",
+  "endDate" : "2019-10-15T08:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 29,
-    "username" : "User 735",
+    "id" : 30,
+    "username" : "User 744",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:07.979Z",
-    "updatedAt" : "2016-08-30T09:51:07.979Z",
+    "createdAt" : "2016-12-11T19:54:36.965Z",
+    "updatedAt" : "2016-12-11T19:54:36.965Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -215,7 +222,7 @@ Content-Length: 1029</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:08.010Z"
+      "createdAt" : "2016-12-11T19:54:37.003Z"
     },
     {
       "mediaId" : 9,
@@ -223,7 +230,7 @@ Content-Length: 1029</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:08.005Z"
+      "createdAt" : "2016-12-11T19:54:36.997Z"
     },
     {
       "mediaId" : 8,
@@ -231,7 +238,7 @@ Content-Length: 1029</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:07.998Z"
+      "createdAt" : "2016-12-11T19:54:36.988Z"
     }
   ],
   "settings" : {

@@ -13,7 +13,7 @@ class SlotsetManager
   def add!(slot, slotset)
     case slotset
     when Group # for 'normal' slot groups
-      fail TSErrors::SlotGroupDeleted if slotset.deleted_at?
+      raise TSErrors::SlotGroupDeleted if slotset.deleted_at?
 
       result = Containership.find_or_initialize_by(slot: slot, group: slotset)
       new_instance = (!result.persisted? && result.save) || result.deleted_at?
@@ -23,7 +23,7 @@ class SlotsetManager
         slot.update_visibility('public')
       end
 
-      #slot.follow(slotset) # actually not supported
+      # slot.follow(slotset) # actually not supported
       result.initiator = @current_user if @current_user != slot.creator
       result.create_activity if new_instance
 
@@ -36,11 +36,11 @@ class SlotsetManager
       result.update(deleted_at: nil) if result.deleted_at?
 
       # TODO: ask stani if an activity should be triggered here?
-      #current_user.follow(slot)
-      #result.initiator = @current_user if @current_user != slot.creator
-      #result.create_activity if new_instance
-      #   Passengership.find_or_create_by(slot: slot,
-      #                                   user: current_user).update(deleted_at: nil)
+      # current_user.follow(slot)
+      # result.initiator = @current_user if @current_user != slot.creator
+      # result.create_activity if new_instance
+      #    Passengership.find_or_create_by(slot: slot,
+      #                                    user: current_user).update(deleted_at: nil)
     when friend_slots_uuid
       slot.update(share_with_friends: true) if slot.StdSlot?
       slot.update_visibility('friends') if slot.StdSlotPrivate?

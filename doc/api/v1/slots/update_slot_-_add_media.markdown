@@ -24,6 +24,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -77,6 +80,9 @@ Description : Startdate of the slot
 
 Name : endDate
 Description : Enddate of the slot
+
+Name : rrule
+Description : Repeating Rule for the slot
 
 Name : openEnd
 Description : OpenEnd Boolean Flag
@@ -154,13 +160,13 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=y7NVTvISTbKhSUMfZodIGs-N2LA
+Authorization: Token token=B8WixhvvQgQs7zQx2D-4D_V68Wk
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/14</pre>
+<pre>PATCH /v1/slots/12</pre>
 
 #### Body
 ```javascript
@@ -179,9 +185,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/14&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/12&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=y7NVTvISTbKhSUMfZodIGs-N2LA&quot;</pre>
+	-H &quot;Authorization: Token token=B8WixhvvQgQs7zQx2D-4D_V68Wk&quot;</pre>
 
 ### Response
 
@@ -192,11 +198,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;4624c9f2b46fc960f8eaef0ef09a2c72&quot;
+ETag: W/&quot;5e77509de262ba775e0f545acc8a6fa5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 40dd15ce-5a07-48ad-98e4-1302c9c0b2fb
-X-Runtime: 0.094372
-Content-Length: 804</pre>
+X-Request-Id: 5059bb44-14bc-41aa-8bc0-a83e7bcbce25
+X-Runtime: 0.123316
+Content-Length: 815</pre>
 
 #### Status
 
@@ -206,23 +212,24 @@ Content-Length: 804</pre>
 
 ```javascript
 {
-  "id" : 14,
-  "title" : "Slot title 170",
+  "id" : 12,
+  "title" : "Slot title 175",
   "description" : "",
-  "startDate" : "2019-09-09T02:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:07.868Z",
-  "updatedAt" : "2016-08-30T09:51:07.868Z",
+  "startDate" : "2019-09-14T07:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:36.823Z",
+  "updatedAt" : "2016-12-11T19:54:36.823Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-09T02:44:02.000Z",
+  "endDate" : "2019-10-14T07:44:02.000Z",
   "location" : null,
   "creator" : {
-    "id" : 27,
-    "username" : "User 733",
+    "id" : 28,
+    "username" : "User 742",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:07.860Z",
-    "updatedAt" : "2016-08-30T09:51:07.860Z",
+    "createdAt" : "2016-12-11T19:54:36.814Z",
+    "updatedAt" : "2016-12-11T19:54:36.814Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -234,7 +241,7 @@ Content-Length: 804</pre>
       "position" : 1,
       "localId" : "B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001",
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:07.886Z"
+      "createdAt" : "2016-12-11T19:54:36.847Z"
     }
   ],
   "settings" : {

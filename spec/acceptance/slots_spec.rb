@@ -126,7 +126,7 @@ resource "Slots" do
       context "slot with open End" do
         let(:endDate) { '' }
 
-        example "Create StandardSlot with open End", document: :v1 do
+        example "Create Slot with open End", document: :v1 do
           explanation "Returns data of new slot.\n\n" \
                       "The empty endDate will internally be set to the end of" \
                       " the start day but will not be returned in json.\n\n" \
@@ -832,7 +832,7 @@ resource "Slots" do
       let(:slotGroups) { [group_1.uuid,
                           current_user.slot_sets['my_public_slots_uuid']] }
 
-      it "adds the slot to the public calendar" do
+      example "adds the slot to the public calendar", document: false do
         uuid = current_user.slot_sets['my_public_slots_uuid']
         my_public_calendar = Group.find_by(uuid: uuid)
 
@@ -896,7 +896,7 @@ resource "Slots" do
 
       example "Remove Slot from multiple SlotGroups", document: :v1 do
         explanation "Send an array of slotGroup UUIDs and the slot will be " \
-                    "added to those slotGroups.\n\n" \
+                    "removed from those slotGroups.\n\n" \
                     "returns 404 if ID is invalid\n\n" \
                     "returns ???"
         expect(group_1.slots).to include slot
@@ -1075,7 +1075,7 @@ resource "Slots" do
     response_field :array,
                    "list of all users who added the slot to their 'MyCalendar'"
 
-    let(:parent) { create(:std_slot_public, show_in_calendar: false) }
+    let(:parent) { create(:std_slot_public, show_in_schedule: false) }
     let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do

@@ -241,6 +241,13 @@ RSpec.describe "V1::Slots", type: :request do
         }.to change(SlotSetting, :count).by 1
       end
 
+      it "creates a passengership for this user and slot" do
+        expect {
+          post "/v1/slots", valid_slot, auth_header
+        }.to change(Passengership, :count).by 1
+        expect(current_user.related_slots).to include StdSlot.last
+      end
+
       it "returns the ID of the new slot" do
         post "/v1/slots", valid_slot, auth_header
         expect(json['id']).to eq(StdSlot.unscoped.last.id)
@@ -397,6 +404,13 @@ RSpec.describe "V1::Slots", type: :request do
             expect(my_private_slots.slots).to include StdSlot.last
             expect(response).to have_http_status :created
           end
+
+          it "creates a passengership for this user and slot" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Passengership, :count).by 1
+            expect(current_user.related_slots).to include StdSlot.last
+          end
         end
 
         context "only private calendar submitted" do
@@ -476,6 +490,13 @@ RSpec.describe "V1::Slots", type: :request do
             new_slot = StdSlotPublic.last
             expect(my_private_slots.slots).to include new_slot
           end
+
+          it "creates a passengership for this user and slot" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Passengership, :count).by 1
+            expect(current_user.related_slots).to include StdSlot.last
+          end
         end
       end
 
@@ -500,6 +521,13 @@ RSpec.describe "V1::Slots", type: :request do
             post "/v1/slots", valid_slot, auth_header
           }.to change(StdSlotPublic, :count).by 1
           expect(response).to have_http_status :created
+        end
+
+        it "creates a passengership for this user and slot" do
+          expect {
+            post "/v1/slots", valid_slot, auth_header
+          }.to change(Passengership, :count).by 1
+          expect(current_user.related_slots).to include StdSlot.last
         end
 
         context "no public calendar submitted" do
@@ -570,6 +598,13 @@ RSpec.describe "V1::Slots", type: :request do
             }.to change(Containership, :count).by 1
             expect(my_private_slots.slots).to include StdSlotPrivate.last
           end
+
+          it "creates a passengership for this user and slot" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Passengership, :count).by 1
+            expect(current_user.related_slots).to include StdSlot.last
+          end
         end
 
         context "shared with friends (friend-uuid submitted)" do
@@ -601,6 +636,13 @@ RSpec.describe "V1::Slots", type: :request do
               post "/v1/slots", valid_slot, auth_header
             }.to change(Containership, :count).by 1
             expect(my_private_slots.slots).to include StdSlot.last
+          end
+
+          it "creates a passengership for this user and slot" do
+            expect {
+              post "/v1/slots", valid_slot, auth_header
+            }.to change(Passengership, :count).by 1
+            expect(current_user.related_slots).to include StdSlot.last
           end
         end
       end

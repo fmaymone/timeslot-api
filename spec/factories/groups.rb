@@ -8,6 +8,17 @@ FactoryGirl.define do
     members_can_post false
     members_can_invite false
 
+    transient do
+      active_members nil
+    end
+
+    after :create do |group, factory|
+      # allows adding members/subscribers to a group/calendar
+      factory.active_members&.each do |member|
+        create :membership, :active, group: group, user: member
+      end
+    end
+
     trait :public do
       public true
     end

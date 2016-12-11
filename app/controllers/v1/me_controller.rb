@@ -54,10 +54,10 @@ module V1
       head :ok
     end
 
-    # GET /v1/me/slots
+    # GET /v1/me/library
     # returns all slots created by, tagged to, in my_calendar
     # or in a group of the current_user
-    def my_slots
+    def my_slot_library
       authorize :me
 
       collector = SlotsCollector.new(**slot_paging_params)
@@ -72,24 +72,42 @@ module V1
       end
     end
 
+    # GET /v1/me/slots
+    # returns all slots created by, tagged to,
+    # or in a group of the current_user
+    def my_slots
+      authorize :me
+
+      collector = SlotsCollector.new(**slot_paging_params)
+      the_result = collector.my_active_slots(user: current_user)
+      @slots = the_result.data
+
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
+    end
+
     # GET /v1/me/schedule
     # returns all slots current user has in schedule
-    # disabled pagination as frontend needs all schedule slots
+    # afaict not used by hybrid app
     def schedule
       authorize :me
 
-      @slots = current_user.my_calendar_slots
+      # @slots = current_user.my_calendar_slots
 
-      # collector = SlotsCollector.new(**slot_paging_params)
-      # the_result = collector.my_schedule_slots(user: current_user)
-      # @slots = the_result.data
+      collector = SlotsCollector.new(**slot_paging_params)
+      the_result = collector.my_schedule_slots(user: current_user)
+      @slots = the_result.data
 
-      # if slot_paging_params.blank?
-      render "v1/slots/index"
-      # else
-      #   @result = SlotPaginator.new(data: the_result, **slot_paging_params)
-      #   render "v1/paginated/slots"
-      # end
+      if slot_paging_params.blank?
+        render "v1/slots/index"
+      else
+        @result = SlotPaginator.new(data: the_result, **slot_paging_params)
+        render "v1/paginated/slots"
+      end
     end
 
     # POST /v1/me/schedule/calendar/:uuid

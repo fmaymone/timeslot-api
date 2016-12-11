@@ -28,6 +28,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -89,19 +92,19 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=qn1pwgKSZr5x_p11Lgi0pcc3Bzg
+Authorization: Token token=naRSm6DfImJ1GQtbMjTvudv2C8k
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/2</pre>
+<pre>GET /v1/slots/5</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/2&quot; -X GET \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/5&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=qn1pwgKSZr5x_p11Lgi0pcc3Bzg&quot;</pre>
+	-H &quot;Authorization: Token token=naRSm6DfImJ1GQtbMjTvudv2C8k&quot;</pre>
 
 ### Response
 
@@ -112,11 +115,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;0b31259fc506c7a03269e82a58a9429f&quot;
+ETag: W/&quot;1ecbfb7d4b26579f1778b91b7fee1e8d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b9a47de6-3b09-4ba6-b4ae-b9a0fd12cb60
-X-Runtime: 0.060345
-Content-Length: 1903</pre>
+X-Request-Id: 6b1c2eea-bc7d-4315-833c-b226789bac7c
+X-Runtime: 0.037920
+Content-Length: 1918</pre>
 
 #### Status
 
@@ -126,16 +129,17 @@ Content-Length: 1903</pre>
 
 ```javascript
 {
-  "id" : 2,
-  "title" : "Slot title 162",
+  "id" : 5,
+  "title" : "Slot title 168",
   "description" : "",
-  "startDate" : "2019-09-01T18:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:06.737Z",
-  "updatedAt" : "2016-08-30T09:51:06.737Z",
+  "startDate" : "2019-09-07T00:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:36.219Z",
+  "updatedAt" : "2016-12-11T19:54:36.219Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-01T18:44:02.000Z",
+  "endDate" : "2019-10-07T00:44:02.000Z",
   "location" : {
-    "id" : "0a7ed54c-cd64-411e-b28d-174c6c2a6e6b",
+    "id" : "04427511-a9cd-4176-bcc3-f36f016ce9bc",
     "name" : "Acapulco",
     "thoroughfare" : null,
     "subThoroughfare" : null,
@@ -154,13 +158,13 @@ Content-Length: 1903</pre>
     "placeId" : null
   },
   "creator" : {
-    "id" : 5,
-    "username" : "User 701",
+    "id" : 13,
+    "username" : "User 717",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:06.722Z",
-    "updatedAt" : "2016-08-30T09:51:06.722Z",
+    "createdAt" : "2016-12-11T19:54:36.200Z",
+    "updatedAt" : "2016-12-11T19:54:36.200Z",
     "deletedAt" : null,
     "image" : ""
   },
@@ -172,7 +176,7 @@ Content-Length: 1903</pre>
       "position" : 5,
       "localId" : null,
       "mediaType" : "audio",
-      "createdAt" : "2016-08-30T09:51:06.762Z",
+      "createdAt" : "2016-12-11T19:54:36.240Z",
       "duration" : null,
       "title" : "Title 405"
     },
@@ -182,7 +186,7 @@ Content-Length: 1903</pre>
       "position" : 4,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-08-30T09:51:06.760Z",
+      "createdAt" : "2016-12-11T19:54:36.236Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -192,7 +196,7 @@ Content-Length: 1903</pre>
       "position" : 3,
       "localId" : null,
       "mediaType" : "video",
-      "createdAt" : "2016-08-30T09:51:06.758Z",
+      "createdAt" : "2016-12-11T19:54:36.233Z",
       "duration" : null,
       "thumbnail" : null
     },
@@ -202,7 +206,7 @@ Content-Length: 1903</pre>
       "position" : 2,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:06.752Z"
+      "createdAt" : "2016-12-11T19:54:36.230Z"
     },
     {
       "mediaId" : 2,
@@ -210,7 +214,7 @@ Content-Length: 1903</pre>
       "position" : 1,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:06.746Z"
+      "createdAt" : "2016-12-11T19:54:36.228Z"
     },
     {
       "mediaId" : 1,
@@ -218,7 +222,7 @@ Content-Length: 1903</pre>
       "position" : 0,
       "localId" : null,
       "mediaType" : "image",
-      "createdAt" : "2016-08-30T09:51:06.744Z"
+      "createdAt" : "2016-12-11T19:54:36.225Z"
     }
   ],
   "settings" : {
@@ -226,9 +230,9 @@ Content-Length: 1903</pre>
   },
   "visibility" : "public",
   "likerIds" : [
-    7,
-    8,
-    9
+    15,
+    16,
+    17
   ],
   "likes" : 3,
   "commentsCounter" : 0,

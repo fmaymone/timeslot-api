@@ -107,6 +107,96 @@ RSpec.describe SlotsCollector, type: :service do
     end
   end
 
+  describe :my_active_slots do
+    let(:user) { create(:user, :with_default_calendars) }
+
+    context "created slots" do
+      # those slots are collected via the subscribed calendars/groups
+      let!(:my_private_slot) {
+        create(:std_slot_private, creator: user,
+               in_calendar: user.default_private_calendar)
+      }
+      let!(:my_public_slot) {
+        create(:std_slot_public, creator: user,
+               in_calendar: user.default_public_calendar)
+      }
+
+      it "returns all slots created by current user" do
+        result = SlotsCollector.new.my_active_slots(user: user)
+        slots = result.data
+        expect(slots).to include my_private_slot
+        expect(slots).to include my_public_slot
+      end
+    end
+
+    context "tagged slots aka slots with add-media-permission" do
+      let!(:tagged_private_slot) { create(:std_slot_private, tag_user: user) }
+      let!(:tagged_public_slot) { create(:std_slot_public, tag_user: user) }
+
+      it "returns all slots current user has 'add-media'-permission (tagged)" do
+        result = SlotsCollector.new.my_active_slots(user: user)
+        slots = result.data
+        expect(slots).to include tagged_private_slot
+        expect(slots).to include tagged_public_slot
+      end
+    end
+
+    context "slots from subscribed calendars" do
+      let(:private_calendar) {
+        create(:calendar, :private, active_members: [user])
+      }
+      let(:public_calendar) {
+        create(:calendar, :public, active_members: [user])
+      }
+      let!(:private_calendar_slot) {
+        create(:std_slot_private, in_calendar: private_calendar)
+      }
+      let!(:public_calendar_slot) {
+        create(:std_slot_public, in_calendar: public_calendar)
+      }
+      it "returns all slots from groups/calendars current user subscribed to" do
+        result = SlotsCollector.new.my_active_slots(user: user)
+        slots = result.data
+        expect(slots).to include private_calendar_slot
+        expect(slots).to include public_calendar_slot
+      end
+    end
+
+    context "removed slots" do
+      let!(:removed_public_stdslot) {
+        slot = create(:std_slot_public, in_calendar: create(:calendar, :public))
+        create(:passengership, slot: slot, user: user,
+               show_in_my_schedule: false,
+               add_media_permission: false)
+        slot
+      }
+
+      let!(:removed_own_stdslot) {
+        create(:std_slot_private, owner: user, creator: user,
+               show_in_schedule: false,
+               in_calendar: user.default_private_calendar)
+      }
+
+      it "doesn't return slots current user resloted but removed then" do
+        # remove slot from own calendar
+        cs = Containership.find_by(slot_id: removed_own_stdslot.id,
+                                   group: user.default_private_calendar)
+        cs.update(deleted_at: Time.zone.now)
+
+        result = SlotsCollector.new.my_active_slots(user: user)
+        slots = result.data
+        expect(slots).not_to include removed_own_stdslot
+      end
+
+      # TODO: edge case: user removed his created slot from his default calendar
+      it "doesn't return slots own slots that were removed" do
+        result = SlotsCollector.new.my_active_slots(user: user)
+        slots = result.data
+        expect(slots).not_to include removed_public_stdslot
+      end
+    end
+  end
+
   describe :slots_from_friends do
     let(:user) { create(:user) }
     let!(:friends) do

@@ -27,14 +27,30 @@ class SlotsCollector
     @direction = after.nil? ? 'before' : 'after'
   end
 
-  # collects all created by, tagged to, in my_calendar
-  # or in a group of current_user
+  # currently unused
+  # collects all slots
+  # - (created by, if in a subscibed group)
+  # - the user has the permission to add media (tagged to),
+  # - in my_calendar now (reslots),
+  # - have been in my_calendar but were deleted (reslots),
+  # - in a calendar subscribed by current_user
   def my_library_slots(user:)
-    valid_collections = PresentableSlots.call(relationship: ME, user: user)
+    # valid_collections = PresentableSlots.call(relationship: ME, user: user)
+    valid_collections = [user.related_slots, user.group_slots] # the same
     consider_mode(valid_collections, @mode)
   end
 
-  # collects all passengerships of current_user
+  # collects all slots
+  # - (created by, if in a subscibed group)
+  # - the user has the permission to add media (tagged to),
+  # - in a calendar subscribed by current_user
+  def my_active_slots(user:)
+    valid_collections = [user.tagged_slots, user.group_slots]
+    consider_mode(valid_collections, @mode)
+  end
+
+  # currently unused
+  # collects all slots which are shown in the users schedule
   def my_schedule_slots(user:)
     valid_collections = [user.my_calendar_slots]
     consider_mode(valid_collections, @mode)

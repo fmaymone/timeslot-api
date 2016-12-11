@@ -26,6 +26,9 @@ Description : Startdate and Time of the Slot
 Name : endDate *- required -*
 Description : Enddate and Time of the Slot (startdate + duration).
 
+Name : rrule
+Description : Repeating Rule for the Slot.
+
 Name : description
 Description : Description for the slot (max. 500 characters)
 
@@ -104,6 +107,9 @@ Description : Startdate of the slot
 Name : endDate
 Description : Enddate of the slot
 
+Name : rrule
+Description : Repeating Rule for the slot
+
 Name : openEnd
 Description : OpenEnd Boolean Flag
 
@@ -162,13 +168,13 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=vi27UWef8hp3aBClIWHUaCAHzqk
+Authorization: Token token=z0n19KFZj-7_z0hm31n7tBEVPiQ
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/slots/16</pre>
+<pre>PATCH /v1/slots/14</pre>
 
 #### Body
 ```javascript
@@ -193,9 +199,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/16&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;placeId&quot;:&quot;ChIJrTLr-GyuEmsRBfy61i59si0&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;http://tsinc-stage.timeslot.rocks/v1/slots/14&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;placeId&quot;:&quot;ChIJrTLr-GyuEmsRBfy61i59si0&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=vi27UWef8hp3aBClIWHUaCAHzqk&quot;</pre>
+	-H &quot;Authorization: Token token=z0n19KFZj-7_z0hm31n7tBEVPiQ&quot;</pre>
 
 ### Response
 
@@ -206,11 +212,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;86441241a10a6baf6ada95d584e4a771&quot;
+ETag: W/&quot;d94cbeb4f066dfc1f7cf39435f6905ca&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7fe60acd-cafb-4664-9503-6b34dc3a4121
-X-Runtime: 0.072830
-Content-Length: 1027</pre>
+X-Request-Id: f1b52e3a-37db-4e2b-a3c2-474fbd4d020c
+X-Runtime: 0.097173
+Content-Length: 1038</pre>
 
 #### Status
 
@@ -220,16 +226,17 @@ Content-Length: 1027</pre>
 
 ```javascript
 {
-  "id" : 16,
-  "title" : "Slot title 172",
+  "id" : 14,
+  "title" : "Slot title 177",
   "description" : "",
-  "startDate" : "2019-09-11T04:44:02.000Z",
-  "createdAt" : "2016-08-30T09:51:08.113Z",
-  "updatedAt" : "2016-08-30T09:51:08.113Z",
+  "startDate" : "2019-09-16T09:44:02.000Z",
+  "rrule" : "",
+  "createdAt" : "2016-12-11T19:54:37.137Z",
+  "updatedAt" : "2016-12-11T19:54:37.137Z",
   "deletedAt" : null,
-  "endDate" : "2019-10-11T04:44:02.000Z",
+  "endDate" : "2019-10-16T09:44:02.000Z",
   "location" : {
-    "id" : "2dff5a11-f645-4e6c-801d-f41deba0a570",
+    "id" : "2329b0a2-f2c1-49c9-93b6-65a055b50ca0",
     "name" : "Soho House",
     "thoroughfare" : "Torstrasse 1",
     "subThoroughfare" : "1",
@@ -248,13 +255,13 @@ Content-Length: 1027</pre>
     "placeId" : "ChIJrTLr-GyuEmsRBfy61i59si0"
   },
   "creator" : {
-    "id" : 34,
-    "username" : "User 740",
+    "id" : 35,
+    "username" : "User 749",
     "firstName" : null,
     "middleName" : null,
     "lastName" : null,
-    "createdAt" : "2016-08-30T09:51:08.104Z",
-    "updatedAt" : "2016-08-30T09:51:08.104Z",
+    "createdAt" : "2016-12-11T19:54:37.125Z",
+    "updatedAt" : "2016-12-11T19:54:37.125Z",
     "deletedAt" : null,
     "image" : ""
   },

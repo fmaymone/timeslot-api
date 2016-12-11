@@ -54,7 +54,6 @@
 * [Remove/Kick other user from own group](groups/removekick_other_user_from_own_group.markdown)
 * [Update settings of joined group](groups/update_settings_of_joined_group.markdown)
 * [Add GlobalSlots to new or existing public group](groups/add_globalslots_to_new_or_existing_public_group.markdown)
-* [Update existing global group](groups/update_existing_global_group.markdown)
 
 ## Invitecode
 
@@ -65,8 +64,10 @@
 
 * [Get complete User data](me/get_complete_user_data.markdown)
 * [Get my schedule](me/get_my_schedule.markdown)
-* [Get slots - with pagination](me/get_slots_-_with_pagination.markdown)
-* [Get slots - no pagination](me/get_slots_-_no_pagination.markdown)
+* [Get active slots - with pagination](me/get_active_slots_-_with_pagination.markdown)
+* [Get active slots - no pagination](me/get_active_slots_-_no_pagination.markdown)
+* [Get slot library - with pagination](me/get_slot_library_-_with_pagination.markdown)
+* [Get slot library - no pagination](me/get_slot_library_-_no_pagination.markdown)
 * [Get slots from friends](me/get_slots_from_friends.markdown)
 * [Get media items](me/get_media_items.markdown)
 * [Get suggested Users](me/get_suggested_users.markdown)
@@ -115,15 +116,12 @@
 * [Share Slot as QR-Code](share/share_slot_as_qr-code.markdown)
 * [Share Slot via Email](share/share_slot_via_email.markdown)
 * [Delete all shared content](share/delete_all_shared_content.markdown)
-* [Cinema - Find global slots](search/cinema_-_find_global_slots.markdown)
 
 ## Slots
 
 * [Create new slot](slots/create_new_slot.markdown)
-* [Get slot](slots/get_slot.markdown)
-* [Create StandardSlot](slots/create_standardslot.markdown)
 * [Create StandardSlot with open End](slots/create_standardslot_with_open_end.markdown)
-* [Update MetaSlot](slots/update_metaslot.markdown)
+* [Get slot](slots/get_slot.markdown)
 * [Update StdSlot - change title](slots/update_stdslot_-_change_title.markdown)
 * [Update Slot - Add notes](slots/update_slot_-_add_notes.markdown)
 * [Update Slot - Add media](slots/update_slot_-_add_media.markdown)
@@ -168,4 +166,3 @@
 * [Get list of friends of another user](users/get_list_of_friends_of_another_user.markdown)
 * [Get list of calendars of another user](users/get_list_of_calendars_of_another_user.markdown)
 * [Reset password](users/reset_password.markdown)
-
