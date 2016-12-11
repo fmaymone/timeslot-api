@@ -132,6 +132,14 @@ class User < ActiveRecord::Base
     picture
   end
 
+  def default_private_calendar
+    Group.find_by uuid: my_private_slots_uuid
+  end
+
+  def default_public_calendar
+    Group.find_by uuid: my_public_slots_uuid
+  end
+
   def sign_out
     update!(auth_token: nil)
   end
