@@ -1075,7 +1075,7 @@ resource "Slots" do
     response_field :array,
                    "list of all users who added the slot to their 'MyCalendar'"
 
-    let(:parent) { create(:std_slot_public, show_in_calendar: false) }
+    let(:parent) { create(:std_slot_public, show_in_schedule: false) }
     let!(:reslots) { create_list(:passengership, 2, slot: parent) }
 
     describe "Get Slotters for Slot" do

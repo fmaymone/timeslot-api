@@ -173,7 +173,7 @@ RSpec.describe SlotsCollector, type: :service do
 
       let!(:removed_own_stdslot) {
         create(:std_slot_private, owner: user, creator: user,
-               show_in_calendar: false,
+               show_in_schedule: false,
                in_calendar: user.default_private_calendar)
       }
 

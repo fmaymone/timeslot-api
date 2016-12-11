@@ -5,7 +5,7 @@ FactoryGirl.define do
     # owner can be overwritten if passed to the factory on creation
 
     transient do
-      show_in_calendar true
+      show_in_schedule true
       tag_user nil
       in_calendar nil
     end
@@ -13,13 +13,13 @@ FactoryGirl.define do
     after :create do |slot, factory|
       # create passengership for the slot creator by default
       create :passengership, slot: slot, user: slot.creator,
-             show_in_my_schedule: factory.show_in_calendar,
+             show_in_my_schedule: factory.show_in_schedule,
              add_media_permission: false
 
       # allows easy tagging of a user to a slot
       if factory.tag_user
         create :passengership, slot: slot, user: factory.tag_user,
-               show_in_my_schedule: factory.show_in_calendar,
+               show_in_my_schedule: factory.show_in_schedule,
                add_media_permission: true
       end
 
