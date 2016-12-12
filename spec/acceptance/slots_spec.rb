@@ -144,6 +144,20 @@ resource "Slots" do
         end
       end
 
+      context "all-day slot" do
+        let(:allday) { true }
+
+        example "Create all-day Slot", document: :false do
+          do_request
+
+          expect(response_status).to eq(201)
+          new_slot = BaseSlot.unscoped.last
+          expect(new_slot.allday) .to eq true
+          expect(json).to have_key("id")
+          expect(json).to have_key("title")
+        end
+      end
+
       context "slot with location" do
         include_context "ios location params"
 

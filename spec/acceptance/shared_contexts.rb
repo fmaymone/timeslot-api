@@ -60,6 +60,9 @@ RSpec.shared_context "default slot parameter" do
             required: true
   parameter :rrule,
             "Repeating Rule for the Slot."
+  parameter :allday,
+            "The All-Day Flag indicates that a Slot lasts for one or " \
+            "more complete days."
   # parameter :openEnd,
   #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
   #          required: true
