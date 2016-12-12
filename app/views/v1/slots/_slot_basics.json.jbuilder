@@ -4,6 +4,7 @@ json.extract!(slot,
               :description,
               :start_date,
               :rrule,
+              :allday,
               :created_at,
               :updated_at,
               :deleted_at
