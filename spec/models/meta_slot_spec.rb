@@ -9,6 +9,7 @@ RSpec.describe MetaSlot, type: :model do
   it { is_expected.to respond_to(:start_date) }
   it { is_expected.to respond_to(:end_date) }
   it { is_expected.to respond_to(:rrule) }
+  it { is_expected.to respond_to(:allday) }
   it { is_expected.to respond_to(:open_end) }
   it { is_expected.to respond_to(:creator) }
   it { is_expected.to respond_to(:location_uid) }
@@ -86,6 +87,35 @@ RSpec.describe MetaSlot, type: :model do
     it "sets the slot to open_end and assign the correct enddate" do
       meta_slot.update(end_date: nil)
       expect(meta_slot.open_end).to be true
+    end
+  end
+
+  describe "allday" do
+    let(:meta_slot) { create(:meta_slot) }
+
+    describe "when allday flag is not present" do
+      before { meta_slot.allday = nil }
+      it { is_expected.to be_valid }
+    end
+
+    it "is false if not present" do
+      expect(meta_slot.allday).to be false
+    end
+
+    it "is false if set to false" do
+      meta_slot.update(allday: false)
+      expect(meta_slot.allday).to be false
+    end
+
+    it "is true if set to true" do
+      meta_slot.update(allday: true)
+      expect(meta_slot.allday).to be true
+    end
+
+    it "raises error if not set to boolean value" do
+      expect {
+        meta_slot.update(allday: nil)
+      }.to raise_error ActiveRecord::StatementInvalid
     end
   end
 

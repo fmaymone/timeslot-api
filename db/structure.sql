@@ -2,11 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.4
--- Dumped by pg_dump version 9.5.4
+-- Dumped from database version 9.6.1
+-- Dumped by pg_dump version 9.6.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -67,20 +68,6 @@ CREATE EXTENSION IF NOT EXISTS hstore WITH SCHEMA public;
 --
 
 COMMENT ON EXTENSION hstore IS 'data type for storing sets of (key, value) pairs';
-
-
---
--- Name: pg_stat_statements; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_stat_statements WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_stat_statements; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_stat_statements IS 'track execution statistics of all SQL statements executed';
 
 
 --
@@ -319,14 +306,14 @@ ALTER SEQUENCE friendships_id_seq OWNED BY friendships.id;
 --
 
 CREATE TABLE global_slots (
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL,
-    deleted_at timestamp without time zone,
-    meta_slot_id bigint,
     id bigint DEFAULT nextval('base_slots_id_seq'::regclass),
+    meta_slot_id bigint,
     slot_type integer,
     likes_count integer DEFAULT 0,
     comments_count integer DEFAULT 0,
+    deleted_at timestamp without time zone,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
     url character varying DEFAULT ''::character varying,
     muid uuid
 )
@@ -585,7 +572,8 @@ CREATE TABLE meta_slots (
     ios_location_id bigint,
     open_end boolean DEFAULT false NOT NULL,
     location_uid uuid,
-    rrule character varying DEFAULT ''::character varying NOT NULL
+    rrule character varying DEFAULT ''::character varying NOT NULL,
+    allday boolean DEFAULT false NOT NULL
 );
 
 
@@ -829,182 +817,182 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: base_slots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY base_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: connects id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY connects ALTER COLUMN id SET DEFAULT nextval('connects_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: containerships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY containerships ALTER COLUMN id SET DEFAULT nextval('containerships_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: devices id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY devices ALTER COLUMN id SET DEFAULT nextval('devices_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: friendships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY friendships ALTER COLUMN id SET DEFAULT nextval('friendships_id_seq'::regclass);
 
 
 --
--- Name: slot_uuid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: global_slots slot_uuid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY global_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4();
 
 
 --
--- Name: description; Type: DEFAULT; Schema: public; Owner: -
+-- Name: global_slots description; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY global_slots ALTER COLUMN description SET DEFAULT ''::character varying;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: groups id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups ALTER COLUMN id SET DEFAULT nextval('groups_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: invitecodes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY invitecodes ALTER COLUMN id SET DEFAULT nextval('invitecodes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ios_locations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ios_locations ALTER COLUMN id SET DEFAULT nextval('ios_locations_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: likes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY likes ALTER COLUMN id SET DEFAULT nextval('likes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: media_items id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY media_items ALTER COLUMN id SET DEFAULT nextval('media_items_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: memberships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY memberships ALTER COLUMN id SET DEFAULT nextval('memberships_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: meta_slots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY meta_slots ALTER COLUMN id SET DEFAULT nextval('meta_slots_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: notes id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY notes ALTER COLUMN id SET DEFAULT nextval('notes_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: passengerships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY passengerships ALTER COLUMN id SET DEFAULT nextval('passengerships_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: providers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY providers ALTER COLUMN id SET DEFAULT nextval('providers_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: slot_settings id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY slot_settings ALTER COLUMN id SET DEFAULT nextval('slot_settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: std_slots id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN id SET DEFAULT nextval('base_slots_id_seq'::regclass);
 
 
 --
--- Name: likes_count; Type: DEFAULT; Schema: public; Owner: -
+-- Name: std_slots likes_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN likes_count SET DEFAULT 0;
 
 
 --
--- Name: comments_count; Type: DEFAULT; Schema: public; Owner: -
+-- Name: std_slots comments_count; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN comments_count SET DEFAULT 0;
 
 
 --
--- Name: slot_uuid; Type: DEFAULT; Schema: public; Owner: -
+-- Name: std_slots slot_uuid; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN slot_uuid SET DEFAULT uuid_generate_v4();
 
 
 --
--- Name: description; Type: DEFAULT; Schema: public; Owner: -
+-- Name: std_slots description; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY std_slots ALTER COLUMN description SET DEFAULT ''::character varying;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 
 --
--- Name: base_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: base_slots base_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY base_slots
@@ -1012,7 +1000,7 @@ ALTER TABLE ONLY base_slots
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -1020,7 +1008,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: connects connects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY connects
@@ -1028,7 +1016,7 @@ ALTER TABLE ONLY connects
 
 
 --
--- Name: containerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: containerships containerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY containerships
@@ -1036,7 +1024,7 @@ ALTER TABLE ONLY containerships
 
 
 --
--- Name: devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: devices devices_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY devices
@@ -1044,7 +1032,7 @@ ALTER TABLE ONLY devices
 
 
 --
--- Name: friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: friendships friendships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY friendships
@@ -1052,7 +1040,7 @@ ALTER TABLE ONLY friendships
 
 
 --
--- Name: groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY groups
@@ -1060,7 +1048,7 @@ ALTER TABLE ONLY groups
 
 
 --
--- Name: invitecodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: invitecodes invitecodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY invitecodes
@@ -1068,7 +1056,7 @@ ALTER TABLE ONLY invitecodes
 
 
 --
--- Name: ios_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ios_locations ios_locations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY ios_locations
@@ -1076,7 +1064,7 @@ ALTER TABLE ONLY ios_locations
 
 
 --
--- Name: likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: likes likes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY likes
@@ -1084,7 +1072,7 @@ ALTER TABLE ONLY likes
 
 
 --
--- Name: media_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: media_items media_items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY media_items
@@ -1092,7 +1080,7 @@ ALTER TABLE ONLY media_items
 
 
 --
--- Name: memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: memberships memberships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY memberships
@@ -1100,7 +1088,7 @@ ALTER TABLE ONLY memberships
 
 
 --
--- Name: meta_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: meta_slots meta_slots_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY meta_slots
@@ -1108,7 +1096,7 @@ ALTER TABLE ONLY meta_slots
 
 
 --
--- Name: notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: notes notes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY notes
@@ -1116,7 +1104,7 @@ ALTER TABLE ONLY notes
 
 
 --
--- Name: passengerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: passengerships passengerships_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY passengerships
@@ -1124,7 +1112,7 @@ ALTER TABLE ONLY passengerships
 
 
 --
--- Name: providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: providers providers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY providers
@@ -1132,7 +1120,7 @@ ALTER TABLE ONLY providers
 
 
 --
--- Name: slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: slot_settings slot_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY slot_settings
@@ -1140,7 +1128,7 @@ ALTER TABLE ONLY slot_settings
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -1618,4 +1606,6 @@ INSERT INTO schema_migrations (version) VALUES ('20160826225331');
 INSERT INTO schema_migrations (version) VALUES ('20160829092803');
 
 INSERT INTO schema_migrations (version) VALUES ('20160912100726');
+
+INSERT INTO schema_migrations (version) VALUES ('20161212131529');
 
