@@ -101,6 +101,8 @@ resource "Slots" do
         expect(json).to have_key("endDate")
         expect(json).to have_key("rrule")
         expect(json["rrule"]).to eq("RRULE:FREQ=WEEKLY;BYDAY=TH")
+        expect(json).to have_key("allday")
+        expect(json["allday"]).to eq(false)
         expect(json).to have_key("createdAt")
         expect(json).to have_key("updatedAt")
         expect(json).to have_key("deletedAt")
@@ -155,6 +157,7 @@ resource "Slots" do
           expect(new_slot.allday) .to eq true
           expect(json).to have_key("id")
           expect(json).to have_key("title")
+          expect(json['allday']).to be true
         end
       end
 
@@ -290,6 +293,7 @@ resource "Slots" do
                  "startDate" => slot.start_date.as_json,
                  "endDate" => slot.end_date.as_json,
                  "rrule" => slot.rrule,
+                 "allday" => slot.allday,
                  "firstGroup" => nil,
                  "createdAt" => slot.created_at.as_json,
                  "updatedAt" => slot.updated_at.as_json,

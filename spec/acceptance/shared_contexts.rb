@@ -15,6 +15,7 @@ RSpec.shared_context "default slot response fields" do
   response_field :startDate, "Startdate of the slot"
   response_field :endDate, "Enddate of the slot"
   response_field :rrule, "Repeating Rule for the slot"
+  response_field :allday, "All-Day Boolean Flag"
   response_field :openEnd, "OpenEnd Boolean Flag"
   response_field :createdAt, "Creation of slot"
   response_field :updatedAt, "Last update of slot"
@@ -61,8 +62,8 @@ RSpec.shared_context "default slot parameter" do
   parameter :rrule,
             "Repeating Rule for the Slot."
   parameter :allday,
-            "The All-Day Flag indicates that a Slot lasts for one or " \
-            "more complete days."
+            "The All-Day boolean Flag indicates that a Slot lasts for one or " \
+            "more complete days (default: false)."
   # parameter :openEnd,
   #          "The OpenEnd Flag indicates if an user has set a specific end date to a Slot or not.",
   #          required: true

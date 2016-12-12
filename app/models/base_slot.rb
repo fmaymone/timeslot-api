@@ -58,7 +58,7 @@ class BaseSlot < ActiveRecord::Base
 
   delegate :title, :start_date, :end_date, :creator_id, :creator, :location_uid,
            :location, :ios_location_id, :ios_location, :open_end, :rrule,
-           :slot_settings,
+           :slot_settings, :allday,
            :title=, :start_date=, :end_date=, :rrule=, :allday=, :creator=,
            :location_uid=, :open_end=,
            to: :meta_slot
