@@ -113,7 +113,7 @@ bundle install
 
 * create local user on OSX (when prompt for password enter "9dh39fd")
 ```bash
-createuser -P -d ts_rails_backend
+createuser -P -d -s ts_rails_backend
 ```
 
 * create local user on Linux
