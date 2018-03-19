@@ -170,7 +170,11 @@ module V1
     def add_high_five
       @slot = BaseSlot.get(params[:id])
       authorize @slot
-      @slot.create_high_five current_user
+      puts '------------Olar'
+      puts params[:count]
+      puts '------------Olar'
+      @slot.create_high_five(current_user, params[:count])
+     
 
       head :ok
     end

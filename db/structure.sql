@@ -367,7 +367,8 @@ CREATE TABLE high_fives (
     base_slot_id integer,
     deleted_at timestamp without time zone,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    count integer DEFAULT 0
 );
 
 
@@ -1679,4 +1680,6 @@ INSERT INTO schema_migrations (version) VALUES ('20180319141657');
 INSERT INTO schema_migrations (version) VALUES ('20180319145038');
 
 INSERT INTO schema_migrations (version) VALUES ('20180319153304');
+
+INSERT INTO schema_migrations (version) VALUES ('20180319213054');
 

@@ -7,7 +7,7 @@ class HighFive < ActiveRecord::Base
   belongs_to :slot, class_name: BaseSlot, foreign_key: "base_slot_id",
             inverse_of: :high_fives, counter_cache: true
             
-   validates_presence_of :user, :slot
+  validates_presence_of :user, :slot
    
   def delete
     remove_activity

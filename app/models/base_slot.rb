@@ -228,21 +228,17 @@ class BaseSlot < ActiveRecord::Base
     like
   end
   
-  def create_high_five(user)
+  def create_high_five(user, count)
     high_five = HighFive.find_by(slot: self, user: user)
+    high_five.count = count
+    puts 'Controller_-----'
+    puts high_five.count
+    puts 'Controller_-----'
+    high_five.save
     unless high_five
+     puts 'unless high_five-----'
       high_five = high_fives.create(user: user)
-      high_five.create_activity
-    end
-    high_five
-  rescue ActiveRecord::RecordNotUnique
-    # this is raised when the like is already present, not catching it here
-    # means it would be rescued in application_controller.rb and returns 422
-    # which is not our intention
-  else
-    if high_five.deleted_at? # relike after unlike
-      high_five.update(deleted_at: nil)
-      BaseSlot.increment_counter(:high_fives_count, id)
+      high_five.count = count
       high_five.create_activity
     end
     high_five
