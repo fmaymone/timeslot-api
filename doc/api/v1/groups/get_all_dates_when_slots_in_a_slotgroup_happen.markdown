@@ -29,19 +29,19 @@ Description : Array with dates where a slot is happening, (starting, ongoing or 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=5RgpGC5euBK8qwi0oQTbrOE3UxQ
+Authorization: Token token=6HYR4_QCBKpsz5BWsxTcFqBzGgw
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/12a2270a-eb0a-4ee2-84bd-abad2df22461/dates</pre>
+<pre>GET /v1/groups/b06ad27f-c57f-464d-854a-24c69eb33a0b/dates</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/12a2270a-eb0a-4ee2-84bd-abad2df22461/dates&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/b06ad27f-c57f-464d-854a-24c69eb33a0b/dates&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=5RgpGC5euBK8qwi0oQTbrOE3UxQ&quot;</pre>
+	-H &quot;Authorization: Token token=6HYR4_QCBKpsz5BWsxTcFqBzGgw&quot;</pre>
 
 ### Response
 
@@ -54,8 +54,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;5073d64e42996d30093cc4e457c42b04&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c32fdf46-9f8a-4a3c-8474-c47aeddb27e2
-X-Runtime: 0.028217
+X-Request-Id: 21147e6f-ada0-45ee-bf4a-975c2caa6f97
+X-Runtime: 0.020193
 Content-Length: 129</pre>
 
 #### Status

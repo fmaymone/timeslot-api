@@ -86,24 +86,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=qpCaGbhrVd_LcJEBwDTrO47gMM8
+<pre>Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/me/slots?limit=3&amp;moment=2018-03-19T15%3A47%3A11.954Z&amp;mode=upcoming</pre>
+<pre>GET /v1/me/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A31.527Z&amp;mode=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2018-03-19T15:47:11.954Z
+moment: 2018-03-19T19:54:31.527Z
 mode: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/slots?limit=3&amp;moment=2018-03-19T15%3A47%3A11.954Z&amp;mode=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=qpCaGbhrVd_LcJEBwDTrO47gMM8&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A31.527Z&amp;mode=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA&quot;</pre>
 
 ### Response
 
@@ -114,10 +114,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;2baaa395c9419b5666c2d93c1bd52e88&quot;
+ETag: W/&quot;90c5a4171a8db6ee9fccd2f92189eecb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: cbedeb0e-20ab-4372-b48c-9694a1a75097
-X-Runtime: 0.097320
+X-Request-Id: b76da378-8428-48b4-a86e-0357fb9ff25f
+X-Runtime: 0.109857
 Content-Length: 3969</pre>
 
 #### Status
@@ -133,7 +133,7 @@ Content-Length: 3969</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=qpCaGbhrVd_LcJEBwDTrO47gMM8
+<pre>Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA
 Host: example.org
 Cookie: </pre>
 
@@ -148,7 +148,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/19/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=qpCaGbhrVd_LcJEBwDTrO47gMM8&quot;</pre>
+	-H &quot;Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA&quot;</pre>
 
 ### Response
 
@@ -161,8 +161,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;ec5f869a1a725449cd7ee8f82d086407&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a12efb41-3b83-4626-a8fd-cd7a653e365a
-X-Runtime: 0.044195
+X-Request-Id: 084b3494-10a1-41dd-918f-de86059f2f8c
+X-Runtime: 0.046892
 Content-Length: 225</pre>
 
 #### Status

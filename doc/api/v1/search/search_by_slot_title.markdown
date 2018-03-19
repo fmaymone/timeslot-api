@@ -48,7 +48,7 @@ Description : User who created the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=AzSau4NgBltq9k6_MGsvlqj_gOQ
+Authorization: Token token=teHWiDjt-AFBXBTSBfX-PZ7lZpg
 Host: example.org
 Cookie: </pre>
 
@@ -64,7 +64,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/search/slot?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=AzSau4NgBltq9k6_MGsvlqj_gOQ&quot;</pre>
+	-H &quot;Authorization: Token token=teHWiDjt-AFBXBTSBfX-PZ7lZpg&quot;</pre>
 
 ### Response
 
@@ -75,10 +75,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;90905898d560da45fbe18847b7f0a966&quot;
+ETag: W/&quot;154638dc0b5a9d4e95b208a7337f456f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: f0e40555-76a7-4563-be60-82d08b6a4832
-X-Runtime: 0.032525
+X-Request-Id: 633d95ca-4758-4754-9126-7ac3e28c9f64
+X-Runtime: 0.055651
 Content-Length: 636</pre>
 
 #### Status

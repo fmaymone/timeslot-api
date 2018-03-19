@@ -191,7 +191,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=YSn_QTt94o9WdYmHW2WxRj8h2ek
+Authorization: Token token=swF4RXyNo8IljlkIAWFyyoiJeRI
 Host: example.org
 Cookie: </pre>
 
@@ -209,7 +209,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me&quot; -d &#39;{&quot;lang&quot;:&quot;de&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=YSn_QTt94o9WdYmHW2WxRj8h2ek&quot;</pre>
+	-H &quot;Authorization: Token token=swF4RXyNo8IljlkIAWFyyoiJeRI&quot;</pre>
 
 ### Response
 
@@ -220,10 +220,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e5632f7e7b7e4885669a4d268668ad82&quot;
+ETag: W/&quot;a93e8c2ea7b2dd42569b7ee35d108558&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ea81e0b8-be0f-49f5-b2d5-35331a8b6584
-X-Runtime: 0.033974
+X-Request-Id: bc92fbf0-959e-4a68-afdd-120b66790fa8
+X-Runtime: 0.070846
 Content-Length: 864</pre>
 
 #### Status

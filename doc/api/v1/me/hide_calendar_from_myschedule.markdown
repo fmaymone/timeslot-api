@@ -10,20 +10,20 @@ returns 200 if calendar successfully removed from schedule or hasn&#39;t been pa
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=oL9EaAiRk-NBGV6P-ePTaYipQVI
+Authorization: Token token=m8cXHcpOm4y34ZocdQarFtU74Sc
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/me/schedule/calendar/a320b6cc-c544-43f9-bbee-b4b247661191</pre>
+<pre>DELETE /v1/me/schedule/calendar/e093bf98-fc46-4c3a-8720-1677573b104a</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/schedule/calendar/a320b6cc-c544-43f9-bbee-b4b247661191&quot; -d &#39;&#39; -X DELETE \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/schedule/calendar/e093bf98-fc46-4c3a-8720-1677573b104a&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=oL9EaAiRk-NBGV6P-ePTaYipQVI&quot; \
+	-H &quot;Authorization: Token token=m8cXHcpOm4y34ZocdQarFtU74Sc&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -36,8 +36,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: b1e79f97-f322-4164-bed1-21164f7f2ffd
-X-Runtime: 0.044723
+X-Request-Id: 3b6941e8-faab-4e67-9260-a6c39c8b4f3c
+X-Runtime: 0.044734
 Content-Length: 0</pre>
 
 #### Status

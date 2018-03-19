@@ -25,7 +25,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=_wNnBAMet2jqSTPj8rOjtWE-W_4
+Authorization: Token token=DternPSQY5qPRel3BXuoOxgzfWo
 Host: example.org
 Cookie: </pre>
 
@@ -38,7 +38,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/ical&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=_wNnBAMet2jqSTPj8rOjtWE-W_4&quot;</pre>
+	-H &quot;Authorization: Token token=DternPSQY5qPRel3BXuoOxgzfWo&quot;</pre>
 
 ### Response
 
@@ -52,9 +52,9 @@ Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;dc97ec4da2dfdf92ca823f3def8c7579&quot;
-X-Request-Id: 0cb04060-786c-4899-949c-a56fc39da069
-X-Runtime: 0.077939
+ETag: W/&quot;069aeb9353385d49f9738e6963ceb499&quot;
+X-Request-Id: ee642b20-d319-4e89-871f-2565f127a115
+X-Runtime: 0.087247
 Content-Length: 1069</pre>
 
 #### Status

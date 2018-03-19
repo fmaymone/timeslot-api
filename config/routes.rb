@@ -31,6 +31,10 @@ Rails.application.routes.draw do
       get ':id/likes', to: 'slots#show_likes', as: 'slot_show_likes'
       post ':id/like', to: 'slots#add_like', as: 'slot_add_like'
       delete ':id/like', to: 'slots#unlike', as: 'slot_unlike'
+      
+      get ':id/high_fives', to: 'slots#show_high_fives', as: 'slot_show_high_fives'
+      post ':id/high_five', to: 'slots#add_high_five', as: 'slot_add_high_five'
+      delete ':id/high_five', to: 'slots#unHighFive', as: 'slot_unHighFive'
 
       get ':id/comments', to: 'slots#show_comments', as: 'slot_show_comments'
       post ':id/comment', to: 'slots#add_comment', as: 'slot_add_comment'

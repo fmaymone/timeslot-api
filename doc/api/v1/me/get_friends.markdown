@@ -15,7 +15,7 @@ Description : containing friends as a list of Users
 
 #### Headers
 
-<pre>Authorization: Token token=zMD1dXA5YT0a8mDBRuQ-KBDZI7c
+<pre>Authorization: Token token=QMGTEixDaw0tetb3CxJR3_LoT7k
 Host: example.org
 Cookie: </pre>
 
@@ -26,7 +26,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=zMD1dXA5YT0a8mDBRuQ-KBDZI7c&quot;</pre>
+	-H &quot;Authorization: Token token=QMGTEixDaw0tetb3CxJR3_LoT7k&quot;</pre>
 
 ### Response
 
@@ -37,10 +37,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;8b6e38731d8947659263d79bd37b3fba&quot;
+ETag: W/&quot;561f043e6b6f423d0c3054543d28e721&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2fa0d285-ca81-40cc-8f23-7c572841484c
-X-Runtime: 0.026158
+X-Request-Id: 59b74f3c-b5a1-44a2-80dc-e077ac7ebccd
+X-Runtime: 0.032488
 Content-Length: 649</pre>
 
 #### Status

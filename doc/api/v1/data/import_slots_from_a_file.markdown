@@ -40,7 +40,7 @@ If the group uuid was not found, no Slot will be imported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=mBqjUBgeHwFPK903czLOPnnU13E
+Authorization: Token token=1tFAggwcKbRIRLK_tqvA5VVszME
 Host: example.org
 Cookie: </pre>
 
@@ -56,10 +56,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/import/&quot; -d &#39;{&quot;file&quot;:[&quot;BEGIN:VCALENDAR\r\n&quot;,&quot;VERSION:2.0\r\n&quot;,&quot;PRODID:icalendar-ruby\r\n&quot;,&quot;CALSCALE:GREGORIAN\r\n&quot;,&quot;METHOD:PUBLISH\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T154653Z\r\n&quot;,&quot;UID:273701f7-3fbe-44e1-a31c-d8a584882ee8\r\n&quot;,&quot;DTSTART:20190921T204402\r\n&quot;,&quot;DTEND:20191021T204402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 20\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T154653Z\r\n&quot;,&quot;UID:e866754f-a1fa-42f2-99c2-16521e383107\r\n&quot;,&quot;DTSTART:20190922T214402\r\n&quot;,&quot;DTEND:20191022T214402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 21\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T154653Z\r\n&quot;,&quot;UID:0c3d9c1f-954c-4c1a-935b-19ba270b2ecf\r\n&quot;,&quot;DTSTART:20190923T224402\r\n&quot;,&quot;DTEND:20191023T224402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 22\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T154653Z\r\n&quot;,&quot;UID:e9b818b1-d065-49cb-a38f-fe85541ad152\r\n&quot;,&quot;DTSTART:20190924T234402\r\n&quot;,&quot;DTEND:20191024T234402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 23\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T154653Z\r\n&quot;,&quot;UID:acf671f5-af52-4595-85d5-95ae1ba33916\r\n&quot;,&quot;DTSTART:20190925T004402\r\n&quot;,&quot;DTEND:20191025T004402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 24\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;END:VCALENDAR\r\n&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/import/&quot; -d &#39;{&quot;file&quot;:[&quot;BEGIN:VCALENDAR\r\n&quot;,&quot;VERSION:2.0\r\n&quot;,&quot;PRODID:icalendar-ruby\r\n&quot;,&quot;CALSCALE:GREGORIAN\r\n&quot;,&quot;METHOD:PUBLISH\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T195407Z\r\n&quot;,&quot;UID:07a45e5b-1d1e-4f41-ad36-4c15ca9150d6\r\n&quot;,&quot;DTSTART:20190921T204402\r\n&quot;,&quot;DTEND:20191021T204402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 20\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T195407Z\r\n&quot;,&quot;UID:775f2ad2-3ef4-4b00-b31a-30a5f1c1b12a\r\n&quot;,&quot;DTSTART:20190922T214402\r\n&quot;,&quot;DTEND:20191022T214402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 21\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T195407Z\r\n&quot;,&quot;UID:5a77d85e-a2f0-41a6-a19e-c62ccfcf68ab\r\n&quot;,&quot;DTSTART:20190923T224402\r\n&quot;,&quot;DTEND:20191023T224402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 22\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T195407Z\r\n&quot;,&quot;UID:c634b65e-dff4-4724-bbb1-1c2a528b93c8\r\n&quot;,&quot;DTSTART:20190924T234402\r\n&quot;,&quot;DTEND:20191024T234402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 23\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;BEGIN:VEVENT\r\n&quot;,&quot;DTSTAMP:20180319T195407Z\r\n&quot;,&quot;UID:49084ef4-b9da-4e1e-9a82-a4bc6d5cfff2\r\n&quot;,&quot;DTSTART:20190925T004402\r\n&quot;,&quot;DTEND:20191025T004402\r\n&quot;,&quot;CLASS:PUBLIC\r\n&quot;,&quot;DESCRIPTION:\r\n&quot;,&quot;SUMMARY:Slot title 24\r\n&quot;,&quot;END:VEVENT\r\n&quot;,&quot;END:VCALENDAR\r\n&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=mBqjUBgeHwFPK903czLOPnnU13E&quot;</pre>
+	-H &quot;Authorization: Token token=1tFAggwcKbRIRLK_tqvA5VVszME&quot;</pre>
 
 ### Response
 
@@ -71,8 +71,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 01bc8aba-8986-4de4-ad16-2418f73d24e5
-X-Runtime: 0.246018
+X-Request-Id: 79f52428-aa47-49f2-ba64-ab4f77f844c1
+X-Runtime: 0.317966
 Content-Length: 0</pre>
 
 #### Status

@@ -136,7 +136,7 @@ Description : Number of friends for this user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=BDKNBa2dzSBipYbOcPKz01wH2Ng
+Authorization: Token token=YDHMSpgcJVuAicuagNsk1NmRxi8
 Host: example.org
 Cookie: </pre>
 
@@ -148,7 +148,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/feed/news&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BDKNBa2dzSBipYbOcPKz01wH2Ng&quot;</pre>
+	-H &quot;Authorization: Token token=YDHMSpgcJVuAicuagNsk1NmRxi8&quot;</pre>
 
 ### Response
 
@@ -159,10 +159,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;d8a88143186b9f4c403124cf31379f8c&quot;
+ETag: W/&quot;aa6ecdea765a4d3e77b401e3088509d2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 73df1c9c-1739-4042-867a-f34d644ba336
-X-Runtime: 0.008675
+X-Request-Id: 30e7b67a-522c-4e10-afb0-dc296c051905
+X-Runtime: 0.011421
 Content-Length: 2562</pre>
 
 #### Status

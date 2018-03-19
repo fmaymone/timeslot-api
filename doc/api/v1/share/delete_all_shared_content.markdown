@@ -20,7 +20,7 @@ Description : The id of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=BVjNwUPyk8yG5-t5pD9Yp19XXRc
+Authorization: Token token=Z2SRzgaNmxTVhJCSHDWAkcZX8vU
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -33,7 +33,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/share/35&quot; -d &#39;&#39; -X DELETE \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=BVjNwUPyk8yG5-t5pD9Yp19XXRc&quot; \
+	-H &quot;Authorization: Token token=Z2SRzgaNmxTVhJCSHDWAkcZX8vU&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -46,8 +46,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 92556d30-a43b-49ac-9781-75e29d582f2c
-X-Runtime: 0.007640
+X-Request-Id: 132848ad-c0d1-42af-bdc6-d9bc3c743bcd
+X-Runtime: 0.008679
 Content-Length: 0</pre>
 
 #### Status

@@ -27,7 +27,7 @@ Description : name of the location
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=MtEevE5refLUsPEaT8RjoBwSMWc
+Authorization: Token token=FSrYtzlaaBSy6rsO30YB0ewflgE
 Host: example.org
 Cookie: </pre>
 
@@ -43,7 +43,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/search/location?query=timeslot+berlin&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=MtEevE5refLUsPEaT8RjoBwSMWc&quot;</pre>
+	-H &quot;Authorization: Token token=FSrYtzlaaBSy6rsO30YB0ewflgE&quot;</pre>
 
 ### Response
 
@@ -54,10 +54,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;9a991a1272c7f96ad0f28f2f3c8c1099&quot;
+ETag: W/&quot;74314fd40be7386fd806eda86c015f9e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 38b08547-d14d-488f-bbf1-0f90f92f5e79
-X-Runtime: 0.015495
+X-Request-Id: 5e38cdb6-b511-4deb-aa7f-dc4fd1191b9f
+X-Runtime: 0.019417
 Content-Length: 391</pre>
 
 #### Status

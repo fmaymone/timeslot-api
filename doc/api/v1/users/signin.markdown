@@ -157,7 +157,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user151@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/signin&quot; -d &#39;{&quot;email&quot;:&quot;user152@email.com&quot;,&quot;password&quot;:&quot;timeslot&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -170,10 +170,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;bb05e9acfeccfa8d9f3770cf326cf4cf&quot;
+ETag: W/&quot;9eacb741f874e02d647812c656e1dd41&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2b1c866a-acdc-4457-909d-fa9076ba4d22
-X-Runtime: 0.034517
+X-Request-Id: 2928f6a3-87e0-4a70-8c3c-80ecbcf90e4b
+X-Runtime: 0.030515
 Content-Length: 908</pre>
 
 #### Status

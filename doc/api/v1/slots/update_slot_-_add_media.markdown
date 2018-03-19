@@ -166,7 +166,7 @@ Description : Clouinary public URL of the video thumbnail
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=yz7ILhwYcb7NzaFKsm1zed_a1hA
+Authorization: Token token=JjQyDQWktqpC4GF4XMv1vLm9T68
 Host: example.org
 Cookie: </pre>
 
@@ -184,7 +184,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/13&quot; -d &#39;{&quot;media&quot;:[{&quot;publicId&quot;:&quot;v1234567/dfhjghjkdisudgfds7sly.jpg&quot;,&quot;position&quot;:&quot;1&quot;,&quot;mediaType&quot;:&quot;image&quot;,&quot;localId&quot;:&quot;B6C0A21C-07C3-493D-8B44-3BA4C9981C25/L0/001&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=yz7ILhwYcb7NzaFKsm1zed_a1hA&quot;</pre>
+	-H &quot;Authorization: Token token=JjQyDQWktqpC4GF4XMv1vLm9T68&quot;</pre>
 
 ### Response
 
@@ -195,10 +195,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;873b02cd031d01b10b29a00ef87e0abb&quot;
+ETag: W/&quot;bb6107cafd4b79095364cabd1aded459&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 132035f3-914f-4556-8b33-5a51f659f87c
-X-Runtime: 0.165465
+X-Request-Id: 034dec55-64f8-46c0-9090-1dacd2d5b56b
+X-Runtime: 0.197771
 Content-Length: 830</pre>
 
 #### Status

@@ -131,7 +131,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=isH8wOgQ01LlE0d8KjEmJOBrOk8
+Authorization: Token token=GUWnGe8QEC7BHD2-cHEh4NuNrls
 Host: example.org
 Cookie: </pre>
 
@@ -149,7 +149,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/11&quot; -d &#39;{&quot;title&quot;:&quot;New title for a Slot&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=isH8wOgQ01LlE0d8KjEmJOBrOk8&quot;</pre>
+	-H &quot;Authorization: Token token=GUWnGe8QEC7BHD2-cHEh4NuNrls&quot;</pre>
 
 ### Response
 
@@ -160,10 +160,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;f46a0f28e40a48a561dd729e1ff09e9b&quot;
+ETag: W/&quot;2e240e5a5e398e5057d6fbbfbe67e195&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3a52d5bb-d4f4-410e-ad34-e6704fb5ee6a
-X-Runtime: 0.089935
+X-Request-Id: 4ac8e53a-89ce-47fb-a0fd-1a1b85fa5cbb
+X-Runtime: 0.090070
 Content-Length: 647</pre>
 
 #### Status

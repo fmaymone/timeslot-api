@@ -1,17 +1,17 @@
 # Slots API
 
-## Get slot
+## Delete StandardSlot
 
-### GET /v1/slots/:id
+### DELETE /v1/slots/:id
 
-if a user is authenticated the slot settings (alerts) will be included
+Sets &#39;deletedAt&#39;, returns updated Standard Slot data. Doesn&#39;t delete anything.
 
 returns 404 if ID is invalid
 
 ### Parameters
 
 Name : id *- required -*
-Description : ID of the slot to get
+Description : ID of the Standard Slot to delete
 
 
 ### Response Fields
@@ -87,27 +87,24 @@ Description : Audio recordings for the slot
 Name : videos
 Description : Videos recordings for the slot
 
-Name : reslotsCounter
-Description : Number of reslots for this slot
-
 ### Request
 
 #### Headers
 
-<pre>Accept: application/json
-Authorization: Token token=3R_LD1QRbLc4Thpz5fUF2VXIh-0
+<pre>Authorization: Token token=vYI2iYloV5M2m2MVEyDvzyG__jo
 Host: example.org
+Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/slots/6</pre>
+<pre>DELETE /v1/slots/17</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/6&quot; -X GET \
-	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3R_LD1QRbLc4Thpz5fUF2VXIh-0&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/17&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=vYI2iYloV5M2m2MVEyDvzyG__jo&quot; \
+	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
 
@@ -118,11 +115,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;3e12fa79db5761a6c161be0d75858564&quot;
+ETag: W/&quot;8485f1e2e3db2784efd8fff07e07b1e3&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5bcfbca2-2a12-4625-a537-eee1e3ba71a1
-X-Runtime: 0.036960
-Content-Length: 1933</pre>
+X-Request-Id: 0ecc06a2-d847-4f1e-918f-b1fd617c72fd
+X-Runtime: 0.236873
+Content-Length: 737</pre>
 
 #### Status
 

@@ -83,7 +83,7 @@ Description : Membership state for current user
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=vS7n-roSloiWBMxiVhpHp89E3QY
+Authorization: Token token=zDtrAdgd117NBtLONut-BIvxE8M
 Host: example.org
 Cookie: </pre>
 
@@ -102,7 +102,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups&quot; -d &#39;{&quot;name&quot;:&quot;foo&quot;,&quot;image&quot;:&quot;salvador dali&quot;,&quot;description&quot;:&quot;This is a description.&quot;,&quot;defaultColor&quot;:&quot;123ABD&quot;,&quot;public&quot;:true,&quot;membersCanPost&quot;:true,&quot;membersCanInvite&quot;:true,&quot;invitees&quot;:[304,305,306]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=vS7n-roSloiWBMxiVhpHp89E3QY&quot;</pre>
+	-H &quot;Authorization: Token token=zDtrAdgd117NBtLONut-BIvxE8M&quot;</pre>
 
 ### Response
 
@@ -113,10 +113,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;61cade6b4d243865d00db19ea719387f&quot;
+ETag: W/&quot;fd063db8c8e28cf397901003722e08d1&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: d5a88f79-e6bb-49d9-a63b-389d155a5a24
-X-Runtime: 0.385672
+X-Request-Id: a35121de-5931-4b09-863b-87d916d19de3
+X-Runtime: 0.431793
 Content-Length: 602</pre>
 
 #### Status

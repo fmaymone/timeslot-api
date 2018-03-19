@@ -25,7 +25,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=ZsgL14lWoCZUgVEuK7tl2ltaMTA
+Authorization: Token token=MoqPQbhhHKFa9wr99THse8N7Ja0
 Host: example.org
 Cookie: </pre>
 
@@ -38,7 +38,7 @@ Cookie: </pre>
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/outlook&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=ZsgL14lWoCZUgVEuK7tl2ltaMTA&quot;</pre>
+	-H &quot;Authorization: Token token=MoqPQbhhHKFa9wr99THse8N7Ja0&quot;</pre>
 
 ### Response
 
@@ -53,8 +53,8 @@ Content-Type: text/csv
 Cache-Control: private
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;47dbccadbf5df8371813fca6b1ed28bc&quot;
-X-Request-Id: 65b0b242-11c2-4142-a3ee-60a9090f17bb
-X-Runtime: 0.041600
+X-Request-Id: a12cb06f-5a40-402f-9080-24f3e30b76e8
+X-Runtime: 0.077514
 Content-Length: 464</pre>
 
 #### Status

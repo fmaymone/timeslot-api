@@ -1,4 +1,8 @@
 class HighFive < ActiveRecord::Base
+  include SlotActivity
+  
+  after_commit AuditLog
+
   belongs_to :user
   belongs_to :slot, class_name: BaseSlot, foreign_key: "base_slot_id",
             inverse_of: :high_fives, counter_cache: true

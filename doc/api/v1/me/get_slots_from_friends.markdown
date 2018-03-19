@@ -135,7 +135,7 @@ Description : Deletion datetime of the slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=-AnXFsNQqUcF4psuFGIdOQwtAnk
+Authorization: Token token=x9FIf2znq54jmIR1vZJ5tK9dnQ0
 Host: example.org
 Cookie: </pre>
 
@@ -147,7 +147,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/friendslots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=-AnXFsNQqUcF4psuFGIdOQwtAnk&quot;</pre>
+	-H &quot;Authorization: Token token=x9FIf2znq54jmIR1vZJ5tK9dnQ0&quot;</pre>
 
 ### Response
 
@@ -158,10 +158,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;0acc5366dde70f3672792fe524839d89&quot;
+ETag: W/&quot;4ae887fc0084ef8d0c202db73fa1c315&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 02111818-eed8-45b8-8de7-1435180ec883
-X-Runtime: 0.076256
+X-Request-Id: e51dcd89-ce57-4a4e-a0e0-912b9cd56997
+X-Runtime: 0.088542
 Content-Length: 2491</pre>
 
 #### Status

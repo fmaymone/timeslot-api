@@ -26,19 +26,19 @@ Description : Set to true to prevent the removal of the calendar slots from the 
 
 #### Headers
 
-<pre>Authorization: Token token=3_RuXT0JcaDEu8zCX-oV9NRoyJ4
+<pre>Authorization: Token token=KCsn0j-Eyj_a0GyVPx8xgCQVmV8
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/4e3bcc11-9820-45a5-9e13-340e16ef85e1/members</pre>
+<pre>DELETE /v1/groups/ffaf7128-af52-43af-93a6-a3e9bda7adf5/members</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/4e3bcc11-9820-45a5-9e13-340e16ef85e1/members&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=3_RuXT0JcaDEu8zCX-oV9NRoyJ4&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/ffaf7128-af52-43af-93a6-a3e9bda7adf5/members&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=KCsn0j-Eyj_a0GyVPx8xgCQVmV8&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -51,8 +51,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 3b10dabb-634b-4bbf-afa8-c2b70e0b0d88
-X-Runtime: 0.097762
+X-Request-Id: b5ead6ba-5c4a-4d69-bb5a-35015e0ab67a
+X-Runtime: 0.129613
 Content-Length: 0</pre>
 
 #### Status

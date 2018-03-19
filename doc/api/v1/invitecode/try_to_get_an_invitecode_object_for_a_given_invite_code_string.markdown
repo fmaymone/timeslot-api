@@ -33,11 +33,11 @@ Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/invitecodes/8a82f6</pre>
+<pre>GET /v1/invitecodes/29ddad</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/invitecodes/8a82f6&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/invitecodes/29ddad&quot; -X GET \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -51,8 +51,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;75e6f8fa8f27f23a79a1610a36e63ad5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 825cef96-48a4-4949-8118-9599efbb4d4d
-X-Runtime: 0.025465
+X-Request-Id: 21945e46-2cea-4096-89dd-905403899d28
+X-Runtime: 0.047573
 Content-Length: 40</pre>
 
 #### Status

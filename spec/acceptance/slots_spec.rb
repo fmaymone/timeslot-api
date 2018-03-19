@@ -967,6 +967,7 @@ resource "Slots" do
       end
     end
   end
+  
 
   delete "/v1/slots/:id/like" do
     header "Content-Type", "application/json"
@@ -1026,6 +1027,32 @@ resource "Slots" do
         expect(json.first["liker"]).to have_key "id"
         expect(json.first["liker"]).to have_key "image"
         expect(response_body).to include like.user.username
+      end
+    end
+  end
+  post "/v1/slots/:id/high_five" do
+    header "Content-Type", "application/json"
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to high_five", required: true
+
+    let(:slot) { create(:std_slot_friends) }
+    let!(:friendship) {
+      create(:friendship, :established, friend: slot.creator, user: current_user)
+    }
+    describe "High Five a Slot" do
+      let(:id) { slot.id }
+
+      example "High Five a Slot", document: :v1 do
+        explanation "Current user High Five a slot."
+        expect(slot.high_fives.count).to eq 0
+
+        do_request
+
+        expect(response_status).to eq(200)
+        slot.reload
+        expect(slot.high_fives.count).to eq 1
+        expect(slot.high_fives.count).to eq slot.high_fives.count
       end
     end
   end
@@ -1180,4 +1207,6 @@ resource "Slots" do
       expect(json.size).to eq(3)
     end
   end
+  
+  
 end

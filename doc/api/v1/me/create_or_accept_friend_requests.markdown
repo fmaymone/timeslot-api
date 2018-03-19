@@ -56,7 +56,7 @@ Description : [pending active, pending passive, friend, stranger]
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=pLWawgxLcBbyieaGwxkrXA4ht2g
+Authorization: Token token=7aMMb46cLZCuUKCkLhfOavvfKFQ
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -69,7 +69,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/friendship/100&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=pLWawgxLcBbyieaGwxkrXA4ht2g&quot; \
+	-H &quot;Authorization: Token token=7aMMb46cLZCuUKCkLhfOavvfKFQ&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -81,10 +81,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;b3d30da9d6da59cd616e40df7cb4e72f&quot;
+ETag: W/&quot;3ee7a3cacdb2bc7615727a564ee901c9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e6b4ef31-8760-4eb2-951f-be3e255765a5
-X-Runtime: 0.119840
+X-Request-Id: 826146b8-5c43-43d0-b40d-6ee0b0317732
+X-Runtime: 0.145437
 Content-Length: 303</pre>
 
 #### Status

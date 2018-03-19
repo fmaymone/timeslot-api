@@ -59,19 +59,19 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=sTUzQbmPjmGRYkyxVHRwNrxyt8Q
+Authorization: Token token=LmIJ_R7W-1qyk0fEG5Emeui-qzI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/68772943-f60e-400c-a1f8-8d37411244e6</pre>
+<pre>GET /v1/groups/d7cb4025-9b51-4f35-b66f-80e14546ed93</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/68772943-f60e-400c-a1f8-8d37411244e6&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/d7cb4025-9b51-4f35-b66f-80e14546ed93&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=sTUzQbmPjmGRYkyxVHRwNrxyt8Q&quot;</pre>
+	-H &quot;Authorization: Token token=LmIJ_R7W-1qyk0fEG5Emeui-qzI&quot;</pre>
 
 ### Response
 
@@ -82,10 +82,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;0be00a0f4defd05bd24a07b19ad79ad7&quot;
+ETag: W/&quot;b79d72dcab163978ffe002ebe798f8fa&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e6141b5c-575a-46d2-a06d-117bf10ae5fb
-X-Runtime: 0.022984
+X-Request-Id: bf6c91be-a7ec-4826-aaf1-102f72c7246b
+X-Runtime: 0.027022
 Content-Length: 585</pre>
 
 #### Status

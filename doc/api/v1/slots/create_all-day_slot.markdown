@@ -131,7 +131,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=LKHzmsjqpj1RGpgSZ2P-4EFOpSU
+Authorization: Token token=9rcg5qSPfrpYxXdYkJkHV2epXjc
 Host: example.org
 Cookie: </pre>
 
@@ -147,10 +147,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;rrule&quot;:&quot;RRULE:FREQ=WEEKLY;BYDAY=TH&quot;,&quot;allday&quot;:true,&quot;description&quot;:&quot;One day it will all make sense.&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;b0571768-6802-49b6-9931-ade4ec50d719&quot;,&quot;a9f749c6-c72e-406a-89a0-3260b7ed8a05&quot;,&quot;3c9ffe5e-c3b7-4c47-97de-45fff095c29d&quot;,&quot;0a2fd5eb-83f9-4a1f-a978-daa279ad16ba&quot;,&quot;df339eb5-38bc-4acc-83ca-feac65d2d252&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;rrule&quot;:&quot;RRULE:FREQ=WEEKLY;BYDAY=TH&quot;,&quot;allday&quot;:true,&quot;description&quot;:&quot;One day it will all make sense.&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;f2aed27e-511c-472a-8551-f1b41eb5449b&quot;,&quot;4569e8ac-45c9-4aab-89ec-2b1bc2419317&quot;,&quot;6816e191-a1d2-402e-998f-22e1ec3ab154&quot;,&quot;03e96161-2572-4d1b-98a3-eaab4183e324&quot;,&quot;3a0cff09-d6be-41f7-9ce5-2b21baeaa0f9&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=LKHzmsjqpj1RGpgSZ2P-4EFOpSU&quot;</pre>
+	-H &quot;Authorization: Token token=9rcg5qSPfrpYxXdYkJkHV2epXjc&quot;</pre>
 
 ### Response
 
@@ -161,10 +161,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e60c10a741b36e182ef94c9fde02037f&quot;
+ETag: W/&quot;3fe65a7747486ed60e4268632a3626ec&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e445ea44-f1d9-4f1e-ba8a-d2a44ee207be
-X-Runtime: 0.503208
+X-Request-Id: 8c86c53d-e522-41e7-8bf1-44699b55b533
+X-Runtime: 0.557752
 Content-Length: 1692</pre>
 
 #### Status

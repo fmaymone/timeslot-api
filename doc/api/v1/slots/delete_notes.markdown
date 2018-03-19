@@ -21,7 +21,7 @@ Description : Array of the Notes to delete
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=3szTqWrZBKuKHFxskapAE70m1z0
+Authorization: Token token=fkq7KHAWofoZUJ8zko4_FbpJJBk
 Host: example.org
 Cookie: </pre>
 
@@ -39,7 +39,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/21/notes&quot; -d &#39;{&quot;notes&quot;:[{&quot;id&quot;:13},{&quot;id&quot;:12},{&quot;id&quot;:11}]}&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=3szTqWrZBKuKHFxskapAE70m1z0&quot;</pre>
+	-H &quot;Authorization: Token token=fkq7KHAWofoZUJ8zko4_FbpJJBk&quot;</pre>
 
 ### Response
 
@@ -51,8 +51,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: b33b09c7-c250-4aa9-a7c1-596ba8e4a3ad
-X-Runtime: 0.127604
+X-Request-Id: 20339a4a-b6f9-4f9f-8d9e-5e4cabc20405
+X-Runtime: 0.103851
 Content-Length: 0</pre>
 
 #### Status

@@ -19,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=CejqLAaJ058On3iOrRafpG72KoQ
+Authorization: Token token=wTu_lRlYCOhAeVMgyM-IqIRmx38
 Host: example.org
 Cookie: </pre>
 
@@ -35,10 +35,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;d91e43ad-426c-442f-a525-41cf5f98fb9f&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/ical&quot; -d &#39;{&quot;group&quot;:&quot;106d6cb2-22fb-4502-a8df-bb2c16dbb984&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=CejqLAaJ058On3iOrRafpG72KoQ&quot;</pre>
+	-H &quot;Authorization: Token token=wTu_lRlYCOhAeVMgyM-IqIRmx38&quot;</pre>
 
 ### Response
 
@@ -47,14 +47,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;d91e43ad-426c-442f-a525-41cf5f98fb9f.ical&quot;
+Content-Disposition: attachment; filename=&quot;106d6cb2-22fb-4502-a8df-bb2c16dbb984.ical&quot;
 Content-Transfer-Encoding: binary
 Content-Type: application/octet-stream
 Cache-Control: private
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;494c49f602237ac148f2d638bc83c0ce&quot;
-X-Request-Id: 1a99b3dd-0077-49cd-9c92-24eb8fe9d27b
-X-Runtime: 0.013733
+ETag: W/&quot;3314e549086c20cff7e517027579eed7&quot;
+X-Request-Id: 1627b2e1-cfb5-4f49-9a27-62d77a4fa2b4
+X-Runtime: 0.014373
 Content-Length: 297</pre>
 
 #### Status

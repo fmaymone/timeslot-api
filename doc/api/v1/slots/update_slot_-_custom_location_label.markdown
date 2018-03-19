@@ -166,7 +166,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=C5LzjdPDTj0KghJd_8greD4pJ-s
+Authorization: Token token=UCnXig4Cyx7SicYJ-TQIIRiFA84
 Host: example.org
 Cookie: </pre>
 
@@ -184,7 +184,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/16&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=C5LzjdPDTj0KghJd_8greD4pJ-s&quot;</pre>
+	-H &quot;Authorization: Token token=UCnXig4Cyx7SicYJ-TQIIRiFA84&quot;</pre>
 
 ### Response
 
@@ -195,10 +195,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5d24abc7dc0730c15b8987841a20bc22&quot;
+ETag: W/&quot;40bb73110dcf8fd02e431a732c228d22&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 376f6d2c-9b27-4861-aa2e-16f52b822a6b
-X-Runtime: 0.110758
+X-Request-Id: 7bf6d6ad-3592-419f-a1ff-b558c8b1d762
+X-Runtime: 0.137476
 Content-Length: 1010</pre>
 
 #### Status

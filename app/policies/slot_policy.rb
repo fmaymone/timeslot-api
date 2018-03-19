@@ -24,6 +24,10 @@ class SlotPolicy < ApplicationPolicy
     show?
   end
 
+
+  def show_high_fives?
+    show?
+  end
   # true if user has read access for the slot, excluding private StdSlots would
   # mean, that I can't see comments an a public slot I made private...
   def show_comments?
@@ -39,6 +43,15 @@ class SlotPolicy < ApplicationPolicy
 
   # true if user is signed-in and has read-access for the slot
   def unlike?
+    current_user_has_read_access?
+  end
+  
+  # true if user is signed-in and has read-access for the slot
+  def add_high_five?
+    current_user_has_read_access?
+  end
+  
+    def unHighFive?
     current_user_has_read_access?
   end
 

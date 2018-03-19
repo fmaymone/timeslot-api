@@ -56,13 +56,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=GssVfAKPBO6VhE7KdceOqf6gmx4
+Authorization: Token token=G5qUPHFt3WwjMx3gjTsqBsO7ab8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/3d3933d0-ea18-4716-96e9-5ea07c3e6353</pre>
+<pre>PATCH /v1/groups/6470e740-21cd-4504-9b45-f132fc240a7b</pre>
 
 #### Body
 ```javascript
@@ -72,9 +72,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/3d3933d0-ea18-4716-96e9-5ea07c3e6353&quot; -d &#39;{&quot;defaultColor&quot;:&quot;12AB67&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/6470e740-21cd-4504-9b45-f132fc240a7b&quot; -d &#39;{&quot;defaultColor&quot;:&quot;12AB67&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=GssVfAKPBO6VhE7KdceOqf6gmx4&quot;</pre>
+	-H &quot;Authorization: Token token=G5qUPHFt3WwjMx3gjTsqBsO7ab8&quot;</pre>
 
 ### Response
 
@@ -85,10 +85,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;7a5f2d700740cd5e0856a3570914632d&quot;
+ETag: W/&quot;b77a530629cb605cfd6bde8a55da09cd&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c94ba3a2-d8fb-41f3-9935-d9d054575db5
-X-Runtime: 0.038796
+X-Request-Id: 3359e75d-ce9e-4fcb-9b0f-9fa5787a20e4
+X-Runtime: 0.030407
 Content-Length: 580</pre>
 
 #### Status

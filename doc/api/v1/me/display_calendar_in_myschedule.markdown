@@ -10,20 +10,20 @@ returns 200 if calendar was successfully added to schedule or has been part of i
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=afUUBiEMaMT51Zi_YxOIR4MiLKM
+Authorization: Token token=-2BWbN2BzkeeAlqo0zvDj3BB1E8
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/me/schedule/calendar/4f582f60-d8fd-417d-bf62-83a837ff410c</pre>
+<pre>POST /v1/me/schedule/calendar/f5f58d46-1638-4644-b668-3967fbf306c6</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/schedule/calendar/4f582f60-d8fd-417d-bf62-83a837ff410c&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/schedule/calendar/f5f58d46-1638-4644-b668-3967fbf306c6&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=afUUBiEMaMT51Zi_YxOIR4MiLKM&quot; \
+	-H &quot;Authorization: Token token=-2BWbN2BzkeeAlqo0zvDj3BB1E8&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -36,8 +36,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 07a18340-5ac1-4016-8d04-5dc85a2deb19
-X-Runtime: 0.033028
+X-Request-Id: f155b2be-ffe1-4c33-ab00-adeadb7ffa0a
+X-Runtime: 0.050020
 Content-Length: 0</pre>
 
 #### Status

@@ -70,7 +70,7 @@ Description : Email of the user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=zyTrhUthqCv_Z6PGS1J1kGJInZA
+Authorization: Token token=xw6esVeJKjGuejp2b-DFw6EhtUA
 Host: example.org
 Cookie: </pre>
 
@@ -88,7 +88,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/fb-connect&quot; -d &#39;{&quot;socialId&quot;:10152854206708061,&quot;username&quot;:&quot;Silvi O Ivlis&quot;,&quot;email&quot;:&quot;alexpar@gmail.com&quot;,&quot;first_name&quot;:&quot;Silvi&quot;,&quot;middle_name&quot;:&quot;O&quot;,&quot;last_name&quot;:&quot;Ivlis&quot;,&quot;gender&quot;:&quot;male&quot;,&quot;link&quot;:&quot;https://www.facebook.com/app_scoped_user_id/10152854206708061/&quot;,&quot;locale&quot;:&quot;en_US&quot;,&quot;timezone&quot;:2,&quot;updated_time&quot;:&quot;2013-12-04T18:09:09+0000&quot;,&quot;verified&quot;:1,&quot;token&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZC6k5xI8Srd214c13eMbtTasOTHwueRfw7jTqRiHSyOh4a9mOvN81obZCtQBBfrnVWjovjC8N00J0bfStxQLXVD3AfSgL8GSSXkkyO8mbTM85jidp4WZCZAAdCjQzNEmoelrnDow9tgILcF2fJrK3t1PZBcHh0II51ub9VvHaZC4ujQgsGPIZCmyuCDbZCUk7UMuul5o6telCWe0taZCRFsdwrHj&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=zyTrhUthqCv_Z6PGS1J1kGJInZA&quot;</pre>
+	-H &quot;Authorization: Token token=xw6esVeJKjGuejp2b-DFw6EhtUA&quot;</pre>
 
 ### Response
 
@@ -99,10 +99,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;9cd96dcef6500a2045d84fb775117381&quot;
+ETag: W/&quot;9f85e93b4792da495af73c447fe6d60e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a8226ea6-2b20-4081-833b-67b74e60a2a8
-X-Runtime: 0.040570
+X-Request-Id: feebf6f1-6157-4544-ae2b-ec77b98f13eb
+X-Runtime: 0.039042
 Content-Length: 861</pre>
 
 #### Status

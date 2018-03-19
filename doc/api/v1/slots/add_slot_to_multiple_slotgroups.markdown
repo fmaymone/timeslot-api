@@ -31,7 +31,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2h1wQNbov2_zbvmBWs52e69saQM
+Authorization: Token token=FPXN1SgXEclp_fKBVgLtnx29GGg
 Host: example.org
 Cookie: </pre>
 
@@ -47,9 +47,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/23/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;ecd2b00f-d817-4481-baf9-b1d21462e74b&quot;,&quot;338af0e0-11ad-4062-a37a-7275eb5ab4e0&quot;,&quot;170a1ad5-78e2-42e5-8753-235f7f720d84&quot;,&quot;f7d201c2-32c1-4fda-bb62-075354a19791&quot;]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/23/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;03e9edf1-493c-4e18-af60-866b673e28fc&quot;,&quot;103fb803-710e-419b-862b-dffd7860348e&quot;,&quot;5f294a9b-d12f-4230-9147-dfce784c0cf0&quot;,&quot;7e6789fd-0e95-47f7-a72f-6109acddd54e&quot;]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2h1wQNbov2_zbvmBWs52e69saQM&quot;</pre>
+	-H &quot;Authorization: Token token=FPXN1SgXEclp_fKBVgLtnx29GGg&quot;</pre>
 
 ### Response
 
@@ -60,10 +60,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;2c3c3e83fff6456fe72c95240b108849&quot;
+ETag: W/&quot;9c97d422c16c04154ffd7e0f5f8b0564&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 70c31845-f31b-467d-b26a-b30b4cb355af
-X-Runtime: 0.235746
+X-Request-Id: 4952ebb2-9740-4399-8342-620e3d498860
+X-Runtime: 0.290597
 Content-Length: 106</pre>
 
 #### Status

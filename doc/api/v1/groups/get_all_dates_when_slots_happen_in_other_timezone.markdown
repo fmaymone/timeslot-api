@@ -23,13 +23,13 @@ Description : Array with dates where a slot is happening, (starting, ongoing or 
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=GGuFKyr4vqXsIHbIS2SldzARZMI
+Authorization: Token token=mnv0FYhLcRvhnLzFhFYPrsD2gVc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/f5513f25-6428-49cd-9d95-885e13c52fb8/dates?timezone=-05%3A00</pre>
+<pre>GET /v1/groups/97bd9865-ceda-4fff-8dca-38b14004f4fd/dates?timezone=-05%3A00</pre>
 
 #### Query Parameters
 
@@ -37,9 +37,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/f5513f25-6428-49cd-9d95-885e13c52fb8/dates?timezone=-05%3A00&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/97bd9865-ceda-4fff-8dca-38b14004f4fd/dates?timezone=-05%3A00&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=GGuFKyr4vqXsIHbIS2SldzARZMI&quot;</pre>
+	-H &quot;Authorization: Token token=mnv0FYhLcRvhnLzFhFYPrsD2gVc&quot;</pre>
 
 ### Response
 
@@ -52,8 +52,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;1f3a63c4833b31e4c94867f927127d79&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7540405e-ec3a-4025-934d-e77d86f1c152
-X-Runtime: 0.008726
+X-Request-Id: 4e524e40-e803-4134-8c88-4a5beadc4ac7
+X-Runtime: 0.011355
 Content-Length: 116</pre>
 
 #### Status

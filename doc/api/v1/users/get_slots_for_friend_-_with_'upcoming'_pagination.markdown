@@ -89,24 +89,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=_hkHWNOzUeRuKAuDOZZ8yFkXUMs
+<pre>Authorization: Token token=DLiTrww-KXYcI32ukH7cXdTG8Wo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/150/slots?limit=3&amp;moment=2018-03-19T15%3A47%3A34.424Z&amp;mode=upcoming</pre>
+<pre>GET /v1/users/152/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A58.944Z&amp;mode=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2018-03-19T15:47:34.424Z
+moment: 2018-03-19T19:54:58.944Z
 mode: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/150/slots?limit=3&amp;moment=2018-03-19T15%3A47%3A34.424Z&amp;mode=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=_hkHWNOzUeRuKAuDOZZ8yFkXUMs&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/152/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A58.944Z&amp;mode=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=DLiTrww-KXYcI32ukH7cXdTG8Wo&quot;</pre>
 
 ### Response
 
@@ -117,10 +117,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;829867273f1f69c97c6f77b51b1a3b05&quot;
+ETag: W/&quot;bca02ad76b64de5527fab56c245458e7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bd882165-9ac4-4bdf-a503-82725478a0f6
-X-Runtime: 0.074989
+X-Request-Id: 4ed1554b-269b-419c-9aab-7650c73fc396
+X-Runtime: 0.125966
 Content-Length: 2321</pre>
 
 #### Status
@@ -136,22 +136,22 @@ Content-Length: 2321</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=_hkHWNOzUeRuKAuDOZZ8yFkXUMs
+<pre>Authorization: Token token=DLiTrww-KXYcI32ukH7cXdTG8Wo
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/users/150/slots</pre>
+<pre>GET /v1/users/152/slots</pre>
 
 #### Query Parameters
 
-<pre>after: NjElMjAxOC0wMy0yNiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0wOSAwODo0NDowMi4wMDAwMDAwMDA=</pre>
+<pre>after: NjIlMjAxOC0wMy0yNiAwMDowMDowMC4wMDAwMDAwMDAlMjAxOS0xMC0xMCAwOTo0NDowMi4wMDAwMDAwMDA=</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/150/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=_hkHWNOzUeRuKAuDOZZ8yFkXUMs&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/152/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=DLiTrww-KXYcI32ukH7cXdTG8Wo&quot;</pre>
 
 ### Response
 
@@ -162,10 +162,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;d021aa94bb8f72d05d6bef8dd33b28cc&quot;
+ETag: W/&quot;0018961bd6c4e07bd8a635b77d740a80&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 1bbc29aa-165a-4e0c-bf5d-1aef14e895c8
-X-Runtime: 0.035998
+X-Request-Id: bf3f08eb-bd93-4620-aa66-df1136b2cbef
+X-Runtime: 0.049337
 Content-Length: 225</pre>
 
 #### Status

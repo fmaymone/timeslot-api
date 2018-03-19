@@ -128,7 +128,7 @@ Description : all devices from user
 
 #### Headers
 
-<pre>Authorization: Token token=3tQBRg_uFHhLwamHf9EKP6J3SSo
+<pre>Authorization: Token token=yOuQglE5sKpnImSBGNZtbRIxuCE
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -140,7 +140,7 @@ Cookie: </pre>
 #### cURL
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=3tQBRg_uFHhLwamHf9EKP6J3SSo&quot; \
+	-H &quot;Authorization: Token token=yOuQglE5sKpnImSBGNZtbRIxuCE&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -152,10 +152,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;508ea485463eba47ea1c31e3c002dd60&quot;
+ETag: W/&quot;74c71de58ba0cc18acd1563b4aeda088&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: dec34d5f-0b81-4019-a333-30bfc3a6e9b9
-X-Runtime: 0.089043
+X-Request-Id: f1b2b671-749b-4331-aa82-63ee769ced48
+X-Runtime: 0.095149
 Content-Length: 886</pre>
 
 #### Status

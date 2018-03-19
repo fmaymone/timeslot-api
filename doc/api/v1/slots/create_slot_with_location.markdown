@@ -184,7 +184,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=Gr-O_6E83jjc_QNQuZKrsskTnUc
+Authorization: Token token=1AzCInMvrrZ6z5Zwp1l6DpMxiIw
 Host: example.org
 Cookie: </pre>
 
@@ -200,10 +200,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;rrule&quot;:&quot;RRULE:FREQ=WEEKLY;BYDAY=TH&quot;,&quot;description&quot;:&quot;One day it will all make sense.&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;f61122a5-13d8-42fd-b203-65de451799bb&quot;,&quot;f2ff9cd8-b5ca-46cf-981f-2181d6121935&quot;,&quot;7e15b9d0-ad93-41e6-93d5-69b66e87860a&quot;,&quot;dcae179a-2bbd-45ee-b3c5-7fd2a9ca421d&quot;,&quot;3f967890-173b-429d-9d75-19207343632a&quot;],&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots&quot; -d &#39;{&quot;title&quot;:&quot;Time for a Slot&quot;,&quot;startDate&quot;:&quot;2014-09-08T13:31:02.000Z&quot;,&quot;endDate&quot;:&quot;2014-09-13T22:03:24.000Z&quot;,&quot;rrule&quot;:&quot;RRULE:FREQ=WEEKLY;BYDAY=TH&quot;,&quot;description&quot;:&quot;One day it will all make sense.&quot;,&quot;notes&quot;:[{&quot;title&quot;:&quot;revolutionizing the calendar&quot;,&quot;content&quot;:&quot;this is content&quot;},{&quot;title&quot;:&quot;and another title&quot;,&quot;content&quot;:&quot;more content here&quot;}],&quot;settings&quot;:{&quot;alerts&quot;:&quot;0101010101&quot;},&quot;visibility&quot;:&quot;private&quot;,&quot;slotGroups&quot;:[&quot;b26de315-7a73-443a-a70f-bd67b81cd180&quot;,&quot;e35f5ccc-a8d9-467c-a5e8-075de82372cf&quot;,&quot;dd576e45-f891-4257-b689-7d763ac15072&quot;,&quot;bd2ce06a-71e6-4d68-8cb1-654034fd2508&quot;,&quot;c2499d3b-0b27-4135-bdae-8c300d255f30&quot;],&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=Gr-O_6E83jjc_QNQuZKrsskTnUc&quot;</pre>
+	-H &quot;Authorization: Token token=1AzCInMvrrZ6z5Zwp1l6DpMxiIw&quot;</pre>
 
 ### Response
 
@@ -214,10 +214,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;c8e99e561f7d6b468796d04f8d36c976&quot;
+ETag: W/&quot;e01608d2f57faba5358616beea24e471&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0deb1702-9dfc-4ae3-8cd7-8a7d8190f5ed
-X-Runtime: 0.501081
+X-Request-Id: 2b1cbacb-c66f-4f10-9641-178ad7b8dc75
+X-Runtime: 0.617890
 Content-Length: 2077</pre>
 
 #### Status

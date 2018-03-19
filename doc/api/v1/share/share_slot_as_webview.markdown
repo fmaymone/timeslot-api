@@ -29,7 +29,7 @@ Description : The full share link including the share ID
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=KfpHZ0Z6493DQpBVi05IbENXJu4
+Authorization: Token token=xvO_hVHE04x_GHDht8ttxPVaGW0
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -42,7 +42,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/share/35/webview&quot; -d &#39;&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=KfpHZ0Z6493DQpBVi05IbENXJu4&quot; \
+	-H &quot;Authorization: Token token=xvO_hVHE04x_GHDht8ttxPVaGW0&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -56,8 +56,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;9e8002d140676515c5ef6d863d0d5a1c&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 118b5e5d-6a26-4aa3-bbe6-f00058a787a3
-X-Runtime: 0.114417
+X-Request-Id: 10a721b9-3aa7-488b-920c-8ad43464c273
+X-Runtime: 0.132886
 Content-Length: 52</pre>
 
 #### Status

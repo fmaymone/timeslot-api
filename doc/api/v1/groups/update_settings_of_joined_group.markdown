@@ -33,13 +33,13 @@ Description : set default alerts for slots in this group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=QYRzfOpiephIzfEYQme7t4gkjo0
+Authorization: Token token=tVy2ooYmt5RywN4UvYyPRK8DQRc
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/e1a8fd55-1953-4cd5-b332-28b37749092b/members</pre>
+<pre>PATCH /v1/groups/d17b63bf-368b-4d29-a997-6818571ba8de/members</pre>
 
 #### Body
 ```javascript
@@ -49,9 +49,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/e1a8fd55-1953-4cd5-b332-28b37749092b/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;color&quot;:&quot;WWW222&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/d17b63bf-368b-4d29-a997-6818571ba8de/members&quot; -d &#39;{&quot;settings&quot;:{&quot;notifications&quot;:&quot;false&quot;,&quot;color&quot;:&quot;WWW222&quot;,&quot;defaultAlerts&quot;:&quot;1111100000&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=QYRzfOpiephIzfEYQme7t4gkjo0&quot;</pre>
+	-H &quot;Authorization: Token token=tVy2ooYmt5RywN4UvYyPRK8DQRc&quot;</pre>
 
 ### Response
 
@@ -63,8 +63,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: b960a58b-3dea-401a-b5f0-af498e61814f
-X-Runtime: 0.011898
+X-Request-Id: b0e331d2-d465-49a1-a587-9a119a94ea80
+X-Runtime: 0.013018
 Content-Length: 0</pre>
 
 #### Status

@@ -133,7 +133,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=6HBE8BbMEl2MYPfmJyRaeOFJ1ac
+Authorization: Token token=Bn8pWWJHQUS1FhaHVxLow8RcrnY
 Host: example.org
 Cookie: </pre>
 
@@ -151,7 +151,7 @@ Cookie: </pre>
 
 <pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/12&quot; -d &#39;{&quot;notes&quot;:[{&quot;title&quot;:&quot;Title for Note 182&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;,&quot;localId&quot;:&quot;123321&quot;},{&quot;title&quot;:&quot;Title for Note 183&quot;,&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit!&quot;}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=6HBE8BbMEl2MYPfmJyRaeOFJ1ac&quot;</pre>
+	-H &quot;Authorization: Token token=Bn8pWWJHQUS1FhaHVxLow8RcrnY&quot;</pre>
 
 ### Response
 
@@ -162,10 +162,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;08871300e913bb72db5ae42c822ec92c&quot;
+ETag: W/&quot;700fd3e072f23925cd1aa6cda583c029&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 210e816a-00e6-43ab-91e5-385e43b0f7b1
-X-Runtime: 0.187682
+X-Request-Id: 489272a7-aa4d-4216-9bd9-e333ffd0e98b
+X-Runtime: 0.242410
 Content-Length: 919</pre>
 
 #### Status
