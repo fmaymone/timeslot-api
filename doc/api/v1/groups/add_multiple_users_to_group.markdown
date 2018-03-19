@@ -27,13 +27,13 @@ Description : User IDs to be invited to group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=eDAQWcytt-GivZpxjD8c8LaaAl0
+Authorization: Token token=tTEZ5iOJI71DJHUjI9nu4rW12Fg
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/3a604cb0-71d6-451c-b3b4-1ba60a21be84/members</pre>
+<pre>POST /v1/groups/78541fb6-b2d1-44f3-a9b8-8704267c93ee/members</pre>
 
 #### Body
 ```javascript
@@ -43,9 +43,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/3a604cb0-71d6-451c-b3b4-1ba60a21be84/members&quot; -d &#39;{&quot;invitees&quot;:[392,393,394]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/groups/78541fb6-b2d1-44f3-a9b8-8704267c93ee/members&quot; -d &#39;{&quot;invitees&quot;:[392,393,394]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=eDAQWcytt-GivZpxjD8c8LaaAl0&quot;</pre>
+	-H &quot;Authorization: Token token=tTEZ5iOJI71DJHUjI9nu4rW12Fg&quot;</pre>
 
 ### Response
 
@@ -56,10 +56,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;c37caa2f55f572a5ced769eeb081a83a&quot;
+ETag: W/&quot;3f979385f7a0bdf8bc4fc33d18e5603b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a106a983-ec5b-4d8f-a534-43ad7fa7aff8
-X-Runtime: 0.350773
+X-Request-Id: ca880e7e-606c-4582-a3f8-e3ffcd12e79b
+X-Runtime: 0.416743
 Content-Length: 246</pre>
 
 #### Status

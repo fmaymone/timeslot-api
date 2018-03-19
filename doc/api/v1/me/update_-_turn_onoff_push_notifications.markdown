@@ -191,7 +191,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=6VuNg_darHScOo1AB2pXrToUcKk
+Authorization: Token token=h6FHw_wTm0Z_2WsD8y9ot4P0b2s
 Host: example.org
 Cookie: </pre>
 
@@ -207,9 +207,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me&quot; -d &#39;{&quot;push&quot;:false}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me&quot; -d &#39;{&quot;push&quot;:false}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=6VuNg_darHScOo1AB2pXrToUcKk&quot;</pre>
+	-H &quot;Authorization: Token token=h6FHw_wTm0Z_2WsD8y9ot4P0b2s&quot;</pre>
 
 ### Response
 
@@ -220,10 +220,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;28d8fa5486b27742979600ae0b0ae215&quot;
+ETag: W/&quot;320e018f9e207f56101312659453f930&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8ed30fbf-bcde-49f3-b8aa-45fabfb22650
-X-Runtime: 0.039127
+X-Request-Id: 00dfa206-e9c5-409d-b0b6-3913bd77f83c
+X-Runtime: 0.053213
 Content-Length: 865</pre>
 
 #### Status

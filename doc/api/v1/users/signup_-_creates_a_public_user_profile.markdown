@@ -160,7 +160,7 @@ Description : Authentication Token for the user to be set as a HTTP header in su
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=QzVcpCOoAYrow5LT34M858s1hJA
+Authorization: Token token=A1dwhT2X632EkDVLseC29wymRJ0
 Host: example.org
 Cookie: </pre>
 
@@ -176,10 +176,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/public&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;role&quot;:&quot;public_user&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/public&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;role&quot;:&quot;public_user&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=QzVcpCOoAYrow5LT34M858s1hJA&quot;</pre>
+	-H &quot;Authorization: Token token=A1dwhT2X632EkDVLseC29wymRJ0&quot;</pre>
 
 ### Response
 
@@ -190,10 +190,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5df8566be9f57773bd13aa9964063825&quot;
+ETag: W/&quot;54465ada85977c50e94272d1d9e4cd3d&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c0955a4a-1ac1-4758-9fe3-0dd088fd01cd
-X-Runtime: 0.108635
+X-Request-Id: 66638d0f-5cd5-4490-86f7-33322258adcc
+X-Runtime: 0.075899
 Content-Length: 1042</pre>
 
 #### Status

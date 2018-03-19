@@ -22,19 +22,19 @@ Description : ID of the group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=b6LHsSUov3RK1zwmheVx7QC7fcM
+Authorization: Token token=gy1KlcN14g_t6_R0Nnrzc6LWuz8
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/groups/6dd0f3ec-3236-4fee-8584-3716284a6f4d/accept</pre>
+<pre>POST /v1/groups/6dc7beb3-d190-432b-9391-914ea1d0d04a/accept</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/6dd0f3ec-3236-4fee-8584-3716284a6f4d/accept&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/groups/6dc7beb3-d190-432b-9391-914ea1d0d04a/accept&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=b6LHsSUov3RK1zwmheVx7QC7fcM&quot;</pre>
+	-H &quot;Authorization: Token token=gy1KlcN14g_t6_R0Nnrzc6LWuz8&quot;</pre>
 
 ### Response
 
@@ -46,8 +46,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: e8909138-41dd-4fd6-8bf6-9f76088d310c
-X-Runtime: 0.089761
+X-Request-Id: 28b17986-d5c8-4151-b52a-2429780b071a
+X-Runtime: 0.132274
 Content-Length: 0</pre>
 
 #### Status

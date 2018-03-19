@@ -33,7 +33,7 @@ Description : API Key
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=gnmdQEDHYeIjfVKhnbxV324KfsM
+Authorization: Token token=kxYD6csZKTRRjvLgFv2sAaxvjAI
 Host: example.org
 Cookie: </pre>
 
@@ -47,9 +47,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/search/media?query=timeslot+2015&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/search/media?query=timeslot+2015&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=gnmdQEDHYeIjfVKhnbxV324KfsM&quot;</pre>
+	-H &quot;Authorization: Token token=kxYD6csZKTRRjvLgFv2sAaxvjAI&quot;</pre>
 
 ### Response
 
@@ -60,10 +60,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e2e42fd80693c816eccac661ff25a19d&quot;
+ETag: W/&quot;0fd89cb95168e2c7188a24fd9eb253e2&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ffbe904a-cd39-4182-a291-eab9693c3698
-X-Runtime: 0.014475
+X-Request-Id: 3216b838-4260-4d51-bb25-151abfa4b1c6
+X-Runtime: 0.012396
 Content-Length: 173</pre>
 
 #### Status

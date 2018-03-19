@@ -19,7 +19,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: text/plain
-Authorization: Token token=SZr01NIL7LyGU-P5DGEv21v7KoQ
+Authorization: Token token=2PUqIZSZendN151pko7KKfcJKds
 Host: example.org
 Cookie: </pre>
 
@@ -35,10 +35,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/outlook&quot; -d &#39;{&quot;group&quot;:&quot;d7158d59-b06a-4c2d-a7b9-ab0a775522d3&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/export/outlook&quot; -d &#39;{&quot;group&quot;:&quot;f3225810-fe9a-4ea9-bbb9-15770795a1e4&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: text/plain&quot; \
-	-H &quot;Authorization: Token token=SZr01NIL7LyGU-P5DGEv21v7KoQ&quot;</pre>
+	-H &quot;Authorization: Token token=2PUqIZSZendN151pko7KKfcJKds&quot;</pre>
 
 ### Response
 
@@ -47,14 +47,14 @@ Cookie: </pre>
 <pre>X-Frame-Options: SAMEORIGIN
 X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
-Content-Disposition: attachment; filename=&quot;d7158d59-b06a-4c2d-a7b9-ab0a775522d3.csv&quot;
+Content-Disposition: attachment; filename=&quot;f3225810-fe9a-4ea9-bbb9-15770795a1e4.csv&quot;
 Content-Transfer-Encoding: binary
 Content-Type: text/csv
 Cache-Control: private
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;106f77abe1de95bb365304c564fa4860&quot;
-X-Request-Id: 3f5db5ea-54c6-44b5-b6e9-91a5692c3905
-X-Runtime: 0.017368
+X-Request-Id: 4fec4161-27a1-4cb9-b8df-96c4e53a90e6
+X-Runtime: 0.016378
 Content-Length: 176</pre>
 
 #### Status

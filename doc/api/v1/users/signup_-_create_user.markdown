@@ -180,7 +180,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -193,10 +193,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e918d56a74a2a251de021f6118c5c656&quot;
+ETag: W/&quot;9308e55c6fd1bf262da5810621b530ba&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5571f8b5-76ed-40fa-89f7-2308c0a3daa4
-X-Runtime: 0.085570
+X-Request-Id: eef9073a-9713-4ede-bbc2-f43176066521
+X-Runtime: 0.083598
 Content-Length: 1053</pre>
 
 #### Status

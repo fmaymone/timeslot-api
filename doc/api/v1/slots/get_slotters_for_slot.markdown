@@ -25,7 +25,7 @@ Description : list of all users who added the slot to their &#39;MyCalendar&#39;
 
 #### Headers
 
-<pre>Authorization: Token token=d9hf9paa0O-CRJv_RRrQhoMi00c
+<pre>Authorization: Token token=v3dB2YCF3M5UiKkk3QX4HmLPD_g
 Host: example.org
 Cookie: </pre>
 
@@ -35,8 +35,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/33/slotters&quot; -X GET \
-	-H &quot;Authorization: Token token=d9hf9paa0O-CRJv_RRrQhoMi00c&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/33/slotters&quot; -X GET \
+	-H &quot;Authorization: Token token=v3dB2YCF3M5UiKkk3QX4HmLPD_g&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;ee2f3ecf9778519a6c5888b2dd41698c&quot;
+ETag: W/&quot;4e780eef6822864f72fd58295a3fefb6&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3f9ba3af-55a0-409b-aba6-2cb108fa6d0c
-X-Runtime: 0.022959
+X-Request-Id: f437b46c-15bb-4527-971a-5f329b8cd7de
+X-Runtime: 0.022539
 Content-Length: 403</pre>
 
 #### Status

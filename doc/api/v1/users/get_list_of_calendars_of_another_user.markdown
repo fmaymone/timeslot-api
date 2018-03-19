@@ -19,7 +19,7 @@ Description : ID of the user to get the calendars for.
 
 #### Headers
 
-<pre>Authorization: Token token=DRv0IXhZYnTNgGPi8ZDMSYe72Io
+<pre>Authorization: Token token=OO98qxI2Yk85t25yAyRh5dZ8j9k
 Accept: application/json
 Host: example.org
 Cookie: </pre>
@@ -30,8 +30,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/193/calendars&quot; -X GET \
-	-H &quot;Authorization: Token token=DRv0IXhZYnTNgGPi8ZDMSYe72Io&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/193/calendars&quot; -X GET \
+	-H &quot;Authorization: Token token=OO98qxI2Yk85t25yAyRh5dZ8j9k&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;560b6785ec668211c15f78799bb85d2c&quot;
+ETag: W/&quot;3ce6d24d868caa3ae41b77c4b4ea424b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 74729070-ddc0-46f9-b31a-427eee653dab
-X-Runtime: 0.098708
+X-Request-Id: 95f9778f-60bb-4c3b-b370-5eb121838e13
+X-Runtime: 0.103014
 Content-Length: 3628</pre>
 
 #### Status

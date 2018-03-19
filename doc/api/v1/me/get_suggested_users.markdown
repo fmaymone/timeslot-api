@@ -15,7 +15,7 @@ Description : contains potentially interesting users
 
 #### Headers
 
-<pre>Authorization: Token token=wLjBscCUXuSBzRxcpGU91zup1OM
+<pre>Authorization: Token token=h2of5Iton0KF1Uvgp3vJcmh41Ag
 Host: example.org
 Cookie: </pre>
 
@@ -25,8 +25,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/suggested_users&quot; -X GET \
-	-H &quot;Authorization: Token token=wLjBscCUXuSBzRxcpGU91zup1OM&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/suggested_users&quot; -X GET \
+	-H &quot;Authorization: Token token=h2of5Iton0KF1Uvgp3vJcmh41Ag&quot;</pre>
 
 ### Response
 
@@ -37,11 +37,11 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;69dfcf83c4a743fc738d42c802a97139&quot;
+ETag: W/&quot;b44871d5b26f9367c9e804a3809d8e4b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: bacf5986-cfae-4656-9d9e-fe211adcf91b
-X-Runtime: 0.039926
-Content-Length: 655</pre>
+X-Request-Id: 37995b16-ffa1-4441-8088-b93b6fbb0f5e
+X-Runtime: 0.050572
+Content-Length: 873</pre>
 
 #### Status
 

@@ -28,7 +28,7 @@ Description : Array of users ids which should be tagged for this slot
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=E8NyOZB2AE5p0QRXvrsN4C4GepQ
+Authorization: Token token=pmcBv031-K5RxnO8klQxaSTzn_k
 Host: example.org
 Cookie: </pre>
 
@@ -44,10 +44,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/34/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[99,100,101]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/34/user_tags&quot; -d &#39;{&quot;user_tags&quot;:[99,100,101]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=E8NyOZB2AE5p0QRXvrsN4C4GepQ&quot;</pre>
+	-H &quot;Authorization: Token token=pmcBv031-K5RxnO8klQxaSTzn_k&quot;</pre>
 
 ### Response
 
@@ -59,8 +59,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 2f938c6e-fdc9-428f-a58e-59345a55372c
-X-Runtime: 0.297875
+X-Request-Id: 43432612-179a-42b4-b315-d27cfcf4419b
+X-Runtime: 0.245636
 Content-Length: 0</pre>
 
 #### Status

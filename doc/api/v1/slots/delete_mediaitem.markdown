@@ -21,7 +21,7 @@ Description : Array of the Media Items to delete
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=mLLnMEzdkqlC_Jgjy04Q7raRpt8
+Authorization: Token token=PcPgWGEt0bU5JKWGsxMBdbAeWBE
 Host: example.org
 Cookie: </pre>
 
@@ -37,9 +37,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/19/media&quot; -d &#39;{&quot;media&quot;:[{&quot;id&quot;:16},{&quot;id&quot;:15},{&quot;id&quot;:14},{&quot;id&quot;:13},{&quot;id&quot;:12},{&quot;id&quot;:11}]}&#39; -X DELETE \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/19/media&quot; -d &#39;{&quot;media&quot;:[{&quot;id&quot;:16},{&quot;id&quot;:15},{&quot;id&quot;:14},{&quot;id&quot;:13},{&quot;id&quot;:12},{&quot;id&quot;:11}]}&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=mLLnMEzdkqlC_Jgjy04Q7raRpt8&quot;</pre>
+	-H &quot;Authorization: Token token=PcPgWGEt0bU5JKWGsxMBdbAeWBE&quot;</pre>
 
 ### Response
 
@@ -51,8 +51,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 071d4877-9096-4142-ac0b-edda992a256a
-X-Runtime: 0.510546
+X-Request-Id: e51e6e99-5857-4086-aa80-684a0d69c21e
+X-Runtime: 0.459671
 Content-Length: 0</pre>
 
 #### Status

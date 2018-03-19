@@ -29,7 +29,7 @@ Description : Array of Slotgroup UUIDs where the current_user has no write acces
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=4_mtKZFnAcc95YDATEM6W1cSfJY
+Authorization: Token token=VFAkrZ1vGIHqPToL2Pjh8NoKB44
 Host: example.org
 Cookie: </pre>
 
@@ -45,9 +45,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/26/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;c5e4d724-da76-4f00-bfba-6d3c454bd5c7&quot;,&quot;8aa7ce9b-e03c-46b4-9777-5177c6f2d50a&quot;,&quot;f1789ca3-565e-42c1-a042-db1b95d9fa0b&quot;,&quot;3d01f88a-a04f-4012-bbf9-34cd8bd2929b&quot;,&quot;8cf138ae-db07-44ba-b115-bab127ee19b0&quot;]}&#39; -X DELETE \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/26/slotgroups&quot; -d &#39;{&quot;slotGroups&quot;:[&quot;374b7f5e-ac6c-4763-8c85-f815cda838b7&quot;,&quot;cb482b0f-d6d2-4bb5-9c2d-1e5acd4954bc&quot;,&quot;22ef171b-b508-4d0f-9a90-d6ce198cb9d2&quot;,&quot;3acdb796-4e17-4d48-8903-f73770af1ce9&quot;,&quot;7111a73c-ca67-47d0-9077-74b810ac5e47&quot;]}&#39; -X DELETE \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=4_mtKZFnAcc95YDATEM6W1cSfJY&quot;</pre>
+	-H &quot;Authorization: Token token=VFAkrZ1vGIHqPToL2Pjh8NoKB44&quot;</pre>
 
 ### Response
 
@@ -58,10 +58,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;72d6902719b29136c373b1764bb8265e&quot;
+ETag: W/&quot;a6ed9da5c28f0ba641bf5b03b37868ca&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 85ae02b8-4f54-4517-9248-b780a1822024
-X-Runtime: 0.213358
+X-Request-Id: cdef9ee2-560e-4332-80b9-d06a27dc5689
+X-Runtime: 0.208054
 Content-Length: 106</pre>
 
 #### Status

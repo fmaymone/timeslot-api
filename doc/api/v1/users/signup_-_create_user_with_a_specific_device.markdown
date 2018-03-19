@@ -192,7 +192,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-333462873410834786765439533&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users&quot; -d &#39;{&quot;username&quot;:&quot;foo&quot;,&quot;firstName&quot;:&quot;Lana&quot;,&quot;middleName&quot;:&quot;Del&quot;,&quot;lastName&quot;:&quot;Rey&quot;,&quot;gender&quot;:&quot;female&quot;,&quot;email&quot;:&quot;someone@timeslot.com&quot;,&quot;lang&quot;:&quot;de&quot;,&quot;password&quot;:&quot;secret-thing&quot;,&quot;device&quot;:{&quot;device&quot;:{&quot;device_id&quot;:&quot;sn-333462873410834786765439533&quot;,&quot;system&quot;:&quot;ios&quot;,&quot;version&quot;:&quot;6.0&quot;}}}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
@@ -205,10 +205,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;cee5ca623bff068702b10ec05331d2fb&quot;
+ETag: W/&quot;af1d88dcf00398d50b38e3e0939be20f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 19ea00e5-cf03-4795-a07f-b9efa695065b
-X-Runtime: 0.111325
+X-Request-Id: cb027303-d8f4-4e44-888f-e476cdcca384
+X-Runtime: 0.097678
 Content-Length: 1053</pre>
 
 #### Status

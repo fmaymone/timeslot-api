@@ -21,7 +21,7 @@ Description : containing media items as a list of MediaItem
 
 #### Headers
 
-<pre>Authorization: Token token=-FufLvhr4CImkHMRu0e4jW6Xuiw
+<pre>Authorization: Token token=XEo-lXyh7nu8rmr3R5aqASbCpRU
 Host: example.org
 Cookie: </pre>
 
@@ -31,8 +31,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/118/media&quot; -X GET \
-	-H &quot;Authorization: Token token=-FufLvhr4CImkHMRu0e4jW6Xuiw&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/118/media&quot; -X GET \
+	-H &quot;Authorization: Token token=XEo-lXyh7nu8rmr3R5aqASbCpRU&quot;</pre>
 
 ### Response
 
@@ -43,10 +43,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;95fb465d54956c3184ead681268c9471&quot;
+ETag: W/&quot;54695d0cbffc1781bbf0ba287873b18e&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b5a33a0c-26e7-4a7d-9fa4-0c1150c13e55
-X-Runtime: 0.102074
+X-Request-Id: 100a1041-42b8-436f-b5fe-7f88e347c023
+X-Runtime: 0.064894
 Content-Length: 2817</pre>
 
 #### Status

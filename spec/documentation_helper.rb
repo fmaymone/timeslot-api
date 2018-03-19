@@ -30,7 +30,7 @@ RspecApiDocumentation.configure do |config|
 
   # Used when adding a cURL output to the docs
   # config.curl_host = nil
-  config.curl_host = 'https://tsinc-alpha.herokuapp.com/'
+  config.curl_host = 'https://tsinc-alpha.herokuapp.com'
 
   # Used when adding a cURL output to the docs
   # Allows you to filter out headers that are not needed in the cURL request,

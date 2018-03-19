@@ -174,7 +174,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=0aS8aEJQYMa9x6S155qHCNt-Htc
+Authorization: Token token=7nGXNdCNCtwCdoMQkV4ooewYzS8
 Host: example.org
 Cookie: </pre>
 
@@ -190,9 +190,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/15&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;placeId&quot;:&quot;ChIJrTLr-GyuEmsRBfy61i59si0&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/15&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House&quot;,&quot;thoroughfare&quot;:&quot;Torstrasse 1&quot;,&quot;subThoroughfare&quot;:&quot;1&quot;,&quot;locality&quot;:&quot;Berlin&quot;,&quot;subLocality&quot;:&quot;Mitte&quot;,&quot;postalCode&quot;:&quot;10119&quot;,&quot;country&quot;:&quot;Germany&quot;,&quot;isoCountryCode&quot;:&quot;GER&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;,&quot;placeId&quot;:&quot;ChIJrTLr-GyuEmsRBfy61i59si0&quot;,&quot;privateLocation&quot;:true}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=0aS8aEJQYMa9x6S155qHCNt-Htc&quot;</pre>
+	-H &quot;Authorization: Token token=7nGXNdCNCtwCdoMQkV4ooewYzS8&quot;</pre>
 
 ### Response
 
@@ -203,10 +203,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5b8092a9b4507aace47d098aee34f22b&quot;
+ETag: W/&quot;6955c1500b138a5d84cbb322696de035&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 3a97dffe-fa9c-4621-89ec-54416f99b734
-X-Runtime: 0.158758
+X-Request-Id: c6a90d94-4be7-4a0b-be58-492ae404ce8f
+X-Runtime: 0.145196
 Content-Length: 1053</pre>
 
 #### Status

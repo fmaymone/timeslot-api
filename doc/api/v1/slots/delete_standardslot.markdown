@@ -91,7 +91,7 @@ Description : Videos recordings for the slot
 
 #### Headers
 
-<pre>Authorization: Token token=vYI2iYloV5M2m2MVEyDvzyG__jo
+<pre>Authorization: Token token=adb5p6tCedJhhICnSmLh8vOz_0s
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -102,8 +102,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/17&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=vYI2iYloV5M2m2MVEyDvzyG__jo&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/17&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=adb5p6tCedJhhICnSmLh8vOz_0s&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -115,10 +115,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;8485f1e2e3db2784efd8fff07e07b1e3&quot;
+ETag: W/&quot;559b820a7cbaec40e9b5719ef7ce7ac4&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 0ecc06a2-d847-4f1e-918f-b1fd617c72fd
-X-Runtime: 0.236873
+X-Request-Id: af9a65ca-637e-47db-9a53-ce7e2cdc3d63
+X-Runtime: 0.253736
 Content-Length: 737</pre>
 
 #### Status

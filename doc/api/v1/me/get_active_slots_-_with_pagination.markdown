@@ -86,24 +86,24 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA
+<pre>Authorization: Token token=EvhX5w11AgwlK0yFVLTFXPYNpuI
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/me/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A31.527Z&amp;mode=upcoming</pre>
+<pre>GET /v1/me/slots?limit=3&amp;moment=2018-03-19T20%3A00%3A05.466Z&amp;mode=upcoming</pre>
 
 #### Query Parameters
 
 <pre>limit: 3
-moment: 2018-03-19T19:54:31.527Z
+moment: 2018-03-19T20:00:05.466Z
 mode: upcoming</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/slots?limit=3&amp;moment=2018-03-19T19%3A54%3A31.527Z&amp;mode=upcoming&quot; -X GET \
-	-H &quot;Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/slots?limit=3&amp;moment=2018-03-19T20%3A00%3A05.466Z&amp;mode=upcoming&quot; -X GET \
+	-H &quot;Authorization: Token token=EvhX5w11AgwlK0yFVLTFXPYNpuI&quot;</pre>
 
 ### Response
 
@@ -114,10 +114,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;90c5a4171a8db6ee9fccd2f92189eecb&quot;
+ETag: W/&quot;daded7ea8d958eb516954798ee77b127&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b76da378-8428-48b4-a86e-0357fb9ff25f
-X-Runtime: 0.109857
+X-Request-Id: 8f1722de-d177-4fa9-baed-8029fd0d8ef4
+X-Runtime: 0.246368
 Content-Length: 3969</pre>
 
 #### Status
@@ -133,7 +133,7 @@ Content-Length: 3969</pre>
 
 #### Headers
 
-<pre>Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA
+<pre>Authorization: Token token=EvhX5w11AgwlK0yFVLTFXPYNpuI
 Host: example.org
 Cookie: </pre>
 
@@ -147,8 +147,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/19/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=vyRdM3cAzt1F9V9yMFTnvF2nxKA&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/19/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=EvhX5w11AgwlK0yFVLTFXPYNpuI&quot;</pre>
 
 ### Response
 
@@ -161,8 +161,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;ec5f869a1a725449cd7ee8f82d086407&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 084b3494-10a1-41dd-918f-de86059f2f8c
-X-Runtime: 0.046892
+X-Request-Id: 27cf709e-c7c7-45d9-ac11-7a321e7105b3
+X-Runtime: 0.092113
 Content-Length: 225</pre>
 
 #### Status

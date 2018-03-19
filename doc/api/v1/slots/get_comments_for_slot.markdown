@@ -25,7 +25,7 @@ Description : containing comment content and creation date and details of the us
 
 #### Headers
 
-<pre>Authorization: Token token=g6_wLg1aMBSkiz7Tc4jz5JCC7aM
+<pre>Authorization: Token token=niABI11UMpNnzSgSpkG19FJFc4w
 Host: example.org
 Cookie: </pre>
 
@@ -35,8 +35,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/32/comments&quot; -X GET \
-	-H &quot;Authorization: Token token=g6_wLg1aMBSkiz7Tc4jz5JCC7aM&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/32/comments&quot; -X GET \
+	-H &quot;Authorization: Token token=niABI11UMpNnzSgSpkG19FJFc4w&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;eed4de9a5313de815ee93803663278d1&quot;
+ETag: W/&quot;1c43f6ee69b555b1b893fc63c3846a72&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 63b43f60-012d-4d2c-a0b4-411257e29228
-X-Runtime: 0.027118
+X-Request-Id: 2fc28794-d0f7-4cd2-b45e-c671b0f1afe1
+X-Runtime: 0.017781
 Content-Length: 850</pre>
 
 #### Status

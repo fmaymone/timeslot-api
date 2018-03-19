@@ -19,7 +19,7 @@ Description : Array of User IDs for whom to refuse/destroy a friendship
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=3x2Vl4qlAqd50qPqVND3aueqIzI
+Authorization: Token token=PYEDKCwBfQZ_2Rqidr1WaAZTrgM
 Host: example.org
 Cookie: </pre>
 
@@ -35,10 +35,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/remove_friends&quot; -d &#39;{&quot;ids&quot;:[106,107,108,105]}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/remove_friends&quot; -d &#39;{&quot;ids&quot;:[106,107,108,105]}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3x2Vl4qlAqd50qPqVND3aueqIzI&quot;</pre>
+	-H &quot;Authorization: Token token=PYEDKCwBfQZ_2Rqidr1WaAZTrgM&quot;</pre>
 
 ### Response
 
@@ -50,8 +50,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: bc3b0836-d9ca-4e0a-815e-c7996a6e29f7
-X-Runtime: 0.198903
+X-Request-Id: 5dc7105a-f76d-4ceb-96ad-066bff4cd0b8
+X-Runtime: 0.190460
 Content-Length: 0</pre>
 
 #### Status

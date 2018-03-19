@@ -17,7 +17,7 @@ Description : ID of the user to get the slot dates for.
 
 #### Headers
 
-<pre>Authorization: Token token=pGY3mhrSK3aAaZOVhITuDoUTlkk
+<pre>Authorization: Token token=UekmaV63FRgh9yEGskl6N6opAm4
 Accept: application/json
 Host: example.org
 Cookie: </pre>
@@ -28,8 +28,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/183/dates&quot; -X GET \
-	-H &quot;Authorization: Token token=pGY3mhrSK3aAaZOVhITuDoUTlkk&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/183/dates&quot; -X GET \
+	-H &quot;Authorization: Token token=UekmaV63FRgh9yEGskl6N6opAm4&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -43,8 +43,8 @@ Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
 ETag: W/&quot;37238668c82ab142750f45cd91f05adb&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 16200f0c-0c42-407a-9230-28f85f1af135
-X-Runtime: 0.050456
+X-Request-Id: 34fbf9a1-0a6c-4ef0-9648-d9ac16a29de6
+X-Runtime: 0.041934
 Content-Length: 64</pre>
 
 #### Status

@@ -16,7 +16,7 @@ Description : ID of the Slot to like
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=h5a_kssEKwjQjRE0gidooG-dZhM
+Authorization: Token token=2rt2KgnBrNUyjuLzQfRXn-yxMGw
 Host: example.org
 Cookie: </pre>
 
@@ -26,9 +26,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/27/like&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/27/like&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=h5a_kssEKwjQjRE0gidooG-dZhM&quot;</pre>
+	-H &quot;Authorization: Token token=2rt2KgnBrNUyjuLzQfRXn-yxMGw&quot;</pre>
 
 ### Response
 
@@ -40,8 +40,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: fccb4a24-a09f-4cdd-a8fb-2ed10c36e240
-X-Runtime: 0.091239
+X-Request-Id: 78f00a2e-2d74-4ebc-83d6-818e5c0aed5e
+X-Runtime: 0.105587
 Content-Length: 0</pre>
 
 #### Status

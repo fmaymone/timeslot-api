@@ -15,7 +15,7 @@ Description : containing friends as a list of Users
 
 #### Headers
 
-<pre>Authorization: Token token=QMGTEixDaw0tetb3CxJR3_LoT7k
+<pre>Authorization: Token token=KK9fIjpM8aQz2TLUZfar4j4no3M
 Host: example.org
 Cookie: </pre>
 
@@ -25,8 +25,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=QMGTEixDaw0tetb3CxJR3_LoT7k&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/friends&quot; -X GET \
+	-H &quot;Authorization: Token token=KK9fIjpM8aQz2TLUZfar4j4no3M&quot;</pre>
 
 ### Response
 
@@ -37,10 +37,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;561f043e6b6f423d0c3054543d28e721&quot;
+ETag: W/&quot;8774b1df20e04630da179041bea5fb1f&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 59b74f3c-b5a1-44a2-80dc-e077ac7ebccd
-X-Runtime: 0.032488
+X-Request-Id: 4f63704a-0c97-47f8-b402-467875c81a0c
+X-Runtime: 0.039792
 Content-Length: 649</pre>
 
 #### Status

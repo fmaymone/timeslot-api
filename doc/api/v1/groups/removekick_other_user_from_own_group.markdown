@@ -28,19 +28,19 @@ Description : ID of the user to kick
 
 #### Headers
 
-<pre>Authorization: Token token=nEk4QPKBIv5-DbPbQhLUxFvBTzQ
+<pre>Authorization: Token token=6CX-PH-ui_p4PpE7qVCmdgk2ERY
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
 
 #### Route
 
-<pre>DELETE /v1/groups/46ba14db-9870-4b93-9a09-346c5bb57bfe/members/407</pre>
+<pre>DELETE /v1/groups/84b3aab5-1558-496b-b601-50fdf3305623/members/407</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/46ba14db-9870-4b93-9a09-346c5bb57bfe/members/407&quot; -d &#39;&#39; -X DELETE \
-	-H &quot;Authorization: Token token=nEk4QPKBIv5-DbPbQhLUxFvBTzQ&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/groups/84b3aab5-1558-496b-b601-50fdf3305623/members/407&quot; -d &#39;&#39; -X DELETE \
+	-H &quot;Authorization: Token token=6CX-PH-ui_p4PpE7qVCmdgk2ERY&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -53,8 +53,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 589bc307-622a-4bd4-b183-3d475a095c8f
-X-Runtime: 0.123288
+X-Request-Id: f4ce0967-1439-484f-8aaf-3986034b05fa
+X-Runtime: 0.111916
 Content-Length: 0</pre>
 
 #### Status

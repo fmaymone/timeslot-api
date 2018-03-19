@@ -32,7 +32,7 @@ Description : Boolean flag to unregister device from all extern services
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=wgCXpMo5tbvmZOr0M3CSqlZq32Q
+Authorization: Token token=IjccnW2pWL5EHTPgIxR2JRgRBnk
 Host: example.org
 Cookie: </pre>
 
@@ -48,9 +48,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/device&quot; -d &#39;{&quot;deviceId&quot;:&quot;sn-283462873410834786765439528&quot;,&quot;system&quot;:&quot;android&quot;,&quot;version&quot;:&quot;5.0b&quot;,&quot;token&quot;:&quot;a43ea436c1eea1d5ebdcd86f46577d664fd28ce4f716350b9adff279e1bbc2ee&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=wgCXpMo5tbvmZOr0M3CSqlZq32Q&quot;</pre>
+	-H &quot;Authorization: Token token=IjccnW2pWL5EHTPgIxR2JRgRBnk&quot;</pre>
 
 ### Response
 
@@ -62,8 +62,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: a1ef07e6-c780-4525-a72b-83f90f07e024
-X-Runtime: 0.013975
+X-Request-Id: 07bd289e-3177-4025-82ac-fd6ce16f8874
+X-Runtime: 0.017537
 Content-Length: 0</pre>
 
 #### Status

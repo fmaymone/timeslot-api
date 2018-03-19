@@ -19,7 +19,7 @@ Description : Content of the comment
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=khdA71Sq6HAnahxkZdq11HR8P2I
+Authorization: Token token=VGpNvzeNqViLtdHJgdF9YDD6ZIE
 Host: example.org
 Cookie: </pre>
 
@@ -35,9 +35,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/31/comment&quot; -d &#39;{&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/31/comment&quot; -d &#39;{&quot;content&quot;:&quot;Liebe ist ein Kind der Freiheit&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=khdA71Sq6HAnahxkZdq11HR8P2I&quot;</pre>
+	-H &quot;Authorization: Token token=VGpNvzeNqViLtdHJgdF9YDD6ZIE&quot;</pre>
 
 ### Response
 
@@ -49,8 +49,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: c83caba8-add5-4bfe-b3b0-fdb840426018
-X-Runtime: 0.137666
+X-Request-Id: ced375be-43bc-4d41-ad5a-37973030b03f
+X-Runtime: 0.142176
 Content-Length: 0</pre>
 
 #### Status

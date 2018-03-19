@@ -95,7 +95,7 @@ Description : Number of reslots for this slot
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=3R_LD1QRbLc4Thpz5fUF2VXIh-0
+Authorization: Token token=kChhKn9swaTVd7EZXzSstc1hwyo
 Host: example.org
 Cookie: </pre>
 
@@ -105,9 +105,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/6&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/6&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=3R_LD1QRbLc4Thpz5fUF2VXIh-0&quot;</pre>
+	-H &quot;Authorization: Token token=kChhKn9swaTVd7EZXzSstc1hwyo&quot;</pre>
 
 ### Response
 
@@ -118,10 +118,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;3e12fa79db5761a6c161be0d75858564&quot;
+ETag: W/&quot;25fbf5771ffeceb18de5c134432526d9&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5bcfbca2-2a12-4625-a537-eee1e3ba71a1
-X-Runtime: 0.036960
+X-Request-Id: 0be53fad-f2f6-4b92-a3e2-9d676e955c10
+X-Runtime: 0.046001
 Content-Length: 1933</pre>
 
 #### Status

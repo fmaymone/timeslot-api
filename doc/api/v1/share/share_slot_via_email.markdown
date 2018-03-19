@@ -23,7 +23,7 @@ Description : The email of the recipient
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=lcnjzEnhRRO7TWKOE6ePGEB9JHU
+Authorization: Token token=GkghOeth80dc6L9bbcRyWyMNwd4
 Host: example.org
 Content-Type: application/x-www-form-urlencoded
 Cookie: </pre>
@@ -40,9 +40,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/share/35/email&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/share/35/email&quot; -d &#39;{&quot;email&quot;:&quot;success@simulator.amazonses.com&quot;}&#39; -X POST \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=lcnjzEnhRRO7TWKOE6ePGEB9JHU&quot; \
+	-H &quot;Authorization: Token token=GkghOeth80dc6L9bbcRyWyMNwd4&quot; \
 	-H &quot;Content-Type: application/x-www-form-urlencoded&quot;</pre>
 
 ### Response
@@ -55,8 +55,8 @@ X-Content-Type-Options: nosniff
 Content-Type: application/json
 Vary: Accept-Encoding, Origin
 Cache-Control: no-cache
-X-Request-Id: 5353cf6b-7ad1-4dbd-b389-56628c93ab7c
-X-Runtime: 0.046496
+X-Request-Id: 5e3b618d-5b13-42b0-8dc5-b7b9fdd6276c
+X-Runtime: 0.057824
 Content-Length: 0</pre>
 
 #### Status

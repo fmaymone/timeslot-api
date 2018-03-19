@@ -25,7 +25,7 @@ If the group uuid was not found, no Slot will be exported.
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=zDjQkZ74FlG37Jhz7up6BSp4tGc
+Authorization: Token token=j_tWQvC_2-cUD2Wyo_jMpDRrSjk
 Host: example.org
 Cookie: </pre>
 
@@ -35,10 +35,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/export/timeslot&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/export/timeslot&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=zDjQkZ74FlG37Jhz7up6BSp4tGc&quot;</pre>
+	-H &quot;Authorization: Token token=j_tWQvC_2-cUD2Wyo_jMpDRrSjk&quot;</pre>
 
 ### Response
 
@@ -52,9 +52,9 @@ Content-Transfer-Encoding: binary
 Content-Type: application/json
 Cache-Control: private
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;238334db0e3a6c26e810bea8ee4db15a&quot;
-X-Request-Id: 228cff75-7e49-4edb-bfc3-28cb5b9f8329
-X-Runtime: 0.352006
+ETag: W/&quot;9b31137052ec8b6428b4e7a3f82ba0b9&quot;
+X-Request-Id: 132e95f6-f8dd-4353-8f22-ef77611a4e98
+X-Runtime: 0.507548
 Content-Length: 6069</pre>
 
 #### Status

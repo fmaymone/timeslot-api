@@ -20,19 +20,19 @@ Description : ID of the group
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=2ovtBOZLJBvFuQBP3k9WRTqndO0
+Authorization: Token token=SPE0m27OVehsf76TxGh3DSwN41s
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>POST /v1/calendars/54c02638-177f-4a43-b356-791e53f9fc97/subscribe</pre>
+<pre>POST /v1/calendars/a421b343-3e7c-411b-91a8-17436c5fe487/subscribe</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/calendars/54c02638-177f-4a43-b356-791e53f9fc97/subscribe&quot; -d &#39;&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/calendars/a421b343-3e7c-411b-91a8-17436c5fe487/subscribe&quot; -d &#39;&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=2ovtBOZLJBvFuQBP3k9WRTqndO0&quot;</pre>
+	-H &quot;Authorization: Token token=SPE0m27OVehsf76TxGh3DSwN41s&quot;</pre>
 
 ### Response
 
@@ -43,10 +43,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;e223242585ad9655ab1bb8cf56af5eac&quot;
+ETag: W/&quot;3a1b99546e565e5b5838b66786334815&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: a231af19-646c-4291-874f-d637b8314c25
-X-Runtime: 0.142254
+X-Request-Id: bfa174d1-f8b9-4031-a382-bb0eeddf27e8
+X-Runtime: 0.126904
 Content-Length: 156</pre>
 
 #### Status

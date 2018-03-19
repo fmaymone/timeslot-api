@@ -33,7 +33,7 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/137/media&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/137/media&quot; -X GET \
 	-H &quot;Authorization: &quot;</pre>
 
 ### Response
@@ -45,10 +45,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;dc9c29d731404eed82b154b048267e11&quot;
+ETag: W/&quot;74791c8192b82326ab05750a3edd2cef&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: c9b4babf-a8cb-40d5-9c9a-c032fc146176
-X-Runtime: 0.035331
+X-Request-Id: 1a279732-aa02-405e-ae47-ed0b493d77b1
+X-Runtime: 0.019689
 Content-Length: 938</pre>
 
 #### Status

@@ -40,7 +40,7 @@ Description : Deletion datetime of the calendar
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=2MNbAtnrIrl8mdSgIWYhEtMDGpU
+Authorization: Token token=tu5z-pzPD3cDqwilfttt3lLl7w0
 Host: example.org
 Cookie: </pre>
 
@@ -50,9 +50,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/calendars&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/calendars&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=2MNbAtnrIrl8mdSgIWYhEtMDGpU&quot;</pre>
+	-H &quot;Authorization: Token token=tu5z-pzPD3cDqwilfttt3lLl7w0&quot;</pre>
 
 ### Response
 
@@ -63,10 +63,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;be0bfb6d8a03d533359cbc657f1b4e5a&quot;
+ETag: W/&quot;f1622679ad50d0cd23e220d2e81c8623&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: adc5799d-8bad-41d2-80d4-0fdac294cd38
-X-Runtime: 0.033560
+X-Request-Id: e5812b67-d19a-42a1-80e6-71738c183bc3
+X-Runtime: 0.049112
 Content-Length: 1656</pre>
 
 #### Status

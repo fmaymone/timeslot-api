@@ -71,7 +71,7 @@ Description : Deletion datetime of the slot
 
 #### Headers
 
-<pre>Authorization: Token token=j6i1-AvgWqcALVHDPRPrmNBGwo8
+<pre>Authorization: Token token=36ECmAcEDrJ1iL1hTsT97U-VjtI
 Host: example.org
 Cookie: </pre>
 
@@ -81,8 +81,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/171/slots&quot; -X GET \
-	-H &quot;Authorization: Token token=j6i1-AvgWqcALVHDPRPrmNBGwo8&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/171/slots&quot; -X GET \
+	-H &quot;Authorization: Token token=36ECmAcEDrJ1iL1hTsT97U-VjtI&quot;</pre>
 
 ### Response
 
@@ -93,10 +93,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;240c4e83ec042c002e61bdb3aa92f69f&quot;
+ETag: W/&quot;18c23107dfdcdc9bf6061ef5a165e110&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7748582a-8fd8-40b7-b239-2999c04f0238
-X-Runtime: 0.128177
+X-Request-Id: e42569cb-32a2-48a0-a565-30bd39b25a56
+X-Runtime: 0.071432
 Content-Length: 619</pre>
 
 #### Status

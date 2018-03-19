@@ -42,7 +42,7 @@ Description : The friendship relation to the current user
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=DWBQ2Xfuxr0hAlF9IvybfkE0lTs
+Authorization: Token token=b6EOoMes4D68UkP2YQCox5AFPCE
 Host: example.org
 Cookie: </pre>
 
@@ -56,9 +56,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/search/user?query=john+doe&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/search/user?query=john+doe&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=DWBQ2Xfuxr0hAlF9IvybfkE0lTs&quot;</pre>
+	-H &quot;Authorization: Token token=b6EOoMes4D68UkP2YQCox5AFPCE&quot;</pre>
 
 ### Response
 
@@ -69,10 +69,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5a5bb3dd812dcc1601a1a441561c5d89&quot;
+ETag: W/&quot;ec2107f746187750d77a031ee0f08949&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: e83ffd29-f443-4794-9820-187bec563303
-X-Runtime: 0.032754
+X-Request-Id: 0176f185-8ff1-4676-b74a-3d4a05803620
+X-Runtime: 0.027966
 Content-Length: 220</pre>
 
 #### Status

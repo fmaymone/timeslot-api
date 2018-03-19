@@ -24,7 +24,7 @@ Description : containing a list of users
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=1V0qqh_86v-6R6bu51vOSlJYpP4
+Authorization: Token token=1yBcn7FjUJ2FNxfTorDg6HpL1LE
 Host: example.org
 Cookie: </pre>
 
@@ -34,9 +34,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/35/user_tags&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/35/user_tags&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=1V0qqh_86v-6R6bu51vOSlJYpP4&quot;</pre>
+	-H &quot;Authorization: Token token=1yBcn7FjUJ2FNxfTorDg6HpL1LE&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;35b03c42002066168f5684b7a0d7cd88&quot;
+ETag: W/&quot;3a6b757b6574357d0914465e5f7e8f9b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 2722ad13-e836-4f65-b434-1d769d492e09
-X-Runtime: 0.033281
+X-Request-Id: e668b6c4-2319-4c29-88e9-2745fa589533
+X-Runtime: 0.031636
 Content-Length: 658</pre>
 
 #### Status

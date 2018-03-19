@@ -29,7 +29,7 @@ Description : Invitecode string
 
 <pre>Content-Type: application/json
 Accept: application/json
-Authorization: Token token=l7UdVv_0QPyrmN6mO2C3BoFT520
+Authorization: Token token=g1QheVqB1Xz87pmmU4beHyN-6Ew
 Host: example.org
 Cookie: </pre>
 
@@ -45,10 +45,10 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/invitecodes&quot; -d &#39;{&quot;userId&quot;:3,&quot;context&quot;:&quot;SomeContext&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/invitecodes&quot; -d &#39;{&quot;userId&quot;:3,&quot;context&quot;:&quot;SomeContext&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=l7UdVv_0QPyrmN6mO2C3BoFT520&quot;</pre>
+	-H &quot;Authorization: Token token=g1QheVqB1Xz87pmmU4beHyN-6Ew&quot;</pre>
 
 ### Response
 
@@ -59,10 +59,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;1b6dd19927a66872253494f5698be6f9&quot;
+ETag: W/&quot;a2b9c5b7bcdb0bae045a72964828d2a7&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: be7a7004-63d8-44f3-9362-adb4244b1b59
-X-Runtime: 0.016914
+X-Request-Id: fd0a3c4c-3b6b-4749-be49-b7a026c05d66
+X-Runtime: 0.015983
 Content-Length: 24</pre>
 
 #### Status

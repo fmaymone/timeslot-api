@@ -19,7 +19,7 @@ Description : ID of the user to get the friends for.
 
 #### Headers
 
-<pre>Authorization: Token token=R0sCaTtH3_vwJk0WJSLl7dVELdY
+<pre>Authorization: Token token=NYZzmVQDDITRfi5HIJB5qnf8faI
 Accept: application/json
 Host: example.org
 Cookie: </pre>
@@ -30,8 +30,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/users/188/friends&quot; -X GET \
-	-H &quot;Authorization: Token token=R0sCaTtH3_vwJk0WJSLl7dVELdY&quot; \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/users/188/friends&quot; -X GET \
+	-H &quot;Authorization: Token token=NYZzmVQDDITRfi5HIJB5qnf8faI&quot; \
 	-H &quot;Accept: application/json&quot;</pre>
 
 ### Response
@@ -43,10 +43,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5c2cfafa8d3a38d14bf32967bb6e34a2&quot;
+ETag: W/&quot;1be44af0b7097b1214a5e4517e224047&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ecfeb6ec-2c63-4089-98b8-a6baf0f15b24
-X-Runtime: 0.046902
+X-Request-Id: 8e64990a-48f6-480f-9452-236d30212310
+X-Runtime: 0.030522
 Content-Length: 875</pre>
 
 #### Status

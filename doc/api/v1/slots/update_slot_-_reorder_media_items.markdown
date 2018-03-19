@@ -138,7 +138,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=5BVLC-ZuS57wzFaPnI8aHsGXUEU
+Authorization: Token token=VfW5PbcKY4kDhvb8F5GSY6w2OTs
 Host: example.org
 Cookie: </pre>
 
@@ -154,9 +154,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/14&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/14&quot; -d &#39;{&quot;media&quot;:[{&quot;mediaId&quot;:8,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:2},{&quot;mediaId&quot;:9,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:0},{&quot;mediaId&quot;:10,&quot;mediaType&quot;:&quot;image&quot;,&quot;position&quot;:1}]}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=5BVLC-ZuS57wzFaPnI8aHsGXUEU&quot;</pre>
+	-H &quot;Authorization: Token token=VfW5PbcKY4kDhvb8F5GSY6w2OTs&quot;</pre>
 
 ### Response
 
@@ -167,10 +167,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;8a561cf3278ae0094c237d2c8579b060&quot;
+ETag: W/&quot;c26cf841919fa8c712271ccb11946e81&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: b865173f-ea2b-470e-bf89-9ae5fac116cf
-X-Runtime: 0.135298
+X-Request-Id: 2615bcd6-ffd5-4fa5-8aa9-7f21161713dd
+X-Runtime: 0.136344
 Content-Length: 1055</pre>
 
 #### Status

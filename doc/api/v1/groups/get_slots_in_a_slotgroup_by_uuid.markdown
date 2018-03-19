@@ -137,19 +137,19 @@ Description : Array containing the result dataset.
 #### Headers
 
 <pre>Accept: application/json
-Authorization: Token token=PFcK6oWVtDiUjzKM6Vemhz7d_ps
+Authorization: Token token=l1QgXzj4D3-q8rrsay0L-pRW27U
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>GET /v1/groups/c6a99efb-bba6-4021-805a-5a443943cfc1/slots</pre>
+<pre>GET /v1/groups/6a9c56f5-ff3a-496c-9543-ddf08fcb8186/slots</pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/c6a99efb-bba6-4021-805a-5a443943cfc1/slots&quot; -X GET \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/groups/6a9c56f5-ff3a-496c-9543-ddf08fcb8186/slots&quot; -X GET \
 	-H &quot;Accept: application/json&quot; \
-	-H &quot;Authorization: Token token=PFcK6oWVtDiUjzKM6Vemhz7d_ps&quot;</pre>
+	-H &quot;Authorization: Token token=l1QgXzj4D3-q8rrsay0L-pRW27U&quot;</pre>
 
 ### Response
 
@@ -160,10 +160,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;759879f6a057eec9aa8f832733769f15&quot;
+ETag: W/&quot;5ec7b9ccd637ea57f4c0929a54f85dad&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: ba250ef0-7269-440d-b8ab-613354f9b706
-X-Runtime: 0.171428
+X-Request-Id: 2d95399c-4de3-4158-8f5a-ffe9657215b6
+X-Runtime: 0.174638
 Content-Length: 4731</pre>
 
 #### Status

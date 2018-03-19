@@ -83,7 +83,7 @@ Description : Array containing the result dataset.
 
 #### Headers
 
-<pre>Authorization: Token token=UAPOTW19kAzks_8ldV2UMik0NpY
+<pre>Authorization: Token token=LuLMKHj-9F5sAjSNcGWzFAYsPWc
 Host: example.org
 Cookie: </pre>
 
@@ -93,8 +93,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me/schedule&quot; -X GET \
-	-H &quot;Authorization: Token token=UAPOTW19kAzks_8ldV2UMik0NpY&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me/schedule&quot; -X GET \
+	-H &quot;Authorization: Token token=LuLMKHj-9F5sAjSNcGWzFAYsPWc&quot;</pre>
 
 ### Response
 
@@ -105,10 +105,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;be5619806b413763949c2799a0e4d845&quot;
+ETag: W/&quot;6d5bbf1fdc85bd527a2cad47b8fa68a0&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 36e5824a-492a-44b3-a255-6998c82120dd
-X-Runtime: 0.056034
+X-Request-Id: 22c2fcde-3697-42f7-978a-16cd1533967e
+X-Runtime: 0.099623
 Content-Length: 1244</pre>
 
 #### Status

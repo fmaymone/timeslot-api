@@ -166,7 +166,7 @@ Description : Videos recordings for the slot
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=UCnXig4Cyx7SicYJ-TQIIRiFA84
+Authorization: Token token=t5VSnIsWR604khfWrR8Egj3ESyo
 Host: example.org
 Cookie: </pre>
 
@@ -182,9 +182,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/16&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/16&quot; -d &#39;{&quot;location&quot;:{&quot;name&quot;:&quot;Soho House Custom&quot;,&quot;latitude&quot;:&quot;52.527335&quot;,&quot;longitude&quot;:&quot;13.414259&quot;}}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=UCnXig4Cyx7SicYJ-TQIIRiFA84&quot;</pre>
+	-H &quot;Authorization: Token token=t5VSnIsWR604khfWrR8Egj3ESyo&quot;</pre>
 
 ### Response
 
@@ -195,10 +195,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;40bb73110dcf8fd02e431a732c228d22&quot;
+ETag: W/&quot;07b842c58ad5127a4ddb5e8049b2672b&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 7bf6d6ad-3592-419f-a1ff-b558c8b1d762
-X-Runtime: 0.137476
+X-Request-Id: 1e7a3adf-b3df-4bdd-98b3-c55547d736c1
+X-Runtime: 0.189991
 Content-Length: 1010</pre>
 
 #### Status

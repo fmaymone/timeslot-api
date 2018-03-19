@@ -39,7 +39,7 @@ Description : URL of the user image
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=C9U6MIoBVgTuLdFizT6B-gw1kyo
+Authorization: Token token=rDkjfq1PapEhuP6p05pBhD9xpUc
 Host: example.org
 Cookie: </pre>
 
@@ -55,9 +55,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/tw-connect&quot; -d &#39;{&quot;username&quot;:&quot;alexandrospar&quot;,&quot;socialId&quot;:3186786310,&quot;auth_token&quot;:&quot;3186786310-OCKGioG9L94PwGc3Qjm4jIU6xIm1Bi5sWrl37xV&quot;,&quot;auth_secret&quot;:&quot;CAAFayXB6p6oBAChjrbg1RB6QoIdJyZasdfljk214C6k5x&quot;}&#39; -X POST \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=C9U6MIoBVgTuLdFizT6B-gw1kyo&quot;</pre>
+	-H &quot;Authorization: Token token=rDkjfq1PapEhuP6p05pBhD9xpUc&quot;</pre>
 
 ### Response
 
@@ -68,10 +68,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;dab6e368f2100c3f824136210ce9f5db&quot;
+ETag: W/&quot;3a6f0b0093dc675dbd9a3257040835c5&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 81ebe43e-b5c1-4fbe-94c0-dfccb16a912d
-X-Runtime: 0.042519
+X-Request-Id: e5a64902-2bea-4daf-a2f9-24753bd05f7e
+X-Runtime: 0.036899
 Content-Length: 861</pre>
 
 #### Status

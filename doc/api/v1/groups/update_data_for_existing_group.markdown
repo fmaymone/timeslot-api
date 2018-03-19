@@ -75,13 +75,13 @@ Description : Membership state for current user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=lp5eZfj6A65uMcfsdp2RPZSFWBo
+Authorization: Token token=9PHlYOe1BPqafIFg7khT7yaCrwU
 Host: example.org
 Cookie: </pre>
 
 #### Route
 
-<pre>PATCH /v1/groups/bc982e60-cec7-400d-9f76-895284e85f52</pre>
+<pre>PATCH /v1/groups/0df3435a-ec6f-490d-b93b-a2c0a62adcd2</pre>
 
 #### Body
 ```javascript
@@ -91,9 +91,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/groups/bc982e60-cec7-400d-9f76-895284e85f52&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;description&quot;:&quot;This is a new description.&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/groups/0df3435a-ec6f-490d-b93b-a2c0a62adcd2&quot; -d &#39;{&quot;name&quot;:&quot;bar&quot;,&quot;description&quot;:&quot;This is a new description.&quot;,&quot;membersCanInvite&quot;:true,&quot;membersCanPost&quot;:true}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=lp5eZfj6A65uMcfsdp2RPZSFWBo&quot;</pre>
+	-H &quot;Authorization: Token token=9PHlYOe1BPqafIFg7khT7yaCrwU&quot;</pre>
 
 ### Response
 
@@ -104,10 +104,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;ba30a49ccc850336e4cfc633d0b60c23&quot;
+ETag: W/&quot;b78af03eeb96799a7074bd5c46828f64&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 8a62857c-c5e1-45cb-ada0-5a769fdb726d
-X-Runtime: 0.038857
+X-Request-Id: 43fa2e89-faaa-4114-bc61-ff4287328bae
+X-Runtime: 0.058656
 Content-Length: 582</pre>
 
 #### Status

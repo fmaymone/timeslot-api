@@ -201,7 +201,7 @@ Description : all devices from user
 #### Headers
 
 <pre>Content-Type: application/json
-Authorization: Token token=kHq9VZybx9EtdxGxz7S43bCX6ho
+Authorization: Token token=iyC_DoM4Rl0aTi0EYgvAS_QuCHk
 Host: example.org
 Cookie: </pre>
 
@@ -217,9 +217,9 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/me&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;firstName&quot;:&quot;Barack&quot;,&quot;gender&quot;:&quot;male&quot;}&#39; -X PATCH \
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/me&quot; -d &#39;{&quot;username&quot;:&quot;bar&quot;,&quot;firstName&quot;:&quot;Barack&quot;,&quot;gender&quot;:&quot;male&quot;}&#39; -X PATCH \
 	-H &quot;Content-Type: application/json&quot; \
-	-H &quot;Authorization: Token token=kHq9VZybx9EtdxGxz7S43bCX6ho&quot;</pre>
+	-H &quot;Authorization: Token token=iyC_DoM4Rl0aTi0EYgvAS_QuCHk&quot;</pre>
 
 ### Response
 
@@ -230,10 +230,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;5b8ee576695a2ca4508f7027ae72b616&quot;
+ETag: W/&quot;481cba11a47297ca40f63b7872d1e431&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: da78997f-ae20-4c86-9725-7b4d1c5cb17d
-X-Runtime: 0.041223
+X-Request-Id: 4eda8af3-49a6-4fac-b28f-34952eac95c3
+X-Runtime: 0.049948
 Content-Length: 865</pre>
 
 #### Status

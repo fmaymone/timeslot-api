@@ -25,7 +25,7 @@ Description : containing creation date of the Like and details of the user who m
 
 #### Headers
 
-<pre>Authorization: Token token=6AfslO4Q5XqbELWFfm3MYp1DetM
+<pre>Authorization: Token token=eXrmBzKZ5ODD-5vLqVm0DPd0kEM
 Host: example.org
 Cookie: </pre>
 
@@ -35,8 +35,8 @@ Cookie: </pre>
 
 #### cURL
 
-<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com//v1/slots/29/likes&quot; -X GET \
-	-H &quot;Authorization: Token token=6AfslO4Q5XqbELWFfm3MYp1DetM&quot;</pre>
+<pre class="request">curl &quot;https://tsinc-alpha.herokuapp.com/v1/slots/29/likes&quot; -X GET \
+	-H &quot;Authorization: Token token=eXrmBzKZ5ODD-5vLqVm0DPd0kEM&quot;</pre>
 
 ### Response
 
@@ -47,10 +47,10 @@ X-XSS-Protection: 1; mode=block
 X-Content-Type-Options: nosniff
 Content-Type: application/json; charset=utf-8
 Vary: Accept-Encoding, Origin
-ETag: W/&quot;22babb1b6db8c0d20bd9a97a83e51d38&quot;
+ETag: W/&quot;9a58977eb1edeaa015fd8d2459067c82&quot;
 Cache-Control: max-age=0, private, must-revalidate
-X-Request-Id: 5b700932-e534-4e4e-8f43-a97514fd2ddf
-X-Runtime: 0.022357
+X-Request-Id: 64e091da-9d99-4451-918f-411b49abb775
+X-Runtime: 0.031474
 Content-Length: 953</pre>
 
 #### Status
