@@ -165,6 +165,32 @@ module V1
 
       render :likes
     end
+    
+     # POST /v1/slots/1/high_five
+    def add_high_five
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.create_high_five current_user
+
+      head :ok
+    end
+
+    # DELETE /v1/slots/1/high_five
+    def unHighFive
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+      @slot.destroy_high_five current_user
+
+      head :ok
+    end
+
+    # GET /v1/slots/1/high_fives
+    def show_high_fives
+      @slot = BaseSlot.get(params[:id])
+      authorize @slot
+
+      render :high_fives
+    end
 
     # POST /v1/slots/1/comment
     def add_comment

@@ -40,6 +40,7 @@ class BaseSlot < ActiveRecord::Base
   has_many :media_items, -> { where deleted_at: nil }, as: :mediable
   has_many :notes, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :likes, -> { where deleted_at: nil }, inverse_of: :slot
+  has_many :high_fives, -> { where deleted_at: nil }, inverse_of: :slot
   has_many :comments, -> { where deleted_at: nil }, foreign_key: :slot_id,
            inverse_of: :slot
 
@@ -101,7 +102,11 @@ class BaseSlot < ActiveRecord::Base
   def likes_with_details
     likes.includes([:user])
   end
-
+  
+  def high_fives_with_details
+    high_fives.includes([:user])
+  end
+  
   def comments_with_details
     comments.includes([:user])
   end
@@ -222,10 +227,35 @@ class BaseSlot < ActiveRecord::Base
     end
     like
   end
+  
+  def create_high_five(user)
+    high_five = HighFive.find_by(slot: self, user: user)
+    unless high_five
+      high_five = high_fives.create(user: user)
+      high_five.create_activity
+    end
+    high_five
+  rescue ActiveRecord::RecordNotUnique
+    # this is raised when the like is already present, not catching it here
+    # means it would be rescued in application_controller.rb and returns 422
+    # which is not our intention
+  else
+    if high_five.deleted_at? # relike after unlike
+      high_five.update(deleted_at: nil)
+      BaseSlot.increment_counter(:high_fives_count, id)
+      high_five.create_activity
+    end
+    high_five
+  end
 
   def destroy_like(user)
     like = likes.find_by(user: user)
     like.try(:delete)
+  end
+  
+  def destroy_high_five(user)
+    high_five = high_fives.find_by(user: user)
+    high_five.try(:delete)
   end
 
   def create_comment(user, content)
@@ -243,6 +273,7 @@ class BaseSlot < ActiveRecord::Base
     current_follower = followers
 
     likes.each(&:delete)
+    high_fives.each(&:delete)
     comments.each(&:delete)
     notes.each(&:delete)
     media_items.each(&:delete)
