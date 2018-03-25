@@ -231,12 +231,10 @@ class BaseSlot < ActiveRecord::Base
   def create_high_five(user, count)
     high_five = HighFive.find_by(slot: self, user: user)
     high_five.count = count
-    puts 'Controller_-----'
-    puts high_five.count
-    puts 'Controller_-----'
+
     high_five.save
     unless high_five
-     puts 'unless high_five-----'
+ 
       high_five = high_fives.create(user: user)
       high_five.count = count
       high_five.create_activity

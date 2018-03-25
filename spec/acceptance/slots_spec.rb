@@ -1022,11 +1022,11 @@ resource "Slots" do
 
         expect(response_status).to eq(200)
         expect(json.length).to eq slot.likes.count
-        expect(json.first).to have_key "liker"
+        expect(json.first).to have_key "HighFiver"
         expect(json.first).to have_key "createdAt"
-        expect(json.first["liker"]).to have_key "id"
-        expect(json.first["liker"]).to have_key "image"
-        expect(response_body).to include like.user.username
+        expect(json.first["HighFiver"]).to have_key "id"
+        expect(json.first["HighFiver"]).to have_key "image"
+        expect(response_body).to include high_five.user.username
       end
     end
   end
@@ -1056,6 +1056,39 @@ resource "Slots" do
       end
     end
   end
+  
+  get "/v1/slots/:id/high_fives" do
+    header "Authorization", :auth_header
+
+    parameter :id, "ID of the Slot to get the HighFives for", required: true
+
+    response_field :array, "containing creation date of the HighFive and " \
+                           "details of the user who made the HighFive"
+
+    let(:slot) { create(:std_slot_public, :with_high_fives) }
+    let!(:high_five) { create(:high_five, user: create(:user), slot: slot) }
+
+    describe "Get HighFives for Slot" do
+      let(:id) { slot.id }
+
+      example "Get HighFives for Slot", document: :v1 do
+        explanation "returns a list of all HighFives for the slot. " \
+                    "Includes User data and timestamp.\n\n" \
+                    "returns 401 if User not allowed to see HighFives data\n\n" \
+                    "returns 404 if ID is invalid"
+        do_request
+
+        expect(response_status).to eq(200)
+        expect(json.length).to eq slot.high_fives_count
+        expect(json.first).to have_key "liker"
+        expect(json.first).to have_key "createdAt"
+        expect(json.first["liker"]).to have_key "id"
+        expect(json.first["liker"]).to have_key "image"
+        expect(response_body).to include like.user.username
+      end
+    end
+  end
+  
 
   post "/v1/slots/:id/comment" do
     header "Content-Type", "application/json"
