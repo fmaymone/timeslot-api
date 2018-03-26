@@ -34,7 +34,10 @@ module V1
         slot_sets = valid_slotset_uuids
 
         # take submitted visibility into account to maintain backward compatibility
+        # check the difference btw ios_location and locatino
         adjust_slot_visibility(@slot, slot_visibility, slot_sets) if slot_visibility
+      
+      
         add_to_slotsets(@slot, slot_sets) if slot_sets
         add_to_default_slotgroups(@slot, slot_sets)
         @slot.create_activity
